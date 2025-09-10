@@ -1,16 +1,12 @@
 # Player Meta
 
-Lilia extends Garry's Mod players with characters, inventories, and permission checks.
-
-This reference details the meta functions enabling that integration.
+This page documents methods available on the `Player` meta table, representing connected human players in the Lilia framework.
 
 ---
 
 ## Overview
 
-Player-meta functions provide quick access to the active character, networking helpers for messaging or data transfer, and utility checks such as admin status.
-
-Players are entity objects that hold at most one `Character` instance, so these helpers unify player-related logic across the framework.
+The `Player` meta table extends Garry's Mod's base player functionality with Lilia-specific features including character management, privilege checking, vehicle handling, movement detection, money management, flag systems, data persistence, and various utility functions. These methods provide comprehensive player management capabilities for roleplay servers and other gameplay systems within the Lilia framework.
 
 ---
 
@@ -18,27 +14,37 @@ Players are entity objects that hold at most one `Character` instance, so these 
 
 **Purpose**
 
-Returns the current character of the player.
+Gets the player's current character.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `Character|nil`: The player's current character, or `nil` if no character is loaded.
+* `character` (*Character|nil*): The player's current character if loaded.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local char = player:getChar()
-if char then
-    print("Character name: " .. char:getName())
+local function checkPlayerCharacter(player)
+    local char = player:getChar()
+    if char then
+        player:ChatPrint("You have a character loaded: " .. char:getName())
+        return char
+    else
+        player:ChatPrint("You don't have a character loaded.")
+        return nil
+    end
 end
+
+concommand.Add("check_char", function(ply)
+    checkPlayerCharacter(ply)
+end)
 ```
 
 ---
@@ -47,105 +53,74 @@ end
 
 **Purpose**
 
-Returns the display name of the player, either their character name or Steam name.
+Gets the player's display name, preferring character name over Steam name.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `string`: The player's display name.
+* `name` (*string*): The player's display name.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local name = player:Name()
-print("Player name: " .. name)
-```
-
----
-
-### steamName
-
-**Purpose**
-
-Returns the player's Steam name without considering character data.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Steam community display name.
-
-**Example Usage**
-
-```lua
-print(player:steamName())
-```
-
----
-
-### SteamName
-
-**Purpose**
-
-Alias of `steamName`.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* `string`: Steam community display name.
-
-**Example Usage**
-
-```lua
-print(player:SteamName())
-```
-
----
-
-### hasPrivilege
-
-**Purpose**
-
-Checks if the player has the specified privilege.
-
-**Parameters**
-
-* `privilegeName` (`string`): The name of the privilege to check.
-
-**Returns**
-
-* `boolean`: True if the player has the privilege, false otherwise.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-if player:hasPrivilege("admin") then
-    print("Player has admin privileges")
+local function displayPlayerName(player)
+    local name = player:Name()
+    print("Player name: " .. name)
 end
+
+hook.Add("PlayerSay", "DisplayName", function(ply, text)
+    if text == "!myname" then
+        displayPlayerName(ply)
+    end
+end)
+```
+
+---
+
+### hasPrivilegeVector
+
+**Purpose**
+
+Checks if the player has a specific privilege.
+
+**Parameters**
+
+* `privilegeName` (*string*): The privilege name to check.
+
+**Returns**
+
+* `hasPrivilege` (*boolean*): True if the player has the privilege.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function checkPlayerPrivilege(player, privilege)
+    if player:hasPrivilege(privilege) then
+        player:ChatPrint("You have the " .. privilege .. " privilege!")
+        return true
+    else
+        player:ChatPrint("You don't have the " .. privilege .. " privilege.")
+        return false
+    end
+end
+
+concommand.Add("check_privilege", function(ply, cmd, args)
+    local privilege = args[1]
+    if privilege then
+        checkPlayerPrivilege(ply, privilege)
+    end
+end)
 ```
 
 ---
@@ -154,27 +129,37 @@ end
 
 **Purpose**
 
-Returns the player's currently occupied vehicle entity.
+Gets the vehicle the player is currently in.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `Entity|nil`: The vehicle entity the player is in, or `nil` if not in a vehicle.
+* `vehicle` (*Entity|nil*): The vehicle if the player is in one.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local vehicle = player:getCurrentVehicle()
-if vehicle then
-    print("Player is in vehicle: " .. vehicle:GetClass())
+local function checkPlayerVehicle(player)
+    local vehicle = player:getCurrentVehicle()
+    if IsValid(vehicle) then
+        player:ChatPrint("You are in a " .. vehicle:GetClass())
+        return vehicle
+    else
+        player:ChatPrint("You are not in a vehicle.")
+        return nil
+    end
 end
+
+concommand.Add("check_vehicle", function(ply)
+    checkPlayerVehicle(ply)
+end)
 ```
 
 ---
@@ -183,26 +168,36 @@ end
 
 **Purpose**
 
-Checks if the player has a valid vehicle.
+Checks if the player is in a valid vehicle.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `boolean`: True if the player has a valid vehicle, false otherwise.
+* `hasVehicle` (*boolean*): True if the player is in a valid vehicle.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if player:hasValidVehicle() then
-    print("Player is in a vehicle")
+local function handleVehicleAction(player)
+    if player:hasValidVehicle() then
+        player:ChatPrint("You can perform vehicle actions!")
+        return true
+    else
+        player:ChatPrint("You need to be in a vehicle to do that.")
+        return false
+    end
 end
+
+concommand.Add("vehicle_action", function(ply)
+    handleVehicleAction(ply)
+end)
 ```
 
 ---
@@ -211,114 +206,36 @@ end
 
 **Purpose**
 
-Checks if the player is currently nocliping.
+Checks if the player is no-clipping and not in a vehicle.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `boolean`: True if the player is nocliping, false otherwise.
+* `isNoClipping` (*boolean*): True if the player is no-clipping.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if player:isNoClipping() then
-    print("Player is nocliping")
+local function checkNoClipStatus(player)
+    if player:isNoClipping() then
+        player:ChatPrint("You are no-clipping!")
+        return true
+    else
+        player:ChatPrint("You are not no-clipping.")
+        return false
+    end
 end
-```
 
----
-
-### hasRagdoll
-
-**Purpose**
-
-Checks if the player has a ragdoll.
-
-**Parameters**
-
-* None
-
-**Returns**
-
-* `boolean`: True if the player has a ragdoll, false otherwise.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-if IsValid(player:getRagdoll()) then
-    print("Player has a ragdoll")
-end
-```
-
----
-
-### CanOverrideView
-
-**Purpose**
-
-Checks if the player is allowed to override the camera view.
-
-A valid character must be loaded and the player cannot be in a vehicle or ragdoll.
-
-The `thirdPersonEnabled` option must be enabled both client and server side and the `ShouldDisableThirdperson` hook must not return `true`.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* `boolean`: `true` when a third-person view may be used.
-
-**Example Usage**
-
-```lua
-if player:CanOverrideView() then
-    -- Place the camera behind the player
-end
-```
-
----
-
-### IsInThirdPerson
-
-**Purpose**
-
-Returns whether third-person view is enabled for this player according to the `thirdPersonEnabled` option and configuration.
-
-**Parameters**
-
-* None
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* `boolean`: `true` if third-person mode is enabled.
-
-**Example Usage**
-
-```lua
-if player:IsInThirdPerson() then
-    print("Third person active")
-end
+concommand.Add("check_noclip", function(ply)
+    checkNoClipStatus(ply)
+end)
 ```
 
 ---
@@ -327,24 +244,31 @@ end
 
 **Purpose**
 
-Removes the player's ragdoll if one exists.
+Removes the player's ragdoll if it exists.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `nil`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Server.
 
 **Example Usage**
 
 ```lua
-player:removeRagdoll()
+local function cleanupPlayerRagdoll(player)
+    player:removeRagdoll()
+    player:ChatPrint("Ragdoll removed!")
+end
+
+concommand.Add("remove_ragdoll", function(ply)
+    cleanupPlayerRagdoll(ply)
+end)
 ```
 
 ---
@@ -353,27 +277,37 @@ player:removeRagdoll()
 
 **Purpose**
 
-Returns the player's ragdoll entity if one exists.
+Gets the player's current ragdoll entity.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `Entity|nil`: The ragdoll entity, or `nil` if no ragdoll exists.
+* `ragdoll` (*Entity|nil*): The ragdoll entity if it exists.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local ragdoll = player:getRagdoll()
-if ragdoll then
-    print("Player has a ragdoll")
+local function checkPlayerRagdoll(player)
+    local ragdoll = player:getRagdoll()
+    if IsValid(ragdoll) then
+        player:ChatPrint("You have a ragdoll at position: " .. tostring(ragdoll:GetPos()))
+        return ragdoll
+    else
+        player:ChatPrint("You don't have a ragdoll.")
+        return nil
+    end
 end
+
+concommand.Add("check_ragdoll", function(ply)
+    checkPlayerRagdoll(ply)
+end)
 ```
 
 ---
@@ -382,22 +316,37 @@ end
 
 **Purpose**
 
-Checks if the player is stuck in geometry.
+Checks if the player is stuck in a wall or object.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-* `boolean`: True if the player is stuck, false otherwise.
+* `isStuck` (*boolean*): True if the player is stuck.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if player:isStuck() then
-    print("Player is stuck in geometry")
+local function checkPlayerStuck(player)
+    if player:isStuck() then
+        player:ChatPrint("You are stuck! Teleporting to spawn...")
+        player:Spawn()
+        return true
+    else
+        player:ChatPrint("You are not stuck.")
+        return false
+    end
 end
+
+concommand.Add("check_stuck", function(ply)
+    checkPlayerStuck(ply)
+end)
 ```
 
 ---
@@ -406,27 +355,41 @@ end
 
 **Purpose**
 
-Checks if the player is near another entity within the specified radius.
+Checks if the player is near another entity within a specified radius.
 
 **Parameters**
 
-* `radius` (`number`): The radius to check within.
-* `entity` (`Entity`): The entity to check distance to.
+* `radius` (*number*): The radius to check within.
+* `entity` (*Entity*): The entity to check proximity to.
 
 **Returns**
 
-* `boolean`: True if the player is within the radius, false otherwise.
+* `isNear` (*boolean*): True if the player is within the radius.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if player:isNearPlayer(100, otherPlayer) then
-    print("Player is nearby")
+local function checkPlayerProximity(player, target, radius)
+    if player:isNearPlayer(radius, target) then
+        player:ChatPrint("You are near " .. target:GetClass())
+        return true
+    else
+        player:ChatPrint("You are not near " .. target:GetClass())
+        return false
+    end
 end
+
+concommand.Add("check_proximity", function(ply, cmd, args)
+    local radius = tonumber(args[1]) or 100
+    local target = ply:getTracedEntity()
+    if IsValid(target) then
+        checkPlayerProximity(ply, target, radius)
+    end
+end)
 ```
 
 ---
@@ -435,26 +398,37 @@ end
 
 **Purpose**
 
-Returns all entities near the player within the specified radius.
+Gets all entities near the player within a specified radius.
 
 **Parameters**
 
-* `radius` (`number`): The radius to search within.
-* `playerOnly` (`boolean`): If true, only return player entities.
+* `radius` (*number*): The radius to search within.
+* `playerOnly` (*boolean|nil*): Whether to only return player entities.
 
 **Returns**
 
-* `table`: Array of nearby entities.
+* `entities` (*table*): Array of nearby entities.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local nearby = player:entitiesNearPlayer(200, true)
-print("Found " .. #nearby .. " players nearby")
+local function listNearbyEntities(player, radius, playerOnly)
+    local entities = player:entitiesNearPlayer(radius, playerOnly)
+    player:ChatPrint("Found " .. #entities .. " nearby entities:")
+    for i, ent in ipairs(entities) do
+        player:ChatPrint("  " .. i .. ". " .. ent:GetClass())
+    end
+end
+
+concommand.Add("list_nearby", function(ply, cmd, args)
+    local radius = tonumber(args[1]) or 100
+    local playerOnly = tobool(args[2])
+    listNearbyEntities(ply, radius, playerOnly)
+end)
 ```
 
 ---
@@ -463,23 +437,38 @@ print("Found " .. #nearby .. " players nearby")
 
 **Purpose**
 
-Returns the player's currently equipped weapon and its corresponding inventory item.
+Gets the weapon and item associated with the player's active weapon.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-* `Weapon|Item|nil`: The weapon and item, or `nil` if not found.
+* `weapon` (*Weapon|nil*): The weapon entity if it's an item weapon.
+* `item` (*Item|nil*): The associated item if found.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local weapon, item = player:getItemWeapon()
-if weapon then
-    print("Equipped weapon: " .. weapon:GetClass())
+local function checkItemWeapon(player)
+    local weapon, item = player:getItemWeapon()
+    if IsValid(weapon) and item then
+        player:ChatPrint("You have an item weapon: " .. item:getName())
+        return weapon, item
+    else
+        player:ChatPrint("You don't have an item weapon equipped.")
+        return nil, nil
+    end
 end
+
+concommand.Add("check_item_weapon", function(ply)
+    checkItemWeapon(ply)
+end)
 ```
 
 ---
@@ -490,44 +479,34 @@ end
 
 Checks if the player is currently running.
 
+**Parameters**
+
+*None.*
+
 **Returns**
 
-* `boolean`: True if the player is running, false otherwise.
+* `isRunning` (*boolean*): True if the player is running.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if player:isRunning() then
-    print("Player is running")
+local function checkPlayerRunning(player)
+    if player:isRunning() then
+        player:ChatPrint("You are running!")
+        return true
+    else
+        player:ChatPrint("You are not running.")
+        return false
+    end
 end
-```
 
----
-
-### isFemale
-
-**Purpose**
-
-Checks if the player's model is female.
-
-**Returns**
-
-* `boolean`: True if the player's model is female, false otherwise.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-if player:isFemale() then
-    print("Player is female")
-end
+concommand.Add("check_running", function(ply)
+    checkPlayerRunning(ply)
+end)
 ```
 
 ---
@@ -536,22 +515,36 @@ end
 
 **Purpose**
 
-Checks if the player's Steam account is family shared.
+Checks if the player is using a family shared Steam account.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-* `boolean`: True if the account is family shared, false otherwise.
+* `isFamilyShared` (*boolean*): True if the account is family shared.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if player:IsFamilySharedAccount() then
-    print("Player has family shared account")
+local function checkFamilyShared(player)
+    if player:IsFamilySharedAccount() then
+        player:ChatPrint("You are using a family shared account.")
+        return true
+    else
+        player:ChatPrint("You are using your own account.")
+        return false
+    end
 end
+
+concommand.Add("check_family_shared", function(ply)
+    checkFamilyShared(ply)
+end)
 ```
 
 ---
@@ -560,21 +553,32 @@ end
 
 **Purpose**
 
-Calculates the position where items should be dropped in front of the player.
+Gets the position where items should be dropped from the player.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-* `Vector`: The calculated drop position.
+* `position` (*Vector*): The drop position.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local dropPos = player:getItemDropPos()
-print("Item will be dropped at: " .. tostring(dropPos))
+local function getDropPosition(player)
+    local pos = player:getItemDropPos()
+    player:ChatPrint("Drop position: " .. tostring(pos))
+    return pos
+end
+
+concommand.Add("get_drop_pos", function(ply)
+    getDropPosition(ply)
+end)
 ```
 
 ---
@@ -583,41 +587,15 @@ print("Item will be dropped at: " .. tostring(dropPos))
 
 **Purpose**
 
-Returns all items in the player's inventory.
-
-**Returns**
-
-* `table|nil`: Array of inventory items, or `nil` if no character or inventory exists.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-local items = player:getItems()
-if items then
-    print("Player has " .. #items .. " items")
-end
-```
-
----
-
-
-### getTrace
-
-**Purpose**
-
-Performs a hull trace from the player's shoot position in the direction they are looking.
+Gets all items in the player's character's inventory.
 
 **Parameters**
 
-* distance (number) - The maximum distance to trace. Defaults to 200.
+*None.*
 
 **Returns**
 
-table - The trace result table containing hit information.
+* `items` (*table|nil*): Table of items if the player has a character.
 
 **Realm**
 
@@ -626,10 +604,101 @@ Shared.
 **Example Usage**
 
 ```lua
-    local trace = player:getTrace(300)
-    if trace.Hit then
-        print("Hit something at: " .. tostring(trace.HitPos))
+local function listPlayerItems(player)
+    local items = player:getItems()
+    if items then
+        player:ChatPrint("You have " .. table.Count(items) .. " items:")
+        for itemID, item in pairs(items) do
+            player:ChatPrint("  " .. item:getName() .. " (ID: " .. itemID .. ")")
+        end
+    else
+        player:ChatPrint("You don't have any items.")
     end
+end
+
+concommand.Add("list_items", function(ply)
+    listPlayerItems(ply)
+end)
+```
+
+---
+
+### getTracedEntity
+
+**Purpose**
+
+Gets the entity the player is looking at within a specified distance.
+
+**Parameters**
+
+* `distance` (*number|nil*): Maximum distance to trace (default: 96).
+
+**Returns**
+
+* `entity` (*Entity|nil*): The traced entity if found.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function getLookedAtEntity(player, distance)
+    local entity = player:getTracedEntity(distance)
+    if IsValid(entity) then
+        player:ChatPrint("You are looking at: " .. entity:GetClass())
+        return entity
+    else
+        player:ChatPrint("You are not looking at anything.")
+        return nil
+    end
+end
+
+concommand.Add("look_at", function(ply, cmd, args)
+    local distance = tonumber(args[1]) or 96
+    getLookedAtEntity(ply, distance)
+end)
+```
+
+---
+
+### getTrace
+
+**Purpose**
+
+Gets a trace result from the player's view with hull collision.
+
+**Parameters**
+
+* `distance` (*number|nil*): Maximum distance to trace (default: 200).
+
+**Returns**
+
+* `trace` (*table*): The trace result table.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function getPlayerTrace(player, distance)
+    local trace = player:getTrace(distance)
+    if trace.Hit then
+        player:ChatPrint("Trace hit: " .. trace.Entity:GetClass() .. " at " .. tostring(trace.HitPos))
+        return trace
+    else
+        player:ChatPrint("Trace didn't hit anything.")
+        return trace
+    end
+end
+
+concommand.Add("trace", function(ply, cmd, args)
+    local distance = tonumber(args[1]) or 200
+    getPlayerTrace(ply, distance)
+end)
 ```
 
 ---
@@ -638,15 +707,15 @@ Shared.
 
 **Purpose**
 
-Returns the entity the player is looking at within a specified distance using eye trace.
+Gets the entity the player is looking at within a specified distance.
 
 **Parameters**
 
-* distance (number) - The maximum distance to check. Defaults to 150.
+* `distance` (*number|nil*): Maximum distance to check (default: 150).
 
 **Returns**
 
-Entity or nil - The entity being looked at, or nil if out of range.
+* `entity` (*Entity|nil*): The entity if within distance.
 
 **Realm**
 
@@ -655,10 +724,21 @@ Shared.
 **Example Usage**
 
 ```lua
-    local entity = player:getEyeEnt(200)
-    if entity then
-        print("Looking at: " .. entity:GetClass())
+local function getEyeEntity(player, distance)
+    local entity = player:getEyeEnt(distance)
+    if IsValid(entity) then
+        player:ChatPrint("You see: " .. entity:GetClass())
+        return entity
+    else
+        player:ChatPrint("You don't see anything.")
+        return nil
     end
+end
+
+concommand.Add("eye_entity", function(ply, cmd, args)
+    local distance = tonumber(args[1]) or 150
+    getEyeEntity(ply, distance)
+end)
 ```
 
 ---
@@ -667,29 +747,34 @@ Shared.
 
 **Purpose**
 
-Sends a notification message to the player. On the server, the notification is sent specifically to this player. On the client, it's sent to the local player.
+Sends a notification to the player.
 
 **Parameters**
 
-* `message` (`string`): The message to display to the player.
-* `...` (`any`): Additional arguments to pass to the notification system.
+* `message` (*string*): The notification message.
+* `...` (*any*): Additional arguments for the notification.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
--- Server-side: Send notification to specific player
-player:notify("Welcome to the server!")
+local function sendPlayerNotification(player, message)
+    player:notify(message)
+end
 
--- Client-side: Send notification to local player
-LocalPlayer():notify("Action completed!")
+concommand.Add("notify", function(ply, cmd, args)
+    local message = table.concat(args, " ")
+    if message ~= "" then
+        sendPlayerNotification(ply, message)
+    end
+end)
 ```
 
 ---
@@ -698,32 +783,38 @@ LocalPlayer():notify("Action completed!")
 
 **Purpose**
 
-Sends a localized notification message to the player. On the server, the notification is sent specifically to this player. On the client, it's sent to the local player. The message is automatically translated using the player's language settings.
+Sends a localized notification to the player.
 
 **Parameters**
 
-* `message` (`string`): The localization key for the message.
-* `...` (`any`): Additional arguments to format the localized message.
+* `message` (*string*): The localized message key.
+* `...` (*any*): Additional arguments for the notification.
 
 **Returns**
 
-* `nil`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
--- Server-side: Send localized notification to specific player
-player:notifyLocalized("welcome_message", player:Name())
+local function sendLocalizedNotification(player, messageKey, ...)
+    player:notifyLocalized(messageKey, ...)
+end
 
--- Client-side: Send localized notification to local player
-LocalPlayer():notifyLocalized("action_completed", "Item pickup")
-
--- With multiple format arguments
-player:notifyLocalized("item_given", "Health Kit", 100)
+concommand.Add("notify_localized", function(ply, cmd, args)
+    local messageKey = args[1]
+    if messageKey then
+        local args = {}
+        for i = 2, #args do
+            table.insert(args, args[i])
+        end
+        sendLocalizedNotification(ply, messageKey, unpack(args))
+    end
+end)
 ```
 
 ---
@@ -732,15 +823,15 @@ player:notifyLocalized("item_given", "Health Kit", 100)
 
 **Purpose**
 
-Checks if the player can edit the specified vendor.
+Checks if the player can edit vendors.
 
 **Parameters**
 
-* vendor (Entity) - The vendor entity to check permissions for.
+* `vendor` (*Entity*): The vendor entity to check.
 
 **Returns**
 
-boolean - True if the player can edit the vendor, false otherwise.
+* `canEdit` (*boolean*): True if the player can edit the vendor.
 
 **Realm**
 
@@ -749,9 +840,22 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:CanEditVendor(vendorEntity) then
-        print("Player can edit this vendor")
+local function checkVendorEditPermission(player, vendor)
+    if player:CanEditVendor(vendor) then
+        player:ChatPrint("You can edit this vendor!")
+        return true
+    else
+        player:ChatPrint("You cannot edit this vendor.")
+        return false
     end
+end
+
+concommand.Add("check_vendor_edit", function(ply)
+    local vendor = ply:getTracedEntity()
+    if IsValid(vendor) and vendor:GetClass() == "lia_vendor" then
+        checkVendorEditPermission(ply, vendor)
+    end
+end)
 ```
 
 ---
@@ -760,11 +864,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player is a staff member based on their user group.
+Checks if the player is a staff member.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-boolean - True if the player is staff, false otherwise.
+* `isStaff` (*boolean*): True if the player is staff.
 
 **Realm**
 
@@ -773,9 +881,19 @@ Shared.
 **Example Usage**
 
 ```lua
+local function checkStaffStatus(player)
     if player:isStaff() then
-        print("Player is a staff member")
+        player:ChatPrint("You are a staff member!")
+        return true
+    else
+        player:ChatPrint("You are not a staff member.")
+        return false
     end
+end
+
+concommand.Add("check_staff", function(ply)
+    checkStaffStatus(ply)
+end)
 ```
 
 ---
@@ -784,11 +902,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player is a VIP member based on their user group.
+Checks if the player is a VIP member.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-boolean - True if the player is VIP, false otherwise.
+* `isVIP` (*boolean*): True if the player is VIP.
 
 **Realm**
 
@@ -797,9 +919,19 @@ Shared.
 **Example Usage**
 
 ```lua
+local function checkVIPStatus(player)
     if player:isVIP() then
-        print("Player is a VIP member")
+        player:ChatPrint("You are a VIP member!")
+        return true
+    else
+        player:ChatPrint("You are not a VIP member.")
+        return false
     end
+end
+
+concommand.Add("check_vip", function(ply)
+    checkVIPStatus(ply)
+end)
 ```
 
 ---
@@ -808,11 +940,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player is currently on duty as staff.
+Checks if the player is staff and on duty.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-boolean - True if the player is on duty as staff, false otherwise.
+* `isOnDuty` (*boolean*): True if the player is staff on duty.
 
 **Realm**
 
@@ -821,9 +957,19 @@ Shared.
 **Example Usage**
 
 ```lua
+local function checkStaffDuty(player)
     if player:isStaffOnDuty() then
-        print("Player is on duty as staff")
+        player:ChatPrint("You are staff and on duty!")
+        return true
+    else
+        player:ChatPrint("You are not staff on duty.")
+        return false
     end
+end
+
+concommand.Add("check_staff_duty", function(ply)
+    checkStaffDuty(ply)
+end)
 ```
 
 ---
@@ -832,15 +978,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player belongs to the specified faction.
+Checks if the player's character belongs to a specific faction.
 
 **Parameters**
 
-* faction (string) - The faction name to check against.
+* `faction` (*string*): The faction name to check.
 
 **Returns**
 
-boolean or nil - True if the player belongs to the faction, false or nil otherwise.
+* `isFaction` (*boolean*): True if the character belongs to the faction.
 
 **Realm**
 
@@ -849,9 +995,22 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:isFaction("police") then
-        print("Player is a police officer")
+local function checkPlayerFaction(player, faction)
+    if player:isFaction(faction) then
+        player:ChatPrint("You belong to the " .. faction .. " faction!")
+        return true
+    else
+        player:ChatPrint("You don't belong to the " .. faction .. " faction.")
+        return false
     end
+end
+
+concommand.Add("check_faction", function(ply, cmd, args)
+    local faction = args[1]
+    if faction then
+        checkPlayerFaction(ply, faction)
+    end
+end)
 ```
 
 ---
@@ -860,15 +1019,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player belongs to the specified class.
+Checks if the player's character belongs to a specific class.
 
 **Parameters**
 
-* class (string) - The class name to check against.
+* `class` (*string*): The class name to check.
 
 **Returns**
 
-boolean or nil - True if the player belongs to the class, false or nil otherwise.
+* `isClass` (*boolean*): True if the character belongs to the class.
 
 **Realm**
 
@@ -877,9 +1036,22 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:isClass("medic") then
-        print("Player is a medic")
+local function checkPlayerClass(player, className)
+    if player:isClass(className) then
+        player:ChatPrint("You are a " .. className .. "!")
+        return true
+    else
+        player:ChatPrint("You are not a " .. className .. ".")
+        return false
     end
+end
+
+concommand.Add("check_class", function(ply, cmd, args)
+    local className = args[1]
+    if className then
+        checkPlayerClass(ply, className)
+    end
+end)
 ```
 
 ---
@@ -888,15 +1060,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player has a whitelist for the specified faction.
+Checks if the player has whitelist access to a specific faction.
 
 **Parameters**
 
-* faction (string) - The faction name to check whitelist for.
+* `faction` (*string*): The faction name to check.
 
 **Returns**
 
-boolean - True if the player has a whitelist for the faction, false otherwise.
+* `hasWhitelist` (*boolean*): True if the player has whitelist access.
 
 **Realm**
 
@@ -905,9 +1077,22 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:hasWhitelist("police") then
-        print("Player has police whitelist")
+local function checkPlayerWhitelist(player, faction)
+    if player:hasWhitelist(faction) then
+        player:ChatPrint("You have whitelist access to " .. faction .. "!")
+        return true
+    else
+        player:ChatPrint("You don't have whitelist access to " .. faction .. ".")
+        return false
     end
+end
+
+concommand.Add("check_whitelist", function(ply, cmd, args)
+    local faction = args[1]
+    if faction then
+        checkPlayerWhitelist(ply, faction)
+    end
+end)
 ```
 
 ---
@@ -916,11 +1101,15 @@ Shared.
 
 **Purpose**
 
-Returns the player's current class.
+Gets the player's character's class.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-string or nil - The player's class name, or nil if no character exists.
+* `class` (*string|nil*): The character's class if loaded.
 
 **Realm**
 
@@ -929,10 +1118,20 @@ Shared.
 **Example Usage**
 
 ```lua
+local function displayPlayerClass(player)
     local class = player:getClass()
     if class then
-        print("Player's class: " .. class)
+        player:ChatPrint("Your class: " .. class)
+        return class
+    else
+        player:ChatPrint("You don't have a class loaded.")
+        return nil
     end
+end
+
+concommand.Add("my_class", function(ply)
+    displayPlayerClass(ply)
+end)
 ```
 
 ---
@@ -941,15 +1140,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player has a whitelist for the specified class.
+Checks if the player's character has whitelist access to a specific class.
 
 **Parameters**
 
-* class (string) - The class name to check whitelist for.
+* `class` (*string*): The class name to check.
 
 **Returns**
 
-boolean - True if the player has a whitelist for the class, false otherwise.
+* `hasWhitelist` (*boolean*): True if the character has class whitelist access.
 
 **Realm**
 
@@ -958,9 +1157,22 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:hasClassWhitelist("medic") then
-        print("Player has medic class whitelist")
+local function checkClassWhitelist(player, className)
+    if player:hasClassWhitelist(className) then
+        player:ChatPrint("You have whitelist access to " .. className .. " class!")
+        return true
+    else
+        player:ChatPrint("You don't have whitelist access to " .. className .. " class.")
+        return false
     end
+end
+
+concommand.Add("check_class_whitelist", function(ply, cmd, args)
+    local className = args[1]
+    if className then
+        checkClassWhitelist(ply, className)
+    end
+end)
 ```
 
 ---
@@ -969,11 +1181,15 @@ Shared.
 
 **Purpose**
 
-Returns the data for the player's current class.
+Gets the data for the player's character's class.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-table or nil - The class data table, or nil if no character or class exists.
+* `classData` (*table|nil*): The class data if the character has a class.
 
 **Realm**
 
@@ -982,10 +1198,23 @@ Shared.
 **Example Usage**
 
 ```lua
+local function displayClassData(player)
     local classData = player:getClassData()
     if classData then
-        print("Class description: " .. classData.description)
+        player:ChatPrint("Class data:")
+        for key, value in pairs(classData) do
+            player:ChatPrint("  " .. key .. ": " .. tostring(value))
+        end
+        return classData
+    else
+        player:ChatPrint("You don't have class data.")
+        return nil
     end
+end
+
+concommand.Add("class_data", function(ply)
+    displayClassData(ply)
+end)
 ```
 
 ---
@@ -994,15 +1223,15 @@ Shared.
 
 **Purpose**
 
-Returns DarkRP variable values for the player. Currently only supports "money" variable.
+Gets a DarkRP variable value for compatibility.
 
 **Parameters**
 
-* var (string) - The DarkRP variable name to retrieve. Only "money" is currently supported.
+* `var` (*string*): The variable name to get.
 
 **Returns**
 
-number or nil - The value of the requested variable, or nil if not supported.
+* `value` (*any*): The variable value.
 
 **Realm**
 
@@ -1011,10 +1240,17 @@ Shared.
 **Example Usage**
 
 ```lua
+local function getDarkRPMoney(player)
     local money = player:getDarkRPVar("money")
     if money then
-        print("Player has " .. money .. " money")
+        player:ChatPrint("DarkRP Money: " .. money)
+        return money
     end
+end
+
+concommand.Add("darkrp_money", function(ply)
+    getDarkRPMoney(ply)
+end)
 ```
 
 ---
@@ -1023,11 +1259,15 @@ Shared.
 
 **Purpose**
 
-Returns the player's current money amount from their character.
+Gets the player's character's money.
+
+**Parameters**
+
+*None.*
 
 **Returns**
 
-number - The player's current money amount, or 0 if no character exists.
+* `money` (*number*): The character's money amount.
 
 **Realm**
 
@@ -1036,8 +1276,15 @@ Shared.
 **Example Usage**
 
 ```lua
+local function displayPlayerMoney(player)
     local money = player:getMoney()
-    print("Player has " .. money .. " money")
+    player:ChatPrint("You have " .. money .. " money.")
+    return money
+end
+
+concommand.Add("my_money", function(ply)
+    displayPlayerMoney(ply)
+end)
 ```
 
 ---
@@ -1046,15 +1293,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player can afford a specified amount of money.
+Checks if the player's character can afford a specific amount.
 
 **Parameters**
 
-* amount (number) - The amount of money to check.
+* `amount` (*number*): The amount to check.
 
 **Returns**
 
-boolean - True if the player can afford the amount, false otherwise.
+* `canAfford` (*boolean*): True if the character can afford the amount.
 
 **Realm**
 
@@ -1063,9 +1310,22 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:canAfford(1000) then
-        print("Player can afford 1000")
+local function checkAffordability(player, amount)
+    if player:canAfford(amount) then
+        player:ChatPrint("You can afford " .. amount .. " money!")
+        return true
+    else
+        player:ChatPrint("You cannot afford " .. amount .. " money.")
+        return false
     end
+end
+
+concommand.Add("check_afford", function(ply, cmd, args)
+    local amount = tonumber(args[1])
+    if amount then
+        checkAffordability(ply, amount)
+    end
+end)
 ```
 
 ---
@@ -1074,16 +1334,16 @@ Shared.
 
 **Purpose**
 
-Checks if the player has a skill level at or above the specified level.
+Checks if the player's character has a specific skill level.
 
 **Parameters**
 
-* skill (string) - The skill name to check.
-* level (number) - The minimum skill level required.
+* `skill` (*string*): The skill name to check.
+* `level` (*number*): The required level.
 
 **Returns**
 
-boolean - True if the player has the required skill level, false otherwise.
+* `hasLevel` (*boolean*): True if the character has the required level.
 
 **Realm**
 
@@ -1092,9 +1352,23 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:hasSkillLevel("strength", 5) then
-        print("Player has strength level 5 or higher")
+local function checkSkillLevel(player, skill, level)
+    if player:hasSkillLevel(skill, level) then
+        player:ChatPrint("You have " .. skill .. " level " .. level .. " or higher!")
+        return true
+    else
+        player:ChatPrint("You don't have " .. skill .. " level " .. level .. ".")
+        return false
     end
+end
+
+concommand.Add("check_skill", function(ply, cmd, args)
+    local skill = args[1]
+    local level = tonumber(args[2])
+    if skill and level then
+        checkSkillLevel(ply, skill, level)
+    end
+end)
 ```
 
 ---
@@ -1103,15 +1377,15 @@ Shared.
 
 **Purpose**
 
-Checks if the player meets all the required skill levels for a set of skills.
+Checks if the player meets all required skill levels.
 
 **Parameters**
 
-* requiredSkillLevels (table) - Table of skill names mapped to required levels.
+* `requiredSkillLevels` (*table|nil*): Table of skill names and required levels.
 
 **Returns**
 
-boolean - True if the player meets all required skill levels, false otherwise.
+* `meetsRequirements` (*boolean*): True if all requirements are met.
 
 **Realm**
 
@@ -1120,61 +1394,23 @@ Shared.
 **Example Usage**
 
 ```lua
-    local required = {strength = 5, agility = 3}
-    if player:meetsRequiredSkills(required) then
-        print("Player meets all skill requirements")
+local function checkRequiredSkills(player, requirements)
+    if player:meetsRequiredSkills(requirements) then
+        player:ChatPrint("You meet all skill requirements!")
+        return true
+    else
+        player:ChatPrint("You don't meet all skill requirements.")
+        return false
     end
-```
+end
 
----
-
-### forceSequence
-
-**Purpose**
-
-Forces the player to play a specific animation sequence.
-
-**Parameters**
-
-* sequenceName (string) - The name of the sequence to play.
-* callback (function) - Optional callback function to execute when sequence ends.
-* time (number) - Optional duration for the sequence. Defaults to sequence duration.
-* noFreeze (boolean) - If false, freezes player movement during sequence.
-
-**Returns**
-
-number or boolean - Duration of the sequence if successful, false if failed.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local duration = player:forceSequence("sit", function() print("Sit sequence finished") end)
-```
-
----
-
-### leaveSequence
-
-**Purpose**
-
-Stops the current forced sequence and restores normal player movement.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    player:leaveSequence()
+concommand.Add("check_skills", function(ply)
+    local requirements = {
+        strength = 5,
+        intelligence = 3
+    }
+    checkRequiredSkills(ply, requirements)
+end)
 ```
 
 ---
@@ -1183,15 +1419,15 @@ Shared.
 
 **Purpose**
 
-Restores the player's stamina by the specified amount.
+Restores the player's stamina by a specified amount.
 
 **Parameters**
 
-* amount (number) - The amount of stamina to restore.
+* `amount` (*number*): The amount of stamina to restore.
 
 **Returns**
 
-None.
+*None.*
 
 **Realm**
 
@@ -1200,7 +1436,15 @@ Server.
 **Example Usage**
 
 ```lua
-    player:restoreStamina(50)
+local function restorePlayerStamina(player, amount)
+    player:restoreStamina(amount)
+    player:ChatPrint("Restored " .. amount .. " stamina!")
+end
+
+concommand.Add("restore_stamina", function(ply, cmd, args)
+    local amount = tonumber(args[1]) or 10
+    restorePlayerStamina(ply, amount)
+end)
 ```
 
 ---
@@ -1209,15 +1453,15 @@ Server.
 
 **Purpose**
 
-Consumes the specified amount of stamina from the player.
+Consumes the player's stamina by a specified amount.
 
 **Parameters**
 
-* amount (number) - The amount of stamina to consume.
+* `amount` (*number*): The amount of stamina to consume.
 
 **Returns**
 
-None.
+*None.*
 
 **Realm**
 
@@ -1226,7 +1470,15 @@ Server.
 **Example Usage**
 
 ```lua
-    player:consumeStamina(25)
+local function consumePlayerStamina(player, amount)
+    player:consumeStamina(amount)
+    player:ChatPrint("Consumed " .. amount .. " stamina!")
+end
+
+concommand.Add("consume_stamina", function(ply, cmd, args)
+    local amount = tonumber(args[1]) or 10
+    consumePlayerStamina(ply, amount)
+end)
 ```
 
 ---
@@ -1235,15 +1487,15 @@ Server.
 
 **Purpose**
 
-Adds the specified amount of money to the player's character.
+Adds money to the player's character.
 
 **Parameters**
 
-* amount (number) - The amount of money to add.
+* `amount` (*number*): The amount of money to add.
 
 **Returns**
 
-None.
+* `success` (*boolean*): True if the money was added successfully.
 
 **Realm**
 
@@ -1252,7 +1504,22 @@ Server.
 **Example Usage**
 
 ```lua
-    player:addMoney(1000)
+local function givePlayerMoney(player, amount)
+    if player:addMoney(amount) then
+        player:ChatPrint("You received " .. amount .. " money!")
+        return true
+    else
+        player:ChatPrint("Failed to add money.")
+        return false
+    end
+end
+
+concommand.Add("give_money", function(ply, cmd, args)
+    local amount = tonumber(args[1])
+    if amount then
+        givePlayerMoney(ply, amount)
+    end
+end)
 ```
 
 ---
@@ -1261,15 +1528,15 @@ Server.
 
 **Purpose**
 
-Removes the specified amount of money from the player's character.
+Takes money from the player's character.
 
 **Parameters**
 
-* amount (number) - The amount of money to remove.
+* `amount` (*number*): The amount of money to take.
 
 **Returns**
 
-None.
+*None.*
 
 **Realm**
 
@@ -1278,200 +1545,17 @@ Server.
 **Example Usage**
 
 ```lua
-    player:takeMoney(500)
-```
-
----
-
-### WhitelistAllClasses
-
-**Purpose**
-
-Grants the player access to all available classes.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:WhitelistAllClasses()
-```
-
----
-
-### WhitelistAllFactions
-
-**Purpose**
-
-Grants the player access to all available factions.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:WhitelistAllFactions()
-```
-
----
-
-### WhitelistEverything
-
-**Purpose**
-
-Grants the player access to all available factions and classes.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:WhitelistEverything()
-```
-
----
-
-### classWhitelist
-
-**Purpose**
-
-Grants the player access to a specific class.
-
-**Parameters**
-
-* class (string) - The class name to whitelist.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:classWhitelist("medic")
-```
-
----
-
-### classUnWhitelist
-
-**Purpose**
-
-Removes the player's access to a specific class.
-
-**Parameters**
-
-* class (string) - The class name to remove whitelist for.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:classUnWhitelist("medic")
-```
-
----
-
-### setWhitelisted
-
-**Purpose**
-
-Sets the whitelist status for a specific faction for the player.
-
-**Parameters**
-
-* faction (string) - The faction name to set whitelist for.
-* whitelisted (boolean) - Whether to whitelist or remove whitelist.
-
-**Returns**
-
-boolean - True if the operation was successful, false otherwise.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setWhitelisted("police", true)
-```
-
----
-
-### loadLiliaData
-
-**Purpose**
-
-Loads the player's Lilia data from the database.
-
-**Parameters**
-
-* callback (function) - Optional callback function to execute after loading.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:loadLiliaData(function(data) print("Data loaded") end)
-```
-
----
-
-### saveLiliaData
-
-**Purpose**
-
-Saves the player's Lilia data to the database, including online time tracking and other persistent data.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:saveLiliaData()
+local function takePlayerMoney(player, amount)
+    player:takeMoney(amount)
+    player:ChatPrint("You lost " .. amount .. " money!")
+end
+
+concommand.Add("take_money", function(ply, cmd, args)
+    local amount = tonumber(args[1])
+    if amount then
+        takePlayerMoney(ply, amount)
+    end
+end)
 ```
 
 ---
@@ -1480,18 +1564,18 @@ Server.
 
 **Purpose**
 
-Sets a key-value pair in the player's Lilia data and optionally syncs it to the client and saves to database.
+Sets persistent data for the player.
 
 **Parameters**
 
-* key (string) - The data key to set.
-* value (any) - The value to store.
-* noNetworking (boolean) - If true, doesn't sync to client.
-* noSave (boolean) - If true, doesn't save to database.
+* `key` (*string*): The data key to set.
+* `value` (*any*): The value to set.
+* `noNetworking` (*boolean|nil*): Whether to skip network replication.
+* `noSave` (*boolean|nil*): Whether to skip database saving.
 
 **Returns**
 
-None.
+*None.*
 
 **Realm**
 
@@ -1500,89 +1584,18 @@ Server.
 **Example Usage**
 
 ```lua
-    player:setLiliaData("customFlag", true)
-```
+local function setPlayerData(player, key, value)
+    player:setLiliaData(key, value)
+    player:ChatPrint("Set " .. key .. " to " .. tostring(value))
+end
 
----
-
-### setWaypoint
-
-**Purpose**
-
-Sets a waypoint for the player at the specified location.
-
-**Parameters**
-
-* name (string) - The name of the waypoint.
-* vector (Vector) - The position where the waypoint should be set.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setWaypoint("Home", Vector(100, 200, 300))
-```
-
----
-
-### setWeighPoint
-
-**Purpose**
-
-Sets a waypoint for the player (alias for setWaypoint).
-
-**Parameters**
-
-* name (string) - The name of the waypoint.
-* vector (Vector) - The position where the waypoint should be set.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setWeighPoint("Home", Vector(100, 200, 300))
-```
-
----
-
-### setWaypointWithLogo
-
-**Purpose**
-
-Sets a waypoint for the player with a custom logo/icon.
-
-**Parameters**
-
-* name (string) - The name of the waypoint.
-* vector (Vector) - The position where the waypoint should be set.
-* logo (string) - The logo/icon identifier for the waypoint.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setWaypointWithLogo("Store", Vector(500, 600, 700), "store_icon")
+concommand.Add("set_data", function(ply, cmd, args)
+    local key = args[1]
+    local value = args[2]
+    if key and value then
+        setPlayerData(ply, key, value)
+    end
+end)
 ```
 
 ---
@@ -1591,16 +1604,16 @@ Server.
 
 **Purpose**
 
-Retrieves a value from the player's Lilia data storage.
+Gets persistent data for the player.
 
 **Parameters**
 
-* key (string) - The data key to retrieve.
-* default (any) - The default value to return if the key doesn't exist.
+* `key` (*string*): The data key to get.
+* `default` (*any*): Default value if the key doesn't exist.
 
 **Returns**
 
-any - The stored value or the default value if not found.
+* `value` (*any*): The data value or default.
 
 **Realm**
 
@@ -1609,32 +1622,18 @@ Shared.
 **Example Usage**
 
 ```lua
-    local customFlag = player:getLiliaData("customFlag", false)
-```
+local function getPlayerData(player, key)
+    local value = player:getLiliaData(key, "not set")
+    player:ChatPrint(key .. ": " .. tostring(value))
+    return value
+end
 
----
-
-### getAllLiliaData
-
-**Purpose**
-
-Returns all of the player's Lilia data as a table.
-
-**Returns**
-
-table - The complete Lilia data table for the player.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local allData = player:getAllLiliaData()
-    for key, value in pairs(allData) do
-        print(key .. ": " .. tostring(value))
+concommand.Add("get_data", function(ply, cmd, args)
+    local key = args[1]
+    if key then
+        getPlayerData(ply, key)
     end
+end)
 ```
 
 ---
@@ -1643,18 +1642,15 @@ Shared.
 
 **Purpose**
 
-Returns the flags associated with the player. Can return character flags, player flags, or combined flags.
+Gets the player's flags for a specific type.
 
 **Parameters**
 
-* flagType (string, optional) - The type of flags to return:
-  - "character" - Returns only character flags
-  - "player" - Returns only player flags  
-  - nil or omitted - Returns combined character and player flags (default)
+* `flagType` (*string|nil*): The flag type to get ("player" or nil for character flags).
 
 **Returns**
 
-string - The requested flags, or empty string if none exist.
+* `flags` (*string*): The player's flags.
 
 **Realm**
 
@@ -1663,18 +1659,17 @@ Shared.
 **Example Usage**
 
 ```lua
-    -- Get combined flags (default)
-    local allFlags = player:getFlags()
-    
-    -- Get only character flags
-    local charFlags = player:getFlags("character")
-    
-    -- Get only player flags
-    local playerFlags = player:getFlags("player")
-    
-    if allFlags:find("a") then
-        print("Player has admin flag")
-    end
+local function displayPlayerFlags(player, flagType)
+    local flags = player:getFlags(flagType)
+    local typeName = flagType or "character"
+    player:ChatPrint(typeName .. " flags: " .. flags)
+    return flags
+end
+
+concommand.Add("my_flags", function(ply, cmd, args)
+    local flagType = args[1]
+    displayPlayerFlags(ply, flagType)
+end)
 ```
 
 ---
@@ -1683,1172 +1678,54 @@ Shared.
 
 **Purpose**
 
-Sets the flags for the player. Can set character flags, player flags, or both.
+Sets the player's flags for a specific type.
 
 **Parameters**
 
-* flags (string) - The flags to set.
-* flagType (string, optional) - The type of flags to set:
-  - "character" - Sets character flags (default)
-  - "player" - Sets player flags
-  - nil or omitted - Sets character flags (default)
+* `flags` (*string*): The flags to set.
+* `flagType` (*string|nil*): The flag type to set ("player" or nil for character flags).
 
 **Returns**
 
-None.
+*None.*
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-    -- Set character flags (default)
-    player:setFlags("a")
-    
-    -- Set player flags
-    player:setFlags("v", "player")
-    
-    -- Set character flags explicitly
-    player:setFlags("abc", "character")
-```
+local function setPlayerFlags(player, flags, flagType)
+    player:setFlags(flags, flagType)
+    local typeName = flagType or "character"
+    player:ChatPrint("Set " .. typeName .. " flags to: " .. flags)
+end
 
----
-
-### giveFlags
-
-**Purpose**
-
-Gives flags to the player. Can give character flags, player flags, or both.
-
-**Parameters**
-
-* flags (string) - The flags to give.
-* flagType (string, optional) - The type of flags to give:
-  - "character" - Gives character flags (default)
-  - "player" - Gives player flags
-  - nil or omitted - Gives character flags (default)
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Give character flags (default)
-    player:giveFlags("a")
-    
-    -- Give player flags
-    player:giveFlags("v", "player")
-    
-    -- Give character flags explicitly
-    player:giveFlags("abc", "character")
-```
-
----
-
-### takeFlags
-
-**Purpose**
-
-Removes flags from the player. Can remove character flags, player flags, or both.
-
-**Parameters**
-
-* flags (string) - The flags to remove.
-* flagType (string, optional) - The type of flags to remove:
-  - "character" - Removes character flags (default)
-  - "player" - Removes player flags
-  - nil or omitted - Removes character flags (default)
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Remove character flags (default)
-    player:takeFlags("a")
-    
-    -- Remove player flags
-    player:takeFlags("v", "player")
-    
-    -- Remove character flags explicitly
-    player:takeFlags("abc", "character")
-```
-
----
-
-
-
-
-
-
-### hasFlags
-
-**Purpose**
-
-Checks if the player has specific flags. Can check character flags, player flags, or combined flags.
-
-**Parameters**
-
-* flags (string) - The flags to check for.
-* flagType (string, optional) - The type of flags to check:
-  - "character" - Checks only character flags
-  - "player" - Checks only player flags
-  - nil or omitted - Checks combined character and player flags (default)
-
-**Returns**
-
-boolean - True if the player has any of the specified flags.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Check combined flags (default)
-    if player:hasFlags("a") then
-        print("Player has admin flag")
+concommand.Add("set_flags", function(ply, cmd, args)
+    local flags = args[1]
+    local flagType = args[2]
+    if flags then
+        setPlayerFlags(ply, flags, flagType)
     end
-    
-    -- Check only character flags
-    if player:hasFlags("a", "character") then
-        print("Player has character admin flag")
-    end
-    
-    -- Check only player flags
-    if player:hasFlags("v", "player") then
-        print("Player has VIP flag")
-    end
-```
-
----
-
-
-
-### NetworkAnimation
-
-**Purpose**
-
-Networks animation status to all clients.
-
-**Parameters**
-
-* active (boolean) - Whether the animation is active.
-* boneData (table) - The bone data for the animation.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:NetworkAnimation(true, boneData)
-```
-
----
-
-### banPlayer
-
-**Purpose**
-
-Bans the player from the server.
-
-**Parameters**
-
-* reason (string) - The reason for the ban.
-* duration (number) - The duration of the ban in seconds.
-* banner (Player) - The player who issued the ban.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:banPlayer("Breaking rules", 3600, adminPlayer)
-```
-
----
-
-### setAction
-
-**Purpose**
-
-Sets an action bar for the player with optional callback.
-
-**Parameters**
-
-* text (string) - The text to display in the action bar.
-* time (number) - The duration of the action bar.
-* callback (function) - Optional callback function when action completes.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setAction("Loading...", 5, function() print("Action complete") end)
-```
-
----
-
-### doStaredAction
-
-**Purpose**
-
-Performs an action that requires the player to stare at an entity.
-
-**Parameters**
-
-* entity (Entity) - The entity to stare at.
-* callback (function) - Function to call when action completes.
-* time (number) - Time required to complete the action.
-* onCancel (function) - Function to call if action is cancelled.
-* distance (number) - Maximum distance to perform action.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:doStaredAction(targetEntity, function() print("Action done") end, 3)
-```
-
----
-
-### stopAction
-
-**Purpose**
-
-Stops the current action bar.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:stopAction()
-```
-
----
-
-### requestDropdown
-
-**Purpose**
-
-Requests a dropdown selection from the player.
-
-**Parameters**
-
-* title (string) - The title of the dropdown.
-* subTitle (string) - The subtitle of the dropdown.
-* options (table) - The options to choose from.
-* callback (function) - Function to call when selection is made.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:requestDropdown("Choose", "Select an option", {"Option 1", "Option 2"}, callback)
-```
-
----
-
-### requestOptions
-
-**Purpose**
-
-Requests multiple option selections from the player.
-
-**Parameters**
-
-* title (string) - The title of the request.
-* subTitle (string) - The subtitle of the request.
-* options (table) - The options to choose from.
-* limit (number) - Maximum number of selections allowed.
-* callback (function) - Function to call when selection is made.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:requestOptions("Choose", "Select options", {"A", "B", "C"}, 2, callback)
-```
-
----
-
-### requestString
-
-**Purpose**
-
-Requests a string input from the player.
-
-**Parameters**
-
-* title (string) - The title of the request.
-* subTitle (string) - The subtitle of the request.
-* callback (function) - Function to call when string is entered.
-* default (string) - Default value for the input.
-
-**Returns**
-
-Deferred object or nil.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    local deferred = player:requestString("Name", "Enter your name", callback, "Default")
-```
-
----
-
-### requestArguments
-
-**Purpose**
-
-Requests multiple arguments from the player with support for various input types including strings, numbers, booleans, and dropdown selections.
-
-**Parameters**
-
-* title (string) - The title of the request dialog.
-* argTypes (table) - A table describing the argument types and names. Each key represents the field name, and the value can be:
-  - A string type: `"string"`, `"number"`, `"int"`, `"boolean"`
-  - A table for dropdowns: `{"table", {"Option1", "Option2", "Option3"}}`
-  - A table with default value: `{type, dataTable, defaultValue}`
-* callback (function) - Optional function to call when arguments are submitted. If not provided, returns a deferred object.
-
-**Returns**
-
-Deferred object if no callback is provided, otherwise nil.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Simple string and number inputs
-local deferred = player:requestArguments("Enter Info", {Name="string", Age="number"}, function(result)
-    print("Name: " .. result.Name .. ", Age: " .. result.Age)
-end)
-
--- With dropdown options
-player:requestArguments("Character Creation", {
-    Name = "string",
-    Class = {"table", {"Warrior", "Mage", "Rogue"}},
-    Level = {"number", nil, 1} -- number type with default value of 1
-}, function(result)
-    -- Handle result
-end)
-
--- Using deferred pattern
-local promise = player:requestArguments("Settings", {Volume="number", Music="boolean"})
-promise:next(function(result)
-    -- Handle result
 end)
 ```
 
 ---
-
-### binaryQuestion
-
-**Purpose**
-
-Asks the player a yes/no question.
-
-**Parameters**
-
-* question (string) - The question to ask.
-* option1 (string) - The first option text.
-* option2 (string) - The second option text.
-* manualDismiss (boolean) - Whether the player can manually dismiss.
-* callback (function) - Function to call when answer is given.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:binaryQuestion("Continue?", "Yes", "No", false, callback)
-```
-
----
-
-### requestButtons
-
-**Purpose**
-
-Requests button selection from the player.
-
-**Parameters**
-
-* title (string) - The title of the request.
-* buttons (table) - Table of button data with text and callbacks.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:requestButtons("Choose", {{text = "Button 1", callback = func1}, {text = "Button 2", callback = func2}})
-```
-
----
-
-### getPlayTime
-
-**Purpose**
-
-Returns the player's total play time.
-
-**Returns**
-
-number - The player's total play time in seconds.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local playTime = player:getPlayTime()
-    print("Player has played for " .. playTime .. " seconds")
-```
-
----
-
-### getSessionTime
-
-**Purpose**
-
-Returns the player's current session time.
-
-**Returns**
-
-number - The current session time in seconds.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local sessionTime = player:getSessionTime()
-    print("Current session: " .. sessionTime .. " seconds")
-```
-
----
-
-### getTotalOnlineTime
-
-**Purpose**
-
-Returns the player's total online time including current session.
-
-**Returns**
-
-number - The total online time in seconds.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local totalTime = player:getTotalOnlineTime()
-    print("Total online time: " .. totalTime .. " seconds")
-```
-
----
-
-### getLastOnline
-
-**Purpose**
-
-Returns a human-readable string of when the player was last online.
-
-**Returns**
-
-string - Human-readable time since last online.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local lastOnline = player:getLastOnline()
-    print("Last online: " .. lastOnline)
-```
-
----
-
-### getLastOnlineTime
-
-**Purpose**
-
-Returns the timestamp of when the player was last online.
-
-**Returns**
-
-number - Unix timestamp of last online time.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local lastTime = player:getLastOnlineTime()
-    print("Last online timestamp: " .. lastTime)
-```
-
----
-
-### createRagdoll
-
-**Purpose**
-
-Creates a ragdoll entity for the player.
-
-**Parameters**
-
-* freeze (boolean) - Whether to freeze the ragdoll physics.
-* isDead (boolean) - Whether this ragdoll represents a dead player.
-
-**Returns**
-
-Entity - The created ragdoll entity.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    local ragdoll = player:createRagdoll(false, true)
-```
-
----
-
-### setRagdolled
-
-**Purpose**
-
-Sets the player's ragdoll state.
-
-**Parameters**
-
-* state (boolean) - Whether to ragdoll the player.
-* time (number) - Time before auto-recovery.
-* getUpGrace (number) - Grace period for getting up.
-* getUpMessage (string) - Message to show during recovery.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    player:setRagdolled(true, 5, 2, "Getting up...")
-```
-
----
-
-### syncVars
-
-**Purpose**
-
-Synchronizes all networked variables for this player with the client.
-    Sends global variables and entity-specific variables through networking.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    -- Sync all variables for a player
-    player:syncVars()
-```
-
----
-
-### setLocalVar
-
-**Purpose**
-
-Sets a local variable for this player and synchronizes it to the client.
-    The variable is stored locally and sent through networking.
-
-**Parameters**
-
-* key (string) - The key/name of the variable.
-* value (any) - The value to store.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-    -- Set a local variable for a player
-    player:setLocalVar("customFlag", true)
-```
-
----
-
-### CanOverrideView
-
-**Purpose**
-
-Determines if the player can override their view (third person).
-    Checks various conditions like ragdoll state, vehicle status, and configuration.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-boolean - True if the player can override their view, false otherwise.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    if player:CanOverrideView() then
-        print("Player can use third person view")
-    end
-```
-
----
-
-### IsInThirdPerson
-
-**Purpose**
-
-Checks if the player is currently in third person view mode.
-    Considers both global configuration and player preferences.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-boolean - True if third person is enabled, false otherwise.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    if player:IsInThirdPerson() then
-        print("Player is in third person view")
-    end
-```
-
----
-
-### getPlayTime
-
-**Purpose**
-
-Gets the total play time for this player, including current session.
-    Considers character login time and previous play time.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-number - Total play time in seconds.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local playTime = player:getPlayTime()
-    print("Total play time: " .. playTime .. " seconds")
-```
-
----
-
-### getTotalOnlineTime
-
-**Purpose**
-
-Gets the total time this player has been online across all sessions.
-    Includes stored time and current session time.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-number - Total online time in seconds.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local totalTime = player:getTotalOnlineTime()
-    print("Total online time: " .. totalTime .. " seconds")
-```
-
----
-
-### getLastOnline
-
-**Purpose**
-
-Gets a human-readable string representing when the player was last online.
-    Returns relative time (e.g., "2 hours ago").
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-string - Human-readable time since last online.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local lastOnline = player:getLastOnline()
-    print("Last online: " .. lastOnline)
-```
-
----
-
-### getLastOnlineTime
-
-**Purpose**
-
-Gets the timestamp when the player was last online.
-    Returns the raw timestamp value.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-number - Unix timestamp of last online time.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local lastTime = player:getLastOnlineTime()
-    print("Last online timestamp: " .. lastTime)
-```
-
----
-
-### setWaypoint
-
-**Purpose**
-
-Sets a waypoint for the player at the specified location.
-    Creates a HUD element that shows the waypoint and distance.
-
-**Parameters**
-
-* name (string) - The name of the waypoint.
-* vector (Vector) - The position where the waypoint should be set.
-* onReach (function, optional) - Callback function when waypoint is reached.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    -- Set a waypoint with callback when reached
-    player:setWaypoint("Home", Vector(100, 200, 300), function()
-        print("Reached home!")
-    end)
-```
-
----
-
-### setWeighPoint
-
-**Purpose**
-
-Sets a weight-based waypoint for the player.
-    Similar to setWaypoint but with weight considerations.
-
-**Parameters**
-
-* name (string) - The name/description of the waypoint.
-* vector (Vector) - The position of the waypoint.
-* onReach (function, optional) - Callback function when waypoint is reached.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    -- Set a weight-based waypoint
-    player:setWeighPoint("Heavy Item", Vector(500, 600, 700))
-```
-
----
-
-### setWaypointWithLogo
-
-**Purpose**
-
-Sets a waypoint with a custom logo/icon for the player.
-    The logo will be displayed alongside the waypoint.
-
-**Parameters**
-
-* name (string) - The name/description of the waypoint.
-* vector (Vector) - The position of the waypoint.
-* logo (string) - The logo/icon identifier.
-* onReach (function, optional) - Callback function when waypoint is reached.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    -- Set a waypoint with custom logo
-    player:setWaypointWithLogo("Shop", Vector(1000, 2000, 3000), "shop_icon")
-```
-
----
-
-### getLiliaData
-
-**Purpose**
-
-Retrieves a value from the player's local Lilia data storage.
-    This is the client-side version of getLiliaData.
-
-**Parameters**
-
-* key (string) - The data key to retrieve.
-* default (any) - The default value to return if the key doesn't exist.
-
-**Returns**
-
-any - The stored value or the default value if not found.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    -- Get player's local settings
-    local settings = player:getLiliaData("settings", {})
-    if settings then
-        print("Player has custom settings")
-    end
-```
-
----
-
-### getAllLiliaData
-
-**Purpose**
-
-Retrieves all stored Lilia data for this player.
-    Returns a table containing all key-value pairs.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-table - All stored Lilia data.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local allData = player:getAllLiliaData()
-    for key, value in pairs(allData) do
-        print(key .. ": " .. tostring(value))
-    end
-```
-
----
-
-### getFlags
-
-**Purpose**
-
-Gets the flags associated with this player's character.
-    Returns the character flags if available, otherwise returns an empty string.
-
-**Parameters**
-
-* None.
-
-**Returns**
-
-string - The character flags or empty string if no character.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    local flags = player:getFlags()
-    print("Player flags: " .. flags)
-```
-
----
-
-### setFlags
-
-**Purpose**
-
-Sets the flags for this player's character.
-    Updates the character flags if a character exists.
-
-**Parameters**
-
-* flags (string) - The flags to set for the character.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Set player character flags
-    player:setFlags("abc")
-```
-
----
-
-### giveFlags
-
-**Purpose**
-
-Adds flags to this player's character.
-    Appends the new flags to existing character flags.
-
-**Parameters**
-
-* flags (string) - The flags to add to the character.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Give additional flags to player
-    player:giveFlags("d")
-```
-
----
-
-### takeFlags
-
-**Purpose**
-
-Removes flags from this player's character.
-    Removes the specified flags from existing character flags.
-
-**Parameters**
-
-* flags (string) - The flags to remove from the character.
-
-**Returns**
-
-None.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-    -- Remove flags from player
-    player:takeFlags("a")
-```
-
----
-
 
 ### hasFlags
 
 **Purpose**
 
 Checks if the player has any of the specified flags.
-    Checks both character flags and player flags, and runs hook callbacks.
 
 **Parameters**
 
-* flags (string) - A string of flag characters to check.
+* `flags` (*string*): The flags to check for.
 
 **Returns**
 
-boolean - True if the player has at least one of the specified flags, false otherwise.
+* `hasFlags` (*boolean*): True if the player has any of the flags.
 
 **Realm**
 
@@ -2857,58 +1734,39 @@ Shared.
 **Example Usage**
 
 ```lua
-    if player:hasFlags("a") then
-        print("Player has flag 'a'")
+local function checkPlayerFlags(player, flags)
+    if player:hasFlags(flags) then
+        player:ChatPrint("You have the required flags!")
+        return true
+    else
+        player:ChatPrint("You don't have the required flags.")
+        return false
     end
+end
+
+concommand.Add("check_flags", function(ply, cmd, args)
+    local flags = args[1]
+    if flags then
+        checkPlayerFlags(ply, flags)
+    end
+end)
 ```
 
 ---
 
-### NetworkAnimation
+### getPlayTime
 
 **Purpose**
 
-Applies bone angle manipulations for animations on the client side.
-    This is the client-side version of NetworkAnimation.
+Gets the player's total play time.
 
 **Parameters**
 
-* active (boolean) - Whether the animation is active.
-* boneData (table) - The bone data containing bone names and angles.
+*None.*
 
 **Returns**
 
-None.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-    -- Apply bone animation data
-    player:NetworkAnimation(true, {
-        ["ValveBiped.Bip01_Head1"] = Angle(0, 45, 0)
-    })
-```
-
----
-
-### playTimeGreaterThan
-
-**Purpose**
-
-Checks if the player's total play time is greater than the specified time.
-    Compares the player's accumulated play time against the given threshold.
-
-**Parameters**
-
-* time (number) - The time threshold to compare against in seconds.
-
-**Returns**
-
-boolean - True if the player's play time is greater than the specified time, false otherwise.
+* `playTime` (*number*): The player's play time in seconds.
 
 **Realm**
 
@@ -2917,9 +1775,17 @@ Shared.
 **Example Usage**
 
 ```lua
-    -- Check if player has played for more than 1 hour
-    if player:playTimeGreaterThan(3600) then
-        print("Player has been playing for more than 1 hour")
-    end
+local function displayPlayTime(player)
+    local playTime = player:getPlayTime()
+    local hours = math.floor(playTime / 3600)
+    local minutes = math.floor((playTime % 3600) / 60)
+    player:ChatPrint("Play time: " .. hours .. "h " .. minutes .. "m")
+    return playTime
+end
+
+concommand.Add("play_time", function(ply)
+    displayPlayTime(ply)
+end)
 ```
 
+---

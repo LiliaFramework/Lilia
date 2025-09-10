@@ -1,177 +1,12 @@
 # Item Library
 
-This page covers item definition helpers.
+This page documents the functions for working with items and item management.
 
 ---
 
 ## Overview
 
-The item library contains utilities for retrieving item definitions and creating new items. It also provides shared item methods used throughout the framework.
-
----
-
-### lia.item.base
-
-**Purpose**
-
-Table of all base item definitions indexed by unique ID.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-local baseOutfit = lia.item.base["base_outfit"]
-```
-
----
-
-### lia.item.list
-
-**Purpose**
-
-Holds all registered item definitions accessible by their unique ID.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-for id, item in pairs(lia.item.list) do
-    print(id, item.name)
-end
-```
-
----
-
-### lia.item.instances
-
-**Purpose**
-
-Stores item instances keyed by numeric ID.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-local inst = lia.item.instances[5]
-```
-
----
-
-### lia.item.inventories
-
-**Purpose**
-
-Alias of `lia.inventory.instances` for convenience.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-local inv = lia.item.inventories[1]
-```
-
----
-
-### lia.item.inventoryTypes
-
-**Purpose**
-
-Contains registered inventory classes by type name.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-print(lia.item.inventoryTypes["GridInv"])
-```
-
----
-
-### lia.item.WeaponOverrides
-
-**Purpose**
-
-Maps weapon class names to property overrides used when generating weapon items.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-lia.item.WeaponOverrides["weapon_pistol"] = { name = "Old Pistol" }
-```
-
----
-
-### lia.item.WeaponsBlackList
-
-**Purpose**
-
-Set of weapon classes excluded from automatic item generation.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-lia.item.WeaponsBlackList["weapon_physgun"] = true
-```
-
----
-
-### lia.item.holdTypeToWeaponCategory
-
-**Purpose**
-
-Translates SWEP hold types to default weapon categories.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-local cat = lia.item.holdTypeToWeaponCategory["smg"]
-```
-
----
-
-### lia.item.holdTypeSizeMapping
-
-**Purpose**
-
-Default width and height values for generated weapons by hold type.
-
-**Realm**
-
-`Shared`
-
-**Example Usage**
-
-```lua
-local size = lia.item.holdTypeSizeMapping["smg"]
-print(size.width, size.height)
-```
+The item library (`lia.item`) provides a comprehensive system for managing items, item creation, item data, and item operations in the Lilia framework. It includes item registration, spawning, data management, and inventory integration functionality.
 
 ---
 
@@ -179,33 +14,68 @@ print(size.width, size.height)
 
 **Purpose**
 
-Retrieves an item definition table by its identifier, searching both base and regular item lists.
-
+Gets an item by its unique ID.
 
 **Parameters**
 
-* `identifier` (*string*): The unique identifier of the item.
-
-
+* `itemID` (*string*): The unique item ID.
 
 **Returns**
 
-* *table or nil*: The item definition table if found, otherwise none.
-
-
+* `item` (*Item*): The item instance or nil.
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-local itemDef = lia.item.get("weapon_ak47")
-if itemDef then
-print("AK47 item found:", itemDef.name)
+-- Get an item by ID
+local function getItem(itemID)
+    return lia.item.get(itemID)
 end
+
+-- Use in a function
+local function checkItemExists(itemID)
+    local item = lia.item.get(itemID)
+    if item then
+        print("Item exists: " .. item:getName())
+        return true
+    else
+        print("Item not found: " .. itemID)
+        return false
+    end
+end
+
+-- Use in a function
+local function getItemInfo(itemID)
+    local item = lia.item.get(itemID)
+    if item then
+        print("Item: " .. item:getName())
+        print("Description: " .. item:getDescription())
+        print("Weight: " .. item:getWeight())
+        return item
+    else
+        print("Item not found")
+        return nil
+    end
+end
+
+-- Use in a command
+lia.command.add("iteminfo", {
+    arguments = {
+        {name = "itemid", type = "string"}
+    },
+    onRun = function(client, arguments)
+        local item = lia.item.get(arguments[1])
+        if item then
+            client:notify("Item: " .. item:getName() .. " - " .. item:getDescription())
+        else
+            client:notify("Item not found")
+        end
+    end
+})
 ```
 
 ---
@@ -214,34 +84,58 @@ end
 
 **Purpose**
 
-Retrieves an instanced item by its unique item ID, along with its location (inventory or world).
-
+Gets an item by its item type ID.
 
 **Parameters**
 
-* `itemID` (*number*): The unique ID of the item instance.
-
-
+* `itemTypeID` (*string*): The item type ID.
 
 **Returns**
 
-* *table or nil, string*: Table containing the item and its location, or nil and an error message.
-
-
+* `item` (*Item*): The item instance or nil.
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-local result, err = lia.item.getItemByID(1234)
-if result then
-print("Item found in location:", result.location)
-else
-print("Error:", err)
+-- Get item by type ID
+local function getItemByType(itemTypeID)
+    return lia.item.getItemByID(itemTypeID)
+end
+
+-- Use in a function
+local function createItemFromType(itemTypeID)
+    local item = lia.item.getItemByID(itemTypeID)
+    if item then
+        print("Item created: " .. item:getName())
+        return item
+    else
+        print("Item type not found: " .. itemTypeID)
+        return nil
+    end
+end
+
+-- Use in a function
+local function checkItemTypeExists(itemTypeID)
+    local item = lia.item.getItemByID(itemTypeID)
+    return item ~= nil
+end
+
+-- Use in a function
+local function getItemTypeInfo(itemTypeID)
+    local item = lia.item.getItemByID(itemTypeID)
+    if item then
+        print("Item Type: " .. item:getName())
+        print("Category: " .. item:getCategory())
+        print("Rarity: " .. item:getRarity())
+        return item
+    else
+        print("Item type not found")
+        return nil
+    end
 end
 ```
 
@@ -251,34 +145,64 @@ end
 
 **Purpose**
 
-Retrieves an instanced item object by its unique item ID.
-
+Gets an instanced item by its unique ID.
 
 **Parameters**
 
-* `itemID` (*number*): The unique ID of the item instance.
-
-
+* `itemID` (*string*): The unique item ID.
 
 **Returns**
 
-* *table or nil, string*: The item instance table if found, or nil and an error message.
-
-
+* `item` (*Item*): The instanced item or nil.
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-local item, err = lia.item.getInstancedItemByID(5678)
-if item then
-print("Item name:", item.name)
-else
-print("Error:", err)
+-- Get instanced item by ID
+local function getInstancedItem(itemID)
+    return lia.item.getInstancedItemByID(itemID)
+end
+
+-- Use in a function
+local function checkInstancedItemExists(itemID)
+    local item = lia.item.getInstancedItemByID(itemID)
+    if item then
+        print("Instanced item exists: " .. item:getName())
+        return true
+    else
+        print("Instanced item not found: " .. itemID)
+        return false
+    end
+end
+
+-- Use in a function
+local function getInstancedItemData(itemID)
+    local item = lia.item.getInstancedItemByID(itemID)
+    if item then
+        print("Instanced Item: " .. item:getName())
+        print("Data: " .. util.TableToJSON(item:getData()))
+        return item
+    else
+        print("Instanced item not found")
+        return nil
+    end
+end
+
+-- Use in a function
+local function updateInstancedItemData(itemID, newData)
+    local item = lia.item.getInstancedItemByID(itemID)
+    if item then
+        item:setData(newData)
+        print("Item data updated")
+        return true
+    else
+        print("Item not found")
+        return false
+    end
 end
 ```
 
@@ -288,34 +212,53 @@ end
 
 **Purpose**
 
-Retrieves the data table of an instanced item by its unique item ID.
-
+Gets item data by its item type ID.
 
 **Parameters**
 
-* `itemID` (*number*): The unique ID of the item instance.
-
-
+* `itemTypeID` (*string*): The item type ID.
 
 **Returns**
 
-* *table or nil, string*: The data table of the item if found, or nil and an error message.
-
-
+* `itemData` (*table*): The item data table or nil.
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-local data, err = lia.item.getItemDataByID(4321)
-if data then
-PrintTable(data)
-else
-print("Error:", err)
+-- Get item data by type ID
+local function getItemData(itemTypeID)
+    return lia.item.getItemDataByID(itemTypeID)
+end
+
+-- Use in a function
+local function showItemData(itemTypeID)
+    local itemData = lia.item.getItemDataByID(itemTypeID)
+    if itemData then
+        print("Item Data for " .. itemTypeID .. ":")
+        for key, value in pairs(itemData) do
+            print("- " .. key .. ": " .. tostring(value))
+        end
+        return itemData
+    else
+        print("Item data not found")
+        return nil
+    end
+end
+
+-- Use in a function
+local function checkItemDataExists(itemTypeID)
+    local itemData = lia.item.getItemDataByID(itemTypeID)
+    return itemData ~= nil
+end
+
+-- Use in a function
+local function getItemProperty(itemTypeID, property)
+    local itemData = lia.item.getItemDataByID(itemTypeID)
+    return itemData and itemData[property] or nil
 end
 ```
 
@@ -325,32 +268,66 @@ end
 
 **Purpose**
 
-Loads an item definition file and registers it as a base or regular item, depending on parameters.
-
+Loads an item from the database.
 
 **Parameters**
 
-* `path` (*string*): The file path to the item definition.
-* `baseID` (*string*): The base item ID to inherit from (optional).
-* `isBaseItem` (*bool*): Whether this is a base item definition (optional).
-
-
+* `itemID` (*string*): The unique item ID.
 
 **Returns**
 
-* None.
-
-
+* `item` (*Item*): The loaded item or nil.
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-lia.item.load("lilia/gamemode/items/weapons/sh_ak47.lua", "base_weapons")
+-- Load item from database
+local function loadItem(itemID)
+    return lia.item.load(itemID)
+end
+
+-- Use in a function
+local function loadPlayerItem(client, itemID)
+    local item = lia.item.load(itemID)
+    if item then
+        print("Item loaded for " .. client:Name())
+        return item
+    else
+        print("Failed to load item: " .. itemID)
+        return nil
+    end
+end
+
+-- Use in a function
+local function loadStorageItem(storageID, itemID)
+    local item = lia.item.load(itemID)
+    if item then
+        print("Item loaded from storage: " .. storageID)
+        return item
+    else
+        print("Failed to load item from storage")
+        return nil
+    end
+end
+
+-- Use in a function
+local function loadAllPlayerItems(client)
+    local character = client:getChar()
+    if character then
+        local inventory = character:getInventory()
+        if inventory then
+            local items = inventory:getItems()
+            for _, item in ipairs(items) do
+                lia.item.load(item:getID())
+            end
+            print("All player items loaded")
+        end
+    end
+end
 ```
 
 ---
@@ -359,31 +336,62 @@ lia.item.load("lilia/gamemode/items/weapons/sh_ak47.lua", "base_weapons")
 
 **Purpose**
 
-Checks if the given object is an item instance.
-
+Checks if an object is an item.
 
 **Parameters**
 
 * `object` (*any*): The object to check.
 
-
-
 **Returns**
 
-* *boolean*: True if the object is an item, false otherwise.
-
-
+* `isItem` (*boolean*): True if the object is an item.
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-if lia.item.isItem(myItem) then
-print("This is a valid item instance.")
+-- Check if object is an item
+local function isItem(object)
+    return lia.item.isItem(object)
+end
+
+-- Use in a function
+local function validateItem(object)
+    if lia.item.isItem(object) then
+        print("Object is a valid item")
+        return true
+    else
+        print("Object is not an item")
+        return false
+    end
+end
+
+-- Use in a function
+local function processItemList(items)
+    local validItems = {}
+    for _, item in ipairs(items) do
+        if lia.item.isItem(item) then
+            table.insert(validItems, item)
+        end
+    end
+    print("Valid items: " .. #validItems .. " out of " .. #items)
+    return validItems
+end
+
+-- Use in a function
+local function checkInventoryItems(inventory)
+    local items = inventory:getItems()
+    for _, item in ipairs(items) do
+        if not lia.item.isItem(item) then
+            print("Invalid item found in inventory")
+            return false
+        end
+    end
+    print("All inventory items are valid")
+    return true
 end
 ```
 
@@ -393,32 +401,64 @@ end
 
 **Purpose**
 
-Retrieves an inventory instance by its ID.
-
+Gets the inventory for an item.
 
 **Parameters**
 
-* `invID` (*number*): The unique ID of the inventory.
-
-
+* `item` (*Item*): The item to get the inventory for.
 
 **Returns**
 
-* *table or nil*: The inventory instance if found, otherwise none.
-
-
+* `inventory` (*Inventory*): The item's inventory or nil.
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-local inv = lia.item.getInv(1001)
-if inv then
-print("Inventory found with size:", inv:getSize())
+-- Get item inventory
+local function getItemInventory(item)
+    return lia.item.getInv(item)
+end
+
+-- Use in a function
+local function checkItemInventory(item)
+    local inventory = lia.item.getInv(item)
+    if inventory then
+        print("Item has inventory: " .. inventory:getName())
+        return inventory
+    else
+        print("Item has no inventory")
+        return nil
+    end
+end
+
+-- Use in a function
+local function getItemInventoryItems(item)
+    local inventory = lia.item.getInv(item)
+    if inventory then
+        local items = inventory:getItems()
+        print("Item inventory contains " .. #items .. " items")
+        return items
+    else
+        print("Item has no inventory")
+        return {}
+    end
+end
+
+-- Use in a function
+local function checkItemInventorySpace(item)
+    local inventory = lia.item.getInv(item)
+    if inventory then
+        local freeSlots = inventory:getFreeSlots()
+        print("Item inventory has " .. freeSlots .. " free slots")
+        return freeSlots
+    else
+        print("Item has no inventory")
+        return 0
+    end
 end
 ```
 
@@ -428,35 +468,72 @@ end
 
 **Purpose**
 
-Registers a new item definition, either as a base or regular item, and sets up its metatable and properties.
-
+Registers a new item type.
 
 **Parameters**
 
-* `uniqueID` (*string*): The unique identifier for the item.
-* `baseID` (*string*): The base item ID to inherit from (optional).
-* `isBaseItem` (*bool*): Whether this is a base item (optional).
-* `path` (*string*): The file path to the item definition (optional).
-* `luaGenerated` (*bool*): If true, the item is generated in Lua and not loaded from file (optional).
-
-
+* `itemData` (*table*): The item data table.
 
 **Returns**
 
-* *table*: The registered item definition.
-
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-local myItem = lia.item.register("custom_pistol", "base_weapons", false, "lilia/gamemode/items/weapons/sh_custom_pistol.lua")
-print("Registered item:", myItem.uniqueID)
+-- Register a new item type
+local function registerItem(itemData)
+    lia.item.register(itemData)
+end
+
+-- Use in a function
+local function createBasicItem(name, description, weight)
+    lia.item.register({
+        name = name,
+        description = description,
+        weight = weight,
+        category = "Misc"
+    })
+    print("Basic item registered: " .. name)
+end
+
+-- Use in a function
+local function createWeaponItem(name, description, weaponClass)
+    lia.item.register({
+        name = name,
+        description = description,
+        weight = 2.5,
+        category = "Weapons",
+        weaponClass = weaponClass,
+        onUse = function(item, client)
+            client:Give(weaponClass)
+            client:notify("Weapon given: " .. name)
+        end
+    })
+    print("Weapon item registered: " .. name)
+end
+
+-- Use in a function
+local function createFoodItem(name, description, hungerRestore)
+    lia.item.register({
+        name = name,
+        description = description,
+        weight = 0.5,
+        category = "Food",
+        onUse = function(item, client)
+            local character = client:getChar()
+            if character then
+                character:setHunger(character:getHunger() + hungerRestore)
+                client:notify("Hunger restored: " .. hungerRestore)
+            end
+        end
+    })
+    print("Food item registered: " .. name)
+end
 ```
 
 ---
@@ -465,32 +542,44 @@ print("Registered item:", myItem.uniqueID)
 
 **Purpose**
 
-Loads all item definition files from the specified directory, including base items and category folders.
-Registers each item using lia.item.load and triggers the "InitializedItems" hook after loading.
-
+Loads items from a directory.
 
 **Parameters**
 
-* `directory` (*string*): The directory path to search for item files (should be relative to the gamemode).
-
-
+* `directory` (*string*): The directory path to load from.
 
 **Returns**
 
-* None.
-
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
--- Load all items from the "lilia/gamemode/items" directory
-lia.item.loadFromDir("lilia/gamemode/items")
+-- Load items from directory
+local function loadItems(directory)
+    lia.item.loadFromDir(directory)
+end
+
+-- Use in a function
+local function loadAllItems()
+    lia.item.loadFromDir("gamemode/items/")
+    print("All items loaded from directory")
+end
+
+-- Use in a function
+local function reloadItems()
+    lia.item.loadFromDir("gamemode/items/")
+    print("Items reloaded")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "LoadItems", function()
+    lia.item.loadFromDir("gamemode/items/")
+end)
 ```
 
 ---
@@ -499,32 +588,70 @@ lia.item.loadFromDir("lilia/gamemode/items")
 
 **Purpose**
 
-Creates a new instanced item from a registered item definition and assigns it a unique ID.
-
+Creates a new item instance.
 
 **Parameters**
 
-* `uniqueID` (*string*): The unique identifier of the item definition.
-* `id` (*number*): The unique instance ID for the item.
-
-
+* `itemTypeID` (*string*): The item type ID.
+* `data` (*table*): The item data.
 
 **Returns**
 
-* *table*: The new item instance.
-
-
+* `item` (*Item*): The created item instance.
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-local item = lia.item.new("weapon_ak47", 1234)
-print("Created item instance with ID:", item.id)
+-- Create a new item instance
+local function createItem(itemTypeID, data)
+    return lia.item.new(itemTypeID, data)
+end
+
+-- Use in a function
+local function giveItemToPlayer(client, itemTypeID, amount)
+    local item = lia.item.new(itemTypeID, {
+        owner = client:SteamID(),
+        character = client:getChar():getID()
+    })
+    if item then
+        local character = client:getChar()
+        if character then
+            character:getInventory():add(item, amount)
+            client:notify("Item given: " .. item:getName())
+        end
+    end
+    return item
+end
+
+-- Use in a function
+local function createStorageItem(storageID, itemTypeID)
+    local item = lia.item.new(itemTypeID, {
+        storage = storageID
+    })
+    if item then
+        print("Item created in storage: " .. storageID)
+        return item
+    else
+        print("Failed to create item in storage")
+        return nil
+    end
+end
+
+-- Use in a function
+local function createItemWithData(itemTypeID, customData)
+    local item = lia.item.new(itemTypeID, customData)
+    if item then
+        print("Item created with custom data")
+        return item
+    else
+        print("Failed to create item with custom data")
+        return nil
+    end
+end
 ```
 
 ---
@@ -533,32 +660,61 @@ print("Created item instance with ID:", item.id)
 
 **Purpose**
 
-Registers a new inventory type with specified width and height, extending the GridInv metatable.
-
+Registers an inventory type for items.
 
 **Parameters**
 
-* `invType` (*string*): The unique identifier for the inventory type.
-* `w` (*number*): The width of the inventory grid.
-* `h` (*number*): The height of the inventory grid.
-
-
+* `invType` (*string*): The inventory type name.
+* `invData` (*table*): The inventory data table.
 
 **Returns**
 
-* None.
-
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.item.registerInv("backpack", 4, 4)
+-- Register item inventory type
+local function registerItemInventory(invType, invData)
+    lia.item.registerInv(invType, invData)
+end
+
+-- Use in a function
+local function createBackpackInventory()
+    lia.item.registerInv("backpack", {
+        name = "Backpack",
+        width = 6,
+        height = 4,
+        slots = 24
+    })
+    print("Backpack inventory registered")
+end
+
+-- Use in a function
+local function createPocketInventory()
+    lia.item.registerInv("pocket", {
+        name = "Pocket",
+        width = 2,
+        height = 2,
+        slots = 4
+    })
+    print("Pocket inventory registered")
+end
+
+-- Use in a function
+local function createToolboxInventory()
+    lia.item.registerInv("toolbox", {
+        name = "Toolbox",
+        width = 4,
+        height = 3,
+        slots = 12
+    })
+    print("Toolbox inventory registered")
+end
 ```
 
 ---
@@ -567,34 +723,67 @@ lia.item.registerInv("backpack", 4, 4)
 
 **Purpose**
 
-Creates a new inventory instance of a given type for a specified owner, and calls a callback when ready.
-
+Creates a new item inventory instance.
 
 **Parameters**
 
-* `owner` (*number*): The character ID of the owner.
-* `invType` (*string*): The inventory type identifier.
-* `callback` (*function*): Function to call with the created inventory (optional).
-
-
+* `invType` (*string*): The inventory type name.
+* `data` (*table*): The inventory data.
 
 **Returns**
 
-* None.
-
-
+* `inventory` (*Inventory*): The created inventory instance.
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-lia.item.newInv(1, "backpack", function(inv)
-print("New backpack inventory created for char 1:", inv.id)
-end)
+-- Create item inventory instance
+local function createItemInventory(invType, data)
+    return lia.item.newInv(invType, data)
+end
+
+-- Use in a function
+local function createBackpackForItem(item)
+    local inventory = lia.item.newInv("backpack", {
+        owner = item:getOwner(),
+        item = item:getID()
+    })
+    if inventory then
+        item:setInventory(inventory)
+        print("Backpack created for item")
+    end
+    return inventory
+end
+
+-- Use in a function
+local function createPocketForItem(item)
+    local inventory = lia.item.newInv("pocket", {
+        owner = item:getOwner(),
+        item = item:getID()
+    })
+    if inventory then
+        item:setInventory(inventory)
+        print("Pocket created for item")
+    end
+    return inventory
+end
+
+-- Use in a function
+local function createToolboxForItem(item)
+    local inventory = lia.item.newInv("toolbox", {
+        owner = item:getOwner(),
+        item = item:getID()
+    })
+    if inventory then
+        item:setInventory(inventory)
+        print("Toolbox created for item")
+    end
+    return inventory
+end
 ```
 
 ---
@@ -603,33 +792,67 @@ end)
 
 **Purpose**
 
-Creates a new inventory instance with specified width, height, and ID, and registers it globally.
-
+Creates an inventory for an item.
 
 **Parameters**
 
-* `w` (*number*): The width of the inventory grid.
-* `h` (*number*): The height of the inventory grid.
-* `id` (*number*): The unique ID for the inventory instance.
-
-
+* `item` (*Item*): The item to create an inventory for.
+* `invType` (*string*): The inventory type name.
 
 **Returns**
 
-* *table*: The created inventory instance.
-
-
+* `inventory` (*Inventory*): The created inventory or nil.
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-local inv = lia.item.createInv(3, 3, 2001)
-print("Created inventory with ID:", inv.id)
+-- Create inventory for item
+local function createItemInventory(item, invType)
+    return lia.item.createInv(item, invType)
+end
+
+-- Use in a function
+local function addInventoryToItem(item, invType)
+    local inventory = lia.item.createInv(item, invType)
+    if inventory then
+        print("Inventory added to item: " .. item:getName())
+        return inventory
+    else
+        print("Failed to add inventory to item")
+        return nil
+    end
+end
+
+-- Use in a function
+local function makeItemContainer(item, invType)
+    local inventory = lia.item.createInv(item, invType)
+    if inventory then
+        item:setData("container", true)
+        print("Item made into container")
+        return inventory
+    else
+        print("Failed to make item into container")
+        return nil
+    end
+end
+
+-- Use in a function
+local function upgradeItemWithInventory(item, invType)
+    if not item:hasInventory() then
+        local inventory = lia.item.createInv(item, invType)
+        if inventory then
+            print("Item upgraded with inventory")
+            return inventory
+        end
+    else
+        print("Item already has inventory")
+        return item:getInventory()
+    end
+end
 ```
 
 ---
@@ -638,35 +861,59 @@ print("Created inventory with ID:", inv.id)
 
 **Purpose**
 
-Adds or updates a weapon override for a specific weapon class, customizing its item properties.
-
+Adds a weapon override for an item.
 
 **Parameters**
 
-* `className` (*string*): The weapon class name.
-* `data` (*table*): Table of override properties (e.g., name, desc, model, etc).
-
-
+* `itemTypeID` (*string*): The item type ID.
+* `weaponClass` (*string*): The weapon class.
 
 **Returns**
 
-* None.
-
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.item.addWeaponOverride("weapon_custom", {
-name = "Custom Blaster",
-desc = "A unique blaster weapon.",
-model = "models/weapons/w_blaster.mdl"
-})
+-- Add weapon override
+local function addWeaponOverride(itemTypeID, weaponClass)
+    lia.item.addWeaponOverride(itemTypeID, weaponClass)
+end
+
+-- Use in a function
+local function createWeaponItem(itemTypeID, weaponClass)
+    lia.item.register({
+        name = "Custom Weapon",
+        description = "A custom weapon",
+        weight = 2.0,
+        category = "Weapons"
+    })
+    lia.item.addWeaponOverride(itemTypeID, weaponClass)
+    print("Weapon item created with override")
+end
+
+-- Use in a function
+local function addMultipleWeaponOverrides(overrides)
+    for itemTypeID, weaponClass in pairs(overrides) do
+        lia.item.addWeaponOverride(itemTypeID, weaponClass)
+    end
+    print("Multiple weapon overrides added")
+end
+
+-- Use in a function
+local function createWeaponFromItem(itemTypeID, weaponClass)
+    local item = lia.item.getItemByID(itemTypeID)
+    if item then
+        lia.item.addWeaponOverride(itemTypeID, weaponClass)
+        print("Weapon override added for " .. item:getName())
+    else
+        print("Item not found: " .. itemTypeID)
+    end
+end
 ```
 
 ---
@@ -675,30 +922,55 @@ model = "models/weapons/w_blaster.mdl"
 
 **Purpose**
 
-Adds a weapon class to the blacklist, preventing it from being auto-generated as an item.
-
+Adds a weapon to the blacklist.
 
 **Parameters**
 
-* `className` (*string*): The weapon class name to blacklist.
-
-
+* `weaponClass` (*string*): The weapon class to blacklist.
 
 **Returns**
 
-* None.
-
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.item.addWeaponToBlacklist("weapon_physcannon")
+-- Add weapon to blacklist
+local function blacklistWeapon(weaponClass)
+    lia.item.addWeaponToBlacklist(weaponClass)
+end
+
+-- Use in a function
+local function blacklistOPWeapons()
+    local weapons = {"weapon_rpg", "weapon_c4", "weapon_slam"}
+    for _, weapon in ipairs(weapons) do
+        lia.item.addWeaponToBlacklist(weapon)
+    end
+    print("OP weapons blacklisted")
+end
+
+-- Use in a function
+local function blacklistWeaponByItem(itemTypeID)
+    local item = lia.item.getItemByID(itemTypeID)
+    if item and item.weaponClass then
+        lia.item.addWeaponToBlacklist(item.weaponClass)
+        print("Weapon blacklisted: " .. item.weaponClass)
+    else
+        print("Item not found or has no weapon class")
+    end
+end
+
+-- Use in a function
+local function blacklistWeaponsFromList(weaponList)
+    for _, weapon in ipairs(weaponList) do
+        lia.item.addWeaponToBlacklist(weapon)
+    end
+    print("Weapons blacklisted from list")
+end
 ```
 
 ---
@@ -707,32 +979,44 @@ lia.item.addWeaponToBlacklist("weapon_physcannon")
 
 **Purpose**
 
-Automatically generates item definitions for all weapons found in the game's weapon list,
-except those blacklisted or with "_base" in their class name. Applies any registered overrides.
-
+Generates weapon items from registered weapons.
 
 **Parameters**
 
-* None.
-
-
+*None*
 
 **Returns**
 
-* None.
-
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
--- Generate all weapon items (usually called automatically)
-lia.item.generateWeapons()
+-- Generate weapon items
+local function generateWeapons()
+    lia.item.generateWeapons()
+end
+
+-- Use in a function
+local function createWeaponItems()
+    lia.item.generateWeapons()
+    print("Weapon items generated")
+end
+
+-- Use in a function
+local function reloadWeaponItems()
+    lia.item.generateWeapons()
+    print("Weapon items reloaded")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "GenerateWeapons", function()
+    lia.item.generateWeapons()
+end)
 ```
 
 ---
@@ -741,31 +1025,44 @@ lia.item.generateWeapons()
 
 **Purpose**
 
-Automatically generates item definitions for ammo entities found in the game's scripted entities list,
-specifically targeting ARC9 and ARCCW ammo types. Creates item definitions with appropriate names,
-descriptions, categories, and models for ammo pickups.
-
+Generates ammo items from registered ammo types.
 
 **Parameters**
 
-* None.
-
+*None*
 
 **Returns**
 
-* None.
-
+*None*
 
 **Realm**
 
-`Shared.`
-
+Server.
 
 **Example Usage**
 
 ```lua
--- Generate all ammo items (usually called automatically)
-lia.item.generateAmmo()
+-- Generate ammo items
+local function generateAmmo()
+    lia.item.generateAmmo()
+end
+
+-- Use in a function
+local function createAmmoItems()
+    lia.item.generateAmmo()
+    print("Ammo items generated")
+end
+
+-- Use in a function
+local function reloadAmmoItems()
+    lia.item.generateAmmo()
+    print("Ammo items reloaded")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "GenerateAmmo", function()
+    lia.item.generateAmmo()
+end)
 ```
 
 ---
@@ -774,39 +1071,59 @@ lia.item.generateAmmo()
 
 **Purpose**
 
-Sets a specific data key-value pair for an instanced item by its ID, optionally syncing to receivers.
-
+Sets item data by item type ID.
 
 **Parameters**
 
-* `itemID` (*number*): The unique ID of the item instance.
-* `key` (*string*): The data key to set.
-* `value` (*any*): The value to assign.
-* `receivers` (*table*): List of players to sync to (optional).
-* `noSave` (*bool*): If true, do not save to database (optional).
-* `noCheckEntity` (*bool*): If true, skip entity checks (optional).
-
-
+* `itemTypeID` (*string*): The item type ID.
+* `data` (*table*): The data to set.
 
 **Returns**
 
-* *boolean, string*: True on success, or false and an error message.
-
-
+*None*
 
 **Realm**
 
-`Server.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-local success, err = lia.item.setItemDataByID(1234, "durability", 80)
-if success then
-print("Durability updated!")
-else
-print("Error:", err)
+-- Set item data by type ID
+local function setItemData(itemTypeID, data)
+    lia.item.setItemDataByID(itemTypeID, data)
+end
+
+-- Use in a function
+local function updateItemData(itemTypeID, newData)
+    lia.item.setItemDataByID(itemTypeID, newData)
+    print("Item data updated: " .. itemTypeID)
+end
+
+-- Use in a function
+local function modifyItemProperties(itemTypeID, properties)
+    local currentData = lia.item.getItemDataByID(itemTypeID)
+    if currentData then
+        for key, value in pairs(properties) do
+            currentData[key] = value
+        end
+        lia.item.setItemDataByID(itemTypeID, currentData)
+        print("Item properties modified: " .. itemTypeID)
+    else
+        print("Item not found: " .. itemTypeID)
+    end
+end
+
+-- Use in a function
+local function resetItemData(itemTypeID)
+    local defaultData = {
+        name = "Unknown Item",
+        description = "An unknown item",
+        weight = 1.0,
+        category = "Misc"
+    }
+    lia.item.setItemDataByID(itemTypeID, defaultData)
+    print("Item data reset: " .. itemTypeID)
 end
 ```
 
@@ -816,49 +1133,68 @@ end
 
 **Purpose**
 
-Creates a new item instance in the database and in memory, optionally calling a callback when ready.
-Supports flexible parameter ordering for convenience.
-
+Creates an item instance from item data.
 
 **Parameters**
 
-* `index` (*number|string*): Inventory ID, or if first parameter is a string, this becomes the uniqueID.
-* `uniqueID` (*string*): The unique identifier of the item definition (can be first parameter if index is string).
-* `itemData` (*table*): Table of item data (optional).
-* `x` (*number*): X position in inventory (optional, can be passed in itemData.x).
-* `y` (*number*): Y position in inventory (optional, can be passed in itemData.y).
-* `callback` (*function*): Function to call with the created item (optional).
-
-
+* `itemData` (*table*): The item data table.
 
 **Returns**
 
-* *deferred*: A deferred object that resolves to the created item.
-
-
+* `item` (*Item*): The created item instance.
 
 **Realm**
 
-`Server.`
-
+Server.
 
 **Example Usage**
 
 ```lua
--- Standard usage with all parameters
-lia.item.instance(0, "weapon_ak47", {durability = 100}, 1, 1, function(item)
-    print("Spawned AK47 item with ID:", item.id)
-end)
+-- Create item instance from data
+local function createItemInstance(itemData)
+    return lia.item.instance(itemData)
+end
 
--- Flexible usage - uniqueID can be first parameter
-lia.item.instance("weapon_ak47", {durability = 100}, function(item)
-    print("Spawned AK47 item with ID:", item.id)
-end)
+-- Use in a function
+local function createItemFromData(itemTypeID, customData)
+    local itemData = lia.item.getItemDataByID(itemTypeID)
+    if itemData then
+        for key, value in pairs(customData) do
+            itemData[key] = value
+        end
+        local item = lia.item.instance(itemData)
+        print("Item instance created from data")
+        return item
+    else
+        print("Item data not found")
+        return nil
+    end
+end
 
--- Position can be passed in itemData
-lia.item.instance(0, "weapon_ak47", {durability = 100, x = 1, y = 1}, function(item)
-    print("Spawned AK47 item with ID:", item.id)
-end)
+-- Use in a function
+local function createCustomItem(itemData)
+    local item = lia.item.instance(itemData)
+    if item then
+        print("Custom item created: " .. item:getName())
+        return item
+    else
+        print("Failed to create custom item")
+        return nil
+    end
+end
+
+-- Use in a function
+local function createItemWithID(itemData, itemID)
+    itemData.id = itemID
+    local item = lia.item.instance(itemData)
+    if item then
+        print("Item created with ID: " .. itemID)
+        return item
+    else
+        print("Failed to create item with ID")
+        return nil
+    end
+end
 ```
 
 ---
@@ -867,30 +1203,60 @@ end)
 
 **Purpose**
 
-Deletes an item instance by its ID, removing it from memory and the database.
-
+Deletes an item by its unique ID.
 
 **Parameters**
 
-* `id` (*number*): The unique ID of the item instance.
-
-
+* `itemID` (*string*): The unique item ID.
 
 **Returns**
 
-* None.
-
-
+* `success` (*boolean*): True if deletion was successful.
 
 **Realm**
 
-`Server.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-lia.item.deleteByID(1234)
+-- Delete item by ID
+local function deleteItem(itemID)
+    return lia.item.deleteByID(itemID)
+end
+
+-- Use in a function
+local function removeItemFromPlayer(client, itemID)
+    local success = lia.item.deleteByID(itemID)
+    if success then
+        client:notify("Item removed")
+        print("Item removed from " .. client:Name())
+    else
+        client:notify("Failed to remove item")
+        print("Failed to remove item from " .. client:Name())
+    end
+    return success
+end
+
+-- Use in a function
+local function deleteItemFromStorage(storageID, itemID)
+    local success = lia.item.deleteByID(itemID)
+    if success then
+        print("Item deleted from storage: " .. storageID)
+    else
+        print("Failed to delete item from storage")
+    end
+    return success
+end
+
+-- Use in a function
+local function cleanupOldItems()
+    local oldItems = {"old_item_1", "old_item_2", "old_item_3"}
+    for _, itemID in ipairs(oldItems) do
+        lia.item.deleteByID(itemID)
+    end
+    print("Old items cleaned up")
+end
 ```
 
 ---
@@ -899,30 +1265,57 @@ lia.item.deleteByID(1234)
 
 **Purpose**
 
-Loads one or more item instances from the database by their IDs and restores them in memory.
-
+Loads an item by its unique ID from the database.
 
 **Parameters**
 
-* `itemIndex` (*number|table*): A single item ID or a table of item IDs.
-
-
+* `itemID` (*string*): The unique item ID.
 
 **Returns**
 
-* None.
-
-
+* `item` (*Item*): The loaded item or nil.
 
 **Realm**
 
-`Server.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-lia.item.loadItemByID({1001, 1002, 1003})
+-- Load item by ID from database
+local function loadItemFromDB(itemID)
+    return lia.item.loadItemByID(itemID)
+end
+
+-- Use in a function
+local function loadPlayerItemFromDB(client, itemID)
+    local item = lia.item.loadItemByID(itemID)
+    if item then
+        print("Item loaded from database for " .. client:Name())
+        return item
+    else
+        print("Failed to load item from database")
+        return nil
+    end
+end
+
+-- Use in a function
+local function loadStorageItemFromDB(storageID, itemID)
+    local item = lia.item.loadItemByID(itemID)
+    if item then
+        print("Item loaded from database for storage: " .. storageID)
+        return item
+    else
+        print("Failed to load item from database for storage")
+        return nil
+    end
+end
+
+-- Use in a function
+local function checkItemExistsInDB(itemID)
+    local item = lia.item.loadItemByID(itemID)
+    return item ~= nil
+end
 ```
 
 ---
@@ -931,53 +1324,64 @@ lia.item.loadItemByID({1001, 1002, 1003})
 
 **Purpose**
 
-Spawns a new item instance in the world at a given position and angle, optionally calling a callback.
-Supports flexible parameter ordering for convenience.
-
+Spawns an item in the world.
 
 **Parameters**
 
-* `uniqueID` (*string*): The unique identifier of the item definition.
-* `position` (*Vector*): The world position to spawn the item at.
-* `callback` (*function*): Function to call with the spawned item (optional). If not a function, can be angles or data.
-* `angles` (*Angle*): The angles to spawn the item with (optional). Can be passed as third parameter.
-* `data` (*table*): Table of item data (optional). Can be passed as third or fourth parameter.
-
-
+* `itemTypeID` (*string*): The item type ID.
+* `position` (*Vector*): The spawn position.
+* `data` (*table*): Optional item data.
 
 **Returns**
 
-* *deferred*: A deferred object that resolves to the spawned item.
-
-
+* `item` (*Item*): The spawned item or nil.
 
 **Realm**
 
-`Server.`
-
+Server.
 
 **Example Usage**
 
 ```lua
--- Standard usage with callback
-lia.item.spawn("weapon_ak47", Vector(0,0,0), function(item)
-    print("Spawned AK47 at origin with ID:", item.id)
-end)
+-- Spawn item in world
+local function spawnItem(itemTypeID, position, data)
+    return lia.item.spawn(itemTypeID, position, data)
+end
 
--- With angles and data
-lia.item.spawn("weapon_ak47", Vector(0,0,0), Angle(0,0,0), {durability = 100}, function(item)
-    print("Spawned AK47 at origin with ID:", item.id)
-end)
+-- Use in a function
+local function spawnItemAtPlayer(client, itemTypeID)
+    local position = client:GetPos() + client:GetForward() * 50
+    local item = lia.item.spawn(itemTypeID, position)
+    if item then
+        client:notify("Item spawned: " .. item:getName())
+        print("Item spawned for " .. client:Name())
+    end
+    return item
+end
 
--- Flexible usage - angles as third parameter
-lia.item.spawn("weapon_ak47", Vector(0,0,0), Angle(0,0,0), function(item)
-    print("Spawned AK47 at origin with ID:", item.id)
-end)
+-- Use in a function
+local function spawnItemAtPosition(itemTypeID, position)
+    local item = lia.item.spawn(itemTypeID, position)
+    if item then
+        print("Item spawned at position: " .. tostring(position))
+        return item
+    else
+        print("Failed to spawn item at position")
+        return nil
+    end
+end
 
--- Data as third parameter
-lia.item.spawn("weapon_ak47", Vector(0,0,0), {durability = 100}, function(item)
-    print("Spawned AK47 at origin with ID:", item.id)
-end)
+-- Use in a function
+local function spawnItemWithData(itemTypeID, position, customData)
+    local item = lia.item.spawn(itemTypeID, position, customData)
+    if item then
+        print("Item spawned with custom data")
+        return item
+    else
+        print("Failed to spawn item with custom data")
+        return nil
+    end
+end
 ```
 
 ---
@@ -986,35 +1390,58 @@ end)
 
 **Purpose**
 
-Restores an inventory by its ID, setting its width and height, and calls a callback when ready.
-
+Restores an inventory for an item.
 
 **Parameters**
 
-* `invID` (*number*): The unique ID of the inventory.
-* `w` (*number*): The width to set.
-* `h` (*number*): The height to set.
-* `callback` (*function*): Function to call with the restored inventory (optional).
-
-
+* `item` (*Item*): The item to restore the inventory for.
 
 **Returns**
 
-* None.
-
-
+* `inventory` (*Inventory*): The restored inventory or nil.
 
 **Realm**
 
-`Server.`
-
+Server.
 
 **Example Usage**
 
 ```lua
-lia.item.restoreInv(1001, 4, 4, function(inv)
-print("Restored inventory with size:", inv:getSize())
-end)
-```
+-- Restore item inventory
+local function restoreItemInventory(item)
+    return lia.item.restoreInv(item)
+end
 
----
+-- Use in a function
+local function restoreItemContainer(item)
+    local inventory = lia.item.restoreInv(item)
+    if inventory then
+        print("Item container restored: " .. item:getName())
+        return inventory
+    else
+        print("Failed to restore item container")
+        return nil
+    end
+end
+
+-- Use in a function
+local function restoreAllItemContainers()
+    local items = lia.item.getAll()
+    for _, item in ipairs(items) do
+        if item:shouldHaveInventory() then
+            lia.item.restoreInv(item)
+        end
+    end
+    print("All item containers restored")
+end
+
+-- Use in a function
+local function restoreItemInventoryIfNeeded(item)
+    if item:shouldHaveInventory() and not item:hasInventory() then
+        local inventory = lia.item.restoreInv(item)
+        if inventory then
+            print("Item inventory restored: " .. item:getName())
+        end
+    end
+end
+```

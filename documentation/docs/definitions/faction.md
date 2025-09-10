@@ -42,11 +42,17 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `MemberToMemberAutoRecognition` | `boolean` | `false` | Auto-recognition among faction members. |
 | `bloodcolor` | `number` | `0` | Blood color enum. |
 | `bodyGroups` | `table` | `{}` | Bodygroup name→index mapping applied on spawn. |
+| `logo` | `string` | `nil` | Material path for the faction logo displayed in scoreboard. |
 | `NPCRelations` | `table` | `{}` | NPC class→disposition mapping on spawn/creation. |
 | `RecognizesGlobally` | `boolean` | `false` | Global player recognition. |
 | `isGloballyRecognized` | `boolean` | `false` | Everyone automatically recognizes this faction.
 | `scoreboardHidden` | `boolean` | `false` | Hide members from the scoreboard. |
 | `commands` | `table` | `{}` | Command names members may always use. |
+| `OnSpawn` | `function` | `nil` | Called when a player spawns with faction attributes applied. |
+| `OnTransferred` | `function` | `nil` | Called when a character is transferred to this faction. |
+| `group` | `string` | `nil` | Faction group identifier for door access control. |
+| `allowedFactions` | `table` | `{}` | Factions allowed to access this vendor. |
+| `spawns` | `table` | `{}` | Faction-specific spawn points. |
 
 ---
 
@@ -228,6 +234,24 @@ FACTION.bodyGroups = {
     hands = 1,
     torso = 3
 }
+```
+
+---
+
+#### `logo`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Material path for the faction logo displayed in the scoreboard header.
+
+**Example Usage:**
+
+```lua
+FACTION.logo = "materials/factions/citizen_logo.png"
 ```
 
 ---
@@ -637,6 +661,126 @@ FACTION.commands = {
 }
 ```
 
+---
+
+## Additional Faction Features
+
+### Hooks
+
+#### `OnSpawn`
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Called when a player spawns with faction attributes applied. Receives the client as the first parameter.
+
+**Example Usage:**
+
+```lua
+function FACTION:OnSpawn(client)
+    -- Custom spawn logic
+    client:SetModelScale(1.2)
+    client:SetHealth(150)
+end
+```
+
+---
+
+#### `OnTransferred`
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Called when a character is transferred to this faction. Receives the target player and the old faction index.
+
+**Example Usage:**
+
+```lua
+function FACTION:OnTransferred(targetPlayer, oldFaction)
+    -- Custom transfer logic
+    targetPlayer:notify("Welcome to our faction!")
+end
+```
+
+---
+
+### Faction Groups
+
+Factions can be organized into groups for easier management and door access control.
+
+#### `group`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Faction group identifier used for door access control and other systems.
+
+**Example Usage:**
+
+```lua
+FACTION.group = "law_enforcement"
+```
+
+---
+
+### Vendor Access
+
+#### `allowedFactions`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Table of faction IDs that are allowed to access this vendor.
+
+**Example Usage:**
+
+```lua
+FACTION.allowedFactions = {
+    "citizen",
+    "police"
+}
+```
+
+---
+
+### Spawn System
+
+#### `spawns`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Faction-specific spawn points. Each spawn point can have position, angle, and map properties.
+
+**Example Usage:**
+
+```lua
+FACTION.spawns = {
+    {
+        pos = Vector(100, 200, 50),
+        ang = Angle(0, 90, 0),
+        map = "rp_downtown_v4c_v2"
+    }
+}
+```
+
+---
+
 ## Example Faction Definition
 
 The snippet below shows a minimal faction script using many of the fields described above.
@@ -650,6 +794,7 @@ FACTION.models = {
     "models/Humans/Group01/male_01.mdl",
     "models/Humans/Group01/female_01.mdl"
 }
+FACTION.logo = "materials/factions/citizen_logo.png"
 FACTION.prefix = "[CIT]"
 FACTION.weapons = {"radio"}
 FACTION.items = {"water"}

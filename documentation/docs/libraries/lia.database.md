@@ -1,12 +1,409 @@
 # Database Library
 
-This page documents functions for connecting to the database.
+This page documents the functions for working with database operations and management.
 
 ---
 
 ## Overview
 
-The database library sets up the SQL connection used by the framework. It defines helpers for creating tables, performing queries, and waiting for asynchronous operations to finish.
+The database library (`lia.db`) provides a comprehensive system for database operations, caching, schema management, and data persistence in the Lilia framework. It includes SQL operations, caching, transactions, and database administration functionality.
+
+---
+
+### lia.db.setCacheEnabled
+
+**Purpose**
+
+Enables or disables database caching.
+
+**Parameters**
+
+* `enabled` (*boolean*): Whether to enable caching.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Enable database caching
+local function enableCaching()
+    lia.db.setCacheEnabled(true)
+    print("Database caching enabled")
+end
+
+-- Disable database caching
+local function disableCaching()
+    lia.db.setCacheEnabled(false)
+    print("Database caching disabled")
+end
+
+-- Use in a command
+lia.command.add("togglecache", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local enabled = lia.db.isCacheEnabled()
+        lia.db.setCacheEnabled(not enabled)
+        client:notify("Database caching " .. (enabled and "disabled" or "enabled"))
+    end
+})
+
+-- Use in a function
+local function configureCaching()
+    if lia.config.get("EnableDBCache") then
+        lia.db.setCacheEnabled(true)
+    else
+        lia.db.setCacheEnabled(false)
+    end
+end
+```
+
+---
+
+### lia.db.setCacheTTL
+
+**Purpose**
+
+Sets the cache time-to-live in seconds.
+
+**Parameters**
+
+* `ttl` (*number*): The TTL in seconds.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Set cache TTL
+local function setCacheTTL(ttl)
+    lia.db.setCacheTTL(ttl)
+    print("Cache TTL set to", ttl, "seconds")
+end
+
+-- Use in a function
+local function configureCache()
+    lia.db.setCacheTTL(300) -- 5 minutes
+    lia.db.setCacheEnabled(true)
+end
+
+-- Use in a command
+lia.command.add("setcachettl", {
+    arguments = {
+        {name = "ttl", type = "number"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local ttl = tonumber(arguments[1])
+        if ttl and ttl > 0 then
+            lia.db.setCacheTTL(ttl)
+            client:notify("Cache TTL set to " .. ttl .. " seconds")
+        else
+            client:notify("Invalid TTL value")
+        end
+    end
+})
+
+-- Use in a function
+local function optimizeCache()
+    lia.db.setCacheTTL(600) -- 10 minutes
+    lia.db.cacheClear()
+    print("Cache optimized")
+end
+```
+
+---
+
+### lia.db.cacheClear
+
+**Purpose**
+
+Clears the database cache.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Clear database cache
+local function clearCache()
+    lia.db.cacheClear()
+    print("Database cache cleared")
+end
+
+-- Use in a function
+local function resetCache()
+    lia.db.cacheClear()
+    lia.db.setCacheEnabled(true)
+    print("Cache reset")
+end
+
+-- Use in a command
+lia.command.add("clearcache", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.db.cacheClear()
+        client:notify("Database cache cleared")
+    end
+})
+
+-- Use in a timer
+timer.Create("ClearCache", 3600, 0, function()
+    lia.db.cacheClear()
+    print("Cache cleared automatically")
+end)
+```
+
+---
+
+### lia.db.cacheGet
+
+**Purpose**
+
+Gets a value from the database cache.
+
+**Parameters**
+
+* `key` (*string*): The cache key.
+
+**Returns**
+
+* `value` (*any*): The cached value or nil.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Get from cache
+local function getFromCache(key)
+    return lia.db.cacheGet(key)
+end
+
+-- Use in a function
+local function getPlayerData(client)
+    local key = "player_" .. client:SteamID()
+    local data = lia.db.cacheGet(key)
+    if data then
+        print("Data found in cache")
+        return data
+    else
+        print("Data not in cache, querying database")
+        return nil
+    end
+end
+
+-- Use in a function
+local function checkCache(key)
+    local value = lia.db.cacheGet(key)
+    if value then
+        print("Cache hit for key:", key)
+    else
+        print("Cache miss for key:", key)
+    end
+    return value
+end
+```
+
+---
+
+### lia.db.cacheSet
+
+**Purpose**
+
+Sets a value in the database cache.
+
+**Parameters**
+
+* `key` (*string*): The cache key.
+* `value` (*any*): The value to cache.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Set in cache
+local function setInCache(key, value)
+    lia.db.cacheSet(key, value)
+end
+
+-- Use in a function
+local function cachePlayerData(client, data)
+    local key = "player_" .. client:SteamID()
+    lia.db.cacheSet(key, data)
+    print("Player data cached")
+end
+
+-- Use in a function
+local function updateCache(key, value)
+    lia.db.cacheSet(key, value)
+    print("Cache updated for key:", key)
+end
+```
+
+---
+
+### lia.db.invalidateTable
+
+**Purpose**
+
+Invalidates cache entries for a specific table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name to invalidate.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Invalidate table cache
+local function invalidateTable(tableName)
+    lia.db.invalidateTable(tableName)
+    print("Cache invalidated for table:", tableName)
+end
+
+-- Use in a function
+local function updateTableData(tableName, data)
+    lia.db.invalidateTable(tableName)
+    -- Update table data
+    print("Table updated and cache invalidated")
+end
+
+-- Use in a command
+lia.command.add("invalidate", {
+    arguments = {
+        {name = "table", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.db.invalidateTable(arguments[1])
+        client:notify("Cache invalidated for table: " .. arguments[1])
+    end
+})
+```
+
+---
+
+### lia.db.normalizeIdentifier
+
+**Purpose**
+
+Normalizes a database identifier.
+
+**Parameters**
+
+* `identifier` (*string*): The identifier to normalize.
+
+**Returns**
+
+* `normalizedIdentifier` (*string*): The normalized identifier.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Normalize identifier
+local function normalizeIdentifier(identifier)
+    return lia.db.normalizeIdentifier(identifier)
+end
+
+-- Use in a function
+local function createTable(tableName)
+    local normalized = lia.db.normalizeIdentifier(tableName)
+    print("Creating table:", normalized)
+end
+
+-- Use in a function
+local function validateIdentifier(identifier)
+    local normalized = lia.db.normalizeIdentifier(identifier)
+    if normalized ~= identifier then
+        print("Identifier normalized:", identifier, "->", normalized)
+    end
+    return normalized
+end
+```
+
+---
+
+### lia.db.normalizeSQLIdentifiers
+
+**Purpose**
+
+Normalizes SQL identifiers in a query.
+
+**Parameters**
+
+* `query` (*string*): The SQL query to normalize.
+
+**Returns**
+
+* `normalizedQuery` (*string*): The normalized query.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Normalize SQL identifiers
+local function normalizeSQL(query)
+    return lia.db.normalizeSQLIdentifiers(query)
+end
+
+-- Use in a function
+local function executeQuery(query)
+    local normalized = lia.db.normalizeSQLIdentifiers(query)
+    print("Executing normalized query:", normalized)
+end
+
+-- Use in a function
+local function buildQuery(tableName, columns)
+    local query = "SELECT " .. table.concat(columns, ", ") .. " FROM " .. tableName
+    return lia.db.normalizeSQLIdentifiers(query)
+end
+```
 
 ---
 
@@ -14,28 +411,49 @@ The database library sets up the SQL connection used by the framework. It define
 
 **Purpose**
 
-Establishes a connection to the configured database module. If the database is not already connected, or if `reconnect` is `true`, it creates or re-establishes a connection.
+Establishes a database connection.
 
 **Parameters**
 
-* `callback` (*function*): Function called when the connection is established.
-
-* `reconnect` (*boolean*): Reconnect using an existing database object.
-
-**Realm**
-
-`Server`
+*None*
 
 **Returns**
 
-* *nil*: This function does not return a value.
+* `success` (*boolean*): True if connection was successful.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.connect(function()
-    print("Database connected")
+-- Connect to database
+local function connectToDatabase()
+    local success = lia.db.connect()
+    if success then
+        print("Database connected successfully")
+    else
+        print("Failed to connect to database")
+    end
+    return success
+end
+
+-- Use in a hook
+hook.Add("Initialize", "ConnectDatabase", function()
+    lia.db.connect()
 end)
+
+-- Use in a function
+local function initializeDatabase()
+    if lia.db.connect() then
+        print("Database initialized")
+        return true
+    else
+        print("Database initialization failed")
+        return false
+    end
+end
 ```
 
 ---
@@ -44,26 +462,44 @@ end)
 
 **Purpose**
 
-Drops all Lilia tables from the database. **Irreversible** – all stored data is removed.
+Wipes all database tables.
 
 **Parameters**
 
-* `callback` (*function*): Function called when the wipe completes.
-
-**Realm**
-
-`Server`
+*None*
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.wipeTables(function()
-    print("Tables wiped")
-end)
+-- Wipe all tables
+local function wipeAllTables()
+    lia.db.wipeTables()
+    print("All tables wiped")
+end
+
+-- Use in a command
+lia.command.add("wipetables", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.db.wipeTables()
+        client:notify("All tables wiped")
+    end
+})
+
+-- Use in a function
+local function resetDatabase()
+    lia.db.wipeTables()
+    lia.db.loadTables()
+    print("Database reset")
+end
 ```
 
 ---
@@ -72,24 +508,39 @@ end)
 
 **Purpose**
 
-Creates required tables if they do not already exist. Ensures the schema is set up.
+Loads database tables.
 
 **Parameters**
 
-* *None*
-
-**Realm**
-
-`Server`
+*None*
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.loadTables()
+-- Load database tables
+local function loadTables()
+    lia.db.loadTables()
+    print("Database tables loaded")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "LoadTables", function()
+    lia.db.loadTables()
+end)
+
+-- Use in a function
+local function initializeTables()
+    lia.db.loadTables()
+    print("Tables initialized")
+end
 ```
 
 ---
@@ -98,25 +549,39 @@ lia.db.loadTables()
 
 **Purpose**
 
-Returns a deferred that resolves once tables are fully created. If tables have already loaded, the deferred resolves immediately. Useful for awaiting setup in async code.
+Waits for all tables to finish loading.
 
 **Parameters**
 
-* *None*
-
-**Realm**
-
-`Server`
+*None*
 
 **Returns**
 
-* *deferred*: Resolves when tables are ready.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.waitForTablesToLoad():next(function()
-    print("Tables loaded")
+-- Wait for tables to load
+local function waitForTables()
+    lia.db.waitForTablesToLoad()
+    print("All tables loaded")
+end
+
+-- Use in a function
+local function ensureTablesLoaded()
+    lia.db.waitForTablesToLoad()
+    print("Tables are ready")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "WaitForTables", function()
+    lia.db.waitForTablesToLoad()
+    print("Database ready")
 end)
 ```
 
@@ -126,26 +591,42 @@ end)
 
 **Purpose**
 
-Converts a Lua value into a SQL-safe representation. `nil` and `NULL` become `NULL`, booleans become `1` or `0`, tables are encoded as JSON, and strings are escaped unless `noEscape` is `true`.
+Converts a data type for database storage.
 
 **Parameters**
 
-* `value` (*any*): Value to convert.
-
-* `noEscape` (*boolean*): Skip escaping the value when `true`.
-
-**Realm**
-
-`Shared`
+* `dataType` (*string*): The data type to convert.
 
 **Returns**
 
-* *string | number*: SQL-ready representation.
+* `convertedType` (*string*): The converted data type.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-local str = lia.db.convertDataType({ name = "Lilia" })
+-- Convert data type
+local function convertDataType(dataType)
+    return lia.db.convertDataType(dataType)
+end
+
+-- Use in a function
+local function createColumn(columnName, dataType)
+    local convertedType = lia.db.convertDataType(dataType)
+    print("Creating column:", columnName, "with type:", convertedType)
+end
+
+-- Use in a function
+local function validateDataType(dataType)
+    local converted = lia.db.convertDataType(dataType)
+    if converted ~= dataType then
+        print("Data type converted:", dataType, "->", converted)
+    end
+    return converted
+end
 ```
 
 ---
@@ -154,30 +635,60 @@ local str = lia.db.convertDataType({ name = "Lilia" })
 
 **Purpose**
 
-Inserts a row into a table using key-value pairs.
+Inserts data into a table.
 
 **Parameters**
 
-* `value` (*table*): Column/value pairs.
-
-* `callback` (*function*): Function called after the insert.
-
-* `dbTable` (*string*): Table name **without** the `lia_` prefix. Defaults to `"characters"`.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `data` (*table*): The data to insert.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+* `success` (*boolean*): True if insertion was successful.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.insertTable({ name = "Test" }, function(_, lastID)
-    print("Inserted", lastID)
-end, "characters")
+-- Insert data into table
+local function insertData(tableName, data)
+    return lia.db.insertTable(tableName, data)
+end
+
+-- Use in a function
+local function createPlayerRecord(client)
+    local data = {
+        steamid = client:SteamID(),
+        name = client:Name(),
+        join_time = os.time()
+    }
+    local success = lia.db.insertTable("players", data)
+    if success then
+        print("Player record created")
+    end
+    return success
+end
+
+-- Use in a command
+lia.command.add("insertdata", {
+    arguments = {
+        {name = "table", type = "string"},
+        {name = "data", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local data = util.JSONToTable(arguments[2])
+        if data then
+            local success = lia.db.insertTable(arguments[1], data)
+            client:notify("Data " .. (success and "inserted" or "insertion failed"))
+        else
+            client:notify("Invalid data format")
+        end
+    end
+})
 ```
 
 ---
@@ -186,32 +697,58 @@ end, "characters")
 
 **Purpose**
 
-Updates one or more rows according to a condition.
+Updates data in a table.
 
 **Parameters**
 
-* `value` (*table*): Columns to update and new values.
-
-* `callback` (*function*): Function called after update.
-
-* `dbTable` (*string*): Table name **without** `lia_`. Defaults to `"characters"`.
-
-* `condition` (*string*): SQL `WHERE` clause.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `data` (*table*): The data to update.
+* `condition` (*string*): The WHERE condition.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+* `success` (*boolean*): True if update was successful.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.updateTable({ name = "Updated" }, function()
-    print("Row updated")
-end, "characters", "id = 1")
+-- Update table data
+local function updateData(tableName, data, condition)
+    return lia.db.updateTable(tableName, data, condition)
+end
+
+-- Use in a function
+local function updatePlayerData(client, newData)
+    local condition = "steamid = '" .. client:SteamID() .. "'"
+    local success = lia.db.updateTable("players", newData, condition)
+    if success then
+        print("Player data updated")
+    end
+    return success
+end
+
+-- Use in a command
+lia.command.add("updatedata", {
+    arguments = {
+        {name = "table", type = "string"},
+        {name = "data", type = "string"},
+        {name = "condition", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local data = util.JSONToTable(arguments[2])
+        if data then
+            local success = lia.db.updateTable(arguments[1], data, arguments[3])
+            client:notify("Data " .. (success and "updated" or "update failed"))
+        else
+            client:notify("Invalid data format")
+        end
+    end
+})
 ```
 
 ---
@@ -220,120 +757,105 @@ end, "characters", "id = 1")
 
 **Purpose**
 
-Selects rows, optionally filtered and limited, returning a deferred.
+Selects data from a table.
 
 **Parameters**
 
-* `fields` (*table | string*): Columns to select.
-
-* `dbTable` (*string*): Table name without `lia_`. Defaults to `"characters"`.
-
-* `condition` (*string*): SQL condition (`WHERE`).
-
-* `limit` (*number*): Maximum number of rows.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `columns` (*string*): The columns to select.
+* `condition` (*string*): The WHERE condition.
 
 **Returns**
 
-* *deferred*: Resolves with a table containing `results` and `lastID`.
+* `results` (*table*): The query results.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.select("*", "characters", "id = 1"):next(function(data)
-    PrintTable(data.results)
-end)
+-- Select data from table
+local function selectData(tableName, columns, condition)
+    return lia.db.select(tableName, columns, condition)
+end
+
+-- Use in a function
+local function getPlayerData(client)
+    local condition = "steamid = '" .. client:SteamID() .. "'"
+    local results = lia.db.select("players", "*", condition)
+    if results and #results > 0 then
+        print("Player data found")
+        return results[1]
+    end
+    return nil
+end
+
+-- Use in a command
+lia.command.add("selectdata", {
+    arguments = {
+        {name = "table", type = "string"},
+        {name = "columns", type = "string"},
+        {name = "condition", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local results = lia.db.select(arguments[1], arguments[2], arguments[3])
+        if results then
+            client:notify("Results: " .. util.TableToJSON(results))
+        else
+            client:notify("No results found")
+        end
+    end
+})
 ```
 
 ---
 
-### lia.db.upsert
+### lia.db.selectWithCondition
 
 **Purpose**
 
-Inserts or updates a row depending on unique-key conflict.
+Selects data from a table with a condition.
 
 **Parameters**
 
-* `value` (*table*): Columns and values.
-
-* `dbTable` (*string*): Table name without `lia_`. Defaults to `"characters"`.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `columns` (*string*): The columns to select.
+* `condition` (*string*): The WHERE condition.
 
 **Returns**
 
-* *deferred*: Resolves with a table containing `results` and `lastID`.
+* `results` (*table*): The query results.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.upsert({ id = 1, name = "John" }, "characters"):next(function(res)
-    print("Last ID:", res.lastID)
-end)
-```
+-- Select data with condition
+local function selectWithCondition(tableName, columns, condition)
+    return lia.db.selectWithCondition(tableName, columns, condition)
+end
 
----
+-- Use in a function
+local function getPlayersByLevel(level)
+    local condition = "level >= " .. level
+    local results = lia.db.selectWithCondition("players", "*", condition)
+    if results then
+        print("Found", #results, "players with level", level)
+    end
+    return results
+end
 
-### lia.db.delete
-
-**Purpose**
-
-Deletes rows matching a condition; deletes all rows if no condition.
-
-**Parameters**
-
-* `dbTable` (*string*): Table name without `lia_`. Defaults to `"character"`.
-
-* `condition` (*string*): SQL condition.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *deferred*: Resolves with deletion result.
-
-**Example Usage**
-
-```lua
-lia.db.delete("characters", "id = 1"):next(function()
-    print("Row deleted")
-end)
-```
-
----
-
-### lia.db.GetCharacterTable
-
-**Purpose**
-
-Fetches the column names of `lia_characters` for debugging/maintenance.
-
-**Parameters**
-
-* `callback` (*function*): Receives the list of columns.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.db.GetCharacterTable(function(cols)
-    PrintTable(cols)
-end)
+-- Use in a function
+local function searchPlayers(name)
+    local condition = "name LIKE '%" .. name .. "%'"
+    return lia.db.selectWithCondition("players", "*", condition)
+end
 ```
 
 ---
@@ -342,59 +864,43 @@ end)
 
 **Purpose**
 
-Counts rows in a table, optionally filtered.
+Counts records in a table.
 
 **Parameters**
 
-* `dbTable` (*string*): Table name without `lia_`.
-
-* `condition` (*string*): Optional SQL condition.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `condition` (*string*): The WHERE condition.
 
 **Returns**
 
-* *deferred*: Resolves to the row count.
+* `count` (*number*): The record count.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.count("characters", "faction = 1"):next(function(n)
-    print("Character count:", n)
-end)
-```
+-- Count records in table
+local function countRecords(tableName, condition)
+    return lia.db.count(tableName, condition)
+end
 
----
+-- Use in a function
+local function getPlayerCount()
+    local count = lia.db.count("players")
+    print("Total players:", count)
+    return count
+end
 
-### lia.db.addDatabaseFields
-
-**Purpose**
-
-Ensures every registered character variable has a matching column in the
-
-`lia_characters` table, adding any that are missing. It can be invoked
-
-multiple times; existing columns will be ignored.
-
-**Parameters**
-
-* *None*
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
--- After creating custom character variables
-lia.db.addDatabaseFields()
+-- Use in a function
+local function getActivePlayers()
+    local condition = "last_seen > " .. (os.time() - 3600)
+    local count = lia.db.count("players", condition)
+    print("Active players:", count)
+    return count
+end
 ```
 
 ---
@@ -403,28 +909,181 @@ lia.db.addDatabaseFields()
 
 **Purpose**
 
-Checks if any row satisfies a condition.
+Checks if a record exists in a table.
 
 **Parameters**
 
-* `dbTable` (*string*): Table name without `lia_`.
-
-* `condition` (*string*): SQL condition.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `condition` (*string*): The WHERE condition.
 
 **Returns**
 
-* *deferred*: Resolves to `true` or `false`.
+* `exists` (*boolean*): True if record exists.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.exists("characters", "id = 5"):next(function(found)
-    print("Character exists:", found)
+-- Check if record exists
+local function recordExists(tableName, condition)
+    return lia.db.exists(tableName, condition)
+end
+
+-- Use in a function
+local function playerExists(client)
+    local condition = "steamid = '" .. client:SteamID() .. "'"
+    return lia.db.exists("players", condition)
+end
+
+-- Use in a function
+local function checkPlayerName(name)
+    local condition = "name = '" .. name .. "'"
+    return lia.db.exists("players", condition)
+end
+```
+
+---
+
+### lia.db.addExpectedSchema
+
+**Purpose**
+
+Adds an expected database schema.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `schema` (*table*): The schema definition.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Add expected schema
+local function addSchema(tableName, schema)
+    lia.db.addExpectedSchema(tableName, schema)
+end
+
+-- Use in a function
+local function definePlayerSchema()
+    local schema = {
+        {name = "id", type = "INTEGER", primary = true, auto_increment = true},
+        {name = "steamid", type = "VARCHAR(20)", unique = true},
+        {name = "name", type = "VARCHAR(100)"},
+        {name = "level", type = "INTEGER", default = 1}
+    }
+    lia.db.addExpectedSchema("players", schema)
+end
+
+-- Use in a function
+local function defineItemSchema()
+    local schema = {
+        {name = "id", type = "INTEGER", primary = true, auto_increment = true},
+        {name = "uniqueid", type = "VARCHAR(50)", unique = true},
+        {name = "itemid", type = "VARCHAR(50)"},
+        {name = "data", type = "TEXT"}
+    }
+    lia.db.addExpectedSchema("items", schema)
+end
+```
+
+---
+
+### lia.db.migrateDatabaseSchemas
+
+**Purpose**
+
+Migrates database schemas to match expected schemas.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Migrate database schemas
+local function migrateSchemas()
+    lia.db.migrateDatabaseSchemas()
+    print("Database schemas migrated")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "MigrateSchemas", function()
+    lia.db.migrateDatabaseSchemas()
 end)
+
+-- Use in a function
+local function updateDatabase()
+    lia.db.migrateDatabaseSchemas()
+    print("Database updated")
+end
+```
+
+---
+
+### lia.db.addDatabaseFields
+
+**Purpose**
+
+Adds fields to a database table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `fields` (*table*): The fields to add.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Add database fields
+local function addFields(tableName, fields)
+    lia.db.addDatabaseFields(tableName, fields)
+end
+
+-- Use in a function
+local function addPlayerFields()
+    local fields = {
+        {name = "last_seen", type = "INTEGER", default = 0},
+        {name = "playtime", type = "INTEGER", default = 0}
+    }
+    lia.db.addDatabaseFields("players", fields)
+end
+
+-- Use in a function
+local function addItemFields()
+    local fields = {
+        {name = "quantity", type = "INTEGER", default = 1},
+        {name = "condition", type = "INTEGER", default = 100}
+    }
+    lia.db.addDatabaseFields("items", fields)
+end
 ```
 
 ---
@@ -433,32 +1092,82 @@ end)
 
 **Purpose**
 
-Fetches the first row that matches a condition.
+Selects a single record from a table.
 
 **Parameters**
 
-* `fields` (*table | string*): Columns.
-
-* `dbTable` (*string*): Table name without `lia_`.
-
-* `condition` (*string*): SQL condition.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `columns` (*string*): The columns to select.
+* `condition` (*string*): The WHERE condition.
 
 **Returns**
 
-* *deferred*: Resolves with the row or `nil`.
+* `record` (*table*): The single record or nil.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.selectOne("*", "characters", "id = 1"):next(function(row)
-    if row then
-        print("Found character:", row._name)
-    end
-end)
+-- Select one record
+local function selectOne(tableName, columns, condition)
+    return lia.db.selectOne(tableName, columns, condition)
+end
+
+-- Use in a function
+local function getPlayer(client)
+    local condition = "steamid = '" .. client:SteamID() .. "'"
+    return lia.db.selectOne("players", "*", condition)
+end
+
+-- Use in a function
+local function findPlayerByName(name)
+    local condition = "name = '" .. name .. "'"
+    return lia.db.selectOne("players", "*", condition)
+end
+```
+
+---
+
+### lia.db.selectWithJoin
+
+**Purpose**
+
+Selects data from multiple tables with a JOIN.
+
+**Parameters**
+
+* `query` (*string*): The JOIN query.
+
+**Returns**
+
+* `results` (*table*): The query results.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Select with JOIN
+local function selectWithJoin(query)
+    return lia.db.selectWithJoin(query)
+end
+
+-- Use in a function
+local function getPlayerWithItems(client)
+    local query = "SELECT p.*, i.* FROM players p LEFT JOIN items i ON p.id = i.player_id WHERE p.steamid = '" .. client:SteamID() .. "'"
+    return lia.db.selectWithJoin(query)
+end
+
+-- Use in a function
+local function getPlayersWithStats()
+    local query = "SELECT p.name, s.kills, s.deaths FROM players p LEFT JOIN stats s ON p.id = s.player_id"
+    return lia.db.selectWithJoin(query)
+end
 ```
 
 ---
@@ -467,31 +1176,42 @@ end)
 
 **Purpose**
 
-Inserts multiple rows in a single query.
+Performs a bulk insert operation.
 
 **Parameters**
 
-* `dbTable` (*string*): Table name without `lia_`.
-
-* `rows` (*table*): Array of row tables.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `data` (*table*): The data to insert.
 
 **Returns**
 
-* *deferred*: Resolves when done. Resolves immediately if `rows` is empty.
+* `success` (*boolean*): True if insertion was successful.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.bulkInsert("items", {
-    { _invID = 1, _uniqueID = "pistol", _x = 0, _y = 0, _quantity = 1 },
-    { _invID = 1, _uniqueID = "ammo",   _x = 1, _y = 0, _quantity = 30 },
-}):next(function()
-    print("Rows inserted")
-end)
+-- Bulk insert data
+local function bulkInsert(tableName, data)
+    return lia.db.bulkInsert(tableName, data)
+end
+
+-- Use in a function
+local function insertMultiplePlayers(players)
+    local success = lia.db.bulkInsert("players", players)
+    if success then
+        print("Bulk insert successful")
+    end
+    return success
+end
+
+-- Use in a function
+local function insertItems(items)
+    return lia.db.bulkInsert("items", items)
+end
 ```
 
 ---
@@ -500,31 +1220,42 @@ end)
 
 **Purpose**
 
-Inserts multiple rows and updates them if they already exist.
+Performs a bulk upsert operation.
 
 **Parameters**
 
-* `dbTable` (*string*): Table name without `lia_`.
-
-* `rows` (*table*): Array of row tables.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `data` (*table*): The data to upsert.
 
 **Returns**
 
-* *deferred*: Resolves when done. Resolves immediately if `rows` is empty.
+* `success` (*boolean*): True if upsert was successful.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.bulkUpsert("items", {
-    { _invID = 1, _uniqueID = "pistol", _x = 0, _y = 0, _quantity = 1 },
-    { _invID = 1, _uniqueID = "ammo",   _x = 1, _y = 0, _quantity = 30 },
-}):next(function()
-    print("Upsert complete")
-end)
+-- Bulk upsert data
+local function bulkUpsert(tableName, data)
+    return lia.db.bulkUpsert(tableName, data)
+end
+
+-- Use in a function
+local function upsertPlayers(players)
+    local success = lia.db.bulkUpsert("players", players)
+    if success then
+        print("Bulk upsert successful")
+    end
+    return success
+end
+
+-- Use in a function
+local function upsertItems(items)
+    return lia.db.bulkUpsert("items", items)
+end
 ```
 
 ---
@@ -533,248 +1264,43 @@ end)
 
 **Purpose**
 
-Attempts to insert a row; silently ignores unique-key violation.
+Inserts data or ignores if it already exists.
 
 **Parameters**
 
-* `value` (*table*): Row data.
-
-* `dbTable` (*string*): Table name without `lia_`. Defaults to `"characters"`.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `data` (*table*): The data to insert.
 
 **Returns**
 
-* *deferred*: Resolves with results and last insert ID.
+* `success` (*boolean*): True if operation was successful.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.insertOrIgnore({ id = 1, name = "Bob" }, "characters"):next(function(r)
-    print("Insert ID:", r.lastID)
-end)
-```
-
----
-
-### lia.db.getTables
-
-**Purpose**
-
-Lists all tables in the database that start with `lia_`.
-
-**Parameters**
-
-* *None*
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *deferred*: Resolves with an array of table names.
-
-**Example Usage**
-
-```lua
-lia.db.getTables():next(function(tables)
-    PrintTable(tables)
-end)
-```
-
----
-
-### lia.db.transaction
-
-**Purpose**
-
-Runs multiple queries inside a transaction, rolling back if any fail.
-
-**Parameters**
-
-* `queries` (*table*): Array of SQL strings.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *deferred*: Resolves when transaction completes.
-
-**Example Usage**
-
-```lua
-lia.db.transaction({
-    "INSERT INTO lia_logs (_message) VALUES ('start')",
-    "INSERT INTO lia_logs (_message) VALUES ('end')",
-}):next(function()
-    print("Transaction complete")
-end)
-```
-
----
-
-### lia.db.escapeIdentifier
-
-**Purpose**
-
-Escapes an identifier (column/table name) for SQL.
-
-**Parameters**
-
-* `id` (*string*): Identifier.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *string*: Escaped identifier.
-
-**Example Usage**
-
-```lua
-local col = lia.db.escapeIdentifier("desc")
-print(col)
-```
-
----
-
-### lia.db.query
-
-**Purpose**
-
-Executes a raw SQL string. If no callback is provided, returns a deferred.
-
-**Parameters**
-
-* `query` (*string*): SQL query.
-
-* `callback` (*function*): Optional results callback.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *deferred | nil*: Deferred when no callback.
-
-**Example Usage**
-
-```lua
-lia.db.query("SELECT 1"):next(function(res)
-    PrintTable(res.results)
-end)
-```
-
----
-
-### lia.db.escape
-
-**Purpose**
-
-Escapes a string for safe inclusion in SQL queries.
-
-**Parameters**
-
-* `value` (*string*): Raw string.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *string*: Escaped string.
-
-**Example Usage**
-
-```lua
-local safe = lia.db.escape(userInput)
-```
-
----
-
-### lia.db.queue
-
-**Purpose**
-
-Returns the number of queued SQL queries.
-
-**Parameters**
-
-* *None*
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *number*: Count of queued queries.
-
-**Example Usage**
-
-```lua
-print("Queue size:", lia.db.queue())
-```
-
----
-
-### lia.db.abort
-
-**Purpose**
-
-Cancels all running queries on every connection.
-
-**Parameters**
-
-* *None*
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.db.abort()
-```
-
----
-
-### lia.db.getObject
-
-**Purpose**
-
-Returns the least busy database object and its pool index.
-
-**Parameters**
-
-* *None*
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *database*, *number*: Connection object and pool index.
-
-**Example Usage**
-
-```lua
-local db, index = lia.db.getObject()
+-- Insert or ignore
+local function insertOrIgnore(tableName, data)
+    return lia.db.insertOrIgnore(tableName, data)
+end
+
+-- Use in a function
+local function addPlayerIfNotExists(client)
+    local data = {
+        steamid = client:SteamID(),
+        name = client:Name(),
+        join_time = os.time()
+    }
+    return lia.db.insertOrIgnore("players", data)
+end
+
+-- Use in a function
+local function addItemIfNotExists(itemData)
+    return lia.db.insertOrIgnore("items", itemData)
+end
 ```
 
 ---
@@ -783,26 +1309,47 @@ local db, index = lia.db.getObject()
 
 **Purpose**
 
-Checks whether a table with the provided name exists in the connected database.
+Checks if a table exists in the database.
 
 **Parameters**
 
-* `tbl` (*string*): Full table name to check (e.g., `"lia_characters"`).
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
 
 **Returns**
 
-* *deferred*: Resolves to `true` or `false`.
+* `exists` (*boolean*): True if table exists.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.tableExists("lia_characters"):next(function(exists)
-    print("Characters table present:", exists)
-end)
+-- Check if table exists
+local function tableExists(tableName)
+    return lia.db.tableExists(tableName)
+end
+
+-- Use in a function
+local function checkRequiredTables()
+    local tables = {"players", "items", "characters"}
+    for _, tableName in ipairs(tables) do
+        if not lia.db.tableExists(tableName) then
+            print("Required table missing:", tableName)
+            return false
+        end
+    end
+    return true
+end
+
+-- Use in a function
+local function createTableIfNotExists(tableName, schema)
+    if not lia.db.tableExists(tableName) then
+        lia.db.createTable(tableName, schema)
+        print("Table created:", tableName)
+    end
+end
 ```
 
 ---
@@ -811,28 +1358,611 @@ end)
 
 **Purpose**
 
-Determines whether a specific column is present in a table.
+Checks if a field exists in a table.
 
 **Parameters**
 
-* `tbl` (*string*): Full table name (e.g., `"lia_characters"`).
-
-* `field` (*string*): Column name to check.
-
-**Realm**
-
-`Server`
+* `tableName` (*string*): The table name.
+* `fieldName` (*string*): The field name.
 
 **Returns**
 
-* *deferred*: Resolves to `true` when the field exists.
+* `exists` (*boolean*): True if field exists.
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.db.fieldExists("lia_characters", "name"):next(function(hasField)
-    print("Name column exists:", hasField)
-end)
+-- Check if field exists
+local function fieldExists(tableName, fieldName)
+    return lia.db.fieldExists(tableName, fieldName)
+end
+
+-- Use in a function
+local function checkPlayerFields()
+    local fields = {"steamid", "name", "level", "last_seen"}
+    for _, fieldName in ipairs(fields) do
+        if not lia.db.fieldExists("players", fieldName) then
+            print("Player field missing:", fieldName)
+        end
+    end
+end
+
+-- Use in a function
+local function addFieldIfNotExists(tableName, fieldName, fieldType)
+    if not lia.db.fieldExists(tableName, fieldName) then
+        lia.db.createColumn(tableName, fieldName, fieldType)
+        print("Field added:", fieldName)
+    end
+end
 ```
 
 ---
+
+### lia.db.getTables
+
+**Purpose**
+
+Gets a list of all database tables.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `tables` (*table*): List of table names.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Get all tables
+local function getAllTables()
+    return lia.db.getTables()
+end
+
+-- Use in a function
+local function listTables()
+    local tables = lia.db.getTables()
+    print("Database tables:")
+    for _, tableName in ipairs(tables) do
+        print("- " .. tableName)
+    end
+    return tables
+end
+
+-- Use in a command
+lia.command.add("listtables", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local tables = lia.db.getTables()
+        client:notify("Tables: " .. table.concat(tables, ", "))
+    end
+})
+```
+
+---
+
+### lia.db.getTableColumns
+
+**Purpose**
+
+Gets the columns of a table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+
+**Returns**
+
+* `columns` (*table*): List of column information.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Get table columns
+local function getTableColumns(tableName)
+    return lia.db.getTableColumns(tableName)
+end
+
+-- Use in a function
+local function describeTable(tableName)
+    local columns = lia.db.getTableColumns(tableName)
+    print("Table " .. tableName .. " columns:")
+    for _, column in ipairs(columns) do
+        print("- " .. column.name .. " (" .. column.type .. ")")
+    end
+    return columns
+end
+
+-- Use in a function
+local function validateTableStructure(tableName, expectedColumns)
+    local columns = lia.db.getTableColumns(tableName)
+    for _, expectedColumn in ipairs(expectedColumns) do
+        local found = false
+        for _, column in ipairs(columns) do
+            if column.name == expectedColumn.name then
+                found = true
+                break
+            end
+        end
+        if not found then
+            print("Missing column:", expectedColumn.name)
+        end
+    end
+end
+```
+
+---
+
+### lia.db.transaction
+
+**Purpose**
+
+Executes a database transaction.
+
+**Parameters**
+
+* `callback` (*function*): The transaction callback function.
+
+**Returns**
+
+* `success` (*boolean*): True if transaction was successful.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Execute transaction
+local function executeTransaction(callback)
+    return lia.db.transaction(callback)
+end
+
+-- Use in a function
+local function transferMoney(fromPlayer, toPlayer, amount)
+    return lia.db.transaction(function()
+        -- Deduct money from sender
+        local fromCondition = "steamid = '" .. fromPlayer:SteamID() .. "'"
+        local fromData = {money = lia.db.selectOne("players", "money", fromCondition).money - amount}
+        lia.db.updateTable("players", fromData, fromCondition)
+        
+        -- Add money to receiver
+        local toCondition = "steamid = '" .. toPlayer:SteamID() .. "'"
+        local toData = {money = lia.db.selectOne("players", "money", toCondition).money + amount}
+        lia.db.updateTable("players", toData, toCondition)
+        
+        return true
+    end)
+end
+
+-- Use in a function
+local function createPlayerWithCharacter(playerData, characterData)
+    return lia.db.transaction(function()
+        -- Insert player
+        local playerId = lia.db.insertTable("players", playerData)
+        if not playerId then return false end
+        
+        -- Insert character
+        characterData.player_id = playerId
+        local characterId = lia.db.insertTable("characters", characterData)
+        if not characterId then return false end
+        
+        return true
+    end)
+end
+```
+
+---
+
+### lia.db.escapeIdentifier
+
+**Purpose**
+
+Escapes a database identifier.
+
+**Parameters**
+
+* `identifier` (*string*): The identifier to escape.
+
+**Returns**
+
+* `escapedIdentifier` (*string*): The escaped identifier.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Escape identifier
+local function escapeIdentifier(identifier)
+    return lia.db.escapeIdentifier(identifier)
+end
+
+-- Use in a function
+local function buildSafeQuery(tableName, columnName)
+    local safeTable = lia.db.escapeIdentifier(tableName)
+    local safeColumn = lia.db.escapeIdentifier(columnName)
+    return "SELECT " .. safeColumn .. " FROM " .. safeTable
+end
+
+-- Use in a function
+local function createSafeTable(tableName)
+    local safeName = lia.db.escapeIdentifier(tableName)
+    print("Creating safe table:", safeName)
+end
+```
+
+---
+
+### lia.db.upsert
+
+**Purpose**
+
+Updates a record or inserts if it doesn't exist.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `data` (*table*): The data to upsert.
+* `condition` (*string*): The WHERE condition.
+
+**Returns**
+
+* `success` (*boolean*): True if operation was successful.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Upsert data
+local function upsertData(tableName, data, condition)
+    return lia.db.upsert(tableName, data, condition)
+end
+
+-- Use in a function
+local function updateOrCreatePlayer(client)
+    local data = {
+        steamid = client:SteamID(),
+        name = client:Name(),
+        last_seen = os.time()
+    }
+    local condition = "steamid = '" .. client:SteamID() .. "'"
+    return lia.db.upsert("players", data, condition)
+end
+
+-- Use in a function
+local function updateOrCreateItem(itemData)
+    local condition = "uniqueid = '" .. itemData.uniqueid .. "'"
+    return lia.db.upsert("items", itemData, condition)
+end
+```
+
+---
+
+### lia.db.delete
+
+**Purpose**
+
+Deletes records from a table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `condition` (*string*): The WHERE condition.
+
+**Returns**
+
+* `success` (*boolean*): True if deletion was successful.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Delete records
+local function deleteRecords(tableName, condition)
+    return lia.db.delete(tableName, condition)
+end
+
+-- Use in a function
+local function deletePlayer(client)
+    local condition = "steamid = '" .. client:SteamID() .. "'"
+    return lia.db.delete("players", condition)
+end
+
+-- Use in a function
+local function deleteOldRecords(tableName, daysOld)
+    local condition = "created_at < " .. (os.time() - (daysOld * 86400))
+    return lia.db.delete(tableName, condition)
+end
+```
+
+---
+
+### lia.db.createTable
+
+**Purpose**
+
+Creates a new database table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `schema` (*table*): The table schema.
+
+**Returns**
+
+* `success` (*boolean*): True if table was created successfully.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Create table
+local function createTable(tableName, schema)
+    return lia.db.createTable(tableName, schema)
+end
+
+-- Use in a function
+local function createPlayersTable()
+    local schema = {
+        {name = "id", type = "INTEGER", primary = true, auto_increment = true},
+        {name = "steamid", type = "VARCHAR(20)", unique = true},
+        {name = "name", type = "VARCHAR(100)"},
+        {name = "level", type = "INTEGER", default = 1}
+    }
+    return lia.db.createTable("players", schema)
+end
+
+-- Use in a function
+local function createItemsTable()
+    local schema = {
+        {name = "id", type = "INTEGER", primary = true, auto_increment = true},
+        {name = "uniqueid", type = "VARCHAR(50)", unique = true},
+        {name = "itemid", type = "VARCHAR(50)"},
+        {name = "data", type = "TEXT"}
+    }
+    return lia.db.createTable("items", schema)
+end
+```
+
+---
+
+### lia.db.createColumn
+
+**Purpose**
+
+Creates a new column in a table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `columnName` (*string*): The column name.
+* `columnType` (*string*): The column type.
+
+**Returns**
+
+* `success` (*boolean*): True if column was created successfully.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Create column
+local function createColumn(tableName, columnName, columnType)
+    return lia.db.createColumn(tableName, columnName, columnType)
+end
+
+-- Use in a function
+local function addPlayerField(fieldName, fieldType)
+    return lia.db.createColumn("players", fieldName, fieldType)
+end
+
+-- Use in a function
+local function addItemField(fieldName, fieldType)
+    return lia.db.createColumn("items", fieldName, fieldType)
+end
+```
+
+---
+
+### lia.db.removeTable
+
+**Purpose**
+
+Removes a table from the database.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+
+**Returns**
+
+* `success` (*boolean*): True if table was removed successfully.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Remove table
+local function removeTable(tableName)
+    return lia.db.removeTable(tableName)
+end
+
+-- Use in a function
+local function cleanupOldTables()
+    local oldTables = {"old_players", "old_items", "old_characters"}
+    for _, tableName in ipairs(oldTables) do
+        lia.db.removeTable(tableName)
+    end
+end
+
+-- Use in a command
+lia.command.add("removetable", {
+    arguments = {
+        {name = "table", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local success = lia.db.removeTable(arguments[1])
+        client:notify("Table " .. (success and "removed" or "removal failed"))
+    end
+})
+```
+
+---
+
+### lia.db.removeColumn
+
+**Purpose**
+
+Removes a column from a table.
+
+**Parameters**
+
+* `tableName` (*string*): The table name.
+* `columnName` (*string*): The column name.
+
+**Returns**
+
+* `success` (*boolean*): True if column was removed successfully.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Remove column
+local function removeColumn(tableName, columnName)
+    return lia.db.removeColumn(tableName, columnName)
+end
+
+-- Use in a function
+local function removePlayerField(fieldName)
+    return lia.db.removeColumn("players", fieldName)
+end
+
+-- Use in a function
+local function removeItemField(fieldName)
+    return lia.db.removeColumn("items", fieldName)
+end
+```
+
+---
+
+### lia.db.GetCharacterTable
+
+**Purpose**
+
+Gets the character table name.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `tableName` (*string*): The character table name.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get character table name
+local function getCharacterTableName()
+    return lia.db.GetCharacterTable()
+end
+
+-- Use in a function
+local function getCharacterData(characterId)
+    local tableName = lia.db.GetCharacterTable()
+    local condition = "id = " .. characterId
+    return lia.db.selectOne(tableName, "*", condition)
+end
+
+-- Use in a function
+local function createCharacter(characterData)
+    local tableName = lia.db.GetCharacterTable()
+    return lia.db.insertTable(tableName, characterData)
+end
+```
+
+---
+
+### lia.db.autoRemoveUnderscoreColumns
+
+**Purpose**
+
+Automatically removes columns with underscores from tables.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Auto remove underscore columns
+local function removeUnderscoreColumns()
+    lia.db.autoRemoveUnderscoreColumns()
+    print("Underscore columns removed")
+end
+
+-- Use in a function
+local function cleanupDatabase()
+    lia.db.autoRemoveUnderscoreColumns()
+    print("Database cleaned up")
+end
+
+-- Use in a command
+lia.command.add("cleanupdb", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.db.autoRemoveUnderscoreColumns()
+        client:notify("Database cleaned up")
+    end
+})
+```

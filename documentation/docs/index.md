@@ -4,7 +4,7 @@
 
 <p align="center">
 
-  <img src="assets/logo_big.png" alt="Lilia Logo" />
+  <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true" alt="Lilia Logo" />
 
 </p>
 

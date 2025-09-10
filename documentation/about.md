@@ -30,30 +30,6 @@
   Download a module and drop it into your server's <code>plugins</code> directory. See our documentation for additional details.
 </p>
 
-<h2 align="center">✨ Module Highlights</h2>
-
-<div align="center">
-
-  **Extensive Addons**
-  A growing collection ready to drop into your server.
-
-  **Server Utilities**
-  Automated restarts, join messages and more.
-
-  **Roleplay Mechanics**
-  Door kicking, tying players and bodygroup tools.
-
-  **Immersion Enhancements**
-  Realistic damage, cinematic text and HUD effects.
-
-  **Community Integrations**
-  Discord relay, radio communication and other extras.
-
-  **Fully Open Source**
-  Modify and extend any module to suit your needs.
-
-</div>
-
 <h2 align="center">📚 Documentation</h2>
 
 <p align="center">

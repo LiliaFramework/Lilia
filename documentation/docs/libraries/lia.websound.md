@@ -1,22 +1,49 @@
-# WebSound Library
+# Web Sound Library
 
-This page explains how remote sounds are downloaded and cached.
+This page documents the functions for working with web sounds and sound downloading.
 
 ---
 
 ## Overview
 
-The web-sound library downloads remote audio files and stores them inside
-`data/lilia/sounds/<IP>/<Gamemode>/`. Each server therefore keeps its own
-collection of downloaded sounds. The library overrides `sound.PlayFile` and
-`sound.PlayURL` so HTTP(S) URLs may be passed directly—the file is downloaded,
-cached and then played. Web addresses can also be used anywhere a sound path is
-expected, such as with `Entity:EmitSound`. If a web URL is passed to
-`sound.PlayFile` or `sound.PlayURL` without prior registration, a hashed file
-name is generated using `util.CRC` and the extension taken from the URL (default
-`mp3`). The `mode` argument to both overrides defaults to an empty string. When a
-cached name or matching URL is supplied, the stored file is reused. Volume and
-pitch from `EntityEmitSound` are preserved for 3D playback.
+The web sound library (`lia.websound`) provides a comprehensive system for downloading, caching, and managing web sounds in the Lilia framework. It includes URL validation, automatic caching, sound file validation, and integration with the sound system.
+
+---
+
+### lia.websound.download
+
+**Purpose**
+
+Downloads a sound file from a URL and caches it locally.
+
+**Parameters**
+
+* `name` (*string*): The name to store the sound under.
+* `url` (*string*): The URL to download from (optional if already registered).
+* `callback` (*function*): Callback function when download completes.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Download a sound file
+local function downloadSound(name, url, callback)
+    lia.websound.download(name, url, callback)
+end
+
+-- Use in a function
+local function loadNotificationSound(callback)
+    local url = "https://example.com/sounds/notification.mp3"
+    lia.websound.download("notification", url, callback)
+end
+```
 
 ---
 
@@ -24,37 +51,35 @@ pitch from `EntityEmitSound` are preserved for 3D playback.
 
 **Purpose**
 
-Downloads a sound from the given URL and saves it in the web-sound cache. Any
-existing file with the same name is overwritten by the new download. If the
-request fails the old cached file is used and passed to the callback.
+Registers a sound URL and downloads it.
 
 **Parameters**
 
-* `name` (*string*): Unique file name including extension.
-* `url` (*string*): HTTP address of the sound file.
-* `cb` (*function | nil*): Called as `cb(path, fromCache)` on success or
-  `cb(nil, false, err)` on failure. `path` is the local data path and
-  `fromCache` is `true` when loaded from disk.
-
-**Realm**
-
-`Client`
+* `name` (*string*): The name to store the sound under.
+* `url` (*string*): The URL to download from.
+* `callback` (*function*): Callback function when download completes.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
 ```lua
--- Download a sound and play it when ready
-lia.websound.register("alert.mp3", "https://example.com/alert.mp3", function(path, fromCache, err)
-    if path then
-        sound.PlayFile(path, "", function(chan) if chan then chan:Play() end end)
-    else
-        print(err)
-    end
-end)
+-- Register a sound
+local function registerSound(name, url, callback)
+    lia.websound.register(name, url, callback)
+end
+
+-- Use in a function
+local function setupDefaultSounds()
+    lia.websound.register("click", "https://example.com/sounds/click.wav")
+    lia.websound.register("hover", "https://example.com/sounds/hover.mp3")
+end
 ```
 
 ---
@@ -63,60 +88,108 @@ end)
 
 **Purpose**
 
-Returns the file path cached with `lia.websound.register`. The `name` can be
-either the registered file name or the original URL. If the file is missing
-`nil` is returned. Both `sound.PlayFile` and `sound.PlayURL` call this internally
-when a cached name or matching URL is supplied.
+Gets a cached sound file path by name.
 
 **Parameters**
 
-* `name` (*string*): File name or URL used during registration.
-
-**Realm**
-
-`Client`
+* `name` (*string*): The name of the sound.
 
 **Returns**
 
-* *string | nil*: Local data path or `nil` if not found.
+* `path` (*string*): The sound file path or nil.
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
 ```lua
--- Retrieve a cached sound and play it
-local path = lia.websound.get("alert.mp3")
-if path then
-    sound.PlayFile(path, "", function(chan) if chan then chan:Play() end end)
+-- Get cached sound
+local function getSound(name)
+    return lia.websound.get(name)
 end
 
--- Play directly from the web
-sound.PlayFile("https://example.com/alert.mp3", "", function(chan)
-    if chan then chan:Play() end
-end)
-
--- Emit a web sound from an entity
-local ply = LocalPlayer()
-ply:EmitSound("https://example.com/alert.mp3")
+-- Use in a function
+local function playSound(name)
+    local path = lia.websound.get(name)
+    if path then
+        sound.PlayFile(path, "", function(chan)
+            if chan then chan:Play() end
+        end)
+    end
+end
 ```
 
 ---
 
-### Viewing Saved Sounds
+### lia.websound.getStats
 
-Use the `lia_saved_sounds` console command on the client to open a menu listing
-all cached web sounds for preview and playback. If no sounds are cached the menu
-is not opened.
+**Purpose**
+
+Gets statistics about downloaded sounds.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `stats` (*table*): Table containing download statistics.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Get sound statistics
+local function getSoundStats()
+    return lia.websound.getStats()
+end
+
+-- Use in a function
+local function showSoundStats()
+    local stats = lia.websound.getStats()
+    print("Downloaded sounds: " .. stats.downloaded)
+    print("Stored sounds: " .. stats.stored)
+    print("Last reset: " .. os.date("%c", stats.lastReset))
+end
+```
 
 ---
 
-### Clearing the Cache
+### lia.websound.stored
 
-To remove all downloaded web sounds on the client use the following console
-command:
+**Purpose**
 
+Stores registered sound data.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `stored` (*table*): Table of stored sound data.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Get stored sounds
+local function getStoredSounds()
+    return lia.websound.stored
+end
+
+-- Use in a function
+local function listStoredSounds()
+    for name, url in pairs(lia.websound.stored) do
+        print("Sound: " .. name .. " - " .. url)
+    end
+end
 ```
-lia_wipe_sounds
-```
-
-This deletes every cached file and resets the internal cache tables. Any sounds
-played afterwards will be downloaded again as needed.

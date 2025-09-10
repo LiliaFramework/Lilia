@@ -1,29 +1,12 @@
 # Vector Meta
 
-Vector utilities expand Garry's Mod's math library.
-
-This document describes additional operations for 3D vectors.
+This page documents methods available on the `Vector` meta table, representing 3D vectors in the Lilia framework.
 
 ---
 
 ## Overview
 
-Vector meta functions provide calculations such as midpoints, distances and axis rotations to support movement, physics and placement tasks.
-
-`Center` and `RotateAroundAxis` return new vectors without changing their inputs. `Distance` returns a number. `Right` and `Up` modify the vector they are called on and also return it.
-
-### Example Hook Usage
-
-These helpers may be called from either client or server code.
-
-The following snippet demonstrates rotating a camera offset every frame inside a `CalcView` hook:
-
-```lua
-hook.Add("CalcView", "TiltView", function(ply, pos, angles, fov)
-    local offset = Vector(30, 0, 10):RotateAroundAxis(vector_up, 45)
-    return {origin = pos + offset, angles = angles, fov = fov}
-end)
-```
+The `Vector` meta table extends Garry's Mod's base vector functionality with Lilia-specific utility methods for geometric calculations, transformations, and spatial operations. These methods provide enhanced vector manipulation capabilities for 3D positioning, rotation, and mathematical operations within the Lilia framework.
 
 ---
 
@@ -31,28 +14,34 @@ end)
 
 **Purpose**
 
-Returns the midpoint between this vector and the supplied vector.
+Calculates the center point between this vector and another vector.
 
 **Parameters**
 
-* `vec2` (*Vector*): The vector to average with this vector.
-
-**Realm**
-
-`Shared`
+* `vec2` (*Vector*): The second vector to calculate the center with.
 
 **Returns**
 
-* *Vector*: The center point of the two vectors.
+* `center` (*Vector*): The center point between the two vectors.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Average two vectors to find the midpoint
-local a = vector_origin
-local b = Vector(10, 10, 10)
-local result = a:Center(b)
-print(result)
+local function getCenterPoint(pos1, pos2)
+    local center = pos1:Center(pos2)
+    print("Center point: " .. tostring(center))
+    return center
+end
+
+concommand.Add("get_center", function(ply)
+    local pos1 = ply:GetPos()
+    local pos2 = ply:GetPos() + Vector(100, 0, 0)
+    getCenterPoint(pos1, pos2)
+end)
 ```
 
 ---
@@ -65,24 +54,30 @@ Calculates the distance between this vector and another vector.
 
 **Parameters**
 
-* `vec2` (*Vector*): The other vector.
-
-**Realm**
-
-`Shared`
+* `vec2` (*Vector*): The second vector to calculate distance to.
 
 **Returns**
 
-* *number*: The distance between the two vectors.
+* `distance` (*number*): The distance between the two vectors.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Measure the distance between two points
-local p1 = vector_origin
-local p2 = Vector(3, 4, 0)
-local result = p1:Distance(p2)
-print(result)
+local function calculateDistance(pos1, pos2)
+    local distance = pos1:Distance(pos2)
+    print("Distance: " .. distance .. " units")
+    return distance
+end
+
+concommand.Add("calculate_distance", function(ply)
+    local pos1 = ply:GetPos()
+    local pos2 = ply:GetPos() + Vector(100, 50, 25)
+    calculateDistance(pos1, pos2)
+end)
 ```
 
 ---
@@ -91,29 +86,37 @@ print(result)
 
 **Purpose**
 
-Rotates the vector around an axis by the specified degrees and returns a new vector without modifying the original.
+Rotates the vector around a specified axis by a given angle in degrees.
 
 **Parameters**
 
-* `axis` (*Vector*): Axis to rotate around.
-
-* `degrees` (*number*): Angle in degrees.
-
-**Realm**
-
-`Shared`
+* `axis` (*Vector*): The axis vector to rotate around.
+* `degrees` (*number*): The angle in degrees to rotate.
 
 **Returns**
 
-* *Vector*: The rotated vector.
+* `rotated` (*Vector*): The rotated vector.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Rotate a vector 90 degrees around the Z axis
-local axis = Vector(0, 0, 1)
-local result = Vector(1, 0, 0):RotateAroundAxis(axis, 90)
-print(result)
+local function rotateVectorAroundAxis(vector, axis, degrees)
+    local rotated = vector:RotateAroundAxis(axis, degrees)
+    print("Original: " .. tostring(vector))
+    print("Rotated: " .. tostring(rotated))
+    return rotated
+end
+
+concommand.Add("rotate_vector", function(ply, cmd, args)
+    local degrees = tonumber(args[1]) or 90
+    local vector = ply:GetPos()
+    local axis = Vector(0, 0, 1) -- Z-axis
+    rotateVectorAroundAxis(vector, axis, degrees)
+end)
 ```
 
 ---
@@ -122,32 +125,35 @@ print(result)
 
 **Purpose**
 
-Derives a right-direction vector relative to an optional up reference. Internally it performs `self:Cross(self, vUp)` and normalizes the result, overwriting the vector in the process.
-
-If this vector has no horizontal component it returns `Vector(0, -1, 0)` and leaves the original vector unchanged.
+Gets the right vector perpendicular to this vector and the up vector.
 
 **Parameters**
 
-* `vUp` (*Vector*, optional): Up direction to compare against. Defaults to `vector_up`.
-
-**Realm**
-
-`Shared`
+* `vUp` (*Vector|nil*): The up vector to use for calculation (default: vector_up).
 
 **Returns**
 
-* *Vector*: The calculated right vector.
+* `right` (*Vector*): The right vector.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Get the right direction vector
-local forward = Vector(1, 0, 0)
-local rightVec = forward:Right() -- forward is now the right vector
-print(rightVec)
+local function getRightVector(direction, upVector)
+    local right = direction:Right(upVector)
+    print("Direction: " .. tostring(direction))
+    print("Right vector: " .. tostring(right))
+    return right
+end
 
-local vertical = Vector(0, 0, 1)
-print(vertical:Right()) -- falls back to Vector(0, -1, 0); vertical is unchanged
+concommand.Add("get_right_vector", function(ply)
+    local direction = ply:GetAimVector()
+    local upVector = Vector(0, 0, 1)
+    getRightVector(direction, upVector)
+end)
 ```
 
 ---
@@ -156,32 +162,35 @@ print(vertical:Right()) -- falls back to Vector(0, -1, 0); vertical is unchanged
 
 **Purpose**
 
-Generates an up-direction vector perpendicular to this vector and an optional up reference. The function first computes `self:Cross(self, vUp)` then `self:Cross(vRet, self)`, normalizing the result and overwriting the vector each time.
-
-When this vector lacks a horizontal component the function returns `Vector(-self.z, 0, 0)` and does not modify the original vector.
+Gets the up vector perpendicular to this vector and the specified up vector.
 
 **Parameters**
 
-* `vUp` (*Vector*, optional): Up direction to compare against. Defaults to `vector_up`.
-
-**Realm**
-
-`Shared`
+* `vUp` (*Vector|nil*): The up vector to use for calculation (default: vector_up).
 
 **Returns**
 
-* *Vector*: The calculated up vector.
+* `up` (*Vector*): The up vector.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Get the up direction vector
-local forward = Vector(1, 0, 0)
-local upVec = forward:Up() -- forward is now the up vector
-print(upVec)
+local function getUpVector(direction, upVector)
+    local up = direction:Up(upVector)
+    print("Direction: " .. tostring(direction))
+    print("Up vector: " .. tostring(up))
+    return up
+end
 
-local vertical = Vector(0, 0, 1)
-print(vertical:Up()) -- returns Vector(-1, 0, 0); vertical is unchanged
+concommand.Add("get_up_vector", function(ply)
+    local direction = ply:GetAimVector()
+    local upVector = Vector(0, 0, 1)
+    getUpVector(direction, upVector)
+end)
 ```
 
 ---

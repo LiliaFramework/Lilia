@@ -1,14 +1,12 @@
 # Panel Meta
 
-Lilia's interface relies on VGUI panels with extra functionality.
-
-This document describes convenience methods available to those panels.
+This page documents methods available on the `Panel` meta table, representing UI panels in the Lilia framework.
 
 ---
 
 ## Overview
 
-Panel meta functions support scaled positioning, listen for inventory changes, and offer other utilities that make building responsive menus and HUD elements easier.
+The `Panel` meta table extends Garry's Mod's base panel functionality with Lilia-specific features including inventory change listening, scaled positioning, and automatic hook management. These methods provide enhanced UI capabilities for creating responsive and interactive interfaces within the Lilia framework, particularly for inventory management and other game systems.
 
 ---
 
@@ -16,44 +14,59 @@ Panel meta functions support scaled positioning, listen for inventory changes, a
 
 **Purpose**
 
-Sets up hooks so this panel reacts to activity on an `Inventory`. Any existing hooks for the same inventory are removed first. When inventory events fire the panel calls its own method with the same name (or `InventoryItemDataChanged` for `ItemDataChanged`) and appends the inventory as the final argument. Each hook confirms the panel still exists and implements the handler before invoking it. Hooks are automatically removed if the inventory is deleted.
-
-The following events are forwarded:
-
-* `InventoryInitialized`
-* `InventoryDeleted`
-* `InventoryDataChanged`
-* `InventoryItemAdded`
-* `InventoryItemRemoved`
-* `ItemDataChanged` → `InventoryItemDataChanged` (only if the item belongs to the inventory)
+Sets up the panel to automatically listen for inventory changes and call appropriate methods.
 
 **Parameters**
 
-* `inventory` (*Inventory*): Required inventory to listen to. An error is thrown if `nil`.
-
-**Realm**
-
-`Client`
+* `inventory` (*Inventory*): The inventory to listen for changes on.
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
+
+**Realm**
+
+Client.
+
+**Notes**
+
+This method listens for the following inventory events:
+- InventoryInitialized
+- InventoryDeleted
+- InventoryDataChanged
+- InventoryItemAdded
+- InventoryItemRemoved
+- ItemDataChanged
+
+When these events occur, corresponding methods on the panel will be called (e.g., InventoryItemAdded, InventoryItemRemoved, etc.).
 
 **Example Usage**
 
 ```lua
-function PANEL:setInventory(inv)
-    self.inventory = inv
-    self:liaListenForInventoryChanges(inv)
+local function setupInventoryPanel(panel, inventory)
+    panel:liaListenForInventoryChanges(inventory)
+    print("Panel is now listening for inventory changes!")
 end
 
-function PANEL:InventoryItemAdded(item, inv)
-    print("Added:", item:getName(), "to", inv:getID())
+local function createInventoryInterface(inventory)
+    local frame = vgui.Create("DFrame")
+    frame:SetSize(400, 300)
+    frame:Center()
+    frame:MakePopup()
+    
+    setupInventoryPanel(frame, inventory)
+    return frame
 end
 
-function PANEL:InventoryItemDataChanged(item, key, oldValue, newValue, inv)
-    print(item, "changed", key, "from", oldValue, "to", newValue)
-end
+concommand.Add("create_inventory_panel", function(ply)
+    local char = ply:getChar()
+    if char then
+        local inv = char:getInv()
+        if inv then
+            createInventoryInterface(inv)
+        end
+    end
+end)
 ```
 
 ---
@@ -62,30 +75,42 @@ end
 
 **Purpose**
 
-Removes hooks created by `liaListenForInventoryChanges`. Useful for cleaning up when the panel is removed or no longer needs updates. Calling this on an inventory that has no hooks has no effect. If called with `nil`, all tracked inventories are cleared.
+Removes all inventory-related hooks from the panel.
 
 **Parameters**
 
-* `id` (*number|nil*): Inventory ID to stop listening to. Defaults to `nil`, which removes hooks for all tracked inventories.
-
-**Realm**
-
-`Client`
+* `id` (*number|nil*): Specific inventory ID to remove hooks for, or nil for all.
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
 ```lua
-function PANEL:OnRemove()
-    self:liaDeleteInventoryHooks()
+local function cleanupInventoryPanel(panel, inventoryID)
+    panel:liaDeleteInventoryHooks(inventoryID)
+    print("Cleaned up inventory hooks for panel!")
 end
 
-function PANEL:StopListening(id)
-    self:liaDeleteInventoryHooks(id)
+local function removeInventoryInterface(panel)
+    cleanupInventoryPanel(panel)
+    panel:Remove()
 end
+
+concommand.Add("remove_inventory_panel", function(ply)
+    local panels = vgui.GetWorldPanel():GetChildren()
+    for _, panel in ipairs(panels) do
+        if panel:GetName() == "InventoryFrame" then
+            removeInventoryInterface(panel)
+            break
+        end
+    end
+end)
 ```
 
 ---
@@ -94,26 +119,37 @@ end
 
 **Purpose**
 
-Wrapper around `SetPos` that converts the provided coordinates using
-`ScreenScale` and `ScreenScaleH` for resolution‑independent layouts.
+Sets the panel's position using scaled coordinates for different screen resolutions.
 
 **Parameters**
 
-* `x` (*number*): Horizontal position before scaling. Required.
-* `y` (*number*): Vertical position before scaling. Required.
-
-**Realm**
-
-`Client`
+* `x` (*number*): The scaled X position.
+* `y` (*number*): The scaled Y position.
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
 ```lua
-panel:SetScaledPos(10, 20)
+local function createScaledPanel()
+    local frame = vgui.Create("DFrame")
+    frame:SetSize(400, 300)
+    frame:SetScaledPos(100, 100)
+    frame:MakePopup()
+    
+    print("Panel positioned at scaled coordinates!")
+    return frame
+end
+
+concommand.Add("create_scaled_panel", function(ply)
+    createScaledPanel()
+end)
 ```
 
 ---
@@ -122,26 +158,37 @@ panel:SetScaledPos(10, 20)
 
 **Purpose**
 
-Wrapper around `SetSize` that scales the supplied width and height using
-`ScreenScale` and `ScreenScaleH`.
+Sets the panel's size using scaled dimensions for different screen resolutions.
 
 **Parameters**
 
-* `w` (*number*): Unscaled width. Required.
-* `h` (*number*): Unscaled height. Required.
-
-**Realm**
-
-`Client`
+* `w` (*number*): The scaled width.
+* `h` (*number*): The scaled height.
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
 ```lua
-panel:SetScaledSize(64, 32)
+local function createResponsivePanel()
+    local frame = vgui.Create("DFrame")
+    frame:SetScaledSize(400, 300)
+    frame:Center()
+    frame:MakePopup()
+    
+    print("Panel sized for current screen resolution!")
+    return frame
+end
+
+concommand.Add("create_responsive_panel", function(ply)
+    createResponsivePanel()
+end)
 ```
 
 ---

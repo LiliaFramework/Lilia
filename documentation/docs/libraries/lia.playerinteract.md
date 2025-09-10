@@ -1,364 +1,317 @@
-# lia.playerinteract
+# Player Interact Library
 
-The `lia.playerinteract` library provides a comprehensive system for managing player interactions with entities and personal actions. It handles the creation, categorization, and execution of interactive options that players can perform on other players, entities, or themselves.
+This page documents the functions for working with player interactions and interaction management.
+
+---
 
 ## Overview
 
-The player interaction system consists of two main types of interactions:
+The playerinteract library (`lia.playerinteract`) provides a comprehensive system for managing player interactions, interaction menus, and interaction handling in the Lilia framework. It includes interaction registration, menu management, and interaction processing functionality.
 
-- **Interactions**: Actions performed on other players or entities (e.g., giving money, using items)
-- **Actions**: Personal actions that players can perform on themselves (e.g., changing voice mode)
+---
 
-The system automatically categorizes interactions, provides range checking, and includes a sophisticated UI with collapsible categories.
+### lia.playerinteract.isWithinRange
 
-## Core Functions
+**Purpose**
 
-### `lia.playerinteract.isWithinRange(client, entity, customRange)`
+Checks if a player is within interaction range.
 
-Checks if a client is within interaction range of an entity.
+**Parameters**
 
-**Parameters:**
-- `client` (Player): The player attempting the interaction
-- `entity` (Entity): The target entity
-- `customRange` (number, optional): Custom range to check (default: 250)
+* `client` (*Player*): The client to check.
+* `target` (*Entity*): The target entity.
 
-**Returns:**
-- `boolean`: True if within range, false otherwise
+**Returns**
 
-**Example:**
+* `isWithinRange` (*boolean*): True if within range.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
 ```lua
-if lia.playerinteract.isWithinRange(player, target, 300) then
-    -- Player is within 300 units of target
+-- Check if within interaction range
+local function isWithinRange(client, target)
+    return lia.playerinteract.isWithinRange(client, target)
 end
-```
 
-### `lia.playerinteract.getInteractions(client)`
-
-Retrieves all available interactions for a client based on their current target entity.
-
-**Parameters:**
-- `client` (Player): The player (defaults to LocalPlayer() on client)
-
-**Returns:**
-- `table`: Table of available interactions
-
-**Example:**
-```lua
-local interactions = lia.playerinteract.getInteractions(player)
-for name, interaction in pairs(interactions) do
-    print("Available interaction:", name)
-end
-```
-
-### `lia.playerinteract.getActions(client)`
-
-Retrieves all available personal actions for a client.
-
-**Parameters:**
-- `client` (Player): The player (defaults to LocalPlayer() on client)
-
-**Returns:**
-- `table`: Table of available actions
-
-**Example:**
-```lua
-local actions = lia.playerinteract.getActions(player)
-for name, action in pairs(actions) do
-    print("Available action:", name)
-end
-```
-
-### `lia.playerinteract.getCategorizedOptions(options)`
-
-Organizes interaction options into categories for better UI presentation.
-
-**Parameters:**
-- `options` (table): Table of interaction options
-
-**Returns:**
-- `table`: Categorized options organized by category
-
-## Server-Side Functions
-
-### `lia.playerinteract.addInteraction(name, data)`
-
-Registers a new interaction option that can be performed on entities or players.
-
-**Parameters:**
-- `name` (string): Unique identifier for the interaction
-- `data` (table): Interaction configuration
-
-**Data Structure:**
-```lua
-{
-    type = "interaction", -- Automatically set
-    range = 250, -- Interaction range (default: 250)
-    category = "General", -- Category name (default: "Unsorted")
-    categoryColor = Color(255, 255, 255, 255), -- Category color
-    shouldShow = function(client, target) return true end, -- Visibility condition
-    onRun = function(client, target) end, -- Interaction execution
-    serverOnly = false, -- Whether interaction runs server-side only
-    timeToComplete = nil, -- Time in seconds to complete the action (optional)
-    actionText = nil -- Text to display during the action (optional)
-}
-```
-
-**Example:**
-```lua
-lia.playerinteract.addInteraction("giveMoney", {
-    category = "Economy",
-    categoryColor = Color(0, 255, 0, 255),
-    shouldShow = function(client, target)
-        return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0
-    end,
-    onRun = function(client, target)
-        -- Handle money transfer
+-- Use in a function
+local function checkInteractionRange(client, target)
+    if lia.playerinteract.isWithinRange(client, target) then
+        print("Player is within interaction range")
+        return true
+    else
+        print("Player is not within interaction range")
+        return false
     end
-})
+end
 ```
 
-**Example with Time-Based Execution:**
+---
+
+### lia.playerinteract.getInteractions
+
+**Purpose**
+
+Gets all interactions for a client.
+
+**Parameters**
+
+* `client` (*Player*): The client to get interactions for.
+
+**Returns**
+
+* `interactions` (*table*): Table of interactions.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
 ```lua
-lia.playerinteract.addInteraction("healPlayer", {
-    category = "Medical",
-    categoryColor = Color(0, 255, 0, 255),
-    range = 150,
-    timeToComplete = 5,
-    actionText = "Healing player...",
-    shouldShow = function(client, target)
-        return IsValid(target) and target:IsPlayer() and 
-               client:getChar():hasMoney(50) and
-               target:Health() < target:GetMaxHealth()
-    end,
-    onRun = function(client, target)
-        -- This will automatically show "Healing player..." for 5 seconds
-        -- before executing the actual healing logic
-        if client:getChar():hasMoney(50) then
-            client:getChar():takeMoney(50)
-            target:SetHealth(math.min(target:Health() + 50, target:GetMaxHealth()))
-            client:notify("Player healed for $50")
-            target:notify("You have been healed")
+-- Get interactions for client
+local function getInteractions(client)
+    return lia.playerinteract.getInteractions(client)
+end
+
+-- Use in a function
+local function showInteractions(client)
+    local interactions = lia.playerinteract.getInteractions(client)
+    print("Available interactions for " .. client:Name() .. ":")
+    for _, interaction in ipairs(interactions) do
+        print("- " .. interaction.name)
+    end
+end
+```
+
+---
+
+### lia.playerinteract.getActions
+
+**Purpose**
+
+Gets all actions for a client.
+
+**Parameters**
+
+* `client` (*Player*): The client to get actions for.
+
+**Returns**
+
+* `actions` (*table*): Table of actions.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get actions for client
+local function getActions(client)
+    return lia.playerinteract.getActions(client)
+end
+
+-- Use in a function
+local function showActions(client)
+    local actions = lia.playerinteract.getActions(client)
+    print("Available actions for " .. client:Name() .. ":")
+    for _, action in ipairs(actions) do
+        print("- " .. action.name)
+    end
+end
+```
+
+---
+
+### lia.playerinteract.getCategorizedOptions
+
+**Purpose**
+
+Gets categorized interaction options for a client.
+
+**Parameters**
+
+* `client` (*Player*): The client to get options for.
+
+**Returns**
+
+* `options` (*table*): Table of categorized options.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get categorized options for client
+local function getCategorizedOptions(client)
+    return lia.playerinteract.getCategorizedOptions(client)
+end
+
+-- Use in a function
+local function showCategorizedOptions(client)
+    local options = lia.playerinteract.getCategorizedOptions(client)
+    print("Categorized options for " .. client:Name() .. ":")
+    for category, options in pairs(options) do
+        print("- " .. category .. ": " .. #options .. " options")
+    end
+end
+```
+
+---
+
+### lia.playerinteract.addInteraction
+
+**Purpose**
+
+Adds a new interaction.
+
+**Parameters**
+
+* `interactionData` (*table*): The interaction data table.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Add interaction
+local function addInteraction(interactionData)
+    lia.playerinteract.addInteraction(interactionData)
+end
+
+-- Use in a function
+local function createDoorInteraction()
+    lia.playerinteract.addInteraction({
+        name = "Open Door",
+        callback = function(client, door)
+            door:Fire("Open")
+            client:notify("Door opened")
         end
-    end
-})
+    })
+    print("Door interaction created")
+end
 ```
 
-### `lia.playerinteract.addAction(name, data)`
+---
 
-Registers a new personal action that players can perform. Actions can now work with traced entities just like interactions.
+### lia.playerinteract.addAction
 
-**Parameters:**
-- `name` (string): Unique identifier for the action
-- `data` (table): Action configuration
+**Purpose**
 
-**Data Structure:**
-```lua
-{
-    type = "action", -- Automatically set
-    range = 250, -- Range (default: 250)
-    category = "General", -- Category name (default: "Unsorted")
-    categoryColor = Color(255, 255, 255, 255), -- Category color
-    shouldShow = function(client, target) return true end, -- Visibility condition
-    onRun = function(client, target) end, -- Action execution
-    serverOnly = false, -- Whether action runs server-side only
-    timeToComplete = nil, -- Time in seconds to complete the action (optional)
-    actionText = nil -- Text to display during the action (optional)
-}
-```
+Adds a new action.
 
-**New Fields:**
-- **`timeToComplete`**: When provided along with `actionText`, automatically wraps the `onRun` function with `client:setAction()` to show a progress bar
-- **`actionText`**: Text displayed during the action execution when `timeToComplete` is set
+**Parameters**
 
-**Note:** Both `shouldShow` and `onRun` functions now receive `client` and `target` parameters, where `target` is the traced entity (can be nil if no entity is being looked at).
+* `actionData` (*table*): The action data table.
 
-**Example:**
-```lua
-lia.playerinteract.addAction("changeVoiceMode", {
-    category = "Voice",
-    categoryColor = Color(255, 255, 0, 255),
-    shouldShow = function(client, target)
-        return client:getChar() and client:Alive()
-    end,
-    onRun = function(client, target)
-        client:setNetVar("VoiceType", "whispering")
-    end
-})
-```
+**Returns**
 
-**Example with Time-Based Execution:**
-```lua
-lia.playerinteract.addAction("meditate", {
-    category = "Personal",
-    categoryColor = Color(100, 100, 255, 255),
-    timeToComplete = 10,
-    actionText = "Meditating...",
-    shouldShow = function(client, target)
-        return client:getChar() and client:Alive() and not client:InVehicle()
-    end,
-    onRun = function(client, target)
-        client:notify("You feel refreshed after meditation")
-        -- Add any meditation effects here
-    end
-})
-```
+*None*
 
-### `lia.playerinteract.syncToClients(client)`
+**Realm**
 
-Synchronizes interaction data to clients for proper client-side functionality.
+Shared.
 
-**Parameters:**
-- `client` (Player): The client to sync data to
-
-**Note:** This function is automatically called when needed and handles networking of interaction data.
-
-## Client-Side Functions
-
-### `lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg)`
-
-Opens the interaction/action menu with categorized options and collapsible sections.
-
-**Parameters:**
-- `options` (table): Available options to display
-- `isInteraction` (boolean): Whether this is an interaction menu (true) or action menu (false)
-- `titleText` (string): Menu title text
-- `closeKey` (number): Key code to close the menu
-- `netMsg` (string): Network message for server-side execution
-
-**Features:**
-- Automatic categorization of options
-- Collapsible category sections
-- Range checking for interactions
-- Smooth animations and blur effects
-- Responsive design with proper scaling
-
-## Built-in Interactions
-
-The library comes with several pre-configured interactions and actions:
-
-### Interactions
-
-#### `giveMoney`
-- **Category**: Economy
-- **Description**: Allows players to transfer money to other players
-- **Requirements**: Player must have money, target must be valid player
-- **Features**: Amount input dialog, anti-cheat protection, family sharing checks
-
-### Actions
-
-#### Voice Mode Changes
-- **changeToWhisper**: Sets voice mode to whispering
-- **changeToTalk**: Sets voice mode to talking  
-- **changeToYell**: Sets voice mode to yelling
-- **Category**: Voice
-- **Requirements**: Player must have character and be alive
-
-## Key Bindings
-
-The library automatically sets up key bindings for easy access:
-
-- **TAB**: Opens interaction menu for current target
-- **G**: Opens personal actions menu
-
-## Networking
-
-The system uses Lilia's networking system to synchronize interaction data between server and clients:
-
-- **liaPlayerInteractSync**: Syncs interaction definitions including new fields
-- **liaPlayerInteractCategories**: Syncs category information
-- **RunInteraction**: Executes server-side interactions
-
-## Hooks
-
-The library provides several hooks for customization:
-
-- **InteractionMenuOpened(frame)**: Called when interaction menu is opened
-- **InteractionMenuClosed()**: Called when interaction menu is closed
-
-## Console Commands
-
-### `printplayerinteract`
-Prints the contents of `lia.playerinteract.stored` to console for debugging purposes.
-
-**Usage:**
-```
-printplayerinteract
-```
-
-**Note:** Admin-only on server, available to all on client.
-
-## Best Practices
-
-1. **Categorization**: Always assign meaningful categories to interactions and actions
-2. **Range Checking**: Use appropriate ranges for different types of interactions
-3. **Validation**: Implement proper `shouldShow` functions to control visibility
-4. **Server-Side Execution**: Use `serverOnly = true` for actions that require server validation
-5. **Error Handling**: Implement proper error handling in `onRun` functions
-6. **Time-Based Actions**: Use `timeToComplete` and `actionText` for actions that require time investment
-7. **Progress Feedback**: Provide clear feedback to users during longer actions
-
-## Example Implementation
+**Example Usage**
 
 ```lua
--- Server-side: Add a custom interaction with time-based execution
-lia.playerinteract.addInteraction("healPlayer", {
-    category = "Medical",
-    categoryColor = Color(0, 255, 0, 255),
-    range = 150,
-    timeToComplete = 5,
-    actionText = "Healing player...",
-    shouldShow = function(client, target)
-        return IsValid(target) and target:IsPlayer() and 
-               client:getChar():hasMoney(50) and
-               target:Health() < target:GetMaxHealth()
-    end,
-    onRun = function(client, target)
-        if client:getChar():hasMoney(50) then
-            client:getChar():takeMoney(50)
-            target:SetHealth(math.min(target:Health() + 50, target:GetMaxHealth()))
-            client:notify("Player healed for $50")
-            target:notify("You have been healed")
+-- Add action
+local function addAction(actionData)
+    lia.playerinteract.addAction(actionData)
+end
+
+-- Use in a function
+local function createUseAction()
+    lia.playerinteract.addAction({
+        name = "Use",
+        callback = function(client, target)
+            target:Use(client)
+            client:notify("Used " .. target:GetClass())
         end
-    end
-})
-
--- Server-side: Add a personal action with time-based execution
-lia.playerinteract.addAction("meditate", {
-    category = "Personal",
-    categoryColor = Color(100, 100, 255, 255),
-    timeToComplete = 10,
-    actionText = "Meditating...",
-    shouldShow = function(client, target)
-        return client:getChar() and client:Alive() and not client:InVehicle()
-    end,
-    onRun = function(client, target)
-        client:notify("You feel refreshed after meditation")
-        -- Add any meditation effects here
-    end
-})
-
--- Client-side: Custom hook usage
-hook.Add("InteractionMenuOpened", "CustomInteractionMenu", function(frame)
-    -- Customize the opened menu
-    print("Interaction menu opened!")
-end)
+    })
+    print("Use action created")
+end
 ```
 
-## Technical Details
+---
 
-- **Range Calculation**: Uses squared distance for performance optimization
-- **UI Rendering**: Built with DFrame and custom painting for optimal performance
-- **Category Management**: Automatic category creation and color assignment
-- **Memory Management**: Proper cleanup of UI elements and timers
-- **Network Optimization**: Efficient data synchronization using big table networking
-- **Action System Integration**: Automatic integration with Lilia's action system for time-based interactions
-- **Progress Indicators**: Built-in support for showing progress bars during time-consuming actions
+### lia.playerinteract.syncToClients
 
-## Migration Notes
+**Purpose**
 
-If you're updating from an older version of the library:
+Syncs interactions to all clients.
 
-1. **New Fields**: The `timeToComplete` and `actionText` fields are optional and won't break existing code
-2. **Automatic Wrapping**: When both fields are provided, the `onRun` function is automatically wrapped with `client:setAction()`
-3. **Backward Compatibility**: All existing interactions and actions will continue to work without modification
-4. **Enhanced UX**: New fields provide better user experience for time-consuming actions
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Sync interactions to clients
+local function syncInteractions()
+    lia.playerinteract.syncToClients()
+end
+
+-- Use in a function
+local function syncAllInteractions()
+    lia.playerinteract.syncToClients()
+    print("Interactions synced to all clients")
+end
+```
+
+---
+
+### lia.playerinteract.openMenu
+
+**Purpose**
+
+Opens an interaction menu for a client.
+
+**Parameters**
+
+* `client` (*Player*): The client to open the menu for.
+* `target` (*Entity*): The target entity.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Open interaction menu
+local function openMenu(client, target)
+    lia.playerinteract.openMenu(client, target)
+end
+
+-- Use in a function
+local function openInteractionMenu(client, target)
+    lia.playerinteract.openMenu(client, target)
+    print("Interaction menu opened for " .. client:Name())
+end
+```

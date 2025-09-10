@@ -25,6 +25,8 @@ Each attribute is registered on the global `ATTRIBUTE` table. You can customize:
 | `startingMax`  | `number`  | `30`    | Maximum base value at character creation, before any startup bonus points are applied. |
 | `noStartBonus` | `boolean` | `false` | If `true`, players cannot allocate any of the creation startup bonus points to this attribute. |
 | `maxValue`     | `number`  | `30`    | Absolute upper limit an attribute can ever reach. |
+| `min`          | `number`  | `0`     | Minimum value for display purposes in character information panels. |
+| `max`          | `number`  | `100`   | Maximum value for display purposes in character information panels. |
 
 ---
 
@@ -94,6 +96,30 @@ Absolute ceiling an attribute can ever reach. Defaults to the
 ATTRIBUTE.maxValue = 50
 ```
 
+---
+
+#### `min`
+
+Minimum value used for display purposes in character information panels.
+
+This field controls the lower bound shown in progress bars and other UI elements.
+
+```lua
+ATTRIBUTE.min = 0
+```
+
+---
+
+#### `max`
+
+Maximum value used for display purposes in character information panels.
+
+This field controls the upper bound shown in progress bars and other UI elements.
+
+```lua
+ATTRIBUTE.max = 100
+```
+
 ### Full Attribute Example
 
 ```lua
@@ -103,4 +129,6 @@ ATTRIBUTE.desc = "Improves your reflexes and overall movement speed."
 ATTRIBUTE.startingMax = 20
 ATTRIBUTE.noStartBonus = false
 ATTRIBUTE.maxValue = 50
+ATTRIBUTE.min = 0
+ATTRIBUTE.max = 100
 ```

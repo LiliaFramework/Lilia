@@ -1,12 +1,12 @@
 # Vendor Library
 
-This page documents vendor-related helpers.
+This page documents the functions for working with vendors and trading systems.
 
 ---
 
 ## Overview
 
-The vendor library stores item presets and rarity colours for use with in-game vendor NPCs. Presets allow vendors to be configured quickly with predefined items while rarities customise item name colours in the vendor menu. The library also exposes a client-side `lia.vendor.editor` table containing functions that send edits to the server.
+The vendor library (`lia.vendor`) provides a comprehensive system for managing vendors, trading, and item commerce in the Lilia framework. It includes vendor presets, rarities, editor functions, and database operations for vendor management.
 
 ---
 
@@ -14,29 +14,37 @@ The vendor library stores item presets and rarity colours for use with in-game v
 
 **Purpose**
 
-Registers a new rarity colour that can be referenced by name.
+Adds a rarity type with a specific color to the vendor system.
 
 **Parameters**
 
-* `name` (*string*): Identifier for the rarity.
-* `color` (*Color*): Colour to display in menus.
-
-**Realm**
-
-`Shared`
+* `name` (*string*): The name of the rarity.
+* `color` (*Color*): The color associated with the rarity.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
 
-**Notes**
+**Realm**
 
-* Name matching is case-sensitive.
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.vendor.addRarities("epic", Color(165, 105, 189))
+-- Add a rarity type
+local function addRarity(name, color)
+    lia.vendor.addRarities(name, color)
+end
+
+-- Use in a function
+local function setupRarities()
+    lia.vendor.addRarities("common", Color(255, 255, 255))
+    lia.vendor.addRarities("uncommon", Color(0, 255, 0))
+    lia.vendor.addRarities("rare", Color(0, 0, 255))
+    lia.vendor.addRarities("epic", Color(128, 0, 128))
+    lia.vendor.addRarities("legendary", Color(255, 165, 0))
+end
 ```
 
 ---
@@ -45,33 +53,47 @@ lia.vendor.addRarities("epic", Color(165, 105, 189))
 
 **Purpose**
 
-Defines a reusable vendor preset of items.
+Adds a vendor preset with predefined items and their configurations.
 
 **Parameters**
 
-* `name` (*string*): Preset name.
-* `items` (*table*): Map of item unique IDs to property tables (`price`, `stock`, `maxStock`, `mode`).
-
-**Realm**
-
-`Shared`
+* `name` (*string*): The name of the preset.
+* `items` (*table*): Table of items and their configurations.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
 
-**Notes**
+**Realm**
 
-* Preset names are stored in lowercase for case-insensitive lookup.
-* Item tables may specify `price`, `stock`, `maxStock` and `mode` fields.
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.vendor.addPreset("medical", {
-    medkit = {price = 100, stock = 5, maxStock = 10, mode = VENDOR_SELLANDBUY},
-    bandage = {price = 20, stock = 20}
-})
+-- Add a vendor preset
+local function addPreset(name, items)
+    lia.vendor.addPreset(name, items)
+end
+
+-- Use in a function
+local function createWeaponVendorPreset()
+    local items = {
+        ["weapon_pistol"] = {
+            price = 100,
+            mode = 1,
+            stock = 10,
+            maxStock = 50
+        },
+        ["weapon_shotgun"] = {
+            price = 500,
+            mode = 1,
+            stock = 5,
+            maxStock = 20
+        }
+    }
+    lia.vendor.addPreset("weapon_vendor", items)
+end
 ```
 
 ---
@@ -80,528 +102,218 @@ lia.vendor.addPreset("medical", {
 
 **Purpose**
 
-Fetches a preset by name.
+Gets a vendor preset by name.
 
 **Parameters**
 
-* `name` (*string*): Name of the preset.
-
-**Realm**
-
-`Shared`
+* `name` (*string*): The name of the preset.
 
 **Returns**
 
-* *table | nil*: The preset table or `nil` if not found.
+* `preset` (*table*): The preset data or nil.
 
-**Notes**
+**Realm**
 
-* Lookup is case-insensitive.
+Shared.
 
 **Example Usage**
 
 ```lua
-local preset = lia.vendor.getPreset("medical")
-if preset then
-    PrintTable(preset)
+-- Get a vendor preset
+local function getPreset(name)
+    return lia.vendor.getPreset(name)
+end
+
+-- Use in a function
+local function loadVendorPreset(presetName)
+    local preset = lia.vendor.getPreset(presetName)
+    if preset then
+        print("Preset loaded: " .. presetName)
+        return preset
+    else
+        print("Preset not found: " .. presetName)
+        return nil
+    end
 end
 ```
 
 ---
-### lia.vendor.editor.name
+
+### lia.vendor.loadPresets
 
 **Purpose**
 
-Sets the name displayed above a vendor.
+Loads vendor presets from the database.
 
 **Parameters**
 
-* `name` (*string*): New vendor name.
-
-**Realm**
-
-`Client`
+*None*
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-lia.vendor.editor.name("Medic")
+-- Load vendor presets
+local function loadPresets()
+    lia.vendor.loadPresets()
+end
+
+-- Use in a function
+local function initializeVendorSystem()
+    lia.vendor.loadPresets()
+    print("Vendor presets loaded from database")
+end
 ```
 
 ---
-### lia.vendor.editor.mode
+
+### lia.vendor.savePresetToDatabase
 
 **Purpose**
 
-Changes how the vendor handles a specific item.
+Saves a vendor preset to the database.
 
 **Parameters**
 
-* `itemType` (*string*): Item unique ID.
-* `mode` (*number | nil*): Trade mode constant or `nil`.
-
-**Realm**
-
-`Client`
+* `name` (*string*): The name of the preset.
+* `data` (*table*): The preset data.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
 
-**Notes**
+**Realm**
 
-* Has no effect while a preset is active.
-* Valid modes are `VENDOR_SELLANDBUY`, `VENDOR_SELLONLY`, and `VENDOR_BUYONLY`. Passing `nil` or an invalid mode clears the item's trade mode.
+Server.
 
 **Example Usage**
 
 ```lua
-lia.vendor.editor.mode("medkit", VENDOR_SELLONLY)
+-- Save preset to database
+local function savePresetToDatabase(name, data)
+    lia.vendor.savePresetToDatabase(name, data)
+end
+
+-- Use in a function
+local function createAndSavePreset(name, items)
+    lia.vendor.addPreset(name, items)
+    lia.vendor.savePresetToDatabase(name, items)
+    print("Preset saved to database: " .. name)
+end
 ```
 
 ---
-### lia.vendor.editor.price
+
+### lia.vendor.editor
 
 **Purpose**
 
-Sets the buy or sell price for an item.
+Provides editor functions for vendor configuration.
 
 **Parameters**
 
-* `itemType` (*string*): Item unique ID.
-* `price` (*number | nil*): Price in currency or `nil`.
-
-**Realm**
-
-`Client`
+* `name` (*string*): The editor function name.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+* `editorFunc` (*function*): The editor function.
 
-**Notes**
+**Realm**
 
-* Has no effect while a preset is active.
-* Passing `nil` or a negative number clears the custom price.
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.vendor.editor.price("bandage", 20)
+-- Use vendor editor
+local function useEditor(name, ...)
+    local editor = lia.vendor.editor[name]
+    if editor then
+        editor(...)
+    end
+end
+
+-- Use in a function
+local function editVendorName(vendor, newName)
+    lia.vendor.editor["name"](newName)
+end
 ```
 
 ---
-### lia.vendor.editor.flag
+
+### lia.vendor.presets
 
 **Purpose**
 
-Restricts vendor access to characters with a flag.
+Stores all vendor presets.
 
 **Parameters**
 
-* `flag` (*string*): Single-character permission flag.
-
-**Realm**
-
-`Client`
+*None*
 
 **Returns**
 
-* *nil*: This function does not return a value.
+* `presets` (*table*): Table of all presets.
 
-**Notes**
+**Realm**
 
-* Use an empty string to remove the flag requirement.
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.vendor.editor.flag("t")
+-- Get all presets
+local function getAllPresets()
+    return lia.vendor.presets
+end
+
+-- Use in a function
+local function listAllPresets()
+    for name, preset in pairs(lia.vendor.presets) do
+        print("Preset: " .. name)
+    end
+end
 ```
 
 ---
-### lia.vendor.editor.stockDisable
+
+### lia.vendor.rarities
 
 **Purpose**
 
-Removes the stock limit for an item.
+Stores all vendor rarities.
 
 **Parameters**
 
-* `itemType` (*string*): Item unique ID.
-
-**Realm**
-
-`Client`
+*None*
 
 **Returns**
 
-* *nil*: This function does not return a value.
+* `rarities` (*table*): Table of all rarities.
 
-**Notes**
+**Realm**
 
-* Has no effect while a preset is active.
-* Sets the maximum stock to unlimited until changed again.
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.vendor.editor.stockDisable("medkit")
+-- Get all rarities
+local function getAllRarities()
+    return lia.vendor.rarities
+end
+
+-- Use in a function
+local function listAllRarities()
+    for name, color in pairs(lia.vendor.rarities) do
+        print("Rarity: " .. name .. " - " .. tostring(color))
+    end
+end
 ```
-
----
-### lia.vendor.editor.welcome
-
-**Purpose**
-
-Changes the vendor's welcome message.
-
-**Parameters**
-
-* `message` (*string*): Text shown when players open the vendor.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.welcome("Hello there!")
-```
-
----
-### lia.vendor.editor.stockMax
-
-**Purpose**
-
-Sets the maximum stock for an item.
-
-**Parameters**
-
-* `itemType` (*string*): Item unique ID.
-* `value` (*number*): Maximum quantity.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Has no effect while a preset is active.
-* The value is clamped to at least 1.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.stockMax("medkit", 10)
-```
-
----
-### lia.vendor.editor.stock
-
-**Purpose**
-
-Manually sets the current stock for an item.
-
-**Parameters**
-
-* `itemType` (*string*): Item unique ID.
-* `value` (*number*): Current quantity.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Has no effect while a preset is active.
-* Stock is clamped between 0 and the maximum stock.
-* If no maximum stock exists, calling this also sets the maximum to the same value.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.stock("medkit", 5)
-```
-
----
-### lia.vendor.editor.faction
-
-**Purpose**
-
-Allows or disallows a faction from using the vendor.
-
-**Parameters**
-
-* `factionID` (*number*): Faction index.
-* `allowed` (*boolean*): `true` to allow, `false` to remove.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.faction(1, true)
-```
-
----
-### lia.vendor.editor.class
-
-**Purpose**
-
-Allows or disallows a class from using the vendor.
-
-**Parameters**
-
-* `classID` (*number*): Class index.
-* `allowed` (*boolean*): `true` to allow, `false` to remove.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.class(2, true)
-```
-
----
-### lia.vendor.editor.model
-
-**Purpose**
-
-Updates the vendor's model.
-
-**Parameters**
-
-* `model` (*string*): Model path.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* The model path is converted to lowercase before being applied.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.model("models/alyx.mdl")
-```
-
----
-### lia.vendor.editor.skin
-
-**Purpose**
-
-Changes the vendor's skin index.
-
-**Parameters**
-
-* `skin` (*number*): Skin ID.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Value is clamped between `0` and `255`.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.skin(1)
-```
-
----
-### lia.vendor.editor.bodygroup
-
-**Purpose**
-
-Sets a bodygroup on the vendor model.
-
-**Parameters**
-
-* `index` (*number*): Bodygroup slot.
-* `value` (*number*): Value to apply.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Missing values default to `0`.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.bodygroup(2, 3)
-```
-
----
-### lia.vendor.editor.useMoney
-
-**Purpose**
-
-Toggles whether the vendor uses a money pool.
-
-**Parameters**
-
-* `useMoney` (*boolean*): `true` to enable, `false` to disable.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Enabling sets the vendor's funds to `lia.config.get("vendorDefaultMoney", 500)`.
-* Disabling clears the money pool, giving the vendor unlimited funds.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.useMoney(true)
-```
-
----
-### lia.vendor.editor.money
-
-**Purpose**
-
-Sets the vendor's available money.
-
-**Parameters**
-
-* `value` (*number*): Amount of currency.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Values are rounded to whole numbers and clamped to at least `0`.
-* To remove the money limit, call `lia.vendor.editor.useMoney(false)`.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.money(500)
-```
-
----
-### lia.vendor.editor.scale
-
-**Purpose**
-
-Adjusts the price multiplier for selling items.
-
-**Parameters**
-
-* `scale` (*number*): Multiplier applied to sell prices.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* The default multiplier is `0.5`.
-* No bounds checking is performed.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.scale(0.5)
-```
-
----
-### lia.vendor.editor.preset
-
-**Purpose**
-
-Applies a saved item preset to the vendor.
-
-**Parameters**
-
-* `preset` (*string*): Preset name.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Notes**
-
-* Use `"none"` to clear the current preset and restore manual editing.
-* While a preset is active, item-specific functions such as `mode`, `price` and `stock` are ignored.
-* Preset names are matched case-insensitively.
-
-**Example Usage**
-
-```lua
-lia.vendor.editor.preset("medical")
--- Clear the preset
-lia.vendor.editor.preset("none")
-```
-
----

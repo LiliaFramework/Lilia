@@ -14,11 +14,12 @@ Each bar represents a progress value such as health, armor, or stamina. The bar 
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `getValue` | `function` | Returns the bar’s progress as a fraction. |
+| `getValue` | `function` | Returns the bar's progress as a fraction. |
 | `color` | `Color` | Bar fill colour. |
 | `priority` | `number` | Draw order; lower priorities draw first. |
 | `identifier` | `string` \| `nil` | Unique identifier, if provided. |
 | `visible` | `boolean` \| `nil` | Set to `true` to force the bar to remain visible. |
 | `lifeTime` | `number` | Internal timer used for fading; managed automatically. |
+| `order` | `number` | Internal ordering counter for bars with same priority; managed automatically. |
 
 ---

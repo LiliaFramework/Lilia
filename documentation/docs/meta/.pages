@@ -2,7 +2,6 @@ arrange:
   - character.md
   - entity.md
   - inventory.md
-  - gridinv.md
   - item.md
   - player.md
   - panel.md

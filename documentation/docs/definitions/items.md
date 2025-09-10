@@ -36,7 +36,6 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `entityid` | `string` | `""` | Entity class spawned by the item. |
 | `equipSound` | `string` | `""` | Sound played when equipping. |
 | `useSound` | `string` | `""` | Sound played when using the item. |
-| `flag` | `string` | `""` | Flag required to purchase the item. |
 | `forceRender` | `boolean` | `false` | Always regenerate the spawn icon. |
 | `functions` | `table` | `DefaultFunctions` | Table of interaction functions. |
 | `health` | `number` | `0` | Amount of health restored when used. |
@@ -69,6 +68,10 @@ The global `ITEM` table defines per-item settings such as sounds, inventory dime
 | `url` | `string` | `""` | Web address opened when using the item. |
 | `weaponCategory` | `string` | `""` | Slot category for the weapon. |
 | `width` | `number` | `1` | Width in inventory grid. |
+| `scale` | `number` | `1` | Scale factor for item rendering. |
+| `skin` | `number` | `0` | Skin index for the item model. |
+| `isItem` | `boolean` | `true` | Indicates the table is an item. |
+| `calcPrice` | `function` | `nil` | Function to calculate dynamic pricing. |
 
 ---
 
@@ -441,6 +444,25 @@ print(item:getQuantity())
 ---
 
 ### Categorization & Metadata
+
+#### `isItem`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Indicates the table is an item. This is automatically set to `true` for all items and is used for type checking.
+
+**Example Usage:**
+
+```lua
+-- This is automatically set, no need to define manually
+ITEM.isItem = true
+```
+
+---
 
 #### `base`
 
@@ -882,6 +904,42 @@ ITEM.weaponCategory = "sidearm"
 
 ### Visuals & Models
 
+#### `scale`
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Scale factor for item rendering. Affects the size of the item when displayed.
+
+**Example Usage:**
+
+```lua
+ITEM.scale = 1.5
+```
+
+---
+
+#### `skin`
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Skin index for the item model. Used to change the appearance of the model.
+
+**Example Usage:**
+
+```lua
+ITEM.skin = 1
+```
+
+---
+
 #### `model`
 
 **Type:**
@@ -990,6 +1048,26 @@ ITEM.contents = "<h1>Book</h1>"
 
 ### Economic & Pricing
 
+#### `calcPrice`
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Function to calculate dynamic pricing. If defined, this function will be called instead of using the static `price` field. The function receives the base price as a parameter and should return the calculated price.
+
+**Example Usage:**
+
+```lua
+ITEM.calcPrice = function(basePrice)
+    return basePrice * 1.5 -- 50% markup
+end
+```
+
+---
+
 #### `price`
 
 **Type:**
@@ -1008,27 +1086,6 @@ ITEM.price = 100
 
 ```
 
----
-
-#### `flag`
-
-**Type:**
-
-`string`
-
-**Description:**
-
-Flag required to purchase the item.
-
-**Example Usage:**
-
-```lua
-
-ITEM.flag = "Y"
-
-```
-
----
 
 #### `rarity`
 

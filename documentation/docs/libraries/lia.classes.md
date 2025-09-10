@@ -1,14 +1,12 @@
 # Classes Library
 
-This page details the class system functions.
+This page documents the functions for working with character classes and job management.
 
 ---
 
 ## Overview
 
-The classes library loads Lua definitions that describe player classes. Classes act like temporary jobs within a faction. The library stores available classes, applies default values, and provides lookup functions by index or text search.
-
-See [Class Fields](../definitions/class.md) for configurable `CLASS` properties and [Class Hooks](../hooks/class_hooks.md) for customization callbacks.
+The classes library (`lia.class`) provides a comprehensive system for managing character classes, jobs, and roles in the Lilia framework. It handles class registration, validation, player assignment, and class-related operations.
 
 ---
 
@@ -16,37 +14,79 @@ See [Class Fields](../definitions/class.md) for configurable `CLASS` properties 
 
 **Purpose**
 
-Registers a new class or updates an existing one with matching `uniqueID`.
-Applies default values and validates that the provided faction exists.
+Registers a new character class with the system.
 
 **Parameters**
 
-* `uniqueID` (*string*): Unique identifier for the class.
-* `data` (*table*): Properties such as `name`, `desc`, `faction`, `limit`, etc.
-
-**Realm**
-
-`Shared`
+* `uniqueID` (*string*): The unique identifier for the class.
+* `data` (*table*): The class configuration data.
 
 **Returns**
 
-* *table | nil*: The registered class table, or `nil` if the faction is invalid.
+* `class` (*table*): The registered class object.
 
-**Edge Cases**
+**Realm**
 
-* Sets defaults of `name` to `L("unknown")`, `desc` to `L("noDesc")`, `limit` to `0`, and `OnCanBe` to a function returning `true` when those fields are missing.
-* Logs an error and returns `nil` when `faction` is missing or not a valid team.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Register a class for the Combine faction
-local class = lia.class.register("overwatch", {
-    name = "Overwatch Soldier",
-    desc = "Transhuman soldier of the Combine.",
-    faction = FACTION_COMBINE,
-    limit = 4,
-    isWhitelisted = true
+-- Register a basic class
+lia.class.register("citizen", {
+    name = "Citizen",
+    desc = "A regular citizen",
+    faction = "Citizen",
+    limit = 0,
+    isDefault = true,
+    OnCanBe = function(client)
+        return true
+    end
+})
+
+-- Register a limited class
+lia.class.register("police", {
+    name = "Police Officer",
+    desc = "A law enforcement officer",
+    faction = "Police",
+    limit = 5,
+    isDefault = false,
+    isWhitelisted = true,
+    OnCanBe = function(client)
+        local char = client:getChar()
+        return char and char:hasFlags("p")
+    end
+})
+
+-- Register a VIP class
+lia.class.register("vip", {
+    name = "VIP Member",
+    desc = "A special VIP member",
+    faction = "VIP",
+    limit = 10,
+    isDefault = false,
+    isWhitelisted = true,
+    OnCanBe = function(client)
+        return client:hasPrivilege("vipClass")
+    end
+})
+
+-- Register a class with custom properties
+lia.class.register("medic", {
+    name = "Medic",
+    desc = "A medical professional",
+    faction = "Medical",
+    limit = 3,
+    isDefault = false,
+    weapons = {"weapon_medkit"},
+    OnCanBe = function(client)
+        local char = client:getChar()
+        return char and char:hasFlags("m")
+    end,
+    OnSet = function(client, character)
+        -- Custom logic when class is set
+        client:Give("weapon_medkit")
+    end
 })
 ```
 
@@ -56,32 +96,35 @@ local class = lia.class.register("overwatch", {
 
 **Purpose**
 
-Loads every `.lua` file within the supplied directory. Each file should define a `CLASS` table inserted into `lia.class.list` with an automatic index.
-Skips files whose `uniqueID` already exists and requires each class to have a valid `faction`.
-Defaults `name` to `L("unknown")`, `desc` to `L("noDesc")`, `limit` to `0`, and `OnCanBe` to a function returning `true`.
-Files prefixed with `sh_` have the prefix stripped when determining `uniqueID`.
+Loads class definitions from a directory containing class files.
 
 **Parameters**
 
-* `directory` (*string*): Folder path containing class Lua files, typically `"schema/classes"` in a schema.
-
-**Edge Cases**
-
-* After inclusion, the temporary global `CLASS` is cleared to avoid leaking state.
-
-**Realm**
-
-`Shared`
+* `directory` (*string*): The directory path to load class files from.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Load all classes for the schema
+-- Load classes from a directory
+lia.class.loadFromDir("gamemode/classes")
+
+-- Load from a custom classes folder
+lia.class.loadFromDir("addons/myaddon/classes")
+
+-- Load from schema classes
 lia.class.loadFromDir("schema/classes")
+
+-- Load from multiple directories
+lia.class.loadFromDir("gamemode/classes")
+lia.class.loadFromDir("addons/customclasses/classes")
 ```
 
 ---
@@ -90,29 +133,55 @@ lia.class.loadFromDir("schema/classes")
 
 **Purpose**
 
-Validates faction membership, current class, and population limits before calling the `CanPlayerJoinClass` gamemode hook and the class’s `OnCanBe` method. This function does not automatically enforce class whitelists.
+Checks if a client can join a specific class.
 
 **Parameters**
 
-* `client` (*Player*): Player attempting to join.
-
-* `class` (*number*): Class index to join.
-
-**Realm**
-
-`Shared`
+* `client` (*Player*): The client to check.
+* `class` (*number*): The class index to check.
 
 **Returns**
 
-* *boolean | nil*, *string?*: `false` and a localized reason when basic checks fail. If either the hook or `OnCanBe` returns `false`, this function simply returns `false`. On success, returns the class’s `isDefault` flag (`true` for default classes, otherwise `nil`).
+* `canBe` (*boolean*): True if the client can join the class.
+* `reason` (*string*): The reason if the client cannot join.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-local canJoin, reason = lia.class.canBe(client, classID)
-if not canJoin then
-    print(reason)
+-- Check if client can be a specific class
+local canBe, reason = lia.class.canBe(client, 1)
+if canBe then
+    print("Client can join class 1")
+else
+    print("Cannot join class 1:", reason)
 end
+
+-- Check multiple classes
+for i = 1, #lia.class.list do
+    local canBe, reason = lia.class.canBe(client, i)
+    if canBe then
+        print("Client can join class " .. i)
+    end
+end
+
+-- Use in a command
+lia.command.add("checkclass", {
+    arguments = {
+        {name = "class", type = "number"}
+    },
+    onRun = function(client, arguments)
+        local canBe, reason = lia.class.canBe(client, arguments[1])
+        if canBe then
+            client:notify("You can join this class")
+        else
+            client:notify("Cannot join: " .. reason)
+        end
+    end
+})
 ```
 
 ---
@@ -121,25 +190,47 @@ end
 
 **Purpose**
 
-Retrieves the class table associated with the given index.
+Retrieves a class by its identifier (index or uniqueID).
 
 **Parameters**
 
-* `index` (*number*): Class index to look up.
-
-**Realm**
-
-`Shared`
+* `identifier` (*number|string*): The class index or uniqueID.
 
 **Returns**
 
-* *table | nil*: Class table if found, or `nil` for an invalid index.
+* `class` (*table*): The class object if found, nil otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Retrieve the class table for the engineer class
-local classData = lia.class.get(CLASS_ENGINEER)
+-- Get class by index
+local class = lia.class.get(1)
+if class then
+    print("Class name:", class.name)
+end
+
+-- Get class by uniqueID
+local class = lia.class.get("police")
+if class then
+    print("Police class found:", class.name)
+end
+
+-- Use in a function
+local function getClassInfo(identifier)
+    local class = lia.class.get(identifier)
+    if class then
+        return {
+            name = class.name,
+            desc = class.desc,
+            limit = class.limit
+        }
+    end
+    return nil
+end
 ```
 
 ---
@@ -148,26 +239,44 @@ local classData = lia.class.get(CLASS_ENGINEER)
 
 **Purpose**
 
-Returns an array of players whose characters belong to the given class.
+Gets all players currently in a specific class.
 
 **Parameters**
 
-* `class` (*number*): Class index to check.
-
-**Realm**
-
-`Shared`
+* `class` (*number*): The class index to get players for.
 
 **Returns**
 
-* *table*: List of player objects. Returns an empty table when no players are in the class.
+* `players` (*table*): Table of players in the class.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-for _, ply in ipairs(lia.class.getPlayers(classID)) do
-    print(ply:Nick())
+-- Get all players in class 1
+local players = lia.class.getPlayers(1)
+print("Players in class 1:", #players)
+
+-- Get all police officers
+local policeClass = lia.class.get("police")
+if policeClass then
+    local police = lia.class.getPlayers(policeClass.index)
+    print("Police officers online:", #police)
 end
+
+-- Use in a command
+lia.command.add("listclass", {
+    arguments = {
+        {name = "class", type = "number"}
+    },
+    onRun = function(client, arguments)
+        local players = lia.class.getPlayers(arguments[1])
+        client:notify("Players in class: " .. #players)
+    end
+})
 ```
 
 ---
@@ -176,25 +285,44 @@ end
 
 **Purpose**
 
-Counts the number of players currently in the specified class.
+Gets the number of players currently in a specific class.
 
 **Parameters**
 
-* `class` (*number*): Class index to check.
-
-**Realm**
-
-`Shared`
+* `class` (*number*): The class index to count players for.
 
 **Returns**
 
-* *number*: Player count (returns `0` if none).
+* `count` (*number*): The number of players in the class.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-local count = lia.class.getPlayerCount(classID)
-print("Players in class:", count)
+-- Get player count for class 1
+local count = lia.class.getPlayerCount(1)
+print("Players in class 1:", count)
+
+-- Check if class is full
+local class = lia.class.get("police")
+if class then
+    local count = lia.class.getPlayerCount(class.index)
+    if count >= class.limit then
+        print("Police class is full!")
+    end
+end
+
+-- Use in a function
+local function isClassFull(classIndex)
+    local class = lia.class.get(classIndex)
+    if class and class.limit > 0 then
+        return lia.class.getPlayerCount(classIndex) >= class.limit
+    end
+    return false
+end
 ```
 
 ---
@@ -203,25 +331,49 @@ print("Players in class:", count)
 
 **Purpose**
 
-Finds a class whose `uniqueID` or `name` matches the given text (case-insensitive, partial matches allowed).
+Retrieves a class by searching for a matching name or uniqueID.
 
 **Parameters**
 
-* `class` (*string*): Name or `uniqueID` to look up.
-
-**Realm**
-
-`Shared`
+* `class` (*string*): The class name or uniqueID to search for.
 
 **Returns**
 
-* *number | nil*: Matching class index or `nil` if not found.
+* `classIndex` (*number*): The class index if found, nil otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-local id = lia.class.retrieveClass("police")
-print("Class index:", id)
+-- Find class by name
+local classIndex = lia.class.retrieveClass("Police Officer")
+if classIndex then
+    print("Found class at index:", classIndex)
+end
+
+-- Find class by uniqueID
+local classIndex = lia.class.retrieveClass("police")
+if classIndex then
+    print("Found police class at index:", classIndex)
+end
+
+-- Use in a command
+lia.command.add("findclass", {
+    arguments = {
+        {name = "name", type = "string"}
+    },
+    onRun = function(client, arguments)
+        local classIndex = lia.class.retrieveClass(arguments[1])
+        if classIndex then
+            client:notify("Found class at index: " .. classIndex)
+        else
+            client:notify("Class not found")
+        end
+    end
+})
 ```
 
 ---
@@ -230,26 +382,42 @@ print("Class index:", id)
 
 **Purpose**
 
-Checks if the class requires a whitelist. Default classes and invalid class indices always return `false`.
+Checks if a class requires whitelist access.
 
 **Parameters**
 
-* `class` (*number*): Class index to check.
-
-**Realm**
-
-`Shared`
+* `class` (*number*): The class index to check.
 
 **Returns**
 
-* *boolean*: `true` if the class is whitelisted; otherwise `false`.
+* `hasWhitelist` (*boolean*): True if the class requires whitelist, false otherwise.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Check whether the class is whitelisted
-if lia.class.hasWhitelist(classID) then
-    print("Whitelist required")
+-- Check if class requires whitelist
+local class = lia.class.get("police")
+if class then
+    local hasWhitelist = lia.class.hasWhitelist(class.index)
+    if hasWhitelist then
+        print("Police class requires whitelist")
+    end
+end
+
+-- Check multiple classes
+for i = 1, #lia.class.list do
+    if lia.class.hasWhitelist(i) then
+        print("Class " .. i .. " requires whitelist")
+    end
+end
+
+-- Use in a function
+local function isWhitelistedClass(classIndex)
+    return lia.class.hasWhitelist(classIndex)
 end
 ```
 
@@ -259,27 +427,46 @@ end
 
 **Purpose**
 
-Returns all classes the specified client is eligible to join by calling `lia.class.canBe` on each registered class.
+Retrieves all classes that a client can join.
 
 **Parameters**
 
-* `client` (*Player?*): Player to check. Defaults to `LocalPlayer()` when called on the client.
-  If invalid or omitted on the server, an empty table is returned.
-
-**Realm**
-
-`Shared`
+* `client` (*Player*): The client to check joinable classes for.
 
 **Returns**
 
-* *table*: List of class tables the client can join. Returns an empty table if the client is invalid.
+* `classes` (*table*): Table of joinable classes.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-for _, class in ipairs(lia.class.retrieveJoinable(client)) do
+-- Get joinable classes for a client
+local classes = lia.class.retrieveJoinable(client)
+print("Client can join " .. #classes .. " classes")
+
+-- Display joinable classes
+for _, class in ipairs(classes) do
     print("Can join:", class.name)
 end
-```
 
----
+-- Use in a command
+lia.command.add("listjoinable", {
+    onRun = function(client, arguments)
+        local classes = lia.class.retrieveJoinable(client)
+        client:notify("You can join " .. #classes .. " classes")
+    end
+})
+
+-- Use in a menu
+local function buildClassMenu(client)
+    local classes = lia.class.retrieveJoinable(client)
+    for _, class in ipairs(classes) do
+        -- Add class to menu
+        print("Adding class to menu:", class.name)
+    end
+end
+```

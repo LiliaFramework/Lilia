@@ -1844,39 +1844,6 @@ end)
 
 ---
 
-### DisplayItemRelevantInfo
-
-**Purpose**
-
-Add extra lines to an item tooltip. Populates additional information for an item tooltip.
-
-**Parameters**
-
-- `extra` (`table`): Info table to fill.
-
-- `client` (`Player`): Local player.
-
-- `item` (`table`): Item being displayed.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Adds the item's weight to its tooltip.
-hook.Add("DisplayItemRelevantInfo", "ShowWeight", function(extra, client, item)
-    extra[#extra + 1] = "Weight: " .. (item.weight or 0)
-end)
-```
-
----
-
 ### GetMainMenuPosition
 
 **Purpose**
@@ -2480,64 +2447,6 @@ hook.Add("CanPlayerRotateItem", "NoRotatingArtifacts", function(ply, item)
 end)
 ```
 
-### CanPlayerInspectItem
-
-**Purpose**
-
-Checks if a player may open the item inspection panel. Return false to prevent inspection.
-
-**Parameters**
-
-- `client` (`Player`): Player inspecting.
-- `item` (`table`): Item being inspected.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-- boolean: False to block inspection
-
-**Example Usage**
-
-```lua
-hook.Add("CanPlayerInspectItem", "BlockSecretItems", function(ply, item)
-    if item.secret then
-        return false
-    end
-end)
-```
-
-### CanPlayerRequestInspectionOnItem
-
-**Purpose**
-
-Called when a player wants to show an item to someone else. Return false to cancel the request.
-
-**Parameters**
-
-- `client` (`Player`): Player requesting inspection.
-- `target` (`Player`): Target player.
-- `item` (`table`): Item being offered.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- boolean: False to cancel the request
-
-**Example Usage**
-
-```lua
-hook.Add("CanPlayerRequestInspectionOnItem", "FriendsOnly", function(ply, target, item)
-    if not ply:isFriend(target) then
-        return false
-    end
-end)
-```
 
 ### CanPlayerSeeLogCategory
 
@@ -7080,33 +6989,6 @@ end)
 
 ---
 
-### VendorMoneyUpdated
-
-**Purpose**
-
-Called when a vendor's available money changes.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Print the vendor's new money amount.
-hook.Add("VendorMoneyUpdated", "LogVendorMoney", function(vendor, money, oldMoney)
-    print("Vendor money changed from", oldMoney, "to", money)
-end)
-```
-
 ---
 
 ### VendorOpened
@@ -7355,33 +7237,6 @@ end)
 ```
 
 ---
-
-### isSuitableForTrunk
-
-**Purpose**
-
-Determines whether an entity can be used as trunk storage.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- boolean
-
-**Example Usage**
-
-```lua
--- Only vehicles are valid trunk containers.
-hook.Add("isSuitableForTrunk", "AllowOnlyCars", function(entity)
-    return entity:IsVehicle()
-end)
-```
 
 ---
 
@@ -7685,44 +7540,6 @@ end)
 ```
 
 ---
-
-### CreateSalaryTimer
-
-**Purpose**
-
-Creates a timer to manage player salary.
-
-**Parameters**
-
-- `client` (`Player`): Player receiving the salary timer.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Example of using SalaryInterval for custom salary logic
--- Note: Lilia now uses a global salary timer based on SalaryInterval configuration
--- Custom salary implementations should use lia.config.get("SalaryInterval", 300)
-hook.Add("CreateSalaryTimer", "SetupSalaryTimer", function(client)
-    local salaryInterval = lia.config.get("SalaryInterval", 300)
-    timer.Create("SalaryTimer_" .. client:SteamID(), salaryInterval, 0, function()
-        if IsValid(client) and MODULE:CanPlayerEarnSalary(client, client:getFaction(), client:getClass()) then
-            local salary = MODULE:GetSalaryAmount(client, client:getFaction(), client:getClass())
-            client:addMoney(salary)
-            client:ChatPrint(string.format("You have received your salary of $%s", salary))
-            print("Salary of $" .. salary .. " awarded to:", client:Name())
-        end
-    end)
-    print("Salary timer created for:", client:Name())
-end)
-```
 
 ---
 
@@ -8436,33 +8253,6 @@ end)
 
 ---
 
-### OnDatabaseConnected
-
-**Purpose**
-
-Called when the database successfully connects. Use to register prepared statements or init DB logic.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Prints a message when OnDatabaseConnected is triggered
-hook.Add("OnDatabaseConnected", "PrepareDatabaseStatements", function()
-    print("Database connected successfully.")
-end)
-```
-
 ### OnDatabaseLoaded
 
 **Purpose**
@@ -8788,33 +8578,6 @@ end)
 ```
 
 ---
-
-### RegisterPreparedStatements
-
-**Purpose**
-
-Called for registering DB prepared statements post-database connection.
-
-**Parameters**
-
-- None
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-- None
-
-**Example Usage**
-
-```lua
--- Example of database initialization
-hook.Add("RegisterPreparedStatements", "InitDatabase", function()
-    print("Database prepared statements registered")
-end)
-```
 
 ---
 
@@ -11053,5 +10816,481 @@ been marked with the `cheater` network variable.
 ```lua
 hook.Add("OnCheaterCaught", "AnnounceCheater", function(ply)
     print(ply:Name() .. " has been caught cheating!")
+end)
+```
+
+### FilterCharacterModels
+
+**Purpose**
+
+Filter character models during character creation. Allows modules to control which models are available for selection based on faction and other criteria.
+
+**Parameters**
+
+- `client` (`Player`): The player creating a character.
+- `faction` (`table`): The faction data table.
+- `modelData` (`table`): The model data being evaluated.
+- `modelIndex` (`string`): The index/key of the model in the faction's models table.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- `boolean`: Return `false` to exclude the model from selection, `true` or `nil` to include it.
+
+**Example Usage**
+
+```lua
+hook.Add("FilterCharacterModels", "RestrictModels", function(client, faction, modelData, modelIndex)
+    if faction.uniqueID == "citizen" and modelIndex:find("police") then
+        return false -- Hide police models from citizens
+    end
+    return true
+end)
+```
+
+### GetModelGender
+
+**Purpose**
+
+Determine the gender of a model for gender-specific functionality. Used by the `isFemale()` entity method.
+
+**Parameters**
+
+- `model` (`string`): The model path to check.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- `string`: Return `"female"` for female models, `"male"` for male models, or any other value for neutral/unknown.
+
+**Example Usage**
+
+```lua
+hook.Add("GetModelGender", "CustomGenderDetection", function(model)
+    if model:find("female") or model:find("woman") then
+        return "female"
+    elseif model:find("male") or model:find("man") then
+        return "male"
+    end
+    return "neutral"
+end)
+```
+
+### GetVendorSaleScale
+
+**Purpose**
+
+Override the sale scale multiplier for vendor transactions. Allows dynamic pricing based on vendor properties or other factors.
+
+**Parameters**
+
+- `vendor` (`Entity`): The vendor entity being used.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- `number`: The sale scale multiplier (0.1 to 2.0), or `nil`/`false` to use default scale.
+
+**Example Usage**
+
+```lua
+hook.Add("GetVendorSaleScale", "DynamicPricing", function(vendor)
+    if vendor:GetPos():Distance(Entity(1):GetPos()) < 500 then
+        return 0.3 -- Lower prices near spawn
+    end
+    return 0.7 -- Higher prices elsewhere
+end)
+```
+
+### IsSuitableForTrunk
+
+**Purpose**
+
+Determine if an entity can be used as a trunk for storage. Controls which vehicles or entities can have their trunk opened.
+
+**Parameters**
+
+- `entity` (`Entity`): The entity being checked for trunk suitability.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- `boolean`: Return `true` if the entity can be used as a trunk, `false` otherwise.
+
+**Example Usage**
+
+```lua
+hook.Add("IsSuitableForTrunk", "VehicleTrunkCheck", function(entity)
+    if not IsValid(entity) then return false end
+    return entity:GetClass():find("vehicle") or entity:GetClass():find("car")
+end)
+```
+
+### ItemDefaultFunctions
+
+**Purpose**
+
+Modify the default functions table for items during registration. Allows adding or modifying item functions globally.
+
+**Parameters**
+
+- `functions` (`table`): The functions table that will be assigned to the item.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- None (modify the table directly)
+
+**Example Usage**
+
+```lua
+hook.Add("ItemDefaultFunctions", "AddCustomFunctions", function(functions)
+    functions.customAction = {
+        name = "Custom Action",
+        onRun = function(item, client)
+            client:notify("Custom action performed!")
+        end
+    }
+end)
+```
+
+### OnCharFlagsGiven
+
+**Purpose**
+
+Called when flags are added to a character. Useful for tracking flag changes and implementing flag-based functionality.
+
+**Parameters**
+
+- `client` (`Player`): The player whose character received flags.
+- `character` (`Character`): The character object that received flags.
+- `flags` (`string`): The flags that were added.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnCharFlagsGiven", "TrackFlagChanges", function(client, character, flags)
+    print(client:Name() .. " received flags: " .. flags)
+    if flags:find("a") then
+        client:notify("You now have admin privileges!")
+    end
+end)
+```
+
+### OnCharFlagsTaken
+
+**Purpose**
+
+Called when flags are removed from a character. Useful for tracking flag changes and cleaning up flag-based functionality.
+
+**Parameters**
+
+- `client` (`Player`): The player whose character lost flags.
+- `character` (`Character`): The character object that lost flags.
+- `flags` (`string`): The flags that were removed.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnCharFlagsTaken", "TrackFlagRemoval", function(client, character, flags)
+    print(client:Name() .. " lost flags: " .. flags)
+    if flags:find("a") then
+        client:notify("Your admin privileges have been revoked!")
+    end
+end)
+```
+
+### OnCheaterStatusChanged
+
+**Purpose**
+
+Called when a player's cheater status is toggled by an admin. Useful for logging and additional actions when players are marked/unmarked as cheaters.
+
+**Parameters**
+
+- `admin` (`Player`): The admin who changed the cheater status.
+- `target` (`Player`): The player whose cheater status was changed.
+- `isCheater` (`boolean`): Whether the player is now marked as a cheater.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnCheaterStatusChanged", "LogCheaterStatus", function(admin, target, isCheater)
+    local status = isCheater and "marked as cheater" or "unmarked as cheater"
+    print(admin:Name() .. " " .. status .. " " .. target:Name())
+end)
+```
+
+### OnConfigUpdated
+
+**Purpose**
+
+Called when a configuration value is updated. Useful for reacting to config changes and implementing config-dependent functionality.
+
+**Parameters**
+
+- `key` (`string`): The configuration key that was updated.
+- `oldValue` (`any`): The previous value of the configuration.
+- `newValue` (`any`): The new value of the configuration.
+
+**Realm**
+
+`Shared`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnConfigUpdated", "ReactToConfigChange", function(key, oldValue, newValue)
+    if key == "maxCharacters" then
+        print("Max characters changed from " .. oldValue .. " to " .. newValue)
+    end
+end)
+```
+
+### OnOOCMessageSent
+
+**Purpose**
+
+Called when a player sends an OOC (Out of Character) message. Useful for logging, filtering, or modifying OOC messages.
+
+**Parameters**
+
+- `client` (`Player`): The player who sent the OOC message.
+- `message` (`string`): The OOC message content.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnOOCMessageSent", "LogOOCChat", function(client, message)
+    print("[OOC] " .. client:Name() .. ": " .. message)
+end)
+```
+
+### OnSalaryGive
+
+**Purpose**
+
+Called when a player receives their salary. Return `true` to handle salary giving manually, preventing the default behavior.
+
+**Parameters**
+
+- `client` (`Player`): The player receiving the salary.
+- `character` (`Character`): The character receiving the salary.
+- `amount` (`number`): The salary amount to be given.
+- `faction` (`table`): The faction data.
+- `class` (`table`): The class data.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- `boolean`: Return `true` to handle salary giving manually, `false` or `nil` to use default behavior.
+
+**Example Usage**
+
+```lua
+hook.Add("OnSalaryGive", "CustomSalary", function(client, character, amount, faction, class)
+    -- Custom salary logic
+    character:giveMoney(amount * 1.5) -- Give 50% bonus
+    client:notify("You received a bonus salary!")
+    return true -- Prevent default salary giving
+end)
+```
+
+### OnTicketClaimed
+
+**Purpose**
+
+Called when an admin claims a support ticket. Useful for logging and notifications when tickets are claimed.
+
+**Parameters**
+
+- `admin` (`Player`): The admin who claimed the ticket.
+- `requester` (`Player`): The player who created the ticket.
+- `message` (`string`): The ticket message content.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnTicketClaimed", "NotifyTicketClaimed", function(admin, requester, message)
+    requester:notify("Your ticket has been claimed by " .. admin:Name())
+    print(admin:Name() .. " claimed ticket from " .. requester:Name())
+end)
+```
+
+### OnTicketClosed
+
+**Purpose**
+
+Called when a support ticket is closed. Useful for logging and cleanup when tickets are resolved.
+
+**Parameters**
+
+- `admin` (`Player`): The admin who closed the ticket.
+- `requester` (`Player`): The player who created the ticket.
+- `message` (`string`): The ticket message content.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnTicketClosed", "LogTicketClosure", function(admin, requester, message)
+    print("Ticket closed by " .. admin:Name() .. " for " .. requester:Name())
+end)
+```
+
+### OnTicketCreated
+
+**Purpose**
+
+Called when a new support ticket is created. Useful for logging and notifications when tickets are submitted.
+
+**Parameters**
+
+- `requester` (`Player`): The player who created the ticket.
+- `message` (`string`): The ticket message content.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnTicketCreated", "NotifyAdmins", function(requester, message)
+    for _, admin in ipairs(player.GetAll()) do
+        if admin:isStaffOnDuty() then
+            admin:notify("New ticket from " .. requester:Name())
+        end
+    end
+end)
+```
+
+### OnVendorEdited
+
+**Purpose**
+
+Called when a vendor is edited by an admin. Useful for logging vendor modifications and implementing vendor-specific functionality.
+
+**Parameters**
+
+- `admin` (`Player`): The admin who edited the vendor.
+- `vendor` (`Entity`): The vendor entity that was edited.
+- `key` (`string`): The specific property that was edited.
+
+**Realm**
+
+`Server`
+
+**Returns**
+
+- None
+
+**Example Usage**
+
+```lua
+hook.Add("OnVendorEdited", "LogVendorChanges", function(admin, vendor, key)
+    print(admin:Name() .. " edited vendor property: " .. key)
+end)
+```
+
+### PaintItem
+
+**Purpose**
+
+Override the material used to paint item models in UI panels. Allows custom materials to be applied to item icons and models.
+
+**Parameters**
+
+- `item` (`Item`): The item object being painted.
+
+**Realm**
+
+`Client`
+
+**Returns**
+
+- `string`: The material path to use for painting the item, or `nil` to use default.
+
+**Example Usage**
+
+```lua
+hook.Add("PaintItem", "CustomItemMaterials", function(item)
+    if item.uniqueID == "special_item" then
+        return "materials/custom/special_item.vmt"
+    end
+    return nil -- Use default material
 end)
 ```

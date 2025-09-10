@@ -1,6 +1,12 @@
-# Utility Library
+# Util Library
 
-Documentation for utility functions.
+This page documents the functions for working with utilities and helper functions.
+
+---
+
+## Overview
+
+The util library (`lia.util`) provides a comprehensive system for managing utilities, helper functions, and common operations in the Lilia framework. It includes player utilities, text utilities, rendering utilities, and general helper functions.
 
 ---
 
@@ -8,27 +14,33 @@ Documentation for utility functions.
 
 **Purpose**
 
-Finds all valid player entities within a specified axis-aligned box.
+Finds players within a box area.
 
 **Parameters**
 
-* `mins` (*Vector*) - The minimum corner of the box.
-* `maxs` (*Vector*) - The maximum corner of the box.
+* `position` (*Vector*): The center position.
+* `size` (*Vector*): The box size.
 
 **Returns**
 
-* `table` - A table of player entities found within the box.
+* `players` (*table*): Table of players in the box.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local players = lia.util.FindPlayersInBox(Vector(0,0,0), Vector(100,100,100))
-for _, ply in ipairs(players) do
-print(ply:Nick())
+-- Find players in box
+local function findPlayersInBox(position, size)
+    return lia.util.FindPlayersInBox(position, size)
+end
+
+-- Use in a function
+local function findPlayersNearPosition(pos, radius)
+    local size = Vector(radius * 2, radius * 2, radius * 2)
+    return lia.util.FindPlayersInBox(pos, size)
 end
 ```
 
@@ -38,26 +50,38 @@ end
 
 **Purpose**
 
-Finds a player by their SteamID or SteamID64 string, only if they have a character.
+Gets a player by SteamID.
 
 **Parameters**
 
-* `steamID` (*string*) - The SteamID or SteamID64 of the player.
+* `steamID` (*string*): The SteamID to search for.
 
 **Returns**
 
-* Player or nil - The player entity if found and has a character, otherwise none.
+* `player` (*Player*): The player or nil.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local ply = lia.util.getBySteamID("STEAM_0:1:123456")
-if ply then
-print("Found player:", ply:Nick())
+-- Get player by SteamID
+local function getPlayerBySteamID(steamID)
+    return lia.util.getBySteamID(steamID)
+end
+
+-- Use in a function
+local function findPlayerBySteamID(steamID)
+    local player = lia.util.getBySteamID(steamID)
+    if player then
+        print("Player found: " .. player:Name())
+        return player
+    else
+        print("Player not found")
+        return nil
+    end
 end
 ```
 
@@ -67,27 +91,32 @@ end
 
 **Purpose**
 
-Finds all players within a given radius of a point.
+Finds players within a sphere area.
 
 **Parameters**
 
-* `origin` (*Vector*) - The center point of the sphere.
-* `radius` (*number*) - The radius to search within.
+* `position` (*Vector*): The center position.
+* `radius` (*number*): The sphere radius.
 
 **Returns**
 
-* `table` - A table of player entities found within the sphere.
+* `players` (*table*): Table of players in the sphere.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local players = lia.util.FindPlayersInSphere(Vector(0,0,0), 256)
-for _, ply in ipairs(players) do
-print(ply:Nick())
+-- Find players in sphere
+local function findPlayersInSphere(position, radius)
+    return lia.util.FindPlayersInSphere(position, radius)
+end
+
+-- Use in a function
+local function findPlayersNearEntity(entity, radius)
+    return lia.util.FindPlayersInSphere(entity:GetPos(), radius)
 end
 ```
 
@@ -97,28 +126,38 @@ end
 
 **Purpose**
 
-Finds a player based on a string identifier, which can be a name, SteamID, SteamID64, or special symbol.
-Notifies the client if the player is not found.
+Finds a player by name or SteamID.
 
 **Parameters**
 
-* `client` (*Player*) - The player requesting the search (for notifications).
-* `identifier` (*string*) - The identifier to search for.
+* `identifier` (*string*): The player identifier.
 
 **Returns**
 
-* Player or nil - The found player entity, or nil if not found.
+* `player` (*Player*): The player or nil.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local ply = lia.util.findPlayer(client, "STEAM_0:1:123456")
-if ply then
-print("Found player:", ply:Nick())
+-- Find player by identifier
+local function findPlayer(identifier)
+    return lia.util.findPlayer(identifier)
+end
+
+-- Use in a function
+local function findPlayerByName(name)
+    local player = lia.util.findPlayer(name)
+    if player then
+        print("Player found: " .. player:Name())
+        return player
+    else
+        print("Player not found: " .. name)
+        return nil
+    end
 end
 ```
 
@@ -128,26 +167,32 @@ end
 
 **Purpose**
 
-Finds all item entities created by the specified player.
+Finds items belonging to a player.
 
 **Parameters**
 
-* `client` (*Player*) - The player whose items to find.
+* `client` (*Player*): The player to search for.
 
 **Returns**
 
-* `table` - A table of item entities created by the player.
+* `items` (*table*): Table of player items.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local items = lia.util.findPlayerItems(client)
-for _, item in ipairs(items) do
-print(item:GetClass())
+-- Find player items
+local function findPlayerItems(client)
+    return lia.util.findPlayerItems(client)
+end
+
+-- Use in a function
+local function getPlayerItemCount(client)
+    local items = lia.util.findPlayerItems(client)
+    return #items
 end
 ```
 
@@ -157,27 +202,32 @@ end
 
 **Purpose**
 
-Finds all item entities of a specific class created by the specified player.
+Finds player items by class.
 
 **Parameters**
 
-* `client` (*Player*) - The player whose items to find.
-* `class` (*string*) - The class (item ID) to filter by.
+* `client` (*Player*): The player to search for.
+* `itemClass` (*string*): The item class.
 
 **Returns**
 
-* `table` - A table of item entities matching the class and player.
+* `items` (*table*): Table of matching items.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local medkits = lia.util.findPlayerItemsByClass(client, "medkit")
-for _, item in ipairs(medkits) do
-print(item:GetClass())
+-- Find player items by class
+local function findPlayerItemsByClass(client, itemClass)
+    return lia.util.findPlayerItemsByClass(client, itemClass)
+end
+
+-- Use in a function
+local function findPlayerWeapons(client)
+    return lia.util.findPlayerItemsByClass(client, "weapon_*")
 end
 ```
 
@@ -187,27 +237,32 @@ end
 
 **Purpose**
 
-Finds all entities of a given class created by or associated with the specified player.
+Finds entities belonging to a player.
 
 **Parameters**
 
-* `client` (*Player*) - The player whose entities to find.
-* `class` (*string or nil*) - The class to filter by (optional).
+* `client` (*Player*): The player to search for.
 
 **Returns**
 
-* `table` - A table of entities matching the criteria.
+* `entities` (*table*): Table of player entities.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local ents = lia.util.findPlayerEntities(client, "prop_physics")
-for _, ent in ipairs(ents) do
-print(ent:GetClass())
+-- Find player entities
+local function findPlayerEntities(client)
+    return lia.util.findPlayerEntities(client)
+end
+
+-- Use in a function
+local function getPlayerEntityCount(client)
+    local entities = lia.util.findPlayerEntities(client)
+    return #entities
 end
 ```
 
@@ -217,16 +272,16 @@ end
 
 **Purpose**
 
-Checks if two strings match, case-insensitively and as substrings.
+Checks if a string matches a pattern.
 
 **Parameters**
 
-* `a` (*string*) - The first string.
-* `b` (*string*) - The second string.
+* `text` (*string*): The text to check.
+* `pattern` (*string*): The pattern to match.
 
 **Returns**
 
-* `boolean` - True if the strings match or one contains the other, false otherwise.
+* `matches` (*boolean*): True if the string matches.
 
 **Realm**
 
@@ -235,8 +290,14 @@ Shared.
 **Example Usage**
 
 ```lua
-if lia.util.stringMatches("John Doe", "john") then
-print("Match found!")
+-- Check string matches
+local function stringMatches(text, pattern)
+    return lia.util.stringMatches(text, pattern)
+end
+
+-- Use in a function
+local function checkPlayerName(name, pattern)
+    return lia.util.stringMatches(name, pattern)
 end
 ```
 
@@ -246,26 +307,35 @@ end
 
 **Purpose**
 
-Returns a table of all players who are considered staff (admins).
+Gets all admin players.
 
 **Parameters**
 
-* None.
+*None*
 
 **Returns**
 
-* `table` - A table of player entities who are staff.
+* `admins` (*table*): Table of admin players.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local admins = lia.util.getAdmins()
-for _, admin in ipairs(admins) do
-print(admin:Nick())
+-- Get admin players
+local function getAdmins()
+    return lia.util.getAdmins()
+end
+
+-- Use in a function
+local function showAdmins()
+    local admins = lia.util.getAdmins()
+    print("Admin players:")
+    for _, admin in ipairs(admins) do
+        print("- " .. admin:Name())
+    end
 end
 ```
 
@@ -275,26 +345,38 @@ end
 
 **Purpose**
 
-Finds a player by their SteamID64.
+Finds a player by SteamID64.
 
 **Parameters**
 
-* `SteamID64` (*string*) - The SteamID64 of the player.
+* `steamID64` (*string*): The SteamID64 to search for.
 
 **Returns**
 
-* Player or nil - The player entity if found, otherwise none.
+* `player` (*Player*): The player or nil.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local ply = lia.util.findPlayerBySteamID64("76561198000000000")
-if ply then
-print("Found player:", ply:Nick())
+-- Find player by SteamID64
+local function findPlayerBySteamID64(steamID64)
+    return lia.util.findPlayerBySteamID64(steamID64)
+end
+
+-- Use in a function
+local function findPlayerBySteamID64(steamID64)
+    local player = lia.util.findPlayerBySteamID64(steamID64)
+    if player then
+        print("Player found: " .. player:Name())
+        return player
+    else
+        print("Player not found")
+        return nil
+    end
 end
 ```
 
@@ -304,26 +386,38 @@ end
 
 **Purpose**
 
-Finds a player by their SteamID.
+Finds a player by SteamID.
 
 **Parameters**
 
-* `SteamID` (*string*) - The SteamID of the player.
+* `steamID` (*string*): The SteamID to search for.
 
 **Returns**
 
-* Player or nil - The player entity if found, otherwise none.
+* `player` (*Player*): The player or nil.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local ply = lia.util.findPlayerBySteamID("STEAM_0:1:123456")
-if ply then
-print("Found player:", ply:Nick())
+-- Find player by SteamID
+local function findPlayerBySteamID(steamID)
+    return lia.util.findPlayerBySteamID(steamID)
+end
+
+-- Use in a function
+local function findPlayerBySteamID(steamID)
+    local player = lia.util.findPlayerBySteamID(steamID)
+    if player then
+        print("Player found: " .. player:Name())
+        return player
+    else
+        print("Player not found")
+        return nil
+    end
 end
 ```
 
@@ -333,28 +427,38 @@ end
 
 **Purpose**
 
-Checks if a hull of given size can fit at a position without colliding with the world or other objects.
+Checks if an object can fit in a position.
 
 **Parameters**
 
-* `pos` (*Vector*) - The position to check.
-* `mins` (*Vector*) - The minimum bounds of the hull (optional, defaults to Vector(16, 16, 0)).
-* `maxs` (*Vector*) - The maximum bounds of the hull (optional, defaults to mins).
-* `filter` (*Entity/table*) - Entities to ignore in the trace (optional).
+* `position` (*Vector*): The position to check.
+* `size` (*Vector*): The size of the object.
 
 **Returns**
 
-* `boolean` - True if the hull can fit, false otherwise.
+* `canFit` (*boolean*): True if the object can fit.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-if lia.util.canFit(Vector(0,0,0)) then
-print("Space is clear!")
+-- Check if object can fit
+local function canFit(position, size)
+    return lia.util.canFit(position, size)
+end
+
+-- Use in a function
+local function checkSpawnPosition(pos, size)
+    if lia.util.canFit(pos, size) then
+        print("Position is clear")
+        return true
+    else
+        print("Position is blocked")
+        return false
+    end
 end
 ```
 
@@ -364,27 +468,34 @@ end
 
 **Purpose**
 
-Returns all valid players within a certain radius of a position.
+Checks if a player is within a radius.
 
 **Parameters**
 
-* `pos` (*Vector*) - The center position.
-* `dist` (*number*) - The radius to search (units).
+* `position` (*Vector*): The center position.
+* `radius` (*number*): The radius.
 
 **Returns**
 
-* `table` - A table of player entities within the radius.
+* `players` (*table*): Table of players in radius.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
-local players = lia.util.playerInRadius(Vector(0,0,0), 128)
-for _, ply in ipairs(players) do
-print(ply:Nick())
+-- Check players in radius
+local function playerInRadius(position, radius)
+    return lia.util.playerInRadius(position, radius)
+end
+
+-- Use in a function
+local function findNearbyPlayers(pos, radius)
+    local players = lia.util.playerInRadius(pos, radius)
+    print("Found " .. #players .. " players within " .. radius .. " units")
+    return players
 end
 ```
 
@@ -394,16 +505,16 @@ end
 
 **Purpose**
 
-Formats a string using named or positional arguments, replacing {name} or {1}, {2}, etc.
+Formats a string with named parameters.
 
 **Parameters**
 
-* `format` (*string*) - The format string containing placeholders.
-* ...             - Arguments as a table (named) or as a list (positional).
+* `text` (*string*): The text to format.
+* `parameters` (*table*): The named parameters.
 
 **Returns**
 
-* `string` - The formatted string.
+* `formattedText` (*string*): The formatted text.
 
 **Realm**
 
@@ -412,8 +523,19 @@ Shared.
 **Example Usage**
 
 ```lua
-local str = lia.util.formatStringNamed("Hello, {name}!", {name = "John"})
-print(str) -- "Hello, John!"
+-- Format string with named parameters
+local function formatStringNamed(text, parameters)
+    return lia.util.formatStringNamed(text, parameters)
+end
+
+-- Use in a function
+local function formatPlayerMessage(message, player)
+    local parameters = {
+        name = player:Name(),
+        steamid = player:SteamID()
+    }
+    return lia.util.formatStringNamed(message, parameters)
+end
 ```
 
 ---
@@ -422,16 +544,15 @@ print(str) -- "Hello, John!"
 
 **Purpose**
 
-Returns a cached Material object for the given path and parameters, creating it if necessary.
+Gets a material by name.
 
 **Parameters**
 
-* `materialPath` (*string*) - The path to the material.
-* `materialParameters` (*string*) - Optional parameters for the material.
+* `materialName` (*string*): The material name.
 
 **Returns**
 
-* `IMaterial` - The Material object.
+* `material` (*Material*): The material or nil.
 
 **Realm**
 
@@ -440,8 +561,22 @@ Client.
 **Example Usage**
 
 ```lua
-local mat = lia.util.getMaterial("icon16/user.png")
-surface.SetMaterial(mat)
+-- Get material by name
+local function getMaterial(materialName)
+    return lia.util.getMaterial(materialName)
+end
+
+-- Use in a function
+local function loadMaterial(materialName)
+    local material = lia.util.getMaterial(materialName)
+    if material then
+        print("Material loaded: " .. materialName)
+        return material
+    else
+        print("Material not found: " .. materialName)
+        return nil
+    end
+end
 ```
 
 ---
@@ -450,16 +585,15 @@ surface.SetMaterial(mat)
 
 **Purpose**
 
-Finds a faction by name or uniqueID, notifies the client if not found.
+Finds a faction by name.
 
 **Parameters**
 
-* `client` (*Player*) - The player requesting the search (for notifications).
-* `name` (*string*) - The name or uniqueID of the faction.
+* `factionName` (*string*): The faction name.
 
 **Returns**
 
-* table or nil - The faction table if found, otherwise none.
+* `faction` (*table*): The faction data or nil.
 
 **Realm**
 
@@ -468,9 +602,21 @@ Shared.
 **Example Usage**
 
 ```lua
-local faction = lia.util.findFaction(client, "overwatch")
-if faction then
-print("Faction found:", faction.name)
+-- Find faction by name
+local function findFaction(factionName)
+    return lia.util.findFaction(factionName)
+end
+
+-- Use in a function
+local function checkFactionExists(factionName)
+    local faction = lia.util.findFaction(factionName)
+    if faction then
+        print("Faction exists: " .. factionName)
+        return true
+    else
+        print("Faction not found: " .. factionName)
+        return false
+    end
 end
 ```
 
@@ -480,20 +626,17 @@ end
 
 **Purpose**
 
-Sends a table UI to a client for display, including title, columns, data, and options using the big table transfer system.
+Sends a table to the client UI.
 
 **Parameters**
 
-* `client` (*Player*) - The player to send the UI to.
-* `title` (*string*) - The title of the table.
-* `columns` (*table*) - The columns to display.
-* `data` (*table*) - The data rows to display.
-* `options` (*table*) - Optional actions for each row.
-* `characterID` (*number*) - Optional character ID for context.
+* `client` (*Player*): The client to send to.
+* `tableName` (*string*): The table name.
+* `data` (*table*): The table data.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
@@ -502,7 +645,16 @@ Server.
 **Example Usage**
 
 ```lua
-lia.util.SendTableUI(client, "Player List", columns, data, options, charID)
+-- Send table to UI
+local function sendTableUI(client, tableName, data)
+    lia.util.SendTableUI(client, tableName, data)
+end
+
+-- Use in a function
+local function sendPlayerData(client, data)
+    lia.util.SendTableUI(client, "PlayerData", data)
+    print("Player data sent to " .. client:Name())
+end
 ```
 
 ---
@@ -511,20 +663,16 @@ lia.util.SendTableUI(client, "Player List", columns, data, options, charID)
 
 **Purpose**
 
-Finds empty positions around an entity where a hull of given size can fit, useful for spawning items or players.
+Finds an empty space near a position.
 
 **Parameters**
 
-* `entity` (*Entity*) - The entity to search around.
-* `filter` (*Entity/table*) - Entities to ignore in the trace (optional).
-* `spacing` (*number*) - The distance between each check (optional, default 32).
-* `size` (*number*) - The number of positions to check in each direction (optional, default 3).
-* `height` (*number*) - The height of the hull (optional, default 36).
-* `tolerance` (*number*) - The Z offset for the trace (optional, default 5).
+* `position` (*Vector*): The position to search from.
+* `size` (*Vector*): The size of the space needed.
 
 **Returns**
 
-* `table` - A sorted table of valid positions (Vector) around the entity.
+* `emptyPosition` (*Vector*): The empty position or nil.
 
 **Realm**
 
@@ -533,9 +681,21 @@ Server.
 **Example Usage**
 
 ```lua
-local positions = lia.util.findEmptySpace(ent)
-for _, pos in ipairs(positions) do
-print(pos)
+-- Find empty space
+local function findEmptySpace(position, size)
+    return lia.util.findEmptySpace(position, size)
+end
+
+-- Use in a function
+local function findSpawnPosition(pos, size)
+    local emptyPos = lia.util.findEmptySpace(pos, size)
+    if emptyPos then
+        print("Empty space found at " .. tostring(emptyPos))
+        return emptyPos
+    else
+        print("No empty space found")
+        return nil
+    end
 end
 ```
 
@@ -545,23 +705,19 @@ end
 
 **Purpose**
 
-Draws text with a shadow at the specified position.
+Draws text with a shadow effect.
 
 **Parameters**
 
-* `text` (*string*) - The text to draw.
-* `font` (*string*) - The font to use.
-* `x` (*number*) - The X position.
-* `y` (*number*) - The Y position.
-* `colortext` (*Color*) - The color of the text.
-* `colorshadow` (*Color*) - The color of the shadow.
-* `dist` (*number*) - The distance to offset the shadow.
-* `xalign` (*number*) - The horizontal alignment.
-* `yalign` (*number*) - The vertical alignment.
+* `text` (*string*): The text to draw.
+* `font` (*string*): The font to use.
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
+* `color` (*Color*): The text color.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
@@ -570,7 +726,16 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.ShadowText("Hello", "DermaDefault", 100, 100, color_white, color_black, 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+-- Draw shadow text
+local function drawShadowText(text, font, x, y, color)
+    lia.util.ShadowText(text, font, x, y, color)
+end
+
+-- Use in a function
+local function drawPlayerName(client, x, y)
+    local color = client:getChar():getFaction():getColor()
+    lia.util.ShadowText(client:Name(), "liaMediumFont", x, y, color)
+end
 ```
 
 ---
@@ -579,22 +744,20 @@ lia.util.ShadowText("Hello", "DermaDefault", 100, 100, color_white, color_black,
 
 **Purpose**
 
-Draws text with an outline at the specified position.
+Draws text with an outline effect.
 
 **Parameters**
 
-* `text` (*string*) - The text to draw.
-* `font` (*string*) - The font to use.
-* `x` (*number*) - The X position.
-* `y` (*number*) - The Y position.
-* `colour` (*Color*) - The color of the text.
-* `xalign` (*number*) - The horizontal alignment.
-* `outlinewidth` (*number*) - The width of the outline.
-* `outlinecolour` (*Color*) - The color of the outline.
+* `text` (*string*): The text to draw.
+* `font` (*string*): The font to use.
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
+* `color` (*Color*): The text color.
+* `outlineColor` (*Color*): The outline color.
 
 **Returns**
 
-* `number` - The width of the drawn text.
+*None*
 
 **Realm**
 
@@ -603,7 +766,15 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.DrawTextOutlined("Outlined", "DermaDefault", 100, 100, color_white, TEXT_ALIGN_LEFT, 2, color_black)
+-- Draw outlined text
+local function drawOutlinedText(text, font, x, y, color, outlineColor)
+    lia.util.DrawTextOutlined(text, font, x, y, color, outlineColor)
+end
+
+-- Use in a function
+local function drawTitleText(text, x, y)
+    lia.util.DrawTextOutlined(text, "liaLargeFont", x, y, Color(255, 255, 255), Color(0, 0, 0))
+end
 ```
 
 ---
@@ -612,22 +783,17 @@ lia.util.DrawTextOutlined("Outlined", "DermaDefault", 100, 100, color_white, TEX
 
 **Purpose**
 
-Draws a tooltip-like tip box with a triangle pointer and text.
+Draws a tooltip.
 
 **Parameters**
 
-* `x` (*number*) - The X position.
-* `y` (*number*) - The Y position.
-* `w` (*number*) - The width of the tip.
-* `h` (*number*) - The height of the tip.
-* `text` (*string*) - The text to display.
-* `font` (*string*) - The font to use.
-* `textCol` (*Color*) - The color of the text.
-* `outlineCol` (*Color*) - The color of the outline.
+* `text` (*string*): The tooltip text.
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
@@ -636,7 +802,16 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.DrawTip(100, 100, 200, 50, "Tip!", "DermaDefault", color_white, color_black)
+-- Draw tooltip
+local function drawTooltip(text, x, y)
+    lia.util.DrawTip(text, x, y)
+end
+
+-- Use in a function
+local function drawItemTooltip(item, x, y)
+    local text = item:getName() .. "\n" .. item:getDescription()
+    lia.util.DrawTip(text, x, y)
+end
 ```
 
 ---
@@ -645,22 +820,19 @@ lia.util.DrawTip(100, 100, 200, 50, "Tip!", "DermaDefault", color_white, color_b
 
 **Purpose**
 
-Draws text with a shadow at the specified position using draw.TextShadow.
+Draws text with various effects.
 
 **Parameters**
 
-* `text` (*string*) - The text to draw.
-* `x` (*number*) - The X position.
-* `y` (*number*) - The Y position.
-* `color` (*Color*) - The color of the text (optional, defaults to white).
-* `alignX` (*number*) - The horizontal alignment (optional).
-* `alignY` (*number*) - The vertical alignment (optional).
-* `font` (*string*) - The font to use (optional, defaults to "liaGenericFont").
-* `alpha` (*number*) - The alpha value for the shadow (optional).
+* `text` (*string*): The text to draw.
+* `font` (*string*): The font to use.
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
+* `color` (*Color*): The text color.
 
 **Returns**
 
-* `number` - The width of the drawn text.
+*None*
 
 **Realm**
 
@@ -669,7 +841,16 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.drawText("Hello", 100, 100, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+-- Draw text
+local function drawText(text, font, x, y, color)
+    lia.util.drawText(text, font, x, y, color)
+end
+
+-- Use in a function
+local function drawCenteredText(text, x, y, color)
+    local width = lia.util.getTextWidth(text, "liaMediumFont")
+    lia.util.drawText(text, "liaMediumFont", x - width / 2, y, color)
+end
 ```
 
 ---
@@ -678,20 +859,19 @@ lia.util.drawText("Hello", 100, 100, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TO
 
 **Purpose**
 
-Draws a textured rectangle using a cached material.
+Draws a texture.
 
 **Parameters**
 
-* `material` (*string*) - The path to the material.
-* `color` (*Color*) - The color to draw with (optional, defaults to white).
-* `x` (*number*) - The X position.
-* `y` (*number*) - The Y position.
-* `w` (*number*) - The width.
-* `h` (*number*) - The height.
+* `texture*): The texture to draw.
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
+* `width` (*number*): The width.
+* `height` (*number*): The height.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
@@ -700,7 +880,15 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.drawTexture("icon16/user.png", color_white, 100, 100, 16, 16)
+-- Draw texture
+local function drawTexture(texture, x, y, width, height)
+    lia.util.drawTexture(texture, x, y, width, height)
+end
+
+-- Use in a function
+local function drawBackground(texture, x, y, width, height)
+    lia.util.drawTexture(texture, x, y, width, height)
+end
 ```
 
 ---
@@ -709,17 +897,16 @@ lia.util.drawTexture("icon16/user.png", color_white, 100, 100, 16, 16)
 
 **Purpose**
 
-Calls a skin function for a panel, if it exists.
+Applies skin function to a panel.
 
 **Parameters**
 
-* `name` (*string*) - The name of the skin function.
-* `panel` (*Panel*) - The panel to pass to the skin function.
-* a, b, c, d, e, f, g - Additional arguments to pass.
+* `panel` (*Panel*): The panel to skin.
+* `skinFunc` (*function*): The skin function.
 
 **Returns**
 
-* `any` - The return value of the skin function, or nil if not found.
+*None*
 
 **Realm**
 
@@ -728,7 +915,17 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.skinFunc("Paint", panel, w, h)
+-- Apply skin function
+local function applySkin(panel, skinFunc)
+    lia.util.skinFunc(panel, skinFunc)
+end
+
+-- Use in a function
+local function skinPanel(panel)
+    lia.util.skinFunc(panel, function(skin)
+        skin.colors = lia.color.getTheme()
+    end)
+end
 ```
 
 ---
@@ -737,17 +934,17 @@ lia.util.skinFunc("Paint", panel, w, h)
 
 **Purpose**
 
-Wraps a string of text to fit within a specified width, using the given font.
+Wraps text to fit within a width.
 
 **Parameters**
 
-* `text` (*string*) - The text to wrap.
-* `width` (*number*) - The maximum width in pixels.
-* `font` (*string*) - The font to use (optional, defaults to "liaChatFont").
+* `text` (*string*): The text to wrap.
+* `font` (*string*): The font to use.
+* `width` (*number*): The maximum width.
 
 **Returns**
 
-* table, number - A table of wrapped lines and the maximum width.
+* `wrappedText` (*table*): Table of wrapped lines.
 
 **Realm**
 
@@ -756,9 +953,16 @@ Client.
 **Example Usage**
 
 ```lua
-local lines, maxW = lia.util.wrapText("This is a long message.", 200)
-for _, line in ipairs(lines) do
-print(line)
+-- Wrap text
+local function wrapText(text, font, width)
+    return lia.util.wrapText(text, font, width)
+end
+
+-- Use in a function
+local function wrapLongText(text, width)
+    local lines = lia.util.wrapText(text, "liaMediumFont", width)
+    print("Text wrapped into " .. #lines .. " lines")
+    return lines
 end
 ```
 
@@ -768,18 +972,18 @@ end
 
 **Purpose**
 
-Draws a blur effect over the specified panel.
+Draws a blur effect.
 
 **Parameters**
 
-* `panel` (*Panel*) - The panel to blur.
-* `amount` (*number*) - The blur amount (optional, default 5).
-* `passes` (*number*) - The number of passes (optional, default 0.2).
-* `alpha` (*number*) - The alpha value (optional, default 255).
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
+* `width` (*number*): The width.
+* `height` (*number*): The height.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
@@ -788,39 +992,15 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.drawBlur(panel, 5, 1, 200)
-```
+-- Draw blur effect
+local function drawBlur(x, y, width, height)
+    lia.util.drawBlur(x, y, width, height)
+end
 
----
-
-### lia.util.drawBlurAt
-
-**Purpose**
-
-Draws a blur effect over a specified rectangle on the screen.
-
-**Parameters**
-
-* `x` (*number*) - The X position.
-* `y` (*number*) - The Y position.
-* `w` (*number*) - The width.
-* `h` (*number*) - The height.
-* `amount` (*number*) - The blur amount (optional, default 5).
-* `passes` (*number*) - The number of passes (optional, default 0.2).
-* `alpha` (*number*) - The alpha value (optional, default 255).
-
-**Returns**
-
-* None.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
-lia.util.drawBlurAt(100, 100, 200, 100, 5, 1, 200)
+-- Use in a function
+local function drawBackgroundBlur()
+    lia.util.drawBlur(0, 0, ScrW(), ScrH())
+end
 ```
 
 ---
@@ -829,18 +1009,18 @@ lia.util.drawBlurAt(100, 100, 200, 100, 5, 1, 200)
 
 **Purpose**
 
-Draws a blur effect over the specified panel and overlays it with a black tint.
+Draws a black blur effect.
 
 **Parameters**
 
-* `panel` (*Panel*) - The panel to blur.
-* `amount` (*number*) - The blur amount (optional, default 5).
-* `passes` (*number*) - The number of passes (optional, default 0.2).
-* `alpha` (*number*) - The alpha value for the black overlay (optional, default 255).
+* `x` (*number*): The x position.
+* `y` (*number*): The y position.
+* `width` (*number*): The width.
+* `height` (*number*): The height.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
@@ -849,7 +1029,52 @@ Client.
 **Example Usage**
 
 ```lua
-lia.util.drawBlackBlur(panel, 5, 1, 200)
+-- Draw black blur effect
+local function drawBlackBlur(x, y, width, height)
+    lia.util.drawBlackBlur(x, y, width, height)
+end
+
+-- Use in a function
+local function drawDarkBackground()
+    lia.util.drawBlackBlur(0, 0, ScrW(), ScrH())
+end
+```
+
+---
+
+### lia.util.drawBlurAt
+
+**Purpose**
+
+Draws a blur effect at a specific position.
+
+**Parameters**
+
+* `position` (*Vector*): The position to draw at.
+* `size` (*Vector*): The size of the blur.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Draw blur at position
+local function drawBlurAt(position, size)
+    lia.util.drawBlurAt(position, size)
+end
+
+-- Use in a function
+local function drawBlurAtEntity(entity)
+    local pos = entity:GetPos()
+    local size = Vector(100, 100, 100)
+    lia.util.drawBlurAt(pos, size)
+end
 ```
 
 ---
@@ -858,26 +1083,34 @@ lia.util.drawBlackBlur(panel, 5, 1, 200)
 
 **Purpose**
 
-Opens a UI to request multiple arguments from the user, supporting strings, numbers, booleans, and dropdowns.
+Requests arguments from a client.
 
 **Parameters**
 
-* `title` (*string*) - The title of the UI.
-* `argTypes` (*table*) - A table describing the argument types and names.
-* `onSubmit` (*function*) - Callback function called with the result table.
+* `client` (*Player*): The client to request from.
+* `prompt` (*string*): The prompt text.
+* `callback` (*function*): The callback function.
 
 **Returns**
 
-* None.
+*None*
 
 **Realm**
 
-Client.
+Server.
 
 **Example Usage**
 
 ```lua
-lia.util.requestArguments("Enter Info", {Name="string", Age="int"}, function(result) PrintTable(result) end)
+-- Request arguments from client
+local function requestArguments(client, prompt, callback)
+    lia.util.requestArguments(client, prompt, callback)
+end
+
+-- Use in a function
+local function requestPlayerName(client, callback)
+    lia.util.requestArguments(client, "Enter player name:", callback)
+end
 ```
 
 ---
@@ -886,28 +1119,35 @@ lia.util.requestArguments("Enter Info", {Name="string", Age="int"}, function(res
 
 **Purpose**
 
-Creates and displays a table UI frame with columns, data, and row options for the client.
+Creates a table UI for a client.
 
 **Parameters**
 
-* `title` (*string*) - The title of the table.
-* `columns` (*table*) - The columns to display.
-* `data` (*table*) - The data rows to display.
-* `options` (*table*) - Optional actions for each row.
-* `charID` (*number*) - Optional character ID for context.
+* `client` (*Player*): The client to create for.
+* `tableName` (*string*): The table name.
+* `data` (*table*): The table data.
 
 **Returns**
 
-* Panel, DListView - The frame and the list view created.
+*None*
 
 **Realm**
 
-Client.
+Server.
 
 **Example Usage**
 
 ```lua
-local frame, listView = lia.util.CreateTableUI("Player List", columns, data, options, charID)
+-- Create table UI
+local function createTableUI(client, tableName, data)
+    lia.util.CreateTableUI(client, tableName, data)
+end
+
+-- Use in a function
+local function createPlayerListUI(client, players)
+    lia.util.CreateTableUI(client, "PlayerList", players)
+    print("Player list UI created for " .. client:Name())
+end
 ```
 
 ---
@@ -916,28 +1156,31 @@ local frame, listView = lia.util.CreateTableUI("Player List", columns, data, opt
 
 **Purpose**
 
-Opens a simple menu listing options that run their callback when selected.
+Opens the options menu for a client.
 
 **Parameters**
 
-* `title` (*string*) - Title for the menu.
-* `options` (*table*) - Options to display. Can be an array of `{name = string, callback = function}` tables or a table mapping option names to callback functions.
+* `client` (*Player*): The client to open for.
 
 **Returns**
 
-* `Panel` - The created menu frame.
+*None*
 
 **Realm**
 
-Client.
+Server.
 
 **Example Usage**
 
 ```lua
-lia.util.openOptionsMenu("Example Menu", {
-    ["Say Hello"] = function() print("Hello") end,
-    ["Say Bye"] = function() print("Bye") end
-})
-```
+-- Open options menu
+local function openOptionsMenu(client)
+    lia.util.openOptionsMenu(client)
+end
 
----
+-- Use in a function
+local function showOptionsMenu(client)
+    lia.util.openOptionsMenu(client)
+    print("Options menu opened for " .. client:Name())
+end
+```

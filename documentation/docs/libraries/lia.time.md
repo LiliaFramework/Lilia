@@ -1,12 +1,12 @@
 # Time Library
 
-This page lists time- and date-utilities.
+This page documents the functions for working with time utilities and time management.
 
 ---
 
 ## Overview
 
-The time library formats dates and converts relative times using Lua's built-in `os.date` and `os.time` functions. It also periodically synchronizes the client's `CurTime` with the server to reduce clock drift. Helpers are provided for phrases such as "time since" and for formatting dates.
+The time library (`lia.time`) provides a comprehensive system for managing time, date formatting, and time-related utilities in the Lilia framework. It includes time calculations, date formatting, and time conversion functionality.
 
 ---
 
@@ -14,47 +14,44 @@ The time library formats dates and converts relative times using Lua's built-in 
 
 **Purpose**
 
-Returns a localized string describing how long ago a given time occurred (for example, "5 minutes ago").
+Calculates the time since a given timestamp.
 
 **Parameters**
 
-* `strTime` (*number | string*): Time to measure from.
-
-  * Numbers are UNIX timestamps in seconds.
-
-  * Strings are parsed with `lia.time.ParseTime` and must return `year`, `month`, and `day`; hours, minutes, and seconds default to `00:00:00`.
-
-**Realm**
-
-`Shared`
+* `timestamp` (*number*): The timestamp to calculate from.
 
 **Returns**
 
-* *string*: Localized "time since" string.
+* `timeSince` (*number*): The time since the timestamp in seconds.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Greet joining players with the time since they last logged in
-hook.Add("PlayerInitialSpawn", "welcomeLastSeen", function(ply)
-    local key  = "lastLogin_" .. ply:SteamID64()
-    local last = lia.data.get(key, nil)
+-- Calculate time since timestamp
+local function timeSince(timestamp)
+    return lia.time.TimeSince(timestamp)
+end
 
-    if last then
-        ply:ChatPrint(("Welcome back! You last joined %s."):format(lia.time.TimeSince(last)))
-    else
-        ply:ChatPrint("Welcome for the first time!")
-    end
+-- Use in a function
+local function checkPlayerLastSeen(client)
+    local lastSeen = client:getChar():getLastSeen()
+    local timeSince = lia.time.TimeSince(lastSeen)
+    print("Player last seen " .. timeSince .. " seconds ago")
+    return timeSince
+end
 
-    lia.data.set(key, os.time(), true)
-end)
+-- Use in a function
+local function checkItemAge(item)
+    local created = item:getCreatedTime()
+    local age = lia.time.TimeSince(created)
+    print("Item age: " .. age .. " seconds")
+    return age
+end
 ```
-
-**Edge Cases**
-
-* Returns `L("invalidDate")` if the string cannot be parsed.
-* Returns `L("invalidInput")` for non-number, non-string inputs.
-* Times in the future will yield negative values (e.g. "-5 seconds ago").
 
 ---
 
@@ -62,32 +59,38 @@ end)
 
 **Purpose**
 
-Parses a timestamp string (`YYYY-MM-DD HH:MM:SS`) into a table of numeric date parts. If no argument is given, the current time is used.
+Converts a time string to a number.
 
 **Parameters**
 
-* `str` (*string*): Timestamp string. *Optional*.
-
-**Realm**
-
-`Shared`
+* `timeString` (*string*): The time string to convert.
 
 **Returns**
 
-* *table*: `{ year, month, day, hour, min, sec }` — numeric fields suitable for `os.time`. No validation is performed on the input string.
+* `timeNumber` (*number*): The time as a number.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Schedule an event for 1 April 2025 12:30
-local tInfo     = lia.time.toNumber("2025-04-01 12:30:00")
-local timestamp = os.time(tInfo)
-local delay     = timestamp - os.time()
+-- Convert time string to number
+local function timeToNumber(timeString)
+    return lia.time.toNumber(timeString)
+end
 
-if delay > 0 then
-    timer.Simple(delay, function()
-        print("It is now April 1st 2025, 12:30 PM!")
-    end)
+-- Use in a function
+local function parseTimeString(timeString)
+    local timeNumber = lia.time.toNumber(timeString)
+    if timeNumber then
+        print("Time parsed: " .. timeNumber)
+        return timeNumber
+    else
+        print("Failed to parse time string")
+        return nil
+    end
 end
 ```
 
@@ -97,34 +100,40 @@ end
 
 **Purpose**
 
-Returns the full current date/time using the `AmericanTimeStamps` config (default `false`). Weekday and month names are localized:
-
-* **Enabled**: `"Weekday, Month DD, YYYY, HH:MM:SSam/pm"` (12-hour clock)
-
-* **Disabled**: `"Weekday, DD Month YYYY, HH:MM:SS"` (24-hour clock)
+Gets the current date as a formatted string.
 
 **Parameters**
 
-* *None*
-
-**Realm**
-
-`Shared`
+*None*
 
 **Returns**
 
-* *string*: Formatted current date/time.
+* `dateString` (*string*): The formatted date string.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Announce the current server date every hour
-timer.Create("ServerTimeAnnounce", 3600, 0, function()
-    local text = lia.time.GetDate()
-    for _, ply in player.Iterator() do
-        ply:ChatPrint("Server time: " .. text)
-    end
-end)
+-- Get current date
+local function getCurrentDate()
+    return lia.time.GetDate()
+end
+
+-- Use in a function
+local function showCurrentDate()
+    local date = lia.time.GetDate()
+    print("Current date: " .. date)
+    return date
+end
+
+-- Use in a function
+local function logWithDate(message)
+    local date = lia.time.GetDate()
+    print("[" .. date .. "] " .. message)
+end
 ```
 
 ---
@@ -133,25 +142,41 @@ end)
 
 **Purpose**
 
-Formats a number of seconds into a localized string describing days, hours, and minutes.
+Formats time in days, hours, and minutes.
 
 **Parameters**
 
-* `seconds` (*number*): Seconds to convert. Negative or `nil` values are treated as `0`.
-
-**Realm**
-
-`Shared`
+* `seconds` (*number*): The time in seconds.
 
 **Returns**
 
-* *string*: Localized "X days Y hours Z minutes" string.
+* `formattedTime` (*string*): The formatted time string.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Display a ban length
-print(lia.time.formatDHM(90061)) -- "1 days 1 hours 1 minutes"
+-- Format time in DHM
+local function formatTime(seconds)
+    return lia.time.formatDHM(seconds)
+end
+
+-- Use in a function
+local function showPlaytime(client)
+    local playtime = client:getChar():getPlaytime()
+    local formatted = lia.time.formatDHM(playtime)
+    client:notify("Playtime: " .. formatted)
+end
+
+-- Use in a function
+local function showServerUptime()
+    local uptime = SysTime()
+    local formatted = lia.time.formatDHM(uptime)
+    print("Server uptime: " .. formatted)
+end
 ```
 
 ---
@@ -160,33 +185,46 @@ print(lia.time.formatDHM(90061)) -- "1 days 1 hours 1 minutes"
 
 **Purpose**
 
-Returns the current hour formatted by `AmericanTimeStamps`:
-
-* **Enabled** → string in the format `"Ham"`/`"Hpm"` (e.g. `"3pm"`)
-
-* **Disabled** → integer `0–23` (24-hour clock)
+Gets the current hour.
 
 **Parameters**
 
-* *None*
-
-**Realm**
-
-`Shared`
+*None*
 
 **Returns**
 
-* *string | number*: Hour with suffix (`"am"`/`"pm"`) or 24-hour integer.
+* `hour` (*number*): The current hour (0-23).
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Toggle an NPC shop by hour
-timer.Create("CheckShopHours", 60, 0, function()
-    local hour = lia.time.GetHour()      -- could be "3pm" or 15
-    local hNum = tonumber(hour) or tonumber(hour:sub(1, -3)) % 12  -- convert if am/pm
-    npc:SetNWBool("ShopOpen", hNum >= 9 and hNum < 17)
-end)
-```
+-- Get current hour
+local function getCurrentHour()
+    return lia.time.GetHour()
+end
 
----
+-- Use in a function
+local function checkTimeOfDay()
+    local hour = lia.time.GetHour()
+    if hour >= 6 and hour < 12 then
+        print("Good morning!")
+    elseif hour >= 12 and hour < 18 then
+        print("Good afternoon!")
+    elseif hour >= 18 and hour < 22 then
+        print("Good evening!")
+    else
+        print("Good night!")
+    end
+    return hour
+end
+
+-- Use in a function
+local function isDayTime()
+    local hour = lia.time.GetHour()
+    return hour >= 6 and hour < 18
+end
+```

@@ -7,7 +7,7 @@ lia.char.vars = lia.char.vars or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
-if SERVER and #lia.char.names < 1 then
+if SERVER then
     lia.db.select({"id", "name"}, "characters"):next(function(data)
         local results = data.results or {}
         if #results > 0 then
@@ -16,9 +16,7 @@ if SERVER and #lia.char.names < 1 then
             end
         end
     end)
-end
 
-if SERVER then
     function lia.char.getCharacter(charID, client, callback)
         local character = lia.char.loaded[charID]
         if character then

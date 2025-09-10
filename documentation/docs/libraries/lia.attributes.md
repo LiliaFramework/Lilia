@@ -1,60 +1,43 @@
 # Attributes Library
 
-This page documents the functions for working with character attributes.
+This page documents the functions for working with character attributes and their management.
 
 ---
 
 ## Overview
 
-The attributes library loads attribute definitions from Lua files and provides helpers for initializing them on a character. Each attribute is defined on a global `ATTRIBUTE` table inside its own file. When
-`lia.attribs.loadFromDir` is called, each file is included in the shared realm, the attribute's `name` and `desc` fields are
-replaced with their translated versions (defaulting to `L("unknown")` and `L("noDesc")` when absent), and the definition is stored in `lia.attribs.list`
-using the file name without extension as the key. Files beginning with `sh_` have the prefix removed and the remaining name
-lowercased; other filenames are used as-is. If an attribute was already registered, its existing table is reused, allowing
-definitions to be extended across multiple files or reloads. After each file is processed the temporary global `ATTRIBUTE` is
-cleared. The loader is invoked automatically when a module is initialized, so most schemas simply place their attribute files in
-`schema/attributes/`.
+The attributes library (`lia.attribs`) provides a system for managing character attributes in the Lilia framework. It handles loading attribute definitions from files, setting up attributes for characters, and managing attribute data throughout the character's lifecycle.
 
-For details on each `ATTRIBUTE` field, see the [Attribute Fields documentation](../definitions/attribute.md).
-
-### lia.attribs.list
-
-Table of all registered attribute definitions. Keys are attribute IDs derived from the filenames passed to
-`lia.attribs.loadFromDir`, and values are the attribute tables themselves. The table is populated when attributes are loaded and
-used by other functions such as `lia.attribs.setup`.
+---
 
 ### lia.attribs.loadFromDir
 
 **Purpose**
 
-Loads attribute definitions from each `.lua` file in the given directory, includes them in the shared realm, localizes their `name` and `desc` fields, and registers them in `lia.attribs.list`. Filenames supply the list key—if a file begins with `sh_`, the prefix is stripped and the remaining name lowercased; otherwise the filename without extension is used as-is. If the attribute was previously registered, the existing table is reused. Missing `name` or `desc` fields default to `L("unknown")` and `L("noDesc")`.
+Loads attribute definitions from a directory containing attribute files.
 
 **Parameters**
 
-* `directory` (*string*): Path to the folder containing attribute Lua files.
-
-**Realm**
-
-`Shared`
+* `directory` (*string*): The directory path to load attribute files from.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- schema/attributes/strength.lua
-ATTRIBUTE.name = "Strength"
-ATTRIBUTE.desc = "Determines melee damage."
-ATTRIBUTE.startingMax = 20
-ATTRIBUTE.maxValue = 50
+-- Load attributes from a directory
+lia.attribs.loadFromDir("gamemode/attributes")
 
-function ATTRIBUTE:OnSetup(client, value)
-    client:SetMaxHealth(100 + value)
-end
+-- Load from a custom attributes folder
+lia.attribs.loadFromDir("addons/myaddon/attributes")
 
--- Load all attribute files once at startup
+-- Load from schema attributes
 lia.attribs.loadFromDir("schema/attributes")
 ```
 
@@ -64,28 +47,39 @@ lia.attribs.loadFromDir("schema/attributes")
 
 **Purpose**
 
-Initializes or refreshes attribute data for a player's character by looping through `lia.attribs.list`. For each attribute it retrieves the character's value (defaulting to 0) and, if the attribute defines `OnSetup`, calls it as `attribute:OnSetup(client, value)`. If the client has no character, the function returns without doing anything.
+Sets up attributes for a client character, calling OnSetup callbacks for each attribute.
 
 **Parameters**
 
-* `client` (*Player*): The player whose character attributes should be set up.
-
-**Realm**
-
-`Server`
+* `client` (*Player*): The client to set up attributes for.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- After modifying a character attribute, run setup again so any
--- OnSetup hooks update the player's stats.
-local char = client:getChar()
-char:updateAttrib("strength", 5)
+-- Set up attributes for a character
 lia.attribs.setup(client)
-```
 
----
+-- Set up attributes when character spawns
+hook.Add("PlayerSpawn", "SetupAttributes", function(ply)
+    local char = ply:getChar()
+    if char then
+        lia.attribs.setup(ply)
+    end
+end)
+
+-- Set up attributes after character creation
+hook.Add("OnCharCreated", "SetupNewCharAttributes", function(char)
+    local client = char:getPlayer()
+    if IsValid(client) then
+        lia.attribs.setup(client)
+    end
+end)
+```

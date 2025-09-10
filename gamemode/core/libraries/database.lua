@@ -174,9 +174,15 @@ function lia.db.loadTables()
     local function done()
         lia.db.addDatabaseFields()
         lia.db.migrateDatabaseSchemas():next(function()
-            lia.db.tablesLoaded = true
-            hook.Run("LiliaTablesLoaded")
-            hook.Run("OnDatabaseLoaded")
+            lia.db.autoRemoveUnderscoreColumns():next(function()
+                lia.db.tablesLoaded = true
+                hook.Run("LiliaTablesLoaded")
+                hook.Run("OnDatabaseLoaded")
+            end):catch(function()
+                lia.db.tablesLoaded = true
+                hook.Run("LiliaTablesLoaded")
+                hook.Run("OnDatabaseLoaded")
+            end)
         end):catch(function()
             lia.db.tablesLoaded = true
             hook.Run("LiliaTablesLoaded")
@@ -2611,3 +2617,420 @@ concommand.Add("lia_dbtest", function(ply)
         MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Database Test Completed ===\n")
     end)
 end)
+
+concommand.Add("lia_list_tables", function(ply)
+    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
+        ply:ChatPrint("This command requires super admin privileges.")
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_list_tables'\n")
+        return
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Listing All lia_* Tables ===\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
+    lia.db.waitForTablesToLoad():next(function()
+        if not lia.db.connected then
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Database not connected!\n")
+            return
+        end
+
+        lia.db.getTables():next(function(tables)
+            if not tables or #tables == 0 then
+                MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "No lia_* tables found!\n")
+                return
+            end
+
+            MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Found ", #tables, " lia_* tables in the database:\n\n")
+            table.sort(tables)
+            local processedTables = 0
+            local totalColumns = 0
+            for i, tableName in ipairs(tables) do
+                local shortName = tableName:gsub("^lia_", "")
+                lia.db.getTableColumns(tableName):next(function(columns)
+                    processedTables = processedTables + 1
+                    local columnCount = 0
+                    local columnNames = {}
+                    if columns then
+                        for columnName, _ in pairs(columns) do
+                            columnCount = columnCount + 1
+                            table.insert(columnNames, columnName)
+                        end
+
+                        totalColumns = totalColumns + columnCount
+                        table.sort(columnNames)
+                    end
+
+                    local status = columnCount > 0 and "ACTIVE" or "EMPTY"
+                    local statusColor = columnCount > 0 and Color(0, 255, 0) or Color(255, 255, 0)
+                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "┌─ ", tableName, " (", shortName, ") ─", string.rep("─", math.max(0, 50 - #tableName - #shortName)), "┐\n")
+                    MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "│ Columns: ", columnCount, " | Status: ", "")
+                    MsgC(statusColor, status, "")
+                    MsgC(Color(255, 255, 255), " │\n")
+                    if columnCount > 0 then
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "├─ Column Names:", string.rep("─", 60), "┤\n")
+                        for j = 1, #columnNames, 4 do
+                            local rowColumns = {}
+                            for k = j, math.min(j + 3, #columnNames) do
+                                table.insert(rowColumns, columnNames[k])
+                            end
+
+                            local columnLine = "│ "
+                            for k, colName in ipairs(rowColumns) do
+                                columnLine = columnLine .. string.format("%-15s", colName)
+                                if k < #rowColumns then columnLine = columnLine .. " │ " end
+                            end
+
+                            local remainingSpace = 75 - #columnLine + 1
+                            if remainingSpace > 0 then columnLine = columnLine .. string.rep(" ", remainingSpace) end
+                            columnLine = columnLine .. "│"
+                            MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), columnLine, "\n")
+                        end
+                    else
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "│ No columns found", string.rep(" ", 58), "│\n")
+                    end
+
+                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "└", string.rep("─", 75), "┘\n")
+                    if i < #tables then MsgC(Color(128, 128, 128), "[Lilia] ", Color(128, 128, 128), string.rep("─", 80), "\n") end
+                    if processedTables >= #tables then
+                        MsgC(Color(255, 255, 0), "\n[Lilia] ", Color(255, 255, 255), "=== SUMMARY ===\n")
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "Total Tables: ", #tables, "\n")
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "Total Columns: ", totalColumns, "\n")
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "Average Columns per Table: ", math.floor(totalColumns / #tables), "\n")
+                        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Table Listing Completed ===\n")
+                    end
+                end):catch(function(err)
+                    processedTables = processedTables + 1
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "┌─ ", tableName, " (", shortName, ") ─", string.rep("─", math.max(0, 50 - #tableName - #shortName)), "┐\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "│ ERROR: Failed to get columns", string.rep(" ", 45), "│\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "│ ", err, string.rep(" ", math.max(0, 70 - #tostring(err))), "│\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "└", string.rep("─", 75), "┘\n")
+                    if i < #tables then MsgC(Color(128, 128, 128), "[Lilia] ", Color(128, 128, 128), string.rep("─", 80), "\n") end
+                    if processedTables >= #tables then MsgC(Color(255, 255, 0), "\n[Lilia] ", Color(255, 255, 255), "=== Table Listing Completed with Errors ===\n") end
+                end)
+            end
+        end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get table list: ", err, "\n") end)
+    end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to wait for database tables to load: ", err, "\n") end)
+end)
+
+concommand.Add("lia_list_columns", function(ply, _, args)
+    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
+        ply:ChatPrint("This command requires super admin privileges.")
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_list_columns'\n")
+        return
+    end
+
+    if #args < 1 then
+        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Usage: lia_list_columns <table_name>\n")
+        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Example: lia_list_columns characters\n")
+        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Example: lia_list_columns lia_characters\n")
+        return
+    end
+
+    local tableName = args[1]
+    local fullTableName = tableName
+    if not tableName:StartWith("lia_") then fullTableName = "lia_" .. tableName end
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Listing Columns for Table: ", fullTableName, " ===\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
+    lia.db.waitForTablesToLoad():next(function()
+        if not lia.db.connected then
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Database not connected!\n")
+            return
+        end
+
+        lia.db.tableExists(fullTableName):next(function(exists)
+            if not exists then
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Table '", fullTableName, "' does not exist!\n")
+                MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Available lia_* tables:\n")
+                lia.db.getTables():next(function(tables)
+                    if tables and #tables > 0 then
+                        for _, tbl in ipairs(tables) do
+                            MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "  - ", tbl, "\n")
+                        end
+                    else
+                        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "  No lia_* tables found\n")
+                    end
+                end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get table list: ", err, "\n") end)
+                return
+            end
+
+            lia.db.getTableColumns(fullTableName):next(function(columns)
+                if not columns then
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get columns for table: ", fullTableName, "\n")
+                    return
+                end
+
+                local columnCount = 0
+                for _ in pairs(columns) do
+                    columnCount = columnCount + 1
+                end
+
+                MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Found ", columnCount, " columns in table '", fullTableName, "':\n\n")
+                lia.db.query("PRAGMA table_info(" .. fullTableName .. ")"):next(function(result)
+                    if not result or not result.results then
+                        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get detailed column information\n")
+                        return
+                    end
+
+                    local columnData = result.results
+                    table.sort(columnData, function(a, b) return a.cid < b.cid end)
+                    MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), string.format("%-20s %-15s %-8s %-8s %-8s %-10s", "Column Name", "Type", "Not Null", "Default", "Primary Key", "Auto Inc"), "\n")
+                    MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), string.rep("-", 80), "\n")
+                    for _, col in ipairs(columnData) do
+                        local notNull = col.notnull == 1 and "YES" or "NO"
+                        local defaultValue = col.dflt_value or "NULL"
+                        local primaryKey = col.pk == 1 and "YES" or "NO"
+                        local autoIncrement = col.type:lower():find("auto") and "YES" or "NO"
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), string.format("%-20s %-15s %-8s %-8s %-8s %-10s", col.name, col.type, notNull, defaultValue, primaryKey, autoIncrement), "\n")
+                    end
+
+                    MsgC(Color(255, 255, 0), "\n[Lilia] ", Color(255, 255, 255), "=== Column Listing Completed ===\n")
+                end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get detailed column information: ", err, "\n") end)
+            end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get columns for table '", fullTableName, "': ", err, "\n") end)
+        end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to check if table exists: ", err, "\n") end)
+    end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to wait for database tables to load: ", err, "\n") end)
+end)
+
+concommand.Add("lia_remove_column_underscores", function(ply)
+    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
+        ply:ChatPrint("This command requires super admin privileges.")
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_remove_column_underscores'\n")
+        return
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Starting Column Underscore Removal ===\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
+    lia.db.waitForTablesToLoad():next(function()
+        if not lia.db.connected then
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Database not connected!\n")
+            return
+        end
+
+        MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Scanning lia_* tables for columns with leading underscores...\n")
+        lia.db.getTables():next(function(tables)
+            if not tables or #tables == 0 then
+                MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "No tables found!\n")
+                return
+            end
+
+            local totalTables = #tables
+            local processedTables = 0
+            local totalColumnsRemoved = 0
+            MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "Found ", totalTables, " lia_* tables to process\n\n")
+            for _, tableName in ipairs(tables) do
+                lia.db.getTableColumns(tableName):next(function(columns)
+                    processedTables = processedTables + 1
+                    if not columns then
+                        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get columns for table: ", tableName, "\n")
+                        return
+                    end
+
+                    local columnsToRemove = {}
+                    local columnsToRename = {}
+                    for columnName, columnType in pairs(columns) do
+                        if columnName:sub(1, 1) == "_" then
+                            local newColumnName = columnName:gsub("^_+", "")
+                            if newColumnName ~= columnName then
+                                if columns[newColumnName] then
+                                    table.insert(columnsToRemove, {
+                                        oldName = columnName,
+                                        newName = newColumnName,
+                                        type = columnType
+                                    })
+                                else
+                                    table.insert(columnsToRename, {
+                                        oldName = columnName,
+                                        newName = newColumnName,
+                                        type = columnType
+                                    })
+                                end
+                            end
+                        end
+                    end
+
+                    if #columnsToRemove == 0 and #columnsToRename == 0 then
+                        MsgC(Color(255, 255, 255), "[Lilia] ", Color(255, 255, 255), "Table ", tableName, ": No columns with leading underscores found\n")
+                        return
+                    end
+
+                    local totalColumns = #columnsToRemove + #columnsToRename
+                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Table ", tableName, ": Found ", totalColumns, " columns to process (", #columnsToRemove, " to remove, ", #columnsToRename, " to rename)\n")
+                    local processPromises = {}
+                    for _, columnInfo in ipairs(columnsToRemove) do
+                        local processPromise = deferred.new()
+                        table.insert(processPromises, processPromise)
+                        local shortTableName = tableName:gsub("^lia_", "")
+                        lia.db.removeColumn(shortTableName, columnInfo.oldName):next(function(removeResult)
+                            if removeResult then
+                                MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  ✓ Removed duplicate column ", columnInfo.oldName, " (", columnInfo.newName, " already exists) in ", tableName, "\n")
+                                totalColumnsRemoved = totalColumnsRemoved + 1
+                                processPromise:resolve()
+                            else
+                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to remove duplicate column ", columnInfo.oldName, " from ", tableName, "\n")
+                                processPromise:reject("Failed to remove duplicate column")
+                            end
+                        end):catch(function(err)
+                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to remove column ", columnInfo.oldName, " from ", tableName, ": ", err, "\n")
+                            processPromise:reject(err)
+                        end)
+                    end
+
+                    for _, columnInfo in ipairs(columnsToRename) do
+                        local processPromise = deferred.new()
+                        table.insert(processPromises, processPromise)
+                        local shortTableName = tableName:gsub("^lia_", "")
+                        local createColumnPromise = lia.db.createColumn(shortTableName, columnInfo.newName, columnInfo.type:lower())
+                        createColumnPromise:next(function(createResult)
+                            if createResult and createResult.success then
+                                local updateQuery = "UPDATE " .. tableName .. " SET " .. lia.db.escapeIdentifier(columnInfo.newName) .. " = " .. lia.db.escapeIdentifier(columnInfo.oldName)
+                                lia.db.query(updateQuery):next(function()
+                                    lia.db.removeColumn(shortTableName, columnInfo.oldName):next(function(removeResult)
+                                        if removeResult then
+                                            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  ✓ Renamed ", columnInfo.oldName, " -> ", columnInfo.newName, " in ", tableName, "\n")
+                                            totalColumnsRemoved = totalColumnsRemoved + 1
+                                            processPromise:resolve()
+                                        else
+                                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to remove old column ", columnInfo.oldName, " from ", tableName, "\n")
+                                            processPromise:reject("Failed to remove old column")
+                                        end
+                                    end):catch(function(err)
+                                        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to remove column ", columnInfo.oldName, " from ", tableName, ": ", err, "\n")
+                                        processPromise:reject(err)
+                                    end)
+                                end):catch(function(err)
+                                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to copy data for ", columnInfo.oldName, " in ", tableName, ": ", err, "\n")
+                                    processPromise:reject(err)
+                                end)
+                            else
+                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to create new column ", columnInfo.newName, " in ", tableName, ": ", createResult and createResult.message or "Unknown error", "\n")
+                                processPromise:reject(createResult and createResult.message or "Unknown error")
+                            end
+                        end):catch(function(err)
+                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "  ✗ Failed to create column ", columnInfo.newName, " in ", tableName, ": ", err, "\n")
+                            processPromise:reject(err)
+                        end)
+                    end
+
+                    deferred.all(processPromises):next(function() MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Table ", tableName, ": Successfully processed ", totalColumns, " columns\n\n") end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Table ", tableName, ": Some column operations failed: ", err, "\n\n") end)
+                end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get columns for table ", tableName, ": ", err, "\n") end)
+            end
+
+            timer.Simple(2.0, function()
+                MsgC(Color(255, 255, 0), "\n[Lilia] ", Color(255, 255, 255), "=== Column Underscore Removal Summary ===\n")
+                MsgC(Color(255, 255, 255), "lia_* tables processed: ", totalTables, "\n")
+                MsgC(Color(255, 255, 255), "Columns processed: ", totalColumnsRemoved, "\n")
+                if totalColumnsRemoved > 0 then
+                    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Successfully processed ", totalColumnsRemoved, " column(s) across ", totalTables, " lia_* table(s)\n")
+                else
+                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "! No columns with leading underscores were found to process in lia_* tables\n")
+                end
+
+                MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Column Underscore Removal Completed ===\n")
+            end)
+        end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to get table list: ", err, "\n") end)
+    end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to wait for database tables to load: ", err, "\n") end)
+end)
+
+function lia.db.autoRemoveUnderscoreColumns()
+    local d = deferred.new()
+    if not lia.db.connected then
+        d:resolve()
+        return d
+    end
+
+    lia.db.getTables():next(function(tables)
+        if not tables or #tables == 0 then
+            d:resolve()
+            return
+        end
+
+        local totalColumnsRemoved = 0
+        local processPromises = {}
+        for _, tableName in ipairs(tables) do
+            local processPromise = deferred.new()
+            table.insert(processPromises, processPromise)
+            lia.db.getTableColumns(tableName):next(function(columns)
+                if not columns then
+                    processPromise:resolve()
+                    return
+                end
+
+                local columnsToRemove = {}
+                local columnsToRename = {}
+                for columnName, columnType in pairs(columns) do
+                    if columnName:sub(1, 1) == "_" then
+                        local newColumnName = columnName:gsub("^_+", "")
+                        if newColumnName ~= columnName then
+                            if columns[newColumnName] then
+                                table.insert(columnsToRemove, {
+                                    oldName = columnName,
+                                    newName = newColumnName,
+                                    type = columnType
+                                })
+                            else
+                                table.insert(columnsToRename, {
+                                    oldName = columnName,
+                                    newName = newColumnName,
+                                    type = columnType
+                                })
+                            end
+                        end
+                    end
+                end
+
+                if #columnsToRemove == 0 and #columnsToRename == 0 then
+                    processPromise:resolve()
+                    return
+                end
+
+                local columnPromises = {}
+                for _, columnInfo in ipairs(columnsToRemove) do
+                    local columnPromise = deferred.new()
+                    table.insert(columnPromises, columnPromise)
+                    local shortTableName = tableName:gsub("^lia_", "")
+                    lia.db.removeColumn(shortTableName, columnInfo.oldName):next(function(removeResult)
+                        if removeResult then
+                            totalColumnsRemoved = totalColumnsRemoved + 1
+                            columnPromise:resolve()
+                        else
+                            columnPromise:reject("Failed to remove duplicate column")
+                        end
+                    end):catch(function(err) columnPromise:reject(err) end)
+                end
+
+                for _, columnInfo in ipairs(columnsToRename) do
+                    local columnPromise = deferred.new()
+                    table.insert(columnPromises, columnPromise)
+                    local shortTableName = tableName:gsub("^lia_", "")
+                    local createColumnPromise = lia.db.createColumn(shortTableName, columnInfo.newName, columnInfo.type:lower())
+                    createColumnPromise:next(function(createResult)
+                        if createResult and createResult.success then
+                            local updateQuery = "UPDATE " .. tableName .. " SET " .. lia.db.escapeIdentifier(columnInfo.newName) .. " = " .. lia.db.escapeIdentifier(columnInfo.oldName)
+                            lia.db.query(updateQuery):next(function()
+                                lia.db.removeColumn(shortTableName, columnInfo.oldName):next(function(removeResult)
+                                    if removeResult then
+                                        totalColumnsRemoved = totalColumnsRemoved + 1
+                                        columnPromise:resolve()
+                                    else
+                                        columnPromise:reject("Failed to remove old column")
+                                    end
+                                end):catch(function(err) columnPromise:reject(err) end)
+                            end):catch(function(err) columnPromise:reject(err) end)
+                        else
+                            columnPromise:reject(createResult and createResult.message or "Unknown error")
+                        end
+                    end):catch(function(err) columnPromise:reject(err) end)
+                end
+
+                deferred.all(columnPromises):next(function() processPromise:resolve() end):catch(function() processPromise:resolve() end)
+            end):catch(function() processPromise:resolve() end)
+        end
+
+        deferred.all(processPromises):next(function()
+            if totalColumnsRemoved > 0 then MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Auto-removed ", totalColumnsRemoved, " underscore-prefixed column(s) on database connection\n") end
+            d:resolve()
+        end):catch(function() d:resolve() end)
+    end):catch(function() d:resolve() end)
+    return d
+end

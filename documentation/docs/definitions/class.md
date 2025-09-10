@@ -707,8 +707,8 @@ CLASS.subMaterials = {
     "models/example/custom_armor" -- sub-material 1
 }
 CLASS.bodyGroups = {
-    {id = 1, value = 1},
-    {id = 2, value = 2}
+    hands = 2, -- apply option 2 to the "hands" bodygroup
+    torso = 0  -- index value 0 keeps the default option
 }
 CLASS.model = {
     "models/player/Group03/male_07.mdl",
@@ -726,5 +726,28 @@ CLASS.canInviteToFaction = true
 CLASS.canInviteToClass = true
 function CLASS:OnCanBe(client)
     return client:IsAdmin()
+end
+
+function CLASS:OnSet(client)
+    -- Called when player joins this class
+    client:notify("Welcome to the Engineer class!")
+end
+
+function CLASS:OnSpawn(client)
+    -- Called each time a member of this class respawns
+    client:SetHealth(self.health or 100)
+end
+
+function CLASS:OnTransferred(client, oldClass)
+    -- Called when player is moved to this class from another
+    local oldClassData = lia.class.list[oldClass]
+    if oldClassData then
+        client:notify("Transferred from " .. oldClassData.name)
+    end
+end
+
+function CLASS:OnLeave(client)
+    -- Called when player leaves this class
+    client:notify("Left the Engineer class")
 end
 ```

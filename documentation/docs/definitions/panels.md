@@ -64,7 +64,10 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `liaMiniButton` | `DButton` | Very small button variant. |
 | `liaNoBGButton` | `DButton` | Text-only button with no background. |
 | `liaQuick` | `EditablePanel` | Quick settings panel showing options flagged with `isQuick`. |
-| `liaCheckBox` | `DButton` | Checkbox that draws the config icons. |
+| `liaCheckbox` | `DButton` | Checkbox that draws the config icons. |
+| `liaItemList` | `DFrame` | Generic list frame for displaying items. |
+| `liaItemSelector` | `DFrame` | Item selection dialog with search and filtering. |
+| `liaDListView` | `DFrame` | Enhanced list view with search, sorting, and context menus. |
 
 ---
 
@@ -816,7 +819,7 @@ vgui.Create("liaQuick")
 
 ---
 
-### `liaCheckBox`
+### `liaCheckbox`
 
 **Base Panel:**
 
@@ -835,8 +838,53 @@ Checkbox that paints the same checkmark icons used in the configuration menu.
 **Example Usage:**
 
 ```lua
-local cb = vgui.Create("liaCheckBox")
+local cb = vgui.Create("liaCheckbox")
 cb:SetChecked(true)
 ```
+
+---
+
+### `liaItemList`
+
+**Base Panel:**
+
+`DFrame`
+
+**Description:**
+
+Generic list frame for displaying items with search functionality and context menus.
+
+---
+
+### `liaItemSelector`
+
+**Base Panel:**
+
+`DFrame`
+
+**Description:**
+
+Item selection dialog with search and filtering capabilities for choosing items from a list.
+
+---
+
+### `liaDListView`
+
+**Base Panel:**
+
+`DFrame`
+
+**Description:**
+
+Enhanced list view with search, sorting, and context menus. Features a search box, refresh button, and status bar showing total count.
+
+**Functions:**
+
+- `SetWindowTitle(title)` – sets the window title.
+- `SetPlaceholderText(text)` – sets the search box placeholder text.
+- `SetColumns(columns)` – defines the list columns.
+- `SetData(rows)` – populates the list with data rows.
+- `SetSort(column, desc)` – sets the sort column and direction.
+- `Populate()` – refreshes the list based on current search filter.
 
 ---

@@ -1,13 +1,12 @@
-# Core Library
+# Core Loader Library
 
-This page documents general utilities used throughout Lilia. All functions on
-this page live in `gamemode/core/libraries/loader.lua`.
+This page documents the functions for working with the core loader system and framework initialization.
 
 ---
 
 ## Overview
 
-The core library exposes shared helper functions used across multiple modules. Its main jobs include realm-aware file inclusion and small convenience utilities for coloured console output, deprecation warnings, and standardised punishments.
+The core loader library (`lia`) provides the fundamental loading and initialization system for the Lilia framework. It handles the initialization and loading of all core libraries, modules, and compatibility files in the correct order, manages entity registration, and provides essential logging and utility functions.
 
 ---
 
@@ -15,30 +14,32 @@ The core library exposes shared helper functions used across multiple modules. I
 
 **Purpose**
 
-Includes a Lua file in the appropriate realm. When run on the server, any
-client or shared files are automatically sent to players. Throws a Lua error if
-`path` is missing.
+Includes a Lua file with proper realm handling.
 
 **Parameters**
 
-* `path` (*string*): Path to the Lua file. *Required.*
-* `realm` (*string*): Override for the inclusion realm (`"server"`,
-  `"client"`, or `"shared"`). When omitted, the realm is inferred from the
-  filename prefix (`sv_`, `sh_`, `cl_`) or defaults to `"shared"`.
-
-**Realm**
-
-`Shared`
+* `path` (*string*): The path to the Lua file to include.
+* `realm` (*string*, optional): The realm to load the file in ("shared", "client", "server").
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Force include as client
-lia.include("lilia/gamemode/core/libraries/keybind.lua", "client")
+-- Include a shared library
+lia.include("lilia/gamemode/core/libraries/util.lua", "shared")
+
+-- Include a client-side file
+lia.include("lilia/gamemode/core/derma/panels.lua", "client")
+
+-- Include a server-side file
+lia.include("lilia/gamemode/core/server/commands.lua", "server")
 ```
 
 ---
@@ -47,32 +48,31 @@ lia.include("lilia/gamemode/core/libraries/keybind.lua", "client")
 
 **Purpose**
 
-Includes all Lua files in a directory. Can automatically prepend the active
-schema or gamemode path, walk subfolders, and force a realm for every file.
+Recursively includes all Lua files in a directory.
 
 **Parameters**
 
-* `dir` (*string*): Directory path.
-* `raw` (*boolean*): If `true`, uses `dir` as-is. Otherwise, the path is
-  relative to the active schema or to `lilia/gamemode`. *Optional.* Defaults to
-  `false`.
-* `deep` (*boolean*): Recursively include subfolders when `true`. *Optional.*
-  Defaults to `false`.
-* `realm` (*string*): Realm override applied to every included file. *Optional.*
-
-**Realm**
-
-`Shared`
+* `dir` (*string*): The directory path to scan.
+* `raw` (*boolean*): Whether to use the raw path without schema prefix.
+* `deep` (*boolean*): Whether to include subdirectories recursively.
+* `realm` (*string*, optional): The realm to load files in.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Load all server files in a folder and its subfolders
-lia.includeDir("lilia/gamemode/modules/administration", true, true, "server")
+-- Include all files in a directory
+lia.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
+
+-- Include only top-level files
+lia.includeDir("lilia/gamemode/core/libraries", true, false, "shared")
 ```
 
 ---
@@ -81,315 +81,31 @@ lia.includeDir("lilia/gamemode/modules/administration", true, true, "server")
 
 **Purpose**
 
-Includes Lua files grouped by folder. The function can walk subdirectories and
-determine the realm of each file from its prefix (`sh_`, `sv_`, `cl_`) unless a
-realm is forced.
+Includes files in a directory with automatic realm detection based on filename prefixes.
 
 **Parameters**
 
-* `dir` (*string*): Directory path.
-* `raw` (*boolean*): Use `dir` as a literal path. Otherwise, it is relative to
-  the active schema or gamemode. *Optional.* Defaults to `false`.
-* `recursive` (*boolean*): Recurse into subdirectories when `true`. *Optional.*
-  Defaults to `false`.
-* `forceRealm` (*string*): Force all files to load in this realm. *Optional.*
-
-**Realm**
-
-`Shared`
+* `dir` (*string*): The directory path to scan.
+* `raw` (*boolean*): Whether to use the raw path without schema prefix.
+* `recursive` (*boolean*): Whether to include subdirectories recursively.
+* `forceRealm` (*string*, optional): Force a specific realm for all files.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-lia.includeGroupedDir("modules", false, true)
-```
-
----
-
-### lia.error
-
-**Purpose**
-
-Prints a coloured console message prefixed with "[Lilia] [Error]". This does
-not halt script execution; it is purely for logging.
-
-**Parameters**
-
-* `msg` (*string*): Error text.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.error("Something went wrong")
-```
-
----
-
-### lia.warning
-
-**Purpose**
-
-Prints a coloured console message prefixed with "[Lilia] [Warning]". This does
-not halt script execution; it is purely for logging warnings that are not
-critical errors.
-
-**Parameters**
-
-* `msg` (*string*): Warning text.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.warning("Failed to deserialize factions for door 123: invalid data")
-```
-
----
-
-### lia.deprecated
-
-**Purpose**
-
-Displays a colour-coded deprecation warning and optionally runs a fallback
-function.
-
-**Parameters**
-
-* `methodName` (*string*): Name of the deprecated method.
-* `callback` (*function*): Function to run after printing the warning. Executed
-  only when supplied. *Optional.*
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.deprecated("OldFunction", function()
-    print("Called fallback")
-end)
-```
-
----
-
-### lia.updater
-
-**Purpose**
-
-Prints a console message prefixed with "[Lilia] [Updater]" in cyan.
-
-**Parameters**
-
-* `msg` (*string*): Message text.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.updater("Loading additional content…")
-```
-
----
-
-### lia.information
-
-**Purpose**
-
-Prints an informational console message prefixed with "[Lilia] [Information]".
-
-**Parameters**
-
-* `msg` (*string*): Console text.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.information("Server started successfully")
-```
-
----
-
-### lia.admin
-
-**Purpose**
-
-Prints an admin-level console message prefixed with "[Lilia] [Admin]".
-
-**Parameters**
-
-* `msg` (*string*): Text to display.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.admin("Player JohnDoe has been promoted to admin.")
-```
-
----
-
-### lia.bootstrap
-
-**Purpose**
-
-Logs a bootstrap message with a coloured section tag. Messages are prefixed
-with "[Lilia] [Bootstrap]" followed by the section in brackets.
-
-**Parameters**
-
-* `section` (*string*): Bootstrap stage.
-
-* `msg` (*string*): Descriptive message.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.bootstrap("Database", "Connection established")
-```
-
----
-
-### lia.notifyAdmin
-
-**Purpose**
-
-Broadcasts a chat notification to every valid player who has the
-`canSeeAltingNotifications` privilege.
-
-**Parameters**
-
-* `notification` (*string*): Text to broadcast.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.notifyAdmin("Possible alt account detected")
-```
-
----
-
-### lia.printLog
-
-**Purpose**
-
-Prints a colour-coded log entry to the console prefixed with "[LOG]" and the
-log category.
-
-**Parameters**
-
-* `category` (*string*): Log category name.
-* `logString` (*string*): Text to log.
-
-**Realm**
-
-`Shared`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.printLog("Gameplay", "Third round started")
-```
-
----
-
-### lia.applyPunishment
-
-**Purpose**
-
-Applies standardised kick and/or ban commands for a player infraction using
-`lia.administrator.execCommand`.
-
-**Parameters**
-
-* `client` (*Player*): Player to punish.
-* `infraction` (*string*): Reason for the punishment.
-* `kick` (*boolean*): Whether to kick the player.
-* `ban` (*boolean*): Whether to ban the player.
-* `time` (*number*): Ban duration in minutes. *Optional.* Defaults to `0`
-  (permanent).
-* `kickKey` (*string*): Localisation key for the kick reason. *Optional.*
-  Defaults to `"kickedForInfraction"`.
-* `banKey` (*string*): Localisation key for the ban reason. *Optional.* Defaults
-  to `"bannedForInfraction"`.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
-lia.applyPunishment(ply, "Cheating", true, true, 0)
+-- Include with automatic realm detection
+lia.includeGroupedDir("lilia/gamemode/core/derma", true, true)
+
+-- Force all files to be client-side
+lia.includeGroupedDir("lilia/gamemode/core/derma", true, true, "client")
 ```
 
 ---
@@ -398,29 +114,340 @@ lia.applyPunishment(ply, "Cheating", true, true, 0)
 
 **Purpose**
 
-Loads and registers entities, weapons, tools, and effects from a base
-directory. Handles both folder- and file-based definitions, automatically
-including `init.lua`, `shared.lua`, and `cl_init.lua` files, stripping realm
-prefixes (`sh_`, `sv_`, `cl_`), and registering with the appropriate GMod
-systems.
+Handles the registration of entities, weapons, tools, and effects from a directory structure.
 
 **Parameters**
 
-* `path` (*string*): Base directory containing `entities`, `weapons`, `tools`,
-  and/or `effects` subfolders.
-
-**Realm**
-
-`Shared`
+* `path` (*string*): The base path to scan for entity files.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
+-- Include all entities from a directory
 lia.includeEntities("lilia/gamemode/entities")
+
+-- Include custom weapons
+lia.includeEntities("lilia/gamemode/weapons")
 ```
 
 ---
+
+### lia.error
+
+**Purpose**
+
+Prints an error message to the console.
+
+**Parameters**
+
+* `msg` (*string*): The error message to display.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Log an error message
+lia.error("Failed to load library: " .. libraryName)
+
+-- Log with context
+lia.error("Database connection failed: " .. tostring(error))
+```
+
+---
+
+### lia.warning
+
+**Purpose**
+
+Prints a warning message to the console.
+
+**Parameters**
+
+* `msg` (*string*): The warning message to display.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Log a warning
+lia.warning("Deprecated function used: " .. functionName)
+
+-- Log configuration warning
+lia.warning("Invalid configuration value for: " .. configKey)
+```
+
+---
+
+### lia.information
+
+**Purpose**
+
+Prints an information message to the console.
+
+**Parameters**
+
+* `msg` (*string*): The information message to display.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Log information
+lia.information("Library loaded successfully: " .. libraryName)
+
+-- Log status update
+lia.information("Database connection established")
+```
+
+---
+
+### lia.admin
+
+**Purpose**
+
+Prints an admin message to the console.
+
+**Parameters**
+
+* `msg` (*string*): The admin message to display.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Log admin action
+lia.admin("Player " .. player:Name() .. " was banned")
+
+-- Log admin command
+lia.admin("Admin " .. admin:Name() .. " executed command: " .. command)
+```
+
+---
+
+### lia.bootstrap
+
+**Purpose**
+
+Prints a bootstrap message to the console.
+
+**Parameters**
+
+* `section` (*string*): The bootstrap section name.
+* `msg` (*string*): The bootstrap message to display.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Log bootstrap progress
+lia.bootstrap("Core", "Loading core libraries...")
+
+-- Log section completion
+lia.bootstrap("Entities", "Entity registration complete")
+```
+
+---
+
+### lia.deprecated
+
+**Purpose**
+
+Handles deprecated method warnings.
+
+**Parameters**
+
+* `methodName` (*string*): The name of the deprecated method.
+* `callback` (*function*, optional): Callback function to execute.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Mark a function as deprecated
+lia.deprecated("oldFunction", function()
+    return newFunction()
+end)
+
+-- Simple deprecation warning
+lia.deprecated("deprecatedMethod")
+```
+
+---
+
+### lia.updater
+
+**Purpose**
+
+Prints an updater message to the console.
+
+**Parameters**
+
+* `msg` (*string*): The updater message to display.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Log update progress
+lia.updater("Checking for updates...")
+
+-- Log update completion
+lia.updater("Update completed successfully")
+```
+
+---
+
+### lia.notifyAdmin
+
+**Purpose**
+
+Notifies all administrators about a specific notification.
+
+**Parameters**
+
+* `notification` (*string*): The notification message to send.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Notify admins of an event
+lia.notifyAdmin("Server restart in 5 minutes")
+
+-- Notify admins of player action
+lia.notifyAdmin("Player " .. player:Name() .. " attempted to exploit")
+```
+
+---
+
+### lia.printLog
+
+**Purpose**
+
+Prints a formatted log message.
+
+**Parameters**
+
+* `category` (*string*): The log category.
+* `logString` (*string*): The log message.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Log with category
+lia.printLog("Database", "Connection established")
+
+-- Log player action
+lia.printLog("Player", player:Name() .. " joined the server")
+```
+
+---
+
+### lia.applyPunishment
+
+**Purpose**
+
+Applies punishment to a client based on infraction.
+
+**Parameters**
+
+* `client` (*Player*): The client to punish.
+* `infraction` (*string*): The infraction description.
+* `kick` (*boolean*): Whether to kick the client.
+* `ban` (*boolean*): Whether to ban the client.
+* `time` (*number*, optional): Ban duration in minutes.
+* `kickKey` (*string*, optional): Language key for kick message.
+* `banKey` (*string*, optional): Language key for ban message.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Kick a player
+lia.applyPunishment(client, "Cheating", true, false)
+
+-- Ban a player for 60 minutes
+lia.applyPunishment(client, "Exploiting", false, true, 60)
+
+-- Ban with custom messages
+lia.applyPunishment(client, "Hacking", false, true, 0, nil, "ban_hacking")
+```

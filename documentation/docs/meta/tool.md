@@ -1,6 +1,12 @@
 # Tool Meta
 
-The ToolGun interacts with the world through specialized meta functions.
+This page documents methods available on the `Tool` meta table, representing tool gun tools in the Lilia framework.
+
+---
+
+## Overview
+
+The `Tool` meta table provides comprehensive tool gun functionality including creation, configuration, networking, interaction handling, and object management. These methods form the foundation for creating custom tools within the Lilia framework, supporting both server-side logic and client-side interface management for Garry's Mod's tool gun system.
 
 ---
 
@@ -8,24 +14,45 @@ The ToolGun interacts with the world through specialized meta functions.
 
 **Purpose**
 
-Creates a new tool object with default properties and metatable.
+Creates a new tool instance with default properties.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* table - The new tool object.
+* `tool` (*Tool*): The new tool instance.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local tool = toolGunMeta:Create()
+local function createCustomTool()
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "custom_tool"
+    tool.SWEP = "gmod_tool"
+    tool.Owner = nil
+    tool.ClientConVar = {
+        size = "1",
+        color = "255 255 255"
+    }
+    tool.ServerConVar = {}
+    tool.Objects = {}
+    tool.Stage = 0
+    tool.Message = "Click to place object"
+    tool.LastMessage = 0
+    tool.AllowedCVar = 0
+    return tool
+end
+
+concommand.Add("create_tool", function(ply)
+    local tool = createCustomTool()
+    print("Created tool: " .. tool.Mode)
+end)
 ```
 
 ---
@@ -34,24 +61,37 @@ local tool = toolGunMeta:Create()
 
 **Purpose**
 
-Creates client and server console variables for the tool mode.
+Creates console variables for the tool on both client and server.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:CreateConVars()
+local function setupToolConVars(tool)
+    tool:CreateConVars()
+    print("Created console variables for tool: " .. tool:GetMode())
+end
+
+concommand.Add("setup_tool_convars", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool.ClientConVar = {
+        size = "1",
+        color = "255 255 255"
+    }
+    setupToolConVars(tool)
+end)
 ```
 
 ---
@@ -60,24 +100,35 @@ tool:CreateConVars()
 
 **Purpose**
 
-Updates tool data. Intended to be overridden by specific tool implementations.
+Updates tool data (placeholder for custom implementations).
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:UpdateData()
+local function setupToolDataUpdate(tool)
+    function tool:UpdateData()
+        print("Updating data for tool: " .. self:GetMode())
+        -- Custom data update logic here
+    end
+end
+
+concommand.Add("setup_tool_data", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "data_tool"
+    setupToolDataUpdate(tool)
+end)
 ```
 
 ---
@@ -86,24 +137,37 @@ tool:UpdateData()
 
 **Purpose**
 
-Freezes movement for the tool. Intended to be overridden by specific tool implementations.
+Freezes player movement (placeholder for custom implementations).
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:FreezeMovement()
+local function setupToolMovementFreeze(tool)
+    function tool:FreezeMovement()
+        if IsValid(self:GetOwner()) then
+            self:GetOwner():SetMoveType(MOVETYPE_NONE)
+            print("Froze movement for tool: " .. self:GetMode())
+        end
+    end
+end
+
+concommand.Add("setup_tool_freeze", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "freeze_tool"
+    setupToolMovementFreeze(tool)
+end)
 ```
 
 ---
@@ -112,24 +176,37 @@ tool:FreezeMovement()
 
 **Purpose**
 
-Draws the tool's HUD. Intended to be overridden by specific tool implementations.
+Draws HUD elements for the tool (placeholder for custom implementations).
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Client`
+Client.
 
 **Example Usage**
 
 ```lua
-tool:DrawHUD()
+local function setupToolHUD(tool)
+    function tool:DrawHUD()
+        local owner = self:GetOwner()
+        if IsValid(owner) and owner == LocalPlayer() then
+            draw.SimpleText("Tool: " .. self:GetMode(), "DermaDefault", 10, 10, Color(255, 255, 255))
+        end
+    end
+end
+
+concommand.Add("setup_tool_hud", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "hud_tool"
+    setupToolHUD(tool)
+end)
 ```
 
 ---
@@ -138,24 +215,41 @@ tool:DrawHUD()
 
 **Purpose**
 
-Retrieves the server convar for the given property and current tool mode.
+Gets server-side console variable information.
 
 **Parameters**
 
-* property (string) - The property name.
+* `property` (*string*): The property name to get.
 
 **Returns**
 
-* ConVar - The server convar object.
+* `convar` (*ConVar*): The console variable.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local cvar = tool:GetServerInfo("allow")
+local function getToolServerInfo(tool, property)
+    local convar = tool:GetServerInfo(property)
+    if convar then
+        print("Server info for " .. property .. ": " .. convar:GetString())
+        return convar
+    else
+        print("No server info found for: " .. property)
+        return nil
+    end
+end
+
+concommand.Add("get_tool_server_info", function(ply, cmd, args)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool:CreateConVars()
+    local property = args[1] or "size"
+    getToolServerInfo(tool, property)
+end)
 ```
 
 ---
@@ -164,24 +258,42 @@ local cvar = tool:GetServerInfo("allow")
 
 **Purpose**
 
-Builds a table of client convars for the current tool mode.
+Builds a list of console variables for the tool.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* table - Table of convar names and their default values.
+* `convars` (*table*): Table of console variables.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local convars = tool:BuildConVarList()
+local function displayToolConVars(tool)
+    local convars = tool:BuildConVarList()
+    print("Console variables for " .. tool:GetMode() .. ":")
+    for name, default in pairs(convars) do
+        print("  " .. name .. " = " .. default)
+    end
+    return convars
+end
+
+concommand.Add("list_tool_convars", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool.ClientConVar = {
+        size = "1",
+        color = "255 255 255"
+    }
+    tool:CreateConVars()
+    displayToolConVars(tool)
+end)
 ```
 
 ---
@@ -190,24 +302,36 @@ local convars = tool:BuildConVarList()
 
 **Purpose**
 
-Gets the value of a client convar for the tool's owner.
+Gets client-side console variable information.
 
 **Parameters**
 
-* property (string) - The property name.
+* `property` (*string*): The property name to get.
 
 **Returns**
 
-* string - The value of the client convar.
+* `value` (*string*): The console variable value.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local value = tool:GetClientInfo("someproperty")
+local function getToolClientInfo(tool, property)
+    local value = tool:GetClientInfo(property)
+    print("Client info for " .. property .. ": " .. value)
+    return value
+end
+
+concommand.Add("get_tool_client_info", function(ply, cmd, args)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool.Owner = ply
+    local property = args[1] or "size"
+    getToolClientInfo(tool, property)
+end)
 ```
 
 ---
@@ -216,25 +340,38 @@ local value = tool:GetClientInfo("someproperty")
 
 **Purpose**
 
-Gets the numeric value of a client convar for the tool's owner.
+Gets a numeric client-side console variable value.
 
 **Parameters**
 
-* property (string) - The property name.
-* default (number) - The default value if the convar is not set.
+* `property` (*string*): The property name to get.
+* `default` (*number|nil*): Default value if not found.
 
 **Returns**
 
-* number - The numeric value of the client convar.
+* `value` (*number*): The numeric console variable value.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local num = tool:GetClientNumber("someproperty", 1)
+local function getToolClientNumber(tool, property, default)
+    local value = tool:GetClientNumber(property, default)
+    print("Client number for " .. property .. ": " .. value)
+    return value
+end
+
+concommand.Add("get_tool_client_number", function(ply, cmd, args)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool.Owner = ply
+    local property = args[1] or "size"
+    local default = tonumber(args[2]) or 1
+    getToolClientNumber(tool, property, default)
+end)
 ```
 
 ---
@@ -243,24 +380,39 @@ local num = tool:GetClientNumber("someproperty", 1)
 
 **Purpose**
 
-Checks if the tool mode is allowed on the server.
+Checks if the tool is allowed to be used.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* boolean - True if allowed, false otherwise.
+* `allowed` (*boolean*): True if the tool is allowed.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-if tool:Allowed() then ... end
+local function checkToolAllowed(tool)
+    if tool:Allowed() then
+        print("Tool " .. tool:GetMode() .. " is allowed!")
+        return true
+    else
+        print("Tool " .. tool:GetMode() .. " is not allowed!")
+        return false
+    end
+end
+
+concommand.Add("check_tool_allowed", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool:CreateConVars()
+    checkToolAllowed(tool)
+end)
 ```
 
 ---
@@ -269,24 +421,35 @@ if tool:Allowed() then ... end
 
 **Purpose**
 
-Initializes the tool. Intended to be overridden by specific tool implementations.
+Initializes the tool (placeholder for custom implementations).
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:Init()
+local function setupToolInit(tool)
+    function tool:Init()
+        print("Initializing tool: " .. self:GetMode())
+        -- Custom initialization logic here
+    end
+end
+
+concommand.Add("setup_tool_init", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "init_tool"
+    setupToolInit(tool)
+end)
 ```
 
 ---
@@ -295,24 +458,34 @@ tool:Init()
 
 **Purpose**
 
-Returns the current tool mode.
+Gets the tool's mode name.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* string - The tool mode.
+* `mode` (*string*): The tool's mode name.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local mode = tool:GetMode()
+local function displayToolMode(tool)
+    local mode = tool:GetMode()
+    print("Tool mode: " .. mode)
+    return mode
+end
+
+concommand.Add("get_tool_mode", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    displayToolMode(tool)
+end)
 ```
 
 ---
@@ -321,24 +494,39 @@ local mode = tool:GetMode()
 
 **Purpose**
 
-Returns the SWEP (Scripted Weapon) associated with the tool.
+Gets the tool's SWEP (weapon) entity.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* SWEP - The SWEP object.
+* `swep` (*Entity*): The SWEP entity.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-local swep = tool:GetSWEP()
+local function displayToolSWEP(tool)
+    local swep = tool:GetSWEP()
+    if IsValid(swep) then
+        print("Tool SWEP: " .. swep:GetClass())
+        return swep
+    else
+        print("No SWEP found for tool")
+        return nil
+    end
+end
+
+concommand.Add("get_tool_swep", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.SWEP = ply:GetActiveWeapon()
+    displayToolSWEP(tool)
+end)
 ```
 
 ---
@@ -347,24 +535,43 @@ local swep = tool:GetSWEP()
 
 **Purpose**
 
-Returns the owner of the tool.
+Gets the tool's owner (player).
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* Player - The owner of the tool.
+* `owner` (*Player|nil*): The tool's owner, or nil if not found.
 
 **Realm**
 
-`Shared`
+Shared.
+
+**Notes**
+
+This method first tries to get the owner from the tool's SWEP (self:GetSWEP().Owner), and falls back to the tool's internal Owner field if that fails.
 
 **Example Usage**
 
 ```lua
-local owner = tool:GetOwner()
+local function displayToolOwner(tool)
+    local owner = tool:GetOwner()
+    if IsValid(owner) then
+        print("Tool owner: " .. owner:Name())
+        return owner
+    else
+        print("No owner found for tool")
+        return nil
+    end
+end
+
+concommand.Add("get_tool_owner", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Owner = ply
+    displayToolOwner(tool)
+end)
 ```
 
 ---
@@ -373,24 +580,43 @@ local owner = tool:GetOwner()
 
 **Purpose**
 
-Returns the weapon associated with the tool.
+Gets the tool's weapon entity.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* Weapon - The weapon object.
+* `weapon` (*Entity|nil*): The weapon entity, or nil if not found.
 
 **Realm**
 
-`Shared`
+Shared.
+
+**Notes**
+
+This method first tries to get the weapon from the tool's SWEP (self:GetSWEP().Weapon), and falls back to the tool's internal Weapon field if that fails.
 
 **Example Usage**
 
 ```lua
-local weapon = tool:GetWeapon()
+local function displayToolWeapon(tool)
+    local weapon = tool:GetWeapon()
+    if IsValid(weapon) then
+        print("Tool weapon: " .. weapon:GetClass())
+        return weapon
+    else
+        print("No weapon found for tool")
+        return nil
+    end
+end
+
+concommand.Add("get_tool_weapon", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Weapon = ply:GetActiveWeapon()
+    displayToolWeapon(tool)
+end)
 ```
 
 ---
@@ -399,24 +625,36 @@ local weapon = tool:GetWeapon()
 
 **Purpose**
 
-Handles the left click action for the tool. Intended to be overridden.
+Handles left click events for the tool.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* boolean - Whether the action was successful.
+* `handled` (*boolean*): True if the click was handled.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:LeftClick()
+local function setupToolLeftClick(tool)
+    function tool:LeftClick()
+        print("Left click on tool: " .. self:GetMode())
+        -- Custom left click logic here
+        return true
+    end
+end
+
+concommand.Add("setup_tool_left_click", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "left_click_tool"
+    setupToolLeftClick(tool)
+end)
 ```
 
 ---
@@ -425,24 +663,36 @@ tool:LeftClick()
 
 **Purpose**
 
-Handles the right click action for the tool. Intended to be overridden.
+Handles right click events for the tool.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* boolean - Whether the action was successful.
+* `handled` (*boolean*): True if the click was handled.
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:RightClick()
+local function setupToolRightClick(tool)
+    function tool:RightClick()
+        print("Right click on tool: " .. self:GetMode())
+        -- Custom right click logic here
+        return true
+    end
+end
+
+concommand.Add("setup_tool_right_click", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "right_click_tool"
+    setupToolRightClick(tool)
+end)
 ```
 
 ---
@@ -451,24 +701,36 @@ tool:RightClick()
 
 **Purpose**
 
-Handles the reload action for the tool, clearing all objects.
+Handles reload events for the tool, clearing objects by default.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:Reload()
+local function setupToolReload(tool)
+    function tool:Reload()
+        print("Reload on tool: " .. self:GetMode())
+        self:ClearObjects()
+        -- Custom reload logic here
+    end
+end
+
+concommand.Add("setup_tool_reload", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "reload_tool"
+    setupToolReload(tool)
+end)
 ```
 
 ---
@@ -477,24 +739,36 @@ tool:Reload()
 
 **Purpose**
 
-Handles the deploy action for the tool, releasing the ghost entity.
+Handles tool deployment, releasing ghost entities by default.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:Deploy()
+local function setupToolDeploy(tool)
+    function tool:Deploy()
+        print("Deploy tool: " .. self:GetMode())
+        self:ReleaseGhostEntity()
+        -- Custom deploy logic here
+    end
+end
+
+concommand.Add("setup_tool_deploy", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "deploy_tool"
+    setupToolDeploy(tool)
+end)
 ```
 
 ---
@@ -503,24 +777,36 @@ tool:Deploy()
 
 **Purpose**
 
-Handles the holster action for the tool, releasing the ghost entity.
+Handles tool holstering, releasing ghost entities by default.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:Holster()
+local function setupToolHolster(tool)
+    function tool:Holster()
+        print("Holster tool: " .. self:GetMode())
+        self:ReleaseGhostEntity()
+        -- Custom holster logic here
+    end
+end
+
+concommand.Add("setup_tool_holster", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "holster_tool"
+    setupToolHolster(tool)
+end)
 ```
 
 ---
@@ -529,24 +815,35 @@ tool:Holster()
 
 **Purpose**
 
-Called every frame, releases the ghost entity.
+Handles tool thinking, releasing ghost entities by default.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:Think()
+local function setupToolThink(tool)
+    function tool:Think()
+        self:ReleaseGhostEntity()
+        -- Custom think logic here
+    end
+end
+
+concommand.Add("setup_tool_think", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "think_tool"
+    setupToolThink(tool)
+end)
 ```
 
 ---
@@ -555,24 +852,39 @@ tool:Think()
 
 **Purpose**
 
-Checks the validity of objects in the tool's object list and clears them if invalid.
+Checks if all tool objects are still valid.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:CheckObjects()
+local function setupToolObjectCheck(tool)
+    function tool:CheckObjects()
+        print("Checking objects for tool: " .. self:GetMode())
+        for id, obj in pairs(self.Objects) do
+            if not IsValid(obj.Ent) then
+                print("Object " .. id .. " is no longer valid")
+            end
+        end
+    end
+end
+
+concommand.Add("setup_tool_object_check", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "object_check_tool"
+    setupToolObjectCheck(tool)
+end)
 ```
 
 ---
@@ -581,24 +893,37 @@ tool:CheckObjects()
 
 **Purpose**
 
-Clears the tool's object list.
+Clears all tool objects.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:ClearObjects()
+local function clearToolObjects(tool)
+    tool:ClearObjects()
+    print("Cleared objects for tool: " .. tool:GetMode())
+end
+
+concommand.Add("clear_tool_objects", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool.Objects = {
+        {Ent = ents.Create("prop_physics")},
+        {Ent = ents.Create("prop_physics")}
+    }
+    clearToolObjects(tool)
+end)
 ```
 
 ---
@@ -607,23 +932,34 @@ tool:ClearObjects()
 
 **Purpose**
 
-Removes the ghost entity if it exists.
+Releases the tool's ghost entity if it exists.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* `None`: This function does not return a value.
+*None.*
 
 **Realm**
 
-`Shared`
+Shared.
 
 **Example Usage**
 
 ```lua
-tool:ReleaseGhostEntity()
+local function releaseToolGhost(tool)
+    tool:ReleaseGhostEntity()
+    print("Released ghost entity for tool: " .. tool:GetMode())
+end
+
+concommand.Add("release_tool_ghost", function(ply)
+    local tool = lia.meta.tool:Create()
+    tool.Mode = "test_tool"
+    tool.GhostEntity = ents.Create("prop_physics")
+    releaseToolGhost(tool)
+end)
 ```
 
+---

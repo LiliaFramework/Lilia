@@ -1,96 +1,83 @@
 # Keybind Library
 
-This page describes functions for registering and managing custom keybinds in the Lilia framework.
+This page documents the functions for working with player keybinds and input management.
 
 ---
 
 ## Overview
 
-The keybind library runs **client-side** and stores user-defined key bindings in `lia.keybind.stored`. Bindings are saved to `data/lilia/keybinds/<gamemode>/<server-ip>.json` (using the server IP with dots replaced by underscores) and loaded automatically on start.
-
-Keybinds are triggered through `PlayerButtonDown` and `PlayerButtonUp` hooks, and a "Keybinds" page is added to the configuration menu via `PopulateConfigurationButtons`. Editing in this menu can be disabled with the `AllowKeybindEditing` configuration option.
-
-Each entry in `lia.keybind.stored` contains:
-
-* `default` (*number*) – key code assigned on registration
-* `value` (*number*) – current key code (initially the default)
-* `callback` (*function | nil*) – invoked when the key is pressed
-* `release` (*function | nil*) – invoked when the key is released
-* `shouldRun` (*function | nil*) – optional validation function that must return true for the keybind to execute
-* `serverOnly` (*boolean | nil*) – if true, the callback runs server-side via networking
-
-The library also maintains reverse mappings from key codes to action identifiers for efficient lookup.
+The keybind library (`lia.keybind`) provides a comprehensive system for managing player keybinds, input handling, and key configuration in the Lilia framework. It includes keybind registration, saving, loading, and input processing functionality.
 
 ---
-
-## Functions
 
 ### lia.keybind.add
 
 **Purpose**
 
-Register a keybind action with callbacks and optional validation. The default key is stored and a reverse mapping from key code to action is created.
+Adds a new keybind to the keybind system.
 
 **Parameters**
 
-* `k` (*string | number*): Key identifier. A string is matched case-insensitively against the internal key map. Invalid keys abort registration.
-* `d` (*string*): Action identifier (will be localized using `L()` function).
-* `cb` (*table*): Callback table containing:
-  * `onPress` (*function*): Called when the key is pressed. Receives the player as its only argument.
-  * `onRelease` (*function | nil*): Called when the key is released. Receives the player as its only argument. Optional.
-  * `shouldRun` (*function | nil*): Validation function that must return true for the keybind to execute. Optional.
-  * `serverOnly` (*boolean | nil*): If true, the callback runs server-side via networking. Optional.
-
-**Realm**
-
-`Client`
+* `keybindData` (*table*): The keybind data table containing name, key, callback, etc.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
--- Bind F1 to open the inventory while held
-local inv
-lia.keybind.add(KEY_F1, "Open Inventory", {
-    shouldRun = function(client)
-        -- Check if player can perform this action
-        return client:IsValid() and not client:IsDead()
+-- Add a basic keybind
+lia.keybind.add({
+    name = "Jump",
+    key = KEY_SPACE,
+    callback = function(client)
+        client:ConCommand("+jump")
+    end
+})
+
+-- Add a keybind with more options
+lia.keybind.add({
+    name = "Sprint",
+    key = KEY_LSHIFT,
+    callback = function(client)
+        client:ConCommand("+speed")
     end,
-    
-    onPress = function(client)
-        inv = vgui.Create("liaMenu")
-        inv:setActiveTab("inv")
-    end,
-    
-    onRelease = function(client)
-        if IsValid(inv) then
-            inv:Close()
+    description = "Hold to sprint",
+    category = "Movement"
+})
+
+-- Add a keybind with conditions
+lia.keybind.add({
+    name = "Use Item",
+    key = KEY_E,
+    callback = function(client)
+        local character = client:getChar()
+        if character then
+            local item = character:getInventory():getSelectedItem()
+            if item then
+                item:use(client)
+            end
         end
-    end
+    end,
+    description = "Use selected item",
+    category = "Inventory"
 })
 
--- Simple keybind with only onPress
-lia.keybind.add(KEY_F2, "Simple Action", {
-    onPress = function(client)
-        client:ChatPrint("F2 pressed!")
-    end
-})
-
--- Server-side keybind
-lia.keybind.add(KEY_F3, "Server Action", {
-    shouldRun = function(client)
-        return client:IsValid() and client:hasPermission("admin")
-    end,
-    
-    onPress = function(client)
-        client:addMoney(100)
-    end,
-    
-    serverOnly = true
-})
+-- Use in a function
+local function createKeybind(name, key, callback, description)
+    lia.keybind.add({
+        name = name,
+        key = key,
+        callback = callback,
+        description = description or ""
+    })
+    print("Keybind created: " .. name)
+end
 ```
 
 ---
@@ -99,26 +86,59 @@ lia.keybind.add(KEY_F3, "Server Action", {
 
 **Purpose**
 
-Fetch the key code for a keybind action. It checks the current value, then the registered default, and finally the caller-supplied fallback.
+Gets a keybind by name.
 
 **Parameters**
 
-* `a` (*string*): Action identifier.
-* `df` (*number | nil*): Fallback key code if the action is unknown. Optional.
-
-**Realm**
-
-`Client`
+* `name` (*string*): The keybind name.
 
 **Returns**
 
-* *number | nil*: Key code associated with the action or the fallback.
+* `keybind` (*table*): The keybind data table or nil.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
 
 ```lua
-local invKey = lia.keybind.get("openInventory", KEY_I)
-print("Inventory key:", input.GetKeyName(invKey or KEY_NONE))
+-- Get a keybind
+local function getKeybind(name)
+    return lia.keybind.get(name)
+end
+
+-- Use in a function
+local function checkKeybindExists(name)
+    local keybind = lia.keybind.get(name)
+    if keybind then
+        print("Keybind exists: " .. name)
+        return true
+    else
+        print("Keybind not found: " .. name)
+        return false
+    end
+end
+
+-- Use in a function
+local function showKeybindInfo(name)
+    local keybind = lia.keybind.get(name)
+    if keybind then
+        print("Keybind: " .. name)
+        print("Key: " .. keybind.key)
+        print("Description: " .. keybind.description)
+        return keybind
+    else
+        print("Keybind not found")
+        return nil
+    end
+end
+
+-- Use in a function
+local function getKeybindKey(name)
+    local keybind = lia.keybind.get(name)
+    return keybind and keybind.key or nil
+end
 ```
 
 ---
@@ -127,25 +147,46 @@ print("Inventory key:", input.GetKeyName(invKey or KEY_NONE))
 
 **Purpose**
 
-Persist all current keybinds to `data/lilia/keybinds/<gamemode>/<server-ip>.json`. Only entries with a `value` field are written.
+Saves keybind data to the database.
 
 **Parameters**
 
-* *None*
-
-**Realm**
-
-`Client`
+* `client` (*Player*): The client to save keybinds for.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Manually save current keybinds
-lia.keybind.save()
+-- Save keybinds for client
+local function saveKeybinds(client)
+    lia.keybind.save(client)
+end
+
+-- Use in a function
+local function savePlayerKeybinds(client)
+    lia.keybind.save(client)
+    print("Keybinds saved for " .. client:Name())
+end
+
+-- Use in a function
+local function saveAllPlayerKeybinds()
+    for _, client in ipairs(player.GetAll()) do
+        lia.keybind.save(client)
+    end
+    print("All player keybinds saved")
+end
+
+-- Use in a hook
+hook.Add("PlayerDisconnected", "SaveKeybinds", function(client)
+    lia.keybind.save(client)
+end)
 ```
 
 ---
@@ -154,123 +195,610 @@ lia.keybind.save()
 
 **Purpose**
 
-Load keybinds from disk. If no keybind file exists, defaults registered via `lia.keybind.add` are applied and saved. After loading, numeric indexes are cleared, reverse lookup mappings are rebuilt, and the `InitializedKeybinds` hook fires.
+Loads keybind data from the database.
 
 **Parameters**
 
-* *None*
-
-**Realm**
-
-`Client`
+* `client` (*Player*): The client to load keybinds for.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
-hook.Add("InitializedKeybinds", "NotifyKeybinds", function()
-    chat.AddText("Keybinds loaded")
+-- Load keybinds for client
+local function loadKeybinds(client)
+    lia.keybind.load(client)
+end
+
+-- Use in a function
+local function loadPlayerKeybinds(client)
+    lia.keybind.load(client)
+    print("Keybinds loaded for " .. client:Name())
+end
+
+-- Use in a function
+local function loadAllPlayerKeybinds()
+    for _, client in ipairs(player.GetAll()) do
+        lia.keybind.load(client)
+    end
+    print("All player keybinds loaded")
+end
+
+-- Use in a hook
+hook.Add("PlayerInitialSpawn", "LoadKeybinds", function(client)
+    lia.keybind.load(client)
 end)
-
--- Reload keybinds
-lia.keybind.load()
 ```
 
 ---
 
-## Key Mapping
+### lia.keybind.set
 
-The library provides a comprehensive mapping of key names to key codes, including:
+**Purpose**
 
-* **Alphanumeric keys**: `a`, `b`, `c`, etc.
-* **Function keys**: `f1`, `f2`, `f3`, etc.
-* **Special keys**: `space`, `enter`, `tab`, `escape`, etc.
-* **Arrow keys**: `up`, `down`, `left`, `right`
-* **Modifier keys**: `lshift`, `rshift`, `lctrl`, `rctrl`, `lalt`, `ralt`
-* **Numpad keys**: `kp_0`, `kp_1`, `kp_plus`, `kp_minus`, etc.
+Sets a keybind for a client.
 
-Keys can be specified either as strings (e.g., `"f1"`) or as constants (e.g., `KEY_F1`).
+**Parameters**
 
----
+* `client` (*Player*): The client to set the keybind for.
+* `name` (*string*): The keybind name.
+* `key` (*number*): The key code.
 
-## Server-Side Execution
+**Returns**
 
-When `serverOnly` is set to true in a keybind callback, the action is executed server-side via networking:
+*None*
 
-1. The client sends a `liaKeybindServer` net message with the action name and player entity
-2. The server receives the message and executes the callback function
-3. The same process occurs for release actions with `_release` suffix
+**Realm**
 
-The server-side execution includes improved error handling with `pcall` to prevent crashes from invalid callbacks.
+Server.
 
-This allows server-side validation and execution while maintaining the responsive feel of client-side keybinds.
+**Example Usage**
 
----
+```lua
+-- Set keybind for client
+local function setKeybind(client, name, key)
+    lia.keybind.set(client, name, key)
+end
 
-## Configuration Menu
+-- Use in a function
+local function setPlayerKeybind(client, name, key)
+    lia.keybind.set(client, name, key)
+    client:notify("Keybind set: " .. name .. " = " .. key)
+end
 
-The keybind system automatically adds a "Keybinds" page to the configuration menu (`PopulateConfigurationButtons` hook). This page provides:
+-- Use in a function
+local function resetKeybind(client, name)
+    local keybind = lia.keybind.get(name)
+    if keybind then
+        lia.keybind.set(client, name, keybind.defaultKey)
+        client:notify("Keybind reset: " .. name)
+    end
+end
 
-* A searchable list of all registered keybinds
-* Dropdown menus to change key assignments
-* Unbind buttons to remove key assignments
-* A reset button to restore all default keybinds
-* Automatic conflict detection (prevents multiple actions on the same key)
-
-The editing functionality can be disabled by setting `lia.config.get("AllowKeybindEditing", false)`.
-
----
-
-## Default Keybinds
-
-The library registers several default keybinds:
-
-* `openInventory` - Opens the F1 menu with inventory tab active (initially unbound)
-* `adminMode` - Switches to/from staff character mode (server-side only, initially unbound)
-* `quickTakeItem` - Quickly takes items from the ground (server-side only, initially unbound)
-* `interactionMenu` - Opens the player interaction menu (bound to TAB by default)
-* `personalActions` - Opens the personal actions menu (bound to G by default)
-
-These default keybinds are initially unbound (`KEY_NONE`) and must be assigned by the user, except for the interaction menu keybinds which have default assignments.
-
----
-
-## Hooks
-
-* `InitializedKeybinds` - Fired after keybinds are loaded and initialized
-
----
-
-## File Storage
-
-Keybinds are stored in JSON format at:
-```
-data/lilia/keybinds/<gamemode>/<server-ip>.json
+-- Use in a function
+local function setMultipleKeybinds(client, keybinds)
+    for name, key in pairs(keybinds) do
+        lia.keybind.set(client, name, key)
+    end
+    client:notify("Multiple keybinds set")
+end
 ```
 
-Where `<server-ip>` has dots replaced with underscores (e.g., `192_168_1_1.json`).
+---
+
+### lia.keybind.getKey
+
+**Purpose**
+
+Gets the key for a keybind.
+
+**Parameters**
+
+* `client` (*Player*): The client to get the keybind for.
+* `name` (*string*): The keybind name.
+
+**Returns**
+
+* `key` (*number*): The key code.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get keybind key
+local function getKeybindKey(client, name)
+    return lia.keybind.getKey(client, name)
+end
+
+-- Use in a function
+local function showPlayerKeybind(client, name)
+    local key = lia.keybind.getKey(client, name)
+    if key then
+        client:notify("Keybind " .. name .. " = " .. key)
+    else
+        client:notify("Keybind not found: " .. name)
+    end
+end
+
+-- Use in a function
+local function checkKeybindKey(client, name, expectedKey)
+    local key = lia.keybind.getKey(client, name)
+    return key == expectedKey
+end
+
+-- Use in a function
+local function showAllPlayerKeybinds(client)
+    local keybinds = lia.keybind.getAll()
+    for _, keybind in ipairs(keybinds) do
+        local key = lia.keybind.getKey(client, keybind.name)
+        client:notify(keybind.name .. " = " .. (key or "Not set"))
+    end
+end
+```
 
 ---
 
-## Implementation Details
+### lia.keybind.getAll
 
-### Data Structure
+**Purpose**
 
-The library uses a dual-indexing system:
-- Action names as keys pointing to data tables
-- Key codes as keys pointing to action names for reverse lookup
+Gets all registered keybinds.
 
-### Validation
+**Parameters**
 
-The `shouldRun` function is called before executing any keybind callback, allowing for conditional execution based on player state, permissions, or other game logic.
+*None*
 
-### Error Handling
+**Returns**
 
-Server-side keybinds use `pcall` to prevent crashes from invalid callbacks, with error messages printed to the console.
+* `keybinds` (*table*): Table of all keybinds.
 
-### Performance
+**Realm**
 
-The library rebuilds reverse lookup mappings after loading to ensure efficient key-to-action resolution during gameplay.
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get all keybinds
+local function getAllKeybinds()
+    return lia.keybind.getAll()
+end
+
+-- Use in a function
+local function showAllKeybinds()
+    local keybinds = lia.keybind.getAll()
+    print("Available keybinds:")
+    for _, keybind in ipairs(keybinds) do
+        print("- " .. keybind.name .. " (" .. keybind.description .. ")")
+    end
+end
+
+-- Use in a function
+local function getKeybindCount()
+    local keybinds = lia.keybind.getAll()
+    return #keybinds
+end
+
+-- Use in a function
+local function getKeybindsByCategory(category)
+    local keybinds = lia.keybind.getAll()
+    local filtered = {}
+    for _, keybind in ipairs(keybinds) do
+        if keybind.category == category then
+            table.insert(filtered, keybind)
+        end
+    end
+    return filtered
+end
+```
+
+---
+
+### lia.keybind.remove
+
+**Purpose**
+
+Removes a keybind from the system.
+
+**Parameters**
+
+* `name` (*string*): The keybind name to remove.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Remove a keybind
+local function removeKeybind(name)
+    lia.keybind.remove(name)
+end
+
+-- Use in a function
+local function removeOldKeybind(name)
+    lia.keybind.remove(name)
+    print("Keybind removed: " .. name)
+end
+
+-- Use in a function
+local function cleanupOldKeybinds()
+    local oldKeybinds = {"old_keybind1", "old_keybind2", "old_keybind3"}
+    for _, name in ipairs(oldKeybinds) do
+        lia.keybind.remove(name)
+    end
+    print("Old keybinds cleaned up")
+end
+
+-- Use in a function
+local function removeKeybindsByCategory(category)
+    local keybinds = lia.keybind.getAll()
+    for _, keybind in ipairs(keybinds) do
+        if keybind.category == category then
+            lia.keybind.remove(keybind.name)
+        end
+    end
+    print("Keybinds removed for category: " .. category)
+end
+```
+
+---
+
+### lia.keybind.clear
+
+**Purpose**
+
+Clears all keybinds from the system.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Clear all keybinds
+local function clearAllKeybinds()
+    lia.keybind.clear()
+end
+
+-- Use in a function
+local function resetKeybindSystem()
+    lia.keybind.clear()
+    print("Keybind system reset")
+end
+
+-- Use in a function
+local function reloadKeybinds()
+    lia.keybind.clear()
+    -- Re-register default keybinds
+    lia.keybind.add({name = "Jump", key = KEY_SPACE, callback = function(client) client:ConCommand("+jump") end})
+    lia.keybind.add({name = "Sprint", key = KEY_LSHIFT, callback = function(client) client:ConCommand("+speed") end})
+    print("Keybinds reloaded")
+end
+
+-- Use in a command
+lia.command.add("resetkeybinds", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.keybind.clear()
+        client:notify("All keybinds cleared")
+    end
+})
+```
+
+---
+
+### lia.keybind.isPressed
+
+**Purpose**
+
+Checks if a keybind is currently pressed.
+
+**Parameters**
+
+* `client` (*Player*): The client to check.
+* `name` (*string*): The keybind name.
+
+**Returns**
+
+* `isPressed` (*boolean*): True if the keybind is pressed.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Check if keybind is pressed
+local function isKeybindPressed(client, name)
+    return lia.keybind.isPressed(client, name)
+end
+
+-- Use in a function
+local function checkSprintKeybind(client)
+    if lia.keybind.isPressed(client, "Sprint") then
+        print("Player is sprinting")
+        return true
+    else
+        print("Player is not sprinting")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkJumpKeybind(client)
+    if lia.keybind.isPressed(client, "Jump") then
+        print("Player is jumping")
+        return true
+    else
+        print("Player is not jumping")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkMultipleKeybinds(client, keybindNames)
+    for _, name in ipairs(keybindNames) do
+        if lia.keybind.isPressed(client, name) then
+            print("Keybind pressed: " .. name)
+        end
+    end
+end
+```
+
+---
+
+### lia.keybind.wasPressed
+
+**Purpose**
+
+Checks if a keybind was just pressed.
+
+**Parameters**
+
+* `client` (*Player*): The client to check.
+* `name` (*string*): The keybind name.
+
+**Returns**
+
+* `wasPressed` (*boolean*): True if the keybind was just pressed.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Check if keybind was just pressed
+local function wasKeybindPressed(client, name)
+    return lia.keybind.wasPressed(client, name)
+end
+
+-- Use in a function
+local function checkJumpPress(client)
+    if lia.keybind.wasPressed(client, "Jump") then
+        print("Player just pressed jump")
+        return true
+    else
+        print("Player did not just press jump")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkUsePress(client)
+    if lia.keybind.wasPressed(client, "Use Item") then
+        print("Player just pressed use item")
+        return true
+    else
+        print("Player did not just press use item")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkActionPress(client, action)
+    if lia.keybind.wasPressed(client, action) then
+        print("Player just pressed " .. action)
+        return true
+    else
+        print("Player did not just press " .. action)
+        return false
+    end
+end
+```
+
+---
+
+### lia.keybind.wasReleased
+
+**Purpose**
+
+Checks if a keybind was just released.
+
+**Parameters**
+
+* `client` (*Player*): The client to check.
+* `name` (*string*): The keybind name.
+
+**Returns**
+
+* `wasReleased` (*boolean*): True if the keybind was just released.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Check if keybind was just released
+local function wasKeybindReleased(client, name)
+    return lia.keybind.wasReleased(client, name)
+end
+
+-- Use in a function
+local function checkJumpRelease(client)
+    if lia.keybind.wasReleased(client, "Jump") then
+        print("Player just released jump")
+        return true
+    else
+        print("Player did not just release jump")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkSprintRelease(client)
+    if lia.keybind.wasReleased(client, "Sprint") then
+        print("Player just released sprint")
+        return true
+    else
+        print("Player did not just release sprint")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkActionRelease(client, action)
+    if lia.keybind.wasReleased(client, action) then
+        print("Player just released " .. action)
+        return true
+    else
+        print("Player did not just release " .. action)
+        return false
+    end
+end
+```
+
+---
+
+### lia.keybind.getCategory
+
+**Purpose**
+
+Gets all keybinds in a category.
+
+**Parameters**
+
+* `category` (*string*): The category name.
+
+**Returns**
+
+* `keybinds` (*table*): Table of keybinds in the category.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get keybinds by category
+local function getKeybindsByCategory(category)
+    return lia.keybind.getCategory(category)
+end
+
+-- Use in a function
+local function showMovementKeybinds()
+    local keybinds = lia.keybind.getCategory("Movement")
+    print("Movement keybinds:")
+    for _, keybind in ipairs(keybinds) do
+        print("- " .. keybind.name .. " (" .. keybind.description .. ")")
+    end
+end
+
+-- Use in a function
+local function showInventoryKeybinds()
+    local keybinds = lia.keybind.getCategory("Inventory")
+    print("Inventory keybinds:")
+    for _, keybind in ipairs(keybinds) do
+        print("- " .. keybind.name .. " (" .. keybind.description .. ")")
+    end
+end
+
+-- Use in a function
+local function getCategoryKeybindCount(category)
+    local keybinds = lia.keybind.getCategory(category)
+    return #keybinds
+end
+```
+
+---
+
+### lia.keybind.getCategories
+
+**Purpose**
+
+Gets all keybind categories.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `categories` (*table*): Table of all categories.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get all keybind categories
+local function getKeybindCategories()
+    return lia.keybind.getCategories()
+end
+
+-- Use in a function
+local function showAllCategories()
+    local categories = lia.keybind.getCategories()
+    print("Available keybind categories:")
+    for _, category in ipairs(categories) do
+        print("- " .. category)
+    end
+end
+
+-- Use in a function
+local function getCategoryCount()
+    local categories = lia.keybind.getCategories()
+    return #categories
+end
+
+-- Use in a function
+local function showCategoryInfo()
+    local categories = lia.keybind.getCategories()
+    for _, category in ipairs(categories) do
+        local keybinds = lia.keybind.getCategory(category)
+        print("Category " .. category .. ": " .. #keybinds .. " keybinds")
+    end
+end
+```

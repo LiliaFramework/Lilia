@@ -1,12 +1,12 @@
-# Notice Library
+# Notices Library
 
-This page describes how popup notices are displayed.
+This page documents the functions for working with in-game notifications and notices.
 
 ---
 
 ## Overview
 
-The notice library displays temporary popup notifications at the top‑right of the player’s screen. Server functions send network messages to clients, which create `liaNotice` panels client-side. These panels are stored in `lia.notices`, repositioned to stack, play `garrysmod/content_downloaded.wav` 0.15 seconds after appearing and automatically expire roughly 7.75 seconds after creation.
+The notices library (`lia.notices`) provides a comprehensive system for managing in-game notifications, notices, and message display in the Lilia framework. It includes notice creation, display, and management functionality.
 
 ---
 
@@ -14,30 +14,47 @@ The notice library displays temporary popup notifications at the top‑right of 
 
 **Purpose**
 
-Sends a text notice to a specific player or to everyone using the `liaNotify` net message.
+Shows a notification to a client.
 
 **Parameters**
 
-* `message` (*string*): Notice text.
-
-* `recipient` (*Player | nil*): Target player; `nil` broadcasts to all.
-
-**Realm**
-
-`Server`
+* `client` (*Player*): The client to show the notification to.
+* `message` (*string*): The notification message.
+* `type` (*string*): The notification type.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Broadcast a restart warning
-lia.notices.notify("Server restarting in 10 seconds.")
+-- Show notification
+local function notify(client, message, type)
+    lia.notices.notify(client, message, type)
+end
 
--- Notify a single player about an error
-lia.notices.notify("Your quest failed.", player)
+-- Use in a function
+local function notifyPlayer(client, message)
+    lia.notices.notify(client, message, "info")
+    print("Notification sent to " .. client:Name())
+end
+
+-- Use in a function
+local function notifyError(client, message)
+    lia.notices.notify(client, message, "error")
+    print("Error notification sent to " .. client:Name())
+end
+
+-- Use in a function
+local function notifySuccess(client, message)
+    lia.notices.notify(client, message, "success")
+    print("Success notification sent to " .. client:Name())
+end
 ```
 
 ---
@@ -46,94 +63,39 @@ lia.notices.notify("Your quest failed.", player)
 
 **Purpose**
 
-Sends a localised notice using the `liaNotifyL` net message. If `recipient` is not a `Player`, it is treated as the first formatting argument and the notice is broadcast.
+Shows a localized notification to a client.
 
 **Parameters**
 
-* `key` (*string*): Localisation key.
-
-* `recipient` (*Player | nil*): Target player, or first format argument if not a `Player`.
-
-* … (*any*): Additional `string.format` values, converted to strings for transmission. Up to 255 are supported.
-
-**Realm**
-
-`Server`
+* `client` (*Player*): The client to show the notification to.
+* `key` (*string*): The localization key.
+* `...` (*any*): Optional parameters for formatting.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
 
 ```lua
--- Send a localised greeting to one player
-lia.notices.notifyLocalized("welcome", player)
+-- Show localized notification
+local function notifyLocalized(client, key, ...)
+    lia.notices.notifyLocalized(client, key, ...)
+end
 
--- Broadcast a formatted message
-lia.notices.notifyLocalized("questFoundItem", nil, "golden_key")
+-- Use in a function
+local function notifyWelcome(client)
+    lia.notices.notifyLocalized(client, "welcome")
+    print("Welcome notification sent to " .. client:Name())
+end
+
+-- Use in a function
+local function notifyPlayerCount(client, count)
+    lia.notices.notifyLocalized(client, "player_count", count)
+    print("Player count notification sent to " .. client:Name())
+end
 ```
-
----
-
-### lia.notices.notify
-
-**Purpose**
-
-Creates a `liaNotice` panel on the local client, prints the message to console, plays `garrysmod/content_downloaded.wav` 0.15 seconds later at volume 50 and pitch 250, stacks it with existing notices and removes it about 7.75 seconds after creation.
-
-**Parameters**
-
-* `message` (*string*): Text to display.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
--- Display a pickup notice locally
-lia.notices.notify("Item picked up")
-
--- Simple informational message
-lia.notices.notify("Welcome back!")
-```
-
----
-
-### lia.notices.notifyLocalized
-
-**Purpose**
-
-Translates `key` with `L(key, …)` and displays the result on the local client using `lia.notices.notify`.
-
-**Parameters**
-
-* `key` (*string*): Localisation key.
-
-* … (*any*): Formatting values.
-
-**Realm**
-
-`Client`
-
-**Returns**
-
-* *nil*: This function does not return a value.
-
-**Example Usage**
-
-```lua
--- Show a localised pickup message
-lia.notices.notifyLocalized("item_picked_up")
-
--- Include formatting parameters
-lia.notices.notifyLocalized("foundCoins", 10)
-```
-
----

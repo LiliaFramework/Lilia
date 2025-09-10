@@ -6,7 +6,7 @@ repo_url: 'https://github.com/LiliaFramework/Lilia'
 
 theme:
   name: material
-  logo: assets/logo_small.png
+  logo: assets/logo.png
   favicon: assets/favicon.ico
   features:
     - navigation.instant

@@ -1,5 +1,5 @@
 arrange:
-  - lia.md
+  - lia.admin.md
   - lia.attributes.md
   - lia.bars.md
   - lia.character.md
@@ -13,6 +13,7 @@ arrange:
   - lia.data.md
   - lia.database.md
   - lia.discord.md
+  - lia.doors.md
   - lia.factions.md
   - lia.flags.md
   - lia.fonts.md
@@ -20,16 +21,18 @@ arrange:
   - lia.item.md
   - lia.keybind.md
   - lia.languages.md
+  - lia.loader.md
   - lia.logger.md
-  - lia.menu.md
   - lia.markup.md
+  - lia.menu.md
   - lia.modularity.md
-  - lia.networking.md
+  - lia.net.md
   - lia.notice.md
   - lia.option.md
   - lia.playerinteract.md
   - lia.time.md
   - lia.util.md
-  - lia.workshop.md
+  - lia.vendor.md
   - lia.webimage.md
   - lia.websound.md
+  - lia.workshop.md

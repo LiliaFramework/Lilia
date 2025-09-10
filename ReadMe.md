@@ -1,7 +1,7 @@
 <p align="center">
-  <strong>Official repository for Lilia, an advanced roleplay framework for Garry’s Mod.</strong><br/>
-  This repo hosts the full source code, built-in modules and documentation.<br/>
-  The perfect foundation for your dream server.<br/><br/>
+  <strong>Lilia - Advanced Roleplay Framework for Garry's Mod</strong><br/>
+  A modern, modular, and highly extensible roleplay framework designed for stability and immersion.<br/>
+  Build your dream roleplay server with powerful built-in systems and seamless addon compatibility.<br/><br/>
   <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true " alt="Lilia Logo" width="200" />
 </p>
 
@@ -25,108 +25,144 @@
 
 <h1 align="center">Lilia Framework</h1>
 
-<h2 align="center">🚀 Getting Started</h2>
+---
+
+## 🌟 Key Features
+
+### **Built-in Core Systems**
+- **📦 Advanced Inventory System** - Grid-based inventory with weight limits, item stacking, and hot-loading modules
+- **👥 Team & Faction Management** - Comprehensive faction system with whitelist support and admin controls
+- **🎭 Character Attributes** - Dynamic character attribute system with management tools
+- **🚪 Door Ownership** - Sophisticated door access control with ownership and tenant permissions
+- **💬 Enhanced Chat System** - Configurable chat with colored text, command parsing, and staff channels
+- **🎯 Recognition System** - Immersive character recognition where players must learn each other's names
+- **📊 Dynamic Scoreboard** - Immersive scoreboard showing recognized players and faction information
+
+### **Administration & Security**
+- **🛡️ Built-in Admin Menu** - Complete administration suite with logging, tickets, and teleport tools
+- **🔒 Anti-Cheat Protection** - Comprehensive anti-exploit and anti-cheat systems
+- **👮 Staff Management** - Advanced permission system with granular privilege controls
+- **📋 Player Management** - Character listing, player information, and administrative tools
+
+### **Developer-Friendly**
+- **🔧 Modular Architecture** - Hot-loadable modules for easy customization and updates
+- **📚 Extensive Documentation** - Complete API reference and development guides
+- **🔌 DarkRP Addon Support** - Out-of-the-box compatibility with DarkRP addons and GMODStore content
+- **⚡ Performance Optimized** - Built for stability and high player counts
+
+---
+
+## 🚀 Quick Start
 
 <p align="center">
   Follow our step-by-step <a href="https://liliaframework.github.io/installation/">installation tutorial</a> to set up Lilia on your server.
 </p>
 
-<h2 align="center">✨ Core Features</h2>
+> **Important:** Lilia is a framework that runs beneath a roleplay schema. After installing Lilia, you must also install a schema and start your server using that schema's gamemode (e.g., `+gamemode skeleton`).
 
-<div align="center">
-
-* **Grid Inventory**
-  Container system with weight limits, stack icons and vendor support.
-
-* **Recognition & Names**
-  Manual name recognition with disguise and friends list integration.
-
-* **Attributes & Stamina**
-  Stats improve with use and optional stamina drains while sprinting.
-
-* **Custom Menus**
-  Main menu, scoreboard, F1 utilities and radial weapon selector.
-
-* **Chatbox & Commands**
-  Colored chat, radio channels and built-in emote commands.
-
-* **Team & Spawn Management**
-  Faction classes, death penalties and dynamic spawn points.
-
-* **Third-Person Camera**
-  Toggleable view with anti-peeking and adjustable position.
-
-* **Doors & Storage**
-  Ownable doors, property groups and persistent containers.
-
-* **NPC Vendors**
-  Buy, sell and restock items through dialogue trees.
-
-* **Interaction Menu**
-  Contextual radial options for money, voice and recognition.
-
-* **Administration Tools**
-  Built-in admin menu handles logging, tickets, warns, teleport and spectate. Optional compatibility is available for ULX, ServerGuard, and SAM.
-
-* **Performance & Protection**
-  Tick monitoring, network profiling and anti-exploit checks.
-
-* **Permissions & Logging**
-  Privileges with inheritance and file logs.
-
-* **Modular Extensions**
-  Hot-loading modules with third-party addon compatibility using global or custom conditions.
-
-* **Workshop & Config**
-  Manage client downloads and tweak hundreds of in-game settings.
-
-</div>
-
-<h2 align="center">📚 Documentation</h2>
+## 📚 Documentation
 
 <p align="center">
-  Explore the complete wiki for in-depth guides on configuring and extending Lilia:<br/>
+  Explore the complete documentation for in-depth guides on configuring and extending Lilia:<br/>
   <a href="https://liliaframework.github.io">https://liliaframework.github.io</a>
 </p>
 
-<h2 align="center">📦 Workshop Content</h2>
+### **What's Included:**
+- **Installation Tutorial** - Step-by-step setup guide
+- **API Reference** - Complete function and library documentation
+- **Module Development** - Guide to creating custom modules
+- **Configuration** - Detailed configuration options
+- **Compatibility Guide** - Addon integration information
+
+## 📦 Workshop Content
 
 <p align="center">
-  Subscribe to our essential <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922">Steam Workshop collection</a> for the assets you’ll need to run Lilia optimally.
-  This workshop release also contains the entire gamemode so you can replace your local <code>lilia</code> folder with it for easier updates.
+  Subscribe to our essential <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3527535922">Steam Workshop collection</a> for the assets you'll need to run Lilia optimally.
 </p>
 
-<h2 align="center">💬 Community Support</h2>
+> **Pro Tip:** The workshop release contains the entire gamemode, so you can replace your local `lilia` folder with it for easier updates and automatic content delivery.
+
+## 💬 Community & Support
 
 <p align="center">
-  Connect with other server owners and get real-time help on our Discord:<br/>
+  Connect with other server owners, get real-time help, and share your creations:<br/>
   <a href="https://discord.gg/esCRH5ckbQ">https://discord.gg/esCRH5ckbQ</a>
 </p>
 
-<h2 align="center">💡 Contributing</h2>
+### **Get Help:**
+- **Discord Community** - Real-time support and discussions
+- **Documentation** - Comprehensive guides and API reference
+- **GitHub Issues** - Bug reports and feature requests
 
-<p align="center">
-  We welcome pull requests and wiki improvements. To submit one, follow the following steps:
-</p>
+## 🔧 Addon Compatibility
 
-<div align="center">
+Lilia includes extensive compatibility layers for popular Garry's Mod addons, ensuring seamless integration with your existing addon collection:
 
-  Fork the repo  
+### **🎯 DarkRP Addon Support**
+- **Out-of-the-box compatibility** with most DarkRP addons
+- **Automatic shim functions** - `isEmpty`, `findEmptyPos`, `formatMoney`, `createEntity`, `createCategory`
+- **No modification required** - Your existing DarkRP addons work immediately
+- **Community & GMODStore addons** supported without changes
 
-  Create a feature branch  
+### **🛠️ Other Supported Addons**
+- **Administration Suites** - SAM, ServerGuard, CAMI integration
+- **Vehicle Frameworks** - LVS, Simfphys compatibility  
+- **Outfit Systems** - PAC3 integration with permission controls
+- **Weapon Frameworks** - ARCCW optimization for roleplay
+- **Utility Addons** - Advanced Duplicator, Sit Anywhere, and more
 
-  Submit a pull request  
+> **Note:** ULX is not recommended due to outdated CAMI library. Use Lilia's built-in admin menu or SAM instead.
 
-</div>
+## 💡 Contributing
+
+We welcome contributions to both code and documentation! Here's how to get started:
+
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Make your changes** and test thoroughly
+4. **Submit a pull request** with a clear description
+
+### **What We're Looking For:**
+- Bug fixes and performance improvements
+- New modules and features
+- Documentation improvements
+- Compatibility enhancements
 
 <p align="center">
   Please review our <a href="./Code_Of_Conduct.md">Code of Conduct</a> before contributing.
 </p>
 
-<h2 align="center">🎓 Learning & Adaptation</h2>
+## 🎓 Learning & Development
+
+### **For Developers:**
+- **Intermediate Lua Knowledge** - Familiarity with Garry's Mod Lua is recommended
+- **Modular Development** - Learn to create custom modules and schemas
+- **API Documentation** - Complete reference for all Lilia functions and libraries
+
+### **For Server Owners:**
+- **Easy Configuration** - Intuitive setup with comprehensive documentation
+- **Schema Compatibility** - Works with any roleplay schema built on Lilia
+- **Regular Updates** - Active development with frequent improvements
+
+### **Official Resources:**
+- **Main Repository** - [LiliaFramework/Lilia](https://github.com/LiliaFramework/Lilia)
+- **Official Modules** - [LiliaFramework/Modules](https://github.com/LiliaFramework/Modules)
+- **Documentation** - [liliaframework.github.io](https://liliaframework.github.io)
+
+---
+
+## 📄 License
+
+All Lilia content is open source under the **GNU General Public License v3.0**. See the [License](./License) file for details.
+
+- ✅ **Study and modify** for your own server
+- ✅ **Educational use** is encouraged
+- ❌ **Commercial resale** is discouraged
+- ✅ **Contribute back** to the community
+
+---
 
 <p align="center">
-  All <strong>Lilia</strong> content is open source under the <strong>GNU General Public License v3.0</strong>. See the <a href="./License">License</a> file for details. You are free to study, modify and adapt it for your own server. Commercial resale is discouraged, but educational use is encouraged.<br/>
-  Official modules for Lilia can be found here:<br/>
-  <a href="https://github.com/LiliaFramework/Modules">https://github.com/LiliaFramework/Modules</a>
+  <strong>Ready to build your dream roleplay server?</strong><br/>
+  <a href="https://liliaframework.github.io/installation/">Get started with Lilia today!</a>
 </p>

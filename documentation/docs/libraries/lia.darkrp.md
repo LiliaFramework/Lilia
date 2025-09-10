@@ -1,12 +1,12 @@
-# DarkRP Compatibility
+# DarkRP Library
 
-This page describes helpers for integrating with DarkRP.
+This page documents the functions for working with DarkRP compatibility and integration.
 
 ---
 
 ## Overview
 
-The `darkrp` library bridges functionality with the DarkRP gamemode. It mirrors several DarkRP helpers so third-party addons expecting the `DarkRP` globals continue to function. The functions documented here are also assigned to the global `DarkRP` table. A simplified `RPExtraTeams` table is created as well, mapping each faction to its team index for compatibility.
+The `lia.darkrp` library provides DarkRP compatibility functions for the Lilia framework. It includes utilities for position checking, text wrapping, money formatting, and entity creation that maintain compatibility with DarkRP addons.
 
 ---
 
@@ -14,28 +14,35 @@ The `darkrp` library bridges functionality with the DarkRP gamemode. It mirrors 
 
 **Purpose**
 
-Checks whether a position is free of solid contents, players, NPCs, props, and entities flagged with `NotEmptyPos` within a 35-unit sphere.
+Checks if a position is empty and suitable for spawning entities.
 
 **Parameters**
 
-* `position` (*Vector*): World position to test.
-
-* `entitiesToIgnore` (*table*): Entities ignored during the check. Defaults to an empty table.
-
-**Realm**
-
-`Server`
+* `position` (*Vector*): The position to check.
+* `entitiesToIgnore` (*table*): Optional table of entities to ignore during the check.
 
 **Returns**
 
-* *boolean*: `true` if the position is clear, `false` otherwise.
+* `isEmpty` (*boolean*): True if the position is empty, false otherwise.
+
+**Realm**
+
+Server.
 
 **Example Usage**
-
 ```lua
-local ply = Entity(1)
-if lia.darkrp.isEmpty(ply:GetPos(), { ply }) then
-    print("Spawn point is clear")
+-- Check if a position is empty
+local pos = Vector(0, 0, 0)
+if lia.darkrp.isEmpty(pos) then
+    print("Position is empty")
+else
+    print("Position is occupied")
+end
+
+-- Check with entities to ignore
+local ignoreList = {someEntity}
+if lia.darkrp.isEmpty(pos, ignoreList) then
+    print("Position is empty (ignoring specified entities)")
 end
 ```
 
@@ -45,32 +52,30 @@ end
 
 **Purpose**
 
-Searches around a start position for a spot free of world geometry and blocking entities. Both the starting position and the position offset by `checkArea` must be clear. The search steps outward along the positive and negative X, Y, and Z axes.
+Finds an empty position near a starting position by searching in expanding circles.
 
 **Parameters**
 
-* `startPos` (*Vector*): Initial position to search from.
-
-* `entitiesToIgnore` (*table*): Entities ignored during the search. *Optional*.
-
-* `maxDistance` (*number*): Maximum distance to search in units.
-
-* `searchStep` (*number*): Step increment when expanding the search radius.
-
-* `checkArea` (*Vector*): Additional height offset tested for clearance.
-
-**Realm**
-
-`Server`
+* `startPos` (*Vector*): The starting position to search from.
+* `entitiesToIgnore` (*table*): Optional table of entities to ignore.
+* `maxDistance` (*number*): Maximum distance to search.
+* `searchStep` (*number*): Step size for the search.
+* `checkArea` (*Vector*): Area to check around each position.
 
 **Returns**
 
-* *Vector*: A safe position. Returns the original `startPos` if none found within `maxDistance`.
+* `emptyPosition` (*Vector*): The first empty position found, or the original position if none found.
+
+**Realm**
+
+Server.
 
 **Example Usage**
-
 ```lua
-local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), { ply }, 128, 16, Vector(0, 0, 64))
+-- Find an empty position near a spawn point
+local startPos = Vector(0, 0, 0)
+local emptyPos = lia.darkrp.findEmptyPos(startPos, {}, 100, 10, Vector(32, 32, 64))
+print("Empty position found at:", emptyPos)
 ```
 
 ---
@@ -79,30 +84,27 @@ local spawn = lia.darkrp.findEmptyPos(ply:GetPos(), { ply }, 128, 16, Vector(0, 
 
 **Purpose**
 
-Sends a localized notification to the specified client. The second and third parameters mirror the DarkRP API but are ignored by this implementation.
+Sends a notification to a client using Lilia's notification system.
 
 **Parameters**
 
-* `client` (*Player*): Player to receive the message.
-
-* `type` (*number*): DarkRP notification type. *Ignored.*
-
-* `length` (*number*): Display time in seconds. *Ignored.*
-
-* `message` (*string*): Localization key or message text to send.
-
-**Realm**
-
-`Server`
+* `client` (*Player*): The client to notify.
+* `_` (*any*): Unused parameter (for DarkRP compatibility).
+* `_` (*any*): Unused parameter (for DarkRP compatibility).
+* `message` (*string*): The message to send.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Server.
 
 **Example Usage**
-
 ```lua
-lia.darkrp.notify(ply, nil, nil, "jobChanged")
+-- Send a notification to a player
+lia.darkrp.notify(player.GetByID(1), nil, nil, "Hello, player!")
 ```
 
 ---
@@ -111,29 +113,28 @@ lia.darkrp.notify(ply, nil, nil, "jobChanged")
 
 **Purpose**
 
-Client-side helper that wraps a string so it fits within a given pixel width using the provided font. Long words are wrapped character-by-character if necessary. Existing newline or tab characters reset the line width calculation.
+Wraps text to fit within a specified maximum line width.
 
 **Parameters**
 
-* `text` (*string*): Text to wrap.
-
-* `fontName` (*string*): Font used to measure width.
-
-* `maxLineWidth` (*number*): Maximum pixel width before wrapping occurs.
-
-**Realm**
-
-`Client`
+* `text` (*string*): The text to wrap.
+* `fontName` (*string*): The font to use for measuring text width.
+* `maxLineWidth` (*number*): The maximum width for each line.
 
 **Returns**
 
-* *string*: The wrapped text with newline characters inserted.
+* `wrappedText` (*string*): The wrapped text with line breaks.
+
+**Realm**
+
+Client.
 
 **Example Usage**
-
 ```lua
-local wrapped = lia.darkrp.textWrap("Some very long text", "DermaDefault", 150)
-chat.AddText(wrapped)
+-- Wrap text to fit in a chat box
+local longText = "This is a very long text that needs to be wrapped to fit within the specified width."
+local wrappedText = lia.darkrp.textWrap(longText, "DermaDefault", 200)
+print(wrappedText)
 ```
 
 ---
@@ -142,24 +143,26 @@ chat.AddText(wrapped)
 
 **Purpose**
 
-Formats the given amount using `lia.currency.get` so other DarkRP addons receive familiar currency strings.
+Formats a money amount using Lilia's currency system.
 
 **Parameters**
 
-* `amount` (*number*): Value of money to format.
-
-**Realm**
-
-`Shared`
+* `amount` (*number*): The amount to format.
 
 **Returns**
 
-* *string*: The formatted currency value.
+* `formattedMoney` (*string*): The formatted money string.
+
+**Realm**
+
+Shared.
 
 **Example Usage**
-
 ```lua
-print(lia.darkrp.formatMoney(2500))
+-- Format money for display
+local amount = 1500
+local formatted = lia.darkrp.formatMoney(amount)
+print("You have " .. formatted)
 ```
 
 ---
@@ -168,35 +171,30 @@ print(lia.darkrp.formatMoney(2500))
 
 **Purpose**
 
-Registers a new DarkRP entity as an item so that it can be spawned through lia's item system.
+Creates a DarkRP-compatible entity item using Lilia's item system.
 
 **Parameters**
 
-* `name` (*string*): Display name of the entity.
-
-* `data` (*table*): Table of fields:
-  * `cmd` (*string*): Console command used for spawning. Defaults to `name` in lowercase.
-  * `model` (*string*): Model path. Defaults to `""`.
-  * `desc` (*string*): Description of the entity. Defaults to `""`.
-  * `category` (*string*): Item category. Defaults to `L("entities")`.
-  * `ent` (*string*): Entity class to spawn. Defaults to `""`.
-  * `price` (*number*): Cost of the entity. Defaults to `0`.
-
-**Realm**
-
-`Shared`
+* `name` (*string*): The name of the entity.
+* `data` (*table*): The entity data including model, description, category, etc.
 
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
-
 ```lua
-lia.darkrp.createEntity("Fuel", {
-    model = "models/props_c17/oildrum001.mdl",
+-- Create a DarkRP entity
+lia.darkrp.createEntity("Test Entity", {
+    model = "models/props_c17/chair01a.mdl",
+    desc = "A test chair",
+    category = "Furniture",
     ent = "prop_physics",
-    price = 50
+    price = 100
 })
 ```
 
@@ -206,55 +204,22 @@ lia.darkrp.createEntity("Fuel", {
 
 **Purpose**
 
-Stub for DarkRP category creation. Included only for compatibility.
+Creates a DarkRP category (currently a placeholder function).
 
 **Parameters**
 
 *None*
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* *nil*: This function does not return a value.
+*None*
+
+**Realm**
+
+Shared.
 
 **Example Usage**
-
 ```lua
+-- Create a category (placeholder)
 lia.darkrp.createCategory()
 ```
-
----
-
-### Map KeyValue Compatibility
-
-**Purpose**
-
-Processes select DarkRP-specific key-values on door entities so maps configured for DarkRP behave as expected.
-
-**Handled KeyValues**
-
-* `DarkRPNonOwnable`: marks the door as unsellable by setting the `noSell` network variable.
-* `DarkRPTitle`: sets the door's display name.
-* `DarkRPCanLockpick`: when set to a truthy value, prevents lockpicking by setting the `noPick` flag.
-
-**Realm**
-
-`Server`
-
-**Returns**
-
-* *nil*: This hook runs automatically and does not return a value.
-
-**Example Usage**
-
-Add the key-values below to a door entity in Hammer:
-
-```text
-"DarkRPTitle" "Police Armory"
-"DarkRPNonOwnable" "1"
-```
-
----

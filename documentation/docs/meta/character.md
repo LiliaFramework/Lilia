@@ -1,6 +1,12 @@
 # Character Meta
 
-Documentation extracted from code comments.
+This page documents methods available on the `Character` meta table, representing player characters in the Lilia framework.
+
+---
+
+## Overview
+
+The `Character` meta table exposes properties and behaviors for character entities, including identity (name, ID), attributes, inventory management, recognition systems, faction/class membership, and gameplay interactions. These methods are the foundation for character-centric logic such as attribute management, inventory access, recognition handling, faction checks, and networked state synchronization.
 
 ---
 
@@ -8,15 +14,15 @@ Documentation extracted from code comments.
 
 **Purpose**
 
-Returns a string representation of the character, including its ID.
+Returns a string representation of the character.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* string - The string representation of the character.
+* `string` (*string*): String representation in format "character[ID]".
 
 **Realm**
 
@@ -25,7 +31,13 @@ Shared.
 **Example Usage**
 
 ```lua
-print(character:tostring()) -- Output: "Character[1]"
+local function logCharacter(character)
+    print("Character info: " .. tostring(character))
+end
+
+hook.Add("OnCharacterCreated", "LogCharacterCreation", function(character)
+    logCharacter(character) -- Output: "character[123]"
+end)
 ```
 
 ---
@@ -38,11 +50,11 @@ Checks if this character is equal to another character by comparing their IDs.
 
 **Parameters**
 
-* other (Character) - The character to compare with.
+* `other` (*Character*): The other character to compare.
 
 **Returns**
 
-* boolean - True if the characters have the same ID, false otherwise.
+* `boolean`: `true` if characters have the same ID, `false` otherwise.
 
 **Realm**
 
@@ -51,8 +63,14 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:eq(otherCharacter) then
-print("Characters are the same.")
+local function areCharactersEqual(char1, char2)
+    if char1:eq(char2) then
+        print("Same character")
+        return true
+    else
+        print("Different characters")
+        return false
+    end
 end
 ```
 
@@ -62,15 +80,15 @@ end
 
 **Purpose**
 
-Returns the unique ID of this character.
+Returns the character's unique identifier.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* number - The character's ID.
+* `id` (*number*): The character's unique ID.
 
 **Realm**
 
@@ -79,8 +97,14 @@ Shared.
 **Example Usage**
 
 ```lua
-local id = character:getID()
-print("Character ID:", id)
+local function logCharacterAction(character, action)
+    local charID = character:getID()
+    print("[CHARACTER] " .. action .. " for character ID: " .. charID)
+end
+
+hook.Add("OnCharacterCreated", "LogCharacterCreation", function(character)
+    logCharacterAction(character, "created")
+end)
 ```
 
 ---
@@ -93,11 +117,11 @@ Returns the player entity associated with this character.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* Player or nil - The player entity, or nil if not found.
+* `player` (*Player|nil*): The player entity if found, otherwise nil.
 
 **Realm**
 
@@ -106,8 +130,22 @@ Shared.
 **Example Usage**
 
 ```lua
-local ply = character:getPlayer()
-if ply then print("Player found!") end
+local function checkCharacterOnline(character)
+    local player = character:getPlayer()
+    if IsValid(player) then
+        print("Character " .. character:getID() .. " is online as " .. player:Name())
+        return true
+    else
+        print("Character " .. character:getID() .. " is offline")
+        return false
+    end
+end
+
+hook.Add("Think", "CheckCharacterStatus", function()
+    for _, char in pairs(lia.char.instances) do
+        checkCharacterOnline(char)
+    end
+end)
 ```
 
 ---
@@ -116,18 +154,15 @@ if ply then print("Player found!") end
 
 **Purpose**
 
-Returns the name to display for this character to the given client, taking into account recognition and fake names.
-If character recognition is enabled, the function checks if the client recognizes this character, and returns the appropriate name.
-If not recognized, it may return a fake name if one is set and recognized, otherwise returns "unknown".
-If recognition is disabled, always returns the character's real name.
+Returns the name that should be displayed for this character, considering recognition settings.
 
 **Parameters**
 
-* client (Player) - The player to check recognition against.
+* `client` (*Player*): The client requesting the display name.
 
 **Returns**
 
-* string - The name to display for this character to the given client.
+* `name` (*string*): The display name for the character.
 
 **Realm**
 
@@ -136,9 +171,22 @@ Shared.
 **Example Usage**
 
 ```lua
--- Get the display name for a character as seen by a client
-local displayName = character:getDisplayedName(client)
-print("You see this character as: " .. displayName)
+local function showCharacterInfo(client, character)
+    local displayName = character:getDisplayedName(client)
+    client:ChatPrint("You see: " .. displayName)
+end
+
+hook.Add("PlayerSay", "ShowCharacterInfo", function(ply, text)
+    if text == "!who" then
+        local target = ply:getTracedEntity()
+        if IsValid(target) and target:IsPlayer() then
+            local char = target:getChar()
+            if char then
+                showCharacterInfo(ply, char)
+            end
+        end
+    end
+end)
 ```
 
 ---
@@ -151,11 +199,11 @@ Checks if the character has at least the specified amount of money.
 
 **Parameters**
 
-* amount (number) - The amount to check.
+* `amount` (*number*): The amount to check for.
 
 **Returns**
 
-* boolean - True if the character has at least the specified amount, false otherwise.
+* `hasMoney` (*boolean*): True if the character has enough money, false otherwise.
 
 **Realm**
 
@@ -164,9 +212,20 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:hasMoney(100) then
-print("Character has enough money.")
+local function canAffordItem(character, price)
+    if character:hasMoney(price) then
+        character:getPlayer():ChatPrint("You can afford this item!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You don't have enough money.")
+        return false
+    end
 end
+
+hook.Add("OnVendorItemPurchase", "CheckAffordability", function(vendor, item, character)
+    local price = item:getPrice()
+    canAffordItem(character, price)
+end)
 ```
 
 ---
@@ -175,15 +234,15 @@ end
 
 **Purpose**
 
-Checks if the character has any of the specified flags. This function checks both character flags and player flags, returning true if the flag is found in either.
+Checks if the character has any of the specified flags.
 
 **Parameters**
 
-* flagStr (string) - A string of flag characters to check.
+* `flagStr` (*string*): String containing flags to check for.
 
 **Returns**
 
-* boolean - True if the character or player has at least one of the specified flags, false otherwise.
+* `hasFlags` (*boolean*): True if the character has any of the flags, false otherwise.
 
 **Realm**
 
@@ -192,9 +251,22 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:hasFlags("a") then
-print("Character has flag 'a'.")
+local function checkAdminAccess(character)
+    if character:hasFlags("a") then
+        character:getPlayer():ChatPrint("You have admin access!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You need admin flags to access this.")
+        return false
+    end
 end
+
+concommand.Add("check_admin", function(ply)
+    local char = ply:getChar()
+    if char then
+        checkAdminAccess(char)
+    end
+end)
 ```
 
 ---
@@ -203,15 +275,15 @@ end
 
 **Purpose**
 
-Checks if the character's currently equipped weapon matches an item in their inventory.
+Checks if the character has a weapon item equipped and returns whether it's valid.
 
 **Parameters**
 
-* requireEquip (boolean) - Whether the item must be equipped (default: true).
+* `requireEquip` (*boolean|nil*): Whether to require the weapon to be equipped (default: true).
 
 **Returns**
 
-* boolean - True if the weapon is found and equipped (if required), false otherwise.
+* `hasWeapon` (*boolean*): True if the character has a valid equipped weapon item.
 
 **Realm**
 
@@ -220,9 +292,21 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:getItemWeapon() then
-print("Character's weapon matches an inventory item.")
+local function checkWeaponItem(character)
+    local hasWeapon = character:getItemWeapon(true)
+    if hasWeapon then
+        character:getPlayer():ChatPrint("You have a valid weapon item equipped!")
+    else
+        character:getPlayer():ChatPrint("You need to equip a weapon item.")
+    end
 end
+
+hook.Add("PlayerSpawn", "CheckWeaponItem", function(ply)
+    local char = ply:getChar()
+    if char then
+        checkWeaponItem(char)
+    end
+end)
 ```
 
 ---
@@ -231,15 +315,15 @@ end
 
 **Purpose**
 
-Returns the maximum stamina value for this character, possibly modified by hooks.
+Returns the character's maximum stamina value.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* number - The maximum stamina value.
+* `maxStamina` (*number*): The character's maximum stamina.
 
 **Realm**
 
@@ -248,8 +332,22 @@ Shared.
 **Example Usage**
 
 ```lua
-local maxStamina = character:getMaxStamina()
-print("Max stamina:", maxStamina)
+local function displayStaminaInfo(character)
+    local maxStamina = character:getMaxStamina()
+    local currentStamina = character:getStamina()
+    local player = character:getPlayer()
+    
+    if IsValid(player) then
+        player:ChatPrint("Stamina: " .. currentStamina .. "/" .. maxStamina)
+    end
+end
+
+concommand.Add("stamina_info", function(ply)
+    local char = ply:getChar()
+    if char then
+        displayStaminaInfo(char)
+    end
+end)
 ```
 
 ---
@@ -258,15 +356,15 @@ print("Max stamina:", maxStamina)
 
 **Purpose**
 
-Returns the current stamina value for this character.
+Returns the character's current stamina value.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* number - The current stamina value.
+* `stamina` (*number*): The character's current stamina.
 
 **Realm**
 
@@ -275,8 +373,23 @@ Shared.
 **Example Usage**
 
 ```lua
-local stamina = character:getStamina()
-print("Current stamina:", stamina)
+local function checkStaminaForAction(character, requiredStamina)
+    local currentStamina = character:getStamina()
+    if currentStamina >= requiredStamina then
+        character:getPlayer():ChatPrint("You have enough stamina for this action.")
+        return true
+    else
+        character:getPlayer():ChatPrint("You're too tired for this action.")
+        return false
+    end
+end
+
+hook.Add("OnPlayerInteract", "CheckStamina", function(ply, entity)
+    local char = ply:getChar()
+    if char then
+        checkStaminaForAction(char, 20)
+    end
+end)
 ```
 
 ---
@@ -285,15 +398,15 @@ print("Current stamina:", stamina)
 
 **Purpose**
 
-Checks if the character has a whitelist for the specified class.
+Checks if the character has whitelist access to a specific class.
 
 **Parameters**
 
-* class (string or number) - The class to check.
+* `class` (*string*): The class name to check.
 
 **Returns**
 
-* boolean - True if the character is whitelisted for the class, false otherwise.
+* `hasWhitelist` (*boolean*): True if the character has whitelist access to the class.
 
 **Realm**
 
@@ -302,9 +415,23 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:hasClassWhitelist("medic") then
-print("Character is whitelisted for medic class.")
+local function checkClassAccess(character, className)
+    if character:hasClassWhitelist(className) then
+        character:getPlayer():ChatPrint("You have access to the " .. className .. " class!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You don't have access to the " .. className .. " class.")
+        return false
+    end
 end
+
+concommand.Add("check_class", function(ply, cmd, args)
+    local char = ply:getChar()
+    local className = args[1]
+    if char and className then
+        checkClassAccess(char, className)
+    end
+end)
 ```
 
 ---
@@ -313,15 +440,15 @@ end
 
 **Purpose**
 
-Checks if the character belongs to the specified faction.
+Checks if the character belongs to a specific faction.
 
 **Parameters**
 
-* faction (number) - The faction index to check.
+* `faction` (*string*): The faction name to check.
 
 **Returns**
 
-* boolean - True if the character is in the faction, false otherwise.
+* `isFaction` (*boolean*): True if the character belongs to the faction.
 
 **Realm**
 
@@ -330,9 +457,22 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:isFaction(2) then
-print("Character is in faction 2.")
+local function checkFactionAccess(character, requiredFaction)
+    if character:isFaction(requiredFaction) then
+        character:getPlayer():ChatPrint("You belong to the " .. requiredFaction .. " faction!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You don't belong to the " .. requiredFaction .. " faction.")
+        return false
+    end
 end
+
+hook.Add("OnPlayerUse", "CheckFactionAccess", function(ply, entity)
+    local char = ply:getChar()
+    if char and entity:GetClass() == "func_door" then
+        checkFactionAccess(char, "police")
+    end
+end)
 ```
 
 ---
@@ -341,15 +481,15 @@ end
 
 **Purpose**
 
-Checks if the character is in the specified class.
+Checks if the character belongs to a specific class.
 
 **Parameters**
 
-* class (number) - The class index to check.
+* `class` (*string*): The class name to check.
 
 **Returns**
 
-* boolean - True if the character is in the class, false otherwise.
+* `isClass` (*boolean*): True if the character belongs to the class.
 
 **Realm**
 
@@ -358,9 +498,25 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:isClass(1) then
-print("Character is in class 1.")
+local function checkClassMembership(character, className)
+    if character:isClass(className) then
+        character:getPlayer():ChatPrint("You are a " .. className .. "!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You are not a " .. className .. ".")
+        return false
+    end
 end
+
+concommand.Add("my_class", function(ply)
+    local char = ply:getChar()
+    if char then
+        local currentClass = char:getClass()
+        if currentClass then
+            checkClassMembership(char, currentClass)
+        end
+    end
+end)
 ```
 
 ---
@@ -369,16 +525,16 @@ end
 
 **Purpose**
 
-Returns the value of the specified attribute for this character, including any boosts.
+Returns the character's attribute value, including any boosts.
 
 **Parameters**
 
-* key (string) - The attribute key.
-* default (number) - The default value if the attribute is not set.
+* `key` (*string*): The attribute key to get.
+* `default` (*number|nil*): Default value if attribute doesn't exist.
 
 **Returns**
 
-* number - The attribute value including boosts.
+* `value` (*number*): The attribute value including boosts.
 
 **Realm**
 
@@ -387,8 +543,22 @@ Shared.
 **Example Usage**
 
 ```lua
-local strength = character:getAttrib("str", 0)
-print("Strength:", strength)
+local function displayAttribute(character, attributeName)
+    local value = character:getAttrib(attributeName, 0)
+    local player = character:getPlayer()
+    
+    if IsValid(player) then
+        player:ChatPrint(attributeName .. ": " .. value)
+    end
+end
+
+concommand.Add("check_attrib", function(ply, cmd, args)
+    local char = ply:getChar()
+    local attribName = args[1]
+    if char and attribName then
+        displayAttribute(char, attribName)
+    end
+end)
 ```
 
 ---
@@ -397,15 +567,15 @@ print("Strength:", strength)
 
 **Purpose**
 
-Returns the boost table for the specified attribute.
+Returns the boost data for a specific attribute.
 
 **Parameters**
 
-* attribID (string) - The attribute key.
+* `attribID` (*string*): The attribute ID to get boosts for.
 
 **Returns**
 
-* table or nil - The boost table for the attribute, or nil if none.
+* `boosts` (*table|nil*): Table of boosts for the attribute, or nil if none.
 
 **Realm**
 
@@ -414,8 +584,29 @@ Shared.
 **Example Usage**
 
 ```lua
-local boost = character:getBoost("str")
-if boost then print("Strength is boosted!") end
+local function displayAttributeBoosts(character, attributeName)
+    local boosts = character:getBoost(attributeName)
+    local player = character:getPlayer()
+    
+    if IsValid(player) then
+        if boosts then
+            player:ChatPrint("Boosts for " .. attributeName .. ":")
+            for boostID, amount in pairs(boosts) do
+                player:ChatPrint("  " .. boostID .. ": +" .. amount)
+            end
+        else
+            player:ChatPrint("No boosts for " .. attributeName)
+        end
+    end
+end
+
+concommand.Add("check_boosts", function(ply, cmd, args)
+    local char = ply:getChar()
+    local attribName = args[1]
+    if char and attribName then
+        displayAttributeBoosts(char, attribName)
+    end
+end)
 ```
 
 ---
@@ -424,15 +615,15 @@ if boost then print("Strength is boosted!") end
 
 **Purpose**
 
-Returns the table of all attribute boosts for this character.
+Returns all attribute boosts for the character.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* table - The boosts table.
+* `boosts` (*table*): Table containing all attribute boosts.
 
 **Realm**
 
@@ -441,8 +632,27 @@ Shared.
 **Example Usage**
 
 ```lua
-local boosts = character:getBoosts()
-PrintTable(boosts)
+local function displayAllBoosts(character)
+    local boosts = character:getBoosts()
+    local player = character:getPlayer()
+    
+    if IsValid(player) then
+        player:ChatPrint("All attribute boosts:")
+        for attribID, attribBoosts in pairs(boosts) do
+            player:ChatPrint(attribID .. ":")
+            for boostID, amount in pairs(attribBoosts) do
+                player:ChatPrint("  " .. boostID .. ": +" .. amount)
+            end
+        end
+    end
+end
+
+concommand.Add("all_boosts", function(ply)
+    local char = ply:getChar()
+    if char then
+        displayAllBoosts(char)
+    end
+end)
 ```
 
 ---
@@ -451,15 +661,15 @@ PrintTable(boosts)
 
 **Purpose**
 
-Checks if this character recognizes another character by ID.
+Checks if the character recognizes another character by ID.
 
 **Parameters**
 
-* id (number or Character) - The character ID or character object.
+* `id` (*number|Character*): The character ID or character object to check.
 
 **Returns**
 
-* boolean - True if recognized, false otherwise.
+* `recognizes` (*boolean*): True if the character recognizes the other character.
 
 **Realm**
 
@@ -468,9 +678,29 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:doesRecognize(otherChar) then
-print("Character recognizes the other character.")
+local function checkRecognition(character, targetCharacter)
+    local targetID = targetCharacter:getID()
+    if character:doesRecognize(targetID) then
+        character:getPlayer():ChatPrint("You recognize this person!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You don't recognize this person.")
+        return false
+    end
 end
+
+hook.Add("PlayerSay", "CheckRecognition", function(ply, text)
+    if text == "!recognize" then
+        local target = ply:getTracedEntity()
+        if IsValid(target) and target:IsPlayer() then
+            local char = ply:getChar()
+            local targetChar = target:getChar()
+            if char and targetChar then
+                checkRecognition(char, targetChar)
+            end
+        end
+    end
+end)
 ```
 
 ---
@@ -479,15 +709,15 @@ end
 
 **Purpose**
 
-Checks if this character fake-recognizes another character by ID.
+Checks if the character has fake recognition of another character by ID.
 
 **Parameters**
 
-* id (number or Character) - The character ID or character object.
+* `id` (*number|Character*): The character ID or character object to check.
 
 **Returns**
 
-* boolean - True if fake-recognized, false otherwise.
+* `fakeRecognizes` (*boolean*): True if the character has fake recognition of the other character.
 
 **Realm**
 
@@ -496,9 +726,27 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:doesFakeRecognize(otherChar) then
-print("Character fake-recognizes the other character.")
+local function checkFakeRecognition(character, targetCharacter)
+    local targetID = targetCharacter:getID()
+    if character:doesFakeRecognize(targetID) then
+        character:getPlayer():ChatPrint("You have fake recognition of this person!")
+        return true
+    else
+        character:getPlayer():ChatPrint("You don't have fake recognition of this person.")
+        return false
+    end
 end
+
+concommand.Add("check_fake_recognition", function(ply, cmd, args)
+    local char = ply:getChar()
+    local targetID = tonumber(args[1])
+    if char and targetID then
+        local targetChar = lia.char.getCharacter(targetID)
+        if targetChar then
+            checkFakeRecognition(char, targetChar)
+        end
+    end
+end)
 ```
 
 ---
@@ -507,28 +755,39 @@ end
 
 **Purpose**
 
-Sets custom data for this character, optionally replicating to clients and saving to the database.
+Sets character data and handles networking and database persistence.
 
 **Parameters**
 
-* k (string or table) - The key or table of key-value pairs to set.
-* v (any) - The value to set (if k is a string).
-* noReplication (boolean) - If true, do not replicate to clients.
-* receiver (Player) - The player to send the data to (optional).
+* `k` (*string|table*): The key to set, or table of key-value pairs.
+* `v` (*any*): The value to set (ignored if k is a table).
+* `noReplication` (*boolean|nil*): Whether to skip network replication.
+* `receiver` (*Player|nil*): Specific player to send data to.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
-Shared (writes to database on server).
+Server.
 
 **Example Usage**
 
 ```lua
-character:setData("customKey", 123)
-character:setData({foo = "bar", baz = 42})
+local function setCharacterCustomData(character, key, value)
+    character:setData(key, value)
+    character:getPlayer():ChatPrint("Set " .. key .. " to " .. tostring(value))
+end
+
+concommand.Add("set_char_data", function(ply, cmd, args)
+    local char = ply:getChar()
+    local key = args[1]
+    local value = args[2]
+    if char and key and value then
+        setCharacterCustomData(char, key, value)
+    end
+end)
 ```
 
 ---
@@ -537,16 +796,16 @@ character:setData({foo = "bar", baz = 42})
 
 **Purpose**
 
-Gets custom data for this character.
+Gets character data by key, with optional default value.
 
 **Parameters**
 
-* key (string) - The key to retrieve (optional).
-* default (any) - The default value if the key is not set.
+* `key` (*string|nil*): The key to get, or nil for all data.
+* `default` (*any*): Default value if key doesn't exist.
 
 **Returns**
 
-* any - The value for the key, or the entire dataVars table if no key is given.
+* `value` (*any*): The data value or default.
 
 **Realm**
 
@@ -555,8 +814,22 @@ Shared.
 **Example Usage**
 
 ```lua
-local value = character:getData("customKey", 0)
-local allData = character:getData()
+local function getCharacterCustomData(character, key)
+    local value = character:getData(key, "not set")
+    local player = character:getPlayer()
+    
+    if IsValid(player) then
+        player:ChatPrint(key .. ": " .. tostring(value))
+    end
+end
+
+concommand.Add("get_char_data", function(ply, cmd, args)
+    local char = ply:getChar()
+    local key = args[1]
+    if char and key then
+        getCharacterCustomData(char, key)
+    end
+end)
 ```
 
 ---
@@ -569,11 +842,11 @@ Checks if the character is currently banned.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* boolean - True if banned, false otherwise.
+* `isBanned` (*boolean*): True if the character is banned, false otherwise.
 
 **Realm**
 
@@ -582,9 +855,22 @@ Shared.
 **Example Usage**
 
 ```lua
-if character:isBanned() then
-print("Character is banned.")
+local function checkCharacterBanStatus(character)
+    if character:isBanned() then
+        character:getPlayer():ChatPrint("This character is banned!")
+        return true
+    else
+        character:getPlayer():ChatPrint("This character is not banned.")
+        return false
+    end
 end
+
+concommand.Add("check_ban", function(ply)
+    local char = ply:getChar()
+    if char then
+        checkCharacterBanStatus(char)
+    end
+end)
 ```
 
 ---
@@ -593,16 +879,16 @@ end
 
 **Purpose**
 
-Adds a character to this character's recognition list, or sets a fake name for them.
+Makes the character recognize another character, optionally with a custom name.
 
 **Parameters**
 
-* character (number or Character) - The character or character ID to recognize.
-* name (string or nil) - The fake name to assign, or nil to just recognize.
+* `character` (*number|Character*): The character ID or character object to recognize.
+* `name` (*string|nil*): Optional custom name for fake recognition.
 
 **Returns**
 
-* boolean - Always true.
+* `success` (*boolean*): True if recognition was successful.
 
 **Realm**
 
@@ -611,86 +897,27 @@ Server.
 **Example Usage**
 
 ```lua
-character:recognize(otherChar)
-character:recognize(otherChar, "Alias Name")
-```
+local function makeCharacterRecognize(character, targetCharacter, customName)
+    if character:recognize(targetCharacter, customName) then
+        character:getPlayer():ChatPrint("You now recognize this person!")
+        if customName then
+            character:getPlayer():ChatPrint("You know them as: " .. customName)
+        end
+    end
+end
 
----
-
-### WhitelistAllClasses
-
-**Purpose**
-
-Whitelists this character for all available classes.
-
-**Parameters**
-
-* None
-
-**Returns**
-
-* nil
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-character:WhitelistAllClasses()
-```
-
----
-
-### WhitelistAllFactions
-
-**Purpose**
-
-Whitelists this character for all available factions.
-
-**Parameters**
-
-* None
-
-**Returns**
-
-* nil
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-character:WhitelistAllFactions()
-```
-
----
-
-### WhitelistEverything
-
-**Purpose**
-
-Whitelists this character for all factions and classes.
-
-**Parameters**
-
-* None
-
-**Returns**
-
-* nil
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-character:WhitelistEverything()
+concommand.Add("recognize_player", function(ply, cmd, args)
+    local char = ply:getChar()
+    local targetID = tonumber(args[1])
+    local customName = args[2]
+    
+    if char and targetID then
+        local targetChar = lia.char.getCharacter(targetID)
+        if targetChar then
+            makeCharacterRecognize(char, targetChar, customName)
+        end
+    end
+end)
 ```
 
 ---
@@ -699,15 +926,15 @@ character:WhitelistEverything()
 
 **Purpose**
 
-Adds a class to this character's whitelist.
+Adds a class to the character's whitelist.
 
 **Parameters**
 
-* class (string or number) - The class to whitelist.
+* `class` (*string*): The class name to whitelist.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -716,7 +943,18 @@ Server.
 **Example Usage**
 
 ```lua
-character:classWhitelist("medic")
+local function whitelistClassForCharacter(character, className)
+    character:classWhitelist(className)
+    character:getPlayer():ChatPrint("You now have access to the " .. className .. " class!")
+end
+
+concommand.Add("whitelist_class", function(ply, cmd, args)
+    local char = ply:getChar()
+    local className = args[1]
+    if char and className then
+        whitelistClassForCharacter(char, className)
+    end
+end)
 ```
 
 ---
@@ -725,15 +963,15 @@ character:classWhitelist("medic")
 
 **Purpose**
 
-Removes a class from this character's whitelist.
+Removes a class from the character's whitelist.
 
 **Parameters**
 
-* class (string or number) - The class to remove from the whitelist.
+* `class` (*string*): The class name to remove from whitelist.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -742,7 +980,18 @@ Server.
 **Example Usage**
 
 ```lua
-character:classUnWhitelist("medic")
+local function unwhitelistClassForCharacter(character, className)
+    character:classUnWhitelist(className)
+    character:getPlayer():ChatPrint("You no longer have access to the " .. className .. " class.")
+end
+
+concommand.Add("unwhitelist_class", function(ply, cmd, args)
+    local char = ply:getChar()
+    local className = args[1]
+    if char and className then
+        unwhitelistClassForCharacter(char, className)
+    end
+end)
 ```
 
 ---
@@ -751,16 +1000,16 @@ character:classUnWhitelist("medic")
 
 **Purpose**
 
-Attempts to set the character's class to the specified class.
+Makes the character join a specific class.
 
 **Parameters**
 
-* class (number) - The class index to join.
-* isForced (boolean) - If true, force the join regardless of requirements.
+* `class` (*string*): The class name to join.
+* `isForced` (*boolean|nil*): Whether to force the class change.
 
 **Returns**
 
-* boolean - True if the class was joined, false otherwise.
+* `success` (*boolean*): True if the character successfully joined the class.
 
 **Realm**
 
@@ -769,7 +1018,21 @@ Server.
 **Example Usage**
 
 ```lua
-character:joinClass(2)
+local function changeCharacterClass(character, className)
+    if character:joinClass(className) then
+        character:getPlayer():ChatPrint("You joined the " .. className .. " class!")
+    else
+        character:getPlayer():ChatPrint("Failed to join the " .. className .. " class.")
+    end
+end
+
+concommand.Add("join_class", function(ply, cmd, args)
+    local char = ply:getChar()
+    local className = args[1]
+    if char and className then
+        changeCharacterClass(char, className)
+    end
+end)
 ```
 
 ---
@@ -778,15 +1041,15 @@ character:joinClass(2)
 
 **Purpose**
 
-Removes the character from their current class and assigns a default class if available.
+Removes the character from their current class and assigns a default class.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -795,7 +1058,17 @@ Server.
 **Example Usage**
 
 ```lua
-character:kickClass()
+local function removeCharacterFromClass(character)
+    character:kickClass()
+    character:getPlayer():ChatPrint("You have been removed from your class.")
+end
+
+concommand.Add("kick_class", function(ply)
+    local char = ply:getChar()
+    if char then
+        removeCharacterFromClass(char)
+    end
+end)
 ```
 
 ---
@@ -804,16 +1077,16 @@ character:kickClass()
 
 **Purpose**
 
-Increases the value of the specified attribute for this character, up to the maximum allowed.
+Updates a character's attribute by adding a value to the current level.
 
 **Parameters**
 
-* key (string) - The attribute key.
-* value (number) - The amount to add.
+* `key` (*string*): The attribute key to update.
+* `value` (*number*): The value to add to the current attribute level.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -822,7 +1095,20 @@ Server.
 **Example Usage**
 
 ```lua
-character:updateAttrib("str", 1)
+local function increaseCharacterAttribute(character, attributeName, amount)
+    character:updateAttrib(attributeName, amount)
+    local newValue = character:getAttrib(attributeName, 0)
+    character:getPlayer():ChatPrint(attributeName .. " increased to " .. newValue)
+end
+
+concommand.Add("increase_attrib", function(ply, cmd, args)
+    local char = ply:getChar()
+    local attribName = args[1]
+    local amount = tonumber(args[2])
+    if char and attribName and amount then
+        increaseCharacterAttribute(char, attribName, amount)
+    end
+end)
 ```
 
 ---
@@ -831,16 +1117,16 @@ character:updateAttrib("str", 1)
 
 **Purpose**
 
-Sets the value of the specified attribute for this character.
+Sets a character's attribute to a specific value.
 
 **Parameters**
 
-* key (string) - The attribute key.
-* value (number) - The value to set.
+* `key` (*string*): The attribute key to set.
+* `value` (*number*): The value to set the attribute to.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -849,7 +1135,19 @@ Server.
 **Example Usage**
 
 ```lua
-character:setAttrib("str", 10)
+local function setCharacterAttribute(character, attributeName, value)
+    character:setAttrib(attributeName, value)
+    character:getPlayer():ChatPrint(attributeName .. " set to " .. value)
+end
+
+concommand.Add("set_attrib", function(ply, cmd, args)
+    local char = ply:getChar()
+    local attribName = args[1]
+    local value = tonumber(args[2])
+    if char and attribName and value then
+        setCharacterAttribute(char, attribName, value)
+    end
+end)
 ```
 
 ---
@@ -858,17 +1156,17 @@ character:setAttrib("str", 10)
 
 **Purpose**
 
-Adds a boost to the specified attribute for this character.
+Adds a boost to a character's attribute.
 
 **Parameters**
 
-* boostID (string) - The unique ID for the boost.
-* attribID (string) - The attribute key.
-* boostAmount (number) - The amount of the boost.
+* `boostID` (*string*): Unique identifier for the boost.
+* `attribID` (*string*): The attribute to boost.
+* `boostAmount` (*number*): The amount to boost the attribute by.
 
 **Returns**
 
-* nil
+* `success` (*boolean*): True if the boost was added successfully.
 
 **Realm**
 
@@ -877,7 +1175,23 @@ Server.
 **Example Usage**
 
 ```lua
-character:addBoost("buff1", "str", 5)
+local function addAttributeBoost(character, attributeName, boostID, amount)
+    if character:addBoost(boostID, attributeName, amount) then
+        character:getPlayer():ChatPrint("Added " .. amount .. " boost to " .. attributeName)
+    else
+        character:getPlayer():ChatPrint("Failed to add boost to " .. attributeName)
+    end
+end
+
+concommand.Add("add_boost", function(ply, cmd, args)
+    local char = ply:getChar()
+    local attribName = args[1]
+    local boostID = args[2]
+    local amount = tonumber(args[3])
+    if char and attribName and boostID and amount then
+        addAttributeBoost(char, attribName, boostID, amount)
+    end
+end)
 ```
 
 ---
@@ -886,16 +1200,16 @@ character:addBoost("buff1", "str", 5)
 
 **Purpose**
 
-Removes a boost from the specified attribute for this character.
+Removes a boost from a character's attribute.
 
 **Parameters**
 
-* boostID (string) - The unique ID for the boost.
-* attribID (string) - The attribute key.
+* `boostID` (*string*): The boost identifier to remove.
+* `attribID` (*string*): The attribute to remove the boost from.
 
 **Returns**
 
-* nil
+* `success` (*boolean*): True if the boost was removed successfully.
 
 **Realm**
 
@@ -904,7 +1218,22 @@ Server.
 **Example Usage**
 
 ```lua
-character:removeBoost("buff1", "str")
+local function removeAttributeBoost(character, attributeName, boostID)
+    if character:removeBoost(boostID, attributeName) then
+        character:getPlayer():ChatPrint("Removed boost " .. boostID .. " from " .. attributeName)
+    else
+        character:getPlayer():ChatPrint("Failed to remove boost from " .. attributeName)
+    end
+end
+
+concommand.Add("remove_boost", function(ply, cmd, args)
+    local char = ply:getChar()
+    local attribName = args[1]
+    local boostID = args[2]
+    if char and attribName and boostID then
+        removeAttributeBoost(char, attribName, boostID)
+    end
+end)
 ```
 
 ---
@@ -913,15 +1242,15 @@ character:removeBoost("buff1", "str")
 
 **Purpose**
 
-Sets the character's flags to the specified string, updating callbacks as needed.
+Sets the character's flags and handles networking and callbacks.
 
 **Parameters**
 
-* flags (string) - The new flags string.
+* `flags` (*string*): The flags string to set.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -930,7 +1259,18 @@ Server.
 **Example Usage**
 
 ```lua
-character:setFlags("ab")
+local function setCharacterFlags(character, flags)
+    character:setFlags(flags)
+    character:getPlayer():ChatPrint("Flags set to: " .. flags)
+end
+
+concommand.Add("set_char_flags", function(ply, cmd, args)
+    local char = ply:getChar()
+    local flags = args[1]
+    if char and flags then
+        setCharacterFlags(char, flags)
+    end
+end)
 ```
 
 ---
@@ -939,15 +1279,15 @@ character:setFlags("ab")
 
 **Purpose**
 
-Adds the specified flags to the character, calling any associated callbacks.
+Adds flags to the character's existing flags.
 
 **Parameters**
 
-* flags (string) - The flags to add.
+* `flags` (*string*): The flags to add.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -956,7 +1296,18 @@ Server.
 **Example Usage**
 
 ```lua
-character:giveFlags("c")
+local function giveCharacterFlags(character, flags)
+    character:giveFlags(flags)
+    character:getPlayer():ChatPrint("Added flags: " .. flags)
+end
+
+concommand.Add("give_char_flags", function(ply, cmd, args)
+    local char = ply:getChar()
+    local flags = args[1]
+    if char and flags then
+        giveCharacterFlags(char, flags)
+    end
+end)
 ```
 
 ---
@@ -965,15 +1316,15 @@ character:giveFlags("c")
 
 **Purpose**
 
-Removes the specified flags from the character, calling any associated callbacks.
+Removes flags from the character's existing flags.
 
 **Parameters**
 
-* flags (string) - The flags to remove.
+* `flags` (*string*): The flags to remove.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -982,7 +1333,18 @@ Server.
 **Example Usage**
 
 ```lua
-character:takeFlags("a")
+local function takeCharacterFlags(character, flags)
+    character:takeFlags(flags)
+    character:getPlayer():ChatPrint("Removed flags: " .. flags)
+end
+
+concommand.Add("take_char_flags", function(ply, cmd, args)
+    local char = ply:getChar()
+    local flags = args[1]
+    if char and flags then
+        takeCharacterFlags(char, flags)
+    end
+end)
 ```
 
 ---
@@ -991,15 +1353,15 @@ character:takeFlags("a")
 
 **Purpose**
 
-Saves the character's data to the database.
+Saves the character data to the database.
 
 **Parameters**
 
-* callback (function) - Optional callback to call after saving.
+* `callback` (*function|nil*): Optional callback function to call after saving.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1008,7 +1370,18 @@ Server.
 **Example Usage**
 
 ```lua
-character:save(function() print("Character saved!") end)
+local function saveCharacterData(character)
+    character:save(function()
+        character:getPlayer():ChatPrint("Character data saved successfully!")
+    end)
+end
+
+concommand.Add("save_char", function(ply)
+    local char = ply:getChar()
+    if char then
+        saveCharacterData(char)
+    end
+end)
 ```
 
 ---
@@ -1017,15 +1390,15 @@ character:save(function() print("Character saved!") end)
 
 **Purpose**
 
-Synchronizes the character's data with the specified receiver, or all players if none specified.
+Synchronizes character data with clients.
 
 **Parameters**
 
-* receiver (Player) - The player to sync to (optional).
+* `receiver` (*Player|nil*): Specific player to sync with, or nil for all players.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1034,8 +1407,21 @@ Server.
 **Example Usage**
 
 ```lua
-character:sync()
-character:sync(specificPlayer)
+local function syncCharacterToPlayer(character, targetPlayer)
+    character:sync(targetPlayer)
+    targetPlayer:ChatPrint("Character data synchronized!")
+end
+
+concommand.Add("sync_char", function(ply, cmd, args)
+    local char = ply:getChar()
+    local targetID = tonumber(args[1])
+    if char and targetID then
+        local targetPlayer = player.GetByID(targetID)
+        if IsValid(targetPlayer) then
+            syncCharacterToPlayer(char, targetPlayer)
+        end
+    end
+end)
 ```
 
 ---
@@ -1044,15 +1430,15 @@ character:sync(specificPlayer)
 
 **Purpose**
 
-Sets up the player entity to match this character's data (model, team, bodygroups, etc).
+Sets up the character for the player, including model, team, and networking.
 
 **Parameters**
 
-* noNetworking (boolean) - If true, do not sync inventory and character data to clients.
+* `noNetworking` (*boolean|nil*): Whether to skip networking setup.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1061,7 +1447,17 @@ Server.
 **Example Usage**
 
 ```lua
-character:setup()
+local function setupCharacterForPlayer(character)
+    character:setup()
+    character:getPlayer():ChatPrint("Character setup complete!")
+end
+
+hook.Add("PlayerSpawn", "SetupCharacter", function(ply)
+    local char = ply:getChar()
+    if char then
+        setupCharacterForPlayer(char)
+    end
+end)
 ```
 
 ---
@@ -1070,15 +1466,15 @@ character:setup()
 
 **Purpose**
 
-Kicks the player from their character, killing them silently and notifying the client.
+Kicks the character from the server.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1087,7 +1483,20 @@ Server.
 **Example Usage**
 
 ```lua
-character:kick()
+local function kickCharacter(character)
+    character:kick()
+    print("Character " .. character:getID() .. " has been kicked.")
+end
+
+concommand.Add("kick_char", function(ply, cmd, args)
+    local charID = tonumber(args[1])
+    if charID then
+        local char = lia.char.getCharacter(charID)
+        if char then
+            kickCharacter(char)
+        end
+    end
+end)
 ```
 
 ---
@@ -1096,15 +1505,15 @@ character:kick()
 
 **Purpose**
 
-Bans the character for a specified time or permanently.
+Bans the character for a specified duration.
 
 **Parameters**
 
-* time (number or nil) - The ban duration in seconds, or nil for permanent ban.
+* `time` (*number|nil*): Ban duration in seconds, or nil for permanent ban.
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1113,8 +1522,22 @@ Server.
 **Example Usage**
 
 ```lua
-character:ban(3600) -- Ban for 1 hour
-character:ban()     -- Permanent ban
+local function banCharacter(character, duration, reason)
+    character:ban(duration)
+    print("Character " .. character:getID() .. " banned for " .. (duration or "permanent") .. " seconds. Reason: " .. (reason or "No reason"))
+end
+
+concommand.Add("ban_char", function(ply, cmd, args)
+    local charID = tonumber(args[1])
+    local duration = tonumber(args[2])
+    local reason = args[3]
+    if charID then
+        local char = lia.char.getCharacter(charID)
+        if char then
+            banCharacter(char, duration, reason)
+        end
+    end
+end)
 ```
 
 ---
@@ -1123,15 +1546,15 @@ character:ban()     -- Permanent ban
 
 **Purpose**
 
-Deletes this character from the database and notifies the player.
+Deletes the character from the database.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1140,7 +1563,20 @@ Server.
 **Example Usage**
 
 ```lua
-character:delete()
+local function deleteCharacter(character)
+    character:delete()
+    print("Character " .. character:getID() .. " has been deleted.")
+end
+
+concommand.Add("delete_char", function(ply, cmd, args)
+    local charID = tonumber(args[1])
+    if charID then
+        local char = lia.char.getCharacter(charID)
+        if char then
+            deleteCharacter(char)
+        end
+    end
+end)
 ```
 
 ---
@@ -1149,15 +1585,15 @@ character:delete()
 
 **Purpose**
 
-Removes this character from the loaded character table.
+Destroys the character instance and removes it from memory.
 
 **Parameters**
 
-* None
+*None.*
 
 **Returns**
 
-* nil
+*None.*
 
 **Realm**
 
@@ -1166,7 +1602,20 @@ Server.
 **Example Usage**
 
 ```lua
-character:destroy()
+local function destroyCharacter(character)
+    character:destroy()
+    print("Character " .. character:getID() .. " has been destroyed.")
+end
+
+concommand.Add("destroy_char", function(ply, cmd, args)
+    local charID = tonumber(args[1])
+    if charID then
+        local char = lia.char.getCharacter(charID)
+        if char then
+            destroyCharacter(char)
+        end
+    end
+end)
 ```
 
 ---
@@ -1175,15 +1624,15 @@ character:destroy()
 
 **Purpose**
 
-Gives the specified amount of money to the character's player.
+Gives money to the character.
 
 **Parameters**
 
-* amount (number) - The amount to give.
+* `amount` (*number*): The amount of money to give.
 
 **Returns**
 
-* boolean - True if successful, false otherwise.
+* `success` (*boolean*): True if the money was given successfully.
 
 **Realm**
 
@@ -1192,7 +1641,21 @@ Server.
 **Example Usage**
 
 ```lua
-character:giveMoney(100)
+local function giveCharacterMoney(character, amount)
+    if character:giveMoney(amount) then
+        character:getPlayer():ChatPrint("You received " .. amount .. " money!")
+    else
+        character:getPlayer():ChatPrint("Failed to give money.")
+    end
+end
+
+concommand.Add("give_money", function(ply, cmd, args)
+    local char = ply:getChar()
+    local amount = tonumber(args[1])
+    if char and amount then
+        giveCharacterMoney(char, amount)
+    end
+end)
 ```
 
 ---
@@ -1201,15 +1664,15 @@ character:giveMoney(100)
 
 **Purpose**
 
-Takes the specified amount of money from the character's player.
+Takes money from the character.
 
 **Parameters**
 
-* amount (number) - The amount to take.
+* `amount` (*number*): The amount of money to take.
 
 **Returns**
 
-* boolean - Always true.
+* `success` (*boolean*): True if the money was taken successfully.
 
 **Realm**
 
@@ -1218,7 +1681,21 @@ Server.
 **Example Usage**
 
 ```lua
-character:takeMoney(50)
+local function takeCharacterMoney(character, amount)
+    if character:takeMoney(amount) then
+        character:getPlayer():ChatPrint("You lost " .. amount .. " money!")
+    else
+        character:getPlayer():ChatPrint("Failed to take money.")
+    end
+end
+
+concommand.Add("take_money", function(ply, cmd, args)
+    local char = ply:getChar()
+    local amount = tonumber(args[1])
+    if char and amount then
+        takeCharacterMoney(char, amount)
+    end
+end)
 ```
 
 ---
