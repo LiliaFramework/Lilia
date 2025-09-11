@@ -6,7 +6,7 @@ This page documents the functions for working with network communication and dat
 
 ## Overview
 
-The net library (`lia.net`) provides a comprehensive system for managing network communication, custom messages, and data transfer in the Lilia framework. It includes message registration, sending, and data serialization functionality.
+The net library (`lia.net`) provides a comprehensive system for managing network communication, custom messages, and data transfer in the Lilia framework, serving as the backbone for all client-server communication and real-time data synchronization. This library handles sophisticated network management with support for reliable message delivery, automatic retry mechanisms, and bandwidth optimization to ensure efficient data transfer even under poor network conditions. The system features advanced message registration with support for typed messages, validation systems, and automatic serialization/deserialization of complex data structures including tables, entities, and custom objects. It includes comprehensive data transfer capabilities with support for large data chunks, streaming protocols, and compression algorithms to minimize network overhead and improve performance. The library provides robust data serialization with support for multiple data formats, version compatibility, and error recovery to ensure data integrity across network boundaries. Additional features include network monitoring and analytics, message queuing for offline scenarios, and integration with the framework's security system for protected communication channels, making it essential for creating responsive and reliable multiplayer experiences that maintain synchronization and provide smooth gameplay even with varying network conditions.
 
 ---
 

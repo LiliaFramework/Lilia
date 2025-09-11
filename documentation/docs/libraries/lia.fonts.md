@@ -6,7 +6,7 @@ This page documents the functions for working with custom fonts and text renderi
 
 ## Overview
 
-The fonts library (`lia.font`) provides a comprehensive system for managing custom fonts, font registration, and text rendering in the Lilia framework. It includes font loading, caching, and rendering functionality.
+The fonts library (`lia.font`) provides a comprehensive system for managing custom fonts, font registration, and text rendering in the Lilia framework, enabling rich typography and visual customization throughout the user interface. This library handles advanced font management with support for multiple font formats, automatic font loading from various sources including local files and web resources, and intelligent caching systems to optimize memory usage and loading performance. The system features sophisticated font registration mechanisms with support for font families, weight variations, style options, and fallback font chains to ensure consistent text rendering across different client configurations. It includes comprehensive text rendering functionality with support for advanced typography features including kerning, ligatures, text effects, and multi-language character support. The library provides integration with the framework's UI system, offering scalable font rendering that adapts to different screen resolutions and accessibility needs. Additional features include font validation and error handling, automatic font fallback systems, and performance monitoring tools for text rendering operations, making it essential for creating polished and professional user interfaces that enhance the overall player experience.
 
 ---
 

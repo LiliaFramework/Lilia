@@ -6,7 +6,7 @@ This page documents the functions for working with DarkRP compatibility and inte
 
 ## Overview
 
-The `lia.darkrp` library provides DarkRP compatibility functions for the Lilia framework. It includes utilities for position checking, text wrapping, money formatting, and entity creation that maintain compatibility with DarkRP addons.
+The `lia.darkrp` library provides comprehensive DarkRP compatibility functions for the Lilia framework, ensuring seamless integration with existing DarkRP addons and maintaining backward compatibility. This library serves as a bridge between the Lilia framework and DarkRP's established ecosystem, offering utilities for position validation, text processing, currency formatting, and entity management. The system handles various compatibility concerns including coordinate system conversions, text wrapping algorithms, money display formatting, and entity spawning mechanics that match DarkRP's behavior patterns. These functions are essential for developers migrating from DarkRP to Lilia or maintaining compatibility with DarkRP-based addons, providing a stable foundation for cross-framework development and ensuring consistent user experience across different roleplay server environments.
 
 ---
 

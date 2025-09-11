@@ -6,7 +6,7 @@ This page documents the functions for working with in-game notifications and not
 
 ## Overview
 
-The notices library (`lia.notices`) provides a comprehensive system for managing in-game notifications, notices, and message display in the Lilia framework. It includes notice creation, display, and management functionality.
+The notices library (`lia.notices`) provides a comprehensive system for managing in-game notifications, notices, and message display in the Lilia framework, enabling effective communication between the server and players through various notification channels. This library handles sophisticated notification management with support for multiple notice types, priority systems, and intelligent display queuing to ensure important messages are never missed while avoiding notification spam. The system features advanced notice creation with support for rich text formatting, custom styling, interactive elements, and contextual information that adapts to different game situations and player states. It includes comprehensive display functionality with support for various UI positions, animation effects, and accessibility options to accommodate different player preferences and visual needs. The library provides robust notice management with automatic expiration, user dismissal capabilities, and history tracking for administrative review and player reference. Additional features include localization support for multilingual notifications, integration with the framework's permission system for targeted messaging, and performance optimization for high-volume notification scenarios, making it essential for maintaining clear communication channels and keeping players informed about important events, updates, and administrative actions.
 
 ---
 

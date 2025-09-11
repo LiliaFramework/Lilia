@@ -10,7 +10,7 @@ The `Player` meta table extends Garry's Mod's base player functionality with Lil
 
 ---
 
-### getChar
+### playerMeta:getChar
 
 **Purpose**
 
@@ -49,7 +49,7 @@ end)
 
 ---
 
-### Name
+### playerMeta:Name
 
 **Purpose**
 
@@ -84,7 +84,7 @@ end)
 
 ---
 
-### hasPrivilegeVector
+### playerMeta:hasPrivilegeVector
 
 **Purpose**
 
@@ -125,7 +125,7 @@ end)
 
 ---
 
-### getCurrentVehicle
+### playerMeta:getCurrentVehicle
 
 **Purpose**
 
@@ -164,7 +164,7 @@ end)
 
 ---
 
-### hasValidVehicle
+### playerMeta:hasValidVehicle
 
 **Purpose**
 
@@ -202,7 +202,7 @@ end)
 
 ---
 
-### isNoClipping
+### playerMeta:isNoClipping
 
 **Purpose**
 
@@ -240,7 +240,7 @@ end)
 
 ---
 
-### removeRagdoll
+### playerMeta:removeRagdoll
 
 **Purpose**
 
@@ -273,7 +273,7 @@ end)
 
 ---
 
-### getRagdoll
+### playerMeta:getRagdoll
 
 **Purpose**
 
@@ -312,7 +312,7 @@ end)
 
 ---
 
-### isStuck
+### playerMeta:isStuck
 
 **Purpose**
 
@@ -351,7 +351,7 @@ end)
 
 ---
 
-### isNearPlayer
+### playerMeta:isNearPlayer
 
 **Purpose**
 
@@ -394,7 +394,7 @@ end)
 
 ---
 
-### entitiesNearPlayer
+### playerMeta:entitiesNearPlayer
 
 **Purpose**
 
@@ -433,7 +433,7 @@ end)
 
 ---
 
-### getItemWeapon
+### playerMeta:getItemWeapon
 
 **Purpose**
 
@@ -473,7 +473,7 @@ end)
 
 ---
 
-### isRunning
+### playerMeta:isRunning
 
 **Purpose**
 
@@ -511,7 +511,7 @@ end)
 
 ---
 
-### IsFamilySharedAccount
+### playerMeta:IsFamilySharedAccount
 
 **Purpose**
 
@@ -549,7 +549,7 @@ end)
 
 ---
 
-### getItemDropPos
+### playerMeta:getItemDropPos
 
 **Purpose**
 
@@ -583,7 +583,7 @@ end)
 
 ---
 
-### getItems
+### playerMeta:getItems
 
 **Purpose**
 
@@ -623,7 +623,7 @@ end)
 
 ---
 
-### getTracedEntity
+### playerMeta:getTracedEntity
 
 **Purpose**
 
@@ -663,7 +663,7 @@ end)
 
 ---
 
-### getTrace
+### playerMeta:getTrace
 
 **Purpose**
 
@@ -703,7 +703,7 @@ end)
 
 ---
 
-### getEyeEnt
+### playerMeta:getEyeEnt
 
 **Purpose**
 
@@ -743,7 +743,7 @@ end)
 
 ---
 
-### notify
+### playerMeta:notify
 
 **Purpose**
 
@@ -779,7 +779,7 @@ end)
 
 ---
 
-### notifyLocalized
+### playerMeta:notifyLocalized
 
 **Purpose**
 
@@ -819,7 +819,7 @@ end)
 
 ---
 
-### CanEditVendor
+### playerMeta:CanEditVendor
 
 **Purpose**
 
@@ -860,7 +860,7 @@ end)
 
 ---
 
-### isStaff
+### playerMeta:isStaff
 
 **Purpose**
 
@@ -898,7 +898,7 @@ end)
 
 ---
 
-### isVIP
+### playerMeta:isVIP
 
 **Purpose**
 
@@ -936,7 +936,7 @@ end)
 
 ---
 
-### isStaffOnDuty
+### playerMeta:isStaffOnDuty
 
 **Purpose**
 
@@ -974,7 +974,7 @@ end)
 
 ---
 
-### isFaction
+### playerMeta:isFaction
 
 **Purpose**
 
@@ -1015,7 +1015,7 @@ end)
 
 ---
 
-### isClass
+### playerMeta:isClass
 
 **Purpose**
 
@@ -1056,7 +1056,7 @@ end)
 
 ---
 
-### hasWhitelist
+### playerMeta:hasWhitelist
 
 **Purpose**
 
@@ -1097,7 +1097,7 @@ end)
 
 ---
 
-### getClass
+### playerMeta:getClass
 
 **Purpose**
 
@@ -1136,7 +1136,7 @@ end)
 
 ---
 
-### hasClassWhitelist
+### playerMeta:hasClassWhitelist
 
 **Purpose**
 
@@ -1177,7 +1177,7 @@ end)
 
 ---
 
-### getClassData
+### playerMeta:getClassData
 
 **Purpose**
 
@@ -1219,7 +1219,7 @@ end)
 
 ---
 
-### getDarkRPVar
+### playerMeta:getDarkRPVar
 
 **Purpose**
 
@@ -1255,7 +1255,7 @@ end)
 
 ---
 
-### getMoney
+### playerMeta:getMoney
 
 **Purpose**
 
@@ -1289,7 +1289,7 @@ end)
 
 ---
 
-### canAfford
+### playerMeta:canAfford
 
 **Purpose**
 
@@ -1330,7 +1330,7 @@ end)
 
 ---
 
-### hasSkillLevel
+### playerMeta:hasSkillLevel
 
 **Purpose**
 
@@ -1373,7 +1373,7 @@ end)
 
 ---
 
-### meetsRequiredSkills
+### playerMeta:meetsRequiredSkills
 
 **Purpose**
 
@@ -1415,7 +1415,7 @@ end)
 
 ---
 
-### restoreStamina
+### playerMeta:restoreStamina
 
 **Purpose**
 
@@ -1449,7 +1449,7 @@ end)
 
 ---
 
-### consumeStamina
+### playerMeta:consumeStamina
 
 **Purpose**
 
@@ -1483,7 +1483,7 @@ end)
 
 ---
 
-### addMoney
+### playerMeta:addMoney
 
 **Purpose**
 
@@ -1524,7 +1524,7 @@ end)
 
 ---
 
-### takeMoney
+### playerMeta:takeMoney
 
 **Purpose**
 
@@ -1560,7 +1560,7 @@ end)
 
 ---
 
-### setLiliaData
+### playerMeta:setLiliaData
 
 **Purpose**
 
@@ -1600,7 +1600,7 @@ end)
 
 ---
 
-### getLiliaData
+### playerMeta:getLiliaData
 
 **Purpose**
 
@@ -1638,7 +1638,7 @@ end)
 
 ---
 
-### getFlags
+### playerMeta:getFlags
 
 **Purpose**
 
@@ -1674,7 +1674,7 @@ end)
 
 ---
 
-### setFlags
+### playerMeta:setFlags
 
 **Purpose**
 
@@ -1713,7 +1713,7 @@ end)
 
 ---
 
-### hasFlags
+### playerMeta:hasFlags
 
 **Purpose**
 
@@ -1754,7 +1754,7 @@ end)
 
 ---
 
-### getPlayTime
+### playerMeta:getPlayTime
 
 **Purpose**
 

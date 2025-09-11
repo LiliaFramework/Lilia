@@ -1829,7 +1829,7 @@ function MODULE:PopulateAdminTabs(pages)
         end)
     end
 
-    if not table.IsEmpty(entitiesByCreator) then
+    if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
         pages[#pages + 1] = {
             name = "entities",
             icon = "icon16/bricks.png",
@@ -1878,14 +1878,12 @@ function MODULE:PopulateAdminTabs(pages)
                             btn.DoClick = func
                         end
 
-                        if client:hasPrivilege("viewEntityTab") then
-                            makeBtn("view", function()
-                                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
-                                local prevTP = lia.option.get("thirdPersonEnabled", false)
-                                lia.option.set("thirdPersonEnabled", false)
-                                startSpectateView(ent, prevTP)
-                            end)
-                        end
+                        makeBtn("view", function()
+                            if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                            local prevTP = lia.option.get("thirdPersonEnabled", false)
+                            lia.option.set("thirdPersonEnabled", false)
+                            startSpectateView(ent, prevTP)
+                        end)
 
                         if client:hasPrivilege("teleportToEntity") then
                             makeBtn("teleport", function()

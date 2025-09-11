@@ -90,6 +90,7 @@ else
     end
 
     function MODULE:LiliaLoaded()
+        lia.option.load()
         vgui.Create("liaCharacter")
     end
 

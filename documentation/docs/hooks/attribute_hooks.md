@@ -1,8 +1,20 @@
 # Attribute Hooks
 
-Attributes may define callbacks that run when a player's attribute table is set up.
+This document describes all `ATTRIBUTE` function hooks defined within the codebase.
 
-These functions live on each attribute’s `ATTRIBUTE` table.
+Use these to customize attribute behavior when a player's attribute table is set up, updated, or when stamina-related events occur.
+
+Each hook is defined on an attribute table and receives the table itself as `self` when invoked.
+
+---
+
+## Overview
+
+Hooks belong to tables under `schema/attributes`.
+
+They are most often used to apply attribute effects when attributes are initialized or updated.
+
+All hooks are optional — if you omit a hook, default behaviour applies.
 
 ---
 
@@ -14,17 +26,17 @@ Called whenever `lia.attribs.setup` initializes or refreshes this attribute for 
 
 **Parameters**
 
-* `client` (`Player`): The player that owns the attribute.
+* `client` (*Player*): The player that owns the attribute.
 
-* `value` (`number`): Current attribute value including temporary boosts.
+* `value` (*number*): Current attribute value including temporary boosts.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -56,18 +68,18 @@ Fired when a character attribute value is changed through `setAttrib` or `update
 
 **Parameters**
 
-* `client` (`Player`): The player that owns the character.
-* `character` (`Character`): The character whose attribute was updated.
-* `key` (`string`): The attribute identifier that was changed.
-* `value` (`number`): The new attribute value.
+* `client` (*Player*): The player that owns the character.
+* `character` (*Character*): The character whose attribute was updated.
+* `key` (*string*): The attribute identifier that was changed.
+* `value` (*number*): The new attribute value.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -87,19 +99,19 @@ Fired when an attribute boost is added or removed from a character.
 
 **Parameters**
 
-* `client` (`Player`): The player that owns the character.
-* `character` (`Character`): The character whose attribute was boosted.
-* `attribID` (`string`): The attribute identifier that was boosted.
-* `boostID` (`string`): The unique boost identifier.
-* `amount` (`number|boolean`): The boost amount added, or `true` when removed.
+* `client` (*Player*): The player that owns the character.
+* `character` (*Character*): The character whose attribute was boosted.
+* `attribID` (*string*): The attribute identifier that was boosted.
+* `boostID` (*string*): The unique boost identifier.
+* `amount` (*number|boolean*): The boost amount added, or `true` when removed.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -123,16 +135,16 @@ Allows modification of stamina regeneration/drain rates before they are applied.
 
 **Parameters**
 
-* `client` (`Player`): The player whose stamina is being calculated.
-* `offset` (`number`): The current stamina offset value.
+* `client` (*Player*): The player whose stamina is being calculated.
+* `offset` (*number*): The current stamina offset value.
 
 **Realm**
 
-`Shared`
+**Shared**
 
 **Returns**
 
-* `number?`: Return a modified offset value, or `nil` to use the original.
+* `number?` (*number?*): Return a modified offset value, or `nil` to use the original.
 
 **Example Usage**
 
@@ -155,15 +167,15 @@ Fired when a player's stamina reaches zero and they become out of breath.
 
 **Parameters**
 
-* `client` (`Player`): The player who lost stamina.
+* `client` (*Player*): The player who lost stamina.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -184,15 +196,15 @@ Fired when a player's stamina recovers above 50% and they are no longer out of b
 
 **Parameters**
 
-* `client` (`Player`): The player who gained stamina.
+* `client` (*Player*): The player who gained stamina.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 

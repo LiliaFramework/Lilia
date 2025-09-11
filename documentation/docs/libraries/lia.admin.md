@@ -6,11 +6,11 @@ This page documents the functions for working with administrator privileges and 
 
 ## Overview
 
-The administrator library (`lia.administrator`) provides a comprehensive, hierarchical permission and user group management system for the Lilia framework. It serves as the core authorization system, handling everything from basic tool usage permissions to complex administrative operations.
+The administrator library (`lia.administrator`) provides a comprehensive, hierarchical permission and user group management system for the Lilia framework, serving as the core authorization and access control infrastructure that governs all administrative operations and player privileges throughout the server. This library handles sophisticated permission management with support for multi-level privilege hierarchies, dynamic permission assignment, and granular access control that enables fine-tuned administrative capabilities from basic tool usage to complex server management operations. The system features advanced user group management with support for hierarchical group structures, inheritance-based permission systems, and dynamic group assignment that allows for flexible and scalable administrative organization. It includes comprehensive privilege registration with support for custom permission definitions, permission validation, and automatic privilege checking that ensures secure and consistent access control across all framework components. The library provides robust administrative command execution with support for server-side command processing, privilege verification, and secure command delegation that maintains system integrity while enabling powerful administrative capabilities. Additional features include integration with the framework's logging system for administrative action tracking, real-time permission synchronization across clients, and comprehensive administrative interfaces that provide intuitive management tools for server administrators, making it essential for maintaining secure and organized server operations while providing the flexibility needed for complex roleplay scenarios and administrative workflows.
 
 ---
 
-### lia.administrator.hasAccess
+### hasAccess
 
 **Purpose**
 
@@ -70,7 +70,7 @@ end
 
 ---
 
-### lia.administrator.registerPrivilege
+### registerPrivilege
 
 **Purpose**
 
@@ -126,7 +126,7 @@ lia.administrator.registerPrivilege({
 
 ---
 
-### lia.administrator.unregisterPrivilege
+### unregisterPrivilege
 
 **Purpose**
 
@@ -159,7 +159,7 @@ lia.administrator.unregisterPrivilege("command_oldCommand")
 
 ---
 
-### lia.administrator.createGroup
+### createGroup
 
 **Purpose**
 
@@ -208,7 +208,7 @@ lia.administrator.createGroup("staff", {
 
 ---
 
-### lia.administrator.removeGroup
+### removeGroup
 
 **Purpose**
 
@@ -241,7 +241,7 @@ lia.administrator.removeGroup("user") -- This will error
 
 ---
 
-### lia.administrator.renameGroup
+### renameGroup
 
 **Purpose**
 
@@ -275,7 +275,7 @@ lia.administrator.renameGroup("user", "player") -- This will error
 
 ---
 
-### lia.administrator.applyInheritance
+### applyInheritance
 
 **Purpose**
 
@@ -305,7 +305,7 @@ lia.administrator.applyInheritance("moderator")
 
 ---
 
-### lia.administrator.load
+### load
 
 **Purpose**
 
@@ -335,7 +335,7 @@ lia.administrator.load()
 
 ---
 
-### lia.administrator.save
+### save
 
 **Purpose**
 
@@ -367,7 +367,7 @@ lia.administrator.save(true)
 
 ---
 
-### lia.administrator.addPermission
+### addPermission
 
 **Purpose**
 
@@ -402,7 +402,7 @@ lia.administrator.addPermission("moderator", "mute", true)
 
 ---
 
-### lia.administrator.removePermission
+### removePermission
 
 **Purpose**
 
@@ -437,7 +437,7 @@ lia.administrator.removePermission("moderator", "mute", true)
 
 ---
 
-### lia.administrator.sync
+### sync
 
 **Purpose**
 
@@ -469,7 +469,7 @@ lia.administrator.sync(ply)
 
 ---
 
-### lia.administrator.setPlayerUsergroup
+### setPlayerUsergroup
 
 **Purpose**
 
@@ -504,7 +504,7 @@ lia.administrator.setPlayerUsergroup(target, "vip", "adminCommand")
 
 ---
 
-### lia.administrator.setSteamIDUsergroup
+### setSteamIDUsergroup
 
 **Purpose**
 
@@ -539,7 +539,7 @@ lia.administrator.setSteamIDUsergroup(steamID, "vip", "database")
 
 ---
 
-### lia.administrator.serverExecCommand
+### serverExecCommand
 
 **Purpose**
 
@@ -579,7 +579,7 @@ lia.administrator.serverExecCommand("freeze", target, 30, nil, admin)
 
 ---
 
-### lia.administrator.execCommand
+### execCommand
 
 **Purpose**
 

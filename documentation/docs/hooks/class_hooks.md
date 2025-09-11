@@ -1,10 +1,20 @@
 # Class Hooks
 
-Classes can implement lifecycle hooks to control access, initialize settings, and respond to events such as joining, leaving, spawning, or being transferred.
+This document describes all `CLASS` function hooks defined within the codebase.
 
-Define these functions inside your class definition files (`schema/classes/*.lua`).
+Use these to customize class behavior when players join, leave, spawn, or are transferred between classes.
 
-All hooks are optional; unspecified hooks fall back to default behaviour.
+Each hook is defined on a class table and receives the table itself as `self` when invoked.
+
+---
+
+## Overview
+
+Hooks belong to tables under `schema/classes`.
+
+They are most often used to control access, initialize settings, and respond to class-related events.
+
+All hooks are optional — if you omit a hook, default behaviour applies.
 
 ---
 
@@ -16,15 +26,15 @@ Determines whether a player is allowed to switch to this class.
 
 **Parameters**
 
-* `client` (`Player`): The player attempting to switch.
+* `client` (*Player*): The player attempting to switch.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `boolean?`: Return `false` to deny the change.
+* `boolean?` (*boolean?*): Return `false` to deny the change.
 
 **Example Usage**
 
@@ -55,15 +65,15 @@ Runs on the previous class after a player successfully changes classes.
 
 **Parameters**
 
-* `client` (`Player`): The player who has left the class.
+* `client` (*Player*): The player who has left the class.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -94,15 +104,15 @@ Executes immediately after a player joins this class.
 
 **Parameters**
 
-* `client` (`Player`): The player who has joined the class.
+* `client` (*Player*): The player who has joined the class.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -137,15 +147,15 @@ Runs each time a member of this class respawns.
 
 **Parameters**
 
-* `client` (`Player`): The player who has just spawned.
+* `client` (*Player*): The player who has just spawned.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -179,17 +189,17 @@ Fires when a player is moved into this class from another.
 
 **Parameters**
 
-* `client` (`Player`): The player who was transferred.
+* `client` (*Player*): The player who was transferred.
 
-* `oldClass` (`number`): Index of the previous class.
+* `oldClass` (*number*): Index of the previous class.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 

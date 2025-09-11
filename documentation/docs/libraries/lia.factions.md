@@ -6,7 +6,7 @@ This page documents the functions for working with factions and player groups.
 
 ## Overview
 
-The factions library (`lia.faction`) provides a comprehensive system for managing player factions, classes, and group hierarchies in the Lilia framework. It includes faction registration, class management, whitelist handling, and player grouping functionality.
+The factions library (`lia.faction`) provides a comprehensive system for managing player factions, classes, and group hierarchies in the Lilia framework, serving as the foundation for roleplay server social structures and organizational systems. This library handles complex faction management with support for hierarchical organizations, internal ranking systems, and dynamic faction relationships including alliances, rivalries, and neutral standings. The system features advanced class management with role-based permissions, skill trees, progression systems, and specialized abilities that define each player's capabilities within their faction. It includes sophisticated whitelist handling with application systems, approval workflows, and automated recruitment processes for maintaining faction quality and roleplay standards. The library provides comprehensive player grouping functionality with team formation, shared resources, collective objectives, and collaborative gameplay mechanics. Additional features include faction-based economy systems, territory control mechanics, diplomatic tools for inter-faction relations, and integration with other framework systems for creating immersive and engaging roleplay experiences that encourage long-term player investment and community building.
 
 ---
 

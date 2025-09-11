@@ -33,8 +33,10 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
 
     local price = vendor:getPrice(itemType, isSellingToVendor)
-    local money = client:getChar():getMoney()
-    if money < price then return false, L("canNotAfford") end
+    if not isSellingToVendor then
+        local money = client:getChar():getMoney()
+        if money < price then return false, L("canNotAfford") end
+    end
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false

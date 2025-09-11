@@ -10,7 +10,7 @@ The `Item` meta table provides comprehensive item management functionality inclu
 
 ---
 
-### isRotated
+### itemMeta:isRotated
 
 **Purpose**
 
@@ -60,7 +60,7 @@ end)
 
 ---
 
-### getWidth
+### itemMeta:getWidth
 
 **Purpose**
 
@@ -104,7 +104,7 @@ end)
 
 ---
 
-### getHeight
+### itemMeta:getHeight
 
 **Purpose**
 
@@ -150,7 +150,7 @@ end)
 
 ---
 
-### getQuantity
+### itemMeta:getQuantity
 
 **Purpose**
 
@@ -193,7 +193,7 @@ end)
 
 ---
 
-### eq
+### itemMeta:eq
 
 **Purpose**
 
@@ -246,7 +246,7 @@ end)
 
 ---
 
-### tostring
+### itemMeta:tostring
 
 **Purpose**
 
@@ -289,7 +289,7 @@ end)
 
 ---
 
-### getID
+### itemMeta:getID
 
 **Purpose**
 
@@ -332,7 +332,7 @@ end)
 
 ---
 
-### getModel
+### itemMeta:getModel
 
 **Purpose**
 
@@ -375,7 +375,7 @@ end)
 
 ---
 
-### getSkin
+### itemMeta:getSkin
 
 **Purpose**
 
@@ -418,7 +418,7 @@ end)
 
 ---
 
-### getPrice
+### itemMeta:getPrice
 
 **Purpose**
 
@@ -461,7 +461,7 @@ end)
 
 ---
 
-### call
+### itemMeta:call
 
 **Purpose**
 
@@ -509,7 +509,7 @@ end)
 
 ---
 
-### getOwner
+### itemMeta:getOwner
 
 **Purpose**
 
@@ -556,7 +556,7 @@ end)
 
 ---
 
-### getData
+### itemMeta:getData
 
 **Purpose**
 
@@ -601,7 +601,7 @@ end)
 
 ---
 
-### getAllData
+### itemMeta:getAllData
 
 **Purpose**
 
@@ -647,7 +647,7 @@ end)
 
 ---
 
-### hook
+### itemMeta:hook
 
 **Purpose**
 
@@ -692,7 +692,7 @@ end)
 
 ---
 
-### postHook
+### itemMeta:postHook
 
 **Purpose**
 
@@ -737,7 +737,7 @@ end)
 
 ---
 
-### onRegistered
+### itemMeta:onRegistered
 
 **Purpose**
 
@@ -772,7 +772,7 @@ end)
 
 ---
 
-### print
+### itemMeta:print
 
 **Purpose**
 
@@ -813,7 +813,7 @@ end)
 
 ---
 
-### printData
+### itemMeta:printData
 
 **Purpose**
 
@@ -853,7 +853,7 @@ end)
 
 ---
 
-### getName
+### itemMeta:getName
 
 **Purpose**
 
@@ -896,7 +896,7 @@ end)
 
 ---
 
-### getDesc
+### itemMeta:getDesc
 
 **Purpose**
 
@@ -939,7 +939,7 @@ end)
 
 ---
 
-### removeFromInventory
+### itemMeta:removeFromInventory
 
 **Purpose**
 
@@ -983,7 +983,7 @@ end)
 
 ---
 
-### delete
+### itemMeta:delete
 
 **Purpose**
 
@@ -1027,7 +1027,7 @@ end)
 
 ---
 
-### remove
+### itemMeta:remove
 
 **Purpose**
 
@@ -1071,7 +1071,7 @@ end)
 
 ---
 
-### destroy
+### itemMeta:destroy
 
 **Purpose**
 
@@ -1114,7 +1114,7 @@ end)
 
 ---
 
-### onDisposed
+### itemMeta:onDisposed
 
 **Purpose**
 
@@ -1149,7 +1149,7 @@ end)
 
 ---
 
-### getEntity
+### itemMeta:getEntity
 
 **Purpose**
 
@@ -1196,7 +1196,7 @@ end)
 
 ---
 
-### spawn
+### itemMeta:spawn
 
 **Purpose**
 
@@ -1250,7 +1250,7 @@ end)
 
 ---
 
-### transfer
+### itemMeta:transfer
 
 **Purpose**
 
@@ -1305,7 +1305,7 @@ end)
 
 ---
 
-### onInstanced
+### itemMeta:onInstanced
 
 **Purpose**
 
@@ -1340,7 +1340,7 @@ end)
 
 ---
 
-### onSync
+### itemMeta:onSync
 
 **Purpose**
 
@@ -1375,7 +1375,7 @@ end)
 
 ---
 
-### onRemoved
+### itemMeta:onRemoved
 
 **Purpose**
 
@@ -1410,7 +1410,7 @@ end)
 
 ---
 
-### onRestored
+### itemMeta:onRestored
 
 **Purpose**
 
@@ -1445,7 +1445,7 @@ end)
 
 ---
 
-### sync
+### itemMeta:sync
 
 **Purpose**
 
@@ -1488,7 +1488,7 @@ end)
 
 ---
 
-### setData
+### itemMeta:setData
 
 **Purpose**
 
@@ -1537,7 +1537,7 @@ end)
 
 ---
 
-### addQuantity
+### itemMeta:addQuantity
 
 **Purpose**
 
@@ -1583,7 +1583,7 @@ end)
 
 ---
 
-### setQuantity
+### itemMeta:setQuantity
 
 **Purpose**
 
@@ -1629,7 +1629,7 @@ end)
 
 ---
 
-### interact
+### itemMeta:interact
 
 **Purpose**
 
@@ -1679,7 +1679,7 @@ end)
 
 ---
 
-### getCategory
+### itemMeta:getCategory
 
 **Purpose**
 

@@ -360,6 +360,23 @@ else
         noBtn.DoClick = function() frame:Close() end
     end
 
+    local function formatSize(bytes)
+        if not bytes or bytes == 0 then return "0 B" end
+        local units = {"B", "KB", "MB", "GB", "TB"}
+        local size = bytes
+        local unitIndex = 1
+        while size >= 1024 and unitIndex < #units do
+            size = size / 1024
+            unitIndex = unitIndex + 1
+        end
+
+        if unitIndex == 1 then
+            return string.format("%d %s", size, units[unitIndex])
+        else
+            return string.format("%.1f %s", size, units[unitIndex])
+        end
+    end
+
     hook.Add("CreateInformationButtons", "liaWorkshopInfo", function(pages)
         table.insert(pages, {
             name = "workshopAddons",

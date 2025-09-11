@@ -6,7 +6,7 @@ This page documents the functions for working with items and item management.
 
 ## Overview
 
-The item library (`lia.item`) provides a comprehensive system for managing items, item creation, item data, and item operations in the Lilia framework. It includes item registration, spawning, data management, and inventory integration functionality.
+The item library (`lia.item`) provides a comprehensive system for managing items, item creation, item data, and item operations in the Lilia framework, serving as the foundation for all item-related functionality and gameplay mechanics. This library handles sophisticated item management with support for complex item hierarchies, inheritance systems, and modular item components that can be combined to create unique items with specialized properties and behaviors. The system features advanced item creation tools with visual editors, template systems, and procedural generation capabilities for creating diverse and interesting item collections. It includes comprehensive item data management with support for custom properties, metadata systems, and dynamic item behavior based on player actions and environmental conditions. The library provides robust item operations including spawning, despawning, item transformation, and complex interaction systems that integrate with the framework's physics, networking, and persistence systems. Additional features include item validation and integrity checking, performance optimization for large item collections, item search and categorization tools, and integration with the framework's economy, crafting, and trading systems, making it essential for creating rich and engaging item-based gameplay experiences that drive player interaction and economic activity.
 
 ---
 

@@ -5,7 +5,17 @@ lia = lia or {
     meta = {},
     notices = {},
     lastReloadTime = 0,
-    reloadCooldown = 5
+    reloadCooldown = 5,
+    loadingState = {
+        databaseConnected = false,
+        databaseTablesLoaded = false,
+        modulesInitialized = false,
+        filesLoaded = false,
+        loadingFailed = false,
+        failureReason = "",
+        failureDetails = "",
+        errors = {}
+    }
 }
 
 local FilesToLoad = {
@@ -368,39 +378,39 @@ lia.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.include("lilia/gamemode/core/libraries/data.lua", "server")
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
-    MsgC(Color(255, 0, 0), tostring(msg), "\n")
+    MsgC(Color(255, 0, 0), tostring(msg), "\n\n")
 end
 
 function lia.warning(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logWarning") .. "] ")
-    MsgC(Color(255, 255, 0), tostring(msg), "\n")
+    MsgC(Color(255, 255, 0), tostring(msg), "\n\n")
 end
 
 function lia.deprecated(methodName, callback)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logDeprecated") .. "] ")
-    MsgC(Color(255, 255, 0), L("deprecatedMessage", methodName), "\n")
+    MsgC(Color(255, 255, 0), L("deprecatedMessage", methodName), "\n\n")
     if callback and isfunction(callback) then callback() end
 end
 
 function lia.updater(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logUpdater") .. "] ")
-    MsgC(Color(0, 255, 255), tostring(msg), "\n")
+    MsgC(Color(0, 255, 255), tostring(msg), "\n\n")
 end
 
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logInformation") .. "] ")
-    MsgC(Color(83, 143, 239), tostring(msg), "\n")
+    MsgC(Color(83, 143, 239), tostring(msg), "\n\n")
 end
 
 function lia.admin(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
-    MsgC(Color(255, 153, 0), tostring(msg), "\n")
+    MsgC(Color(255, 153, 0), tostring(msg), "\n\n")
 end
 
 function lia.bootstrap(section, msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
-    MsgC(Color(255, 255, 255), tostring(msg), "\n")
+    MsgC(Color(255, 255, 255), tostring(msg), "\n\n")
 end
 
 function lia.notifyAdmin(notification)
@@ -512,15 +522,109 @@ end
 
 lia.includeEntities("lilia/gamemode/entities")
 lia.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
+-- Global error handler for critical startup errors
+local originalError = error
+function error(message, level)
+    -- Capture all errors during loading phase
+    lia.addLoadingError(message)
+    -- Check if this is a critical loading error
+    if string.find(message, "CRITICAL") or string.find(message, "failed to load") then
+        lia.loadingState.loadingFailed = true
+        lia.loadingState.failureReason = "Critical Error"
+        lia.loadingState.failureDetails = message
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL ERROR DETECTED: ", message, "\n")
+    end
+    -- Call original error function
+    return originalError(message, level)
+end
+
+-- Function to check if gamemode loaded successfully
+function lia.hasGamemodeLoadedSuccessfully()
+    return not lia.loadingState.loadingFailed and lia.loadingState.databaseConnected and lia.loadingState.databaseTablesLoaded and lia.loadingState.modulesInitialized and lia.loadingState.filesLoaded
+end
+
+-- Function to parse Lua error messages
+function lia.parseLuaError(errorMessage)
+    -- Pattern to match typical Lua error format: [Lilia] path/file.lua:line: message
+    local pattern = "%[Lilia%] ([^:]+):(%d+): (.+)"
+    local file, line, message = errorMessage:match(pattern)
+    if file and line and message then
+        return {
+            message = message,
+            line = tonumber(line),
+            file = file
+        }
+    end
+
+    -- Fallback pattern for different error formats
+    local fallbackPattern = "([^:]+):(%d+): (.+)"
+    file, line, message = errorMessage:match(fallbackPattern)
+    if file and line and message then
+        return {
+            message = message,
+            line = tonumber(line),
+            file = file
+        }
+    end
+    -- If no pattern matches, return the whole message
+    return {
+        message = errorMessage,
+        line = "N/A",
+        file = "Unknown"
+    }
+end
+
+-- Function to add an error to the loading state
+function lia.addLoadingError(errorMessage)
+    local parsedError = lia.parseLuaError(errorMessage)
+    table.insert(lia.loadingState.errors, parsedError)
+    -- Keep only the last 10 errors to avoid memory issues
+    if #lia.loadingState.errors > 10 then table.remove(lia.loadingState.errors, 1) end
+end
+
+-- Function to get loading failure information
+function lia.getLoadingFailureInfo()
+    if not lia.loadingState.loadingFailed then return nil end
+    return {
+        reason = lia.loadingState.failureReason,
+        details = lia.loadingState.failureDetails,
+        errors = lia.loadingState.errors
+    }
+end
+
+-- Function to clear loading state (for debugging/testing)
+function lia.clearLoadingState()
+    lia.loadingState = {
+        databaseConnected = false,
+        databaseTablesLoaded = false,
+        modulesInitialized = false,
+        filesLoaded = false,
+        loadingFailed = false,
+        failureReason = "",
+        failureDetails = "",
+        errors = {}
+    }
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Loading state cleared for debugging.\n")
+end
+
 if SERVER then
     local function SetupDatabase()
         hook.Run("SetupDatabase")
-        lia.db.connect(function()
-            lia.db.loadTables()
-            local dbLabel = L("database") or "Database"
-            local connMsg = L("databaseConnected", "SQLite") or "Database connected to SQLite"
-            lia.bootstrap(dbLabel, connMsg)
-            hook.Run("DatabaseConnected")
+        lia.db.connect(function(success, errorMsg)
+            if success then
+                lia.loadingState.databaseConnected = true
+                lia.db.loadTables()
+            else
+                lia.loadingState.loadingFailed = true
+                lia.loadingState.failureReason = "Database Connection Failed"
+                lia.loadingState.failureDetails = "Failed to connect to database: " .. tostring(errorMsg)
+                local errorMsgFull = "[Database] Failed to connect to database: " .. tostring(errorMsg)
+                lia.addLoadingError(errorMsgFull)
+                lia.error(errorMsgFull)
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Database connection failed! Server may not function properly.\n")
+                hook.Run("DatabaseConnectionFailed", errorMsg)
+            end
         end)
     end
 
@@ -553,10 +657,27 @@ else
 end
 
 function GM:Initialize()
-    if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
+    if engine.ActiveGamemode() == "lilia" then
+        lia.loadingState.loadingFailed = true
+        lia.loadingState.failureReason = "No Schema Loaded"
+        lia.loadingState.failureDetails = "The gamemode failed to load because no schema is loaded"
+        lia.error(L("noSchemaLoaded"))
+    end
+
     if not hasInitializedModules then
-        lia.module.initialize()
-        hasInitializedModules = true
+        local success, errorMsg = pcall(lia.module.initialize)
+        if not success then
+            lia.loadingState.loadingFailed = true
+            lia.loadingState.failureReason = "Module Initialization Failed"
+            lia.loadingState.failureDetails = "Failed to initialize modules: " .. tostring(errorMsg)
+            local errorMsgFull = "Module initialization failed: " .. tostring(errorMsg)
+            lia.addLoadingError(errorMsgFull)
+            lia.error(errorMsgFull)
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Module initialization failed! Server may not function properly.\n")
+        else
+            hasInitializedModules = true
+            lia.loadingState.modulesInitialized = true
+        end
     end
 end
 

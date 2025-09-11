@@ -221,6 +221,7 @@ if SERVER then
         return true
     end
 
+
     function characterMeta:classWhitelist(class)
         local wl = self:getClasswhitelists() or {}
         wl[class] = true

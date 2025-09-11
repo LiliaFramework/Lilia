@@ -10,7 +10,7 @@ The `Vector` meta table extends Garry's Mod's base vector functionality with Lil
 
 ---
 
-### Center
+### vectorMeta:Center
 
 **Purpose**
 
@@ -46,7 +46,7 @@ end)
 
 ---
 
-### Distance
+### vectorMeta:Distance
 
 **Purpose**
 
@@ -82,7 +82,7 @@ end)
 
 ---
 
-### RotateAroundAxis
+### vectorMeta:RotateAroundAxis
 
 **Purpose**
 
@@ -121,7 +121,7 @@ end)
 
 ---
 
-### Right
+### vectorMeta:Right
 
 **Purpose**
 
@@ -158,7 +158,7 @@ end)
 
 ---
 
-### Up
+### vectorMeta:Up
 
 **Purpose**
 

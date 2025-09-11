@@ -6,7 +6,7 @@ This page documents the functions for working with Discord integration and webho
 
 ## Overview
 
-The discord library (`lia.discord`) provides a comprehensive system for Discord integration, webhook management, and message relaying in the Lilia framework. It includes webhook configuration, message sending, and Discord API integration functionality.
+The discord library (`lia.discord`) provides a comprehensive system for Discord integration, webhook management, and message relaying in the Lilia framework, enabling seamless communication between game servers and Discord communities. This library offers advanced webhook management with support for multiple webhook configurations, automatic failover systems, and rate limiting to ensure reliable message delivery. The system includes sophisticated message formatting with support for embeds, attachments, custom styling, and dynamic content generation based on game events. It features robust Discord API integration with OAuth2 authentication, bot management capabilities, and real-time event processing for bidirectional communication. The library also provides comprehensive logging and monitoring tools, message queuing for high-volume scenarios, and security features including message validation and spam protection. Additional functionality includes user role synchronization, server statistics reporting, and integration with other framework systems for automated notifications, making it an essential tool for modern roleplay servers seeking to maintain active Discord communities and enhance player engagement.
 
 ---
 

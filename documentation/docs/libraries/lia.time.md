@@ -6,7 +6,7 @@ This page documents the functions for working with time utilities and time manag
 
 ## Overview
 
-The time library (`lia.time`) provides a comprehensive system for managing time, date formatting, and time-related utilities in the Lilia framework. It includes time calculations, date formatting, and time conversion functionality.
+The time library (`lia.time`) provides a comprehensive system for managing time, date formatting, and time-related utilities in the Lilia framework, serving as the central time management system for all temporal operations and scheduling needs. This library handles sophisticated time management with support for multiple time zones, daylight saving time adjustments, and server-specific time configurations that can be customized for different roleplay scenarios and server themes. The system features advanced time calculations with support for complex date arithmetic, duration formatting, and relative time expressions that provide intuitive time representations for players and administrators. It includes comprehensive date formatting with support for multiple locale-specific formats, cultural date representations, and customizable time display options to accommodate different player preferences and regional settings. The library provides robust time conversion functionality with support for various time units, automatic time zone conversions, and integration with the framework's persistence system for accurate time tracking across server restarts. Additional features include time-based event scheduling, performance monitoring for time-sensitive operations, and integration with other framework systems for creating dynamic and time-aware gameplay experiences that enhance immersion and provide realistic temporal progression.
 
 ---
 

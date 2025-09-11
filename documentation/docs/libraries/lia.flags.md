@@ -6,7 +6,7 @@ This page documents the functions for working with player flags and permissions.
 
 ## Overview
 
-The flags library (`lia.flag`) provides a comprehensive system for managing player flags, permissions, and special abilities in the Lilia framework. It includes flag registration, checking, and management functionality.
+The flags library (`lia.flag`) provides a comprehensive system for managing player flags, permissions, and special abilities in the Lilia framework, serving as the core authorization and privilege management system for all player capabilities. This library handles sophisticated flag registration with support for hierarchical permission structures, conditional flags based on player state, and dynamic flag assignment based on gameplay achievements or administrative decisions. The system features advanced permission checking mechanisms with efficient lookup algorithms, caching strategies, and real-time validation to ensure optimal performance even with complex permission hierarchies. It includes comprehensive flag management functionality with bulk operations, inheritance systems, and automatic cleanup for temporary or expired flags. The library provides integration with all framework systems including commands, inventory access, faction permissions, and administrative tools, ensuring consistent authorization across all player interactions. Additional features include flag auditing and logging systems, permission debugging tools, and administrative interfaces for managing player privileges, making it essential for maintaining server security, implementing roleplay restrictions, and creating balanced gameplay experiences.
 
 ---
 

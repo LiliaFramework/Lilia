@@ -6,7 +6,7 @@ This page documents the functions for working with logging and log management.
 
 ## Overview
 
-The logger library (`lia.log`) provides a comprehensive system for managing logs, log types, and log storage in the Lilia framework. It includes log creation, categorization, database storage, and log retrieval functionality.
+The logger library (`lia.log`) provides a comprehensive system for managing logs, log types, and log storage in the Lilia framework, serving as the central logging infrastructure for debugging, monitoring, and auditing all framework operations. This library handles sophisticated log management with support for multiple log levels, structured logging formats, and intelligent log filtering to provide detailed insights into system behavior and player activities. The system features advanced log categorization with automatic classification based on event types, severity levels, and contextual information to enable efficient log analysis and troubleshooting. It includes comprehensive log storage with support for multiple storage backends including databases, files, and external logging services, with automatic log rotation and archival systems to manage storage efficiently. The library provides robust log retrieval functionality with powerful search capabilities, filtering options, and export tools for administrative analysis and compliance reporting. Additional features include real-time log monitoring, alert systems for critical events, performance metrics collection, and integration with external monitoring tools, making it essential for maintaining server stability, investigating issues, and ensuring compliance with administrative and legal requirements.
 
 ---
 

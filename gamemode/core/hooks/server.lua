@@ -1,4 +1,6 @@
 ﻿local GM = GM or GAMEMODE
+
+-- Database loading state tracking
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()
@@ -106,6 +108,9 @@ function GM:OnPickupMoney(client, moneyEntity)
 end
 
 function GM:CanItemBeTransfered(item, curInv, inventory)
+    if not inventory then
+        return false
+    end
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         lia.char.getCharacter(curInv.client, nil, function(character) if character then character:getPlayer():notifyLocalized("forbiddenActionStorage") end end)
         return false
@@ -115,11 +120,11 @@ function GM:CanItemBeTransfered(item, curInv, inventory)
     if itemSteamID then
         local targetCharID = inventory:getData("char")
         if targetCharID then
-            local client = inventory:getRecipients()[1]
-            if IsValid(client) and client:getChar() then
-                local currentCharID = client:getChar():getID()
-                if currentCharID ~= targetCharID and itemSteamID == client:SteamID() then
-                    client:notifyLocalized("playerCharBelonging")
+            local recipient = inventory:getRecipients()[1]
+            if IsValid(recipient) and recipient:getChar() then
+                local currentCharID = recipient:getChar():getID()
+                if currentCharID ~= targetCharID and itemSteamID == recipient:SteamID() then
+                    recipient:notifyLocalized("playerCharBelonging")
                     return false
                 end
             end
@@ -224,10 +229,13 @@ function GM:CanPlayerTakeItem(client, item)
         return false
     elseif IsValid(item.entity) then
         local itemSteamID = item.entity.liaSteamID or item:getData("steamID")
-        if itemSteamID and itemSteamID ~= client:SteamID() then
+        local itemCharID = item.entity.liaCharID or item:getData("charID")
+        if itemSteamID and itemSteamID == client:SteamID() and itemCharID and itemCharID ~= client:getChar():getID() and not table.HasValue(client.liaCharList or {}, itemCharID) then
+            -- Item belongs to same player account but different character
             client:notifyLocalized("playerCharBelonging")
             return false
         end
+        -- Allow pickup if it's from a different player account entirely
     end
 end
 
@@ -453,6 +461,33 @@ end
 function GM:PlayerInitialSpawn(client)
     if client:IsBot() then
         hook.Run("SetupBotPlayer", client)
+        return
+    end
+
+    -- Check if gamemode failed to load
+    if not lia.hasGamemodeLoadedSuccessfully() then
+        client:SetNoDraw(true)
+        lia.config.send(client)
+
+        -- Send failure information to client
+        local failureInfo = lia.getLoadingFailureInfo()
+        net.Start("liaLoadingFailure")
+        net.WriteString(failureInfo and failureInfo.reason or "Unknown Error")
+        net.WriteString(failureInfo and failureInfo.details or "The server failed to load properly")
+
+        -- Send error list
+        local errors = failureInfo and failureInfo.errors or {}
+        net.WriteUInt(#errors, 8) -- Max 255 errors
+
+        for _, err in ipairs(errors) do
+            net.WriteString(err.message or "Unknown error")
+            net.WriteString(tostring(err.line or "N/A"))
+            net.WriteString(err.file or "Unknown")
+        end
+
+        net.Send(client)
+
+        hook.Run("PostPlayerInitialSpawn", client)
         return
     end
 
@@ -1011,15 +1046,40 @@ function GM:InitializedModules()
 end
 
 function GM:LiliaTablesLoaded()
-    lia.db.addDatabaseFields()
-    lia.data.loadTables()
-    lia.data.loadPersistence()
-    lia.administrator.load()
-    lia.config.load()
-    hook.Run("LoadData")
-    hook.Run("PostLoadData")
-    lia.faction.formatModelData()
-    timer.Simple(2, function() lia.entityDataLoaded = true end)
+    -- Set database tables as loaded
+    lia.loadingState.databaseTablesLoaded = true
+
+    local function loadDataSafely()
+        local success, errorMsg = pcall(function()
+            lia.db.addDatabaseFields()
+            lia.data.loadTables()
+            lia.data.loadPersistence()
+            lia.administrator.load()
+            lia.config.load()
+            hook.Run("LoadData")
+            hook.Run("PostLoadData")
+            lia.faction.formatModelData()
+        end)
+
+        if not success then
+            lia.loadingState.loadingFailed = true
+            lia.loadingState.failureReason = "Data Loading Failed"
+            lia.loadingState.failureDetails = "Failed to load server data: " .. tostring(errorMsg)
+            local errorMsgFull = "Data loading failed: " .. tostring(errorMsg)
+            lia.addLoadingError(errorMsgFull)
+            lia.error(errorMsgFull)
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Data loading failed! Server may not function properly.\n")
+        else
+            timer.Simple(2, function()
+                lia.entityDataLoaded = true
+                databaseLoadingComplete = true
+                lia.loadingState.filesLoaded = true
+                lia.bootstrap("Database", "Loading complete - players can now join the server.")
+            end)
+        end
+    end
+
+    loadDataSafely()
 end
 
 function ClientAddText(client, ...)
@@ -1136,6 +1196,71 @@ concommand.Add("lia_wipedb", function(client)
     end
 end)
 
+local wipeStoragesCalled = 0
+concommand.Add("lia_wipestorages", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    if wipeStoragesCalled < RealTime() then
+        wipeStoragesCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipeStoragesConsoleConfirm") .. "\n")
+    else
+        wipeStoragesCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipeStoragesConsoleProgress") .. "\n")
+
+        local storageCount = 0
+        local itemCount = 0
+
+        -- Find all storage entities
+        local storageEntities = ents.FindByClass("lia_storage")
+
+        -- Count items in storage inventories first
+        for _, storage in ipairs(storageEntities) do
+            local invID = storage:getNetVar("inv")
+            if invID then
+                local inventory = lia.inventory.instances[invID]
+                if inventory then
+                    for _, item in pairs(inventory.items) do
+                        itemCount = itemCount + (item.quantity or 1)
+                    end
+                end
+            end
+        end
+
+        -- Also check vehicle trunks and other storage inventories
+        for _, inventory in pairs(lia.inventory.instances) do
+            if inventory.isStorage then
+                storageCount = storageCount + 1
+                for _, item in pairs(inventory.items) do
+                    itemCount = itemCount + (item.quantity or 1)
+                end
+            end
+        end
+
+        -- Wipe all storage inventories
+        for _, storage in ipairs(storageEntities) do
+            local invID = storage:getNetVar("inv")
+            if invID then
+                lia.inventory.deleteByID(invID)
+                storage:setNetVar("inv", nil)
+                storage:setNetVar("hasStorage", nil)
+                storage.receivers = {}
+            end
+        end
+
+        -- Also delete any other storage inventories that might not be attached to entities
+        for id, inventory in pairs(lia.inventory.instances) do
+            if inventory.isStorage then
+                lia.inventory.deleteByID(id)
+            end
+        end
+
+        MsgC(Color(0, 255, 0), "[Lilia] " .. L("wipeStoragesConsoleComplete", storageCount, itemCount) .. "\n")
+    end
+end)
+
 concommand.Add("list_entities", function(client)
     local entityCount = {}
     local totalEntities = 0
@@ -1221,6 +1346,56 @@ hook.Add("server_addban", "LiliaLogServerBan", function(data)
         timestamp = os.time(),
         evidence = ""
     }, nil, "bans")
+end)
+
+concommand.Add("lia_autoremove_underscore_columns", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] Starting auto-remove underscore columns process...\n")
+    lia.db.autoRemoveUnderscoreColumns():next(function()
+        MsgC(Color(0, 255, 0), "[Lilia] Auto-remove underscore columns process completed.\n")
+    end):catch(function(err)
+        MsgC(Color(255, 0, 0), "[Lilia] Error during auto-remove process: ", err, "\n")
+    end)
+end)
+
+concommand.Add("lia_check_loading_status", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Loading Status Check:\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Database Connected: ", lia.loadingState.databaseConnected and "YES" or "NO", "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Database Tables Loaded: ", lia.loadingState.databaseTablesLoaded and "YES" or "NO", "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Modules Initialized: ", lia.loadingState.modulesInitialized and "YES" or "NO", "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Files Loaded: ", lia.loadingState.filesLoaded and "YES" or "NO", "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Overall Status: ", lia.hasGamemodeLoadedSuccessfully() and "SUCCESS" or "FAILED", "\n")
+
+    if lia.loadingState.loadingFailed then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "- Failure Reason: ", lia.loadingState.failureReason, "\n")
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "- Failure Details: ", lia.loadingState.failureDetails, "\n")
+
+        -- Show logged errors
+        if lia.loadingState.errors and #lia.loadingState.errors > 0 then
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "- Logged Errors:\n")
+            for i, err in ipairs(lia.loadingState.errors) do
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), string.format("  %d. %s | %s | %s\n", i, err.message, err.line, err.file))
+            end
+        end
+    end
+end)
+
+concommand.Add("lia_clear_loading_state", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    lia.clearLoadingState()
 end)
 
 hook.Add("server_removeban", "LiliaLogServerUnban", function(data)

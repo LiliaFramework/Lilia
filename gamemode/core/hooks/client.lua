@@ -407,6 +407,7 @@ function GM:CharListLoaded()
         if not IsValid(client) then return end
         timer.Remove("liaWaitUntilPlayerValid")
         hook.Run("PreLiliaLoaded")
+        lia.option.load()
         hook.Run("LiliaLoaded")
     end)
 end
@@ -480,6 +481,30 @@ concommand.Add("lia_vgui_cleanup", function()
 end, nil, L("vguiCleanupCommandDesc"))
 
 concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
+
+-- Handle loading failure network message
+net.Receive("liaLoadingFailure", function()
+    local reason = net.ReadString()
+    local details = net.ReadString()
+    local errorCount = net.ReadUInt(8)
+
+    -- Remove any existing failure screen
+    if IsValid(lia.loadingFailurePanel) then
+        lia.loadingFailurePanel:Remove()
+    end
+
+    -- Create the failure screen
+    lia.loadingFailurePanel = vgui.Create("liaLoadingFailure")
+    lia.loadingFailurePanel:SetFailureInfo(reason, details)
+
+    -- Add individual errors to the panel
+    for _ = 1, errorCount do
+        local errorMessage = net.ReadString()
+        local line = net.ReadString()
+        local file = net.ReadString()
+        lia.loadingFailurePanel:AddError(errorMessage, line, file)
+    end
+end)
 local dermaPreviewFrame
 concommand.Add("lia_open_derma_preview", function()
     if IsValid(dermaPreviewFrame) then dermaPreviewFrame:Remove() end

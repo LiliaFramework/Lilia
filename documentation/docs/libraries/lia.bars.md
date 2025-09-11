@@ -6,11 +6,11 @@ This page documents the functions for working with HUD bars and progress indicat
 
 ## Overview
 
-The bars library (`lia.bar`) provides a comprehensive system for creating and managing HUD bars in the Lilia framework. It handles health bars, armor bars, custom progress indicators, and action bars with smooth animations and customizable appearance. The library supports priority-based ordering, lifetime management, and automatic drawing with delta smoothing.
+The bars library (`lia.bar`) provides a comprehensive system for creating and managing HUD bars, progress indicators, and visual feedback elements in the Lilia framework, serving as the core visual interface system that enhances player experience through dynamic and informative display elements. This library handles sophisticated bar management with support for multiple bar types including health, armor, custom indicators, and action bars with advanced animation systems, priority management, and delta smoothing that create smooth and responsive visual feedback. The system features advanced bar customization with support for custom colors, gradients, textures, and styling options that enable rich visual customization and thematic consistency throughout the user interface. It includes comprehensive animation support with smooth transitions, easing functions, and dynamic value changes that provide intuitive visual feedback for all player actions and status changes. The library provides robust priority management with support for layered bar systems, conflict resolution, and intelligent display ordering that ensures important information is always visible and accessible to players. Additional features include integration with the framework's character system for automatic health and status updates, performance optimization for complex bar animations, and comprehensive accessibility options that ensure all players can effectively use the visual interface elements, making it essential for creating engaging and informative user interfaces that enhance gameplay immersion and provide clear feedback for all player actions and status changes.
 
 ---
 
-### lia.bar.get
+### get
 
 **Purpose**
 
@@ -52,7 +52,7 @@ end
 
 ---
 
-### lia.bar.add
+### add
 
 **Purpose**
 
@@ -123,7 +123,7 @@ end)
 
 ---
 
-### lia.bar.remove
+### remove
 
 **Purpose**
 
@@ -168,7 +168,7 @@ end
 
 ---
 
-### lia.bar.drawBar
+### drawBar
 
 **Purpose**
 
@@ -223,7 +223,7 @@ end)
 
 ---
 
-### lia.bar.drawAction
+### drawAction
 
 **Purpose**
 
@@ -267,7 +267,7 @@ end
 
 ---
 
-### lia.bar.drawAll
+### drawAll
 
 **Purpose**
 

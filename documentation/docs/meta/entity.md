@@ -10,7 +10,7 @@ The `Entity` meta table extends Garry's Mod's base entity functionality with Lil
 
 ---
 
-### EmitSound
+### entityMeta:EmitSound
 
 **Purpose**
 
@@ -54,7 +54,7 @@ end)
 
 ---
 
-### isProp
+### entityMeta:isProp
 
 **Purpose**
 
@@ -91,7 +91,7 @@ end)
 
 ---
 
-### isItem
+### entityMeta:isItem
 
 **Purpose**
 
@@ -131,7 +131,7 @@ end)
 
 ---
 
-### isMoney
+### entityMeta:isMoney
 
 **Purpose**
 
@@ -171,7 +171,7 @@ end)
 
 ---
 
-### isSimfphysCar
+### entityMeta:isSimfphysCar
 
 **Purpose**
 
@@ -212,7 +212,7 @@ end)
 
 ---
 
-### isLiliaPersistent
+### entityMeta:isLiliaPersistent
 
 **Purpose**
 
@@ -250,7 +250,7 @@ end)
 
 ---
 
-### checkDoorAccess
+### entityMeta:checkDoorAccess
 
 **Purpose**
 
@@ -291,7 +291,7 @@ end)
 
 ---
 
-### keysOwn
+### entityMeta:keysOwn
 
 **Purpose**
 
@@ -329,7 +329,7 @@ end)
 
 ---
 
-### keysLock
+### entityMeta:keysLock
 
 **Purpose**
 
@@ -367,7 +367,7 @@ end)
 
 ---
 
-### keysUnLock
+### entityMeta:keysUnLock
 
 **Purpose**
 
@@ -405,7 +405,7 @@ end)
 
 ---
 
-### getDoorOwner
+### entityMeta:getDoorOwner
 
 **Purpose**
 
@@ -444,7 +444,7 @@ end)
 
 ---
 
-### isLocked
+### entityMeta:isLocked
 
 **Purpose**
 
@@ -482,7 +482,7 @@ end)
 
 ---
 
-### isDoorLocked
+### entityMeta:isDoorLocked
 
 **Purpose**
 
@@ -520,7 +520,7 @@ end)
 
 ---
 
-### getEntItemDropPos
+### entityMeta:getEntItemDropPos
 
 **Purpose**
 
@@ -564,7 +564,7 @@ end)
 
 ---
 
-### isFemale
+### entityMeta:isFemale
 
 **Purpose**
 
@@ -602,7 +602,7 @@ end)
 
 ---
 
-### isNearEntity
+### entityMeta:isNearEntity
 
 **Purpose**
 
@@ -645,7 +645,7 @@ end)
 
 ---
 
-### GetCreator
+### entityMeta:GetCreator
 
 **Purpose**
 
@@ -684,7 +684,7 @@ end)
 
 ---
 
-### SetCreator
+### entityMeta:SetCreator
 
 **Purpose**
 
@@ -722,7 +722,7 @@ end)
 
 ---
 
-### sendNetVar
+### entityMeta:sendNetVar
 
 **Purpose**
 
@@ -766,7 +766,7 @@ end)
 
 ---
 
-### clearNetVars
+### entityMeta:clearNetVars
 
 **Purpose**
 
@@ -806,7 +806,7 @@ end)
 
 ---
 
-### removeDoorAccessData
+### entityMeta:removeDoorAccessData
 
 **Purpose**
 
@@ -844,7 +844,7 @@ end)
 
 ---
 
-### setLocked
+### entityMeta:setLocked
 
 **Purpose**
 
@@ -881,7 +881,7 @@ end)
 
 ---
 
-### setKeysNonOwnable
+### entityMeta:setKeysNonOwnable
 
 **Purpose**
 
@@ -918,7 +918,7 @@ end)
 
 ---
 
-### isDoor
+### entityMeta:isDoor
 
 **Purpose**
 
@@ -959,7 +959,7 @@ end)
 
 ---
 
-### getDoorPartner
+### entityMeta:getDoorPartner
 
 **Purpose**
 
@@ -998,7 +998,7 @@ end)
 
 ---
 
-### setNetVar
+### entityMeta:setNetVar
 
 **Purpose**
 
@@ -1040,7 +1040,7 @@ end)
 
 ---
 
-### getNetVar
+### entityMeta:getNetVar
 
 **Purpose**
 
@@ -1080,7 +1080,7 @@ end)
 
 ---
 
-### PlayFollowingSound
+### entityMeta:PlayFollowingSound
 
 **Purpose**
 

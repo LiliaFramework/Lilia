@@ -26,15 +26,15 @@ Generates a custom character name before defaults are applied.
 
 **Parameters**
 
-* `client` (`Player`): The player creating the character.
+* `client` (*Player*): The player creating the character.
 
 **Realm**
 
-`Shared`
+**Shared**
 
 **Returns**
 
-* `string`, `boolean`: Generated name and whether to bypass default naming.
+* `string`, `boolean` (*string*, *boolean*): Generated name and whether to bypass default naming.
 
 **Example Usage**
 
@@ -56,15 +56,15 @@ Retrieves the default character name for this faction.
 
 **Parameters**
 
-* `client` (`Player`): The client requesting the name.
+* `client` (*Player*): The client requesting the name.
 
 **Realm**
 
-`Shared`
+**Shared**
 
 **Returns**
 
-* `string`: The generated name.
+* `string` (*string*): The generated name.
 
 **Example Usage**
 
@@ -85,15 +85,15 @@ Provides the default description for a newly created character.
 
 **Parameters**
 
-* `client` (`Player`): The client for whom the description is generated.
+* `client` (*Player*): The client for whom the description is generated.
 
 **Realm**
 
-`Shared`
+**Shared**
 
 **Returns**
 
-* `string`, `boolean`: The description text and whether to override the user input.
+* `string`, `boolean` (*string*, *boolean*): The description text and whether to override the user input.
 
 **Example Usage**
 
@@ -116,15 +116,15 @@ Executes whenever a faction member spawns during load-out.
 
 **Parameters**
 
-* `client` (`Player`): The player who has just spawned.
+* `client` (*Player*): The player who has just spawned.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -150,17 +150,17 @@ Runs after a player is moved into this faction from another.
 
 **Parameters**
 
-* `client` (`Player`): The player that was transferred.
+* `client` (*Player*): The player that was transferred.
 
-* `oldFaction` (`number`): Index of the previous faction.
+* `oldFaction` (*number*): Index of the previous faction.
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
-* `nil`: This function does not return a value.
+* `nil` (*nil*): This function does not return a value.
 
 **Example Usage**
 
@@ -187,17 +187,17 @@ Determines if the faction has reached its player limit.
 
 **Parameters**
 
-* `character` (`Character`): The character attempting to join.
+* `character` (*Character*): The character attempting to join.
 
-* `client` (`Player`): The owner of that character.
+* `client` (*Player*): The owner of that character.
 
 **Realm**
 
-`Shared`
+**Shared**
 
 **Returns**
 
-* `boolean`: Whether the limit is reached.
+* `boolean` (*boolean*): Whether the limit is reached.
 
 **Example Usage**
 

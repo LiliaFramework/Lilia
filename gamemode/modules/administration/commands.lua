@@ -3056,3 +3056,50 @@ lia.command.add("removefactiongroup", {
         client:notifyLocalized("factionGroupRemoved", groupName)
     end
 })
+
+lia.command.add("dbcheck", {
+    adminOnly = true,
+    desc = "Check database connection and table status",
+    onRun = function(client)
+        client:ChatPrint("[Database Check] Starting database diagnostics...")
+
+        -- Test basic connection
+        local testQuery = sql.Query("SELECT 1 as test")
+        local testError = sql.LastError()
+
+        if testQuery == false then
+            client:ChatPrint("[Database Check] ❌ Connection test FAILED: " .. tostring(testError))
+            return
+        else
+            client:ChatPrint("[Database Check] ✅ Connection test PASSED")
+        end
+
+        -- Check if tables are loaded
+        if lia.db.tablesLoaded == false then
+            client:ChatPrint("[Database Check] ❌ Tables not loaded properly")
+        else
+            client:ChatPrint("[Database Check] ✅ Tables loaded")
+        end
+
+        -- Check core tables exist
+        local coreTables = {"lia_players", "lia_characters", "lia_inventories", "lia_items"}
+        for _, tableName in ipairs(coreTables) do
+            local existsQuery = sql.Query("SELECT name FROM sqlite_master WHERE type='table' AND name='" .. tableName .. "'")
+            if existsQuery and #existsQuery > 0 then
+                client:ChatPrint("[Database Check] ✅ Table '" .. tableName .. "' exists")
+            else
+                client:ChatPrint("[Database Check] ❌ Table '" .. tableName .. "' MISSING")
+            end
+        end
+
+        -- Test a simple query
+        local simpleQuery = sql.Query("SELECT COUNT(*) as count FROM sqlite_master WHERE type='table'")
+        if simpleQuery and simpleQuery[1] then
+            client:ChatPrint("[Database Check] ✅ Query test PASSED (" .. simpleQuery[1].count .. " tables found)")
+        else
+            client:ChatPrint("[Database Check] ❌ Query test FAILED")
+        end
+
+        client:ChatPrint("[Database Check] Diagnostics complete.")
+    end
+})

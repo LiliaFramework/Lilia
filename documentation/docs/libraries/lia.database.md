@@ -6,7 +6,7 @@ This page documents the functions for working with database operations and manag
 
 ## Overview
 
-The database library (`lia.db`) provides a comprehensive system for database operations, caching, schema management, and data persistence in the Lilia framework. It includes SQL operations, caching, transactions, and database administration functionality.
+The database library (`lia.db`) provides a comprehensive system for database operations, caching, schema management, and data persistence in the Lilia framework, serving as the primary data access layer for all persistent storage needs. This library offers advanced SQL operations with support for multiple database backends including MySQL, SQLite, and PostgreSQL, with automatic query optimization and connection pooling for optimal performance. The system features intelligent caching mechanisms with configurable cache layers, automatic cache invalidation, and memory management to reduce database load and improve response times. It includes robust schema management with automatic migrations, version control, and backward compatibility support for seamless framework updates. The library also provides comprehensive transaction management with rollback capabilities, deadlock detection, and performance monitoring tools. Additional features include database administration utilities, query profiling, backup and restore functionality, and security features such as SQL injection prevention and access control, making it the cornerstone of all persistent data operations within the Lilia framework.
 
 ---
 

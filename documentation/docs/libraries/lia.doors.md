@@ -6,7 +6,7 @@ This page documents the functions for working with door ownership, access contro
 
 ## Overview
 
-The doors library (`lia.doors`) provides a comprehensive door management system for the Lilia framework. It handles door ownership, access control through factions and classes, door presets, database persistence, and door interaction mechanics. The system supports both regular doors and vehicles, with configurable permissions and ownership models.
+The doors library (`lia.doors`) provides a comprehensive door management system for the Lilia framework, offering sophisticated access control and ownership mechanics essential for roleplay server environments. This library handles complex door ownership systems with support for individual, faction-based, and class-based ownership models, allowing for flexible property management and access control. The system features advanced access control mechanisms that integrate seamlessly with the framework's faction and class systems, enabling granular permission management based on player roles, ranks, and special privileges. It includes comprehensive door preset functionality with pre-configured door types, automatic property assignment, and bulk management tools for server administrators. The library provides robust database persistence with automatic state synchronization, ownership transfer capabilities, and historical tracking of door interactions. Additional features include support for both regular doors and vehicles with specialized interaction mechanics, configurable permission models, door locking systems, and integration with the framework's economy and property systems, making it a crucial component for creating immersive and functional roleplay environments.
 
 ---
 

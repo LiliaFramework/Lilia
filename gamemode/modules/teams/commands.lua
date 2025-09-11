@@ -49,7 +49,7 @@
         if defaultClass then targetChar:joinClass(defaultClass.index) end
         hook.Run("OnTransferred", targetPlayer)
         if faction.OnTransferred then faction:OnTransferred(targetPlayer, oldFaction) end
-        hook.Run("PlayerLoadout", targetPlayer)
+        -- hook.Run("PlayerLoadout", targetPlayer) -- Disabled to prevent loadout after transfer
         client:notifyLocalized("transferSuccess", targetPlayer:Name(), L(faction.name, client))
         if client ~= targetPlayer then targetPlayer:notifyLocalized("transferNotification", L(faction.name, targetPlayer), client:Name()) end
         lia.log.add(client, "plyTransfer", targetPlayer:Name(), oldFactionName, faction.name)

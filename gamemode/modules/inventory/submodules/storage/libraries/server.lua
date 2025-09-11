@@ -67,13 +67,16 @@ function MODULE:CanPlayerInteractItem(_, action, itemObject)
 end
 
 function MODULE:EntityRemoved(entity)
-    if not self:IsSuitableForTrunk(entity) then return end
+    if self:IsSuitableForTrunk(entity) == false then return end
     local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
     if storageInv then storageInv:delete() end
+    -- Clean up storage initialization data
+    entity.liaStorageInitPromise = nil
+    entity.receivers = nil
 end
 
 function MODULE:OnEntityCreated(entity)
-    if not self:IsSuitableForTrunk(entity) then return end
+    if self:IsSuitableForTrunk(entity) == false then return end
     self:InitializeStorage(entity)
 end
 
@@ -122,4 +125,23 @@ end
 function MODULE:OnDatabaseLoaded()
     self.loadedData = true
 end
+
+-- Register default storage for entities without models
+lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
+    name = "Storage Container",
+    invType = "GridInv",
+    invData = {
+        w = 6,
+        h = 4
+    }
+})
+
+lia.inventory.registerTrunk("vehicle", {
+    name = "Vehicle Trunk",
+    invType = "GridInv",
+    invData = {
+        w = lia.config.get("trunkInvW", 10),
+        h = lia.config.get("trunkInvH", 2)
+    }
+})
 return RULES

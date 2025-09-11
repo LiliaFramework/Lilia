@@ -390,3 +390,31 @@ net.Receive("liaRequestPlayerCharacters", function(_, client)
         })
     end)
 end)
+
+net.Receive("liaAdminRemoveEntity", function(_, client)
+    if not client:hasPrivilege("viewEntityTab") then return end
+    local entClass = net.ReadString()
+    local pos = net.ReadVector()
+    -- Validate inputs
+    if not entClass or entClass == "" or not pos then return end
+    -- Find entity within a small radius for security
+    local found = false
+    for _, ent in ipairs(ents.FindInSphere(pos, 5)) do
+        if IsValid(ent) and ent:GetClass() == entClass then
+            -- Check if the entity can be removed (not a critical world entity)
+            if not ent:IsWorld() and not ent.CreatedByMap then
+                ent:Remove()
+                client:notifyLocalized("entityRemoved", entClass)
+                lia.log.add(client, "entityRemoved", entClass, tostring(pos))
+                found = true
+                break
+            else
+                client:notifyLocalized("noRemoveWorldEntities")
+                found = true
+                break
+            end
+        end
+    end
+
+    if not found then client:notifyLocalized("entityNotFound") end
+end)

@@ -37,7 +37,7 @@ lia.command.add("trunk", {
         local entity = client:getTracedEntity()
         local maxDistance = 128
         local openTime = 0.7
-        if not hook.Run("IsSuitableForTrunk", entity) then
+        if  hook.Run("IsSuitableForTrunk", entity) == false then
             client:notifyLocalized("notLookingAtVehicle")
             return
         end
@@ -76,7 +76,10 @@ lia.command.add("trunk", {
             if inv then
                 openStorage(inv)
             else
-                MODULE:InitializeStorage(entity):next(openStorage)
+                MODULE:InitializeStorage(entity):next(openStorage, function(err)
+                    client:notifyLocalized("unableCreateStorageEntity", err)
+                    client.liaStorageEntity = nil
+                end)
             end
         end)
     end

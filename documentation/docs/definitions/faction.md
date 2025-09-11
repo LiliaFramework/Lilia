@@ -51,7 +51,6 @@ Each faction in the game is defined by a set of fields on the global `FACTION` t
 | `OnSpawn` | `function` | `nil` | Called when a player spawns with faction attributes applied. |
 | `OnTransferred` | `function` | `nil` | Called when a character is transferred to this faction. |
 | `group` | `string` | `nil` | Faction group identifier for door access control. |
-| `allowedFactions` | `table` | `{}` | Factions allowed to access this vendor. |
 | `spawns` | `table` | `{}` | Faction-specific spawn points. |
 
 ---
@@ -237,6 +236,7 @@ FACTION.bodyGroups = {
 ```
 
 ---
+
 
 #### `logo`
 
@@ -530,8 +530,6 @@ FACTION.jumpPowerMultiplier = true
 
 ---
 
-### Recognition & Relations
-
 #### `MemberToMemberAutoRecognition`
 
 **Type:**
@@ -549,6 +547,9 @@ FACTION.MemberToMemberAutoRecognition = true
 ```
 
 ---
+
+### Recognition & Relations
+
 
 #### `RecognizesGlobally`
 
@@ -732,28 +733,6 @@ FACTION.group = "law_enforcement"
 
 ---
 
-### Vendor Access
-
-#### `allowedFactions`
-
-**Type:**
-
-`table`
-
-**Description:**
-
-Table of faction IDs that are allowed to access this vendor.
-
-**Example Usage:**
-
-```lua
-FACTION.allowedFactions = {
-    "citizen",
-    "police"
-}
-```
-
----
 
 ### Spawn System
 

@@ -6,7 +6,7 @@ This page documents the functions for working with client-side options and setti
 
 ## Overview
 
-The option library (`lia.option`) provides a comprehensive system for managing client-side options, settings, and preferences in the Lilia framework. It includes option registration, saving, loading, and management functionality.
+The option library (`lia.option`) provides a comprehensive system for managing client-side options, settings, and preferences in the Lilia framework, enabling personalized user experiences and customizable interface configurations. This library handles sophisticated option management with support for various option types including sliders, toggles, dropdowns, and custom input fields, with validation systems and constraint checking to ensure valid user input. The system features advanced option registration with support for default values, option categories, and dependency relationships that create logical option groupings and conditional visibility. It includes comprehensive saving and loading functionality with cloud synchronization, profile management, and automatic backup systems to preserve user preferences across sessions and devices. The library provides robust option management with real-time updates, change notifications, and integration with the framework's UI system for seamless option modification and immediate effect application. Additional features include option migration tools for framework updates, accessibility support for different input methods, and performance optimization for large option sets, making it essential for creating user-friendly interfaces that adapt to individual player preferences and enhance overall user experience and comfort.
 
 ---
 

@@ -76,10 +76,10 @@ function PANEL:Init()
         surface.DrawRect(0, 0, sw * 0.26, sh * 0.033)
         surface.DrawOutlinedRect(0, 0, sw * 0.26, sh * 0.033)
         draw.DrawText(liaVendorEnt:getNetVar("name") or L("vendorDefaultName"), "liaMediumFont", sw * 0.005, sh * 0.003, color_white, TEXT_ALIGN_LEFT)
-        draw.DrawText(L("vendorSellScale"), "liaSmallFont", sw * 0.1, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
-        draw.DrawText(math.ceil((isnumber(scale) and scale or 0.5) * 100) .. "%", "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
-        draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.1, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
-        draw.DrawText(count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("vendorSellScale"), "liaSmallFont", sw * 0.1, sh * 0.05, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(math.ceil((isnumber(scale) and scale or 0.5) * 100) .. "%", "liaSmallFont", sw * 0.2, sh * 0.05, color_white, TEXT_ALIGN_RIGHT)
+        draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.1, sh * 0.065, color_white, TEXT_ALIGN_LEFT)
+        draw.DrawText(count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count), "liaSmallFont", sw * 0.2, sh * 0.065, color_white, TEXT_ALIGN_RIGHT)
     end
 
     self.right = self:Add("DFrame")
@@ -105,13 +105,13 @@ function PANEL:Init()
         local class = char:getClass()
         local invCount = char:getInv():getItemCount()
         if lia.class.list[class] then
-            draw.DrawText(L("class"), "liaSmallFont", sw * 0.085, sh * 0.07, color_white, TEXT_ALIGN_LEFT)
-            draw.DrawText(lia.class.list[class].name, "liaSmallFont", sw * 0.2, sh * 0.07, color_white, TEXT_ALIGN_RIGHT)
-            draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.11, color_white, TEXT_ALIGN_LEFT)
-            draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.11, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("class"), "liaSmallFont", sw * 0.085, sh * 0.065, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(lia.class.list[class].name, "liaSmallFont", sw * 0.2, sh * 0.065, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.08, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.08, color_white, TEXT_ALIGN_RIGHT)
         else
-            draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.09, color_white, TEXT_ALIGN_LEFT)
-            draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.09, color_white, TEXT_ALIGN_RIGHT)
+            draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.085, sh * 0.065, color_white, TEXT_ALIGN_LEFT)
+            draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.065, color_white, TEXT_ALIGN_RIGHT)
         end
     end
 

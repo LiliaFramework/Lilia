@@ -6,7 +6,7 @@ This page documents the functions for working with 3D context menus and menu man
 
 ## Overview
 
-The menu library (`lia.menu`) provides a comprehensive system for managing 3D context menus, menu interactions, and menu rendering in the Lilia framework. It includes menu creation, button management, and menu display functionality.
+The menu library (`lia.menu`) provides a comprehensive system for managing 3D context menus, menu interactions, and menu rendering in the Lilia framework, enabling intuitive and immersive user interfaces within the 3D game world. This library handles sophisticated menu management with support for dynamic menu generation, context-sensitive options, and real-time menu updates based on player state and environmental conditions. The system features advanced menu interaction with support for various input methods including mouse, keyboard, and gamepad controls, with customizable interaction patterns and accessibility options for different player preferences. It includes comprehensive menu rendering with support for 3D positioning, scaling, and orientation that adapts to different viewing angles and distances for optimal visibility and usability. The library provides robust button management with support for complex button hierarchies, conditional visibility, and dynamic content generation based on available actions and player permissions. Additional features include menu animation systems, sound integration for user feedback, and performance optimization for complex menu structures, making it essential for creating responsive and engaging user interfaces that enhance player interaction and overall gameplay experience.
 
 ---
 

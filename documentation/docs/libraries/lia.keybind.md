@@ -6,7 +6,7 @@ This page documents the functions for working with player keybinds and input man
 
 ## Overview
 
-The keybind library (`lia.keybind`) provides a comprehensive system for managing player keybinds, input handling, and key configuration in the Lilia framework. It includes keybind registration, saving, loading, and input processing functionality.
+The keybind library (`lia.keybind`) provides a comprehensive system for managing player keybinds, input handling, and key configuration in the Lilia framework, enabling customizable control schemes and enhanced user interaction capabilities. This library handles sophisticated keybind management with support for complex key combinations, context-sensitive bindings, and dynamic key assignment based on player state or game mode. The system features advanced input processing with support for multiple input devices, gesture recognition, and customizable input sensitivity settings to accommodate different player preferences and accessibility needs. It includes comprehensive keybind registration with validation systems, conflict detection, and automatic resolution to ensure smooth user experience. The library provides robust saving and loading functionality with cloud synchronization, profile management, and backup systems to preserve player preferences across sessions and devices. Additional features include keybind visualization tools, tutorial systems for new players, and integration with the framework's UI system for creating intuitive and responsive control interfaces that enhance player comfort and gameplay efficiency.
 
 ---
 

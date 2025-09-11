@@ -6,7 +6,7 @@ This page documents the functions for working with localization and language man
 
 ## Overview
 
-The languages library (`lia.lang`) provides a comprehensive system for managing multiple languages, localization, and text translation in the Lilia framework. It includes language loading, text translation, and localization functionality.
+The languages library (`lia.lang`) provides a comprehensive system for managing multiple languages, localization, and text translation in the Lilia framework, enabling global accessibility and multilingual support for diverse player communities. This library handles sophisticated language management with support for dynamic language switching, context-aware translations, and automatic language detection based on player preferences or system settings. The system features advanced text translation capabilities with support for pluralization rules, gender-specific translations, and cultural localization that goes beyond simple text replacement to provide culturally appropriate content. It includes comprehensive language loading with support for multiple translation file formats, automatic updates, and fallback systems to ensure consistent user experience even with incomplete translations. The library provides robust localization functionality with support for right-to-left languages, different character encodings, and region-specific formatting for dates, numbers, and currency. Additional features include translation management tools for content creators, crowd-sourcing integration for community translations, and performance optimization for large translation databases, making it essential for creating inclusive and accessible roleplay experiences that welcome players from diverse linguistic backgrounds.
 
 ---
 

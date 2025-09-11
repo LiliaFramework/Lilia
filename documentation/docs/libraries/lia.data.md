@@ -6,7 +6,7 @@ This page documents the functions for working with data serialization and persis
 
 ## Overview
 
-The data library (`lia.data`) provides a comprehensive system for data serialization, deserialization, and persistence in the Lilia framework. It includes table encoding/decoding, data storage, and persistence management functionality.
+The data library (`lia.data`) provides a comprehensive system for data serialization, deserialization, and persistence in the Lilia framework, serving as the core data management layer for all framework operations. This library handles complex data transformation processes including table encoding/decoding with support for nested structures, circular references, and custom data types. The system includes robust data storage mechanisms with automatic compression, encryption options, and integrity validation to ensure data reliability across server restarts and network transfers. It features advanced persistence management with configurable storage backends, automatic backup systems, and data migration tools for seamless framework updates. The library also provides utilities for data validation, schema enforcement, and performance optimization through intelligent caching strategies, making it the foundation for all data-driven features within the Lilia framework including character data, inventory management, configuration storage, and module state persistence.
 
 ---
 

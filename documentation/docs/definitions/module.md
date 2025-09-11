@@ -21,7 +21,6 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `discord` | `string` | `""` | Discord tag or support channel. |
 | `version` | `number` | `0` | Version number for compatibility checks. |
 | `desc` | `string` | `"No Description"` | Short description of module functionality. |
-| `CAMIPrivileges` | `table` | `nil` | CAMI privileges defined or required by the module. |
 | `WorkshopContent` | `table` | `nil` | Steam Workshop add-on IDs required. |
 | `enabled` | `boolean` or `function` | `true` | Controls whether the module loads. |
 | `Dependencies` | `table` | `nil` | Files or directories included before the module loads. |
@@ -30,6 +29,19 @@ A `MODULE` table defines a self-contained add-on for the Lilia framework. Each f
 | `uniqueID` | `string` | `""` | Internal identifier for the module list. Prefix with `public_` or `private_` to opt into version checks. |
 | `loading` | `boolean` | `false` | True while the module is in the process of loading. |
 | `ModuleLoaded` | `function` | `nil` | Callback run after module finishes loading. |
+| `Privileges` | `table` | `nil` | CAMI privileges required by the module. |
+| `isSingleFile` | `boolean` | `false` | True if the module is loaded from a single file. |
+| `variable` | `string` | `"MODULE"` | Variable name used to access the module table. |
+| `CharacterInformation` | `table` | `nil` | Custom character information fields for the F1 menu. |
+| `ActiveTickets` | `table` | `nil` | Active support tickets in the ticket system. |
+| `adminStickCategories` | `table` | `nil` | Categories for admin stick tools. |
+| `adminStickCategoryOrder` | `table` | `nil` | Order of admin stick tool categories. |
+| `panel` | `Panel` | `nil` | Reference to the module's UI panel. |
+| `loadedData` | `boolean` | `false` | True when the module's data has been loaded. |
+| `versionID` | `string` | `nil` | Version identifier for update checking. |
+| `NetworkStrings` | `table` | `nil` | Network string identifiers used by the module. |
+| `WebImages` | `table` | `nil` | Web image URLs for caching. |
+| `WebSounds` | `table` | `nil` | Web sound URLs for caching. |
 
 ---
 
@@ -131,25 +143,6 @@ MODULE.version = 1.0
 
 ### Dependencies & Content
 
-#### `CAMIPrivileges`
-
-**Type:**
-
-`table`
-
-**Description:**
-
-CAMI privileges required or provided by the module.
-
-**Example Usage:**
-
-```lua
-MODULE.CAMIPrivileges = {
-    { Name = "Staff Permissions - Admin Chat", MinAccess = "admin" }
-}
-```
-
----
 
 #### `WorkshopContent`
 
@@ -167,6 +160,33 @@ Steam Workshop add-on IDs required by this module.
 MODULE.WorkshopContent = {
     "3527535922", -- shared assets
     "1234567890"  -- map data
+}
+```
+
+---
+
+#### `Privileges`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+CAMI privileges required by the module. These are automatically registered with the CAMI system when the module loads.
+
+**Example Usage:**
+
+```lua
+MODULE.Privileges = {
+    {
+        Name = "Staff Permissions - Admin Chat",
+        MinAccess = "admin"
+    },
+    {
+        Name = "Moderation - Kick Players",
+        MinAccess = "moderator"
+    }
 }
 ```
 
@@ -274,6 +294,250 @@ Optional callback run after the module finishes loading.
 function MODULE:ModuleLoaded()
     print("Module fully initialized")
 end
+```
+
+---
+
+#### `isSingleFile`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+True if the module is loaded from a single file rather than a directory structure.
+
+**Example Usage:**
+
+```lua
+if MODULE.isSingleFile then
+    -- Handle single-file module loading
+end
+```
+
+---
+
+#### `variable`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+The variable name used to access the module table (usually "MODULE").
+
+**Example Usage:**
+
+```lua
+print("Module variable:", MODULE.variable) -- Output: MODULE
+```
+
+---
+
+#### `CharacterInformation`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Custom character information fields displayed in the F1 menu's character information panel.
+
+**Example Usage:**
+
+```lua
+MODULE.CharacterInformation = {
+    {
+        name = "Health",
+        data = function(client) return client:Health() end
+    }
+}
+```
+
+---
+
+#### `ActiveTickets`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Active support tickets in the ticket system module, keyed by SteamID.
+
+**Example Usage:**
+
+```lua
+local ticket = MODULE.ActiveTickets[client:SteamID()]
+if ticket then
+    -- Handle existing ticket
+end
+```
+
+---
+
+#### `adminStickCategories`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Categories for organizing admin stick tools, used by the admin stick module.
+
+**Example Usage:**
+
+```lua
+MODULE.adminStickCategories = {
+    playerInfo = {
+        name = "Player Information",
+        icon = "icon16/user.png"
+    }
+}
+```
+
+---
+
+#### `adminStickCategoryOrder`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Defines the display order of admin stick tool categories.
+
+**Example Usage:**
+
+```lua
+MODULE.adminStickCategoryOrder = {"playerInformation", "moderation", "characterManagement"}
+```
+
+---
+
+#### `panel`
+
+**Type:**
+
+`Panel`
+
+**Description:**
+
+Reference to the module's main UI panel (e.g., chatbox panel).
+
+**Example Usage:**
+
+```lua
+if IsValid(MODULE.panel) then
+    MODULE.panel:Remove()
+end
+```
+
+---
+
+#### `loadedData`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Indicates whether the module's persistent data has been loaded from the database.
+
+**Example Usage:**
+
+```lua
+if not MODULE.loadedData then return end
+-- Safe to access module data
+```
+
+---
+
+#### `versionID`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Unique version identifier for update checking. Prefix with `public_` or `private_` to enable automatic version checks.
+
+**Example Usage:**
+
+```lua
+MODULE.versionID = "public_mymodule"
+MODULE.version = 1.2
+```
+
+---
+
+#### `NetworkStrings`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Network string identifiers used by the module for client-server communication.
+
+**Example Usage:**
+
+```lua
+MODULE.NetworkStrings = {
+    "MyModuleData",
+    "MyModuleAction"
+}
+```
+
+---
+
+#### `WebImages`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+URLs of web images to be cached by the framework for use in the module.
+
+**Example Usage:**
+
+```lua
+MODULE.WebImages = {
+    logo = "https://example.com/logo.png",
+    icon = "https://example.com/icon.png"
+}
+```
+
+---
+
+#### `WebSounds`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+URLs of web sounds to be cached by the framework for use in the module.
+
+**Example Usage:**
+
+```lua
+MODULE.WebSounds = {
+    notification = "https://example.com/sound.mp3",
+    alert = "https://example.com/alert.wav"
+}
 ```
 
 ---
@@ -394,7 +658,7 @@ MODULE.WorkshopContent = {
     "1234567890"
 }
 
-MODULE.CAMIPrivileges = {
+MODULE.Privileges = {
     { Name = "My Feature - Use", MinAccess = "admin" }
 }
 

@@ -116,12 +116,42 @@ end
 function PANEL:onItemReleased(itemIcon)
     local item = itemIcon.itemTable
     if not item then return end
-    local x, y = self:LocalCursorPos()
+    -- Check if mouse is outside the inventory panel
+    local cursorX, cursorY = self:LocalCursorPos()
+    local panelW, panelH = self:GetSize()
+    local isOutside = cursorX < 0 or cursorY < 0 or cursorX > panelW or cursorY > panelH
+    if isOutside then
+        -- Drop the item outside inventory
+        self.inventory:requestTransfer(item:getID(), nil, 0, 0)
+        hook.Run("OnRequestItemTransfer", self, item:getID(), nil, 0, 0)
+        return
+    end
+
+    -- Normal transfer within inventory
     local size = self.size + 2
     local itemW = item:getWidth() * size - 2
     local itemH = item:getHeight() * size - 2
-    x = math.Round((x - itemW * 0.5) / size) + 1
-    y = math.Round((y - itemH * 0.5) / size) + 1
+    local x = math.Round((cursorX - itemW * 0.5) / size) + 1
+    local y = math.Round((cursorY - itemH * 0.5) / size) + 1
+    -- Validate the calculated position is within inventory bounds
+    local invW, invH = self.inventory:getSize()
+    local itemWidth = item:getWidth()
+    local itemHeight = item:getHeight()
+    if x < 1 or y < 1 or x + itemWidth - 1 > invW or y + itemHeight - 1 > invH then
+        -- Position is outside inventory bounds, drop the item instead
+        self.inventory:requestTransfer(item:getID(), nil, 0, 0)
+        hook.Run("OnRequestItemTransfer", self, item:getID(), nil, 0, 0)
+        return
+    end
+
+    -- Check if the item would fit at this position (no overlap with existing items)
+    if not self.inventory:doesItemFitAtPos(item, x, y) then
+        -- Item doesn't fit, drop it instead
+        self.inventory:requestTransfer(item:getID(), nil, 0, 0)
+        hook.Run("OnRequestItemTransfer", self, item:getID(), nil, 0, 0)
+        return
+    end
+
     self.inventory:requestTransfer(item:getID(), self.inventory:getID(), x, y)
     hook.Run("OnRequestItemTransfer", self, item:getID(), self.inventory:getID(), x, y)
 end

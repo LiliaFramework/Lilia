@@ -6,7 +6,7 @@ This page documents the functions for working with modules and modularity.
 
 ## Overview
 
-The modularity library (`lia.module`) provides a comprehensive system for managing modules, module loading, and module initialization in the Lilia framework. It includes module registration, loading, and management functionality.
+The modularity library (`lia.module`) provides a comprehensive system for managing modules, module loading, and module initialization in the Lilia framework, serving as the core architecture for the framework's extensible and modular design. This library handles sophisticated module management with support for dynamic module loading, dependency resolution, and automatic initialization sequences that ensure proper module startup order and inter-module communication. The system features advanced module loading with support for hot-reloading during development, lazy loading for performance optimization, and conditional loading based on server configuration or player requirements. It includes comprehensive module registration with validation systems, version checking, and compatibility verification to ensure stable module integration and prevent conflicts. The library provides robust module management functionality with lifecycle hooks, state tracking, and error handling to maintain system stability even when individual modules fail or are removed. Additional features include module discovery and auto-registration, dependency graph visualization for debugging, and integration with the framework's configuration system for flexible module management, making it essential for creating maintainable and extensible server configurations that can adapt to different needs and scale with growing communities.
 
 ---
 

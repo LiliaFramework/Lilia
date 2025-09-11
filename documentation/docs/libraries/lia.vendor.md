@@ -6,7 +6,7 @@ This page documents the functions for working with vendors and trading systems.
 
 ## Overview
 
-The vendor library (`lia.vendor`) provides a comprehensive system for managing vendors, trading, and item commerce in the Lilia framework. It includes vendor presets, rarities, editor functions, and database operations for vendor management.
+The vendor library (`lia.vendor`) provides a comprehensive system for managing vendors, trading, and item commerce in the Lilia framework, serving as the core economic system for player-to-player and player-to-NPC trading interactions. This library handles sophisticated vendor management with support for multiple vendor types, dynamic pricing systems, and complex trading mechanics that create realistic and engaging economic gameplay. The system features advanced vendor presets with support for pre-configured vendor setups, template systems, and bulk vendor management tools that enable server administrators to quickly establish diverse trading networks. It includes comprehensive rarity systems with support for item classification, visual indicators, and rarity-based pricing that add depth and value to the item economy. The library provides robust editor functions with support for real-time vendor configuration, item management interfaces, and administrative tools for maintaining balanced and fair trading systems. Additional features include database integration for persistent vendor data, performance optimization for high-traffic trading scenarios, and integration with the framework's permission and economy systems for creating controlled and regulated trading environments that enhance roleplay and provide meaningful economic progression for players.
 
 ---
 

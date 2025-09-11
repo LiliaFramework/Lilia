@@ -2,7 +2,7 @@ arrange:
   - lia.admin.md
   - lia.attributes.md
   - lia.bars.md
-  - lia.character.md
+  - lia.char.md
   - lia.chatbox.md
   - lia.classes.md
   - lia.color.md
@@ -21,7 +21,6 @@ arrange:
   - lia.item.md
   - lia.keybind.md
   - lia.languages.md
-  - lia.loader.md
   - lia.logger.md
   - lia.markup.md
   - lia.menu.md

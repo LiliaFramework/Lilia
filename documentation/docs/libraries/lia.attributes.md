@@ -6,11 +6,11 @@ This page documents the functions for working with character attributes and thei
 
 ## Overview
 
-The attributes library (`lia.attribs`) provides a system for managing character attributes in the Lilia framework. It handles loading attribute definitions from files, setting up attributes for characters, and managing attribute data throughout the character's lifecycle.
+The attributes library (`lia.attribs`) provides a comprehensive system for managing character attributes, skill progression, and character development in the Lilia framework, serving as the core character advancement system that enables dynamic character growth and specialized abilities throughout gameplay. This library handles sophisticated attribute management with support for multiple attribute types, complex progression systems, and dynamic attribute calculations that create meaningful character development choices and specialized character builds. The system features advanced attribute definitions with support for custom attribute creation, attribute dependencies, and complex attribute interactions that enable rich character customization and progression mechanics. It includes comprehensive attribute loading with support for modular attribute definitions, automatic attribute discovery, and dynamic attribute registration that allows for flexible and extensible character development systems. The library provides robust attribute data management with support for persistent attribute storage, attribute synchronization across clients, and real-time attribute updates that maintain consistent character progression throughout the player's experience. Additional features include integration with the framework's character system for seamless attribute integration, performance optimization for complex attribute calculations, and comprehensive attribute validation that ensures balanced and fair character progression, making it essential for creating engaging character development systems that enhance roleplay depth and provide meaningful progression rewards for players.
 
 ---
 
-### lia.attribs.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -43,7 +43,7 @@ lia.attribs.loadFromDir("schema/attributes")
 
 ---
 
-### lia.attribs.setup
+### setup
 
 **Purpose**
 

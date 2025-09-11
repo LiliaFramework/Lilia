@@ -675,9 +675,8 @@ if SERVER then
             for _, v in ipairs(results) do
                 local charId = tonumber(v.id)
                 if not charId then
-                    lia.error(L("invalidCharacterID", data.name or "nil"))
-                    continue
-                end
+                    lia.error(L("invalidCharacterID", v.name or "nil"))
+                else
 
                 local charData = {}
                 for k2, v2 in pairs(lia.char.vars) do
@@ -747,6 +746,7 @@ if SERVER then
                     done = done + 1
                     if done == #results and callback then callback(characters) end
                 end)
+                end
             end
         end)
     end
@@ -775,9 +775,10 @@ if SERVER then
             removePlayer(client)
         else
             for _, target in player.Iterator() do
-                if not table.HasValue(target.liaCharList or {}, id) then continue end
-                table.RemoveByValue(target.liaCharList, id)
-                removePlayer(target)
+                if table.HasValue(target.liaCharList or {}, id) then
+                    table.RemoveByValue(target.liaCharList, id)
+                    removePlayer(target)
+                end
             end
         end
 
