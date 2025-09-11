@@ -117,14 +117,14 @@ local sqliteQuery = promisifyIfNoCallback(function(query, callback, throw)
     local data = sql.Query(query)
     local err = sql.LastError()
     if data == false then
-        -- Log database errors for debugging (but don't spam for known issues)
-        if not string.find(tostring(err), "duplicate column name") and
-           not string.find(tostring(err), "UNIQUE constraint failed") then
+        if not string.find(tostring(err), "duplicate column name") and not string.find(tostring(err), "UNIQUE constraint failed") then
             lia.warning("[Database] Query failed: " .. tostring(err))
             lia.warning("[Database] Failed query: " .. query)
         end
+
         throw(err)
     end
+
     if callback then
         local lastID = nil
         if string.find(string.upper(query), "INSERT") then lastID = tonumber(sql.QueryValue("SELECT last_insert_rowid()")) end
@@ -140,23 +140,15 @@ lia.db.escape = sqliteEscape
 lia.db.query = function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
 function lia.db.connect(connectCallback, reconnect)
     if reconnect or not lia.db.connected then
-        -- Test database connection before marking as connected
         local testQuery = sql.Query("SELECT 1")
         local testError = sql.LastError()
-
         if testQuery == false then
             lia.error("[Database] Connection test failed: " .. tostring(testError))
             MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Database connection failed! Error: ", tostring(testError), "\n")
-
-            -- Update status tracking
             lia.db.status.connected = false
             lia.db.status.lastError = testError
             lia.db.status.connectionTested = true
-
-            -- Don't proceed with database operations if connection is broken
-            if isfunction(connectCallback) then
-                connectCallback(false, testError)
-            end
+            if isfunction(connectCallback) then connectCallback(false, testError) end
             return false
         end
 
@@ -762,12 +754,8 @@ function lia.db.loadTables()
         lia.error("[Database] Failed to create database tables: " .. tostring(err))
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Database table creation failed! Error: ", tostring(err), "\n")
         MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "This may cause the server to malfunction. Check database permissions and disk space.\n")
-
-        -- Update status tracking
         lia.db.status.lastError = err
         lia.db.status.tablesLoaded = false
-
-        -- Still call done() but mark tables as not loaded properly
         lia.db.tablesLoaded = false
         done()
     end)
@@ -775,7 +763,6 @@ function lia.db.loadTables()
     hook.Run("OnLoadTables")
 end
 
--- Add console command for database status check
 if SERVER then
     concommand.Add("lia_db_status", function(ply)
         if IsValid(ply) and not ply:IsSuperAdmin() then
@@ -788,14 +775,12 @@ if SERVER then
         print("Connected: " .. (lia.db.status.connected and "YES" or "NO"))
         print("Tables Loaded: " .. (lia.db.status.tablesLoaded and "YES" or "NO"))
         print("Connection Tested: " .. (lia.db.status.connectionTested and "YES" or "NO"))
-
         if lia.db.status.lastError then
             print("Last Error: " .. tostring(lia.db.status.lastError))
         else
             print("Last Error: None")
         end
 
-        -- Test current connection
         local testQuery = sql.Query("SELECT 1")
         local testError = sql.LastError()
         if testQuery == false then
@@ -804,7 +789,6 @@ if SERVER then
             print("Live Connection Test: PASSED")
         end
 
-        -- Check core tables
         local coreTables = {"lia_players", "lia_characters", "lia_inventories", "lia_items"}
         print("\nCore Tables Status:")
         for _, tableName in ipairs(coreTables) do
@@ -817,10 +801,7 @@ if SERVER then
         end
 
         print("========================\n")
-
-        if IsValid(ply) then
-            ply:ChatPrint("Database status printed to server console.")
-        end
+        if IsValid(ply) then ply:ChatPrint("Database status printed to server console.") end
     end)
 end
 
@@ -1429,7 +1410,6 @@ end
 
 function lia.db.migrateDatabaseSchemas()
     local d = deferred.new()
-    -- First phase: Check if there are any missing columns
     local checkPromises = {}
     local totalMissingColumns = 0
     for tableName, expectedColumns in pairs(lia.db.expectedSchemas) do
@@ -1464,11 +1444,9 @@ function lia.db.migrateDatabaseSchemas()
         table.insert(checkPromises, checkPromise)
     end
 
-    -- Only proceed with migration if missing columns were found
     deferred.all(checkPromises):next(function()
         if totalMissingColumns > 0 then
             MsgC(Color(0, 255, 0), "[Lilia] Found ", totalMissingColumns, " missing database column(s), starting migration...\n")
-            -- Second phase: Actual migration
             local migrationPromises = {}
             for tableName, expectedColumns in pairs(lia.db.expectedSchemas) do
                 local fullTableName = "lia_" .. tableName

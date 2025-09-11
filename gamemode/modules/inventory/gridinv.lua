@@ -332,8 +332,6 @@ else
         local inventory = lia.inventory.instances[destinationID]
         local item = lia.item.instances[itemID]
         if not item then return end
-
-        -- Handle drop outside inventory (destinationID is nil)
         if not destinationID then
             net.Start("liaTransferItem")
             net.WriteUInt(itemID, 32)
@@ -344,9 +342,6 @@ else
             return
         end
 
-        -- Handle normal inventory transfer
-        -- Allow transfers even to the same position to prevent user confusion
-        -- if item and item:getData("x") == x and item:getData("y") == y then return end
         if item and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)
