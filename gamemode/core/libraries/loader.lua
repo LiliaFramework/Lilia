@@ -522,30 +522,23 @@ end
 
 lia.includeEntities("lilia/gamemode/entities")
 lia.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
--- Global error handler for critical startup errors
 local originalError = error
 function error(message, level)
-    -- Capture all errors during loading phase
     lia.addLoadingError(message)
-    -- Check if this is a critical loading error
     if string.find(message, "CRITICAL") or string.find(message, "failed to load") then
         lia.loadingState.loadingFailed = true
         lia.loadingState.failureReason = "Critical Error"
         lia.loadingState.failureDetails = message
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL ERROR DETECTED: ", message, "\n")
     end
-    -- Call original error function
     return originalError(message, level)
 end
 
--- Function to check if gamemode loaded successfully
 function lia.hasGamemodeLoadedSuccessfully()
     return not lia.loadingState.loadingFailed and lia.loadingState.databaseConnected and lia.loadingState.databaseTablesLoaded and lia.loadingState.modulesInitialized and lia.loadingState.filesLoaded
 end
 
--- Function to parse Lua error messages
 function lia.parseLuaError(errorMessage)
-    -- Pattern to match typical Lua error format: [Lilia] path/file.lua:line: message
     local pattern = "%[Lilia%] ([^:]+):(%d+): (.+)"
     local file, line, message = errorMessage:match(pattern)
     if file and line and message then
@@ -556,7 +549,6 @@ function lia.parseLuaError(errorMessage)
         }
     end
 
-    -- Fallback pattern for different error formats
     local fallbackPattern = "([^:]+):(%d+): (.+)"
     file, line, message = errorMessage:match(fallbackPattern)
     if file and line and message then
@@ -566,7 +558,6 @@ function lia.parseLuaError(errorMessage)
             file = file
         }
     end
-    -- If no pattern matches, return the whole message
     return {
         message = errorMessage,
         line = "N/A",
@@ -574,15 +565,12 @@ function lia.parseLuaError(errorMessage)
     }
 end
 
--- Function to add an error to the loading state
 function lia.addLoadingError(errorMessage)
     local parsedError = lia.parseLuaError(errorMessage)
     table.insert(lia.loadingState.errors, parsedError)
-    -- Keep only the last 10 errors to avoid memory issues
     if #lia.loadingState.errors > 10 then table.remove(lia.loadingState.errors, 1) end
 end
 
--- Function to get loading failure information
 function lia.getLoadingFailureInfo()
     if not lia.loadingState.loadingFailed then return nil end
     return {
@@ -592,7 +580,6 @@ function lia.getLoadingFailureInfo()
     }
 end
 
--- Function to clear loading state (for debugging/testing)
 function lia.clearLoadingState()
     lia.loadingState = {
         databaseConnected = false,

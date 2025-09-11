@@ -1,6 +1,4 @@
 ﻿local GM = GM or GAMEMODE
-
--- Database loading state tracking
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()
@@ -108,9 +106,7 @@ function GM:OnPickupMoney(client, moneyEntity)
 end
 
 function GM:CanItemBeTransfered(item, curInv, inventory)
-    if not inventory then
-        return false
-    end
+    if not inventory then return false end
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
         lia.char.getCharacter(curInv.client, nil, function(character) if character then character:getPlayer():notifyLocalized("forbiddenActionStorage") end end)
         return false
@@ -231,11 +227,9 @@ function GM:CanPlayerTakeItem(client, item)
         local itemSteamID = item.entity.liaSteamID or item:getData("steamID")
         local itemCharID = item.entity.liaCharID or item:getData("charID")
         if itemSteamID and itemSteamID == client:SteamID() and itemCharID and itemCharID ~= client:getChar():getID() and not table.HasValue(client.liaCharList or {}, itemCharID) then
-            -- Item belongs to same player account but different character
             client:notifyLocalized("playerCharBelonging")
             return false
         end
-        -- Allow pickup if it's from a different player account entirely
     end
 end
 
@@ -464,21 +458,15 @@ function GM:PlayerInitialSpawn(client)
         return
     end
 
-    -- Check if gamemode failed to load
     if not lia.hasGamemodeLoadedSuccessfully() then
         client:SetNoDraw(true)
         lia.config.send(client)
-
-        -- Send failure information to client
         local failureInfo = lia.getLoadingFailureInfo()
         net.Start("liaLoadingFailure")
         net.WriteString(failureInfo and failureInfo.reason or "Unknown Error")
         net.WriteString(failureInfo and failureInfo.details or "The server failed to load properly")
-
-        -- Send error list
         local errors = failureInfo and failureInfo.errors or {}
-        net.WriteUInt(#errors, 8) -- Max 255 errors
-
+        net.WriteUInt(#errors, 8)
         for _, err in ipairs(errors) do
             net.WriteString(err.message or "Unknown error")
             net.WriteString(tostring(err.line or "N/A"))
@@ -486,7 +474,6 @@ function GM:PlayerInitialSpawn(client)
         end
 
         net.Send(client)
-
         hook.Run("PostPlayerInitialSpawn", client)
         return
     end
@@ -1046,9 +1033,7 @@ function GM:InitializedModules()
 end
 
 function GM:LiliaTablesLoaded()
-    -- Set database tables as loaded
     lia.loadingState.databaseTablesLoaded = true
-
     local function loadDataSafely()
         local success, errorMsg = pcall(function()
             lia.db.addDatabaseFields()
@@ -1209,14 +1194,9 @@ concommand.Add("lia_wipestorages", function(client)
     else
         wipeStoragesCalled = 0
         MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipeStoragesConsoleProgress") .. "\n")
-
         local storageCount = 0
         local itemCount = 0
-
-        -- Find all storage entities
         local storageEntities = ents.FindByClass("lia_storage")
-
-        -- Count items in storage inventories first
         for _, storage in ipairs(storageEntities) do
             local invID = storage:getNetVar("inv")
             if invID then
@@ -1229,7 +1209,6 @@ concommand.Add("lia_wipestorages", function(client)
             end
         end
 
-        -- Also check vehicle trunks and other storage inventories
         for _, inventory in pairs(lia.inventory.instances) do
             if inventory.isStorage then
                 storageCount = storageCount + 1
@@ -1239,7 +1218,6 @@ concommand.Add("lia_wipestorages", function(client)
             end
         end
 
-        -- Wipe all storage inventories
         for _, storage in ipairs(storageEntities) do
             local invID = storage:getNetVar("inv")
             if invID then
@@ -1250,11 +1228,8 @@ concommand.Add("lia_wipestorages", function(client)
             end
         end
 
-        -- Also delete any other storage inventories that might not be attached to entities
         for id, inventory in pairs(lia.inventory.instances) do
-            if inventory.isStorage then
-                lia.inventory.deleteByID(id)
-            end
+            if inventory.isStorage then lia.inventory.deleteByID(id) end
         end
 
         MsgC(Color(0, 255, 0), "[Lilia] " .. L("wipeStoragesConsoleComplete", storageCount, itemCount) .. "\n")
@@ -1355,11 +1330,7 @@ concommand.Add("lia_autoremove_underscore_columns", function(client)
     end
 
     MsgC(Color(0, 255, 0), "[Lilia] Starting auto-remove underscore columns process...\n")
-    lia.db.autoRemoveUnderscoreColumns():next(function()
-        MsgC(Color(0, 255, 0), "[Lilia] Auto-remove underscore columns process completed.\n")
-    end):catch(function(err)
-        MsgC(Color(255, 0, 0), "[Lilia] Error during auto-remove process: ", err, "\n")
-    end)
+    lia.db.autoRemoveUnderscoreColumns():next(function() MsgC(Color(0, 255, 0), "[Lilia] Auto-remove underscore columns process completed.\n") end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] Error during auto-remove process: ", err, "\n") end)
 end)
 
 concommand.Add("lia_check_loading_status", function(client)
@@ -1374,12 +1345,9 @@ concommand.Add("lia_check_loading_status", function(client)
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Modules Initialized: ", lia.loadingState.modulesInitialized and "YES" or "NO", "\n")
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Files Loaded: ", lia.loadingState.filesLoaded and "YES" or "NO", "\n")
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "- Overall Status: ", lia.hasGamemodeLoadedSuccessfully() and "SUCCESS" or "FAILED", "\n")
-
     if lia.loadingState.loadingFailed then
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "- Failure Reason: ", lia.loadingState.failureReason, "\n")
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "- Failure Details: ", lia.loadingState.failureDetails, "\n")
-
-        -- Show logged errors
         if lia.loadingState.errors and #lia.loadingState.errors > 0 then
             MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "- Logged Errors:\n")
             for i, err in ipairs(lia.loadingState.errors) do

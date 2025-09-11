@@ -677,75 +677,74 @@ if SERVER then
                 if not charId then
                     lia.error(L("invalidCharacterID", v.name or "nil"))
                 else
+                    local charData = {}
+                    for k2, v2 in pairs(lia.char.vars) do
+                        if v2.field and v[v2.field] then
+                            local value = tostring(v[v2.field])
+                            if isnumber(v2.default) then
+                                value = tonumber(value) or v2.default
+                            elseif isbool(v2.default) then
+                                value = tobool(value)
+                            elseif istable(v2.default) then
+                                value = util.JSONToTable(value)
+                            end
 
-                local charData = {}
-                for k2, v2 in pairs(lia.char.vars) do
-                    if v2.field and v[v2.field] then
-                        local value = tostring(v[v2.field])
-                        if isnumber(v2.default) then
-                            value = tonumber(value) or v2.default
-                        elseif isbool(v2.default) then
-                            value = tobool(value)
-                        elseif istable(v2.default) then
-                            value = util.JSONToTable(value)
+                            charData[k2] = value
+                        end
+                    end
+
+                    if charData.data and charData.data.rgn then
+                        charData.recognition = charData.data.rgn
+                        charData.data.rgn = nil
+                    end
+
+                    if not lia.faction.teams[charData.faction] then
+                        local defaultFaction
+                        for _, fac in pairs(lia.faction.teams) do
+                            if fac.isDefault then
+                                defaultFaction = fac
+                                break
+                            end
                         end
 
-                        charData[k2] = value
-                    end
-                end
-
-                if charData.data and charData.data.rgn then
-                    charData.recognition = charData.data.rgn
-                    charData.data.rgn = nil
-                end
-
-                if not lia.faction.teams[charData.faction] then
-                    local defaultFaction
-                    for _, fac in pairs(lia.faction.teams) do
-                        if fac.isDefault then
+                        if not defaultFaction then
+                            local _, fac = next(lia.faction.teams)
                             defaultFaction = fac
-                            break
+                        end
+
+                        if defaultFaction then
+                            charData.faction = defaultFaction.uniqueID
+                            lia.db.updateTable({
+                                faction = defaultFaction.uniqueID
+                            }, nil, "characters", "id = " .. charId)
                         end
                     end
 
-                    if not defaultFaction then
-                        local _, fac = next(lia.faction.teams)
-                        defaultFaction = fac
-                    end
-
-                    if defaultFaction then
-                        charData.faction = defaultFaction.uniqueID
-                        lia.db.updateTable({
-                            faction = defaultFaction.uniqueID
-                        }, nil, "characters", "id = " .. charId)
-                    end
-                end
-
-                characters[#characters + 1] = charId
-                local character = lia.char.new(charData, charId, client)
-                if charData.recognition then lia.char.setCharDatabase(charId, "rgn", nil) end
-                hook.Run("CharRestored", character)
-                character.vars.inv = {}
-                lia.inventory.loadAllFromCharID(charId):next(function(inventories)
-                    if #inventories == 0 then
-                        local promise = hook.Run("CreateDefaultInventory", character)
-                        assert(promise ~= nil, L("noDefaultInventory"))
-                        return promise:next(function(inventory)
-                            assert(inventory ~= nil, L("noDefaultInventory"))
-                            return {inventory}
-                        end)
-                    end
-                    return inventories
-                end, function(err)
-                    lia.information(L("failedLoadInventories", tostring(charId)))
-                    lia.information(err)
-                    if IsValid(client) then client:notifyLocalized("fixInventoryError") end
-                end):next(function(inventories)
-                    character.vars.inv = inventories
-                    lia.char.loaded[charId] = character
-                    done = done + 1
-                    if done == #results and callback then callback(characters) end
-                end)
+                    characters[#characters + 1] = charId
+                    local character = lia.char.new(charData, charId, client)
+                    if charData.recognition then lia.char.setCharDatabase(charId, "rgn", nil) end
+                    hook.Run("CharRestored", character)
+                    character.vars.inv = {}
+                    lia.inventory.loadAllFromCharID(charId):next(function(inventories)
+                        if #inventories == 0 then
+                            local promise = hook.Run("CreateDefaultInventory", character)
+                            assert(promise ~= nil, L("noDefaultInventory"))
+                            return promise:next(function(inventory)
+                                assert(inventory ~= nil, L("noDefaultInventory"))
+                                return {inventory}
+                            end)
+                        end
+                        return inventories
+                    end, function(err)
+                        lia.information(L("failedLoadInventories", tostring(charId)))
+                        lia.information(err)
+                        if IsValid(client) then client:notifyLocalized("fixInventoryError") end
+                    end):next(function(inventories)
+                        character.vars.inv = inventories
+                        lia.char.loaded[charId] = character
+                        done = done + 1
+                        if done == #results and callback then callback(characters) end
+                    end)
                 end
             end
         end)
