@@ -57,8 +57,6 @@ local function SpawnPlayer(client)
     if factionID then
         local factionInfo = lia.faction.get(factionID)
         local curMap = game.GetMap():lower()
-
-        -- Check for hardcoded spawns first (takes priority)
         if factionInfo and factionInfo.spawns and factionInfo.spawns[curMap] then
             local mapSpawns = factionInfo.spawns[curMap]
             if istable(mapSpawns) and #mapSpawns > 0 then
@@ -66,23 +64,18 @@ local function SpawnPlayer(client)
                 if data then
                     local pos = data.position or data.pos
                     local ang = data.angle or data.ang
-
                     if isvector(pos) then
-                        pos = pos + Vector(0, 0, 16) -- Add slight height offset
+                        pos = pos + Vector(0, 0, 16)
                         client:SetPos(pos)
                     end
 
-                    if isangle(ang) then
-                        client:SetEyeAngles(ang)
-                    end
-
+                    if isangle(ang) then client:SetEyeAngles(ang) end
                     hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
                     return
                 end
             end
         end
 
-        -- Fallback to dynamic spawns if no hardcoded spawns found
         MODULE:FetchSpawns():next(function(spawns)
             local factionSpawns = spawns and spawns[factionID]
             if factionSpawns and #factionSpawns > 0 then

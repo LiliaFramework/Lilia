@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetTitle(self.Title or "Item List")
     self:SetSize(self.Width or 600, self.Height or 500)

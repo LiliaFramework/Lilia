@@ -37,6 +37,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         local money = client:getChar():getMoney()
         if money < price then return false, L("canNotAfford") end
     end
+
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false
@@ -186,8 +187,6 @@ function MODULE:OnEntityLoaded(ent, data)
     ent:setNetVar("welcomeMessage", data.welcomeMessage)
     ent:setNetVar("preset", data.preset or "none")
     ent:setNetVar("animation", data.animation or "")
-
-    -- Apply preset if one is set, otherwise load saved items
     if data.preset and data.preset ~= "none" then
         ent:applyPreset(data.preset)
     else
