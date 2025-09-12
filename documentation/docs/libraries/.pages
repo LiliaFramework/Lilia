@@ -23,6 +23,7 @@ arrange:
   - lia.languages.md
   - lia.logger.md
   - lia.markup.md
+  - lia.md
   - lia.menu.md
   - lia.modularity.md
   - lia.net.md

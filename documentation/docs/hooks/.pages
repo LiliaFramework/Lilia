@@ -1,5 +1,7 @@
 arrange:
-  - gamemode_hooks.md
-  - attribute_hooks.md
-  - faction_hooks.md
-  - class_hooks.md
+  - administration.md
+  - communication_social.md
+  - configuration_modules.md
+  - database_persistence.md
+  - economy_trading.md
+  - world_environment.md

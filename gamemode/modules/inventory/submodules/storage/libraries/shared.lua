@@ -37,10 +37,16 @@ function MODULE:InitializeStorage(entity)
         local def = lia.inventory.storage[key]
         -- Fall back to generic "vehicle" key for vehicles if specific class not found
         if not def and entity:IsVehicle() then def = lia.inventory.storage["vehicle"] end
+        -- Use default fallback storage if no specific definition found
         if not def then
-            local d = deferred.new()
-            d:reject("No storage definition found for " .. key .. (entity:IsVehicle() and " or vehicle" or ""))
-            return d
+            def = {
+                name = "Storage Container",
+                invType = "GridInv",
+                invData = {
+                    w = 4,
+                    h = 4
+                }
+            }
         end
 
         if SERVER then

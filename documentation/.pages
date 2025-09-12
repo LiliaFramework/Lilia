@@ -1,7 +1,6 @@
 arrange:
   - index.md
   - installation.md
-  - definitions
   - hooks
   - libraries
   - meta

@@ -3,7 +3,7 @@ arrange:
   - entity.md
   - inventory.md
   - item.md
-  - player.md
   - panel.md
+  - player.md
   - tool.md
   - vector.md

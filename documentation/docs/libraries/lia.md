@@ -10,7 +10,7 @@ The core loader library (`lia`) provides the fundamental loading and initializat
 
 ---
 
-### lia.include
+### include
 
 **Purpose**
 
@@ -44,7 +44,7 @@ lia.include("lilia/gamemode/core/server/commands.lua", "server")
 
 ---
 
-### lia.includeDir
+### includeDir
 
 **Purpose**
 
@@ -77,7 +77,7 @@ lia.includeDir("lilia/gamemode/core/libraries", true, false, "shared")
 
 ---
 
-### lia.includeGroupedDir
+### includeGroupedDir
 
 **Purpose**
 
@@ -110,7 +110,7 @@ lia.includeGroupedDir("lilia/gamemode/core/derma", true, true, "client")
 
 ---
 
-### lia.includeEntities
+### includeEntities
 
 **Purpose**
 
@@ -140,7 +140,7 @@ lia.includeEntities("lilia/gamemode/weapons")
 
 ---
 
-### lia.error
+### error
 
 **Purpose**
 
@@ -170,7 +170,7 @@ lia.error("Database connection failed: " .. tostring(error))
 
 ---
 
-### lia.warning
+### warning
 
 **Purpose**
 
@@ -200,7 +200,7 @@ lia.warning("Invalid configuration value for: " .. configKey)
 
 ---
 
-### lia.information
+### information
 
 **Purpose**
 
@@ -230,7 +230,7 @@ lia.information("Database connection established")
 
 ---
 
-### lia.admin
+### admin
 
 **Purpose**
 
@@ -260,7 +260,7 @@ lia.admin("Admin " .. admin:Name() .. " executed command: " .. command)
 
 ---
 
-### lia.bootstrap
+### bootstrap
 
 **Purpose**
 
@@ -291,7 +291,7 @@ lia.bootstrap("Entities", "Entity registration complete")
 
 ---
 
-### lia.deprecated
+### deprecated
 
 **Purpose**
 
@@ -324,7 +324,7 @@ lia.deprecated("deprecatedMethod")
 
 ---
 
-### lia.updater
+### updater
 
 **Purpose**
 
@@ -354,7 +354,7 @@ lia.updater("Update completed successfully")
 
 ---
 
-### lia.notifyAdmin
+### notifyAdmin
 
 **Purpose**
 
@@ -384,7 +384,7 @@ lia.notifyAdmin("Player " .. player:Name() .. " attempted to exploit")
 
 ---
 
-### lia.printLog
+### printLog
 
 **Purpose**
 
@@ -415,7 +415,7 @@ lia.printLog("Player", player:Name() .. " joined the server")
 
 ---
 
-### lia.applyPunishment
+### applyPunishment
 
 **Purpose**
 
@@ -454,7 +454,7 @@ lia.applyPunishment(client, "Hacking", false, true, 0, nil, "ban_hacking")
 
 ---
 
-### lia.hasGamemodeLoadedSuccessfully
+### hasGamemodeLoadedSuccessfully
 
 **Purpose**
 
@@ -505,7 +505,7 @@ lia.command.add("checkstatus", {
 
 ---
 
-### lia.parseLuaError
+### parseLuaError
 
 **Purpose**
 
@@ -563,7 +563,7 @@ end
 
 ---
 
-### lia.addLoadingError
+### addLoadingError
 
 **Purpose**
 
@@ -611,7 +611,7 @@ end)
 
 ---
 
-### lia.getLoadingFailureInfo
+### getLoadingFailureInfo
 
 **Purpose**
 
@@ -677,7 +677,7 @@ lia.command.add("loadingstatus", {
 
 ---
 
-### lia.clearLoadingState
+### clearLoadingState
 
 **Purpose**
 
