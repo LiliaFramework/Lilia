@@ -675,7 +675,21 @@ if SERVER then
             for _, v in ipairs(results) do
                 local charId = tonumber(v.id)
                 if not charId then
-                    lia.error(L("invalidCharacterID", v.name or "nil"))
+                    -- Enhanced error message with detailed corruption information
+                    local corruptionReason = "Character ID is not a valid number"
+                    local rawId = tostring(v.id)
+                    local charName = v.name or "Unknown"
+                    local charSteamID = v.steamID or "Unknown"
+
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "=== CORRUPTED CHARACTER DETECTED ===\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Name: ", charName, "\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Raw ID: '", rawId, "' (type: ", type(v.id), ")\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "SteamID: ", charSteamID, "\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Corruption Reason: ", corruptionReason, "\n")
+                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Solution: Run 'lia_fix_characters' console command to clean up corrupted characters\n")
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "=====================================\n")
+
+                    lia.error(L("invalidCharacterID", charName))
                 else
                     local charData = {}
                     for k2, v2 in pairs(lia.char.vars) do
