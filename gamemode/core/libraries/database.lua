@@ -765,8 +765,8 @@ end
 
 if SERVER then
     concommand.Add("lia_db_status", function(ply)
-        if IsValid(ply) and not ply:IsSuperAdmin() then
-            ply:ChatPrint("You must be a super admin to use this command.")
+        if SERVER and IsValid(ply) then
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
             return
         end
 
@@ -2156,9 +2156,8 @@ function lia.db.GetCharacterTable(callback)
 end
 
 concommand.Add("lia_load_snapshot", function(ply, _, args)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_load_snapshot'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2244,9 +2243,8 @@ concommand.Add("lia_load_snapshot", function(ply, _, args)
 end)
 
 concommand.Add("lia_clear_table", function(ply, _, args)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_clear_table'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2289,9 +2287,8 @@ concommand.Add("lia_clear_table", function(ply, _, args)
 end)
 
 concommand.Add("lia_list_snapshots", function(ply, _, args)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_list_snapshots'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2331,9 +2328,8 @@ concommand.Add("lia_list_snapshots", function(ply, _, args)
 end)
 
 concommand.Add("lia_snapshot", function(ply)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_snapshot'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2396,9 +2392,8 @@ concommand.Add("lia_snapshot", function(ply)
 end)
 
 concommand.Add("lia_snapshot_table", function(ply, _, args)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_snapshot_table'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2466,9 +2461,8 @@ concommand.Add("lia_snapshot_table", function(ply, _, args)
 end)
 
 concommand.Add("lia_dbtest", function(ply)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_dbtest'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2741,9 +2735,8 @@ concommand.Add("lia_dbtest", function(ply)
 end)
 
 concommand.Add("lia_list_tables", function(ply)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_list_tables'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2835,9 +2828,8 @@ concommand.Add("lia_list_tables", function(ply)
 end)
 
 concommand.Add("lia_list_columns", function(ply, _, args)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_list_columns'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -2914,9 +2906,8 @@ concommand.Add("lia_list_columns", function(ply, _, args)
 end)
 
 concommand.Add("lia_remove_column_underscores", function(ply)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_remove_column_underscores'\n")
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
@@ -3157,16 +3148,16 @@ function lia.db.autoRemoveUnderscoreColumns()
     return d
 end
 
-concommand.Add("lia_fix_characters", function(ply, _)
-    if SERVER and IsValid(ply) and not ply:IsSuperAdmin() then
-        ply:ChatPrint("This command requires super admin privileges.")
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: Player ", ply:Nick(), " attempted to use command 'lia_fix_characters'\n")
+concommand.Add("lia_fix_characters", function(ply, _, args)
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
     end
 
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Starting Character Corruption Fix ===\n")
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
+
     lia.db.waitForTablesToLoad():next(function()
         if not lia.db.connected then
             MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Database not connected!\n")
@@ -3175,11 +3166,15 @@ concommand.Add("lia_fix_characters", function(ply, _)
 
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local schemaCondition = "schema = " .. lia.db.convertDataType(gamemode)
+
+        -- Check for corrupted characters (non-numeric IDs)
         MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Scanning for corrupted character IDs...\n")
+
         lia.db.select({"id", "name", "steamID"}, "characters", schemaCondition):next(function(data)
             local results = data.results or {}
             local corruptedChars = {}
             local validChars = 0
+
             for _, v in ipairs(results) do
                 local charId = tonumber(v.id)
                 if not charId then
@@ -3194,6 +3189,7 @@ concommand.Add("lia_fix_characters", function(ply, _)
             end
 
             MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Found ", #results, " total characters (", validChars, " valid, ", #corruptedChars, " corrupted)\n")
+
             if #corruptedChars == 0 then
                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "No corrupted characters found!\n")
                 return
@@ -3205,22 +3201,33 @@ concommand.Add("lia_fix_characters", function(ply, _)
             end
 
             MsgC(Color(255, 255, 0), "\n[Lilia] ", Color(255, 255, 255), "Starting cleanup process...\n")
+
             local deletedCount = 0
             local promises = {}
+
             for _, char in ipairs(corruptedChars) do
-                local deletePromise = lia.db.delete("characters", "id = " .. lia.db.convertDataType(char.rawId) .. " AND " .. schemaCondition):next(function()
+                local deletePromise = lia.db.delete("characters", "id = " .. lia.db.convertDataType(char.rawId) .. " AND " .. schemaCondition)
+                :next(function()
+                    -- Also delete related chardata
                     lia.db.delete("chardata", "charID = " .. lia.db.convertDataType(char.rawId)):next(function()
+                        -- Also delete related inventories
                         lia.db.select({"invID"}, "inventories", "charID = " .. lia.db.convertDataType(char.rawId)):next(function(invData)
                             local invResults = invData.results or {}
                             for _, inv in ipairs(invResults) do
                                 lia.inventory.deleteByID(tonumber(inv.invID))
                             end
-                        end):catch(function(err) MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete inventories for corrupted character ID '", char.rawId, "': ", err, "\n") end)
-                    end):catch(function(err) MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete chardata for corrupted character ID '", char.rawId, "': ", err, "\n") end)
+                        end):catch(function(err)
+                            MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete inventories for corrupted character ID '", char.rawId, "': ", err, "\n")
+                        end)
+                    end):catch(function(err)
+                        MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete chardata for corrupted character ID '", char.rawId, "': ", err, "\n")
+                    end)
 
                     deletedCount = deletedCount + 1
                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Deleted corrupted character: ", char.name, " (ID: ", char.rawId, ")\n")
-                end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to delete corrupted character ID '", char.rawId, "': ", err, "\n") end)
+                end):catch(function(err)
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to delete corrupted character ID '", char.rawId, "': ", err, "\n")
+                end)
 
                 table.insert(promises, deletePromise)
             end
@@ -3229,7 +3236,13 @@ concommand.Add("lia_fix_characters", function(ply, _)
                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "\n=== Character Corruption Fix Completed ===\n")
                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Successfully processed ", deletedCount, " corrupted character(s)\n")
                 MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Remaining valid characters: ", validChars, "\n")
-            end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Error during cleanup process: ", err, "\n") end)
-        end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to scan characters table: ", err, "\n") end)
-    end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to wait for database tables to load: ", err, "\n") end)
+            end):catch(function(err)
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Error during cleanup process: ", err, "\n")
+            end)
+        end):catch(function(err)
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to scan characters table: ", err, "\n")
+        end)
+    end):catch(function(err)
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to wait for database tables to load: ", err, "\n")
+    end)
 end)
