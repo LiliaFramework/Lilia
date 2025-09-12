@@ -171,20 +171,15 @@ function lia.db.connect(connectCallback, reconnect)
             return sqliteQuery(query, queryCallback, onError)
         end
 
-        -- Apply SQLite performance and safety PRAGMAs on connect (server only)
         if SERVER and not lia.db._pragmasApplied then
             pcall(function()
-                -- Use WAL for better concurrency and startup durability
                 sql.Query("PRAGMA journal_mode=WAL")
-                -- Balance safety and speed; NORMAL keeps durability reasonable
                 sql.Query("PRAGMA synchronous=NORMAL")
-                -- Keep temp objects in memory for speed
                 sql.Query("PRAGMA temp_store=MEMORY")
-                -- Increase page cache size (negative means KB units)
                 sql.Query("PRAGMA cache_size=-8000")
-                -- Enforce foreign keys if defined
                 sql.Query("PRAGMA foreign_keys=ON")
             end)
+
             lia.db._pragmasApplied = true
         end
 
@@ -777,9 +772,7 @@ function lia.db.loadTables()
                 type = "text"
             }
         })
-    end):next(function()
-        return lia.db.migrateDatabaseSchemas()
-    end):next(function()
+    end):next(function() return lia.db.migrateDatabaseSchemas() end):next(function()
         lia.bootstrap("Database", "Database tables loaded and migrations completed successfully")
         done()
     end):catch(function(err)
@@ -3665,7 +3658,6 @@ concommand.Add("lia_snapshot_skip", function(ply, _, args)
             return
         end
 
-        -- Filter out tables to skip
         local filteredTables = {}
         for _, tableName in ipairs(tables) do
             if not skipTables[tableName] then
@@ -3716,15 +3708,11 @@ concommand.Add("lia_snapshot_skip", function(ply, _, args)
                 end
 
                 completed = completed + 1
-                if completed >= total then
-                    sendFeedback("Selective snapshot creation completed (" .. completed .. "/" .. total .. " tables)", Color(0, 255, 0))
-                end
+                if completed >= total then sendFeedback("Selective snapshot creation completed (" .. completed .. "/" .. total .. " tables)", Color(0, 255, 0)) end
             end):catch(function(err)
                 sendFeedback("? Error processing table " .. tableName .. ": " .. err, Color(255, 0, 0))
                 completed = completed + 1
-                if completed >= total then
-                    sendFeedback("Selective snapshot creation completed with errors (" .. completed .. "/" .. total .. " tables)", Color(255, 255, 0))
-                end
+                if completed >= total then sendFeedback("Selective snapshot creation completed with errors (" .. completed .. "/" .. total .. " tables)", Color(255, 255, 0)) end
             end)
         end
     end):catch(function(err) sendFeedback("? Failed to get table list: " .. err, Color(255, 0, 0)) end)
@@ -3744,32 +3732,24 @@ concommand.Add("lia_diagnose_table", function(ply, _, args)
 
     local tableName = args[1]
     local fullTableName = tableName:StartWith("lia_") and tableName or "lia_" .. tableName
-
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Diagnosing table: ", fullTableName, " ===\n")
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
-
-    -- Step 1: Check if table exists in sqlite_master
     lia.db.query("SELECT name FROM sqlite_master WHERE type='table' AND name='" .. fullTableName .. "'", function(result)
         if result and #result > 0 then
             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table exists in sqlite_master\n")
-
-            -- Step 2: Try to get table schema
             lia.db.query("PRAGMA table_info(" .. fullTableName .. ")", function(schemaResult)
                 if schemaResult and #schemaResult > 0 then
                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table schema retrieved successfully (", #schemaResult, " columns)\n")
                     for _, col in ipairs(schemaResult) do
                         print("  - " .. col.name .. " (" .. col.type .. ")")
                     end
-                    print("")
 
-                    -- Step 3: Try to count records
+                    print("")
                     lia.db.query("SELECT COUNT(*) as count FROM " .. fullTableName, function(countResult)
                         if countResult and countResult[1] then
                             local count = countResult[1].count or 0
                             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table has ", count, " records\n")
-
-                            -- Step 4: Try a simple SELECT query
                             lia.db.select("*", tableName:gsub("^lia_", "")):next(function(selectResult)
                                 if selectResult and selectResult.results then
                                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query successful (", #selectResult.results, " records retrieved)\n")

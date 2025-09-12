@@ -616,7 +616,6 @@ if SERVER then
     end
 
     local function BootstrapLilia()
-        -- Initialize database immediately so it's available before anything else
         SetupDatabase()
         cvars.AddChangeCallback("sbox_persist", function(_, old, new)
             timer.Create("sbox_persist_change_timer", 1, 1, function()
@@ -689,7 +688,6 @@ function GM:OnReloaded()
     if timeSinceLastReload < lia.reloadCooldown then return end
     lia.lastReloadTime = currentTime
     if SERVER then
-        -- Reconnect database and wait for tables to be available before reinitializing modules
         lia.db.connect(function()
             lia.db.waitForTablesToLoad():next(function()
                 lia.module.initialize()
