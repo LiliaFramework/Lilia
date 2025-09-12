@@ -530,7 +530,6 @@ function MODULE:PopulateAdminTabs(pages)
                 panel:Clear()
                 panel:DockPadding(10, 10, 10, 10)
                 panel.Paint = function() end
-                -- Create a list view for entities
                 local entityList = panel:Add("DListView")
                 entityList:Dock(FILL)
                 entityList:SetMultiSelect(false)
@@ -538,10 +537,8 @@ function MODULE:PopulateAdminTabs(pages)
                 entityList:AddColumn(L("entityModel"))
                 entityList:AddColumn(L("entityPosition"))
                 entityList:AddColumn(L("entityCreator"))
-                -- Function to populate the entity list
                 local function populateEntities()
                     entityList:Clear()
-                    -- Get all entities on the map
                     for _, ent in ipairs(ents.GetAll()) do
                         if IsValid(ent) and not ent:IsPlayer() then
                             local creator = "N/A"
@@ -554,20 +551,16 @@ function MODULE:PopulateAdminTabs(pages)
                     end
                 end
 
-                -- Refresh button
                 local refreshButton = vgui.Create("DButton", panel)
                 refreshButton:Dock(TOP)
                 refreshButton:DockMargin(0, 0, 0, 10)
                 refreshButton:SetText(L("refresh"))
                 refreshButton:SetTall(30)
                 refreshButton.DoClick = function() populateEntities() end
-                -- Initial population
                 populateEntities()
-                -- Right-click menu for entity management
                 entityList.OnRowRightClick = function(_, _, line)
                     local menu = DermaMenu()
                     menu:AddOption(L("gotoEntity"), function()
-                        -- Find the entity by class and position
                         local entClass = line:GetColumnText(1)
                         local posText = line:GetColumnText(3)
                         local posParts = string.Split(posText, ", ")
@@ -583,13 +576,11 @@ function MODULE:PopulateAdminTabs(pages)
                     end):SetIcon("icon16/arrow_right.png")
 
                     menu:AddOption(L("removeEntity"), function()
-                        -- Find and remove the entity (server-side for security)
                         local entClass = line:GetColumnText(1)
                         local posText = line:GetColumnText(3)
                         local posParts = string.Split(posText, ", ")
                         if #posParts == 3 then
                             local pos = Vector(tonumber(posParts[1]), tonumber(posParts[2]), tonumber(posParts[3]))
-                            -- Send removal request to server for validation
                             net.Start("liaAdminRemoveEntity")
                             net.WriteString(entClass)
                             net.WriteVector(pos)

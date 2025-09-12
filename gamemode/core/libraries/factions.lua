@@ -3,10 +3,8 @@ lia.faction.indices = lia.faction.indices or {}
 lia.faction.teams = lia.faction.teams or {}
 lia.faction.groups = lia.faction.groups or {}
 local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group01/male_02.mdl", "models/player/group01/male_03.mdl", "models/player/group01/male_04.mdl", "models/player/group01/male_05.mdl", "models/player/group01/male_06.mdl", "models/player/group01/female_01.mdl", "models/player/group01/female_02.mdl", "models/player/group01/female_03.mdl", "models/player/group01/female_04.mdl", "models/player/group01/female_05.mdl", "models/player/group01/female_06.mdl"}
-
 local function validateFactionSpawns(spawns)
-    if not spawns then return true end -- No spawns defined is fine
-
+    if not spawns then return true end
     if not istable(spawns) then
         lia.log.add("Faction spawns must be a table")
         return false
@@ -29,7 +27,6 @@ local function validateFactionSpawns(spawns)
                 return false
             end
 
-            -- Check for position data
             if not spawnData.position and not spawnData.pos then
                 lia.log.add("Spawn must have 'position' or 'pos' field for spawn " .. spawnIndex .. " on map " .. mapName)
                 return false
@@ -41,7 +38,6 @@ local function validateFactionSpawns(spawns)
                 return false
             end
 
-            -- Check for angle data (optional)
             if spawnData.angle or spawnData.ang then
                 local ang = spawnData.angle or spawnData.ang
                 if not isangle(ang) then
@@ -51,17 +47,15 @@ local function validateFactionSpawns(spawns)
             end
         end
     end
-
     return true
 end
+
 function lia.faction.register(uniqueID, data)
     assert(isstring(uniqueID), L("factionUniqueIDString"))
     assert(istable(data), L("factionDataTable"))
-
-    -- Validate faction spawns if provided
     if data.spawns and not validateFactionSpawns(data.spawns) then
         lia.log.add("Invalid faction spawns format for faction: " .. uniqueID .. ". Skipping spawn registration.")
-        data.spawns = nil -- Remove invalid spawns
+        data.spawns = nil
     end
 
     local existing = lia.faction.teams[uniqueID]
@@ -111,26 +105,16 @@ end
 
 function lia.faction.getBodygroupsForModel(faction, model)
     if not faction or not faction.bodygroups then return {} end
-
-    -- Check if the exact model path is defined
-    if faction.bodygroups[model] then
-        return faction.bodygroups[model]
-    end
-
-    -- If not found, return empty table
+    if faction.bodygroups[model] then return faction.bodygroups[model] end
     return {}
 end
 
 function lia.faction.applyBodygroups(client, faction, model)
     if not IsValid(client) or not faction or not model then return end
-
     local bodygroups = lia.faction.getBodygroupsForModel(faction, model)
     if not bodygroups or table.IsEmpty(bodygroups) then return end
-
     for bodygroupIndex, bodygroupValue in pairs(bodygroups) do
-        if isnumber(bodygroupIndex) and isnumber(bodygroupValue) then
-            client:SetBodygroup(bodygroupIndex, bodygroupValue)
-        end
+        if isnumber(bodygroupIndex) and isnumber(bodygroupValue) then client:SetBodygroup(bodygroupIndex, bodygroupValue) end
     end
 end
 
@@ -159,10 +143,9 @@ function lia.faction.loadFromDir(directory)
             lia.error(L("factionMissingDesc", niceName))
         end
 
-        -- Validate faction spawns if provided
         if FACTION.spawns and not validateFactionSpawns(FACTION.spawns) then
             lia.log.add("Invalid faction spawns format for faction: " .. niceName .. ". Skipping spawn registration.")
-            FACTION.spawns = nil -- Remove invalid spawns
+            FACTION.spawns = nil
         end
 
         FACTION.name = L(FACTION.name)
@@ -397,7 +380,6 @@ FACTION_STAFF = lia.faction.register("staff", {
     weapons = {"weapon_physgun", "gmod_tool", "weapon_physcannon"}
 })
 
--- Example faction with hardcoded spawns
 FACTION_TEST = lia.faction.register("test", {
     name = "Test Faction",
     desc = "A test faction with hardcoded spawns",

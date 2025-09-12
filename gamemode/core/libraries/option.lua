@@ -104,7 +104,6 @@ function lia.option.load()
     file.CreateDir("lilia")
     local data = file.Read(path, "DATA")
     print("[LIA OPTIONS] Loading options from " .. path)
-
     if data then
         local saved = util.JSONToTable(data)
         if saved then
@@ -115,6 +114,7 @@ function lia.option.load()
                     loadedCount = loadedCount + 1
                 end
             end
+
             print("[LIA OPTIONS] Loaded " .. loadedCount .. " saved options")
         else
             print("[LIA OPTIONS] Failed to parse JSON data from file")
