@@ -2375,7 +2375,7 @@ concommand.Add("lia_snapshot", function(ply)
                     end
 
                     file.Write(filename, content)
-                    sendFeedback("? Saved " .. #result.results .. " records from " .. tableName .. " to " .. filename, Color(0, 255, 0))
+                    sendFeedback("? Saved " .. #selectResult.results .. " records from " .. tableName .. " to " .. filename, Color(0, 255, 0))
                 else
                     sendFeedback("? Failed to query table: " .. tableName, Color(255, 0, 0))
                 end
