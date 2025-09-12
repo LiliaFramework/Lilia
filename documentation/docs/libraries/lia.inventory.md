@@ -914,3 +914,85 @@ local function openTrunkInventory(client, vehicle)
     end
 end
 ```
+
+---
+
+### lia.inventory.checkOverflow
+
+**Purpose**
+
+Checks for items that overflow from an inventory due to size changes and stores them in the character's overflow data.
+
+**Parameters**
+
+* `inventory` (*Inventory*): The inventory to check for overflow.
+* `character` (*Character*): The character whose inventory is being checked.
+* `oldWidth` (*number*): The previous width of the inventory.
+* `oldHeight` (*number*): The previous height of the inventory.
+
+**Returns**
+
+* `hasOverflow` (*boolean*): True if items were moved to overflow, false otherwise.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Check inventory overflow
+local function checkInventoryOverflow(inventory, character, oldW, oldH)
+    local hasOverflow = lia.inventory.checkOverflow(inventory, character, oldW, oldH)
+    if hasOverflow then
+        print("Items moved to overflow storage")
+        return true
+    else
+        print("No overflow detected")
+        return false
+    end
+end
+
+-- Use when resizing inventory
+local function resizeInventory(character, newWidth, newHeight)
+    local inventory = character:getInventory()
+    if inventory then
+        local oldW, oldH = inventory:getSize()
+        inventory:setSize(newWidth, newHeight)
+        local hasOverflow = lia.inventory.checkOverflow(inventory, character, oldW, oldH)
+        if hasOverflow then
+            character:sendMessage("Some items were moved to overflow storage due to inventory resize")
+        end
+        return hasOverflow
+    end
+    return false
+end
+
+-- Check overflow on character load
+local function onCharacterLoaded(client, character)
+    local inventory = character:getInventory()
+    if inventory then
+        local width, height = inventory:getSize()
+        local hasOverflow = lia.inventory.checkOverflow(inventory, character, width, height)
+        if hasOverflow then
+            client:notify("Some items were moved to overflow storage")
+        end
+    end
+end
+
+-- Handle inventory overflow cleanup
+local function cleanupOverflow(character)
+    local overflowData = character:getData("overflowItems")
+    if overflowData then
+        local inventory = character:getInventory()
+        if inventory then
+            for _, itemInfo in ipairs(overflowData.items) do
+                -- Attempt to restore items to inventory
+                inventory:add(itemInfo.uniqueID, itemInfo.quantity, itemInfo.data)
+            end
+            character:setData("overflowItems", nil)
+            print("Overflow items restored to inventory")
+        end
+    end
+end
+```

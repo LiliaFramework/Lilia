@@ -1040,6 +1040,80 @@ end
 
 ---
 
+### lia.db.query
+
+**Purpose**
+
+Executes a database query with automatic queuing and connection management.
+
+**Parameters**
+
+* `query` (*string*): The SQL query string.
+* `callback` (*function*): Optional callback function to handle the query result.
+* `onError` (*function*): Optional error callback function.
+
+**Returns**
+
+* `promise` (*Promise*): A promise object that resolves with the query results.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Execute a simple query
+local function executeQuery()
+    lia.db.query("SELECT * FROM lia_players WHERE steamid = 'STEAM_0:1:12345678'", function(results)
+        if results then
+            print("Query successful, found " .. #results .. " results")
+            for _, row in ipairs(results) do
+                print("Player: " .. row.name)
+            end
+        end
+    end, function(err)
+        print("Query failed: " .. err)
+    end)
+end
+
+-- Use with promise
+local function getPlayerCount()
+    return lia.db.query("SELECT COUNT(*) as count FROM lia_players"):next(function(result)
+        local count = result.results[1].count
+        print("Total players: " .. count)
+        return count
+    end):catch(function(err)
+        print("Failed to get player count: " .. err)
+        return 0
+    end)
+end
+
+-- Insert data
+local function addPlayer(steamid, name)
+    lia.db.query("INSERT INTO lia_players (steamid, name, join_time) VALUES ('" .. steamid .. "', '" .. name .. "', " .. os.time() .. ")", function(results, lastID)
+        print("Player added with ID: " .. lastID)
+    end)
+end
+
+-- Update data
+local function updatePlayerLastSeen(steamid)
+    lia.db.query("UPDATE lia_players SET last_seen = " .. os.time() .. " WHERE steamid = '" .. steamid .. "'", function(results)
+        print("Player last seen updated")
+    end)
+end
+
+-- Use in a transaction
+local function transferItems(fromPlayer, toPlayer, itemID, quantity)
+    lia.db.query("BEGIN TRANSACTION")
+    lia.db.query("UPDATE lia_inventory SET quantity = quantity - " .. quantity .. " WHERE player_id = '" .. fromPlayer .. "' AND item_id = '" .. itemID .. "'")
+    lia.db.query("UPDATE lia_inventory SET quantity = quantity + " .. quantity .. " WHERE player_id = '" .. toPlayer .. "' AND item_id = '" .. itemID .. "'")
+    lia.db.query("COMMIT")
+end
+```
+
+---
+
 ### lia.db.addDatabaseFields
 
 **Purpose**

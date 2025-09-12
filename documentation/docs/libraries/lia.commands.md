@@ -424,247 +424,297 @@ end
 
 ---
 
-### lia.command.findPlayer
+## Definitions
 
-**Purpose**
+# Command Fields
 
-Finds a player by name or SteamID.
+This document describes the table passed to `lia.command.add`.  Each key in the
 
-**Parameters**
+table customizes how the command behaves, who can run it and how it appears in
 
-* `client` (*Player*): The client requesting the search.
-* `identifier` (*string*): The player identifier to search for.
+admin utilities.
 
-**Returns**
+All fields are optional unless noted otherwise.
 
-* `player` (*Player*): The found player or nil.
+---
 
-**Realm**
+## Overview
 
-Server.
+When you register a command with `lia.command.add`, you provide a table of
 
-**Example Usage**
+fields controlling its name, permissions and execution.  Except for
+
+`onRun`, every field is optional.
+
+The command name itself is the first argument to `lia.command.add` and is stored in lowercase.
+
+---
+
+## Field Summary
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `alias` | `string` or `table` | `nil` | Alternative names for the command. |
+| `adminOnly` | `boolean` | `false` | Restrict to admins (registers a CAMI privilege). |
+| `superAdminOnly` | `boolean` | `false` | Restrict to superadmins (registers a CAMI privilege). |
+| `privilege` | `string` | `nil` | Custom CAMI privilege name (defaults to command name). |
+| `arguments` | `table` | `{}` | Ordered argument definitions used to build help text. |
+| `desc` | `string` | `""` | Short description shown in command lists and menus. |
+| `AdminStick` | `table` | `nil` | Defines how the command appears in admin utilities. |
+| `onRun(client, args)` | `function(client, table)` | **required** | Function executed when the command is invoked. |
+
+---
+
+## Field Details
+
+### Aliases & Permissions
+
+#### `alias`
+
+**Type:**
+
+`string` or `table`
+
+**Description:**
+
+One or more alternative command names that trigger the same behavior.
+
+Aliases are automatically lower-cased and behave exactly like the main command name.
+
+**Example Usage:**
 
 ```lua
--- Find a player by name
-local function findPlayerByName(client, name)
-    return lia.command.findPlayer(client, name)
-end
+-- as a single string
+alias = "chargiveflag"
 
--- Use in a command
-lia.command.add("teleport", {
-    arguments = {
-        {name = "player", type = "string"}
-    },
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if target then
-            client:SetPos(target:GetPos())
-            client:notify("Teleported to " .. target:Name())
-        else
-            client:notify("Player not found")
-        end
-    end
-})
+-- or multiple aliases
+alias = {"chargiveflag", "giveflag"}
+```
 
--- Use in a function
-local function teleportToPlayer(client, playerName)
-    local target = lia.command.findPlayer(client, playerName)
+**Note:** When using aliases with `adminOnly` or `superAdminOnly`, privileges are automatically registered for each alias. For example, if a command has `adminOnly = true` and alias `"testcmd"`, the privilege `command_testcmd` will be registered and required to use that alias.
+
+---
+
+#### `adminOnly`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, only players with the generated CAMI privilege may run the command. The privilege name is automatically registered as `Commands - <privilege>`.
+
+**Example Usage:**
+
+```lua
+adminOnly = true
+```
+
+---
+
+#### `superAdminOnly`
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, only superadmins with the automatically registered privilege `Commands - <privilege>` can use the command.
+
+**Example Usage:**
+
+```lua
+superAdminOnly = true
+```
+
+---
+
+#### `privilege`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Custom CAMI privilege name checked when running the command. If omitted, `adminOnly` or `superAdminOnly` register `Commands - <command name>`.
+
+**Example Usage:**
+
+```lua
+privilege = "Manage Doors"
+```
+
+---
+
+### Arguments & Description
+
+#### `arguments`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Ordered list defining each command argument. Every entry may contain:
+
+* `name` – Argument name shown to the user.
+* `type` – One of `player`, `bool`, `table`, or `string`.
+* `optional` – Set to `true` if the argument is optional.
+* `description` – Optional human-readable help text.
+* `options` – Table or function returning options for `table` type.
+* `filter` – Function to filter players for `player` type.
+
+The displayed syntax string is generated automatically from these definitions.
+
+**Example Usage:**
+
+```lua
+arguments = {
+    {name = "target", type = "player"},
+    {name = "reason", type = "string", optional = true}
+}
+```
+
+---
+
+#### `desc`
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Short description of what the command does, displayed in command lists and menus.
+
+**Example Usage:**
+
+```lua
+desc = "Purchase a door if it is available and you can afford it."
+```
+
+---
+
+### AdminStick Integration
+
+#### `AdminStick`
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Defines how the command appears in admin utility menus. Common keys:
+
+All keys are optional; if omitted the command simply will not appear in the Admin Stick menu.
+
+* `Name` (string) – Text shown on the menu button.
+
+* `Category` (string) – Top-level grouping.
+
+* `SubCategory` (string) – Secondary grouping under the main category.
+
+* `Icon` (string) – 16×16 icon path.
+
+* `TargetClass` (string) – Limit the command to a specific entity class when using the Admin Stick.
+
+Custom categories and subcategories can be added through the Administration module using
+`addAdminStickCategory(key, data)` and `addAdminStickSubCategory(category, key, data)`.
+
+**Example Usage:**
+
+```lua
+AdminStick = {
+    Name        = "Restock Vendor",
+    Category    = "Vendors",
+    SubCategory = "Management",
+    Icon        = "icon16/box.png",
+    TargetClass = "lia_vendor"
+}
+```
+
+---
+
+### Execution Hook
+
+#### `onRun`
+
+**Type:**
+
+`function(client, table)`
+
+**Description:**
+
+Function called when the command is executed. `args` is a table of parsed arguments. Return a string to send a message back to the caller, or return nothing for silent execution.
+
+Strings starting with `@` are interpreted as localization keys for `notifyLocalized`.
+
+**Example Usage:**
+
+```lua
+onRun = function(client, arguments)
+    local target = lia.util.findPlayer(client, arguments[1])
     if target then
-        client:SetPos(target:GetPos())
-        return true
-    end
-    return false
-end
-```
-
----
-
-### lia.command.get
-
-**Purpose**
-
-Gets a command by name.
-
-**Parameters**
-
-* `name` (*string*): The name of the command to get.
-
-**Returns**
-
-* `command` (*table*): The command data table or nil.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Get a command
-local function getCommand(name)
-    return lia.command.get(name)
-end
-
--- Use in a function
-local function checkCommandExists(name)
-    local command = lia.command.get(name)
-    return command ~= nil
-end
-
--- Use in command help
-local function showCommandHelp(commandName)
-    local command = lia.command.get(commandName)
-    if command then
-        print("Command: " .. commandName)
-        print("Arguments: " .. (command.arguments and table.concat(command.arguments, " ") or "None"))
+        target:Kill()
     end
 end
 ```
 
 ---
 
-### lia.command.list
-
-**Purpose**
-
-Gets a list of all registered commands.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-* `commands` (*table*): Table of all registered commands.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
+### Full Command Example
 
 ```lua
--- Get all commands
-local function getAllCommands()
-    return lia.command.list()
-end
-
--- Use in a function
-local function showAllCommands()
-    local commands = lia.command.list()
-    for name, command in pairs(commands) do
-        print("Command: " .. name)
-    end
-end
-
--- Use in a command browser
-local function createCommandBrowser()
-    local commands = lia.command.list()
-    local list = vgui.Create("DListView")
-    
-    for name, command in pairs(commands) do
-        list:AddLine(name, command.privilege or "None")
-    end
-    
-    return list
-end
-```
-
----
-
-### lia.command.remove
-
-**Purpose**
-
-Removes a command from the command system.
-
-**Parameters**
-
-* `name` (*string*): The name of the command to remove.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Remove a command
-local function removeCommand(name)
-    lia.command.remove(name)
-end
-
--- Use in a function
-local function cleanupCommands()
-    local commandsToRemove = {"oldcommand1", "oldcommand2"}
-    for _, name in ipairs(commandsToRemove) do
-        lia.command.remove(name)
-    end
-end
-
--- Use in a command
-lia.command.add("removecommand", {
-    arguments = {
-        {name = "command", type = "string"}
+lia.command.add("restockvendor", {
+    superAdminOnly = true,                -- restrict to super administrators
+    privilege = "Manage Vendors",        -- custom privilege checked before run
+    desc = "Restock the vendor you are looking at.", -- shown in command lists
+    arguments = {{name = "target", type = "player"}}, -- argument definition
+    alias = {"vendorrestock"},           -- other names that trigger the command
+    AdminStick = {
+        Name        = "Restock Vendor",  -- text on the Admin Stick button
+        Category    = "Vendors",        -- top-level category
+        SubCategory = "Management",     -- subcategory in the menu
+        Icon        = "icon16/box.png",  -- icon displayed next to the entry
+        TargetClass = "lia_vendor"       -- only usable when aiming at this class
     },
-    privilege = "Admin Access",
-    onRun = function(client, arguments)
-        lia.command.remove(arguments[1])
-        client:notify("Command removed: " .. arguments[1])
+    onRun = function(client, args)
+        -- grab the entity the admin is looking at
+        local vendor = client:getTracedEntity()
+        if IsValid(vendor) and vendor:GetClass() == "lia_vendor" then
+            -- reset all purchasable item stock counts
+            for id, itemData in pairs(vendor.items) do
+                if itemData[2] and itemData[4] then
+                    vendor.items[id][2] = itemData[4]
+                end
+            end
+            client:notifyLocalized("vendorRestocked")
+        else
+            client:notifyLocalized("NotLookingAtValidVendor")
+        end
     end
 })
 ```
 
 ---
 
-### lia.command.clear
-
-**Purpose**
-
-Clears all registered commands.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
 ```lua
--- Clear all commands
-local function clearAllCommands()
-    lia.command.clear()
-end
-
--- Use in a function
-local function resetCommands()
-    lia.command.clear()
-    -- Re-register default commands
-    lia.command.add("hello", {
-        onRun = function(client, arguments)
-            client:notify("Hello!")
+lia.command.add("goto", {
+    adminOnly = true,                    -- only admins may run this command
+    arguments = {{name = "target", type = "player"}}, -- argument definition
+    desc = "Teleport to the specified player.", -- short description
+    onRun = function(client, args)
+        -- look up the target player from the first argument
+        local target = lia.util.findPlayer(client, args[1])
+        if not target then
+            return "@targetNotFound"     -- localization key sent when player missing
         end
-    })
-end
-
--- Use in a command
-lia.command.add("resetcommands", {
-    privilege = "Admin Access",
-    onRun = function(client, arguments)
-        lia.command.clear()
-        client:notify("All commands cleared")
+        client:SetPos(target:GetPos())   -- move to the target's position
     end
 })
 ```

@@ -159,39 +159,3 @@ local function showImageStats()
     print("Last reset: " .. os.date("%c", stats.lastReset))
 end
 ```
-
----
-
-### lia.webimage.stored
-
-**Purpose**
-
-Stores registered image data.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-* `stored` (*table*): Table of stored image data.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Get stored images
-local function getStoredImages()
-    return lia.webimage.stored
-end
-
--- Use in a function
-local function listStoredImages()
-    for name, data in pairs(lia.webimage.stored) do
-        print("Image: " .. name .. " - " .. data.url)
-    end
-end
-```

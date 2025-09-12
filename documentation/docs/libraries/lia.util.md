@@ -10,41 +10,6 @@ The util library (`lia.util`) provides a comprehensive system for managing utili
 
 ---
 
-### lia.util.FindPlayersInBox
-
-**Purpose**
-
-Finds players within a box area.
-
-**Parameters**
-
-* `position` (*Vector*): The center position.
-* `size` (*Vector*): The box size.
-
-**Returns**
-
-* `players` (*table*): Table of players in the box.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Find players in box
-local function findPlayersInBox(position, size)
-    return lia.util.FindPlayersInBox(position, size)
-end
-
--- Use in a function
-local function findPlayersNearPosition(pos, radius)
-    local size = Vector(radius * 2, radius * 2, radius * 2)
-    return lia.util.FindPlayersInBox(pos, size)
-end
-```
-
----
 
 ### lia.util.getBySteamID
 

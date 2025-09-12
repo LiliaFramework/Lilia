@@ -469,4 +469,934 @@ local function buildClassMenu(client)
         print("Adding class to menu:", class.name)
     end
 end
+
+---
+
+## Definitions
+
+# Class Fields
+
+This document describes all configurable `CLASS` fields in the codebase. Each field controls a specific aspect of how a class behaves, appears, or is granted to players. Unspecified fields will use sensible defaults.
+
+---
+
+## Overview
+
+The global `CLASS` table defines per-class settings such as display name, lore, starting equipment, pay parameters, movement speeds, and visual appearance. Use these fields to fully customize each class's behavior and presentation.
+
+---
+
+### CLASS.name
+
+**Type:**
+
+`string`
+
+**Description:**
+
+The displayed name of the class.
+
+**Example Usage:**
+
+```lua
+CLASS.name = "Engineer"
+```
+
+---
+
+### CLASS.desc
+
+**Type:**
+
+`string`
+
+**Description:**
+
+The description or lore of the class.
+
+**Example Usage:**
+
+```lua
+CLASS.desc = "Technicians who maintain equipment."
+```
+
+---
+
+### CLASS.uniqueID
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Internal identifier used when referencing the class. If omitted, it defaults to the file name this class was loaded from.
+
+**Example Usage:**
+
+```lua
+CLASS.uniqueID = "engineer"
+```
+
+---
+
+### CLASS.index
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Unique numeric identifier (team index) for the class.
+
+**Example Usage:**
+
+```lua
+CLASS.index = CLASS_ENGINEER
+```
+
+---
+
+### CLASS.isDefault
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Determines if the class is available to all players by default.
+
+**Example Usage:**
+
+```lua
+CLASS.isDefault = true
+```
+
+---
+
+### CLASS.isWhitelisted
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Indicates if the class requires a whitelist entry to be accessible.
+
+**Example Usage:**
+
+```lua
+CLASS.isWhitelisted = false
+```
+
+---
+
+### CLASS.faction
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Links this class to a specific faction index. This field is required; registration fails if the faction is missing or invalid.
+
+**Example Usage:**
+
+```lua
+CLASS.faction = FACTION_CITIZEN
+```
+
+---
+
+### CLASS.color
+
+**Type:**
+
+`Color`
+
+**Description:**
+
+UI color representing the class. When omitted, the faction's color is used.
+
+**Example Usage:**
+
+```lua
+CLASS.color = Color(255, 0, 0)
+```
+
+---
+
+### CLASS.weapons
+
+**Type:**
+
+`string` or `table`
+
+**Description:**
+
+Weapons granted to members of this class on spawn. Supply a single weapon class or a table of weapon class strings.
+
+**Example Usage:**
+
+```lua
+-- give two weapons
+CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
+-- or grant one weapon
+CLASS.weapons = "weapon_pistol"
+```
+
+### CLASS.pay
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Payment amount issued per pay interval.
+
+**Example Usage:**
+
+```lua
+CLASS.pay = 50
+```
+
+---
+
+### CLASS.payLimit
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Maximum accumulated pay a player can hold.
+
+**Example Usage:**
+
+```lua
+CLASS.payLimit = 1000
+```
+
+---
+
+---
+
+### CLASS.limit
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Maximum number of players allowed in this class simultaneously.
+
+**Example Usage:**
+
+```lua
+CLASS.limit = 10
+```
+
+---
+
+### CLASS.health
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Overrides the player's starting health when they spawn as this class. If omitted, health is unchanged.
+
+**Example Usage:**
+
+```lua
+CLASS.health = 150
+```
+
+---
+
+### CLASS.armor
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Overrides the player's starting armor. If omitted, armor remains unchanged.
+
+**Example Usage:**
+
+```lua
+CLASS.armor = 50
+```
+
+---
+
+### CLASS.scale
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Multiplier for player model size.
+
+**Example Usage:**
+
+```lua
+CLASS.scale = 1.2
+```
+
+---
+
+### CLASS.runSpeed
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Overrides or multiplies the player's running speed. Set a number to replace the speed or a multiplier when used with `runSpeedMultiplier`. If unset, the run speed is unchanged.
+
+**Example Usage:**
+
+```lua
+-- explicit speed value
+CLASS.runSpeed = 250
+OR
+-- 25% faster than the base run speed
+CLASS.runSpeed = 1.25
+CLASS.runSpeedMultiplier = true
+```
+
+---
+
+### CLASS.runSpeedMultiplier
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Multiply base run speed instead of replacing it.
+
+**Example Usage:**
+
+```lua
+CLASS.runSpeedMultiplier = true
+```
+
+---
+
+### CLASS.walkSpeed
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Overrides or multiplies the player's walking speed. If unset, the walk speed is unchanged.
+
+**Example Usage:**
+
+```lua
+CLASS.walkSpeed = 200
+```
+
+---
+
+### CLASS.walkSpeedMultiplier
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Multiply base walk speed instead of replacing it.
+
+**Example Usage:**
+
+```lua
+CLASS.walkSpeedMultiplier = false
+```
+
+---
+
+### CLASS.jumpPower
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Overrides or multiplies the player's jump power. If unset, the jump power is unchanged.
+
+**Example Usage:**
+
+```lua
+CLASS.jumpPower = 200
+```
+
+---
+
+### CLASS.jumpPowerMultiplier
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Multiply base jump power instead of replacing it.
+
+**Example Usage:**
+
+```lua
+CLASS.jumpPowerMultiplier = true
+```
+
+---
+
+### CLASS.bloodcolor
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Blood color enumeration constant for this class.
+
+**Example Usage:**
+
+```lua
+CLASS.bloodcolor = BLOOD_COLOR_RED
+```
+
+---
+
+### CLASS.bodyGroups
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Mapping of bodygroup names to index values applied when the player spawns. If omitted, bodygroups are not modified.
+
+**Example Usage:**
+
+```lua
+CLASS.bodyGroups = {
+    hands = 2, -- apply option 2 to the "hands" bodygroup
+    torso = 0  -- index value 0 keeps the default option
+}
+```
+
+---
+
+### CLASS.logo
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Path to the material used as this class's logo. When `nil`, no logo is displayed in the scoreboard or F1 menu.
+
+**Example Usage:**
+
+```lua
+CLASS.logo = "materials/example/eng_logo.png"
+```
+
+---
+
+### CLASS.scoreboardHidden
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, this class will not display a header or logo on the scoreboard.
+
+**Example Usage:**
+
+```lua
+CLASS.scoreboardHidden = true
+```
+
+---
+
+### CLASS.skin
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Model skin index to apply to members of this class.
+
+**Example Usage:**
+
+```lua
+CLASS.skin = 2
+```
+
+---
+
+### CLASS.subMaterials
+
+**Type:**
+
+`table`
+
+**Description:**
+
+List of material paths that replace the model's sub-materials. The first entry applies to sub-material `0`, the second to `1`, and so on. Leave `nil` for no overrides.
+
+**Example Usage:**
+
+```lua
+CLASS.subMaterials = {
+    "models/example/custom_cloth", -- sub-material 0
+    "models/example/custom_armor" -- sub-material 1
+}
+```
+
+---
+
+### CLASS.model
+
+**Type:**
+
+`string` or `table`
+
+**Description:**
+
+Model path (or list of paths) assigned to this class. When omitted, the character's existing model is used.
+
+**Example Usage:**
+
+```lua
+CLASS.model = "models/player/alyx.mdl"
+```
+
+---
+
+### CLASS.requirements
+
+**Type:**
+
+`string` or `table`
+
+**Description:**
+
+Text displayed to the player describing what is needed to join this class. Accepts a string or list of strings. This field does not restrict access on its own.
+
+**Example Usage:**
+
+```lua
+-- single requirement string
+CLASS.requirements = "Flag V"
+-- or list multiple requirements
+CLASS.requirements = {"Flag V", "Engineering 25+"}
+```
+
+---
+
+### CLASS.commands
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Table of command names that members of this class may always use,
+
+overriding standard command permissions. If omitted, no extra commands are granted.
+
+**Example Usage:**
+
+```lua
+CLASS.commands = {
+    plytransfer = true,
+}
+```
+
+### CLASS.canInviteToFaction
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Whether members of this class can invite players to join their faction.
+
+**Example Usage:**
+
+```lua
+CLASS.canInviteToFaction = true
+```
+
+---
+
+### CLASS.canInviteToClass
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Whether members of this class can invite players to join this class.
+
+**Example Usage:**
+
+```lua
+CLASS.canInviteToClass = true
+```
+
+---
+
+### CLASS.OnCanBe(client)
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Optional callback executed when a player attempts to join the class. `self` is the class table. Return `false` to block the player from joining.
+
+**Example Usage:**
+
+```lua
+function CLASS:OnCanBe(client)
+    return client:IsAdmin()
+end
+```
+
+---
+
+## Example
+
+```lua
+-- schema/classes/engineer.lua
+CLASS.name = "Engineer"
+CLASS.desc = "Technicians who maintain complex machinery."
+CLASS.faction = FACTION_CITIZEN
+CLASS.isDefault = true
+CLASS.color = Color(150, 150, 255)
+CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
+CLASS.pay = 25
+CLASS.payLimit = 250
+CLASS.limit = 5
+CLASS.health = 120
+CLASS.armor = 25
+CLASS.scale = 1
+CLASS.runSpeed = 1.1
+CLASS.runSpeedMultiplier = true
+CLASS.walkSpeed = 1
+CLASS.walkSpeedMultiplier = true
+CLASS.jumpPower = 200
+CLASS.jumpPowerMultiplier = false
+CLASS.logo = "materials/example/eng_logo.png"
+CLASS.scoreboardHidden = true
+CLASS.skin = 0
+CLASS.subMaterials = {
+    "models/example/custom_cloth", -- sub-material 0
+    "models/example/custom_armor" -- sub-material 1
+}
+CLASS.bodyGroups = {
+    hands = 2, -- apply option 2 to the "hands" bodygroup
+    torso = 0  -- index value 0 keeps the default option
+}
+CLASS.model = {
+    "models/player/Group03/male_07.mdl",
+    "models/player/Group03/female_02.mdl"
+}
+CLASS.requirements = "Flag V"
+CLASS.isWhitelisted = false
+CLASS.uniqueID = "engineer"
+CLASS.index = CLASS_ENGINEER
+CLASS.bloodcolor = BLOOD_COLOR_RED
+CLASS.commands = {
+    plytransfer = true
+}
+CLASS.canInviteToFaction = true
+CLASS.canInviteToClass = true
+```
+
+---
+
+### CLASS:OnCanBe
+
+**Purpose**
+
+Determines whether a player is allowed to switch to this class.
+
+**Parameters**
+
+* `client` (*Player*): The player attempting to switch.
+
+**Returns**
+
+* `boolean?` (*boolean*): Return `false` to deny the change.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+function CLASS:OnCanBe(client)
+    -- Only allow admins or players that own the "V" flag.
+    if client:IsAdmin() then
+        return true
+    end
+
+    local char = client:getChar()
+    if char and char:hasFlags("V") then
+        return true
+    end
+
+    -- Returning false prevents the switch.
+    return false
+end
+```
+
+---
+
+### CLASS:OnLeave
+
+**Purpose**
+
+Runs on the previous class after a player successfully changes classes.
+
+**Parameters**
+
+* `client` (*Player*): The player who has left the class.
+
+**Returns**
+
+* `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+function CLASS:OnLeave(client)
+    -- Strip any class-specific weapons.
+    client:StripWeapon("weapon_pistol")
+
+    -- Restore the player's previous model before the class change.
+    local char = client:getChar()
+    if char and self.model then
+        char:setModel(char:getData("model", char:getModel()))
+    end
+
+    -- Reset movement speeds back to the config defaults.
+    client:SetWalkSpeed(lia.config.get("WalkSpeed"))
+    client:SetRunSpeed(lia.config.get("RunSpeed"))
+end
+```
+
+---
+
+### CLASS:OnSet
+
+**Purpose**
+
+Executes immediately after a player joins this class.
+
+**Parameters**
+
+* `client` (*Player*): The player who has joined the class.
+
+**Returns**
+
+* `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+function CLASS:OnSet(client)
+    local char = client:getChar()
+
+    -- Apply the class model and give a starter pistol.
+    if char and self.model then
+        char:setModel(self.model)
+    end
+    client:Give("weapon_pistol")
+
+    -- Initialize base stats from the class definition.
+    if self.health then
+        client:SetHealth(self.health)
+        client:SetMaxHealth(self.health)
+    end
+    if self.armor then
+        client:SetArmor(self.armor)
+    end
+end
+```
+
+---
+
+### CLASS:OnSpawn
+
+**Purpose**
+
+Runs each time a member of this class respawns.
+
+**Parameters**
+
+* `client` (*Player*): The player who has just spawned.
+
+**Returns**
+
+* `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+function CLASS:OnSpawn(client)
+    -- Apply the class load-out and stats every respawn.
+    client:SetMaxHealth(self.health or 150)
+    client:SetHealth(client:GetMaxHealth())
+    client:SetArmor(self.armor or 50)
+
+    for _, wep in ipairs(self.weapons or {}) do
+        client:Give(wep)
+    end
+
+    if self.runSpeed then
+        client:SetRunSpeed(self.runSpeed)
+    end
+    if self.walkSpeed then
+        client:SetWalkSpeed(self.walkSpeed)
+    end
+end
+```
+
+---
+
+### CLASS:OnTransferred
+
+**Purpose**
+
+Fires when a player is moved into this class from another.
+
+**Parameters**
+
+* `client` (*Player*): The player who was transferred.
+* `oldClass` (*number*): Index of the previous class.
+
+**Returns**
+
+* `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+function CLASS:OnTransferred(client, oldClass)
+    local char = client:getChar()
+    if char and self.model then
+        -- Swap the model to match the new class.
+        char:setModel(self.model)
+    end
+
+    -- Record the previous class so we can switch back later if needed.
+    char:setData("previousClass", oldClass)
+end
+```
+
+---
+
+## Example
+
+```lua
+-- schema/classes/engineer.lua
+CLASS.name = "Engineer"
+CLASS.desc = "Technicians who maintain complex machinery."
+CLASS.faction = FACTION_CITIZEN
+CLASS.isDefault = true
+CLASS.color = Color(150, 150, 255)
+CLASS.weapons = {"weapon_pistol", "weapon_crowbar"}
+CLASS.pay = 25
+CLASS.payLimit = 250
+CLASS.limit = 5
+CLASS.health = 120
+CLASS.armor = 25
+CLASS.scale = 1
+CLASS.runSpeed = 1.1
+CLASS.runSpeedMultiplier = true
+CLASS.walkSpeed = 1
+CLASS.walkSpeedMultiplier = true
+CLASS.jumpPower = 200
+CLASS.jumpPowerMultiplier = false
+CLASS.logo = "materials/example/eng_logo.png"
+CLASS.scoreboardHidden = true
+CLASS.skin = 0
+CLASS.subMaterials = {
+    "models/example/custom_cloth", -- sub-material 0
+    "models/example/custom_armor" -- sub-material 1
+}
+CLASS.bodyGroups = {
+    hands = 2, -- apply option 2 to the "hands" bodygroup
+    torso = 0  -- index value 0 keeps the default option
+}
+CLASS.model = {
+    "models/player/Group03/male_07.mdl",
+    "models/player/Group03/female_02.mdl"
+}
+CLASS.requirements = "Flag V"
+CLASS.isWhitelisted = false
+CLASS.uniqueID = "engineer"
+CLASS.index = CLASS_ENGINEER
+CLASS.bloodcolor = BLOOD_COLOR_RED
+CLASS.commands = {
+    plytransfer = true
+}
+CLASS.canInviteToFaction = true
+CLASS.canInviteToClass = true
+```
 ```

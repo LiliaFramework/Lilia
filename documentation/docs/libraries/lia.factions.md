@@ -875,4 +875,858 @@ local function showWhitelistedFactions()
         end
     end
 end
+
+---
+
+## Definitions
+
+# Faction Fields
+
+This document describes all the configurable `FACTION` fields available in the codebase, with their descriptions and example usages.
+
+Unspecified fields will use sensible defaults.
+
+---
+
+## Overview
+
+Each faction in the game is defined by a set of fields on the global `FACTION` table. These fields control everything from display name and lore, to starting weapons and player statistics. All fields are optional; unspecified fields will fall back to sensible defaults.
+
+---
+
+### FACTION.name
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Display name shown for members of this faction.
+
+**Example Usage:**
+
+```lua
+FACTION.name = "Minecrafters"
+```
+
+---
+
+### FACTION.desc
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Lore or descriptive text about the faction.
+
+**Example Usage:**
+
+```lua
+FACTION.desc = "Surviving and crafting in the blocky world."
+```
+
+---
+
+### FACTION.isDefault
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Set to `true` if players may select this faction without a whitelist.
+
+**Example Usage:**
+
+```lua
+FACTION.isDefault = false
+```
+
+---
+
+### FACTION.uniqueID
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Internal string identifier for referencing the faction.
+
+**Example Usage:**
+
+```lua
+FACTION.uniqueID = "staff"
+```
+
+### FACTION.prefix
+
+**Type:**
+
+`string` or `function`
+
+**Description:**
+
+Optional prefix automatically prepended to new character names. If a function is
+
+provided, it is called with the player creating the character and should return
+
+the desired text. The result is inserted before the base name with a space and
+
+trimmed; returning `nil` or an empty string results in no prefix being applied.
+
+**Example Usage:**
+
+```lua
+FACTION.prefix = "[CIT]"
+-- or
+FACTION.prefix = function(client)
+    return client:isVIP() and "[VIP]" or ""
+end
+```
+
+---
+
+### FACTION.index
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Numeric identifier assigned during faction registration.
+
+**Example Usage:**
+
+```lua
+FACTION_STAFF = FACTION.index
+```
+
+---
+
+### FACTION.color
+
+**Type:**
+
+`Color`
+
+**Description:**
+
+Color used in UI elements to represent the faction. Defaults to `Color(150, 150, 150)` if not specified.
+
+**Example Usage:**
+
+```lua
+FACTION.color = Color(255, 56, 252)
+```
+
+---
+
+### FACTION.models
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Table of player model paths available to faction members.
+
+**Example Usage:**
+
+```lua
+FACTION.models = {
+    "models/Humans/Group02/male_07.mdl",
+    "models/Humans/Group02/female_02.mdl"
+}
+```
+
+---
+
+### FACTION.bodyGroups
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Mapping of bodygroup names to index values applied on spawn.
+
+**Example Usage:**
+
+```lua
+FACTION.bodyGroups = {
+    hands = 1,
+    torso = 3
+}
+```
+
+---
+
+### FACTION.logo
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Material path for the faction logo displayed in the scoreboard header.
+
+**Example Usage:**
+
+```lua
+FACTION.logo = "materials/factions/citizen_logo.png"
+```
+
+---
+
+### FACTION.weapons
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Weapons automatically granted on spawn.
+
+**Example Usage:**
+
+```lua
+FACTION.weapons = {"weapon_physgun", "gmod_tool"}
+```
+
+---
+
+### FACTION.items
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Item uniqueIDs automatically granted on character creation.
+
+**Example Usage:**
+
+```lua
+FACTION.items = {"radio", "handcuffs"}
+```
+
+---
+
+### FACTION.pay
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Payment amount for members each interval.
+
+**Example Usage:**
+
+```lua
+FACTION.pay = 50
+```
+
+---
+
+### FACTION.payLimit
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Maximum pay a member can accumulate.
+
+**Example Usage:**
+
+```lua
+FACTION.payLimit = 1000
+```
+
+---
+
+### FACTION.limit
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Maximum number of players allowed in this faction.
+
+**Example Usage:**
+
+```lua
+FACTION.limit = 20
+```
+
+---
+
+### FACTION.oneCharOnly
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, players may only create one character in this faction.
+
+**Example Usage:**
+
+```lua
+FACTION.oneCharOnly = true
+```
+
+---
+
+### FACTION.health
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Starting health for faction members.
+
+**Example Usage:**
+
+```lua
+FACTION.health = 150
+```
+
+---
+
+### FACTION.armor
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Starting armor for faction members.
+
+**Example Usage:**
+
+```lua
+FACTION.armor = 25
+```
+
+---
+
+### FACTION.scale
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Player model scale multiplier.
+
+**Example Usage:**
+
+```lua
+FACTION.scale = 1.1
+```
+
+---
+
+### FACTION.runSpeed
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Base running speed.
+
+**Example Usage:**
+
+```lua
+FACTION.runSpeed = 250
+```
+
+---
+
+### FACTION.runSpeedMultiplier
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, multiplies the base speed rather than replacing it.
+
+**Example Usage:**
+
+```lua
+FACTION.runSpeedMultiplier = false
+```
+
+---
+
+### FACTION.walkSpeed
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Base walking speed.
+
+**Example Usage:**
+
+```lua
+FACTION.walkSpeed = 200
+```
+
+---
+
+### FACTION.walkSpeedMultiplier
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, multiplies the base walk speed rather than replacing it.
+
+**Example Usage:**
+
+```lua
+FACTION.walkSpeedMultiplier = true
+```
+
+---
+
+### FACTION.jumpPower
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Base jump power.
+
+**Example Usage:**
+
+```lua
+FACTION.jumpPower = 200
+```
+
+---
+
+### FACTION.jumpPowerMultiplier
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, multiplies the base jump power rather than replacing it.
+
+**Example Usage:**
+
+```lua
+FACTION.jumpPowerMultiplier = true
+```
+
+---
+
+### FACTION.MemberToMemberAutoRecognition
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+Whether faction members automatically recognize each other on sight.
+
+**Example Usage:**
+
+```lua
+FACTION.MemberToMemberAutoRecognition = true
+```
+
+---
+
+### FACTION.RecognizesGlobally
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, members recognize all players globally, regardless of faction.
+
+**Example Usage:**
+
+```lua
+FACTION.RecognizesGlobally = false
+```
+
+### FACTION.isGloballyRecognized
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If set to `true`, all players will automatically recognize members of this faction.
+
+**Example Usage:**
+
+```lua
+FACTION.isGloballyRecognized = true
+```
+
+---
+
+### FACTION.NPCRelations
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Mapping of NPC class names to disposition constants (`D_HT`, `D_LI`, etc.). NPCs are updated on spawn/creation.
+
+**Example Usage:**
+
+```lua
+FACTION.NPCRelations = {
+    ["npc_combine_s"] = D_HT,
+    ["npc_citizen"]     = D_LI
+}
+```
+
+---
+
+### FACTION.bloodcolor
+
+**Type:**
+
+`number`
+
+**Description:**
+
+Blood color enumeration constant for faction members.
+
+**Example Usage:**
+
+```lua
+FACTION.bloodcolor = BLOOD_COLOR_RED
+```
+
+---
+
+### FACTION.scoreboardHidden
+
+**Type:**
+
+`boolean`
+
+**Description:**
+
+If `true`, members of this faction are hidden from the scoreboard.
+
+**Example Usage:**
+
+```lua
+FACTION.scoreboardHidden = false
+```
+
+---
+
+### FACTION.commands
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Table of command names that members of this faction may always use,
+
+even if they normally lack the required privilege.
+
+**Example Usage:**
+
+```lua
+FACTION.commands = {
+    plytransfer = true,
+}
+```
+
+---
+
+### FACTION.group
+
+**Type:**
+
+`string`
+
+**Description:**
+
+Faction group identifier used for door access control and other systems.
+
+**Example Usage:**
+
+```lua
+FACTION.group = "law_enforcement"
+```
+
+---
+
+### FACTION.spawns
+
+**Type:**
+
+`table`
+
+**Description:**
+
+Faction-specific spawn points. Each spawn point can have position, angle, and map properties.
+
+**Example Usage:**
+
+```lua
+FACTION.spawns = {
+    {
+        pos = Vector(100, 200, 50),
+        ang = Angle(0, 90, 0),
+        map = "rp_downtown_v4c_v2"
+    }
+}
+```
+
+---
+
+### FACTION:OnSpawn
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Called when a player spawns with faction attributes applied. Receives the client as the first parameter.
+
+**Example Usage:**
+
+```lua
+function FACTION:OnSpawn(client)
+    -- Custom spawn logic
+    client:SetModelScale(1.2)
+    client:SetHealth(150)
+end
+```
+
+---
+
+### FACTION:OnTransferred
+
+**Type:**
+
+`function`
+
+**Description:**
+
+Called when a character is transferred to this faction. Receives the target player and the old faction index.
+
+**Example Usage:**
+
+```lua
+function FACTION:OnTransferred(targetPlayer, oldFaction)
+    -- Custom transfer logic
+    targetPlayer:notify("Welcome to our faction!")
+end
+```
+
+---
+
+### FACTION:NameTemplate
+
+**Purpose**
+
+Generates a custom character name before defaults are applied.
+
+**Parameters**
+
+* `client` (*Player*): The player creating the character.
+
+**Returns**
+
+* `string`, `boolean` (*string*, *boolean*): Generated name and whether to bypass default naming.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+function FACTION:NameTemplate(client)
+    -- Prefix a random callsign with the faction name.
+    local id = math.random(100, 999)
+    return string.format("%s-%03d", self.name, id), true
+end
+```
+
+---
+
+### FACTION:GetDefaultName
+
+**Purpose**
+
+Retrieves the default character name for this faction.
+
+**Parameters**
+
+* `client` (*Player*): The client requesting the name.
+
+**Returns**
+
+* `string` (*string*): The generated name.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+function FACTION:GetDefaultName(client)
+    -- Base the callsign on the player's account ID for consistency.
+    return "Recruit-" .. client:AccountID()
+end
+```
+
+---
+
+### FACTION:GetDefaultDesc
+
+**Purpose**
+
+Provides the default description for a newly created character.
+
+**Parameters**
+
+* `client` (*Player*): The client for whom the description is generated.
+
+**Returns**
+
+* `string`, `boolean` (*string*, *boolean*): The description text and whether to override the user input.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+function FACTION:GetDefaultDesc(client)
+    -- Use the name as part of a simple biography.
+    local callsign = self:GetDefaultName(client)
+    -- Returning true overrides any description entered by the player.
+    return string.format("%s recently enlisted and is eager for duty.", callsign), true
+end
+```
+
+---
+
+### FACTION:OnCheckLimitReached
+
+**Purpose**
+
+Determines if the faction has reached its player limit.
+
+**Parameters**
+
+* `character` (*Character*): The character attempting to join.
+* `client` (*Player*): The owner of that character.
+
+**Returns**
+
+* `boolean` (*boolean*): Whether the limit is reached.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+function FACTION:OnCheckLimitReached(character, client)
+    -- Allow admins to bypass the limit.
+    if client:IsAdmin() then
+        return false
+    end
+
+    local maxMembers = self.limit or 10
+    return lia.faction.getPlayerCount(self.index) >= maxMembers
+end
+```
+
+---
+
+## Example
+
+The snippet below shows a minimal faction script using many of the fields described above.
+
+```lua
+FACTION.name = "Citizens"
+FACTION.desc = "Everyday city dwellers."
+FACTION.color = Color(75, 150, 50)
+FACTION.isDefault = true
+FACTION.models = {
+    "models/Humans/Group01/male_01.mdl",
+    "models/Humans/Group01/female_01.mdl"
+}
+FACTION.logo = "materials/factions/citizen_logo.png"
+FACTION.prefix = "[CIT]"
+FACTION.weapons = {"radio"}
+FACTION.items = {"water"}
+FACTION.pay = 20
+FACTION.health = 100
+FACTION.armor = 0
+FACTION.runSpeed = 200
+FACTION.walkSpeed = 100
+FACTION.jumpPower = 160
+FACTION.bodyGroups = {hands = 1}
+FACTION.NPCRelations = {
+    ["npc_metropolice"] = D_HT
+}
+
+FACTION_CITIZEN = FACTION.index
+```
 ```

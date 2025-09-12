@@ -10,7 +10,7 @@ The character library (`lia.char`) provides a comprehensive system for managing 
 
 ---
 
-### getCharacter
+### lia.char.getCharacter
 
 **Purpose**
 
@@ -66,7 +66,7 @@ lia.command.add("getchar", {
 
 ---
 
-### isLoaded
+### lia.char.isLoaded
 
 **Purpose**
 
@@ -109,7 +109,7 @@ end
 
 ---
 
-### getAll
+### lia.char.getAll
 
 **Purpose**
 
@@ -151,7 +151,7 @@ end
 
 ---
 
-### addCharacter
+### lia.char.addCharacter
 
 **Purpose**
 
@@ -182,7 +182,7 @@ lia.char.addCharacter(123, characterObject)
 
 ---
 
-### removeCharacter
+### lia.char.removeCharacter
 
 **Purpose**
 
@@ -212,7 +212,7 @@ lia.char.removeCharacter(123)
 
 ---
 
-### new
+### lia.char.new
 
 **Purpose**
 
@@ -256,7 +256,7 @@ local character = lia.char.new(charData, 125, client)
 
 ---
 
-### hookVar
+### lia.char.hookVar
 
 **Purpose**
 
@@ -297,7 +297,7 @@ end)
 
 ---
 
-### registerVar
+### lia.char.registerVar
 
 **Purpose**
 
@@ -352,7 +352,7 @@ lia.char.registerVar("customData", {
 
 ---
 
-### getCharData
+### lia.char.getCharData
 
 **Purpose**
 
@@ -410,7 +410,7 @@ lia.command.add("chardata", {
 
 ---
 
-### getCharDataRaw
+### lia.char.getCharDataRaw
 
 **Purpose**
 
@@ -449,7 +449,7 @@ end)
 
 ---
 
-### getOwnerByID
+### lia.char.getOwnerByID
 
 **Purpose**
 
@@ -491,7 +491,7 @@ end
 
 ---
 
-### getBySteamID
+### lia.char.getBySteamID
 
 **Purpose**
 
@@ -538,7 +538,7 @@ lia.command.add("findchar", {
 
 ---
 
-### GetTeamColor
+### lia.char.GetTeamColor
 
 **Purpose**
 
@@ -580,7 +580,7 @@ end
 
 ---
 
-### create
+### lia.char.create
 
 **Purpose**
 
@@ -628,7 +628,7 @@ end)
 
 ---
 
-### restore
+### lia.char.restore
 
 **Purpose**
 
@@ -673,7 +673,7 @@ end)
 
 ---
 
-### cleanUpForPlayer
+### lia.char.cleanUpForPlayer
 
 **Purpose**
 
@@ -716,7 +716,7 @@ lia.command.add("cleanupchar", {
 
 ---
 
-### delete
+### lia.char.delete
 
 **Purpose**
 
@@ -758,7 +758,7 @@ lia.command.add("deletechar", {
 
 ---
 
-### getCharBanned
+### lia.char.getCharBanned
 
 **Purpose**
 
@@ -800,7 +800,7 @@ end
 
 ---
 
-### setCharDatabase
+### lia.char.setCharDatabase
 
 **Purpose**
 
@@ -838,7 +838,7 @@ lia.char.setCharDatabase(123, "customData", {level = 5, xp = 1000})
 
 ---
 
-### unloadCharacter
+### lia.char.unloadCharacter
 
 **Purpose**
 
@@ -876,7 +876,7 @@ end)
 
 ---
 
-### unloadUnusedCharacters
+### lia.char.unloadUnusedCharacters
 
 **Purpose**
 
@@ -914,7 +914,7 @@ end
 
 ---
 
-### loadSingleCharacter
+### lia.char.loadSingleCharacter
 
 **Purpose**
 

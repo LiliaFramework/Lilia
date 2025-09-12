@@ -157,39 +157,3 @@ local function showSoundStats()
     print("Last reset: " .. os.date("%c", stats.lastReset))
 end
 ```
-
----
-
-### lia.websound.stored
-
-**Purpose**
-
-Stores registered sound data.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-* `stored` (*table*): Table of stored sound data.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Get stored sounds
-local function getStoredSounds()
-    return lia.websound.stored
-end
-
--- Use in a function
-local function listStoredSounds()
-    for name, url in pairs(lia.websound.stored) do
-        print("Sound: " .. name .. " - " .. url)
-    end
-end
-```

@@ -1,17 +1,25 @@
-# Gamemode Hooks
+# Gamemode Hooks Library
 
-This document describes all global hooks triggered by the gamemode.
+This page documents all global hooks triggered by the Lilia gamemode framework for customizing behavior, extending functionality, and responding to game events.
 
-Use these to customize gamemode behavior, extend functionality, and respond to various game events.
+---
 
-Hooks can be defined on the `GM` table, inside a `MODULE`, on the `SCHEMA`, or called anywhere with `hook.Add`.
+## Categories
+
+- Administration: see `documentation/docs/hooks/administration.md`
+- Database & Persistence: see `documentation/docs/hooks/database_persistence.md`
+- Economy & Trading: see `documentation/docs/hooks/economy_trading.md`
+- Communication & Social: see `documentation/docs/hooks/communication_social.md`
+- World & Environment: see `documentation/docs/hooks/world_environment.md`
+- Configuration & Modules: see `documentation/docs/hooks/configuration_modules.md`
 
 ---
 
 ## Overview
 
-Global hooks are triggered by the gamemode and can be defined in multiple ways:
+The gamemode hooks library provides a comprehensive event system for the Lilia framework, allowing developers to customize and extend gamemode behavior through a well-defined hook system. These hooks serve as the primary integration points for modules, schemas, and custom functionality, enabling everything from basic UI modifications to complex gameplay mechanics.
 
+Hooks can be defined in multiple ways:
 - **MODULE** functions load only from `/modules`
 - **SCHEMA** functions live in `/schema`  
 - **hook.Add** may be used from any file
@@ -24,21 +32,21 @@ If multiple definitions of the same hook exist on `GM`, `MODULE`, or `SCHEMA`, t
 
 **Purpose**
 
-Extend the Admin Stick HUD with extra information. Mutate the provided `information` table to add lines that will be rendered.
+Extend the Admin Stick HUD with extra information by mutating the provided information table.
 
 **Parameters**
 
-* `client` (*Player*): Local player.
+* `client` (*Player*): Local player using the admin stick.
 * `target` (*Entity*): Entity under the crosshair or selected by the admin stick.
-* `information` (*table*): Array of strings. Append additional lines in-place.
-
-**Realm**
-
-`Client`
+* `information` (*table*): Array of strings to append additional lines to.
 
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+* `nil` (*nil*): This hook does not return a value.
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
@@ -46,6 +54,25 @@ Extend the Admin Stick HUD with extra information. Mutate the provided `informat
 hook.Add("AddToAdminStickHUD", "ShowTargetModel", function(client, target, information)
     if IsValid(target) and target.GetModel then
         information[#information + 1] = L("model") .. ": " .. tostring(target:GetModel())
+    end
+end)
+
+hook.Add("AddToAdminStickHUD", "ShowTargetHealth", function(client, target, information)
+    if IsValid(target) and target.Health then
+        information[#information + 1] = L("health") .. ": " .. tostring(target:Health())
+    end
+end)
+
+hook.Add("AddToAdminStickHUD", "ShowTargetClass", function(client, target, information)
+    if IsValid(target) and target.GetClass then
+        information[#information + 1] = L("class") .. ": " .. tostring(target:GetClass())
+    end
+end)
+
+hook.Add("AddToAdminStickHUD", "ShowTargetPosition", function(client, target, information)
+    if IsValid(target) and target.GetPos then
+        local pos = target:GetPos()
+        information[#information + 1] = L("position") .. ": " .. string.format("%.1f, %.1f, %.1f", pos.x, pos.y, pos.z)
     end
 end)
 ```
@@ -65,13 +92,13 @@ Customize columns shown in the Admin Character List. Mutate the `columns` array 
   * `field` (*string*): Key in the row to display.
   * `format` (*function* | optional): `(value, row) -> any` to transform display.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -82,6 +109,26 @@ hook.Add("CharListColumns", "AddHoursPlayedColumn", function(columns)
         field = "PlayTime",
         format = function(seconds)
             return string.format("%0.1f h", (tonumber(seconds) or 0) / 3600)
+        end
+    })
+end)
+
+hook.Add("CharListColumns", "AddKarmaColumn", function(columns)
+    table.insert(columns, {
+        name = "karma",
+        field = "Karma",
+        format = function(value)
+            return tostring(value or 0)
+        end
+    })
+end)
+
+hook.Add("CharListColumns", "AddLastSeenColumn", function(columns)
+    table.insert(columns, {
+        name = "lastSeen",
+        field = "LastSeen",
+        format = function(timestamp)
+            return os.date("%Y-%m-%d %H:%M", tonumber(timestamp) or 0)
         end
     })
 end)
@@ -100,19 +147,27 @@ Adjust each character list entry as it is built server-side before sending to cl
 * `entry` (*table*): Mutable payload row (keys like `ID`, `Name`, `SteamID`, etc.).
 * `row` (*table*): Original database row for reference.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
 ```lua
 hook.Add("CharListEntry", "AttachKarmaField", function(entry, row)
     entry.Karma = tonumber(row.karma or 0)
+end)
+
+hook.Add("CharListEntry", "AddPlayTime", function(entry, row)
+    entry.PlayTime = tonumber(row.playtime or 0)
+end)
+
+hook.Add("CharListEntry", "AddLastSeen", function(entry, row)
+    entry.LastSeen = tonumber(row.lastseen or 0)
 end)
 ```
 
@@ -128,13 +183,13 @@ Fires whenever the chat input text changes in the chat box.
 
 * `text` (*string*): Current input text.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -159,13 +214,13 @@ Called after admin usergroups and privileges are loaded and synchronized.
 * `groups` (*table*): Map of usergroup -> permissions table.
 * `privileges` (*table*): Map of privilege ID -> minimum access group.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -188,13 +243,13 @@ Notifies that a persistent entity's stored data has been updated and saved.
 * `ent` (*Entity*): The persistent entity.
 * `data` (*table*): The saved persistence payload for this entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -218,13 +273,13 @@ Triggered when a new admin privilege is registered.
 
 * `info` (*table*): Contains `Name`, `ID`, `MinAccess`, `Category`.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -246,13 +301,13 @@ Triggered when a privilege is unregistered.
 
 * `info` (*table*): Contains `Name`, `ID`.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -275,13 +330,13 @@ Fires after a new usergroup is created.
 * `groupName` (*string*): Name of the new group.
 * `groupData` (*table*): Permissions and metadata for the group.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -305,10 +360,6 @@ Fires when a usergroup's permissions are modified.
 * `groupName` (*string*): Name of the usergroup whose permissions changed.
 * `groupData` (*table*): Updated permissions/metadata.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
@@ -325,19 +376,31 @@ Fires after a usergroup is removed.
 
 * `groupName` (*string*): Name of the removed usergroup.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+Server
+
+**Realm**
+
+*** `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server****
 
 **Example Usage**
 
 ```lua
 hook.Add("OnUsergroupRemoved", "LogGroupRemoval", function(groupName)
     print("Usergroup removed:", groupName)
+end)
+
+hook.Add("AddToAdminStickHUD", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("AddToAdminStickHUD", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -354,13 +417,13 @@ Fires after a usergroup is renamed.
 * `oldName` (*string*): Previous name of the usergroup.
 * `newName` (*string*): New name of the usergroup.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -383,10 +446,6 @@ Override a faction's display name during registration/loading.
 * `uniqueID` (*string*): Faction unique ID.
 * `currentName` (*string*): Current localized name.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `newName` (*string* | *nil*): New name to use, or nil to keep existing.
@@ -404,13 +463,13 @@ Override a faction's description during registration/loading.
 * `uniqueID` (*string*): Faction unique ID.
 * `currentDesc` (*string*): Current localized description.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `newDesc` (*string* | *nil*): New description to use, or nil to keep existing.
+Shared
+
+**Realm**
+
+*** `newDesc` (*string* | *nil*): New description to use, or nil to keep existing.
 
 ---
 
@@ -427,7 +486,7 @@ Override a faction's models table during registration/loading.
 
 **Realm**
 
-`Shared`
+**Shared**
 
 **Returns**
 
@@ -449,17 +508,29 @@ Gate giving a SWEP to an entity (e.g., via context menu tools). Return `true` to
 
 **Realm**
 
-`Server`
+**Server**
 
 **Returns**
 
 * `allow` (*boolean*): True to allow giving the SWEP, false or nil to deny.
+
+**Realm**
+
+**Shared****
 
 **Example Usage**
 
 ```lua
 hook.Add("PlayerGiveSWEP", "RestrictNPCWeapons", function(ply, class, swep)
     return ply:hasPrivilege("canSpawnSWEPs")
+end)
+
+hook.Add("OnUsergroupRenamed", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("OnUsergroupRenamed", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -475,10 +546,6 @@ Invoked when a client sends chat text through the chatbox network path. Note: in
 
 * `client` (*Player*): The player who sent the chat message.
 * `text` (*string*): The chat message text.
-
-**Realm**
-
-`Server`
 
 **Returns**
 
@@ -496,13 +563,17 @@ Populate the Admin tab in the F1 menu. Mutate the provided `pages` array and ins
 
 * `pages` (*table*): Insert items like `{ name = string, icon = string, drawFunc = function(panel) end }`.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+Client
+
+**Realm**
+
+*** `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server****
 
 **Example Usage**
 
@@ -515,6 +586,14 @@ hook.Add("PopulateAdminTabs", "AddOnlineList", function(pages)
             -- build UI here
         end
     }
+end)
+
+hook.Add("PlayerSay", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("PlayerSay", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -530,13 +609,13 @@ Fill the Quick Settings panel with options using the provided panel helpers.
 
 * `panel` (*Panel*): The `liaQuick` panel. Use `addCategory`, `addButton`, `addSlider`, `addCheck`.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -559,13 +638,13 @@ Request that the gamemode re-save a persistent entity's data to disk.
 
 * `ent` (*Entity*): The persistent entity to update.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -586,13 +665,13 @@ Override a player's computed playtime. Return seconds to use your value; return 
 
 * `client` (*Player*): The player whose playtime is being computed.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `playTime` (*number* | *nil*): Playtime in seconds, or nil to use default logic.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -620,13 +699,13 @@ Called after the F1 menu panel is created so additional sections can be added. P
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -661,13 +740,13 @@ Triggered whenever `lia.option.set` modifies an option value.
 * `oldValue` (*any*): Previous value before the change.
 * `newValue` (*any*): New assigned value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -692,13 +771,13 @@ Triggered after a remote image finishes downloading to the data folder.
 
 * `path` (*string*): Local `data/` path to the image.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -722,13 +801,13 @@ Triggered after a remote sound file finishes downloading to the data folder.
 
 * `path` (*string*): Local `data/` path to the sound file.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -750,13 +829,13 @@ Called just before an embed is posted to the configured Discord webhook. Return 
 
 * `embed` (*table*): The embed object that will be sent to Discord.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -778,13 +857,13 @@ Runs after an embed has been successfully sent through the webhook.
 
 * `embed` (*table*): The embed object that was sent to Discord.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -806,13 +885,13 @@ Fires when the CHTTP binary module is missing and relaying cannot be performed.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -834,13 +913,13 @@ Executed during menu creation allowing you to define custom tabs. Allows modules
 
 * `tabs` (*table*): Table to add menu definitions to.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -879,13 +958,13 @@ Runs every frame when the character model panel draws. Lets code draw over the m
 * `panel` (*Panel*): The model panel being drawn.
 * `entity` (*Entity*): Model entity displayed.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -926,13 +1005,13 @@ replace the displayed name, model or description for a player.
 
 * `var` (*string*): Field identifier such as "name", "model" or "desc".
 
-**Realm**
-
-`Client`
-
 **Returns**
 
-- boolean: Return true to allow override
+Client
+
+**Realm**
+
+**- boolean: Return true to allow override**
 
 **Example Usage**
 
@@ -942,6 +1021,14 @@ hook.Add("ShouldAllowScoreboardOverride", "OverrideNames", function(ply, var)
     if var == "name" then
         return true
     end
+end)
+
+hook.Add("SetupQuickMenu", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("SetupQuickMenu", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -957,13 +1044,13 @@ Returns the name text to display for a player in UI panels.
 
 * `client` (*Player*): Player to query.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string or nil: Name text to display
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -992,13 +1079,13 @@ Fired when the voice panel for a player is removed from the HUD.
 
 * `client` (*Player*): Player whose panel ended.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1022,13 +1109,13 @@ Triggered when a spawn icon is removed from the extended spawn menu. Fired when 
 
 * `icon` (*Panel*): Icon affected.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1059,13 +1146,13 @@ Gives a chance to draw additional info over item icons. Allows drawing over item
 
 * `height` (*number*): Panel height.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1092,13 +1179,13 @@ Allows extensions to populate the right-click menu for an item. Allows overridin
 
 * `itemTable` (*table*): Item data.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1125,13 +1212,13 @@ Determines whether an item action should be displayed. Determines whether a spec
 
 * `action` (*string*): Action key.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: True if the action can run.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1156,13 +1243,13 @@ Return false to omit players from the scoreboard. Determines if a player should 
 
 * `player` (*Player*): Player to test.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to hide the player
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1187,13 +1274,13 @@ Checks if the local player may open the scoreboard. Return false to prevent it f
 
 * `player` (*Player*): Local player.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to disallow opening.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1220,13 +1307,13 @@ Populate the scoreboard context menu with extra options. Allows modules to add s
 
 * `options` (*table*): Options table to populate.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1256,13 +1343,13 @@ Allows modules to customize the model entity displayed for scoreboard entries. T
 * `entity` (*Entity*): Model entity being shown.
 * `player` (*Player*): Player this entry represents.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1289,13 +1376,13 @@ Supplies the description text shown on the scoreboard. Returns the description t
 
 * `isHUD` (*boolean*): True when drawing overhead text rather than in menus.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string: Description text
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1320,13 +1407,13 @@ Triggered when the scoreboard becomes visible on the client.
 
 * `panel` (*Panel*): Scoreboard panel instance.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1348,13 +1435,13 @@ Called after the scoreboard is hidden or removed.
 
 * `panel` (*Panel*): Scoreboard panel instance.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1380,19 +1467,27 @@ customize the panel or add additional elements.
 
 * `player` (*Player*): Player associated with the row.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+Client
+
+**Realm**
+
+*** `nil` (*nil*): This function does not return a value.**
 
 **Example Usage**
 
 ```lua
 hook.Add("ScoreboardRowCreated", "AddGlow", function(pnl, ply)
     pnl:SetAlpha(200)
+end)
+
+hook.Add("GetDisplayedName", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("GetDisplayedName", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -1414,7 +1509,7 @@ Use this to perform cleanup or update other UI elements.
 
 **Realm**
 
-`Client`
+**Client**
 
 **Returns**
 
@@ -1440,13 +1535,13 @@ Runs when the F1 main menu panel initializes.
 
 * `panel` (*Panel*): Menu panel.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1468,13 +1563,13 @@ Fires when the F1 main menu panel is removed.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1496,13 +1591,13 @@ Called when the character selection menu is created.
 
 * `panel` (*Panel*): Character menu panel.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1524,13 +1619,13 @@ Fired when the character menu panel is removed.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1554,13 +1649,13 @@ Triggered when an item detail panel is created.
 
 * `entity` (*Entity*): Item entity represented.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1584,13 +1679,13 @@ Runs after an item panel is removed.
 
 * `entity` (*Entity*): Item entity represented.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1614,13 +1709,13 @@ Called when an inventory panel is created.
 
 * `inventory` (*table*): Inventory shown.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1644,13 +1739,13 @@ Fired when an inventory panel is removed.
 
 * `inventory` (*table*): Inventory shown.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1672,13 +1767,13 @@ Called when the interaction menu pops up.
 
 * `frame` (*Panel*): Interaction menu frame.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1700,13 +1795,13 @@ Runs when the interaction menu frame is removed.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1730,13 +1825,13 @@ Fires when the chat box closes. Fired when the chat box is closed.
 
 * `chatType` (*string*): The chat command being checked.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1763,13 +1858,13 @@ Fires when the chat box opens. Fired when the chat box is opened.
 
 * `chatType` (*string*): The chat command being checked.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1797,13 +1892,13 @@ Allows modification of the markup before chat messages are printed. Allows modif
 
 - ...: Additional segments.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string: Modified markup text.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1827,13 +1922,13 @@ Called when the chatbox panel is instantiated.
 
 * `panel` (*Panel*): Newly created chat panel.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1855,13 +1950,13 @@ Runs whenever chat.AddText successfully outputs text.
 
 - ...: Arguments passed to `chat.AddText`.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1883,13 +1978,13 @@ Returns the camera position and angle for the main menu character preview. Provi
 
 * `character` (*Character*): Character being viewed.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - Vector, Angle: Position and angle values.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1912,13 +2007,13 @@ Return false here to prevent character deletion. Determines if a character can b
 
 * `characterID` (*number*): Identifier of the character.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to disallow deletion.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1945,13 +2040,13 @@ Lets modules insert additional information on the main menu info panel. Allows m
 
 * `character` (*Character*): Selected character.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -1977,13 +2072,13 @@ Checks if a player may start creating a character. Determines if the player may 
 * `player` (*Player*): The player attempting to create a character.
 * `data` (*table*|nil): Optional character data being created. Only supplied on the server.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to disallow creation.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -2010,13 +2105,13 @@ Lets you edit the clientside model used in the main menu. Allows adjustments to 
 
 * `character` (*Character* | *nil*): Character data if available.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2043,13 +2138,13 @@ Add or reorder steps in the character creation flow. Lets modules alter the char
 
 * `panel` (*Panel*): Creation panel.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2074,13 +2169,13 @@ Override to change how many characters a player can have. Returns the maximum nu
 * `player` (*Player*): The player attempting to create a character.
 * `data` (*table*|nil): Optional character data being created. Only supplied on the server.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - number: Maximum character count.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2103,13 +2198,13 @@ Return false and a reason to hide buttons on the main menu. Determines if a butt
 
 * `name` (*string*): Button identifier.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean, string: False and reason to hide.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2134,13 +2229,13 @@ Called when the character creation panel should reset. Called to reset the chara
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2163,13 +2258,13 @@ Customize tooltip sizing and layout before it appears.
 
 * `panel` (*Panel*): Tooltip panel being laid out.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2196,13 +2291,13 @@ Draw custom visuals on the tooltip, returning true skips default painting.
 
 * `height` (*number*): Panel height.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2229,13 +2324,13 @@ Runs when a tooltip is opened for a panel.
 
 * `target` (*Panel*): Target panel that opened the tooltip.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -2259,13 +2354,13 @@ Runs when a player spawns and equips items. Allows modification of the default l
 
 * `client` (*Player*): Player being loaded out.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -2294,13 +2389,13 @@ Determines if a player's death should permanently kill their character. Return t
 
 * `attacker` (*Entity*): Damage attacker.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: Return true to mark for permanent death
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2327,13 +2422,13 @@ Checks if a player may drop an item. Return false to block dropping.
 
 * `item` (*table*): Item being dropped.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to block dropping
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2360,13 +2455,13 @@ Determines if a player can pick up an item. Return false to prevent taking.
 
 * `item` (*table*): Item in question.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to prevent pickup
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2393,13 +2488,13 @@ Queries if a player can equip an item. Returning false stops the equip action.
 
 * `item` (*table*): Item to equip.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to block equipping
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2426,13 +2521,13 @@ Called before an item is unequipped. Return false to keep the item equipped.
 
 * `item` (*table*): Item being unequipped.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to prevent unequipping
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2456,13 +2551,13 @@ Called when a player attempts to rotate an inventory item. Return false to block
 * `client` (*Player*): Player rotating.
 * `item` (*table*): Item being rotated.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to block rotating
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2486,13 +2581,13 @@ Determines if a player can view a specific log category in the admin console.
 * `client` (*Player*): Player requesting logs.
 * `category` (*string*): Category name.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to hide the category
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2522,13 +2617,13 @@ Runs after chat messages are processed. Allows reacting to player chat.
 
 * `anonymous` (*boolean*): Whether the message was anonymous.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2553,13 +2648,13 @@ Decides if a corpse ragdoll should spawn for a player. Return false to skip ragd
 
 * `client` (*Player*): Player that died.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to skip ragdoll
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2584,13 +2679,13 @@ Called when the framework saves persistent data. Modules can store custom inform
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2619,13 +2714,13 @@ Triggered after `lia.data.set` successfully writes a key/value pair to the datab
 
 * `map` (*string* | *nil*): Map name when not global or ignored.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2648,13 +2743,13 @@ Fires when map persistence should be written to disk. Allows adding extra persis
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2687,13 +2782,13 @@ Invoked before an entity is saved as persistent. Return false to disallow persis
 
 * `entity` (*Entity*): Entity being considered for persistence.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to prevent the entity from being saved.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2718,13 +2813,13 @@ Allows adding custom data to each persisted entity during `SaveData`.
 
 * `entity` (*Entity*): Entity being persisted.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `table|nil`: Extra data to store with the entity.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2751,13 +2846,13 @@ Runs when an entity is added to the persistence table.
 
 * `data` (*table*): Persistence data for that entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2782,13 +2877,13 @@ Called for each entity spawned from saved persistence data.
 
 * `data` (*table* | *nil*): Extra data stored for the entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2813,13 +2908,13 @@ Triggered when stored data should be loaded. Modules can restore custom informat
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2853,13 +2948,13 @@ Called after all persistent data has loaded. Useful for post-processing.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2888,13 +2983,13 @@ Queries if data saving should occur during shutdown. Return false to cancel savi
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to cancel saving
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2919,13 +3014,13 @@ Called when a player's character disconnects. Provides a last chance to handle d
 
 * `character` (*Character*): Their character.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2948,13 +3043,13 @@ Initializes a bot's character when it first joins. Allows custom bot setup.
 
 * `client` (*Player*): Bot player.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -2979,13 +3074,13 @@ Fired after a player's personal data has loaded. Useful for syncing additional i
 
 * `client` (*Player*): Player that loaded data.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3012,13 +3107,13 @@ Runs after the player entity has spawned and data is ready. Allows post-initiali
 
 * `client` (*Player*): Newly spawned player.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3042,13 +3137,13 @@ Gives factions a chance to modify player loadouts. Runs before weapons are equip
 
 * `client` (*Player*): Player being equipped.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3073,13 +3168,13 @@ Allows classes to modify the player's starting gear. Executed prior to PostPlaye
 
 * `client` (*Player*): Player being equipped.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3105,13 +3200,13 @@ The character's stored bodygroups and skin are also restored here.
 
 * `client` (*Player*): Player loaded out.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+Server
+
+**Realm**
+
+*** `nil` (*nil*): This function does not return a value.**
 
 **Example Usage**
 
@@ -3119,6 +3214,14 @@ The character's stored bodygroups and skin are also restored here.
 -- Tint players green after all items are equipped
 hook.Add("PostPlayerLoadout", "SetColor", function(ply)
     ply:SetPlayerColor(Vector(0, 1, 0))
+end)
+
+hook.Add("F1MenuOpened", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("F1MenuOpened", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -3134,13 +3237,13 @@ Runs after faction loadout logic completes. Allows post-loadout tweaks.
 
 * `client` (*Player*): Player affected.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3165,13 +3268,13 @@ Runs after class loadout logic completes. Allows post-loadout tweaks for classes
 
 * `client` (*Player*): Player affected.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3194,13 +3297,13 @@ Returns the inventory type used for new characters. Modules can override to prov
 
 * `character` (*Character*): Character being created.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - string: Inventory type
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3223,13 +3326,13 @@ Decides whether saved persistent items should be deleted on load. Return true to
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: True to delete items
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3254,13 +3357,13 @@ Called after map items have been loaded from storage. Provides the table of crea
 
 * `items` (*table*): Loaded item entities.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3286,13 +3389,13 @@ Determines if world-space info should be rendered for an entity. Return false to
 
 * `entity` (*Entity*): Entity being considered.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to hide info
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3321,13 +3424,13 @@ Allows custom drawing of entity information in the world. Drawn every frame whil
 
 * `position` (*table*): Screen position table.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3350,13 +3453,13 @@ Provides the health status text and color for a player. Return a table with text
 
 * `client` (*Player*): Player to check.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - table: {text, color} info
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3381,13 +3484,13 @@ Determines if character info should draw above a player. Return false to suppres
 
 * `player` (*Player*): Player being rendered.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to hide info
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3416,13 +3519,13 @@ Allows modules to add lines to the character info display. Called when building 
 
 * `info` (*table*): Table to add lines to.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3445,13 +3548,13 @@ Opens the context menu for a world item when used. Allows replacing the default 
 
 * `entity` (*Entity*): Item entity clicked.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3476,13 +3579,13 @@ Fired just before the client finishes loading the framework. Useful for setup ta
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3505,13 +3608,13 @@ Indicates the client finished initializing the framework. Modules can start crea
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3544,13 +3647,13 @@ Allows external admin mods to intercept and handle admin actions. Returning
 
 * `reason` (*string* | *nil*): Optional reason text.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-* `boolean?`: Return `true` if the command was handled.
+Shared
+
+**Realm**
+
+*** `boolean?`: Return `true` if the command was handled.**
 
 **Example Usage**
 
@@ -3560,6 +3663,14 @@ hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, exec, victim, dur, rea
         SAM.Commands[cmd](exec, victim, dur, reason)
         return true
     end
+end)
+
+hook.Add("FactionPostLoadout", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("FactionPostLoadout", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -3577,13 +3688,13 @@ Fired after a new command is registered via `lia.command.add`.
 
 * `data` (*table*): Command data table.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -3611,13 +3722,13 @@ Called after a command executes through `lia.command.run`.
 
 * `results` (*table*): Table of values returned by the command.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -3645,13 +3756,13 @@ Notifies when inventory metadata changes. Provides old and new values.
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3676,13 +3787,13 @@ Called when a new item instance is created clientside. Allows additional setup f
 
 * `item` (*table*): Item created.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3705,13 +3816,13 @@ Fired when an inventory instance finishes loading. Modules may modify it here.
 
 * `inventory` (*table*): Inventory initialized.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3736,13 +3847,13 @@ Invoked when an item is placed into an inventory. Lets code react to the additio
 
 * `item` (*table*): Item added.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3767,13 +3878,13 @@ Called when an item is removed from an inventory. Runs after the item table is u
 
 * `item` (*table*): Item removed.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3796,13 +3907,13 @@ Signals that an inventory was deleted clientside. Allows cleanup of references.
 
 * `inventory` (*table*): Deleted inventory.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3825,13 +3936,13 @@ Fired when an item is removed entirely. Modules should clear any cached data.
 
 * `item` (*table*): Item that was deleted.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3860,13 +3971,13 @@ Runs when a networked character variable changes. Gives both old and new values.
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3897,13 +4008,13 @@ Similar to OnCharVarChanged but for local-only variables. Called after the table
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -3934,13 +4045,13 @@ Triggered when `setLocalVar` updates a player's local variable. Provides both th
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -3971,13 +4082,13 @@ Runs when `setNetVar` changes an entity's networked variable. Works for global v
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4008,13 +4119,13 @@ Called when item data values change clientside. Provides both the old and new va
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4043,13 +4154,13 @@ Runs when an item's quantity value updates. Allows reacting to stack changes.
 
 * `quantity` (*number*): New quantity.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4074,13 +4185,13 @@ Indicates that a character was forcefully removed. isCurrentChar denotes if it w
 
 * `isCurrentChar` (*boolean*): Was this the active character?
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4111,13 +4222,13 @@ Called when the server receives a request to move an item to another inventory. 
 
 * `inventoryID` (*number* | *string*): Target inventory identifier.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - DPromise|nil: Promise for the transfer or nil to block.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -4140,13 +4251,13 @@ Fired when a character object is fully loaded. Receives the character ID.
 
 * `id` (*number*): Character identifier.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4169,13 +4280,13 @@ Called before a character is removed. Return false to cancel deletion.
 
 * `id` (*number*): Character identifier.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4202,13 +4313,13 @@ Fired when a character is deleted. Provides the owning player if available.
 
 * `id` (*number*): Character identifier.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4235,13 +4346,13 @@ Invoked after a new character is created. Supplies the character table and creat
 
 * `data` (*table*): Raw creation info.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4264,13 +4375,13 @@ Runs when a player transfers to another server. Useful for cleanup.
 
 * `client` (*Player*): Transferring player.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4293,13 +4404,13 @@ Executed before a character is saved to disk. Allows writing custom data.
 
 * `character` (*Character*): Character being saved.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4322,13 +4433,13 @@ Called when the character selection list finishes loading. Provides the loaded l
 
 * `newCharList` (*table*): Table of characters.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4353,13 +4464,13 @@ Fires when the character list is refreshed. Gives both old and new tables.
 
 * `newCharList` (*table*): Updated list.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4388,13 +4499,13 @@ when an administrator requests the character list.
 
 * `stored` (*table*): Raw database row for the character.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+Server
+
+**Realm**
+
+*** `nil` (*nil*): This function does not return a value.**
 
 **Example Usage**
 
@@ -4402,6 +4513,14 @@ when an administrator requests the character list.
 -- Add a play time field to every entry
 hook.Add("CharListExtraDetails", "PlayTime", function(admin, entry, stored)
     entry.extraDetails.playTime = stored._playTime or 0
+end)
+
+hook.Add("liaCommandAdded", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("liaCommandAdded", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -4417,13 +4536,13 @@ Returns the maximum stamina for a character. Override to change stamina capacity
 
 * `character` (*Character*): Character queried.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4448,13 +4567,13 @@ Final hook for tweaking the calculated stamina offset. Return the modified offse
 
 * `offset` (*number*): Current offset after other adjustments.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - number: New offset to apply.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4479,13 +4598,13 @@ Runs after all font files have loaded. Allows registering additional fonts.
 
 * `genericFont` (*string*): Name of the generic fallback font.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4518,13 +4637,13 @@ Called when the F1 menu builds status bars so new fields can be added.
 
 * `valueFunc` (*function*): Returns the current value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4553,13 +4672,13 @@ Fired when building the F1 menu so modules can insert additional sections.
 
 * `location` (*number*): Column/location index.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4591,13 +4710,13 @@ Determines whether an item may move between inventories.
 
 * `client` (*Player*): Owning player.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean, string: False and reason to block
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -4622,13 +4741,13 @@ Called right before a bag inventory UI opens. Return false to block opening.
 
 * `item` (*Item*): Bag item being opened.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to block opening.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -4653,13 +4772,13 @@ Checks if an outfit is allowed to change the player model.
 
 * `item` (*Item*): Outfit item attempting to change the model.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to block the change.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4686,13 +4805,13 @@ Determines if a player can modify a vendor's settings.
 
 * `vendor` (*Entity*): Vendor entity targeted.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to disallow editing.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4717,13 +4836,13 @@ Called when a player attempts to pick up a money entity.
 
 - `moneyEntity` (`Entity`): The money entity.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to disallow pickup.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4752,13 +4871,13 @@ Determines if a player can open or lock a door entity.
 
 - `access` (`number`): Desired access level.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to deny access.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4785,13 +4904,13 @@ Checks if a player is permitted to open a vendor menu.
 
 * `vendor` (*Entity*): Vendor entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to deny access.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -4818,13 +4937,13 @@ Determines if the player can pick up an entity with the hands swep.
 
 * `entity` (*Entity*): Target entity.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to prevent holding.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4853,13 +4972,13 @@ Called when a player tries to use or drop an item.
 
 - `item` (`Item`): Item being interacted with.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to block the action.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4886,13 +5005,13 @@ Called when a player attempts to knock on a door.
 
 - `door` (`Entity`): Door being knocked on.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to block knocking.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4921,13 +5040,13 @@ Checks if the player is allowed to spawn a storage container.
 
 * `data` (*table*): Storage definition data.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to deny spawning.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -4952,13 +5071,13 @@ Called when the fists weapon tries to punch.
 
 * `client` (*Player*): Player performing the punch.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean: False to block punching.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -4989,13 +5108,13 @@ Checks whether a vendor trade is allowed.
 
 - `selling` (`boolean`): True if the player is selling to the vendor.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean, string: False and reason to deny trade
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5020,13 +5139,13 @@ Called before any inventory menu is shown.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean: False to prevent opening
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5051,13 +5170,13 @@ Called before persistent storage saves.
 
 * `inventory` (*Inventory*): Inventory associated with the entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to cancel saving
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5084,13 +5203,13 @@ Allows custom checks for a character's permission flags.
 
 - `flags` (`string`): Flags being queried.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5116,13 +5235,13 @@ Runs after a character's data has been saved to the database.
 
 * `character` (*Character*): Character that finished saving.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5145,13 +5264,13 @@ Fired after the database has been successfully connected.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5182,13 +5301,13 @@ Called when an item entity draws its description text.
 
 * `alpha` (*number*): Current alpha value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5211,13 +5330,13 @@ Returns the default width and height for new inventories.
 
 * `client` (*Player*): Player the inventory belongs to.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - number, number: Width and height
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5242,13 +5361,13 @@ Allows overriding the entity model used for dropped money.
 
 - `amount` (`number`): Money amount being dropped.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - string: Model path to use
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5277,13 +5396,13 @@ Lets addons modify how much damage the fists weapon deals.
 
 - `context` (`table`): Additional context table.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5310,13 +5429,13 @@ Allows overriding default clicks on inventory icons.
 
 - `keyCode` (`number`): Key that was pressed.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5345,13 +5464,13 @@ Called after an inventory panel is constructed.
 
 - `parent` (`Panel|nil`): Parent panel if any.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5377,13 +5496,13 @@ Fires whenever an item icon is generated within an inventory panel.
 
 - `inventoryPanel` (`Panel`): Panel that contains the icon.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5409,13 +5528,13 @@ Called when the system attempts to combine one item with another in an inventory
 
 - `targetItem` (`Item`): Item it is being combined with.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: true if combination succeeds and items are consumed, false otherwise.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5444,13 +5563,13 @@ Called when an item icon is dragged completely out of an inventory.
 
 - `item` (`Item`): Item being removed.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5481,13 +5600,13 @@ Triggered whenever an item function is executed by a player.
 
 - `result` (`any`): Result returned by the item function.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5510,13 +5629,13 @@ Called when an item has successfully moved between inventories. The context tabl
 
 - `context` (`table`): Transfer context table containing client, item, from and to inventories.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5543,13 +5662,13 @@ Called when a character ragdolls or is forced to fall over.
 
 - `forced` (`boolean`): True when the ragdoll was forced.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5576,13 +5695,13 @@ Called when a character is kicked from the server.
 
 * `client` (*Player*): Player owning the character.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5607,13 +5726,13 @@ Called when a character is permanently killed.
 
 - `time` (`number|nil`): Ban duration or nil for permanent.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5636,13 +5755,13 @@ Called clientside when your character recognizes another.
 
 * `client` (*Player*): Player that initiated recognition.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5667,13 +5786,13 @@ Triggered serverside when `ForceRecognizeRange` forcibly recognizes a player.
 
 - `range` (`string`): Range identifier (e.g., `whisper`).
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5707,13 +5826,13 @@ Called after a character buys from or sells to a vendor.
 
 - `failed` (`boolean|nil`): True if the trade failed.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5740,13 +5859,13 @@ Called when a ragdoll entity is created for a player.
 
 - `dead` (`boolean`): True if the player died.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5773,13 +5892,13 @@ Determines how long a player remains ragdolled when ragdolling starts. Return a 
 
 - `baseTime` (`number|nil`): Suggested/base duration in seconds. May be nil; the gamemode defaults to 10 seconds if not overridden.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - `number|nil`: Duration in seconds. Return nil to keep the base/default time.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -5834,13 +5953,13 @@ Called when both the player's inventory and storage panels are created.
 
 - `storage` (`Entity`): The storage entity.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5867,13 +5986,13 @@ Called when a new item instance is placed into an inventory.
 
 - `item` (`Item`): Item that was inserted.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5900,13 +6019,13 @@ Called when a new item instance table is initialized.
 
 * `entity` (*Entity*): Spawned item entity.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5929,13 +6048,13 @@ Called when an item entity has been spawned in the world.
 
 * `entity` (*Entity*): Spawned item entity.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -5962,13 +6081,13 @@ Called when the vendor dialog panel is opened.
 
 - `vendor` (`Entity`): The vendor entity.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -5993,13 +6112,13 @@ Called after a player picks up a money entity.
 
 - `moneyEntity` (`Entity`): The money entity collected.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6030,13 +6149,13 @@ Fired when a scripted animation sequence begins.
 
 - `noFreeze` (`boolean`): True if the player should not be frozen.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6069,13 +6188,13 @@ Runs after a player has interacted with an item.
 
 * `data` (*table* | *nil*): Additional data table.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6102,13 +6221,13 @@ Called when a player changes to a new class.
 
 - `oldClass` (`table|number`): Previous class table or index.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6133,13 +6252,13 @@ Fired when a scripted animation sequence ends for a player.
 
 * `client` (*Player*): Player that finished the sequence.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6162,13 +6281,13 @@ Called if a stackable item is removed unexpectedly.
 
 - `item` (`Item`): The item that disappeared.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6197,13 +6316,13 @@ Occurs right before a player's class changes.
 
 - `oldClass` (`table|number`): Class being left.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6236,13 +6355,13 @@ Called when the UI asks to move an item between inventories.
 
 * `y` (*number*): Destination Y coordinate.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6265,13 +6384,13 @@ Called when map persistence data is loaded.
 
 * `name` (*string*): Name of the persistence file.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -6296,13 +6415,13 @@ Occurs when a player successfully opens a vendor.
 
 - `vendor` (`Entity`): Vendor entity opened.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6325,13 +6444,13 @@ Called when a player regenerates stamina points.
 
 * `client` (*Player*): Player gaining stamina.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6356,13 +6475,13 @@ Called when a player's stamina decreases.
 
 * `client` (*Player*): Player losing stamina.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6389,13 +6508,13 @@ Fires when a player lands a punch with the fists weapon.
 
 - `trace` (`table`): Trace result of the punch.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6420,13 +6539,13 @@ Called each frame after the inventory panel draws.
 
 - `parentPanel` (`Panel|nil`): Parent panel if any.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6453,13 +6572,13 @@ Called just before a player interacts with an item.
 
 - `item` (`Item`): Target item.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6484,13 +6603,13 @@ Allows modules to define who can access a bag inventory.
 
 - `inventory` (`Inventory`): Bag inventory object.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6515,13 +6634,13 @@ Signals that a bag item now has a valid inventory after being created or loaded.
 
 - `inventory` (`Inventory`): Associated inventory.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6545,13 +6664,13 @@ Fired right before a bag's inventory is deleted or destroyed.
 
 - `inventory` (`Inventory`): The inventory being removed.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -6573,13 +6692,13 @@ Runs before the gamemode initializes its database connection.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -6606,13 +6725,13 @@ Determines if an item can move in or out of a storage entity.
 
 * `item` (*Item*): Item being transferred.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: False to disallow transfer
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -6639,13 +6758,13 @@ Fired when a storage entity is removed from the world.
 
 * `inventory` (*Inventory*): Inventory associated with the entity.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6672,13 +6791,13 @@ Called when a storage entity is assigned an inventory.
 
 - `isCar` (`boolean`): True if the entity is a vehicle trunk.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -6705,13 +6824,13 @@ Called clientside when a storage menu is opened.
 
 - `isCar` (`boolean`): True if opening a vehicle trunk.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6736,13 +6855,13 @@ Called when a storage's contents are loaded from disk.
 
 - `inventory` (`Inventory`): Inventory loaded.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -6765,13 +6884,13 @@ Called clientside when you must enter a storage password.
 
 * `entity` (*Entity*): Storage entity being opened.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6794,13 +6913,13 @@ Called when a vendor's allowed classes are updated.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6823,13 +6942,13 @@ Called after a delay when a vendor's data is edited.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6852,13 +6971,13 @@ Called when a player exits from interacting with a vendor.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6881,13 +7000,13 @@ Called when a vendor's allowed factions are updated.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6910,13 +7029,13 @@ Called when a vendor's item max stock value changes.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6939,13 +7058,13 @@ Called when a vendor's item mode is changed.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6968,13 +7087,13 @@ Called when a vendor's item price is changed.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -6997,13 +7116,13 @@ Called when a vendor's item stock value changes.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -7028,13 +7147,13 @@ Called when a vendor menu is opened on the client.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -7057,13 +7176,13 @@ Called when vendor synchronization data is received.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -7086,13 +7205,13 @@ Called when a player attempts to trade with a vendor.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7116,13 +7235,13 @@ Returns an alternate model path for a dropped item.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - string|nil: Alternate model path or nil for default.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7147,13 +7266,13 @@ Allows modules to override a vendor item's price dynamically.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - integer|nil: New price or nil for default.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7182,13 +7301,13 @@ Checks if a character is fake recognized rather than truly known.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7215,13 +7334,13 @@ Determines whether one character recognizes another.
 
 * `id` (*number*): Identifier of the other character.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7245,13 +7364,13 @@ Determines if a chat type counts toward recognition.
 
 * `chatType` (*string*): The chat command being checked.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7281,13 +7400,13 @@ Determines if a player is allowed to earn salary.
 
 - `class` (`table`): Class table for the player.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7317,13 +7436,13 @@ Determines whether a player can join a certain class. Return `false` to block.
 
 * `info` (*table*): Additional class info table.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean|nil: false to block, nil to allow.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7354,15 +7473,15 @@ Determines if a player can use a specific command. Returning either
 
 - `command` (`string`): Command name.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
-- boolean|nil: non-nil values override the result; return `nil` to
+Shared
 
-allow built‑in checks to decide.
+**Realm**
+
+**- boolean|nil: non-nil values override the result; return `nil` to
+
+allow built‑in checks to decide.**
 
 **Example Usage**
 
@@ -7373,6 +7492,14 @@ hook.Add("CanPlayerUseCommand", "BlockSensitiveCommands", function(client, comma
     if table.HasValue(blockedCommands, command) and not client:isSuperAdmin() then
         return false
     end
+end)
+
+hook.Add("getCharMaxStamina", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("getCharMaxStamina", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -7392,13 +7519,13 @@ Determines if a player is allowed to use a door entity, such as opening, locking
 
 - `access` (`int`): Access type attempted (e.g. DOOR_LOCK).
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: false to block, nil or true to allow.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7424,13 +7551,13 @@ Used during character cleanup routines for additional steps when removing or tra
 
 * `character` (*Character*): The character being cleaned up.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7459,13 +7586,13 @@ Called after a character has been restored from the database. Useful for post-re
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7492,13 +7619,13 @@ Called when creating a default inventory for a character. Should return a [defer
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7533,13 +7660,13 @@ Client-side call when creating the graphical representation of an inventory.
 
 - `parent` (`Panel`): Parent container panel.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -7582,13 +7709,13 @@ Called when modules include submodules. Useful for advanced module handling or d
 
 - `module` (`table`): Module performing the include.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7615,15 +7742,15 @@ Retrieves a default description for a character during creation. Return `(defaul
 
 - `faction` (`number`): Faction index of the new character.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - string: The default description.
 
 - boolean: Whether to override.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7654,15 +7781,15 @@ If the character's faction defines a prefix it will automatically be prepended t
 
 * `data` (*table*): Additional creation data.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-- string: The default name.
+Server
 
-- boolean: Whether to override the user-provided name.
+**Realm**
+
+**- string: The default name.
+
+- boolean: Whether to override the user-provided name.**
 
 **Example Usage**
 
@@ -7672,6 +7799,14 @@ hook.Add("GetDefaultCharName", "PoliceDefaultName", function(client, faction, da
     if faction == FACTION_POLICE then
         return "Officer " .. data.lastName or "Smith", true
     end
+end)
+
+hook.Add("CanPlayerUseDoor", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("CanPlayerUseDoor", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -7691,13 +7826,13 @@ Retrieves the amount of salary a player should receive.
 
 - `class` (`table`): Player's class data.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - any: The salary amount
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7726,13 +7861,13 @@ Retrieves the salary limit for a player.
 
 - `class` (`table`): Player's class data.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - any: The salary limit
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7759,13 +7894,13 @@ Called when `lia.config` is fully initialized.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7793,13 +7928,13 @@ Called once all item modules have been loaded from a directory.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7831,13 +7966,13 @@ Called after all modules are fully initialized.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7860,13 +7995,13 @@ Called when `lia.option` is fully initialized.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -7889,13 +8024,13 @@ Called after the schema has finished initializing.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -7923,13 +8058,13 @@ Called when a player attempts to lock a door.
 
 - `time` (`float`): Duration of the locking animation.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -7962,13 +8097,13 @@ Called when a player attempts to unlock a door.
 
 - `time` (`float`): How long the process took.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8001,13 +8136,13 @@ Runs after a door's locked state changes.
 
 - `state` (`boolean`): True if now locked.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8033,13 +8168,13 @@ Fires after a door's ability to be owned is changed.
 
 - `state` (`boolean`): True if now unownable.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8065,13 +8200,13 @@ Runs when a door is enabled or disabled.
 
 - `state` (`boolean`): True if disabled.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8097,13 +8232,13 @@ Triggered after a door is hidden or revealed.
 
 - `state` (`boolean`): True if now hidden.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8129,13 +8264,13 @@ Called after an administrator sets a door's price.
 
 - `price` (`number`): New price value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8161,13 +8296,13 @@ Runs after the title or name of a door is changed.
 
 - `title` (`string`): New title.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8189,13 +8324,13 @@ Called after all essential DB tables have been loaded.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8220,13 +8355,13 @@ Called after an item has been registered. Useful for customizing item behavior o
 
 - `item` (`Item`): Item definition being registered.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -8259,13 +8394,13 @@ Called before the faction tables are loaded. Good spot for data setup prior to f
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -8290,13 +8425,13 @@ Triggered once all required database tables have been created and initial data h
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8328,13 +8463,13 @@ Called when a player purchases or sells a door.
 
 - `CallOnDoorChild` (`function`): Optional callback for door children.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8374,13 +8509,13 @@ Called whenever a new log message is added. Allows for custom logic or modificat
 
 * `color` (*Color*): Display color.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8409,13 +8544,13 @@ Called after wiping tables in the DB, typically after major resets/cleanups.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8446,13 +8581,13 @@ Called before a chat message is sent. Return `false` to cancel, or modify the me
 
 * `anonymous` (*boolean*): True if the speaker is hidden.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean|nil|modifiedString: false to cancel, or return a modified string to change the message.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -8484,13 +8619,13 @@ Invoked after `lia.chat.parse` determines the chat type and sanitized message.
 
 * `anonymous` (*boolean*): Whether the speaker is hidden.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - `chatType|nil`, `message|nil`, `anonymous|nil`: Optionally return new values to override.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -8517,13 +8652,13 @@ Called when a player's model changes.
 
 - `model` (`string`): The new model path.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -8550,13 +8685,13 @@ Lets modules modify player models after the base model, skin and bodygroups are 
 
 - `character` (`table|nil`): Active character table if available.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -8583,13 +8718,13 @@ Called when a player attempts to use a door entity.
 
 * `entity` (*Entity*): Door entity targeted.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to disallow, true to allow, or nil to let other hooks decide.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8618,13 +8753,13 @@ Determines whether a specific HUD bar should be drawn.
 
 - `barName` (`string`): HUD bar identifier, e.g. "health" or "armor".
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean|nil: false to hide, nil to allow.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8649,13 +8784,13 @@ Checks if third-person view is allowed or disabled.
 
 * `client` (*Player*): Player to test.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `shouldDisable` (*boolean*): True if third-person view should be disabled, false otherwise.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8680,13 +8815,13 @@ Determines whether all HUD bars should be hidden.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean|nil: true to hide, nil to allow rendering.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8711,13 +8846,13 @@ Called when third-person mode is toggled on or off. Allows for custom handling o
 
 - `state` (`boolean`): true if third-person is enabled, false if disabled.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8751,13 +8886,13 @@ Called when a text field is added to an F1 menu information section. Allows modu
 
 - `valueFunc` (`function`): Function returning the value string.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8788,13 +8923,13 @@ Fired after AddTextField so other modules can react to new fields.
 
 - `valueFunc` (`function`): Function returning the field value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8827,13 +8962,13 @@ Triggered after AddBarField inserts a status bar into the F1 menu.
 
 - `valueFunc` (`function`): Function returning the current value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8856,13 +8991,13 @@ Called while building the F1 information menu to populate navigation buttons.
 
 - `pages` (`table`): Table to add page definitions into.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8885,13 +9020,13 @@ Invoked when the settings tab is constructed allowing new configuration pages.
 
 - `pages` (`table`): Table to populate with config pages.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8914,13 +9049,13 @@ Called after keybinds have been loaded from disk.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -8943,13 +9078,13 @@ Allows modification of the cooldown delay between OOC messages.
 
 * `client` (*Player*): Player sending OOC chat.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - number|nil: Custom cooldown in seconds.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -8980,13 +9115,13 @@ Runs on the client when chat text is received before display. Returning modified
 
 * `anonymous` (*boolean*): True if anonymous chat.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string|nil: Replacement text.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9011,13 +9146,13 @@ Requests PAC3 part data after adjustments have been applied.
 
 - `id` (`string`): Part identifier.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - table|nil: Adjusted part data.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9044,13 +9179,13 @@ Allows modules to modify PAC3 part data before it is attached.
 
 * `data` (*table*): Part data table.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - table|nil: Modified data table.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9076,13 +9211,13 @@ Called when a PAC3 part should be attached to a player.
 
 - `id` (`string`): Part identifier.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9107,13 +9242,13 @@ Triggered when a PAC3 part is removed from a player.
 
 - `id` (`string`): Part identifier being removed.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9136,13 +9271,13 @@ Fired when a PAC3 outfit part transfers ownership to a ragdoll.
 
 - `part` (`Entity`): The outfit part being transferred.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9165,13 +9300,13 @@ Allows custom rendering of a player's ragdoll created by PAC3.
 
 * `entity` (*Entity*): Ragdoll entity to draw.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9194,13 +9329,13 @@ Initializes PAC3 outfits from equipped items after modules load.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9223,13 +9358,13 @@ Allows PAC3 to swap the view model entity for event checks.
 
 * `entity` (*Entity*): The view model entity.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - Entity: Replacement entity.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9252,15 +9387,15 @@ Lets modules provide a custom sound when cycling weapons in the selector.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string|nil: Sound path.
 
 - number|nil: Playback pitch.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9283,15 +9418,15 @@ Similar to WeaponCycleSound but used when confirming a weapon choice.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string|nil: Sound path.
 
 - number|nil: Playback pitch.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9314,13 +9449,13 @@ Determines if the weapon selection UI should be visible.
 
 * `client` (*Player*): Player whose UI is drawing.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9343,13 +9478,13 @@ Checks whether the active weapon can be selected via the weapon wheel.
 
 - `weapon` (`Weapon`): Weapon to name.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean|nil: false to block selection.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9376,13 +9511,13 @@ Allows modules to modify the respawn delay after death.
 
 - `baseTime` (`number`): Default respawn delay.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - number|nil: New respawn time.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9407,13 +9542,13 @@ Lets modules suppress the respawn HUD from showing.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - boolean|nil: false to hide.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9438,13 +9573,13 @@ Invoked once a final spawn position has been determined for a player.
 
 - `position` (`Vector`): Chosen spawn location.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9466,13 +9601,13 @@ Fired when voice chat is enabled or disabled via config.
 
 - `enabled` (`boolean`): Current voice chat state.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -9495,13 +9630,13 @@ Fired when the Derma UI skin configuration value changes. Allows modules to reac
 
 - `skin` (`string`): Name of the new Derma skin.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9524,13 +9659,13 @@ Requests recreation of all registered UI fonts.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9559,13 +9694,13 @@ Allows modification of character creation data before the character is saved.
 
 - `originalData` (`table`): Raw data before adjustments.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9594,13 +9729,13 @@ Determines if a character may switch factions.
 
 - `oldFaction` (`number`): Index of the current faction.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to block.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9627,13 +9762,13 @@ Checks if `client` can invite `target` to the same faction. Return false to deny
 
 - `target` (`Player`): Player being invited.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to block.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9658,13 +9793,13 @@ Checks if `client` can invite `target` to their current class. Return false to d
 
 - `target` (`Player`): Player being invited.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to block.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9689,13 +9824,13 @@ Called when a player attempts to load one of their characters.
 
 * `character` (*table*): Character being loaded.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to deny.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9724,13 +9859,13 @@ Checks if a player can switch from their current character to another.
 
 - `newChar` (`table`): Character to switch to.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to block the switch.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9757,13 +9892,13 @@ Determines whether the player may lock the given door or vehicle.
 
 - `door` (`Entity`): Door or vehicle entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to disallow.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9790,13 +9925,13 @@ Determines whether the player may unlock the given door or vehicle.
 
 - `door` (`Entity`): Door or vehicle entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to disallow.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -9823,13 +9958,13 @@ Lets you change how many attribute points a new character receives. Retrieves th
 
 - `context` (`string`): Creation context.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - number: Maximum starting points
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9854,13 +9989,13 @@ Sets a limit for a specific attribute at character creation. Returns the startin
 
 - `attribute` (`string`): Attribute identifier.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - number: Maximum starting value
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -9887,13 +10022,13 @@ Returns the maximum value allowed for an attribute.
 
 - `attribute` (`string`): Attribute identifier.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - number: Maximum attribute value
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -9926,13 +10061,13 @@ Fired when an attribute boost is added or removed.
 
 - `amount` (`number|boolean`): Amount added or true when removed.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -9963,13 +10098,13 @@ Fired when a character attribute value is changed.
 
 - `value` (`number`): New attribute value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -9996,13 +10131,13 @@ Called when a player attempts to change a configuration value.
 
 * `key` (*string*): Config key being modified.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean|nil: false to deny modification.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10031,13 +10166,13 @@ Runs after a configuration variable is modified.
 
 * `client` (*Player*): Player responsible.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10061,13 +10196,13 @@ Fired after a character is permanently removed.
 
 * `character` (*table*): Character that was deleted.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10094,13 +10229,13 @@ Allows custom logic for determining if a faction has reached its player limit.
 
 * `client` (*Player*): Owning player.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - boolean
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -10131,13 +10266,13 @@ Triggered after AddSection inserts a new information section.
 
 - `location` (`number`): Column index.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -10160,13 +10295,13 @@ Allows overriding of the displayed weapon name in the selector.
 
 - `weapon` (`Weapon`): Weapon to name.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 - string|nil: Replacement name.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -10191,13 +10326,13 @@ Called when a ragdolled character finishes getting up.
 
 * `entity` (*Entity*): Ragdoll entity.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10220,13 +10355,13 @@ Fired once language files finish loading.
 
 * `nil` (*nil*): This function does not return a value.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -10251,13 +10386,13 @@ Called when a player's observe mode is toggled.
 
 - `state` (`boolean`): True to enable observing.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10284,13 +10419,13 @@ Called after a player finishes loading a character. `previousChar` is only suppl
 
 - `previousChar` (`table|nil`): Previously active character.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10317,13 +10452,13 @@ Runs just before a new character becomes active for the player.
 
 - `oldChar` (`table|nil`): Character being left.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10350,13 +10485,13 @@ Runs after `PlayerLoadedChar` so modules can perform additional setup.
 
 - `previousChar` (`table|nil`): Previous character if any.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10383,13 +10518,13 @@ Called after the admin stick menu is created so additional commands can be added
 
 - `target` (`Entity`): Target entity of the admin stick.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -10415,13 +10550,13 @@ Fired when a new help ticket is created by a player.
 - `requester` (`Player`): Player who created the ticket.
 * `message` (*string*): The ticket message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10447,13 +10582,13 @@ Fired when a staff member claims a help ticket.
 - `requester` (`Player`): Player who opened the ticket.
 * `message` (*string*): The ticket message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10479,13 +10614,13 @@ Fired when a staff member closes a help ticket.
 - `requester` (`Player`): Player who opened the ticket.
 * `message` (*string*): The ticket message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10513,13 +10648,13 @@ Triggered when a shared option value is changed.
 
 * `value` (*any*): New value.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10552,13 +10687,13 @@ Fired when an administrator issues a warning to a player.
 
 - `targetSteamID` (`string`): Steam ID of the player receiving the warning.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10590,13 +10725,13 @@ Fired when an administrator removes one of a player's warnings.
 
 - `index` (`number`): Index of the removed warning.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10621,13 +10756,13 @@ Called when an administrator gags a player, preventing chat.
 
 - `admin` (`Player`): Admin issuing the gag.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10651,13 +10786,13 @@ Called when a player is ungagged and allowed to speak again.
 
 - `admin` (`Player`): Admin removing the gag.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10681,13 +10816,13 @@ Runs when voice chat is disabled for a player.
 
 - `admin` (`Player`): Admin muting the player.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10711,13 +10846,13 @@ Runs when a previously muted player can use voice chat again.
 
 - `admin` (`Player`): Admin lifting the mute.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10741,13 +10876,13 @@ Triggered after a remote image finishes downloading to the data folder.
 
 * `path` (*string*): Local `data/` path to the image.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -10771,13 +10906,13 @@ Triggered after a remote sound file finishes downloading to the data folder.
 
 * `path` (*string*): Local `data/` path to the sound file.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -10799,13 +10934,13 @@ Triggered when the anti-cheat system flags a player for hacking.
 
 * `client` (*Player*): Player detected using cheats.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - boolean: Return true to override default punishment.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10830,19 +10965,27 @@ been marked with the `cheater` network variable.
 
 * `client` (*Player*): Player confirmed to be cheating.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
-* `nil` (*nil*): This function does not return a value.
+Server
+
+**Realm**
+
+*** `nil` (*nil*): This function does not return a value.**
 
 **Example Usage**
 
 ```lua
 hook.Add("OnCheaterCaught", "AnnounceCheater", function(ply)
     print(ply:Name() .. " has been caught cheating!")
+end)
+
+hook.Add("GetSalaryAmount", "AdditionalExample1", function()
+    -- Additional example implementation
+end)
+
+hook.Add("GetSalaryAmount", "AdditionalExample2", function()
+    -- Another example implementation
 end)
 ```
 
@@ -10859,13 +11002,13 @@ Filter character models during character creation. Allows modules to control whi
 * `modelData` (*table*): The model data being evaluated.
 * `modelIndex` (*string*): The index/key of the model in the faction's models table.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `include` (*boolean*): Return false to exclude the model from selection, true or nil to include it.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -10888,13 +11031,13 @@ Determine the gender of a model for gender-specific functionality. Used by the `
 
 - `model` (`string`): The model path to check.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 - `string`: Return `"female"` for female models, `"male"` for male models, or any other value for neutral/unknown.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -10919,13 +11062,13 @@ Override the sale scale multiplier for vendor transactions. Allows dynamic prici
 
 - `vendor` (`Entity`): The vendor entity being used.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 - `number`: The sale scale multiplier (0.1 to 2.0), or `nil`/`false` to use default scale.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10948,13 +11091,13 @@ Determine if an entity can be used as a trunk for storage. Controls which vehicl
 
 * `entity` (*Entity*): The entity being checked for trunk suitability.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `isSuitable` (*boolean*): True if the entity can be used as a trunk, false otherwise.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -10975,13 +11118,13 @@ Modify the default functions table for items during registration. Allows adding 
 
 - `functions` (`table`): The functions table that will be assigned to the item.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value. (modify the table directly)
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -11008,13 +11151,13 @@ Called when flags are added to a character. Useful for tracking flag changes and
 * `character` (*Character*): The character object that received flags.
 - `flags` (`string`): The flags that were added.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11039,13 +11182,13 @@ Called when flags are removed from a character. Useful for tracking flag changes
 * `character` (*Character*): The character object that lost flags.
 - `flags` (`string`): The flags that were removed.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11070,13 +11213,13 @@ Called when a player's cheater status is toggled by an admin. Useful for logging
 - `target` (`Player`): The player whose cheater status was changed.
 - `isCheater` (`boolean`): Whether the player is now marked as a cheater.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11099,13 +11242,13 @@ Called when a configuration value is updated. Useful for reacting to config chan
 * `oldValue` (*any*): The previous value of the configuration.
 - `newValue` (`any`): The new value of the configuration.
 
-**Realm**
-
-`Shared`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Shared**
 
 **Example Usage**
 
@@ -11128,13 +11271,13 @@ Called when a player sends an OOC (Out of Character) message. Useful for logging
 * `client` (*Player*): The player who sent the OOC message.
 * `message` (*string*): The OOC message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11158,13 +11301,13 @@ Called when a player receives their salary. Return `true` to handle salary givin
 - `faction` (`table`): The faction data.
 - `class` (`table`): The class data.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `handled` (*boolean*): Return true to handle salary giving manually, false or nil to use default behavior.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11189,13 +11332,13 @@ Called when an admin claims a support ticket. Useful for logging and notificatio
 - `requester` (`Player`): The player who created the ticket.
 * `message` (*string*): The ticket message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11218,13 +11361,13 @@ Called when a support ticket is closed. Useful for logging and cleanup when tick
 - `requester` (`Player`): The player who created the ticket.
 * `message` (*string*): The ticket message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11245,13 +11388,13 @@ Called when a new support ticket is created. Useful for logging and notification
 - `requester` (`Player`): The player who created the ticket.
 * `message` (*string*): The ticket message content.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11277,13 +11420,13 @@ Called when a vendor is edited by an admin. Useful for logging vendor modificati
 - `vendor` (`Entity`): The vendor entity that was edited.
 * `key` (*string*): The specific property that was edited.
 
-**Realm**
-
-`Server`
-
 **Returns**
 
 * `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Server**
 
 **Example Usage**
 
@@ -11303,13 +11446,13 @@ Override the material used to paint item models in UI panels. Allows custom mate
 
 * `item` (*Item*): The item object being painted.
 
-**Realm**
-
-`Client`
-
 **Returns**
 
 * `string`: The material path to use for painting the item, or `nil` to use default.
+
+**Realm**
+
+**Client**
 
 **Example Usage**
 
@@ -11321,3 +11464,5 @@ hook.Add("PaintItem", "CustomItemMaterials", function(item)
     return nil -- Use default material
 end)
 ```
+
+---

@@ -451,3 +451,280 @@ lia.applyPunishment(client, "Exploiting", false, true, 60)
 -- Ban with custom messages
 lia.applyPunishment(client, "Hacking", false, true, 0, nil, "ban_hacking")
 ```
+
+---
+
+### lia.hasGamemodeLoadedSuccessfully
+
+**Purpose**
+
+Checks if the gamemode has loaded successfully by verifying database connection, table loading, module initialization, and file loading.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `success` (*boolean*): True if the gamemode loaded successfully, false otherwise.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Check loading status
+local function checkLoadingStatus()
+    if lia.hasGamemodeLoadedSuccessfully() then
+        print("Gamemode loaded successfully")
+        return true
+    else
+        print("Gamemode failed to load")
+        return false
+    end
+end
+
+-- Use in a hook
+hook.Add("Initialize", "CheckLoadingStatus", function()
+    if not lia.hasGamemodeLoadedSuccessfully() then
+        print("Warning: Gamemode loading incomplete")
+    end
+end)
+
+-- Use in a command
+lia.command.add("checkstatus", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local status = lia.hasGamemodeLoadedSuccessfully()
+        client:notify("Gamemode status: " .. (status and "Loaded" or "Failed"))
+    end
+})
+```
+
+---
+
+### lia.parseLuaError
+
+**Purpose**
+
+Parses a Lua error message to extract file path, line number, and error message.
+
+**Parameters**
+
+* `errorMessage` (*string*): The raw Lua error message to parse.
+
+**Returns**
+
+* `parsedError` (*table*): A table containing parsed error information with keys: `message`, `line`, `file`.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Parse a Lua error
+local function parseError(errorMsg)
+    local parsed = lia.parseLuaError(errorMsg)
+    if parsed then
+        print("Error in file:", parsed.file)
+        print("Line:", parsed.line)
+        print("Message:", parsed.message)
+        return parsed
+    end
+    return nil
+end
+
+-- Use in error handling
+local function handleError(errorMsg)
+    local parsed = lia.parseLuaError(errorMsg)
+    if parsed then
+        lia.error("Error in " .. parsed.file .. " at line " .. parsed.line .. ": " .. parsed.message)
+    else
+        lia.error("Unknown error: " .. errorMsg)
+    end
+end
+
+-- Parse error from pcall
+local function safeExecute(func)
+    local success, err = pcall(func)
+    if not success then
+        local parsed = lia.parseLuaError(err)
+        if parsed then
+            print("Execution failed in " .. parsed.file .. " at line " .. parsed.line)
+        end
+    end
+    return success
+end
+```
+
+---
+
+### lia.addLoadingError
+
+**Purpose**
+
+Adds an error to the loading state and maintains a rolling list of recent errors.
+
+**Parameters**
+
+* `errorMessage` (*string*): The error message to add to the loading state.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Add a loading error
+local function reportLoadingError(errorMsg)
+    lia.addLoadingError(errorMsg)
+    print("Loading error recorded:", errorMsg)
+end
+
+-- Use in error handling
+local function handleModuleLoadError(moduleName, errorMsg)
+    local fullError = "Failed to load module '" .. moduleName .. "': " .. errorMsg
+    lia.addLoadingError(fullError)
+    lia.error(fullError)
+end
+
+-- Use in hook
+hook.Add("OnGamemodeLoaded", "CheckForErrors", function()
+    local errorCount = #lia.loadingState.errors
+    if errorCount > 0 then
+        print("Loading completed with", errorCount, "errors")
+        for i, error in ipairs(lia.loadingState.errors) do
+            print("Error", i .. ":", error.message)
+        end
+    end
+end)
+```
+
+---
+
+### lia.getLoadingFailureInfo
+
+**Purpose**
+
+Retrieves information about loading failures including failure reason, details, and error list.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `failureInfo` (*table* or *nil*): A table containing failure information with keys: `reason`, `details`, `errors`, or nil if no failure occurred.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get loading failure information
+local function getFailureInfo()
+    local failure = lia.getLoadingFailureInfo()
+    if failure then
+        print("Loading failed:", failure.reason)
+        print("Details:", failure.details)
+        print("Error count:", #failure.errors)
+        return failure
+    else
+        print("No loading failures detected")
+        return nil
+    end
+end
+
+-- Use in diagnostics
+local function diagnoseLoadingIssues()
+    local failure = lia.getLoadingFailureInfo()
+    if failure then
+        print("=== LOADING FAILURE REPORT ===")
+        print("Reason:", failure.reason)
+        print("Details:", failure.details)
+        print("Errors:")
+        for i, error in ipairs(failure.errors) do
+            print("  " .. i .. ". " .. error.message)
+        end
+    end
+end
+
+-- Use in status command
+lia.command.add("loadingstatus", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        local failure = lia.getLoadingFailureInfo()
+        if failure then
+            client:notify("Loading failed: " .. failure.reason)
+            client:notify("Details: " .. failure.details)
+        else
+            client:notify("Loading successful")
+        end
+    end
+})
+```
+
+---
+
+### lia.clearLoadingState
+
+**Purpose**
+
+Clears the loading state, resetting all loading flags and error information for debugging or testing purposes.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Clear loading state
+local function resetLoadingState()
+    lia.clearLoadingState()
+    print("Loading state cleared for debugging")
+end
+
+-- Use in development command
+lia.command.add("resetloading", {
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.clearLoadingState()
+        client:notify("Loading state reset")
+        print("Loading state cleared by", client:Name())
+    end
+})
+
+-- Use in testing
+local function testLoadingSequence()
+    lia.clearLoadingState()
+    -- Run loading tests...
+    local success = lia.hasGamemodeLoadedSuccessfully()
+    print("Loading test result:", success)
+end
+
+-- Clear state before reload
+hook.Add("OnReloaded", "ClearLoadingState", function()
+    lia.clearLoadingState()
+    print("Loading state cleared for reload")
+end)
+```

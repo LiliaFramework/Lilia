@@ -1,3 +1,17 @@
+# Derma Library
+
+This page documents the functions for working with Derma panels and UI components.
+
+---
+
+## Overview
+
+The Derma library (`lia.derma`) provides a comprehensive system for managing user interface panels, custom Derma components, and UI interactions in the Lilia framework, serving as the foundation for the framework's graphical user interface and player interaction systems. This library handles sophisticated panel management with support for custom panel creation, dynamic layout systems, and responsive design principles that adapt to different screen sizes and resolutions. The system features advanced component integration with support for custom styling, theming systems, and accessibility features that ensure all players can effectively use the interface. It includes comprehensive panel lifecycle management with creation, destruction, and state preservation mechanisms that maintain UI consistency throughout the player experience. The library provides robust interaction handling with support for mouse, keyboard, and touch input methods, with customizable interaction patterns and feedback systems for intuitive user experience. Additional features include panel animation systems, performance optimization for complex UI hierarchies, and integration with the framework's theming and localization systems, making it essential for creating polished and professional user interfaces that enhance player engagement and provide clear feedback for all user interactions.
+
+---
+
+## Definitions
+
 # Panel Reference
 
 This document describes every custom panel bundled with **Lilia**. Each entry lists the base Garry's Mod panel it derives from, a short description of its purpose, and a small code snippet demonstrating typical usage.
@@ -67,7 +81,7 @@ Panels provide the building blocks for Lilia's user interface. Most derive from 
 | `liaCheckbox` | `DButton` | Checkbox that draws the config icons. |
 | `liaItemList` | `DFrame` | Generic list frame for displaying items. |
 | `liaItemSelector` | `DFrame` | Item selection dialog with search and filtering. |
-| `liaDListView` | `DFrame` | Enhanced list view with search, sorting, and context menus. |
+| `liaDListView` | `DFrame` | Enhanced list view with search, sorting, and context menus.
 
 ---
 
@@ -886,5 +900,3 @@ Enhanced list view with search, sorting, and context menus. Features a search bo
 - `SetData(rows)` – populates the list with data rows.
 - `SetSort(column, desc)` – sets the sort column and direction.
 - `Populate()` – refreshes the list based on current search filter.
-
----

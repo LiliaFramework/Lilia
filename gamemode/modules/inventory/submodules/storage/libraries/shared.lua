@@ -1,6 +1,5 @@
-﻿function MODULE:IsSuitableForTrunk(entity)
-    if IsValid(entity) and entity:IsVehicle() and entity:getNetVar("hasStorage", false) then return true end
-    return false
+﻿function MODULE:IsSuitableForTrunk(ent)
+    if IsValid(ent) and ((ent.isSimfphysCar and ent:isSimfphysCar()) or (ent:IsVehicle() and ent:getNetVar("hasStorage", false))) then return true end
 end
 
 function MODULE:InitializeStorage(entity)
@@ -18,13 +17,17 @@ function MODULE:InitializeStorage(entity)
     end
 
     if entity.liaStorageInitPromise then return entity.liaStorageInitPromise end
+    -- Function to initialize storage without model dependency
     local function tryInitialize()
         local key
         local model = entity:GetModel()
         if entity:IsVehicle() then
+            -- For vehicles, use class name directly
             key = entity:GetClass():lower()
         else
+            -- For non-vehicles, use model if available, otherwise use default
             if not model or model == "" then
+                -- Use default model for entities without a model
                 key = "models/props_junk/wood_crate001a.mdl"
             else
                 key = model:lower()
@@ -32,6 +35,7 @@ function MODULE:InitializeStorage(entity)
         end
 
         local def = lia.inventory.storage[key]
+        -- Fall back to generic "vehicle" key for vehicles if specific class not found
         if not def and entity:IsVehicle() then def = lia.inventory.storage["vehicle"] end
         if not def then
             local d = deferred.new()

@@ -10,7 +10,7 @@ The administrator library (`lia.administrator`) provides a comprehensive, hierar
 
 ---
 
-### hasAccess
+### lia.administrator.hasAccess
 
 **Purpose**
 
@@ -70,7 +70,7 @@ end
 
 ---
 
-### registerPrivilege
+### lia.administrator.registerPrivilege
 
 **Purpose**
 
@@ -126,7 +126,7 @@ lia.administrator.registerPrivilege({
 
 ---
 
-### unregisterPrivilege
+### lia.administrator.unregisterPrivilege
 
 **Purpose**
 
@@ -159,7 +159,7 @@ lia.administrator.unregisterPrivilege("command_oldCommand")
 
 ---
 
-### createGroup
+### lia.administrator.createGroup
 
 **Purpose**
 
@@ -208,7 +208,7 @@ lia.administrator.createGroup("staff", {
 
 ---
 
-### removeGroup
+### lia.administrator.removeGroup
 
 **Purpose**
 
@@ -241,7 +241,7 @@ lia.administrator.removeGroup("user") -- This will error
 
 ---
 
-### renameGroup
+### lia.administrator.renameGroup
 
 **Purpose**
 
@@ -275,7 +275,7 @@ lia.administrator.renameGroup("user", "player") -- This will error
 
 ---
 
-### applyInheritance
+### lia.administrator.applyInheritance
 
 **Purpose**
 
@@ -305,7 +305,7 @@ lia.administrator.applyInheritance("moderator")
 
 ---
 
-### load
+### lia.administrator.load
 
 **Purpose**
 
@@ -335,7 +335,7 @@ lia.administrator.load()
 
 ---
 
-### save
+### lia.administrator.save
 
 **Purpose**
 
@@ -367,7 +367,7 @@ lia.administrator.save(true)
 
 ---
 
-### addPermission
+### lia.administrator.addPermission
 
 **Purpose**
 
@@ -402,7 +402,7 @@ lia.administrator.addPermission("moderator", "mute", true)
 
 ---
 
-### removePermission
+### lia.administrator.removePermission
 
 **Purpose**
 
@@ -437,7 +437,7 @@ lia.administrator.removePermission("moderator", "mute", true)
 
 ---
 
-### sync
+### lia.administrator.sync
 
 **Purpose**
 
@@ -469,7 +469,7 @@ lia.administrator.sync(ply)
 
 ---
 
-### setPlayerUsergroup
+### lia.administrator.setPlayerUsergroup
 
 **Purpose**
 
@@ -504,7 +504,7 @@ lia.administrator.setPlayerUsergroup(target, "vip", "adminCommand")
 
 ---
 
-### setSteamIDUsergroup
+### lia.administrator.setSteamIDUsergroup
 
 **Purpose**
 
@@ -539,7 +539,7 @@ lia.administrator.setSteamIDUsergroup(steamID, "vip", "database")
 
 ---
 
-### serverExecCommand
+### lia.administrator.serverExecCommand
 
 **Purpose**
 
@@ -579,7 +579,7 @@ lia.administrator.serverExecCommand("freeze", target, 30, nil, admin)
 
 ---
 
-### execCommand
+### lia.administrator.execCommand
 
 **Purpose**
 
