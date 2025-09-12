@@ -89,13 +89,11 @@ function lia.option.save()
     if json then
         file.CreateDir("lilia")
         local success = file.Write(path, json)
-        if success then
-            print("[LIA OPTIONS] Saved options to " .. path .. " (" .. table.Count(out) .. " options)")
-        else
-            print("[LIA OPTIONS] Failed to save options to " .. path)
+        if not success then
+            print("Warning: Failed to save options to file")
         end
     else
-        print("[LIA OPTIONS] Failed to serialize options to JSON")
+        print("Warning: Failed to serialize options to JSON")
     end
 end
 
@@ -103,7 +101,7 @@ function lia.option.load()
     local path = "lilia/options.json"
     file.CreateDir("lilia")
     local data = file.Read(path, "DATA")
-    print("[LIA OPTIONS] Loading options from " .. path)
+    -- Loading options from file
     if data then
         local saved = util.JSONToTable(data)
         if saved then
@@ -114,13 +112,11 @@ function lia.option.load()
                     loadedCount = loadedCount + 1
                 end
             end
-
-            print("[LIA OPTIONS] Loaded " .. loadedCount .. " saved options")
         else
-            print("[LIA OPTIONS] Failed to parse JSON data from file")
+            print("Warning: Failed to parse JSON data from options file")
         end
     else
-        print("[LIA OPTIONS] No saved options file found, using defaults")
+        -- No saved options file found, using defaults
         for _, option in pairs(lia.option.stored) do
             if option.default ~= nil then option.value = option.default end
         end
@@ -133,10 +129,8 @@ function lia.option.load()
         local json = util.TableToJSON(out, true)
         if json then
             local success = file.Write(path, json)
-            if success then
-                print("[LIA OPTIONS] Created default options file")
-            else
-                print("[LIA OPTIONS] Failed to create default options file")
+            if not success then
+                print("Warning: Failed to create default options file")
             end
         end
     end

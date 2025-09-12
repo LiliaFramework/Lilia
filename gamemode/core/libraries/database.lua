@@ -134,10 +134,11 @@ local sqliteQuery = promisifyIfNoCallback(function(query, callback, throw)
                 lastID = nil
             else
                 lastID = tonumber(rawLastID)
-                if not lastID then lia.warning("[Database] Invalid last insert ID '" .. tostring(rawLastID) .. "' for query: " .. query) end
+                if not lastID then
+                    lia.warning("[Database] Invalid last insert ID '" .. tostring(rawLastID) .. "' for query: " .. query)
+                end
             end
         end
-
         callback(data, lastID)
     end
 end)
@@ -231,6 +232,7 @@ function lia.db.loadTables()
         lia.db.addDatabaseFields()
         lia.db.tablesLoaded = true
         lia.db.status.tablesLoaded = true
+        lia.bootstrap("Database", "Database loading complete")
         hook.Run("LiliaTablesLoaded")
         hook.Run("OnDatabaseLoaded")
     end
@@ -780,7 +782,6 @@ function lia.db.loadTables()
     end):next(function()
         return lia.db.migrateDatabaseSchemas()
     end):next(function()
-        lia.bootstrap("Database", "Database tables loaded and migrations completed successfully")
         done()
     end):catch(function(err)
         lia.error("[Database] Failed to create database tables: " .. tostring(err))
@@ -2422,7 +2423,9 @@ concommand.Add("lia_snapshot", function(ply)
             end):catch(function(err)
                 sendFeedback("? Error processing table " .. tableName .. ": " .. err, Color(255, 0, 0))
                 completed = completed + 1
-                if completed >= total then sendFeedback("Snapshot creation completed with errors", Color(255, 255, 0)) end
+                if completed >= total then
+                    sendFeedback("Snapshot creation completed with errors", Color(255, 255, 0))
+                end
             end)
         end
     end):catch(function(err) sendFeedback("? Failed to get table list: " .. err, Color(255, 0, 0)) end)
@@ -2458,6 +2461,7 @@ concommand.Add("lia_snapshot_table", function(ply, _, args)
     local total = #tablesToSnapshot
     local timestamp = os.date("%Y%m%d_%H%M%S")
     for _, tableName in ipairs(tablesToSnapshot) do
+        sendFeedback("Querying table: lia_" .. tableName, Color(255, 255, 255))
         lia.db.select("*", tableName):next(function(selectResult)
             if selectResult and selectResult.results then
                 local fullTableName = "lia_" .. tableName
@@ -2483,8 +2487,9 @@ concommand.Add("lia_snapshot_table", function(ply, _, args)
                 end
 
                 file.Write(filename, content)
+                sendFeedback("? Saved " .. #selectResult.results .. " records from " .. fullTableName .. " to " .. filename, Color(0, 255, 0))
             else
-                sendFeedback("? Failed to query table: lia_" .. tableName, Color(255, 0, 0))
+                sendFeedback("? Failed to query table: lia_" .. tableName .. " (no results returned)", Color(255, 0, 0))
             end
 
             completed = completed + 1
@@ -3373,16 +3378,24 @@ concommand.Add("lia_wipecharacters", function(ply)
                             local invdataTotal = invdataCount.results and invdataCount.results[1] and invdataCount.results[1].count or 0
                             MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Found ", invdataTotal, " inventory data entries\n\n")
                             MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Beginning wipe process...\n")
+                            -- Temporarily disable foreign key constraints for the wipe operation
+                            sql.Query("PRAGMA foreign_keys=OFF")
+                            -- Delete in correct order to respect foreign key constraints
+                            -- First delete tables that reference other tables (child tables)
                             lia.db.delete("invdata"):next(function()
                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared invdata table\n")
                                 lia.db.delete("items"):next(function()
                                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared items table\n")
+                                    -- Then delete the referenced tables (parent tables)
                                     lia.db.delete("inventories"):next(function()
                                         MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared inventories table\n")
                                         lia.db.delete("chardata"):next(function()
                                             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared chardata table\n")
                                             lia.db.delete("characters", schemaCondition):next(function()
-                                                MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared characters table\n\n")
+                                                MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared characters table\n")
+                                                -- Re-enable foreign key constraints
+                                                sql.Query("PRAGMA foreign_keys=ON")
+                                                MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "\n")
                                                 if lia.db.cacheClear then lia.db.cacheClear() end
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== CHARACTER DATA WIPE COMPLETED ===\n")
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Successfully deleted:\n")
@@ -3391,11 +3404,27 @@ concommand.Add("lia_wipecharacters", function(ply)
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  • ", invTotal, " inventories\n")
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  • ", itemTotal, " items\n")
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  • ", invdataTotal, " inventory data entries\n")
-                                            end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear characters table: ", err, "\n") end)
-                                        end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear chardata table: ", err, "\n") end)
-                                    end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear inventories table: ", err, "\n") end)
-                                end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear items table: ", err, "\n") end)
-                            end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear invdata table: ", err, "\n") end)
+                                            end):catch(function(err)
+                                                -- Re-enable foreign key constraints even on error
+                                                sql.Query("PRAGMA foreign_keys=ON")
+                                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear characters table: ", err, "\n")
+                                            end)
+                                        end):catch(function(err)
+                                            sql.Query("PRAGMA foreign_keys=ON")
+                                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear chardata table: ", err, "\n")
+                                        end)
+                                    end):catch(function(err)
+                                        sql.Query("PRAGMA foreign_keys=ON")
+                                        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear inventories table: ", err, "\n")
+                                    end)
+                                end):catch(function(err)
+                                    sql.Query("PRAGMA foreign_keys=ON")
+                                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear items table: ", err, "\n")
+                                end)
+                            end):catch(function(err)
+                                sql.Query("PRAGMA foreign_keys=ON")
+                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear invdata table: ", err, "\n")
+                            end)
                         end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to count invdata: ", err, "\n") end)
                     end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to count items: ", err, "\n") end)
                 end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to count inventories: ", err, "\n") end)
@@ -3776,6 +3805,7 @@ concommand.Add("lia_diagnose_table", function(ply, _, args)
                                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Diagnosis completed successfully ===\n")
                                 else
                                     MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query failed: No results returned\n")
+                                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "This is likely the cause of the snapshot failure\n")
                                 end
                             end):catch(function(err)
                                 MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query failed: ", err, "\n")
