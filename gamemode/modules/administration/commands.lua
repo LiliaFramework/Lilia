@@ -1606,8 +1606,12 @@ lia.command.add("charunban", {
         if id then
             lia.db.selectOne({"id"}, "characters", "id = " .. id):next(function(data)
                 if data then
+                    -- Get character name from chardata
                     lia.db.selectOne("value", "chardata", "charID = " .. data.id .. " AND key = 'name'"):next(function(nameData)
-                        if nameData then data.name = nameData.value end
+                        if nameData then
+                            data.name = nameData.value
+                        end
+                        -- Process the character data
                         local charID = tonumber(data.id)
                         local banned = lia.char.getCharBanned(charID)
                         client.liaNextSearch = 0
@@ -1622,6 +1626,7 @@ lia.command.add("charunban", {
                         lia.log.add(client, "charUnban", data.name or "Unknown", charID)
                     end):catch(function(err)
                         lia.warning("[Admin] Failed to get character name: " .. tostring(err))
+                        -- Continue without name
                         local charID = tonumber(data.id)
                         local banned = lia.char.getCharBanned(charID)
                         client.liaNextSearch = 0
@@ -1644,9 +1649,10 @@ lia.command.add("charunban", {
                 client.liaNextSearch = 0
             end)
         else
+            -- Search by name using chardata join
             lia.db.selectWithJoin("SELECT c.id, n.value AS name FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' WHERE n.value LIKE " .. lia.db.convertDataType("%" .. queryArg .. "%")):next(function(result)
                 if result and result.results and #result.results > 0 then
-                    local data = result.results[1]
+                    local data = result.results[1] -- Get first match
                     local charID = tonumber(data.id)
                     local banned = lia.char.getCharBanned(charID)
                     client.liaNextSearch = 0
@@ -1883,7 +1889,11 @@ lia.command.add("charwipeoffline", {
         if not charID then return client:notifyLocalized("invalidCharID") end
         lia.db.selectOne("value", "chardata", "charID = " .. charID .. " AND key = 'name'"):next(function(nameData)
             local charName = "Unknown"
-            if nameData then charName = nameData.value end
+            if nameData then
+                charName = nameData.value
+            end
+
+            -- Verify character exists
             lia.db.selectOne({"id"}, "characters", "id = " .. charID):next(function(charData)
                 if not charData then
                     client:notifyLocalized("characterNotFound")
@@ -1906,6 +1916,7 @@ lia.command.add("charwipeoffline", {
             end)
         end):catch(function(err)
             lia.warning("[Admin] Failed to get character name, proceeding anyway: " .. tostring(err))
+            -- Verify character exists even if we can't get the name
             lia.db.selectOne({"id"}, "characters", "id = " .. charID):next(function(charData)
                 if not charData then
                     client:notifyLocalized("characterNotFound")

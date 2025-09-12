@@ -57,7 +57,7 @@ end
 function entityMeta:isLiliaPersistent()
     if not IsValid(self) then return false end
     if self.GetPersistent and self:GetPersistent() then return true end
-    return self.IsPersistent or self.IsPersistent
+    return self.IsPersistent or self.IsLeonNPC
 end
 
 function entityMeta:checkDoorAccess(client, access)

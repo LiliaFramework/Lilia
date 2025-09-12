@@ -91,7 +91,7 @@ else
 
     function MODULE:LiliaLoaded()
         lia.option.load()
-        vgui.Create("liaCharacter")
+        if not LocalPlayer():getChar() then vgui.Create("liaCharacter") end
     end
 
     function MODULE:KickedFromChar(_, isCurrentChar)

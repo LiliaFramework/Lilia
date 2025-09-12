@@ -1371,6 +1371,57 @@ concommand.Add("lia_clear_loading_state", function(client)
     lia.clearLoadingState()
 end)
 
+concommand.Add("lia_force_reload", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Forcing database reload...\n")
+    hook.Run("OnReloaded")
+end)
+
+concommand.Add("lia_restore_characters", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Restoring character lists for all players...\n")
+    for _, ply in player.Iterator() do
+        if IsValid(ply) and not ply:IsBot() then
+            -- Reset the client's loaded state to force proper reload
+            ply.liaLoaded = false
+            ply.liaCharList = nil
+            -- Trigger the full character loading process
+            hook.Run("PlayerLiliaDataLoaded", ply)
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Triggered character reload for " .. ply:Name() .. "\n")
+        end
+    end
+end)
+
+concommand.Add("lia_check_players", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player Character Status:\n")
+    for _, ply in player.Iterator() do
+        if IsValid(ply) and not ply:IsBot() then
+            local charList = ply.liaCharList or {}
+            local loaded = ply.liaLoaded or false
+            local currentChar = ply:getChar()
+            local currentCharID = ply:getNetVar("char")
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), ply:Name() .. ":\n")
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  - Loaded: " .. tostring(loaded) .. "\n")
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  - Character List: " .. table.concat(charList, ", ") .. " (" .. #charList .. " chars)\n")
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  - Current Char ID: " .. tostring(currentCharID) .. "\n")
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  - Has Character: " .. tostring(currentChar ~= nil) .. "\n")
+        end
+    end
+end)
+
 hook.Add("server_removeban", "LiliaLogServerUnban", function(data)
     lia.admin(L("unbanLogFormat", data.networkid))
     lia.db.delete("bans", "playerSteamID = " .. lia.db.convertDataType(data.networkid))
