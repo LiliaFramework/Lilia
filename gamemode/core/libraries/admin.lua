@@ -296,15 +296,16 @@ function lia.administrator.save(noNetwork)
         }
     end
 
-    -- Check if admin table exists before trying to delete from it
     lia.db.waitForTablesToLoad():next(function()
         lia.db.tableExists("lia_admin"):next(function(tableExists)
             if tableExists then
                 lia.db.delete("admin"):next(function()
                     lia.db.bulkInsert("admin", rows):next(function()
                         if noNetwork or lia.administrator._loading then return end
-                        -- Handle network updates after successful save
-                        lia.net.ready = lia.net.ready or setmetatable({}, {__mode = "k"})
+                        lia.net.ready = lia.net.ready or setmetatable({}, {
+                            __mode = "k"
+                        })
+
                         local hasReady = false
                         for ply in pairs(lia.net.ready) do
                             if IsValid(ply) and lia.net.ready[ply] then
@@ -318,18 +319,15 @@ function lia.administrator.save(noNetwork)
                             net.WriteTable(lia.administrator.groups)
                             net.Broadcast()
                         end
-                    end):catch(function(err)
-                        lia.warning("[Admin] Failed to bulk insert admin data: " .. tostring(err))
-                    end)
-                end):catch(function(err)
-                    lia.warning("[Admin] Failed to delete admin table: " .. tostring(err))
-                end)
+                    end):catch(function(err) lia.warning("[Admin] Failed to bulk insert admin data: " .. tostring(err)) end)
+                end):catch(function(err) lia.warning("[Admin] Failed to delete admin table: " .. tostring(err)) end)
             else
-                -- Table doesn't exist yet, just insert the data
                 lia.db.bulkInsert("admin", rows):next(function()
                     if noNetwork or lia.administrator._loading then return end
-                    -- Handle network updates after successful save
-                    lia.net.ready = lia.net.ready or setmetatable({}, {__mode = "k"})
+                    lia.net.ready = lia.net.ready or setmetatable({}, {
+                        __mode = "k"
+                    })
+
                     local hasReady = false
                     for ply in pairs(lia.net.ready) do
                         if IsValid(ply) and lia.net.ready[ply] then
@@ -343,13 +341,9 @@ function lia.administrator.save(noNetwork)
                         net.WriteTable(lia.administrator.groups)
                         net.Broadcast()
                     end
-                end):catch(function(err)
-                    lia.warning("[Admin] Failed to bulk insert admin data: " .. tostring(err))
-                end)
+                end):catch(function(err) lia.warning("[Admin] Failed to bulk insert admin data: " .. tostring(err)) end)
             end
-        end):catch(function(err)
-            lia.warning("[Admin] Failed to check admin table existence: " .. tostring(err))
-        end)
+        end):catch(function(err) lia.warning("[Admin] Failed to check admin table existence: " .. tostring(err)) end)
     end)
 end
 

@@ -1390,10 +1390,8 @@ concommand.Add("lia_restore_characters", function(client)
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Restoring character lists for all players...\n")
     for _, ply in player.Iterator() do
         if IsValid(ply) and not ply:IsBot() then
-            -- Reset the client's loaded state to force proper reload
             ply.liaLoaded = false
             ply.liaCharList = nil
-            -- Trigger the full character loading process
             hook.Run("PlayerLiliaDataLoaded", ply)
             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Triggered character reload for " .. ply:Name() .. "\n")
         end

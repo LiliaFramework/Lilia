@@ -164,8 +164,6 @@ if SERVER then
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
-
-        -- Wait for tables to be loaded before creating inventory
         lia.db.waitForTablesToLoad():next(function()
             lia.db.tableExists("lia_inventories"):next(function(inventoriesExists)
                 if not inventoriesExists then
@@ -198,15 +196,10 @@ if SERVER then
                                 if count == expected then d:resolve(lastID) end
                             end, "invdata")
                         end
-                    end, "inventories"):catch(function(err)
-                        d:reject("Failed to create inventory: " .. tostring(err))
-                    end)
+                    end, "inventories"):catch(function(err) d:reject("Failed to create inventory: " .. tostring(err)) end)
                 end)
             end)
-        end):catch(function(err)
-            d:reject("Failed to wait for database tables: " .. tostring(err))
-        end)
-
+        end):catch(function(err) d:reject("Failed to wait for database tables: " .. tostring(err)) end)
         return d
     end
 

@@ -616,7 +616,6 @@ if SERVER then
     end
 
     local function BootstrapLilia()
-        -- Initialize database immediately so it's available before anything else
         SetupDatabase()
         cvars.AddChangeCallback("sbox_persist", function(_, old, new)
             timer.Create("sbox_persist_change_timer", 1, 1, function()
@@ -689,7 +688,6 @@ function GM:OnReloaded()
     if timeSinceLastReload < lia.reloadCooldown then return end
     lia.lastReloadTime = currentTime
     if SERVER then
-        -- Reset database and loading states for proper reload
         lia.db.connected = false
         lia.db.tablesLoaded = false
         lia.db.status.connected = false
@@ -700,7 +698,6 @@ function GM:OnReloaded()
         lia.loadingState.filesLoaded = false
         lia.loadingState.loadingFailed = false
         lia.bootstrap("Reload", "Resetting database state for reload...")
-        -- Reconnect to database and ensure tables are loaded
         lia.db.connect(function(success, errorMsg)
             if not success then
                 lia.error("[Reload] Database connection failed: " .. tostring(errorMsg))
@@ -712,7 +709,6 @@ function GM:OnReloaded()
 
             lia.loadingState.databaseConnected = true
             lia.bootstrap("Reload", "Database reconnected, loading tables...")
-            -- Force reload tables to ensure they're properly accessible
             lia.db.loadTables()
             lia.db.waitForTablesToLoad():next(function()
                 lia.loadingState.databaseTablesLoaded = true
@@ -732,19 +728,12 @@ function GM:OnReloaded()
                 lia.config.send()
                 lia.administrator.sync()
                 lia.playerinteract.syncToClients()
-
-                -- Restore character lists for existing players after reload
                 lia.bootstrap("Reload", "Restoring character lists for existing players...")
-
-                -- Add a small delay to ensure modules are fully initialized
                 timer.Simple(0.5, function()
                     for _, client in player.Iterator() do
                         if IsValid(client) and not client:IsBot() then
-                            -- Reset the client's loaded state to force proper reload
                             client.liaLoaded = false
                             client.liaCharList = nil
-
-                            -- Trigger the full character loading process
                             hook.Run("PlayerLiliaDataLoaded", client)
                             lia.information("[Reload] Triggered character reload for " .. client:Name())
                         end
@@ -762,7 +751,6 @@ function GM:OnReloaded()
         end, true)
     end
 
-    -- Client-side reload
     lia.module.initialize()
     lia.config.load()
     lia.faction.formatModelData()

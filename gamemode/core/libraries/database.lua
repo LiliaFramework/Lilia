@@ -171,18 +171,12 @@ function lia.db.connect(connectCallback, reconnect)
             return sqliteQuery(query, queryCallback, onError)
         end
 
-        -- Apply SQLite performance and safety PRAGMAs on connect (server only)
         if SERVER and not lia.db._pragmasApplied then
             pcall(function()
-                -- Use WAL for better concurrency and startup durability
                 sql.Query("PRAGMA journal_mode=WAL")
-                -- Balance safety and speed; NORMAL keeps durability reasonable
                 sql.Query("PRAGMA synchronous=NORMAL")
-                -- Keep temp objects in memory for speed
                 sql.Query("PRAGMA temp_store=MEMORY")
-                -- Increase page cache size (negative means KB units)
                 sql.Query("PRAGMA cache_size=-8000")
-                -- Enforce foreign keys if defined
                 sql.Query("PRAGMA foreign_keys=ON")
             end)
 
@@ -1584,7 +1578,6 @@ function lia.db.addDatabaseFields()
             }):next(function(result)
                 if result and result.success then
                     lia.information("[Lilia] Added missing 'schema' column to lia_characters table")
-                    -- Update existing records with current gamemode
                     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
                     lia.db.query("UPDATE lia_characters SET schema = " .. lia.db.convertDataType(gamemode) .. " WHERE schema IS NULL OR schema = ''"):next(function() lia.information("[Lilia] Updated existing character records with schema: " .. gamemode) end):catch(function(err) lia.error("[Lilia] Failed to update existing character records with schema: " .. err) end)
                 end
@@ -3391,22 +3384,17 @@ concommand.Add("lia_wipecharacters", function(ply)
                             local invdataTotal = invdataCount.results and invdataCount.results[1] and invdataCount.results[1].count or 0
                             MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Found ", invdataTotal, " inventory data entries\n\n")
                             MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Beginning wipe process...\n")
-                            -- Temporarily disable foreign key constraints for the wipe operation
                             sql.Query("PRAGMA foreign_keys=OFF")
-                            -- Delete in correct order to respect foreign key constraints
-                            -- First delete tables that reference other tables (child tables)
                             lia.db.delete("invdata"):next(function()
                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared invdata table\n")
                                 lia.db.delete("items"):next(function()
                                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared items table\n")
-                                    -- Then delete the referenced tables (parent tables)
                                     lia.db.delete("inventories"):next(function()
                                         MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared inventories table\n")
                                         lia.db.delete("chardata"):next(function()
                                             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared chardata table\n")
                                             lia.db.delete("characters", schemaCondition):next(function()
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✓ Cleared characters table\n")
-                                                -- Re-enable foreign key constraints
                                                 sql.Query("PRAGMA foreign_keys=ON")
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "\n")
                                                 if lia.db.cacheClear then lia.db.cacheClear() end
@@ -3418,7 +3406,6 @@ concommand.Add("lia_wipecharacters", function(ply)
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  • ", itemTotal, " items\n")
                                                 MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "  • ", invdataTotal, " inventory data entries\n")
                                             end):catch(function(err)
-                                                -- Re-enable foreign key constraints even on error
                                                 sql.Query("PRAGMA foreign_keys=ON")
                                                 MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear characters table: ", err, "\n")
                                             end)
@@ -3707,7 +3694,6 @@ concommand.Add("lia_snapshot_skip", function(ply, _, args)
             return
         end
 
-        -- Filter out tables to skip
         local filteredTables = {}
         for _, tableName in ipairs(tables) do
             if not skipTables[tableName] then
@@ -3785,11 +3771,9 @@ concommand.Add("lia_diagnose_table", function(ply, _, args)
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Diagnosing table: ", fullTableName, " ===\n")
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
-    -- Step 1: Check if table exists in sqlite_master
     lia.db.query("SELECT name FROM sqlite_master WHERE type='table' AND name='" .. fullTableName .. "'", function(result)
         if result and #result > 0 then
             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table exists in sqlite_master\n")
-            -- Step 2: Try to get table schema
             lia.db.query("PRAGMA table_info(" .. fullTableName .. ")", function(schemaResult)
                 if schemaResult and #schemaResult > 0 then
                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table schema retrieved successfully (", #schemaResult, " columns)\n")
@@ -3798,12 +3782,10 @@ concommand.Add("lia_diagnose_table", function(ply, _, args)
                     end
 
                     print("")
-                    -- Step 3: Try to count records
                     lia.db.query("SELECT COUNT(*) as count FROM " .. fullTableName, function(countResult)
                         if countResult and countResult[1] then
                             local count = countResult[1].count or 0
                             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table has ", count, " records\n")
-                            -- Step 4: Try a simple SELECT query
                             lia.db.select("*", tableName:gsub("^lia_", "")):next(function(selectResult)
                                 if selectResult and selectResult.results then
                                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query successful (", #selectResult.results, " records retrieved)\n")
@@ -3870,29 +3852,16 @@ concommand.Add("lia_fix_schema_column", function(ply)
             }):next(function(result)
                 if result and result.success then
                     MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✅ Successfully added 'schema' column to lia_characters table\n")
-                    -- Update existing records with current gamemode
                     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-                    lia.db.query("UPDATE lia_characters SET schema = " .. lia.db.convertDataType(gamemode) .. " WHERE schema IS NULL OR schema = ''"):next(function()
-                        MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✅ Updated existing character records with schema: " .. gamemode .. "\n")
-                    end):catch(function(err)
-                        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Failed to update existing character records with schema: " .. err .. "\n")
-                    end)
+                    lia.db.query("UPDATE lia_characters SET schema = " .. lia.db.convertDataType(gamemode) .. " WHERE schema IS NULL OR schema = ''"):next(function() MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✅ Updated existing character records with schema: " .. gamemode .. "\n") end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Failed to update existing character records with schema: " .. err .. "\n") end)
                 else
                     MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Failed to add 'schema' column to lia_characters table\n")
                 end
-            end):catch(function(err)
-                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Error adding 'schema' column: " .. err .. "\n")
-            end)
+            end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Error adding 'schema' column: " .. err .. "\n") end)
         else
             MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✅ Schema column already exists. Updating missing values...\n")
             local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-            lia.db.query("UPDATE lia_characters SET schema = " .. lia.db.convertDataType(gamemode) .. " WHERE schema IS NULL OR schema = ''"):next(function()
-                MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✅ Updated character records with missing schema values: " .. gamemode .. "\n")
-            end):catch(function(err)
-                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Failed to update character records with missing schema: " .. err .. "\n")
-            end)
+            lia.db.query("UPDATE lia_characters SET schema = " .. lia.db.convertDataType(gamemode) .. " WHERE schema IS NULL OR schema = ''"):next(function() MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "✅ Updated character records with missing schema values: " .. gamemode .. "\n") end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Failed to update character records with missing schema: " .. err .. "\n") end)
         end
-    end):catch(function(err)
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Error checking for 'schema' column: " .. err .. "\n")
-    end)
+    end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "❌ Error checking for 'schema' column: " .. err .. "\n") end)
 end)
