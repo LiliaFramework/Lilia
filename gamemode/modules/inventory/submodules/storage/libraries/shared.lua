@@ -32,7 +32,6 @@ function MODULE:InitializeStorage(entity)
 
         local def = lia.inventory.storage[key]
         if not def and entity:IsVehicle() then def = lia.inventory.storage["vehicle"] end
-        -- Use default fallback storage if no specific definition found
         if not def then
             def = {
                 name = "Storage Container",
