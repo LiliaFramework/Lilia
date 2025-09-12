@@ -10,7 +10,7 @@ The factions library (`lia.faction`) provides a comprehensive system for managin
 
 ---
 
-### lia.faction.register
+### register
 
 **Purpose**
 
@@ -70,7 +70,7 @@ end
 
 ---
 
-### lia.faction.cacheModels
+### cacheModels
 
 **Purpose**
 
@@ -111,7 +111,7 @@ end)
 
 ---
 
-### lia.faction.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -153,7 +153,7 @@ end)
 
 ---
 
-### lia.faction.get
+### get
 
 **Purpose**
 
@@ -209,7 +209,7 @@ lia.command.add("factioninfo", {
 
 ---
 
-### lia.faction.getIndex
+### getIndex
 
 **Purpose**
 
@@ -253,7 +253,7 @@ end
 
 ---
 
-### lia.faction.getClasses
+### getClasses
 
 **Purpose**
 
@@ -299,7 +299,7 @@ end
 
 ---
 
-### lia.faction.getPlayers
+### getPlayers
 
 **Purpose**
 
@@ -345,7 +345,7 @@ end
 
 ---
 
-### lia.faction.getPlayerCount
+### getPlayerCount
 
 **Purpose**
 
@@ -396,7 +396,7 @@ end
 
 ---
 
-### lia.faction.isFactionCategory
+### isFactionCategory
 
 **Purpose**
 
@@ -446,7 +446,7 @@ end
 
 ---
 
-### lia.faction.jobGenerate
+### jobGenerate
 
 **Purpose**
 
@@ -495,7 +495,7 @@ end
 
 ---
 
-### lia.faction.formatModelData
+### formatModelData
 
 **Purpose**
 
@@ -546,7 +546,7 @@ end
 
 ---
 
-### lia.faction.getCategories
+### getCategories
 
 **Purpose**
 
@@ -590,7 +590,7 @@ end
 
 ---
 
-### lia.faction.getModelsFromCategory
+### getModelsFromCategory
 
 **Purpose**
 
@@ -636,7 +636,7 @@ end
 
 ---
 
-### lia.faction.getDefaultClass
+### getDefaultClass
 
 **Purpose**
 
@@ -684,7 +684,7 @@ end
 
 ---
 
-### lia.faction.registerGroup
+### registerGroup
 
 **Purpose**
 
@@ -730,7 +730,7 @@ end
 
 ---
 
-### lia.faction.getGroup
+### getGroup
 
 **Purpose**
 
@@ -782,7 +782,7 @@ end
 
 ---
 
-### lia.faction.getFactionsInGroup
+### getFactionsInGroup
 
 **Purpose**
 
@@ -828,7 +828,7 @@ end
 
 ---
 
-### lia.faction.hasWhitelist
+### hasWhitelist
 
 **Purpose**
 

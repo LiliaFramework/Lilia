@@ -10,7 +10,7 @@ The flags library (`lia.flag`) provides a comprehensive system for managing play
 
 ---
 
-### lia.flag.add
+### add
 
 **Purpose**
 
@@ -72,7 +72,7 @@ end
 
 ---
 
-### lia.flag.onSpawn
+### onSpawn
 
 **Purpose**
 

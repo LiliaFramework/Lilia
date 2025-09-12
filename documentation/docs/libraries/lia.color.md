@@ -10,7 +10,7 @@ The color library (`lia.color`) provides a comprehensive system for managing col
 
 ---
 
-### lia.color.register
+### register
 
 **Purpose**
 
@@ -49,7 +49,7 @@ lia.color.register("gold", {255, 215, 0})
 
 ---
 
-### lia.color.Adjust
+### Adjust
 
 **Purpose**
 
@@ -94,7 +94,7 @@ end
 
 ---
 
-### lia.color.ReturnMainAdjustedColors
+### ReturnMainAdjustedColors
 
 **Purpose**
 

@@ -11,7 +11,7 @@ The util library (`lia.util`) provides a comprehensive system for managing utili
 ---
 
 
-### lia.util.getBySteamID
+### getBySteamID
 
 **Purpose**
 
@@ -52,7 +52,7 @@ end
 
 ---
 
-### lia.util.FindPlayersInSphere
+### FindPlayersInSphere
 
 **Purpose**
 
@@ -87,7 +87,7 @@ end
 
 ---
 
-### lia.util.findPlayer
+### findPlayer
 
 **Purpose**
 
@@ -128,7 +128,7 @@ end
 
 ---
 
-### lia.util.findPlayerItems
+### findPlayerItems
 
 **Purpose**
 
@@ -163,7 +163,7 @@ end
 
 ---
 
-### lia.util.findPlayerItemsByClass
+### findPlayerItemsByClass
 
 **Purpose**
 
@@ -198,7 +198,7 @@ end
 
 ---
 
-### lia.util.findPlayerEntities
+### findPlayerEntities
 
 **Purpose**
 
@@ -233,7 +233,7 @@ end
 
 ---
 
-### lia.util.stringMatches
+### stringMatches
 
 **Purpose**
 
@@ -268,7 +268,7 @@ end
 
 ---
 
-### lia.util.getAdmins
+### getAdmins
 
 **Purpose**
 
@@ -306,7 +306,7 @@ end
 
 ---
 
-### lia.util.findPlayerBySteamID64
+### findPlayerBySteamID64
 
 **Purpose**
 
@@ -347,7 +347,7 @@ end
 
 ---
 
-### lia.util.findPlayerBySteamID
+### findPlayerBySteamID
 
 **Purpose**
 
@@ -388,7 +388,7 @@ end
 
 ---
 
-### lia.util.canFit
+### canFit
 
 **Purpose**
 
@@ -429,7 +429,7 @@ end
 
 ---
 
-### lia.util.playerInRadius
+### playerInRadius
 
 **Purpose**
 
@@ -466,7 +466,7 @@ end
 
 ---
 
-### lia.util.formatStringNamed
+### formatStringNamed
 
 **Purpose**
 
@@ -505,7 +505,7 @@ end
 
 ---
 
-### lia.util.getMaterial
+### getMaterial
 
 **Purpose**
 
@@ -546,7 +546,7 @@ end
 
 ---
 
-### lia.util.findFaction
+### findFaction
 
 **Purpose**
 
@@ -587,7 +587,7 @@ end
 
 ---
 
-### lia.util.SendTableUI
+### SendTableUI
 
 **Purpose**
 
@@ -624,7 +624,7 @@ end
 
 ---
 
-### lia.util.findEmptySpace
+### findEmptySpace
 
 **Purpose**
 
@@ -666,7 +666,7 @@ end
 
 ---
 
-### lia.util.ShadowText
+### ShadowText
 
 **Purpose**
 
@@ -705,7 +705,7 @@ end
 
 ---
 
-### lia.util.DrawTextOutlined
+### DrawTextOutlined
 
 **Purpose**
 
@@ -744,7 +744,7 @@ end
 
 ---
 
-### lia.util.DrawTip
+### DrawTip
 
 **Purpose**
 
@@ -781,7 +781,7 @@ end
 
 ---
 
-### lia.util.drawText
+### drawText
 
 **Purpose**
 
@@ -820,7 +820,7 @@ end
 
 ---
 
-### lia.util.drawTexture
+### drawTexture
 
 **Purpose**
 
@@ -858,7 +858,7 @@ end
 
 ---
 
-### lia.util.skinFunc
+### skinFunc
 
 **Purpose**
 
@@ -895,7 +895,7 @@ end
 
 ---
 
-### lia.util.wrapText
+### wrapText
 
 **Purpose**
 
@@ -933,7 +933,7 @@ end
 
 ---
 
-### lia.util.drawBlur
+### drawBlur
 
 **Purpose**
 
@@ -970,7 +970,7 @@ end
 
 ---
 
-### lia.util.drawBlackBlur
+### drawBlackBlur
 
 **Purpose**
 
@@ -1007,7 +1007,7 @@ end
 
 ---
 
-### lia.util.drawBlurAt
+### drawBlurAt
 
 **Purpose**
 
@@ -1044,7 +1044,7 @@ end
 
 ---
 
-### lia.util.requestArguments
+### requestArguments
 
 **Purpose**
 
@@ -1080,7 +1080,7 @@ end
 
 ---
 
-### lia.util.CreateTableUI
+### CreateTableUI
 
 **Purpose**
 
@@ -1117,7 +1117,7 @@ end
 
 ---
 
-### lia.util.openOptionsMenu
+### openOptionsMenu
 
 **Purpose**
 

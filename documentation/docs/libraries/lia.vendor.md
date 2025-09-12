@@ -10,7 +10,7 @@ The vendor library (`lia.vendor`) provides a comprehensive system for managing v
 
 ---
 
-### lia.vendor.addRarities
+### addRarities
 
 **Purpose**
 
@@ -49,7 +49,7 @@ end
 
 ---
 
-### lia.vendor.addPreset
+### addPreset
 
 **Purpose**
 
@@ -98,7 +98,7 @@ end
 
 ---
 
-### lia.vendor.getPreset
+### getPreset
 
 **Purpose**
 
@@ -139,7 +139,7 @@ end
 
 ---
 
-### lia.vendor.loadPresets
+### loadPresets
 
 **Purpose**
 
@@ -174,7 +174,7 @@ end
 
 ---
 
-### lia.vendor.savePresetToDatabase
+### savePresetToDatabase
 
 **Purpose**
 

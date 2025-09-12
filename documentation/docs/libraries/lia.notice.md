@@ -10,7 +10,7 @@ The notices library (`lia.notices`) provides a comprehensive system for managing
 
 ---
 
-### lia.notices.notify
+### notify
 
 **Purpose**
 
@@ -59,7 +59,7 @@ end
 
 ---
 
-### lia.notices.notifyLocalized
+### notifyLocalized
 
 **Purpose**
 

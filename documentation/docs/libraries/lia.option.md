@@ -10,7 +10,7 @@ The option library (`lia.option`) provides a comprehensive system for managing c
 
 ---
 
-### lia.option.add
+### add
 
 **Purpose**
 
@@ -64,7 +64,7 @@ end
 
 ---
 
-### lia.option.getOptions
+### getOptions
 
 **Purpose**
 
@@ -102,7 +102,7 @@ end
 
 ---
 
-### lia.option.set
+### set
 
 **Purpose**
 
@@ -139,7 +139,7 @@ end
 
 ---
 
-### lia.option.get
+### get
 
 **Purpose**
 
@@ -176,7 +176,7 @@ end
 
 ---
 
-### lia.option.save
+### save
 
 **Purpose**
 
@@ -211,7 +211,7 @@ end
 
 ---
 
-### lia.option.load
+### load
 
 **Purpose**
 

@@ -10,7 +10,7 @@ The languages library (`lia.lang`) provides a comprehensive system for managing 
 
 ---
 
-### lia.lang.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -56,7 +56,7 @@ end)
 
 ---
 
-### lia.lang.AddTable
+### AddTable
 
 **Purpose**
 
@@ -119,7 +119,7 @@ end
 
 ---
 
-### lia.lang.getLanguages
+### getLanguages
 
 **Purpose**
 

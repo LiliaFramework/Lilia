@@ -10,7 +10,7 @@ The database library (`lia.db`) provides a comprehensive system for database ope
 
 ---
 
-### lia.db.setCacheEnabled
+### setCacheEnabled
 
 **Purpose**
 
@@ -65,7 +65,7 @@ end
 
 ---
 
-### lia.db.setCacheTTL
+### setCacheTTL
 
 **Purpose**
 
@@ -125,7 +125,7 @@ end
 
 ---
 
-### lia.db.cacheClear
+### cacheClear
 
 **Purpose**
 
@@ -177,7 +177,7 @@ end)
 
 ---
 
-### lia.db.cacheGet
+### cacheGet
 
 **Purpose**
 
@@ -230,7 +230,7 @@ end
 
 ---
 
-### lia.db.cacheSet
+### cacheSet
 
 **Purpose**
 
@@ -273,7 +273,7 @@ end
 
 ---
 
-### lia.db.invalidateTable
+### invalidateTable
 
 **Purpose**
 
@@ -322,7 +322,7 @@ lia.command.add("invalidate", {
 
 ---
 
-### lia.db.normalizeIdentifier
+### normalizeIdentifier
 
 **Purpose**
 
@@ -366,7 +366,7 @@ end
 
 ---
 
-### lia.db.normalizeSQLIdentifiers
+### normalizeSQLIdentifiers
 
 **Purpose**
 
@@ -407,7 +407,7 @@ end
 
 ---
 
-### lia.db.connect
+### connect
 
 **Purpose**
 
@@ -458,7 +458,7 @@ end
 
 ---
 
-### lia.db.wipeTables
+### wipeTables
 
 **Purpose**
 
@@ -504,7 +504,7 @@ end
 
 ---
 
-### lia.db.loadTables
+### loadTables
 
 **Purpose**
 
@@ -545,7 +545,7 @@ end
 
 ---
 
-### lia.db.waitForTablesToLoad
+### waitForTablesToLoad
 
 **Purpose**
 
@@ -587,7 +587,7 @@ end)
 
 ---
 
-### lia.db.convertDataType
+### convertDataType
 
 **Purpose**
 
@@ -631,7 +631,7 @@ end
 
 ---
 
-### lia.db.insertTable
+### insertTable
 
 **Purpose**
 
@@ -693,7 +693,7 @@ lia.command.add("insertdata", {
 
 ---
 
-### lia.db.updateTable
+### updateTable
 
 **Purpose**
 
@@ -753,7 +753,7 @@ lia.command.add("updatedata", {
 
 ---
 
-### lia.db.select
+### select
 
 **Purpose**
 
@@ -813,7 +813,7 @@ lia.command.add("selectdata", {
 
 ---
 
-### lia.db.selectWithCondition
+### selectWithCondition
 
 **Purpose**
 
@@ -860,7 +860,7 @@ end
 
 ---
 
-### lia.db.count
+### count
 
 **Purpose**
 
@@ -905,7 +905,7 @@ end
 
 ---
 
-### lia.db.exists
+### exists
 
 **Purpose**
 
@@ -947,7 +947,7 @@ end
 
 ---
 
-### lia.db.addExpectedSchema
+### addExpectedSchema
 
 **Purpose**
 
@@ -999,7 +999,7 @@ end
 
 ---
 
-### lia.db.migrateDatabaseSchemas
+### migrateDatabaseSchemas
 
 **Purpose**
 
@@ -1040,7 +1040,7 @@ end
 
 ---
 
-### lia.db.query
+### query
 
 **Purpose**
 
@@ -1114,7 +1114,7 @@ end
 
 ---
 
-### lia.db.addDatabaseFields
+### addDatabaseFields
 
 **Purpose**
 
@@ -1162,7 +1162,7 @@ end
 
 ---
 
-### lia.db.selectOne
+### selectOne
 
 **Purpose**
 
@@ -1205,7 +1205,7 @@ end
 
 ---
 
-### lia.db.selectWithJoin
+### selectWithJoin
 
 **Purpose**
 
@@ -1246,7 +1246,7 @@ end
 
 ---
 
-### lia.db.bulkInsert
+### bulkInsert
 
 **Purpose**
 
@@ -1290,7 +1290,7 @@ end
 
 ---
 
-### lia.db.bulkUpsert
+### bulkUpsert
 
 **Purpose**
 
@@ -1334,7 +1334,7 @@ end
 
 ---
 
-### lia.db.insertOrIgnore
+### insertOrIgnore
 
 **Purpose**
 
@@ -1379,7 +1379,7 @@ end
 
 ---
 
-### lia.db.tableExists
+### tableExists
 
 **Purpose**
 
@@ -1428,7 +1428,7 @@ end
 
 ---
 
-### lia.db.fieldExists
+### fieldExists
 
 **Purpose**
 
@@ -1476,7 +1476,7 @@ end
 
 ---
 
-### lia.db.getTables
+### getTables
 
 **Purpose**
 
@@ -1524,7 +1524,7 @@ lia.command.add("listtables", {
 
 ---
 
-### lia.db.getTableColumns
+### getTableColumns
 
 **Purpose**
 
@@ -1580,7 +1580,7 @@ end
 
 ---
 
-### lia.db.transaction
+### transaction
 
 **Purpose**
 
@@ -1642,7 +1642,7 @@ end
 
 ---
 
-### lia.db.escapeIdentifier
+### escapeIdentifier
 
 **Purpose**
 
@@ -1684,7 +1684,7 @@ end
 
 ---
 
-### lia.db.upsert
+### upsert
 
 **Purpose**
 
@@ -1732,7 +1732,7 @@ end
 
 ---
 
-### lia.db.delete
+### delete
 
 **Purpose**
 
@@ -1774,7 +1774,7 @@ end
 
 ---
 
-### lia.db.createTable
+### createTable
 
 **Purpose**
 
@@ -1826,7 +1826,7 @@ end
 
 ---
 
-### lia.db.createColumn
+### createColumn
 
 **Purpose**
 
@@ -1867,7 +1867,7 @@ end
 
 ---
 
-### lia.db.removeTable
+### removeTable
 
 **Purpose**
 
@@ -1916,7 +1916,7 @@ lia.command.add("removetable", {
 
 ---
 
-### lia.db.removeColumn
+### removeColumn
 
 **Purpose**
 
@@ -1956,7 +1956,7 @@ end
 
 ---
 
-### lia.db.GetCharacterTable
+### GetCharacterTable
 
 **Purpose**
 
@@ -1998,7 +1998,7 @@ end
 
 ---
 
-### lia.db.autoRemoveUnderscoreColumns
+### autoRemoveUnderscoreColumns
 
 **Purpose**
 

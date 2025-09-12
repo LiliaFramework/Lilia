@@ -10,7 +10,7 @@ The `Tool` meta table provides comprehensive tool gun functionality including cr
 
 ---
 
-### toolMeta:Create
+### Create
 
 **Purpose**
 
@@ -57,7 +57,7 @@ end)
 
 ---
 
-### toolMeta:CreateConVars
+### CreateConVars
 
 **Purpose**
 
@@ -96,7 +96,7 @@ end)
 
 ---
 
-### toolMeta:UpdateData
+### UpdateData
 
 **Purpose**
 
@@ -133,7 +133,7 @@ end)
 
 ---
 
-### toolMeta:FreezeMovement
+### FreezeMovement
 
 **Purpose**
 
@@ -172,7 +172,7 @@ end)
 
 ---
 
-### toolMeta:DrawHUD
+### DrawHUD
 
 **Purpose**
 
@@ -211,7 +211,7 @@ end)
 
 ---
 
-### toolMeta:GetServerInfo
+### GetServerInfo
 
 **Purpose**
 
@@ -254,7 +254,7 @@ end)
 
 ---
 
-### toolMeta:BuildConVarList
+### BuildConVarList
 
 **Purpose**
 
@@ -298,7 +298,7 @@ end)
 
 ---
 
-### toolMeta:GetClientInfo
+### GetClientInfo
 
 **Purpose**
 
@@ -336,7 +336,7 @@ end)
 
 ---
 
-### toolMeta:GetClientNumber
+### GetClientNumber
 
 **Purpose**
 
@@ -376,7 +376,7 @@ end)
 
 ---
 
-### toolMeta:Allowed
+### Allowed
 
 **Purpose**
 
@@ -417,7 +417,7 @@ end)
 
 ---
 
-### toolMeta:Init
+### Init
 
 **Purpose**
 
@@ -454,7 +454,7 @@ end)
 
 ---
 
-### toolMeta:GetMode
+### GetMode
 
 **Purpose**
 
@@ -490,7 +490,7 @@ end)
 
 ---
 
-### toolMeta:GetSWEP
+### GetSWEP
 
 **Purpose**
 
@@ -531,7 +531,7 @@ end)
 
 ---
 
-### toolMeta:GetOwner
+### GetOwner
 
 **Purpose**
 
@@ -576,7 +576,7 @@ end)
 
 ---
 
-### toolMeta:GetWeapon
+### GetWeapon
 
 **Purpose**
 
@@ -621,7 +621,7 @@ end)
 
 ---
 
-### toolMeta:LeftClick
+### LeftClick
 
 **Purpose**
 
@@ -659,7 +659,7 @@ end)
 
 ---
 
-### toolMeta:RightClick
+### RightClick
 
 **Purpose**
 
@@ -697,7 +697,7 @@ end)
 
 ---
 
-### toolMeta:Reload
+### Reload
 
 **Purpose**
 
@@ -735,7 +735,7 @@ end)
 
 ---
 
-### toolMeta:Deploy
+### Deploy
 
 **Purpose**
 
@@ -773,7 +773,7 @@ end)
 
 ---
 
-### toolMeta:Holster
+### Holster
 
 **Purpose**
 
@@ -811,7 +811,7 @@ end)
 
 ---
 
-### toolMeta:Think
+### Think
 
 **Purpose**
 
@@ -848,7 +848,7 @@ end)
 
 ---
 
-### toolMeta:CheckObjects
+### CheckObjects
 
 **Purpose**
 
@@ -889,7 +889,7 @@ end)
 
 ---
 
-### toolMeta:ClearObjects
+### ClearObjects
 
 **Purpose**
 
@@ -928,7 +928,7 @@ end)
 
 ---
 
-### toolMeta:ReleaseGhostEntity
+### ReleaseGhostEntity
 
 **Purpose**
 

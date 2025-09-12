@@ -10,7 +10,7 @@ The inventory library (`lia.inventory`) provides a comprehensive system for mana
 
 ---
 
-### lia.inventory.newType
+### newType
 
 **Purpose**
 
@@ -73,7 +73,7 @@ end
 
 ---
 
-### lia.inventory.new
+### new
 
 **Purpose**
 
@@ -133,7 +133,7 @@ end
 
 ---
 
-### lia.inventory.loadByID
+### loadByID
 
 **Purpose**
 
@@ -193,7 +193,7 @@ end
 
 ---
 
-### lia.inventory.loadFromDefaultStorage
+### loadFromDefaultStorage
 
 **Purpose**
 
@@ -258,7 +258,7 @@ end
 
 ---
 
-### lia.inventory.instance
+### instance
 
 **Purpose**
 
@@ -324,7 +324,7 @@ end
 
 ---
 
-### lia.inventory.loadAllFromCharID
+### loadAllFromCharID
 
 **Purpose**
 
@@ -380,7 +380,7 @@ end
 
 ---
 
-### lia.inventory.deleteByID
+### deleteByID
 
 **Purpose**
 
@@ -444,7 +444,7 @@ end
 
 ---
 
-### lia.inventory.cleanUpForCharacter
+### cleanUpForCharacter
 
 **Purpose**
 
@@ -497,7 +497,7 @@ end
 
 ---
 
-### lia.inventory.registerStorage
+### registerStorage
 
 **Purpose**
 
@@ -564,7 +564,7 @@ end
 
 ---
 
-### lia.inventory.getStorage
+### getStorage
 
 **Purpose**
 
@@ -619,7 +619,7 @@ end
 
 ---
 
-### lia.inventory.registerTrunk
+### registerTrunk
 
 **Purpose**
 
@@ -685,7 +685,7 @@ end
 
 ---
 
-### lia.inventory.getTrunk
+### getTrunk
 
 **Purpose**
 
@@ -740,7 +740,7 @@ end
 
 ---
 
-### lia.inventory.getAllTrunks
+### getAllTrunks
 
 **Purpose**
 
@@ -798,7 +798,7 @@ end
 
 ---
 
-### lia.inventory.getAllStorage
+### getAllStorage
 
 **Purpose**
 
@@ -856,7 +856,7 @@ end
 
 ---
 
-### lia.inventory.show
+### show
 
 **Purpose**
 
@@ -917,7 +917,7 @@ end
 
 ---
 
-### lia.inventory.checkOverflow
+### checkOverflow
 
 **Purpose**
 

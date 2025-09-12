@@ -10,7 +10,7 @@ The bars library (`lia.bar`) provides a comprehensive system for creating and ma
 
 ---
 
-### lia.bar.get
+### get
 
 **Purpose**
 
@@ -52,7 +52,7 @@ end
 
 ---
 
-### lia.bar.add
+### add
 
 **Purpose**
 
@@ -123,7 +123,7 @@ end)
 
 ---
 
-### lia.bar.remove
+### remove
 
 **Purpose**
 
@@ -168,7 +168,7 @@ end
 
 ---
 
-### lia.bar.drawBar
+### drawBar
 
 **Purpose**
 
@@ -223,7 +223,7 @@ end)
 
 ---
 
-### lia.bar.drawAction
+### drawAction
 
 **Purpose**
 
@@ -267,7 +267,7 @@ end
 
 ---
 
-### lia.bar.drawAll
+### drawAll
 
 **Purpose**
 

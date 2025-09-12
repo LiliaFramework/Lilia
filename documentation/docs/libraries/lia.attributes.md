@@ -10,7 +10,7 @@ The attributes library (`lia.attribs`) provides a comprehensive system for manag
 
 ---
 
-### lia.attribs.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -43,7 +43,7 @@ lia.attribs.loadFromDir("schema/attributes")
 
 ---
 
-### lia.attribs.setup
+### setup
 
 **Purpose**
 

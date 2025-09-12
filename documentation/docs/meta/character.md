@@ -10,7 +10,7 @@ The `Character` meta table exposes properties and behaviors for character entiti
 
 ---
 
-### characterMeta:tostring
+### tostring
 
 **Purpose**
 
@@ -42,7 +42,7 @@ end)
 
 ---
 
-### characterMeta:eq
+### eq
 
 **Purpose**
 
@@ -76,7 +76,7 @@ end
 
 ---
 
-### characterMeta:getID
+### getID
 
 **Purpose**
 
@@ -109,7 +109,7 @@ end)
 
 ---
 
-### characterMeta:getPlayer
+### getPlayer
 
 **Purpose**
 
@@ -150,7 +150,7 @@ end)
 
 ---
 
-### characterMeta:getDisplayedName
+### getDisplayedName
 
 **Purpose**
 
@@ -191,7 +191,7 @@ end)
 
 ---
 
-### characterMeta:hasMoney
+### hasMoney
 
 **Purpose**
 
@@ -230,7 +230,7 @@ end)
 
 ---
 
-### characterMeta:hasFlags
+### hasFlags
 
 **Purpose**
 
@@ -271,7 +271,7 @@ end)
 
 ---
 
-### characterMeta:getItemWeapon
+### getItemWeapon
 
 **Purpose**
 
@@ -311,7 +311,7 @@ end)
 
 ---
 
-### characterMeta:getMaxStamina
+### getMaxStamina
 
 **Purpose**
 
@@ -352,7 +352,7 @@ end)
 
 ---
 
-### characterMeta:getStamina
+### getStamina
 
 **Purpose**
 
@@ -394,7 +394,7 @@ end)
 
 ---
 
-### characterMeta:hasClassWhitelist
+### hasClassWhitelist
 
 **Purpose**
 
@@ -436,7 +436,7 @@ end)
 
 ---
 
-### characterMeta:isFaction
+### isFaction
 
 **Purpose**
 
@@ -477,7 +477,7 @@ end)
 
 ---
 
-### characterMeta:isClass
+### isClass
 
 **Purpose**
 
@@ -521,7 +521,7 @@ end)
 
 ---
 
-### characterMeta:getAttrib
+### getAttrib
 
 **Purpose**
 
@@ -563,7 +563,7 @@ end)
 
 ---
 
-### characterMeta:getBoost
+### getBoost
 
 **Purpose**
 
@@ -611,7 +611,7 @@ end)
 
 ---
 
-### characterMeta:getBoosts
+### getBoosts
 
 **Purpose**
 
@@ -657,7 +657,7 @@ end)
 
 ---
 
-### characterMeta:doesRecognize
+### doesRecognize
 
 **Purpose**
 
@@ -705,7 +705,7 @@ end)
 
 ---
 
-### characterMeta:doesFakeRecognize
+### doesFakeRecognize
 
 **Purpose**
 
@@ -751,7 +751,7 @@ end)
 
 ---
 
-### characterMeta:setData
+### setData
 
 **Purpose**
 
@@ -792,7 +792,7 @@ end)
 
 ---
 
-### characterMeta:getData
+### getData
 
 **Purpose**
 
@@ -834,7 +834,7 @@ end)
 
 ---
 
-### characterMeta:isBanned
+### isBanned
 
 **Purpose**
 
@@ -875,7 +875,7 @@ end)
 
 ---
 
-### characterMeta:recognize
+### recognize
 
 **Purpose**
 
@@ -922,7 +922,7 @@ end)
 
 ---
 
-### characterMeta:classWhitelist
+### classWhitelist
 
 **Purpose**
 
@@ -959,7 +959,7 @@ end)
 
 ---
 
-### characterMeta:classUnWhitelist
+### classUnWhitelist
 
 **Purpose**
 
@@ -996,7 +996,7 @@ end)
 
 ---
 
-### characterMeta:joinClass
+### joinClass
 
 **Purpose**
 
@@ -1037,7 +1037,7 @@ end)
 
 ---
 
-### characterMeta:kickClass
+### kickClass
 
 **Purpose**
 
@@ -1073,7 +1073,7 @@ end)
 
 ---
 
-### characterMeta:updateAttrib
+### updateAttrib
 
 **Purpose**
 
@@ -1113,7 +1113,7 @@ end)
 
 ---
 
-### characterMeta:setAttrib
+### setAttrib
 
 **Purpose**
 
@@ -1152,7 +1152,7 @@ end)
 
 ---
 
-### characterMeta:addBoost
+### addBoost
 
 **Purpose**
 
@@ -1196,7 +1196,7 @@ end)
 
 ---
 
-### characterMeta:removeBoost
+### removeBoost
 
 **Purpose**
 
@@ -1238,7 +1238,7 @@ end)
 
 ---
 
-### characterMeta:setFlags
+### setFlags
 
 **Purpose**
 
@@ -1275,7 +1275,7 @@ end)
 
 ---
 
-### characterMeta:giveFlags
+### giveFlags
 
 **Purpose**
 
@@ -1312,7 +1312,7 @@ end)
 
 ---
 
-### characterMeta:takeFlags
+### takeFlags
 
 **Purpose**
 
@@ -1349,7 +1349,7 @@ end)
 
 ---
 
-### characterMeta:save
+### save
 
 **Purpose**
 
@@ -1386,7 +1386,7 @@ end)
 
 ---
 
-### characterMeta:sync
+### sync
 
 **Purpose**
 
@@ -1426,7 +1426,7 @@ end)
 
 ---
 
-### characterMeta:setup
+### setup
 
 **Purpose**
 
@@ -1462,7 +1462,7 @@ end)
 
 ---
 
-### characterMeta:kick
+### kick
 
 **Purpose**
 
@@ -1501,7 +1501,7 @@ end)
 
 ---
 
-### characterMeta:ban
+### ban
 
 **Purpose**
 
@@ -1542,7 +1542,7 @@ end)
 
 ---
 
-### characterMeta:delete
+### delete
 
 **Purpose**
 
@@ -1581,7 +1581,7 @@ end)
 
 ---
 
-### characterMeta:destroy
+### destroy
 
 **Purpose**
 
@@ -1620,7 +1620,7 @@ end)
 
 ---
 
-### characterMeta:giveMoney
+### giveMoney
 
 **Purpose**
 
@@ -1660,7 +1660,7 @@ end)
 
 ---
 
-### characterMeta:takeMoney
+### takeMoney
 
 **Purpose**
 

@@ -10,7 +10,7 @@ The playerinteract library (`lia.playerinteract`) provides a comprehensive syste
 
 ---
 
-### lia.playerinteract.isWithinRange
+### isWithinRange
 
 **Purpose**
 
@@ -51,7 +51,7 @@ end
 
 ---
 
-### lia.playerinteract.getInteractions
+### getInteractions
 
 **Purpose**
 
@@ -89,7 +89,7 @@ end
 
 ---
 
-### lia.playerinteract.getActions
+### getActions
 
 **Purpose**
 
@@ -127,7 +127,7 @@ end
 
 ---
 
-### lia.playerinteract.getCategorizedOptions
+### getCategorizedOptions
 
 **Purpose**
 
@@ -165,7 +165,7 @@ end
 
 ---
 
-### lia.playerinteract.addInteraction
+### addInteraction
 
 **Purpose**
 
@@ -206,7 +206,7 @@ end
 
 ---
 
-### lia.playerinteract.addAction
+### addAction
 
 **Purpose**
 
@@ -247,7 +247,7 @@ end
 
 ---
 
-### lia.playerinteract.syncToClients
+### syncToClients
 
 **Purpose**
 
@@ -282,7 +282,7 @@ end
 
 ---
 
-### lia.playerinteract.openMenu
+### openMenu
 
 **Purpose**
 

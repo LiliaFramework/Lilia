@@ -10,7 +10,7 @@ The logger library (`lia.log`) provides a comprehensive system for managing logs
 
 ---
 
-### lia.log.addType
+### addType
 
 **Purpose**
 
@@ -70,7 +70,7 @@ end
 
 ---
 
-### lia.log.getString
+### getString
 
 **Purpose**
 
@@ -130,7 +130,7 @@ end
 
 ---
 
-### lia.log.add
+### add
 
 **Purpose**
 

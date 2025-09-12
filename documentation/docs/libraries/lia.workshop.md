@@ -10,7 +10,7 @@ The workshop library (`lia.workshop`) provides a comprehensive system for managi
 
 ---
 
-### lia.workshop.Add
+### Add
 
 **Purpose**
 
@@ -46,7 +46,7 @@ end
 
 ---
 
-### lia.workshop.Gather
+### Gather
 
 **Purpose**
 
@@ -82,7 +82,7 @@ end
 
 ---
 
-### lia.workshop.Send
+### Send
 
 **Purpose**
 
@@ -117,7 +117,7 @@ end
 
 ---
 
-### lia.workshop.IsMounted
+### IsMounted
 
 **Purpose**
 
@@ -157,7 +157,7 @@ end
 
 ---
 
-### lia.workshop.Enqueue
+### Enqueue
 
 **Purpose**
 
@@ -192,7 +192,7 @@ end
 
 ---
 
-### lia.workshop.ProcessQueue
+### ProcessQueue
 
 **Purpose**
 
@@ -227,7 +227,7 @@ end
 
 ---
 
-### lia.workshop.hasContentToDownload
+### hasContentToDownload
 
 **Purpose**
 
@@ -267,7 +267,7 @@ end
 
 ---
 
-### lia.workshop.mountContent
+### mountContent
 
 **Purpose**
 

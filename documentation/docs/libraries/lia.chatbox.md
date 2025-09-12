@@ -10,7 +10,7 @@ The chatbox library (`lia.chat`) provides a comprehensive chat system for the Li
 
 ---
 
-### lia.chat.timestamp
+### timestamp
 
 **Purpose**
 
@@ -48,7 +48,7 @@ end
 
 ---
 
-### lia.chat.register
+### register
 
 **Purpose**
 
@@ -123,7 +123,7 @@ lia.chat.register("admin", {
 
 ---
 
-### lia.chat.parse
+### parse
 
 **Purpose**
 
@@ -173,7 +173,7 @@ end)
 
 ---
 
-### lia.chat.send
+### send
 
 **Purpose**
 

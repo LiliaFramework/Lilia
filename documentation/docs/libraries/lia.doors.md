@@ -10,7 +10,7 @@ The doors library (`lia.doors`) provides a comprehensive door management system 
 
 ---
 
-### lia.doors.AddPreset
+### AddPreset
 
 **Purpose**
 
@@ -66,7 +66,7 @@ lia.doors.AddPreset("rp_evocity_v4b", simplePreset)
 
 ---
 
-### lia.doors.GetPreset
+### GetPreset
 
 **Purpose**
 
@@ -111,7 +111,7 @@ end
 
 ---
 
-### lia.doors.VerifyDatabaseSchema
+### VerifyDatabaseSchema
 
 **Purpose**
 
@@ -150,7 +150,7 @@ lia.doors.VerifyDatabaseSchema()
 
 ---
 
-### lia.doors.CleanupCorruptedData
+### CleanupCorruptedData
 
 **Purpose**
 
@@ -192,7 +192,7 @@ end)
 
 ---
 
-### lia.doors.AddDoorGroupColumn
+### AddDoorGroupColumn
 
 **Purpose**
 

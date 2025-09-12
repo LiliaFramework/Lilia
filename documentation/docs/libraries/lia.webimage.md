@@ -10,7 +10,7 @@ The web image library (`lia.webimage`) provides a comprehensive system for downl
 
 ---
 
-### lia.webimage.download
+### download
 
 **Purpose**
 
@@ -48,7 +48,7 @@ end
 
 ---
 
-### lia.webimage.register
+### register
 
 **Purpose**
 
@@ -86,7 +86,7 @@ end
 
 ---
 
-### lia.webimage.get
+### get
 
 **Purpose**
 
@@ -125,7 +125,7 @@ end
 
 ---
 
-### lia.webimage.getStats
+### getStats
 
 **Purpose**
 

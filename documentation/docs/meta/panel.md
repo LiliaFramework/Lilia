@@ -10,7 +10,7 @@ The `Panel` meta table extends Garry's Mod's base panel functionality with Lilia
 
 ---
 
-### panelMeta:liaListenForInventoryChanges
+### liaListenForInventoryChanges
 
 **Purpose**
 
@@ -71,7 +71,7 @@ end)
 
 ---
 
-### panelMeta:liaDeleteInventoryHooks
+### liaDeleteInventoryHooks
 
 **Purpose**
 
@@ -115,7 +115,7 @@ end)
 
 ---
 
-### panelMeta:SetScaledPos
+### SetScaledPos
 
 **Purpose**
 
@@ -154,7 +154,7 @@ end)
 
 ---
 
-### panelMeta:SetScaledSize
+### SetScaledSize
 
 **Purpose**
 

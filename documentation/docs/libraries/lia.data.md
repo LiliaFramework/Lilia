@@ -10,7 +10,7 @@ The data library (`lia.data`) provides a comprehensive system for data serializa
 
 ---
 
-### lia.data.encodetable
+### encodetable
 
 **Purpose**
 
@@ -75,7 +75,7 @@ end
 
 ---
 
-### lia.data.decode
+### decode
 
 **Purpose**
 
@@ -143,7 +143,7 @@ end
 
 ---
 
-### lia.data.serialize
+### serialize
 
 **Purpose**
 
@@ -220,7 +220,7 @@ end
 
 ---
 
-### lia.data.deserialize
+### deserialize
 
 **Purpose**
 
@@ -286,7 +286,7 @@ end
 
 ---
 
-### lia.data.decodeVector
+### decodeVector
 
 **Purpose**
 
@@ -350,7 +350,7 @@ end
 
 ---
 
-### lia.data.decodeAngle
+### decodeAngle
 
 **Purpose**
 
@@ -414,7 +414,7 @@ end
 
 ---
 
-### lia.data.set
+### set
 
 **Purpose**
 
@@ -472,7 +472,7 @@ end
 
 ---
 
-### lia.data.delete
+### delete
 
 **Purpose**
 
@@ -526,7 +526,7 @@ end
 
 ---
 
-### lia.data.loadTables
+### loadTables
 
 **Purpose**
 
@@ -567,7 +567,7 @@ end
 
 ---
 
-### lia.data.loadPersistence
+### loadPersistence
 
 **Purpose**
 
@@ -608,7 +608,7 @@ end
 
 ---
 
-### lia.data.savePersistence
+### savePersistence
 
 **Purpose**
 
@@ -649,7 +649,7 @@ end
 
 ---
 
-### lia.data.loadPersistenceData
+### loadPersistenceData
 
 **Purpose**
 
@@ -713,7 +713,7 @@ end
 
 ---
 
-### lia.data.get
+### get
 
 **Purpose**
 
@@ -773,7 +773,7 @@ end
 
 ---
 
-### lia.data.getPersistence
+### getPersistence
 
 **Purpose**
 

@@ -10,7 +10,7 @@ The fonts library (`lia.font`) provides a comprehensive system for managing cust
 
 ---
 
-### lia.font.register
+### register
 
 **Purpose**
 
@@ -74,7 +74,7 @@ end
 
 ---
 
-### lia.font.getAvailableFonts
+### getAvailableFonts
 
 **Purpose**
 
@@ -129,7 +129,7 @@ end
 
 ---
 
-### lia.font.refresh
+### refresh
 
 **Purpose**
 

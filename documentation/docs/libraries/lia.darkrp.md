@@ -10,7 +10,7 @@ The `lia.darkrp` library provides comprehensive DarkRP compatibility functions f
 
 ---
 
-### lia.darkrp.isEmpty
+### isEmpty
 
 **Purpose**
 
@@ -48,7 +48,7 @@ end
 
 ---
 
-### lia.darkrp.findEmptyPos
+### findEmptyPos
 
 **Purpose**
 
@@ -80,7 +80,7 @@ print("Empty position found at:", emptyPos)
 
 ---
 
-### lia.darkrp.notify
+### notify
 
 **Purpose**
 
@@ -109,7 +109,7 @@ lia.darkrp.notify(player.GetByID(1), nil, nil, "Hello, player!")
 
 ---
 
-### lia.darkrp.textWrap
+### textWrap
 
 **Purpose**
 
@@ -139,7 +139,7 @@ print(wrappedText)
 
 ---
 
-### lia.darkrp.formatMoney
+### formatMoney
 
 **Purpose**
 
@@ -167,7 +167,7 @@ print("You have " .. formatted)
 
 ---
 
-### lia.darkrp.createEntity
+### createEntity
 
 **Purpose**
 
@@ -200,7 +200,7 @@ lia.darkrp.createEntity("Test Entity", {
 
 ---
 
-### lia.darkrp.createCategory
+### createCategory
 
 **Purpose**
 

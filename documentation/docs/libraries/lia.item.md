@@ -10,7 +10,7 @@ The item library (`lia.item`) provides a comprehensive system for managing items
 
 ---
 
-### lia.item.get
+### get
 
 **Purpose**
 
@@ -80,7 +80,7 @@ lia.command.add("iteminfo", {
 
 ---
 
-### lia.item.getItemByID
+### getItemByID
 
 **Purpose**
 
@@ -141,7 +141,7 @@ end
 
 ---
 
-### lia.item.getInstancedItemByID
+### getInstancedItemByID
 
 **Purpose**
 
@@ -208,7 +208,7 @@ end
 
 ---
 
-### lia.item.getItemDataByID
+### getItemDataByID
 
 **Purpose**
 
@@ -264,7 +264,7 @@ end
 
 ---
 
-### lia.item.load
+### load
 
 **Purpose**
 
@@ -332,7 +332,7 @@ end
 
 ---
 
-### lia.item.isItem
+### isItem
 
 **Purpose**
 
@@ -397,7 +397,7 @@ end
 
 ---
 
-### lia.item.getInv
+### getInv
 
 **Purpose**
 
@@ -464,7 +464,7 @@ end
 
 ---
 
-### lia.item.register
+### register
 
 **Purpose**
 
@@ -538,7 +538,7 @@ end
 
 ---
 
-### lia.item.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -584,7 +584,7 @@ end)
 
 ---
 
-### lia.item.new
+### new
 
 **Purpose**
 
@@ -656,7 +656,7 @@ end
 
 ---
 
-### lia.item.registerInv
+### registerInv
 
 **Purpose**
 
@@ -719,7 +719,7 @@ end
 
 ---
 
-### lia.item.newInv
+### newInv
 
 **Purpose**
 
@@ -788,7 +788,7 @@ end
 
 ---
 
-### lia.item.createInv
+### createInv
 
 **Purpose**
 
@@ -857,7 +857,7 @@ end
 
 ---
 
-### lia.item.addWeaponOverride
+### addWeaponOverride
 
 **Purpose**
 
@@ -918,7 +918,7 @@ end
 
 ---
 
-### lia.item.addWeaponToBlacklist
+### addWeaponToBlacklist
 
 **Purpose**
 
@@ -975,7 +975,7 @@ end
 
 ---
 
-### lia.item.generateWeapons
+### generateWeapons
 
 **Purpose**
 
@@ -1021,7 +1021,7 @@ end)
 
 ---
 
-### lia.item.generateAmmo
+### generateAmmo
 
 **Purpose**
 
@@ -1067,7 +1067,7 @@ end)
 
 ---
 
-### lia.item.setItemDataByID
+### setItemDataByID
 
 **Purpose**
 
@@ -1129,7 +1129,7 @@ end
 
 ---
 
-### lia.item.instance
+### instance
 
 **Purpose**
 
@@ -1199,7 +1199,7 @@ end
 
 ---
 
-### lia.item.deleteByID
+### deleteByID
 
 **Purpose**
 
@@ -1261,7 +1261,7 @@ end
 
 ---
 
-### lia.item.loadItemByID
+### loadItemByID
 
 **Purpose**
 
@@ -1320,7 +1320,7 @@ end
 
 ---
 
-### lia.item.spawn
+### spawn
 
 **Purpose**
 
@@ -1386,7 +1386,7 @@ end
 
 ---
 
-### lia.item.restoreInv
+### restoreInv
 
 **Purpose**
 

@@ -10,7 +10,7 @@ The web sound library (`lia.websound`) provides a comprehensive system for downl
 
 ---
 
-### lia.websound.download
+### download
 
 **Purpose**
 
@@ -47,7 +47,7 @@ end
 
 ---
 
-### lia.websound.register
+### register
 
 **Purpose**
 
@@ -84,7 +84,7 @@ end
 
 ---
 
-### lia.websound.get
+### get
 
 **Purpose**
 
@@ -123,7 +123,7 @@ end
 
 ---
 
-### lia.websound.getStats
+### getStats
 
 **Purpose**
 

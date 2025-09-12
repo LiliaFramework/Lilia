@@ -10,7 +10,7 @@ The discord library (`lia.discord`) provides a comprehensive system for Discord 
 
 ---
 
-### lia.discord.relayMessage
+### relayMessage
 
 **Purpose**
 

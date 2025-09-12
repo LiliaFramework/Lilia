@@ -10,7 +10,7 @@ The time library (`lia.time`) provides a comprehensive system for managing time,
 
 ---
 
-### lia.time.TimeSince
+### TimeSince
 
 **Purpose**
 
@@ -55,7 +55,7 @@ end
 
 ---
 
-### lia.time.toNumber
+### toNumber
 
 **Purpose**
 
@@ -96,7 +96,7 @@ end
 
 ---
 
-### lia.time.GetDate
+### GetDate
 
 **Purpose**
 
@@ -138,7 +138,7 @@ end
 
 ---
 
-### lia.time.formatDHM
+### formatDHM
 
 **Purpose**
 
@@ -181,7 +181,7 @@ end
 
 ---
 
-### lia.time.GetHour
+### GetHour
 
 **Purpose**
 

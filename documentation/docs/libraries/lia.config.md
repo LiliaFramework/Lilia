@@ -10,7 +10,7 @@ The config library (`lia.config`) provides a comprehensive system for managing s
 
 ---
 
-### lia.config.add
+### add
 
 **Purpose**
 
@@ -68,7 +68,7 @@ lia.config.add("ThemeColor", {
 
 ---
 
-### lia.config.getOptions
+### getOptions
 
 **Purpose**
 
@@ -118,7 +118,7 @@ end
 
 ---
 
-### lia.config.setDefault
+### setDefault
 
 **Purpose**
 
@@ -161,7 +161,7 @@ end
 
 ---
 
-### lia.config.forceSet
+### forceSet
 
 **Purpose**
 
@@ -201,7 +201,7 @@ end
 
 ---
 
-### lia.config.set
+### set
 
 **Purpose**
 
@@ -249,7 +249,7 @@ lia.command.add("setconfig", {
 
 ---
 
-### lia.config.get
+### get
 
 **Purpose**
 
@@ -300,7 +300,7 @@ end
 
 ---
 
-### lia.config.load
+### load
 
 **Purpose**
 
@@ -341,7 +341,7 @@ end
 
 ---
 
-### lia.config.getChangedValues
+### getChangedValues
 
 **Purpose**
 
@@ -389,7 +389,7 @@ lia.command.add("showchanged", {
 
 ---
 
-### lia.config.send
+### send
 
 **Purpose**
 
@@ -429,7 +429,7 @@ end
 
 ---
 
-### lia.config.save
+### save
 
 **Purpose**
 
@@ -473,7 +473,7 @@ lia.command.add("saveconfig", {
 
 ---
 
-### lia.config.reset
+### reset
 
 **Purpose**
 

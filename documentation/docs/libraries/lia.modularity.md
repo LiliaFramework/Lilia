@@ -10,7 +10,7 @@ The modularity library (`lia.module`) provides a comprehensive system for managi
 
 ---
 
-### lia.module.load
+### load
 
 **Purpose**
 
@@ -61,7 +61,7 @@ end
 
 ---
 
-### lia.module.initialize
+### initialize
 
 **Purpose**
 
@@ -102,7 +102,7 @@ end
 
 ---
 
-### lia.module.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -143,7 +143,7 @@ end
 
 ---
 
-### lia.module.get
+### get
 
 **Purpose**
 
@@ -184,7 +184,7 @@ end
 
 ---
 
-### lia.module.printDisabledModules
+### printDisabledModules
 
 **Purpose**
 

@@ -10,7 +10,7 @@ The menu library (`lia.menu`) provides a comprehensive system for managing 3D co
 
 ---
 
-### lia.menu.add
+### add
 
 **Purpose**
 
@@ -84,7 +84,7 @@ end
 
 ---
 
-### lia.menu.drawAll
+### drawAll
 
 **Purpose**
 
@@ -129,7 +129,7 @@ end
 
 ---
 
-### lia.menu.getActiveMenu
+### getActiveMenu
 
 **Purpose**
 
@@ -189,7 +189,7 @@ end
 
 ---
 
-### lia.menu.onButtonPressed
+### onButtonPressed
 
 **Purpose**
 

@@ -10,7 +10,7 @@ The commands library (`lia.command`) provides a comprehensive system for creatin
 
 ---
 
-### lia.command.buildSyntaxFromArguments
+### buildSyntaxFromArguments
 
 **Purpose**
 
@@ -63,7 +63,7 @@ lia.command.add("giveitem", {
 
 ---
 
-### lia.command.add
+### add
 
 **Purpose**
 
@@ -130,7 +130,7 @@ lia.command.add("kick", {
 
 ---
 
-### lia.command.hasAccess
+### hasAccess
 
 **Purpose**
 
@@ -187,7 +187,7 @@ end
 
 ---
 
-### lia.command.extractArgs
+### extractArgs
 
 **Purpose**
 
@@ -237,7 +237,7 @@ end
 
 ---
 
-### lia.command.run
+### run
 
 **Purpose**
 
@@ -287,7 +287,7 @@ end)
 
 ---
 
-### lia.command.parse
+### parse
 
 **Purpose**
 
@@ -331,7 +331,7 @@ end)
 
 ---
 
-### lia.command.openArgumentPrompt
+### openArgumentPrompt
 
 **Purpose**
 
@@ -379,7 +379,7 @@ end
 
 ---
 
-### lia.command.send
+### send
 
 **Purpose**
 

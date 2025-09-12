@@ -10,7 +10,7 @@ The classes library (`lia.class`) provides a comprehensive system for managing c
 
 ---
 
-### lia.class.register
+### register
 
 **Purpose**
 
@@ -92,7 +92,7 @@ lia.class.register("medic", {
 
 ---
 
-### lia.class.loadFromDir
+### loadFromDir
 
 **Purpose**
 
@@ -129,7 +129,7 @@ lia.class.loadFromDir("addons/customclasses/classes")
 
 ---
 
-### lia.class.canBe
+### canBe
 
 **Purpose**
 
@@ -186,7 +186,7 @@ lia.command.add("checkclass", {
 
 ---
 
-### lia.class.get
+### get
 
 **Purpose**
 
@@ -235,7 +235,7 @@ end
 
 ---
 
-### lia.class.getPlayers
+### getPlayers
 
 **Purpose**
 
@@ -281,7 +281,7 @@ lia.command.add("listclass", {
 
 ---
 
-### lia.class.getPlayerCount
+### getPlayerCount
 
 **Purpose**
 
@@ -327,7 +327,7 @@ end
 
 ---
 
-### lia.class.retrieveClass
+### retrieveClass
 
 **Purpose**
 
@@ -378,7 +378,7 @@ lia.command.add("findclass", {
 
 ---
 
-### lia.class.hasWhitelist
+### hasWhitelist
 
 **Purpose**
 
@@ -423,7 +423,7 @@ end
 
 ---
 
-### lia.class.retrieveJoinable
+### retrieveJoinable
 
 **Purpose**
 

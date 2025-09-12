@@ -10,7 +10,7 @@ The `Inventory` meta table provides comprehensive inventory management functiona
 
 ---
 
-### inventoryMeta:getData
+### getData
 
 **Purpose**
 
@@ -54,7 +54,7 @@ end)
 
 ---
 
-### inventoryMeta:extend
+### extend
 
 **Purpose**
 
@@ -100,7 +100,7 @@ hook.Add("Initialize", "CreateCustomInventory", createCustomInventoryClass)
 
 ---
 
-### inventoryMeta:configure
+### configure
 
 **Purpose**
 
@@ -133,7 +133,7 @@ end)
 
 ---
 
-### inventoryMeta:addDataProxy
+### addDataProxy
 
 **Purpose**
 
@@ -168,7 +168,7 @@ end)
 
 ---
 
-### inventoryMeta:getItemsByUniqueID
+### getItemsByUniqueID
 
 **Purpose**
 
@@ -214,7 +214,7 @@ end)
 
 ---
 
-### inventoryMeta:register
+### register
 
 **Purpose**
 
@@ -252,7 +252,7 @@ hook.Add("Initialize", "RegisterCustomInventory", registerCustomInventoryType)
 
 ---
 
-### inventoryMeta:new
+### new
 
 **Purpose**
 
@@ -291,7 +291,7 @@ end)
 
 ---
 
-### inventoryMeta:tostring
+### tostring
 
 **Purpose**
 
@@ -332,7 +332,7 @@ end)
 
 ---
 
-### inventoryMeta:getType
+### getType
 
 **Purpose**
 
@@ -373,7 +373,7 @@ end)
 
 ---
 
-### inventoryMeta:onDataChanged
+### onDataChanged
 
 **Purpose**
 
@@ -411,7 +411,7 @@ end)
 
 ---
 
-### inventoryMeta:getItems
+### getItems
 
 **Purpose**
 
@@ -455,7 +455,7 @@ end)
 
 ---
 
-### inventoryMeta:getItemsOfType
+### getItemsOfType
 
 **Purpose**
 
@@ -497,7 +497,7 @@ end)
 
 ---
 
-### inventoryMeta:getFirstItemOfType
+### getFirstItemOfType
 
 **Purpose**
 
@@ -546,7 +546,7 @@ end)
 
 ---
 
-### inventoryMeta:hasItem
+### hasItem
 
 **Purpose**
 
@@ -595,7 +595,7 @@ end)
 
 ---
 
-### inventoryMeta:getItemCount
+### getItemCount
 
 **Purpose**
 
@@ -641,7 +641,7 @@ end)
 
 ---
 
-### inventoryMeta:getID
+### getID
 
 **Purpose**
 
@@ -682,7 +682,7 @@ end)
 
 ---
 
-### inventoryMeta:eq
+### eq
 
 **Purpose**
 
@@ -731,7 +731,7 @@ end)
 
 ---
 
-### inventoryMeta:addItem
+### addItem
 
 **Purpose**
 
@@ -775,7 +775,7 @@ end)
 
 ---
 
-### inventoryMeta:add
+### add
 
 **Purpose**
 
@@ -818,7 +818,7 @@ end)
 
 ---
 
-### inventoryMeta:syncItemAdded
+### syncItemAdded
 
 **Purpose**
 
@@ -862,7 +862,7 @@ end)
 
 ---
 
-### inventoryMeta:initializeStorage
+### initializeStorage
 
 **Purpose**
 
@@ -906,7 +906,7 @@ end)
 
 ---
 
-### inventoryMeta:restoreFromStorage
+### restoreFromStorage
 
 **Purpose**
 
@@ -941,7 +941,7 @@ end)
 
 ---
 
-### inventoryMeta:removeItem
+### removeItem
 
 **Purpose**
 
@@ -985,7 +985,7 @@ end)
 
 ---
 
-### inventoryMeta:remove
+### remove
 
 **Purpose**
 
@@ -1028,7 +1028,7 @@ end)
 
 ---
 
-### inventoryMeta:setData
+### setData
 
 **Purpose**
 
@@ -1072,7 +1072,7 @@ end)
 
 ---
 
-### inventoryMeta:canAccess
+### canAccess
 
 **Purpose**
 
@@ -1118,7 +1118,7 @@ end)
 
 ---
 
-### inventoryMeta:addAccessRule
+### addAccessRule
 
 **Purpose**
 
@@ -1163,7 +1163,7 @@ end)
 
 ---
 
-### inventoryMeta:removeAccessRule
+### removeAccessRule
 
 **Purpose**
 
@@ -1205,7 +1205,7 @@ end)
 
 ---
 
-### inventoryMeta:getRecipients
+### getRecipients
 
 **Purpose**
 
@@ -1249,7 +1249,7 @@ end)
 
 ---
 
-### inventoryMeta:onInstanced
+### onInstanced
 
 **Purpose**
 
@@ -1284,7 +1284,7 @@ end)
 
 ---
 
-### inventoryMeta:onLoaded
+### onLoaded
 
 **Purpose**
 
@@ -1319,7 +1319,7 @@ end)
 
 ---
 
-### inventoryMeta:loadItems
+### loadItems
 
 **Purpose**
 
@@ -1361,7 +1361,7 @@ end)
 
 ---
 
-### inventoryMeta:onItemsLoaded
+### onItemsLoaded
 
 **Purpose**
 
@@ -1396,7 +1396,7 @@ end)
 
 ---
 
-### inventoryMeta:instance
+### instance
 
 **Purpose**
 
@@ -1439,7 +1439,7 @@ end)
 
 ---
 
-### inventoryMeta:syncData
+### syncData
 
 **Purpose**
 
@@ -1482,7 +1482,7 @@ end)
 
 ---
 
-### inventoryMeta:sync
+### sync
 
 **Purpose**
 
@@ -1523,7 +1523,7 @@ end)
 
 ---
 
-### inventoryMeta:delete
+### delete
 
 **Purpose**
 
@@ -1564,7 +1564,7 @@ end)
 
 ---
 
-### inventoryMeta:destroy
+### destroy
 
 **Purpose**
 
@@ -1605,7 +1605,7 @@ end)
 
 ---
 
-### inventoryMeta:show
+### show
 
 **Purpose**
 
@@ -1646,7 +1646,7 @@ end)
 
 ---
 
-### inventoryMeta:getWidth
+### getWidth
 
 **Purpose**
 
@@ -1678,7 +1678,7 @@ end
 
 ---
 
-### inventoryMeta:getHeight
+### getHeight
 
 **Purpose**
 
@@ -1713,7 +1713,7 @@ end
 
 ---
 
-### inventoryMeta:getSize
+### getSize
 
 **Purpose**
 
@@ -1745,7 +1745,7 @@ end
 
 ---
 
-### inventoryMeta:canAdd
+### canAdd
 
 **Purpose**
 
@@ -1780,7 +1780,7 @@ end
 
 ---
 
-### inventoryMeta:doesItemOverlapWithOther
+### doesItemOverlapWithOther
 
 **Purpose**
 
@@ -1819,7 +1819,7 @@ end
 
 ---
 
-### inventoryMeta:doesFitInventory
+### doesFitInventory
 
 **Purpose**
 
@@ -1850,7 +1850,7 @@ end
 
 ---
 
-### inventoryMeta:canItemFitInInventory
+### canItemFitInInventory
 
 **Purpose**
 
@@ -1883,7 +1883,7 @@ end
 
 ---
 
-### inventoryMeta:doesItemFitAtPos
+### doesItemFitAtPos
 
 **Purpose**
 
@@ -1921,7 +1921,7 @@ end
 
 ---
 
-### inventoryMeta:findFreePosition
+### findFreePosition
 
 **Purpose**
 
@@ -1960,7 +1960,7 @@ end
 
 ---
 
-### inventoryMeta:getItems
+### getItems
 
 **Purpose**
 
@@ -1996,7 +1996,7 @@ end
 
 ---
 
-### inventoryMeta:setSize
+### setSize
 
 **Purpose**
 
@@ -2028,7 +2028,7 @@ end
 
 ---
 
-### inventoryMeta:wipeItems
+### wipeItems
 
 **Purpose**
 
@@ -2059,7 +2059,7 @@ end
 
 ---
 
-### inventoryMeta:setOwner
+### setOwner
 
 **Purpose**
 
@@ -2091,7 +2091,7 @@ end
 
 ---
 
-### inventoryMeta:add
+### add
 
 **Purpose**
 
@@ -2137,7 +2137,7 @@ end
 
 ---
 
-### inventoryMeta:remove
+### remove
 
 **Purpose**
 
@@ -2172,7 +2172,7 @@ end
 
 ---
 
-### inventoryMeta:requestTransfer
+### requestTransfer
 
 **Purpose**
 

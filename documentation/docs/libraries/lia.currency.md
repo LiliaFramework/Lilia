@@ -10,7 +10,7 @@ The currency library (`lia.currency`) provides a comprehensive system for managi
 
 ---
 
-### lia.currency.get
+### get
 
 **Purpose**
 
@@ -60,7 +60,7 @@ lia.command.add("showmoney", {
 
 ---
 
-### lia.currency.spawn
+### spawn
 
 **Purpose**
 
@@ -126,7 +126,7 @@ end)
 
 ---
 
-### lia.currency.get
+### get
 
 **Purpose**
 

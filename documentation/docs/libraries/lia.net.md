@@ -10,7 +10,7 @@ The net library (`lia.net`) provides a comprehensive system for managing network
 
 ---
 
-### lia.net.register
+### register
 
 **Purpose**
 
@@ -59,7 +59,7 @@ end
 
 ---
 
-### lia.net.send
+### send
 
 **Purpose**
 
@@ -102,7 +102,7 @@ end
 
 ---
 
-### lia.net.readBigTable
+### readBigTable
 
 **Purpose**
 
@@ -143,7 +143,7 @@ end
 
 ---
 
-### lia.net.writeBigTable
+### writeBigTable
 
 **Purpose**
 

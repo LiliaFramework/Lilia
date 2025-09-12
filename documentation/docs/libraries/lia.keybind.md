@@ -10,7 +10,7 @@ The keybind library (`lia.keybind`) provides a comprehensive system for managing
 
 ---
 
-### lia.keybind.add
+### add
 
 **Purpose**
 
@@ -82,7 +82,7 @@ end
 
 ---
 
-### lia.keybind.get
+### get
 
 **Purpose**
 
@@ -143,7 +143,7 @@ end
 
 ---
 
-### lia.keybind.save
+### save
 
 **Purpose**
 
@@ -191,7 +191,7 @@ end)
 
 ---
 
-### lia.keybind.load
+### load
 
 **Purpose**
 

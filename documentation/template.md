@@ -83,7 +83,7 @@ The administrator library (`lia.administrator`) provides a comprehensive, hierar
 
 ---
 
-### lia.administrator.hasAccess
+### hasAccess
 
 **Purpose**
 
