@@ -134,11 +134,10 @@ local sqliteQuery = promisifyIfNoCallback(function(query, callback, throw)
                 lastID = nil
             else
                 lastID = tonumber(rawLastID)
-                if not lastID then
-                    lia.warning("[Database] Invalid last insert ID '" .. tostring(rawLastID) .. "' for query: " .. query)
-                end
+                if not lastID then lia.warning("[Database] Invalid last insert ID '" .. tostring(rawLastID) .. "' for query: " .. query) end
             end
         end
+
         callback(data, lastID)
     end
 end)

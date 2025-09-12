@@ -628,7 +628,6 @@ if SERVER then
             recognition = data.recognition or "",
             fakenames = ""
         }, function(_, charID)
-            -- Fix for corrupted character IDs: if charID is nil, query the database to get the correct ID
             if not charID then
                 lia.db.selectOne("id", "characters", "steamID = " .. lia.db.convertDataType(data.steamID) .. " AND name = " .. lia.db.convertDataType(data.name or "") .. " AND createTime = " .. lia.db.convertDataType(timeStamp) .. " AND schema = " .. lia.db.convertDataType(gamemode)):next(function(result)
                     if result and result.id then
@@ -639,16 +638,12 @@ if SERVER then
                         return
                     end
 
-                    -- Continue with character creation using the correct ID
                     createCharacterWithID(charID)
-                end):catch(function(err)
-                    lia.error("[Lilia] Character creation: Error retrieving character ID: " .. err)
-                end)
+                end):catch(function(err) lia.error("[Lilia] Character creation: Error retrieving character ID: " .. err) end)
                 return
             end
 
             createCharacterWithID(charID)
-
             function createCharacterWithID()
                 local client
                 for _, v in player.Iterator() do
