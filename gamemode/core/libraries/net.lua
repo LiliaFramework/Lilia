@@ -260,6 +260,7 @@ if SERVER then
         else
             lia.char.names[character:getID()] = character:getName()
         end
+
         if not lia.shuttingDown then
             net.Start("liaCharFetchNames")
             net.WriteTable(lia.char.names)

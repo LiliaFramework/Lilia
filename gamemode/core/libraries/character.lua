@@ -635,7 +635,6 @@ if SERVER then
             recognition = data.recognition or "",
             fakenames = ""
         }, function(_, charID)
-            -- Define the character creation function
             local function createCharacterWithID()
                 local client
                 for _, v in player.Iterator() do
@@ -650,14 +649,12 @@ if SERVER then
                     if callback then callback(nil) end
                     return
                 end
-                -- Set character variables
+
                 for k, v in pairs(data) do
                     if lia.char.vars[k] then character:setVar(k, v, nil, client) end
                 end
 
-                -- Save character data
                 character:save()
-                -- Handle player setup
                 if IsValid(client) then
                     client:setNetVar("char", charID)
                     lia.char.loaded[charID] = character
@@ -668,12 +665,9 @@ if SERVER then
                 end
 
                 hook.Run("OnCharCreated", client, character)
-
-                -- Call the callback with the character ID
                 if callback then callback(charID) end
             end
 
-            -- Fix for corrupted character IDs: if charID is nil, query the database to get the correct ID
             if not charID then
                 lia.db.selectWithJoin("SELECT c.id FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' WHERE c.steamID = " .. lia.db.convertDataType(data.steamID) .. " AND n.value = " .. lia.db.convertDataType(data.name or "") .. " AND c.createTime = " .. lia.db.convertDataType(timeStamp) .. " AND c.schema = " .. lia.db.convertDataType(gamemode)):next(function(result)
                     if result and result.id then
@@ -685,7 +679,6 @@ if SERVER then
                         return
                     end
 
-                    -- Continue with character creation using the correct ID
                     createCharacterWithID()
                 end):catch(function(err)
                     lia.error("[Lilia] Character creation: Error retrieving character ID: " .. err)
