@@ -127,7 +127,18 @@ local sqliteQuery = promisifyIfNoCallback(function(query, callback, throw)
 
     if callback then
         local lastID = nil
-        if string.find(string.upper(query), "INSERT") then lastID = tonumber(sql.QueryValue("SELECT last_insert_rowid()")) end
+        if string.find(string.upper(query), "INSERT") then
+            local rawLastID = sql.QueryValue("SELECT last_insert_rowid()")
+            if rawLastID == false then
+                lia.warning("[Database] Failed to retrieve last insert ID for query: " .. query)
+                lastID = nil
+            else
+                lastID = tonumber(rawLastID)
+                if not lastID then
+                    lia.warning("[Database] Invalid last insert ID '" .. tostring(rawLastID) .. "' for query: " .. query)
+                end
+            end
+        end
         callback(data, lastID)
     end
 end)

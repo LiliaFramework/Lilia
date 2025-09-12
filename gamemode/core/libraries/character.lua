@@ -628,27 +628,50 @@ if SERVER then
             recognition = data.recognition or "",
             fakenames = ""
         }, function(_, charID)
-            local client
-            for _, v in player.Iterator() do
-                if v:SteamID() == data.steamID then
-                    client = v
-                    break
-                end
+            -- Fix for corrupted character IDs: if charID is nil, query the database to get the correct ID
+            if not charID then
+                lia.db.selectOne("id", "characters", "steamID = " .. lia.db.convertDataType(data.steamID) .. " AND name = " .. lia.db.convertDataType(data.name or "") .. " AND createTime = " .. lia.db.convertDataType(timeStamp) .. " AND schema = " .. lia.db.convertDataType(gamemode)):next(function(result)
+                    if result and result.id then
+                        charID = tonumber(result.id)
+                        lia.warning("[Lilia] Character creation: Retrieved correct ID " .. charID .. " for character '" .. (data.name or "Unknown") .. "'")
+                    else
+                        lia.error("[Lilia] Character creation: Failed to retrieve ID for newly created character '" .. (data.name or "Unknown") .. "'")
+                        return
+                    end
+
+                    -- Continue with character creation using the correct ID
+                    createCharacterWithID(charID)
+                end):catch(function(err)
+                    lia.error("[Lilia] Character creation: Error retrieving character ID: " .. err)
+                end)
+                return
             end
 
-            local character = lia.char.new(data, charID, client, data.steamID)
-            character.vars.inv = {}
-            hook.Run("CreateDefaultInventory", character):next(function(inventory)
-                character.vars.inv[1] = inventory
-                lia.char.loaded[charID] = character
-                if istable(data.data) then
-                    for k, v in pairs(data.data) do
-                        lia.char.setCharDatabase(charID, k, v)
+            createCharacterWithID(charID)
+
+            function createCharacterWithID(charID)
+                local client
+                for _, v in player.Iterator() do
+                    if v:SteamID() == data.steamID then
+                        client = v
+                        break
                     end
                 end
 
-                if callback then callback(charID) end
-            end)
+                local character = lia.char.new(data, charID, client, data.steamID)
+                character.vars.inv = {}
+                hook.Run("CreateDefaultInventory", character):next(function(inventory)
+                    character.vars.inv[1] = inventory
+                    lia.char.loaded[charID] = character
+                    if istable(data.data) then
+                        for k, v in pairs(data.data) do
+                            lia.char.setCharDatabase(charID, k, v)
+                        end
+                    end
+
+                    if callback then callback(charID) end
+                end)
+            end
         end)
     end
 
