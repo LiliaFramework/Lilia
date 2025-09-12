@@ -3148,7 +3148,7 @@ function lia.db.autoRemoveUnderscoreColumns()
     return d
 end
 
-concommand.Add("lia_fix_characters", function(ply, _, args)
+concommand.Add("lia_fix_characters", function(ply)
     if SERVER and IsValid(ply) then
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
         return
