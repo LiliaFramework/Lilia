@@ -3285,17 +3285,17 @@ concommand.Add("lia_fix_characters", function(ply)
                                         for _, inv in ipairs(invResults) do
                                             lia.inventory.deleteByID(tonumber(inv.invID))
                                         end
-                                    end):catch(function(err)
-                                        MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete inventories for corrupted character ID '", char.rawId, "': ", err, "\n")
+                                    end):catch(function(deleteInvErr)
+                                        MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete inventories for corrupted character ID '", char.rawId, "': ", deleteInvErr, "\n")
                                     end)
-                                end):catch(function(err)
-                                    MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete chardata for corrupted character ID '", char.rawId, "': ", err, "\n")
+                                end):catch(function(deleteChardataErr)
+                                    MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete chardata for corrupted character ID '", char.rawId, "': ", deleteChardataErr, "\n")
                                 end)
 
                                 deletedCount = deletedCount + 1
                                 MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Deleted corrupted character: ", char.name, " (ID: ", char.rawId, ")\n")
-                            end):catch(function(err)
-                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to delete corrupted character ID '", char.rawId, "': ", err, "\n")
+                            end):catch(function(deleteCharErr)
+                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to delete corrupted character ID '", char.rawId, "': ", deleteCharErr, "\n")
                             end)
 
                             table.insert(promises, deletePromise)
@@ -3316,17 +3316,17 @@ concommand.Add("lia_fix_characters", function(ply)
                                     for _, inv in ipairs(invResults) do
                                         lia.inventory.deleteByID(tonumber(inv.invID))
                                     end
-                                end):catch(function(err)
-                                    MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete inventories for corrupted character ID '", char.rawId, "': ", err, "\n")
+                                end):catch(function(deleteInvErr2)
+                                    MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete inventories for corrupted character ID '", char.rawId, "': ", deleteInvErr2, "\n")
                                 end)
-                            end):catch(function(err)
-                                MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete chardata for corrupted character ID '", char.rawId, "': ", err, "\n")
+                            end):catch(function(deleteChardataErr2)
+                                MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Warning: Could not delete chardata for corrupted character ID '", char.rawId, "': ", deleteChardataErr2, "\n")
                             end)
 
                             deletedCount = deletedCount + 1
                             MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Deleted corrupted character: ", char.name, " (ID: ", char.rawId, ")\n")
-                        end):catch(function(err)
-                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to delete corrupted character ID '", char.rawId, "': ", err, "\n")
+                        end):catch(function(deleteCharErr2)
+                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to delete corrupted character ID '", char.rawId, "': ", deleteCharErr2, "\n")
                         end)
 
                         table.insert(promises, deletePromise)
