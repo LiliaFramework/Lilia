@@ -649,7 +649,7 @@ if SERVER then
 
             createCharacterWithID(charID)
 
-            function createCharacterWithID(charID)
+            function createCharacterWithID()
                 local client
                 for _, v in player.Iterator() do
                     if v:SteamID() == data.steamID then
