@@ -540,22 +540,22 @@ end
 
 function lia.parseLuaError(errorMessage)
     local pattern = "%[Lilia%] ([^:]+):(%d+): (.+)"
-    local file, line, message = errorMessage:match(pattern)
-    if file and line and message then
+    local errFile, line, message = errorMessage:match(pattern)
+    if errFile and line and message then
         return {
             message = message,
             line = tonumber(line),
-            file = file
+            file = errFile
         }
     end
 
     local fallbackPattern = "([^:]+):(%d+): (.+)"
-    file, line, message = errorMessage:match(fallbackPattern)
-    if file and line and message then
+    errFile, line, message = errorMessage:match(fallbackPattern)
+    if errFile and line and message then
         return {
             message = message,
             line = tonumber(line),
-            file = file
+            file = errFile
         }
     end
     return {
@@ -615,7 +615,9 @@ if SERVER then
         end)
     end
 
-    local function SetupPersistence()
+    local function BootstrapLilia()
+        -- Initialize database immediately so it's available before anything else
+        SetupDatabase()
         cvars.AddChangeCallback("sbox_persist", function(_, old, new)
             timer.Create("sbox_persist_change_timer", 1, 1, function()
                 hook.Run("PersistenceSave", old)
@@ -623,11 +625,6 @@ if SERVER then
                 if new ~= "" then hook.Run("PersistenceLoad", new) end
             end)
         end, "sbox_persist_load")
-    end
-
-    local function BootstrapLilia()
-        timer.Simple(0, SetupDatabase)
-        SetupPersistence()
     end
 
     BootstrapLilia()
@@ -652,18 +649,36 @@ function GM:Initialize()
     end
 
     if not hasInitializedModules then
-        local success, errorMsg = pcall(lia.module.initialize)
-        if not success then
-            lia.loadingState.loadingFailed = true
-            lia.loadingState.failureReason = "Module Initialization Failed"
-            lia.loadingState.failureDetails = "Failed to initialize modules: " .. tostring(errorMsg)
-            local errorMsgFull = "Module initialization failed: " .. tostring(errorMsg)
-            lia.addLoadingError(errorMsgFull)
-            lia.error(errorMsgFull)
-            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Module initialization failed! Server may not function properly.\n")
+        if SERVER then
+            lia.db.waitForTablesToLoad():next(function()
+                local success, errorMsg = pcall(lia.module.initialize)
+                if not success then
+                    lia.loadingState.loadingFailed = true
+                    lia.loadingState.failureReason = "Module Initialization Failed"
+                    lia.loadingState.failureDetails = "Failed to initialize modules: " .. tostring(errorMsg)
+                    local errorMsgFull = "Module initialization failed: " .. tostring(errorMsg)
+                    lia.addLoadingError(errorMsgFull)
+                    lia.error(errorMsgFull)
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Module initialization failed! Server may not function properly.\n")
+                else
+                    hasInitializedModules = true
+                    lia.loadingState.modulesInitialized = true
+                end
+            end)
         else
-            hasInitializedModules = true
-            lia.loadingState.modulesInitialized = true
+            local success, errorMsg = pcall(lia.module.initialize)
+            if not success then
+                lia.loadingState.loadingFailed = true
+                lia.loadingState.failureReason = "Module Initialization Failed"
+                lia.loadingState.failureDetails = "Failed to initialize modules: " .. tostring(errorMsg)
+                local errorMsgFull = "Module initialization failed: " .. tostring(errorMsg)
+                lia.addLoadingError(errorMsgFull)
+                lia.error(errorMsgFull)
+                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Module initialization failed! Server may not function properly.\n")
+            else
+                hasInitializedModules = true
+                lia.loadingState.modulesInitialized = true
+            end
         end
     end
 end
@@ -673,14 +688,22 @@ function GM:OnReloaded()
     local timeSinceLastReload = currentTime - lia.lastReloadTime
     if timeSinceLastReload < lia.reloadCooldown then return end
     lia.lastReloadTime = currentTime
-    lia.module.initialize()
-    lia.config.load()
-    lia.faction.formatModelData()
     if SERVER then
-        lia.config.send()
-        lia.administrator.sync()
-        lia.playerinteract.syncToClients()
-        lia.db.connect(nil, true)
+        -- Reconnect database and wait for tables to be available before reinitializing modules
+        lia.db.connect(function()
+            lia.db.waitForTablesToLoad():next(function()
+                lia.module.initialize()
+                lia.config.load()
+                lia.faction.formatModelData()
+                lia.config.send()
+                lia.administrator.sync()
+                lia.playerinteract.syncToClients()
+            end)
+        end, true)
+    else
+        lia.module.initialize()
+        lia.config.load()
+        lia.faction.formatModelData()
     end
 end
 

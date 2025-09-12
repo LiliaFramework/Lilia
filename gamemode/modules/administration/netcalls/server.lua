@@ -89,9 +89,8 @@ net.Receive("liaRequestFactionRoster", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("canManageFactions") then return end
     local data = {}
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local fields = "lia_characters.name, lia_characters.id, lia_characters.steamID, lia_characters.playtime, lia_characters.lastJoinTime, lia_characters.class, lia_characters.faction, lia_players.lastOnline"
     local condition = "lia_characters.schema = " .. lia.db.convertDataType(gamemode)
-    lia.db.selectWithJoin("SELECT " .. fields .. " FROM lia_characters LEFT JOIN lia_players ON lia_characters.steamID = lia_players.steamID WHERE " .. condition):next(function(result)
+    lia.db.selectWithJoin("SELECT n.value AS name, c.id, c.steamID, c.playtime, c.lastJoinTime, cl.value AS class, f.value AS faction, p.lastOnline FROM lia_characters AS c LEFT JOIN lia_players AS p ON c.steamID = p.steamID LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' LEFT JOIN lia_chardata AS cl ON cl.charID = c.id AND cl.key = 'class' LEFT JOIN lia_chardata AS f ON f.charID = c.id AND f.key = 'faction' WHERE " .. condition):next(function(result)
         if result and result.results then
             for _, v in ipairs(result.results) do
                 local charID = tonumber(v.id)
@@ -141,7 +140,7 @@ end)
 
 net.Receive("liaRequestFullCharList", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
-    lia.db.selectWithJoin("SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo FROM lia_characters AS c LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo'"):next(function(data)
+    lia.db.selectWithJoin("SELECT c.id, n.value AS name, d.value AS `desc`, f.value AS faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, b.value AS charBanInfo FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'desc' LEFT JOIN lia_chardata AS f ON f.charID = c.id AND f.key = 'faction' LEFT JOIN lia_chardata AS b ON b.charID = c.id AND b.key = 'charBanInfo'"):next(function(data)
         local payload = {
             all = {},
             players = {}

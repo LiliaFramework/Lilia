@@ -206,6 +206,7 @@ function PANEL:Think()
         local char = ply:getChar()
         if not char then continue end
         local facCont = self.factionLists[ply:Team()]
+        if not facCont then continue end
         local parent = facCont.classLists[char:getClass()] or facCont.noClass
         if not IsValid(ply.liaScoreSlot) then
             self:addPlayer(ply, parent)

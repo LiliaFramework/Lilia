@@ -255,7 +255,11 @@ if SERVER then
     end)
 
     hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
-        lia.char.names[character:getID()] = data.name
+        if data and data.name then
+            lia.char.names[character:getID()] = data.name
+        else
+            lia.char.names[character:getID()] = character:getName()
+        end
         if not lia.shuttingDown then
             net.Start("liaCharFetchNames")
             net.WriteTable(lia.char.names)

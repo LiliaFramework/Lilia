@@ -164,26 +164,49 @@ if SERVER then
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
-        lia.db.insertTable({
-            invType = self.typeID,
-            charID = charID
-        }, function(_, lastID)
-            local count = 0
-            local expected = table.Count(initialData)
-            if initialData.char then expected = expected - 1 end
-            if expected == 0 then return d:resolve(lastID) end
-            for key, value in pairs(initialData) do
-                if key == "char" then continue end
-                lia.db.insertTable({
-                    invID = lastID,
-                    key = key,
-                    value = {value}
-                }, function()
-                    count = count + 1
-                    if count == expected then d:resolve(lastID) end
-                end, "invdata")
-            end
-        end, "inventories")
+
+        -- Wait for tables to be loaded before creating inventory
+        lia.db.waitForTablesToLoad():next(function()
+            lia.db.tableExists("lia_inventories"):next(function(inventoriesExists)
+                if not inventoriesExists then
+                    d:reject("Inventory tables not yet loaded")
+                    return
+                end
+
+                lia.db.tableExists("lia_invdata"):next(function(invdataExists)
+                    if not invdataExists then
+                        d:reject("Inventory data tables not yet loaded")
+                        return
+                    end
+
+                    lia.db.insertTable({
+                        invType = self.typeID,
+                        charID = charID
+                    }, function(_, lastID)
+                        local count = 0
+                        local expected = table.Count(initialData)
+                        if initialData.char then expected = expected - 1 end
+                        if expected == 0 then return d:resolve(lastID) end
+                        for key, value in pairs(initialData) do
+                            if key == "char" then continue end
+                            lia.db.insertTable({
+                                invID = lastID,
+                                key = key,
+                                value = {value}
+                            }, function()
+                                count = count + 1
+                                if count == expected then d:resolve(lastID) end
+                            end, "invdata")
+                        end
+                    end, "inventories"):catch(function(err)
+                        d:reject("Failed to create inventory: " .. tostring(err))
+                    end)
+                end)
+            end)
+        end):catch(function(err)
+            d:reject("Failed to wait for database tables: " .. tostring(err))
+        end)
+
         return d
     end
 

@@ -172,6 +172,23 @@ function lia.db.connect(connectCallback, reconnect)
             return sqliteQuery(query, queryCallback, onError)
         end
 
+        -- Apply SQLite performance and safety PRAGMAs on connect (server only)
+        if SERVER and not lia.db._pragmasApplied then
+            pcall(function()
+                -- Use WAL for better concurrency and startup durability
+                sql.Query("PRAGMA journal_mode=WAL")
+                -- Balance safety and speed; NORMAL keeps durability reasonable
+                sql.Query("PRAGMA synchronous=NORMAL")
+                -- Keep temp objects in memory for speed
+                sql.Query("PRAGMA temp_store=MEMORY")
+                -- Increase page cache size (negative means KB units)
+                sql.Query("PRAGMA cache_size=-8000")
+                -- Enforce foreign keys if defined
+                sql.Query("PRAGMA foreign_keys=ON")
+            end)
+            lia.db._pragmasApplied = true
+        end
+
         if isfunction(connectCallback) then connectCallback(true) end
         for i = 1, #lia.db.queryQueue do
             lia.db.query(unpack(lia.db.queryQueue[i]))
@@ -761,7 +778,12 @@ function lia.db.loadTables()
                 type = "text"
             }
         })
-    end):next(function() done() end):catch(function(err)
+    end):next(function()
+        return lia.db.migrateDatabaseSchemas()
+    end):next(function()
+        lia.bootstrap("Database", "Database tables loaded and migrations completed successfully")
+        done()
+    end):catch(function(err)
         lia.error("[Database] Failed to create database tables: " .. tostring(err))
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Database table creation failed! Error: ", tostring(err), "\n")
         MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "This may cause the server to malfunction. Check database permissions and disk space.\n")
@@ -1511,7 +1533,6 @@ function lia.db.migrateDatabaseSchemas()
                 d:reject(err)
             end)
         else
-            MsgC(Color(0, 255, 0), "[Lilia] No missing database columns found, skipping migration.\n")
             d:resolve()
         end
     end):catch(function(err)
@@ -2388,11 +2409,17 @@ concommand.Add("lia_snapshot", function(ply)
                     file.Write(filename, content)
                     sendFeedback("? Saved " .. #selectResult.results .. " records from " .. tableName .. " to " .. filename, Color(0, 255, 0))
                 else
-                    sendFeedback("? Failed to query table: " .. tableName, Color(255, 0, 0))
+                    sendFeedback("? Failed to query table: " .. tableName .. " (no results returned)", Color(255, 0, 0))
                 end
 
                 completed = completed + 1
-                if completed >= total then sendFeedback("Snapshot creation completed for all tables", Color(0, 255, 0)) end
+                if completed >= total then
+                    if completed == total then
+                        sendFeedback("Snapshot creation completed for all tables", Color(0, 255, 0))
+                    else
+                        sendFeedback("Snapshot creation completed with some errors", Color(255, 255, 0))
+                    end
+                end
             end):catch(function(err)
                 sendFeedback("? Error processing table " .. tableName .. ": " .. err, Color(255, 0, 0))
                 completed = completed + 1
@@ -3177,7 +3204,7 @@ concommand.Add("lia_fix_characters", function(ply)
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local schemaCondition = "schema = " .. lia.db.convertDataType(gamemode)
         MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Scanning for corrupted character IDs...\n")
-        lia.db.select({"id", "name", "steamID"}, "characters", schemaCondition):next(function(data)
+        lia.db.selectWithJoin("SELECT c.id, n.value AS name, c.steamID FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' WHERE " .. schemaCondition):next(function(data)
             local results = data.results or {}
             local corruptedChars = {}
             local validChars = 0
@@ -3605,4 +3632,172 @@ concommand.Add("lia_wipeticketclaims", function(ply)
             end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to clear ticketclaims table: ", err, "\n") end)
         end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to count ticketclaims: ", err, "\n") end)
     end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to wait for database tables to load: ", err, "\n") end)
+end)
+
+concommand.Add("lia_snapshot_skip", function(ply, _, args)
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
+        return
+    end
+
+    if #args == 0 then
+        print("Usage: lia_snapshot_skip <table_to_skip> [table_to_skip2] ...")
+        print("Example: lia_snapshot_skip chardata")
+        print("This will create snapshots for all tables EXCEPT the ones specified")
+        return
+    end
+
+    local skipTables = {}
+    for _, tableName in ipairs(args) do
+        local fullTableName = tableName:StartWith("lia_") and tableName or "lia_" .. tableName
+        skipTables[fullTableName] = true
+        print("Will skip table: " .. fullTableName)
+    end
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player ", IsValid(ply) and ply:Nick() or "Console", " initiated selective database snapshot creation\n")
+    local function sendFeedback(msg)
+        print("[DB Snapshot] " .. msg)
+    end
+
+    sendFeedback("Starting database snapshot of all lia_* tables (skipping " .. table.concat(args, ", ") .. ")...", Color(0, 255, 0))
+    lia.db.getTables():next(function(tables)
+        if #tables == 0 then
+            sendFeedback("No lia_* tables found!", Color(255, 255, 0))
+            return
+        end
+
+        -- Filter out tables to skip
+        local filteredTables = {}
+        for _, tableName in ipairs(tables) do
+            if not skipTables[tableName] then
+                table.insert(filteredTables, tableName)
+            else
+                sendFeedback("Skipping table: " .. tableName, Color(255, 255, 0))
+            end
+        end
+
+        if #filteredTables == 0 then
+            sendFeedback("No tables left to snapshot after filtering!", Color(255, 255, 0))
+            return
+        end
+
+        sendFeedback("Found " .. #filteredTables .. " tables to snapshot: " .. table.concat(filteredTables, ", "), Color(255, 255, 255))
+        local completed = 0
+        local total = #filteredTables
+        local timestamp = os.date("%Y%m%d_%H%M%S")
+        for _, tableName in ipairs(filteredTables) do
+            lia.db.select("*", tableName:gsub("lia_", "")):next(function(selectResult)
+                if selectResult and selectResult.results then
+                    local shortName = tableName:gsub("lia_", "")
+                    local filename = "lilia/database/" .. shortName .. "_" .. timestamp .. ".txt"
+                    local content = "Database snapshot for table: " .. tableName .. "\n"
+                    content = content .. "Generated on: " .. os.date() .. "\n"
+                    content = content .. "Total records: " .. #selectResult.results .. "\n\n"
+                    for _, row in ipairs(selectResult.results) do
+                        local rowData = {}
+                        for k, v in pairs(row) do
+                            if isstring(v) then
+                                rowData[#rowData + 1] = string.format("%s='%s'", k, v:gsub("'", "''"))
+                            elseif isnumber(v) then
+                                rowData[#rowData + 1] = string.format("%s=%s", k, tostring(v))
+                            elseif v == nil then
+                                rowData[#rowData + 1] = string.format("%s=NULL", k)
+                            else
+                                rowData[#rowData + 1] = string.format("%s='%s'", k, tostring(v):gsub("'", "''"))
+                            end
+                        end
+
+                        content = content .. "INSERT INTO " .. tableName .. " (" .. table.concat(rowData, ", ") .. ");\n"
+                    end
+
+                    file.Write(filename, content)
+                    sendFeedback("? Saved " .. #selectResult.results .. " records from " .. tableName .. " to " .. filename, Color(0, 255, 0))
+                else
+                    sendFeedback("? Failed to query table: " .. tableName .. " (no results returned)", Color(255, 0, 0))
+                end
+
+                completed = completed + 1
+                if completed >= total then
+                    sendFeedback("Selective snapshot creation completed (" .. completed .. "/" .. total .. " tables)", Color(0, 255, 0))
+                end
+            end):catch(function(err)
+                sendFeedback("? Error processing table " .. tableName .. ": " .. err, Color(255, 0, 0))
+                completed = completed + 1
+                if completed >= total then
+                    sendFeedback("Selective snapshot creation completed with errors (" .. completed .. "/" .. total .. " tables)", Color(255, 255, 0))
+                end
+            end)
+        end
+    end):catch(function(err) sendFeedback("? Failed to get table list: " .. err, Color(255, 0, 0)) end)
+end)
+
+concommand.Add("lia_diagnose_table", function(ply, _, args)
+    if SERVER and IsValid(ply) then
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Access denied: This database command can only be run from the server console\n")
+        return
+    end
+
+    if #args == 0 then
+        print("Usage: lia_diagnose_table <table_name>")
+        print("Example: lia_diagnose_table chardata")
+        return
+    end
+
+    local tableName = args[1]
+    local fullTableName = tableName:StartWith("lia_") and tableName or "lia_" .. tableName
+
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Diagnosing table: ", fullTableName, " ===\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Player: ", IsValid(ply) and ply:Nick() or "Console", "\n")
+    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Timestamp: ", os.date("%Y-%m-%d %H:%M:%S"), "\n\n")
+
+    -- Step 1: Check if table exists in sqlite_master
+    lia.db.query("SELECT name FROM sqlite_master WHERE type='table' AND name='" .. fullTableName .. "'", function(result)
+        if result and #result > 0 then
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table exists in sqlite_master\n")
+
+            -- Step 2: Try to get table schema
+            lia.db.query("PRAGMA table_info(" .. fullTableName .. ")", function(schemaResult)
+                if schemaResult and #schemaResult > 0 then
+                    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table schema retrieved successfully (", #schemaResult, " columns)\n")
+                    for _, col in ipairs(schemaResult) do
+                        print("  - " .. col.name .. " (" .. col.type .. ")")
+                    end
+                    print("")
+
+                    -- Step 3: Try to count records
+                    lia.db.query("SELECT COUNT(*) as count FROM " .. fullTableName, function(countResult)
+                        if countResult and countResult[1] then
+                            local count = countResult[1].count or 0
+                            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? Table has ", count, " records\n")
+
+                            -- Step 4: Try a simple SELECT query
+                            lia.db.select("*", tableName:gsub("^lia_", "")):next(function(selectResult)
+                                if selectResult and selectResult.results then
+                                    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query successful (", #selectResult.results, " records retrieved)\n")
+                                    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "=== Diagnosis completed successfully ===\n")
+                                else
+                                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query failed: No results returned\n")
+                                end
+                            end):catch(function(err)
+                                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? SELECT query failed: ", err, "\n")
+                                MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "This is likely the cause of the snapshot failure\n")
+                            end)
+                        else
+                            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? Failed to count records in table\n")
+                        end
+                    end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? COUNT query failed: ", err, "\n") end)
+                else
+                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? Failed to retrieve table schema\n")
+                end
+            end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? PRAGMA table_info failed: ", err, "\n") end)
+        else
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? Table does not exist in sqlite_master\n")
+            MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Available lia_ tables:\n")
+            lia.db.getTables():next(function(tables)
+                for _, tbl in ipairs(tables) do
+                    print("  - " .. tbl)
+                end
+            end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Failed to list tables: ", err, "\n") end)
+        end
+    end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "? sqlite_master query failed: ", err, "\n") end)
 end)

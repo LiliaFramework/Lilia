@@ -1065,7 +1065,6 @@ function GM:LiliaTablesLoaded()
                 lia.entityDataLoaded = true
                 databaseLoadingComplete = true
                 lia.loadingState.filesLoaded = true
-                lia.bootstrap("Database", "Loading complete - players can now join the server.")
             end)
         end
     end

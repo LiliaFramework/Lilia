@@ -1603,23 +1603,77 @@ lia.command.add("charunban", {
         end
 
         client.liaNextSearch = CurTime() + 15
-        local sqlCondition = id and ("id = " .. id) or ("name LIKE " .. lia.db.convertDataType("%" .. queryArg .. "%"))
-        lia.db.selectOne({"id", "name"}, "characters", sqlCondition):next(function(data)
-            if data then
-                local charID = tonumber(data.id)
-                local banned = lia.char.getCharBanned(charID)
-                client.liaNextSearch = 0
-                if not banned or banned == 0 then
-                    client:notifyLocalized("charNotBanned")
-                    return
-                end
+        if id then
+            lia.db.selectOne({"id"}, "characters", "id = " .. id):next(function(data)
+                if data then
+                    -- Get character name from chardata
+                    lia.db.selectOne("value", "chardata", "charID = " .. data.id .. " AND key = 'name'"):next(function(nameData)
+                        if nameData then
+                            data.name = nameData.value
+                        end
+                        -- Process the character data
+                        local charID = tonumber(data.id)
+                        local banned = lia.char.getCharBanned(charID)
+                        client.liaNextSearch = 0
+                        if not banned or banned == 0 then
+                            client:notifyLocalized("charNotBanned")
+                            return
+                        end
 
-                lia.char.setCharDatabase(charID, "banned", 0)
-                lia.char.setCharDatabase(charID, "charBanInfo", nil)
-                client:notifyLocalized("charUnBan", client:Name(), data.name)
-                lia.log.add(client, "charUnban", data.name, charID)
-            end
-        end)
+                        lia.char.setCharDatabase(charID, "banned", 0)
+                        lia.char.setCharDatabase(charID, "charBanInfo", nil)
+                        client:notifyLocalized("charUnBan", client:Name(), data.name or "Unknown")
+                        lia.log.add(client, "charUnban", data.name or "Unknown", charID)
+                    end):catch(function(err)
+                        lia.warning("[Admin] Failed to get character name: " .. tostring(err))
+                        -- Continue without name
+                        local charID = tonumber(data.id)
+                        local banned = lia.char.getCharBanned(charID)
+                        client.liaNextSearch = 0
+                        if not banned or banned == 0 then
+                            client:notifyLocalized("charNotBanned")
+                            return
+                        end
+
+                        lia.char.setCharDatabase(charID, "banned", 0)
+                        lia.char.setCharDatabase(charID, "charBanInfo", nil)
+                        client:notifyLocalized("charUnBan", client:Name(), "Unknown")
+                        lia.log.add(client, "charUnban", "Unknown", charID)
+                    end)
+                else
+                    client:notifyLocalized("characterNotFound")
+                    client.liaNextSearch = 0
+                end
+            end):catch(function(err)
+                lia.error("[Admin] Failed to find character by ID: " .. tostring(err))
+                client.liaNextSearch = 0
+            end)
+        else
+            -- Search by name using chardata join
+            lia.db.selectWithJoin("SELECT c.id, n.value AS name FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' WHERE n.value LIKE " .. lia.db.convertDataType("%" .. queryArg .. "%")):next(function(result)
+                if result and result.results and #result.results > 0 then
+                    local data = result.results[1] -- Get first match
+                    local charID = tonumber(data.id)
+                    local banned = lia.char.getCharBanned(charID)
+                    client.liaNextSearch = 0
+                    if not banned or banned == 0 then
+                        client:notifyLocalized("charNotBanned")
+                        return
+                    end
+
+                    lia.char.setCharDatabase(charID, "banned", 0)
+                    lia.char.setCharDatabase(charID, "charBanInfo", nil)
+                    client:notifyLocalized("charUnBan", client:Name(), data.name or "Unknown")
+                    lia.log.add(client, "charUnban", data.name or "Unknown", charID)
+                else
+                    client:notifyLocalized("characterNotFound")
+                    client.liaNextSearch = 0
+                end
+            end):catch(function(err)
+                lia.error("[Admin] Failed to search character by name: " .. tostring(err))
+                client.liaNextSearch = 0
+            end)
+        end
     end
 })
 
@@ -1833,23 +1887,56 @@ lia.command.add("charwipeoffline", {
     onRun = function(client, arguments)
         local charID = tonumber(arguments[1])
         if not charID then return client:notifyLocalized("invalidCharID") end
-        lia.db.selectOne({"name"}, "characters", "id = " .. charID):next(function(data)
-            if not data then
-                client:notifyLocalized("characterNotFound")
-                return
+        lia.db.selectOne("value", "chardata", "charID = " .. charID .. " AND key = 'name'"):next(function(nameData)
+            local charName = "Unknown"
+            if nameData then
+                charName = nameData.value
             end
 
-            local charName = data.name
-            for _, ply in player.Iterator() do
-                if ply:getChar() and ply:getChar():getID() == charID then
-                    ply:Kick(L("youHaveBeenWiped"))
-                    break
+            -- Verify character exists
+            lia.db.selectOne({"id"}, "characters", "id = " .. charID):next(function(charData)
+                if not charData then
+                    client:notifyLocalized("characterNotFound")
+                    return
                 end
-            end
 
-            lia.char.delete(charID)
-            client:notifyLocalized("offlineCharWiped", charID)
-            lia.log.add(client, "charWipeOffline", charName, charID)
+                for _, ply in player.Iterator() do
+                    if ply:getChar() and ply:getChar():getID() == charID then
+                        ply:Kick(L("youHaveBeenWiped"))
+                        break
+                    end
+                end
+
+                lia.char.delete(charID)
+                client:notifyLocalized("offlineCharWiped", charID)
+                lia.log.add(client, "charWipeOffline", charName, charID)
+            end):catch(function(err)
+                lia.error("[Admin] Failed to verify character exists: " .. tostring(err))
+                client:notifyLocalized("characterNotFound")
+            end)
+        end):catch(function(err)
+            lia.warning("[Admin] Failed to get character name, proceeding anyway: " .. tostring(err))
+            -- Verify character exists even if we can't get the name
+            lia.db.selectOne({"id"}, "characters", "id = " .. charID):next(function(charData)
+                if not charData then
+                    client:notifyLocalized("characterNotFound")
+                    return
+                end
+
+                for _, ply in player.Iterator() do
+                    if ply:getChar() and ply:getChar():getID() == charID then
+                        ply:Kick(L("youHaveBeenWiped"))
+                        break
+                    end
+                end
+
+                lia.char.delete(charID)
+                client:notifyLocalized("offlineCharWiped", charID)
+                lia.log.add(client, "charWipeOffline", "Unknown", charID)
+            end):catch(function(verifyErr)
+                lia.error("[Admin] Failed to verify character exists: " .. tostring(verifyErr))
+                client:notifyLocalized("characterNotFound")
+            end)
         end)
     end
 })
