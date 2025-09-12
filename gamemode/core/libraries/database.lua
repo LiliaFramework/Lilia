@@ -3175,7 +3175,6 @@ concommand.Add("lia_fix_characters", function(ply, _)
 
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local schemaCondition = "schema = " .. lia.db.convertDataType(gamemode)
-        -- Check for corrupted characters (non-numeric IDs)
         MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Scanning for corrupted character IDs...\n")
         lia.db.select({"id", "name", "steamID"}, "characters", schemaCondition):next(function(data)
             local results = data.results or {}
@@ -3210,9 +3209,7 @@ concommand.Add("lia_fix_characters", function(ply, _)
             local promises = {}
             for _, char in ipairs(corruptedChars) do
                 local deletePromise = lia.db.delete("characters", "id = " .. lia.db.convertDataType(char.rawId) .. " AND " .. schemaCondition):next(function()
-                    -- Also delete related chardata
                     lia.db.delete("chardata", "charID = " .. lia.db.convertDataType(char.rawId)):next(function()
-                        -- Also delete related inventories
                         lia.db.select({"invID"}, "inventories", "charID = " .. lia.db.convertDataType(char.rawId)):next(function(invData)
                             local invResults = invData.results or {}
                             for _, inv in ipairs(invResults) do
