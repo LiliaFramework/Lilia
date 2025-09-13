@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:OnReloaded()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
 end

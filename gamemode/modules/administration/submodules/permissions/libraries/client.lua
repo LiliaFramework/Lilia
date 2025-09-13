@@ -1,4 +1,4 @@
-function MODULE:PrePlayerDraw(client)
+﻿function MODULE:PrePlayerDraw(client)
     if not IsValid(client) then return end
     if client:isNoClipping() then return true end
 end

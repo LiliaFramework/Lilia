@@ -1,4 +1,4 @@
-local characterMeta = lia.meta.character or {}
+﻿local characterMeta = lia.meta.character or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
@@ -513,7 +513,6 @@ if SERVER then
         local curChar, steamID = client:getChar(), client:SteamID()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
-
             if isCurChar then
                 net.Start("removeF1")
                 net.Send(client)

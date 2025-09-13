@@ -1,4 +1,4 @@
-local hasInitializedModules = false
+﻿local hasInitializedModules = false
 lia = lia or {
     util = {},
     gui = {},

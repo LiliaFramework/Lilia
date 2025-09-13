@@ -1,4 +1,4 @@
-lia.inventory = lia.inventory or {}
+﻿lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.storage = lia.inventory.storage or {}
 lia.inventory.instances = lia.inventory.instances or {}

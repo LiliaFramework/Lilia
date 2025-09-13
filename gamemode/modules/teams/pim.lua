@@ -1,4 +1,4 @@
-lia.playerinteract.addInteraction("inviteToFaction", {
+﻿lia.playerinteract.addInteraction("inviteToFaction", {
     serverOnly = true,
     category = L("categoryFactionManagement"),
     shouldShow = function(client, target)
