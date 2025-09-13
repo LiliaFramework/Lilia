@@ -1,4 +1,4 @@
-﻿local ITEM = lia.meta.item or {}
+local ITEM = lia.meta.item or {}
 debug.getregistry().Item = lia.meta.item
 ITEM.__index = ITEM
 ITEM.name = "invalidName"

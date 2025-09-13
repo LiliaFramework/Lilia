@@ -1,4 +1,4 @@
-﻿if CLIENT then TicketFrames = {} end
+if CLIENT then TicketFrames = {} end
 MODULE.name = "Tickets"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"

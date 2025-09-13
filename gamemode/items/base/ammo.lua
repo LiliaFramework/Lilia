@@ -1,4 +1,4 @@
-﻿ITEM.name = "ammoName"
+ITEM.name = "ammoName"
 ITEM.model = "models/props_c17/SuitCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1

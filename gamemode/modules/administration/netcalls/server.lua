@@ -1,4 +1,4 @@
-﻿net.Receive("cfgSet", function(_, client)
+net.Receive("cfgSet", function(_, client)
     local key = net.ReadString()
     local name = net.ReadString()
     local value = net.ReadType()

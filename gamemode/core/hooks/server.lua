@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()
@@ -1066,6 +1066,43 @@ concommand.Add("kickbots", function()
     end
 end)
 
+concommand.Add("lia_reload", function(client)
+    if IsValid(client) and not client:IsSuperAdmin() then
+        client:notify("You don't have permission to use this command.")
+        return
+    end
+
+    if lia.reloadInProgress then
+        if IsValid(client) then
+            client:notify("A reload is already in progress.")
+        else
+            print("[Lilia] A reload is already in progress.")
+        end
+        return
+    end
+
+    local currentTime = CurTime()
+    local timeSinceLastReload = currentTime - lia.lastReloadTime
+    if timeSinceLastReload < lia.reloadCooldown then
+        local remaining = math.ceil(lia.reloadCooldown - timeSinceLastReload)
+        if IsValid(client) then
+            client:notify("Reload cooldown active. " .. remaining .. " seconds remaining.")
+        else
+            print("[Lilia] Reload cooldown active. " .. remaining .. " seconds remaining.")
+        end
+        return
+    end
+
+    if IsValid(client) then
+        client:notify("Starting controlled reload...")
+    else
+        print("[Lilia] Starting controlled reload...")
+    end
+
+    -- Trigger the reload
+    hook.Run("OnReloaded")
+end)
+
 concommand.Add("plysetgroup", function(ply, _, args)
     local target = lia.util.findPlayer(ply, args[1])
     local usergroup = args[2]
@@ -1341,4 +1378,63 @@ concommand.Add("database_list", function(ply)
             lia.information(L("dbColumnsList", table.concat(columns, ", ")))
         end
     end)
+end)
+
+concommand.Add("lia_fix_characters", function(client)
+    if IsValid(client) then
+        client:notifyLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Starting character data fix...\n")
+    -- First, let's check for characters with invalid IDs
+    lia.db.query("SELECT id, name, steamID FROM lia_characters WHERE id IS NULL OR id = '' OR id = '0'", function(data)
+        if not data or #data == 0 then
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No characters with invalid IDs found.\n")
+        else
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "Found " .. #data .. " characters with invalid IDs. Fixing...\n")
+            for _, char in ipairs(data) do
+                local charName = char.name or "Unknown"
+                local steamID = char.steamID or "Unknown"
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Fixing character: " .. charName .. " (SteamID: " .. steamID .. ")\n")
+                -- Delete the invalid character record
+                lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.escape(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed invalid character: " .. charName .. "\n") end)
+            end
+        end
+    end)
+
+    -- Also check for characters with non-numeric IDs by fetching all and checking in Lua
+    lia.db.query("SELECT id, name, steamID FROM lia_characters", function(data)
+        if data and #data > 0 then
+            local invalidChars = {}
+            for _, char in ipairs(data) do
+                local charID = char.id
+                if charID and not tonumber(charID) then table.insert(invalidChars, char) end
+            end
+
+            if #invalidChars > 0 then
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "Found " .. #invalidChars .. " characters with non-numeric IDs. Fixing...\n")
+                for _, char in ipairs(invalidChars) do
+                    local charName = char.name or "Unknown"
+                    local invalidID = char.id
+                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Fixing character with invalid ID '" .. tostring(invalidID) .. "': " .. charName .. "\n")
+                    -- Delete the invalid character record
+                    lia.db.query("DELETE FROM lia_characters WHERE id = " .. lia.db.escape(invalidID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed character with invalid ID: " .. charName .. "\n") end)
+                end
+            else
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No characters with non-numeric IDs found.\n")
+            end
+        end
+    end)
+
+    -- Clean up orphaned character data
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Cleaning up orphaned character data...\n")
+    lia.db.query("DELETE FROM lia_chardata WHERE charID NOT IN (SELECT id FROM lia_characters WHERE id IS NOT NULL AND id != '' AND id != '0')", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned character data.\n") end)
+    -- Clean up orphaned inventories
+    lia.db.query("DELETE FROM lia_inventories WHERE charID NOT IN (SELECT id FROM lia_characters WHERE id IS NOT NULL AND id != '' AND id != '0')", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned inventories.\n") end)
+    -- Clean up orphaned inventory data
+    lia.db.query("DELETE FROM lia_invdata WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned inventory data.\n") end)
+    -- Clean up orphaned items
+    lia.db.query("DELETE FROM lia_items WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned items.\n") end)
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Character data fix completed!\n")
 end)

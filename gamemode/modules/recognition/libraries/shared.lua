@@ -1,4 +1,4 @@
-﻿local function isFakeNameExistant(name, nameList)
+local function isFakeNameExistant(name, nameList)
     for _, n in pairs(nameList) do
         if n == name then return true end
     end

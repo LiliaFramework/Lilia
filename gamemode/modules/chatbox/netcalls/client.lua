@@ -1,4 +1,4 @@
-﻿net.Receive("cMsg", function()
+net.Receive("cMsg", function()
     local client = net.ReadEntity()
     local chatType = net.ReadString()
     local text = net.ReadString()

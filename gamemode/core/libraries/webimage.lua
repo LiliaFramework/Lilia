@@ -1,4 +1,4 @@
-﻿lia.webimage = lia.webimage or {}
+lia.webimage = lia.webimage or {}
 lia.webimage.stored = lia.webimage.stored or {}
 lia.webimage.allowDownloads = false
 local baseDir = "lilia/webimages/"

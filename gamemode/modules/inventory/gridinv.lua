@@ -1,4 +1,4 @@
-﻿local GridInv = lia.Inventory:extend("GridInv")
+local GridInv = lia.Inventory:extend("GridInv")
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
     local ownerID = inventory:getData("char")

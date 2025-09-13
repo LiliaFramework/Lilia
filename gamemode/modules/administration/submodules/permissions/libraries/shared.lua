@@ -1,4 +1,4 @@
-﻿lia.flag.add("p", "flagPhysgun", function(client, isGiven)
+lia.flag.add("p", "flagPhysgun", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
         client:SelectWeapon("weapon_physgun")
