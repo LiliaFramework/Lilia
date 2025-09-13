@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     local border = 32
     local screenW, screenH = ScrW(), ScrH()

@@ -1,4 +1,4 @@
-net.Receive("liaCharList", function()
+﻿net.Receive("liaCharList", function()
     local newCharList = {}
     local length = net.ReadUInt(32)
     for i = 1, length do

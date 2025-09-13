@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local rowPaint = {
     [0] = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 50)

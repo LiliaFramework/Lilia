@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetSize(280, 240)
     self:SetTitle(L("door") .. " " .. L("settings"))

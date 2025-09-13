@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
     lia.gui.charConfirm = self
