@@ -1398,7 +1398,7 @@ concommand.Add("lia_fix_characters", function(client)
                 local steamID = char.steamID or "Unknown"
                 MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Fixing character: " .. charName .. " (SteamID: " .. steamID .. ")\n")
                 -- Delete the invalid character record
-                lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.escape(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed invalid character: " .. charName .. "\n") end)
+                lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.convertDataType(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed invalid character: " .. charName .. "\n") end)
             end
         end
     end)
@@ -1416,10 +1416,11 @@ concommand.Add("lia_fix_characters", function(client)
                 MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "Found " .. #invalidChars .. " characters with non-numeric IDs. Fixing...\n")
                 for _, char in ipairs(invalidChars) do
                     local charName = char.name or "Unknown"
+                    local steamID = char.steamID or "Unknown"
                     local invalidID = char.id
                     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Fixing character with invalid ID '" .. tostring(invalidID) .. "': " .. charName .. "\n")
-                    -- Delete the invalid character record
-                    lia.db.query("DELETE FROM lia_characters WHERE id = " .. lia.db.escape(invalidID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed character with invalid ID: " .. charName .. "\n") end)
+                    -- Delete the invalid character record using name and steamID since ID is invalid
+                    lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.convertDataType(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed character with invalid ID: " .. charName .. "\n") end)
                 end
             else
                 MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No characters with non-numeric IDs found.\n")
