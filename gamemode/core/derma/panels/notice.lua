@@ -1,4 +1,4 @@
-﻿local TimeFraction, CurTime = math.TimeFraction, CurTime
+local TimeFraction, CurTime = math.TimeFraction, CurTime
 local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 local PANEL = {}
 function PANEL:Init()

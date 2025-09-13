@@ -1,4 +1,4 @@
-﻿if SERVER then
+if SERVER then
     function lia.notices.notify(message, recipient)
         net.Start("liaNotify")
         net.WriteString(message)

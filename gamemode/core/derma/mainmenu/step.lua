@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 PANEL.isCharCreateStep = true
 function PANEL:Init()
     self:Dock(FILL)

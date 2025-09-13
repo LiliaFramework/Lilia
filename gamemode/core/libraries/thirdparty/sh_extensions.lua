@@ -1,4 +1,4 @@
-﻿local friendliedNPCs = {}
+local friendliedNPCs = {}
 local hostaliziedNPCs = {}
 local passive = {"npc_seagull", "npc_crow", "npc_piegon", "monster_cockroach", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_turret_floor"}
 local friendly = {"npc_monk", "npc_alyx", "npc_barney", "npc_citizen", "npc_turret_floor", "npc_dog", "npc_vortigaunt", "npc_kleiner", "npc_eli", "npc_magnusson", "npc_breen", "npc_mossman", "npc_fisherman", "monster_barney", "monster_scientist", "player"}

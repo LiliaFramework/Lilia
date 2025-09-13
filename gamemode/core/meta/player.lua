@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name

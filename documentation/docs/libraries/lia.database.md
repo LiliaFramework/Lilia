@@ -8,8 +8,6 @@ This page documents the functions for working with database operations and manag
 
 The database library (`lia.db`) provides a comprehensive system for database operations, schema management, and data persistence in the Lilia framework, serving as the primary data access layer for all persistent storage needs. This library offers advanced SQL operations with support for SQLite database backend with automatic query queuing and connection management for optimal performance. The system features robust schema management with automatic field additions, table creation, and migration support for seamless framework updates. The library provides comprehensive transaction management with rollback capabilities and deferred promise-based operations for asynchronous database interactions. Additional features include database administration utilities, table and column management, and security features such as SQL injection prevention through proper escaping, making it the cornerstone of all persistent data operations within the Lilia framework.
 
-**Note**: All database operations return promises (deferred objects) and should be handled asynchronously using `.next()` and `.catch()` methods.
-
 ---
 
 ### escapeIdentifier
@@ -771,52 +769,6 @@ local function updatePlayerLastSeen(steamid)
         print("Player last seen updated")
     end)
 end
-```
-
-
----
-
-### addDatabaseFields
-
-**Purpose**
-
-Automatically adds database fields to the lia_characters table based on character variables.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Add database fields
-local function addFields()
-    lia.db.addDatabaseFields()
-    print("Database fields added")
-end
-
--- This function is automatically called by loadTables()
--- It reads from lia.char.vars and adds corresponding database columns
--- Example character variable definition:
-lia.char.registerVar("level", {
-    field = "level",
-    fieldType = "integer",
-    default = 1,
-    onDisplay = function(client, value)
-        return "Level: " .. value
-    end
-})
-
--- The addDatabaseFields function will automatically create a 'level' column
--- in the lia_characters table when called
 ```
 
 ---
@@ -1644,3 +1596,138 @@ end
 ```
 
 ---
+
+### createSnapshot
+
+**Purpose**
+
+Creates a snapshot of a database table by exporting all data to a JSON file and returns a promise.
+
+**Parameters**
+
+* `tableName` (*string*): The table name (without 'lia_' prefix).
+
+**Returns**
+
+* `promise` (*Promise*): A promise that resolves with snapshot information including file name, path, and record count.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Create snapshot
+local function createSnapshot(tableName)
+    return lia.db.createSnapshot(tableName)
+end
+
+-- Use in a function
+local function backupPlayersTable()
+    lia.db.createSnapshot("players"):next(function(result)
+        print("Snapshot created successfully!")
+        print("File:", result.file)
+        print("Path:", result.path)
+        print("Records:", result.records)
+    end):catch(function(err)
+        print("Snapshot failed:", err)
+    end)
+end
+
+-- Use in a command
+lia.command.add("backup", {
+    arguments = {
+        {name = "table", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.db.createSnapshot(arguments[1]):next(function(result)
+            client:notify("Backup created: " .. result.file .. " (" .. result.records .. " records)")
+        end):catch(function(err)
+            client:notify("Backup failed: " .. err)
+        end)
+    end
+})
+
+-- Backup multiple tables
+local function backupAllTables()
+    local tables = {"players", "characters", "items"}
+    for _, tableName in ipairs(tables) do
+        lia.db.createSnapshot(tableName):next(function(result)
+            print("Backed up " .. tableName .. ": " .. result.records .. " records")
+        end)
+    end
+end
+```
+
+---
+
+### loadSnapshot
+
+**Purpose**
+
+Loads a database snapshot from a JSON file and restores the data to the target table, returning a promise.
+
+**Parameters**
+
+* `fileName` (*string*): The snapshot file name (with or without path).
+
+**Returns**
+
+* `promise` (*Promise*): A promise that resolves with restoration information including table name, record count, and timestamp.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Load snapshot
+local function loadSnapshot(fileName)
+    return lia.db.loadSnapshot(fileName)
+end
+
+-- Use in a function
+local function restorePlayersTable(fileName)
+    lia.db.loadSnapshot(fileName):next(function(result)
+        print("Snapshot loaded successfully!")
+        print("Table:", result.table)
+        print("Records:", result.records)
+        if result.timestamp then
+            print("Original timestamp:", os.date("%Y-%m-%d %H:%M:%S", result.timestamp))
+        end
+    end):catch(function(err)
+        print("Snapshot load failed:", err)
+    end)
+end
+
+-- Use in a command
+lia.command.add("restore", {
+    arguments = {
+        {name = "filename", type = "string"}
+    },
+    privilege = "Admin Access",
+    onRun = function(client, arguments)
+        lia.db.loadSnapshot(arguments[1]):next(function(result)
+            client:notify("Restored " .. result.records .. " records to " .. result.table)
+        end):catch(function(err)
+            client:notify("Restore failed: " .. err)
+        end)
+    end
+})
+
+-- List available snapshots
+local function listSnapshots()
+    local files, _ = file.Find("data/lilia/snapshots/*/*.json", "DATA")
+    if files and #files > 0 then
+        print("Available snapshots:")
+        for _, file in ipairs(files) do
+            print("- " .. file)
+        end
+    else
+        print("No snapshots found")
+    end
+end
+```

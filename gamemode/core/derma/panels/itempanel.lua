@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local sw, sh = ScrW(), ScrH()
     self:SetSize(sw * 0.6, sh * 0.8)

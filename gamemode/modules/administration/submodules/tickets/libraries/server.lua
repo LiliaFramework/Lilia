@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 MODULE.ActiveTickets = MODULE.ActiveTickets or {}
 local function buildClaimTable(rows)
     local caseclaims = {}

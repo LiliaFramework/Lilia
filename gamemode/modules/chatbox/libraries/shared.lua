@@ -1,4 +1,4 @@
-﻿lia.chat.register("meclose", {
+lia.chat.register("meclose", {
     arguments = {
         {
             name = "action",

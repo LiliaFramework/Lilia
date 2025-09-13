@@ -1,4 +1,4 @@
-﻿lia.command.add("charsetattrib", {
+lia.command.add("charsetattrib", {
     superAdminOnly = true,
     desc = "setAttributes",
     arguments = {

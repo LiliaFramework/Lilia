@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local baseEmitSound = entityMeta.EmitSound
 local validClasses = {

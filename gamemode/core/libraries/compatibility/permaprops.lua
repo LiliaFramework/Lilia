@@ -1,4 +1,4 @@
-﻿local spawnedPositions = {}
+local spawnedPositions = {}
 local radiusSqr = 16
 local lastSaver
 hook.Add("CanTool", "liaPermaProps", function(ply, trace, tool)

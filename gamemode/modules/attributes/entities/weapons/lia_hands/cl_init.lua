@@ -1,4 +1,4 @@
-﻿include("shared.lua")
+include("shared.lua")
 SWEP.NextAllowedPlayRateChange = 0
 function SWEP:DoDrawCrosshair(x, y)
     surface.SetDrawColor(255, 255, 255, 66)
