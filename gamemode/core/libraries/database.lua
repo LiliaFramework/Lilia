@@ -760,10 +760,10 @@ function lia.db.createSnapshot(tableName)
 
             local jsonData = util.TableToJSON(snapshot, true)
             local fileName = "snapshot_" .. tableName .. "_" .. os.time() .. ".json"
-            local filePath = "lilia/snapshots/" .. tableName .. "/" .. fileName
+            local filePath = "lilia/snapshots/" .. fileName
 
             -- Create directory if it doesn't exist
-            file.CreateDir("lilia/snapshots/" .. tableName)
+            file.CreateDir("lilia/snapshots")
 
             -- Write to file
             file.Write(filePath, jsonData)
@@ -897,7 +897,7 @@ concommand.Add("lia_snapshot_load", function(_, _, args)
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Available snapshots:\n")
 
         -- List available snapshots
-        local files, _ = file.Find("lilia/snapshots/*/*.json", "DATA")
+        local files, _ = file.Find("lilia/snapshots/*.json", "DATA")
         if files and #files > 0 then
             for _, file in ipairs(files) do
                 MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "  " .. file .. "\n")
