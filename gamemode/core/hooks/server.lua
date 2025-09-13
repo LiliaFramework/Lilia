@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()

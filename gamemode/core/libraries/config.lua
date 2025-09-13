@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 function lia.config.add(key, name, value, callback, data)
@@ -142,7 +142,7 @@ function lia.config.load()
                 if not existing[k] then
                     lia.config.stored[k].value = v.default
                     inserts[#inserts + 1] = {
-                        schema = schema,
+                        schema = gamemode,
                         key = k,
                         value = {v.default}
                     }

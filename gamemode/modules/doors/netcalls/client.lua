@@ -1,4 +1,4 @@
-﻿net.Receive("doorMenu", function()
+net.Receive("doorMenu", function()
     if net.BytesLeft() > 0 then
         local entity = net.ReadEntity()
         local count = net.ReadUInt(8)

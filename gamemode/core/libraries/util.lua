@@ -1,4 +1,4 @@
-﻿function lia.util.FindPlayersInBox(mins, maxs)
+function lia.util.FindPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
     local plyList = {}
     for _, v in pairs(entsList) do

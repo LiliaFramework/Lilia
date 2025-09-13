@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self

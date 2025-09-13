@@ -1,4 +1,4 @@
-﻿lia.attribs = lia.attribs or {}
+lia.attribs = lia.attribs or {}
 lia.attribs.list = lia.attribs.list or {}
 function lia.attribs.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do

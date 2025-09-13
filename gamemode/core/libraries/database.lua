@@ -1,4 +1,4 @@
-﻿lia.db = lia.db or {}
+lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
 lia.db.modules = {

@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self.StartTime = CurTime()
     self.EndTime = self.StartTime + 5

@@ -1,4 +1,4 @@
-﻿function MODULE:ShowPlayerOptions(target, options)
+function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end
     if not (client:hasPrivilege("canAccessScoreboardInfoOutOfStaff") or client:hasPrivilege("canAccessScoreboardAdminOptions") and client:isStaffOnDuty()) then return end
