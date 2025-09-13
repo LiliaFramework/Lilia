@@ -1,2 +1,2 @@
-DeriveGamemode("sandbox")
+﻿DeriveGamemode("sandbox")
 include("shared.lua")

@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local function runCommand(client, args, range)
     local target = lia.util.findPlayer(client, args[1]) or client
     if not IsValid(target) or not target:getChar() then return end

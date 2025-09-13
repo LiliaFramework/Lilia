@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 lia.command.add("spawnadd", {
     adminOnly = true,
     desc = "spawnAddDesc",

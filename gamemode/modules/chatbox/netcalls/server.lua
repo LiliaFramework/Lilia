@@ -1,4 +1,4 @@
-net.Receive("msg", function(_, client)
+﻿net.Receive("msg", function(_, client)
     local text = net.ReadString()
     local charlimit = lia.config.get("MaxChatLength")
     if charlimit > 0 then

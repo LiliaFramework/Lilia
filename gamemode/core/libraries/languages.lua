@@ -1,4 +1,4 @@
-lia.lang = lia.lang or {}
+﻿lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 function lia.lang.loadFromDir(directory)
@@ -69,6 +69,7 @@ function L(key, ...)
     for i = count + 1, needed do
         args[i] = ""
     end
+
     local success, result = pcall(string.format, template, unpack(args))
     if not success then
         lia.error("Format error in localization string '" .. tostring(key) .. "': " .. result)

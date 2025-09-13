@@ -1,4 +1,4 @@
-local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
+﻿local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.values = lia.bar.values or {}

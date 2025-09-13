@@ -926,22 +926,14 @@ end)
 
 concommand.Add("lia_add_door_group_column", function()
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Adding door_group column to lia_doors table...\n")
-
     lia.db.fieldExists("lia_doors", "door_group"):next(function(exists)
         if not exists then
-            lia.db.query("ALTER TABLE lia_doors ADD COLUMN door_group TEXT"):next(function()
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Successfully added door_group column to lia_doors table\n")
-            end):catch(function(err)
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to add door_group column: " .. tostring(err) .. "\n")
-            end)
+            lia.db.query("ALTER TABLE lia_doors ADD COLUMN door_group TEXT"):next(function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Successfully added door_group column to lia_doors table\n") end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to add door_group column: " .. tostring(err) .. "\n") end)
         else
             MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "door_group column already exists in lia_doors table\n")
         end
-    end):catch(function(err)
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to check for door_group column: " .. tostring(err) .. "\n")
-    end)
+    end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to check for door_group column: " .. tostring(err) .. "\n") end)
 end)
-
 
 function GM:RegisterPreparedStatements()
     lia.bootstrap(L("database"), L("preparedStatementsAdded"))
