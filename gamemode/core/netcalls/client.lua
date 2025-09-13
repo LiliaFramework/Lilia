@@ -1,4 +1,4 @@
-net.Receive("liaNotifyL", function()
+﻿net.Receive("liaNotifyL", function()
     local message = net.ReadString()
     local length = net.ReadUInt(8)
     if length == 0 then return lia.notices.notifyLocalized(message) end

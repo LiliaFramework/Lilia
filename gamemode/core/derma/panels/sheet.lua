@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:Dock(FILL)
     self:DockMargin(10, 10, 10, 10)

@@ -1,4 +1,4 @@
-module("lia.markup", package.seeall)
+﻿module("lia.markup", package.seeall)
 local TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM = 1, 2, 3
 local colour_stack = {
     {

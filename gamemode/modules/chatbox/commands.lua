@@ -1,4 +1,4 @@
-lia.command.add("banooc", {
+﻿lia.command.add("banooc", {
     adminOnly = true,
     desc = "banOOCCommandDesc",
     arguments = {
