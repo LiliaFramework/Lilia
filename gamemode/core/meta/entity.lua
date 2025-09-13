@@ -374,7 +374,7 @@ else
             return
         end
 
-        if soundPath:find("^lilia/websounds/") or soundPath:find("^websounds/") or soundPath:find("^data/lilia/websounds/") or soundPath:find("^data/websounds/") then
+        if soundPath:find("^lilia/websounds/") or soundPath:find("^websounds/") or soundPath:find("^lilia/websounds/") or soundPath:find("^data/websounds/") then
             playLocalFile(soundPath)
             return
         end

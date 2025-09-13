@@ -1720,7 +1720,7 @@ lia.command.add("restore", {
 
 -- List available snapshots
 local function listSnapshots()
-    local files, _ = file.Find("data/lilia/snapshots/*/*.json", "DATA")
+    local files, _ = file.Find("lilia/snapshots/*/*.json", "DATA")
     if files and #files > 0 then
         print("Available snapshots:")
         for _, file in ipairs(files) do
