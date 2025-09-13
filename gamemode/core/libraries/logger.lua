@@ -1,4 +1,4 @@
-﻿lia.log = lia.log or {}
+lia.log = lia.log or {}
 lia.log.types = {
     ["charRecognize"] = {
         func = function(client, id, name) return L("logPlayerRecognizedCharacter", client:Name(), id, name) end,

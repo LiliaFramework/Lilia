@@ -1,4 +1,4 @@
-﻿lia.command.add("togglecheater", {
+lia.command.add("togglecheater", {
     adminOnly = true,
     desc = "toggleCheaterDesc",
     arguments = {

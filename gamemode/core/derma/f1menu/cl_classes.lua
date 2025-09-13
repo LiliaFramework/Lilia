@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     lia.gui.classes = self
     local w, h = self:GetParent():GetSize()

@@ -1,4 +1,4 @@
-﻿local function getGameList()
+local function getGameList()
     local games = engine.GetGames()
     table.insert(games, {
         title = L("spawnmenuAll"),

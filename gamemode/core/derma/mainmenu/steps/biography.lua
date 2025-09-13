@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 local HIGHLIGHT = Color(255, 255, 255, 50)
 function PANEL:Init()
     self:SetSize(400, 600)

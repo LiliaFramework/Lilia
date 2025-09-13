@@ -1,4 +1,4 @@
-﻿SWEP.PrintName = L("handsWeaponName")
+SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false

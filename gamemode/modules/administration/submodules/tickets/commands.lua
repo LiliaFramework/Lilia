@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 lia.command.add("viewtickets", {
     adminOnly = true,
     desc = "viewTicketsDesc",

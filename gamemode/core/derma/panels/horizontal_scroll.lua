@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 AccessorFunc(PANEL, "padding", "Padding")
 AccessorFunc(PANEL, "canvas", "Canvas")
 function PANEL:Init()

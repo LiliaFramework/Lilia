@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     self:SetTitle("")
