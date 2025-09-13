@@ -1,4 +1,4 @@
-﻿lia.data = lia.data or {}
+lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 function lia.data.encodetable(value)
     if isvector(value) then
@@ -317,10 +317,20 @@ for col in pairs(defaultCols) do
     baseCols[#baseCols + 1] = col
 end
 
+local function addPersistenceColumn(col)
+    local query
+    if lia.db.module == "sqlite" then
+        query = ([[ALTER TABLE lia_persistence ADD COLUMN %s TEXT]]):format(lia.db.escapeIdentifier(col))
+    else
+        query = ([[ALTER TABLE `lia_persistence` ADD COLUMN %s TEXT NULL]]):format(lia.db.escapeIdentifier(col))
+    end
+    return lia.db.query(query)
+end
+
 local function ensurePersistenceColumns(cols)
     local d = lia.db.waitForTablesToLoad()
     for _, col in ipairs(cols) do
-        d = d:next(function() return lia.db.fieldExists("lia_persistence", col) end):next(function(exists) if not exists then return lia.db.createColumn("persistence", col, "text"):next(function(success) if success then MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Added column '" .. col .. "' to lia_persistence table\n") end end):catch(function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 0, 0), "Failed to add column '" .. col .. "' to lia_persistence: " .. err .. "\n") end) end end)
+        d = d:next(function() return lia.db.fieldExists("lia_persistence", col) end):next(function(exists) if not exists then return addPersistenceColumn(col) end end)
     end
     return d
 end

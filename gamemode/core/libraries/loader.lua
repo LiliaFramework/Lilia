@@ -1,21 +1,11 @@
-﻿local hasInitializedModules = false
+local hasInitializedModules = false
 lia = lia or {
     util = {},
     gui = {},
     meta = {},
     notices = {},
     lastReloadTime = 0,
-    reloadCooldown = 5,
-    loadingState = {
-        databaseConnected = false,
-        databaseTablesLoaded = false,
-        modulesInitialized = false,
-        filesLoaded = false,
-        loadingFailed = false,
-        failureReason = "",
-        failureDetails = "",
-        errors = {}
-    }
+    reloadCooldown = 5
 }
 
 local FilesToLoad = {
@@ -522,101 +512,16 @@ end
 
 lia.includeEntities("lilia/gamemode/entities")
 lia.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
-local originalError = error
-function error(message, level)
-    lia.addLoadingError(message)
-    if string.find(message, "CRITICAL") or string.find(message, "failed to load") then
-        lia.loadingState.loadingFailed = true
-        lia.loadingState.failureReason = "Critical Error"
-        lia.loadingState.failureDetails = message
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL ERROR DETECTED: ", message, "\n")
-    end
-    return originalError(message, level)
-end
-
-function lia.hasGamemodeLoadedSuccessfully()
-    return not lia.loadingState.loadingFailed and lia.loadingState.databaseConnected and lia.loadingState.databaseTablesLoaded and lia.loadingState.modulesInitialized and lia.loadingState.filesLoaded
-end
-
-function lia.parseLuaError(errorMessage)
-    local pattern = "%[Lilia%] ([^:]+):(%d+): (.+)"
-    local errFile, line, message = errorMessage:match(pattern)
-    if errFile and line and message then
-        return {
-            message = message,
-            line = tonumber(line),
-            file = errFile
-        }
-    end
-
-    local fallbackPattern = "([^:]+):(%d+): (.+)"
-    errFile, line, message = errorMessage:match(fallbackPattern)
-    if errFile and line and message then
-        return {
-            message = message,
-            line = tonumber(line),
-            file = errFile
-        }
-    end
-    return {
-        message = errorMessage,
-        line = "N/A",
-        file = "Unknown"
-    }
-end
-
-function lia.addLoadingError(errorMessage)
-    local parsedError = lia.parseLuaError(errorMessage)
-    table.insert(lia.loadingState.errors, parsedError)
-    if #lia.loadingState.errors > 10 then table.remove(lia.loadingState.errors, 1) end
-end
-
-function lia.getLoadingFailureInfo()
-    if not lia.loadingState.loadingFailed then return nil end
-    return {
-        reason = lia.loadingState.failureReason,
-        details = lia.loadingState.failureDetails,
-        errors = lia.loadingState.errors
-    }
-end
-
-function lia.clearLoadingState()
-    lia.loadingState = {
-        databaseConnected = false,
-        databaseTablesLoaded = false,
-        modulesInitialized = false,
-        filesLoaded = false,
-        loadingFailed = false,
-        failureReason = "",
-        failureDetails = "",
-        errors = {}
-    }
-
-    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Loading state cleared for debugging.\n")
-end
-
 if SERVER then
     local function SetupDatabase()
         hook.Run("SetupDatabase")
-        lia.db.connect(function(success, errorMsg)
-            if success then
-                lia.loadingState.databaseConnected = true
-                lia.db.loadTables()
-            else
-                lia.loadingState.loadingFailed = true
-                lia.loadingState.failureReason = "Database Connection Failed"
-                lia.loadingState.failureDetails = "Failed to connect to database: " .. tostring(errorMsg)
-                local errorMsgFull = "[Database] Failed to connect to database: " .. tostring(errorMsg)
-                lia.addLoadingError(errorMsgFull)
-                lia.error(errorMsgFull)
-                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Database connection failed! Server may not function properly.\n")
-                hook.Run("DatabaseConnectionFailed", errorMsg)
-            end
+        lia.db.connect(function()
+            lia.db.loadTables()
+            hook.Run("DatabaseConnected")
         end)
     end
 
-    local function BootstrapLilia()
-        SetupDatabase()
+    local function SetupPersistence()
         cvars.AddChangeCallback("sbox_persist", function(_, old, new)
             timer.Create("sbox_persist_change_timer", 1, 1, function()
                 hook.Run("PersistenceSave", old)
@@ -624,6 +529,11 @@ if SERVER then
                 if new ~= "" then hook.Run("PersistenceLoad", new) end
             end)
         end, "sbox_persist_load")
+    end
+
+    local function BootstrapLilia()
+        timer.Simple(0, SetupDatabase)
+        SetupPersistence()
     end
 
     BootstrapLilia()
@@ -640,45 +550,10 @@ else
 end
 
 function GM:Initialize()
-    if engine.ActiveGamemode() == "lilia" then
-        lia.loadingState.loadingFailed = true
-        lia.loadingState.failureReason = "No Schema Loaded"
-        lia.loadingState.failureDetails = "The gamemode failed to load because no schema is loaded"
-        lia.error(L("noSchemaLoaded"))
-    end
-
+    if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
     if not hasInitializedModules then
-        if SERVER then
-            lia.db.waitForTablesToLoad():next(function()
-                local success, errorMsg = pcall(lia.module.initialize)
-                if not success then
-                    lia.loadingState.loadingFailed = true
-                    lia.loadingState.failureReason = "Module Initialization Failed"
-                    lia.loadingState.failureDetails = "Failed to initialize modules: " .. tostring(errorMsg)
-                    local errorMsgFull = "Module initialization failed: " .. tostring(errorMsg)
-                    lia.addLoadingError(errorMsgFull)
-                    lia.error(errorMsgFull)
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Module initialization failed! Server may not function properly.\n")
-                else
-                    hasInitializedModules = true
-                    lia.loadingState.modulesInitialized = true
-                end
-            end)
-        else
-            local success, errorMsg = pcall(lia.module.initialize)
-            if not success then
-                lia.loadingState.loadingFailed = true
-                lia.loadingState.failureReason = "Module Initialization Failed"
-                lia.loadingState.failureDetails = "Failed to initialize modules: " .. tostring(errorMsg)
-                local errorMsgFull = "Module initialization failed: " .. tostring(errorMsg)
-                lia.addLoadingError(errorMsgFull)
-                lia.error(errorMsgFull)
-                MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "CRITICAL: Module initialization failed! Server may not function properly.\n")
-            else
-                hasInitializedModules = true
-                lia.loadingState.modulesInitialized = true
-            end
-        end
+        lia.module.initialize()
+        hasInitializedModules = true
     end
 end
 
@@ -687,92 +562,36 @@ function GM:OnReloaded()
     local timeSinceLastReload = currentTime - lia.lastReloadTime
     if timeSinceLastReload < lia.reloadCooldown then return end
     lia.lastReloadTime = currentTime
-    if SERVER then
-        lia.db.connected = false
-        lia.db.tablesLoaded = false
-        lia.db.status.connected = false
-        lia.db.status.tablesLoaded = false
-        lia.loadingState.databaseConnected = false
-        lia.loadingState.databaseTablesLoaded = false
-        lia.loadingState.modulesInitialized = false
-        lia.loadingState.filesLoaded = false
-        lia.loadingState.loadingFailed = false
-        lia.bootstrap("Reload", "Resetting database state for reload...")
-        lia.db.connect(function(success, errorMsg)
-            if not success then
-                lia.error("[Reload] Database connection failed: " .. tostring(errorMsg))
-                lia.loadingState.loadingFailed = true
-                lia.loadingState.failureReason = "Database Reconnection Failed"
-                lia.loadingState.failureDetails = "Failed to reconnect to database during reload: " .. tostring(errorMsg)
-                return
-            end
-
-            lia.loadingState.databaseConnected = true
-            lia.bootstrap("Reload", "Database reconnected, loading tables...")
-            lia.db.loadTables()
-            lia.db.waitForTablesToLoad():next(function()
-                lia.loadingState.databaseTablesLoaded = true
-                lia.bootstrap("Reload", "Tables loaded, initializing modules...")
-                local moduleSuccess, moduleError = pcall(lia.module.initialize)
-                if not moduleSuccess then
-                    lia.error("[Reload] Module initialization failed: " .. tostring(moduleError))
-                    lia.loadingState.loadingFailed = true
-                    lia.loadingState.failureReason = "Module Initialization Failed"
-                    lia.loadingState.failureDetails = "Failed to initialize modules during reload: " .. tostring(moduleError)
-                    return
-                end
-
-                lia.loadingState.modulesInitialized = true
-                lia.config.load()
-                lia.faction.formatModelData()
-                lia.config.send()
-                lia.administrator.sync()
-                lia.playerinteract.syncToClients()
-                lia.bootstrap("Reload", "Restoring character lists for existing players...")
-                timer.Simple(0.5, function()
-                    for _, client in player.Iterator() do
-                        if IsValid(client) and not client:IsBot() then
-                            client.liaLoaded = false
-                            client.liaCharList = nil
-                            hook.Run("PlayerLiliaDataLoaded", client)
-                            lia.information("[Reload] Triggered character reload for " .. client:Name())
-                        end
-                    end
-                end)
-
-                lia.loadingState.filesLoaded = true
-                lia.bootstrap("Reload", "Reload completed successfully")
-            end):catch(function(err)
-                lia.error("[Reload] Table loading failed: " .. tostring(err))
-                lia.loadingState.loadingFailed = true
-                lia.loadingState.failureReason = "Table Loading Failed"
-                lia.loadingState.failureDetails = "Failed to load database tables during reload: " .. tostring(err)
-            end)
-        end, true)
-    end
-
     lia.module.initialize()
     lia.config.load()
     lia.faction.formatModelData()
+    if SERVER then
+        lia.config.send()
+        lia.administrator.sync()
+        lia.playerinteract.syncToClients()
+        lia.bootstrap("HotReload", "Gamemode hotreloaded successfully!")
+    else
+        chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Gamemode hotreloaded successfully!")
+    end
 end
 
 local loadedCompatibility = {}
-for _, compatFile in ipairs(ConditionalFiles) do
+for _, file in ipairs(ConditionalFiles) do
     local shouldLoad = false
-    if isfunction(compatFile.condition) then
-        local ok, result = pcall(compatFile.condition)
+    if isfunction(file.condition) then
+        local ok, result = pcall(file.condition)
         if ok then
             shouldLoad = result
         else
             lia.error(L("compatibilityConditionError", tostring(result)))
         end
-    elseif compatFile.global then
-        shouldLoad = _G[compatFile.global] ~= nil
+    elseif file.global then
+        shouldLoad = _G[file.global] ~= nil
     end
 
     if shouldLoad then
-        lia.include(compatFile.path, compatFile.realm or "shared")
-        loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
+        lia.include(file.path, file.realm or "shared")
+        loadedCompatibility[#loadedCompatibility + 1] = file.name
     end
 end
 

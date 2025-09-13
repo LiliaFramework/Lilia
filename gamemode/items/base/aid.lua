@@ -1,4 +1,4 @@
-﻿ITEM.name = "aidName"
+ITEM.name = "aidName"
 ITEM.desc = "aidDesc"
 ITEM.model = "models/weapons/w_package.mdl"
 ITEM.width = 1

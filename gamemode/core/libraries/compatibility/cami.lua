@@ -1,4 +1,4 @@
-﻿local function getGroupLevel(group)
+local function getGroupLevel(group)
     local levels = lia.administrator.DefaultGroups or {}
     if levels[group] then return levels[group] end
     local visited, current = {}, group
@@ -117,9 +117,7 @@ hook.Add("CAMI.PlayerUsergroupChanged", "liaAdminPlyUGChanged", function(ply, _,
     if not IsValid(ply) then return end
     local newGroup = tostring(new or "user")
     if tostring(ply:GetUserGroup() or "user") ~= newGroup then ply:SetUserGroup(newGroup) end
-    lia.db.updateTable({
-        userGroup = newGroup
-    }, nil, "players", "steamID = " .. lia.db.convertDataType(ply:SteamID()))
+    lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(newGroup), lia.db.convertDataType(ply:SteamID())))
 end)
 
 hook.Add("CAMI.SteamIDUsergroupChanged", "liaAdminSIDUGChanged", function(steamId, _, new)
@@ -129,7 +127,5 @@ hook.Add("CAMI.SteamIDUsergroupChanged", "liaAdminSIDUGChanged", function(steamI
     local newGroup = tostring(new or "user")
     local ply = lia.util.getBySteamID(sid)
     if IsValid(ply) and tostring(ply:GetUserGroup() or "user") ~= newGroup then ply:SetUserGroup(newGroup) end
-    lia.db.updateTable({
-        userGroup = newGroup
-    }, nil, "players", "steamID = " .. lia.db.convertDataType(sid))
+    lia.db.query(Format("UPDATE lia_players SET userGroup = '%s' WHERE steamID = %s", lia.db.escape(newGroup), lia.db.convertDataType(sid)))
 end)

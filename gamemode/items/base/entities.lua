@@ -1,13 +1,16 @@
-﻿ITEM.name = "entitiesName"
+ITEM.name = "entitiesName"
 ITEM.model = ""
 ITEM.desc = "entitiesDesc"
 ITEM.category = "entities"
 ITEM.entityid = ""
+
 local function restoreEntityData(entity, data)
     if not IsValid(entity) or not data then return end
+
     if data.material and data.material ~= "" then entity:SetMaterial(data.material) end
     if data.color then entity:SetColor(data.color) end
     if data.skin then entity:SetSkin(data.skin) end
+
     if data.bodygroups and istable(data.bodygroups) then
         for i, bodygroup in pairs(data.bodygroups) do
             if isnumber(i) and i >= 0 then entity:SetBodygroup(i, bodygroup) end
@@ -15,6 +18,7 @@ local function restoreEntityData(entity, data)
     end
 
     if data.angles then entity:SetAngles(data.angles) end
+
     if data.health and data.health > 0 then entity:SetHealth(data.health) end
     if data.maxHealth and data.maxHealth > 0 then entity:SetMaxHealth(data.maxHealth) end
     if data.netvars and istable(data.netvars) then
@@ -32,24 +36,16 @@ ITEM.functions.Place = {
         data.start = client:GetShootPos()
         data.endpos = data.start + client:GetAimVector() * 96
         data.filter = client
-        if not item.entityid or item.entityid == "" then
-            client:notifyLocalized("itemEntityInvalid")
-            return false
-        end
-
         local entity = ents.Create(item.entityid)
-        if not IsValid(entity) then
-            client:notifyLocalized("itemEntityInvalid")
-            return false
-        end
-
         entity:SetPos(data.endpos)
         entity:Spawn()
         local entityData
         if SERVER then entityData = item:getEntity():getNetVar("entityData", {}) end
+
         if entityData and table.Count(entityData) > 0 then
             restoreEntityData(entity, entityData)
         else
+
             local itemData = item:getData()
             if itemData.angles then entity:SetAngles(itemData.angles) end
             if itemData.material and itemData.material ~= "" then entity:SetMaterial(itemData.material) end

@@ -1,4 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local entityMeta = FindMetaTable("Entity")
 local baseEmitSound = entityMeta.EmitSound
 local validClasses = {
@@ -57,7 +57,7 @@ end
 function entityMeta:isLiliaPersistent()
     if not IsValid(self) then return false end
     if self.GetPersistent and self:GetPersistent() then return true end
-    return self.IsPersistent or self.IsLeonNPC
+    return self.IsLeonNPC or self.IsPersistent
 end
 
 function entityMeta:checkDoorAccess(client, access)
@@ -160,16 +160,13 @@ if SERVER then
         if not IsValid(self) then return end
         lia.net[self] = nil
         if lia.shuttingDown then return end
-        timer.Simple(0, function()
-            if not IsValid(self) then return end
-            net.Start("nDel")
-            net.WriteUInt(self:EntIndex(), 16)
-            if receiver then
-                net.Send(receiver)
-            else
-                net.Broadcast()
-            end
-        end)
+        net.Start("nDel")
+        net.WriteUInt(self:EntIndex(), 16)
+        if receiver then
+            net.Send(receiver)
+        else
+            net.Broadcast()
+        end
     end
 
     function entityMeta:removeDoorAccessData()

@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 local function SendLogs(client, categorizedLogs)
     lia.net.writeBigTable(client, "send_logs", categorizedLogs)
 end

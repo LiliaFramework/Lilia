@@ -1,4 +1,4 @@
-﻿lia.config.add("invW", "invWidth", 6, function(_, newW)
+lia.config.add("invW", "invWidth", 6, function(_, newW)
     if not SERVER then return end
     for _, client in player.Iterator() do
         if not IsValid(client) then continue end
@@ -16,9 +16,7 @@
     end
 
     local json = util.TableToJSON({newW})
-    lia.db.updateTable({
-        value = json
-    }, nil, "invdata", "key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
+    lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "invWidthDesc",
     category = "character",
@@ -45,9 +43,7 @@ lia.config.add("invH", "invHeight", 4, function(_, newH)
     end
 
     local json = util.TableToJSON({newH})
-    lia.db.updateTable({
-        value = json
-    }, nil, "invdata", "key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
+    lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
     desc = "invHeightDesc",
     category = "character",

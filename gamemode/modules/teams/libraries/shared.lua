@@ -1,4 +1,4 @@
-﻿function MODULE:CheckFactionLimitReached(faction, character, client)
+function MODULE:CheckFactionLimitReached(faction, character, client)
     if faction.OnCheckLimitReached then return faction:OnCheckLimitReached(character, client) end
     if not isnumber(faction.limit) then return false end
     local maxPlayers = faction.limit

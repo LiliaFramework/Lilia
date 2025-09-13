@@ -1,4 +1,4 @@
-﻿MODULE.name = "MainMenu"
+MODULE.name = "MainMenu"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Creates the in-game main menu used for selecting, creating, and managing player characters before entering the world."
@@ -90,8 +90,7 @@ else
     end
 
     function MODULE:LiliaLoaded()
-        lia.option.load()
-        if not LocalPlayer():getChar() then vgui.Create("liaCharacter") end
+        vgui.Create("liaCharacter")
     end
 
     function MODULE:KickedFromChar(_, isCurrentChar)

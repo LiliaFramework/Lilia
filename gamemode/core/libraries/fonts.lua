@@ -1,4 +1,4 @@
-﻿lia.font = lia.font or {}
+lia.font = lia.font or {}
 lia.font.stored = lia.font.stored or {}
 if CLIENT then
     function lia.font.register(fontName, fontData)
@@ -430,19 +430,19 @@ if CLIENT then
     })
 
     lia.font.register("PoppinsSmall", {
-        font = "Poppins Regular",
+        font = "Poppins",
         extended = true,
         size = 16
     })
 
     lia.font.register("PoppinsMedium", {
-        font = "Poppins Medium",
+        font = "Poppins",
         extended = true,
         size = 32
     })
 
     lia.font.register("PoppinsBig", {
-        font = "Poppins Bold",
+        font = "Poppins",
         extended = true,
         size = 64
     })

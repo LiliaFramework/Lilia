@@ -1,15 +1,15 @@
-﻿local playerMeta = FindMetaTable("Player")
+local playerMeta = FindMetaTable("Player")
 local vectorMeta = FindMetaTable("Vector")
 do
     playerMeta.steamName = playerMeta.steamName or playerMeta.Name
     playerMeta.SteamName = playerMeta.steamName
     function playerMeta:getChar()
-        return lia.char.getCharacter(self:getNetVar("char"), self)
+        return lia.char.getCharacter(self.getNetVar(self, "char"), self)
     end
 
     function playerMeta:Name()
-        local character = self:getChar()
-        return character and character:getName() or self:steamName()
+        local character = self.getChar(self)
+        return character and character.getName(character) or self.steamName(self)
     end
 
     playerMeta.GetCharacter = playerMeta.getChar
@@ -424,21 +424,21 @@ if SERVER then
         local name = self:steamName()
         local steamID = self:SteamID()
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
-        lia.db.selectOne({"data", "firstJoin", "lastJoin", "lastIP", "lastOnline", "totalOnlineTime"}, "players", "steamID = " .. lia.db.convertDataType(steamID)):next(function(data)
-            if IsValid(self) and data and data.data then
+        lia.db.query("SELECT data, firstJoin, lastJoin, lastIP, lastOnline, totalOnlineTime FROM lia_players WHERE steamID = " .. lia.db.convertDataType(steamID), function(data)
+            if IsValid(self) and data and data[1] and data[1].data then
                 lia.db.updateTable({
                     lastJoin = timeStamp,
                 }, nil, "players", "steamID = " .. lia.db.convertDataType(steamID))
 
-                self.firstJoin = data.firstJoin or timeStamp
-                self.lastJoin = data.lastJoin or timeStamp
-                self.liaData = util.JSONToTable(data.data)
+                self.firstJoin = data[1].firstJoin or timeStamp
+                self.lastJoin = data[1].lastJoin or timeStamp
+                self.liaData = util.JSONToTable(data[1].data)
                 local isCheater = self:getLiliaData("cheater", false)
                 self:setNetVar("cheater", isCheater and true or nil)
-                self.totalOnlineTime = tonumber(data.totalOnlineTime) or self:getLiliaData("totalOnlineTime", 0)
+                self.totalOnlineTime = tonumber(data[1].totalOnlineTime) or self:getLiliaData("totalOnlineTime", 0)
                 local default = os.time(lia.time.toNumber(self.lastJoin))
-                self.lastOnline = tonumber(data.lastOnline) or self:getLiliaData("lastOnline", default)
-                self.lastIP = data.lastIP or self:getLiliaData("lastIP")
+                self.lastOnline = tonumber(data[1].lastOnline) or self:getLiliaData("lastOnline", default)
+                self.lastIP = data[1].lastIP or self:getLiliaData("lastIP")
                 if callback then callback(self.liaData) end
             else
                 lia.db.insertTable({
@@ -522,54 +522,24 @@ if SERVER then
         return self.liaData
     end
 
-    function playerMeta:getFlags(flagType)
-        if flagType == "player" then
-            return self:getLiliaData("flags", "")
-        else
-            local char = self:getChar()
-            return char and char:getFlags() or ""
-        end
+    function playerMeta:getFlags()
+        local char = self:getChar()
+        return char and char:getFlags() or ""
     end
 
-    function playerMeta:setFlags(flags, flagType)
-        if flagType == "player" then
-            self:setLiliaData("flags", flags)
-        else
-            local char = self:getChar()
-            if char then char:setFlags(flags) end
-        end
+    function playerMeta:setFlags(flags)
+        local char = self:getChar()
+        if char then char:setFlags(flags) end
     end
 
-    function playerMeta:giveFlags(flags, flagType)
-        if flagType == "player" then
-            local currentFlags = self:getLiliaData("flags", "")
-            local newFlags = currentFlags
-            for i = 1, #flags do
-                local flag = flags:sub(i, i)
-                if not newFlags:find(flag, 1, true) then newFlags = newFlags .. flag end
-            end
-
-            self:setLiliaData("flags", newFlags)
-        else
-            local char = self:getChar()
-            if char then char:giveFlags(flags) end
-        end
+    function playerMeta:giveFlags(flags)
+        local char = self:getChar()
+        if char then char:giveFlags(flags) end
     end
 
-    function playerMeta:takeFlags(flags, flagType)
-        if flagType == "player" then
-            local currentFlags = self:getLiliaData("flags", "")
-            local newFlags = ""
-            for i = 1, #currentFlags do
-                local flag = currentFlags:sub(i, i)
-                if not flags:find(flag, 1, true) then newFlags = newFlags .. flag end
-            end
-
-            self:setLiliaData("flags", newFlags)
-        else
-            local char = self:getChar()
-            if char then char:takeFlags(flags) end
-        end
+    function playerMeta:takeFlags(flags)
+        local char = self:getChar()
+        if char then char:takeFlags(flags) end
     end
 
     function playerMeta:hasFlags(flags)
@@ -1084,54 +1054,24 @@ else
         return lia.localData
     end
 
-    function playerMeta:getFlags(flagType)
-        if flagType == "player" then
-            return self:getLiliaData("flags", "")
-        else
-            local char = self:getChar()
-            return char and char:getFlags() or ""
-        end
+    function playerMeta:getFlags()
+        local char = self:getChar()
+        return char and char:getFlags() or ""
     end
 
-    function playerMeta:setFlags(flags, flagType)
-        if flagType == "player" then
-            self:setLiliaData("flags", flags)
-        else
-            local char = self:getChar()
-            if char then char:setFlags(flags) end
-        end
+    function playerMeta:setFlags(flags)
+        local char = self:getChar()
+        if char then char:setFlags(flags) end
     end
 
-    function playerMeta:giveFlags(flags, flagType)
-        if flagType == "player" then
-            local currentFlags = self:getLiliaData("flags", "")
-            local newFlags = currentFlags
-            for i = 1, #flags do
-                local flag = flags:sub(i, i)
-                if not newFlags:find(flag, 1, true) then newFlags = newFlags .. flag end
-            end
-
-            self:setLiliaData("flags", newFlags)
-        else
-            local char = self:getChar()
-            if char then char:giveFlags(flags) end
-        end
+    function playerMeta:giveFlags(flags)
+        local char = self:getChar()
+        if char then char:giveFlags(flags) end
     end
 
-    function playerMeta:takeFlags(flags, flagType)
-        if flagType == "player" then
-            local currentFlags = self:getLiliaData("flags", "")
-            local newFlags = ""
-            for i = 1, #currentFlags do
-                local flag = currentFlags:sub(i, i)
-                if not flags:find(flag, 1, true) then newFlags = newFlags .. flag end
-            end
-
-            self:setLiliaData("flags", newFlags)
-        else
-            local char = self:getChar()
-            if char then char:takeFlags(flags) end
-        end
+    function playerMeta:takeFlags(flags)
+        local char = self:getChar()
+        if char then char:takeFlags(flags) end
     end
 
     function playerMeta:hasFlags(flags)

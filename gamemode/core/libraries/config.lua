@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 function lia.config.add(key, name, value, callback, data)
@@ -122,7 +122,6 @@ end
 function lia.config.load()
     if SERVER then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local schema = gamemode
         lia.db.select({"key", "value"}, "config", "schema = " .. lia.db.convertDataType(gamemode)):next(function(res)
             local rows = res.results or {}
             local existing = {}

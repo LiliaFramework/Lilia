@@ -1,4 +1,4 @@
-﻿SWEP.PrintName = "Distance Measure Tool"
+SWEP.PrintName = "Distance Measure Tool"
 SWEP.Author = "Samael"
 SWEP.Contact = "@liliaplayer"
 SWEP.Purpose = "Measure distance between two points"

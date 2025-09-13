@@ -1,4 +1,4 @@
-﻿lia.lang = lia.lang or {}
+lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 function lia.lang.loadFromDir(directory)
@@ -52,7 +52,7 @@ function L(key, ...)
     local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
     local template = langTable and langTable[key]
     if not template then return tostring(key) end
-    template = template:gsub("%%d", "%%s")
+    if template:find("%%d") then lia.error("String formatting with %d is not allowed in localization strings: " .. tostring(key)) end
     if template:find("%%[^%%sdfg]") then lia.error("Invalid format specifier in localization string: " .. tostring(key) .. " - " .. template) end
     local count = select("#", ...)
     local args = {}
@@ -69,7 +69,6 @@ function L(key, ...)
     for i = count + 1, needed do
         args[i] = ""
     end
-
     local success, result = pcall(string.format, template, unpack(args))
     if not success then
         lia.error("Format error in localization string '" .. tostring(key) .. "': " .. result)

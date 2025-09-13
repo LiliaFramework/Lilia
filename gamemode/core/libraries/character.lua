@@ -1,4 +1,4 @@
-﻿local characterMeta = lia.meta.character or {}
+local characterMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
@@ -7,22 +7,17 @@ lia.char.vars = lia.char.vars or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
-if SERVER then
-    lia.db.waitForTablesToLoad():next(function()
-        lia.db.tableExists("lia_characters"):next(function(tableExists)
-            if tableExists then
-                lia.db.selectWithJoin("SELECT c.id, n.value AS name FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name'"):next(function(data)
-                    local results = data.results or {}
-                    if #results > 0 then
-                        for _, v in pairs(results) do
-                            lia.char.names[v.id] = v.name
-                        end
-                    end
-                end):catch(function(err) lia.warning("[Character] Failed to load character names: " .. tostring(err)) end)
+if SERVER and #lia.char.names < 1 then
+    lia.db.query("SELECT id, name FROM lia_characters", function(data)
+        if data and #data > 0 then
+            for _, v in pairs(data) do
+                lia.char.names[v.id] = v.name
             end
-        end)
+        end
     end)
+end
 
+if SERVER then
     function lia.char.getCharacter(charID, client, callback)
         local character = lia.char.loaded[charID]
         if character then
@@ -418,7 +413,7 @@ lia.char.registerVar("var", {
             net.WriteString(key)
             net.WriteType(value)
             net.WriteType(id)
-            if IsValid(receiver) then
+            if receiver then
                 net.Send(receiver)
             else
                 net.Send(client)
@@ -450,10 +445,9 @@ lia.char.registerVar("inv", {
     onSync = function(character, recipient)
         net.Start("liaCharacterInvList")
         net.WriteUInt(character:getID(), 32)
-        local inv = character.vars.inv or {}
-        net.WriteUInt(#inv, 32)
-        for i = 1, #inv do
-            net.WriteType(inv[i].id)
+        net.WriteUInt(#character.vars.inv, 32)
+        for i = 1, #character.vars.inv do
+            net.WriteType(character.vars.inv[i].id)
         end
 
         if recipient == nil then
@@ -547,40 +541,38 @@ lia.char.registerVar("banned", {
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
-    return lia.db.select({"key", "value"}, "chardata", "charID = " .. charIDsafe):next(function(result)
-        local data = {}
-        if result and result.results then
-            for _, row in ipairs(result.results) do
-                local decoded = pon.decode(row.value)
-                data[row.key] = decoded[1]
-            end
+    local results = sql.Query("SELECT key, value FROM lia_chardata WHERE charID = " .. charIDsafe)
+    local data = {}
+    if istable(results) then
+        for _, row in ipairs(results) do
+            local decoded = pon.decode(row.value)
+            data[row.key] = decoded[1]
         end
+    end
 
-        if key then return data[key] end
-        return data
-    end)
+    if key then return data[key] end
+    return data
 end
 
 function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
     if key then
-        return lia.db.selectOne("value", "chardata", "charID = " .. charIDsafe .. " AND key = " .. lia.db.convertDataType(key)):next(function(result)
-            if not result then return false end
-            local decoded = pon.decode(result.value)
-            return decoded[1]
-        end)
+        local row = sql.Query("SELECT value FROM lia_chardata WHERE charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(key) .. "'")
+        if not row or not row[1] then return false end
+        local decoded = pon.decode(row[1].value)
+        return decoded[1]
     end
-    return lia.db.select({"key", "value"}, "chardata", "charID = " .. charIDsafe):next(function(result)
-        local data = {}
-        if result and result.results then
-            for _, r in ipairs(result.results) do
-                local decoded = pon.decode(r.value)
-                data[r.key] = decoded[1]
-            end
+
+    local results = sql.Query("SELECT key, value FROM lia_chardata WHERE charID = " .. charIDsafe)
+    local data = {}
+    if istable(results) then
+        for _, r in ipairs(results) do
+            local decoded = pon.decode(r.value)
+            data[r.key] = decoded[1]
         end
-        return data
-    end)
+    end
+    return data
 end
 
 function lia.char.getOwnerByID(ID)
@@ -635,59 +627,27 @@ if SERVER then
             recognition = data.recognition or "",
             fakenames = ""
         }, function(_, charID)
-            local function createCharacterWithID()
-                local client
-                for _, v in player.Iterator() do
-                    if v:SteamID() == data.steamID then
-                        client = v
-                        break
+            local client
+            for _, v in player.Iterator() do
+                if v:SteamID() == data.steamID then
+                    client = v
+                    break
+                end
+            end
+
+            local character = lia.char.new(data, charID, client, data.steamID)
+            character.vars.inv = {}
+            hook.Run("CreateDefaultInventory", character):next(function(inventory)
+                character.vars.inv[1] = inventory
+                lia.char.loaded[charID] = character
+                if istable(data.data) then
+                    for k, v in pairs(data.data) do
+                        lia.char.setCharDatabase(charID, k, v)
                     end
                 end
 
-                local character = lia.char.new(data, charID, client, data.steamID)
-                if not character then
-                    if callback then callback(nil) end
-                    return
-                end
-
-                for k, v in pairs(data) do
-                    if lia.char.vars[k] then character:setVar(k, v, nil, client) end
-                end
-
-                character:save()
-                if IsValid(client) then
-                    client:setNetVar("char", charID)
-                    lia.char.loaded[charID] = character
-                    client:getChar():sync(client)
-                    client:Spawn()
-                    hook.Run("PlayerLoadedChar", client, character, data.lastChar)
-                    lia.log.add(client, "charCreate", data.name or "Unknown", charID)
-                end
-
-                hook.Run("OnCharCreated", client, character)
                 if callback then callback(charID) end
-            end
-
-            if not charID then
-                lia.db.selectWithJoin("SELECT c.id FROM lia_characters AS c LEFT JOIN lia_chardata AS n ON n.charID = c.id AND n.key = 'name' WHERE c.steamID = " .. lia.db.convertDataType(data.steamID) .. " AND n.value = " .. lia.db.convertDataType(data.name or "") .. " AND c.createTime = " .. lia.db.convertDataType(timeStamp) .. " AND c.schema = " .. lia.db.convertDataType(gamemode)):next(function(result)
-                    if result and result.id then
-                        charID = tonumber(result.id)
-                        lia.warning("[Lilia] Character creation: Retrieved correct ID " .. charID .. " for character '" .. (data.name or "Unknown") .. "'")
-                    else
-                        lia.error("[Lilia] Character creation: Failed to retrieve ID for newly created character '" .. (data.name or "Unknown") .. "'")
-                        if callback then callback(nil) end
-                        return
-                    end
-
-                    createCharacterWithID()
-                end):catch(function(err)
-                    lia.error("[Lilia] Character creation: Error retrieving character ID: " .. err)
-                    if callback then callback(nil) end
-                end)
-                return
-            end
-
-            createCharacterWithID()
+            end)
         end)
     end
 
@@ -700,11 +660,12 @@ if SERVER then
 
         fields = table.concat(fields, ", ")
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND steamID = " .. lia.db.convertDataType(steamID)
+        local condition = "schema = '" .. lia.db.escape(gamemode) .. "' AND steamID = " .. lia.db.convertDataType(steamID)
         if id then condition = condition .. " AND id = " .. id end
-        lia.db.select(fields, "characters", condition):next(function(data)
+        local query = "SELECT " .. fields .. " FROM lia_characters WHERE " .. condition
+        lia.db.query(query, function(data)
             local characters = {}
-            local results = data.results or {}
+            local results = data or {}
             local done = 0
             if #results == 0 then
                 if callback then callback(characters) end
@@ -714,88 +675,78 @@ if SERVER then
             for _, v in ipairs(results) do
                 local charId = tonumber(v.id)
                 if not charId then
-                    local corruptionReason = "Character ID is not a valid number"
-                    local rawId = tostring(v.id)
-                    local charName = v.name or "Unknown"
-                    local charSteamID = v.steamID or "Unknown"
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "=== CORRUPTED CHARACTER DETECTED ===\n")
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Name: ", charName, "\n")
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Raw ID: '", rawId, "' (type: ", type(v.id), ")\n")
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "SteamID: ", charSteamID, "\n")
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Corruption Reason: ", corruptionReason, "\n")
-                    MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Solution: Run 'lia_fix_characters' console command to clean up corrupted characters\n")
-                    MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "=====================================\n")
-                    lia.error(L("invalidCharacterID", charName))
-                else
-                    local charData = {}
-                    for k2, v2 in pairs(lia.char.vars) do
-                        if v2.field and v[v2.field] then
-                            local value = tostring(v[v2.field])
-                            if isnumber(v2.default) then
-                                value = tonumber(value) or v2.default
-                            elseif isbool(v2.default) then
-                                value = tobool(value)
-                            elseif istable(v2.default) then
-                                value = util.JSONToTable(value)
-                            end
-
-                            charData[k2] = value
-                        end
-                    end
-
-                    if charData.data and charData.data.rgn then
-                        charData.recognition = charData.data.rgn
-                        charData.data.rgn = nil
-                    end
-
-                    if not lia.faction.teams[charData.faction] then
-                        local defaultFaction
-                        for _, fac in pairs(lia.faction.teams) do
-                            if fac.isDefault then
-                                defaultFaction = fac
-                                break
-                            end
-                        end
-
-                        if not defaultFaction then
-                            local _, fac = next(lia.faction.teams)
-                            defaultFaction = fac
-                        end
-
-                        if defaultFaction then
-                            charData.faction = defaultFaction.uniqueID
-                            lia.db.updateTable({
-                                faction = defaultFaction.uniqueID
-                            }, nil, "characters", "id = " .. charId)
-                        end
-                    end
-
-                    characters[#characters + 1] = charId
-                    local character = lia.char.new(charData, charId, client)
-                    if charData.recognition then lia.char.setCharDatabase(charId, "rgn", nil) end
-                    hook.Run("CharRestored", character)
-                    character.vars.inv = {}
-                    lia.inventory.loadAllFromCharID(charId):next(function(inventories)
-                        if #inventories == 0 then
-                            local promise = hook.Run("CreateDefaultInventory", character)
-                            assert(promise ~= nil, L("noDefaultInventory"))
-                            return promise:next(function(inventory)
-                                assert(inventory ~= nil, L("noDefaultInventory"))
-                                return {inventory}
-                            end)
-                        end
-                        return inventories
-                    end, function(err)
-                        lia.information(L("failedLoadInventories", tostring(charId)))
-                        lia.information(err)
-                        if IsValid(client) then client:notifyLocalized("fixInventoryError") end
-                    end):next(function(inventories)
-                        character.vars.inv = inventories
-                        lia.char.loaded[charId] = character
-                        done = done + 1
-                        if done == #results and callback then callback(characters) end
-                    end)
+                    lia.error(L("invalidCharacterID", data.name or "nil"))
+                    continue
                 end
+
+                local charData = {}
+                for k2, v2 in pairs(lia.char.vars) do
+                    if v2.field and v[v2.field] then
+                        local value = tostring(v[v2.field])
+                        if isnumber(v2.default) then
+                            value = tonumber(value) or v2.default
+                        elseif isbool(v2.default) then
+                            value = tobool(value)
+                        elseif istable(v2.default) then
+                            value = util.JSONToTable(value)
+                        end
+
+                        charData[k2] = value
+                    end
+                end
+
+                if charData.data and charData.data.rgn then
+                    charData.recognition = charData.data.rgn
+                    charData.data.rgn = nil
+                end
+
+                if not lia.faction.teams[charData.faction] then
+                    local defaultFaction
+                    for _, fac in pairs(lia.faction.teams) do
+                        if fac.isDefault then
+                            defaultFaction = fac
+                            break
+                        end
+                    end
+
+                    if not defaultFaction then
+                        local _, fac = next(lia.faction.teams)
+                        defaultFaction = fac
+                    end
+
+                    if defaultFaction then
+                        charData.faction = defaultFaction.uniqueID
+                        lia.db.updateTable({
+                            faction = defaultFaction.uniqueID
+                        }, nil, "characters", "id = " .. charId)
+                    end
+                end
+
+                characters[#characters + 1] = charId
+                local character = lia.char.new(charData, charId, client)
+                if charData.recognition then lia.char.setCharDatabase(charId, "rgn", nil) end
+                hook.Run("CharRestored", character)
+                character.vars.inv = {}
+                lia.inventory.loadAllFromCharID(charId):next(function(inventories)
+                    if #inventories == 0 then
+                        local promise = hook.Run("CreateDefaultInventory", character)
+                        assert(promise ~= nil, L("noDefaultInventory"))
+                        return promise:next(function(inventory)
+                            assert(inventory ~= nil, L("noDefaultInventory"))
+                            return {inventory}
+                        end)
+                    end
+                    return inventories
+                end, function(err)
+                    lia.information(L("failedLoadInventories", tostring(charId)))
+                    lia.information(err)
+                    if IsValid(client) then client:notifyLocalized("fixInventoryError") end
+                end):next(function(inventories)
+                    character.vars.inv = inventories
+                    lia.char.loaded[charId] = character
+                    done = done + 1
+                    if done == #results and callback then callback(characters) end
+                end)
             end
         end)
     end
@@ -824,10 +775,9 @@ if SERVER then
             removePlayer(client)
         else
             for _, target in player.Iterator() do
-                if table.HasValue(target.liaCharList or {}, id) then
-                    table.RemoveByValue(target.liaCharList, id)
-                    removePlayer(target)
-                end
+                if not table.HasValue(target.liaCharList or {}, id) then continue end
+                table.RemoveByValue(target.liaCharList, id)
+                removePlayer(target)
             end
         end
 
@@ -840,25 +790,28 @@ if SERVER then
         end
 
         lia.char.loaded[id] = nil
-        lia.db.delete("characters", "id = " .. id)
+        lia.db.query("DELETE FROM lia_characters WHERE id = " .. id)
         lia.db.delete("chardata", "charID = " .. id)
-        lia.db.select({"invID"}, "inventories", "charID = " .. id):next(function(data)
-            local results = data.results or {}
-            if results then
-                for _, inventory in ipairs(results) do
+        lia.db.query("SELECT invID FROM lia_inventories WHERE charID = " .. id, function(data)
+            if data then
+                for _, inventory in ipairs(data) do
                     lia.inventory.deleteByID(tonumber(inventory.invID))
                 end
             end
         end)
 
         hook.Run("OnCharDelete", client, id)
+
         if IsValid(client) and client:getChar() and client:getChar():getID() == id then
+
             net.Start("removeF1")
             net.Send(client)
+
             net.Start("charKick")
             net.WriteUInt(id, 32)
             net.WriteBool(true)
             net.Send(client)
+
             client:setNetVar("char", nil)
             client:Spawn()
         end
@@ -874,10 +827,8 @@ if SERVER then
     function lia.char.getCharBanned(charID)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
-        return lia.db.selectOne("banned", "characters", "id = " .. charIDsafe):next(function(result)
-            if result then return tonumber(result.banned) or 0 end
-            return 0
-        end)
+        local result = sql.Query("SELECT banned FROM lia_characters WHERE id = " .. charIDsafe .. " LIMIT 1")
+        if istable(result) and result[1] then return tonumber(result[1].banned) or 0 end
     end
 
     function lia.char.setCharDatabase(charID, field, value)
@@ -950,7 +901,7 @@ if SERVER then
                 return true
             else
                 if val == nil then
-                    lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = " .. lia.db.convertDataType(field))
+                    lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
                 else
                     local encoded = pon.encode({value})
                     lia.db.upsert({
@@ -965,7 +916,7 @@ if SERVER then
             end
         else
             if val == nil then
-                lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = " .. lia.db.convertDataType(field))
+                lia.db.delete("chardata", "charID = " .. charIDsafe .. " AND key = '" .. lia.db.escape(field) .. "'")
             else
                 local encoded = pon.encode({value})
                 lia.db.upsert({

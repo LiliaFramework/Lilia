@@ -6,6 +6,11 @@ function PANEL:Init()
     self:SetKeyboardInputEnabled(false)
     self:SetMouseInputEnabled(false)
     self:SetZPos(32767)
+    self:SetDraggable(false)
+    self:SetSizable(false)
+    self:SetDeleteOnClose(false)
+    self:SetVisible(true)
+    self:SetAlpha(255)
     self.background = self:Add("DPanel")
     self.background:SetSize(ScrW(), ScrH())
     self.background:SetPos(0, 0)
@@ -35,10 +40,10 @@ function PANEL:Init()
     self.reasonLabel = self.container:Add("DLabel")
     self.reasonLabel:SetFont("liaSmallFont")
     self.reasonLabel:SetText("")
-    self.reasonLabel:SetSize(550, 60)
+    self.reasonLabel:SetSize(550, 80)
     self.reasonLabel:SetPos(25, 170)
     self.reasonLabel:SetWrap(true)
-    self.reasonLabel:SetTextColor(Color(200, 200, 200))
+    self.reasonLabel:SetTextColor(Color(255, 150, 150))
     self.reasonLabel:SetContentAlignment(5)
     self.hintLabel = self.container:Add("DLabel")
     self.hintLabel:SetFont("liaSmallFont")
@@ -62,7 +67,16 @@ function PANEL:Init()
 end
 
 function PANEL:SetFailureInfo(reason, details)
-    if reason then self.reasonLabel:SetText("Error: " .. reason .. "\n" .. (details or "")) end
+    if reason then
+        local errorText = "Error: " .. reason
+        if details and details ~= "" then
+            errorText = errorText .. "\n\nDetails: " .. details
+        end
+        self.reasonLabel:SetText(errorText)
+        -- Ensure the panel is visible when error info is set
+        self:SetVisible(true)
+        self:SetAlpha(255)
+    end
 end
 
 function PANEL:AddError(errorMessage, line, file)
@@ -73,19 +87,24 @@ function PANEL:AddError(errorMessage, line, file)
 
     self.errorCount = self.errorCount + 1
     table.insert(self.errorList, {
-        message = errorMessage,
-        line = line,
-        file = file
+        message = errorMessage or "Unknown error",
+        line = line or "N/A",
+        file = file or "Unknown"
     })
 
     self:UpdateErrorDisplay()
+    -- Ensure the panel is visible when errors are added
+    self:SetVisible(true)
+    self:SetAlpha(255)
 end
 
 function PANEL:UpdateErrorDisplay()
     if not self.errorList or #self.errorList == 0 then return end
-    local errorText = "Recent Errors:\n"
+    local errorText = "Recent Errors:\n" .. string.rep("=", 50) .. "\n"
     for i, err in ipairs(self.errorList) do
-        errorText = errorText .. string.format("%d. %s | %s | %s\n", i, err.message, err.line or "N/A", err.file or "Unknown")
+        local fileInfo = err.file and err.file ~= "Unknown" and err.file or "Unknown File"
+        local lineInfo = err.line and err.line ~= "N/A" and "Line " .. err.line or "Unknown Line"
+        errorText = errorText .. string.format("%d. %s\n   File: %s | %s\n\n", i, err.message, fileInfo, lineInfo)
     end
 
     if not IsValid(self.errorDisplayLabel) then
@@ -112,4 +131,4 @@ function PANEL:Paint(w, h)
     end
 end
 
-vgui.Register("liaLoadingFailure", PANEL, "DPanel")
+vgui.Register("liaLoadingFailure", PANEL, "DFrame")

@@ -1,4 +1,4 @@
-﻿lia.class = lia.class or {}
+lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 function lia.class.register(uniqueID, data)
     assert(isstring(uniqueID), L("classUniqueIDString"))
@@ -135,19 +135,4 @@ function lia.class.retrieveJoinable(client)
         if lia.class.canBe(client, class.index) then classes[#classes + 1] = class end
     end
     return classes
-end
-
-function lia.class.getBodygroupsForModel(class, model)
-    if not class or not class.bodygroups then return {} end
-    if class.bodygroups[model] then return class.bodygroups[model] end
-    return {}
-end
-
-function lia.class.applyBodygroups(client, class, model)
-    if not IsValid(client) or not class or not model then return end
-    local bodygroups = lia.class.getBodygroupsForModel(class, model)
-    if not bodygroups or table.IsEmpty(bodygroups) then return end
-    for bodygroupIndex, bodygroupValue in pairs(bodygroups) do
-        if isnumber(bodygroupIndex) and isnumber(bodygroupValue) then client:SetBodygroup(bodygroupIndex, bodygroupValue) end
-    end
 end

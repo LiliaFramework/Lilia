@@ -1,4 +1,4 @@
-﻿lia.administrator = lia.administrator or {}
+lia.administrator = lia.administrator or {}
 lia.administrator.groups = lia.administrator.groups or {}
 lia.administrator.privileges = lia.administrator.privileges or {}
 lia.administrator.privilegeCategories = lia.administrator.privilegeCategories or {}
@@ -296,55 +296,23 @@ function lia.administrator.save(noNetwork)
         }
     end
 
-    lia.db.waitForTablesToLoad():next(function()
-        lia.db.tableExists("lia_admin"):next(function(tableExists)
-            if tableExists then
-                lia.db.delete("admin"):next(function()
-                    lia.db.bulkInsert("admin", rows):next(function()
-                        if noNetwork or lia.administrator._loading then return end
-                        lia.net.ready = lia.net.ready or setmetatable({}, {
-                            __mode = "k"
-                        })
+    lia.db.query("DELETE FROM lia_admin")
+    lia.db.bulkInsert("admin", rows)
+    if noNetwork or lia.administrator._loading then return end
+    lia.net.ready = lia.net.ready or setmetatable({}, {
+        __mode = "k"
+    })
 
-                        local hasReady = false
-                        for ply in pairs(lia.net.ready) do
-                            if IsValid(ply) and lia.net.ready[ply] then
-                                hasReady = true
-                                break
-                            end
-                        end
+    local hasReady = false
+    for ply in pairs(lia.net.ready) do
+        if IsValid(ply) and lia.net.ready[ply] then
+            hasReady = true
+            break
+        end
+    end
 
-                        if hasReady then
-                            net.Start("liaAdminUpdate")
-                            net.WriteTable(lia.administrator.groups)
-                            net.Broadcast()
-                        end
-                    end):catch(function(err) lia.warning("[Admin] Failed to bulk insert admin data: " .. tostring(err)) end)
-                end):catch(function(err) lia.warning("[Admin] Failed to delete admin table: " .. tostring(err)) end)
-            else
-                lia.db.bulkInsert("admin", rows):next(function()
-                    if noNetwork or lia.administrator._loading then return end
-                    lia.net.ready = lia.net.ready or setmetatable({}, {
-                        __mode = "k"
-                    })
-
-                    local hasReady = false
-                    for ply in pairs(lia.net.ready) do
-                        if IsValid(ply) and lia.net.ready[ply] then
-                            hasReady = true
-                            break
-                        end
-                    end
-
-                    if hasReady then
-                        net.Start("liaAdminUpdate")
-                        net.WriteTable(lia.administrator.groups)
-                        net.Broadcast()
-                    end
-                end):catch(function(err) lia.warning("[Admin] Failed to bulk insert admin data: " .. tostring(err)) end)
-            end
-        end):catch(function(err) lia.warning("[Admin] Failed to check admin table existence: " .. tostring(err)) end)
-    end)
+    if not hasReady then return end
+    lia.administrator.sync()
 end
 
 function lia.administrator.registerPrivilege(priv)
@@ -660,7 +628,7 @@ if SERVER then
         elseif cmd == "unban" then
             local steamid = IsValid(target) and target:SteamID() or tostring(victim)
             if steamid and steamid ~= "" then
-                lia.db.delete("bans", "playerSteamID = " .. lia.db.convertDataType(steamid))
+                lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
                 admin:notifyLocalized("playerUnbanned")
                 lia.log.add(admin, "plyUnban", steamid)
                 return true

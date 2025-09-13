@@ -1,4 +1,4 @@
-﻿function MODULE:OnPlayerJoinClass(client, class, oldClass)
+function MODULE:OnPlayerJoinClass(client, class, oldClass)
     local info = lia.class.list[class]
     local info2 = lia.class.list[oldClass]
     if info then
@@ -255,9 +255,9 @@ net.Receive("KickCharacter", function(_, client)
     end
 
     if not isOnline then
-        lia.db.selectOne("faction", "characters", "id = " .. characterID):next(function(data)
-            if not data or not data.faction then return end
-            local oldFactionID = data.faction
+        lia.db.query("SELECT faction FROM lia_characters WHERE id = " .. characterID, function(data)
+            if not data or not data[1] then return end
+            local oldFactionID = data[1].faction
             local oldFactionData = lia.faction.teams[oldFactionID]
             if oldFactionData and oldFactionData.isDefault then return end
             lia.db.updateTable({

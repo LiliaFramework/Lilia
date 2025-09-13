@@ -1,4 +1,4 @@
-﻿local Inventory = lia.Inventory or {}
+local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
 Inventory.data = {}
@@ -127,20 +127,6 @@ if SERVER then
             invID = id
         }, nil, "items", "itemID = " .. item:getID())
 
-        local charID = self:getData("char")
-        if charID then
-            local client = self:getRecipients()[1]
-            if IsValid(client) then
-                item:setData("charID", charID, nil, true, true)
-                item:setData("steamID", client:SteamID(), nil, true, true)
-                if IsValid(item.entity) then
-                    item.entity.liaCharID = charID
-                    item.entity.liaSteamID = client:SteamID()
-                    item.entity.SteamID = client:SteamID()
-                end
-            end
-        end
-
         self:syncItemAdded(item)
         if not noReplicate then hook.Run("OnItemAdded", item:getOwner(), item) end
         return self
@@ -164,42 +150,26 @@ if SERVER then
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
-        lia.db.waitForTablesToLoad():next(function()
-            lia.db.tableExists("lia_inventories"):next(function(inventoriesExists)
-                if not inventoriesExists then
-                    d:reject("Inventory tables not yet loaded")
-                    return
-                end
-
-                lia.db.tableExists("lia_invdata"):next(function(invdataExists)
-                    if not invdataExists then
-                        d:reject("Inventory data tables not yet loaded")
-                        return
-                    end
-
-                    lia.db.insertTable({
-                        invType = self.typeID,
-                        charID = charID
-                    }, function(_, lastID)
-                        local count = 0
-                        local expected = table.Count(initialData)
-                        if initialData.char then expected = expected - 1 end
-                        if expected == 0 then return d:resolve(lastID) end
-                        for key, value in pairs(initialData) do
-                            if key == "char" then continue end
-                            lia.db.insertTable({
-                                invID = lastID,
-                                key = key,
-                                value = {value}
-                            }, function()
-                                count = count + 1
-                                if count == expected then d:resolve(lastID) end
-                            end, "invdata")
-                        end
-                    end, "inventories"):catch(function(err) d:reject("Failed to create inventory: " .. tostring(err)) end)
-                end)
-            end)
-        end):catch(function(err) d:reject("Failed to wait for database tables: " .. tostring(err)) end)
+        lia.db.insertTable({
+            invType = self.typeID,
+            charID = charID
+        }, function(_, lastID)
+            local count = 0
+            local expected = table.Count(initialData)
+            if initialData.char then expected = expected - 1 end
+            if expected == 0 then return d:resolve(lastID) end
+            for key, value in pairs(initialData) do
+                if key == "char" then continue end
+                lia.db.insertTable({
+                    invID = lastID,
+                    key = key,
+                    value = {value}
+                }, function()
+                    count = count + 1
+                    if count == expected then d:resolve(lastID) end
+                end, "invdata")
+            end
+        end, "inventories")
         return d
     end
 
@@ -245,7 +215,7 @@ if SERVER then
             }, nil, "inventories", "invID = " .. self:getID())
         elseif not keyData or not keyData.notPersistent then
             if value == nil then
-                lia.db.delete("invdata", "invID = " .. self.id .. " AND key = " .. lia.db.convertDataType(key))
+                lia.db.delete("invdata", "invID = " .. self.id .. " AND key = '" .. lia.db.escape(key) .. "'")
             else
                 lia.db.upsert({
                     invID = self.id,

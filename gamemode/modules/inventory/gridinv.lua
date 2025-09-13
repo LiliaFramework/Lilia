@@ -1,4 +1,4 @@
-﻿local GridInv = lia.Inventory:extend("GridInv")
+local GridInv = lia.Inventory:extend("GridInv")
 local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
     if inventory.virtual then return action == "transfer" end
     local ownerID = inventory:getData("char")
@@ -330,18 +330,9 @@ if SERVER then
 else
     function GridInv:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
-        local item = lia.item.instances[itemID]
-        if not item then return end
-        if not destinationID then
-            net.Start("liaTransferItem")
-            net.WriteUInt(itemID, 32)
-            net.WriteUInt(x, 32)
-            net.WriteUInt(y, 32)
-            net.WriteType(destinationID)
-            net.SendToServer()
-            return
-        end
-
+        if not inventory then return end
+        local item = inventory.items[itemID]
+        if item and item:getData("x") == x and item:getData("y") == y then return end
         if item and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)

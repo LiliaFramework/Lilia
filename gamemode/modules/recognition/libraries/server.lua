@@ -1,4 +1,4 @@
-﻿local rangeMap = {
+local rangeMap = {
     whisper = "w",
     normal = "ic",
     talk = "ic",

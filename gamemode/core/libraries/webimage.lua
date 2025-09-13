@@ -1,5 +1,6 @@
-﻿lia.webimage = lia.webimage or {}
+lia.webimage = lia.webimage or {}
 lia.webimage.stored = lia.webimage.stored or {}
+lia.webimage.allowDownloads = false
 local baseDir = "lilia/webimages/"
 local cache = {}
 local urlMap = {}
@@ -58,6 +59,11 @@ end
 
 function lia.webimage.download(n, u, cb, flags)
     if not isstring(n) then return end
+    if not lia.webimage.allowDownloads then
+        if cb then cb(nil, false, "downloads not allowed") end
+        return
+    end
+
     local url = u or lia.webimage.stored[n] and lia.webimage.stored[n].url
     local flg = flags or lia.webimage.stored[n] and lia.webimage.stored[n].flags
     if not url or url == "" then
@@ -300,7 +306,7 @@ concommand.Add("lia_wipewebimages", function()
     ensureDir(baseDir)
 end)
 
-concommand.Add("lia_webimage_menu", function()
+concommand.Add("test_webimage_menu", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L("webImageTesterTitle"))
     frame:SetSize(500, 400)

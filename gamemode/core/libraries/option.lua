@@ -1,4 +1,4 @@
-﻿lia.option = lia.option or {}
+lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), L("optionKeyString", type(key)))
@@ -86,31 +86,18 @@ function lia.option.save()
     end
 
     local json = util.TableToJSON(out, true)
-    if json then
-        file.CreateDir("lilia")
-        local success = file.Write(path, json)
-        if not success then print("Warning: Failed to save options to file") end
-    else
-        print("Warning: Failed to serialize options to JSON")
-    end
+    if json then file.Write(path, json) end
 end
 
 function lia.option.load()
     local path = "lilia/options.json"
-    file.CreateDir("lilia")
     local data = file.Read(path, "DATA")
     if data then
         local saved = util.JSONToTable(data)
         if saved then
-            local loadedCount = 0
             for k, v in pairs(saved) do
-                if lia.option.stored[k] then
-                    lia.option.stored[k].value = v
-                    loadedCount = loadedCount + 1
-                end
+                if lia.option.stored[k] then lia.option.stored[k].value = v end
             end
-        else
-            print("Warning: Failed to parse JSON data from options file")
         end
     else
         for _, option in pairs(lia.option.stored) do
@@ -123,10 +110,7 @@ function lia.option.load()
         end
 
         local json = util.TableToJSON(out, true)
-        if json then
-            local success = file.Write(path, json)
-            if not success then print("Warning: Failed to create default options file") end
-        end
+        if json then file.Write(path, json) end
     end
 
     hook.Run("InitializedOptions")

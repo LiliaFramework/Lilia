@@ -1,4 +1,4 @@
-﻿local surface = surface
+local surface = surface
 local Color = Color
 local SKIN = {}
 SKIN.fontFrame = "BudgetLabel"

@@ -1,4 +1,4 @@
-﻿local characterMeta = lia.meta.character or {}
+local characterMeta = lia.meta.character or {}
 characterMeta.__index = characterMeta
 characterMeta.id = characterMeta.id or 0
 characterMeta.vars = characterMeta.vars or {}
@@ -164,7 +164,7 @@ function characterMeta:setData(k, v, noReplication, receiver)
         if istable(k) then
             for nk, nv in pairs(k) do
                 if nv == nil then
-                    lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = " .. lia.db.convertDataType(nk))
+                    lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = '" .. lia.db.escape(nk) .. "'")
                 else
                     local encoded = pon.encode({nv})
                     lia.db.upsert({
@@ -176,7 +176,7 @@ function characterMeta:setData(k, v, noReplication, receiver)
             end
         else
             if v == nil then
-                lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = " .. lia.db.convertDataType(k))
+                lia.db.delete("chardata", "charID = " .. self:getID() .. " AND key = '" .. lia.db.escape(k) .. "'")
             else
                 local encoded = pon.encode({v})
                 lia.db.upsert({
@@ -219,6 +219,23 @@ if SERVER then
             self:setRecognition(recognized .. "," .. id .. ",")
         end
         return true
+    end
+
+    function characterMeta:WhitelistAllClasses()
+        for class, _ in pairs(lia.class.list) do
+            self:classWhitelist(class)
+        end
+    end
+
+    function characterMeta:WhitelistAllFactions()
+        for faction, _ in pairs(lia.faction.indices) do
+            self:setWhitelisted(faction, true)
+        end
+    end
+
+    function characterMeta:WhitelistEverything()
+        self:WhitelistAllFactions()
+        self:WhitelistAllClasses()
     end
 
     function characterMeta:classWhitelist(class)
@@ -496,6 +513,7 @@ if SERVER then
         local curChar, steamID = client:getChar(), client:SteamID()
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
+
             if isCurChar then
                 net.Start("removeF1")
                 net.Send(client)

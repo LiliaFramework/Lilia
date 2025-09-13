@@ -1,4 +1,4 @@
-﻿lia.vendor = lia.vendor or {}
+lia.vendor = lia.vendor or {}
 lia.vendor.editor = lia.vendor.editor or {}
 lia.vendor.presets = lia.vendor.presets or {}
 lia.vendor.rarities = lia.vendor.rarities or {}
@@ -36,36 +36,24 @@ if SERVER then
         vendor:setStock(itemType, value)
     end)
 
+    addEditor("flag", function() return net.ReadString() end, function(vendor, flag) vendor:setFlag(flag) end)
     addEditor("welcome", function() return net.ReadString() end, function(vendor, message) vendor:setWelcomeMessage(message) end)
     addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, factionID, allowed) vendor:setFactionAllowed(factionID, allowed) end)
     addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, classID, allowed) vendor:setClassAllowed(classID, allowed) end)
     addEditor("model", function() return net.ReadString() end, function(vendor, model) vendor:setModel(model) end)
     addEditor("skin", function() return net.ReadUInt(8) end, function(vendor, skin) vendor:setSkin(skin) end)
     addEditor("bodygroup", function() return net.ReadUInt(8), net.ReadUInt(8) end, function(vendor, index, value) vendor:setBodyGroup(index, value) end)
+    addEditor("useMoney", function() return net.ReadBool() end, function(vendor, useMoney)
+        if useMoney then
+            vendor:setMoney(lia.config.get("vendorDefaultMoney", 500))
+        else
+            vendor:setMoney(nil)
+        end
+    end)
+
+    addEditor("money", function() return net.ReadUInt(32) end, function(vendor, money) vendor:setMoney(money) end)
+    addEditor("scale", function() return net.ReadFloat() end, function(vendor, scale) vendor:setSellScale(scale) end)
     addEditor("preset", function() return net.ReadString() end, function(vendor, preset) vendor:applyPreset(preset) end)
-    addEditor("animation", function() return net.ReadString() end, function(vendor, animation) vendor:setAnimation(animation) end)
-    function lia.vendor.loadPresets()
-        lia.db.select("*", "vendor_presets"):next(function(data)
-            local results = data.results or {}
-            for _, row in ipairs(results) do
-                local presetName = row.name
-                local presetData = util.JSONToTable(row.data or "{}")
-                if presetData and next(presetData) then lia.vendor.presets[string.lower(presetName)] = presetData end
-            end
-
-            lia.log.add("Loaded " .. #results .. " vendor presets from database.")
-        end)
-    end
-
-    function lia.vendor.savePresetToDatabase(name, data)
-        local presetData = util.TableToJSON(data)
-        lia.db.upsert({
-            name = name,
-            data = presetData
-        }, "vendor_presets")
-    end
-
-    hook.Add("LiliaTablesLoaded", "liaVendorPresetLoading", function() lia.vendor.loadPresets() end)
 else
     local function addEditor(name, writer)
         lia.vendor.editor[name] = function(...)
@@ -102,6 +90,7 @@ else
         net.WriteUInt(value, 32)
     end)
 
+    addEditor("flag", function(flag) net.WriteString(flag) end)
     addEditor("welcome", function(message) net.WriteString(message) end)
     addEditor("faction", function(factionID, allowed)
         net.WriteUInt(factionID, 8)
@@ -120,8 +109,14 @@ else
         net.WriteUInt(value or 0, 8)
     end)
 
+    addEditor("useMoney", function(useMoney) net.WriteBool(useMoney) end)
+    addEditor("money", function(value)
+        local amt = isnumber(value) and math.max(math.Round(value), 0) or -1
+        net.WriteInt(amt, 32)
+    end)
+
+    addEditor("scale", function(scale) net.WriteFloat(scale) end)
     addEditor("preset", function(preset) net.WriteString(preset) end)
-    addEditor("animation", function(animation) net.WriteString(animation) end)
 end
 
 function lia.vendor.addRarities(name, color)
@@ -143,7 +138,6 @@ function lia.vendor.addPreset(name, items)
     end
 
     lia.vendor.presets[string.lower(name)] = validItems
-    if SERVER then lia.vendor.savePresetToDatabase(name, validItems) end
 end
 
 function lia.vendor.getPreset(name)
