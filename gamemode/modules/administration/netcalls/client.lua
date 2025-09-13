@@ -1,4 +1,4 @@
-net.Receive("cfgList", function()
+﻿net.Receive("cfgList", function()
     local changed = net.ReadTable()
     for key, value in pairs(changed) do
         if lia.config.stored[key] then lia.config.stored[key].value = value end
@@ -795,7 +795,6 @@ end)
 
 net.Receive("liaCharDeleted", function()
     if IsValid(panelRef) and isfunction(panelRef.buildSheets) then
-
         net.Start("liaRequestFullCharList")
         net.SendToServer()
     end

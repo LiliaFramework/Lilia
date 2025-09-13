@@ -1,4 +1,4 @@
-lia.playerinteract = lia.playerinteract or {}
+﻿lia.playerinteract = lia.playerinteract or {}
 lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
 function lia.playerinteract.isWithinRange(client, entity, customRange)

@@ -1,4 +1,4 @@
-local vectorMeta = FindMetaTable("Vector")
+﻿local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
 function ENT:onDrawEntityInfo(alpha)
     local position = toScreen(self:LocalToWorld(self:OBBCenter()))

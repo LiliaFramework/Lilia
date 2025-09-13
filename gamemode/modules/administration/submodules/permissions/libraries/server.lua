@@ -1,4 +1,4 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
 local restrictedProperties = {
     persist = true,
     drive = true,

@@ -1,4 +1,4 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
