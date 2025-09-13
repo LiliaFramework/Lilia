@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local ticketPanel
 local ticketsTabAdded = false
 net.Receive("liaActiveTickets", function()

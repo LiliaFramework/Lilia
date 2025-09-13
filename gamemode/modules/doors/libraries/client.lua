@@ -1,4 +1,4 @@
-function MODULE:DrawEntityInfo(entity, alpha)
+﻿function MODULE:DrawEntityInfo(entity, alpha)
     if entity:isDoor() then
         local doorData = entity:getNetVar("doorData", {})
         if not (doorData.hidden or false) then

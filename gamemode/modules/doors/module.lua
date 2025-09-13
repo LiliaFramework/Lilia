@@ -1,4 +1,4 @@
-lia.doors = lia.doors or {}
+﻿lia.doors = lia.doors or {}
 lia.doors.presets = lia.doors.presets or {}
 DOOR_OWNER = 3
 DOOR_TENANT = 2
