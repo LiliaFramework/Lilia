@@ -1,4 +1,4 @@
-local xpos = xpos or 20
+﻿local xpos = xpos or 20
 local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
     local mat_lightning = Material("icon16/lightning_go.png")

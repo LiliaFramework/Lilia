@@ -1,4 +1,4 @@
-lia.darkrp = lia.darkrp or {}
+﻿lia.darkrp = lia.darkrp or {}
 DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 DarkRP.disabledDefaults = DarkRP.disabledDefaults or {}

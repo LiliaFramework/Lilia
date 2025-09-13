@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self.title = self:addLabel(L("selectFaction"))
     self.faction = self:Add("DComboBox")

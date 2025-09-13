@@ -1,11 +1,11 @@
-local hasInitializedModules = false
+﻿local hasInitializedModules = false
 lia = lia or {
     util = {},
     gui = {},
     meta = {},
     notices = {},
     lastReloadTime = 0,
-    reloadCooldown = 10, -- Increased cooldown to prevent rapid reloads
+    reloadCooldown = 10,
     reloadInProgress = false
 }
 
@@ -561,8 +561,6 @@ end
 function GM:OnReloaded()
     local currentTime = CurTime()
     local timeSinceLastReload = currentTime - lia.lastReloadTime
-
-    -- Prevent rapid reloads and concurrent reloads
     if timeSinceLastReload < lia.reloadCooldown or lia.reloadInProgress then
         lia.warning("Reload blocked: " .. (lia.reloadInProgress and "reload in progress" or "cooldown active (" .. math.ceil(lia.reloadCooldown - timeSinceLastReload) .. "s remaining)"))
         return
@@ -570,13 +568,10 @@ function GM:OnReloaded()
 
     lia.reloadInProgress = true
     lia.lastReloadTime = currentTime
-
     lia.module.initialize()
     lia.config.load()
     lia.faction.formatModelData()
-
     if SERVER then
-        -- Use a delayed, controlled reload to prevent buffer overflow
         timer.Simple(0.1, function() lia.config.send() end)
         timer.Simple(0.2, function() lia.administrator.sync() end)
         timer.Simple(0.3, function() lia.playerinteract.syncToClients() end)

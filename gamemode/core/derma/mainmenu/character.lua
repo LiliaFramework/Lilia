@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local clientChar = client.getChar and client:getChar()
@@ -341,9 +341,7 @@ end
 
 function PANEL:createTabs()
     self.tabs:Clear()
-    if not self.isKickedFromChar then
-        self:addTab(L("returnText"), function() self:backToMainMenu() end, true)
-    end
+    if not self.isKickedFromChar then self:addTab(L("returnText"), function() self:backToMainMenu() end, true) end
 end
 
 function PANEL:backToMainMenu()

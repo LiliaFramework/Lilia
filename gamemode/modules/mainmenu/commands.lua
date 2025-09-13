@@ -1,4 +1,4 @@
-lia.command.add("staffdiscord", {
+﻿lia.command.add("staffdiscord", {
     desc = "staffdiscordDesc",
     arguments = {
         {

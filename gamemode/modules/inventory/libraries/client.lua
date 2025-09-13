@@ -1,4 +1,4 @@
-function MODULE:CreateInventoryPanel(inventory, parent)
+﻿function MODULE:CreateInventoryPanel(inventory, parent)
     local panel = vgui.Create("liaGridInventory", parent)
     panel:setInventory(inventory)
     panel:Center()

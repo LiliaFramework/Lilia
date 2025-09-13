@@ -1,4 +1,4 @@
-lia.net = lia.net or {}
+﻿lia.net = lia.net or {}
 lia.net.sendq = lia.net.sendq or {}
 lia.net.globals = lia.net.globals or {}
 lia.net.buffers = lia.net.buffers or {}
@@ -166,8 +166,6 @@ if SERVER then
         if not json then return end
         local data = util.Compress(json)
         if not data or #data == 0 then return end
-
-        -- Use smaller chunks during reload to prevent buffer overflow
         local isReload = lia.reloadInProgress or false
         local size = isReload and math.max(128, math.min(1024, chunkSize or 512)) or math.max(256, math.min(4096, chunkSize or 2048))
         local chunks = {}
@@ -183,7 +181,6 @@ if SERVER then
         local function schedule(ply)
             if not IsValid(ply) then return end
             timer.Simple(delay, function() if IsValid(ply) then beginStream(ply, netStr, chunks, sid) end end)
-            -- Use longer delays during reload to prevent buffer overflow
             delay = delay + (isReload and chunkTime * 2 or chunkTime)
         end
 
