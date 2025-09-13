@@ -24,7 +24,7 @@ end
 function PANEL:SetChecked(state)
     self.checked = state and true or false
     self:SetSelected(self.checked)
-    if self.OnChange then self.OnChange(self.checked) end
+    if self.OnChange then self.OnChange(self, self.checked) end
 end
 
 function PANEL:GetChecked()

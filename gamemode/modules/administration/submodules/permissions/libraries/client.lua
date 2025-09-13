@@ -1,4 +1,4 @@
-﻿function MODULE:PrePlayerDraw(client)
+function MODULE:PrePlayerDraw(client)
     if not IsValid(client) then return end
     if client:isNoClipping() then return true end
 end
@@ -33,21 +33,28 @@ function MODULE:HUDPaint()
             kind = L("entities")
             label = ent.PrintName or ent:GetClass()
             baseColor = lia.option.get("espEntitiesColor")
-        elseif lia.option.get("espUnconfiguredDoors", false) and ent:isDoor() then
-            local factions = ent:getNetVar("factions", "[]")
-            local classes = ent:getNetVar("classes", "[]")
-            local name = ent:getNetVar("name")
-            local title = ent:getNetVar("title")
-            local price = ent:getNetVar("price", 0)
-            local locked = ent:getNetVar("locked", false)
-            local disabled = ent:getNetVar("disabled", false)
-            local hidden = ent:getNetVar("hidden", false)
-            local noSell = ent:getNetVar("noSell", false)
-            local isUnconfigured = (not factions or factions == "[]") and (not classes or classes == "[]") and (not name or name == "") and (not title or title == "") and price == 0 and not locked and not disabled and not hidden and not noSell
-            if isUnconfigured then
+        elseif ent:isDoor() then
+            local doorData = ent:getNetVar("doorData", {})
+            local factions = doorData.factions or {}
+            local classes = doorData.classes or {}
+            local name = doorData.name
+            local title = doorData.title
+            local price = doorData.price or 0
+            local locked = doorData.locked
+            local disabled = doorData.disabled
+            local hidden = doorData.hidden
+            local noSell = doorData.noSell
+
+            -- Check if door is configured
+            local isConfigured = (factions and #factions > 0) or (classes and #classes > 0) or (name and name ~= "") or (title and title ~= "") or price > 0 or locked or disabled or hidden or noSell
+            if lia.option.get("espUnconfiguredDoors", false) and not isConfigured then
                 kind = L("doorUnconfigured")
                 label = L("doorUnconfigured")
                 baseColor = lia.option.get("espUnconfiguredDoorsColor")
+            elseif lia.option.get("espConfiguredDoors", false) and isConfigured then
+                kind = L("doorConfigured")
+                label = L("doorConfigured")
+                baseColor = lia.option.get("espConfiguredDoorsColor")
             end
         end
 

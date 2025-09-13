@@ -1,4 +1,4 @@
-﻿lia.option = lia.option or {}
+lia.option = lia.option or {}
 lia.option.stored = lia.option.stored or {}
 function lia.option.add(key, name, desc, default, callback, data)
     assert(isstring(key), L("optionKeyString", type(key)))
@@ -588,6 +588,30 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
     r = 255,
     g = 0,
     b = 255,
+    a = 255
+}, nil, {
+    category = "categoryESP",
+    visible = function()
+        local ply = LocalPlayer()
+        if not IsValid(ply) then return false end
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
+    end
+})
+
+lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDesc", false, nil, {
+    category = "categoryESP",
+    isQuick = true,
+    visible = function()
+        local ply = LocalPlayer()
+        if not IsValid(ply) then return false end
+        return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
+    end
+})
+
+lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfiguredDoorsColorDesc", {
+    r = 0,
+    g = 255,
+    b = 0,
     a = 255
 }, nil, {
     category = "categoryESP",

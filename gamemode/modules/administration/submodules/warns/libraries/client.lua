@@ -1,4 +1,4 @@
-﻿local panelRef
+local panelRef
 local warningsTabAdded = false
 net.Receive("liaAllWarnings", function()
     local warnings = net.ReadTable() or {}

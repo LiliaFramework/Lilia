@@ -1,4 +1,4 @@
-﻿lia.data = lia.data or {}
+lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
 function lia.data.encodetable(value)
     if isvector(value) then

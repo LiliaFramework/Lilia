@@ -1,4 +1,4 @@
-﻿local function OnPrivilegeRegistered(privilege)
+local function OnPrivilegeRegistered(privilege)
     local permission = privilege.Name
     serverguard.permission:Add(permission)
     if SERVER then

@@ -1,4 +1,4 @@
-﻿local function canRecog(ply)
+local function canRecog(ply)
     return lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
 end
 

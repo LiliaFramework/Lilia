@@ -1,4 +1,4 @@
-﻿lia.color = lia.color or {}
+lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 local clamp = math.Clamp
 local configGet = lia.config.get

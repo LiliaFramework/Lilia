@@ -1,4 +1,4 @@
-﻿lia.command.add("playtime", {
+lia.command.add("playtime", {
     adminOnly = false,
     desc = "playtimeDesc",
     onRun = function(client)
@@ -1812,7 +1812,9 @@ lia.command.add("charwipe", {
         if character then
             local charID = character:getID()
             local charName = character:getName()
+
             character:kick()
+
             lia.char.delete(charID, target)
             client:notifyLocalized("charWipe", client:Name(), charName)
             lia.log.add(client, "charWipe", charName, charID)

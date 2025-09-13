@@ -1,4 +1,4 @@
-﻿local vectorMeta = FindMetaTable("Vector")
+local vectorMeta = FindMetaTable("Vector")
 function vectorMeta:Center(vec2)
     return (self + vec2) / 2
 end
