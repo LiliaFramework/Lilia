@@ -1,4 +1,4 @@
-lia.time = lia.time or {}
+﻿lia.time = lia.time or {}
 function lia.time.TimeSince(strTime)
     local timestamp
     if isnumber(strTime) then

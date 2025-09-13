@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 chat.liaAddText = chat.liaAddText or chat.AddText
 LIA_CVAR_CHATFILTER = CreateClientConVar("lia_chatfilter", "", true, false)
 function MODULE:createChat()

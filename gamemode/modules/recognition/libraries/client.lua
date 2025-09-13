@@ -1,4 +1,4 @@
-local ChatIsRecognized = {
+﻿local ChatIsRecognized = {
     ic = true,
     y = true,
     w = true,

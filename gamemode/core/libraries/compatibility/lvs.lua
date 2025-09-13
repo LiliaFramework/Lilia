@@ -1,4 +1,4 @@
-hook.Add("EntityTakeDamage", "liaLVS", function(_, dmg)
+﻿hook.Add("EntityTakeDamage", "liaLVS", function(_, dmg)
     local attacker = dmg:GetAttacker()
     local inflictor = dmg:GetInflictor()
     local attackerVehicle

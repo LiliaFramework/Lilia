@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     lia.module.list["f1menu"].CharacterInformation = {}
     lia.gui.menu = self

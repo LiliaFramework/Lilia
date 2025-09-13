@@ -1,4 +1,4 @@
-lia.websound = lia.websound or {}
+﻿lia.websound = lia.websound or {}
 lia.websound.stored = lia.websound.stored or {}
 local baseDir = "lilia/websounds/"
 local cache = {}
