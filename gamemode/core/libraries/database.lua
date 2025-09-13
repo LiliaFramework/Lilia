@@ -1,4 +1,4 @@
-lia.db = lia.db or {}
+﻿lia.db = lia.db or {}
 lia.db.queryQueue = lia.db.queue or {}
 lia.db.prepared = lia.db.prepared or {}
 lia.db.modules = {
@@ -733,19 +733,15 @@ function lia.db.GetCharacterTable(callback)
     end)
 end
 
--- Database Snapshot Functions
 function lia.db.createSnapshot(tableName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
-
-    -- Check if table exists
     lia.db.tableExists(fullTableName):next(function(exists)
         if not exists then
             d:reject("Table " .. fullTableName .. " does not exist")
             return
         end
 
-        -- Get all data from the table
         lia.db.query("SELECT * FROM " .. fullTableName, function(results)
             if not results then
                 d:reject("Failed to query table " .. fullTableName)
@@ -761,39 +757,26 @@ function lia.db.createSnapshot(tableName)
             local jsonData = util.TableToJSON(snapshot, true)
             local fileName = "snapshot_" .. tableName .. "_" .. os.time() .. ".json"
             local filePath = "lilia/snapshots/" .. fileName
-
-            -- Create directory if it doesn't exist
             file.CreateDir("lilia/snapshots")
-
-            -- Write to file
             file.Write(filePath, jsonData)
-
             d:resolve({
                 file = fileName,
                 path = filePath,
                 records = #results
             })
-        end, function(err)
-            d:reject("Database error: " .. tostring(err))
-        end)
-    end, function(err)
-        d:reject("Table check error: " .. tostring(err))
-    end)
-
+        end, function(err) d:reject("Database error: " .. tostring(err)) end)
+    end, function(err) d:reject("Table check error: " .. tostring(err)) end)
     return d
 end
 
 function lia.db.loadSnapshot(fileName)
     local d = deferred.new()
     local filePath = "lilia/snapshots/" .. fileName
-
-    -- Check if file exists
     if not file.Exists(filePath, "DATA") then
         d:reject("Snapshot file " .. fileName .. " not found")
         return d
     end
 
-    -- Read and parse JSON
     local jsonData = file.Read(filePath, "DATA")
     if not jsonData then
         d:reject("Failed to read snapshot file")
@@ -812,15 +795,12 @@ function lia.db.loadSnapshot(fileName)
     end
 
     local fullTableName = "lia_" .. snapshot.table
-
-    -- Check if target table exists
     lia.db.tableExists(fullTableName):next(function(exists)
         if not exists then
             d:reject("Target table " .. fullTableName .. " does not exist")
             return
         end
 
-        -- Clear existing data
         lia.db.query("DELETE FROM " .. fullTableName, function()
             if #snapshot.data == 0 then
                 d:resolve({
@@ -830,7 +810,6 @@ function lia.db.loadSnapshot(fileName)
                 return
             end
 
-            -- Insert data in batches
             local batchSize = 100
             local batches = {}
             for i = 1, #snapshot.data, batchSize do
@@ -838,6 +817,7 @@ function lia.db.loadSnapshot(fileName)
                 for j = i, math.min(i + batchSize - 1, #snapshot.data) do
                     table.insert(batch, snapshot.data[j])
                 end
+
                 table.insert(batches, batch)
             end
 
@@ -855,23 +835,15 @@ function lia.db.loadSnapshot(fileName)
                 lia.db.bulkInsert(snapshot.table, batches[currentBatch]):next(function()
                     currentBatch = currentBatch + 1
                     insertNextBatch()
-                end, function(err)
-                    d:reject("Failed to insert batch " .. currentBatch .. ": " .. tostring(err))
-                end)
+                end, function(err) d:reject("Failed to insert batch " .. currentBatch .. ": " .. tostring(err)) end)
             end
 
             insertNextBatch()
-        end, function(err)
-            d:reject("Failed to clear table: " .. tostring(err))
-        end)
-    end, function(err)
-        d:reject("Table check error: " .. tostring(err))
-    end)
-
+        end, function(err) d:reject("Failed to clear table: " .. tostring(err)) end)
+    end, function(err) d:reject("Table check error: " .. tostring(err)) end)
     return d
 end
 
--- Console Commands
 concommand.Add("lia_snapshot", function(_, _, args)
     if not args[1] then
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Usage: lia_snapshot <table_name>\n")
@@ -880,23 +852,18 @@ concommand.Add("lia_snapshot", function(_, _, args)
 
     local tableName = args[1]
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Creating snapshot for table: " .. tableName .. "\n")
-
     lia.db.createSnapshot(tableName):next(function(result)
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Snapshot created successfully!\n")
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "File: " .. result.file .. "\n")
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Records: " .. result.records .. "\n")
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Path: " .. result.path .. "\n")
-    end, function(err)
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Snapshot failed: " .. tostring(err) .. "\n")
-    end)
+    end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Snapshot failed: " .. tostring(err) .. "\n") end)
 end)
 
 concommand.Add("lia_snapshot_load", function(_, _, args)
     if not args[1] then
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Usage: lia_snapshot_load <filename>\n")
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Available snapshots:\n")
-
-        -- List available snapshots
         local files, _ = file.Find("lilia/snapshots/*.json", "DATA")
         if files and #files > 0 then
             for _, file in ipairs(files) do
@@ -910,17 +877,12 @@ concommand.Add("lia_snapshot_load", function(_, _, args)
 
     local fileName = args[1]
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Loading snapshot: " .. fileName .. "\n")
-
     lia.db.loadSnapshot(fileName):next(function(result)
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Snapshot loaded successfully!\n")
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Table: " .. result.table .. "\n")
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Records: " .. result.records .. "\n")
-        if result.timestamp then
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Original timestamp: " .. os.date("%Y-%m-%d %H:%M:%S", result.timestamp) .. "\n")
-        end
-    end, function(err)
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Snapshot load failed: " .. tostring(err) .. "\n")
-    end)
+        if result.timestamp then MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Original timestamp: " .. os.date("%Y-%m-%d %H:%M:%S", result.timestamp) .. "\n") end
+    end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Snapshot load failed: " .. tostring(err) .. "\n") end)
 end)
 
 function GM:RegisterPreparedStatements()
