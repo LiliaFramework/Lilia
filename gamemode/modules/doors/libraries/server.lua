@@ -307,7 +307,7 @@ function lia.doors.VerifyDatabaseSchema()
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
                     lia.error("Missing expected column: " .. colName)
-                elseif columns[colName] ~= expectedType then
+                elseif columns[colName]:lower() ~= expectedType:lower() then
                     lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
                 end
             end
@@ -342,7 +342,7 @@ function lia.doors.VerifyDatabaseSchema()
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
                     lia.error("Missing expected column: " .. colName)
-                elseif not columns[colName]:match(expectedType) then
+                elseif not columns[colName]:lower():match(expectedType:lower()) then
                     lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
                 end
             end
