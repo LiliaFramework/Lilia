@@ -1,4 +1,4 @@
-﻿function MODULE:PostLoadData()
+function MODULE:PostLoadData()
     if lia.config.get("DoorsAlwaysDisabled", false) then
         local count = 0
         for _, door in ents.Iterator() do
@@ -301,7 +301,8 @@ function lia.doors.VerifyDatabaseSchema()
                 ownable = "integer",
                 name = "text",
                 price = "integer",
-                locked = "integer"
+                locked = "integer",
+                door_group = "text"
             }
 
             for colName, expectedType in pairs(expectedColumns) do
@@ -336,7 +337,8 @@ function lia.doors.VerifyDatabaseSchema()
                 ownable = "tinyint",
                 name = "text",
                 price = "int",
-                locked = "tinyint"
+                locked = "tinyint",
+                door_group = "text"
             }
 
             for colName, expectedType in pairs(expectedColumns) do
@@ -348,6 +350,22 @@ function lia.doors.VerifyDatabaseSchema()
             end
         end):catch(function(err) lia.error("Failed to verify database schema: " .. tostring(err)) end)
     end
+end
+
+function lia.doors.AddDoorGroupColumn()
+    lia.db.fieldExists("lia_doors", "door_group"):next(function(exists)
+        if not exists then
+            lia.db.query("ALTER TABLE lia_doors ADD COLUMN door_group TEXT"):next(function()
+                lia.information("Added door_group column to lia_doors table")
+            end):catch(function(err)
+                lia.error("Failed to add door_group column: " .. tostring(err))
+            end)
+        else
+            lia.information("door_group column already exists in lia_doors table")
+        end
+    end):catch(function(err)
+        lia.error("Failed to check for door_group column: " .. tostring(err))
+    end)
 end
 
 function lia.doors.CleanupCorruptedData()
@@ -407,6 +425,7 @@ function MODULE:InitPostEntity()
     end
 
     timer.Simple(1, function() lia.doors.CleanupCorruptedData() end)
+    timer.Simple(2, function() lia.doors.AddDoorGroupColumn() end)
     timer.Simple(3, function() lia.doors.VerifyDatabaseSchema() end)
 end
 

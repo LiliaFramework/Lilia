@@ -1,4 +1,4 @@
-﻿lia.command.add("updateinvsize", {
+lia.command.add("updateinvsize", {
     adminOnly = true,
     desc = "updateInventorySizeDesc",
     arguments = {

@@ -1,4 +1,4 @@
-﻿local math = math
+local math = math
 local HUGE = math.huge
 local floor = math.floor
 local internal_type = type

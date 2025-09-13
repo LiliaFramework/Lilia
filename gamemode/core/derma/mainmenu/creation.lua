@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterFaction"))
     self:addStep(vgui.Create("liaCharacterBiography"))
@@ -184,6 +184,7 @@ end
 function PANEL:onStepChanged(oldStep, newStep)
     local finish = self.curStep == #self.steps
     local key = finish and "finish" or "next"
+
     if IsValid(newStep) then
         local panelName = newStep:GetName()
         local shouldShowModel = panelName == "liaCharacterBiography" or panelName == "liaCharacterModel"

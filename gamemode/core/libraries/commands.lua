@@ -1,4 +1,4 @@
-﻿lia.command = lia.command or {}
+lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 function lia.command.buildSyntaxFromArguments(args)
     local tokens = {}

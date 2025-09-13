@@ -1,4 +1,4 @@
-﻿local Inventory = lia.Inventory or {}
+local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
 Inventory.data = {}

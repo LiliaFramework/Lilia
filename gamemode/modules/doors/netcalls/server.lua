@@ -1,4 +1,4 @@
-﻿net.Receive("doorPerm", function(_, client)
+net.Receive("doorPerm", function(_, client)
     local door = net.ReadEntity()
     local target = net.ReadEntity()
     local access = net.ReadUInt(2)
