@@ -1,4 +1,4 @@
-local characterMeta = lia.meta.character or {}
+﻿local characterMeta = lia.meta.character or {}
 lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
@@ -801,17 +801,13 @@ if SERVER then
         end)
 
         hook.Run("OnCharDelete", client, id)
-
         if IsValid(client) and client:getChar() and client:getChar():getID() == id then
-
             net.Start("removeF1")
             net.Send(client)
-
             net.Start("charKick")
             net.WriteUInt(id, 32)
             net.WriteBool(true)
             net.Send(client)
-
             client:setNetVar("char", nil)
             client:Spawn()
         end

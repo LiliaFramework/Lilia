@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 AdminStickIsOpen = false
 local playerInfoLabel = L("player") .. " " .. L("information")
 local giveFlagsLabel = L("give") .. " " .. L("flags")

@@ -1,4 +1,4 @@
-lia.administrator = lia.administrator or {}
+﻿lia.administrator = lia.administrator or {}
 lia.administrator.groups = lia.administrator.groups or {}
 lia.administrator.privileges = lia.administrator.privileges or {}
 lia.administrator.privilegeCategories = lia.administrator.privilegeCategories or {}

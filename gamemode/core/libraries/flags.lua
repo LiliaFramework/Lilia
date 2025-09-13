@@ -1,4 +1,4 @@
-lia.flag = lia.flag or {}
+﻿lia.flag = lia.flag or {}
 lia.flag.list = lia.flag.list or {}
 function lia.flag.add(flag, desc, callback)
     if lia.flag.list[flag] then return end

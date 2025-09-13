@@ -1,4 +1,4 @@
-function MODULE:PlayerLiliaDataLoaded(client)
+﻿function MODULE:PlayerLiliaDataLoaded(client)
     lia.char.restore(client, function(charList)
         if not IsValid(client) then return end
         lia.information(L("loadedCharacters", table.concat(charList, ", "), client:Name()))
