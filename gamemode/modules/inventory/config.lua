@@ -1,4 +1,4 @@
-lia.config.add("invW", "invWidth", 6, function(_, newW)
+﻿lia.config.add("invW", "invWidth", 6, function(_, newW)
     if not SERVER then return end
     for _, client in player.Iterator() do
         if not IsValid(client) then continue end

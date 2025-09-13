@@ -1,4 +1,4 @@
-local MaliciousNet = {
+﻿local MaliciousNet = {
     ["Sbox_gm_attackofnullday_key"] = true,
     ["c"] = true,
     ["enablevac"] = true,

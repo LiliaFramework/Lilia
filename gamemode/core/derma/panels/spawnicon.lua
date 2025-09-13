@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 local function setSequence(entity)
     local seq = entity:SelectWeightedSequence(ACT_IDLE)
     if seq <= 0 then seq = entity:LookupSequence("idle_unarmed") end

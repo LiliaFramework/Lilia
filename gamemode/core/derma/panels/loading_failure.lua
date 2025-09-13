@@ -69,11 +69,8 @@ end
 function PANEL:SetFailureInfo(reason, details)
     if reason then
         local errorText = "Error: " .. reason
-        if details and details ~= "" then
-            errorText = errorText .. "\n\nDetails: " .. details
-        end
+        if details and details ~= "" then errorText = errorText .. "\n\nDetails: " .. details end
         self.reasonLabel:SetText(errorText)
-        -- Ensure the panel is visible when error info is set
         self:SetVisible(true)
         self:SetAlpha(255)
     end
@@ -93,7 +90,6 @@ function PANEL:AddError(errorMessage, line, file)
     })
 
     self:UpdateErrorDisplay()
-    -- Ensure the panel is visible when errors are added
     self:SetVisible(true)
     self:SetAlpha(255)
 end

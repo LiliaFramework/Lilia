@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local staminaPlayers = {}
 function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()

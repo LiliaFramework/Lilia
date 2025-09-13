@@ -1,4 +1,4 @@
-lia.class = lia.class or {}
+﻿lia.class = lia.class or {}
 lia.class.list = lia.class.list or {}
 function lia.class.register(uniqueID, data)
     assert(isstring(uniqueID), L("classUniqueIDString"))

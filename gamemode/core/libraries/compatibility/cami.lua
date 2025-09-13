@@ -1,4 +1,4 @@
-local function getGroupLevel(group)
+﻿local function getGroupLevel(group)
     local levels = lia.administrator.DefaultGroups or {}
     if levels[group] then return levels[group] end
     local visited, current = {}, group
