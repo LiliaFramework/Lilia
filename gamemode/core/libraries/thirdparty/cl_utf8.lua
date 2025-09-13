@@ -1,4 +1,4 @@
-local function utf8charbytes(s, i)
+﻿local function utf8charbytes(s, i)
     i = i or 1
     if not isstring(s) then error(L("utf8CharbytesStringExpected", type(s))) end
     if not isnumber(i) then error(L("utf8CharbytesNumberExpected", type(i))) end

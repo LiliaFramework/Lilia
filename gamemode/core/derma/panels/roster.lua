@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetTall(500)
     self.sheet = self:Add("liaSheet")

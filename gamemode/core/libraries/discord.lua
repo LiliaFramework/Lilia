@@ -1,4 +1,4 @@
-lia.discord = lia.discord or {}
+﻿lia.discord = lia.discord or {}
 lia.discord.webhook = lia.discord.webhook or ""
 function lia.discord.relayMessage(embed)
     if not lia.discord.webhook or lia.discord.webhook == "" or not istable(embed) then return end

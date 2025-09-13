@@ -1,4 +1,4 @@
-local pi = math.pi
+﻿local pi = math.pi
 local index = index or 1
 local deltaIndex = deltaIndex or index
 local infoAlpha = infoAlpha or 0

@@ -1,4 +1,4 @@
-hook.Add("ULibGroupAccessChanged", "liaULXCAMI", function(group_name, access, revoke)
+﻿hook.Add("ULibGroupAccessChanged", "liaULXCAMI", function(group_name, access, revoke)
     if not group_name or not access then return end
     if not revoke then
         if CAMI and not CAMI.GetPrivilege(access) then

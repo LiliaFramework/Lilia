@@ -1,4 +1,4 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
 function lia.config.add(key, name, value, callback, data)

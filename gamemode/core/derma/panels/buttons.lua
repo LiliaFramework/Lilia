@@ -1,4 +1,4 @@
-local animDuration = 0.3
+﻿local animDuration = 0.3
 local function PaintButton(self, w, h)
     local r, g, b = lia.config.get("Color")
     if self.Base then

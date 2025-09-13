@@ -1,4 +1,4 @@
-function MODULE:PrePlayerDraw(client)
+﻿function MODULE:PrePlayerDraw(client)
     if not IsValid(client) then return end
     if client:isNoClipping() then return true end
 end
@@ -44,8 +44,6 @@ function MODULE:HUDPaint()
             local disabled = doorData.disabled
             local hidden = doorData.hidden
             local noSell = doorData.noSell
-
-            -- Check if door is configured
             local isConfigured = (factions and #factions > 0) or (classes and #classes > 0) or (name and name ~= "") or (title and title ~= "") or price > 0 or locked or disabled or hidden or noSell
             if lia.option.get("espUnconfiguredDoors", false) and not isConfigured then
                 kind = L("doorUnconfigured")

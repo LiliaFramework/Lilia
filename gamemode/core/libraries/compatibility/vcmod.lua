@@ -1,4 +1,4 @@
-if SERVER then
+﻿if SERVER then
     hook.Add("VC_canAddMoney", "liaVCMOD", function(client, amount)
         client:getChar():giveMoney(amount)
         return false
