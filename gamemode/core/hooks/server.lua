@@ -1292,7 +1292,6 @@ concommand.Add("lia_wipebanking", function(client)
         MsgC(Color(255, 0, 0), "[Lilia] Wiping all banking data and recreating table...\n")
         lia.db.query("DROP TABLE IF EXISTS lia_banking", function()
             MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Dropped old banking table...\n")
-            -- Recreate the table with proper structure
             lia.db.createTable("banking", "account_number", {
                 {
                     name = "account_number",
@@ -1347,7 +1346,6 @@ concommand.Add("lia_wipebanking", function(client)
             }):next(function(result)
                 if result and result.success then
                     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Recreated banking table with proper structure...\n")
-                    -- Create indexes
                     lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_account_number ON lia_banking(account_number)"):next(function() end):catch(function() end)
                     lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_steamid ON lia_banking(steamid)"):next(function() end):catch(function() end)
                     lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_charid ON lia_banking(charid)"):next(function() end):catch(function() end)

@@ -2116,7 +2116,6 @@ lia.command.add("charsetname", {
 
         local newName = table.concat(arguments, " ", 2)
         if newName == "" then return client:requestString(L("chgName"), L("chgNameDesc"), function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
-
         local oldName = target:getChar():getName()
         target:getChar():setName(newName:gsub("#", "#?"))
         client:notifySuccessLocalized("changeName", client:Name(), oldName, newName)

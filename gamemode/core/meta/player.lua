@@ -1192,19 +1192,19 @@ function playerMeta:playTimeGreaterThan(time)
     return playTime > time
 end
 
-    function playerMeta:notify(message, type)
-        if SERVER then
-            lia.notices.notify(self, message, type)
-        else
-            lia.notices.notify(nil, message, type)
-        end
+function playerMeta:notify(message, type)
+    if SERVER then
+        lia.notices.notify(self, message, type)
+    else
+        lia.notices.notify(nil, message, type)
     end
+end
 
-    function playerMeta:notifyLocalized(key, type, ...)
-        local args = {...}
-        if SERVER then
-            lia.notices.notifyLocalized(self, key, type, unpack(args))
-        else
-            lia.notices.notifyLocalized(nil, key, type, unpack(args))
-        end
+function playerMeta:notifyLocalized(key, type, ...)
+    local args = {...}
+    if SERVER then
+        lia.notices.notifyLocalized(self, key, type, unpack(args))
+    else
+        lia.notices.notifyLocalized(nil, key, type, unpack(args))
     end
+end
