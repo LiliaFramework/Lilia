@@ -330,10 +330,18 @@ if SERVER then
 else
     function GridInv:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
-        if not inventory then return end
-        local item = inventory.items[itemID]
+        local item
+
+        -- If destinationID is nil (dragging outside), get item from current inventory
+        if not destinationID then
+            item = lia.item.instances[itemID]
+        else
+            if not inventory then return end
+            item = inventory.items[itemID]
+        end
+
         if item and item:getData("x") == x and item:getData("y") == y then return end
-        if item and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
+        if item and inventory and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
         net.Start("liaTransferItem")
         net.WriteUInt(itemID, 32)
         net.WriteUInt(x, 32)

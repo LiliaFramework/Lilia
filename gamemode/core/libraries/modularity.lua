@@ -205,6 +205,7 @@ function lia.module.initialize()
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")
     hook.Run("InitializedModules")
+    if SERVER then timer.Simple(0.1, function() lia.db.addDatabaseFields() end) end
     lia.item.loadFromDir(schemaPath .. "/schema/items")
     for id, mod in pairs(lia.module.list) do
         if id ~= "schema" then

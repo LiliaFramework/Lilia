@@ -211,8 +211,10 @@ lia.keybind.add(KEY_NONE, "quickTakeItem", {
         local entity = client:getTracedEntity()
         if IsValid(entity) and entity:isItem() then
             if entity:GetPos():Distance(client:GetPos()) > 96 then return end
-            local itemTable = entity:getItemTable()
-            if itemTable and itemTable.functions and itemTable.functions.take and itemTable.functions.take.onCanRun and itemTable.functions.take.onCanRun(itemTable) then if itemTable.functions.take.onRun then itemTable.functions.take.onRun(itemTable, client, entity) end end
+            local item = entity:getItemTable()
+            if item and item.functions and item.functions.take then
+                item:interact("take", client, entity)
+            end
         end
     end
 })
