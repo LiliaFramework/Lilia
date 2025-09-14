@@ -148,19 +148,115 @@ function playerMeta:getEyeEnt(distance)
     return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
 
-function playerMeta:notify(message, ...)
+function playerMeta:notify(message, notifType)
     if SERVER then
-        lia.notices.notify(message, self, ...)
+        lia.notices.notify(message, self, notifType or "default")
     else
-        lia.notices.notify(message, ...)
+        lia.notices.notify(message, notifType or "default")
     end
 end
 
-function playerMeta:notifyLocalized(message, ...)
+function playerMeta:notifyLocalized(message, notifType, ...)
     if SERVER then
-        lia.notices.notifyLocalized(message, self, ...)
+        lia.notices.notifyLocalized(message, self, notifType or "default", ...)
     else
-        lia.notices.notifyLocalized(message, ...)
+        lia.notices.notifyLocalized(message, notifType or "default", ...)
+    end
+end
+
+function playerMeta:notifyError(message)
+    if SERVER then
+        lia.notices.notify(message, self, "error")
+    else
+        lia.notices.notify(message, "error")
+    end
+end
+
+function playerMeta:notifyWarning(message)
+    if SERVER then
+        lia.notices.notify(message, self, "warning")
+    else
+        lia.notices.notify(message, "warning")
+    end
+end
+
+function playerMeta:notifyInfo(message)
+    if SERVER then
+        lia.notices.notify(message, self, "info")
+    else
+        lia.notices.notify(message, "info")
+    end
+end
+
+function playerMeta:notifySuccess(message)
+    if SERVER then
+        lia.notices.notify(message, self, "success")
+    else
+        lia.notices.notify(message, "success")
+    end
+end
+
+function playerMeta:notifyMoney(message)
+    if SERVER then
+        lia.notices.notify(message, self, "money")
+    else
+        lia.notices.notify(message, "money")
+    end
+end
+
+function playerMeta:notifyAdmin(message)
+    if SERVER then
+        lia.notices.notify(message, self, "admin")
+    else
+        lia.notices.notify(message, "admin")
+    end
+end
+
+function playerMeta:notifyErrorLocalized(key, ...)
+    if SERVER then
+        lia.notices.notifyLocalized(key, self, "error", ...)
+    else
+        lia.notices.notifyLocalized(key, "error", ...)
+    end
+end
+
+function playerMeta:notifyWarningLocalized(key, ...)
+    if SERVER then
+        lia.notices.notifyLocalized(key, self, "warning", ...)
+    else
+        lia.notices.notifyLocalized(key, "warning", ...)
+    end
+end
+
+function playerMeta:notifyInfoLocalized(key, ...)
+    if SERVER then
+        lia.notices.notifyLocalized(key, self, "info", ...)
+    else
+        lia.notices.notifyLocalized(key, "info", ...)
+    end
+end
+
+function playerMeta:notifySuccessLocalized(key, ...)
+    if SERVER then
+        lia.notices.notifyLocalized(key, self, "success", ...)
+    else
+        lia.notices.notifyLocalized(key, "success", ...)
+    end
+end
+
+function playerMeta:notifyMoneyLocalized(key, ...)
+    if SERVER then
+        lia.notices.notifyLocalized(key, self, "money", ...)
+    else
+        lia.notices.notifyLocalized(key, "money", ...)
+    end
+end
+
+function playerMeta:notifyAdminLocalized(key, ...)
+    if SERVER then
+        lia.notices.notifyLocalized(key, self, "admin", ...)
+    else
+        lia.notices.notifyLocalized(key, "admin", ...)
     end
 end
 
@@ -354,7 +450,7 @@ if SERVER then
         if maxMoneyLimit > 0 and isnumber(maxMoneyLimit) and totalMoney > maxMoneyLimit then
             local excessMoney = totalMoney - maxMoneyLimit
             character:setMoney(maxMoneyLimit)
-            self:notifyLocalized("moneyLimitReached", lia.currency.get(maxMoneyLimit), lia.currency.plural, lia.currency.get(excessMoney), lia.currency.plural)
+            self:notifyMoneyLocalized("moneyLimitReached", lia.currency.get(maxMoneyLimit), lia.currency.plural, lia.currency.get(excessMoney), lia.currency.plural)
             local money = lia.currency.spawn(self:getItemDropPos(), excessMoney)
             if IsValid(money) then
                 money.client = self
@@ -1095,3 +1191,20 @@ function playerMeta:playTimeGreaterThan(time)
     if not playTime or not time then return false end
     return playTime > time
 end
+
+    function playerMeta:notify(message, type)
+        if SERVER then
+            lia.notices.notify(self, message, type)
+        else
+            lia.notices.notify(nil, message, type)
+        end
+    end
+
+    function playerMeta:notifyLocalized(key, type, ...)
+        local args = {...}
+        if SERVER then
+            lia.notices.notifyLocalized(self, key, type, unpack(args))
+        else
+            lia.notices.notifyLocalized(nil, key, type, unpack(args))
+        end
+    end

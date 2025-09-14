@@ -215,7 +215,7 @@ function PANEL:createStartButton()
                     for _, charID in pairs(lia.characters) do
                         local character = lia.char.getCharacter(charID)
                         if character and character:getFaction() == FACTION_STAFF then
-                            lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
+                            lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
                             break
                         end
                     end
@@ -434,7 +434,7 @@ function PANEL:createStaffCharacter()
         groups = {}
     }
 
-    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyLocalized(err or "Failed to create staff character") end)
+    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or "Failed to create staff character") end)
 end
 
 function PANEL:updateSelectedCharacter()
@@ -578,7 +578,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             return
         end
 
-        lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
+        lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end
 
     self.deleteBtn = self:Add("liaSmallButton")
@@ -587,7 +587,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.deleteBtn:SetText(L("delete") .. " " .. L("character"))
     self.deleteBtn.DoClick = function()
         if hook.Run("CanDeleteChar", character:getID()) == false then
-            LocalPlayer():notifyLocalized("cannotDeleteChar")
+            LocalPlayer():notifyErrorLocalized("cannotDeleteChar")
             return
         end
 

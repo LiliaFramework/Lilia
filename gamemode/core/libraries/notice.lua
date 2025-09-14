@@ -1,19 +1,21 @@
-﻿if SERVER then
-    function lia.notices.notify(message, recipient)
+﻿lia.notices = lia.notices or {}
+if SERVER then
+    function lia.notices.notify(client, message, notifType)
         net.Start("liaNotify")
         net.WriteString(message)
-        if recipient then
-            net.Send(recipient)
+        net.WriteString(notifType or "default")
+        if client then
+            net.Send(client)
         else
             net.Broadcast()
         end
     end
 
-    function lia.notices.notifyLocalized(key, recipient, ...)
+    function lia.notices.notifyLocalized(client, key, notifType, ...)
         local args = {...}
-        if recipient and type(recipient) ~= "Player" then
-            table.insert(args, 1, recipient)
-            recipient = nil
+        if client and type(client) ~= "Player" then
+            table.insert(args, 1, client)
+            client = nil
         end
 
         net.Start("liaNotifyL")
@@ -23,54 +25,96 @@
             net.WriteString(tostring(args[i]))
         end
 
-        if recipient then
-            net.Send(recipient)
+        net.WriteString(tostring(notifType or "default"))
+        if client then
+            net.Send(client)
         else
             net.Broadcast()
         end
     end
 else
-    local function OrganizeNotices()
-        local scrW = ScrW()
-        for k, v in ipairs(lia.notices) do
-            v:MoveTo(scrW - (v:GetWide() + 4), (k - 1) * (v:GetTall() + 4) + 4, 0.15, k / #lia.notices * 0.25)
-        end
-    end
-
-    function lia.notices.notify(message)
+    function lia.notices.receiveNotify()
+        local msg = net.ReadString() or ""
+        local ntype = net.ReadString() or "default"
         local notice = vgui.Create("liaNotice")
-        local i = table.insert(lia.notices, notice)
-        local scrW = ScrW()
-        notice:SetText(message)
-        notice:SetPos(scrW, (i - 1) * (notice:GetTall() + 4) + 4)
-        notice:SizeToContentsX()
-        notice:SetWide(notice:GetWide() + 16)
-        notice.start = CurTime() + 0.25
-        notice.endTime = CurTime() + 7.75
+        notice:SetText(msg)
+        notice:SetType(ntype)
+        table.insert(lia.notices, notice)
         OrganizeNotices()
-        MsgC(Color(0, 255, 255), message .. "\n")
-        timer.Simple(0.15, function() LocalPlayer():EmitSound(unpack({"garrysmod/content_downloaded.wav", 50, 250})) end)
-        timer.Simple(7.75, function()
-            if IsValid(notice) then
-                for k, v in ipairs(lia.notices) do
-                    if v == notice then
-                        notice:MoveTo(scrW, notice.y, 0.15, 0.1, nil, function() notice:Remove() end)
-                        table.remove(lia.notices, k)
-                        OrganizeNotices()
-                        break
-                    end
-                end
-            end
+        MsgC(Color(0, 255, 255), msg .. "\n")
+        timer.Simple(0.15, function()
+            local lp = LocalPlayer()
+            if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
         end)
 
-        MsgN(message)
+        MsgN(msg)
     end
 
-    function lia.notices.notifyLocalized(key, ...)
-        lia.notices.notify(L(key, ...))
+    net.Receive("liaNotify", lia.notices.receiveNotify)
+    function lia.notices.receiveNotifyL()
+        local key = net.ReadString() or ""
+        local argc = net.ReadUInt(8) or 0
+        local args = {}
+        for i = 1, argc do
+            args[i] = net.ReadString()
+        end
+
+        local ntype = net.ReadString() or "default"
+        local msg = L(key, unpack(args))
+        local notice = vgui.Create("liaNotice")
+        notice:SetText(tostring(msg))
+        notice:SetType(ntype)
+        table.insert(lia.notices, notice)
+        OrganizeNotices()
+        MsgC(Color(0, 255, 255), tostring(msg) .. "\n")
+        timer.Simple(0.15, function()
+            local lp = LocalPlayer()
+            if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
+        end)
+
+        MsgN(tostring(msg))
     end
 
-    function notification.AddLegacy(text)
-        lia.notices.notify(tostring(text))
+    net.Receive("liaNotifyL", lia.notices.receiveNotifyL)
+    function lia.notices.notify(_, message, notifType)
+        local notice = vgui.Create("liaNotice")
+        notice:SetText(tostring(message))
+        notice:SetType(tostring(notifType or "default"))
+        table.insert(lia.notices, notice)
+        OrganizeNotices()
+        MsgC(Color(0, 255, 255), tostring(message) .. "\n")
+        timer.Simple(0.15, function()
+            local lp = LocalPlayer()
+            if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
+        end)
+
+        MsgN(tostring(message))
+    end
+
+    function lia.notices.notifyLocalized(client, key, notifType, ...)
+        lia.notices.notify(client, L(key, ...), notifType or "default")
+    end
+
+    function notification.AddLegacy(text, typeId)
+        local map = {
+            [0] = "info",
+            [1] = "error",
+            [2] = "success"
+        }
+
+        lia.notices.notify(nil, tostring(text), map[tonumber(typeId) or -1] or "default")
+    end
+end
+
+function OrganizeNotices()
+    local scale = ScrH() / 1080
+    local baseY = ScrH() - 200 * scale
+    local spacing = 4 * scale
+    local y = baseY
+    for _, v in ipairs(lia.notices) do
+        if IsValid(v) then
+            v.targetY = y
+            y = y - (v:GetTall() + spacing)
+        end
     end
 end

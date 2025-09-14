@@ -7,7 +7,7 @@
             name = L("nameCopyFormat", target:Name()),
             image = "icon16/page_copy.png",
             func = function()
-                client:notifyLocalized("copiedToClipboard", target:Name(), L("name"))
+                client:notifySuccessLocalized("copiedToClipboard", target:Name(), L("name"))
                 SetClipboardText(target:Name())
             end
         },
@@ -16,7 +16,7 @@
             image = "icon16/page_copy.png",
             func = function()
                 if target:getChar() then
-                    client:notifyLocalized("copiedCharID", target:getChar():getID())
+                    client:notifySuccessLocalized("copiedCharID", target:getChar():getID())
                     SetClipboardText(target:getChar():getID())
                 end
             end
@@ -25,7 +25,7 @@
             name = L("steamIDCopyFormat", target:SteamID()),
             image = "icon16/page_copy.png",
             func = function()
-                client:notifyLocalized("copiedToClipboard", target:Name(), L("steamID"))
+                client:notifySuccessLocalized("copiedToClipboard", target:Name(), L("steamID"))
                 SetClipboardText(target:SteamID())
             end
         },
@@ -174,7 +174,7 @@ function MODULE:PopulateAdminTabs(pages)
                         for i, header in ipairs(headers) do
                             m:AddOption("Copy " .. header, function()
                                 SetClipboardText(line:GetColumnText(i) or "")
-                                client:notifyLocalized("copied")
+                                client:notifySuccessLocalized("copied")
                             end)
                         end
 
@@ -186,7 +186,7 @@ function MODULE:PopulateAdminTabs(pages)
                             end
 
                             SetClipboardText(table.concat(t, "\n"))
-                            client:notifyLocalized("allPrivilegeInfo")
+                            client:notifySuccessLocalized("allPrivilegeInfo")
                         end)
 
                         m:Open()
@@ -194,7 +194,7 @@ function MODULE:PopulateAdminTabs(pages)
 
                     listView.OnRowDoubleClick = function(_, _, line)
                         SetClipboardText(line:GetColumnText(1) or "")
-                        client:notifyLocalized("privilegeIdCopied")
+                        client:notifySuccessLocalized("privilegeIdCopied")
                     end
                 end
 

@@ -16,16 +16,16 @@ lia.command.add("storagelock", {
             if password ~= "" then
                 entity:setNetVar("locked", true)
                 entity.password = password
-                client:notifyLocalized("storPass", password)
+                client:notifySuccessLocalized("storPass", password)
                 lia.log.add(client, "storageLock", entity:GetClass(), true)
             else
                 entity:setNetVar("locked", nil)
                 entity.password = nil
-                client:notifyLocalized("storPassRmv")
+                client:notifySuccessLocalized("storPassRmv")
                 lia.log.add(client, "storageLock", entity:GetClass(), false)
             end
         else
-            client:notifyLocalized("invalidEntity")
+            client:notifyErrorLocalized("invalidEntity")
         end
     end
 })
@@ -38,12 +38,12 @@ lia.command.add("trunk", {
         local maxDistance = 128
         local openTime = 0.7
         if hook.Run("IsSuitableForTrunk", entity) == false then
-            client:notifyLocalized("notLookingAtVehicle")
+            client:notifyErrorLocalized("notLookingAtVehicle")
             return
         end
 
         if client:GetPos():Distance(entity:GetPos()) > maxDistance then
-            client:notifyLocalized("tooFarToOpenTrunk")
+            client:notifyErrorLocalized("tooFarToOpenTrunk")
             return
         end
 
@@ -60,7 +60,7 @@ lia.command.add("trunk", {
             local inv = invID and lia.inventory.instances[invID]
             local function openStorage(storageInv)
                 if not storageInv then
-                    client:notifyLocalized("noInventory")
+                    client:notifyErrorLocalized("noInventory")
                     client.liaStorageEntity = nil
                     return
                 end
@@ -77,7 +77,7 @@ lia.command.add("trunk", {
                 openStorage(inv)
             else
                 MODULE:InitializeStorage(entity):next(openStorage, function(err)
-                    client:notifyLocalized("unableCreateStorageEntity", err)
+                    client:notifyErrorLocalized("unableCreateStorageEntity", err)
                     client.liaStorageEntity = nil
                 end)
             end

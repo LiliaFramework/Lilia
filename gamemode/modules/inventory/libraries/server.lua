@@ -119,7 +119,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     if not oldInventory or not oldInventory.items[itemID] then return end
     local transferAllowed, transferReason = hook.Run("CanItemBeTransfered", item, oldInventory, newInventory, client)
     if transferAllowed == false then
-        client:notifyLocalized(transferReason or "notNow")
+        client:notifyErrorLocalized(transferReason or "notNow")
         return
     end
 
@@ -133,13 +133,13 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local canAccessTransfer, accessReason = oldInventory:canAccess("transfer", context)
     if not newInventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
     if not canAccessTransfer then
-        if isstring(accessReason) then client:notifyLocalized(accessReason) end
+        if isstring(accessReason) then client:notifyErrorLocalized(accessReason) end
         return
     end
 
     local canAccessTransferTo, accessReasonTo = newInventory:canAccess("transfer", context)
     if not canAccessTransferTo then
-        if isstring(accessReasonTo) then client:notifyLocalized(accessReasonTo) end
+        if isstring(accessReasonTo) then client:notifyErrorLocalized(accessReasonTo) end
         return
     end
 
@@ -156,7 +156,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         end
 
         if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
-        if IsValid(client) then client:notifyLocalized("itemOnGround") end
+        if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
         item:spawn(dropPos)
     end
 

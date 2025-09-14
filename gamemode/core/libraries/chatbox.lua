@@ -43,7 +43,7 @@ function lia.chat.register(chatType, data)
 
     data.onCanSay = data.onCanSay or function(speaker)
         if not data.deadCanChat and not speaker:Alive() then
-            speaker:notifyLocalized("noPerm")
+            speaker:notifyErrorLocalized("noPerm")
             return false
         end
         return true

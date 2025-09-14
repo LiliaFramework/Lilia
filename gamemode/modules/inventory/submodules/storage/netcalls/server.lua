@@ -16,14 +16,14 @@ net.Receive("liaStorageUnlock", function(_, client)
     local storage = storageFunc()
     if not storage then return end
     if client.lastPasswordAttempt and CurTime() < client.lastPasswordAttempt + passwordDelay then
-        client:notifyLocalized("passwordTooQuick")
+        client:notifyWarningLocalized("passwordTooQuick")
     else
         if storage.password == password then
             lia.log.add(client, "storageUnlock", storage:GetClass())
             storage:openInv(client)
         else
             lia.log.add(client, "storageUnlockFailed", storage:GetClass(), password)
-            client:notifyLocalized("wrongPassword")
+            client:notifyErrorLocalized("wrongPassword")
             client.liaStorageEntity = nil
         end
 
@@ -70,12 +70,12 @@ net.Receive("liaStorageTransfer", function(_, client)
     end):catch(function(err)
         client.storageTransaction = nil
         if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), fromInv:getID(), toInv:getID()) end
-        if IsValid(client) then client:notifyLocalized(err) end
+        if IsValid(client) then client:notifyErrorLocalized(err) end
         return fromInv:add(item)
     end):catch(function()
         client.storageTransaction = nil
         if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), fromInv:getID(), toInv:getID()) end
         item:spawn(failItemDropPos)
-        if IsValid(client) then client:notifyLocalized("itemOnGround") end
+        if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
     end)
 end)

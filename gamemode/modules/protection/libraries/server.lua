@@ -5,7 +5,7 @@ end
 
 local function LogCheaterAction(client, action)
     lia.log.add(client, "cheaterAction", action)
-    client:notifyLocalized("maybeYouShouldntHaveCheated")
+    client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
 end
 
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
@@ -327,9 +327,9 @@ end
 function MODULE:OnCheaterCaught(client)
     if IsValid(client) then
         lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
-        client:notifyLocalized("caughtCheating")
+        client:notifyErrorLocalized("caughtCheating")
         for _, p in player.Iterator() do
-            if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
+            if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
         end
     end
 

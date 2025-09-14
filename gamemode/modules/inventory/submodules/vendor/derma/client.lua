@@ -683,13 +683,13 @@ function PANEL:Init()
     self.savePreset:DockMargin(0, 4, 0, 0)
     self.savePreset.DoClick = function()
         if not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
-            LocalPlayer():notify(L("noPermission"))
+            LocalPlayer():notifyErrorLocalized(L("noPermission"))
             return
         end
 
         Derma_StringRequest(L("vendorPresetName"), L("vendorPresetNameDesc"), "", function(text)
             if text:Trim() == "" then
-                LocalPlayer():notify(L("vendorPresetNameRequired"))
+                LocalPlayer():notifyErrorLocalized(L("vendorPresetNameRequired"))
                 return
             end
 
@@ -805,7 +805,7 @@ end
 
 function PANEL:saveVendorPreset(_, displayName)
     if not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
-        LocalPlayer():notify(L("noPermission"))
+        LocalPlayer():notifyError(L("noPermission"))
         return
     end
 
@@ -824,7 +824,7 @@ function PANEL:saveVendorPreset(_, displayName)
 
     lia.vendor.addPreset(displayName, presetData)
     self:refreshPresetDropdown()
-    LocalPlayer():notify(L("vendorPresetSaved", displayName))
+    LocalPlayer():notifySuccessLocalized(L("vendorPresetSaved", displayName))
 end
 
 function PANEL:refreshPresetDropdown()

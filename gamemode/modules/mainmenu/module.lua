@@ -120,7 +120,7 @@ else
                 net.WriteString(discord:Trim())
                 net.SendToServer()
             else
-                LocalPlayer():notify("Discord username cannot be empty!")
+                LocalPlayer():notifyErrorLocalized("Discord username cannot be empty!")
             end
         end, function()
             net.Start("liaStaffDiscordResponse")

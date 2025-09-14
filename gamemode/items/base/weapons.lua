@@ -13,7 +13,7 @@ function ITEM.postHooks:drop()
     local client = self.player
     if not client or not IsValid(client) then return end
     if client:HasWeapon(self.class) then
-        client:notifyLocalized("invalidWeapon")
+        client:notifyErrorLocalized("invalidWeapon")
         client:StripWeapon(self.class)
     end
 end
@@ -22,7 +22,7 @@ ITEM:hook("drop", function(item)
     local client = item.player
     if not client or not IsValid(client) then return false end
     if IsValid(client:getRagdoll()) then
-        client:notifyLocalized("noRagdollAction")
+        client:notifyErrorLocalized("noRagdollAction")
         return false
     end
 
@@ -47,7 +47,7 @@ ITEM.functions.Unequip = {
         local client = item.player
         if not client or not IsValid(client) then return false end
         if IsValid(client:getRagdoll()) then
-            client:notifyLocalized("noRagdollAction")
+            client:notifyErrorLocalized("noRagdollAction")
             return false
         end
 
@@ -78,7 +78,7 @@ ITEM.functions.Equip = {
         local client = item.player
         if not client or not IsValid(client) then return false end
         if IsValid(client:getRagdoll()) then
-            client:notifyLocalized("noRagdollAction")
+            client:notifyErrorLocalized("noRagdollAction")
             return false
         end
 
@@ -86,7 +86,7 @@ ITEM.functions.Equip = {
         client.carryWeapons = client.carryWeapons or {}
         for _, v in pairs(items) do
             if v.id ~= item.id and v.isWeapon and client.carryWeapons[item.weaponCategory] and v:getData("equip") then
-                client:notifyLocalized("weaponSlotFilled")
+                client:notifyErrorLocalized("weaponSlotFilled")
                 return false
             end
         end

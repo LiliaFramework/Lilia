@@ -18,7 +18,7 @@ function ENT:Use(activator)
     local character = activator:getChar()
     if not character then return end
     if self.client == activator and character:getID() ~= self.charID then
-        activator:notifyLocalized("cantUseThisOnSameChar")
+        activator:notifyErrorLocalized("cantUseThisOnSameChar")
         return
     end
 

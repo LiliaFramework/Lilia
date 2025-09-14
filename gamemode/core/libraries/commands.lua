@@ -207,9 +207,9 @@ if SERVER then
             if isstring(result) then
                 if IsValid(client) then
                     if result:sub(1, 1) == "@" then
-                        client:notifyLocalized(result:sub(2), unpack(results, 2))
+                        client:notifyInfoLocalized(result:sub(2), unpack(results, 2))
                     else
-                        client:notify(result)
+                        client:notifyErrorLocalized(result)
                     end
                 else
                     print(result)
@@ -259,7 +259,7 @@ if SERVER then
                 if not realCommand then lia.log.add(client, "command", text) end
             else
                 if IsValid(client) then
-                    client:notifyLocalized("cmdNoExist")
+                    client:notifyErrorLocalized("cmdNoExist")
                 else
                     lia.information(L("cmdNoExist"))
                 end

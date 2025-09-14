@@ -8,7 +8,7 @@
         end
     else
         if utf8.len(text) > charlimit then
-            client:notifyLocalized("messageTooLong", charlimit)
+            client:notifyErrorLocalized("messageTooLong", charlimit)
         else
             if (client.liaNextChat or 0) < CurTime() and text:find("%S") then
                 hook.Run("PlayerSay", client, text)

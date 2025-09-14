@@ -33,7 +33,7 @@
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
@@ -43,7 +43,7 @@
             for k, v in pairs(lia.attribs.list) do
                 if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
                     character:setAttrib(k, math.abs(attribNumber))
-                    client:notifyLocalized("attribSet", target:Name(), L(v.name), math.abs(attribNumber))
+                    client:notifySuccessLocalized("attribSet", target:Name(), L(v.name), math.abs(attribNumber))
                     lia.log.add(client, "attribSet", target:Name(), k, math.abs(attribNumber))
                     return
                 end
@@ -70,7 +70,7 @@ lia.command.add("checkattributes", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
@@ -153,7 +153,7 @@ lia.command.add("charaddattrib", {
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
@@ -162,7 +162,7 @@ lia.command.add("charaddattrib", {
             for k, v in pairs(lia.attribs.list) do
                 if lia.util.stringMatches(L(v.name), attribName) or lia.util.stringMatches(k, attribName) then
                     character:updateAttrib(k, math.abs(attribNumber))
-                    client:notifyLocalized("attribUpdate", target:Name(), L(v.name), math.abs(attribNumber))
+                    client:notifySuccessLocalized("attribUpdate", target:Name(), L(v.name), math.abs(attribNumber))
                     lia.log.add(client, "attribAdd", target:Name(), k, math.abs(attribNumber))
                     return
                 end

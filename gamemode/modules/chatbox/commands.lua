@@ -16,12 +16,12 @@
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         target:setLiliaData("oocBanned", true)
-        client:notifyLocalized("playerBannedFromOOC", target:Name())
+        client:notifySuccessLocalized("playerBannedFromOOC", target:Name())
         lia.log.add(client, "banOOC", target:Name(), target:SteamID())
     end
 })
@@ -44,12 +44,12 @@ lia.command.add("unbanooc", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         target:setLiliaData("oocBanned", nil)
-        client:notifyLocalized("playerUnbannedFromOOC", target:Name())
+        client:notifySuccessLocalized("playerUnbannedFromOOC", target:Name())
         lia.log.add(client, "unbanOOC", target:Name(), target:SteamID())
     end
 })
@@ -60,7 +60,7 @@ lia.command.add("blockooc", {
     onRun = function(client)
         local blocked = GetGlobalBool("oocblocked", false)
         SetGlobalBool("oocblocked", not blocked)
-        client:notifyLocalized(blocked and "unlockedOOC" or "blockedOOC")
+        client:notifyInfoLocalized(blocked and "unlockedOOC" or "blockedOOC")
         lia.log.add(client, "blockOOC", not blocked)
     end
 })

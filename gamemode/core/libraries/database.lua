@@ -326,12 +326,16 @@ function lia.db.insertTable(value, callback, dbTable)
     local d = deferred.new()
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
     lia.db.query(query, function(results, lastID)
-        if callback then callback(results, lastID) end
+        if callback then
+            callback(results, lastID)
+        end
         d:resolve({
             results = results,
             lastID = lastID
         })
-    end, function(err) d:reject(err) end)
+    end, function(err)
+        d:reject(err)
+    end)
     return d
 end
 
@@ -339,12 +343,16 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     local d = deferred.new()
     local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
     lia.db.query(query, function(results, lastID)
-        if callback then callback(results, lastID) end
+        if callback then
+            callback(results, lastID)
+        end
         d:resolve({
             results = results,
             lastID = lastID
         })
-    end, function(err) d:reject(err) end)
+    end, function(err)
+        d:reject(err)
+    end)
     return d
 end
 

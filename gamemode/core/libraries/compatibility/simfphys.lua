@@ -25,7 +25,7 @@
         local enabled = lia.config.get("CarEntryDelayEnabled", true)
         if not enabled then return end
         if entity.IsBeingEntered then
-            client:notifyLocalized("carOccupiedNotice")
+            client:notifyWarningLocalized("carOccupiedNotice")
             return true
         end
 

@@ -49,7 +49,7 @@ ITEM.functions.Equip = {
         local items = char:getInv():getItems()
         for _, v in pairs(items) do
             if v.id ~= item.id and v.pacData and v.outfitCategory == item.outfitCategory and v:getData("equip") then
-                client:notifyLocalized("outfitTypeEquipAlready")
+                client:notifyErrorLocalized("outfitTypeEquipAlready")
                 return false
             end
         end

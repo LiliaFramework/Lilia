@@ -28,14 +28,14 @@ end
 function lia.util.findPlayer(client, identifier)
     local isValidClient = IsValid(client)
     if not isstring(identifier) or identifier == "" then
-        if isValidClient then client:notifyLocalized("mustProvideString") end
+        if isValidClient then client:notifyErrorLocalized("mustProvideString") end
         return nil
     end
 
     if string.match(identifier, "^STEAM_%d+:%d+:%d+$") then
         local ply = lia.util.getBySteamID(identifier)
         if IsValid(ply) then return ply end
-        if isValidClient then client:notifyLocalized("plyNoExist") end
+        if isValidClient then client:notifyErrorLocalized("plyNoExist") end
         return nil
     end
 
@@ -46,7 +46,7 @@ function lia.util.findPlayer(client, identifier)
             if IsValid(ply) then return ply end
         end
 
-        if isValidClient then client:notifyLocalized("plyNoExist") end
+        if isValidClient then client:notifyErrorLocalized("plyNoExist") end
         return nil
     end
 
@@ -54,7 +54,7 @@ function lia.util.findPlayer(client, identifier)
     if isValidClient and identifier == "@" then
         local trace = client:getTracedEntity()
         if IsValid(trace) and trace:IsPlayer() then return trace end
-        client:notifyLocalized("lookToUseAt")
+        client:notifyErrorLocalized("lookToUseAt")
         return nil
     end
 
@@ -63,7 +63,7 @@ function lia.util.findPlayer(client, identifier)
         if lia.util.stringMatches(ply:Name(), safe) then return ply end
     end
 
-    if isValidClient then client:notifyLocalized("plyNoExist") end
+    if isValidClient then client:notifyErrorLocalized("plyNoExist") end
     return nil
 end
 
@@ -177,7 +177,7 @@ function lia.util.findFaction(client, name)
         if lia.util.stringMatches(v.name, name) or lia.util.stringMatches(v.uniqueID, name) then return v end
     end
 
-    client:notifyLocalized("invalidFaction")
+    client:notifyErrorLocalized("invalidFaction")
     return nil
 end
 

@@ -100,14 +100,14 @@ end
 function GM:OnPickupMoney(client, moneyEntity)
     if moneyEntity and IsValid(moneyEntity) then
         local amount = moneyEntity:getAmount()
-        client:notifyLocalized("moneyTaken", lia.currency.get(amount))
+        client:notifyMoneyLocalized("moneyTaken", lia.currency.get(amount))
         lia.log.add(client, "moneyPickedUp", amount)
     end
 end
 
 function GM:CanItemBeTransfered(item, curInv, inventory)
     if item.isBag and curInv ~= inventory and item.getInv and item:getInv() and table.Count(item:getInv():getItems()) > 0 then
-        lia.char.getCharacter(curInv.client, nil, function(character) if character then character:getPlayer():notifyLocalized("forbiddenActionStorage") end end)
+        lia.char.getCharacter(curInv.client, nil, function(character) if character then character:getPlayer():notifyErrorLocalized("forbiddenActionStorage") end end)
         return false
     end
 
@@ -129,7 +129,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("DropDelay." .. client:SteamID64(), lia.config.get("DropDelay"), 1, function() if IsValid(client) then client.dropDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("switchCooldown")
+                client:notifyWarningLocalized("switchCooldown")
                 return false
             end
         else
@@ -144,7 +144,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("TakeDelay." .. client:SteamID64(), lia.config.get("TakeDelay"), 1, function() if IsValid(client) then client.takeDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("switchCooldown")
+                client:notifyWarningLocalized("switchCooldown")
                 return false
             end
         else
@@ -159,7 +159,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("EquipDelay." .. client:SteamID64(), lia.config.get("EquipDelay"), 1, function() if IsValid(client) then client.equipDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("switchCooldown")
+                client:notifyWarningLocalized("switchCooldown")
                 return false
             end
         else
@@ -174,7 +174,7 @@ function GM:CanPlayerInteractItem(client, action, item)
                 timer.Create("UnequipDelay." .. client:SteamID64(), lia.config.get("UnequipDelay"), 1, function() if IsValid(client) then client.unequipDelay = nil end end)
                 return true
             else
-                client:notifyLocalized("switchCooldown")
+                client:notifyWarningLocalized("switchCooldown")
                 return false
             end
         else
@@ -188,10 +188,10 @@ end
 function GM:CanPlayerEquipItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.equipDelay ~= nil then
-        client:notifyLocalized("switchCooldown")
+        client:notifyWarningLocalized("switchCooldown")
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
-        client:notifyLocalized("forbiddenActionStorage")
+        client:notifyErrorLocalized("forbiddenActionStorage")
         return false
     end
 end
@@ -199,18 +199,18 @@ end
 function GM:CanPlayerTakeItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.takeDelay ~= nil then
-        client:notifyLocalized("switchCooldown")
+        client:notifyWarningLocalized("switchCooldown")
         return false
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
-        client:notifyLocalized("forbiddenActionStorage")
+        client:notifyErrorLocalized("forbiddenActionStorage")
         return false
     elseif client:IsFamilySharedAccount() then
-        client:notifyLocalized("familySharedPickupDisabled")
+        client:notifyErrorLocalized("familySharedPickupDisabled")
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
         if character and item.entity.liaCharID and item.entity.liaCharID ~= character:getID() then
-            client:notifyLocalized("playerCharBelonging")
+            client:notifyErrorLocalized("playerCharBelonging")
             return false
         end
     end
@@ -219,18 +219,18 @@ end
 function GM:CanPlayerDropItem(client, item)
     local inventory = lia.inventory.instances[item.invID]
     if client.dropDelay ~= nil then
-        client:notifyLocalized("switchCooldown")
+        client:notifyWarningLocalized("switchCooldown")
         return false
     elseif item.isBag and item:getInv() then
         local items = item:getInv():getItems()
         for _, otheritem in pairs(items) do
             if not otheritem.ignoreEquipCheck and otheritem:getData("equip", false) then
-                client:notifyLocalized("cantDropBagHasEquipped")
+                client:notifyErrorLocalized("cantDropBagHasEquipped")
                 return false
             end
         end
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
-        client:notifyLocalized("forbiddenActionStorage")
+        client:notifyErrorLocalized("forbiddenActionStorage")
         return false
     end
     return true
@@ -256,7 +256,7 @@ function GM:PlayerSay(client, message)
     message = parsedMessage
     if chatType == "ic" and lia.command.parse(client, message) then return "" end
     if utf8.len(message) > lia.config.get("MaxChatLength") then
-        client:notifyLocalized("tooLongMessage")
+        client:notifyErrorLocalized("tooLongMessage")
         return ""
     end
 
@@ -1070,13 +1070,13 @@ end)
 
 concommand.Add("lia_reload", function(client)
     if IsValid(client) and not client:IsSuperAdmin() then
-        client:notify("You don't have permission to use this command.")
+        client:notifyErrorLocalized("You don't have permission to use this command.")
         return
     end
 
     if lia.reloadInProgress then
         if IsValid(client) then
-            client:notify("A reload is already in progress.")
+            client:notifyWarningLocalized("A reload is already in progress.")
         else
             print("[Lilia] A reload is already in progress.")
         end
@@ -1088,7 +1088,7 @@ concommand.Add("lia_reload", function(client)
     if timeSinceLastReload < lia.reloadCooldown then
         local remaining = math.ceil(lia.reloadCooldown - timeSinceLastReload)
         if IsValid(client) then
-            client:notify("Reload cooldown active. " .. remaining .. " seconds remaining.")
+            client:notifyWarningLocalized("Reload cooldown active. " .. remaining .. " seconds remaining.")
         else
             print("[Lilia] Reload cooldown active. " .. remaining .. " seconds remaining.")
         end
@@ -1096,7 +1096,7 @@ concommand.Add("lia_reload", function(client)
     end
 
     if IsValid(client) then
-        client:notify("Starting controlled reload...")
+        client:notifyInfoLocalized("Starting controlled reload...")
     else
         print("[Lilia] Starting controlled reload...")
     end
@@ -1127,7 +1127,7 @@ concommand.Add("stopsoundall", function(client)
             v:ConCommand("stopsound")
         end
     else
-        client:notifyLocalized("mustSuperAdminStopSound", L("stopSoundForEveryone"))
+        client:notifyErrorLocalized("mustSuperAdminStopSound", L("stopSoundForEveryone"))
     end
 end)
 
@@ -1144,7 +1144,7 @@ end)
 local resetCalled = 0
 concommand.Add("lia_wipedb", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1162,7 +1162,7 @@ end)
 
 concommand.Add("lia_resetconfig", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1172,7 +1172,7 @@ end)
 
 concommand.Add("lia_wipecharacters", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1229,7 +1229,7 @@ end)
 
 concommand.Add("lia_wipelogs", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1245,7 +1245,7 @@ end)
 
 concommand.Add("lia_wipebans", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1261,7 +1261,7 @@ end)
 
 concommand.Add("lia_wipepersistence", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1276,6 +1276,169 @@ concommand.Add("lia_wipepersistence", function(client)
             game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
         end)
     end
+end)
+
+concommand.Add("lia_wipebanking", function(client)
+    if IsValid(client) then
+        client:notifyErrorLocalized("commandConsoleOnly")
+        return
+    end
+
+    if resetCalled < RealTime() then
+        resetCalled = RealTime() + 3
+        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL banking data? This will remove all bank accounts and recreate the table with proper structure.\n")
+    else
+        resetCalled = 0
+        MsgC(Color(255, 0, 0), "[Lilia] Wiping all banking data and recreating table...\n")
+        lia.db.query("DROP TABLE IF EXISTS lia_banking", function()
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Dropped old banking table...\n")
+            -- Recreate the table with proper structure
+            lia.db.createTable("banking", "account_number", {
+                {
+                    name = "account_number",
+                    type = "integer",
+                    not_null = true,
+                    auto_increment = true
+                },
+                {
+                    name = "steamid",
+                    type = "string",
+                    not_null = true
+                },
+                {
+                    name = "balance",
+                    type = "integer",
+                    not_null = true,
+                    default = 0
+                },
+                {
+                    name = "charid",
+                    type = "integer",
+                    not_null = true
+                },
+                {
+                    name = "itembankid",
+                    type = "integer",
+                    not_null = true,
+                    default = 0
+                },
+                {
+                    name = "created_at",
+                    type = "integer",
+                    not_null = true,
+                    default = 0
+                },
+                {
+                    name = "last_interest_at",
+                    type = "integer",
+                    not_null = true,
+                    default = 0
+                },
+                {
+                    name = "account_name",
+                    type = "string",
+                    default = ""
+                },
+                {
+                    name = "members",
+                    type = "text",
+                    default = "[]"
+                }
+            }):next(function(result)
+                if result and result.success then
+                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Recreated banking table with proper structure...\n")
+                    -- Create indexes
+                    lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_account_number ON lia_banking(account_number)"):next(function() end):catch(function() end)
+                    lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_steamid ON lia_banking(steamid)"):next(function() end):catch(function() end)
+                    lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_charid ON lia_banking(charid)"):next(function() end):catch(function() end)
+                    lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_steamid_charid ON lia_banking(steamid, charid)"):next(function() end):catch(function() end)
+                    lia.db.query("CREATE INDEX IF NOT EXISTS idx_banking_balance ON lia_banking(balance)"):next(function() end):catch(function() end)
+                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Banking table recreated successfully with all required columns!\n")
+                else
+                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to recreate banking table!\n")
+                end
+            end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Error recreating banking table: " .. tostring(err) .. "\n") end)
+        end)
+    end
+end)
+
+concommand.Add("lia_fixbanking", function(client)
+    if IsValid(client) then
+        client:notifyErrorLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Checking banking table structure...\n")
+    lia.db.tableExists("lia_banking"):next(function(exists)
+        if not exists then
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Banking table does not exist! Use lia_wipebanking to create it.\n")
+            return
+        end
+
+        lia.db.getTableColumns("lia_banking"):next(function(columns)
+            local hasCreatedAt = false
+            local hasLastInterestAt = false
+            local hasAccountName = false
+            local hasMembers = false
+            if columns then
+                for colName, _ in pairs(columns) do
+                    if colName == "created_at" then
+                        hasCreatedAt = true
+                    elseif colName == "last_interest_at" then
+                        hasLastInterestAt = true
+                    elseif colName == "account_name" then
+                        hasAccountName = true
+                    elseif colName == "members" then
+                        hasMembers = true
+                    end
+                end
+            end
+
+            local needsFix = not hasCreatedAt or not hasLastInterestAt or not hasAccountName or not hasMembers
+            if not needsFix then
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Banking table structure is already correct!\n")
+                return
+            end
+
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "Adding missing columns to banking table...\n")
+            local function addColumn(name, columnType, options)
+                return lia.db.createColumn("banking", name, columnType, options):next(function(result)
+                    if result and result.success then
+                        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Added column: " .. name .. "\n")
+                    else
+                        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to add column: " .. name .. "\n")
+                    end
+                end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Error adding column " .. name .. ": " .. tostring(err) .. "\n") end)
+            end
+
+            local promises = {}
+            if not hasCreatedAt then
+                table.insert(promises, addColumn("created_at", "integer", {
+                    default = 0
+                }))
+            end
+
+            if not hasLastInterestAt then
+                table.insert(promises, addColumn("last_interest_at", "integer", {
+                    default = 0
+                }))
+            end
+
+            if not hasAccountName then
+                table.insert(promises, addColumn("account_name", "string", {
+                    default = ""
+                }))
+            end
+
+            if not hasMembers then
+                table.insert(promises, addColumn("members", "text", {
+                    default = "[]"
+                }))
+            end
+
+            if #promises > 0 then lia.util.waitForAll(promises):next(function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " Banking table structure fixed successfully!\n") end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Error fixing banking table: " .. tostring(err) .. "\n") end) end
+        end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Error checking banking table columns: " .. tostring(err) .. "\n") end)
+    end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Error checking banking table existence: " .. tostring(err) .. "\n") end)
 end)
 
 concommand.Add("list_entities", function(client)
@@ -1317,13 +1480,13 @@ function GM:CreateSalaryTimers()
                 if pay > 0 then
                     local money = char:getMoney()
                     if limit > 0 and money + pay > limit then
-                        client:notifyLocalized("salaryLimitReached")
+                        client:notifyWarningLocalized("salaryLimitReached")
                         char:setMoney(limit)
                     else
                         local handled = hook.Run("OnSalaryGive", client, char, pay, faction, class)
                         if handled ~= true then
                             char:giveMoney(pay)
-                            client:notifyLocalized("salary", lia.currency.get(pay))
+                            client:notifyMoneyLocalized("salary", lia.currency.get(pay))
                         end
                     end
                 end
@@ -1383,7 +1546,7 @@ end)
 
 concommand.Add("lia_fix_characters", function(client)
     if IsValid(client) then
-        client:notifyLocalized("commandConsoleOnly")
+        client:notifyErrorLocalized("commandConsoleOnly")
         return
     end
 
@@ -1431,4 +1594,81 @@ concommand.Add("lia_fix_characters", function(client)
     lia.db.query("DELETE FROM lia_invdata WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned inventory data.\n") end)
     lia.db.query("DELETE FROM lia_items WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned items.\n") end)
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Character data fix completed!\n")
+end)
+
+concommand.Add("test_all_notifications", function()
+    local notificationTypes = {
+        {
+            type = "default",
+            message = "This is a default notification",
+            method = "notify"
+        },
+        {
+            type = "info",
+            message = "This is an info notification",
+            method = "notifyInfo"
+        },
+        {
+            type = "error",
+            message = "This is an error notification",
+            method = "notifyError"
+        },
+        {
+            type = "success",
+            message = "This is a success notification",
+            method = "notifySuccess"
+        },
+        {
+            type = "warning",
+            message = "This is a warning notification",
+            method = "notifyWarning"
+        },
+        {
+            type = "money",
+            message = "This is a money notification",
+            method = "notifyMoney"
+        },
+        {
+            type = "admin",
+            message = "This is an admin notification",
+            method = "notifyAdmin"
+        }
+    }
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Starting notification type demonstration...\n")
+    for i, notif in ipairs(notificationTypes) do
+        timer.Simple(i - 1, function()
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Sending " .. notif.type .. " notification to all players: " .. notif.message .. "\n")
+            for _, ply in ipairs(player.GetAll()) do
+                if IsValid(ply) then
+                    if notif.method == "notify" then
+                        ply:notify(notif.message, notif.type)
+                    else
+                        ply[notif.method](ply, notif.message)
+                    end
+                end
+            end
+        end)
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Notification demonstration completed!\n")
+end)
+
+concommand.Add("test_existing_notifications", function(client)
+    if IsValid(client) then
+        client:notifyErrorLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Testing existing notification methods...\n")
+    for _, ply in ipairs(player.GetAll()) do
+        if IsValid(ply) then
+            ply:notifyError("This is an error notification")
+            ply:notifySuccess("This is a success notification")
+            ply:notifyWarning("This is a warning notification")
+            ply:notifyInfo("This is an info notification")
+            ply:notifyMoney("This is a money notification")
+            ply:notifyAdmin("This is an admin notification")
+        end
+    end
 end)

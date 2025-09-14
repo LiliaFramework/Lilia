@@ -18,7 +18,7 @@
             value = value2
         end
 
-        client:notifyLocalized("cfgSet", client:Name(), name, tostring(value))
+        client:notifySuccessLocalized("cfgSet", client:Name(), name, tostring(value))
         lia.log.add(client, "configChange", name, tostring(oldValue), tostring(value))
     end
 end)
@@ -45,7 +45,7 @@ net.Receive("lia_managesitrooms_action", function(_, client)
         if targetPos then
             client:setNetVar("previousSitroomPos", client:GetPos())
             client:SetPos(targetPos)
-            client:notifyLocalized("sitroomTeleport", name)
+            client:notifySuccessLocalized("sitroomTeleport", name)
             lia.log.add(client, "sendToSitRoom", client:Name(), name)
         end
     elseif action == 2 then
@@ -54,14 +54,14 @@ net.Receive("lia_managesitrooms_action", function(_, client)
             rooms[newName] = rooms[name]
             rooms[name] = nil
             lia.data.set("sitrooms", rooms)
-            client:notifyLocalized("sitroomRenamed")
+            client:notifySuccessLocalized("sitroomRenamed")
             lia.log.add(client, "sitRoomRenamed", L("sitroomRenamedDetail", name, newName), L("logRenamedSitroom"))
         end
     elseif action == 3 then
         if rooms[name] then
             rooms[name] = client:GetPos()
             lia.data.set("sitrooms", rooms)
-            client:notifyLocalized("sitroomRepositioned")
+            client:notifySuccessLocalized("sitroomRepositioned")
             lia.log.add(client, "sitRoomRepositioned", L("sitroomRepositionedDetail", name, tostring(client:GetPos())), L("logRepositionedSitroom"))
         end
     end
@@ -225,12 +225,12 @@ net.Receive("liaModifyFlags", function(_, client)
     flags = string.gsub(flags or "", "%s", "")
     if isPlayer then
         target:setFlags(flags, "player")
-        client:notifyLocalized("playerFlagSet", client:Name(), target:Name(), flags)
+        client:notifySuccessLocalized("playerFlagSet", client:Name(), target:Name(), flags)
     else
         local char = target:getChar()
         if not char then return end
         char:setFlags(flags)
-        client:notifyLocalized("flagSet", client:Name(), target:Name(), flags)
+        client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
     end
 end)
 

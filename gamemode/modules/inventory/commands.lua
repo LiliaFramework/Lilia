@@ -10,19 +10,19 @@
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         local char = target:getChar()
         if not char then
-            client:notifyLocalized("noCharacterLoaded")
+            client:notifyErrorLocalized("noCharacterLoaded")
             return
         end
 
         local inv = char:getInv()
         if not inv then
-            client:notifyLocalized("noInventory")
+            client:notifyErrorLocalized("noInventory")
             return
         end
 
@@ -31,14 +31,14 @@
         dh = dh or lia.config.get("invH")
         local w, h = inv:getSize()
         if w == dw and h == dh then
-            client:notifyLocalized("inventoryAlreadySize", target:Name(), dw, dh)
+            client:notifyInfoLocalized("inventoryAlreadySize", target:Name(), dw, dh)
             return
         end
 
         inv:setSize(dw, dh)
         inv:sync(target)
         char:setData("invSizeOverride", nil)
-        client:notifyLocalized("updatedInventorySize", target:Name(), dw, dh)
+        client:notifySuccessLocalized("updatedInventorySize", target:Name(), dw, dh)
         lia.log.add(client, "invUpdateSize", target:Name(), dw, dh)
     end
 })
@@ -63,19 +63,19 @@ lia.command.add("setinventorysize", {
     onRun = function(client, args)
         local target = lia.util.findPlayer(client, args[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         local w, h = tonumber(args[2]), tonumber(args[3])
         if not w or not h then
-            client:notifyLocalized("invalidWidthHeight")
+            client:notifyErrorLocalized("invalidWidthHeight")
             return
         end
 
         local minW, maxW, minH, maxH = 1, 10, 1, 10
         if w < minW or w > maxW or h < minH or h > maxH then
-            client:notifyLocalized("widthHeightOutOfRange", minW, maxW, minH, maxH)
+            client:notifyErrorLocalized("widthHeightOutOfRange", minW, maxW, minH, maxH)
             return
         end
 
@@ -87,7 +87,7 @@ lia.command.add("setinventorysize", {
         end
 
         lia.log.add(client, "invSetSize", target:Name(), w, h)
-        client:notifyLocalized("setInventorySizeNotify", target:Name(), w, h)
+        client:notifySuccessLocalized("setInventorySizeNotify", target:Name(), w, h)
     end
 })
 
@@ -111,19 +111,19 @@ lia.command.add("setinventorysizeoverride", {
     onRun = function(client, args)
         local target = lia.util.findPlayer(client, args[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         local w, h = tonumber(args[2]), tonumber(args[3])
         if not w or not h then
-            client:notifyLocalized("invalidWidthHeight")
+            client:notifyErrorLocalized("invalidWidthHeight")
             return
         end
 
         local minW, maxW, minH, maxH = 1, 10, 1, 10
         if w < minW or w > maxW or h < minH or h > maxH then
-            client:notifyLocalized("widthHeightOutOfRange", minW, maxW, minH, maxH)
+            client:notifyErrorLocalized("widthHeightOutOfRange", minW, maxW, minH, maxH)
             return
         end
 
@@ -136,6 +136,6 @@ lia.command.add("setinventorysizeoverride", {
 
         if char then char:setData("invSizeOverride", {w, h}) end
         lia.log.add(client, "invSetSize", target:Name(), w, h)
-        client:notifyLocalized("setInventorySizeNotify", target:Name(), w, h)
+        client:notifySuccessLocalized("setInventorySizeNotify", target:Name(), w, h)
     end,
 })

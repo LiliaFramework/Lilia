@@ -159,7 +159,7 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                 client:setNetVar("OldCharID", nil)
                 lia.log.add(client, "adminMode", oldCharID, L("adminModeLogBack"))
             else
-                client:notifyLocalized("noPrevChar")
+                client:notifyErrorLocalized("noPrevChar")
             end
         else
             local currentChar = client:getChar()
@@ -193,11 +193,11 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                             net.WriteInt(charID, 32)
                             net.Send(client)
                             lia.log.add(client, "adminMode", charID, L("adminModeLogStaff"))
-                            client:notifyLocalized("staffCharCreated")
+                            client:notifySuccessLocalized("staffCharCreated")
                         end
                     end)
                 else
-                    client:notifyLocalized("noStaffChar")
+                    client:notifyErrorLocalized("noStaffChar")
                 end
             end)
         end
@@ -212,7 +212,9 @@ lia.keybind.add(KEY_NONE, "quickTakeItem", {
         if IsValid(entity) and entity:isItem() then
             if entity:GetPos():Distance(client:GetPos()) > 96 then return end
             local item = entity:getItemTable()
-            if item and item.functions and item.functions.take then item:interact("take", client, entity) end
+            if item and item.functions and item.functions.take then
+                item:interact("take", client, entity)
+            end
         end
     end
 })
@@ -224,12 +226,12 @@ lia.keybind.add(KEY_NONE, "convertEntity", {
         local targetEntity = trace.Entity
         if not IsValid(targetEntity) or targetEntity == client then return end
         if trace.HitPos:Distance(client:GetPos()) > 200 then
-            client:notifyLocalized("entityTooFar")
+            client:notifyErrorLocalized("entityTooFar")
             return
         end
 
         if targetEntity:IsPlayer() or targetEntity:isItem() or targetEntity:GetClass() == "lia_money" then
-            client:notifyLocalized("cannotConvertEntity")
+            client:notifyErrorLocalized("cannotConvertEntity")
             return
         end
 
@@ -245,7 +247,7 @@ lia.keybind.add(KEY_NONE, "convertEntity", {
         end
 
         if not hasItemDefinition then
-            client:notifyLocalized("entityNotConvertible")
+            client:notifyErrorLocalized("entityNotConvertible")
             return
         end
 
@@ -262,20 +264,20 @@ lia.keybind.add(KEY_NONE, "convertEntity", {
             if inventory then
                 inventory:add(item):next(function()
                     if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
-                    client:notifyLocalized("entityConverted", item:getName())
+                    client:notifySuccessLocalized("entityConverted", item:getName())
                 end):catch(function(err)
                     if err == "noFit" then
                         item:spawn(client:getItemDropPos())
                         if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
-                        client:notifyLocalized("entityConvertedGround", item:getName())
+                        client:notifySuccessLocalized("entityConvertedGround", item:getName())
                     else
-                        client:notifyLocalized("inventoryError")
+                        client:notifyErrorLocalized("inventoryError")
                     end
                 end)
             else
                 item:spawn(client:getItemDropPos())
                 if IsValid(targetEntity) then SafeRemoveEntity(targetEntity) end
-                client:notifyLocalized("entityConvertedGround", item:getName())
+                client:notifySuccessLocalized("entityConvertedGround", item:getName())
             end
         end)
     end,

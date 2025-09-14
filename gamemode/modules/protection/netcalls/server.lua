@@ -520,9 +520,9 @@ function MODULE:InitializedModules()
             if client.nextExploitNotify > CurTime() then return end
             client.nextExploitNotify = CurTime() + 2
             lia.log.add(client, "exploitAttempt", client:Name(), client:SteamID(), tostring(name))
-            client:notifyLocalized("caughtExploiting")
+            client:notifyErrorLocalized("caughtExploiting")
             for _, p in player.Iterator() do
-                if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(name)) end
+                if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(name)) end
             end
         end)
     end
@@ -541,7 +541,7 @@ function MODULE:InitializedModules()
             net.Receive(netName, function(_, client)
                 lia.log.add(client, "exploitAttempt", client:Name(), client:SteamID(), tostring(netName))
                 for _, p in player.Iterator() do
-                    if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(netName)) end
+                    if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("exploitAttempt", client:Name(), client:SteamID(), tostring(netName)) end
                 end
             end)
         end
@@ -615,13 +615,13 @@ end
 
 net.Receive("liaTeleportToEntity", function(_, client)
     if not client:hasPrivilege("teleportToEntity") then
-        client:notifyLocalized("noPrivilege")
+        client:notifyErrorLocalized("noPrivilege")
         return
     end
 
     local entity = net.ReadEntity()
     if not IsValid(entity) then
-        client:notifyLocalized("invalidEntity")
+        client:notifyErrorLocalized("invalidEntity")
         return
     end
 
@@ -639,19 +639,19 @@ net.Receive("liaTeleportToEntity", function(_, client)
         client:SetPos(entityPos + Vector(0, 0, 50))
     end
 
-    client:notifyLocalized("teleportedToEntity", getEntityDisplayName(entity))
+    client:notifySuccessLocalized("teleportedToEntity", getEntityDisplayName(entity))
     lia.log.add(client, "entityTeleport", client:Name(), getEntityDisplayName(entity), tostring(entity:GetPos()))
 end)
 
 net.Receive("liaReturnFromEntity", function(_, client)
     if not client.previousPosition then
-        client:notifyLocalized("noPreviousPosition")
+        client:notifyErrorLocalized("noPreviousPosition")
         return
     end
 
     local returnPos = client.previousPosition
     client:SetPos(returnPos)
     client.previousPosition = nil
-    client:notifyLocalized("returnedFromEntity")
+    client:notifySuccessLocalized("returnedFromEntity")
     lia.log.add(client, "entityReturn", client:Name(), tostring(returnPos))
 end)

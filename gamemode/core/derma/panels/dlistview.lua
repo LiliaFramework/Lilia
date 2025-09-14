@@ -36,7 +36,7 @@ function PANEL:Init()
     self.refreshButton:SetText(L("refresh") or "Refresh")
     self.refreshButton.DoClick = function()
         self:Populate()
-        client:notifyLocalized("privilegeListRefreshed")
+        client:notifySuccessLocalized("privilegeListRefreshed")
     end
 
     self.listView = vgui.Create("DListView", self)
@@ -47,7 +47,7 @@ function PANEL:Init()
         for i, header in ipairs(self.columns) do
             m:AddOption("Copy " .. header, function()
                 SetClipboardText(line:GetColumnText(i) or "")
-                client:notifyLocalized("copied")
+                client:notifySuccessLocalized("copied")
             end)
         end
 
@@ -59,7 +59,7 @@ function PANEL:Init()
             end
 
             SetClipboardText(table.concat(t, "\n"))
-            client:notifyLocalized("allPrivilegeInfo")
+            client:notifySuccessLocalized("allPrivilegeInfo")
         end)
 
         m:Open()
@@ -67,7 +67,7 @@ function PANEL:Init()
 
     self.listView.OnRowDoubleClick = function(_, _, line)
         SetClipboardText(line:GetColumnText(1) or "")
-        client:notifyLocalizedL("privilegeIdCopied")
+        client:notifySuccessLocalized("privilegeIdCopied")
     end
 
     self.statusBar = vgui.Create("DPanel", self)

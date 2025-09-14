@@ -331,6 +331,8 @@ else
     function GridInv:requestTransfer(itemID, destinationID, x, y)
         local inventory = lia.inventory.instances[destinationID]
         local item
+
+        -- If destinationID is nil (dragging outside), get item from current inventory
         if not destinationID then
             item = lia.item.instances[itemID]
         else

@@ -498,7 +498,7 @@ function MODULE:ShowTeam(client)
             elseif not IsValid(entity:GetDTEntity(0)) then
                 lia.command.run(client, "doorbuy")
             else
-                client:notifyLocalized("notNow")
+                client:notifyErrorLocalized("notNow")
             end
             return true
         end

@@ -21,18 +21,18 @@
         end
 
         if not faction then
-            client:notifyLocalized("invalidFaction")
+            client:notifyErrorLocalized("invalidFaction")
             return
         end
 
         if faction.uniqueID == "staff" then
-            client:notifyLocalized("staffInviteBlocked")
+            client:notifyErrorLocalized("staffInviteBlocked")
             return
         end
 
         target:binaryQuestion(L("joinFactionPrompt"), L("yes"), L("no"), false, function(choice)
             if choice ~= 0 then
-                client:notifyLocalized("inviteDeclined")
+                client:notifyInfoLocalized("inviteDeclined")
                 return
             end
 
@@ -46,8 +46,8 @@
             hook.Run("OnTransferred", target)
             if faction.OnTransferred then faction:OnTransferred(target, oldFaction) end
             hook.Run("PlayerLoadout", target)
-            client:notifyLocalized("transferSuccess", target:Name(), faction.name)
-            if client ~= target then target:notifyLocalized("transferNotification", faction.name, client:Name()) end
+            client:notifySuccessLocalized("transferSuccess", target:Name(), faction.name)
+            if client ~= target then target:notifyInfoLocalized("transferNotification", faction.name, client:Name()) end
             tChar:takeFlags("Z")
         end)
     end
@@ -73,13 +73,13 @@ lia.playerinteract.addInteraction("inviteToClass", {
         if not cChar or not tChar then return end
         local class = lia.class.list[cChar:getClass()]
         if not class then
-            client:notifyLocalized("invalidClass")
+            client:notifyErrorLocalized("invalidClass")
             return
         end
 
         target:binaryQuestion(L("joinClassPrompt"), L("yes"), L("no"), false, function(choice)
             if choice ~= 0 then
-                client:notifyLocalized("inviteDeclined")
+                client:notifyInfoLocalized("inviteDeclined")
                 return
             end
 
@@ -87,8 +87,8 @@ lia.playerinteract.addInteraction("inviteToClass", {
             local oldClass = tChar:getClass()
             tChar:setClass(class.index)
             hook.Run("OnPlayerJoinClass", target, class.index, oldClass)
-            client:notifyLocalized("transferSuccess", target:Name(), class.name)
-            if client ~= target then target:notifyLocalized("transferNotification", class.name, client:Name()) end
+            client:notifySuccessLocalized("transferSuccess", target:Name(), class.name)
+            if client ~= target then target:notifyInfoLocalized("transferNotification", class.name, client:Name()) end
         end)
     end
 })

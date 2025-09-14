@@ -75,14 +75,14 @@ hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
     if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then
         if cmd.permission and not client:HasPermission(cmd.permission) then
-            client:notifyLocalized("staffPermissionDenied")
+            client:notifyErrorLocalized("staffPermissionDenied")
             return false
         end
 
         if client:hasPrivilege("canBypassSAMFactionWhitelist") or client:isStaffOnDuty() then
             return true
         else
-            client:notifyLocalized("staffRestrictedCommand")
+            client:notifyErrorLocalized("staffRestrictedCommand")
             return false
         end
     end

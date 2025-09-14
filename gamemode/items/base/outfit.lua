@@ -86,7 +86,7 @@ ITEM.functions.Equip = {
         local items = character:getInv():getItems()
         for _, other in pairs(items) do
             if item ~= other and item.outfitCategory == other.outfitCategory and other:getData("equip") then
-                item.player:notifyLocalized("sameOutfitCategory")
+                item.player:notifyErrorLocalized("sameOutfitCategory")
                 return false
             end
         end

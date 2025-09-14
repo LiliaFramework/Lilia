@@ -148,7 +148,7 @@ local function RemovedDropOnDeathItems(client)
     end
 
     local lostCount = #client.LostItems
-    if lostCount > 0 then client:notifyLocalized("itemsLostOnDeath", lostCount) end
+    if lostCount > 0 then client:notifyWarningLocalized("itemsLostOnDeath", lostCount) end
 end
 
 function MODULE:PlayerDeath(client, _, attacker)

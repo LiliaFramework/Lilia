@@ -374,6 +374,7 @@ function GM:ItemShowEntityMenu(entity)
             net.Start("invAct")
             net.WriteString("take")
             net.WriteType(entity)
+            net.WriteType(nil) -- Send nil for data parameter
             net.SendToServer()
         end
         return

@@ -340,7 +340,7 @@ if SERVER then
         assert(client:IsPlayer() and IsValid(client), L("itemActionNoPlayer"))
         local canInteract, reason = hook.Run("CanPlayerInteractItem", client, action, self, data)
         if canInteract == false then
-            if reason then client:notifyLocalized(reason) end
+            if reason then client:notifyErrorLocalized(reason) end
             return false
         end
 

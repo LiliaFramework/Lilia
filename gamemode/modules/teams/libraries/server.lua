@@ -47,7 +47,7 @@ end
 
 function MODULE:PlayerLoadedChar(client, character)
     if character:getData("factionKickWarn") then
-        client:notifyLocalized("kickedFromFaction")
+        client:notifyWarningLocalized("kickedFromFaction")
         hook.Run("OnTransferred", client)
         local faction = lia.faction.indices[client:Team()]
         if faction and faction.OnTransferred then faction:OnTransferred(client) end
@@ -244,7 +244,7 @@ net.Receive("KickCharacter", function(_, client)
             local oldFaction = targetChar:getFaction()
             local oldFactionData = lia.faction.indices[oldFaction]
             if oldFactionData and oldFactionData.isDefault then return end
-            target:notifyLocalized("kickedFromFaction")
+            target:notifyWarningLocalized("kickedFromFaction")
             targetChar.vars.faction = defaultFaction.uniqueID
             targetChar:setFaction(defaultFaction.index)
             hook.Run("OnTransferred", target)

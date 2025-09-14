@@ -65,7 +65,7 @@ ITEM.functions.Open = {
         if not inventory then
             if SERVER then
                 lia.log.add(client, "itemInteractionFailed", "open", item:getName())
-                client:notifyLocalized("bagNoInventory")
+                client:notifyErrorLocalized("bagNoInventory")
             end
             return false
         end
@@ -84,14 +84,14 @@ ITEM.functions.Open = {
     onCanRun = function(item)
         local client = item.player
         if SERVER and client:getNetVar("cheater", false) then
-            client:notifyLocalized("cheaterActionUseInteractionMenu")
+            client:notifyWarningLocalized("cheaterActionUseInteractionMenu")
             return false
         end
 
         local canRun = not IsValid(item.entity) and item:getInv() ~= nil
         if SERVER and not canRun then
             local reason = IsValid(item.entity) and "bagOnGround" or "bagNoInventory"
-            client:notifyLocalized(reason)
+            client:notifyErrorLocalized(reason)
             lia.log.add(client, "itemInteractionFailed", "open", item:getName())
         end
         return canRun
@@ -115,7 +115,7 @@ function ITEM:onCombine(other)
     if not res then return end
     res:next(function(result)
         if not IsValid(client) then return end
-        if istable(result) and isstring(result.error) then return client:notifyLocalized(result.error) end
+        if istable(result) and isstring(result.error) then return client:notifyErrorLocalized(result.error) end
         client:EmitSound(unpack(self.BagSound))
     end)
 end

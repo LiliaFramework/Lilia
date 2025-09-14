@@ -27,7 +27,7 @@ ITEM.functions.target = {
                 local newHealth = math.min(target:Health() + item.health, target:GetMaxHealth())
                 target:SetHealth(newHealth)
             else
-                client:notifyLocalized("invalidTargetNeedLiving")
+                client:notifyErrorLocalized("invalidTargetNeedLiving")
             end
         end
     end,

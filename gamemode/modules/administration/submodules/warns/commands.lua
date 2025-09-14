@@ -24,12 +24,12 @@ lia.command.add("warn", {
         if not targetName or reason == "" then return L("warnUsage") end
         local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         if target == client then
-            client:notifyLocalized("cannotWarnSelf")
+            client:notifyErrorLocalized("cannotWarnSelf")
             return
         end
 
@@ -38,8 +38,8 @@ lia.command.add("warn", {
         local warnerSteamID = client:SteamID()
         MODULE:AddWarning(target:getChar():getID(), target:Nick(), target:SteamID(), timestamp, reason, warnerName, warnerSteamID)
         lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count)
-            target:notifyLocalized("playerWarned", warnerName .. " (" .. warnerSteamID .. ")", reason)
-            client:notifyLocalized("warningIssued", target:Nick())
+            target:notifyWarningLocalized("playerWarned", warnerName .. " (" .. warnerSteamID .. ")", reason)
+            client:notifySuccessLocalized("warningIssued", target:Nick())
             hook.Run("WarningIssued", client, target, reason, count, warnerSteamID, target:SteamID())
         end)
     end
@@ -63,13 +63,13 @@ lia.command.add("viewwarns", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         MODULE:GetWarnings(target:getChar():getID()):next(function(warns)
             if #warns == 0 then
-                client:notifyLocalized("noWarnings", target:Nick())
+                client:notifyInfoLocalized("noWarnings", target:Nick())
                 return
             end
 
@@ -124,7 +124,7 @@ lia.command.add("viewwarnsissued", {
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
@@ -137,7 +137,7 @@ lia.command.add("viewwarnsissued", {
 
         MODULE:GetWarningsByIssuer(steamID):next(function(warns)
             if #warns == 0 then
-                client:notifyLocalized("noWarnings", displayName)
+                client:notifyInfoLocalized("noWarnings", displayName)
                 return
             end
 

@@ -42,6 +42,7 @@ function PANEL:buildButtons()
                 net.Start("invAct")
                 net.WriteString(key)
                 net.WriteType(self.ent)
+                net.WriteType(nil) -- Send nil for data parameter
                 net.SendToServer()
             end
 

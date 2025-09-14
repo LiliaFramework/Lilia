@@ -10,13 +10,13 @@
         local discord = arguments[1]
         local character = client:getChar()
         if not character or character:getFaction() ~= FACTION_STAFF then
-            client:notifyLocalized("noStaffChar")
+            client:notifyErrorLocalized("noStaffChar")
             return
         end
 
         client:setLiliaData("staffDiscord", discord)
         local description = "A Staff Character, Discord: " .. discord .. ", SteamID: " .. client:SteamID()
         character:setDesc(description)
-        client:notifyLocalized("staffDescUpdated")
+        client:notifySuccessLocalized("staffDescUpdated")
     end
 })

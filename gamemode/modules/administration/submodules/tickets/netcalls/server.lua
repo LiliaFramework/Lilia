@@ -12,7 +12,7 @@ end)
 net.Receive("TicketSystemClaim", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
-        client:notifyLocalized("ticketActionSelf")
+        client:notifyErrorLocalized("ticketActionSelf")
         return
     end
 
@@ -42,7 +42,7 @@ end)
 net.Receive("TicketSystemClose", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
-        client:notifyLocalized("ticketActionSelf")
+        client:notifyErrorLocalized("ticketActionSelf")
         return
     end
 

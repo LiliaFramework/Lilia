@@ -1064,7 +1064,7 @@ function MODULE:OpenAdminStickUI(tgt)
     hook.Run("PopulateAdminStick", tempMenu, tgt)
     tempMenu:Remove()
     if not hasOptions then
-        cl:notifyLocalized("adminStickNoOptions")
+        cl:notifyInfoLocalized("adminStickNoOptions")
         return
     end
 
@@ -1078,7 +1078,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or L("na")),
                 cmd = function()
                     if tgt:getChar() then
-                        cl:notifyLocalized("adminStickCopiedCharID")
+                        cl:notifySuccessLocalized("adminStickCopiedCharID")
                         SetClipboardText(tgt:getChar():getID())
                     end
 
@@ -1089,7 +1089,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("nameCopyFormat", tgt:Name()),
                 cmd = function()
-                    cl:notifyLocalized("adminStickCopiedToClipboard", L("name"))
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard", L("name"))
                     SetClipboardText(tgt:Name())
                     AdminStickIsOpen = false
                 end,
@@ -1098,7 +1098,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
-                    cl:notifyLocalized("adminStickCopiedToClipboard", L("steamID"))
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard", L("steamID"))
                     SetClipboardText(tgt:SteamID())
                     AdminStickIsOpen = false
                 end,

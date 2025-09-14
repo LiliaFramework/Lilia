@@ -124,25 +124,25 @@ if SERVER then
             client:requestString("@giveMoney", "@enterAmount", function(amount)
                 amount = tonumber(amount)
                 if not amount or amount <= 0 then
-                    client:notifyLocalized("invalidAmount")
+                    client:notifyErrorLocalized("invalidAmount")
                     return
                 end
 
                 if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
                     lia.log.add(client, "cheaterAction", L("cheaterActionTransferMoney"))
-                    client:notifyLocalized("maybeYouShouldntHaveCheated")
+                    client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
                     return
                 end
 
                 if not IsValid(client) or not client:getChar() then return end
                 if client:IsFamilySharedAccount() and not lia.config.get("AltsDisabled", false) then
-                    client:notifyLocalized("familySharedMoneyTransferDisabled")
+                    client:notifyErrorLocalized("familySharedMoneyTransferDisabled")
                     return
                 end
 
                 if not IsValid(target) or not target:IsPlayer() or not target:getChar() then return end
                 if not client:getChar():hasMoney(amount) then
-                    client:notifyLocalized("notEnoughMoney")
+                    client:notifyErrorLocalized("notEnoughMoney")
                     return
                 end
 
@@ -150,8 +150,8 @@ if SERVER then
                 client:getChar():takeMoney(amount)
                 local senderName = client:getChar():getDisplayedName(target)
                 local targetName = client:getChar():getDisplayedName(client)
-                client:notifyLocalized("moneyTransferSent", lia.currency.get(amount), targetName)
-                target:notifyLocalized("moneyTransferReceived", lia.currency.get(amount), senderName)
+                client:notifyMoneyLocalized("moneyTransferSent", lia.currency.get(amount), targetName)
+                target:notifyMoneyLocalized("moneyTransferReceived", lia.currency.get(amount), senderName)
             end, "")
         end
     })
@@ -161,7 +161,7 @@ if SERVER then
         shouldShow = function(client) return client:getChar() and client:Alive() end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("whispering"))
-            client:notifyLocalized("voiceModeSet", L("whispering"))
+            client:notifyInfoLocalized("voiceModeSet", L("whispering"))
         end,
         serverOnly = true
     })
@@ -171,7 +171,7 @@ if SERVER then
         shouldShow = function(client) return client:getChar() and client:Alive() end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("talking"))
-            client:notifyLocalized("voiceModeSet", L("talking"))
+            client:notifyInfoLocalized("voiceModeSet", L("talking"))
         end,
         serverOnly = true
     })
@@ -181,7 +181,7 @@ if SERVER then
         shouldShow = function(client) return client:getChar() and client:Alive() end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("yelling"))
-            client:notifyLocalized("voiceModeSet", L("yelling"))
+            client:notifyInfoLocalized("voiceModeSet", L("yelling"))
         end,
         serverOnly = true
     })

@@ -8,7 +8,7 @@ hook.Add("CanTool", "liaPermaProps", function(ply, trace, tool)
     local entClass = entity:GetClass()
     local canPersist = hook.Run("CanPersistEntity", entity)
     if canPersist ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
-        ply:notifyLocalized("toolCantUseEntity", tool)
+        ply:notifyErrorLocalized("toolCantUseEntity", tool)
         return false
     end
 end)
@@ -18,7 +18,7 @@ hook.Add("PermaProps.OnEntityCreated", "liaPermaPropsOverlapWarning", function(e
     local pos = entity:GetPos()
     for _, existing in ipairs(spawnedPositions) do
         if pos:DistToSqr(existing) <= radiusSqr then
-            lia.notices.notifyLocalized("permaPropOverlapWarning")
+            LocalPlayer():notifyWarningLocalized("permaPropOverlapWarning")
             break
         end
     end

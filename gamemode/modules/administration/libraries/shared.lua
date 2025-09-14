@@ -19,11 +19,11 @@ properties.Add("TogglePropBlacklist", {
         if table.HasValue(list, model) then
             table.RemoveByValue(list, model)
             lia.data.set("prop_blacklist", list, true, true)
-            ply:notifyLocalized("removedFromBlacklist", model)
+            ply:notifySuccessLocalized("removedFromBlacklist", model)
         else
             table.insert(list, model)
             lia.data.set("prop_blacklist", list, true, true)
-            ply:notifyLocalized("addedToBlacklist", model)
+            ply:notifySuccessLocalized("addedToBlacklist", model)
         end
     end
 })
@@ -45,11 +45,11 @@ properties.Add("ToggleCarBlacklist", {
         if table.HasValue(list, model) then
             table.RemoveByValue(list, model)
             lia.data.set("carBlacklist", list, true, true)
-            ply:notifyLocalized("removedFromBlacklist", model)
+            ply:notifySuccessLocalized("removedFromBlacklist", model)
         else
             table.insert(list, model)
             lia.data.set("carBlacklist", list, true, true)
-            ply:notifyLocalized("addedToBlacklist", model)
+            ply:notifySuccessLocalized("addedToBlacklist", model)
         end
     end
 })

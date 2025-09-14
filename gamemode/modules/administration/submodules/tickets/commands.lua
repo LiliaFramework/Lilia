@@ -11,7 +11,7 @@ lia.command.add("viewtickets", {
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notifyLocalized("mustSpecifyPlayer")
+            client:notifyErrorLocalized("mustSpecifyPlayer")
             return
         end
 
@@ -27,7 +27,7 @@ lia.command.add("viewtickets", {
 
         MODULE:GetTicketsByRequester(steamID):next(function(tickets)
             if #tickets == 0 then
-                client:notifyLocalized("noTicketsFound")
+                client:notifyInfoLocalized("noTicketsFound")
                 return
             end
 
@@ -78,13 +78,13 @@ lia.command.add("plyviewclaims", {
     onRun = function(client, arguments)
         local targetName = arguments[1]
         if not targetName then
-            client:notifyLocalized("mustSpecifyPlayer")
+            client:notifyErrorLocalized("mustSpecifyPlayer")
             return
         end
 
         local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
@@ -92,7 +92,7 @@ lia.command.add("plyviewclaims", {
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             local claim = caseclaims[steamID]
             if not claim then
-                client:notifyLocalized("noClaimsFound")
+                client:notifyInfoLocalized("noClaimsFound")
                 return
             end
 
@@ -151,7 +151,7 @@ lia.command.add("viewallclaims", {
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
-                client:notifyLocalized("noClaimsRecorded")
+                client:notifyInfoLocalized("noClaimsRecorded")
                 return
             end
 
@@ -211,7 +211,7 @@ lia.command.add("viewclaims", {
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
-                client:notifyLocalized("noClaimsData")
+                client:notifyInfoLocalized("noClaimsData")
                 return
             end
 

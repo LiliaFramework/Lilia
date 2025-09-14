@@ -17,7 +17,7 @@ function SWEP:SecondaryAttack()
         local victim = target:IsBot() and target:Name() or target:SteamID()
         hook.Run("RunAdminSystemCommand", action, client, victim)
     else
-        client:notifyLocalized("cantFreezeTarget")
+        client:notifyErrorLocalized("cantFreezeTarget")
     end
 end
 

@@ -752,6 +752,7 @@ Sends a notification to the player.
 **Parameters**
 
 * `message` (*string*): The notification message.
+* `notifType` (*string*): The type of notification (e.g., "default", "error", "success", "info").
 * `...` (*any*): Additional arguments for the notification.
 
 **Returns**
@@ -765,14 +766,15 @@ Shared.
 **Example Usage**
 
 ```lua
-local function sendPlayerNotification(player, message)
-    player:notify(message)
+local function sendPlayerNotification(player, message, notifType)
+    player:notify(message, notifType or "default")
 end
 
 concommand.Add("notify", function(ply, cmd, args)
     local message = table.concat(args, " ")
+    local notifType = args[#args] -- Last argument as notification type
     if message ~= "" then
-        sendPlayerNotification(ply, message)
+        sendPlayerNotification(ply, message, notifType)
     end
 end)
 ```
@@ -788,7 +790,8 @@ Sends a localized notification to the player.
 **Parameters**
 
 * `message` (*string*): The localized message key.
-* `...` (*any*): Additional arguments for the notification.
+* `notifType` (*string*): The type of notification (e.g., "default", "error", "success", "info").
+* `...` (*any*): Additional arguments for localization.
 
 **Returns**
 
@@ -801,19 +804,416 @@ Shared.
 **Example Usage**
 
 ```lua
-local function sendLocalizedNotification(player, messageKey, ...)
-    player:notifyLocalized(messageKey, ...)
+local function sendLocalizedNotification(player, messageKey, notifType, ...)
+    player:notifyLocalized(messageKey, notifType or "default", ...)
 end
 
 concommand.Add("notify_localized", function(ply, cmd, args)
     local messageKey = args[1]
+    local notifType = args[2] -- Second argument as notification type
     if messageKey then
-        local args = {}
-        for i = 2, #args do
-            table.insert(args, args[i])
+        local localizationArgs = {}
+        for i = 3, #args do
+            table.insert(localizationArgs, args[i])
         end
-        sendLocalizedNotification(ply, messageKey, unpack(args))
+        sendLocalizedNotification(ply, messageKey, notifType, unpack(localizationArgs))
     end
+end)
+```
+
+---
+
+### notifyError
+
+**Purpose**
+
+Sends an error notification to the player with red styling and exclamation icon.
+
+**Parameters**
+
+* `message` (*string*): The error message to display.
+* `...` (*any*): Additional arguments (unused, for consistency with other methods).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function handleDatabaseError(player, errorMsg)
+    player:notifyError("Database error: " .. errorMsg)
+end
+
+concommand.Add("test_error", function(ply)
+    ply:notifyError("This is an error notification!")
+end)
+```
+
+---
+
+### notifyWarning
+
+**Purpose**
+
+Sends a warning notification to the player with yellow/orange styling and error icon.
+
+**Parameters**
+
+* `message` (*string*): The warning message to display.
+* `...` (*any*): Additional arguments (unused, for consistency with other methods).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function warnPlayer(player, action)
+    player:notifyWarning("Warning: " .. action .. " may have consequences!")
+end
+
+concommand.Add("test_warning", function(ply)
+    ply:notifyWarning("This is a warning notification!")
+end)
+```
+
+---
+
+### notifyInfo
+
+**Purpose**
+
+Sends an informational notification to the player with blue styling and information icon.
+
+**Parameters**
+
+* `message` (*string*): The informational message to display.
+* `...` (*any*): Additional arguments (unused, for consistency with other methods).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function informPlayer(player, info)
+    player:notifyInfo("Information: " .. info)
+end
+
+concommand.Add("test_info", function(ply)
+    ply:notifyInfo("This is an info notification!")
+end)
+```
+
+---
+
+### notifySuccess
+
+**Purpose**
+
+Sends a success notification to the player with green styling and accept icon.
+
+**Parameters**
+
+* `message` (*string*): The success message to display.
+* `...` (*any*): Additional arguments (unused, for consistency with other methods).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function confirmSuccess(player, action)
+    player:notifySuccess("Successfully completed: " .. action)
+end
+
+concommand.Add("test_success", function(ply)
+    ply:notifySuccess("This is a success notification!")
+end)
+```
+
+---
+
+### notifyMoney
+
+**Purpose**
+
+Sends a money-related notification to the player with green styling and money icon.
+
+**Parameters**
+
+* `message` (*string*): The money message to display.
+* `...` (*any*): Additional arguments (unused, for consistency with other methods).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function notifyMoneyChange(player, amount, reason)
+    player:notifyMoney("Money " .. reason .. ": $" .. amount)
+end
+
+concommand.Add("test_money", function(ply)
+    ply:notifyMoney("You received $100!")
+end)
+```
+
+---
+
+### notifyAdmin
+
+**Purpose**
+
+Sends an admin notification to the player with purple styling and shield icon.
+
+**Parameters**
+
+* `message` (*string*): The admin message to display.
+* `...` (*any*): Additional arguments (unused, for consistency with other methods).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function adminAction(player, action)
+    player:notifyAdmin("Admin action: " .. action)
+end
+
+concommand.Add("test_admin", function(ply)
+    ply:notifyAdmin("This is an admin notification!")
+end)
+```
+
+---
+
+### notifyErrorLocalized
+
+**Purpose**
+
+Sends a localized error notification to the player with red styling and exclamation icon.
+
+**Parameters**
+
+* `key` (*string*): The localization key for the error message.
+* `...` (*any*): Additional arguments for localization.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function handleLocalizedError(player, errorKey, ...)
+    player:notifyErrorLocalized(errorKey, ...)
+end
+
+concommand.Add("test_error_localized", function(ply)
+    ply:notifyErrorLocalized("errorDatabaseConnection", "localhost")
+end)
+```
+
+---
+
+### notifyWarningLocalized
+
+**Purpose**
+
+Sends a localized warning notification to the player with yellow/orange styling and error icon.
+
+**Parameters**
+
+* `key` (*string*): The localization key for the warning message.
+* `...` (*any*): Additional arguments for localization.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function warnPlayerLocalized(player, warningKey, ...)
+    player:notifyWarningLocalized(warningKey, ...)
+end
+
+concommand.Add("test_warning_localized", function(ply)
+    ply:notifyWarningLocalized("warningActionConsequences", "deleting character")
+end)
+```
+
+---
+
+### notifyInfoLocalized
+
+**Purpose**
+
+Sends a localized informational notification to the player with blue styling and information icon.
+
+**Parameters**
+
+* `key` (*string*): The localization key for the informational message.
+* `...` (*any*): Additional arguments for localization.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function informPlayerLocalized(player, infoKey, ...)
+    player:notifyInfoLocalized(infoKey, ...)
+end
+
+concommand.Add("test_info_localized", function(ply)
+    ply:notifyInfoLocalized("infoServerRestart", "5 minutes")
+end)
+```
+
+---
+
+### notifySuccessLocalized
+
+**Purpose**
+
+Sends a localized success notification to the player with green styling and accept icon.
+
+**Parameters**
+
+* `key` (*string*): The localization key for the success message.
+* `...` (*any*): Additional arguments for localization.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function confirmSuccessLocalized(player, successKey, ...)
+    player:notifySuccessLocalized(successKey, ...)
+end
+
+concommand.Add("test_success_localized", function(ply)
+    ply:notifySuccessLocalized("successCharacterCreated", "John Doe")
+end)
+```
+
+---
+
+### notifyMoneyLocalized
+
+**Purpose**
+
+Sends a localized money-related notification to the player with green styling and money icon.
+
+**Parameters**
+
+* `key` (*string*): The localization key for the money message.
+* `...` (*any*): Additional arguments for localization.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function notifyMoneyChangeLocalized(player, moneyKey, ...)
+    player:notifyMoneyLocalized(moneyKey, ...)
+end
+
+concommand.Add("test_money_localized", function(ply)
+    ply:notifyMoneyLocalized("moneyReceived", 100, "quest completion")
+end)
+```
+
+---
+
+### notifyAdminLocalized
+
+**Purpose**
+
+Sends a localized admin notification to the player with purple styling and shield icon.
+
+**Parameters**
+
+* `key` (*string*): The localization key for the admin message.
+* `...` (*any*): Additional arguments for localization.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function adminActionLocalized(player, adminKey, ...)
+    player:notifyAdminLocalized(adminKey, ...)
+end
+
+concommand.Add("test_admin_localized", function(ply)
+    ply:notifyAdminLocalized("adminActionPerformed", "kick player")
 end)
 ```
 

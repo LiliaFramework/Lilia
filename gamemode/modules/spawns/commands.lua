@@ -18,7 +18,7 @@ lia.command.add("spawnadd", {
     onRun = function(client, arguments)
         local factionName = arguments[1]
         if not factionName then
-            client:notifyLocalized("invalidArg")
+            client:notifyErrorLocalized("invalidArg")
             return
         end
 
@@ -35,11 +35,11 @@ lia.command.add("spawnadd", {
                 table.insert(spawns[factionInfo.uniqueID], newSpawn)
                 MODULE:StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnAdd", factionInfo.name)
-                    client:notifyLocalized("spawnAdded", L(factionInfo.name))
+                    client:notifySuccessLocalized("spawnAdded", L(factionInfo.name))
                 end)
             end)
         else
-            client:notifyLocalized("invalidFaction")
+            client:notifyErrorLocalized("invalidFaction")
         end
     end
 })
@@ -79,11 +79,11 @@ lia.command.add("spawnremoveinradius", {
             if removedCount > 0 then
                 MODULE:StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
-                    client:notifyLocalized("spawnDeleted", removedCount)
+                    client:notifySuccessLocalized("spawnDeleted", removedCount)
                 end)
             else
                 lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
-                client:notifyLocalized("spawnDeleted", removedCount)
+                client:notifySuccessLocalized("spawnDeleted", removedCount)
             end
         end)
     end
@@ -126,17 +126,17 @@ lia.command.add("spawnremovebyname", {
                         if #list == 0 then spawns[factionInfo.uniqueID] = nil end
                         MODULE:StoreSpawns(spawns):next(function()
                             lia.log.add(client, "spawnRemoveByName", factionInfo.name, removedCount)
-                            client:notifyLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
+                            client:notifySuccessLocalized("spawnDeletedByName", L(factionInfo.name), removedCount)
                         end)
                     else
-                        client:notifyLocalized("noSpawnsForFaction")
+                        client:notifyInfoLocalized("noSpawnsForFaction")
                     end
                 else
-                    client:notifyLocalized("noSpawnsForFaction")
+                    client:notifyInfoLocalized("noSpawnsForFaction")
                 end
             end)
         else
-            client:notifyLocalized("invalidFaction")
+            client:notifyErrorLocalized("invalidFaction")
         end
     end
 })
@@ -159,13 +159,13 @@ lia.command.add("returnitems", {
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
         if lia.config.get("LoseItemsonDeathHuman", false) or lia.config.get("LoseItemsonDeathNPC", false) then
             if not target.LostItems or table.IsEmpty(target.LostItems) then
-                client:notifyLocalized("returnItemsTargetNoItems")
+                client:notifyInfoLocalized("returnItemsTargetNoItems")
                 return
             end
 
@@ -178,11 +178,11 @@ lia.command.add("returnitems", {
             end
 
             target.LostItems = nil
-            target:notifyLocalized("returnItemsReturnedToPlayer")
-            client:notifyLocalized("returnItemsAdminConfirmed")
+            target:notifySuccessLocalized("returnItemsReturnedToPlayer")
+            client:notifySuccessLocalized("returnItemsAdminConfirmed")
             lia.log.add(client, "returnItems", target:Name())
         else
-            client:notifyLocalized("returnItemsNotEnabled")
+            client:notifyInfoLocalized("returnItemsNotEnabled")
         end
     end
 })

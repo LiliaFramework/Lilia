@@ -32,7 +32,7 @@ if SERVER then
     end
 
     function lia.darkrp.notify(client, _, _, message)
-        client:notifyLocalized(message)
+        client:notifyInfoLocalized(message)
     end
 else
     local function wrapCharacters(text, remainingWidth, maxWidth)
@@ -115,7 +115,7 @@ function DarkRP.defineChatCommand(cmd, callback)
                 return
             end
 
-            if isstring(result) and result ~= "" then client:notify(result) end
+            if isstring(result) and result ~= "" then client:notifyErrorLocalized(result) end
             return result
         end
     })
@@ -132,7 +132,7 @@ function DarkRP.definePrivilegedChatCommand(cmd, priv, callback)
                 return
             end
 
-            if isstring(result) and result ~= "" then client:notify(result) end
+            if isstring(result) and result ~= "" then client:notifyErrorLocalized(result) end
             return result
         end
     })

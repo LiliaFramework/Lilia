@@ -212,7 +212,7 @@ end)
 net.Receive("RunInteraction", function(_, ply)
     if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
         lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
-        ply:notifyLocalized("maybeYouShouldntHaveCheated")
+        ply:notifyWarningLocalized("maybeYouShouldntHaveCheated")
         return
     end
 

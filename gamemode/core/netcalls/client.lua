@@ -1,16 +1,4 @@
-﻿net.Receive("liaNotifyL", function()
-    local message = net.ReadString()
-    local length = net.ReadUInt(8)
-    if length == 0 then return lia.notices.notifyLocalized(message) end
-    local args = {}
-    for i = 1, length do
-        args[i] = net.ReadString()
-    end
-
-    lia.notices.notifyLocalized(message, unpack(args))
-end)
-
-net.Receive("setWaypoint", function()
+﻿net.Receive("setWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     LocalPlayer():setWaypoint(name, pos)
@@ -21,11 +9,6 @@ net.Receive("setWaypointWithLogo", function()
     local pos = net.ReadVector()
     local logo = net.ReadString()
     LocalPlayer():setWaypointWithLogo(name, pos, logo)
-end)
-
-net.Receive("liaNotify", function()
-    local message = net.ReadString()
-    lia.notices.notify(message)
 end)
 
 net.Receive("ServerChatAddText", function()

@@ -406,7 +406,7 @@ end
 
 function lia.notifyAdmin(notification)
     for _, client in player.Iterator() do
-        if IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") then client:notify(notification) end
+        if IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") then client:notifyAdminLocalized(notification) end
     end
 end
 

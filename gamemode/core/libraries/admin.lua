@@ -589,7 +589,7 @@ if SERVER then
     function lia.administrator.serverExecCommand(cmd, victim, dur, reason, admin)
         local privilegeID = string.lower("command_" .. cmd)
         if not lia.administrator.hasAccess(admin, privilegeID) then
-            admin:notifyLocalized("noPerm")
+            admin:notifyErrorLocalized("noPerm")
             lia.log.add(admin, "unauthorizedCommand", cmd)
             return false
         end
@@ -602,13 +602,13 @@ if SERVER then
         end
 
         if not IsValid(target) then
-            admin:notifyLocalized("targetNotFound")
+            admin:notifyErrorLocalized("targetNotFound")
             return false
         end
 
         if cmd == "kick" then
             target:Kick(reason or L("genericReason"))
-            admin:notifyLocalized("plyKicked")
+            admin:notifySuccessLocalized("plyKicked")
             lia.log.add(admin, "plyKick", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
@@ -622,21 +622,21 @@ if SERVER then
             return true
         elseif cmd == "ban" then
             target:banPlayer(reason, dur, admin)
-            admin:notifyLocalized("plyBanned")
+            admin:notifySuccessLocalized("plyBanned")
             lia.log.add(admin, "plyBan", target:Name())
             return true
         elseif cmd == "unban" then
             local steamid = IsValid(target) and target:SteamID() or tostring(victim)
             if steamid and steamid ~= "" then
                 lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
-                admin:notifyLocalized("playerUnbanned")
+                admin:notifySuccessLocalized("playerUnbanned")
                 lia.log.add(admin, "plyUnban", steamid)
                 return true
             end
         elseif cmd == "mute" then
             if target:getChar() then
                 target:setLiliaData("VoiceBan", true)
-                admin:notifyLocalized("plyMuted")
+                admin:notifySuccessLocalized("plyMuted")
                 lia.log.add(admin, "plyMute", target:Name())
                 lia.db.insertTable({
                     player = target:Name(),
@@ -654,20 +654,20 @@ if SERVER then
         elseif cmd == "unmute" then
             if target:getChar() then
                 target:setLiliaData("VoiceBan", false)
-                admin:notifyLocalized("plyUnmuted")
+                admin:notifySuccessLocalized("plyUnmuted")
                 lia.log.add(admin, "plyUnmute", target:Name())
                 hook.Run("PlayerUnmuted", target, admin)
                 return true
             end
         elseif cmd == "gag" then
             target:setNetVar("liaGagged", true)
-            admin:notifyLocalized("plyGagged")
+            admin:notifySuccessLocalized("plyGagged")
             lia.log.add(admin, "plyGag", target:Name())
             hook.Run("PlayerGagged", target, admin)
             return true
         elseif cmd == "ungag" then
             target:setNetVar("liaGagged", false)
-            admin:notifyLocalized("plyUngagged")
+            admin:notifySuccessLocalized("plyUngagged")
             lia.log.add(admin, "plyUngag", target:Name())
             hook.Run("PlayerUngagged", target, admin)
             return true
@@ -683,12 +683,12 @@ if SERVER then
             return true
         elseif cmd == "slay" then
             target:Kill()
-            admin:notifyLocalized("plyKilled")
+            admin:notifySuccessLocalized("plyKilled")
             lia.log.add(admin, "plySlay", target:Name())
             return true
         elseif cmd == "kill" then
             target:Kill()
-            admin:notifyLocalized("plyKilled")
+            admin:notifySuccessLocalized("plyKilled")
             lia.log.add(admin, "plyKill", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
@@ -985,7 +985,7 @@ if SERVER then
 
         lia.administrator.save()
         broadcastGroups()
-        p:notifyLocalized("groupCreated", n)
+        p:notifySuccessLocalized("groupCreated", n)
     end)
 
     net.Receive("liaGroupsRemove", function(_, p)
@@ -996,7 +996,7 @@ if SERVER then
         if lia.administrator.groups then lia.administrator.groups[n] = nil end
         lia.administrator.save()
         broadcastGroups()
-        p:notifyLocalized("groupRemoved", n)
+        p:notifySuccessLocalized("groupRemoved", n)
     end)
 
     net.Receive("liaGroupsRename", function(_, p)
@@ -1010,7 +1010,7 @@ if SERVER then
         if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[old] then return end
         lia.administrator.renameGroup(old, new)
         broadcastGroups()
-        p:notifyLocalized("groupRenamed", old, new)
+        p:notifySuccessLocalized("groupRenamed", old, new)
     end)
 
     net.Receive("liaGroupsSetPerm", function(_, p)
@@ -1034,7 +1034,7 @@ if SERVER then
         net.WriteString(privilege)
         net.WriteBool(value)
         net.Broadcast()
-        p:notifyLocalized("groupPermissionsUpdated")
+        p:notifySuccessLocalized("groupPermissionsUpdated")
     end)
 else
     local LAST_GROUP

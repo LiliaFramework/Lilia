@@ -221,7 +221,7 @@ lia.chat.register("looc", {
         if speaker:isStaff() and lia.config.get("LOOCDelayAdmin", false) and delay > 0 and speaker.liaLastLOOC then
             local lastLOOC = CurTime() - speaker.liaLastLOOC
             if lastLOOC <= delay then
-                speaker:notifyLocalized("loocDelay", delay - math.ceil(lastLOOC))
+                speaker:notifyWarningLocalized("loocDelay", delay - math.ceil(lastLOOC))
                 return false
             end
         end
@@ -251,7 +251,7 @@ lia.chat.register("adminchat", {
     onCanHear = function(_, listener) return listener:hasPrivilege("adminChat") end,
     onCanSay = function(speaker)
         if not speaker:hasPrivilege("adminChat") then
-            speaker:notifyLocalized("notAdminForTicket")
+            speaker:notifyErrorLocalized("notAdminForTicket")
             return false
         end
         return true
@@ -336,17 +336,17 @@ lia.chat.register("ooc", {
     desc = "oocDesc",
     onCanSay = function(speaker, text)
         if GetGlobalBool("oocblocked", false) then
-            speaker:notifyLocalized("oocBlocked")
+            speaker:notifyErrorLocalized("oocBlocked")
             return false
         end
 
         if speaker:getLiliaData("oocBanned", false) then
-            speaker:notifyLocalized("oocBanned")
+            speaker:notifyErrorLocalized("oocBanned")
             return false
         end
 
         if #text > lia.config.get("OOCLimit", 150) then
-            speaker:notifyLocalized("textTooBig")
+            speaker:notifyErrorLocalized("textTooBig")
             return false
         end
 
@@ -355,7 +355,7 @@ lia.chat.register("ooc", {
         if not speaker:hasPrivilege("noOOCCooldown") and oocDelay > 0 and speaker.liaLastOOC then
             local lastOOC = CurTime() - speaker.liaLastOOC
             if lastOOC <= oocDelay then
-                speaker:notifyLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
+                speaker:notifyWarningLocalized("oocDelay", oocDelay - math.ceil(lastOOC))
                 return false
             end
         end

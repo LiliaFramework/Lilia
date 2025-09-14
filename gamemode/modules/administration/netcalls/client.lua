@@ -229,7 +229,7 @@ net.Receive("AdminModeSwapCharacter", function()
         end
     end)
 
-    d:catch(function(err) if err and err ~= "" then LocalPlayer():notifyLocalized(err) end end)
+    d:catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     net.Start("liaCharChoose")
     net.WriteUInt(id, 32)
     net.SendToServer()

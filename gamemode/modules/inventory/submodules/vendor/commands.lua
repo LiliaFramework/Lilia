@@ -9,7 +9,7 @@
     onRun = function(client)
         local target = client:getTracedEntity()
         if not target or not IsValid(target) then
-            client:notifyLocalized("targetNotFound")
+            client:notifyErrorLocalized("targetNotFound")
             return
         end
 
@@ -18,10 +18,10 @@
                 if itemData[2] and itemData[4] then target.items[id][2] = itemData[4] end
             end
 
-            client:notifyLocalized("vendorRestocked")
+            client:notifySuccessLocalized("vendorRestocked")
             lia.log.add(client, "restockvendor", target)
         else
-            client:notifyLocalized("notLookingAtValidVendor")
+            client:notifyErrorLocalized("notLookingAtValidVendor")
         end
     end
 })
@@ -40,7 +40,7 @@ lia.command.add("restockallvendors", {
             lia.log.add(client, "restockvendor", vendor)
         end
 
-        client:notifyLocalized("vendorAllVendorsRestocked", count)
+        client:notifySuccessLocalized("vendorAllVendorsRestocked", count)
         lia.log.add(client, "restockallvendors", count)
     end
 })
@@ -56,19 +56,19 @@ lia.command.add("createvendorpreset", {
     },
     onRun = function(client, arguments)
         if not client:hasPrivilege("canCreateVendorPresets") then
-            client:notifyLocalized("noPermission")
+            client:notifyErrorLocalized("noPermission")
             return
         end
 
         local presetName = arguments[1]
         if not presetName or presetName:Trim() == "" then
-            client:notifyLocalized("vendorPresetNameRequired")
+            client:notifyErrorLocalized("vendorPresetNameRequired")
             return
         end
 
         local target = client:getTracedEntity()
         if not target or not IsValid(target) or target:GetClass() ~= "lia_vendor" then
-            client:notifyLocalized("notLookingAtValidVendor")
+            client:notifyErrorLocalized("notLookingAtValidVendor")
             return
         end
 
@@ -85,7 +85,7 @@ lia.command.add("createvendorpreset", {
         end
 
         lia.vendor.addPreset(presetName, presetData)
-        client:notifyLocalized("vendorPresetSaved", presetName)
+        client:notifySuccessLocalized("vendorPresetSaved", presetName)
         lia.log.add(client, "createvendorpreset", presetName)
     end
 })
@@ -101,25 +101,25 @@ lia.command.add("deletevendorpreset", {
     },
     onRun = function(client, arguments)
         if not client:hasPrivilege("canCreateVendorPresets") then
-            client:notifyLocalized("noPermission")
+            client:notifyErrorLocalized("noPermission")
             return
         end
 
         local presetName = arguments[1]
         if not presetName or presetName:Trim() == "" then
-            client:notifyLocalized("vendorPresetNameRequired")
+            client:notifyErrorLocalized("vendorPresetNameRequired")
             return
         end
 
         presetName = presetName:Trim():lower()
         if not lia.vendor.presets[presetName] then
-            client:notifyLocalized("vendorPresetNotFound", presetName)
+            client:notifyErrorLocalized("vendorPresetNotFound", presetName)
             return
         end
 
         lia.vendor.presets[presetName] = nil
         if SERVER then lia.db.delete("vendor_presets", "name = " .. lia.db.convertDataType(presetName)) end
-        client:notifyLocalized("vendorPresetDeleted", presetName)
+        client:notifySuccessLocalized("vendorPresetDeleted", presetName)
         lia.log.add(client, "deletevendorpreset", presetName)
     end
 })
@@ -129,7 +129,7 @@ lia.command.add("listvendorpresets", {
     desc = "listVendorPresetsDesc",
     onRun = function(client)
         if not client:hasPrivilege("canCreateVendorPresets") then
-            client:notifyLocalized("noPermission")
+            client:notifyErrorLocalized("noPermission")
             return
         end
 
@@ -139,10 +139,10 @@ lia.command.add("listvendorpresets", {
         end
 
         if #presets == 0 then
-            client:notifyLocalized("vendorNoPresets")
+            client:notifyInfoLocalized("vendorNoPresets")
         else
             table.sort(presets)
-            client:notifyLocalized("vendorPresetList", table.concat(presets, ", "))
+            client:notifyInfoLocalized("vendorPresetList", table.concat(presets, ", "))
         end
     end
 })
