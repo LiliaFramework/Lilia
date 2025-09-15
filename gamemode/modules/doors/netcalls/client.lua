@@ -1,4 +1,4 @@
-net.Receive("doorMenu", function()
+﻿net.Receive("doorMenu", function()
     if net.BytesLeft() > 0 then
         local entity = net.ReadEntity()
         local count = net.ReadUInt(8)
@@ -8,6 +8,7 @@ net.Receive("doorMenu", function()
             local perm = net.ReadUInt(2)
             access[ply] = perm
         end
+
         local door2 = net.ReadEntity()
         if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
         if IsValid(entity) then
@@ -18,6 +19,7 @@ net.Receive("doorMenu", function()
         lia.gui.door:Remove()
     end
 end)
+
 net.Receive("doorPerm", function()
     local door = net.ReadEntity()
     local client = net.ReadEntity()

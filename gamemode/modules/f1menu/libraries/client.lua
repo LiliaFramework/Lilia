@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 MODULE.CharacterInformation = {}
 function MODULE:LoadCharInformation()
     hook.Run("AddSection", L("generalInfo"), Color(0, 0, 0), 1, 1)
@@ -7,16 +7,19 @@ function MODULE:LoadCharInformation()
         local char = client:getChar()
         return char and char:getName() or L("unknown")
     end)
+
     hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function()
         local client = LocalPlayer()
         local char = client:getChar()
         return char and char:getDesc() or ""
     end)
+
     hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
         local client = LocalPlayer()
         return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
     end)
 end
+
 function MODULE:AddSection(sectionName, color, priority, location)
     hook.Run("F1OnAddSection", sectionName, color, priority, location)
     local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -34,6 +37,7 @@ function MODULE:AddSection(sectionName, color, priority, location)
         info.location = location or info.location
     end
 end
+
 function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
     hook.Run("F1OnAddTextField", sectionName, fieldName, labelText, valueFunc)
     local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -43,6 +47,7 @@ function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
         for _, field in ipairs(section.fields) do
             if field.name == fieldName then return end
         end
+
         table.insert(section.fields, {
             type = "text",
             name = fieldName,
@@ -51,6 +56,7 @@ function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
         })
     end
 end
+
 function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     hook.Run("F1OnAddBarField", sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -60,6 +66,7 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
         for _, field in ipairs(section.fields) do
             if field.name == fieldName then return end
         end
+
         table.insert(section.fields, {
             type = "bar",
             name = fieldName,
@@ -70,6 +77,7 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
         })
     end
 end
+
 function MODULE:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -80,6 +88,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
         return true
     end
 end
+
 function MODULE:CreateMenuButtons(tabs)
     tabs["you"] = function(statusPanel)
         statusPanel.info = vgui.Create("liaCharInfo", statusPanel)
@@ -88,6 +97,7 @@ function MODULE:CreateMenuButtons(tabs)
         statusPanel.info:SetAlpha(0)
         statusPanel.info:AlphaTo(255, 0.5)
     end
+
     tabs["information"] = function(infoTabPanel)
         local sheet = infoTabPanel:Add("DPropertySheet")
         sheet:Dock(FILL)
@@ -100,6 +110,7 @@ function MODULE:CreateMenuButtons(tabs)
             local bn = tostring(b.name):lower()
             return an < bn
         end)
+
         for _, page in ipairs(pages) do
             local panel = vgui.Create("DPanel")
             panel:Dock(FILL)
@@ -112,10 +123,12 @@ function MODULE:CreateMenuButtons(tabs)
                 sheetData.Tab.liaOnSelect = page.onSelect
             end
         end
+
         function sheet:OnActiveTabChanged(_, newTab)
             if IsValid(newTab) and newTab.liaOnSelect then newTab.liaOnSelect(newTab.liaPagePanel) end
         end
     end
+
     tabs["settings"] = function(settingsPanel)
         local sheet = settingsPanel:Add("DPropertySheet")
         sheet:Dock(FILL)
@@ -128,6 +141,7 @@ function MODULE:CreateMenuButtons(tabs)
             local bn = tostring(b.name):lower()
             return an < bn
         end)
+
         for _, page in ipairs(pages) do
             local panel = sheet:Add("DPanel")
             panel:Dock(FILL)
@@ -136,6 +150,7 @@ function MODULE:CreateMenuButtons(tabs)
             sheet:AddSheet(L(page.name), panel)
         end
     end
+
     local adminPages = {}
     hook.Run("PopulateAdminTabs", adminPages)
     if not table.IsEmpty(adminPages) then
@@ -151,6 +166,7 @@ function MODULE:CreateMenuButtons(tabs)
                 local bn = tostring(b.name):lower()
                 return an < bn
             end)
+
             for _, page in ipairs(pages) do
                 local panel = sheet:Add("DPanel")
                 panel:Dock(FILL)
@@ -161,14 +177,17 @@ function MODULE:CreateMenuButtons(tabs)
                     sheetData.Tab.liaOnSelect = page.drawFunc
                 end
             end
+
             function sheet:OnActiveTabChanged(_, newTab)
                 if IsValid(newTab) and newTab.liaOnSelect then newTab.liaOnSelect(newTab.liaPagePanel) end
             end
+
             local initial = sheet:GetActiveTab()
             if IsValid(initial) and initial.liaOnSelect then initial.liaOnSelect(initial.liaPagePanel) end
         end
     end
 end
+
 function MODULE:CanDisplayCharInfo(name)
     local client = LocalPlayer()
     if not client then return true end

@@ -1,4 +1,4 @@
-net.Receive("cfgSet", function(_, client)
+﻿net.Receive("cfgSet", function(_, client)
     local key = net.ReadString()
     local name = net.ReadString()
     local value = net.ReadType()
@@ -14,12 +14,15 @@ net.Receive("cfgSet", function(_, client)
                 value2 = value2 .. v .. (i == count and "]" or ", ")
                 i = i + 1
             end
+
             value = value2
         end
+
         client:notifySuccessLocalized("cfgSet", client:Name(), name, tostring(value))
         lia.log.add(client, "configChange", name, tostring(oldValue), tostring(value))
     end
 end)
+
 net.Receive("liaRequestTableData", function(_, client)
     if not client:hasPrivilege("viewDBTables") then return end
     local tbl = net.ReadString()
@@ -31,6 +34,7 @@ net.Receive("liaRequestTableData", function(_, client)
         net.Send(client)
     end)
 end)
+
 net.Receive("lia_managesitrooms_action", function(_, client)
     if not client:hasPrivilege("manageSitRooms") then return end
     local action = net.ReadUInt(2)
@@ -62,6 +66,7 @@ net.Receive("lia_managesitrooms_action", function(_, client)
         end
     end
 end)
+
 net.Receive("liaRequestAllPKs", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     lia.db.query("SELECT * FROM lia_permakills", function(data)
@@ -70,6 +75,7 @@ net.Receive("liaRequestAllPKs", function(_, client)
         net.Send(client)
     end)
 end)
+
 net.Receive("liaRequestPKsCount", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     lia.db.count("permakills"):next(function(count)
@@ -78,6 +84,7 @@ net.Receive("liaRequestPKsCount", function(_, client)
         net.Send(client)
     end)
 end)
+
 net.Receive("liaRequestFactionRoster", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("canManageFactions") then return end
     local data = {}
@@ -101,6 +108,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                     local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
                     lastOnlineText = L("agoFormat", timeStripped, lia.time.formatDHM(lastDiff))
                 end
+
                 local classID = tonumber(v.class) or 0
                 local classData = lia.class.list[classID]
                 local playTime = tonumber(v.playtime) or 0
@@ -111,6 +119,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                         playTime = char:getPlayTime() + os.time() - loginTime
                     end
                 end
+
                 local faction = lia.faction.teams[v.faction]
                 if faction and faction.index ~= FACTION_STAFF then
                     data[faction.name] = data[faction.name] or {}
@@ -126,9 +135,11 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                 end
             end
         end
+
         lia.net.writeBigTable(client, "liaFactionRosterData", data)
     end)
 end)
+
 net.Receive("liaRequestFullCharList", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
     lia.db.query([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo
@@ -138,6 +149,7 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
             all = {},
             players = {}
         }
+
         for _, row in ipairs(data or {}) do
             local stored = lia.char.getCharacter(row.id)
             local bannedVal = tonumber(row.banned) or 0
@@ -148,6 +160,7 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                 local loginTime = stored:getLoginTime() or os.time()
                 playTime = stored:getPlayTime() + os.time() - loginTime
             end
+
             local entry = {
                 ID = row.id,
                 Name = row.name,
@@ -159,6 +172,7 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                 PlayTime = playTime,
                 Money = tonumber(row.money) or 0
             }
+
             if isBanned then
                 local banInfo = {}
                 if row.charBanInfo and row.charBanInfo ~= "" then
@@ -169,18 +183,22 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                         banInfo = util.JSONToTable(row.charBanInfo) or {}
                     end
                 end
+
                 entry.BanningAdminName = banInfo.name or ""
                 entry.BanningAdminSteamID = banInfo.steamID or ""
                 entry.BanningAdminRank = banInfo.rank or ""
             end
+
             hook.Run("CharListEntry", entry, row)
             payload.all[#payload.all + 1] = entry
             payload.players[steamID] = payload.players[steamID] or {}
             table.insert(payload.players[steamID], entry)
         end
+
         lia.net.writeBigTable(client, "liaFullCharList", payload)
     end)
 end)
+
 net.Receive("liaRequestAllFlags", function(_, client)
     if not client:hasPrivilege("canAccessFlagManagement") then return end
     local data = {}
@@ -193,8 +211,10 @@ net.Receive("liaRequestAllFlags", function(_, client)
             playerFlags = ply:getFlags("player"),
         }
     end
+
     lia.net.writeBigTable(client, "liaAllFlags", data)
 end)
+
 net.Receive("liaModifyFlags", function(_, client)
     if not client:hasPrivilege("canAccessFlagManagement") then return end
     local steamID = net.ReadString()
@@ -213,6 +233,7 @@ net.Receive("liaModifyFlags", function(_, client)
         client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
     end
 end)
+
 net.Receive("liaRequestDatabaseView", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("viewDBTables") then return end
     lia.db.getTables():next(function(tables)
@@ -223,6 +244,7 @@ net.Receive("liaRequestDatabaseView", function(_, client)
             lia.net.writeBigTable(client, "liaDatabaseViewData", data)
             return
         end
+
         for _, tbl in ipairs(tables) do
             lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
                 data[tbl] = res or {}
@@ -232,6 +254,7 @@ net.Receive("liaRequestDatabaseView", function(_, client)
         end
     end)
 end)
+
 local function buildSummary()
     local d = deferred.new()
     local summary = {}
@@ -250,9 +273,11 @@ local function buildSummary()
             jails = 0,
             strips = 0
         }
+
         if name and name ~= "" then summary[id].player = name end
         return summary[id]
     end
+
     lia.db.query([[SELECT warner AS name, warnerSteamID AS steamID, COUNT(*) AS count FROM lia_warnings GROUP BY warnerSteamID]], function(warnRows)
         for _, row in ipairs(warnRows or {}) do
             local steamID = row.steamID or row.warnerSteamID
@@ -261,6 +286,7 @@ local function buildSummary()
                 entry.warnings = tonumber(row.count) or 0
             end
         end
+
         lia.db.query([[SELECT admin AS name, adminSteamID AS steamID, COUNT(*) AS count FROM lia_ticketclaims GROUP BY adminSteamID]], function(ticketRows)
             for _, row in ipairs(ticketRows or {}) do
                 local steamID = row.steamID or row.adminSteamID
@@ -269,6 +295,7 @@ local function buildSummary()
                     entry.tickets = tonumber(row.count) or 0
                 end
             end
+
             lia.db.query([[SELECT staffName AS name, staffSteamID AS steamID, action, COUNT(*) AS count FROM lia_staffactions GROUP BY staffSteamID, action]], function(actionRows)
                 for _, row in ipairs(actionRows or {}) do
                     local steamID = row.steamID or row.staffSteamID
@@ -292,6 +319,7 @@ local function buildSummary()
                         end
                     end
                 end
+
                 lia.db.query([[SELECT steamName AS name, steamID, userGroup FROM lia_players]], function(playerRows)
                     for _, row in ipairs(playerRows or {}) do
                         local steamID = row.steamID
@@ -300,6 +328,7 @@ local function buildSummary()
                             entry.usergroup = row.userGroup or ""
                         end
                     end
+
                     local list = {}
                     for _, info in pairs(summary) do
                         info.warnings = info.warnings or 0
@@ -314,6 +343,7 @@ local function buildSummary()
                         info.usergroup = info.usergroup or ""
                         list[#list + 1] = info
                     end
+
                     d:resolve(list)
                 end)
             end)
@@ -321,10 +351,12 @@ local function buildSummary()
     end)
     return d
 end
+
 net.Receive("liaRequestStaffSummary", function(_, client)
     if not client:hasPrivilege("viewStaffManagement") then return end
     buildSummary():next(function(data) lia.net.writeBigTable(client, "liaStaffSummary", data) end)
 end)
+
 net.Receive("liaRequestPlayers", function(_, client)
     if not client:hasPrivilege("canAccessPlayerList") then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -343,9 +375,11 @@ FROM lia_players
             local ply = player.GetBySteamID(tostring(row.steamID))
             if IsValid(ply) then row.totalOnlineTime = ply:getPlayTime() end
         end
+
         lia.net.writeBigTable(client, "liaAllPlayers", data)
     end)
 end)
+
 net.Receive("liaRequestPlayerCharacters", function(_, client)
     if not (client:hasPrivilege("canAccessPlayerList") or client:hasPrivilege("canManageFactions")) then return end
     local steamID = net.ReadString()
@@ -359,6 +393,7 @@ net.Receive("liaRequestPlayerCharacters", function(_, client)
                 chars[#chars + 1] = v.name
             end
         end
+
         lia.net.writeBigTable(client, "liaPlayerCharacters", {
             steamID = steamID,
             characters = chars

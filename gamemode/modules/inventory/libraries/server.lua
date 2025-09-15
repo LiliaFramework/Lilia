@@ -1,4 +1,4 @@
-local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
+﻿local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
     local bagItemID = inventory:getData("item")
     if not bagItemID then return end
     local bagItem = lia.item.instances[bagItemID]
@@ -9,14 +9,17 @@ local function CanAccessIfPlayerHasAccessToBag(inventory, action, context)
     for key, value in pairs(context) do
         contextWithBagInv[key] = value
     end
+
     contextWithBagInv.bagInv = inventory
     return parentInv and parentInv:canAccess(action, contextWithBagInv) or false, L("noAccess")
 end
+
 local function CanNotTransferBagIntoBag(_, action, context)
     if action ~= "transfer" then return end
     local item, toInventory = context.item, context.to
     if toInventory and toInventory:getData("item") and item.isBag then return false, L("bagIntoBagError") end
 end
+
 local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
     if action ~= "transfer" then return end
     local bag = context.item
@@ -28,19 +31,23 @@ local function CanNotTransferBagIfNestedItemCanNotBe(_, action, context)
         if canTransfer == false then return false, reason or L("nestedItemTransferError") end
     end
 end
+
 function MODULE:SetupBagInventoryAccessRules(inventory)
     inventory:addAccessRule(CanNotTransferBagIntoBag, 1)
     inventory:addAccessRule(CanNotTransferBagIfNestedItemCanNotBe, 1)
     inventory:addAccessRule(CanAccessIfPlayerHasAccessToBag)
 end
+
 function MODULE:ItemCombine(client, item, target)
     if target.onCombine and target:call("onCombine", client, nil, item) then return end
     if item.onCombineTo and item and item:call("onCombineTo", client, nil, target) then return end
     lia.log.add(client, "itemCombine", item:getName(), target:getName())
 end
+
 function MODULE:ItemDraggedOutOfInventory(client, item)
     item:interact("drop", client)
 end
+
 local function storeOverflowItems(inv, character, oldW, oldH)
     local overflow, toRemove = {}, {}
     for _, item in pairs(inv:getItems()) do
@@ -53,12 +60,15 @@ local function storeOverflowItems(inv, character, oldW, oldH)
                 quantity = item:getQuantity(),
                 data = data
             }
+
             toRemove[#toRemove + 1] = item
         end
     end
+
     for _, item in ipairs(toRemove) do
         item:remove()
     end
+
     if #overflow > 0 then
         character:setData("overflowItems", {
             size = {oldW, oldH},
@@ -67,9 +77,11 @@ local function storeOverflowItems(inv, character, oldW, oldH)
         return true
     end
 end
+
 function lia.inventory.checkOverflow(inv, character, oldW, oldH)
     return storeOverflowItems(inv, character, oldW, oldH) and true or false
 end
+
 local function applyInventorySize(client, character)
     local inv = character:getInv()
     if not inv then return end
@@ -82,6 +94,7 @@ local function applyInventorySize(client, character)
         dw = dw or lia.config.get("invW")
         dh = dh or lia.config.get("invH")
     end
+
     local w, h = inv:getSize()
     local sizeChanged = w ~= dw or h ~= dh
     if sizeChanged then inv:sync(client) end
@@ -89,12 +102,15 @@ local function applyInventorySize(client, character)
     local removed = lia.inventory.checkOverflow(inv, character, w, h)
     if sizeChanged or removed then inv:sync(client) end
 end
+
 function MODULE:PlayerLoadedChar(client, character)
     applyInventorySize(client, character)
 end
+
 function MODULE:OnCharCreated(client, character)
     applyInventorySize(client, character)
 end
+
 function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
     local newInventory = lia.inventory.instances[invID]
     local item = lia.item.instances[itemID]
@@ -106,23 +122,27 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         client:notifyErrorLocalized(transferReason or "notNow")
         return
     end
+
     local context = {
         client = client,
         item = item,
         from = oldInventory,
         to = newInventory
     }
+
     local canAccessTransfer, accessReason = oldInventory:canAccess("transfer", context)
     if not newInventory then return hook.Run("ItemDraggedOutOfInventory", client, item) end
     if not canAccessTransfer then
         if isstring(accessReason) then client:notifyErrorLocalized(accessReason) end
         return
     end
+
     local canAccessTransferTo, accessReasonTo = newInventory:canAccess("transfer", context)
     if not canAccessTransferTo then
         if isstring(accessReasonTo) then client:notifyErrorLocalized(accessReasonTo) end
         return
     end
+
     local oldX, oldY = item:getData("x"), item:getData("y")
     local dropPos = client:getItemDropPos()
     if client.invTransferTransaction and client.invTransferTransactionTimeout > RealTime() then return end
@@ -134,10 +154,12 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
             lia.error(err)
             debug.Trace()
         end
+
         if IsValid(client) then lia.log.add(client, "itemTransferFailed", item:getName(), oldInventory:getID(), newInventory and newInventory:getID() or 0) end
         if IsValid(client) then client:notifyInfoLocalized("itemOnGround") end
         item:spawn(dropPos)
     end
+
     local tryCombineWith
     local originalAddResult
     return oldInventory:removeItem(itemID, true):next(function() return newInventory:add(item, x, y) end):next(function(res)
@@ -158,6 +180,7 @@ function MODULE:HandleItemTransferRequest(client, itemID, x, y, invID)
         return originalAddResult
     end):catch(fail)
 end
+
 net.Receive("liaRestoreOverflowItems", function(_, client)
     local char = client:getChar()
     if not char then return end
@@ -171,5 +194,6 @@ net.Receive("liaRestoreOverflowItems", function(_, client)
         itemData.x, itemData.y = nil, nil
         inv:add(itemInfo.uniqueID, 1, itemData):next(function(item) if itemInfo.quantity and itemInfo.quantity > 1 then item:setQuantity(itemInfo.quantity) end end):catch(function() lia.item.spawn(itemInfo.uniqueID, dropPos, function(spawned) if spawned and itemInfo.quantity and itemInfo.quantity > 1 then spawned:setQuantity(itemInfo.quantity) end end, nil, itemInfo.data or {}) end)
     end
+
     char:setData("overflowItems", nil)
 end)

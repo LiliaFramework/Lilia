@@ -1,4 +1,4 @@
-lia.lang = lia.lang or {}
+﻿lia.lang = lia.lang or {}
 lia.lang.names = lia.lang.names or {}
 lia.lang.stored = lia.lang.stored or {}
 function lia.lang.loadFromDir(directory)
@@ -9,21 +9,25 @@ function lia.lang.loadFromDir(directory)
         else
             niceName = v:sub(1, -5):lower()
         end
+
         lia.include(directory .. "/" .. v, "shared")
         if LANGUAGE then
             if NAME then
                 lia.lang.names[niceName] = NAME
                 NAME = nil
             end
+
             local formatted = {}
             for k, val in pairs(LANGUAGE) do
                 formatted[tostring(k)] = tostring(val)
             end
+
             lia.lang.stored[niceName] = table.Merge(lia.lang.stored[niceName] or {}, formatted)
             LANGUAGE = nil
         end
     end
 end
+
 function lia.lang.AddTable(name, tbl)
     local lowerName = tostring(name):lower()
     lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
@@ -31,15 +35,18 @@ function lia.lang.AddTable(name, tbl)
         lia.lang.stored[lowerName][tostring(k)] = tostring(v)
     end
 end
+
 function lia.lang.getLanguages()
     local languages = {}
     for key, _ in pairs(lia.lang.stored) do
         local displayName = key:sub(1, 1):upper() .. key:sub(2)
         table.insert(languages, displayName)
     end
+
     table.sort(languages)
     return languages
 end
+
 function L(key, ...)
     local lang = lia.config and lia.config.get("Language", "english") or "english"
     local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
@@ -57,10 +64,12 @@ function L(key, ...)
             args[i] = tostring(arg or "")
         end
     end
+
     local needed = select(2, template:gsub("%%[^%%]", ""))
     for i = count + 1, needed do
         args[i] = ""
     end
+
     local success, result = pcall(string.format, template, unpack(args))
     if not success then
         lia.error("Format error in localization string '" .. tostring(key) .. "': " .. result)
@@ -68,5 +77,6 @@ function L(key, ...)
     end
     return result
 end
+
 lia.lang.loadFromDir("lilia/gamemode/languages")
 hook.Run("OnLocalizationLoaded")

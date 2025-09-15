@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self.title = self:addLabel(L("selectFaction"))
     self.faction = self:Add("DComboBox")
@@ -11,6 +11,7 @@ function PANEL:Init()
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
     end
+
     self.faction:SetTextColor(color_white)
     self.faction.OnSelect = function(_, _, _, id) self:onFactionSelected(lia.faction.teams[id]) end
     self.desc = self:addLabel(L("description"))
@@ -26,12 +27,14 @@ function PANEL:Init()
         end
     end
 end
+
 function PANEL:onDisplay()
     self.skipFirstSelect = true
     local _, id = self.faction:GetSelected()
     local fac = lia.faction.teams[id]
     if fac then self:onFactionSelected(fac) end
 end
+
 function PANEL:onFactionSelected(fac)
     if self:getContext("faction") == fac.index then return end
     self.desc:SetText(L(fac.desc or "noDesc"))
@@ -43,15 +46,19 @@ function PANEL:onFactionSelected(fac)
         self.skipFirstSelect = false
         return
     end
+
     lia.gui.character:clickSound()
 end
+
 function PANEL:shouldSkip()
     return #self.faction.Choices == 1
 end
+
 function PANEL:onSkip()
     local _, id = self.faction:GetSelected()
     local fac = lia.faction.teams[id]
     self:setContext("faction", fac and fac.index)
     self:setContext("model", self:getContext("model", 1))
 end
+
 vgui.Register("liaCharacterFaction", PANEL, "liaCharacterCreateStep")

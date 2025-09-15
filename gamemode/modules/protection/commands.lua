@@ -1,4 +1,4 @@
-lia.command.add("togglecheater", {
+﻿lia.command.add("togglecheater", {
     adminOnly = true,
     desc = "toggleCheaterDesc",
     arguments = {
@@ -13,6 +13,7 @@ lia.command.add("togglecheater", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
+
         local isCheater = target:getLiliaData("cheater", false)
         target:setLiliaData("cheater", not isCheater)
         target:setNetVar("cheater", not isCheater and true or nil)
@@ -34,6 +35,7 @@ lia.command.add("togglecheater", {
                 end)
             end
         end
+
         lia.log.add(client, "cheaterToggle", target:Name(), isCheater and L("cheaterStatusUnmarked") or L("cheaterStatusMarked"))
     end
 })

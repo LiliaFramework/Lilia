@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     lia.module.list["f1menu"].CharacterInformation = {}
     lia.gui.menu = self
@@ -38,6 +38,7 @@ function PANEL:Init()
             surface.SetTextPos(30 + iconSize + 10, (h - th) * 0.5)
             surface.DrawText(txt)
         end
+
         surface.SetMaterial(iconMat)
         surface.SetDrawColor(255, 255, 255)
         local baseSize = h - 10
@@ -45,6 +46,7 @@ function PANEL:Init()
         local iconY = (h - iconSize) * 0.5
         surface.DrawTexturedRect(w - iconSize - 20, iconY, iconSize, iconSize)
     end
+
     local leftArrow = topBar:Add("liaSmallButton")
     leftArrow:Dock(LEFT)
     leftArrow:DockMargin(0, 0, spacing, 0)
@@ -69,6 +71,7 @@ function PANEL:Init()
         for _, btn in ipairs(btns) do
             totalW = totalW + (btn.calcW or baseBtnW) + spacing
         end
+
         local overflow = totalW - w
         if overflow > 0 then
             leftArrow:SetVisible(true)
@@ -79,6 +82,7 @@ function PANEL:Init()
             rightArrow:SetVisible(false)
             self.tabOffset = 0
         end
+
         local x = (w - totalW) * 0.5 + (self.tabOffset or 0)
         for _, btn in ipairs(btns) do
             local bW = btn.calcW or baseBtnW
@@ -87,14 +91,17 @@ function PANEL:Init()
             x = x + bW + spacing
         end
     end
+
     leftArrow.DoClick = function()
         tabsContainer.tabOffset = (tabsContainer.tabOffset or 0) + baseBtnW + spacing
         tabsContainer:InvalidateLayout()
     end
+
     rightArrow.DoClick = function()
         tabsContainer.tabOffset = (tabsContainer.tabOffset or 0) - (baseBtnW + spacing)
         tabsContainer:InvalidateLayout()
     end
+
     self.tabs = tabsContainer
     local panel = self:Add("EditablePanel")
     panel:Dock(FILL)
@@ -109,10 +116,12 @@ function PANEL:Init()
     for k in pairs(btnDefs) do
         tabKeys[#tabKeys + 1] = k
     end
+
     table.sort(tabKeys, function(a, b)
         local aName, bName = tostring(L(a)):lower(), tostring(L(b)):lower()
         return aName < bName
     end)
+
     self.tabList = {}
     for _, key in ipairs(tabKeys) do
         local cb = btnDefs[key]
@@ -132,8 +141,10 @@ function PANEL:Init()
                 end
             end
         end
+
         self.tabList[key] = self:addTab(key, cb)
     end
+
     self:MakePopup()
     local defaultTab = lia.config.get("DefaultMenuTab", "you")
     if not self.tabList[defaultTab] then
@@ -144,11 +155,14 @@ function PANEL:Init()
             for k in pairs(self.tabList) do
                 allKeys[#allKeys + 1] = k
             end
+
             if #allKeys > 0 then defaultTab = allKeys[math.random(#allKeys)] end
         end
     end
+
     if defaultTab then self:setActiveTab(defaultTab) end
 end
+
 function PANEL:addTab(name, callback)
     local colors = lia.color.ReturnMainAdjustedColors()
     local tab = self.tabs:Add("liaSmallButton")
@@ -165,6 +179,7 @@ function PANEL:addTab(name, callback)
         for _, t in pairs(self.tabList) do
             t:SetSelected(false)
         end
+
         tab:SetSelected(true)
         self.activeTab = tab
         self.panel:Clear()
@@ -176,6 +191,7 @@ function PANEL:addTab(name, callback)
     end
     return tab
 end
+
 function PANEL:setActiveTab(key)
     local tab = self.tabList[key]
     if IsValid(tab) then
@@ -183,6 +199,7 @@ function PANEL:setActiveTab(key)
         tab:SetSelected(true)
         return
     end
+
     for _, tabPanel in pairs(self.tabList) do
         if IsValid(tabPanel) and tabPanel:GetText() == key then
             tabPanel:DoClick()
@@ -191,6 +208,7 @@ function PANEL:setActiveTab(key)
         end
     end
 end
+
 function PANEL:remove()
     CloseDermaMenus()
     if not self.closing then
@@ -198,29 +216,37 @@ function PANEL:remove()
         self.closing = true
     end
 end
+
 function PANEL:OnRemove()
     hook.Run("F1MenuClosed")
 end
+
 function PANEL:OnKeyCodePressed(key)
     self.noAnchor = CurTime() + 0.5
     if key == KEY_F1 or key == self.invKey then self:remove() end
 end
+
 function PANEL:Update()
     self:Remove()
     vgui.Create("liaMenu")
 end
+
 function PANEL:Think()
     if gui.IsGameUIVisible() or gui.IsConsoleVisible() then
         self:remove()
         return
     end
+
     if input.IsKeyDown(KEY_F1) and CurTime() > self.noAnchor and self.anchorMode then
         self.anchorMode = false
         surface.PlaySound("buttons/lightswitch2.wav")
     end
+
     if not self.anchorMode and not input.IsKeyDown(KEY_F1) and not IsValid(self.info) then self:remove() end
 end
+
 function PANEL:Paint()
     lia.util.drawBlackBlur(self, 1, 4, 255, 220)
 end
+
 vgui.Register("liaMenu", PANEL, "EditablePanel")

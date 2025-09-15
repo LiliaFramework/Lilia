@@ -1,4 +1,4 @@
-spawnmenu.AddContentType("inventoryitem", function(container, data)
+﻿spawnmenu.AddContentType("inventoryitem", function(container, data)
     local client = LocalPlayer()
     if not client:hasPrivilege("canUseItemSpawner") then return end
     local icon = vgui.Create("ContentIcon", container)
@@ -13,6 +13,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
         local matName = string.Replace(model, ".mdl", "")
         icon.Image:SetMaterial(Material("spawnicons/" .. matName .. ".png"))
     end
+
     icon:SetColor(Color(205, 92, 92, 255))
     icon:SetTooltip(lia.darkrp.textWrap(itemData.desc or "", "DermaDefault", 560))
     icon.DoClick = function()
@@ -21,6 +22,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
         net.SendToServer()
         surface.PlaySound("outlands-rp/ui/ui_return.wav")
     end
+
     icon.OpenMenu = function()
         local menu = DermaMenu()
         menu:AddOption(L("copy"), function() SetClipboardText(icon:GetSpawnName()) end):SetIcon("icon16/page_copy.png")
@@ -42,6 +44,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                     combo:AddChoice(L("characterSteamIDFormat", character:getName() or L("unknown"), steamID), steamID)
                 end
             end
+
             local button = vgui.Create("liaSmallButton", popup)
             button:Dock(BOTTOM)
             button:SetText(L("spawnItem"))
@@ -54,16 +57,20 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                 popup:Remove()
             end
         end)
+
         menu:Open()
     end
+
     container:Add(icon)
     return icon
 end)
+
 function MODULE:PopulateInventoryItems(pnlContent, tree)
     local allItems = lia.item.list
     local categorized = {
         Unsorted = {}
     }
+
     for uniqueID, itemData in pairs(allItems) do
         local category = itemData:getCategory()
         categorized[category] = categorized[category] or {}
@@ -72,6 +79,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
             name = itemData.name
         })
     end
+
     for category, itemList in SortedPairs(categorized) do
         if category ~= L("unsorted") or #itemList > 0 then
             local node = tree:AddNode(category == L("unsorted") and L("unsorted") or category, "icon16/picture.png")
@@ -87,6 +95,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
                     })
                 end
             end
+
             node.DoClick = function(btn)
                 btn:DoPopulate()
                 pnlContent:SwitchPanel(btn.PropPanel)
@@ -94,6 +103,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
         end
     end
 end
+
 spawnmenu.AddCreationTab(L("inventoryItems"), function()
     local client = LocalPlayer()
     if not IsValid(client) or not client.hasPrivilege or not client:hasPrivilege("canUseItemSpawner") then

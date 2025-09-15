@@ -1,7 +1,8 @@
-function MODULE:exitStorage()
+﻿function MODULE:exitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
+
 function MODULE:StorageUnlockPrompt()
     Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
         net.Start("liaStorageUnlock")
@@ -9,6 +10,7 @@ function MODULE:StorageUnlockPrompt()
         net.SendToServer()
     end)
 end
+
 function MODULE:StorageOpen(storage, isCar)
     local client = LocalPlayer()
     if isCar then
@@ -34,8 +36,10 @@ function MODULE:StorageOpen(storage, isCar)
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end
+
             panel:oldOnRemove()
         end
+
         hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
         localInvPanel.OnRemove = exitStorageOnRemove
         storageInvPanel.OnRemove = exitStorageOnRemove
@@ -64,13 +68,16 @@ function MODULE:StorageOpen(storage, isCar)
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end
+
             panel:oldOnRemove()
         end
+
         hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
         localInvPanel.OnRemove = exitStorageOnRemove
         storageInvPanel.OnRemove = exitStorageOnRemove
     end
 end
+
 function MODULE:transferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")

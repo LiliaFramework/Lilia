@@ -1,4 +1,4 @@
-local NotificationMaxWidth = 450
+﻿local NotificationMaxWidth = 450
 local NotificationHeight = 54
 local NotificationPadding = 18
 local NotificationLifetime = 6
@@ -12,6 +12,7 @@ local NotifIcons = {
     admin = Material("icon16/shield.png"),
     default = Material("icon16/lightbulb.png")
 }
+
 local NotifColors = {
     info = Color(70, 130, 180),
     error = Color(180, 60, 60),
@@ -21,6 +22,7 @@ local NotifColors = {
     admin = Color(140, 70, 180),
     default = Color(40, 40, 40)
 }
+
 local PANEL = {}
 function PANEL:Init()
     self.msg = ""
@@ -36,6 +38,7 @@ function PANEL:Init()
     self:InvalidateLayout(true)
     self:SetPos(-self:GetWide(), 0)
 end
+
 function PANEL:RecalcSize()
     self.scale = ScrH() / 1080
     surface.SetFont("liaSmallFont")
@@ -51,19 +54,23 @@ function PANEL:RecalcSize()
     self.padding = NotificationPadding * self.scale
     self.baseX = 32 * self.scale
 end
+
 function PANEL:SetText(t)
     self.msg = tostring(t or "")
     self:RecalcSize()
 end
+
 function PANEL:SetType(t)
     self.ntype = NotifColors[t] and t or "default"
 end
+
 function PANEL:Think()
     if self._lastScrH ~= ScrH() then
         self._lastScrH = ScrH()
         self:RecalcSize()
         OrganizeNotices()
     end
+
     local elapsed = CurTime() - self.startTime
     if elapsed > NotificationLifetime then
         local fadeProgress = math.Clamp((elapsed - NotificationLifetime) / NotificationFadeoutTime, 0, 1)
@@ -71,6 +78,7 @@ function PANEL:Think()
     else
         self.alpha = 255
     end
+
     if self.alpha <= 0 then
         for k, v in ipairs(lia.notices) do
             if v == self then
@@ -78,15 +86,18 @@ function PANEL:Think()
                 break
             end
         end
+
         self:Remove()
         OrganizeNotices()
         return
     end
+
     local slideProgress = math.min(1, elapsed * 5)
     local slideX = Lerp(slideProgress, -self:GetWide(), self.baseX)
     local y = self.targetY or 0
     self:SetPos(math.floor(slideX), math.floor(y))
 end
+
 function PANEL:Paint(w, h)
     local typeColor = NotifColors[self.ntype] or NotifColors.default
     local icon = NotifIcons[self.ntype] or NotifIcons.default
@@ -100,6 +111,8 @@ function PANEL:Paint(w, h)
         surface.SetDrawColor(255, 255, 255, self.alpha)
         surface.DrawTexturedRect(self.padding, (h - self.iconSize) / 2, self.iconSize, self.iconSize)
     end
+
     draw.SimpleText(self.msg or "", "liaSmallFont", self.padding + self.iconSize + self.padding / 2, h / 2, Color(255, 255, 255, self.alpha), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
+
 vgui.Register("liaNotice", PANEL, "DPanel")

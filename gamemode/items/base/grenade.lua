@@ -1,4 +1,4 @@
-ITEM.name = "grenadeName"
+﻿ITEM.name = "grenadeName"
 ITEM.desc = "grenadeDesc"
 ITEM.category = "itemCatGrenades"
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
@@ -15,10 +15,12 @@ ITEM.functions.Use = {
             client:notifyErrorLocalized("noRagdollAction")
             return false
         end
+
         if client:HasWeapon(item.class) then
             client:notifyErrorLocalized("alreadyHaveGrenade")
             return false
         end
+
         client:Give(item.class)
         return true
     end,

@@ -1,4 +1,4 @@
-lia.time = lia.time or {}
+﻿lia.time = lia.time or {}
 function lia.time.TimeSince(strTime)
     local timestamp
     if isnumber(strTime) then
@@ -17,6 +17,7 @@ function lia.time.TimeSince(strTime)
     else
         return L("invalidInput")
     end
+
     local diff = os.time() - timestamp
     if diff < 60 then
         return L("secondsAgo", diff)
@@ -28,6 +29,7 @@ function lia.time.TimeSince(strTime)
         return L("daysAgo", math.floor(diff / 86400))
     end
 end
+
 function lia.time.toNumber(str)
     str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
     return {
@@ -39,6 +41,7 @@ function lia.time.toNumber(str)
         sec = tonumber(str:sub(18, 19)),
     }
 end
+
 function lia.time.GetDate()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
@@ -52,6 +55,7 @@ function lia.time.GetDate()
     end
     return string.format("%s, %02d %s %04d, %02d:%02d:%02d", L(weekdayKeys[ct.wday]), ct.day, L(monthKeys[ct.month]), ct.year, ct.hour, ct.min, ct.sec)
 end
+
 function lia.time.formatDHM(seconds)
     seconds = math.max(seconds or 0, 0)
     local days = math.floor(seconds / 86400)
@@ -61,6 +65,7 @@ function lia.time.formatDHM(seconds)
     local minutes = math.floor(seconds / 60)
     return L("daysHoursMinutes", days, hours, minutes)
 end
+
 function lia.time.GetHour()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)

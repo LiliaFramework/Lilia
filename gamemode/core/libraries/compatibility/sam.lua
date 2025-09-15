@@ -1,4 +1,4 @@
-hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
+﻿hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
 hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, _, victim, dur, reason)
     local id = isstring(victim) and victim or IsValid(victim) and victim:SteamID()
     if not id then return end
@@ -70,6 +70,7 @@ hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, _, victim, dur, reason
         return true
     end
 end)
+
 hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
     if type(client) ~= "Player" then return true end
     if lia.config.get("SAMEnforceStaff", false) then
@@ -77,6 +78,7 @@ hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
             client:notifyErrorLocalized("staffPermissionDenied")
             return false
         end
+
         if client:hasPrivilege("canBypassSAMFactionWhitelist") or client:isStaffOnDuty() then
             return true
         else
@@ -85,6 +87,7 @@ hook.Add("SAM.CanRunCommand", "liaSAM", function(client, _, _, cmd)
         end
     end
 end)
+
 if SERVER then
     sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help(L("blindCommandHelp")):OnExecute(function(client, targets)
         for i = 1, #targets do
@@ -93,6 +96,7 @@ if SERVER then
             net.WriteBool(true)
             net.Send(target)
         end
+
         if not sam.is_command_silent then
             client:sam_send_message(L("samBlindedTargets"), {
                 A = client,
@@ -100,6 +104,7 @@ if SERVER then
             })
         end
     end):End()
+
     sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help(L("unblindCommandHelp")):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
@@ -107,6 +112,7 @@ if SERVER then
             net.WriteBool(false)
             net.Send(target)
         end
+
         if not sam.is_command_silent then
             client:sam_send_message(L("samUnblindedTargets"), {
                 A = client,
@@ -114,12 +120,15 @@ if SERVER then
             })
         end
     end):End()
+
     hook.Add("InitializedModules", "SAM_InitializedModules", function() hook.Remove("PlayerSay", "SAM.Chat.Asay") end)
 end
+
 local function CanReadNotifications(client)
     if not lia.config.get("AdminOnlyNotification", true) then return true end
     return client:hasPrivilege("canSeeSAMNotificationsOutsideStaff") or client:isStaffOnDuty()
 end
+
 function sam.player.send_message(client, msg, tbl)
     if SERVER then
         if sam.isconsole(client) then
@@ -136,6 +145,7 @@ function sam.player.send_message(client, msg, tbl)
         chat.AddText(unpack(result, 1, result.__cnt))
     end
 end
+
 hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rankName, permission)
     if not rankName or not permission then return end
     if CAMI and not CAMI.GetPrivilege(permission) then
@@ -144,12 +154,15 @@ hook.Add("SAM.RankPermissionGiven", "liaSAMHandlePermissionGiven", function(rank
             MinAccess = "admin"
         })
     end
+
     if SERVER then lia.administrator.addPermission(rankName, permission, true) end
 end)
+
 hook.Add("SAM.RankPermissionTaken", "liaSAMHandlePermissionTaken", function(rankName, permission)
     if not rankName or not permission then return end
     if SERVER then lia.administrator.removePermission(rankName, permission, true) end
 end)
+
 lia.command.add("cleardecals", {
     adminOnly = true,
     desc = "cleardecalsDesc",
@@ -159,16 +172,19 @@ lia.command.add("cleardecals", {
         end
     end
 })
+
 lia.config.add("AdminOnlyNotification", "adminOnlyNotifications", true, nil, {
     desc = "adminOnlyNotificationsDesc",
     category = "categorySAM",
     type = "Boolean"
 })
+
 lia.config.add("SAMEnforceStaff", "samEnforceStaff", true, nil, {
     desc = "samEnforceStaffDesc",
     category = "categorySAM",
     type = "Boolean"
 })
+
 sam.config.set("Restrictions.Tool", false)
 sam.config.set("Restrictions.Spawning", false)
 sam.config.set("Restrictions.Limits", false)

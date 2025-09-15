@@ -1,4 +1,4 @@
-lia.chat.register("meclose", {
+﻿lia.chat.register("meclose", {
     arguments = {
         {
             name = "action",
@@ -13,6 +13,7 @@ lia.chat.register("meclose", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("actions", {
     arguments = {
         {
@@ -26,6 +27,7 @@ lia.chat.register("actions", {
     onCanHear = lia.config.get("ChatRange", 280),
     deadCanChat = true
 })
+
 lia.chat.register("mefar", {
     arguments = {
         {
@@ -41,6 +43,7 @@ lia.chat.register("mefar", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("itclose", {
     arguments = {
         {
@@ -56,6 +59,7 @@ lia.chat.register("itclose", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("itfar", {
     arguments = {
         {
@@ -71,6 +75,7 @@ lia.chat.register("itfar", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("coinflip", {
     desc = "coinflipDesc",
     format = "coinflipFormat",
@@ -81,6 +86,7 @@ lia.chat.register("coinflip", {
     font = "liaChatFontItalics",
     deadCanChat = false
 })
+
 lia.chat.register("ic", {
     arguments = {
         {
@@ -101,6 +107,7 @@ lia.chat.register("ic", {
         return false
     end
 })
+
 lia.chat.register("me", {
     arguments = {
         {
@@ -121,6 +128,7 @@ lia.chat.register("me", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("globalme", {
     arguments = {
         {
@@ -137,6 +145,7 @@ lia.chat.register("globalme", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("it", {
     arguments = {
         {
@@ -156,6 +165,7 @@ lia.chat.register("it", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("w", {
     arguments = {
         {
@@ -176,6 +186,7 @@ lia.chat.register("w", {
     end,
     prefix = {"/w", "/whisper"}
 })
+
 lia.chat.register("y", {
     arguments = {
         {
@@ -196,6 +207,7 @@ lia.chat.register("y", {
     end,
     prefix = {"/y", "/yell"}
 })
+
 lia.chat.register("looc", {
     arguments = {
         {
@@ -213,6 +225,7 @@ lia.chat.register("looc", {
                 return false
             end
         end
+
         speaker.liaLastLOOC = CurTime()
     end,
     onChatAdd = function(speaker, text) chat.AddText(Color(255, 50, 50), "[" .. L("looc") .. "] ", lia.config.get("ChatColor"), speaker:Name() .. ": " .. text) end,
@@ -225,6 +238,7 @@ lia.chat.register("looc", {
     noSpaceAfter = true,
     filter = "ooc"
 })
+
 lia.chat.register("adminchat", {
     arguments = {
         {
@@ -245,6 +259,7 @@ lia.chat.register("adminchat", {
     onChatAdd = function(speaker, text) chat.AddText(Color(255, 215, 0), "[" .. L("adminChat") .. "] ", Color(128, 0, 255, 255), speaker:getChar():getName(), ": ", Color(255, 255, 255), text) end,
     prefix = {"/adminchat", "/asay", "/admin", "/a"}
 })
+
 lia.chat.register("roll", {
     desc = "rollDesc",
     format = "rollFormat",
@@ -258,6 +273,7 @@ lia.chat.register("roll", {
         return false
     end
 })
+
 lia.chat.register("pm", {
     arguments = {
         {
@@ -275,6 +291,7 @@ lia.chat.register("pm", {
     filter = "pm",
     deadCanChat = true
 })
+
 lia.chat.register("eventlocal", {
     arguments = {
         {
@@ -293,6 +310,7 @@ lia.chat.register("eventlocal", {
     prefix = {"/eventlocal"},
     font = "liaMediumFont"
 })
+
 lia.chat.register("event", {
     arguments = {
         {
@@ -307,6 +325,7 @@ lia.chat.register("event", {
     prefix = {"/event"},
     font = "liaMediumFont"
 })
+
 lia.chat.register("ooc", {
     arguments = {
         {
@@ -320,14 +339,17 @@ lia.chat.register("ooc", {
             speaker:notifyErrorLocalized("oocBlocked")
             return false
         end
+
         if speaker:getLiliaData("oocBanned", false) then
             speaker:notifyErrorLocalized("oocBanned")
             return false
         end
+
         if #text > lia.config.get("OOCLimit", 150) then
             speaker:notifyErrorLocalized("textTooBig")
             return false
         end
+
         local customDelay = hook.Run("getOOCDelay", speaker)
         local oocDelay = customDelay or lia.config.get("OOCDelay", 10)
         if not speaker:hasPrivilege("noOOCCooldown") and oocDelay > 0 and speaker.liaLastOOC then
@@ -337,6 +359,7 @@ lia.chat.register("ooc", {
                 return false
             end
         end
+
         speaker.liaLastOOC = CurTime()
     end,
     onCanHear = function() return true end,
@@ -345,6 +368,7 @@ lia.chat.register("ooc", {
     noSpaceAfter = true,
     filter = "ooc"
 })
+
 lia.chat.register("me's", {
     arguments = {
         {
@@ -365,6 +389,7 @@ lia.chat.register("me's", {
             texCol = Color(tempCol.r + 20, tempCol.b + 20, tempCol.g + 20)
             nameCol = Color(tempCol.r + 40, tempCol.b + 60, tempCol.g + 40)
         end
+
         chat.AddText(nameCol, L("mePossessiveFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or language.GetPhrase("#Console"), ""), texCol, text)
     end,
     prefix = {"/me's", "/action's"},
@@ -372,6 +397,7 @@ lia.chat.register("me's", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("mefarfar", {
     arguments = {
         {
@@ -391,6 +417,7 @@ lia.chat.register("mefarfar", {
             texCol = Color(tempCol.r + 65, tempCol.b + 65, tempCol.g + 65)
             nameCol = Color(tempCol.r + 40, tempCol.b + 60, tempCol.g + 40)
         end
+
         chat.AddText(nameCol, L("emoteFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or language.GetPhrase("#Console"), ""), texCol, text)
     end,
     onCanHear = lia.config.get("ChatRange", 280) * 4,
@@ -399,6 +426,7 @@ lia.chat.register("mefarfar", {
     filter = "actions",
     deadCanChat = true
 })
+
 lia.chat.register("help", {
     arguments = {
         {

@@ -1,4 +1,4 @@
-AddCSLuaFile("cl_init.lua")
+﻿AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 function SWEP:Holster()
@@ -6,9 +6,11 @@ function SWEP:Holster()
     self:DropObject()
     return true
 end
+
 function SWEP:OnRemove()
     self:DropObject()
 end
+
 function SWEP:OwnerChanged()
     self:DropObject()
 end

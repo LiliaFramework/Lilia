@@ -1,4 +1,4 @@
-local Inventory = lia.Inventory or {}
+﻿local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory
 lia.Inventory = Inventory
 Inventory.data = {}
@@ -9,6 +9,7 @@ function Inventory:getData(key, default)
     if value == nil then return default end
     return value
 end
+
 function Inventory:extend(className)
     local base = debug.getregistry()[className] or {}
     table.Empty(base)
@@ -17,13 +18,16 @@ function Inventory:extend(className)
     subClass.__index = subClass
     return subClass
 end
+
 function Inventory:configure()
 end
+
 function Inventory:addDataProxy(key, onChange)
     local dataConfig = self.config.data[key] or {}
     dataConfig.proxies[#dataConfig.proxies + 1] = onChange
     self.config.data[key] = dataConfig
 end
+
 function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     local items = {}
     for _, v in pairs(self:getItems(onlyMain)) do
@@ -31,31 +35,38 @@ function Inventory:getItemsByUniqueID(uniqueID, onlyMain)
     end
     return items
 end
+
 function Inventory:register(typeID)
     assert(isstring(typeID), L("registerTypeString", self.className))
     self.typeID = typeID
     self.config = {
         data = {}
     }
+
     if SERVER then
         self.config.persistent = true
         self.config.accessRules = {}
     end
+
     self:configure(self.config)
     if not InventoryRegistered then
         lia.inventory.newType(self.typeID, self)
         InventoryRegistered = true
     end
 end
+
 function Inventory:new()
     return lia.inventory.new(self.typeID)
 end
+
 function Inventory:tostring()
     return L(self.className) .. "[" .. tostring(self.id) .. "]"
 end
+
 function Inventory:getType()
     return lia.inventory.types[self.typeID]
 end
+
 function Inventory:onDataChanged(key, oldValue, newValue)
     local keyData = self.config.data[key]
     if keyData and keyData.proxies then
@@ -64,9 +75,11 @@ function Inventory:onDataChanged(key, oldValue, newValue)
         end
     end
 end
+
 function Inventory:getItems()
     return self.items
 end
+
 function Inventory:getItemsOfType(itemType)
     local items = {}
     for _, item in pairs(self:getItems()) do
@@ -74,17 +87,20 @@ function Inventory:getItemsOfType(itemType)
     end
     return items
 end
+
 function Inventory:getFirstItemOfType(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return item end
     end
 end
+
 function Inventory:hasItem(itemType)
     for _, item in pairs(self:getItems()) do
         if item.uniqueID == itemType then return true end
     end
     return false
 end
+
 function Inventory:getItemCount(itemType)
     local count = 0
     for _, item in pairs(self:getItems()) do
@@ -92,12 +108,15 @@ function Inventory:getItemCount(itemType)
     end
     return count
 end
+
 function Inventory:getID()
     return self.id
 end
+
 function Inventory:eq(other)
     return self:getID() == other:getID()
 end
+
 if SERVER then
     function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item
@@ -107,13 +126,16 @@ if SERVER then
         lia.db.updateTable({
             invID = id
         }, nil, "items", "itemID = " .. item:getID())
+
         self:syncItemAdded(item)
         if not noReplicate then hook.Run("OnItemAdded", item:getOwner(), item) end
         return self
     end
+
     function Inventory:add(item)
         return self:addItem(item)
     end
+
     function Inventory:syncItemAdded(item)
         assert(istable(item) and item.getID, L("cannotSyncNonItem"))
         assert(self.items[item:getID()], L("itemDoesNotBelong", item:getID(), self.id))
@@ -124,6 +146,7 @@ if SERVER then
         net.WriteType(self.id)
         net.Send(recipients)
     end
+
     function Inventory:initializeStorage(initialData)
         local d = deferred.new()
         local charID = initialData.char
@@ -149,8 +172,10 @@ if SERVER then
         end, "inventories")
         return d
     end
+
     function Inventory:restoreFromStorage()
     end
+
     function Inventory:removeItem(itemID, preserveItem)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
         local d = deferred.new()
@@ -175,9 +200,11 @@ if SERVER then
         end
         return d
     end
+
     function Inventory:remove(itemID)
         return self:removeItem(itemID)
     end
+
     function Inventory:setData(key, value)
         local oldValue = self.data[key]
         self.data[key] = value
@@ -197,10 +224,12 @@ if SERVER then
                 }, "invdata")
             end
         end
+
         self:syncData(key)
         self:onDataChanged(key, oldValue, value)
         return self
     end
+
     function Inventory:canAccess(action, context)
         context = context or {}
         local result, reason
@@ -209,6 +238,7 @@ if SERVER then
             if result ~= nil then return result, reason end
         end
     end
+
     function Inventory:addAccessRule(rule, priority)
         if isnumber(priority) then
             table.insert(self.config.accessRules, priority, rule)
@@ -217,10 +247,12 @@ if SERVER then
         end
         return self
     end
+
     function Inventory:removeAccessRule(rule)
         table.RemoveByValue(self.config.accessRules, rule)
         return self
     end
+
     function Inventory:getRecipients()
         local recipients = {}
         for _, client in player.Iterator() do
@@ -232,10 +264,13 @@ if SERVER then
         end
         return recipients
     end
+
     function Inventory:onInstanced()
     end
+
     function Inventory:onLoaded()
     end
+
     local ITEM_TABLE = "items"
     local ITEM_FIELDS = {"itemID", "uniqueID", "data", "x", "y", "quantity"}
     function Inventory:loadItems()
@@ -249,6 +284,7 @@ if SERVER then
                     lia.error(L("inventoryInvalidItem", self.id, uniqueID, itemID))
                     continue
                 end
+
                 local item = lia.item.new(uniqueID, itemID)
                 item.invID = self.id
                 if result.data then item.data = table.Merge(item.data, util.JSONToTable(result.data) or {}) end
@@ -258,16 +294,20 @@ if SERVER then
                 items[itemID] = item
                 item:onRestored(self)
             end
+
             self.items = items
             self:onItemsLoaded(items)
             return items
         end)
     end
+
     function Inventory:onItemsLoaded()
     end
+
     function Inventory:instance(initialData)
         return lia.inventory.instance(self.typeID, initialData)
     end
+
     function Inventory:syncData(key, recipients)
         if self.config.data[key] and self.config.data[key].noReplication then return end
         net.Start("liaInventoryData")
@@ -276,6 +316,7 @@ if SERVER then
         net.WriteType(self.data[key])
         net.Send(recipients or self:getRecipients())
     end
+
     function Inventory:sync(recipients)
         net.Start("liaInventoryInit")
         net.WriteType(self.id)
@@ -290,9 +331,11 @@ if SERVER then
                 q = item:getQuantity()
             }
         end
+
         for _, item in pairs(self.items) do
             writeItem(item)
         end
+
         local compressedTable = util.Compress(util.TableToJSON(items))
         net.WriteUInt(#compressedTable, 32)
         net.WriteData(compressedTable, #compressedTable)
@@ -301,13 +344,16 @@ if SERVER then
             item:onSync(recipients)
         end
     end
+
     function Inventory:delete()
         lia.inventory.deleteByID(self.id)
     end
+
     function Inventory:destroy()
         for _, item in pairs(self:getItems()) do
             item:destroy()
         end
+
         lia.inventory.instances[self:getID()] = nil
         net.Start("liaInventoryDelete")
         net.WriteType(self.id)

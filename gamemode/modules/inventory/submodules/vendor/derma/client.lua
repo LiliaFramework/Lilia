@@ -1,4 +1,4 @@
-local sw, sh = ScrW(), ScrH()
+﻿local sw, sh = ScrW(), ScrH()
 local COLS_MODE = 2
 local COLS_PRICE = 3
 local COLS_STOCK = 4
@@ -11,6 +11,7 @@ function PANEL:Init()
         lia.gui.vendor.noSendExit = true
         lia.gui.vendor:Remove()
     end
+
     lia.gui.vendor = self
     self:SetSize(sw, sh)
     self:MakePopup()
@@ -40,6 +41,7 @@ function PANEL:Init()
         vendor = {},
         me = {}
     }
+
     self.currentCategory = nil
     local lbl = self:Add("DLabel")
     lbl:SetText(L("vendorYourItems"))
@@ -79,6 +81,7 @@ function PANEL:Init()
         draw.DrawText(L("vendorItemCount"), "liaSmallFont", sw * 0.1, sh * 0.065, color_white, TEXT_ALIGN_LEFT)
         draw.DrawText(count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count), "liaSmallFont", sw * 0.2, sh * 0.065, color_white, TEXT_ALIGN_RIGHT)
     end
+
     self.right = self:Add("DFrame")
     self.right:SetPos(sw * 0.78, sh * 0.35)
     self.right:SetSize(sw * 0.212, sh * 0.61)
@@ -111,6 +114,7 @@ function PANEL:Init()
             draw.DrawText(invCount == 0 and L("vendorNoItems") or invCount == 1 and L("vendorOneItem") or L("vendorItems", invCount), "liaSmallFont", sw * 0.2, sh * 0.065, color_white, TEXT_ALIGN_RIGHT)
         end
     end
+
     local bw, bh = sw * 0.15, sh * 0.05
     if ply:CanEditVendor(self.vendorPanel) then
         local by = self.right:GetY() + self.right:GetTall() - bh - sw * 0.02
@@ -122,6 +126,7 @@ function PANEL:Init()
         btn:SetTextColor(color_white)
         btn.DoClick = function() vgui.Create("VendorEditor"):SetZPos(99) end
     end
+
     local leave = self.right:Add("liaSmallButton")
     leave:SetSize(bw, bh)
     leave:SetPos(self.right:GetWide() - bw - sw * 0.02, self.right:GetTall() - bh - sw * 0.02)
@@ -131,6 +136,7 @@ function PANEL:Init()
     leave.DoClick = function() self:Remove() end
     self:DrawModels()
 end
+
 function PANEL:createCategoryDropdown()
     local c = self:GetItemCategoryList()
     if table.Count(c) < 1 then return end
@@ -142,6 +148,7 @@ function PANEL:createCategoryDropdown()
     for k in pairs(c) do
         sorted[#sorted + 1] = k
     end
+
     table.sort(sorted, function(a, b) return a:lower() < b:lower() end)
     local menu
     btn.DoClick = function()
@@ -150,6 +157,7 @@ function PANEL:createCategoryDropdown()
             menu = nil
             return
         end
+
         menu = vgui.Create("DScrollPanel", self)
         menu:SetSize(btn:GetWide(), #sorted * 24)
         menu:SetPos(btn.x, btn.y + btn:GetTall() + 2)
@@ -167,6 +175,7 @@ function PANEL:createCategoryDropdown()
                     self.currentCategory = cat
                     btn:SetText(text)
                 end
+
                 self:applyCategoryFilter()
                 if IsValid(menu) then
                     menu:Remove()
@@ -176,6 +185,7 @@ function PANEL:createCategoryDropdown()
         end
     end
 end
+
 function PANEL:updateVendorModel()
     if not (IsValid(self.vendorModel) and IsValid(liaVendorEnt)) then return end
     local ent = self.vendorModel.Entity
@@ -185,6 +195,7 @@ function PANEL:updateVendorModel()
         ent:SetBodygroup(i, liaVendorEnt:GetBodygroup(i))
     end
 end
+
 function PANEL:DrawModels()
     self.vendorModel = self:Add("DModelPanel")
     self.vendorModel:SetSize(ScreenScale(160), ScreenScaleH(170))
@@ -196,6 +207,7 @@ function PANEL:DrawModels()
     else
         self.vendorModel:SetModel("")
     end
+
     self.vendorModel:SetFOV(20)
     self.vendorModel:SetAlpha(0)
     self.vendorModel:AlphaTo(255, 0.2)
@@ -206,6 +218,7 @@ function PANEL:DrawModels()
             self.vendorModel:SetLookAt(ent:GetBonePosition(bone))
         end
     end
+
     self.playerModel = self:Add("DModelPanel")
     self.playerModel:SetSize(ScreenScale(160), ScreenScaleH(170))
     self.playerModel:SetPos(self:GetWide() * 0.75 + ScreenScale(110) - ScreenScale(50), sh * 0.36 + ScreenScaleH(25))
@@ -215,6 +228,7 @@ function PANEL:DrawModels()
     else
         self.playerModel:SetModel("")
     end
+
     self.playerModel:SetFOV(20)
     self.playerModel:SetAlpha(0)
     self.playerModel:AlphaTo(255, 0.2)
@@ -226,18 +240,21 @@ function PANEL:DrawModels()
         end
     end
 end
+
 function PANEL:buyItemFromVendor(id)
     net.Start("VendorTrade")
     net.WriteString(id)
     net.WriteBool(false)
     net.SendToServer()
 end
+
 function PANEL:sellItemToVendor(id)
     net.Start("VendorTrade")
     net.WriteString(id)
     net.WriteBool(true)
     net.SendToServer()
 end
+
 function PANEL:populateItems()
     if not IsValid(liaVendorEnt) then return end
     local data = liaVendorEnt.items
@@ -254,6 +271,7 @@ function PANEL:populateItems()
         end
     end
 end
+
 function PANEL:shouldShow(id, which)
     if not IsValid(liaVendorEnt) then return false end
     local mode = liaVendorEnt:getTradeMode(id)
@@ -262,6 +280,7 @@ function PANEL:shouldShow(id, which)
     if which == "vendor" and mode == VENDOR_BUYONLY then return false end
     return true
 end
+
 function PANEL:updateItem(id, which, qty)
     local container = self.items[which]
     if not container then return end
@@ -269,12 +288,14 @@ function PANEL:updateItem(id, which, qty)
         if IsValid(container[id]) then container[id]:Remove() end
         return
     end
+
     local parent = which == "me" and self.mePanel or self.vendorPanel
     if not IsValid(parent.items) then
         parent.items = vgui.Create("DPanel", parent)
         parent.items:Dock(FILL)
         parent.items:SetPaintBackground(false)
     end
+
     local pnl = container[id]
     if not IsValid(pnl) then
         pnl = vgui.Create("VendorItem", parent.items)
@@ -282,10 +303,12 @@ function PANEL:updateItem(id, which, qty)
         pnl:setIsSelling(which == "me")
         container[id] = pnl
     end
+
     if not isnumber(qty) then qty = which == "me" and LocalPlayer():getChar():getInv():getItemCount(id) or liaVendorEnt:getStock(id) end
     pnl:setQuantity(qty)
     return pnl
 end
+
 function PANEL:GetItemCategoryList()
     if not IsValid(liaVendorEnt) then return {} end
     local data = liaVendorEnt.items
@@ -293,6 +316,7 @@ function PANEL:GetItemCategoryList()
     local out = {
         [L("vendorShowAll")] = true
     }
+
     for id in pairs(data) do
         local itm = lia.item.list[id]
         if itm then
@@ -302,13 +326,16 @@ function PANEL:GetItemCategoryList()
     end
     return out
 end
+
 function PANEL:applyCategoryFilter()
     for _, p in pairs(self.items.vendor) do
         if IsValid(p) then p:Remove() end
     end
+
     for _, p in pairs(self.items.me) do
         if IsValid(p) then p:Remove() end
     end
+
     self.items.vendor = {}
     self.items.me = {}
     local data = liaVendorEnt.items
@@ -326,9 +353,11 @@ function PANEL:applyCategoryFilter()
             end
         end
     end
+
     if IsValid(self.vendorPanel.items) then self.vendorPanel.items:InvalidateLayout() end
     if IsValid(self.mePanel.items) then self.mePanel.items:InvalidateLayout() end
 end
+
 function PANEL:listenForChanges()
     hook.Add("VendorItemPriceUpdated", self, self.onVendorPriceUpdated)
     hook.Add("VendorItemStockUpdated", self, self.onItemStockUpdated)
@@ -336,12 +365,15 @@ function PANEL:listenForChanges()
     hook.Add("VendorItemModeUpdated", self, self.onVendorModeUpdated)
     hook.Add("VendorEdited", self, self.onVendorPropEdited)
 end
+
 function PANEL:InventoryItemAdded(it)
     if it and it.uniqueID then self:updateItem(it.uniqueID, "me") end
 end
+
 function PANEL:InventoryItemRemoved(it)
     if it and it.uniqueID then self:InventoryItemAdded(it) end
 end
+
 function PANEL:onVendorPropEdited(_, key)
     if not IsValid(liaVendorEnt) then return end
     if key == "model" then
@@ -356,6 +388,7 @@ function PANEL:onVendorPropEdited(_, key)
         for _, v in pairs(self.items.vendor) do
             if IsValid(v) then v:updateLabel() end
         end
+
         for _, v in pairs(self.items.me) do
             if IsValid(v) then v:updateLabel() end
         end
@@ -369,38 +402,47 @@ function PANEL:onVendorPropEdited(_, key)
         if IsValid(lia.gui.vendorBodygroupEditor) then lia.gui.vendorBodygroupEditor:onVendorEdited(nil, key) end
         self:updateVendorModel()
     end
+
     self:applyCategoryFilter()
 end
+
 function PANEL:onVendorPriceUpdated(_, id)
     if IsValid(self.items.vendor[id]) then self.items.vendor[id]:updateLabel() end
     if IsValid(self.items.me[id]) then self.items.me[id]:updateLabel() end
     self:applyCategoryFilter()
 end
+
 function PANEL:onVendorModeUpdated(_, id)
     self:updateItem(id, "vendor")
     self:updateItem(id, "me")
     self:applyCategoryFilter()
 end
+
 function PANEL:onItemStockUpdated(_, id)
     self:updateItem(id, "vendor")
     self:applyCategoryFilter()
 end
+
 function PANEL:Paint()
     lia.util.drawBlur(self, 15)
 end
+
 function PANEL:OnRemove()
     if not self.noSendExit then
         net.Start("VendorExit")
         net.SendToServer()
         self.noSendExit = true
     end
+
     if IsValid(lia.gui.vendorEditor) then lia.gui.vendorEditor:Remove() end
     if IsValid(lia.gui.vendorFactionEditor) then lia.gui.vendorFactionEditor:Remove() end
     self:liaDeleteInventoryHooks()
 end
+
 function PANEL:OnKeyCodePressed()
     if input.LookupBinding("+use", true) then self:Remove() end
 end
+
 vgui.Register("Vendor", PANEL, "EditablePanel")
 PANEL = {}
 local function drawIcon(mat, _, x, y)
@@ -409,6 +451,7 @@ local function drawIcon(mat, _, x, y)
     surface.SetMaterial(mat)
     surface.DrawTexturedRect(0, 0, x, y)
 end
+
 function PANEL:Init()
     self:SetSize(600, 200)
     self:Dock(TOP)
@@ -459,10 +502,12 @@ function PANEL:Init()
     self.isSelling = false
     self.suffix = ""
 end
+
 local function clickEffects()
     local client = LocalPlayer()
     client:EmitSound(unpack(VendorClick))
 end
+
 function PANEL:sellItemToVendor()
     local item = self.item
     if not item then return end
@@ -471,6 +516,7 @@ function PANEL:sellItemToVendor()
         clickEffects()
     end
 end
+
 function PANEL:buyItemFromVendor()
     local item = self.item
     if not item then return end
@@ -479,6 +525,7 @@ function PANEL:buyItemFromVendor()
         clickEffects()
     end
 end
+
 function PANEL:updateAction()
     if not self.action or not self.item then return end
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
@@ -490,6 +537,7 @@ function PANEL:updateAction()
     else
         priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
+
     self.action:SetText(self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix))
     self.action.DoClick = function()
         if self.isSelling then
@@ -499,6 +547,7 @@ function PANEL:updateAction()
         end
     end
 end
+
 function PANEL:setQuantity(quantity)
     if not self.item then return end
     if quantity then
@@ -506,12 +555,15 @@ function PANEL:setQuantity(quantity)
             self:Remove()
             return
         end
+
         self.suffix = L("vendorItemQuantity", quantity)
     else
         self.suffix = ""
     end
+
     self:updateLabel()
 end
+
 function PANEL:setItemType(itemType)
     local item = lia.item.list[itemType]
     assert(item, L("invalidItemTypeOrID", tostring(itemType)))
@@ -526,17 +578,20 @@ function PANEL:setItemType(itemType)
         self.icon:SetModel(item.model, item.skin or 0)
         self.iconFrame.ExtraPaint = function() end
     end
+
     self:updateLabel()
     self:updateAction()
     local rarity = item.rarity or "Common"
     local nameColor = RarityColors[rarity] or color_white
     self.name:SetTextColor(nameColor)
 end
+
 function PANEL:setIsSelling(isSelling)
     self.isSelling = isSelling
     self:updateLabel()
     self:updateAction()
 end
+
 function PANEL:updateLabel()
     if not self.item then return end
     local nameText = (self.suffix ~= "" and self.suffix or "") .. self.item:getName()
@@ -551,8 +606,10 @@ function PANEL:updateLabel()
     else
         priceSuffix = string.format("%s %s", price, lia.currency.singular)
     end
+
     self.action:SetText(self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix))
 end
+
 vgui.Register("VendorItem", PANEL, "DPanel")
 PANEL = {}
 function PANEL:Init()
@@ -579,6 +636,7 @@ function PANEL:Init()
         local modelText = this:GetText():lower()
         if entity:GetModel():lower() ~= modelText then lia.vendor.editor.model(modelText) end
     end
+
     self.welcome = self:Add("DTextEntry")
     self.welcome:Dock(TOP)
     self.welcome:DockMargin(0, 4, 0, 0)
@@ -588,6 +646,7 @@ function PANEL:Init()
         local msg = this:GetText()
         if msg ~= entity:getWelcomeMessage() then lia.vendor.editor.welcome(msg) end
     end
+
     self.searchBar = self:Add("DTextEntry")
     self.searchBar:Dock(TOP)
     self.searchBar:DockMargin(0, 4, 0, 0)
@@ -601,6 +660,7 @@ function PANEL:Init()
             break
         end
     end
+
     if hasBodygroups or entity:SkinCount() > 1 then
         self.bodygroups = self:Add("DButton")
         self.bodygroups:Dock(TOP)
@@ -609,6 +669,7 @@ function PANEL:Init()
         self.bodygroups:SetTextColor(color_white)
         self.bodygroups.DoClick = function() vgui.Create("VendorBodygroupEditor", self):MoveLeftOf(self, 4) end
     end
+
     self.faction = self:Add("DButton")
     self.faction:SetText(L("vendorFaction"))
     self.faction:Dock(TOP)
@@ -625,11 +686,13 @@ function PANEL:Init()
             LocalPlayer():notifyErrorLocalized(L("noPermission"))
             return
         end
+
         Derma_StringRequest(L("vendorPresetName"), L("vendorPresetNameDesc"), "", function(text)
             if text:Trim() == "" then
                 LocalPlayer():notifyErrorLocalized(L("vendorPresetNameRequired"))
                 return
             end
+
             local presetName = text:Trim():lower()
             if lia.vendor.presets[presetName] then
                 Derma_Query(L("vendorPresetOverwrite", text), L("vendorPresetOverwriteTitle"), L("yes"), function() self:saveVendorPreset(presetName, text) end, L("no"))
@@ -638,6 +701,7 @@ function PANEL:Init()
             end
         end, function() end, L("vendorSavePreset"), L("cancel"))
     end
+
     self.preset = self:Add("DComboBox")
     self.preset:Dock(TOP)
     self.preset:SetSortItems(false)
@@ -651,6 +715,7 @@ function PANEL:Init()
         if value == L("none") then value = "none" end
         lia.vendor.editor.preset(value)
     end
+
     self.animation = self:Add("DComboBox")
     self.animation:Dock(TOP)
     self.animation:SetSortItems(false)
@@ -666,6 +731,7 @@ function PANEL:Init()
         if value == L("none") then value = "" end
         lia.vendor.editor.animation(value)
     end
+
     if entity:SkinCount() > 1 then
         self.skin = self:Add("DNumSlider")
         self.skin:Dock(TOP)
@@ -680,6 +746,7 @@ function PANEL:Init()
             if entity:GetSkin() ~= value then lia.vendor.editor.skin(value) end
         end
     end
+
     self.items = self:Add("DListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
@@ -696,18 +763,22 @@ function PANEL:Init()
     self.refreshTimer = "VendorPresetRefresh_" .. tostring(self)
     timer.Create(self.refreshTimer, 2, 1, function() if IsValid(self) and IsValid(self.preset) then self:refreshPresetDropdown() end end)
 end
+
 local VendorText = {
     [VENDOR_SELLANDBUY] = "buyOnlynSell",
     [VENDOR_BUYONLY] = "buyOnly",
     [VENDOR_SELLONLY] = "sellOnly",
 }
+
 function PANEL:getModeText(mode)
     return mode and L(VendorText[mode]) or L("none")
 end
+
 function PANEL:OnRemove()
     if IsValid(lia.gui.editorFaction) then lia.gui.editorFaction:Remove() end
     if self.refreshTimer then timer.Remove(self.refreshTimer) end
 end
+
 function PANEL:updateVendor(key, value)
     net.Start("VendorEdit")
     net.WriteString(key)
@@ -721,8 +792,10 @@ function PANEL:updateVendor(key, value)
             net.WriteType(value)
         end
     end
+
     net.SendToServer()
 end
+
 function PANEL:OnFocusChanged(gained)
     if not gained then
         timer.Simple(0, function()
@@ -731,11 +804,13 @@ function PANEL:OnFocusChanged(gained)
         end)
     end
 end
+
 function PANEL:saveVendorPreset(_, displayName)
     if not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
         LocalPlayer():notifyError(L("noPermission"))
         return
     end
+
     local entity = liaVendorEnt
     local presetData = {}
     for itemType, itemData in pairs(entity.items or {}) do
@@ -748,10 +823,12 @@ function PANEL:saveVendorPreset(_, displayName)
             }
         end
     end
+
     lia.vendor.addPreset(displayName, presetData)
     self:refreshPresetDropdown()
     LocalPlayer():notifySuccessLocalized(L("vendorPresetSaved", displayName))
 end
+
 function PANEL:refreshPresetDropdown()
     if not IsValid(self.preset) then return end
     self.preset:Clear()
@@ -759,9 +836,11 @@ function PANEL:refreshPresetDropdown()
     for name in pairs(lia.vendor.presets or {}) do
         self.preset:AddChoice(name)
     end
+
     local currentPreset = liaVendorEnt:getNetVar("preset", "none")
     self.preset:SetValue(currentPreset == "none" and L("none") or currentPreset)
 end
+
 function PANEL:refreshAnimationDropdown()
     if not IsValid(self.animation) then return end
     self.animation:Clear()
@@ -774,9 +853,11 @@ function PANEL:refreshAnimationDropdown()
             end
         end
     end
+
     local currentAnimation = liaVendorEnt:getNetVar("animation", "")
     self.animation:SetValue(currentAnimation == "" and L("none") or currentAnimation)
 end
+
 function PANEL:onNameDescChanged(key)
     local entity = liaVendorEnt
     if key == "name" then
@@ -793,22 +874,26 @@ function PANEL:onNameDescChanged(key)
         if IsValid(self.animation) then self.animation:SetValue(currentAnimation == "" and L("none") or currentAnimation) end
     end
 end
+
 function PANEL:onItemModeUpdated(_, itemType, value)
     local line = self.lines[itemType]
     if not IsValid(line) then return end
     line:SetColumnText(COLS_MODE, self:getModeText(value))
 end
+
 function PANEL:onItemPriceUpdated(vendor, itemType)
     local line = self.lines[itemType]
     if not IsValid(line) then return end
     line:SetColumnText(COLS_PRICE, vendor:getPrice(itemType))
 end
+
 function PANEL:onItemStockUpdated(vendor, itemType)
     local line = self.lines[itemType]
     if not IsValid(line) then return end
     local current, max = vendor:getStock(itemType)
     line:SetColumnText(COLS_STOCK, max and current .. "/" .. max or "-")
 end
+
 function PANEL:listenForUpdates()
     hook.Add("VendorEdited", self, self.onNameDescChanged)
     hook.Add("VendorItemModeUpdated", self, self.onItemModeUpdated)
@@ -816,6 +901,7 @@ function PANEL:listenForUpdates()
     hook.Add("VendorItemStockUpdated", self, self.onItemStockUpdated)
     hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)
 end
+
 function PANEL:OnRowRightClick(line)
     local entity = liaVendorEnt
     if entity:getNetVar("preset") ~= "none" then return end
@@ -835,6 +921,7 @@ function PANEL:OnRowRightClick(line)
             lia.vendor.editor.price(uniqueID, text)
         end):SetParent(self)
     end):SetImage("icon16/coins.png")
+
     local stock, stockPanel = menu:AddSubMenu(L("stock"))
     stockPanel:SetImage("icon16/table.png")
     stock:AddOption(L("disable"), function() lia.vendor.editor.stockDisable(uniqueID) end):SetImage("icon16/table_delete.png")
@@ -845,14 +932,17 @@ function PANEL:OnRowRightClick(line)
             lia.vendor.editor.stockMax(uniqueID, text)
         end):SetParent(self)
     end):SetImage("icon16/table_edit.png")
+
     stock:AddOption(L("vendorEditCurStock"), function()
         Derma_StringRequest(itemTable:getName(), L("vendorStockCurReq"), entity:getStock(uniqueID) or 0, function(text)
             text = math.Round(tonumber(text) or 0)
             lia.vendor.editor.stock(uniqueID, text)
         end):SetParent(self)
     end):SetImage("icon16/table_edit.png")
+
     menu:Open()
 end
+
 function PANEL:ReloadItemList(filter)
     local entity = liaVendorEnt
     self.lines = {}
@@ -867,14 +957,17 @@ function PANEL:ReloadItemList(filter)
         self.lines[k] = panel
     end
 end
+
 vgui.Register("VendorEditor", PANEL, "DFrame")
 PANEL = {}
 local function onFactionStateChanged(checkBox, state)
     lia.vendor.editor.faction(checkBox.factionID, state)
 end
+
 local function onClassStateChanged(checkBox, state)
     lia.vendor.editor.class(checkBox.classID, state)
 end
+
 function PANEL:Init()
     if IsValid(lia.gui.vendorFactionEditor) then lia.gui.vendorFactionEditor:Remove() end
     lia.gui.vendorFactionEditor = self
@@ -915,19 +1008,23 @@ function PANEL:Init()
             end
         end
     end
+
     self:updateChecked()
     hook.Add("VendorFactionUpdated", self, self.updateChecked)
     hook.Add("VendorClassUpdated", self, self.updateChecked)
 end
+
 function PANEL:updateChecked()
     local entity = liaVendorEnt
     for id, panel in pairs(self.factions) do
         panel:SetChecked(entity:isFactionAllowed(id))
     end
+
     for id, panel in pairs(self.classes) do
         panel:SetChecked(entity:isClassAllowed(id))
     end
 end
+
 vgui.Register("VendorFactionEditor", PANEL, "DFrame")
 PANEL = {}
 function PANEL:Init()
@@ -955,8 +1052,10 @@ function PANEL:Init()
         slider.OnValueChanged = function(_, val) lia.vendor.editor.bodygroup(i, math.Round(val)) end
         self.sliders[i] = slider
     end
+
     hook.Add("VendorEdited", self, self.onVendorEdited)
 end
+
 function PANEL:onVendorEdited(_, key)
     if key ~= "bodygroup" and key ~= "skin" then return end
     local entity = liaVendorEnt
@@ -964,7 +1063,9 @@ function PANEL:onVendorEdited(_, key)
         s:SetValue(entity:GetBodygroup(id))
     end
 end
+
 function PANEL:OnRemove()
     hook.Remove("VendorEdited", self)
 end
+
 vgui.Register("VendorBodygroupEditor", PANEL, "DFrame")

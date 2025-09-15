@@ -1,4 +1,4 @@
-lia.discord = lia.discord or {}
+﻿lia.discord = lia.discord or {}
 lia.discord.webhook = lia.discord.webhook or ""
 function lia.discord.relayMessage(embed)
     if not lia.discord.webhook or lia.discord.webhook == "" or not istable(embed) then return end
@@ -9,10 +9,12 @@ function lia.discord.relayMessage(embed)
     embed.footer = embed.footer or {
         text = L("discordRelayLiliaDiscordRelay")
     }
+
     local payload = {
         embeds = {embed},
         username = L("discordRelayLiliaLogger")
     }
+
     hook.Run("DiscordRelaySend", embed)
     if util.IsBinaryModuleInstalled("chttp") and not ForceHTTPMode then
         require("chttp")
@@ -30,5 +32,6 @@ function lia.discord.relayMessage(embed)
             payload_json = util.TableToJSON(payload)
         }, function() end, function(err) print("[Discord Relay] HTTP failed: " .. tostring(err)) end)
     end
+
     hook.Run("DiscordRelayed", embed)
 end

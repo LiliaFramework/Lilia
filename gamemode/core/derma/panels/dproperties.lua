@@ -1,4 +1,4 @@
-local min, clamp = math.min, math.Clamp
+﻿local min, clamp = math.min, math.Clamp
 local inputGetCursorPos, isValid = input.GetCursorPos, IsValid
 local timerSimple = timer.Simple
 local surfaceSetDrawColor, surfaceDrawRect = surface.SetDrawColor, surface.DrawRect
@@ -9,9 +9,11 @@ function TooltipPanel:Init()
     self:SetText("")
     self:SetFont("liaToolTipText")
 end
+
 function TooltipPanel:UpdateColours()
     return self:SetTextStyleColor(Color(255, 255, 255))
 end
+
 function TooltipPanel:SetContents(panel, bDelete)
     panel:SetParent(self)
     self.Contents = panel
@@ -20,6 +22,7 @@ function TooltipPanel:SetContents(panel, bDelete)
     self:InvalidateLayout(true)
     panel:SetVisible(false)
 end
+
 function TooltipPanel:PerformLayout()
     if hook.Run("TooltipLayout", self) then return end
     if self.Contents then
@@ -32,11 +35,13 @@ function TooltipPanel:PerformLayout()
         self:SetContentAlignment(5)
     end
 end
+
 function TooltipPanel:PositionTooltip()
     if not isValid(self.TargetPanel) then
         self:Remove()
         return
     end
+
     self:PerformLayout()
     local x, y = inputGetCursorPos()
     local w, h = self:GetSize()
@@ -45,11 +50,13 @@ function TooltipPanel:PositionTooltip()
     if y < 2 then y = 2 end
     self:SetPos(clamp(x - w * 0.5, 0, ScrW() - w), clamp(y, 0, ScrH() - h))
 end
+
 function TooltipPanel:Paint(w, h)
     self:PositionTooltip()
     if hook.Run("TooltipPaint", self, w, h) then return end
     derma.SkinHook("Paint", "Tooltip", self, w, h)
 end
+
 function TooltipPanel:OpenForPanel(panel)
     self.TargetPanel = panel
     self:PositionTooltip()
@@ -61,13 +68,16 @@ function TooltipPanel:OpenForPanel(panel)
         self:SetVisible(true)
     end)
 end
+
 function TooltipPanel:Close()
     if not self.DeleteContentsOnClose and isValid(self.Contents) then
         self.Contents:SetVisible(false)
         self.Contents:SetParent(nil)
     end
+
     self:Remove()
 end
+
 derma.DefineControl("DTooltip", "", TooltipPanel, "DLabel")
 local tblRow = vgui.RegisterTable({
     Init = function(self)
@@ -91,13 +101,16 @@ local tblRow = vgui.RegisterTable({
             elseif rt == "Vector" or rt == "Angle" or rt == "String" then
                 rt = "Generic"
             end
+
             name = "DProperty_" .. rt
         end
+
         if vgui.GetControlTable(name) then
             self.Inner = self.Container:Add(name)
         else
             self.Inner = self.Container:Add("DProperty_Generic")
         end
+
         self.Inner:SetRow(self)
         self.Inner:Dock(FILL)
         self.Inner:Setup(vars)
@@ -122,6 +135,7 @@ local tblRow = vgui.RegisterTable({
             surfaceSetDrawColor(skin.Colours.Properties.Column_Selected)
             surfaceDrawRect(0, 0, w * 0.45, h)
         end
+
         surfaceSetDrawColor(skin.Colours.Properties.Border)
         surfaceDrawRect(w - 1, 0, 1, h)
         surfaceDrawRect(w * 0.45, 0, 1, h)
@@ -130,6 +144,7 @@ local tblRow = vgui.RegisterTable({
         self.Label:SetTextColor(col)
     end
 }, "Panel")
+
 local tblCategory = vgui.RegisterTable({
     Init = function(self)
         self:Dock(TOP)
@@ -149,6 +164,7 @@ local tblCategory = vgui.RegisterTable({
             self.Expand:SetExpanded(self.Container:IsVisible())
             self:InvalidateLayout()
         end
+
         self.Container = self:Add("Panel")
         self.Container:Dock(TOP)
         self.Container:DockMargin(16, 0, 0, 0)
@@ -179,16 +195,20 @@ local tblCategory = vgui.RegisterTable({
         surfaceDrawRect(0, 0, w, h)
     end
 }, "Panel")
+
 local PropertiesPanel = {}
 function PropertiesPanel:Init()
     self.Categories = {}
 end
+
 function PropertiesPanel:PerformLayout()
     self:SizeToChildren(false, true)
 end
+
 function PropertiesPanel:Clear()
     if isValid(self.Canvas) then self.Canvas:Clear() end
 end
+
 function PropertiesPanel:GetCanvas()
     if not isValid(self.Canvas) then
         self.Canvas = self:Add("DScrollPanel")
@@ -196,6 +216,7 @@ function PropertiesPanel:GetCanvas()
     end
     return self.Canvas
 end
+
 function PropertiesPanel:GetCategory(name, bCreate)
     local cat = self.Categories[name]
     if isValid(cat) then return cat end
@@ -205,7 +226,9 @@ function PropertiesPanel:GetCategory(name, bCreate)
     self.Categories[name] = cat
     return cat
 end
+
 function PropertiesPanel:CreateRow(category, name)
     return self:GetCategory(category, true):GetRow(name, true)
 end
+
 derma.DefineControl("DProperties", "", PropertiesPanel, "Panel")

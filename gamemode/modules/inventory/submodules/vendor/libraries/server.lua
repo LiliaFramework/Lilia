@@ -1,4 +1,4 @@
-function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
+﻿function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
     local vendorName = vendor:getNetVar("name")
     if not isSellingToVendor then
         lia.log.add(client, "vendorBuy", item and (item:getName() or item.name) or "", vendorName or L("unknown"), isFailed)
@@ -6,12 +6,14 @@ function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _,
         lia.log.add(client, "vendorSell", item and (item:getName() or item.name) or "", vendorName or L("unknown"))
     end
 end
+
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local character = client:getChar()
     if client:CanEditVendor(vendor) then return true end
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
+
 function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVendor)
     local item = lia.item.list[itemType]
     if not item then return false, L("vendorInvalidItem") end
@@ -29,11 +31,13 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         local stock = vendor:getStock(itemType)
         if stock and stock <= 0 then return false, L("vendorNoStock") end
     end
+
     local price = vendor:getPrice(itemType, isSellingToVendor)
     if not isSellingToVendor then
         local money = client:getChar():getMoney()
         if money < price then return false, L("canNotAfford") end
     end
+
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
         local hasWhitelist = true
         local isWhitelisted = false
@@ -59,6 +63,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     end
     return true, nil, isWhitelisted
 end
+
 function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
     if not VENDOR_INVENTORY_MEASURE and lia.inventory.types["GridInv"] then
         VENDOR_INVENTORY_MEASURE = lia.inventory.types["GridInv"]:new()
@@ -66,14 +71,17 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             w = 8,
             h = 8
         }
+
         VENDOR_INVENTORY_MEASURE.virtual = true
         VENDOR_INVENTORY_MEASURE:onInstanced()
     end
+
     local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
         if isstring(reason) then client:notifyErrorLocalized(reason) end
         return
     end
+
     if client.vendorTransaction and client.vendorTimeout > RealTime() then return end
     client.vendorTransaction = true
     client.vendorTimeout = RealTime() + 0.1
@@ -89,18 +97,21 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
                 from = inventory,
                 to = VENDOR_INVENTORY_MEASURE
             }
+
             local canTransfer, transferReason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
             if not canTransfer then
                 client:notifyErrorLocalized(transferReason or L("vendorError"))
                 client.vendorTransaction = nil
                 return
             end
+
             local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
             if canTransferItem == false then
                 client:notifyErrorLocalized(itemTransferReason or "vendorError")
                 client.vendorTransaction = nil
                 return
             end
+
             character:giveMoney(price)
             item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
@@ -114,6 +125,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             client.vendorTransaction = nil
             return
         end
+
         character:takeMoney(price)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
@@ -123,6 +135,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         end)
     end
 end
+
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
     net.Start("VendorOpen")
@@ -135,6 +148,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
             net.WriteBool(true)
             net.Send(client)
         end
+
         for classID in pairs(vendor.classes) do
             net.Start("VendorAllowClass")
             net.WriteUInt(classID, 8)
@@ -143,6 +157,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
         end
     end
 end
+
 function MODULE:GetEntitySaveData(ent)
     if ent:GetClass() ~= "lia_vendor" then return end
     return {
@@ -165,6 +180,7 @@ function MODULE:GetEntitySaveData(ent)
         animation = ent:getNetVar("animation"),
     }
 end
+
 function MODULE:OnEntityLoaded(ent, data)
     if ent:GetClass() ~= "lia_vendor" or not data then return end
     ent:setNetVar("name", data.name)
@@ -176,6 +192,7 @@ function MODULE:OnEntityLoaded(ent, data)
     else
         ent.items = data.items or {}
     end
+
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
     if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
@@ -199,10 +216,12 @@ function MODULE:OnEntityLoaded(ent, data)
         end
     end
 end
+
 net.Receive("VendorExit", function(_, client)
     local vendor = client.liaVendor
     if IsValid(vendor) then vendor:removeReceiver(client, true) end
 end)
+
 net.Receive("VendorEdit", function(_, client)
     local key = net.ReadString()
     if not client:CanEditVendor() then return end
@@ -213,6 +232,7 @@ net.Receive("VendorEdit", function(_, client)
     lia.vendor.editor[key](vendor, client, key)
     hook.Run("UpdateEntityPersistence", vendor)
 end)
+
 net.Receive("VendorTrade", function(_, client)
     local uniqueID = net.ReadString()
     local isSellingToVendor = net.ReadBool()
@@ -222,6 +242,7 @@ net.Receive("VendorTrade", function(_, client)
     else
         return
     end
+
     local entity = client.liaVendor
     if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192 then return end
     if not hook.Run("CanPlayerAccessVendor", client, entity) then return end

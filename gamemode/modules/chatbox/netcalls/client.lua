@@ -1,4 +1,4 @@
-net.Receive("cMsg", function()
+﻿net.Receive("cMsg", function()
     local client = net.ReadEntity()
     local chatType = net.ReadString()
     local text = net.ReadString()
@@ -14,6 +14,7 @@ net.Receive("cMsg", function()
             else
                 chat.PlaySound()
             end
+
             CHAT_CLASS = nil
         end
     end

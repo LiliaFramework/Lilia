@@ -1,7 +1,8 @@
-net.Receive("liaStorageUnlock", function()
+﻿net.Receive("liaStorageUnlock", function()
     local entity = net.ReadEntity()
     hook.Run("StorageUnlockPrompt", entity)
 end)
+
 net.Receive("liaStorageOpen", function()
     local isCar = net.ReadBool() or false
     local entity = net.ReadEntity()

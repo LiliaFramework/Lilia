@@ -1,4 +1,4 @@
-net.Receive("StringRequest", function(_, client)
+﻿net.Receive("StringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
     if client.liaStrReqs and client.liaStrReqs[id] then
@@ -6,14 +6,17 @@ net.Receive("StringRequest", function(_, client)
         client.liaStrReqs[id] = nil
     end
 end)
+
 net.Receive("StringRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.liaStrReqs and client.liaStrReqs[id] then client.liaStrReqs[id] = nil end
 end)
+
 net.Receive("liaCharRequest", function(_, client)
     local charID = net.ReadUInt(32)
     lia.char.getCharacter(charID, client, function(character) if character then character:sync(client) end end)
 end)
+
 net.Receive("ArgumentsRequest", function(_, client)
     local id = net.ReadUInt(32)
     local data = net.ReadTable()
@@ -41,13 +44,16 @@ net.Receive("ArgumentsRequest", function(_, client)
             end
         end
     end
+
     if isfunction(req.callback) then req.callback(data) end
     client.liaArgReqs[id] = nil
 end)
+
 net.Receive("ArgumentsRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.liaArgReqs and client.liaArgReqs[id] then client.liaArgReqs[id] = nil end
 end)
+
 net.Receive("liaKeybindServer", function(_, ply)
     if not IsValid(ply) then return end
     local action = net.ReadString()
@@ -68,6 +74,7 @@ net.Receive("liaKeybindServer", function(_, ply)
         end
     end
 end)
+
 net.Receive("RequestDropdown", function(_, client)
     local id = net.ReadUInt(32)
     local selectedOption = net.ReadString()
@@ -81,17 +88,21 @@ net.Receive("RequestDropdown", function(_, client)
             break
         end
     end
+
     if not isValid then
         client.liaDropdownReqs[id] = nil
         return
     end
+
     if isfunction(req.callback) then req.callback(selectedOption) end
     client.liaDropdownReqs[id] = nil
 end)
+
 net.Receive("RequestDropdownCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.liaDropdownReqs then client.liaDropdownReqs[id] = nil end
 end)
+
 net.Receive("OptionsRequest", function(_, client)
     local id = net.ReadUInt(32)
     local selectedOptions = net.ReadTable()
@@ -102,6 +113,7 @@ net.Receive("OptionsRequest", function(_, client)
         client.liaOptionsReqs[id] = nil
         return
     end
+
     for _, opt in ipairs(selectedOptions) do
         local ok = false
         for _, a in ipairs(allowed) do
@@ -110,18 +122,22 @@ net.Receive("OptionsRequest", function(_, client)
                 break
             end
         end
+
         if not ok then
             client.liaOptionsReqs[id] = nil
             return
         end
     end
+
     if isfunction(req.callback) then req.callback(selectedOptions) end
     client.liaOptionsReqs[id] = nil
 end)
+
 net.Receive("OptionsRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.liaOptionsReqs then client.liaOptionsReqs[id] = nil end
 end)
+
 net.Receive("BinaryQuestionRequest", function(_, client)
     local id = net.ReadUInt(32)
     local choice = net.ReadUInt(1)
@@ -130,10 +146,12 @@ net.Receive("BinaryQuestionRequest", function(_, client)
     if isfunction(cb) then cb(choice) end
     client.liaBinaryReqs[id] = nil
 end)
+
 net.Receive("BinaryQuestionRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.liaBinaryReqs then client.liaBinaryReqs[id] = nil end
 end)
+
 net.Receive("ButtonRequest", function(_, client)
     local id = net.ReadUInt(32)
     local choice = net.ReadUInt(8)
@@ -143,10 +161,12 @@ net.Receive("ButtonRequest", function(_, client)
         client.buttonRequests[id] = nil
     end
 end)
+
 net.Receive("ButtonRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.buttonRequests and client.buttonRequests[id] then client.buttonRequests[id] = nil end
 end)
+
 net.Receive("liaTransferItem", function(_, client)
     local itemID = net.ReadUInt(32)
     local x = net.ReadUInt(32)
@@ -154,6 +174,7 @@ net.Receive("liaTransferItem", function(_, client)
     local invID = net.ReadType()
     hook.Run("HandleItemTransferRequest", client, itemID, x, y, invID)
 end)
+
 net.Receive("invAct", function(_, client)
     local action = net.ReadString()
     local rawItem = net.ReadType()
@@ -171,6 +192,7 @@ net.Receive("invAct", function(_, client)
     else
         item = lia.item.instances[rawItem]
     end
+
     if not item then return end
     local inventory = lia.inventory.instances[item.invID]
     if inventory then
@@ -180,16 +202,20 @@ net.Receive("invAct", function(_, client)
             entity = entity,
             action = action
         })
+
         if not ok then return end
     end
+
     item:interact(action, client, entity, data)
 end)
+
 net.Receive("RunInteraction", function(_, ply)
     if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
         lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
         ply:notifyWarningLocalized("maybeYouShouldntHaveCheated")
         return
     end
+
     local name = net.ReadString()
     local hasEntity = net.ReadBool()
     local tracedEntity = hasEntity and net.ReadEntity() or nil
@@ -207,6 +233,7 @@ net.Receive("RunInteraction", function(_, ply)
         end
         return
     end
+
     if opt and opt.type == "action" and opt.serverOnly then
         if hasEntity and IsValid(tracedEntity) then
             opt.onRun(ply, tracedEntity)
@@ -215,6 +242,7 @@ net.Receive("RunInteraction", function(_, ply)
         end
     end
 end)
+
 net.Receive("liaRequestInteractOptions", function(_, ply)
     if not IsValid(ply) then return end
     local requestType = net.ReadString()
@@ -228,6 +256,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
             net.Send(ply)
             return
         end
+
         for name, opt in pairs(lia.playerinteract.stored or {}) do
             if opt.type == "interaction" and lia.playerinteract.isWithinRange(ply, ent, opt.range) then
                 local targetType = opt.target or "player"
@@ -239,6 +268,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
                         local ok, res = pcall(opt.shouldShow, ply, ent)
                         canShow = ok and res ~= false
                     end
+
                     if canShow then
                         options[#options + 1] = {
                             name = name,
@@ -265,6 +295,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
             net.Send(ply)
             return
         end
+
         for name, opt in pairs(lia.playerinteract.stored or {}) do
             if opt.type == "action" then
                 local canShow = true
@@ -272,6 +303,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
                     local ok, res = pcall(opt.shouldShow, ply)
                     canShow = ok and res ~= false
                 end
+
                 if canShow then
                     options[#options + 1] = {
                         name = name,
@@ -289,6 +321,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
             end
         end
     end
+
     net.Start("liaProvideInteractOptions")
     net.WriteString(requestType == "interaction" and "interaction" or "action")
     net.WriteUInt(#options, 16)
@@ -307,8 +340,10 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
         net.WriteBool(entry.opt.targetActionText ~= nil)
         if entry.opt.targetActionText ~= nil then net.WriteString(entry.opt.targetActionText) end
     end
+
     net.Send(ply)
 end)
+
 net.Receive("cmd", function(_, client)
     local command = net.ReadString()
     local arguments = net.ReadTable()
@@ -317,15 +352,18 @@ net.Receive("cmd", function(_, client)
         for _, v in ipairs(arguments) do
             if isstring(v) or isnumber(v) then arguments2[#arguments2 + 1] = tostring(v) end
         end
+
         lia.command.parse(client, nil, command, arguments2)
         client.liaNextCmd = CurTime() + 0.2
     end
 end)
+
 net.Receive("liaCharFetchNames", function(_, client)
     net.Start("liaCharFetchNames")
     net.WriteTable(lia.char.names)
     net.Send(client)
 end)
+
 net.Receive("liaNetMessage", function(_, client)
     local name = net.ReadString()
     local args = net.ReadTable()

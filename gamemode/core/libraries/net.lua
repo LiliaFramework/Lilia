@@ -1,4 +1,4 @@
-lia.net = lia.net or {}
+﻿lia.net = lia.net or {}
 lia.net.sendq = lia.net.sendq or {}
 lia.net.globals = lia.net.globals or {}
 lia.net.buffers = lia.net.buffers or {}
@@ -8,14 +8,17 @@ function lia.net.register(name, callback)
         lia.error("Invalid arguments for lia.net.register")
         return false
     end
+
     lia.net.registry[name] = callback
     return true
 end
+
 function lia.net.send(name, target, ...)
     if not isstring(name) then
         lia.error("Invalid net message name")
         return false
     end
+
     local args = {...}
     if SERVER then
         net.Start("liaNetMessage")
@@ -41,6 +44,7 @@ function lia.net.send(name, target, ...)
     end
     return true
 end
+
 function lia.net.readBigTable(netStr, callback)
     lia.net.buffers[netStr] = lia.net.buffers[netStr] or {}
     net.Receive(netStr, function(_, ply)
@@ -57,18 +61,22 @@ function lia.net.readBigTable(netStr, callback)
                 count = 0,
                 parts = {}
             }
+
             buffers[sid] = state
         end
+
         if not state.parts[idx] then
             state.parts[idx] = chunk
             state.count = state.count + 1
         end
+
         if CLIENT then
             net.Start("LIA_BigTable_Ack")
             net.WriteUInt(sid, 32)
             net.WriteUInt(idx, 16)
             net.SendToServer()
         end
+
         if state.count == state.total then
             buffers[sid] = nil
             local full = table.concat(state.parts, "", 1, total)
@@ -82,6 +90,7 @@ function lia.net.readBigTable(netStr, callback)
         end
     end)
 end
+
 if SERVER then
     local chunkTime = 0.05
     local function sendChunk(ply, s, sid, idx)
@@ -89,11 +98,13 @@ if SERVER then
             if lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
             return
         end
+
         local part = s.chunks[idx]
         if not part then
             if lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
             return
         end
+
         s.idx = idx
         net.Start(s.netStr)
         net.WriteUInt(sid, 32)
@@ -104,6 +115,7 @@ if SERVER then
         net.Send(ply)
         if idx == s.total and lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
     end
+
     net.Receive("LIA_BigTable_Ack", function(_, ply)
         if not IsValid(ply) then return end
         local sid = net.ReadUInt(32)
@@ -117,6 +129,7 @@ if SERVER then
             q[sid] = nil
             return
         end
+
         timer.Simple(chunkTime, function()
             if not IsValid(ply) then return end
             local qq = lia.net.sendq[ply]
@@ -126,6 +139,7 @@ if SERVER then
             sendChunk(ply, ss, sid, ss.idx + 1)
         end)
     end)
+
     local function beginStream(ply, netStr, chunks, sid)
         lia.net.sendq[ply] = lia.net.sendq[ply] or {}
         local s = {
@@ -134,6 +148,7 @@ if SERVER then
             total = #chunks,
             idx = 0
         }
+
         lia.net.sendq[ply][sid] = s
         timer.Simple(chunkTime, function()
             if not IsValid(ply) then return end
@@ -144,6 +159,7 @@ if SERVER then
             sendChunk(ply, ss, sid, 1)
         end)
     end
+
     function lia.net.writeBigTable(targets, netStr, tbl, chunkSize)
         if not istable(tbl) then return end
         local json = util.TableToJSON(tbl)
@@ -159,6 +175,7 @@ if SERVER then
             chunks[#chunks + 1] = part
             pos = pos + size
         end
+
         local sid = (tonumber(util.CRC(tostring(SysTime()) .. json)) or 0) % 4294967296
         local delay = 0
         local function schedule(ply)
@@ -166,6 +183,7 @@ if SERVER then
             timer.Simple(delay, function() if IsValid(ply) then beginStream(ply, netStr, chunks, sid) end end)
             delay = delay + (isReload and chunkTime * 2 or chunkTime)
         end
+
         if istable(targets) then
             local validTargets = 0
             for i = #targets, 1, -1 do
@@ -174,6 +192,7 @@ if SERVER then
                     validTargets = validTargets + 1
                 end
             end
+
             if validTargets == 0 then
                 for _, ply in ipairs(player.GetHumans()) do
                     schedule(ply)
@@ -188,6 +207,7 @@ if SERVER then
         end
     end
 end
+
 if SERVER then
     function checkBadType(name, object)
         if isfunction(object) then
@@ -199,6 +219,7 @@ if SERVER then
             end
         end
     end
+
     function setNetVar(key, value, receiver)
         if checkBadType(key, value) then return end
         local oldValue = getNetVar(key)
@@ -214,12 +235,15 @@ if SERVER then
                 net.Broadcast()
             end
         end
+
         hook.Run("NetVarChanged", nil, key, oldValue, value)
     end
+
     function getNetVar(key, default)
         local value = lia.net.globals[key]
         return value ~= nil and value or default
     end
+
     hook.Add("EntityRemoved", "liaNetworkingCleanup", function(entity) entity:clearNetVars() end)
     hook.Add("PlayerInitialSpawn", "liaNetworkingSync", function(client) client:syncVars() end)
     hook.Add("CharDeleted", "liaNetworkingCharDeleted", function(client, character)
@@ -230,6 +254,7 @@ if SERVER then
             net.Send(client)
         end
     end)
+
     hook.Add("OnCharCreated", "liaNetworkingCharCreated", function(client, character, data)
         lia.char.names[character:getID()] = data.name
         if not lia.shuttingDown then
@@ -243,5 +268,6 @@ else
         local value = lia.net.globals[key]
         return value ~= nil and value or default
     end
+
     FindMetaTable("Player").getLocalVar = FindMetaTable("Entity").getNetVar
 end

@@ -1,4 +1,4 @@
-MODULE.name = "Vendors"
+﻿MODULE.name = "Vendors"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Provides NPC vendors who can buy and sell items with stock management and dialogue-driven transactions."
@@ -16,6 +16,7 @@ MODULE.Privileges = {
         Category = "vendors",
     },
 }
+
 VENDOR_WELCOME = 1
 VENDOR_LEAVE = 2
 VENDOR_NOTRADE = 3

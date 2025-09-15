@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     self:SetTitle(self.Title or "Item List")
     self:SetSize(self.Width or 600, self.Height or 500)
@@ -18,6 +18,7 @@ function PANEL:Init()
         self.listView:AddColumn("Value")
         self.listView:AddColumn("Description")
     end
+
     self.closeButton = self:Add("DButton")
     self.closeButton:Dock(BOTTOM)
     self.closeButton:SetTall(30)
@@ -25,6 +26,7 @@ function PANEL:Init()
     self.closeButton.DoClick = function() self:Remove() end
     if self.Data then self:PopulateItems() end
 end
+
 function PANEL:PopulateItems()
     if not self.Data then return end
     self.listView:Clear()
@@ -37,22 +39,27 @@ function PANEL:PopulateItems()
         end
     end
 end
+
 function PANEL:SetData(data)
     self.Data = data
     self:PopulateItems()
 end
+
 function PANEL:SetTitle(title)
     self.Title = title
     if self:GetTitle() ~= title then DFrame.SetTitle(self, title) end
 end
+
 function PANEL:SetColumns(columns)
     self.Columns = columns
 end
+
 function PANEL:Paint(w, h)
     surface.SetDrawColor(45, 45, 45, 250)
     surface.DrawRect(0, 0, w, h)
     draw.SimpleText(self.Title or "Item List", "liaMediumFont", w / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
+
 vgui.Register("liaItemList", PANEL, "DFrame")
 PANEL = {}
 function PANEL:Init()
@@ -74,6 +81,7 @@ function PANEL:Init()
         self.listView:AddColumn("Value")
         self.listView:AddColumn("Quantity")
     end
+
     self.actionButton = self:Add("DButton")
     self.actionButton:Dock(BOTTOM)
     self.actionButton:SetTall(40)
@@ -86,6 +94,7 @@ function PANEL:Init()
             self:OnAction(line, selectedLine)
         end
     end
+
     self.closeButton = self:Add("DButton")
     self.closeButton:Dock(BOTTOM)
     self.closeButton:DockMargin(0, 5, 0, 0)
@@ -96,8 +105,10 @@ function PANEL:Init()
         self.actionButton:SetDisabled(false)
         self.selectedItem = line
     end
+
     if self.Data then self:PopulateItems() end
 end
+
 function PANEL:PopulateItems()
     if not self.Data then return end
     self.listView:Clear()
@@ -110,24 +121,30 @@ function PANEL:PopulateItems()
         end
     end
 end
+
 function PANEL:SetData(data)
     self.Data = data
     self:PopulateItems()
 end
+
 function PANEL:SetTitle(title)
     self.Title = title
     if self:GetTitle() ~= title then DFrame.SetTitle(self, title) end
 end
+
 function PANEL:SetActionText(text)
     self.ActionText = text
     if self.actionButton then self.actionButton:SetText(text) end
 end
+
 function PANEL:SetColumns(columns)
     self.Columns = columns
 end
+
 function PANEL:Paint(w, h)
     surface.SetDrawColor(45, 45, 45, 250)
     surface.DrawRect(0, 0, w, h)
     draw.SimpleText(self.Title or "Select Items", "liaMediumFont", w / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
+
 vgui.Register("liaItemSelector", PANEL, "DFrame")

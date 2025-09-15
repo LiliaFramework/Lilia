@@ -1,4 +1,4 @@
-local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
+﻿local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng
 local clmp = math.Clamp
 crouchFactor = 0
 local diff, fm, sm
@@ -7,6 +7,7 @@ local maxValues = {
     horizontal = 30,
     distance = 100
 }
+
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
     if client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
@@ -15,6 +16,7 @@ hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
         else
             crouchFactor = Lerp(ft * 5, crouchFactor, 0)
         end
+
         curAng = owner.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
@@ -32,6 +34,7 @@ hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
         return view
     end
 end)
+
 hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     owner = LocalPlayer()
     if owner:CanOverrideView() and owner:GetMoveType() ~= MOVETYPE_NOCLIP and LocalPlayer():GetViewEntity() == LocalPlayer() then
@@ -44,6 +47,7 @@ hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
         return false
     end
 end)
+
 hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
     owner = LocalPlayer()
     if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
@@ -53,6 +57,7 @@ hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
         return true
     end
 end)
+
 hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function() if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():CanOverrideView() then return true end end)
 hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
     local steps = {".stepleft", ".stepright"}
@@ -63,6 +68,7 @@ hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
         if sName:find(steps[1]) or sName:find(steps[2]) then return false end
     end
 end)
+
 hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local currentState = lia.option.get("thirdPersonEnabled", false)
@@ -70,10 +76,12 @@ hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, butto
         hook.Run("thirdPersonToggled", not currentState)
     end
 end)
+
 local function SetWeaponHidden(ply, state)
     local wep = ply:GetActiveWeapon()
     if IsValid(wep) then wep:SetNoDraw(state) end
 end
+
 local function SetRagdollHidden(ply, state)
     local rag = ply:getRagdoll() or ply:GetRagdollEntity()
     if IsValid(rag) then
@@ -81,6 +89,7 @@ local function SetRagdollHidden(ply, state)
         rag:DrawShadow(not state)
     end
 end
+
 local function PlayerIsVisible(client, ply, filter)
     local tr = util.TraceHull({
         start = client:EyePos(),
@@ -92,6 +101,7 @@ local function PlayerIsVisible(client, ply, filter)
     })
     return tr.Fraction == 1 or tr.Entity == ply
 end
+
 hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
     local client = LocalPlayer()
     if ply == client then return end
@@ -100,29 +110,35 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
             ply.IsHidden = false
             if not ply:GetNoDraw() then ply:DrawShadow(true) end
         end
+
         SetWeaponHidden(ply, false)
         SetRagdollHidden(ply, false)
         return
     end
+
     local maxDist = lia.config.get("MaxViewDistance", 5000)
     if client:EyePos():DistToSqr(ply:EyePos()) > maxDist * maxDist then
         if not ply.IsHidden then
             ply.IsHidden = true
             ply:DrawShadow(false)
         end
+
         SetWeaponHidden(ply, true)
         SetRagdollHidden(ply, true)
         return true
     end
+
     if client:EyeAngles():Forward():Dot(ply:EyePos() - client:EyePos()) < 0 then
         if not ply.IsHidden then
             ply.IsHidden = true
             ply:DrawShadow(false)
         end
+
         SetRagdollHidden(ply, true)
         SetWeaponHidden(ply, true)
         return true
     end
+
     local filter = player.GetAll()
     table.RemoveByValue(filter, client)
     table.RemoveByValue(filter, ply)
@@ -132,6 +148,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
             ply.IsHidden = false
             if not ply:GetNoDraw() then ply:DrawShadow(true) end
         end
+
         SetRagdollHidden(ply, false)
         SetWeaponHidden(ply, false)
     else
@@ -140,6 +157,7 @@ hook.Add("PrePlayerDraw", "liaThirdPersonPrePlayerDraw", function(ply)
             ply:DrawShadow(false)
             SetRagdollHidden(ply, true)
         end
+
         SetWeaponHidden(ply, true)
     end
     return not visible

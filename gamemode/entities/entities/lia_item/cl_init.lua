@@ -1,4 +1,4 @@
-local vectorMeta = FindMetaTable("Vector")
+﻿local vectorMeta = FindMetaTable("Vector")
 local toScreen = vectorMeta.ToScreen
 function ENT:computeDescMarkup(description)
     if self.desc ~= description then
@@ -7,6 +7,7 @@ function ENT:computeDescMarkup(description)
     end
     return self.markup
 end
+
 function ENT:onDrawEntityInfo(alpha)
     if IsValid(lia.gui.itemPanel) then return end
     if LocalPlayer():GetPos():DistToSqr(self:GetPos()) > 200 * 200 then return end
@@ -29,6 +30,7 @@ function ENT:onDrawEntityInfo(alpha)
     hook.Run("DrawItemDescription", self, x, y, ColorAlpha(color_white, alpha), alpha)
     item.data, item.entity = oldD, oldE
 end
+
 function ENT:DrawTranslucent()
     local itemTable = self:getItemTable()
     if itemTable and itemTable.drawEntity then

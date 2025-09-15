@@ -1,4 +1,4 @@
-lia.module = lia.module or {}
+﻿lia.module = lia.module or {}
 lia.module.list = lia.module.list or {}
 local function loadPermissions(Privileges)
     if not Privileges or not istable(Privileges) then return end
@@ -13,6 +13,7 @@ local function loadPermissions(Privileges)
         })
     end
 end
+
 local function loadDependencies(dependencies)
     if not istable(dependencies) then return end
     for _, dep in ipairs(dependencies) do
@@ -24,10 +25,12 @@ local function loadDependencies(dependencies)
         end
     end
 end
+
 local function loadSubmodules(path)
     local files, folders = file.Find(path .. "/submodules/*", "LUA")
     if #files > 0 or #folders > 0 then lia.module.loadFromDir(path .. "/submodules", "module") end
 end
+
 local function collectModuleIDs(directory)
     local ids = {}
     if not directory then return ids end
@@ -37,6 +40,7 @@ local function collectModuleIDs(directory)
     end
     return ids
 end
+
 local function loadExtras(path)
     local ModuleFiles = {
         pim = "server",
@@ -44,6 +48,7 @@ local function loadExtras(path)
         commands = "shared",
         networking = "server",
     }
+
     local ModuleFolders = {"config", "dependencies", "libs", "hooks", "libraries", "commands", "netcalls", "meta", "derma"}
     lia.lang.loadFromDir(path .. "/languages")
     lia.faction.loadFromDir(path .. "/factions")
@@ -53,10 +58,12 @@ local function loadExtras(path)
         local filePath = path .. "/" .. fileName .. ".lua"
         if file.Exists(filePath, "LUA") then lia.include(filePath, realm) end
     end
+
     for _, folder in ipairs(ModuleFolders) do
         local subPath = path .. "/" .. folder
         if file.Exists(subPath, "LUA") then lia.includeDir(subPath, true, true) end
     end
+
     lia.includeEntities(path .. "/entities")
     if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
     if SERVER then
@@ -71,14 +78,17 @@ local function loadExtras(path)
                 if isstring(name) and isstring(url) then lia.webimage.register(name, url) end
             end
         end
+
         if MODULE.WebSounds and istable(MODULE.WebSounds) then
             for name, url in pairs(MODULE.WebSounds) do
                 if isstring(name) and isstring(url) then lia.websound.register(name, url) end
             end
         end
     end
+
     hook.Run("DoModuleIncludes", path, MODULE)
 end
+
 function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
@@ -90,6 +100,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             if isfunction(func) then hook.Remove(hookName, existing) end
         end
     end
+
     MODULE = {
         folder = path,
         module = existing or prev,
@@ -100,11 +111,13 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         enabled = true,
         IsValid = function() return true end
     }
+
     if uniqueID == "schema" then
         if SCHEMA then MODULE = SCHEMA end
         variable = "SCHEMA"
         MODULE.folder = engine.ActiveGamemode()
     end
+
     _G[variable] = MODULE
     MODULE.loading = true
     MODULE.path = path
@@ -118,32 +131,39 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             _G[variable] = prev
             return
         end
+
         lia.include(coreFile, "shared")
     end
+
     local enabled, disableReason
     if isfunction(MODULE.enabled) then
         enabled, disableReason = MODULE.enabled()
     else
         enabled = MODULE.enabled
     end
+
     if uniqueID ~= "schema" and not enabled then
         if disableReason then
             lia.bootstrap(L("moduleDisabledTitle"), disableReason)
         else
             lia.bootstrap(L("moduleDisabledTitle"), MODULE.name)
         end
+
         _G[variable] = prev
         return
     end
+
     loadPermissions(MODULE.Privileges)
     if not isSingleFile then
         loadDependencies(MODULE.Dependencies)
         loadExtras(path)
     end
+
     MODULE.loading = false
     for k, f in pairs(MODULE) do
         if isfunction(f) then hook.Add(k, MODULE, f) end
     end
+
     if uniqueID == "schema" then
         function MODULE:IsValid()
             return true
@@ -152,9 +172,11 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         function MODULE:setData(value, global, ignoreMap)
             lia.data.set(uniqueID, value, global, ignoreMap)
         end
+
         function MODULE:getData(default)
             return lia.data.get(uniqueID, default) or {}
         end
+
         lia.module.list[uniqueID] = MODULE
         if not skipSubmodules then loadSubmodules(path) end
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
@@ -162,6 +184,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
         _G[variable] = prev
     end
 end
+
 function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode()
     lia.module.load("schema", schemaPath .. "/schema", false, "schema")
@@ -173,9 +196,11 @@ function lia.module.initialize()
     for id in pairs(collectModuleIDs(schemaPath .. "/overrides")) do
         gamemodeIDs[id] = true
     end
+
     for id in pairs(collectModuleIDs("lilia/gamemode/modules")) do
         if not preloadIDs[id] and gamemodeIDs[id] then lia.bootstrap(L("module"), L("modulePreloadSuggestion", id)) end
     end
+
     lia.module.loadFromDir("lilia/gamemode/modules", "module", preloadIDs)
     lia.module.loadFromDir(schemaPath .. "/modules", "module")
     lia.module.loadFromDir(schemaPath .. "/overrides", "module")
@@ -189,6 +214,7 @@ function lia.module.initialize()
         end
     end
 end
+
 function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local _, folders = file.Find(directory .. "/*", "LUA")
@@ -196,9 +222,11 @@ function lia.module.loadFromDir(directory, group, skip)
         if not skip or not skip[folderName] then lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar) end
     end
 end
+
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
+
 hook.Add("CreateInformationButtons", "liaInformationModulesUnified", function(pages)
     table.insert(pages, {
         name = "modules",
@@ -216,8 +244,10 @@ hook.Add("CreateInformationButtons", "liaInformationModulesUnified", function(pa
                     desc = desc,
                     right = right,
                 })
+
                 row.filterText = (title .. " " .. desc .. " " .. right):lower()
             end
+
             sheet:Refresh()
         end
     })

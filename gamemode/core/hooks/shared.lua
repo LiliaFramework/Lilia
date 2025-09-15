@@ -1,4 +1,4 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
 function GM:OnCharVarChanged(character, varName, oldVar, newVar)
     if lia.char.varHooks[varName] then
         for _, v in pairs(lia.char.varHooks[varName]) do
@@ -6,10 +6,12 @@ function GM:OnCharVarChanged(character, varName, oldVar, newVar)
         end
     end
 end
+
 function GM:GetModelGender(model)
     local isFemale = model:find("alyx") or model:find("mossman") or model:find("female")
     return isFemale and "female" or "male"
 end
+
 local GamemodeFunctions = {
     server = {
         {
@@ -115,6 +117,7 @@ local GamemodeFunctions = {
         }
     }
 }
+
 local function registerFunctions(scope)
     for _, f in ipairs(GamemodeFunctions[scope]) do
         if f.returnValue ~= nil then
@@ -127,6 +130,7 @@ local function registerFunctions(scope)
         end
     end
 end
+
 if SERVER then registerFunctions("server") end
 if CLIENT then registerFunctions("client") end
 registerFunctions("shared")

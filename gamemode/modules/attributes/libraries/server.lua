@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local staminaPlayers = {}
 function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
@@ -15,12 +15,15 @@ function MODULE:PostPlayerLoadout(client)
             end
         end
     end
+
     client:setLocalVar("stamina", char:getMaxStamina())
     staminaPlayers[client] = true
 end
+
 function MODULE:PlayerDisconnected(client)
     staminaPlayers[client] = nil
 end
+
 function MODULE:KeyPress(client, key)
     local char = client:getChar()
     if not char then return end
@@ -33,6 +36,7 @@ function MODULE:KeyPress(client, key)
             client.Grabbed = NULL
         end
     end
+
     if key == IN_JUMP and not client:isNoClipping() and not client:InVehicle() and client:Alive() and client:OnGround() and (client.liaNextJump or 0) <= CurTime() then
         client.liaNextJump = CurTime() + 0.1
         local cost = lia.config.get("JumpStaminaCost", 25)
@@ -45,9 +49,11 @@ function MODULE:KeyPress(client, key)
         end
     end
 end
+
 function MODULE:PlayerLoadedChar(client, character)
     timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getMaxStamina()) end end)
 end
+
 function MODULE:PlayerStaminaLost(client)
     if client:getNetVar("brth", false) then return end
     client:setNetVar("brth", true)
@@ -60,17 +66,20 @@ function MODULE:PlayerStaminaLost(client)
             timer.Remove("liaStamBreathCheck" .. client:SteamID64())
             return
         end
+
         local char = client:getChar()
         local currentStamina = client:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         if currentStamina <= breathThreshold then
             client:EmitSound("player/breathe1.wav", 35, 100)
             return
         end
+
         client:StopSound("player/breathe1.wav")
         client:setNetVar("brth", nil)
         timer.Remove("liaStamBreathCheck" .. client:SteamID64())
     end)
 end
+
 net.Receive("ChangeAttribute", function(_, client)
     if not client:hasPrivilege("manageAttributes") then return end
     local charID = net.ReadInt(32)
@@ -86,30 +95,36 @@ net.Receive("ChangeAttribute", function(_, client)
             end
         end
     end
+
     if not attribKey or not lia.attribs.list[attribKey] then
         client:notifyErrorLocalized("invalidAttributeKey")
         return
     end
+
     local attribValue = tonumber(amountStr)
     if not attribValue then
         client:notifyErrorLocalized("invalidAmount")
         return
     end
+
     local targetClient = lia.char.getBySteamID(charID)
     if not IsValid(targetClient) then
         client:notifyErrorLocalized("characterNotFound")
         return
     end
+
     local targetChar = targetClient:getChar()
     if not targetChar then
         client:notifyErrorLocalized("characterNotFound")
         return
     end
+
     if mode == L("set") then
         if attribValue < 0 then
             client:notifyErrorLocalized("attribNonNegative")
             return
         end
+
         targetChar:setAttrib(attribKey, attribValue)
         client:notifySuccessLocalized("attribSet", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
         targetChar:getPlayer():notifyInfoLocalized("yourAttributeSet", lia.attribs.list[attribKey].name, attribValue, client:Nick())
@@ -118,12 +133,14 @@ net.Receive("ChangeAttribute", function(_, client)
             client:notifyErrorLocalized("attribPositive")
             return
         end
+
         local current = targetChar:getAttrib(attribKey, 0) or 0
         local newValue = current + attribValue
         if not isnumber(newValue) or newValue < 0 then
             client:notifyErrorLocalized("attribCalculationError")
             return
         end
+
         targetChar:updateAttrib(attribKey, newValue)
         client:notifySuccessLocalized("attribUpdate", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
         targetChar:getPlayer():notifyInfoLocalized("yourAttributeIncreased", lia.attribs.list[attribKey].name, attribValue, client:Nick())
@@ -131,6 +148,7 @@ net.Receive("ChangeAttribute", function(_, client)
         client:notifyErrorLocalized("invalidMode")
     end
 end)
+
 if SERVER and not timer.Exists("liaGlobalStamina") then
     timer.Create("liaGlobalStamina", 0.25, 0, function()
         for client, _ in pairs(staminaPlayers) do

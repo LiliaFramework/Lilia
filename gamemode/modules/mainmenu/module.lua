@@ -1,4 +1,4 @@
-MODULE.name = "MainMenu"
+﻿MODULE.name = "MainMenu"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Creates the in-game main menu used for selecting, creating, and managing player characters before entering the world."
@@ -10,6 +10,7 @@ if SERVER then
         for i = 1, #client.liaCharList do
             net.WriteUInt(client.liaCharList[i], 32)
         end
+
         net.Send(client)
     end
 else
@@ -19,10 +20,12 @@ else
             return true
         end
     end
+
     function MODULE:ResetCharacterPanel()
         if IsValid(lia.gui.character) then lia.gui.character:Remove() end
         vgui.Create("liaCharacter")
     end
+
     function MODULE:chooseCharacter(id)
         assert(isnumber(id), L("idMustBeNumber"))
         local d = deferred.new()
@@ -35,11 +38,13 @@ else
                 d:reject(message)
             end
         end)
+
         net.Start("liaCharChoose")
         net.WriteUInt(id, 32)
         net.SendToServer()
         return d
     end
+
     function MODULE:createCharacter(data)
         local client = LocalPlayer()
         assert(istable(data), L("dataMustBeTable"))
@@ -52,8 +57,10 @@ else
                 local results = {charVar.onValidate(value, data, client)}
                 if results[1] == false then return d:reject(L(unpack(results, 2))) end
             end
+
             payload[key] = value
         end
+
         net.Receive("liaCharCreate", function()
             local id = net.ReadUInt(32)
             local reason = net.ReadString()
@@ -63,31 +70,37 @@ else
                 d:reject(reason)
             end
         end)
+
         net.Start("liaCharCreate")
         net.WriteUInt(table.Count(payload), 32)
         for key, value in pairs(payload) do
             net.WriteString(key)
             net.WriteType(value)
         end
+
         net.SendToServer()
         return d
     end
+
     function MODULE:deleteCharacter(id)
         assert(isnumber(id), L("idMustBeNumber"))
         net.Start("liaCharDelete")
         net.WriteUInt(id, 32)
         net.SendToServer()
     end
+
     function MODULE:LiliaLoaded()
         hook.Run("ShouldOpenMainMenu")
         vgui.Create("liaCharacter")
     end
+
     function MODULE:KickedFromChar(_, isCurrentChar)
         if isCurrentChar then
             local charPanel = vgui.Create("liaCharacter")
             charPanel.isKickedFromChar = true
         end
     end
+
     function MODULE:CreateMenuButtons(tabs)
         tabs["characters"] = function()
             local client = LocalPlayer()
@@ -95,10 +108,12 @@ else
                 lia.option.set("thirdPersonEnabled", false)
                 hook.Run("thirdPersonToggled", false)
             end
+
             if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end
             vgui.Create("liaCharacter")
         end
     end
+
     net.Receive("liaStaffDiscordPrompt", function()
         Derma_StringRequest("Staff Character Setup", "Please enter your Discord username for your staff character description:", "", function(discord)
             if discord and discord:Trim() ~= "" then
@@ -115,6 +130,7 @@ else
         end)
     end)
 end
+
 function MODULE:CanPlayerCreateChar(client, data)
     local isStaffCharacter = istable(data) and data.faction == FACTION_STAFF
     if isStaffCharacter then return true end
@@ -129,6 +145,7 @@ function MODULE:CanPlayerCreateChar(client, data)
         if (count or 0) >= maxChars then return false end
     end
 end
+
 function MODULE:GetMaxPlayerChar(client)
     local maxChars = lia.config.get("MaxCharacters")
     if SERVER then

@@ -1,4 +1,4 @@
-lia.workshop = lia.workshop or {}
+﻿lia.workshop = lia.workshop or {}
 if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
@@ -9,6 +9,7 @@ if SERVER then
         lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
         lia.workshop.ids[id] = true
     end
+
     local function addKnown(id)
         id = tostring(id)
         if not lia.workshop.known[id] then
@@ -16,11 +17,13 @@ if SERVER then
             lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id))
         end
     end
+
     function lia.workshop.gather()
         local ids = table.Copy(lia.workshop.ids)
         for _, addon in pairs(engine.GetAddons() or {}) do
             if addon.mounted and addon.wsid then ids[tostring(addon.wsid)] = true end
         end
+
         for _, module in pairs(lia.module.list) do
             local wc = module.WorkshopContent
             if wc then
@@ -33,17 +36,20 @@ if SERVER then
                 end
             end
         end
+
         for id in pairs(ids) do
             addKnown(id)
         end
         return ids
     end
+
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
     function lia.workshop.send(ply)
         net.Start("WorkshopDownloader_Start")
         net.WriteTable(lia.workshop.cache)
         net.Send(ply)
     end
+
     hook.Add("PlayerInitialSpawn", "liaWorkshopInit", function(ply)
         timer.Simple(2, function()
             if IsValid(ply) then
@@ -53,6 +59,7 @@ if SERVER then
             end
         end)
     end)
+
     net.Receive("WorkshopDownloader_Request", function(_, client) lia.workshop.send(client) end)
     lia.workshop.AddWorkshop("3527535922")
     resource.AddWorkshop = lia.workshop.AddWorkshop
@@ -67,14 +74,17 @@ else
         end
         return false
     end
+
     local function gmaDir()
         local dir = "lilia/workshop"
         if not file.IsDir(dir, "DATA") then file.CreateDir(dir) end
         return dir
     end
+
     local function gmaPath(id)
         return gmaDir() .. "/" .. id .. ".gma"
     end
+
     local function mountLocal(id)
         local rel = gmaPath(id)
         if file.Exists(rel, "DATA") then
@@ -83,12 +93,14 @@ else
         end
         return false
     end
+
     function lia.workshop.hasContentToDownload()
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then return true end
         end
         return false
     end
+
     local function formatSize(bytes)
         if not bytes or bytes <= 0 then return "0 B" end
         local units = {"B", "KB", "MB", "GB", "TB"}
@@ -99,6 +111,7 @@ else
         end
         return string.format("%.2f %s", bytes, units[unit])
     end
+
     local function uiCreate()
         if panel and panel:IsValid() then return end
         surface.SetFont("DermaLarge")
@@ -121,25 +134,30 @@ else
         panel.bar:SetSize(w - pad * 2, bh)
         panel.bar:SetFraction(0)
     end
+
     local function uiUpdate()
         if not (panel and panel:IsValid()) then return end
         panel.bar:SetFraction(totalDownloads > 0 and (totalDownloads - remainingDownloads) / totalDownloads or 0)
         panel.bar:SetText(totalDownloads - remainingDownloads .. "/" .. totalDownloads)
     end
+
     local function start()
         for id in pairs(queue) do
             if mounted(id) or mountLocal(id) then queue[id] = nil end
         end
+
         local seq, idx = {}, 1
         for id in pairs(queue) do
             seq[#seq + 1] = id
         end
+
         totalDownloads = #seq
         remainingDownloads = totalDownloads
         if totalDownloads == 0 then
             lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
             return
         end
+
         uiCreate()
         uiUpdate()
         local function nextItem()
@@ -150,6 +168,7 @@ else
                 end
                 return
             end
+
             local id = seq[idx]
             lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
             steamworks.DownloadUGC(id, function(path)
@@ -162,32 +181,39 @@ else
                         file.Write(rel, data)
                         path = "data/" .. rel
                     end
+
                     game.MountGMA(path)
                 end
+
                 uiUpdate()
                 idx = idx + 1
                 timer.Simple(MOUNT_DELAY, nextItem)
             end)
         end
+
         nextItem()
     end
+
     local function buildQueue(all)
         table.Empty(queue)
         for id in pairs(lia.workshop.serverIds or {}) do
             if id == FORCE_ID or all then queue[id] = true end
         end
     end
+
     local function refresh(tbl)
         if tbl then lia.workshop.serverIds = tbl end
         for id in pairs(lia.workshop.serverIds or {}) do
             if id ~= FORCE_ID then mountLocal(id) end
         end
     end
+
     net.Receive("WorkshopDownloader_Start", function()
         refresh(net.ReadTable())
         buildQueue(true)
         start()
     end)
+
     net.Receive("WorkshopDownloader_Info", function() refresh(net.ReadTable()) end)
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
@@ -195,10 +221,12 @@ else
         for id in pairs(ids) do
             if id ~= FORCE_ID and not mounted(id) and not mountLocal(id) then needed[#needed + 1] = id end
         end
+
         if #needed == 0 then
             lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
             return
         end
+
         local pending, totalSize = #needed, 0
         for _, id in ipairs(needed) do
             steamworks.FileInfo(id, function(fi)
@@ -213,12 +241,14 @@ else
             end)
         end
     end
+
     concommand.Add("workshop_force_redownload", function()
         table.Empty(queue)
         buildQueue(true)
         start()
         lia.bootstrap(L("workshopDownloader"), L("workshopForcedRedownload"))
     end)
+
     hook.Add("CreateInformationButtons", "liaWorkshopInfo", function(pages)
         table.insert(pages, {
             name = "workshopAddons",
@@ -251,8 +281,10 @@ else
                             end
                         end
                     end
+
                     if IsValid(sheet) and sheet.Refresh then sheet:Refresh() end
                 end
+
                 for id in pairs(ids) do
                     steamworks.FileInfo(id, function(fi)
                         info[id] = fi

@@ -1,4 +1,4 @@
-function MODULE:ShowPlayerOptions(target, options)
+﻿function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end
     if not (client:hasPrivilege("canAccessScoreboardInfoOutOfStaff") or client:hasPrivilege("canAccessScoreboardAdminOptions") and client:isStaffOnDuty()) then return end
@@ -105,10 +105,12 @@ function MODULE:ShowPlayerOptions(target, options)
             func = function() RunConsoleCommand("say", "!return " .. target:SteamID()) end
         }
     }
+
     for _, v in ipairs(orderedOptions) do
         options[#options + 1] = v
     end
 end
+
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
@@ -123,6 +125,7 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
+
     if client:hasPrivilege("privilegeViewer") then
         table.insert(pages, {
             name = "privileges",
@@ -147,6 +150,7 @@ function MODULE:PopulateAdminTabs(pages)
                     for _, header in ipairs(headers) do
                         listView:AddColumn(header)
                     end
+
                     local rows = {}
                     for id, minAccess in pairs(privileges) do
                         local name = names[id] or id
@@ -154,13 +158,16 @@ function MODULE:PopulateAdminTabs(pages)
                         local category = L(categoryKey)
                         rows[#rows + 1] = {category, id, name, tostring(minAccess or "user")}
                     end
+
                     table.sort(rows, function(a, b)
                         if a[1] == b[1] then return a[2] < b[2] end
                         return a[1] < b[1]
                     end)
+
                     for _, r in ipairs(rows) do
                         listView:AddLine(r[2], r[3], r[4], r[1])
                     end
+
                     listView:SortByColumn(4, false)
                     listView.OnRowRightClick = function(_, _, line)
                         local m = DermaMenu()
@@ -170,22 +177,27 @@ function MODULE:PopulateAdminTabs(pages)
                                 client:notifySuccessLocalized("copied")
                             end)
                         end
+
                         m:AddSpacer()
                         m:AddOption("Copy All", function()
                             local t = {}
                             for i, header in ipairs(headers) do
                                 t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
                             end
+
                             SetClipboardText(table.concat(t, "\n"))
                             client:notifySuccessLocalized("allPrivilegeInfo")
                         end)
+
                         m:Open()
                     end
+
                     listView.OnRowDoubleClick = function(_, _, line)
                         SetClipboardText(line:GetColumnText(1) or "")
                         client:notifySuccessLocalized("privilegeIdCopied")
                     end
                 end
+
                 local refreshButton = vgui.Create("DButton", panel)
                 refreshButton:Dock(TOP)
                 refreshButton:DockMargin(0, 0, 0, 10)
@@ -196,6 +208,7 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
+
     if client:hasPrivilege("canAccessPlayerList") then
         table.insert(pages, {
             name = "players",
@@ -207,6 +220,7 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
+
     if client:hasPrivilege("listCharacters") then
         table.insert(pages, {
             name = "characterList",
@@ -228,6 +242,7 @@ function MODULE:PopulateAdminTabs(pages)
                         local s = secs % 60
                         return string.format("%02i:%02i:%02i", h, m, s)
                     end
+
                     local hasBanInfo = false
                     for _, row in ipairs(data.all or {}) do
                         if row.Banned then
@@ -235,6 +250,7 @@ function MODULE:PopulateAdminTabs(pages)
                             break
                         end
                     end
+
                     local columns = {
                         {
                             name = "id",
@@ -266,30 +282,36 @@ function MODULE:PopulateAdminTabs(pages)
                             format = function(val) return val and L("yes") or L("no") end
                         }
                     }
+
                     if hasBanInfo then
                         table.insert(columns, {
                             name = "banningAdminName",
                             field = "BanningAdminName"
                         })
+
                         table.insert(columns, {
                             name = "banningAdminSteamID",
                             field = "BanningAdminSteamID"
                         })
+
                         table.insert(columns, {
                             name = "banningAdminRank",
                             field = "BanningAdminRank"
                         })
                     end
+
                     table.insert(columns, {
                         name = "playtime",
                         field = "PlayTime",
                         format = function(val) return formatPlayTime(val or 0) end
                     })
+
                     table.insert(columns, {
                         name = "money",
                         field = L("money"),
                         format = function(val) return lia.currency.get(tonumber(val) or 0) end
                     })
+
                     hook.Run("CharListColumns", columns)
                     local function createList(parent, rows)
                         local container = parent:Add("DPanel")
@@ -306,6 +328,7 @@ function MODULE:PopulateAdminTabs(pages)
                             list:AddColumn(col.name)
                             if col.field == L("steamID") then steamIDColumnIndex = i end
                         end
+
                         local function populate(filter)
                             list:Clear()
                             filter = string.lower(filter or "")
@@ -316,6 +339,7 @@ function MODULE:PopulateAdminTabs(pages)
                                     if col.format then value = col.format(value, row) end
                                     values[#values + 1] = value or ""
                                 end
+
                                 local match = false
                                 if filter == "" then
                                     match = true
@@ -327,6 +351,7 @@ function MODULE:PopulateAdminTabs(pages)
                                         end
                                     end
                                 end
+
                                 if match then
                                     local line = list:AddLine(unpack(values))
                                     line.CharID = row.ID
@@ -335,6 +360,7 @@ function MODULE:PopulateAdminTabs(pages)
                                 end
                             end
                         end
+
                         search.OnChange = function() populate(search:GetValue()) end
                         populate("")
                         function list:OnRowRightClick(_, line)
@@ -348,8 +374,10 @@ function MODULE:PopulateAdminTabs(pages)
                                     local value = line:GetColumnText(i) or ""
                                     rowString = rowString .. header .. " " .. value .. " | "
                                 end
+
                                 SetClipboardText(string.sub(rowString, 1, -4))
                             end):SetIcon("icon16/page_copy.png")
+
                             if line.CharID then
                                 local owner = line.SteamID and lia.util.getBySteamID(line.SteamID)
                                 if IsValid(owner) then
@@ -358,6 +386,7 @@ function MODULE:PopulateAdminTabs(pages)
                                     else
                                         if lia.command.hasAccess(LocalPlayer(), "charban") then menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
                                     end
+
                                     if lia.command.hasAccess(LocalPlayer(), "charwipe") then menu:AddOption(L("wipeCharacter"), function() LocalPlayer():ConCommand('say "/charwipe ' .. line.CharID .. '"') end):SetIcon("icon16/user_delete.png") end
                                 else
                                     if not line.Banned and lia.command.hasAccess(LocalPlayer(), "charbanoffline") then menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
@@ -365,9 +394,11 @@ function MODULE:PopulateAdminTabs(pages)
                                     if line.Banned and lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png") end
                                 end
                             end
+
                             menu:Open()
                         end
                     end
+
                     local allPanel = self.sheet:Add("DPanel")
                     allPanel:Dock(FILL)
                     allPanel.Paint = function() end
@@ -383,11 +414,13 @@ function MODULE:PopulateAdminTabs(pages)
                         self.sheet:AddSheet(tabName, pnl)
                     end
                 end
+
                 net.Start("liaRequestFullCharList")
                 net.SendToServer()
             end
         })
     end
+
     if client:hasPrivilege("viewDBTables") then
         table.insert(pages, {
             name = L("databaseView"),
@@ -403,6 +436,7 @@ function MODULE:PopulateAdminTabs(pages)
                     for _, v in ipairs(self.sheet.Items or {}) do
                         if IsValid(v.Tab) then self.sheet:CloseTab(v.Tab, true) end
                     end
+
                     self.sheet.Items = {}
                     for tbl, rows in SortedPairs(data or {}) do
                         local pnl = self.sheet:Add("DPanel")
@@ -421,35 +455,43 @@ function MODULE:PopulateAdminTabs(pages)
                                     local value = line:GetColumnText(i) or ""
                                     rowString = rowString .. header .. " " .. value .. " | "
                                 end
+
                                 SetClipboardText(string.sub(rowString, 1, -4))
                             end):SetIcon("icon16/page_copy.png")
+
                             menu:AddOption(L("viewEntry"), function() openRowInfo(line.rowData) end):SetIcon("icon16/table.png")
                             menu:AddOption(L("viewDecodedTable"), function() openDecodedTable(tbl, columns, rows) end):SetIcon("icon16/table_go.png")
                             menu:Open()
                         end
+
                         if rows and rows[1] then
                             for col in pairs(rows[1]) do
                                 list:AddColumn(col)
                                 columns[#columns + 1] = col
                             end
+
                             for _, row in ipairs(rows) do
                                 local lineData = {}
                                 for _, col in ipairs(columns) do
                                     lineData[#lineData + 1] = tostring(row[col])
                                 end
+
                                 local line = list:AddLine(unpack(lineData))
                                 line.rowData = row
                             end
                         end
+
                         local sheetName = tbl:gsub("^lia_", "")
                         self.sheet:AddSheet(sheetName, pnl)
                     end
                 end
+
                 net.Start("liaRequestDatabaseView")
                 net.SendToServer()
             end
         })
     end
+
     if client:hasPrivilege("canAccessFlagManagement") then
         table.insert(pages, {
             name = L("flagsManagement"),
@@ -466,6 +508,7 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
+
     if client:hasPrivilege("canManageFactions") then
         table.insert(pages, {
             name = L("factionManagement"),
@@ -477,11 +520,13 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
+
     if client:hasPrivilege("manageCharacters") then
         net.Start("liaRequestPKsCount")
         net.SendToServer()
     end
 end
+
 local pksTabAdded = false
 net.Receive("liaPKsCount", function()
     local count = net.ReadInt(32)

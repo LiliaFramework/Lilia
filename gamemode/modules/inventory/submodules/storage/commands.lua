@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 lia.command.add("storagelock", {
     adminOnly = true,
     desc = "storagelockDesc",
@@ -29,6 +29,7 @@ lia.command.add("storagelock", {
         end
     end
 })
+
 lia.command.add("trunk", {
     adminOnly = false,
     desc = "trunkOpenDesc",
@@ -40,16 +41,19 @@ lia.command.add("trunk", {
             client:notifyErrorLocalized("notLookingAtVehicle")
             return
         end
+
         if client:GetPos():Distance(entity:GetPos()) > maxDistance then
             client:notifyErrorLocalized("tooFarToOpenTrunk")
             return
         end
+
         client.liaStorageEntity = entity
         client:setAction(L("openingTrunk"), openTime, function()
             if client:GetPos():Distance(entity:GetPos()) > maxDistance then
                 client.liaStorageEntity = nil
                 return
             end
+
             entity.receivers = entity.receivers or {}
             entity.receivers[client] = true
             local invID = entity:getNetVar("inv")
@@ -60,6 +64,7 @@ lia.command.add("trunk", {
                     client.liaStorageEntity = nil
                     return
                 end
+
                 storageInv:sync(client)
                 net.Start("liaStorageOpen")
                 net.WriteBool(true)
@@ -67,6 +72,7 @@ lia.command.add("trunk", {
                 net.Send(client)
                 entity:EmitSound("items/ammocrate_open.wav")
             end
+
             if inv then
                 openStorage(inv)
             else

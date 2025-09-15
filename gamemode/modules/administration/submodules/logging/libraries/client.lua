@@ -1,4 +1,4 @@
-local receivedPanel
+﻿local receivedPanel
 local function OpenLogsUI(panel, categorizedLogs)
     panel:Clear()
     local sheet = panel:Add("DPropertySheet")
@@ -12,6 +12,7 @@ local function OpenLogsUI(panel, categorizedLogs)
         col:SetWidth(w + 16)
         return col
     end
+
     for category, logs in pairs(categorizedLogs) do
         local page = sheet:Add("DPanel")
         page:Dock(FILL)
@@ -38,6 +39,7 @@ local function OpenLogsUI(panel, categorizedLogs)
                 end
             end
         end
+
         search.OnChange = function() populate(search:GetValue()) end
         list.OnRowRightClick = function(_, _, line)
             if not IsValid(line) or not line.rowData then return end
@@ -47,17 +49,21 @@ local function OpenLogsUI(panel, categorizedLogs)
             menu:AddOption(L("copyLogMessage"), function() SetClipboardText(data.message or "") end)
             menu:Open()
         end
+
         populate("")
         sheet:AddSheet(category, page)
     end
 end
+
 lia.net.readBigTable("send_logs", function(categorizedLogs)
     if not categorizedLogs then
         chat.AddText(Color(255, 0, 0), L("failedRetrieveLogs"))
         return
     end
+
     if IsValid(receivedPanel) then OpenLogsUI(receivedPanel, categorizedLogs) end
 end)
+
 function MODULE:PopulateAdminTabs(pages)
     if IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("canSeeLogs") then
         table.insert(pages, {
