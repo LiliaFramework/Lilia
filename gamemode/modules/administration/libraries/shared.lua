@@ -1,7 +1,6 @@
-﻿function MODULE:CanPlayerModifyConfig(client)
+function MODULE:CanPlayerModifyConfig(client)
     return client:hasPrivilege("accessEditConfigurationMenu")
 end
-
 properties.Add("TogglePropBlacklist", {
     MenuLabel = L("togglePropBlacklist"),
     Order = 900,
@@ -27,7 +26,6 @@ properties.Add("TogglePropBlacklist", {
         end
     end
 })
-
 properties.Add("ToggleCarBlacklist", {
     MenuLabel = L("toggleCarBlacklist"),
     Order = 901,
@@ -53,7 +51,6 @@ properties.Add("ToggleCarBlacklist", {
         end
     end
 })
-
 properties.Add("copytoclipboard", {
     MenuLabel = L("copyModelClipboard"),
     Order = 999,

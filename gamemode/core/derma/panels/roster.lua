@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:SetTall(500)
     self.sheet = self:Add("liaSheet")
@@ -11,12 +11,10 @@ function PANEL:Init()
         end
     end)
 end
-
 function PANEL:PerformLayout()
     self:SizeToChildren(false, true)
     if self.sheet then self.sheet:InvalidateLayout(true) end
 end
-
 function PANEL:SetRosterType(t)
     self.rosterType = t
     if t == "faction" then
@@ -24,7 +22,6 @@ function PANEL:SetRosterType(t)
         net.SendToServer()
     end
 end
-
 function PANEL:Populate(data, canKick)
     if not IsValid(self.sheet) then return end
     self.sheet.search:SetValue("")
@@ -35,11 +32,9 @@ function PANEL:Populate(data, canKick)
             desc = L("noMembers"),
             compact = true
         })
-
         self.sheet:Refresh()
         return
     end
-
     for _, v in ipairs(data) do
         local title = v.name or L("unnamed")
         local desc = string.format("%s | %s | %s", v.steamID or L("na"), v.class or L("none"), v.playTime or L("na"))
@@ -83,11 +78,9 @@ function PANEL:Populate(data, canKick)
                         local y = d and pad + t:GetTall() + spacing + d:GetTall() - r:GetTall() or p:GetTall() * 0.5 - r:GetTall() * 0.5
                         r:SetPos(p:GetWide() - r:GetWide() - pad, math.max(pad, y))
                     end
-
                     local textH = pad + t:GetTall() + spacing + d:GetTall() + pad
                     p:SetTall(math.max(rowHeight, textH))
                 end
-
                 rowPanel.filterText = (title .. " " .. desc .. " " .. right):lower()
             end)
         else
@@ -98,7 +91,6 @@ function PANEL:Populate(data, canKick)
                 minHeight = self.sheet.padding * 2 + 64
             })
         end
-
         row.rowData = v
         row.filterText = (title .. " " .. desc .. " " .. right):lower()
         row.OnRightClick = function()
@@ -114,7 +106,6 @@ function PANEL:Populate(data, canKick)
                     end, L("no"))
                 end)
             end
-
             menu:AddOption(L("view") .. " " .. L("characterList"), function() LocalPlayer():ConCommand("say /charlist " .. rowData.steamID) end)
             menu:AddOption(L("copySteamID"), function() SetClipboardText(rowData.steamID or "") end)
             menu:AddOption(L("copyRow"), function()
@@ -123,15 +114,12 @@ function PANEL:Populate(data, canKick)
                     value = tostring(value or L("na"))
                     rowString = rowString .. key:gsub("^%l", string.upper) .. ": " .. value .. " | "
                 end
-
                 rowString = rowString:sub(1, -4)
                 SetClipboardText(rowString)
             end)
-
             menu:Open()
         end
     end
-
     self.sheet:Refresh()
     timer.Simple(0.1, function()
         if IsValid(self) then
@@ -140,5 +128,4 @@ function PANEL:Populate(data, canKick)
         end
     end)
 end
-
 vgui.Register("liaRoster", PANEL, "EditablePanel")

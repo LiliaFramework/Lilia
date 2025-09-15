@@ -1,4 +1,4 @@
-﻿SWEP.PrintName = "Distance Measure Tool"
+SWEP.PrintName = "Distance Measure Tool"
 SWEP.Author = "Samael"
 SWEP.Contact = "@liliaplayer"
 SWEP.Purpose = "Measure distance between two points"
@@ -17,7 +17,6 @@ SWEP.StartPos = nil
 function SWEP:Initialize()
     self:SetHoldType("normal")
 end
-
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     local owner = self:GetOwner()
@@ -34,11 +33,9 @@ function SWEP:PrimaryAttack()
             surface.PlaySound("buttons/button17.wav")
             owner:ChatPrint("Distance: " .. math.Round(distance) .. " units")
         end
-
         self.StartPos = nil
     end
 end
-
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     self.StartPos = nil
@@ -47,7 +44,6 @@ function SWEP:SecondaryAttack()
         self:GetOwner():ChatPrint("Measurement cancelled")
     end
 end
-
 function SWEP:DrawHUD()
     if not self.StartPos then return end
     local owner = self:GetOwner()

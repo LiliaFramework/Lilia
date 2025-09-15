@@ -1,4 +1,4 @@
-﻿ENT.Type = "anim"
+ENT.Type = "anim"
 ENT.PrintName = L("storage")
 ENT.Author = "Samael"
 ENT.Contact = "@liliaplayer"
@@ -10,7 +10,6 @@ ENT.IsPersistent = true
 function ENT:getInv()
     return lia.inventory.instances[self:getNetVar("id")]
 end
-
 function ENT:getStorageInfo()
     local model = self:GetModel()
     if not model then return end

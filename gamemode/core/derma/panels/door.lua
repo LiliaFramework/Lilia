@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:SetSize(280, 240)
     self:SetTitle(L("door") .. " " .. L("settings"))
@@ -22,14 +22,12 @@ function PANEL:Init()
             net.WriteUInt(level, 2)
             net.SendToServer()
         end
-
         menu:AddOption(L("tenant"), function() if accessData[ply] ~= DOOR_TENANT then sendPerm(DOOR_TENANT) end end):SetImage("icon16/user_add.png")
         menu:AddOption(L("guest"), function() if accessData[ply] ~= DOOR_GUEST then sendPerm(DOOR_GUEST) end end):SetImage("icon16/user_green.png")
         menu:AddOption(L("none"), function() if accessData[ply] ~= DOOR_NONE then sendPerm(DOOR_NONE) end end):SetImage("icon16/user_red.png")
         menu:Open()
     end
 end
-
 function PANEL:setDoor(door, accessData, fallback)
     door.liaPanel = self
     self.accessData = accessData
@@ -41,7 +39,6 @@ function PANEL:setDoor(door, accessData, fallback)
             line.player = ply
         end
     end
-
     if self:CheckAccess(DOOR_OWNER) then
         local btn = self:Add("DButton")
         btn:Dock(BOTTOM)
@@ -52,10 +49,8 @@ function PANEL:setDoor(door, accessData, fallback)
             self:Remove()
             lia.command.send("doorsell")
         end
-
         self.sell = btn
     end
-
     if self:CheckAccess(DOOR_TENANT) then
         local entry = self:Add("DTextEntry")
         entry:Dock(TOP)
@@ -66,19 +61,15 @@ function PANEL:setDoor(door, accessData, fallback)
                 entry:SetText(ent:getNetVar("title", L("doorTitleOwned")))
             end
         end
-
         entry.OnEnter = function() lia.command.send("doorsettitle", entry:GetText()) end
         self.name = entry
     end
 end
-
 function PANEL:CheckAccess(minimum)
     if not self.accessData then return false end
     return (self.accessData[LocalPlayer()] or 0) >= (minimum or DOOR_GUEST)
 end
-
 function PANEL:Think()
     if self.accessData and not IsValid(self.door) and self:CheckAccess() then self:Remove() end
 end
-
 vgui.Register("liaDoorMenu", PANEL, "DFrame")

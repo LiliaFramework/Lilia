@@ -1,4 +1,4 @@
-﻿local function utf8charbytes(s, i)
+local function utf8charbytes(s, i)
     i = i or 1
     if not isstring(s) then error(L("utf8CharbytesStringExpected", type(s))) end
     if not isnumber(i) then error(L("utf8CharbytesNumberExpected", type(i))) end
@@ -21,7 +21,6 @@
         elseif c2 < 128 or c2 > 191 then
             error(L("utf8InvalidCharacter"))
         end
-
         if c3 < 128 or c3 > 191 then error(L("utf8InvalidCharacter")) end
         return 3
     elseif c >= 240 and c <= 244 then
@@ -36,7 +35,6 @@
         elseif c2 < 128 or c2 > 191 then
             error(L("utf8InvalidCharacter"))
         end
-
         if c3 < 128 or c3 > 191 then error(L("utf8InvalidCharacter")) end
         if c4 < 128 or c4 > 191 then error(L("utf8InvalidCharacter")) end
         return 4
@@ -44,7 +42,6 @@
         error(L("utf8InvalidCharacter"))
     end
 end
-
 local function utf8len(s)
     if not isstring(s) then error(L("utf8LenStringExpected", type(s))) end
     local pos = 1
@@ -56,7 +53,6 @@ local function utf8len(s)
     end
     return len
 end
-
 if not string.utf8bytes then string.utf8bytes = utf8charbytes end
 if not string.utf8len then string.utf8len = utf8len end
 local function utf8sub(s, i, j)
@@ -83,7 +79,6 @@ local function utf8sub(s, i, j)
     end
     return s:sub(startByte, endByte)
 end
-
 if not string.utf8sub then string.utf8sub = utf8sub end
 local function utf8replace(s, mapping)
     if not isstring(s) then error(L("utf8ReplaceStringExpected", type(s))) end
@@ -100,16 +95,13 @@ local function utf8replace(s, mapping)
     end
     return newstr
 end
-
 local function utf8upper(s)
     return utf8replace(s, utf8_lc_uc)
 end
-
 if not string.utf8upper and utf8_lc_uc then string.utf8upper = utf8upper end
 local function utf8lower(s)
     return utf8replace(s, utf8_uc_lc)
 end
-
 if not string.utf8lower and utf8_uc_lc then string.utf8lower = utf8lower end
 local function utf8reverse(s)
     if not isstring(s) then error(L("utf8ReverseStringExpected", type(s))) end
@@ -124,12 +116,10 @@ local function utf8reverse(s)
             pos = pos - 1
             c = s:byte(pos)
         end
-
         charbytes = utf8charbytes(s, pos)
         newstr = newstr .. s:sub(pos, pos + charbytes - 1)
         pos = pos - 1
     end
     return newstr
 end
-
 if not string.utf8reverse then string.utf8reverse = utf8reverse end

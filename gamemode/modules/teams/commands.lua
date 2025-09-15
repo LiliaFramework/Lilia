@@ -1,4 +1,4 @@
-﻿lia.command.add("plytransfer", {
+lia.command.add("plytransfer", {
     adminOnly = true,
     desc = "plyTransferDesc",
     alias = {"charsetfaction"},
@@ -25,19 +25,16 @@
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local factionName = arguments[2]
         local faction = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
         if not faction then
             client:notifyErrorLocalized("invalidFaction")
             return
         end
-
         if faction.uniqueID == "staff" then
             client:notifyErrorLocalized("staffTransferBlocked")
             return
         end
-
         local targetChar = targetPlayer:getChar()
         if hook.Run("CanCharBeTransfered", targetChar, faction, targetPlayer:Team()) == false then return end
         local oldFaction = targetChar:getFaction()
@@ -54,7 +51,6 @@
         lia.log.add(client, "plyTransfer", targetPlayer:Name(), oldFactionName, faction.name)
     end
 })
-
 lia.command.add("plywhitelist", {
     adminOnly = true,
     desc = "plyWhitelistDesc",
@@ -82,28 +78,23 @@ lia.command.add("plywhitelist", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local faction = lia.util.findFaction(client, arguments[2])
         if not faction then
             client:notifyErrorLocalized("invalidFaction")
             return
         end
-
         if faction.uniqueID == "staff" then
             client:notifyErrorLocalized("staffWhitelistBlocked")
             return
         end
-
         if target:setWhitelisted(faction.index, true) then
             for _, v in player.Iterator() do
                 v:notifyInfoLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
             end
-
             lia.log.add(client, "plyWhitelist", target:Name(), faction.name)
         end
     end
 })
-
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
     desc = "plyUnwhitelistDesc",
@@ -131,30 +122,25 @@ lia.command.add("plyunwhitelist", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local faction = lia.util.findFaction(client, arguments[2])
         if not faction then
             client:notifyErrorLocalized("invalidFaction")
             return
         end
-
         if faction.uniqueID == "staff" then
             client:notifyErrorLocalized("staffUnwhitelistBlocked")
             return
         end
-
         if faction and not faction.isDefault and target:setWhitelisted(faction.index, false) then
             for _, v in player.Iterator() do
                 v:notifyInfoLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
             end
-
             lia.log.add(client, "plyUnwhitelist", target:Name(), faction.name)
         else
             client:notifyErrorLocalized("invalidFaction")
         end
     end
 })
-
 lia.command.add("beclass", {
     adminOnly = false,
     desc = "beClassDesc",
@@ -178,7 +164,6 @@ lia.command.add("beclass", {
             client:notifyErrorLocalized("illegalAccess")
             return
         end
-
         local classID = tonumber(className) or lia.class.retrieveClass(className)
         local classData = lia.class.get(classID)
         if classData and lia.class.canBe(client, classID) then
@@ -193,7 +178,6 @@ lia.command.add("beclass", {
         end
     end
 })
-
 lia.command.add("setclass", {
     adminOnly = true,
     desc = "setClassDesc",
@@ -222,7 +206,6 @@ lia.command.add("setclass", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local className = arguments[2]
         local classID = lia.class.retrieveClass(className)
         local classData = lia.class.list[classID]
@@ -241,7 +224,6 @@ lia.command.add("setclass", {
         end
     end
 })
-
 lia.command.add("classwhitelist", {
     adminOnly = true,
     desc = "classWhitelistDesc",
@@ -272,7 +254,6 @@ lia.command.add("classwhitelist", {
             client:notifyErrorLocalized("invalidClass")
             return
         end
-
         local classData = lia.class.list[classID]
         if target:Team() ~= classData.faction then
             client:notifyErrorLocalized("whitelistFactionMismatch")
@@ -286,7 +267,6 @@ lia.command.add("classwhitelist", {
         end
     end
 })
-
 lia.command.add("classunwhitelist", {
     adminOnly = true,
     desc = "classUnwhitelistDesc",
@@ -317,7 +297,6 @@ lia.command.add("classunwhitelist", {
             client:notifyErrorLocalized("invalidClass")
             return
         end
-
         local classData = lia.class.list[classID]
         if target:Team() ~= classData.faction then
             client:notifyErrorLocalized("whitelistFactionMismatch")

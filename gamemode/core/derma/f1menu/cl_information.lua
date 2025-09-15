@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.info) then lia.gui.info:Remove() end
     lia.gui.info = self
@@ -21,7 +21,6 @@ function PANEL:Init()
         end
     end)
 end
-
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, marginBot, valueFunc)
     local entry = parent:Add("DPanel")
     entry:Dock(TOP)
@@ -48,17 +47,14 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
         local v = valueFunc()
         if isstring(v) then txt:SetText(v) end
     end
-
     txt.OnLoseFocus = function(selfEntry)
         if isDesc then
             local t = selfEntry:GetValue()
             if isstring(t) then lia.command.send("chardesc", t) end
         end
     end
-
     self[name] = txt
 end
-
 function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, margin, valueFunc)
     local entry = parent:Add("DPanel")
     entry:Dock(TOP)
@@ -84,22 +80,18 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
         bar:SetFraction(frac)
         bar:SetText(L("barProgress", math.Round(val), math.Round(mx)))
     end
-
     function bar:Think()
         updateBar()
     end
-
     parent[name] = bar
     return bar
 end
-
 function PANEL:AddSpacer(parent, height)
     local sp = parent:Add("DPanel")
     sp:Dock(TOP)
     sp:SetTall(height)
     sp.Paint = function() end
 end
-
 function PANEL:GenerateSections()
     local info = lia.module.list["f1menu"].CharacterInformation
     local secs = {}
@@ -109,7 +101,6 @@ function PANEL:GenerateSections()
             data = data
         }
     end
-
     table.sort(secs, function(a, b) return a.data.priority < b.data.priority end)
     for _, sec in ipairs(secs) do
         local container = self:CreateSection(self.content, sec.name)
@@ -120,12 +111,10 @@ function PANEL:GenerateSections()
             elseif f.type == "bar" then
                 self:CreateFillableBarWithBackgroundAndLabel(container, f.name, L(f.label or ""), f.min, f.max, 5, f.value)
             end
-
             self:AddSpacer(container, 5)
         end
     end
 end
-
 function PANEL:CreateSection(parent, title)
     local cat = parent:Add("DCollapsibleCategory")
     cat:Dock(TOP)
@@ -138,7 +127,6 @@ function PANEL:CreateSection(parent, title)
         derma.SkinHook("Paint", "Panel", p, w, h)
         draw.SimpleText(L(title), "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-
     local contents = vgui.Create("DPanel", cat)
     contents:Dock(FILL)
     contents:DockPadding(8, 10, 8, 10)
@@ -146,12 +134,10 @@ function PANEL:CreateSection(parent, title)
     cat:SetContents(contents)
     return contents
 end
-
 function PANEL:Refresh()
     self.content:Clear()
     self:GenerateSections()
 end
-
 function PANEL:setup()
     local info = lia.module.list["f1menu"].CharacterInformation
     for _, data in pairs(info) do
@@ -162,5 +148,4 @@ function PANEL:setup()
         end
     end
 end
-
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")

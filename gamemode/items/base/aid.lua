@@ -1,4 +1,4 @@
-﻿ITEM.name = "aidName"
+ITEM.name = "aidName"
 ITEM.desc = "aidDesc"
 ITEM.model = "models/weapons/w_package.mdl"
 ITEM.width = 1
@@ -15,7 +15,6 @@ ITEM.functions.use = {
         end
     end
 }
-
 ITEM.functions.target = {
     name = "itemUseOnTarget",
     sound = "items/medshot4.wav",

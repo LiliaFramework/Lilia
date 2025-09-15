@@ -1,4 +1,4 @@
-﻿lia.color = lia.color or {}
+lia.color = lia.color or {}
 lia.color.stored = lia.color.stored or {}
 local clamp = math.Clamp
 local configGet = lia.config.get
@@ -6,11 +6,9 @@ local unpack = unpack
 function lia.color.register(name, color)
     lia.color.stored[name:lower()] = color
 end
-
 function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
     return Color(clamp(color.r + rOffset, 0, 255), clamp(color.g + gOffset, 0, 255), clamp(color.b + bOffset, 0, 255), clamp((color.a or 255) + (aOffset or 0), 0, 255))
 end
-
 function lia.color.ReturnMainAdjustedColors()
     local base = configGet("Color")
     return {
@@ -23,7 +21,6 @@ function lia.color.ReturnMainAdjustedColors()
         highlight = Color(255, 255, 255, 30)
     }
 end
-
 lia.color.register("black", {0, 0, 0})
 lia.color.register("white", {255, 255, 255})
 lia.color.register("gray", {128, 128, 128})

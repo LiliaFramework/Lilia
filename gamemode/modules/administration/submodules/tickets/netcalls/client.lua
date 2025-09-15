@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 local ticketPanel
 local ticketsTabAdded = false
 net.Receive("liaActiveTickets", function()
@@ -19,7 +19,6 @@ net.Receive("liaActiveTickets", function()
         col:SetWidth(w + 16)
         return col
     end
-
     addSizedColumn(L("timestamp"))
     addSizedColumn(L("requester"))
     addSizedColumn(L("admin"))
@@ -34,7 +33,6 @@ net.Receive("liaActiveTickets", function()
                 local requesterName = IsValid(requesterPly) and requesterPly:Nick() or requester
                 requester = string.format("%s (%s)", requesterName, requester)
             end
-
             local ts = os.date("%Y-%m-%d %H:%M:%S", t.timestamp or os.time())
             local entries = {
                 ts,
@@ -46,7 +44,6 @@ net.Receive("liaActiveTickets", function()
                 end)() or L("unassigned"),
                 t.message or ""
             }
-
             local match = false
             if filter == "" then
                 match = true
@@ -58,11 +55,9 @@ net.Receive("liaActiveTickets", function()
                     end
                 end
             end
-
             if match then list:AddLine(unpack(entries)) end
         end
     end
-
     search.OnChange = function() populate(search:GetValue()) end
     populate("")
     function list:OnRowRightClick(_, line)
@@ -75,14 +70,11 @@ net.Receive("liaActiveTickets", function()
                 local value = line:GetColumnText(i) or ""
                 rowString = rowString .. header .. " " .. value .. " | "
             end
-
             SetClipboardText(string.sub(rowString, 1, -4))
         end):SetIcon("icon16/page_copy.png")
-
         menu:Open()
     end
 end)
-
 net.Receive("liaTicketsCount", function()
     local count = net.ReadInt(32)
     if count > 0 and not ticketsTabAdded then
@@ -101,13 +93,11 @@ net.Receive("liaTicketsCount", function()
         end)
     end
 end)
-
 function MODULE:PopulateAdminTabs()
     if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
     net.Start("liaRequestTicketsCount")
     net.SendToServer()
 end
-
 net.Receive("ViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()
@@ -120,14 +110,12 @@ net.Receive("ViewClaims", function()
         end
     end
 end)
-
 net.Receive("TicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
     if LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets") then MODULE:TicketFrame(pl, msg, claimed) end
 end)
-
 net.Receive("TicketSystemClaim", function()
     local pl = net.ReadEntity()
     local requester = net.ReadEntity()
@@ -146,7 +134,6 @@ net.Receive("TicketSystemClaim", function()
                     draw.RoundedBox(0, 2, 2, w - 4, 16, Color(207, 0, 15))
                 end
             end
-
             local bu = v:GetChildren()[11]
             bu.DoClick = function()
                 if LocalPlayer() == pl then
@@ -160,13 +147,11 @@ net.Receive("TicketSystemClaim", function()
         end
     end
 end)
-
 net.Receive("TicketSystemClose", function()
     local requester = net.ReadEntity()
     if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then v:Remove() end
     end
-
     if timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
 end)

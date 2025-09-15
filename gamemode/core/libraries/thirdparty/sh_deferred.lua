@@ -1,4 +1,4 @@
-﻿local PENDING, FULFILLED, REJECTED = "pending", "fulfilled", "rejected"
+local PENDING, FULFILLED, REJECTED = "pending", "fulfilled", "rejected"
 local HANDLER_RESOLVE, HANDLER_REJECT, HANDLER_PROMISE = 1, 2, 3
 REJECTION_HANDLER_ID = REJECTION_HANDLER_ID or 0
 UNHANDLED_PROMISES = UNHANDLED_PROMISES or {}
@@ -6,7 +6,6 @@ local Promise = {
     state = PENDING,
     value = nil,
 }
-
 Promise.__index = Promise
 function Promise:new()
     local instance = {
@@ -14,11 +13,9 @@ function Promise:new()
         onReject = onReject,
         handlers = {}
     }
-
     setmetatable(instance, Promise)
     return instance
 end
-
 function Promise:__tostring()
     local value = ""
     if self.value then
@@ -28,7 +25,6 @@ function Promise:__tostring()
     end
     return "Promise{state=" .. self.state .. value .. "}"
 end
-
 function Promise:resolve(value)
     if self.state == PENDING then
         self.state = FULFILLED
@@ -37,7 +33,6 @@ function Promise:resolve(value)
     end
     return self
 end
-
 function Promise:reject(reason)
     if self.state == PENDING then
         self.state = REJECTED
@@ -46,7 +41,6 @@ function Promise:reject(reason)
     end
     return self
 end
-
 function Promise:next(onResolve, onReject)
     if not isfunction(onResolve) then onResolve = nil end
     if not isfunction(onReject) then onReject = nil end
@@ -56,7 +50,6 @@ function Promise:next(onResolve, onReject)
         [HANDLER_REJECT] = onReject,
         [HANDLER_PROMISE] = promise
     }
-
     if self.state ~= PENDING then
         timer.Simple(0, function()
             if self.state == FULFILLED then
@@ -66,7 +59,6 @@ function Promise:next(onResolve, onReject)
             end
         end)
     end
-
     if DEBUG_IGNOREUNHANDLED then return promise end
     if self.rejectionHandlerID then
         promise.rejectionHandlerID = self.rejectionHandlerID
@@ -77,11 +69,9 @@ function Promise:next(onResolve, onReject)
     end
     return promise
 end
-
 function Promise:catch(onReject)
     return self:next(nil, onReject)
 end
-
 function Promise:_handle(value)
     if value == self then return self:reject(L("promiseCannotResolveSelf")) end
     if istable(value) and value.next then
@@ -90,7 +80,6 @@ function Promise:_handle(value)
                 UNHANDLED_PROMISES[value.rejectionHandlerID] = nil
                 value.rejectionHandlerID = self.rejectionHandlerID
             end
-
             self.state = value.state
             if value.state == PENDING then
                 self.value = value.value
@@ -119,20 +108,17 @@ function Promise:_handle(value)
                     first = nil
                 end
             end
-
             local function rejectPromise(reason)
                 if first then
                     self:reject(reason)
                     first = nil
                 end
             end
-
             local status, result = pcall(value.next, resolvePromise, rejectPromise)
             if not status and first then self:reject(result) end
             return
         end
     end
-
     local handler, onResolve, onReject, promise
     local isRejected = self.state == REJECTED
     for i = 1, #self.handlers do
@@ -165,7 +151,6 @@ function Promise:_handle(value)
             end
         end
     end
-
     self.handlers = {}
     if isRejected and not DEBUG_IGNOREUNHANDLED then
         local trace = debug.traceback()
@@ -178,12 +163,10 @@ function Promise:_handle(value)
         end)
     end
 end
-
 deferred = {}
 function deferred.isPromise(value)
     return istable(value) and isfunction(value.next) and isfunction(value.resolve) and value.state
 end
-
 function deferred.new()
     local promise = Promise:new()
     if not DEBUG_IGNOREUNHANDLED then
@@ -193,15 +176,12 @@ function deferred.new()
     end
     return promise
 end
-
 function deferred.reject(reason)
     return deferred.new():reject(reason)
 end
-
 function deferred.resolve(value)
     return deferred.new():resolve(value)
 end
-
 function deferred.all(promises)
     assert(istable(promises), L("promisesMustBeTableOfPromises"))
     local results = {}
@@ -219,13 +199,11 @@ function deferred.all(promises)
             return value
         end
     end
-
     for i = 1, expected do
         promises[i]:next(onFinish(i, true), onFinish(i, false))
     end
     return d
 end
-
 function deferred.map(args, fn)
     assert(istable(args), L("argsMustBeTable"))
     assert(isfunction(fn), L("mapCalledWithoutFunction"))
@@ -243,7 +221,6 @@ function deferred.map(args, fn)
     end
     return d
 end
-
 function deferred.fold(promises, folder, initial)
     assert(istable(promises), L("promisesMustBeTable"))
     assert(isfunction(folder), L("folderMustBeFunction"))
@@ -256,34 +233,28 @@ function deferred.fold(promises, folder, initial)
         d:reject(reason)
         return reason
     end
-
     local function handle(value)
         total = folder(total, value, i, length)
         if i == length then
             d:resolve(total)
             return value
         end
-
         i = i + 1
         promises[i]:next(handle, onRejected)
         return value
     end
-
     promises[1]:next(handle, onRejected)
     return d
 end
-
 function deferred.filter(promises, filter)
     return deferred.fold(promises, function(acc, value)
         if filter(value) then acc[#acc + 1] = value end
         return acc
     end, {})
 end
-
 function deferred.each(promises, fn)
     return deferred.fold(promises, function(_, value, i, length) fn(value, i, length) end, nil):next(function() return nil end)
 end
-
 function deferred.some(promises, count)
     assert(istable(promises), L("promisesMustBeTable"))
     assert(isnumber(count) and count >= 0 and math.floor(count) == count, L("countMustBeNonNegativeInteger"))
@@ -302,7 +273,6 @@ function deferred.some(promises, count)
     end
     return d
 end
-
 function deferred.any(promises)
     return deferred.some(promises, 1):next(function(results) return results[1] end)
 end

@@ -1,4 +1,4 @@
-﻿ITEM.name = "bagName"
+ITEM.name = "bagName"
 ITEM.desc = "bagDesc"
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "storage"
@@ -13,7 +13,6 @@ function ITEM:onInstanced()
         w = self.invWidth,
         h = self.invHeight
     }
-
     lia.inventory.instance("GridInv", data):next(function(inventory)
         self:setData("id", inventory:getID())
         hook.Run("SetupBagInventoryAccessRules", inventory)
@@ -22,7 +21,6 @@ function ITEM:onInstanced()
         hook.Run("BagInventoryReady", self, inventory)
     end)
 end
-
 function ITEM:onRestored()
     local invID = self:getData("id")
     if invID then
@@ -33,11 +31,9 @@ function ITEM:onRestored()
         end)
     end
 end
-
 function ITEM:onRegistered()
     if not self.functions.Open then self.functions.Open = ITEM.functions.Open end
 end
-
 function ITEM:onRemoved()
     local invID = self:getData("id")
     if invID then
@@ -46,16 +42,13 @@ function ITEM:onRemoved()
         lia.inventory.deleteByID(invID)
     end
 end
-
 function ITEM:getInv()
     return lia.inventory.instances[self:getData("id")]
 end
-
 function ITEM:onSync(recipient)
     local inventory = self:getInv()
     if inventory then inventory:sync(recipient) end
 end
-
 ITEM.functions.Open = {
     tip = "openTip",
     icon = "icon16/briefcase.png",
@@ -69,7 +62,6 @@ ITEM.functions.Open = {
             end
             return false
         end
-
         if SERVER then
             inventory:sync(client)
         else
@@ -87,7 +79,6 @@ ITEM.functions.Open = {
             client:notifyWarningLocalized("cheaterActionUseInteractionMenu")
             return false
         end
-
         local canRun = not IsValid(item.entity) and item:getInv() ~= nil
         if SERVER and not canRun then
             local reason = IsValid(item.entity) and "bagOnGround" or "bagNoInventory"
@@ -97,7 +88,6 @@ ITEM.functions.Open = {
         return canRun
     end
 }
-
 function ITEM.postHooks:drop()
     local invID = self:getData("id")
     if invID then
@@ -106,7 +96,6 @@ function ITEM.postHooks:drop()
         net.Send(self.player)
     end
 end
-
 function ITEM:onCombine(other)
     local client = self.player
     local invID = self:getInv() and self:getInv():getID() or nil
@@ -119,7 +108,6 @@ function ITEM:onCombine(other)
         client:EmitSound(unpack(self.BagSound))
     end)
 end
-
 if SERVER then
     function ITEM:onDisposed()
         local inventory = self:getInv()
@@ -128,17 +116,14 @@ if SERVER then
             inventory:destroy()
         end
     end
-
     function ITEM:resolveInvAwaiters(inventory)
         if self.awaitingInv then
             for _, d in ipairs(self.awaitingInv) do
                 d:resolve(inventory)
             end
-
             self.awaitingInv = nil
         end
     end
-
     function ITEM:awaitInv()
         local d = deferred.new()
         local inventory = self:getInv()

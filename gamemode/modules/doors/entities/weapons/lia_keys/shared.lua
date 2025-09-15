@@ -1,4 +1,4 @@
-﻿SWEP.Author = "Samael"
+SWEP.Author = "Samael"
 SWEP.Contact = "@liliaplayer"
 SWEP.Instructions = L("keysInstructions")
 SWEP.Purpose = L("keysPurpose")
@@ -29,7 +29,6 @@ function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
     return true
 end
-
 function SWEP:Holster()
     if not IsValid(self:GetOwner()) then return end
     local viewModel = self:GetOwner():GetViewModel()
@@ -39,14 +38,11 @@ function SWEP:Holster()
     end
     return true
 end
-
 function SWEP:Precache()
 end
-
 function SWEP:Initialize()
     self:SetHoldType(self.HoldType)
 end
-
 function SWEP:PrimaryAttack()
     local time = lia.config.get("DoorLockTime", 0.5)
     local time2 = math.max(time, 1)
@@ -62,7 +58,6 @@ function SWEP:PrimaryAttack()
     if not IsValid(entity) then return end
     hook.Run("KeyLock", owner, entity, time)
 end
-
 function SWEP:SecondaryAttack()
     local time = lia.config.get("DoorLockTime", 0.5)
     local time2 = math.max(time, 1)

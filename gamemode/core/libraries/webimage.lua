@@ -1,4 +1,4 @@
-﻿lia.webimage = lia.webimage or {}
+lia.webimage = lia.webimage or {}
 lia.webimage.stored = lia.webimage.stored or {}
 lia.webimage.allowDownloads = false
 local baseDir = "lilia/webimages/"
@@ -9,7 +9,6 @@ local stats = {
     lastReset = os.time(),
     downloadedImages = {}
 }
-
 local function ensureDir(p)
     local parts = string.Explode("/", p)
     local cur = ""
@@ -20,7 +19,6 @@ local function ensureDir(p)
         end
     end
 end
-
 local function deriveUrlSaveName(url)
     local filename = url:match("([^/]+)$") or util.CRC(url) .. ".png"
     if file.Exists(baseDir .. filename, "DATA") then return filename end
@@ -28,11 +26,9 @@ local function deriveUrlSaveName(url)
     if path:find("/") then path = path:gsub("^[^/]+/", "", 1) end
     return "urlimages/" .. path
 end
-
 local function buildMaterial(p, flags)
     return Material("data/" .. p, flags or "noclamp smooth")
 end
-
 local function validateURL(url)
     if not url or type(url) ~= "string" then return false, "URL is not a valid string" end
     if not url:find("^https?://") then return false, "URL must start with http:// or https://" end
@@ -51,32 +47,27 @@ local function validateURL(url)
         if not domain:find("%.") then return false, "domain name must contain at least one dot" end
         if domain:find("%.%.") then return false, "domain contains consecutive dots" end
     end
-
     if url:find("[<>\"\\|]") then return false, "URL contains invalid characters" end
     if #url > 2048 then return false, "URL is too long (max 2048 characters)" end
     return true
 end
-
 function lia.webimage.download(n, u, cb, flags)
     if not isstring(n) then return end
     if not lia.webimage.allowDownloads then
         if cb then cb(nil, false, "downloads not allowed") end
         return
     end
-
     local url = u or lia.webimage.stored[n] and lia.webimage.stored[n].url
     local flg = flags or lia.webimage.stored[n] and lia.webimage.stored[n].flags
     if not url or url == "" then
         if cb then cb(nil, false, "no url") end
         return
     end
-
     local isValidURL, validationError = validateURL(url)
     if not isValidURL then
         if cb then cb(nil, false, "invalid url: " .. validationError) end
         return
     end
-
     if isstring(url) then urlMap[url] = n end
     cache[n] = nil
     local savePath = baseDir .. n
@@ -90,7 +81,6 @@ function lia.webimage.download(n, u, cb, flags)
             hook.Run("WebImageDownloaded", n, "data/" .. savePath)
         end
     end
-
     local cleanName = n:gsub("%.%w+$", "")
     local extension = nil
     for _, ext in ipairs({"png", "jpg", "jpeg"}) do
@@ -101,19 +91,16 @@ function lia.webimage.download(n, u, cb, flags)
             return
         end
     end
-
     http.Fetch(url, function(b)
         if string.lower(string.sub(b, 2, 4)) == "png" then
             extension = "png"
         elseif string.lower(string.sub(b, 7, 10)) == "jfif" or string.lower(string.sub(b, 7, 10)) == "exif" then
             extension = "jpg"
         end
-
         if not extension then
             if cb then cb(nil, false, "Invalid file format - not PNG or JPEG") end
             return
         end
-
         savePath = baseDir .. cleanName .. "." .. extension
         if file.Exists(savePath, "DATA") then
             local existingSize = file.Size(savePath, "DATA")
@@ -122,14 +109,12 @@ function lia.webimage.download(n, u, cb, flags)
                 return
             end
         end
-
         local dirPath = savePath:match("(.+)/[^/]+$")
         if dirPath then
             ensureDir(dirPath)
         else
             ensureDir(baseDir)
         end
-
         file.Write(savePath, b)
         finalize(false)
     end, function(e)
@@ -141,20 +126,16 @@ function lia.webimage.download(n, u, cb, flags)
                 return
             end
         end
-
         if cb then cb(nil, false, e) end
     end)
 end
-
 function lia.webimage.register(n, u, cb, flags)
     lia.webimage.stored[n] = {
         url = u,
         flags = flags
     }
-
     lia.webimage.download(n, u, cb, flags)
 end
-
 function lia.webimage.get(n, flags)
     local key = urlMap[n] or n
     if cache[key] then return cache[key] end
@@ -165,7 +146,6 @@ function lia.webimage.get(n, flags)
         return m
     end
 end
-
 local origMaterial = Material
 function Material(p, ...)
     local flags = select(1, ...)
@@ -176,7 +156,6 @@ function Material(p, ...)
                 n = deriveUrlSaveName(p)
                 urlMap[p] = n
             end
-
             lia.webimage.register(n, p)
             return origMaterial("data/" .. baseDir .. n, flags)
         elseif p:find("^lilia/webimages/") then
@@ -196,7 +175,6 @@ function Material(p, ...)
     end
     return origMaterial(p, flags)
 end
-
 local dimage = vgui.GetControlTable("DImage")
 local origSetImage = dimage.SetImage
 function dimage:SetImage(src, backup)
@@ -207,7 +185,6 @@ function dimage:SetImage(src, backup)
                 n = deriveUrlSaveName(src)
                 urlMap[src] = n
             end
-
             local savePath = baseDir .. n
             lia.webimage.register(n, src, function(m)
                 if m and not m:IsError() then
@@ -239,10 +216,8 @@ function dimage:SetImage(src, backup)
             end
         end
     end
-
     origSetImage(self, src, backup)
 end
-
 local function findImagesRecursive(dir, result)
     result = result or {}
     local files, dirs = file.Find(dir .. "*", "DATA")
@@ -251,7 +226,6 @@ local function findImagesRecursive(dir, result)
             table.insert(result, dir .. fn)
         end
     end
-
     if dirs then
         for _, subdir in ipairs(dirs) do
             findImagesRecursive(dir .. subdir .. "/", result)
@@ -259,7 +233,6 @@ local function findImagesRecursive(dir, result)
     end
     return result
 end
-
 concommand.Add("lia_saved_images", function()
     local files = findImagesRecursive(baseDir)
     if not files or #files == 0 then return end
@@ -281,7 +254,6 @@ concommand.Add("lia_saved_images", function()
         img:SetTooltip(filePath:sub(#baseDir + 1))
     end
 end)
-
 local function deleteDirectoryRecursive(dir)
     local files, dirs = file.Find(dir .. "*", "DATA")
     if files then
@@ -289,7 +261,6 @@ local function deleteDirectoryRecursive(dir)
             file.Delete(dir .. fn)
         end
     end
-
     if dirs then
         for _, subdir in ipairs(dirs) do
             deleteDirectoryRecursive(dir .. subdir .. "/")
@@ -297,7 +268,6 @@ local function deleteDirectoryRecursive(dir)
         end
     end
 end
-
 concommand.Add("lia_wipewebimages", function()
     deleteDirectoryRecursive(baseDir)
     cache = {}
@@ -305,7 +275,6 @@ concommand.Add("lia_wipewebimages", function()
     lia.information(L("webImagesCleared"))
     ensureDir(baseDir)
 end)
-
 concommand.Add("test_webimage_menu", function()
     local frame = vgui.Create("DFrame")
     frame:SetTitle(L("webImageTesterTitle"))
@@ -328,7 +297,6 @@ concommand.Add("test_webimage_menu", function()
         for _, child in ipairs(imgPanel:GetChildren()) do
             child:Remove()
         end
-
         local src = urlEntry:GetValue()
         local img = vgui.Create("DImage", imgPanel)
         img:SetPos(0, 0)
@@ -336,7 +304,6 @@ concommand.Add("test_webimage_menu", function()
         img:SetImage(src)
     end
 end)
-
 function lia.webimage.getStats()
     local totalStored = 0
     for _ in pairs(lia.webimage.stored) do
@@ -348,7 +315,6 @@ function lia.webimage.getStats()
         lastReset = stats.lastReset
     }
 end
-
 lia.webimage.register("lilia.png", "https://bleonheart.github.io/Samael-Assets/lilia.png")
 lia.webimage.register("locked.png", "https://bleonheart.github.io/Samael-Assets/misc/locked.png")
 lia.webimage.register("unlocked.png", "https://bleonheart.github.io/Samael-Assets/misc/unlocked.png")

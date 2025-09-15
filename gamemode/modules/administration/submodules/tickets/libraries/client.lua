@@ -1,4 +1,4 @@
-﻿local xpos = xpos or 20
+local xpos = xpos or 20
 local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
     local mat_lightning = Material("icon16/lightning_go.png")
@@ -17,7 +17,6 @@ function MODULE:TicketFrame(requester, message, claimed)
             return
         end
     end
-
     local frameWidth, frameHeight = 300, 120
     local frm = vgui.Create("DFrame")
     frm:SetSize(frameWidth, frameHeight)
@@ -26,7 +25,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     function frm:Paint(paintWidth, paintHeight)
         draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
     end
-
     frm.lblTitle:SetColor(Color(255, 255, 255))
     frm.lblTitle:SetFont("ticketsystem")
     frm.lblTitle:SetContentAlignment(7)
@@ -46,7 +44,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     else
         frm:SetTitle(requester:Nick())
     end
-
     local msg = vgui.Create("RichText", frm)
     msg:SetPos(10, 30)
     msg:SetSize(190, frameHeight - 35)
@@ -55,7 +52,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     function msg:PerformLayout()
         self:SetFontInternal("DermaDefault")
     end
-
     msg:AppendText(message)
     local function createButton(text, material, position, clickFunc, disabled)
         text = L(text)
@@ -75,16 +71,13 @@ function MODULE:TicketFrame(requester, message, claimed)
             else
                 draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, panel.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
             end
-
             surface.SetDrawColor(Color(255, 255, 255))
             surface.SetMaterial(material)
             surface.DrawTexturedRect(5, 1, 16, 16)
         end
-
         if disabled then btn:SetTooltip(L("ticketActionSelf")) end
         return btn
     end
-
     local isLocalPlayer = requester == LocalPlayer()
     createButton("goTo", mat_lightning, 20, function() lia.administrator.execCommand("goto", requester) end, isLocalPlayer)
     createButton("returnText", mat_arrow, 40, function() lia.administrator.execCommand("return", requester) end, isLocalPlayer)
@@ -110,7 +103,6 @@ function MODULE:TicketFrame(requester, message, claimed)
             net.SendToServer()
         end
     end, isLocalPlayer)
-
     local closeButton = vgui.Create("DButton", frm)
     closeButton:SetText("")
     closeButton:SetTooltip(L("close"))
@@ -119,7 +111,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     closeButton:SetSize(16, 16)
     function closeButton:Paint()
     end
-
     closeButton.DoClick = function() frm:Close() end
     frm:ShowCloseButton(false)
     frm:SetPos(xpos, ypos + 130 * #TicketFrames)
@@ -131,10 +122,8 @@ function MODULE:TicketFrame(requester, message, claimed)
                 v:MoveTo(xpos, ypos + 130 * (k - 1), 0.1, 0, 1)
             end
         end
-
         if IsValid(requester) and timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
     end
-
     table.insert(TicketFrames, frm)
     timer.Create("ticketsystem-" .. requester:SteamID(), 60, 1, function() if IsValid(frm) then frm:Remove() end end)
 end

@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     self:SetTitle("")
@@ -19,7 +19,6 @@ function PANEL:Init()
         surface.DrawRect(0, 0, w, h)
         draw.SimpleText(self.windowTitle, "liaMediumFont", w / 2, self.headerHeight / 2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-
     self.topBar = vgui.Create("DPanel", self)
     self.topBar:Dock(TOP)
     self.topBar:SetTall(44)
@@ -38,7 +37,6 @@ function PANEL:Init()
         self:Populate()
         client:notifySuccessLocalized("privilegeListRefreshed")
     end
-
     self.listView = vgui.Create("DListView", self)
     self.listView:Dock(FILL)
     self.listView:SetMultiSelect(false)
@@ -50,40 +48,32 @@ function PANEL:Init()
                 client:notifySuccessLocalized("copied")
             end)
         end
-
         m:AddSpacer()
         m:AddOption("Copy All", function()
             local t = {}
             for i, header in ipairs(self.columns) do
                 t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
             end
-
             SetClipboardText(table.concat(t, "\n"))
             client:notifySuccessLocalized("allPrivilegeInfo")
         end)
-
         m:Open()
     end
-
     self.listView.OnRowDoubleClick = function(_, _, line)
         SetClipboardText(line:GetColumnText(1) or "")
         client:notifySuccessLocalized("privilegeIdCopied")
     end
-
     self.statusBar = vgui.Create("DPanel", self)
     self.statusBar:Dock(BOTTOM)
     self.statusBar:SetTall(24)
     self.statusBar.Paint = function() draw.SimpleText("Total: " .. tostring(self.visibleCount or 0), "liaSmallFont", 5, 4, Color(200, 200, 200, 255), TEXT_ALIGN_LEFT) end
 end
-
 function PANEL:SetWindowTitle(t)
     self.windowTitle = t or ""
 end
-
 function PANEL:SetPlaceholderText(t)
     self.searchBox:SetPlaceholderText(t or "")
 end
-
 function PANEL:SetColumns(cols)
     self.columns = {}
     self.listView:Clear()
@@ -93,18 +83,15 @@ function PANEL:SetColumns(cols)
         self.columns[#self.columns + 1] = v
     end
 end
-
 function PANEL:SetData(rows)
     self.data = rows or {}
     self:Populate()
 end
-
 function PANEL:SetSort(column, desc)
     self.sortColumn = column or 1
     self.sortDesc = desc and true or false
     self.listView:SortByColumn(self.sortColumn, self.sortDesc)
 end
-
 function PANEL:RowMatches(row, term)
     if not term or term == "" then return true end
     local st = string.lower(term)
@@ -114,7 +101,6 @@ function PANEL:RowMatches(row, term)
     end
     return false
 end
-
 function PANEL:Populate()
     self.listView:Clear()
     local term = string.Trim(self.searchBox:GetValue() or "")
@@ -125,9 +111,7 @@ function PANEL:Populate()
             count = count + 1
         end
     end
-
     self.visibleCount = count
     if self.sortColumn then self.listView:SortByColumn(self.sortColumn, self.sortDesc) end
 end
-
 vgui.Register("liaDListView", PANEL, "DFrame")

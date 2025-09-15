@@ -1,14 +1,12 @@
-﻿local ChatIsRecognized = {
+local ChatIsRecognized = {
     ic = true,
     y = true,
     w = true,
     me = true,
 }
-
 function MODULE:isRecognizedChatType(chatType)
     return ChatIsRecognized[chatType] or false
 end
-
 function MODULE:GetDisplayedDescription(client, isHUD)
     local lp = LocalPlayer()
     if not IsValid(client) or not IsValid(lp) then return L("unknown") end
@@ -17,7 +15,6 @@ function MODULE:GetDisplayedDescription(client, isHUD)
         return L("noRecog")
     end
 end
-
 function MODULE:GetDisplayedName(client, chatType)
     local lp = LocalPlayer()
     if not IsValid(client) or not IsValid(lp) then return L("unknown") end
@@ -32,7 +29,6 @@ function MODULE:GetDisplayedName(client, chatType)
         return L("unknown")
     end
 end
-
 function MODULE:ShouldAllowScoreboardOverride(client, var)
     if client == LocalPlayer() then return false end
     if not IsValid(client) or not IsValid(LocalPlayer()) then return false end
@@ -44,7 +40,6 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     local isNotRecognized = not (ourCharacter:doesRecognize(character:getID()) or ourCharacter:doesFakeRecognize(character:getID()))
     return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
 end
-
 net.Receive("rgnDone", function()
     local client = LocalPlayer()
     hook.Run("OnCharRecognized", client, client:getChar():getID())

@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     local client = LocalPlayer()
     local clientChar = client.getChar and client:getChar()
@@ -16,7 +16,6 @@ function PANEL:Init()
             return render.oldDrawBeam(startPos, endPos, width, textureStart, textureEnd, color)
         end
     end
-
     hook.Add("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam", function() return IsValid(lia.gui.character) end)
     self:Dock(FILL)
     self:MakePopup()
@@ -42,17 +41,13 @@ function PANEL:Init()
                 break
             end
         end
-
         self.currentIndex = self.currentIndex or 1
     end
-
     self:createStartButton()
 end
-
 function PANEL:createTitle()
     if self.tabs then self.tabs:DockMargin(64, 32, 64, 0) end
 end
-
 function PANEL:hideExternalEntities()
     self.hiddenEntities = {}
     for _, ent in ents.Iterator() do
@@ -62,16 +57,13 @@ function PANEL:hideExternalEntities()
         end
     end
 end
-
 function PANEL:restoreExternalEntities()
     if not self.hiddenEntities then return end
     for ent, wasHidden in pairs(self.hiddenEntities) do
         if IsValid(ent) then ent:SetNoDraw(wasHidden) end
     end
-
     self.hiddenEntities = nil
 end
-
 function PANEL:loadBackground()
     if self.isLoadMode then
         self:hideExternalEntities()
@@ -98,12 +90,10 @@ function PANEL:loadBackground()
             self.leftArrow:Remove()
             self.leftArrow = nil
         end
-
         if IsValid(self.rightArrow) then
             self.rightArrow:Remove()
             self.rightArrow = nil
         end
-
         local url = lia.config.get("BackgroundURL")
         if url and url:find("%S") then
             self.background = self:Add("DHTML")
@@ -113,7 +103,6 @@ function PANEL:loadBackground()
             else
                 self.background:SetHTML(url)
             end
-
             self.background.OnDocumentReady = function() if IsValid(self.bgLoader) then self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end end
             self.background:MoveToBack()
             self.background:SetZPos(-999)
@@ -121,7 +110,6 @@ function PANEL:loadBackground()
                 self.background:SetMouseInputEnabled(false)
                 self.background:SetKeyboardInputEnabled(false)
             end
-
             self.bgLoader = self:Add("DPanel")
             self.bgLoader:SetSize(ScrW(), ScrH())
             self.bgLoader:SetZPos(-998)
@@ -132,14 +120,12 @@ function PANEL:loadBackground()
         end
     end
 end
-
 function PANEL:createStartButton()
     local client = LocalPlayer()
     if not IsValid(client) then
         timer.Simple(0.1, function() if IsValid(self) then self:createStartButton() end end)
         return
     end
-
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
     local logoPath = lia.config.get("CenterLogo")
@@ -159,7 +145,6 @@ function PANEL:createStartButton()
             end
         end
     end
-
     if hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
             id = "create",
@@ -168,7 +153,6 @@ function PANEL:createStartButton()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
                 end
-
                 self:clickSound()
                 self.isLoadMode = false
                 self:showContent(true)
@@ -176,7 +160,6 @@ function PANEL:createStartButton()
             end
         })
     end
-
     if hasNonStaffChar then
         table.insert(buttonsData, {
             id = "load",
@@ -185,14 +168,12 @@ function PANEL:createStartButton()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
                 end
-
                 self:clickSound()
                 self.availableCharacters = {}
                 for _, charID in pairs(lia.characters or {}) do
                     local character = lia.char.getCharacter(charID)
                     if character and character:getFaction() ~= FACTION_STAFF then table.insert(self.availableCharacters, charID) end
                 end
-
                 self.currentIndex = 1
                 self.isLoadMode = true
                 self:showContent(true)
@@ -200,7 +181,6 @@ function PANEL:createStartButton()
             end
         })
     end
-
     if client:hasPrivilege("createStaffCharacter") and not client:isStaffOnDuty() then
         table.insert(buttonsData, {
             id = "staff",
@@ -209,7 +189,6 @@ function PANEL:createStartButton()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
                 end
-
                 self:clickSound()
                 if hasStaffChar then
                     for _, charID in pairs(lia.characters) do
@@ -225,7 +204,6 @@ function PANEL:createStartButton()
             end
         })
     end
-
     if discordURL ~= "" then
         table.insert(buttonsData, {
             id = "discord",
@@ -236,7 +214,6 @@ function PANEL:createStartButton()
             end
         })
     end
-
     if workshopURL ~= "" then
         table.insert(buttonsData, {
             id = "workshop",
@@ -247,7 +224,6 @@ function PANEL:createStartButton()
             end
         })
     end
-
     if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
         table.insert(buttonsData, {
             id = "mount",
@@ -263,7 +239,6 @@ function PANEL:createStartButton()
             end
         })
     end
-
     table.insert(buttonsData, {
         id = "disconnect",
         text = "Disconnect",
@@ -272,7 +247,6 @@ function PANEL:createStartButton()
             RunConsoleCommand("disconnect")
         end
     })
-
     if clientChar then
         table.insert(buttonsData, {
             id = "return",
@@ -280,7 +254,6 @@ function PANEL:createStartButton()
             doClick = function() self:Remove() end
         })
     end
-
     self.buttons = {}
     for i, data in ipairs(buttonsData) do
         local x, y = ScrW() / 2 - w / 2, ScrH() * 0.3 + (i - 1) * (h + s)
@@ -294,10 +267,8 @@ function PANEL:createStartButton()
             oldSetPos(b, nx, ny)
             if IsValid(self) then self:UpdateLogoPosition() end
         end
-
         self.buttons[data.id] = btn
     end
-
     if logoPath ~= "" then
         local function setLogo(img)
             if not IsValid(self) then return end
@@ -305,7 +276,6 @@ function PANEL:createStartButton()
             self:UpdateLogoPosition()
             timer.Simple(0, function() if IsValid(img) then img:MoveToFront() end end)
         end
-
         if logoPath:sub(1, 8) == "https://" then
             http.Fetch(logoPath, function(body)
                 if not IsValid(self) then return end
@@ -321,7 +291,6 @@ function PANEL:createStartButton()
         end
     end
 end
-
 function PANEL:addTab(name, callback, justClick, height)
     local btn = self.tabs:Add("liaMediumButton")
     surface.SetFont(btn:GetFont())
@@ -333,17 +302,14 @@ function PANEL:addTab(name, callback, justClick, height)
         if isfunction(callback) then btn.DoClick = function() callback(self) end end
         return btn
     end
-
     btn.DoClick = function(b) b:setSelected(true) end
     if isfunction(callback) then btn:onSelected(function() callback(self) end) end
     return btn
 end
-
 function PANEL:createTabs()
     self.tabs:Clear()
     if not self.isKickedFromChar then self:addTab(L("returnText"), function() self:backToMainMenu() end, true) end
 end
-
 function PANEL:backToMainMenu()
     self:clickSound()
     if IsValid(lia.gui.charConfirm) then lia.gui.charConfirm:Remove() end
@@ -352,18 +318,15 @@ function PANEL:backToMainMenu()
         self.leftArrow:Remove()
         self.leftArrow = nil
     end
-
     if IsValid(self.rightArrow) then
         self.rightArrow:Remove()
         self.rightArrow = nil
     end
-
     if IsValid(self.selectBtn) then self.selectBtn:Remove() end
     if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
     for _, btn in pairs(self.buttons) do
         if IsValid(btn) then btn:Remove() end
     end
-
     self.buttons = {}
     self.isLoadMode = false
     self.disableClientModel = false
@@ -372,7 +335,6 @@ function PANEL:backToMainMenu()
     self:createStartButton()
     self:loadBackground()
 end
-
 function PANEL:createCharacterSelection()
     self.isLoadMode = true
     for _, name in ipairs{"background", "logo"} do
@@ -381,28 +343,23 @@ function PANEL:createCharacterSelection()
             self[name] = nil
         end
     end
-
     for _, b in pairs(self.buttons) do
         if IsValid(b) then b:Remove() end
     end
-
     self.buttons = {}
     if IsValid(self.leftArrow) then
         self.leftArrow:Remove()
         self.leftArrow = nil
     end
-
     if IsValid(self.rightArrow) then
         self.rightArrow:Remove()
         self.rightArrow = nil
     end
-
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self:updateSelectedCharacter()
     if self.availableCharacters and #self.availableCharacters > 1 then self:createArrows() end
 end
-
 function PANEL:createCharacterCreation()
     for _, name in ipairs{"background", "logo"} do
         if IsValid(self[name]) then
@@ -410,18 +367,15 @@ function PANEL:createCharacterCreation()
             self[name] = nil
         end
     end
-
     for _, b in pairs(self.buttons) do
         if IsValid(b) then b:Remove() end
     end
-
     self.buttons = {}
     if IsValid(self.bgLoader) then self.bgLoader:Remove() end
     self.content:Clear()
     self.content:InvalidateLayout(true)
     self.content:Add("liaCharacterCreation")
 end
-
 function PANEL:createStaffCharacter()
     local client = LocalPlayer()
     local steamName = client:Nick()
@@ -433,10 +387,8 @@ function PANEL:createStaffCharacter()
         skin = 0,
         groups = {}
     }
-
     lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or "Failed to create staff character") end)
 end
-
 function PANEL:updateSelectedCharacter()
     if not self.isLoadMode then return end
     local chars = self.availableCharacters or {}
@@ -450,7 +402,6 @@ function PANEL:updateSelectedCharacter()
     self:createSelectedCharacterInfoPanel(character)
     self:updateModelEntity(character)
 end
-
 function PANEL:createSelectedCharacterInfoPanel(character)
     if not character then return end
     local chars = self.availableCharacters or {}
@@ -463,13 +414,11 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             break
         end
     end
-
     local info = {L("name") .. ": " .. (character:getName() or ""), L("description") .. ":", character:getDesc() or "", L("faction") .. ": " .. (team.GetName(character:getFaction()) or "")}
     if character:getClass() then
         local cls = lia.class.list[character:getClass()]
         if cls and cls.name then table.insert(info, L("class") .. ": " .. cls.name) end
     end
-
     table.insert(info, L("money") .. ": " .. lia.currency.get(character:getMoney()))
     hook.Run("LoadMainMenuInformation", info, character)
     self.infoFrame = self:Add("SemiTransparentDFrame")
@@ -513,7 +462,6 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             lbl:SizeToContentsY()
         end
     end
-
     local spacer = scroll:Add("DPanel")
     spacer:Dock(TOP)
     spacer:SetTall(5)
@@ -525,7 +473,6 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             attr = attr
         }
     end
-
     table.sort(attrs, function(a, b) return a.attr.name < b.attr.name end)
     for _, entry in ipairs(attrs) do
         local minValue = entry.attr.min or 0
@@ -548,7 +495,6 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         progressBar.Font = "liaSmallFont"
         progressBar:SetTall(20)
     end
-
     local fx, fy = self.infoFrame:GetPos()
     local fw, fh = self.infoFrame:GetWide(), self.infoFrame:GetTall()
     local bw, bh = fw * 0.85, 40
@@ -561,7 +507,6 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     elseif character:isBanned() then
         selectText = L("permaKilledCharacter")
     end
-
     self.selectBtn = self:Add("liaSmallButton")
     self.selectBtn:SetSize(bw, bh)
     self.selectBtn:SetPos(cx, fy + fh + pad)
@@ -570,17 +515,14 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         self.selectBtn:SetEnabled(false)
         self.selectBtn:SetTextColor(Color(255, 255, 255))
     end
-
     self.selectBtn.DoClick = function()
         if character:isBanned() then
             local characterName = character:getName()
             Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
             return
         end
-
         lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end
-
     self.deleteBtn = self:Add("liaSmallButton")
     self.deleteBtn:SetSize(bw, bh)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
@@ -590,11 +532,9 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             LocalPlayer():notifyErrorLocalized("cannotDeleteChar")
             return
         end
-
         vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.list["mainmenu"]:deleteCharacter(character:getID()) end)
     end
 end
-
 function PANEL:updateModelEntity(character)
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
     if not character then return end
@@ -608,7 +548,6 @@ function PANEL:updateModelEntity(character)
         if value == nil then value = groups[tostring(i)] end
         if value ~= nil then self.modelEntity:SetBodygroup(i, tonumber(value) or 0) end
     end
-
     hook.Run("SetupPlayerModel", self.modelEntity, character)
     local pos, ang = hook.Run("GetMainMenuPosition", character)
     if not pos or not ang then
@@ -616,7 +555,6 @@ function PANEL:updateModelEntity(character)
         pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
         ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
     end
-
     ang.pitch, ang.roll = 0, 0
     ang.yaw = 265
     self.modelEntity:SetPos(pos)
@@ -628,7 +566,6 @@ function PANEL:updateModelEntity(character)
             break
         end
     end
-
     hook.Run("ModifyCharacterModel", self.modelEntity, character)
     hook.Add("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables", function()
         if IsValid(self.modelEntity) then
@@ -637,7 +574,6 @@ function PANEL:updateModelEntity(character)
         end
     end)
 end
-
 function PANEL:createArrows()
     local size, space = 100, 240
     local function newArrow(sign, xOffset)
@@ -657,11 +593,9 @@ function PANEL:createArrows()
         end
         return btn
     end
-
     self.leftArrow = newArrow("<", -size - space)
     self.rightArrow = newArrow(">", space)
 end
-
 function PANEL:UpdateLogoPosition()
     if not IsValid(self.logo) then return end
     local pad = ScrH() * 0.01
@@ -675,34 +609,28 @@ function PANEL:UpdateLogoPosition()
             top = math.min(top, y)
         end
     end
-
     top = top == math.huge and ScrH() * 0.5 or top
     local center = (left + right) * 0.5
     self.logo:SetPos(center - logoW * 0.5, top - logoH - pad)
     self.logo:SetSize(logoW, logoH)
 end
-
 function PANEL:showContent(disableBg)
     if IsValid(self.infoFrame) then self.infoFrame:Remove() end
     if IsValid(self.leftArrow) then
         self.leftArrow:Remove()
         self.leftArrow = nil
     end
-
     if IsValid(self.rightArrow) then
         self.rightArrow:Remove()
         self.rightArrow = nil
     end
-
     if IsValid(self.logo) then
         self.logo:Remove()
         self.logo = nil
     end
-
     for _, b in pairs(self.buttons) do
         if IsValid(b) then b:Remove() end
     end
-
     self.buttons = {}
     self.disableClientModel = true
     self:removeClientModelModifications()
@@ -713,13 +641,11 @@ function PANEL:showContent(disableBg)
     self.noBlur = self.isLoadMode or false
     if self.isLoadMode or not disableBg then self:loadBackground() end
 end
-
 function PANEL:removeClientModelModifications()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     if not self.isLoadMode then hook.Remove("CalcView", "liaMainMenuCalcView") end
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
 end
-
 function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
     if fade then
@@ -744,35 +670,28 @@ function PANEL:setFadeToBlack(fade)
     end
     return d
 end
-
 function PANEL:fadeOut()
     self:AlphaTo(0, 0.1, 0, function() self:Remove() end)
 end
-
 function PANEL:Paint(w, h)
     if not self.noBlur then lia.util.drawBlur(self) end
     self:paintBackground(w, h)
 end
-
 function PANEL:paintBackground(w, h)
     if not IsValid(self.background) and self.blank then
         surface.SetDrawColor(42, 42, 42, 179)
         surface.DrawRect(0, 0, w, h)
     end
 end
-
 function PANEL:hoverSound()
     LocalPlayer():EmitSound("buttons/button15.wav", 35, 250)
 end
-
 function PANEL:clickSound()
     LocalPlayer():EmitSound("buttons/button14.wav", 35, 255)
 end
-
 function PANEL:warningSound()
     LocalPlayer():EmitSound("friends/friend_join.wav", 40, 255)
 end
-
 function PANEL:OnRemove()
     if lia.gui.character == self then lia.gui.character = nil end
     hook.Run("CharacterMenuClosed")
@@ -785,17 +704,14 @@ function PANEL:OnRemove()
         render.DrawBeam = render.oldDrawBeam
         render.oldDrawBeam = nil
     end
-
     if IsValid(self.modelEntity) then self.modelEntity:Remove() end
 end
-
 function PANEL:Think()
     if IsValid(self.logo) then
         self.logo:SetZPos(9999)
         self.logo:MoveToFront()
         self:UpdateLogoPosition()
     end
-
     if self.isLoadMode and IsValid(self.modelEntity) then
         local ang = self.modelEntity:GetAngles()
         local rotate = 0
@@ -807,5 +723,4 @@ function PANEL:Think()
         end
     end
 end
-
 vgui.Register("liaCharacter", PANEL, "EditablePanel")

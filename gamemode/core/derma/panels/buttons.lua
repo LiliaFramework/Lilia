@@ -1,4 +1,4 @@
-﻿local animDuration = 0.3
+local animDuration = 0.3
 local function PaintButton(self, w, h)
     local r, g, b = lia.config.get("Color")
     if self.Base then
@@ -7,7 +7,6 @@ local function PaintButton(self, w, h)
         surface.SetDrawColor(0, 0, 0, 150)
         surface.DrawRect(1, 1, w - 2, h - 2)
     end
-
     draw.SimpleText(self:GetText(), self:GetFont(), w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     if self:IsHovered() or self:IsSelected() then
         self.startTime = self.startTime or CurTime()
@@ -20,7 +19,6 @@ local function PaintButton(self, w, h)
     end
     return true
 end
-
 local function RegisterButton(name, defaultFont, useBase)
     local PANEL = {}
     PANEL.DefaultFont = defaultFont or name:match("lia(%w+)Button") .. "Font"
@@ -29,30 +27,23 @@ local function RegisterButton(name, defaultFont, useBase)
         self:SetFont(self.DefaultFont)
         self.Selected = false
     end
-
     function PANEL:SetFont(font)
         self.ButtonFont = font
     end
-
     function PANEL:GetFont()
         return self.ButtonFont
     end
-
     function PANEL:SetSelected(state)
         self.Selected = state
     end
-
     function PANEL:IsSelected()
         return self.Selected
     end
-
     function PANEL:Paint(w, h)
         return PaintButton(self, w, h)
     end
-
     vgui.Register(name, PANEL, "DButton")
 end
-
 RegisterButton("liaHugeButton", "liaHugeFont", true)
 RegisterButton("liaBigButton", "liaBigFont", true)
 RegisterButton("liaMediumButton", "liaMediumFont", true)

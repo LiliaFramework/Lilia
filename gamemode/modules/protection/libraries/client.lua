@@ -1,4 +1,4 @@
-﻿local HackCommands = {
+local HackCommands = {
     ["aimkey"] = true,
     ["+hera_aim"] = true,
     ["boom"] = true,
@@ -817,7 +817,6 @@
     ["sCheat_menu"] = true,
     ["lowkey_menu"] = true,
 }
-
 local HackGlobals = {
     ["netCodes"] = true,
     ["hack"] = true,
@@ -851,7 +850,6 @@ local HackGlobals = {
     ["ValidateESP"] = true,
     ["ValidateAimbot"] = true,
 }
-
 local BadCVars = {
     ["snixzz"] = true,
     ["razor_aim"] = true,
@@ -1554,26 +1552,22 @@ local BadCVars = {
     ["gmodhack"] = true,
     ["cathack"] = true,
 }
-
 local TRIGGER_KEYS = {
     [KEY_HOME] = true,
     [KEY_INSERT] = true,
     [KEY_DELETE] = true,
 }
-
 local suspiciousFunctions = {
     ["hook.Call"] = true,
     ["net.Receive"] = true,
     ["render.Capture"] = true,
     ["RunConsoleCommand"] = true
 }
-
 local hideWeaponSet = {
     ["weapon_gravitygun"] = true,
     ["weapon_physgun"] = true,
     ["gmod_tool"] = true
 }
-
 local function getEntityDisplayName(ent)
     if not IsValid(ent) then return "Unknown Entity" end
     if ent:GetClass() == "lia_item" and ent.getItemTable then
@@ -1584,49 +1578,40 @@ local function getEntityDisplayName(ent)
             return item.name
         end
     end
-
     if ent:GetClass() == "lia_vendor" then
         local vendorName = ent:getNetVar("name")
         if vendorName and vendorName ~= "" then return vendorName end
     end
-
     if ent:GetClass() == "lia_storage" then
         local storageInfo = ent:getStorageInfo()
         if storageInfo and storageInfo.name then return storageInfo.name end
     end
-
     if ent:IsPlayer() and ent:getChar() then return ent:getChar():getName() end
     if ent:IsVehicle() then
         local vehicleName = ent:GetVehicleClass()
         if vehicleName and vehicleName ~= "" then return vehicleName end
     end
-
     if ent.PrintName and ent.PrintName ~= "" then return ent.PrintName end
     local className = ent:GetClass()
     if className:StartWith("lia_") then return className:sub(5):gsub("_", " "):gsub("^%l", string.upper) end
     return className
 end
-
 function MODULE:CanDeleteChar(_, character)
     if IsValid(character) and character:getMoney() < lia.config.get("DefaultMoney") then return false end
 end
-
 function MODULE:DrawPhysgunBeam(client)
     return client == LocalPlayer()
 end
-
 local function ShouldHideWeapon(wep)
     if not IsValid(wep) or not IsValid(wep.Owner) then return false end
     if not wep.Owner:isStaffOnDuty() then return false end
     return hideWeaponSet[wep:GetClass()] or false
 end
-
 function MODULE:PrePlayerDraw(client)
     local activeWep = client:GetActiveWeapon()
     if not IsValid(activeWep) then return end
     if ShouldHideWeapon(activeWep) then activeWep:SetNoDraw(true) end
 end
-
 local function detect_cheadleware()
     local function safe_call(f, ...)
         if isfunction(f) ~= "function" then return false, nil end
@@ -1634,14 +1619,12 @@ local function detect_cheadleware()
         if not ok then return false, nil end
         return true, v
     end
-
     local function config_probe(api, k)
         local f = rawget(api, "config_get") or rawget(api, "get_config")
         if isfunction(f) then
             local ok, v = pcall(f, k)
             if ok and v ~= nil then return true end
         end
-
         local cfg = rawget(api, "config")
         if istable(cfg) then
             local g = rawget(cfg, "get") or rawget(cfg, "get_value")
@@ -1652,7 +1635,6 @@ local function detect_cheadleware()
         end
         return false
     end
-
     local roots = {"cheadleware", "cheadle", "cheadware", "chead"}
     local cfg_keys = {"misc.Bunny Hop", "combat.Aimbot", "misc.Notifications", "visuals.Chams", "exploits.Speedhack", "Bunny Hop", "Aimbot", "Notifications", "Chams", "Speedhack"}
     for _, name in ipairs(roots) do
@@ -1664,7 +1646,6 @@ local function detect_cheadleware()
                 local ok, v = safe_call(f)
                 if ok and isstring(v) == "string" and #v > 0 and #v <= 64 then score = score + 1 end
             end
-
             do
                 local hit = false
                 for _, k in ipairs(cfg_keys) do
@@ -1673,15 +1654,12 @@ local function detect_cheadleware()
                         break
                     end
                 end
-
                 if hit then score = score + 1 end
             end
-
             do
                 local f = rawget(api, "event_listen") or rawget(api, "on")
                 if isfunction(f) then score = score + 1 end
             end
-
             do
                 local f = rawget(api, "get_original")
                 if isfunction(f) then
@@ -1689,19 +1667,16 @@ local function detect_cheadleware()
                     if ok and isfunction(orig) then score = score + 1 end
                 end
             end
-
             do
                 local a = isfunction(rawget(api, "view_angles"))
                 local b = isfunction(rawget(api, "view_pos"))
                 if a or b then score = score + 1 end
             end
-
             if score >= 1 then return true end
         end
     end
     return false
 end
-
 local function detect_oink()
     local t = rawget(_G, "oink")
     if istable(t) then return true end
@@ -1709,51 +1684,41 @@ local function detect_oink()
         local ok, u = pcall(t.username)
         if ok and isstring(u) and #u > 0 and #u <= 64 then return true end
     end
-
     if istable(t) and isfunction(t.config_get) then
         for _, p in ipairs({{"aimbot.enabled", false}, {"triggerbot.enabled", false}, {"misc.no_spread", false}, {"misc.rapid_fire", false}, {"misc.screengrab_alerts", false}, {"misc.freecam_speed", true}}) do
             local ok, v = pcall(t.config_get, p[1])
             if ok and v ~= nil and (p[2] and isnumber(v) or not p[2] and isbool(v)) then return true end
         end
     end
-
     if istable(t) and isfunction(t.event_listen) then return true end
     if istable(t) and isfunction(t.get_original) then
         local ok, fn = pcall(t.get_original, "_G.LocalPlayer")
         if ok and isfunction(fn) then return true end
     end
-
     if istable(t) and (isfunction(t.view_angles) or isfunction(t.view_pos)) then return true end
     return false
 end
-
 local function VerifyCheats()
     local function flag()
         net.Start("CheckHack")
         net.SendToServer()
     end
-
     for func in pairs(suspiciousFunctions) do
         local f = _G[func]
         if f and (debug.getinfo(f, "S") or {}).what ~= "C" then return flag() end
     end
-
     local hackCommands = concommand.GetTable()
     for command in pairs(HackCommands) do
         if hackCommands[command] then return flag() end
     end
-
     for cvar in pairs(BadCVars) do
         if ConVarExists(cvar) then return flag() end
     end
-
     for globalName in pairs(HackGlobals) do
         if _G[globalName] then return flag() end
     end
-
     if detect_oink() or detect_cheadleware() then return flag() end
 end
-
 function MODULE:PlayerButtonDown(_, key)
     if TRIGGER_KEYS[key] then
         timer.Remove("clipboard_blocker")
@@ -1764,12 +1729,10 @@ function MODULE:PlayerButtonDown(_, key)
                 timer.Remove("clipboard_blocker")
                 return
             end
-
             SetClipboardText("")
         end)
     end
 end
-
 function MODULE:InitPostEntity()
     local client = LocalPlayer()
     if not file.Exists("cache", "DATA") then file.CreateDir("cache") end
@@ -1782,7 +1745,6 @@ function MODULE:InitPostEntity()
         file.Write(filename, client:SteamID())
     end
 end
-
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     local entitiesByCreator = {}
@@ -1793,7 +1755,6 @@ function MODULE:PopulateAdminTabs(pages)
             table.insert(entitiesByCreator[owner], ent)
         end
     end
-
     local function startSpectateView(ent, originalThirdPerson)
         local yaw = client:EyeAngles().yaw
         local camZOffset = 50
@@ -1805,7 +1766,6 @@ function MODULE:PopulateAdminTabs(pages)
                 fov = 60
             }
         end)
-
         hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText(L("pressInstructions"), "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
         hook.Add("Think", "EntityViewRotate", function()
             if input.IsKeyDown(KEY_A) then yaw = yaw - FrameTime() * 100 end
@@ -1821,14 +1781,12 @@ function MODULE:PopulateAdminTabs(pages)
                 client.IsInAdminEntityView = false
             end
         end)
-
         hook.Add("CreateMove", "EntitySpectateCreateMove", function(cmd)
             cmd:SetForwardMove(0)
             cmd:SetSideMove(0)
             cmd:SetUpMove(0)
         end)
     end
-
     if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
         pages[#pages + 1] = {
             name = "entities",
@@ -1853,7 +1811,6 @@ function MODULE:PopulateAdminTabs(pages)
                             derma.SkinHook("Paint", "Panel", pnl, w, h)
                             draw.SimpleText(displayName, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                         end
-
                         local icon = vgui.Create("liaSpawnIcon", itemPanel)
                         icon:Dock(LEFT)
                         icon:SetWide(64)
@@ -1877,14 +1834,12 @@ function MODULE:PopulateAdminTabs(pages)
                             btn:SetText(L(key))
                             btn.DoClick = func
                         end
-
                         makeBtn("view", function()
                             if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
                             local prevTP = lia.option.get("thirdPersonEnabled", false)
                             lia.option.set("thirdPersonEnabled", false)
                             startSpectateView(ent, prevTP)
                         end)
-
                         if client:hasPrivilege("teleportToEntity") then
                             makeBtn("teleport", function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
@@ -1893,7 +1848,6 @@ function MODULE:PopulateAdminTabs(pages)
                                 net.SendToServer()
                             end)
                         end
-
                         if client.previousPosition then
                             makeBtn("return", function()
                                 if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
@@ -1901,14 +1855,12 @@ function MODULE:PopulateAdminTabs(pages)
                                 net.SendToServer()
                             end)
                         end
-
                         makeBtn("waypointButton", function() client:setWaypoint(getEntityDisplayName(ent), ent:GetPos()) end)
                         searchSheet:AddPanelRow(itemPanel, {
                             height = 100,
                             filterText = displayName:lower()
                         })
                     end
-
                     searchSheet:Refresh()
                     sheetContainer:AddSheet(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
                 end
@@ -1916,7 +1868,6 @@ function MODULE:PopulateAdminTabs(pages)
         }
     end
 end
-
 net.Receive("VerifyCheats", function()
     VerifyCheats()
     net.Start("VerifyCheatsResponse")

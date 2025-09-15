@@ -1,4 +1,4 @@
-﻿lia.command = lia.command or {}
+lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
 function lia.command.buildSyntaxFromArguments(args)
     local tokens = {}
@@ -13,14 +13,12 @@ function lia.command.buildSyntaxFromArguments(args)
         else
             typ = "string"
         end
-
         local name = arg.name or typ
         local optional = arg.optional and " optional" or ""
         tokens[#tokens + 1] = string.format("[%s %s%s]", typ, name, optional)
     end
     return table.concat(tokens, " ")
 end
-
 function lia.command.add(command, data)
     data.arguments = data.arguments or {}
     data.syntax = lia.command.buildSyntaxFromArguments(data.arguments)
@@ -33,7 +31,6 @@ function lia.command.add(command, data)
         lia.error(L("commandNoCallback", command))
         return
     end
-
     if superAdminOnly or adminOnly then
         local privilegeName = data.privilege and L(data.privilege) or L("accessTo", command)
         local privilegeID = data.privilege or string.lower("command_" .. command)
@@ -44,17 +41,14 @@ function lia.command.add(command, data)
             Category = "commands"
         })
     end
-
     for _, arg in ipairs(data.arguments) do
         if arg.type == "boolean" then
             arg.type = "bool"
         elseif arg.type ~= "player" and arg.type ~= "table" and arg.type ~= "bool" then
             arg.type = "string"
         end
-
         arg.optional = arg.optional or false
     end
-
     local onRun = data.onRun
     data._onRun = data.onRun
     data.onRun = function(client, arguments)
@@ -65,7 +59,6 @@ function lia.command.add(command, data)
             return "@noPerm"
         end
     end
-
     local alias = data.alias
     if alias then
         if istable(alias) then
@@ -98,17 +91,14 @@ function lia.command.add(command, data)
             end
         end
     end
-
     if command == command:lower() then
         lia.command.list[command] = data
     else
         data.realCommand = command
         lia.command.list[command:lower()] = data
     end
-
     hook.Run("liaCommandAdded", command, data)
 end
-
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
     if not data then return false, "unknown" end
@@ -123,10 +113,8 @@ function lia.command.hasAccess(client, command, data)
             lia.error("Command '" .. tostring(command) .. "' has invalid privilege ID type: " .. tostring(privilegeID))
             return false, privilegeName
         end
-
         hasAccess = client:hasPrivilege(privilegeID)
     end
-
     local hookResult = hook.Run("CanPlayerUseCommand", client, command)
     if hookResult ~= nil then return hookResult, privilegeName end
     local char = IsValid(client) and client.getChar and client:getChar()
@@ -138,7 +126,6 @@ function lia.command.hasAccess(client, command, data)
     end
     return hasAccess, privilegeName
 end
-
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -163,11 +150,9 @@ function lia.command.extractArgs(text)
             end
         end
     end
-
     if curString ~= "" then arguments[#arguments + 1] = curString end
     return arguments
 end
-
 local function combineBracketArgs(args)
     local result = {}
     local buffer
@@ -188,15 +173,12 @@ local function combineBracketArgs(args)
             result[#result + 1] = a
         end
     end
-
     if buffer then result[#result + 1] = buffer end
     return result
 end
-
 local function isPlaceholder(arg)
     return isstring(arg) and arg:sub(1, 1) == "[" and arg:sub(-1) == "]"
 end
-
 if SERVER then
     function lia.command.run(client, command, arguments)
         local commandTbl = lia.command.list[command:lower()]
@@ -217,7 +199,6 @@ if SERVER then
             end
         end
     end
-
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or utf8.sub(text, 1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -226,7 +207,6 @@ if SERVER then
                 local len = string.len(post[1])
                 match = utf8.sub(post[1], 2, len)
             end
-
             match = match:lower()
             local command = lia.command.list[match]
             if command then
@@ -244,7 +224,6 @@ if SERVER then
                             prefix[#prefix + 1] = arg
                         end
                     end
-
                     if #missing > 0 then
                         net.Start("liaCmdArgPrompt")
                         net.WriteString(match)
@@ -254,7 +233,6 @@ if SERVER then
                         return true
                     end
                 end
-
                 lia.command.run(client, match, arguments)
                 if not realCommand then lia.log.add(client, "command", text) end
             else
@@ -277,11 +255,9 @@ else
         for _, name in ipairs(missing or {}) do
             lookup[name] = true
         end
-
         for _, arg in ipairs(command.arguments or {}) do
             if lookup[arg.name] then fields[arg.name] = arg end
         end
-
         prefix = prefix or {}
         local numFields = table.Count(fields)
         local frameW, frameH = 600, 200 + numFields * 75
@@ -295,7 +271,6 @@ else
             derma.SkinHook("Paint", "Frame", self, w, h)
             draw.SimpleText(L(cmdKey), "liaMediumFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
         end
-
         local scroll = vgui.Create("DScrollPanel", frame)
         scroll:Dock(FILL)
         scroll:DockMargin(10, 40, 10, 10)
@@ -322,12 +297,10 @@ else
                 for _, plyObj in player.Iterator() do
                     if IsValid(plyObj) then players[#players + 1] = plyObj end
                 end
-
                 if isfunction(filter) then
                     local ok, res = pcall(filter, LocalPlayer(), players)
                     if ok and istable(res) then players = res end
                 end
-
                 for _, plyObj in ipairs(players) do
                     ctrl:AddChoice(plyObj:Name(), plyObj:SteamID())
                 end
@@ -339,7 +312,6 @@ else
                     local ok, res = pcall(opts, LocalPlayer(), prefix)
                     if ok then opts = res end
                 end
-
                 if istable(opts) then
                     for k, v in pairs(opts) do
                         if isnumber(k) then
@@ -355,7 +327,6 @@ else
                 ctrl = vgui.Create("DTextEntry", panel)
                 ctrl:SetFont("liaSmallFont")
             end
-
             local label = vgui.Create("DLabel", panel)
             label:SetFont("liaSmallFont")
             label:SetText(L(data.description or name))
@@ -370,32 +341,27 @@ else
                 ctrl:SetPos(xOff + textW + 10, (h - ctrlH) / 2)
                 ctrl:SetWide(ctrlW)
             end
-
             controls[name] = {
                 ctrl = ctrl,
                 type = fieldType,
                 optional = optional
             }
-
             watchers[#watchers + 1] = function()
                 local oldValue = ctrl.OnValueChange
                 function ctrl:OnValueChange(...)
                     if oldValue then oldValue(self, ...) end
                     validate()
                 end
-
                 local oldText = ctrl.OnTextChanged
                 function ctrl:OnTextChanged(...)
                     if oldText then oldText(self, ...) end
                     validate()
                 end
-
                 local oldChange = ctrl.OnChange
                 function ctrl:OnChange(...)
                     if oldChange then oldChange(self, ...) end
                     validate()
                 end
-
                 local oldSelect = ctrl.OnSelect
                 function ctrl:OnSelect(...)
                     if oldSelect then oldSelect(self, ...) end
@@ -403,7 +369,6 @@ else
                 end
             end
         end
-
         local buttons = vgui.Create("DPanel", frame)
         buttons:Dock(BOTTOM)
         buttons:SetTall(90)
@@ -431,21 +396,17 @@ else
                     else
                         filled = ctl:GetValue() ~= nil and ctl:GetValue() ~= ""
                     end
-
                     if not filled then
                         submit:SetEnabled(false)
                         return
                     end
                 end
             end
-
             submit:SetEnabled(true)
         end
-
         for _, fn in ipairs(watchers) do
             fn()
         end
-
         validate()
         local cancel = vgui.Create("DButton", buttons)
         cancel:Dock(RIGHT)
@@ -469,15 +430,12 @@ else
                 else
                     val = ctl:GetValue()
                 end
-
                 args[#args + 1] = val ~= "" and val or nil
             end
-
             RunConsoleCommand("say", "/" .. cmdKey .. " " .. table.concat(args, " "))
             frame:Remove()
         end
     end
-
     function lia.command.send(command, ...)
         net.Start("cmd")
         net.WriteString(command)
@@ -485,7 +443,6 @@ else
         net.SendToServer()
     end
 end
-
 hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
@@ -508,7 +465,6 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                         end
                     end
                 end
-
                 sheet:AddListViewRow({
                     columns = {L("command"), L("description"), L("privilege")},
                     data = data,
@@ -528,18 +484,15 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
                                 desc = desc,
                                 right = right
                             })
-
                             row.filterText = (cmdName .. " " .. L(cmdData.syntax or "") .. " " .. desc .. " " .. right):lower()
                         end
                     end
                 end
             end
-
             sheet:Refresh()
             parent.refreshSheet = function() if IsValid(sheet) then sheet:Refresh() end end
         end,
         onSelect = function(pnl) if pnl.refreshSheet then pnl.refreshSheet() end end
     })
 end)
-
 lia.command.findPlayer = lia.util.findPlayer

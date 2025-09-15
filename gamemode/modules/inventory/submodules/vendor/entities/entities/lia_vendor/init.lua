@@ -1,7 +1,6 @@
-﻿local function safeSendToReceivers(entity)
+local function safeSendToReceivers(entity)
     if entity.receivers and #entity.receivers > 0 then net.Send(entity.receivers) end
 end
-
 function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0
@@ -13,13 +12,11 @@ function ENT:SpawnFunction(client, trace)
     entity:Spawn()
     return entity
 end
-
 function ENT:Use(activator)
     if not hook.Run("CanPlayerAccessVendor", activator, self) then
         if self.messages[VENDOR_NOTRADE] then activator:notifyErrorLocalized("vendorMessageFormat", self:getNetVar("name"), L(self.messages[VENDOR_NOTRADE], activator)) end
         return
     end
-
     lia.log.add(activator, "vendorAccess", self:getNetVar("name"))
     self.receivers = self.receivers or {}
     self.receivers[#self.receivers + 1] = activator
@@ -27,17 +24,14 @@ function ENT:Use(activator)
     if self:getNetVar("welcomeMessage") then activator:notifyInfoLocalized("vendorMessageFormat", self:getNetVar("name"), self:getNetVar("welcomeMessage")) end
     hook.Run("PlayerAccessVendor", activator, self)
 end
-
 function ENT:setWelcomeMessage(value)
     self:setNetVar("welcomeMessage", value)
 end
-
 function ENT:setStock(itemType, value)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot set stock for non-existent item '" .. itemType .. "'")
         return
     end
-
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     if not self.items[itemType][VENDOR_MAXSTOCK] then self:setMaxStock(itemType, value) end
@@ -47,28 +41,23 @@ function ENT:setStock(itemType, value)
     net.WriteUInt(value, 32)
     safeSendToReceivers(self, "VendorStock")
 end
-
 function ENT:addStock(itemType, value)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot add stock for non-existent item '" .. itemType .. "'")
         return
     end
-
     local current = self:getStock(itemType)
     if not current then return end
     self:setStock(itemType, self:getStock(itemType) + (value or 1))
 end
-
 function ENT:takeStock(itemType, value)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot take stock for non-existent item '" .. itemType .. "'")
         return
     end
-
     if not self.items[itemType] or not self.items[itemType][VENDOR_MAXSTOCK] then return end
     self:addStock(itemType, -(value or 1))
 end
-
 function ENT:setMaxStock(itemType, value)
     if value == 0 or not isnumber(value) then value = 0 end
     self.items[itemType] = self.items[itemType] or {}
@@ -78,14 +67,12 @@ function ENT:setMaxStock(itemType, value)
     net.WriteUInt(value, 32)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setFactionAllowed(factionID, isAllowed)
     if isAllowed then
         self.factions[factionID] = true
     else
         self.factions[factionID] = nil
     end
-
     net.Start("VendorAllowFaction")
     net.WriteUInt(factionID, 8)
     net.WriteBool(self.factions[factionID])
@@ -96,20 +83,17 @@ function ENT:setFactionAllowed(factionID, isAllowed)
         end
     end
 end
-
 function ENT:setClassAllowed(classID, isAllowed)
     if isAllowed then
         self.classes[classID] = true
     else
         self.classes[classID] = nil
     end
-
     net.Start("VendorAllowClass")
     net.WriteUInt(classID, 8)
     net.WriteBool(self.classes[classID])
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:removeReceiver(client, requestedByPlayer)
     if self.receivers then table.RemoveByValue(self.receivers, client) end
     if client.liaVendor == self then client.liaVendor = nil end
@@ -120,26 +104,22 @@ function ENT:removeReceiver(client, requestedByPlayer)
         lia.log.add(client, "vendorExit", self:getNetVar("name"))
     end
 end
-
 local ALLOWED_MODES = {
     [VENDOR_SELLANDBUY] = true,
     [VENDOR_SELLONLY] = true,
     [VENDOR_BUYONLY] = true
 }
-
 function ENT:setName(name)
     self:setNetVar("name", name)
     net.Start("VendorEdit")
     net.WriteString("name")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setTradeMode(itemType, mode)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot set trade mode for non-existent item '" .. itemType .. "'")
         return
     end
-
     if not ALLOWED_MODES[mode] then mode = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MODE] = mode
@@ -148,13 +128,11 @@ function ENT:setTradeMode(itemType, mode)
     net.WriteInt(mode or -1, 8)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setItemPrice(itemType, value)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot set price for non-existent item '" .. itemType .. "'")
         return
     end
-
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_PRICE] = value
@@ -163,13 +141,11 @@ function ENT:setItemPrice(itemType, value)
     net.WriteInt(value or -1, 32)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setItemStock(itemType, value)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot set stock for non-existent item '" .. itemType .. "'")
         return
     end
-
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_STOCK] = value
@@ -178,13 +154,11 @@ function ENT:setItemStock(itemType, value)
     net.WriteInt(value, 32)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setItemMaxStock(itemType, value)
     if not lia.item.list[itemType] then
         print("[Vendor] Warning: Cannot set max stock for non-existent item '" .. itemType .. "'")
         return
     end
-
     if not isnumber(value) or value < 0 then value = nil end
     self.items[itemType] = self.items[itemType] or {}
     self.items[itemType][VENDOR_MAXSTOCK] = value
@@ -193,7 +167,6 @@ function ENT:setItemMaxStock(itemType, value)
     net.WriteInt(value, 32)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:OnRemove()
     LiliaVendors[self:EntIndex()] = nil
     if not lia.shuttingDown then
@@ -204,10 +177,8 @@ function ENT:OnRemove()
             net.Broadcast()
         end
     end
-
     if lia.shuttingDown or self.liaIsSafe then return end
 end
-
 function ENT:setModel(model)
     assert(isstring(model), L("vendorModelString"))
     model = model:lower()
@@ -218,7 +189,6 @@ function ENT:setModel(model)
     net.WriteString("model")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setSkin(skin)
     skin = tonumber(skin) or 0
     self:SetSkin(skin)
@@ -227,7 +197,6 @@ function ENT:setSkin(skin)
     net.WriteString("skin")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setBodyGroup(id, value)
     id = tonumber(id) or 0
     value = tonumber(value) or 0
@@ -237,7 +206,6 @@ function ENT:setBodyGroup(id, value)
     net.WriteString("bodygroup")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:setAnimation(animation)
     self:setNetVar("animation", animation or "")
     if self:isReadyForAnim() then self:setAnim() end
@@ -246,7 +214,6 @@ function ENT:setAnimation(animation)
     net.WriteString("animation")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:applyPreset(name)
     name = string.lower(name)
     self:setNetVar("preset", name)
@@ -257,13 +224,11 @@ function ENT:applyPreset(name)
                 self:sync(client)
             end
         end
-
         net.Start("VendorEdit")
         net.WriteString("preset")
         if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
         return
     end
-
     local preset = lia.vendor and lia.vendor.getPreset(name)
     if not preset then return end
     self.items = {}
@@ -277,18 +242,15 @@ function ENT:applyPreset(name)
             print("[Vendor] Warning: Skipping invalid item '" .. itemType .. "' when applying preset '" .. name .. "' to vendor.")
         end
     end
-
     if self.receivers then
         for _, client in ipairs(self.receivers) do
             self:sync(client)
         end
     end
-
     net.Start("VendorEdit")
     net.WriteString("preset")
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
-
 function ENT:sync(client)
     net.Start("VendorSync")
     net.WriteEntity(self)
@@ -300,10 +262,8 @@ function ENT:sync(client)
         net.WriteInt(item[VENDOR_MAXSTOCK] or -1, 32)
         net.WriteInt(item[VENDOR_MODE] or -1, 8)
     end
-
     net.Send(client)
 end
-
 function ENT:addReceiver(client, noSync)
     self.receivers = self.receivers or {}
     if not table.HasValue(self.receivers, client) then self.receivers[#self.receivers + 1] = client end

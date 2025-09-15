@@ -1,4 +1,4 @@
-﻿LiliaVendors = LiliaVendors or {}
+LiliaVendors = LiliaVendors or {}
 ENT.Type = "anim"
 ENT.PrintName = L("entityVendorName")
 ENT.Author = "Samael"
@@ -17,7 +17,6 @@ function ENT:setupVars()
         self:setNetVar("preset", "none")
         self:setNetVar("animation", "")
     end
-
     self.receivers = self.receivers or {}
     self.items = {}
     self.factions = {}
@@ -25,7 +24,6 @@ function ENT:setupVars()
     self.classes = {}
     self.hasSetupVars = true
 end
-
 function ENT:Initialize()
     if CLIENT then
         timer.Simple(1, function()
@@ -38,7 +36,6 @@ function ENT:Initialize()
         end)
         return
     end
-
     self.receivers = self.receivers or {}
     self:SetModel("models/mossman.mdl")
     self:SetUseType(SIMPLE_USE)
@@ -53,22 +50,17 @@ function ENT:Initialize()
         physObj:EnableMotion(false)
         physObj:Sleep()
     end
-
     LiliaVendors[self:EntIndex()] = self
 end
-
 function ENT:getWelcomeMessage()
     return self:getNetVar("welcomeMessage", L("vendorWelcomeMessage"))
 end
-
 function ENT:getStock(uniqueID)
     if self.items[uniqueID] and self.items[uniqueID][VENDOR_MAXSTOCK] then return self.items[uniqueID][VENDOR_STOCK] or 0, self.items[uniqueID][VENDOR_MAXSTOCK] end
 end
-
 function ENT:getMaxStock(itemType)
     if self.items[itemType] then return self.items[itemType][VENDOR_MAXSTOCK] end
 end
-
 function ENT:isItemInStock(itemType, amount)
     amount = amount or 1
     assert(isnumber(amount), L("vendorAmountNumber"))
@@ -77,7 +69,6 @@ function ENT:isItemInStock(itemType, amount)
     if not info[VENDOR_MAXSTOCK] then return true end
     return info[VENDOR_STOCK] >= amount
 end
-
 function ENT:getPrice(uniqueID, isSellingToVendor)
     local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or lia.item.list[uniqueID]:getPrice()
     local overridePrice = hook.Run("getPriceOverride", self, uniqueID, price, isSellingToVendor)
@@ -88,11 +79,9 @@ function ENT:getPrice(uniqueID, isSellingToVendor)
     end
     return price
 end
-
 function ENT:getTradeMode(itemType)
     if self.items[itemType] then return self.items[itemType][VENDOR_MODE] end
 end
-
 function ENT:isClassAllowed(classID)
     local class = lia.class.list[classID]
     if not class then return false end
@@ -100,11 +89,9 @@ function ENT:isClassAllowed(classID)
     if faction and self:isFactionAllowed(faction.index) then return true end
     return self.classes[classID]
 end
-
 function ENT:isFactionAllowed(factionID)
     return self.factions[factionID]
 end
-
 function ENT:getSellScale()
     local scale = lia.config.get("vendorSaleScale", 0.5)
     local hookScale = hook.Run("GetVendorSaleScale", self)
@@ -112,23 +99,18 @@ function ENT:getSellScale()
         local numHookScale = tonumber(hookScale)
         if numHookScale then return math.Clamp(numHookScale, 0.1, 2.0) end
     end
-
     local finalScale = tonumber(scale) or 0.5
     return math.Clamp(finalScale, 0.1, 2.0)
 end
-
 function ENT:getName()
     return self:getNetVar("name", "")
 end
-
 function ENT:getPreset()
     return self:getNetVar("preset", "none")
 end
-
 function ENT:isReadyForAnim()
     return self:GetModel() and self:GetModel() ~= "" and self:GetSequenceList() and self:GetSequenceCount() > 0
 end
-
 function ENT:setAnim()
     if not self:isReadyForAnim() then return end
     local customAnim = self:getNetVar("animation", "")
@@ -143,7 +125,6 @@ function ENT:setAnim()
             end
         end
     end
-
     local sequenceList = self:GetSequenceList()
     for k, v in ipairs(sequenceList) do
         if v:lower():find("idle") and v ~= "idlenoise" then
@@ -153,7 +134,6 @@ function ENT:setAnim()
             return
         end
     end
-
     if self:GetSequenceCount() > 1 then
         self:ResetSequence(4)
         self:SetCycle(1)

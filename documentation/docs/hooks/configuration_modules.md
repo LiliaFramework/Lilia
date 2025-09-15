@@ -1228,6 +1228,89 @@ end)
 
 ---
 
+### ShouldOpenMainMenu
+
+**Purpose**
+
+Called when the Lilia framework has finished loading and is about to open the main character selection menu, allowing modules to perform actions before the main menu is displayed.
+
+**Parameters**
+
+* `nil` (*nil*): This hook takes no parameters.
+
+**Returns**
+
+* `nil` (*nil*): This function does not return a value.
+
+**Realm**
+
+**Client**
+
+**Example Usage**
+
+```lua
+-- This example demonstrates how to perform actions before the main menu opens.
+-- The main menu is displayed when players first connect and need to select or create characters.
+-- This hook is useful for custom UI setup, data loading, and initialization tasks.
+
+-- Set up custom UI elements before main menu opens
+hook.Add("ShouldOpenMainMenu", "SetupCustomUI", function()
+    -- Initialize custom UI elements
+    print("Setting up custom UI for main menu")
+    
+    -- Load custom fonts or materials
+    surface.CreateFont("CustomMainMenuFont", {
+        font = "Arial",
+        size = 24,
+        weight = 500
+    })
+end)
+
+-- Load additional data before main menu opens
+hook.Add("ShouldOpenMainMenu", "LoadAdditionalData", function()
+    -- Load custom character data or assets
+    print("Loading additional character data")
+    
+    -- Preload custom models or materials
+    util.PrecacheModel("models/player/custom_character.mdl")
+end)
+
+-- Display welcome message or notifications
+hook.Add("ShouldOpenMainMenu", "ShowWelcomeMessage", function()
+    -- Show welcome message to new players
+    chat.AddText(Color(0, 255, 0), "Welcome to the server! Please select or create a character.")
+    
+    -- Display server rules or information
+    notification.AddLegacy("Server rules are available in the F1 menu", NOTIFY_GENERIC, 5)
+end)
+
+-- Initialize module-specific configurations
+hook.Add("ShouldOpenMainMenu", "InitializeModuleConfig", function()
+    -- Set up module-specific settings
+    if not MODULE_CONFIG then
+        MODULE_CONFIG = {
+            customSetting = true,
+            anotherSetting = "default"
+        }
+    end
+    
+    print("Module configuration initialized")
+end)
+
+-- Track when players first access the main menu
+hook.Add("ShouldOpenMainMenu", "TrackMenuAccess", function()
+    -- Log main menu access for analytics
+    print("Player accessed main menu at:", os.date())
+    
+    -- Send analytics data if needed
+    if analytics then
+        analytics:track("main_menu_accessed")
+    end
+end)
+```
+
+---
+
 ### liaCommandAdded
 
 **Purpose**

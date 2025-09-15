@@ -1,4 +1,4 @@
-﻿ITEM.name = "weaponsName"
+ITEM.name = "weaponsName"
 ITEM.desc = "weaponsDesc"
 ITEM.category = "weapons"
 ITEM.model = "models/weapons/w_pistol.mdl"
@@ -17,7 +17,6 @@ function ITEM.postHooks:drop()
         client:StripWeapon(self.class)
     end
 end
-
 ITEM:hook("drop", function(item)
     local client = item.player
     if not client or not IsValid(client) then return false end
@@ -25,7 +24,6 @@ ITEM:hook("drop", function(item)
         client:notifyErrorLocalized("noRagdollAction")
         return false
     end
-
     if item:getData("equip") then
         item:setData("equip", nil)
         client.carryWeapons = client.carryWeapons or {}
@@ -38,7 +36,6 @@ ITEM:hook("drop", function(item)
         end
     end
 end)
-
 ITEM.functions.Unequip = {
     name = "unequip",
     tip = "equipTip",
@@ -50,7 +47,6 @@ ITEM.functions.Unequip = {
             client:notifyErrorLocalized("noRagdollAction")
             return false
         end
-
         client.carryWeapons = client.carryWeapons or {}
         local weapon = client.carryWeapons[item.weaponCategory]
         if not weapon or not IsValid(weapon) then weapon = client:GetWeapon(item.class) end
@@ -60,7 +56,6 @@ ITEM.functions.Unequip = {
         else
             lia.error(L("weaponDoesNotExist", item.class))
         end
-
         client:EmitSound(item.unequipSound or "items/ammo_pickup.wav", 80)
         client.carryWeapons[item.weaponCategory] = nil
         item:setData("equip", nil)
@@ -69,7 +64,6 @@ ITEM.functions.Unequip = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
 }
-
 ITEM.functions.Equip = {
     name = "equip",
     tip = "equipTip",
@@ -81,7 +75,6 @@ ITEM.functions.Equip = {
             client:notifyErrorLocalized("noRagdollAction")
             return false
         end
-
         local items = client:getChar():getInv():getItems()
         client.carryWeapons = client.carryWeapons or {}
         for _, v in pairs(items) do
@@ -90,7 +83,6 @@ ITEM.functions.Equip = {
                 return false
             end
         end
-
         if client:HasWeapon(item.class) then client:StripWeapon(item.class) end
         local weapon = client:Give(item.class, true)
         if IsValid(weapon) then
@@ -109,12 +101,10 @@ ITEM.functions.Equip = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and not item:getData("equip", false) end
 }
-
 function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end
-
 function ITEM:onLoadout()
     if self:getData("equip") then
         local client = self.player
@@ -130,21 +120,18 @@ function ITEM:onLoadout()
         end
     end
 end
-
 function ITEM:OnSave()
     local client = self.player
     if not client or not IsValid(client) then return end
     local weapon = client:GetWeapon(self.class)
     if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
 end
-
 if CLIENT then
     function ITEM:getName()
         local weapon = weapons.GetStored(self.class)
         if weapon and weapon.PrintName then return language.GetPhrase(weapon.PrintName) end
         return self.name
     end
-
     function ITEM:paintOver(item, w, h)
         if item:getData("equip") then
             surface.SetDrawColor(110, 255, 110, 100)

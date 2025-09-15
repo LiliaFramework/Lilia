@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:Dock(FILL)
     self:DockMargin(10, 10, 10, 10)
@@ -14,29 +14,23 @@ function PANEL:Init()
     self.canvas = self.scroll:GetCanvas()
     self.search.OnTextChanged = function() self:Refresh() end
 end
-
 function PANEL:SetPlaceholderText(t)
     self.search:SetPlaceholderText(t or "")
 end
-
 function PANEL:PerformLayout()
     self:SizeToChildren(false, true)
     if self.scroll then self.scroll:InvalidateLayout(true) end
 end
-
 function PANEL:SetSpacing(y)
     self.spacingY = y or self.spacingY
 end
-
 function PANEL:SetPadding(p)
     self.padding = p or self.padding
 end
-
 function PANEL:Clear()
     self.canvas:Clear()
     self.rows = {}
 end
-
 function PANEL:AddRow(builder)
     local p = vgui.Create("DPanel", self.canvas)
     p:Dock(TOP)
@@ -48,12 +42,10 @@ function PANEL:AddRow(builder)
         filterText = "",
         filterFunc = nil
     }
-
     builder(p, row)
     self.rows[#self.rows + 1] = row
     return row
 end
-
 function PANEL:AddPanelRow(widget, opts)
     opts = opts or {}
     return self:AddRow(function(p, row)
@@ -67,7 +59,6 @@ function PANEL:AddPanelRow(widget, opts)
         row.filterFunc = opts.filterFunc
     end)
 end
-
 function PANEL:AddTextRow(data)
     local title = data.title or ""
     local desc = data.desc or ""
@@ -89,7 +80,6 @@ function PANEL:AddTextRow(data)
             d:SetAutoStretchVertical(true)
             d:SetText(desc)
         end
-
         local r
         if right ~= "" then
             r = vgui.Create("DLabel", p)
@@ -97,7 +87,6 @@ function PANEL:AddTextRow(data)
             r:SetText(right)
             r:SizeToContents()
         end
-
         p.PerformLayout = function()
             local pad = self.padding
             if compact then pad = math.ceil(pad * 0.5) end
@@ -108,23 +97,18 @@ function PANEL:AddTextRow(data)
                 d:SetWide(p:GetWide() - pad * 2 - (r and r:GetWide() + 10 or 0))
                 d:SizeToContentsY()
             end
-
             if r then
                 local y = d and pad + t:GetTall() + spacing + d:GetTall() - r:GetTall() or p:GetTall() * 0.5 - r:GetTall() * 0.5
                 r:SetPos(p:GetWide() - r:GetWide() - pad, math.max(pad, y))
             end
-
             local textH = pad + t:GetTall() + (d and spacing + d:GetTall() or 0) + pad
             p:SetTall(math.max(minHeight, textH))
         end
-
         row.filterText = (title .. " " .. desc .. " " .. right):lower()
     end)
-
     row.panel:InvalidateLayout(true)
     return row
 end
-
 function PANEL:AddSubsheetRow(cfg)
     cfg = cfg or {}
     local title = cfg.title or ""
@@ -139,7 +123,6 @@ function PANEL:AddSubsheetRow(cfg)
             derma.SkinHook("Paint", "Panel", pnl, w, h)
             draw.SimpleText(title, "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
-
         local subsheet = vgui.Create("liaSheet", cat)
         subsheet:Dock(FILL)
         cat:SetContents(subsheet)
@@ -154,11 +137,9 @@ function PANEL:AddSubsheetRow(cfg)
             end
             return false
         end
-
         row.filterText = title:lower()
     end)
 end
-
 function PANEL:AddPreviewRow(data)
     local title = data.title or ""
     local desc = data.desc or ""
@@ -182,7 +163,6 @@ function PANEL:AddPreviewRow(data)
             d:SetAutoStretchVertical(true)
             d:SetText(desc)
         end
-
         local r
         if right ~= "" then
             r = vgui.Create("DLabel", p)
@@ -190,7 +170,6 @@ function PANEL:AddPreviewRow(data)
             r:SetText(right)
             r:SizeToContents()
         end
-
         p.PerformLayout = function()
             local pad = self.padding
             html:SetPos(pad, pad)
@@ -200,24 +179,19 @@ function PANEL:AddPreviewRow(data)
                 d:SetWide(p:GetWide() - (pad + size + pad) - pad - (r and r:GetWide() + 10 or 0))
                 d:SizeToContentsY()
             end
-
             if r then
                 local y = d and pad + t:GetTall() + 5 + d:GetTall() - r:GetTall() or p:GetTall() * 0.5 - r:GetTall() * 0.5
                 r:SetPos(p:GetWide() - r:GetWide() - pad, math.max(pad, y))
             end
-
             local textH = d and t:GetTall() + 5 + d:GetTall() or t:GetTall()
             local h = math.max(size, textH) + pad * 2
             p:SetTall(h)
         end
-
         row.filterText = (title .. " " .. desc .. " " .. right):lower()
     end)
-
     row.panel:InvalidateLayout(true)
     return row
 end
-
 function PANEL:AddListViewRow(cfg)
     cfg = cfg or {}
     local cols = cfg.columns or {}
@@ -230,11 +204,9 @@ function PANEL:AddListViewRow(cfg)
         for _, v in ipairs(cols) do
             lv:AddColumn(v)
         end
-
         for _, v in ipairs(data) do
             lv:AddLine(unpack(v))
         end
-
         p:SetTall(height)
         row.widget = lv
         row.filterFunc = function(q)
@@ -249,7 +221,6 @@ function PANEL:AddListViewRow(cfg)
                         if v then s = s .. " " .. tostring(v) end
                     end
                 end
-
                 local vis = q == "" or s:lower():find(q, 1, true) ~= nil
                 line:SetVisible(vis)
                 if vis then any = true end
@@ -257,11 +228,9 @@ function PANEL:AddListViewRow(cfg)
             return any
         end
     end)
-
     row.panel:InvalidateLayout(true)
     return row
 end
-
 function PANEL:AddIconLayoutRow(cfg)
     cfg = cfg or {}
     local height = cfg.height or 240
@@ -283,21 +252,17 @@ function PANEL:AddIconLayoutRow(cfg)
                 child:SetVisible(vis)
                 if vis then any = true end
             end
-
             layout:InvalidateLayout(true)
             return any
         end
     end)
-
     row.panel:InvalidateLayout(true)
     return row
 end
-
 function PANEL:RegisterCustomFilter(row, fn)
     row.filterFunc = fn
     return row
 end
-
 function PANEL:Refresh()
     local q = self.search:GetValue():lower()
     for _, row in ipairs(self.rows) do
@@ -308,12 +273,9 @@ function PANEL:Refresh()
         else
             vis = q == "" or row.filterText and row.filterText:find(q, 1, true) ~= nil
         end
-
         row.panel:SetVisible(vis ~= false)
     end
-
     self.canvas:InvalidateLayout(true)
     self.canvas:SizeToChildren(false, true)
 end
-
 vgui.Register("liaSheet", PANEL, "DPanel")

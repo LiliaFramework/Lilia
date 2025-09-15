@@ -1,8 +1,7 @@
-﻿function MODULE:PrePlayerDraw(client)
+function MODULE:PrePlayerDraw(client)
     if not IsValid(client) then return end
     if client:isNoClipping() then return true end
 end
-
 function MODULE:HUDPaint()
     local client = LocalPlayer()
     if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
@@ -55,7 +54,6 @@ function MODULE:HUDPaint()
                 baseColor = lia.option.get("espConfiguredDoorsColor")
             end
         end
-
         if not kind then continue end
         local screenPos = pos:ToScreen()
         if not screenPos.visible then continue end
@@ -87,7 +85,6 @@ function MODULE:HUDPaint()
                 local armorY = barY + barH / 2
                 draw.SimpleTextOutlined(ent:Armor(), "liaSmallFont", armorX, armorY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, 255))
             end
-
             local wep = ent:GetActiveWeapon()
             if IsValid(wep) then
                 local ammo, reserve = wep:Clip1(), ent:GetAmmoCount(wep:GetPrimaryAmmoType())
@@ -98,7 +95,6 @@ function MODULE:HUDPaint()
         end
     end
 end
-
 net.Receive("DisplayCharList", function()
     local sendData = net.ReadTable()
     local targetSteamIDsafe = net.ReadString()
@@ -113,7 +109,6 @@ net.Receive("DisplayCharList", function()
             end
         end
     end
-
     local columns = {
         {
             name = "name",
@@ -152,14 +147,12 @@ net.Receive("DisplayCharList", function()
             field = "LastUsed"
         }
     }
-
     for _, name in ipairs(extraOrder) do
         table.insert(columns, {
             name = name,
             field = name
         })
     end
-
     local _, listView = lia.util.CreateTableUI(L("charlistTitle", targetSteamIDsafe), columns, sendData)
     if IsValid(listView) then
         for _, line in ipairs(listView:GetLines()) do
@@ -173,7 +166,6 @@ net.Receive("DisplayCharList", function()
                     pnl:DoPaint(w, h)
                 end
             end
-
             line.CharID = rowData and rowData.ID
             line.SteamID = targetSteamIDsafe
             if rowData and rowData.extraDetails then
@@ -184,7 +176,6 @@ net.Receive("DisplayCharList", function()
                 end
             end
         end
-
         listView.OnRowRightClick = function(_, _, ln)
             if not (ln and ln.CharID) then return end
             if not (lia.command.hasAccess(LocalPlayer(), "charban") or lia.command.hasAccess(LocalPlayer(), "charwipe") or lia.command.hasAccess(LocalPlayer(), "charunban") or lia.command.hasAccess(LocalPlayer(), "charbanoffline") or lia.command.hasAccess(LocalPlayer(), "charwipeoffline") or lia.command.hasAccess(LocalPlayer(), "charunbanoffline")) then return end
@@ -195,12 +186,10 @@ net.Receive("DisplayCharList", function()
                     local opt1 = dMenu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. ln.CharID .. '"') end)
                     opt1:SetIcon("icon16/cancel.png")
                 end
-
                 if lia.command.hasAccess(LocalPlayer(), "charwipe") then
                     local opt1_5 = dMenu:AddOption(L("wipeCharacter"), function() LocalPlayer():ConCommand('say "/charwipe ' .. ln.CharID .. '"') end)
                     opt1_5:SetIcon("icon16/user_delete.png")
                 end
-
                 if lia.command.hasAccess(LocalPlayer(), "charunban") then
                     local opt2 = dMenu:AddOption(L("unbanCharacter"), function() LocalPlayer():ConCommand('say "/charunban ' .. ln.CharID .. '"') end)
                     opt2:SetIcon("icon16/accept.png")
@@ -210,18 +199,15 @@ net.Receive("DisplayCharList", function()
                     local opt3 = dMenu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. ln.CharID .. '"') end)
                     opt3:SetIcon("icon16/cancel.png")
                 end
-
                 if lia.command.hasAccess(LocalPlayer(), "charwipeoffline") then
                     local opt3_5 = dMenu:AddOption(L("wipeCharacterOffline"), function() LocalPlayer():ConCommand('say "/charwipeoffline ' .. ln.CharID .. '"') end)
                     opt3_5:SetIcon("icon16/user_delete.png")
                 end
-
                 if lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then
                     local opt4 = dMenu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. ln.CharID .. '"') end)
                     opt4:SetIcon("icon16/accept.png")
                 end
             end
-
             dMenu:Open()
         end
     end

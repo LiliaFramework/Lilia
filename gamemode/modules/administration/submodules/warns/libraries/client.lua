@@ -1,4 +1,4 @@
-﻿local panelRef
+local panelRef
 local warningsTabAdded = false
 net.Receive("liaAllWarnings", function()
     local warnings = net.ReadTable() or {}
@@ -18,7 +18,6 @@ net.Receive("liaAllWarnings", function()
         col:SetWidth(w + 16)
         return col
     end
-
     addSizedColumn(L("timestamp"))
     addSizedColumn(L("warned"))
     addSizedColumn(L("admin"))
@@ -39,11 +38,9 @@ net.Receive("liaAllWarnings", function()
                     end
                 end
             end
-
             if match then list:AddLine(unpack(entries)) end
         end
     end
-
     search.OnChange = function() populate(search:GetValue()) end
     populate("")
     function list:OnRowRightClick(_, line)
@@ -56,14 +53,11 @@ net.Receive("liaAllWarnings", function()
                 local value = line:GetColumnText(i) or ""
                 rowString = rowString .. header .. " " .. value .. " | "
             end
-
             SetClipboardText(string.sub(rowString, 1, -4))
         end):SetIcon("icon16/page_copy.png")
-
         menu:Open()
     end
 end)
-
 net.Receive("liaWarningsCount", function()
     local count = net.ReadInt(32)
     if count > 0 and not warningsTabAdded then
@@ -82,7 +76,6 @@ net.Receive("liaWarningsCount", function()
         end)
     end
 end)
-
 function MODULE:PopulateAdminTabs()
     if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("viewPlayerWarnings") then return end
     net.Start("liaRequestWarningsCount")

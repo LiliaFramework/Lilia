@@ -1,4 +1,4 @@
-﻿SWEP.PrintName = L("handsWeaponName")
+SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
@@ -44,7 +44,6 @@ function SWEP:Initialize()
     self.lastPunchTime = 0
     self.isFistHold = false
 end
-
 function SWEP:Deploy()
     if not IsValid(self:GetOwner()) then return end
     local viewModel = self:GetOwner():GetViewModel()
@@ -53,11 +52,9 @@ function SWEP:Deploy()
         viewModel:ResetSequence(ACT_VM_FISTS_DRAW)
         if CLIENT then self.NextAllowedPlayRateChange = CurTime() + viewModel:SequenceDuration() end
     end
-
     self:DropObject()
     return true
 end
-
 function SWEP:Precache()
     util.PrecacheSound("npc/vort/claw_swing1.wav")
     util.PrecacheSound("npc/vort/claw_swing2.wav")
@@ -68,12 +65,10 @@ function SWEP:Precache()
     util.PrecacheSound("physics/wood/wood_crate_impact_hard2.wav")
     util.PrecacheSound("physics/wood/wood_crate_impact_hard3.wav")
 end
-
 function SWEP:OnReloaded()
     self.maxHoldDistanceSquared = self.maxHoldDistance ^ 2
     self:DropObject()
 end
-
 function SWEP:Think()
     if not IsValid(self:GetOwner()) then return end
     if CLIENT then
@@ -84,7 +79,6 @@ function SWEP:Think()
             self:SetHoldType("normal")
             self.isFistHold = false
         end
-
         if self:IsHoldingObject() then
             local physics = self:GetHeldPhysicsObject()
             local bIsRagdoll = self.heldEntity:IsRagdoll()
@@ -95,7 +89,6 @@ function SWEP:Think()
                 self:DropObject()
                 return
             end
-
             if physics:GetPos():DistToSqr(targetLocation) > self.maxHoldDistanceSquared then
                 self:DropObject()
             else
@@ -107,7 +100,6 @@ function SWEP:Think()
                     self.heldObjectAngle:RotateAroundAxis(currentPlayerAngles:Forward(), cmd:GetMouseX() / 15)
                     self.heldObjectAngle:RotateAroundAxis(currentPlayerAngles:Right(), cmd:GetMouseY() / 15)
                 end
-
                 self.lastPlayerAngles = self.lastPlayerAngles or currentPlayerAngles
                 self.heldObjectAngle.y = self.heldObjectAngle.y - math.AngleDifference(self.lastPlayerAngles.y, currentPlayerAngles.y)
                 self.lastPlayerAngles = currentPlayerAngles
@@ -124,28 +116,22 @@ function SWEP:Think()
                     teleportdistance = self.maxHoldDistance * 0.75,
                     deltatime = FrameTime()
                 })
-
                 if physics:GetStress() > self.maxHoldStress then self:DropObject() end
             end
         end
-
         if not IsValid(self.heldEntity) and self:GetOwner():getLocalVar("IsHoldingObject", true) then self:GetOwner():setLocalVar("IsHoldingObject", false) end
     end
 end
-
 function SWEP:GetHeldPhysicsObject()
     return IsValid(self.heldEntity) and IsValid(self.heldEntity.ixHeldOwner) and self.heldEntity.ixHeldOwner == self:GetOwner() and self.heldEntity:GetPhysicsObject() or nil
 end
-
 function SWEP:CanHoldObject(entity)
     local physics = entity:GetPhysicsObject()
     return IsValid(physics) and physics:GetMass() <= lia.config.get("MaxHoldWeight", 100) and physics:IsMoveable() and not self:IsHoldingObject() and not IsValid(entity.ixHeldOwner) and hook.Run("CanPlayerHoldObject", self:GetOwner(), entity)
 end
-
 function SWEP:IsHoldingObject()
     return IsValid(self.heldEntity) and IsValid(self.heldEntity.ixHeldOwner) and self.heldEntity.ixHeldOwner == self:GetOwner()
 end
-
 function SWEP:PickupObject(entity)
     if self:IsHoldingObject() or not IsValid(entity) or not IsValid(entity:GetPhysicsObject()) then return end
     local physics = entity:GetPhysicsObject()
@@ -176,15 +162,12 @@ function SWEP:PickupObject(entity)
         physicsObject:EnableCollisions(false)
         physicsObject:EnableMotion(false)
     end
-
     if trace.Entity:IsRagdoll() then
         local tracedEnt = trace.Entity
         self.holdEntity:SetPos(tracedEnt:GetBonePosition(tracedEnt:TranslatePhysBoneToBone(trace.PhysicsBone)))
     end
-
     self.constraint = constraint.Weld(self.holdEntity, self.heldEntity, 0, trace.Entity:IsRagdoll() and trace.PhysicsBone or 0, 0, true, true)
 end
-
 function SWEP:DropObject(bThrow)
     if not IsValid(self.heldEntity) or self.heldEntity.ixHeldOwner ~= self:GetOwner() then return end
     self.lastPlayerAngles = nil
@@ -205,13 +188,11 @@ function SWEP:DropObject(bThrow)
             end
         end)
     end
-
     self:SetHoldType("normal")
     self.heldEntity.ixHeldOwner = nil
     self.heldEntity.ixCollisionGroup = nil
     self.heldEntity = nil
 end
-
 function SWEP:PlayPickupSound(surfaceProperty)
     local result = "Flesh.ImpactSoft"
     if surfaceProperty ~= nil then
@@ -219,10 +200,8 @@ function SWEP:PlayPickupSound(surfaceProperty)
         local soundName = surfaceName:gsub("^metal$", "SolidMetal") .. ".ImpactSoft"
         if sound.GetProperties(soundName) then result = soundName end
     end
-
     self:GetOwner():EmitSound(result, 75, 100, 40)
 end
-
 function SWEP:DoPunchAnimation()
     self.lastHand = math.abs(1 - self.lastHand)
     local sequence = 3 + self.lastHand
@@ -233,25 +212,21 @@ function SWEP:DoPunchAnimation()
         if CLIENT then self.NextAllowedPlayRateChange = CurTime() + viewModel:SequenceDuration() * 2 end
     end
 end
-
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     if SERVER and self:IsHoldingObject() then
         self:DropObject(true)
         return
     end
-
     if not self.isFistHold then
         self:SetHoldType("fist")
         self.isFistHold = true
     end
-
     local canPunch, reason = hook.Run("CanPlayerThrowPunch", self:GetOwner())
     if canPunch == false then
         if SERVER and reason and isstring(reason) then self:GetOwner():notifyErrorLocalized(reason) end
         return
     end
-
     local staminaUse = lia.config.get("PunchStamina", 0)
     if staminaUse > 0 and SERVER then self:GetOwner():consumeStamina(staminaUse) end
     local defaultDelay = self.Primary.Delay
@@ -263,7 +238,6 @@ function SWEP:PrimaryAttack()
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
         self:GetOwner():ViewPunch(Angle(self.lastHand + 2, self.lastHand + 5, 0.125))
     end)
-
     self.lastPunchTime = CurTime()
     timer.Simple(0.055, function()
         if not IsValid(self) or not IsValid(self:GetOwner()) then return end
@@ -271,7 +245,6 @@ function SWEP:PrimaryAttack()
         local context = {
             damage = damage
         }
-
         local result = hook.Run("GetPlayerPunchDamage", self:GetOwner(), damage, context)
         damage = result ~= nil and result or context.damage
         self:GetOwner():LagCompensation(true)
@@ -282,7 +255,6 @@ function SWEP:PrimaryAttack()
             endpos = endPos,
             filter = self:GetOwner()
         })
-
         if SERVER and trace.Hit and IsValid(trace.Entity) then
             local dmgInfo = DamageInfo()
             dmgInfo:SetAttacker(self:GetOwner())
@@ -294,12 +266,10 @@ function SWEP:PrimaryAttack()
             trace.Entity:DispatchTraceAttack(dmgInfo, startPos, endPos)
             self:GetOwner():EmitSound("physics/body/body_medium_impact_hard" .. math.random(1, 6) .. ".wav", 80)
         end
-
         hook.Run("PlayerThrowPunch", self:GetOwner(), trace)
         self:GetOwner():LagCompensation(false)
     end)
 end
-
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     local data = {}
@@ -315,7 +285,6 @@ function SWEP:SecondaryAttack()
             self.NextAllowedPlayRateChange = CurTime() + viewModel:SequenceDuration() * 2
         end
     end
-
     if SERVER and IsValid(entity) then
         if entity:isDoor() then
             if hook.Run("CanPlayerKnock", self:GetOwner(), entity) == false then return end
@@ -341,7 +310,6 @@ function SWEP:SecondaryAttack()
         end
     end
 end
-
 function SWEP:Reload()
     if not IsFirstTimePredicted() then return end
     if SERVER and IsValid(self.heldEntity) then self:DropObject() end

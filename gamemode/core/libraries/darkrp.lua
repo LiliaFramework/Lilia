@@ -1,4 +1,4 @@
-﻿lia.darkrp = lia.darkrp or {}
+lia.darkrp = lia.darkrp or {}
 DarkRP = DarkRP or {}
 RPExtraTeams = RPExtraTeams or {}
 DarkRP.disabledDefaults = DarkRP.disabledDefaults or {}
@@ -17,7 +17,6 @@ if SERVER then
         end
         return isClear and isEmpty
     end
-
     function lia.darkrp.findEmptyPos(startPos, entitiesToIgnore, maxDistance, searchStep, checkArea)
         if lia.darkrp.isEmpty(startPos, entitiesToIgnore) and lia.darkrp.isEmpty(startPos + checkArea, entitiesToIgnore) then return startPos end
         for distance = searchStep, maxDistance, searchStep do
@@ -30,7 +29,6 @@ if SERVER then
         end
         return startPos
     end
-
     function lia.darkrp.notify(client, _, _, message)
         client:notifyInfoLocalized(message)
     end
@@ -48,7 +46,6 @@ else
         end)
         return text, accumulatedWidth
     end
-
     function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local accumulatedWidth = 0
         surface.SetFont(fontName)
@@ -65,28 +62,23 @@ else
             elseif accumulatedWidth < maxLineWidth then
                 return word
             end
-
             if firstChar == ' ' then
                 accumulatedWidth = wordWidth - spaceWidth
                 return '\n' .. string.sub(word, 2)
             end
-
             accumulatedWidth = wordWidth
             return '\n' .. word
         end)
         return text
     end
 end
-
 for index, faction in ipairs(lia.faction.indices) do
     RPExtraTeams[index] = faction
     RPExtraTeams[index].team = index
 end
-
 function lia.darkrp.formatMoney(amount)
     return lia.currency.get(amount)
 end
-
 function lia.darkrp.createEntity(name, data)
     local cmd = data.cmd or string.lower(name)
     local ITEM = lia.item.register(cmd, "base_entities", nil, nil, true)
@@ -98,13 +90,10 @@ function lia.darkrp.createEntity(name, data)
     ITEM.price = data.price or 0
     lia.information(L("generatedDarkRPItem", name))
 end
-
 function lia.darkrp.createCategory()
 end
-
 function DarkRP.removeChatCommand()
 end
-
 function DarkRP.defineChatCommand(cmd, callback)
     cmd = string.lower(cmd)
     lia.command.add(cmd, {
@@ -114,13 +103,11 @@ function DarkRP.defineChatCommand(cmd, callback)
                 ErrorNoHalt("Error in DarkRP chat command '" .. cmd .. "': " .. result)
                 return
             end
-
             if isstring(result) and result ~= "" then client:notifyErrorLocalized(result) end
             return result
         end
     })
 end
-
 function DarkRP.definePrivilegedChatCommand(cmd, priv, callback)
     cmd = string.lower(cmd)
     lia.command.add(cmd, {
@@ -131,19 +118,16 @@ function DarkRP.definePrivilegedChatCommand(cmd, priv, callback)
                 ErrorNoHalt("Error in DarkRP privileged chat command '" .. cmd .. "': " .. result)
                 return
             end
-
             if isstring(result) and result ~= "" then client:notifyErrorLocalized(result) end
             return result
         end
     })
 end
-
 local DarkRPVariables = {
     ["DarkRPNonOwnable"] = function(entity) entity:setNetVar("noSell", true) end,
     ["DarkRPTitle"] = function(entity, val) entity:setNetVar("name", val) end,
     ["DarkRPCanLockpick"] = function(entity, val) entity.noPick = tobool(val) end
 }
-
 DarkRP.createCategory = lia.darkrp.createCategory
 DarkRP.createEntity = lia.darkrp.createEntity
 DarkRP.formatMoney = lia.darkrp.formatMoney

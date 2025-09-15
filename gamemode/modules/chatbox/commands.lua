@@ -1,4 +1,4 @@
-﻿lia.command.add("banooc", {
+lia.command.add("banooc", {
     adminOnly = true,
     desc = "banOOCCommandDesc",
     arguments = {
@@ -19,13 +19,11 @@
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:setLiliaData("oocBanned", true)
         client:notifySuccessLocalized("playerBannedFromOOC", target:Name())
         lia.log.add(client, "banOOC", target:Name(), target:SteamID())
     end
 })
-
 lia.command.add("unbanooc", {
     adminOnly = true,
     desc = "unbanOOCCommandDesc",
@@ -47,13 +45,11 @@ lia.command.add("unbanooc", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:setLiliaData("oocBanned", nil)
         client:notifySuccessLocalized("playerUnbannedFromOOC", target:Name())
         lia.log.add(client, "unbanOOC", target:Name(), target:SteamID())
     end
 })
-
 lia.command.add("blockooc", {
     superAdminOnly = true,
     desc = "blockOOCCommandDesc",
@@ -64,7 +60,6 @@ lia.command.add("blockooc", {
         lia.log.add(client, "blockOOC", not blocked)
     end
 })
-
 lia.command.add("clearchat", {
     adminOnly = true,
     desc = "clearChatCommandDesc",

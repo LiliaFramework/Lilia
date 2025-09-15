@@ -1,4 +1,4 @@
-﻿module("lia.markup", package.seeall)
+module("lia.markup", package.seeall)
 local TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM = 1, 2, 3
 local colour_stack = {
     {
@@ -8,7 +8,6 @@ local colour_stack = {
         a = 255
     }
 }
-
 local font_stack = {"DermaDefault"}
 local blocks = {}
 local colourmap = {
@@ -187,12 +186,10 @@ local colourmap = {
         a = 255
     },
 }
-
 local function colourMatch(c)
     c = string.lower(c)
     return colourmap[c]
 end
-
 local function ExtractParams(p1, p2)
     if string.utf8sub(p1, 1, 1) == "/" then
         local tag = string.utf8sub(p1, 2)
@@ -213,7 +210,6 @@ local function ExtractParams(p1, p2)
                     n = n + 1
                 end
             end
-
             table.insert(colour_stack, rgba)
         elseif p1 == "font" or p1 == "face" then
             table.insert(font_stack, tostring(p2))
@@ -237,7 +233,6 @@ local function ExtractParams(p1, p2)
         end
     end
 end
-
 local function CheckTextOrTag(p)
     if p == "" then return end
     if p == nil then return end
@@ -251,13 +246,11 @@ local function CheckTextOrTag(p)
         table.insert(blocks, text_block)
     end
 end
-
 local function ProcessMatches(p1, p2, p3)
     if p1 then CheckTextOrTag(p1) end
     if p2 then CheckTextOrTag(p2) end
     if p3 then CheckTextOrTag(p3) end
 end
-
 local MarkupObject = {}
 function MarkupObject:create()
     local o = {}
@@ -265,19 +258,15 @@ function MarkupObject:create()
     self.__index = self
     return o
 end
-
 function MarkupObject:getWidth()
     return self.totalWidth
 end
-
 function MarkupObject:getHeight()
     return self.totalHeight
 end
-
 function MarkupObject:size()
     return self.totalWidth, self.totalHeight
 end
-
 function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     for i = 1, #self.blocks do
         local blk = self.blocks[i]
@@ -289,7 +278,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
             elseif halign == TEXT_ALIGN_RIGHT then
                 x = x - self.totalWidth
             end
-
             if valign == TEXT_ALIGN_CENTER then y = y - blk.h / 2 end
             surface.SetDrawColor(blk.colour.r, blk.colour.g, blk.colour.b, alphaoverride or blk.colour.a or 255)
             surface.SetMaterial(blk.texture)
@@ -302,7 +290,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
             elseif halign == TEXT_ALIGN_RIGHT then
                 x = x - self.totalWidth
             end
-
             x = x + blk.offset.x
             if self.onDrawText then
                 self.onDrawText(blk.text, blk.font, x, y, blk.colour, halign, valign, alphaoverride, blk)
@@ -312,7 +299,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
                 elseif valign == TEXT_ALIGN_BOTTOM then
                     y = y - self.totalHeight
                 end
-
                 local alpha = blk.colour.a
                 if alphaoverride then alpha = alphaoverride end
                 surface.SetFont(blk.font)
@@ -323,7 +309,6 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
         end
     end
 end
-
 function parse(ml, maxwidth)
     colour_stack = {
         {
@@ -333,7 +318,6 @@ function parse(ml, maxwidth)
             a = 255
         }
     }
-
     font_stack = {"DermaDefault"}
     blocks = {}
     if not string.find(ml, "<") then ml = ml .. "<nop>" end
@@ -365,7 +349,6 @@ function parse(ml, maxwidth)
                     else
                         lineHeight = thisY + texOffset
                     end
-
                     if string.utf8len(curString) > 0 then
                         local x1, _ = surface.GetTextSize(curString)
                         local new_block = {}
@@ -380,7 +363,6 @@ function parse(ml, maxwidth)
                         table.insert(new_block_list, new_block)
                         if xOffset + x1 > xMax then xMax = xOffset + x1 end
                     end
-
                     xOffset = 0
                     xSize = 0
                     yOffset = yOffset + thisMaxY
@@ -402,7 +384,6 @@ function parse(ml, maxwidth)
                         table.insert(new_block_list, new_block)
                         if xOffset + x1 > xMax then xMax = xOffset + x1 end
                     end
-
                     local xOldSize = xSize
                     xSize = 0
                     curString = ""
@@ -418,7 +399,6 @@ function parse(ml, maxwidth)
                             local chspace = string.utf8sub(curString, k, k)
                             if chspace == " " then lastSpacePos = k end
                         end
-
                         if lastSpacePos == string.utf8len(curString) then
                             ch = string.utf8sub(curString, lastSpacePos, lastSpacePos) .. ch
                             curString = string.utf8sub(curString, 1, lastSpacePos - 1)
@@ -426,13 +406,11 @@ function parse(ml, maxwidth)
                             ch = string.utf8sub(curString, lastSpacePos + 1) .. ch
                             curString = string.utf8sub(curString, 1, lastSpacePos)
                         end
-
                         local m = 1
                         local chLen = string.utf8len(ch)
                         while m <= chLen and string.utf8sub(ch, m, m) == " " do
                             m = m + 1
                         end
-
                         ch = string.utf8sub(ch, m)
                         local x1, y1 = surface.GetTextSize(curString)
                         if y1 > thisMaxY then
@@ -440,7 +418,6 @@ function parse(ml, maxwidth)
                             ymaxes[yOffset] = thisMaxY
                             lineHeight = y1
                         end
-
                         local new_block = {}
                         new_block.text = curString
                         new_block.font = block.font
@@ -459,7 +436,6 @@ function parse(ml, maxwidth)
                         curString = ""
                         thisMaxY = 0
                     end
-
                     curString = curString .. ch
                     thisY = y
                     xSize = xSize + x
@@ -470,7 +446,6 @@ function parse(ml, maxwidth)
                     end
                 end
             end
-
             if string.utf8len(curString) > 0 then
                 local x1, _ = surface.GetTextSize(curString)
                 local new_block = {}
@@ -487,7 +462,6 @@ function parse(ml, maxwidth)
                 if xOffset + x1 > xMax then xMax = xOffset + x1 end
                 xOffset = xOffset + x1
             end
-
             xSize = 0
         elseif block.texture then
             local newBlock = table.Copy(block)
@@ -497,44 +471,37 @@ function parse(ml, maxwidth)
                 b = 255,
                 a = 255
             }
-
             newBlock.thisX = block.w
             newBlock.thisY = block.h - 3
             newBlock.offset = {
                 x = xOffset,
                 y = yOffset
             }
-
             table.insert(new_block_list, newBlock)
             xOffset = xOffset + block.w + 1
             texOffset = block.h / 2
         end
     end
-
     local totalHeight = 0
     for i = 1, #new_block_list do
         local block = new_block_list[i]
         block.height = ymaxes[block.offset.y]
         if block.height and block.offset.y + block.height > totalHeight then totalHeight = block.offset.y + block.height end
     end
-
     local newObject = MarkupObject:create()
     newObject.totalHeight = totalHeight
     newObject.totalWidth = xMax
     newObject.blocks = new_block_list
     return newObject
 end
-
 local PANEL = {}
 function PANEL:Init()
     self:SetPaintBackground(false)
 end
-
 function PANEL:setMarkup(text, onDrawText)
     local object = lia.markup.parse(text, self:GetWide())
     object.onDrawText = onDrawText
     self:SetTall(object:getHeight())
     self.Paint = function() object:draw(0, 0) end
 end
-
 vgui.Register("liaMarkupPanel", PANEL, "DPanel")

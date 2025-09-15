@@ -1,4 +1,4 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 lia.command.add("doorsell", {
     desc = "doorsellDesc",
     adminOnly = false,
@@ -32,7 +32,6 @@ lia.command.add("doorsell", {
         end
     end
 })
-
 lia.command.add("admindoorsell", {
     desc = "admindoorsellDesc",
     adminOnly = true,
@@ -68,7 +67,6 @@ lia.command.add("admindoorsell", {
         end
     end
 })
-
 lia.command.add("doortogglelock", {
     desc = "doortogglelockDesc",
     adminOnly = true,
@@ -97,7 +95,6 @@ lia.command.add("doortogglelock", {
                     client:notifyInfoLocalized("doorToggleLocked", L("unlocked"))
                     lia.log.add(client, "toggleLock", door, L("unlocked"))
                 end
-
                 local partner = door:getDoorPartner()
                 if IsValid(partner) then
                     if toggleState then
@@ -114,7 +111,6 @@ lia.command.add("doortogglelock", {
         end
     end
 })
-
 lia.command.add("doorbuy", {
     desc = "doorbuyDesc",
     adminOnly = false,
@@ -131,7 +127,6 @@ lia.command.add("doorbuy", {
             client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
             return
         end
-
         local door = client:getTracedEntity()
         if IsValid(door) and door:isDoor() then
             local doorData = door:getNetVar("doorData", {})
@@ -143,14 +138,12 @@ lia.command.add("doorbuy", {
                     client:notifyInfoLocalized("doorOwnedBy", door:GetDTEntity(0):Name())
                     return false
                 end
-
                 local price = doorData.price or 0
                 if client:getChar():hasMoney(price) then
                     door:SetDTEntity(0, client)
                     door.liaAccess = {
                         [client] = DOOR_OWNER
                     }
-
                     client:getChar():takeMoney(price)
                     client:notifySuccessLocalized("doorPurchased", lia.currency.get(price))
                     hook.Run("OnPlayerPurchaseDoor", client, door, true)
@@ -166,7 +159,6 @@ lia.command.add("doorbuy", {
         end
     end
 })
-
 lia.command.add("doortoggleownable", {
     desc = "doortoggleownableDesc",
     adminOnly = true,
@@ -198,7 +190,6 @@ lia.command.add("doortoggleownable", {
         end
     end
 })
-
 lia.command.add("doorresetdata", {
     desc = "doorresetdataDesc",
     adminOnly = true,
@@ -223,7 +214,6 @@ lia.command.add("doorresetdata", {
                 price = 0,
                 locked = false
             }
-
             door:setNetVar("doorData", doorData)
             client:notifySuccessLocalized("doorResetData")
             MODULE:SaveData()
@@ -232,7 +222,6 @@ lia.command.add("doorresetdata", {
         end
     end
 })
-
 lia.command.add("doortoggleenabled", {
     desc = "doortoggleenabledDesc",
     adminOnly = true,
@@ -260,7 +249,6 @@ lia.command.add("doortoggleenabled", {
         end
     end
 })
-
 lia.command.add("doortogglehidden", {
     desc = "doortogglehiddenDesc",
     adminOnly = true,
@@ -288,7 +276,6 @@ lia.command.add("doortogglehidden", {
         end
     end
 })
-
 lia.command.add("doorsetprice", {
     desc = "doorsetpriceDesc",
     arguments = {
@@ -326,7 +313,6 @@ lia.command.add("doorsetprice", {
         end
     end
 })
-
 lia.command.add("doorsettitle", {
     desc = "doorsettitleDesc",
     arguments = {
@@ -367,7 +353,6 @@ lia.command.add("doorsettitle", {
         end
     end
 })
-
 lia.command.add("savedoors", {
     desc = "savedoorsDesc",
     adminOnly = true,
@@ -384,7 +369,6 @@ lia.command.add("savedoors", {
         client:notifySuccessLocalized("doorsSaved")
     end
 })
-
 lia.command.add("doorinfo", {
     desc = "doorinfoDesc",
     adminOnly = true,
@@ -408,7 +392,6 @@ lia.command.add("doorinfo", {
                 local info = lia.faction.get(id)
                 if info then table.insert(factionNames, info.name) end
             end
-
             local classes = doorData.classes or {}
             local classNames = {}
             for _, uid in ipairs(classes) do
@@ -416,7 +399,6 @@ lia.command.add("doorinfo", {
                 local info = lia.class.list[idx]
                 if info then table.insert(classNames, info.name) end
             end
-
             local hidden = doorData.hidden or false
             local locked = doorData.locked or false
             local group = doorData.group or ""
@@ -458,7 +440,6 @@ lia.command.add("doorinfo", {
                     value = tostring(locked)
                 }
             }
-
             lia.util.SendTableUI(client, L("door") .. " " .. L("information"), {
                 {
                     name = "doorInfoProperty",
@@ -474,7 +455,6 @@ lia.command.add("doorinfo", {
         end
     end
 })
-
 lia.command.add("dooraddfaction", {
     desc = "dooraddfactionDesc",
     arguments = {
@@ -508,7 +488,6 @@ lia.command.add("dooraddfaction", {
                         end
                     end
                 end
-
                 if faction then
                     local facs = doorData.factions or {}
                     if not table.HasValue(facs, faction.uniqueID) then facs[#facs + 1] = faction.uniqueID end
@@ -526,7 +505,6 @@ lia.command.add("dooraddfaction", {
                     lia.log.add(client, "doorRemoveFaction", door, "all")
                     client:notifySuccessLocalized("doorRemoveFaction")
                 end
-
                 MODULE:SaveData()
             else
                 client:notifyErrorLocalized("doorNotValid")
@@ -536,7 +514,6 @@ lia.command.add("dooraddfaction", {
         end
     end
 })
-
 lia.command.add("doorremovefaction", {
     desc = "doorremovefactionDesc",
     arguments = {
@@ -570,7 +547,6 @@ lia.command.add("doorremovefaction", {
                         end
                     end
                 end
-
                 if faction then
                     local facs = doorData.factions or {}
                     table.RemoveByValue(facs, faction.uniqueID)
@@ -588,7 +564,6 @@ lia.command.add("doorremovefaction", {
                     lia.log.add(client, "doorRemoveFaction", door, "all")
                     client:notifySuccessLocalized("doorRemoveFaction")
                 end
-
                 MODULE:SaveData()
             else
                 client:notifyErrorLocalized("doorNotValid")
@@ -598,7 +573,6 @@ lia.command.add("doorremovefaction", {
         end
     end
 })
-
 lia.command.add("doorsetclass", {
     desc = "doorsetclassDesc",
     arguments = {
@@ -639,7 +613,6 @@ lia.command.add("doorsetclass", {
                         end
                     end
                 end
-
                 if class then
                     local classes = doorData.classes or {}
                     if not table.HasValue(classes, classData.uniqueID) then classes[#classes + 1] = classData.uniqueID end
@@ -657,7 +630,6 @@ lia.command.add("doorsetclass", {
                     lia.log.add(client, "doorRemoveClass", door)
                     client:notifySuccessLocalized("doorRemoveClass")
                 end
-
                 MODULE:SaveData()
             else
                 client:notifyErrorLocalized("doorNotValid")
@@ -668,7 +640,6 @@ lia.command.add("doorsetclass", {
     end,
     alias = {"jobdoor"}
 })
-
 lia.command.add("doorremoveclass", {
     desc = "doorremoveclassDesc",
     arguments = {
@@ -716,7 +687,6 @@ lia.command.add("doorremoveclass", {
                         end
                     end
                 end
-
                 if class then
                     local classes = doorData.classes or {}
                     if table.HasValue(classes, classData.uniqueID) then
@@ -738,7 +708,6 @@ lia.command.add("doorremoveclass", {
                     lia.log.add(client, "doorRemoveClass", door)
                     client:notifySuccessLocalized("doorRemoveClass")
                 end
-
                 MODULE:SaveData()
             else
                 client:notifyErrorLocalized("doorNotValid")
@@ -748,7 +717,6 @@ lia.command.add("doorremoveclass", {
         end
     end
 })
-
 lia.command.add("togglealldoors", {
     desc = "togglealldoorsDesc",
     adminOnly = true,
@@ -761,7 +729,6 @@ lia.command.add("togglealldoors", {
                 break
             end
         end
-
         local count = 0
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
@@ -774,13 +741,11 @@ lia.command.add("togglealldoors", {
                 end
             end
         end
-
         client:notifySuccessLocalized(toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         lia.log.add(client, toggleToDisable and "doorDisableAll" or "doorEnableAll", count)
         MODULE:SaveData()
     end
 })
-
 lia.command.add("doorid", {
     desc = "doorIDDesc",
     adminOnly = true,
@@ -800,7 +765,6 @@ lia.command.add("doorid", {
         end
     end
 })
-
 lia.command.add("doorsetgroup", {
     desc = "doorsetgroupDesc",
     arguments = {
@@ -836,7 +800,6 @@ lia.command.add("doorsetgroup", {
                         end
                     end
                 end
-
                 if groupName then
                     doorData.group = groupName
                     door:setNetVar("doorData", doorData)
@@ -850,7 +813,6 @@ lia.command.add("doorsetgroup", {
                     lia.log.add(client, "doorRemoveGroup", door)
                     client:notifySuccessLocalized("doorRemoveGroup")
                 end
-
                 MODULE:SaveData()
             else
                 client:notifyErrorLocalized("doorNotValid")
@@ -860,7 +822,6 @@ lia.command.add("doorsetgroup", {
         end
     end
 })
-
 lia.command.add("dooraddgroup", {
     desc = "dooraddgroupDesc",
     arguments = {
@@ -896,7 +857,6 @@ lia.command.add("dooraddgroup", {
                         end
                     end
                 end
-
                 if groupName then
                     local groupFactions = lia.faction.getFactionsInGroup(groupName)
                     if #groupFactions > 0 then
@@ -908,7 +868,6 @@ lia.command.add("dooraddgroup", {
                                 addedCount = addedCount + 1
                             end
                         end
-
                         doorData.factions = factions
                         door.liaFactions = factions
                         door:setNetVar("doorData", doorData)
@@ -922,7 +881,6 @@ lia.command.add("dooraddgroup", {
                 else
                     client:notifyErrorLocalized("missingGroupName")
                 end
-
                 MODULE:SaveData()
             else
                 client:notifyErrorLocalized("doorNotValid")
@@ -932,7 +890,6 @@ lia.command.add("dooraddgroup", {
         end
     end
 })
-
 lia.command.add("doorremovegroup", {
     desc = "doorremovegroupDesc",
     adminOnly = true,
@@ -961,7 +918,6 @@ lia.command.add("doorremovegroup", {
         end
     end
 })
-
 lia.command.add("listdoorids", {
     desc = "listDoorIDsDesc",
     adminOnly = true,
@@ -980,12 +936,10 @@ lia.command.add("listdoorids", {
                 end
             end
         end
-
         if #doorData == 0 then
             client:notifyInfoLocalized("doorNoDoorsFound")
             return
         end
-
         table.sort(doorData, function(a, b) return a.id < b.id end)
         local doorList = {}
         for _, data in ipairs(doorData) do
@@ -994,7 +948,6 @@ lia.command.add("listdoorids", {
                 value = L("positionLabel") .. data.position .. L("modelLabel") .. data.model
             })
         end
-
         lia.util.SendTableUI(client, L("doorIDsOnMap", game.GetMap()), {
             {
                 name = L("doorIDColumn"),
@@ -1005,7 +958,6 @@ lia.command.add("listdoorids", {
                 field = "value"
             }
         }, doorList)
-
         client:notifyInfoLocalized("doorFoundCount", #doorData)
     end
 })
