@@ -357,6 +357,12 @@ function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
     end
 end
 
+lia.loader.include("lilia/gamemode/core/libraries/languages.lua", "shared")
+lia.loader.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
+lia.loader.includeDir("lilia/gamemode/core/derma", true, true, "client")
+lia.loader.include("lilia/gamemode/core/libraries/database.lua", "server")
+lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
+lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
     MsgC(Color(255, 0, 0), tostring(msg), "\n")
@@ -487,12 +493,6 @@ function lia.loader.includeEntities(path)
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
 
-lia.loader.include("lilia/gamemode/core/libraries/languages.lua", "shared")
-lia.loader.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
-lia.loader.includeDir("lilia/gamemode/core/derma", true, true, "client")
-lia.loader.include("lilia/gamemode/core/libraries/database.lua", "server")
-lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
-lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
 lia.loader.includeEntities("lilia/gamemode/entities")
 lia.loader.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
 if SERVER then

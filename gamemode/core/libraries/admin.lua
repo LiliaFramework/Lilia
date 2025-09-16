@@ -516,7 +516,7 @@ function lia.administrator.renameGroup(oldName, newName)
 end
 
 if SERVER then
-    function lia.adminstrator.notifyAdmin(notification)
+    function lia.administrator.notifyAdmin(notification)
         for _, client in player.Iterator() do
             if IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") then client:notifyAdminLocalized(notification) end
         end
