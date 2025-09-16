@@ -2265,19 +2265,13 @@ Reload: Drop]],
     inventoryError = "An error occurred while adding the item to your inventory.",
     convertedEntityDesc = "A converted %s entity",
     convertedEntities = "Converted Entities",
-    
-    -- Administration
     noclipWhileDead = "You cannot use noclip while dead",
-    
-    -- Doors
     doorIDProperty = "Door ID",
     positionLabel = "Position: ",
     modelLabel = " Model: ",
     doorIDsOnMap = "Door IDs on %s",
     doorIDColumn = "Door ID",
     detailsColumn = "Details",
-    
-    -- Vendor
     vendorSavePreset = "Save Preset",
     noPermission = "You do not have permission to perform this action",
     vendorPresetName = "Preset Name",
