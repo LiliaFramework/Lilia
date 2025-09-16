@@ -140,7 +140,6 @@ function PANEL:onItemReleased(itemIcon)
     end
 
     if not self.inventory:doesItemFitAtPos(item, x, y) then
-        -- Prevent dropping item on top of another item - return to original position
         local originalX, originalY = item:getData("x"), item:getData("y")
         if originalX and originalY then
             self.inventory:requestTransfer(item:getID(), self.inventory:getID(), originalX, originalY)
