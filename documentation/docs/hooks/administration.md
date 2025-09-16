@@ -32,6 +32,14 @@ These hooks work together to create a flexible, extensible administrative framew
 
 Extend the Admin Stick HUD with extra information by mutating the provided information table.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator uses the admin stick tool
+- The admin stick targets an entity (player, NPC, or object)
+- The HUD information is being prepared for display
+- Before the admin stick HUD is shown to the administrator
+
 **Parameters**
 
 * `client` (*Player*): Local player using the admin stick.
@@ -100,6 +108,14 @@ end)
 
 Determines if a player can view a specific log category in the admin console.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to open the admin console
+- The admin console is loading log categories
+- Before log categories are displayed to the player
+- During admin console initialization
+
 **Parameters**
 
 * `client` (*Player*): Player requesting logs.
@@ -146,6 +162,14 @@ end)
 **Purpose**
 
 Customize columns shown in the Admin Character List. Mutate the `columns` array to add or adjust column definitions.
+
+**When Called**
+
+This hook is triggered when:
+- The admin character list is being initialized
+- Character list columns are being prepared for display
+- Before the character list UI is shown to administrators
+- During admin panel setup
 
 **Parameters**
 
@@ -217,6 +241,14 @@ end)
 
 Adjust each character list entry as it is built server-side before sending to clients.
 
+**When Called**
+
+This hook is triggered when:
+- Character data is being prepared for the admin character list
+- Each character entry is being processed server-side
+- Before character data is sent to client administrators
+- During character list data compilation
+
 **Parameters**
 
 * `entry` (*table*): Mutable payload row (keys like `ID`, `Name`, `SteamID`, etc.).
@@ -270,6 +302,14 @@ end)
 
 Called after admin usergroups and privileges are loaded and synchronized.
 
+**When Called**
+
+This hook is triggered when:
+- The server starts up and admin system initializes
+- Admin usergroups and privileges are loaded from the database
+- All admin permissions have been synchronized
+- After the admin system is fully ready for use
+
 **Parameters**
 
 * `groups` (*table*): Map of usergroup -> permissions table.
@@ -314,6 +354,14 @@ end)
 
 Triggered when a new admin privilege is registered.
 
+**When Called**
+
+This hook is triggered when:
+- A new admin privilege is registered in the system
+- Privilege data is added to the admin system
+- During module initialization that registers privileges
+- When admin permissions are being set up
+
 **Parameters**
 
 * `info` (*table*): Contains `Name`, `ID`, `MinAccess`, `Category`.
@@ -354,6 +402,14 @@ end)
 
 Triggered when a privilege is unregistered.
 
+**When Called**
+
+This hook is triggered when:
+- An admin privilege is removed from the system
+- Privilege data is being cleaned up
+- During module shutdown that unregisters privileges
+- When admin permissions are being modified
+
 **Parameters**
 
 * `info` (*table*): Contains `Name`, `ID`.
@@ -393,6 +449,14 @@ end)
 **Purpose**
 
 Fires after a new usergroup is created.
+
+**When Called**
+
+This hook is triggered when:
+- A new usergroup is successfully created in the system
+- Usergroup data is saved to the database
+- After the usergroup creation process completes
+- During admin panel usergroup management
 
 **Parameters**
 
@@ -438,6 +502,14 @@ end)
 **Purpose**
 
 Fires when a usergroup's permissions are modified.
+
+**When Called**
+
+This hook is triggered when:
+- A usergroup's permissions are updated in the system
+- Permission changes are saved to the database
+- After usergroup permission modifications complete
+- During admin panel permission management
 
 **Parameters**
 
@@ -488,6 +560,14 @@ end)
 
 Fires after a usergroup is removed.
 
+**When Called**
+
+This hook is triggered when:
+- A usergroup is successfully deleted from the system
+- Usergroup data is removed from the database
+- After the usergroup removal process completes
+- During admin panel usergroup management
+
 **Parameters**
 
 * `groupName` (*string*): Name of the removed usergroup.
@@ -527,6 +607,14 @@ end)
 **Purpose**
 
 Fires after a usergroup is renamed.
+
+**When Called**
+
+This hook is triggered when:
+- A usergroup's name is successfully changed in the system
+- Usergroup rename data is saved to the database
+- After the usergroup rename process completes
+- During admin panel usergroup management
 
 **Parameters**
 
@@ -568,6 +656,14 @@ end)
 **Purpose**
 
 Gate giving a SWEP to an entity (e.g., via context menu tools). Return `true` to allow; any falsy value denies.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to give a SWEP to an entity
+- Context menu tools are used to spawn weapons
+- Admin tools are used to distribute weapons
+- Before a weapon is given to any entity
 
 **Parameters**
 
@@ -619,6 +715,14 @@ end)
 **Purpose**
 
 Populate the Admin tab in the F1 menu. Mutate the provided `pages` array and insert page descriptors.
+
+**When Called**
+
+This hook is triggered when:
+- The F1 admin menu is being initialized
+- Admin tabs are being prepared for display
+- Before the admin menu is shown to administrators
+- During admin panel setup
 
 **Parameters**
 
@@ -690,6 +794,14 @@ end)
 
 Allows external admin mods to intercept and handle admin actions. Returning `true` prevents the default command behaviour.
 
+**When Called**
+
+This hook is triggered when:
+- An admin command is executed through the system
+- External admin mods attempt to handle admin actions
+- Before the default admin command behavior is executed
+- During admin command processing
+
 **Parameters**
 
 * `cmd` (*string*): Action identifier such as `kick` or `ban`.
@@ -757,6 +869,14 @@ end)
 
 Override a faction's display name during registration/loading.
 
+**When Called**
+
+This hook is triggered when:
+- A faction is being registered in the system
+- Faction data is being loaded from configuration
+- Before faction names are displayed in the UI
+- During faction system initialization
+
 **Parameters**
 
 * `uniqueID` (*string*): Faction unique ID.
@@ -797,6 +917,14 @@ end)
 
 Override a faction's description during registration/loading.
 
+**When Called**
+
+This hook is triggered when:
+- A faction is being registered in the system
+- Faction data is being loaded from configuration
+- Before faction descriptions are displayed in the UI
+- During faction system initialization
+
 **Parameters**
 
 * `uniqueID` (*string*): Faction unique ID.
@@ -836,6 +964,14 @@ end)
 **Purpose**
 
 Override a faction's models table during registration/loading.
+
+**When Called**
+
+This hook is triggered when:
+- A faction is being registered in the system
+- Faction data is being loaded from configuration
+- Before faction models are assigned to players
+- During faction system initialization
 
 **Parameters**
 

@@ -38,6 +38,14 @@ The database and persistence system in Lilia is built around a sophisticated arc
 
 Notifies that a persistent entity's stored data has been updated and saved.
 
+**When Called**
+
+This hook is triggered when:
+- A persistent entity's data has been modified and saved to disk
+- The entity persistence system has completed updating stored data
+- After entity data changes are committed to the database
+- During the entity persistence update process
+
 **Parameters**
 
 * `ent` (*Entity*): The persistent entity.
@@ -90,6 +98,14 @@ end)
 
 Request that the gamemode re-save a persistent entity's data to disk.
 
+**When Called**
+
+This hook is triggered when:
+- A request is made to update persistent entity data
+- Entity data needs to be re-saved to disk
+- Manual persistence updates are requested
+- The system needs to force-save entity state
+
 **Parameters**
 
 * `ent` (*Entity*): The persistent entity to update.
@@ -138,6 +154,14 @@ end)
 **Purpose**
 
 Called when the server saves data to disk. Allows adding custom data to the save payload.
+
+**When Called**
+
+This hook is triggered when:
+- The server initiates a data save operation
+- Server data is being prepared for disk storage
+- Before the save payload is written to disk
+- During the server save process
 
 **Parameters**
 
@@ -198,6 +222,14 @@ end)
 
 Fires when a key-value pair is stored in the server's data system.
 
+**When Called**
+
+This hook is triggered when:
+- A data key-value pair is set in the server data system
+- Server data is modified or updated
+- New data entries are created in the data system
+- Existing data values are changed
+
 **Parameters**
 
 * `key` (*string*): Data key that was set.
@@ -248,6 +280,14 @@ end)
 **Purpose**
 
 Called before an entity's persistence data is saved to disk.
+
+**When Called**
+
+This hook is triggered when:
+- An entity is about to have its persistence data saved
+- Before entity data is written to disk
+- During the entity save preparation process
+- Prior to persistence data serialization
 
 **Parameters**
 
@@ -302,6 +342,14 @@ end)
 **Purpose**
 
 Determines if an entity should be saved for persistence.
+
+**When Called**
+
+This hook is triggered when:
+- The system evaluates whether an entity should be persisted
+- Before an entity is added to the persistence system
+- During entity persistence eligibility checks
+- When determining which entities to save
 
 **Parameters**
 
@@ -359,6 +407,14 @@ end)
 **Purpose**
 
 Allows modification of the data saved for an entity's persistence.
+
+**When Called**
+
+This hook is triggered when:
+- An entity's save data is being prepared for persistence
+- Before entity data is serialized and stored
+- During the entity data preparation process
+- When entity persistence data can be modified
 
 **Parameters**
 
@@ -420,6 +476,14 @@ end)
 
 Fires when an entity has been successfully saved to persistence.
 
+**When Called**
+
+This hook is triggered when:
+- An entity has been successfully persisted to disk
+- After entity persistence data is written and confirmed
+- Following successful entity save operations
+- When entity persistence is completed
+
 **Parameters**
 
 * `ent` (*Entity*): Entity that was saved.
@@ -470,6 +534,14 @@ end)
 **Purpose**
 
 Called when a persistent entity is loaded from disk.
+
+**When Called**
+
+This hook is triggered when:
+- A persistent entity is restored from saved data
+- During server startup when loading persisted entities
+- When entity data is read from disk and applied
+- After entity persistence data is loaded
 
 **Parameters**
 
@@ -535,6 +607,14 @@ end)
 **Purpose**
 
 Called when the server loads saved data from disk.
+
+**When Called**
+
+This hook is triggered when:
+- The server loads its saved data from disk
+- During server startup when restoring saved state
+- When server data is read from storage
+- After data files are loaded into memory
 
 **Parameters**
 
@@ -604,6 +684,14 @@ end)
 **Purpose**
 
 Runs after all saved data has been loaded and processed.
+
+**When Called**
+
+This hook is triggered when:
+- All server data has been loaded from disk
+- After the complete data loading process is finished
+- When all saved data has been restored and processed
+- Following successful data initialization
 
 **Parameters**
 
@@ -675,6 +763,14 @@ end)
 
 Determines if a specific data key should be saved to disk.
 
+**When Called**
+
+This hook is triggered when:
+- The system evaluates whether a data key should be persisted
+- Before data is written to the save file
+- During the data filtering process
+- When determining which data to include in saves
+
 **Parameters**
 
 * `key` (*string*): Data key to check.
@@ -738,6 +834,14 @@ end)
 
 Fires when the database connection is established.
 
+**When Called**
+
+This hook is triggered when:
+- The database connection is successfully established
+- After database initialization is completed
+- When the database becomes available for queries
+- Following successful database connection setup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -800,6 +904,14 @@ end)
 
 Checks if data can be saved at this time.
 
+**When Called**
+
+This hook is triggered when:
+- The system checks if data saving is currently allowed
+- Before initiating a data save operation
+- When validating save conditions
+- During save permission evaluation
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -858,6 +970,14 @@ end)
 
 Called during database initialization to set up tables and schema.
 
+**When Called**
+
+This hook is triggered when:
+- The database is being initialized
+- During database schema setup
+- When database tables need to be created
+- Before the database is ready for use
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -885,6 +1005,14 @@ end)
 **Purpose**
 
 Fires after the database schema and initial data have been loaded.
+
+**When Called**
+
+This hook is triggered when:
+- The database schema has been fully loaded
+- After initial database data is populated
+- When the database is ready for normal operations
+- Following complete database initialization
 
 **Parameters**
 
@@ -914,6 +1042,14 @@ end)
 
 Called when database tables are being wiped/reset.
 
+**When Called**
+
+This hook is triggered when:
+- Database tables are about to be wiped or reset
+- Before database cleanup operations
+- When performing database maintenance
+- During database table reset procedures
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -941,6 +1077,14 @@ end)
 **Purpose**
 
 Fires when all Lilia database tables have been loaded and are ready.
+
+**When Called**
+
+This hook is triggered when:
+- All Lilia database tables have been loaded
+- After database table initialization is complete
+- When the database system is fully ready
+- Following successful table loading
 
 **Parameters**
 
@@ -970,6 +1114,14 @@ end)
 
 Called during the table loading process.
 
+**When Called**
+
+This hook is triggered when:
+- A database table is being loaded
+- During the table initialization process
+- For each table as it's being set up
+- While database tables are being prepared
+
 **Parameters**
 
 * `tableName` (*string*): Name of the table being loaded.
@@ -998,6 +1150,14 @@ end)
 
 Fires when an item is registered in the system.
 
+**When Called**
+
+This hook is triggered when:
+- A new item is registered in the item system
+- During item initialization and setup
+- When items are loaded and processed
+- After item data is validated and stored
+
 **Parameters**
 
 * `item` (*table*): Item data that was registered.
@@ -1025,6 +1185,14 @@ end)
 **Purpose**
 
 Called when a character variable changes.
+
+**When Called**
+
+This hook is triggered when:
+- A character's variable is modified
+- When character data is updated
+- After character variable values change
+- During character data synchronization
 
 **Parameters**
 
@@ -1057,6 +1225,14 @@ end)
 
 Fires when a character's local variable changes.
 
+**When Called**
+
+This hook is triggered when:
+- A character's local variable is modified on the client
+- When client-side character data changes
+- After local character variable updates
+- During client-side character data synchronization
+
 **Parameters**
 
 * `character` (*Character*): Character whose variable changed.
@@ -1088,6 +1264,14 @@ end)
 
 Called when any local variable changes.
 
+**When Called**
+
+This hook is triggered when:
+- Any local variable is modified on the client
+- When client-side data changes
+- After local variable updates
+- During client-side data synchronization
+
 **Parameters**
 
 * `key` (*string*): Variable key that changed.
@@ -1117,6 +1301,14 @@ end)
 **Purpose**
 
 Fires when a network variable changes.
+
+**When Called**
+
+This hook is triggered when:
+- A network variable (netvar) is modified
+- When networked data changes between client and server
+- After netvar synchronization
+- During network variable updates
 
 **Parameters**
 
@@ -1149,6 +1341,14 @@ end)
 
 Called when an item's data changes.
 
+**When Called**
+
+This hook is triggered when:
+- An item's data properties are modified
+- When item attributes or values change
+- After item data updates
+- During item data synchronization
+
 **Parameters**
 
 * `item` (*Item*): Item whose data changed.
@@ -1179,6 +1379,14 @@ end)
 **Purpose**
 
 Fires when an item's quantity changes.
+
+**When Called**
+
+This hook is triggered when:
+- An item's quantity is modified
+- When items are added or removed from stacks
+- After quantity adjustments
+- During item stack changes
 
 **Parameters**
 
@@ -1232,6 +1440,14 @@ end)
 
 Called when inventory data changes.
 
+**When Called**
+
+This hook is triggered when:
+- Inventory data properties are modified
+- When inventory attributes or settings change
+- After inventory data updates
+- During inventory data synchronization
+
 **Parameters**
 
 * `inventory` (*Inventory*): Inventory whose data changed.
@@ -1263,6 +1479,14 @@ end)
 
 Fires when an inventory is initialized.
 
+**When Called**
+
+This hook is triggered when:
+- A new inventory is created and initialized
+- During inventory setup and configuration
+- When inventory data is first loaded
+- After inventory creation is completed
+
 **Parameters**
 
 * `inventory` (*Inventory*): Inventory that was initialized.
@@ -1290,6 +1514,14 @@ end)
 **Purpose**
 
 Called when an item is added to an inventory.
+
+**When Called**
+
+This hook is triggered when:
+- An item is successfully added to an inventory
+- After item placement in inventory slots
+- When inventory contents are updated with new items
+- Following successful item addition operations
 
 **Parameters**
 
@@ -1347,6 +1579,14 @@ end)
 
 Fires when an item is removed from an inventory.
 
+**When Called**
+
+This hook is triggered when:
+- An item is successfully removed from an inventory
+- After item extraction from inventory slots
+- When inventory contents are updated after removal
+- Following successful item removal operations
+
 **Parameters**
 
 * `inventory` (*Inventory*): Inventory that lost the item.
@@ -1403,6 +1643,14 @@ end)
 
 Called when an inventory is deleted.
 
+**When Called**
+
+This hook is triggered when:
+- An inventory is being deleted or destroyed
+- Before inventory cleanup operations
+- When inventory data is being removed
+- During inventory deletion procedures
+
 **Parameters**
 
 * `inventory` (*Inventory*): Inventory that was deleted.
@@ -1430,6 +1678,14 @@ end)
 **Purpose**
 
 Fires when an item is deleted.
+
+**When Called**
+
+This hook is triggered when:
+- An item is being deleted or destroyed
+- Before item cleanup operations
+- When item data is being removed
+- During item deletion procedures
 
 **Parameters**
 
@@ -1459,6 +1715,14 @@ end)
 
 Called when an item is initialized.
 
+**When Called**
+
+This hook is triggered when:
+- A new item is created and initialized
+- During item setup and configuration
+- When item data is first loaded
+- After item creation is completed
+
 **Parameters**
 
 * `item` (*Item*): Item that was initialized.
@@ -1486,6 +1750,14 @@ end)
 **Purpose**
 
 Fires when a character disconnects.
+
+**When Called**
+
+This hook is triggered when:
+- A character is disconnecting from the server
+- Before character cleanup operations
+- When a player leaves the server
+- During character disconnection procedures
 
 **Parameters**
 
@@ -1544,6 +1816,14 @@ end)
 **Purpose**
 
 Called before a character is saved.
+
+**When Called**
+
+This hook is triggered when:
+- A character is about to be saved to the database
+- Before character data is written to storage
+- During character save preparation
+- Prior to character data serialization
 
 **Parameters**
 
@@ -1609,6 +1889,14 @@ end)
 
 Fires after a character is saved.
 
+**When Called**
+
+This hook is triggered when:
+- A character has been successfully saved to the database
+- After character data is written to storage
+- Following successful character save operations
+- When character persistence is completed
+
 **Parameters**
 
 * `character` (*Character*): Character that was saved.
@@ -1667,6 +1955,14 @@ end)
 **Purpose**
 
 Called when a character is loaded.
+
+**When Called**
+
+This hook is triggered when:
+- A character is loaded from the database
+- During character initialization from saved data
+- When a player selects and loads their character
+- After character data is restored from storage
 
 **Parameters**
 
@@ -1731,6 +2027,14 @@ end)
 **Purpose**
 
 Fires before a character is deleted.
+
+**When Called**
+
+This hook is triggered when:
+- A character is about to be deleted
+- Before character data is removed from the database
+- During character deletion preparation
+- Prior to character cleanup operations
 
 **Parameters**
 
@@ -1797,6 +2101,14 @@ end)
 **Purpose**
 
 Called when a character is deleted.
+
+**When Called**
+
+This hook is triggered when:
+- A character has been successfully deleted
+- After character data is removed from the database
+- Following character deletion operations
+- When character cleanup is completed
 
 **Parameters**
 
@@ -1867,6 +2179,14 @@ end)
 
 Fires when a character is created.
 
+**When Called**
+
+This hook is triggered when:
+- A new character is created and added to the database
+- After character creation is completed
+- When a player successfully creates a new character
+- Following character initialization and setup
+
 **Parameters**
 
 * `character` (*Character*): Character that was created.
@@ -1895,6 +2215,14 @@ end)
 **Purpose**
 
 Called when something is transferred.
+
+**When Called**
+
+This hook is triggered when:
+- Data or objects are transferred between systems
+- During transfer operations
+- When items or data change ownership or location
+- After successful transfer operations
 
 **Parameters**
 
@@ -1925,6 +2253,14 @@ end)
 
 Fires when the character list is loaded.
 
+**When Called**
+
+This hook is triggered when:
+- The character selection list is loaded from the database
+- During character list initialization
+- When a player's characters are retrieved for selection
+- After character list data is loaded
+
 **Parameters**
 
 * `characters` (*table*): List of characters.
@@ -1952,6 +2288,14 @@ end)
 **Purpose**
 
 Called when the character list is updated.
+
+**When Called**
+
+This hook is triggered when:
+- The character selection list is refreshed or updated
+- When character list data changes
+- After character creation, deletion, or modification
+- During character list synchronization
 
 **Parameters**
 
@@ -1981,6 +2325,14 @@ end)
 
 Allows adding extra details to character list entries.
 
+**When Called**
+
+This hook is triggered when:
+- Character list entries are being prepared for display
+- During character list rendering
+- When additional character information is needed
+- Before character list is shown to the player
+
 **Parameters**
 
 * `character` (*Character*): Character to add details for.
@@ -2008,6 +2360,14 @@ end)
 **Purpose**
 
 Fires when a player is kicked from a character.
+
+**When Called**
+
+This hook is triggered when:
+- A player is forcibly disconnected from their character
+- During administrative character kick operations
+- When a player is removed from their character session
+- After character kick procedures are initiated
 
 **Parameters**
 
@@ -2039,6 +2399,14 @@ end)
 
 Fires when a character is restored.
 
+**When Called**
+
+This hook is triggered when:
+- A character is restored from backup or previous state
+- During character recovery operations
+- When character data is reverted or restored
+- After character restoration procedures
+
 **Parameters**
 
 * `character` (*Character*): Character that was restored.
@@ -2066,6 +2434,14 @@ end)
 **Purpose**
 
 Called to create a default inventory.
+
+**When Called**
+
+This hook is triggered when:
+- A default inventory needs to be created for a player
+- During character initialization
+- When setting up initial inventory for new characters
+- Before inventory system is ready for use
 
 **Parameters**
 
@@ -2095,6 +2471,14 @@ end)
 
 Fires when an inventory panel is created.
 
+**When Called**
+
+This hook is triggered when:
+- An inventory UI panel is being created
+- During inventory interface initialization
+- When inventory GUI needs to be displayed
+- Before inventory panel is shown to the player
+
 **Parameters**
 
 * `inventory` (*Inventory*): Inventory the panel is for.
@@ -2122,6 +2506,14 @@ end)
 **Purpose**
 
 Called during module inclusion process.
+
+**When Called**
+
+This hook is triggered when:
+- Modules are being included and loaded
+- During module initialization process
+- When module files are being processed
+- Before modules become available for use
 
 **Parameters**
 
@@ -2151,6 +2543,14 @@ end)
 
 Fires when configuration is initialized.
 
+**When Called**
+
+This hook is triggered when:
+- System configuration is initialized
+- After configuration files are loaded
+- When configuration system is ready
+- Following configuration setup completion
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -2178,6 +2578,14 @@ end)
 **Purpose**
 
 Called when items are initialized.
+
+**When Called**
+
+This hook is triggered when:
+- Item system initialization is completed
+- After all items are loaded and registered
+- When item definitions are processed
+- Following item system setup
 
 **Parameters**
 
@@ -2207,6 +2615,14 @@ end)
 
 Fires when modules are initialized.
 
+**When Called**
+
+This hook is triggered when:
+- Module system initialization is completed
+- After all modules are loaded and activated
+- When module dependencies are resolved
+- Following module system setup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -2234,6 +2650,14 @@ end)
 **Purpose**
 
 Called when options are initialized.
+
+**When Called**
+
+This hook is triggered when:
+- Options system initialization is completed
+- After option definitions are loaded
+- When option system is ready for use
+- Following options setup completion
 
 **Parameters**
 
@@ -2263,6 +2687,14 @@ end)
 
 Fires when schema is initialized.
 
+**When Called**
+
+This hook is triggered when:
+- Schema system initialization is completed
+- After schema definitions are loaded
+- When schema is ready for use
+- Following schema setup completion
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -2290,6 +2722,14 @@ end)
 **Purpose**
 
 Called when a player purchases a door.
+
+**When Called**
+
+This hook is triggered when:
+- A player successfully purchases a door
+- After door ownership is transferred
+- When door purchase transaction is completed
+- Following successful door acquisition
 
 **Parameters**
 
@@ -2320,6 +2760,14 @@ end)
 
 Fires when a server log entry is created.
 
+**When Called**
+
+This hook is triggered when:
+- A log entry is being created
+- During logging operations
+- When events are being recorded
+- Before log data is written to storage
+
 **Parameters**
 
 * `message` (*string*): Log message.
@@ -2348,6 +2796,14 @@ end)
 **Purpose**
 
 Called when a player sends a message.
+
+**When Called**
+
+This hook is triggered when:
+- A player sends a chat message
+- During message processing
+- After message validation
+- Before message is distributed to recipients
 
 **Parameters**
 
@@ -2379,6 +2835,14 @@ end)
 
 Fires when a chat message is parsed.
 
+**When Called**
+
+This hook is triggered when:
+- A chat message is being parsed and processed
+- During message analysis and formatting
+- After message content is evaluated
+- Before message handling is completed
+
 **Parameters**
 
 * `speaker` (*Player*): Player who sent the message.
@@ -2408,6 +2872,14 @@ end)
 **Purpose**
 
 Called when configuration is updated.
+
+**When Called**
+
+This hook is triggered when:
+- Configuration values are modified
+- During configuration changes
+- After configuration updates are applied
+- When configuration synchronization occurs
 
 **Parameters**
 
@@ -2439,6 +2911,14 @@ end)
 
 Fires when an out-of-character message is sent.
 
+**When Called**
+
+This hook is triggered when:
+- A player sends an OOC (out-of-character) message
+- During OOC message processing
+- After OOC message validation
+- Before OOC message is distributed
+
 **Parameters**
 
 * `client` (*Player*): Player who sent the message.
@@ -2467,6 +2947,14 @@ end)
 **Purpose**
 
 Called when salary is given to a player.
+
+**When Called**
+
+This hook is triggered when:
+- A player receives their salary payment
+- During salary distribution events
+- After salary calculations are completed
+- When periodic salary payments are made
 
 **Parameters**
 
@@ -2497,6 +2985,14 @@ end)
 
 Fires when a ticket is claimed.
 
+**When Called**
+
+This hook is triggered when:
+- A support ticket is claimed by an administrator
+- During ticket assignment operations
+- After ticket ownership is transferred
+- When ticket status changes to claimed
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was claimed.
@@ -2526,6 +3022,14 @@ end)
 
 Called when a ticket is closed.
 
+**When Called**
+
+This hook is triggered when:
+- A support ticket is closed or resolved
+- During ticket completion operations
+- After ticket resolution is confirmed
+- When ticket status changes to closed
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was closed.
@@ -2553,6 +3057,14 @@ end)
 **Purpose**
 
 Fires when a ticket is created.
+
+**When Called**
+
+This hook is triggered when:
+- A new support ticket is created
+- During ticket submission process
+- After ticket validation is completed
+- When ticket is added to the system
 
 **Parameters**
 
@@ -2582,6 +3094,14 @@ end)
 
 Called when a vendor is edited.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor's properties or inventory are modified
+- During vendor configuration changes
+- After vendor updates are applied
+- When vendor data is synchronized
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor that was edited.
@@ -2610,6 +3130,14 @@ end)
 **Purpose**
 
 Queries if a player can equip an item. Returning false stops the equip action.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to equip an item
+- Before item equipping is processed
+- During equipment validation checks
+- When item equip permissions are evaluated
 
 **Parameters**
 
@@ -2685,6 +3213,14 @@ end)
 
 Called before an item is unequipped. Return false to keep the item equipped.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to unequip an item
+- Before item unequipping is processed
+- During unequip validation checks
+- When item removal permissions are evaluated
+
 **Parameters**
 
 * `client` (*Player*): Player unequipping.
@@ -2744,6 +3280,14 @@ end)
 
 Called when a player attempts to rotate an inventory item. Return false to block rotating.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to rotate an item in their inventory
+- Before item rotation is processed
+- During rotation validation checks
+- When item rotation permissions are evaluated
+
 **Parameters**
 
 * `client` (*Player*): Player rotating.
@@ -2802,6 +3346,14 @@ end)
 **Purpose**
 
 Runs after chat messages are processed. Allows reacting to player chat.
+
+**When Called**
+
+This hook is triggered when:
+- A chat message has been fully processed
+- After message validation and distribution
+- When chat processing is completed
+- Following successful message handling
 
 **Parameters**
 
@@ -2882,6 +3434,14 @@ end)
 **Purpose**
 
 Decides if a corpse ragdoll should spawn for a player. Return false to skip ragdoll creation.
+
+**When Called**
+
+This hook is triggered when:
+- A player dies and ragdoll creation is being considered
+- Before ragdoll spawning occurs
+- During death processing
+- When ragdoll spawn permissions are evaluated
 
 **Parameters**
 

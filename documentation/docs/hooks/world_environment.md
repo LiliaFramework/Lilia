@@ -48,6 +48,14 @@ The world and environment system in Lilia is built around a sophisticated archit
 
 Determines if world-space info should be rendered for an entity. Return false to hide the tooltip.
 
+**When Called**
+
+This hook is triggered when:
+- An entity is being evaluated for info display
+- Before entity information tooltip is shown
+- When player looks at an entity
+- During entity info rendering checks
+
 **Parameters**
 
 * `entity` (*Entity*): Entity being considered.
@@ -82,6 +90,14 @@ end)
 **Purpose**
 
 Allows custom drawing of entity information in the world. Drawn every frame while visible.
+
+**When Called**
+
+This hook is triggered when:
+- Entity information is being drawn in the world
+- Every frame while entity info is visible
+- When custom entity info rendering is needed
+- During world-space UI rendering
 
 **Parameters**
 
@@ -120,6 +136,14 @@ end)
 
 Provides the health status text and color for a player. Return a table with text and color values.
 
+**When Called**
+
+This hook is triggered when:
+- A player's health status is being displayed
+- When health information is needed for UI
+- During player health status evaluation
+- Before health text and color are shown
+
 **Parameters**
 
 * `client` (*Player*): Player to check.
@@ -155,6 +179,14 @@ end)
 
 Determines if character info should draw above a player. Return false to suppress drawing.
 
+**When Called**
+
+This hook is triggered when:
+- Character information is about to be drawn above a player
+- Before player nameplate rendering
+- When evaluating player info display permissions
+- During character info visibility checks
+
 **Parameters**
 
 * `player` (*Player*): Player being rendered.
@@ -183,6 +215,14 @@ end)
 **Purpose**
 
 Allows custom drawing of character information above players.
+
+**When Called**
+
+This hook is triggered when:
+- Character information is being drawn above a player
+- During custom character info rendering
+- When player nameplate is being displayed
+- While character info is visible
 
 **Parameters**
 
@@ -216,6 +256,14 @@ end)
 
 Called when an item's entity menu is shown. Allows customization of item entity menus.
 
+**When Called**
+
+This hook is triggered when:
+- An item entity's context menu is being displayed
+- When player right-clicks on an item entity
+- Before item entity menu options are shown
+- During item entity interaction menu setup
+
 **Parameters**
 
 * `entity` (*Entity*): Item entity.
@@ -248,6 +296,14 @@ end)
 
 Runs before the Lilia framework finishes loading.
 
+**When Called**
+
+This hook is triggered when:
+- The Lilia framework is in the process of loading
+- Before framework initialization is completed
+- During early framework setup phase
+- Prior to full system initialization
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -276,6 +332,14 @@ end)
 **Purpose**
 
 Runs after the Lilia framework has finished loading.
+
+**When Called**
+
+This hook is triggered when:
+- The Lilia framework has completed loading
+- After all framework systems are initialized
+- When the framework is ready for use
+- Following successful framework setup
 
 **Parameters**
 
@@ -306,6 +370,14 @@ end)
 
 Override a player's computed playtime. Return seconds to use your value; return `nil` to fall back to default logic.
 
+**When Called**
+
+This hook is triggered when:
+- A player's playtime is being calculated
+- When playtime statistics are requested
+- During playtime display or logging
+- Before playtime values are shown or used
+
 **Parameters**
 
 * `client` (*Player*): The player whose playtime is being computed.
@@ -333,6 +405,14 @@ end)
 **Purpose**
 
 Allows modification of stamina regeneration rate.
+
+**When Called**
+
+This hook is triggered when:
+- Player stamina is being regenerated
+- During stamina system calculations
+- When stamina offset is being determined
+- While stamina recovery is processed
 
 **Parameters**
 
@@ -366,6 +446,14 @@ end)
 
 Called after custom fonts have been loaded.
 
+**When Called**
+
+This hook is triggered when:
+- Custom fonts have finished loading
+- After font initialization is completed
+- When font system is ready for use
+- Following successful font setup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -394,6 +482,14 @@ end)
 **Purpose**
 
 Allows adding custom fields to the HUD bars.
+
+**When Called**
+
+This hook is triggered when:
+- HUD bar fields are being set up
+- During HUD bar initialization
+- When custom bar fields can be added
+- Before HUD bars are displayed
 
 **Parameters**
 
@@ -428,6 +524,14 @@ end)
 
 Allows adding custom sections to the F1 menu.
 
+**When Called**
+
+This hook is triggered when:
+- F1 menu sections are being set up
+- During F1 menu initialization
+- When custom menu sections can be added
+- Before F1 menu is displayed to players
+
 **Parameters**
 
 * `panel` (*Panel*): F1 menu panel.
@@ -459,6 +563,14 @@ end)
 **Purpose**
 
 Determines if an item can be transferred between inventories.
+
+**When Called**
+
+This hook is triggered when:
+- An item transfer between inventories is being evaluated
+- Before item movement is processed
+- When transfer permissions are being checked
+- During inventory transfer validation
 
 **Parameters**
 
@@ -493,6 +605,14 @@ end)
 
 Checks if a player can open a bag's inventory panel.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to open a bag inventory
+- Before bag panel is displayed
+- When bag access permissions are evaluated
+- During bag interaction checks
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to open the panel.
@@ -522,6 +642,14 @@ end)
 **Purpose**
 
 Determines if a player can change their model using an outfit item.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to use an outfit item
+- Before model change is processed
+- When outfit permissions are evaluated
+- During outfit item usage validation
 
 **Parameters**
 
@@ -554,6 +682,14 @@ end)
 
 Checks if a player can hold/use an object.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to hold or use an object
+- Before object interaction is processed
+- When object usage permissions are evaluated
+- During object interaction validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to hold the object.
@@ -585,6 +721,14 @@ end)
 **Purpose**
 
 Determines if a player can interact with an item.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to interact with an item
+- Before item interaction is processed
+- When item interaction permissions are evaluated
+- During item usage validation
 
 **Parameters**
 
@@ -619,6 +763,14 @@ end)
 
 Checks if a player can knock on a door.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to knock on a door
+- Before door knocking is processed
+- When door interaction permissions are evaluated
+- During door knocking validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to knock.
@@ -651,6 +803,14 @@ end)
 
 Determines if a player can spawn storage containers.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to spawn storage containers
+- Before storage spawning is processed
+- When storage spawn permissions are evaluated
+- During storage container creation validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to spawn storage.
@@ -679,6 +839,14 @@ end)
 **Purpose**
 
 Checks if a player can throw a punch.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to throw a punch
+- Before punch action is processed
+- When combat permissions are evaluated
+- During melee combat validation
 
 **Parameters**
 
@@ -710,6 +878,14 @@ end)
 **Purpose**
 
 Determines if a player can view another player's inventory.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to view another player's inventory
+- Before inventory viewing is processed
+- When inventory access permissions are evaluated
+- During inventory viewing validation
 
 **Parameters**
 
@@ -772,6 +948,14 @@ end)
 
 Determines if a player can join a class.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to join a class
+- Before class assignment is processed
+- When class joining permissions are evaluated
+- During class membership validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to join.
@@ -805,6 +989,14 @@ end)
 
 Checks if a player can use a specific command.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to use a command
+- Before command execution is processed
+- When command permissions are evaluated
+- During command usage validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to use command.
@@ -836,6 +1028,14 @@ end)
 **Purpose**
 
 Determines if a player can use a door.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to use a door
+- Before door usage is processed
+- When door interaction permissions are evaluated
+- During door access validation
 
 **Parameters**
 
@@ -869,6 +1069,14 @@ end)
 
 Called when a character's data needs to be cleaned up.
 
+**When Called**
+
+This hook is triggered when:
+- A character's data requires cleanup
+- During character cleanup procedures
+- When character data is being removed or reset
+- Before character data is cleared
+
 **Parameters**
 
 * `character` (*Character*): Character being cleaned up.
@@ -897,6 +1105,14 @@ end)
 **Purpose**
 
 Fires when a character is restored from storage.
+
+**When Called**
+
+This hook is triggered when:
+- A character is being restored from storage
+- During character restoration procedures
+- When character data is loaded from backup
+- After character recovery operations
 
 **Parameters**
 
@@ -927,6 +1143,14 @@ end)
 
 Called to create a default inventory for a character.
 
+**When Called**
+
+This hook is triggered when:
+- A default inventory needs to be created for a character
+- During character initialization
+- When setting up initial character inventory
+- Before character inventory system is ready
+
 **Parameters**
 
 * `client` (*Player*): Player to create inventory for.
@@ -955,6 +1179,14 @@ end)
 **Purpose**
 
 Fires when an inventory panel is created.
+
+**When Called**
+
+This hook is triggered when:
+- An inventory panel is being created
+- During inventory UI initialization
+- When inventory interface needs to be displayed
+- Before inventory panel is shown to players
 
 **Parameters**
 
@@ -985,6 +1217,14 @@ end)
 
 Called during module inclusion process.
 
+**When Called**
+
+This hook is triggered when:
+- Modules are being included and loaded
+- During module initialization process
+- When module files are being processed
+- Before modules become available for use
+
 **Parameters**
 
 * `moduleName` (*string*): Name of the module being included.
@@ -1013,6 +1253,14 @@ end)
 
 Returns the default character description.
 
+**When Called**
+
+This hook is triggered when:
+- A default character description is needed
+- During character creation process
+- When character description field needs a default value
+- Before character creation form is displayed
+
 **Parameters**
 
 * `client` (*Player*): Player creating character.
@@ -1040,6 +1288,14 @@ end)
 **Purpose**
 
 Returns the default character name.
+
+**When Called**
+
+This hook is triggered when:
+- A default character name is needed
+- During character creation process
+- When character name field needs a default value
+- Before character creation form is displayed
 
 **Parameters**
 
@@ -4153,6 +4409,14 @@ end)
 
 Called when a ticket is closed.
 
+**When Called**
+
+This hook is triggered when:
+- A ticket is closed by an administrator
+- A ticket is resolved and marked as closed
+- After ticket closure process is completed
+- During ticket system cleanup
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was closed.
@@ -4180,6 +4444,14 @@ end)
 **Purpose**
 
 Fires when a ticket is created.
+
+**When Called**
+
+This hook is triggered when:
+- A player creates a new support ticket
+- A ticket is submitted to the ticket system
+- After ticket creation process is completed
+- During ticket system initialization
 
 **Parameters**
 
@@ -4209,6 +4481,14 @@ end)
 
 Called when a vendor is edited.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor's settings are modified
+- Vendor configuration is updated
+- After vendor edit process is completed
+- During vendor management operations
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor that was edited.
@@ -4237,6 +4517,14 @@ end)
 **Purpose**
 
 Allows custom painting of items.
+
+**When Called**
+
+This hook is triggered when:
+- An item is being rendered in inventory
+- Item display is being drawn
+- Before item visual representation is shown
+- During item rendering process
 
 **Parameters**
 

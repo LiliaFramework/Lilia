@@ -42,6 +42,14 @@ The economy and trading system in Lilia is built around a flexible architecture 
 
 Determines if a player can modify a vendor's settings.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to edit vendor settings
+- Before vendor modification interface is shown
+- When vendor edit permissions are being validated
+- During vendor configuration access checks
+
 **Parameters**
 
 * `client` (*Player*): Player attempting the edit.
@@ -75,6 +83,14 @@ end)
 **Purpose**
 
 Called when a player attempts to pick up a money entity.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to pick up a dropped money entity
+- Before money pickup is processed
+- When money collection permissions are being validated
+- During money pickup interaction checks
 
 **Parameters**
 
@@ -112,6 +128,14 @@ end)
 
 Checks if a player is permitted to open a vendor menu.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to access a vendor menu
+- Before vendor interface is displayed
+- When vendor access permissions are being validated
+- During vendor interaction checks
+
 **Parameters**
 
 * `client` (*Player*): Player requesting access.
@@ -132,6 +156,14 @@ Checks if a player is permitted to open a vendor menu.
 **Purpose**
 
 Checks whether a vendor trade is allowed.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to trade with a vendor
+- Before a vendor transaction is processed
+- When trade permissions are being validated
+- During vendor trade authorization checks
 
 **Parameters**
 
@@ -171,6 +203,14 @@ end)
 
 Allows overriding the entity model used for dropped money.
 
+**When Called**
+
+This hook is triggered when:
+- Money is being dropped as an entity
+- Before the money entity model is determined
+- During money entity creation
+- When money visual representation is being set
+
 **Parameters**
 
 - `amount` (`number`): Money amount being dropped.
@@ -202,6 +242,14 @@ end)
 
 Called after an item is moved between inventories.
 
+**When Called**
+
+This hook is triggered when:
+- An item has been successfully transferred between inventories
+- After item movement is completed
+- When inventory contents have been updated
+- Following successful item relocation
+
 **Parameters**
 
 - `item` (`Item`): Item moved.
@@ -219,6 +267,14 @@ Called after an item is moved between inventories.
 **Purpose**
 
 Called after a character buys from or sells to a vendor.
+
+**When Called**
+
+This hook is triggered when:
+- A vendor transaction has been completed
+- After items or money have been exchanged
+- When vendor trade is finalized
+- Following successful vendor interaction
 
 **Parameters**
 
@@ -255,6 +311,14 @@ end)
 
 Called when the vendor dialog panel is opened.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor menu interface is opened
+- After vendor access is granted
+- When vendor UI is being displayed
+- During vendor menu initialization
+
 **Parameters**
 
 * `panel` (*Panel*): The vendor menu panel.
@@ -284,6 +348,14 @@ end)
 **Purpose**
 
 Called after a player picks up a money entity.
+
+**When Called**
+
+This hook is triggered when:
+- A player has successfully picked up a money entity
+- After money has been added to player's inventory
+- When money pickup is completed
+- Following successful money collection
 
 **Parameters**
 
@@ -315,6 +387,14 @@ end)
 
 Fired when a client requests an item transfer between inventories.
 
+**When Called**
+
+This hook is triggered when:
+- A client requests to move an item between inventories
+- Before item transfer is processed
+- When transfer permissions are being validated
+- During item movement authorization checks
+
 **Parameters**
 
 - `client` (`Player`): Requesting player.
@@ -338,6 +418,14 @@ Fired when a client requests an item transfer between inventories.
 
 Occurs when a player successfully opens a vendor.
 
+**When Called**
+
+This hook is triggered when:
+- A player successfully accesses a vendor
+- After vendor access permissions are validated
+- When vendor interaction begins
+- During successful vendor opening
+
 **Parameters**
 
 * `client` (*Player*): Player accessing the vendor.
@@ -358,6 +446,14 @@ Occurs when a player successfully opens a vendor.
 **Purpose**
 
 Called when the server receives a request to move an item to another inventory. Add-ons may validate the request, change the destination or return nil to block it.
+
+**When Called**
+
+This hook is triggered when:
+- The server receives an item transfer request
+- Before item movement is processed
+- When transfer validation is needed
+- During item relocation request handling
 
 **Parameters**
 
@@ -430,6 +526,14 @@ end)
 
 Called after a character buys from or sells to a vendor.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor transaction has been completed
+- After items or money have been exchanged
+- When vendor trade is finalized
+- Following successful vendor interaction
+
 **Parameters**
 
 * `client` (*Player*): Player completing the trade.
@@ -465,6 +569,14 @@ end)
 
 Called when the vendor dialog panel is opened.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor menu interface is opened
+- After vendor access is granted
+- When vendor UI is being displayed
+- During vendor menu initialization
+
 **Parameters**
 
 * `panel` (*Panel*): The vendor menu panel.
@@ -494,6 +606,14 @@ end)
 **Purpose**
 
 Called after a player picks up a money entity.
+
+**When Called**
+
+This hook is triggered when:
+- A player has successfully picked up a money entity
+- After money has been added to player's inventory
+- When money pickup is completed
+- Following successful money collection
 
 **Parameters**
 
@@ -525,6 +645,14 @@ end)
 
 Occurs when a player successfully opens a vendor.
 
+**When Called**
+
+This hook is triggered when:
+- A player successfully accesses a vendor
+- After vendor access permissions are validated
+- When vendor interaction begins
+- During successful vendor opening
+
 **Parameters**
 
 * `client` (*Player*): Player accessing the vendor.
@@ -545,6 +673,14 @@ Occurs when a player successfully opens a vendor.
 **Purpose**
 
 Fired when a client requests an item transfer between inventories.
+
+**When Called**
+
+This hook is triggered when:
+- A client requests to move an item between inventories
+- Before item transfer is processed
+- When transfer permissions are being validated
+- During item movement authorization checks
 
 **Parameters**
 
@@ -620,6 +756,14 @@ end)
 
 Called when a vendor's class is updated.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor's class type is modified
+- When vendor configuration is updated
+- After vendor class changes are applied
+- During vendor customization operations
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor entity.
@@ -649,6 +793,14 @@ end)
 
 Fires when a vendor is edited.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor's properties or settings are modified
+- When vendor configuration changes
+- After vendor updates are applied
+- During vendor customization operations
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor that was edited.
@@ -676,6 +828,14 @@ end)
 **Purpose**
 
 Called when a player exits a vendor menu.
+
+**When Called**
+
+This hook is triggered when:
+- A player closes or exits a vendor menu
+- When vendor interaction ends
+- After vendor menu is closed
+- During vendor session termination
 
 **Parameters**
 
@@ -705,6 +865,14 @@ end)
 
 Fires when a vendor's faction restriction is updated.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor's faction access restrictions are modified
+- When vendor permissions are updated
+- After faction restrictions are applied
+- During vendor access configuration
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor entity.
@@ -733,6 +901,14 @@ end)
 **Purpose**
 
 Called when a vendor item's max stock is updated.
+
+**When Called**
+
+This hook is triggered when:
+- A vendor item's maximum stock limit is modified
+- When vendor inventory limits are updated
+- After stock configuration changes
+- During vendor item management
 
 **Parameters**
 
@@ -764,6 +940,14 @@ end)
 
 Fires when a vendor item's mode is updated.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor item's trading mode is modified
+- When item availability settings are updated
+- After item mode configuration changes
+- During vendor item customization
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor entity.
@@ -793,6 +977,14 @@ end)
 **Purpose**
 
 Called when a vendor item's price is updated.
+
+**When Called**
+
+This hook is triggered when:
+- A vendor item's price is modified
+- When item pricing is updated
+- After price configuration changes
+- During vendor economic adjustments
 
 **Parameters**
 
@@ -824,6 +1016,14 @@ end)
 
 Fires when a vendor item's stock is updated.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor item's current stock is modified
+- When inventory quantities are updated
+- After stock level changes
+- During vendor restocking operations
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor entity.
@@ -854,6 +1054,14 @@ end)
 
 Called when a vendor is opened.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor interface is opened
+- When vendor interaction begins
+- After vendor access is initiated
+- During vendor session start
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor that was opened.
@@ -882,6 +1090,14 @@ end)
 
 Fires when vendor data is synchronized.
 
+**When Called**
+
+This hook is triggered when:
+- Vendor data is synchronized between client and server
+- When vendor information is updated
+- After vendor data changes are propagated
+- During vendor state synchronization
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor that was synchronized.
@@ -909,6 +1125,14 @@ end)
 **Purpose**
 
 Called during vendor trade events.
+
+**When Called**
+
+This hook is triggered when:
+- A vendor trade transaction is occurring
+- During vendor trading operations
+- When trade events are processed
+- Throughout vendor transaction handling
 
 **Parameters**
 
@@ -941,6 +1165,14 @@ end)
 
 Allows overriding the model used when an item is dropped on the ground.
 
+**When Called**
+
+This hook is triggered when:
+- An item is being dropped on the ground
+- Before the item entity model is determined
+- During item drop processing
+- When item visual representation is being set
+
 **Parameters**
 
 * `item` (*table*): Item being dropped.
@@ -970,6 +1202,14 @@ end)
 **Purpose**
 
 Allows overriding the price of items in vendors.
+
+**When Called**
+
+This hook is triggered when:
+- Vendor item pricing is being calculated
+- Before item prices are displayed
+- During vendor price determination
+- When custom pricing logic is needed
 
 **Parameters**
 
@@ -1002,6 +1242,14 @@ end)
 
 Determines if a character is fake recognized (for roleplay purposes).
 
+**When Called**
+
+This hook is triggered when:
+- Character recognition status is being checked
+- During roleplay recognition validation
+- When fake recognition mechanics are evaluated
+- Before recognition display is determined
+
 **Parameters**
 
 * `character` (*Character*): Character to check.
@@ -1030,6 +1278,14 @@ end)
 **Purpose**
 
 Checks if one character recognizes another.
+
+**When Called**
+
+This hook is triggered when:
+- Character recognition status is being evaluated
+- During character interaction checks
+- When recognition mechanics are processed
+- Before character identification is determined
 
 **Parameters**
 
@@ -1061,6 +1317,14 @@ end)
 
 Determines if a chat type requires recognition.
 
+**When Called**
+
+This hook is triggered when:
+- Chat message recognition requirements are checked
+- During chat processing validation
+- When recognition-based chat is evaluated
+- Before chat visibility is determined
+
 **Parameters**
 
 * `chatType` (*string*): Chat type to check.
@@ -1088,6 +1352,14 @@ end)
 **Purpose**
 
 Checks if a player can earn salary.
+
+**When Called**
+
+This hook is triggered when:
+- Player salary eligibility is being checked
+- Before salary distribution occurs
+- During salary payment validation
+- When salary permissions are evaluated
 
 **Parameters**
 
@@ -1119,6 +1391,14 @@ end)
 
 Returns the salary amount for a player.
 
+**When Called**
+
+This hook is triggered when:
+- Player salary amount is being calculated
+- During salary payment processing
+- When salary distribution occurs
+- Before salary is awarded to players
+
 **Parameters**
 
 * `client` (*Player*): Player to get salary for.
@@ -1148,6 +1428,14 @@ end)
 
 Returns the salary limit for a player.
 
+**When Called**
+
+This hook is triggered when:
+- Player salary limits are being determined
+- During salary cap validation
+- When salary restrictions are checked
+- Before salary payment limits are applied
+
 **Parameters**
 
 * `client` (*Player*): Player to get salary limit for.
@@ -1175,6 +1463,14 @@ end)
 **Purpose**
 
 Called when salary is given to a player.
+
+**When Called**
+
+This hook is triggered when:
+- A player receives their salary payment
+- After salary is distributed to players
+- When salary transactions are completed
+- During periodic salary payments
 
 **Parameters**
 
@@ -1205,6 +1501,14 @@ end)
 
 Called when a player purchases a door.
 
+**When Called**
+
+This hook is triggered when:
+- A player successfully purchases a door
+- After door ownership is transferred
+- When door purchase transaction is completed
+- Following successful property acquisition
+
 **Parameters**
 
 * `client` (*Player*): Player who purchased the door.
@@ -1233,6 +1537,14 @@ end)
 **Purpose**
 
 Called when a door's price is set.
+
+**When Called**
+
+This hook is triggered when:
+- A door's purchase price is being set
+- When door pricing is configured
+- After door value is determined
+- During door property setup
 
 **Parameters**
 
@@ -1263,6 +1575,14 @@ end)
 
 Fires when a door's title is set.
 
+**When Called**
+
+This hook is triggered when:
+- A door's display title is being set
+- When door naming is configured
+- After door identification is updated
+- During door property customization
+
 **Parameters**
 
 * `entity` (*Entity*): Door entity.
@@ -1292,6 +1612,14 @@ end)
 
 Returns the sale scale for vendors.
 
+**When Called**
+
+This hook is triggered when:
+- Vendor sale pricing scale is being calculated
+- During vendor price adjustments
+- When sale multipliers are determined
+- Before vendor transaction pricing is applied
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor entity.
@@ -1319,6 +1647,14 @@ end)
 **Purpose**
 
 Called when a vendor is edited.
+
+**When Called**
+
+This hook is triggered when:
+- A vendor is edited or modified
+- When vendor properties are updated
+- After vendor configuration changes
+- During vendor customization operations
 
 **Parameters**
 

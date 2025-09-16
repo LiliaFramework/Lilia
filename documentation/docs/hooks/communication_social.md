@@ -32,6 +32,14 @@ The communication system in Lilia is built around a multi-layered architecture t
 
 Fired when the voice panel for a player is removed from the HUD.
 
+**When Called**
+
+This hook is triggered when:
+- A player stops using voice chat
+- The voice panel is removed from the HUD display
+- Voice chat session ends for a player
+- After voice communication is terminated
+
 **Parameters**
 
 * `client` (*Player*): Player whose panel ended.
@@ -77,6 +85,14 @@ end)
 **Purpose**
 
 Return false to omit players from the scoreboard. Determines if a player should appear on the scoreboard.
+
+**When Called**
+
+This hook is triggered when:
+- The scoreboard is being populated with player data
+- Each player's visibility is being checked for the scoreboard
+- Before players are displayed on the scoreboard
+- During scoreboard initialization and updates
 
 **Parameters**
 
@@ -127,6 +143,14 @@ end)
 
 Checks if the local player may open the scoreboard. Return false to prevent it from showing.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to open the scoreboard (usually by pressing Tab)
+- Before the scoreboard is displayed to the player
+- During scoreboard access permission checks
+- When scoreboard visibility is being determined
+
 **Parameters**
 
 * `player` (*Player*): Local player.
@@ -175,6 +199,14 @@ end)
 **Purpose**
 
 Populate the scoreboard context menu with extra options. Allows modules to add scoreboard options for a player.
+
+**When Called**
+
+This hook is triggered when:
+- A player right-clicks on another player's name in the scoreboard
+- The scoreboard context menu is being prepared for display
+- Before the context menu is shown to the player
+- During scoreboard interaction menu setup
 
 **Parameters**
 
@@ -240,6 +272,14 @@ end)
 
 Returns the name text to display for a player in UI panels.
 
+**When Called**
+
+This hook is triggered when:
+- Player names are being displayed in UI panels
+- Scoreboard entries are being rendered
+- Player information is being shown in menus
+- Before player names are displayed to other players
+
 **Parameters**
 
 * `client` (*Player*): Player to query.
@@ -289,6 +329,14 @@ end)
 **Purpose**
 
 Supplies the description text shown on the scoreboard. Returns the description text to display for a player.
+
+**When Called**
+
+This hook is triggered when:
+- Player descriptions are being displayed on the scoreboard
+- Player information is being rendered in UI elements
+- Before player descriptions are shown to other players
+- During scoreboard and HUD rendering
 
 **Parameters**
 
@@ -340,6 +388,14 @@ end)
 
 Triggered when the scoreboard becomes visible on the client.
 
+**When Called**
+
+This hook is triggered when:
+- A player opens the scoreboard (usually by pressing Tab)
+- The scoreboard panel becomes visible on the client
+- After the scoreboard is fully initialized and displayed
+- During scoreboard opening animations
+
 **Parameters**
 
 * `panel` (*Panel*): Scoreboard panel instance.
@@ -384,6 +440,14 @@ end)
 
 Called after the scoreboard is hidden or removed.
 
+**When Called**
+
+This hook is triggered when:
+- A player closes the scoreboard (usually by releasing Tab)
+- The scoreboard panel is hidden or removed from the client
+- After the scoreboard closing animations complete
+- During scoreboard cleanup operations
+
 **Parameters**
 
 * `panel` (*Panel*): Scoreboard panel instance.
@@ -426,6 +490,14 @@ end)
 **Purpose**
 
 Runs after a player's row panel is added to the scoreboard. Use this to customize the panel or add additional elements.
+
+**When Called**
+
+This hook is triggered when:
+- A player's row is added to the scoreboard
+- Scoreboard rows are being created for each player
+- After a player row panel is fully initialized
+- During scoreboard population with player data
 
 **Parameters**
 
@@ -475,6 +547,14 @@ end)
 
 Runs after a player's row panel is removed from the scoreboard.
 
+**When Called**
+
+This hook is triggered when:
+- A player disconnects from the server
+- A player's row is removed from the scoreboard
+- After a player row panel is destroyed
+- During scoreboard cleanup when players leave
+
 **Parameters**
 
 * `panel` (*Panel*): Row panel being removed.
@@ -521,6 +601,14 @@ end)
 
 Triggered when a spawn icon is removed from the extended spawn menu. Fired when content is removed from the spawn menu.
 
+**When Called**
+
+This hook is triggered when:
+- A spawn icon is removed from the spawn menu
+- Spawn menu content is being updated or cleaned up
+- Items are being removed from the spawn list
+- During spawn menu maintenance operations
+
 **Parameters**
 
 * `icon` (*Panel*): Icon affected.
@@ -565,6 +653,14 @@ end)
 **Purpose**
 
 Allows modules to customize the model entity displayed for scoreboard entries. This can be used to attach props or tweak bodygroups.
+
+**When Called**
+
+This hook is triggered when:
+- Scoreboard model entities are being created for player entries
+- 3D player models are being prepared for scoreboard display
+- Before scoreboard model entities are shown
+- During scoreboard model initialization
 
 **Parameters**
 
@@ -617,6 +713,14 @@ end)
 
 Checks if a scoreboard value may be overridden by other hooks so modules can replace the displayed name, model or description for a player.
 
+**When Called**
+
+This hook is triggered when:
+- Scoreboard values are being checked for override permissions
+- Other hooks attempt to override scoreboard display values
+- Before scoreboard display values are finalized
+- During scoreboard value permission validation
+
 **Parameters**
 
 * `client` (*Player*): Player being displayed.
@@ -666,6 +770,14 @@ end)
 
 Runs when the F1 main menu panel initializes.
 
+**When Called**
+
+This hook is triggered when:
+- A player opens the F1 main menu
+- The main menu panel is being initialized
+- After the main menu is fully loaded and ready
+- During main menu setup and preparation
+
 **Parameters**
 
 * `panel` (*Panel*): Menu panel.
@@ -710,6 +822,14 @@ end)
 
 Fires when the F1 main menu panel is removed.
 
+**When Called**
+
+This hook is triggered when:
+- A player closes the F1 main menu
+- The main menu panel is being removed from the client
+- After the main menu closing animations complete
+- During main menu cleanup operations
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -749,6 +869,14 @@ end)
 **Purpose**
 
 Called when the character selection menu is created.
+
+**When Called**
+
+This hook is triggered when:
+- A player opens the character selection menu
+- The character menu panel is being created
+- After the character menu is fully initialized
+- During character selection interface setup
 
 **Parameters**
 
@@ -794,6 +922,14 @@ end)
 
 Fired when the character menu panel is removed.
 
+**When Called**
+
+This hook is triggered when:
+- A player closes the character selection menu
+- The character menu panel is being removed from the client
+- After character selection is completed or cancelled
+- During character menu cleanup operations
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -836,6 +972,14 @@ end)
 **Purpose**
 
 Triggered when an item detail panel is created.
+
+**When Called**
+
+This hook is triggered when:
+- A player inspects an item in their inventory
+- An item detail panel is being created for display
+- After the item panel is fully initialized
+- During item inspection interface setup
 
 **Parameters**
 
@@ -882,6 +1026,14 @@ end)
 
 Runs after an item panel is removed.
 
+**When Called**
+
+This hook is triggered when:
+- A player closes an item detail panel
+- The item panel is being removed from the client
+- After item inspection is completed or cancelled
+- During item panel cleanup operations
+
 **Parameters**
 
 * `panel` (*Panel*): Item panel instance.
@@ -925,6 +1077,14 @@ end)
 **Purpose**
 
 Called when an inventory panel is created.
+
+**When Called**
+
+This hook is triggered when:
+- A player opens an inventory (player inventory or container)
+- An inventory panel is being created for display
+- After the inventory panel is fully initialized
+- During inventory interface setup
 
 **Parameters**
 
@@ -971,6 +1131,14 @@ end)
 
 Fired when an inventory panel is removed.
 
+**When Called**
+
+This hook is triggered when:
+- A player closes an inventory panel
+- The inventory panel is being removed from the client
+- After inventory management is completed or cancelled
+- During inventory panel cleanup operations
+
 **Parameters**
 
 * `panel` (*Panel*): Inventory panel.
@@ -1014,6 +1182,14 @@ end)
 **Purpose**
 
 Called when the interaction menu pops up.
+
+**When Called**
+
+This hook is triggered when:
+- A player right-clicks on an object or entity
+- The interaction menu is being created for display
+- After the interaction menu is fully initialized
+- During interaction menu setup
 
 **Parameters**
 
@@ -1059,6 +1235,14 @@ end)
 
 Runs when the interaction menu frame is removed.
 
+**When Called**
+
+This hook is triggered when:
+- A player closes the interaction menu
+- The interaction menu frame is being removed from the client
+- After an interaction option is selected or menu is cancelled
+- During interaction menu cleanup operations
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -1101,6 +1285,14 @@ end)
 **Purpose**
 
 Fires when the chat box closes. Fired when the chat box is closed.
+
+**When Called**
+
+This hook is triggered when:
+- A player closes the chat box (usually by pressing Enter or Escape)
+- The chat box is being removed from the client
+- After chat input is submitted or cancelled
+- During chat box cleanup operations
 
 **Parameters**
 
@@ -1148,6 +1340,14 @@ end)
 **Purpose**
 
 Fires when the chat box opens. Fired when the chat box is opened.
+
+**When Called**
+
+This hook is triggered when:
+- A player opens the chat box (usually by pressing Enter)
+- The chat box is being created for input
+- After the chat box is fully initialized
+- During chat input interface setup
 
 **Parameters**
 
@@ -1198,6 +1398,14 @@ end)
 
 Allows modification of the markup before chat messages are printed. Allows modification of markup before chat text is shown.
 
+**When Called**
+
+This hook is triggered when:
+- Chat messages are being processed for display
+- Before chat text is rendered to the screen
+- During chat message formatting and markup processing
+- When chat messages are being prepared for output
+
 **Parameters**
 
 * `text` (*string*): Base markup text.
@@ -1244,6 +1452,14 @@ end)
 
 Called when the chatbox panel is instantiated.
 
+**When Called**
+
+This hook is triggered when:
+- The chatbox panel is being created for display
+- After the chatbox panel is fully initialized
+- During chat interface setup
+- When the chat system is being prepared
+
 **Parameters**
 
 * `panel` (*Panel*): Newly created chat panel.
@@ -1288,6 +1504,14 @@ end)
 **Purpose**
 
 Runs whenever chat.AddText successfully outputs text.
+
+**When Called**
+
+This hook is triggered when:
+- Chat text is successfully added to the display
+- After chat.AddText completes successfully
+- When chat messages are being output to the screen
+- During successful chat message processing
 
 **Parameters**
 
@@ -1334,6 +1558,14 @@ end)
 
 Returns the camera position and angle for the main menu character preview. Provides the camera position and angle for the main menu model.
 
+**When Called**
+
+This hook is triggered when:
+- The main menu character preview is being set up
+- Camera position is being determined for character display
+- Before the character model is rendered in the main menu
+- During main menu character preview initialization
+
 **Parameters**
 
 * `character` (*Character*): Character being viewed.
@@ -1379,6 +1611,14 @@ end)
 **Purpose**
 
 Return false here to prevent character deletion. Determines if a character can be deleted.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to delete a character
+- Character deletion is being validated
+- Before a character is removed from the system
+- During character management operations
 
 **Parameters**
 
@@ -1430,6 +1670,14 @@ end)
 
 Lets modules insert additional information on the main menu info panel. Allows modules to populate extra information on the main menu panel.
 
+**When Called**
+
+This hook is triggered when:
+- The main menu information panel is being populated
+- Character information is being prepared for display
+- Before the main menu info is shown to the player
+- During main menu information setup
+
 **Parameters**
 
 * `info` (*table*): Table to receive information.
@@ -1477,6 +1725,14 @@ end)
 **Purpose**
 
 Checks if a player may start creating a character. Determines if the player may create a new character.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to create a new character
+- Character creation is being validated
+- Before the character creation process begins
+- During character creation permission checks
 
 **Parameters**
 
@@ -1529,6 +1785,14 @@ end)
 **Purpose**
 
 Lets you edit the clientside model used in the main menu. Allows adjustments to the character model in menus.
+
+**When Called**
+
+This hook is triggered when:
+- Character models are being prepared for menu display
+- Main menu character previews are being set up
+- Before character models are rendered in menus
+- During character model initialization for UI
 
 **Parameters**
 
@@ -1584,6 +1848,14 @@ end)
 
 Add or reorder steps in the character creation flow. Lets modules alter the character creation step layout.
 
+**When Called**
+
+This hook is triggered when:
+- The character creation panel is being initialized
+- Character creation steps are being prepared
+- Before the character creation interface is shown
+- During character creation flow setup
+
 **Parameters**
 
 * `panel` (*Panel*): Creation panel.
@@ -1630,6 +1902,14 @@ end)
 **Purpose**
 
 Override to change how many characters a player can have. Returns the maximum number of characters a player can have.
+
+**When Called**
+
+This hook is triggered when:
+- Character limits are being checked for a player
+- Before character creation is allowed
+- During character management operations
+- When validating character slot availability
 
 **Parameters**
 
@@ -1680,6 +1960,14 @@ end)
 
 Return false and a reason to hide buttons on the main menu. Determines if a button should be visible on the main menu.
 
+**When Called**
+
+This hook is triggered when:
+- Main menu buttons are being prepared for display
+- Button visibility is being checked
+- Before the main menu is shown to the player
+- During main menu button setup
+
 **Parameters**
 
 * `name` (*string*): Button identifier.
@@ -1725,6 +2013,14 @@ end)
 
 Called when the character creation panel should reset. Called to reset the character creation panel.
 
+**When Called**
+
+This hook is triggered when:
+- The character creation panel is being reset
+- Character creation data is being cleared
+- Before starting a new character creation process
+- During character creation panel cleanup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -1763,6 +2059,14 @@ end)
 **Purpose**
 
 Customize tooltip sizing and layout before it appears.
+
+**When Called**
+
+This hook is triggered when:
+- A tooltip is being prepared for display
+- Tooltip layout is being calculated
+- Before the tooltip is shown to the player
+- During tooltip initialization
 
 **Parameters**
 
@@ -1804,6 +2108,14 @@ end)
 **Purpose**
 
 Draw custom visuals on the tooltip, returning true skips default painting.
+
+**When Called**
+
+This hook is triggered when:
+- A tooltip is being painted/rendered
+- Tooltip visuals are being drawn
+- Before the tooltip is displayed to the player
+- During tooltip rendering process
 
 **Parameters**
 
@@ -1854,6 +2166,14 @@ end)
 
 Runs when a tooltip is opened for a panel.
 
+**When Called**
+
+This hook is triggered when:
+- A tooltip is being opened for a panel
+- Tooltip is being created and initialized
+- After the tooltip is fully set up
+- During tooltip opening process
+
 **Parameters**
 
 * `panel` (*Panel*): Tooltip panel.
@@ -1895,6 +2215,14 @@ end)
 **Purpose**
 
 Runs after chat messages are processed. Allows reacting to player chat.
+
+**When Called**
+
+This hook is triggered when:
+- A player sends a chat message
+- Chat messages are being processed by the system
+- After chat message parsing and validation
+- During chat message handling
 
 **Parameters**
 
@@ -1940,6 +2268,14 @@ end)
 
 Fires when a chat message is parsed.
 
+**When Called**
+
+This hook is triggered when:
+- A chat message is being parsed by the system
+- Chat message content is being processed
+- Before chat message validation and filtering
+- During chat message parsing
+
 **Parameters**
 
 * `speaker` (*Player*): Player who sent the message.
@@ -1984,6 +2320,14 @@ end)
 **Purpose**
 
 Called when a player sends a message.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to send a chat message
+- Chat message sending is being processed
+- Before chat message validation and filtering
+- During chat message transmission
 
 **Parameters**
 
@@ -2034,6 +2378,14 @@ end)
 
 Called when a chat message is received.
 
+**When Called**
+
+This hook is triggered when:
+- A chat message is received by the client
+- Chat messages are being processed for display
+- After chat message parsing and validation
+- During chat message reception
+
 **Parameters**
 
 * `speaker` (*Player*): Player who sent the message.
@@ -2076,6 +2428,14 @@ end)
 **Purpose**
 
 Returns the delay between OOC messages.
+
+**When Called**
+
+This hook is triggered when:
+- OOC message delays are being calculated
+- Before allowing a player to send an OOC message
+- During OOC message rate limiting
+- When checking OOC message cooldowns
 
 **Parameters**
 
@@ -2120,6 +2480,14 @@ end)
 **Purpose**
 
 Fires when an out-of-character message is sent.
+
+**When Called**
+
+This hook is triggered when:
+- A player sends an OOC message
+- OOC messages are being processed by the system
+- After OOC message validation and filtering
+- During OOC message handling
 
 **Parameters**
 
@@ -2167,6 +2535,14 @@ end)
 
 Fires when voice chat is toggled.
 
+**When Called**
+
+This hook is triggered when:
+- A player toggles voice chat on or off
+- Voice chat state is being changed
+- During voice chat activation/deactivation
+- When voice chat settings are modified
+
 **Parameters**
 
 * `client` (*Player*): Player who toggled voice.
@@ -2210,6 +2586,14 @@ end)
 **Purpose**
 
 Fires when a warning is issued to a player.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator issues a warning to a player
+- Warning system processes a warning
+- After warning validation and processing
+- During warning administration
 
 **Parameters**
 
@@ -2258,6 +2642,14 @@ end)
 
 Called when a warning is removed from a player.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator removes a warning from a player
+- Warning system processes warning removal
+- After warning removal validation and processing
+- During warning cleanup
+
 **Parameters**
 
 * `target` (*Player*): Player whose warning was removed.
@@ -2299,6 +2691,14 @@ end)
 **Purpose**
 
 Fires when a player is gagged.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator gags a player
+- Gag system processes a gag
+- After gag validation and processing
+- During gag administration
 
 **Parameters**
 
@@ -2342,6 +2742,14 @@ end)
 
 Called when a player is ungagged.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator ungags a player
+- Gag system processes ungagging
+- After ungag validation and processing
+- During gag removal
+
 **Parameters**
 
 * `target` (*Player*): Player who was ungagged.
@@ -2383,6 +2791,14 @@ end)
 **Purpose**
 
 Fires when a player is muted.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator mutes a player
+- Mute system processes a mute
+- After mute validation and processing
+- During mute administration
 
 **Parameters**
 
@@ -2426,6 +2842,14 @@ end)
 
 Called when a player is unmuted.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator unmutes a player
+- Mute system processes unmuting
+- After unmute validation and processing
+- During mute removal
+
 **Parameters**
 
 * `target` (*Player*): Player who was unmuted.
@@ -2467,6 +2891,14 @@ end)
 **Purpose**
 
 Fires when a ticket is created in the ticket system.
+
+**When Called**
+
+This hook is triggered when:
+- A player creates a new ticket
+- Ticket system processes ticket creation
+- After ticket validation and processing
+- During ticket submission
 
 **Parameters**
 
@@ -2513,6 +2945,14 @@ end)
 
 Called when a ticket is claimed.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator claims a ticket
+- Ticket system processes ticket claiming
+- After ticket claim validation and processing
+- During ticket assignment
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was claimed.
@@ -2558,6 +2998,14 @@ end)
 
 Fires when a ticket is closed.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator closes a ticket
+- Ticket system processes ticket closure
+- After ticket close validation and processing
+- During ticket completion
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was closed.
@@ -2602,6 +3050,14 @@ end)
 
 Fires when a new command is registered.
 
+**When Called**
+
+This hook is triggered when:
+- A new command is registered in the system
+- Command system processes command registration
+- After command validation and processing
+- During command system initialization
+
 **Parameters**
 
 * `command` (*table*): The command that was added.
@@ -2644,6 +3100,14 @@ end)
 **Purpose**
 
 Called when a command is executed.
+
+**When Called**
+
+This hook is triggered when:
+- A player executes a command
+- Command system processes command execution
+- After command validation and processing
+- During command execution
 
 **Parameters**
 
@@ -2689,6 +3153,14 @@ end)
 **Purpose**
 
 Fires when a server log entry is created.
+
+**When Called**
+
+This hook is triggered when:
+- A server log entry is being created
+- Log system processes log entry creation
+- After log entry validation and processing
+- During server logging operations
 
 **Parameters**
 

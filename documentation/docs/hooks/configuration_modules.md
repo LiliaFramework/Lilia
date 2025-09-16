@@ -40,6 +40,14 @@ This comprehensive hook system ensures that developers have complete control ove
 
 Determines if a player can modify configuration settings.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to modify configuration settings
+- Configuration changes are being validated
+- Before configuration modifications are applied
+- During configuration permission checks
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to modify config.
@@ -85,6 +93,14 @@ end)
 **Purpose**
 
 Fires when configuration is changed and allows you to respond to configuration updates.
+
+**When Called**
+
+This hook is triggered when:
+- A configuration value is modified
+- Configuration changes are being processed
+- After configuration validation and processing
+- During configuration updates
 
 **Parameters**
 
@@ -146,6 +162,14 @@ end)
 
 Fires when configuration is initialized and ready for use.
 
+**When Called**
+
+This hook is triggered when:
+- The configuration system is being initialized
+- Configuration data is being loaded from files
+- After configuration validation and processing
+- During system startup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -194,6 +218,14 @@ end)
 **Purpose**
 
 Called when items are initialized and ready for use.
+
+**When Called**
+
+This hook is triggered when:
+- The item system is being initialized
+- Item data is being loaded and processed
+- After item validation and registration
+- During system startup
 
 **Parameters**
 
@@ -252,6 +284,14 @@ end)
 
 Fires when modules are initialized and ready for use.
 
+**When Called**
+
+This hook is triggered when:
+- The module system is being initialized
+- Modules are being loaded and processed
+- After module validation and registration
+- During system startup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -307,6 +347,14 @@ end)
 
 Called when options are initialized and ready for use.
 
+**When Called**
+
+This hook is triggered when:
+- The options system is being initialized
+- Option data is being loaded and processed
+- After option validation and registration
+- During system startup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -351,6 +399,14 @@ end)
 **Purpose**
 
 Fires when schema is initialized and ready for use.
+
+**When Called**
+
+This hook is triggered when:
+- The schema system is being initialized
+- Schema data is being loaded and processed
+- After schema validation and registration
+- During system startup
 
 **Parameters**
 
@@ -399,6 +455,14 @@ end)
 **Purpose**
 
 Fires when keybinds are initialized and ready for use.
+
+**When Called**
+
+This hook is triggered when:
+- The keybind system is being initialized
+- Keybind data is being loaded and processed
+- After keybind validation and registration
+- During system startup
 
 **Parameters**
 
@@ -450,6 +514,14 @@ end)
 
 Called during module inclusion process to allow custom handling of module loading.
 
+**When Called**
+
+This hook is triggered when:
+- A module is being included/loaded
+- Module loading process is being executed
+- Before module initialization
+- During module inclusion
+
 **Parameters**
 
 * `moduleName` (*string*): Name of the module being included.
@@ -500,6 +572,14 @@ end)
 
 Runs before the Lilia framework finishes loading, allowing for pre-initialization setup.
 
+**When Called**
+
+This hook is triggered when:
+- The Lilia framework is about to finish loading
+- Pre-initialization setup is being performed
+- Before the main framework initialization
+- During system startup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -544,6 +624,14 @@ end)
 **Purpose**
 
 Runs after the Lilia framework has finished loading, allowing for post-initialization setup.
+
+**When Called**
+
+This hook is triggered when:
+- The Lilia framework has finished loading
+- Post-initialization setup is being performed
+- After the main framework initialization
+- During system startup completion
 
 **Parameters**
 
@@ -592,6 +680,14 @@ end)
 **Purpose**
 
 Triggered whenever `lia.option.set` modifies an option value, allowing you to respond to option changes.
+
+**When Called**
+
+This hook is triggered when:
+- An option value is modified using lia.option.set
+- Option changes are being processed
+- After option validation and processing
+- During option updates
 
 **Parameters**
 
@@ -650,6 +746,14 @@ end)
 
 Called when an option is received from the server, allowing you to handle server-sent option updates.
 
+**When Called**
+
+This hook is triggered when:
+- An option is received from the server
+- Server-sent option updates are being processed
+- After option synchronization from server to client
+- During option network transmission
+
 **Parameters**
 
 * `key` (*string*): Option key that was received.
@@ -701,6 +805,14 @@ end)
 **Purpose**
 
 Triggered after a remote image finishes downloading to the data folder, allowing you to handle downloaded images.
+
+**When Called**
+
+This hook is triggered when:
+- A remote image finishes downloading
+- Image download is completed successfully
+- After image validation and storage
+- During web resource management
 
 **Parameters**
 
@@ -758,6 +870,14 @@ end)
 
 Triggered after a remote sound file finishes downloading to the data folder, allowing you to handle downloaded sounds.
 
+**When Called**
+
+This hook is triggered when:
+- A remote sound file finishes downloading
+- Sound download is completed successfully
+- After sound validation and storage
+- During web resource management
+
 **Parameters**
 
 * `name` (*string*): Saved file name including extension.
@@ -813,6 +933,14 @@ end)
 **Purpose**
 
 Called just before an embed is posted to the configured Discord webhook, allowing you to log or monitor Discord messages.
+
+**When Called**
+
+This hook is triggered when:
+- A Discord embed is about to be sent to the webhook
+- Discord relay is processing outgoing messages
+- Before Discord message transmission
+- During Discord integration operations
 
 **Parameters**
 
@@ -969,6 +1097,14 @@ end)
 
 Executed during menu creation allowing you to define custom tabs and insert additional tabs into the F1 menu.
 
+**When Called**
+
+This hook is triggered when:
+- The F1 menu is being created and initialized
+- Menu tabs are being prepared for display
+- Before the F1 menu is shown to players
+- During F1 menu setup and preparation
+
 **Parameters**
 
 * `tabs` (*table*): Table to add menu definitions to.
@@ -1063,6 +1199,14 @@ end)
 **Purpose**
 
 Runs every frame when the character model panel draws, allowing you to draw custom elements over the model view used in character menus.
+
+**When Called**
+
+This hook is triggered when:
+- The character model panel is being drawn/rendered
+- Character model view is being displayed in menus
+- Every frame during character model rendering
+- During character selection and creation interfaces
 
 **Parameters**
 
@@ -1167,6 +1311,14 @@ end)
 
 Returns the camera position and angle for the main menu character preview, allowing you to customize the camera view.
 
+**When Called**
+
+This hook is triggered when:
+- The main menu character preview is being set up
+- Camera position is being determined for character display
+- Before the character model is rendered in the main menu
+- During main menu character preview initialization
+
 **Parameters**
 
 * `character` (*Character*): Character being viewed.
@@ -1233,6 +1385,14 @@ end)
 **Purpose**
 
 Called when the Lilia framework has finished loading and is about to open the main character selection menu, allowing modules to perform actions before the main menu is displayed.
+
+**When Called**
+
+This hook is triggered when:
+- The Lilia framework has finished loading
+- The main character selection menu is about to be opened
+- Before the main menu is displayed to players
+- During framework initialization completion
 
 **Parameters**
 
@@ -1317,6 +1477,14 @@ end)
 
 Fires when a new command is registered, allowing you to track and respond to command registration.
 
+**When Called**
+
+This hook is triggered when:
+- A new command is registered in the system
+- Command system processes command registration
+- After command validation and processing
+- During command system initialization
+
 **Parameters**
 
 * `command` (*table*): The command that was added.
@@ -1375,6 +1543,14 @@ end)
 **Purpose**
 
 Called when a command is executed, allowing you to track and respond to command usage.
+
+**When Called**
+
+This hook is triggered when:
+- A player executes a command
+- Command system processes command execution
+- After command validation and processing
+- During command execution
 
 **Parameters**
 
@@ -1446,6 +1622,14 @@ end)
 **Purpose**
 
 Fill the Quick Settings panel with options using the provided panel helpers, allowing you to add custom settings to the quick menu.
+
+**When Called**
+
+This hook is triggered when:
+- The quick settings panel is being initialized
+- Quick menu options are being prepared for display
+- Before the quick settings menu is shown to players
+- During quick settings panel setup
 
 **Parameters**
 
@@ -1592,6 +1776,14 @@ end)
 
 Called when localization is loaded.
 
+**When Called**
+
+This hook is triggered when:
+- The localization system is being initialized
+- Language files are being loaded and processed
+- After localization data is validated and ready
+- During system startup
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -1620,6 +1812,14 @@ end)
 
 Fires when fonts need to be refreshed.
 
+**When Called**
+
+This hook is triggered when:
+- Font system needs to be refreshed
+- Custom fonts are being reloaded
+- After font changes are applied
+- During font system updates
+
 **Parameters**
 
 * `nil` (*nil*): This function does not return a value.
@@ -1647,6 +1847,14 @@ end)
 **Purpose**
 
 Called when the Derma skin changes.
+
+**When Called**
+
+This hook is triggered when:
+- The Derma skin is being changed
+- UI skin system processes skin changes
+- After skin validation and processing
+- During skin system updates
 
 **Parameters**
 
@@ -1707,6 +1915,14 @@ end)
 
 Called when adding text fields to the F1 menu.
 
+**When Called**
+
+This hook is triggered when:
+- Text fields are being added to the F1 menu
+- F1 menu is being populated with player information
+- Before text fields are displayed in the F1 menu
+- During F1 menu field setup
+
 **Parameters**
 
 * `client` (*Player*): Player to add text field for.
@@ -1735,6 +1951,14 @@ end)
 
 Called when adding bar fields to the F1 menu.
 
+**When Called**
+
+This hook is triggered when:
+- Bar fields are being added to the F1 menu
+- F1 menu is being populated with player information
+- Before bar fields are displayed in the F1 menu
+- During F1 menu field setup
+
 **Parameters**
 
 * `client` (*Player*): Player to add bar field for.
@@ -1762,6 +1986,14 @@ end)
 **Purpose**
 
 Allows adding custom fields to the HUD bars.
+
+**When Called**
+
+This hook is triggered when:
+- HUD bars are being set up for a player
+- Bar fields are being prepared for display
+- Before HUD bars are shown to the player
+- During HUD bar initialization
 
 **Parameters**
 
@@ -1826,6 +2058,14 @@ end)
 
 Called when adding sections to the F1 menu.
 
+**When Called**
+
+This hook is triggered when:
+- Sections are being added to the F1 menu
+- F1 menu is being populated with content
+- Before sections are displayed in the F1 menu
+- During F1 menu section setup
+
 **Parameters**
 
 * `panel` (*Panel*): F1 menu panel.
@@ -1853,6 +2093,14 @@ end)
 **Purpose**
 
 Allows adding custom information buttons to the main menu.
+
+**When Called**
+
+This hook is triggered when:
+- Information buttons are being created for the main menu
+- Main menu is being populated with buttons
+- Before information buttons are displayed
+- During main menu button setup
 
 **Parameters**
 
@@ -1884,6 +2132,14 @@ end)
 
 Called to populate configuration buttons.
 
+**When Called**
+
+This hook is triggered when:
+- Configuration buttons are being populated
+- Configuration panel is being set up
+- Before configuration buttons are displayed
+- During configuration panel initialization
+
 **Parameters**
 
 * `panel` (*Panel*): Configuration panel.
@@ -1911,6 +2167,14 @@ end)
 **Purpose**
 
 Populate the Admin tab in the F1 menu. Mutate the provided `pages` array and insert page descriptors.
+
+**When Called**
+
+This hook is triggered when:
+- The F1 admin menu is being initialized
+- Admin tabs are being prepared for display
+- Before the admin menu is shown to administrators
+- During admin panel setup
 
 **Parameters**
 
@@ -2004,6 +2268,14 @@ end)
 
 Allows adjustment of PAC part data.
 
+**When Called**
+
+This hook is triggered when:
+- PAC part data is being adjusted for a player
+- PAC system processes part data modifications
+- Before PAC parts are applied to the player
+- During PAC part data processing
+
 **Parameters**
 
 * `client` (*Player*): Player whose PAC data is being adjusted.
@@ -2034,6 +2306,14 @@ end)
 
 Called to adjust PAC part data.
 
+**When Called**
+
+This hook is triggered when:
+- PAC part data is being adjusted for a player
+- PAC system processes part data modifications
+- Before PAC parts are applied to the player
+- During PAC part data processing
+
 **Parameters**
 
 * `client` (*Player*): Player whose PAC data is being adjusted.
@@ -2062,6 +2342,14 @@ end)
 **Purpose**
 
 Fires when a PAC part is attached.
+
+**When Called**
+
+This hook is triggered when:
+- A PAC part is being attached to a player
+- PAC system processes part attachment
+- After part attachment validation and processing
+- During PAC part attachment
 
 **Parameters**
 
@@ -2121,6 +2409,14 @@ end)
 
 Fires when a PAC3 part is transferred.
 
+**When Called**
+
+This hook is triggered when:
+- A PAC3 part is being transferred to a player
+- PAC3 system processes part transfer
+- After part transfer validation and processing
+- During PAC3 part transfer
+
 **Parameters**
 
 * `client` (*Player*): Player whose part is being transferred.
@@ -2149,6 +2445,14 @@ end)
 **Purpose**
 
 Allows custom drawing of player ragdolls.
+
+**When Called**
+
+This hook is triggered when:
+- A player ragdoll is being drawn/rendered
+- Ragdoll entities are being displayed
+- Every frame during ragdoll rendering
+- During player death and ragdoll display
 
 **Parameters**
 
@@ -2179,6 +2483,14 @@ end)
 
 Called to set up PAC data from items.
 
+**When Called**
+
+This hook is triggered when:
+- PAC data is being set up from player items
+- Item-based PAC parts are being processed
+- Before PAC parts are applied from items
+- During PAC data initialization from items
+
 **Parameters**
 
 * `client` (*Player*): Player to set up PAC data for.
@@ -2206,6 +2518,14 @@ end)
 **Purpose**
 
 Allows modification of viewmodel handling.
+
+**When Called**
+
+This hook is triggered when:
+- Viewmodel handling is being processed
+- Weapon viewmodels are being set up
+- Before viewmodel is applied to the player
+- During viewmodel system processing
 
 **Parameters**
 
@@ -2236,6 +2556,14 @@ end)
 
 Called when weapon cycling sound should play.
 
+**When Called**
+
+This hook is triggered when:
+- A player cycles through weapons
+- Weapon cycling sound is being played
+- During weapon switching animations
+- When weapon cycling occurs
+
 **Parameters**
 
 * `client` (*Player*): Player cycling weapons.
@@ -2263,6 +2591,14 @@ end)
 **Purpose**
 
 Fires when weapon selection sound should play.
+
+**When Called**
+
+This hook is triggered when:
+- A player selects a weapon
+- Weapon selection sound is being played
+- During weapon selection animations
+- When weapon selection occurs
 
 **Parameters**
 
@@ -2292,6 +2628,14 @@ end)
 
 Determines if weapon selection should be drawn.
 
+**When Called**
+
+This hook is triggered when:
+- Weapon selection UI is being prepared for display
+- Before weapon selection is shown to the player
+- During weapon selection rendering checks
+- When weapon selection visibility is being determined
+
 **Parameters**
 
 * `client` (*Player*): Player to check.
@@ -2319,6 +2663,14 @@ end)
 **Purpose**
 
 Checks if a player can choose a weapon.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to choose a weapon
+- Weapon selection is being validated
+- Before weapon choice is allowed
+- During weapon selection permission checks
 
 **Parameters**
 
@@ -2351,6 +2703,14 @@ end)
 
 Allows overriding the spawn time for entities.
 
+**When Called**
+
+This hook is triggered when:
+- An entity is being spawned
+- Spawn time is being calculated for an entity
+- Before entity spawn time is applied
+- During entity spawning process
+
 **Parameters**
 
 * `entity` (*Entity*): Entity being spawned.
@@ -2381,6 +2741,14 @@ end)
 
 Determines if the respawn screen should appear.
 
+**When Called**
+
+This hook is triggered when:
+- A player dies and respawn screen is being checked
+- Respawn screen visibility is being determined
+- Before respawn screen is shown to the player
+- During respawn screen display checks
+
 **Parameters**
 
 * `client` (*Player*): Player who died.
@@ -2408,6 +2776,14 @@ end)
 **Purpose**
 
 Called when a player selects a spawn point.
+
+**When Called**
+
+This hook is triggered when:
+- A player selects a spawn point
+- Spawn point selection is being processed
+- After spawn point validation and processing
+- During spawn point selection
 
 **Parameters**
 
@@ -2438,6 +2814,14 @@ end)
 
 Fires when voice chat is toggled.
 
+**When Called**
+
+This hook is triggered when:
+- A player toggles voice chat on or off
+- Voice chat state is being changed
+- During voice chat activation/deactivation
+- When voice chat settings are modified
+
 **Parameters**
 
 * `client` (*Player*): Player who toggled voice.
@@ -2466,6 +2850,14 @@ end)
 **Purpose**
 
 Fires when third-person view is toggled.
+
+**When Called**
+
+This hook is triggered when:
+- A player toggles third-person view on or off
+- Third-person view state is being changed
+- During third-person view activation/deactivation
+- When third-person view settings are modified
 
 **Parameters**
 
@@ -2496,6 +2888,14 @@ end)
 
 Allows adjustment of character creation data.
 
+**When Called**
+
+This hook is triggered when:
+- Character creation data is being processed
+- Character creation form is being validated
+- Before character creation data is saved
+- During character creation process
+
 **Parameters**
 
 * `client` (*Player*): Player creating character.
@@ -2525,6 +2925,14 @@ end)
 
 Determines if a character can be transferred.
 
+**When Called**
+
+This hook is triggered when:
+- A character transfer is being attempted
+- Character transfer permissions are being checked
+- Before character transfer is allowed
+- During character transfer validation
+
 **Parameters**
 
 * `character` (*Character*): Character to transfer.
@@ -2553,6 +2961,14 @@ end)
 **Purpose**
 
 Checks if a player can invite others to a faction.
+
+**When Called**
+
+This hook is triggered when:
+- A player attempts to invite someone to a faction
+- Faction invitation permissions are being checked
+- Before faction invitation is allowed
+- During faction invitation validation
 
 **Parameters**
 
@@ -2584,6 +3000,14 @@ end)
 
 Determines if a player can invite others to a class.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to invite someone to a class
+- Class invitation permissions are being checked
+- Before class invitation is allowed
+- During class invitation validation
+
 **Parameters**
 
 * `inviter` (*Player*): Player attempting to invite.
@@ -2614,6 +3038,14 @@ end)
 
 Checks if a player can use a character.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to use a character
+- Character usage permissions are being checked
+- Before character is loaded/used
+- During character usage validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to use character.
@@ -2643,6 +3075,14 @@ end)
 
 Determines if a player can switch characters.
 
+**When Called**
+
+This hook is triggered when:
+- A player attempts to switch characters
+- Character switching permissions are being checked
+- Before character switch is allowed
+- During character switching validation
+
 **Parameters**
 
 * `client` (*Player*): Player attempting to switch.
@@ -2671,6 +3111,14 @@ end)
 
 Returns the maximum starting attribute points.
 
+**When Called**
+
+This hook is triggered when:
+- Character creation attribute points are being calculated
+- Starting attribute points are being determined
+- Before character creation attribute allocation
+- During character creation process
+
 **Parameters**
 
 * `client` (*Player*): Player creating character.
@@ -2698,6 +3146,14 @@ end)
 **Purpose**
 
 Returns the starting maximum for an attribute.
+
+**When Called**
+
+This hook is triggered when:
+- Character creation attribute maximums are being calculated
+- Starting attribute maximums are being determined
+- Before character creation attribute allocation
+- During character creation process
 
 **Parameters**
 
@@ -2728,6 +3184,14 @@ end)
 
 Returns the maximum value for an attribute.
 
+**When Called**
+
+This hook is triggered when:
+- Attribute maximum values are being calculated
+- Attribute limits are being determined
+- Before attribute values are validated
+- During attribute system processing
+
 **Parameters**
 
 * `client` (*Player*): Player to check.
@@ -2756,6 +3220,14 @@ end)
 **Purpose**
 
 Fires when a character's attribute is boosted.
+
+**When Called**
+
+This hook is triggered when:
+- A character's attribute is being boosted
+- Attribute boost is being applied
+- After attribute boost validation and processing
+- During attribute boost operations
 
 **Parameters**
 
@@ -2786,6 +3258,14 @@ end)
 **Purpose**
 
 Called when a character's attribute is updated.
+
+**When Called**
+
+This hook is triggered when:
+- A character's attribute is being updated
+- Attribute changes are being applied
+- After attribute update validation and processing
+- During attribute update operations
 
 **Parameters**
 
@@ -2818,6 +3298,14 @@ end)
 
 Fires when character flags are given.
 
+**When Called**
+
+This hook is triggered when:
+- Character flags are being given to a character
+- Flag assignment is being processed
+- After flag assignment validation and processing
+- During flag assignment operations
+
 **Parameters**
 
 * `character` (*Character*): Character receiving flags.
@@ -2846,6 +3334,14 @@ end)
 **Purpose**
 
 Called when character flags are taken.
+
+**When Called**
+
+This hook is triggered when:
+- Character flags are being taken from a character
+- Flag removal is being processed
+- After flag removal validation and processing
+- During flag removal operations
 
 **Parameters**
 
@@ -2876,6 +3372,14 @@ end)
 
 Fires when a player's cheater status changes.
 
+**When Called**
+
+This hook is triggered when:
+- A player's cheater status is being changed
+- Cheater status update is being processed
+- After cheater status validation and processing
+- During cheater status operations
+
 **Parameters**
 
 * `client` (*Player*): Player whose status changed.
@@ -2904,6 +3408,14 @@ end)
 **Purpose**
 
 Called when configuration is updated.
+
+**When Called**
+
+This hook is triggered when:
+- Configuration values are being updated
+- Config changes are being processed
+- After configuration validation and processing
+- During configuration updates
 
 **Parameters**
 
@@ -2935,6 +3447,14 @@ end)
 
 Fires when an out-of-character message is sent.
 
+**When Called**
+
+This hook is triggered when:
+- A player sends an OOC message
+- OOC messages are being processed by the system
+- After OOC message validation and filtering
+- During OOC message handling
+
 **Parameters**
 
 * `client` (*Player*): Player who sent the message.
@@ -2963,6 +3483,14 @@ end)
 **Purpose**
 
 Called when salary is given to a player.
+
+**When Called**
+
+This hook is triggered when:
+- Salary is being given to a player
+- Salary payment is being processed
+- After salary validation and processing
+- During salary payment operations
 
 **Parameters**
 
@@ -2993,6 +3521,14 @@ end)
 
 Fires when a ticket is claimed.
 
+**When Called**
+
+This hook is triggered when:
+- A ticket is being claimed by an administrator
+- Ticket claiming is being processed
+- After ticket claim validation and processing
+- During ticket assignment
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was claimed.
@@ -3022,6 +3558,14 @@ end)
 
 Called when a ticket is closed.
 
+**When Called**
+
+This hook is triggered when:
+- A ticket is being closed by an administrator
+- Ticket closure is being processed
+- After ticket close validation and processing
+- During ticket completion
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was closed.
@@ -3049,6 +3593,14 @@ end)
 **Purpose**
 
 Fires when a ticket is created.
+
+**When Called**
+
+This hook is triggered when:
+- A player creates a new ticket
+- Ticket creation is being processed
+- After ticket validation and processing
+- During ticket submission
 
 **Parameters**
 
@@ -3078,6 +3630,14 @@ end)
 
 Called when a vendor is edited.
 
+**When Called**
+
+This hook is triggered when:
+- A vendor's settings are being modified
+- Vendor editing is being processed
+- After vendor edit validation and processing
+- During vendor management operations
+
 **Parameters**
 
 * `vendor` (*Entity*): Vendor that was edited.
@@ -3106,6 +3666,14 @@ end)
 **Purpose**
 
 Fires when a warning is issued to a player.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator issues a warning to a player
+- Warning system processes a warning
+- After warning validation and processing
+- During warning administration
 
 **Parameters**
 
@@ -3137,6 +3705,14 @@ end)
 
 Called when a warning is removed from a player.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator removes a warning from a player
+- Warning removal is being processed
+- After warning removal validation and processing
+- During warning cleanup
+
 **Parameters**
 
 * `target` (*Player*): Player whose warning was removed.
@@ -3165,6 +3741,14 @@ end)
 **Purpose**
 
 Fires when a player is gagged.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator gags a player
+- Gag system processes a gag
+- After gag validation and processing
+- During gag administration
 
 **Parameters**
 
@@ -3195,6 +3779,14 @@ end)
 
 Called when a player is ungagged.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator ungags a player
+- Gag system processes ungagging
+- After ungag validation and processing
+- During gag removal
+
 **Parameters**
 
 * `target` (*Player*): Player who was ungagged.
@@ -3223,6 +3815,14 @@ end)
 **Purpose**
 
 Fires when a player is muted.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator mutes a player
+- Mute system processes a mute
+- After mute validation and processing
+- During mute administration
 
 **Parameters**
 
@@ -3253,6 +3853,14 @@ end)
 
 Called when a player is unmuted.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator unmutes a player
+- Mute system processes unmuting
+- After unmute validation and processing
+- During mute removal
+
 **Parameters**
 
 * `target` (*Player*): Player who was unmuted.
@@ -3281,6 +3889,14 @@ end)
 **Purpose**
 
 Fires when cheat detection is triggered.
+
+**When Called**
+
+This hook is triggered when:
+- A player is detected using cheats
+- Anti-cheat system processes cheat detection
+- After cheat detection validation and processing
+- During cheat detection operations
 
 **Parameters**
 
@@ -3311,6 +3927,14 @@ end)
 
 Called when a cheater is caught.
 
+**When Called**
+
+This hook is triggered when:
+- A cheater is caught by the system
+- Cheat detection processes cheater capture
+- After cheater validation and processing
+- During cheater handling operations
+
 **Parameters**
 
 * `client` (*Player*): Player caught cheating.
@@ -3338,6 +3962,14 @@ end)
 **Purpose**
 
 Fires when a ticket is created in the ticket system.
+
+**When Called**
+
+This hook is triggered when:
+- A player creates a new ticket
+- Ticket system processes ticket creation
+- After ticket validation and processing
+- During ticket submission
 
 **Parameters**
 
@@ -3367,6 +3999,14 @@ end)
 
 Called when a ticket is claimed.
 
+**When Called**
+
+This hook is triggered when:
+- An administrator claims a ticket
+- Ticket system processes ticket claiming
+- After ticket claim validation and processing
+- During ticket assignment
+
 **Parameters**
 
 * `ticket` (*table*): Ticket that was claimed.
@@ -3395,6 +4035,14 @@ end)
 **Purpose**
 
 Fires when a ticket is closed.
+
+**When Called**
+
+This hook is triggered when:
+- An administrator closes a ticket
+- Ticket system processes ticket closure
+- After ticket close validation and processing
+- During ticket completion
 
 **Parameters**
 

@@ -33,6 +33,14 @@ An extended, detailed explanation of the library, including its purpose, scope, 
 
 A one-sentence explanation of what the function does.
 
+**When Called**
+
+This function is called when:
+- Specific condition or event that triggers the function
+- Another condition that triggers the function
+- Additional conditions that trigger the function
+- During specific system processes or events
+
 **Parameters**
 
 * `paramName` (*type*): Description of the parameter.
@@ -61,8 +69,8 @@ Provide extensive, practical Lua examples demonstrating usage. Always use clean 
 - Always provide **extensive usage examples** in GLua code fences.  
 - Always format code cleanly and consistently.  
 - Always save documentation files as `lia.libraryname.md`.  
-- Never omit any of the sections (Purpose, Parameters, Returns, Realm, Example Usage).  
-- Never include comments in code unless they clarify the example’s intent.  
+- Never omit any of the sections (Purpose, When Called, Parameters, Returns, Realm, Example Usage).  
+- Never include comments in code unless they clarify the example's intent.  
 - Never document hooks, enums, or config variables unless they are explicitly part of the `lia.*` namespace.  
 
 ---
@@ -88,6 +96,14 @@ The administrator library (`lia.administrator`) provides a comprehensive, hierar
 **Purpose**
 
 Checks if a player or usergroup has access to a specific privilege.
+
+**When Called**
+
+This function is called when:
+- Permission checks are being performed
+- Access validation is required
+- Before allowing certain actions or operations
+- During authorization processes
 
 **Parameters**
 

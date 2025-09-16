@@ -140,8 +140,12 @@ function PANEL:onItemReleased(itemIcon)
     end
 
     if not self.inventory:doesItemFitAtPos(item, x, y) then
-        self.inventory:requestTransfer(item:getID(), nil, 0, 0)
-        hook.Run("OnRequestItemTransfer", self, item:getID(), nil, 0, 0)
+        -- Prevent dropping item on top of another item - return to original position
+        local originalX, originalY = item:getData("x"), item:getData("y")
+        if originalX and originalY then
+            self.inventory:requestTransfer(item:getID(), self.inventory:getID(), originalX, originalY)
+            hook.Run("OnRequestItemTransfer", self, item:getID(), self.inventory:getID(), originalX, originalY)
+        end
         return
     end
 
