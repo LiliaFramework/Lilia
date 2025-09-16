@@ -54,6 +54,8 @@ function GM:PlayerDeath(client, inflictor, attacker)
     local character = client:getChar()
     if not character then return end
     if IsValid(client:GetRagdollEntity()) then client:GetRagdollEntity():Remove() end
+    local handsWeapon = client:GetActiveWeapon()
+    if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
     local inventory = character:getInv()
     if inventory then
         for _, item in pairs(inventory:getItems()) do
@@ -1019,7 +1021,7 @@ function ClientAddText(client, ...)
     end
 
     local args = {...}
-    net.Start("ServerChatAddText")
+    net.Start("liaServerChatAddText")
     net.WriteTable(args)
     net.Send(client)
 end
@@ -1473,6 +1475,8 @@ function GM:CreateSalaryTimers()
                 local class = lia.class.list[char:getClass()]
                 local pay = hook.Run("GetSalaryAmount", client, faction, class)
                 pay = isnumber(pay) and pay or class and class.pay or faction and faction.pay or 0
+                local adjustedPay = hook.Run("OnSalaryAdjust", client)
+                if isnumber(adjustedPay) then pay = adjustedPay end
                 local limit = hook.Run("GetSalaryLimit", client, faction, class)
                 limit = isnumber(limit) and limit or class and class.payLimit or faction and faction.payLimit or lia.config.get("SalaryThreshold", 0)
                 if pay > 0 then
@@ -1598,37 +1602,37 @@ concommand.Add("test_all_notifications", function()
     local notificationTypes = {
         {
             type = "default",
-            message = "This is a default notification",
+            message = "This is a default notification. It is being used to demonstrate the default notification type in the Lilia framework. The message is intentionally made longer to test the notification panel's ability to handle extended text and to ensure that the notification wraps and displays correctly for all users.",
             method = "notify"
         },
         {
             type = "info",
-            message = "This is an info notification",
+            message = "This is an info notification. Information notifications are typically used to provide users with helpful tips, updates, or general information about the current state of the game or server. This message is longer to test the notification system's handling of verbose informational content.",
             method = "notifyInfo"
         },
         {
             type = "error",
-            message = "This is an error notification",
+            message = "This is an error notification. An error has occurred in the system, and this notification is being used to alert you to the issue. Please review the error details and take any necessary corrective action. This message is intentionally verbose to test the notification display.",
             method = "notifyError"
         },
         {
             type = "success",
-            message = "This is a success notification",
+            message = "This is a success notification. Your recent action was completed successfully, and everything went as expected. This longer message is used to ensure that success notifications can accommodate more detailed feedback for the user.",
             method = "notifySuccess"
         },
         {
             type = "warning",
-            message = "This is a warning notification",
+            message = "This is a warning notification. Please be aware that something may require your attention or caution. This message is extended to test how the notification system handles warnings that contain more context or instructions for the player.",
             method = "notifyWarning"
         },
         {
             type = "money",
-            message = "This is a money notification",
+            message = "This is a money notification. You have received or lost some in-game currency. This message is intentionally longer to verify that monetary notifications can display detailed transaction information or explanations as needed.",
             method = "notifyMoney"
         },
         {
             type = "admin",
-            message = "This is an admin notification",
+            message = "This is an admin notification. Administrative actions or messages are being communicated to you. This longer message is used to test the notification system's ability to display extended admin-related information or instructions.",
             method = "notifyAdmin"
         }
     }
@@ -1650,6 +1654,29 @@ concommand.Add("test_all_notifications", function()
     end
 
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Notification demonstration completed!\n")
+end)
+
+concommand.Add("lia_redownload_assets", function(client)
+    if IsValid(client) then
+        client:notifyErrorLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Starting asset redownload for all connected players...\n")
+    local playerCount = 0
+    for _, ply in ipairs(player.GetAll()) do
+        if IsValid(ply) then
+            net.Start("liaAssureClientSideAssets")
+            net.Send(ply)
+            playerCount = playerCount + 1
+        end
+    end
+
+    if playerCount > 0 then
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Asset redownload initiated for " .. playerCount .. " player(s). Check client consoles for progress.\n")
+    else
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "No players connected to redownload assets for.\n")
+    end
 end)
 
 concommand.Add("test_existing_notifications", function(client)

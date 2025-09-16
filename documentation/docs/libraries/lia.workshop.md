@@ -10,6 +10,52 @@ The workshop library (`lia.workshop`) provides a comprehensive system for managi
 
 ---
 
+### AddWorkshop
+
+**Purpose**
+
+Adds a Workshop addon ID to the server's required addons list and notifies about the addition and download process.
+
+**Parameters**
+
+* `id` (*string*): The Workshop addon ID.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Add a Workshop addon
+local function addWorkshopAddon(id)
+    lia.workshop.AddWorkshop(id)
+end
+
+-- Use in a function
+local function setupRequiredAddons()
+    lia.workshop.AddWorkshop("123456789")
+    lia.workshop.AddWorkshop("987654321")
+    print("Required addons added")
+end
+
+-- Add addon with validation
+local function addWorkshopAddonSafe(id)
+    if not id or id == "" then
+        print("Invalid addon ID")
+        return
+    end
+    lia.workshop.AddWorkshop(tostring(id))
+    print("Addon " .. id .. " added to required list")
+end
+```
+
+---
+
 ### Add
 
 **Purpose**
@@ -41,6 +87,58 @@ local function setupRequiredAddons()
     lia.workshop.Add("123456789")
     lia.workshop.Add("987654321")
     print("Required addons added")
+end
+```
+
+---
+
+### gather
+
+**Purpose**
+
+Gathers all Workshop addon IDs from various sources including manually added IDs, mounted addons, and module-specified Workshop content.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+* `ids` (*table*): Table of all addon IDs with their values set to true.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Gather all addon IDs
+local function gatherAddonIDs()
+    return lia.workshop.gather()
+end
+
+-- Use in a function
+local function refreshAddonList()
+    local ids = lia.workshop.gather()
+    print("Found " .. table.Count(ids) .. " addon IDs")
+    return ids
+end
+
+-- Check if specific addon is in the gathered list
+local function isAddonRequired(addonId)
+    local ids = lia.workshop.gather()
+    return ids[tostring(addonId)] == true
+end
+
+-- Get all addon IDs as a list
+local function getAllAddonIDs()
+    local ids = lia.workshop.gather()
+    local idList = {}
+    for id, _ in pairs(ids) do
+        table.insert(idList, id)
+    end
+    return idList
 end
 ```
 

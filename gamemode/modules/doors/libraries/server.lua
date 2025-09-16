@@ -484,7 +484,7 @@ function MODULE:ShowTeam(client)
         if (not factions or #factions == 0) and (not classes or #classes == 0) then
             if entity:checkDoorAccess(client, DOOR_TENANT) then
                 local door = entity
-                net.Start("doorMenu")
+                net.Start("liaDoorMenu")
                 net.WriteEntity(door)
                 local access = door.liaAccess or {}
                 net.WriteUInt(table.Count(access), 8)

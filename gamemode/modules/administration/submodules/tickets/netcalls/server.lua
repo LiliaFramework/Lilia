@@ -1,15 +1,15 @@
 ﻿local MODULE = MODULE
-net.Receive("ViewClaims", function(_, client)
+net.Receive("liaViewClaims", function(_, client)
     local sid = net.ReadString()
     MODULE:GetAllCaseClaims():next(function(caseclaims)
-        net.Start("ViewClaims")
+        net.Start("liaViewClaims")
         net.WriteTable(caseclaims)
         net.WriteString(sid)
         net.Send(client)
     end)
 end)
 
-net.Receive("TicketSystemClaim", function(_, client)
+net.Receive("liaTicketSystemClaim", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
         client:notifyErrorLocalized("ticketActionSelf")
@@ -19,7 +19,7 @@ net.Receive("TicketSystemClaim", function(_, client)
     if (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) and not requester.CaseClaimed then
         for _, v in player.Iterator() do
             if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
-                net.Start("TicketSystemClaim")
+                net.Start("liaTicketSystemClaim")
                 net.WriteEntity(client)
                 net.WriteEntity(requester)
                 net.Send(v)
@@ -39,7 +39,7 @@ net.Receive("TicketSystemClaim", function(_, client)
     end
 end)
 
-net.Receive("TicketSystemClose", function(_, client)
+net.Receive("liaTicketSystemClose", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
         client:notifyErrorLocalized("ticketActionSelf")
@@ -50,7 +50,7 @@ net.Receive("TicketSystemClose", function(_, client)
     if timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
     for _, v in player.Iterator() do
         if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
-            net.Start("TicketSystemClose")
+            net.Start("liaTicketSystemClose")
             net.WriteEntity(requester)
             net.Send(v)
         end

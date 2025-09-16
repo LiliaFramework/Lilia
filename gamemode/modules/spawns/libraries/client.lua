@@ -43,7 +43,7 @@ function MODULE:HUDPaint()
     if left <= 0 and input.IsKeyDown(KEY_SPACE) then
         if not respawnReq then
             respawnReq = true
-            net.Start("request_respawn")
+            net.Start("liaRequestRespawn")
             net.SendToServer()
         end
     else

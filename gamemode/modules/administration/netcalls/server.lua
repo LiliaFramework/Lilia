@@ -1,4 +1,4 @@
-﻿net.Receive("cfgSet", function(_, client)
+﻿net.Receive("liaCfgSet", function(_, client)
     local key = net.ReadString()
     local name = net.ReadString()
     local value = net.ReadType()
@@ -28,14 +28,14 @@ net.Receive("liaRequestTableData", function(_, client)
     local tbl = net.ReadString()
     if not tbl or tbl == "" then return end
     lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
-        net.Start("liaDBTableData")
+        net.Start("liaDbTableData")
         net.WriteString(tbl)
         net.WriteTable(res or {})
         net.Send(client)
     end)
 end)
 
-net.Receive("lia_managesitrooms_action", function(_, client)
+net.Receive("liaManagesitroomsAction", function(_, client)
     if not client:hasPrivilege("manageSitRooms") then return end
     local action = net.ReadUInt(2)
     local name = net.ReadString()
@@ -67,19 +67,19 @@ net.Receive("lia_managesitrooms_action", function(_, client)
     end
 end)
 
-net.Receive("liaRequestAllPKs", function(_, client)
+net.Receive("liaRequestAllPks", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     lia.db.query("SELECT * FROM lia_permakills", function(data)
-        net.Start("liaAllPKs")
+        net.Start("liaAllPks")
         net.WriteTable(data or {})
         net.Send(client)
     end)
 end)
 
-net.Receive("liaRequestPKsCount", function(_, client)
+net.Receive("liaRequestPksCount", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     lia.db.count("permakills"):next(function(count)
-        net.Start("liaPKsCount")
+        net.Start("liaPksCount")
         net.WriteInt(count or 0, 32)
         net.Send(client)
     end)

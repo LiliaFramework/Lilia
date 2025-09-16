@@ -65,4 +65,4 @@ function MODULE:ChatAddText(text, ...)
 end
 
 hook.Add("OnReloaded", "OnReloadedChatbox", RegenChat)
-net.Receive("RegenChat", RegenChat)
+net.Receive("liaRegenChat", RegenChat)

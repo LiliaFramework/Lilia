@@ -11,7 +11,7 @@ local validClasses = {
 function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)
     if isstring(soundName) and (soundName:find("^https?://") or soundName:find("^lilia/websounds/") or soundName:find("^websounds/")) then
         if SERVER then
-            net.Start("EmitURLSound")
+            net.Start("liaEmitUrlSound")
             net.WriteEntity(self)
             net.WriteString(soundName)
             net.WriteFloat(volume or 100)
@@ -145,7 +145,7 @@ if SERVER then
 
     function entityMeta:sendNetVar(key, receiver)
         if not IsValid(self) then return end
-        net.Start("nVar")
+        net.Start("liaNetVar")
         net.WriteUInt(self:EntIndex(), 16)
         net.WriteString(key)
         net.WriteType(lia.net[self] and lia.net[self][key])
@@ -160,7 +160,7 @@ if SERVER then
         if not IsValid(self) then return end
         lia.net[self] = nil
         if lia.shuttingDown then return end
-        net.Start("nDel")
+        net.Start("liaNetDel")
         net.WriteUInt(self:EntIndex(), 16)
         if receiver then
             net.Send(receiver)
@@ -172,7 +172,7 @@ if SERVER then
     function entityMeta:removeDoorAccessData()
         if IsValid(self) then
             for k, _ in pairs(self.liaAccess or {}) do
-                net.Start("doorMenu")
+                net.Start("liaDoorMenu")
                 net.Send(k)
             end
 

@@ -5,7 +5,7 @@
     return timeSince
 end
 
-net.Receive("RequestFactionRoster", function(_, client)
+net.Receive("liaRequestFactionRoster", function(_, client)
     local character = client:getChar()
     if not character or not character:hasFlags("V") then return end
     local factionIndex = character:getFaction()
@@ -58,7 +58,7 @@ net.Receive("RequestFactionRoster", function(_, client)
             end
         end
 
-        net.Start("CharacterInfo")
+        net.Start("liaCharacterInfo")
         net.WriteTable(characters)
         net.Send(client)
     end)

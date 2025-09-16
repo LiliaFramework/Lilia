@@ -138,19 +138,19 @@ end
 
 function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
-    net.Start("VendorOpen")
+    net.Start("liaVendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
     if client:CanEditVendor(vendor) then
         for factionID in pairs(vendor.factions) do
-            net.Start("VendorAllowFaction")
+            net.Start("liaVendorAllowFaction")
             net.WriteUInt(factionID, 8)
             net.WriteBool(true)
             net.Send(client)
         end
 
         for classID in pairs(vendor.classes) do
-            net.Start("VendorAllowClass")
+            net.Start("liaVendorAllowClass")
             net.WriteUInt(classID, 8)
             net.WriteBool(true)
             net.Send(client)
@@ -217,12 +217,12 @@ function MODULE:OnEntityLoaded(ent, data)
     end
 end
 
-net.Receive("VendorExit", function(_, client)
+net.Receive("liaVendorExit", function(_, client)
     local vendor = client.liaVendor
     if IsValid(vendor) then vendor:removeReceiver(client, true) end
 end)
 
-net.Receive("VendorEdit", function(_, client)
+net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
     if not client:CanEditVendor() then return end
     local vendor = client.liaVendor
@@ -233,7 +233,7 @@ net.Receive("VendorEdit", function(_, client)
     hook.Run("UpdateEntityPersistence", vendor)
 end)
 
-net.Receive("VendorTrade", function(_, client)
+net.Receive("liaVendorTrade", function(_, client)
     local uniqueID = net.ReadString()
     local isSellingToVendor = net.ReadBool()
     if not client:getChar() or not client:getChar():getInv() then return end

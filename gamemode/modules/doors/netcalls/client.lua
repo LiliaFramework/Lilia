@@ -1,4 +1,4 @@
-﻿net.Receive("doorMenu", function()
+﻿net.Receive("liaDoorMenu", function()
     if net.BytesLeft() > 0 then
         local entity = net.ReadEntity()
         local count = net.ReadUInt(8)
@@ -20,7 +20,7 @@
     end
 end)
 
-net.Receive("doorPerm", function()
+net.Receive("liaDoorPerm", function()
     local door = net.ReadEntity()
     local client = net.ReadEntity()
     local access = net.ReadUInt(2)

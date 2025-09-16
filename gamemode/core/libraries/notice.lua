@@ -1,7 +1,7 @@
 ﻿lia.notices = lia.notices or {}
 if SERVER then
     function lia.notices.notify(client, message, notifType)
-        net.Start("liaNotify")
+        net.Start("liaNotificationData")
         net.WriteString(message)
         net.WriteString(notifType or "default")
         if client then
@@ -18,7 +18,7 @@ if SERVER then
             client = nil
         end
 
-        net.Start("liaNotifyL")
+        net.Start("liaNotifyLocal")
         net.WriteString(key)
         net.WriteUInt(#args, 8)
         for i = 1, #args do
@@ -50,7 +50,7 @@ else
         MsgN(msg)
     end
 
-    net.Receive("liaNotify", lia.notices.receiveNotify)
+    net.Receive("liaNotificationData", lia.notices.receiveNotify)
     function lia.notices.receiveNotifyL()
         local key = net.ReadString() or ""
         local argc = net.ReadUInt(8) or 0
@@ -75,7 +75,7 @@ else
         MsgN(tostring(msg))
     end
 
-    net.Receive("liaNotifyL", lia.notices.receiveNotifyL)
+    net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
     function lia.notices.notify(_, message, notifType)
         local notice = vgui.Create("liaNotice")
         notice:SetText(tostring(message))

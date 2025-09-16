@@ -69,7 +69,7 @@ local function buildActionFunc(action, actionIndex, itemTable, sub, optionKey)
         end
 
         if send ~= false then
-            net.Start("invAct")
+            net.Start("liaInvAct")
             net.WriteString(actionIndex)
             net.WriteType(itemTable.id)
             net.WriteType(optionKey or sub and sub.data)

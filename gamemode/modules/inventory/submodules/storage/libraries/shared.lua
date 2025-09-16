@@ -64,7 +64,7 @@ function MODULE:InitializeStorage(entity)
     return entity.liaStorageInitPromise
 end
 
-net.Receive("trunkInitStorage", function()
+net.Receive("liaTrunkInitStorage", function()
     local entity = net.ReadEntity()
     if IsValid(entity) then MODULE:InitializeStorage(entity) end
 end)

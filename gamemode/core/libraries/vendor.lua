@@ -57,7 +57,7 @@ if SERVER then
 else
     local function addEditor(name, writer)
         lia.vendor.editor[name] = function(...)
-            net.Start("VendorEdit")
+            net.Start("liaVendorEdit")
             net.WriteString(name)
             writer(...)
             net.SendToServer()

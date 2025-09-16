@@ -1,5 +1,5 @@
 ﻿local characterPanel
-net.Receive("classUpdate", function()
+net.Receive("liaClassUpdate", function()
     local joinedClient = net.ReadEntity()
     if lia.gui.classes and lia.gui.classes:IsVisible() then
         if joinedClient == LocalPlayer() then
@@ -13,7 +13,7 @@ net.Receive("classUpdate", function()
     end
 end)
 
-net.Receive("CharacterInfo", function()
+net.Receive("liaCharacterInfo", function()
     local characterData = net.ReadTable()
     local character = LocalPlayer():getChar()
     if not character or LocalPlayer():Team() == FACTION_STAFF or not (character:hasFlags("V") or character:hasFlags("W")) then return end
@@ -76,7 +76,7 @@ net.Receive("CharacterInfo", function()
             if canKick and rowData.steamID ~= LocalPlayer():SteamID() then
                 menu:AddOption(L("kick"), function()
                     Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
-                        net.Start("KickCharacter")
+                        net.Start("liaKickCharacter")
                         net.WriteInt(tonumber(rowData.id), 32)
                         net.SendToServer()
                         if IsValid(frame) then frame:Remove() end

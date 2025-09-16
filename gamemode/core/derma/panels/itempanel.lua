@@ -39,7 +39,7 @@ function PANEL:buildButtons()
         self:addBtn(L(fn.name or key), function()
             if fn.sound then surface.PlaySound(fn.sound) end
             if not fn.onClick or fn.onClick(self.item) ~= false then
-                net.Start("invAct")
+                net.Start("liaInvAct")
                 net.WriteString(key)
                 net.WriteType(self.ent)
                 net.WriteType(nil)

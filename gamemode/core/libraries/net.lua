@@ -71,7 +71,7 @@ function lia.net.readBigTable(netStr, callback)
         end
 
         if CLIENT then
-            net.Start("LIA_BigTable_Ack")
+            net.Start("liaBigTableAck")
             net.WriteUInt(sid, 32)
             net.WriteUInt(idx, 16)
             net.SendToServer()
@@ -116,7 +116,7 @@ if SERVER then
         if idx == s.total and lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
     end
 
-    net.Receive("LIA_BigTable_Ack", function(_, ply)
+    net.Receive("liaBigTableAck", function(_, ply)
         if not IsValid(ply) then return end
         local sid = net.ReadUInt(32)
         local last = net.ReadUInt(16)
@@ -226,7 +226,7 @@ if SERVER then
         if oldValue == value then return end
         lia.net.globals[key] = value
         if not lia.shuttingDown then
-            net.Start("gVar")
+            net.Start("liaGlobalVar")
             net.WriteString(key)
             net.WriteType(value)
             if receiver then

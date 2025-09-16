@@ -20,7 +20,7 @@ end
 function PANEL:SetRosterType(t)
     self.rosterType = t
     if t == "faction" then
-        net.Start("RequestFactionRoster")
+        net.Start("liaRequestFactionRoster")
         net.SendToServer()
     end
 end
@@ -108,7 +108,7 @@ function PANEL:Populate(data, canKick)
             if canKick and rowData.steamID ~= LocalPlayer():SteamID() then
                 menu:AddOption(L("kick"), function()
                     Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
-                        net.Start("KickCharacter")
+                        net.Start("liaKickCharacter")
                         net.WriteInt(tonumber(rowData.id), 32)
                         net.SendToServer()
                     end, L("no"))

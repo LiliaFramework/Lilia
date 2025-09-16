@@ -108,7 +108,7 @@ function MODULE:PopulateAdminTabs()
     net.SendToServer()
 end
 
-net.Receive("ViewClaims", function()
+net.Receive("liaViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()
     if steamid and steamid ~= "" and steamid ~= " " then
@@ -121,14 +121,14 @@ net.Receive("ViewClaims", function()
     end
 end)
 
-net.Receive("TicketSystem", function()
+net.Receive("liaTicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
     if LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets") then MODULE:TicketFrame(pl, msg, claimed) end
 end)
 
-net.Receive("TicketSystemClaim", function()
+net.Receive("liaTicketSystemClaim", function()
     local pl = net.ReadEntity()
     local requester = net.ReadEntity()
     for _, v in pairs(TicketFrames) do
@@ -150,7 +150,7 @@ net.Receive("TicketSystemClaim", function()
             local bu = v:GetChildren()[11]
             bu.DoClick = function()
                 if LocalPlayer() == pl then
-                    net.Start("TicketSystemClose")
+                    net.Start("liaTicketSystemClose")
                     net.WriteEntity(requester)
                     net.SendToServer()
                 else
@@ -161,7 +161,7 @@ net.Receive("TicketSystemClaim", function()
     end
 end)
 
-net.Receive("TicketSystemClose", function()
+net.Receive("liaTicketSystemClose", function()
     local requester = net.ReadEntity()
     if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do

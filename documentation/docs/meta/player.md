@@ -84,7 +84,7 @@ end)
 
 ---
 
-### hasPrivilegeVector
+### hasPrivilege
 
 **Purpose**
 
@@ -2149,6 +2149,1430 @@ concommand.Add("check_flags", function(ply, cmd, args)
     if flags then
         checkPlayerFlags(ply, flags)
     end
+end)
+```
+
+---
+
+### forceSequence
+
+**Purpose**
+
+Forces the player to play a specific animation sequence.
+
+**Parameters**
+
+* `sequenceName` (*string|nil*): The name of the sequence to play, or nil to stop current sequence.
+* `callback` (*function|nil*): Function to call when the sequence completes.
+* `time` (*number|nil*): Duration of the sequence (defaults to sequence duration).
+* `noFreeze` (*boolean|nil*): Whether to prevent freezing the player during sequence.
+
+**Returns**
+
+* `duration` (*number|false*): The duration of the sequence, or false if invalid.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function playPlayerSequence(player, sequenceName, duration)
+    local result = player:forceSequence(sequenceName, function()
+        player:ChatPrint("Sequence completed!")
+    end, duration)
+    
+    if result then
+        player:ChatPrint("Playing sequence for " .. result .. " seconds")
+    else
+        player:ChatPrint("Invalid sequence name")
+    end
+end
+
+concommand.Add("play_sequence", function(ply, cmd, args)
+    local sequenceName = args[1]
+    local duration = tonumber(args[2])
+    if sequenceName then
+        playPlayerSequence(ply, sequenceName, duration)
+    end
+end)
+```
+
+---
+
+### leaveSequence
+
+**Purpose**
+
+Stops the current animation sequence and restores normal movement.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function stopPlayerSequence(player)
+    player:leaveSequence()
+    player:ChatPrint("Sequence stopped!")
+end
+
+concommand.Add("stop_sequence", function(ply)
+    stopPlayerSequence(ply)
+end)
+```
+
+---
+
+### NetworkAnimation
+
+**Purpose**
+
+Synchronizes bone animations across the network for all players.
+
+**Parameters**
+
+* `active` (*boolean*): Whether the animation is active.
+* `boneData` (*table*): Table of bone names and their angle data.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function animatePlayerBones(player, active, boneData)
+    player:NetworkAnimation(active, boneData)
+    player:ChatPrint("Bone animation " .. (active and "started" or "stopped"))
+end
+
+concommand.Add("animate_bones", function(ply, cmd, args)
+    local active = tobool(args[1])
+    local boneData = {
+        ["ValveBiped.Bip01_Head1"] = Angle(0, 0, 0),
+        ["ValveBiped.Bip01_Spine2"] = Angle(0, 0, 0)
+    }
+    animatePlayerBones(ply, active, boneData)
+end)
+```
+
+---
+
+### WhitelistAllClasses
+
+**Purpose**
+
+Gives the player whitelist access to all available classes.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function whitelistAllClasses(player)
+    player:WhitelistAllClasses()
+    player:ChatPrint("You now have access to all classes!")
+end
+
+concommand.Add("whitelist_all_classes", function(ply)
+    whitelistAllClasses(ply)
+end)
+```
+
+---
+
+### WhitelistAllFactions
+
+**Purpose**
+
+Gives the player whitelist access to all available factions.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function whitelistAllFactions(player)
+    player:WhitelistAllFactions()
+    player:ChatPrint("You now have access to all factions!")
+end
+
+concommand.Add("whitelist_all_factions", function(ply)
+    whitelistAllFactions(ply)
+end)
+```
+
+---
+
+### WhitelistEverything
+
+**Purpose**
+
+Gives the player whitelist access to all classes and factions.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function whitelistEverything(player)
+    player:WhitelistEverything()
+    player:ChatPrint("You now have access to everything!")
+end
+
+concommand.Add("whitelist_everything", function(ply)
+    whitelistEverything(ply)
+end)
+```
+
+---
+
+### classWhitelist
+
+**Purpose**
+
+Gives the player's character whitelist access to a specific class.
+
+**Parameters**
+
+* `class` (*string*): The class name to whitelist.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function whitelistClass(player, className)
+    player:classWhitelist(className)
+    player:ChatPrint("You now have access to " .. className .. " class!")
+end
+
+concommand.Add("whitelist_class", function(ply, cmd, args)
+    local className = args[1]
+    if className then
+        whitelistClass(ply, className)
+    end
+end)
+```
+
+---
+
+### classUnWhitelist
+
+**Purpose**
+
+Removes the player's character whitelist access to a specific class.
+
+**Parameters**
+
+* `class` (*string*): The class name to remove whitelist access from.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function unwhitelistClass(player, className)
+    player:classUnWhitelist(className)
+    player:ChatPrint("You no longer have access to " .. className .. " class!")
+end
+
+concommand.Add("unwhitelist_class", function(ply, cmd, args)
+    local className = args[1]
+    if className then
+        unwhitelistClass(ply, className)
+    end
+end)
+```
+
+---
+
+### setWhitelisted
+
+**Purpose**
+
+Sets the player's whitelist status for a specific faction.
+
+**Parameters**
+
+* `faction` (*string*): The faction name to set whitelist for.
+* `whitelisted` (*boolean|nil*): Whether to whitelist (true) or remove whitelist (nil/false).
+
+**Returns**
+
+* `success` (*boolean*): True if the whitelist was set successfully.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setFactionWhitelist(player, faction, whitelisted)
+    if player:setWhitelisted(faction, whitelisted) then
+        local status = whitelisted and "whitelisted" or "unwhitelisted"
+        player:ChatPrint("You are now " .. status .. " for " .. faction .. " faction!")
+    else
+        player:ChatPrint("Failed to set whitelist for " .. faction .. " faction.")
+    end
+end
+
+concommand.Add("set_faction_whitelist", function(ply, cmd, args)
+    local faction = args[1]
+    local whitelisted = tobool(args[2])
+    if faction then
+        setFactionWhitelist(ply, faction, whitelisted)
+    end
+end)
+```
+
+---
+
+### loadLiliaData
+
+**Purpose**
+
+Loads persistent player data from the database.
+
+**Parameters**
+
+* `callback` (*function|nil*): Function to call when data is loaded.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function loadPlayerData(player)
+    player:loadLiliaData(function(data)
+        player:ChatPrint("Data loaded! Keys: " .. table.Count(data))
+        -- Process loaded data
+        for key, value in pairs(data) do
+            print(key .. " = " .. tostring(value))
+        end
+    end)
+end
+
+concommand.Add("load_data", function(ply)
+    loadPlayerData(ply)
+end)
+```
+
+---
+
+### saveLiliaData
+
+**Purpose**
+
+Saves the player's current data to the database.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function savePlayerData(player)
+    player:saveLiliaData()
+    player:ChatPrint("Data saved to database!")
+end
+
+concommand.Add("save_data", function(ply)
+    savePlayerData(ply)
+end)
+```
+
+---
+
+### getAllLiliaData
+
+**Purpose**
+
+Gets all persistent data for the player.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `data` (*table*): Table containing all player data.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displayAllPlayerData(player)
+    local data = player:getAllLiliaData()
+    player:ChatPrint("All player data:")
+    for key, value in pairs(data) do
+        player:ChatPrint("  " .. key .. ": " .. tostring(value))
+    end
+    return data
+end
+
+concommand.Add("all_data", function(ply)
+    displayAllPlayerData(ply)
+end)
+```
+
+---
+
+### giveFlags
+
+**Purpose**
+
+Adds flags to the player's character.
+
+**Parameters**
+
+* `flags` (*string*): The flags to add.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function givePlayerFlags(player, flags)
+    player:giveFlags(flags)
+    player:ChatPrint("Added flags: " .. flags)
+end
+
+concommand.Add("give_flags", function(ply, cmd, args)
+    local flags = args[1]
+    if flags then
+        givePlayerFlags(ply, flags)
+    end
+end)
+```
+
+---
+
+### takeFlags
+
+**Purpose**
+
+Removes flags from the player's character.
+
+**Parameters**
+
+* `flags` (*string*): The flags to remove.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function takePlayerFlags(player, flags)
+    player:takeFlags(flags)
+    player:ChatPrint("Removed flags: " .. flags)
+end
+
+concommand.Add("take_flags", function(ply, cmd, args)
+    local flags = args[1]
+    if flags then
+        takePlayerFlags(ply, flags)
+    end
+end)
+```
+
+---
+
+### setWaypoint
+
+**Purpose**
+
+Sets a waypoint for the player to follow.
+
+**Parameters**
+
+* `name` (*string*): The name of the waypoint.
+* `vector` (*Vector*): The position of the waypoint.
+* `onReach` (*function|nil*): Function to call when the waypoint is reached (client-side only).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setPlayerWaypoint(player, name, pos)
+    player:setWaypoint(name, pos)
+    player:ChatPrint("Waypoint set: " .. name .. " at " .. tostring(pos))
+end
+
+concommand.Add("set_waypoint", function(ply, cmd, args)
+    local name = args[1] or "Waypoint"
+    local pos = ply:GetPos() + Vector(0, 0, 50)
+    setPlayerWaypoint(ply, name, pos)
+end)
+```
+
+---
+
+### setWeighPoint
+
+**Purpose**
+
+Sets a waypoint for the player to follow (alias for setWaypoint).
+
+**Parameters**
+
+* `name` (*string*): The name of the waypoint.
+* `vector` (*Vector*): The position of the waypoint.
+* `onReach` (*function|nil*): Function to call when the waypoint is reached (client-side only).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setPlayerWeighPoint(player, name, pos)
+    player:setWeighPoint(name, pos)
+    player:ChatPrint("Weigh point set: " .. name .. " at " .. tostring(pos))
+end
+
+concommand.Add("set_weighpoint", function(ply, cmd, args)
+    local name = args[1] or "WeighPoint"
+    local pos = ply:GetPos() + Vector(0, 0, 50)
+    setPlayerWeighPoint(ply, name, pos)
+end)
+```
+
+---
+
+### setWaypointWithLogo
+
+**Purpose**
+
+Sets a waypoint with a custom logo for the player to follow.
+
+**Parameters**
+
+* `name` (*string*): The name of the waypoint.
+* `vector` (*Vector*): The position of the waypoint.
+* `logo` (*string*): The material path for the logo.
+* `onReach` (*function|nil*): Function to call when the waypoint is reached (client-side only).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setPlayerWaypointWithLogo(player, name, pos, logo)
+    player:setWaypointWithLogo(name, pos, logo)
+    player:ChatPrint("Waypoint with logo set: " .. name .. " at " .. tostring(pos))
+end
+
+concommand.Add("set_waypoint_logo", function(ply, cmd, args)
+    local name = args[1] or "Waypoint"
+    local logo = args[2] or "icon16/flag_blue.png"
+    local pos = ply:GetPos() + Vector(0, 0, 50)
+    setPlayerWaypointWithLogo(ply, name, pos, logo)
+end)
+```
+
+---
+
+### banPlayer
+
+**Purpose**
+
+Bans the player from the server.
+
+**Parameters**
+
+* `reason` (*string|nil*): The reason for the ban.
+* `duration` (*number|nil*): The duration of the ban in seconds (0 for permanent).
+* `banner` (*Player|nil*): The player who issued the ban.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function banPlayerFromServer(player, reason, duration, banner)
+    player:banPlayer(reason, duration, banner)
+    print("Player " .. player:Name() .. " has been banned")
+end
+
+concommand.Add("ban_player", function(ply, cmd, args)
+    local target = ply:getTracedEntity()
+    if IsValid(target) and target:IsPlayer() then
+        local reason = args[1] or "No reason provided"
+        local duration = tonumber(args[2]) or 0
+        banPlayerFromServer(target, reason, duration, ply)
+    end
+end)
+```
+
+---
+
+### setAction
+
+**Purpose**
+
+Sets an action bar for the player with optional callback.
+
+**Parameters**
+
+* `text` (*string|nil*): The action text to display, or nil to clear.
+* `time` (*number|nil*): The duration of the action (default: 5).
+* `callback` (*function|nil*): Function to call when the action completes.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setPlayerAction(player, text, time, callback)
+    player:setAction(text, time, callback)
+    player:ChatPrint("Action set: " .. (text or "cleared"))
+end
+
+concommand.Add("set_action", function(ply, cmd, args)
+    local text = args[1] or "Default Action"
+    local time = tonumber(args[2]) or 5
+    setPlayerAction(ply, text, time, function()
+        ply:ChatPrint("Action completed!")
+    end)
+end)
+```
+
+---
+
+### doStaredAction
+
+**Purpose**
+
+Performs an action that requires the player to stare at an entity.
+
+**Parameters**
+
+* `entity` (*Entity*): The entity to stare at.
+* `callback` (*function|nil*): Function to call when the action completes.
+* `time` (*number|nil*): The duration of the action.
+* `onCancel` (*function|nil*): Function to call if the action is cancelled.
+* `distance` (*number|nil*): Maximum distance to maintain (default: 96).
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function doPlayerStaredAction(player, entity, time, callback)
+    player:doStaredAction(entity, callback, time, function()
+        player:ChatPrint("Action cancelled - look away!")
+    end)
+    player:ChatPrint("Stare at the entity for " .. time .. " seconds")
+end
+
+concommand.Add("stare_action", function(ply, cmd, args)
+    local entity = ply:getTracedEntity()
+    local time = tonumber(args[1]) or 3
+    if IsValid(entity) then
+        doPlayerStaredAction(ply, entity, time, function()
+            ply:ChatPrint("Stared action completed!")
+        end)
+    end
+end)
+```
+
+---
+
+### stopAction
+
+**Purpose**
+
+Stops any current action or stared action.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function stopPlayerAction(player)
+    player:stopAction()
+    player:ChatPrint("Action stopped!")
+end
+
+concommand.Add("stop_action", function(ply)
+    stopPlayerAction(ply)
+end)
+```
+
+---
+
+### requestDropdown
+
+**Purpose**
+
+Shows a dropdown menu to the player and handles the response.
+
+**Parameters**
+
+* `title` (*string*): The title of the dropdown.
+* `subTitle` (*string*): The subtitle of the dropdown.
+* `options` (*table*): Array of options to display.
+* `callback` (*function*): Function to call with the selected option.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function showPlayerDropdown(player, title, options, callback)
+    player:requestDropdown(title, "Choose an option:", options, callback)
+end
+
+concommand.Add("show_dropdown", function(ply)
+    local options = {"Option 1", "Option 2", "Option 3"}
+    showPlayerDropdown(ply, "Test Dropdown", options, function(selected)
+        ply:ChatPrint("You selected: " .. selected)
+    end)
+end)
+```
+
+---
+
+### requestOptions
+
+**Purpose**
+
+Shows a multi-select options menu to the player.
+
+**Parameters**
+
+* `title` (*string*): The title of the options menu.
+* `subTitle` (*string*): The subtitle of the options menu.
+* `options` (*table*): Array of options to display.
+* `limit` (*number|nil*): Maximum number of selections allowed (default: 1).
+* `callback` (*function*): Function to call with the selected options.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function showPlayerOptions(player, title, options, limit, callback)
+    player:requestOptions(title, "Choose options:", options, limit, callback)
+end
+
+concommand.Add("show_options", function(ply, cmd, args)
+    local options = {"Option A", "Option B", "Option C", "Option D"}
+    local limit = tonumber(args[1]) or 2
+    showPlayerOptions(ply, "Multi-Select", options, limit, function(selected)
+        ply:ChatPrint("You selected: " .. table.concat(selected, ", "))
+    end)
+end)
+```
+
+---
+
+### requestString
+
+**Purpose**
+
+Shows a string input dialog to the player.
+
+**Parameters**
+
+* `title` (*string*): The title of the input dialog.
+* `subTitle` (*string*): The subtitle of the input dialog.
+* `callback` (*function*): Function to call with the input string.
+* `default` (*string|nil*): Default value for the input.
+
+**Returns**
+
+* `deferred` (*Deferred|nil*): Deferred object if callback is not provided.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function requestPlayerString(player, title, callback, default)
+    player:requestString(title, "Enter your input:", callback, default)
+end
+
+concommand.Add("request_string", function(ply)
+    requestPlayerString(ply, "Test Input", function(input)
+        ply:ChatPrint("You entered: " .. input)
+    end, "Default text")
+end)
+```
+
+---
+
+### requestArguments
+
+**Purpose**
+
+Shows an arguments input dialog to the player.
+
+**Parameters**
+
+* `title` (*string*): The title of the arguments dialog.
+* `argTypes` (*table*): Array of argument type specifications.
+* `callback` (*function*): Function to call with the parsed arguments.
+
+**Returns**
+
+* `deferred` (*Deferred|nil*): Deferred object if callback is not provided.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function requestPlayerArguments(player, title, argTypes, callback)
+    player:requestArguments(title, argTypes, callback)
+end
+
+concommand.Add("request_args", function(ply)
+    local argTypes = {
+        {type = "string", name = "Name", desc = "Enter a name"},
+        {type = "number", name = "Age", desc = "Enter your age"},
+        {type = "boolean", name = "Active", desc = "Are you active?"}
+    }
+    requestPlayerArguments(ply, "Test Arguments", argTypes, function(args)
+        ply:ChatPrint("Arguments: " .. util.TableToJSON(args))
+    end)
+end)
+```
+
+---
+
+### binaryQuestion
+
+**Purpose**
+
+Shows a yes/no question dialog to the player.
+
+**Parameters**
+
+* `question` (*string*): The question to ask.
+* `option1` (*string*): The first option (usually "Yes").
+* `option2` (*string*): The second option (usually "No").
+* `manualDismiss` (*boolean|nil*): Whether the dialog can be manually dismissed.
+* `callback` (*function*): Function to call with the selected option.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function askPlayerQuestion(player, question, option1, option2, callback)
+    player:binaryQuestion(question, option1, option2, false, callback)
+end
+
+concommand.Add("ask_question", function(ply)
+    askPlayerQuestion(ply, "Do you want to continue?", "Yes", "No", function(choice)
+        ply:ChatPrint("You chose: " .. choice)
+    end)
+end)
+```
+
+---
+
+### requestButtons
+
+**Purpose**
+
+Shows a custom button menu to the player.
+
+**Parameters**
+
+* `title` (*string*): The title of the button menu.
+* `buttons` (*table*): Array of button data tables with 'text' and 'callback' fields.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function showPlayerButtons(player, title, buttons)
+    player:requestButtons(title, buttons)
+end
+
+concommand.Add("show_buttons", function(ply)
+    local buttons = {
+        {text = "Button 1", callback = function() ply:ChatPrint("Button 1 pressed!") end},
+        {text = "Button 2", callback = function() ply:ChatPrint("Button 2 pressed!") end},
+        {text = "Button 3", callback = function() ply:ChatPrint("Button 3 pressed!") end}
+    }
+    showPlayerButtons(ply, "Test Buttons", buttons)
+end)
+```
+
+---
+
+### getSessionTime
+
+**Purpose**
+
+Gets the player's current session time in seconds.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `sessionTime` (*number*): The current session time in seconds.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displaySessionTime(player)
+    local sessionTime = player:getSessionTime()
+    local hours = math.floor(sessionTime / 3600)
+    local minutes = math.floor((sessionTime % 3600) / 60)
+    player:ChatPrint("Session time: " .. hours .. "h " .. minutes .. "m")
+    return sessionTime
+end
+
+concommand.Add("session_time", function(ply)
+    displaySessionTime(ply)
+end)
+```
+
+---
+
+### getTotalOnlineTime
+
+**Purpose**
+
+Gets the player's total online time including current session.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `totalTime` (*number*): The total online time in seconds.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displayTotalTime(player)
+    local totalTime = player:getTotalOnlineTime()
+    local hours = math.floor(totalTime / 3600)
+    local minutes = math.floor((totalTime % 3600) / 60)
+    player:ChatPrint("Total online time: " .. hours .. "h " .. minutes .. "m")
+    return totalTime
+end
+
+concommand.Add("total_time", function(ply)
+    displayTotalTime(ply)
+end)
+```
+
+---
+
+### getLastOnline
+
+**Purpose**
+
+Gets the time since the player was last online.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `timeSince` (*string*): Human-readable time since last online.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displayLastOnline(player)
+    local timeSince = player:getLastOnline()
+    player:ChatPrint("Last online: " .. timeSince .. " ago")
+    return timeSince
+end
+
+concommand.Add("last_online", function(ply)
+    displayLastOnline(ply)
+end)
+```
+
+---
+
+### getLastOnlineTime
+
+**Purpose**
+
+Gets the timestamp of when the player was last online.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `timestamp` (*number*): Unix timestamp of last online time.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displayLastOnlineTime(player)
+    local timestamp = player:getLastOnlineTime()
+    local date = os.date("%Y-%m-%d %H:%M:%S", timestamp)
+    player:ChatPrint("Last online timestamp: " .. date)
+    return timestamp
+end
+
+concommand.Add("last_online_time", function(ply)
+    displayLastOnlineTime(ply)
+end)
+```
+
+---
+
+### CanOverrideView
+
+**Purpose**
+
+Checks if the player can override their view (for third-person mode).
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `canOverride` (*boolean*): True if the player can override their view.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+local function checkViewOverride(player)
+    if player:CanOverrideView() then
+        player:ChatPrint("You can override your view!")
+        return true
+    else
+        player:ChatPrint("You cannot override your view.")
+        return false
+    end
+end
+
+concommand.Add("check_view_override", function(ply)
+    checkViewOverride(ply)
+end)
+```
+
+---
+
+### IsInThirdPerson
+
+**Purpose**
+
+Checks if the player is currently in third-person mode.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `isThirdPerson` (*boolean*): True if the player is in third-person mode.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+local function checkThirdPerson(player)
+    if player:IsInThirdPerson() then
+        player:ChatPrint("You are in third-person mode!")
+        return true
+    else
+        player:ChatPrint("You are in first-person mode.")
+        return false
+    end
+end
+
+concommand.Add("check_third_person", function(ply)
+    checkThirdPerson(ply)
+end)
+```
+
+---
+
+### syncVars
+
+**Purpose**
+
+Synchronizes all network variables to the player.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function syncPlayerVars(player)
+    player:syncVars()
+    player:ChatPrint("Network variables synchronized!")
+end
+
+concommand.Add("sync_vars", function(ply)
+    syncPlayerVars(ply)
+end)
+```
+
+---
+
+### setLocalVar
+
+**Purpose**
+
+Sets a local variable for the player (client-side only).
+
+**Parameters**
+
+* `key` (*string*): The variable key to set.
+* `value` (*any*): The value to set.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setPlayerLocalVar(player, key, value)
+    player:setLocalVar(key, value)
+    player:ChatPrint("Set local variable " .. key .. " to " .. tostring(value))
+end
+
+concommand.Add("set_local_var", function(ply, cmd, args)
+    local key = args[1]
+    local value = args[2]
+    if key and value then
+        setPlayerLocalVar(ply, key, value)
+    end
+end)
+```
+
+---
+
+### playTimeGreaterThan
+
+**Purpose**
+
+Checks if the player's play time is greater than a specified amount.
+
+**Parameters**
+
+* `time` (*number*): The time in seconds to compare against.
+
+**Returns**
+
+* `isGreater* (*boolean*): True if play time is greater than the specified time.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function checkPlayTimeRequirement(player, requiredTime)
+    if player:playTimeGreaterThan(requiredTime) then
+        player:ChatPrint("You meet the play time requirement!")
+        return true
+    else
+        player:ChatPrint("You need more play time.")
+        return false
+    end
+end
+
+concommand.Add("check_playtime_req", function(ply, cmd, args)
+    local requiredTime = tonumber(args[1]) or 3600 -- 1 hour default
+    checkPlayTimeRequirement(ply, requiredTime)
+end)
+```
+
+---
+
+### createRagdoll
+
+**Purpose**
+
+Creates a ragdoll entity for the player.
+
+**Parameters**
+
+* `freeze` (*boolean|nil*): Whether to freeze the ragdoll physics.
+* `isDead` (*boolean|nil*): Whether the player is dead (sets ragdoll as active).
+
+**Returns**
+
+* `ragdoll` (*Entity*): The created ragdoll entity.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function createPlayerRagdoll(player, freeze, isDead)
+    local ragdoll = player:createRagdoll(freeze, isDead)
+    if IsValid(ragdoll) then
+        player:ChatPrint("Ragdoll created!")
+        return ragdoll
+    else
+        player:ChatPrint("Failed to create ragdoll.")
+        return nil
+    end
+end
+
+concommand.Add("create_ragdoll", function(ply, cmd, args)
+    local freeze = tobool(args[1])
+    local isDead = tobool(args[2])
+    createPlayerRagdoll(ply, freeze, isDead)
+end)
+```
+
+---
+
+### setRagdolled
+
+**Purpose**
+
+Sets the player's ragdoll state.
+
+**Parameters**
+
+* `state` (*boolean*): Whether to ragdoll the player.
+* `baseTime` (*number|nil*): Base time for the ragdoll duration.
+* `getUpGrace` (*number|nil*): Grace period before allowing get up.
+* `getUpMessage` (*string|nil*): Message to display during get up.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function setPlayerRagdolled(player, state, time, grace, message)
+    player:setRagdolled(state, time, grace, message)
+    local status = state and "ragdolled" or "unragdolled"
+    player:ChatPrint("Player " .. status .. "!")
+end
+
+concommand.Add("set_ragdolled", function(ply, cmd, args)
+    local state = tobool(args[1])
+    local time = tonumber(args[2]) or 10
+    local grace = tonumber(args[3]) or 2
+    local message = args[4] or "Getting up..."
+    setPlayerRagdolled(ply, state, time, grace, message)
 end)
 ```
 

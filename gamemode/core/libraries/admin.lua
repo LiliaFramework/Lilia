@@ -548,12 +548,12 @@ if SERVER then
         local function push(ply)
             if not IsValid(ply) then return end
             if not lia.net.ready[ply] then return end
-            lia.net.writeBigTable(ply, "updateAdminPrivileges", {
+            lia.net.writeBigTable(ply, "liaUpdateAdminPrivileges", {
                 privileges = lia.administrator.privileges or {},
                 names = lia.administrator.privilegeNames or {}
             })
 
-            timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminGroups", lia.administrator.groups or {}) end end)
+            timer.Simple(0.05, function() if IsValid(ply) and lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.administrator.groups or {}) end end)
         end
 
         if c and IsValid(c) then
@@ -793,14 +793,14 @@ if SERVER then
             }, nil, "staffactions")
             return true
         elseif cmd == "blind" then
-            net.Start("blindTarget")
+            net.Start("liaBlindTarget")
             net.WriteBool(true)
             net.Send(target)
             local duration = dur or 0
             if duration > 0 then
                 timer.Create("liaBlind" .. target:SteamID(), duration, 1, function()
                     if IsValid(target) then
-                        net.Start("blindTarget")
+                        net.Start("liaBlindTarget")
                         net.WriteBool(false)
                         net.Send(target)
                     end
@@ -819,7 +819,7 @@ if SERVER then
             }, nil, "staffactions")
             return true
         elseif cmd == "unblind" then
-            net.Start("blindTarget")
+            net.Start("liaBlindTarget")
             net.WriteBool(false)
             net.Send(target)
             lia.log.add(admin, "plyUnblind", target:Name())
@@ -953,7 +953,7 @@ if SERVER then
 
         local players = player.GetHumans()
         for _, ply in ipairs(players) do
-            if lia.net.ready[ply] then lia.net.writeBigTable(ply, "updateAdminGroups", lia.administrator.groups or {}) end
+            if lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.administrator.groups or {}) end
         end
     end
 
@@ -1303,12 +1303,12 @@ else
         end
     end
 
-    lia.net.readBigTable("updateAdminGroups", function(tbl)
+    lia.net.readBigTable("liaUpdateAdminGroups", function(tbl)
         lia.administrator.groups = tbl
         if IsValid(lia.gui.usergroups) then buildGroupsUI(lia.gui.usergroups, tbl) end
     end)
 
-    lia.net.readBigTable("updateAdminPrivileges", function(tbl)
+    lia.net.readBigTable("liaUpdateAdminPrivileges", function(tbl)
         if tbl and tbl.privileges then
             lia.administrator.privileges = tbl.privileges
             lia.administrator.privilegeNames = tbl.names or {}

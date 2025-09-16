@@ -1,5 +1,5 @@
 ﻿function MODULE:PlayerDeath(client)
-    net.Start("removeF1")
+    net.Start("liaRemoveFOne")
     net.Send(client)
 end
 

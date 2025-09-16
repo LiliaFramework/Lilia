@@ -303,7 +303,7 @@ function MODULE:PlayerInitialSpawn(client)
     client.VerifyCheatsPending = true
     local timerName = "liaVerifyCheats:" .. client:SteamID64()
     client.VerifyCheatsTimer = timerName
-    net.Start("VerifyCheats")
+    net.Start("liaVerifyCheats")
     net.Send(client)
     timer.Create(timerName, 10, 1, function()
         if IsValid(client) and client.VerifyCheatsPending then

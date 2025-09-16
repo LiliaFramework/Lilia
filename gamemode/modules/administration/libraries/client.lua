@@ -522,13 +522,13 @@ function MODULE:PopulateAdminTabs(pages)
     end
 
     if client:hasPrivilege("manageCharacters") then
-        net.Start("liaRequestPKsCount")
+        net.Start("liaRequestPksCount")
         net.SendToServer()
     end
 end
 
 local pksTabAdded = false
-net.Receive("liaPKsCount", function()
+net.Receive("liaPksCount", function()
     local count = net.ReadInt(32)
     if count > 0 and not pksTabAdded then
         pksTabAdded = true
@@ -540,7 +540,7 @@ net.Receive("liaPKsCount", function()
                 icon = "icon16/lightning.png",
                 drawFunc = function(panel)
                     panelRef = panel
-                    net.Start("liaRequestAllPKs")
+                    net.Start("liaRequestAllPks")
                     net.SendToServer()
                 end
             })

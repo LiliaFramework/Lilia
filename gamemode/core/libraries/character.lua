@@ -114,7 +114,7 @@ function lia.char.registerVar(key, data)
                 self.vars[key] = value
                 local player = self:getPlayer()
                 if player and IsValid(player) and player:IsPlayer() then
-                    net.Start("charSet")
+                    net.Start("liaCharSet")
                     net.WriteString(key)
                     net.WriteType(value)
                     net.WriteType(sendID and self:getID() or nil)
@@ -127,7 +127,7 @@ function lia.char.registerVar(key, data)
             characterMeta["set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
-                net.Start("charSet")
+                net.Start("liaCharSet")
                 net.WriteString(key)
                 net.WriteType(value)
                 net.WriteType(self:getID())
@@ -226,7 +226,7 @@ lia.char.registerVar("model", {
         local client = character:getPlayer()
         if IsValid(client) and client:getChar() == character then client:SetModel(value) end
         character.vars.model = value
-        net.Start("charSet")
+        net.Start("liaCharSet")
         net.WriteString("model")
         net.WriteType(character.vars.model)
         net.WriteType(character:getID())
@@ -284,7 +284,7 @@ lia.char.registerVar("skin", {
         character.vars.skin = value
         local client = character:getPlayer()
         if IsValid(client) and client:getChar() == character then client:SetSkin(value) end
-        net.Start("charSet")
+        net.Start("liaCharSet")
         net.WriteString("skin")
         net.WriteType(character.vars.skin)
         net.WriteType(character:getID())
@@ -310,7 +310,7 @@ lia.char.registerVar("bodygroups", {
             end
         end
 
-        net.Start("charSet")
+        net.Start("liaCharSet")
         net.WriteString("bodygroups")
         net.WriteType(character.vars.bodygroups)
         net.WriteType(character:getID())
@@ -339,7 +339,7 @@ lia.char.registerVar("faction", {
         local client = character:getPlayer()
         client:SetTeam(value)
         character.vars.faction = faction.uniqueID
-        net.Start("charSet")
+        net.Start("liaCharSet")
         net.WriteString("faction")
         net.WriteType(character.vars.faction)
         net.WriteType(character:getID())
@@ -409,7 +409,7 @@ lia.char.registerVar("var", {
                 id = character:getID()
             end
 
-            net.Start("charVar")
+            net.Start("liaCharVar")
             net.WriteString(key)
             net.WriteType(value)
             net.WriteType(id)
@@ -762,7 +762,7 @@ if SERVER then
             client:KillSilent()
             client:setNetVar("char", nil)
             client:Spawn()
-            net.Start("charKick")
+            net.Start("liaCharKick")
             net.WriteType(nil)
             net.WriteBool(true)
             net.Send(client)
@@ -802,9 +802,9 @@ if SERVER then
 
         hook.Run("OnCharDelete", client, id)
         if IsValid(client) and client:getChar() and client:getChar():getID() == id then
-            net.Start("removeF1")
+            net.Start("liaRemoveFOne")
             net.Send(client)
-            net.Start("charKick")
+            net.Start("liaCharKick")
             net.WriteUInt(id, 32)
             net.WriteBool(true)
             net.Send(client)

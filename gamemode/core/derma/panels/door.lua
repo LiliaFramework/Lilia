@@ -16,7 +16,7 @@ function PANEL:Init()
         local accessData = self.accessData
         local door = self.door
         local function sendPerm(level)
-            net.Start("doorPerm")
+            net.Start("liaDoorPerm")
             net.WriteEntity(door)
             net.WriteEntity(ply)
             net.WriteUInt(level, 2)

@@ -69,7 +69,7 @@ lia.command.add("clearchat", {
     adminOnly = true,
     desc = "clearChatCommandDesc",
     onRun = function(client)
-        net.Start("RegenChat")
+        net.Start("liaRegenChat")
         net.Broadcast()
         lia.log.add(client, "clearChat")
     end

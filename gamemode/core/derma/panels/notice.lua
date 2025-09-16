@@ -1,5 +1,4 @@
-﻿local NotificationMaxWidth = 450
-local NotificationHeight = 54
+﻿local NotificationHeight = 54
 local NotificationPadding = 18
 local NotificationLifetime = 6
 local NotificationFadeoutTime = 1
@@ -42,15 +41,18 @@ end
 function PANEL:RecalcSize()
     self.scale = ScrH() / 1080
     surface.SetFont("liaSmallFont")
-    local tw, th = surface.GetTextSize(self.msg or "")
-    local minWidth = 200 * self.scale
-    local maxWidth = NotificationMaxWidth * self.scale
-    local extraSpacing = 20 * self.scale
-    local textAreaWidth = tw + (NotificationPadding * 2) + (24 * self.scale) + extraSpacing
-    local w = math.Clamp(textAreaWidth, minWidth, maxWidth)
+    local msg = self.msg or ""
+    local tw, th = surface.GetTextSize(msg)
+    if tw == 0 or th == 0 then tw, th = surface.GetTextSize(" ") end
+    local minWidth = 300 * self.scale
+    local extraSpacing = 40 * self.scale
+    local iconWidth = 24 * self.scale
+    local textPadding = math.min(60 * self.scale, tw * 0.1)
+    local requiredWidth = tw + (NotificationPadding * 2) + iconWidth + extraSpacing + textPadding
+    local w = math.max(requiredWidth, minWidth)
     local h = math.max(NotificationHeight * self.scale, th + NotificationPadding * self.scale)
     self:SetSize(w, h)
-    self.iconSize = 24 * self.scale
+    self.iconSize = iconWidth
     self.padding = NotificationPadding * self.scale
     self.baseX = 32 * self.scale
 end
@@ -58,6 +60,7 @@ end
 function PANEL:SetText(t)
     self.msg = tostring(t or "")
     self:RecalcSize()
+    self:InvalidateLayout(true)
 end
 
 function PANEL:SetType(t)

@@ -8,7 +8,7 @@ function MODULE:VendorExited()
     if IsValid(lia.gui.vendor) then lia.gui.vendor:Remove() end
 end
 
-net.Receive("VendorSync", function()
+net.Receive("liaVendorSync", function()
     local vendor = net.ReadEntity()
     if not IsValid(vendor) then return end
     local count = net.ReadUInt(16)
@@ -34,7 +34,7 @@ net.Receive("VendorSync", function()
     hook.Run("VendorSynchronized", vendor)
 end)
 
-net.Receive("VendorOpen", function()
+net.Receive("liaVendorOpen", function()
     local vendor = net.ReadEntity()
     if IsValid(vendor) then
         liaVendorEnt = vendor
@@ -42,12 +42,12 @@ net.Receive("VendorOpen", function()
     end
 end)
 
-net.Receive("VendorExit", function()
+net.Receive("liaVendorExit", function()
     liaVendorEnt = nil
     hook.Run("VendorExited")
 end)
 
-net.Receive("VendorEdit", function()
+net.Receive("liaVendorEdit", function()
     local key = net.ReadString()
     timer.Simple(0.25, function()
         if not IsValid(liaVendorEnt) then return end
@@ -55,12 +55,12 @@ net.Receive("VendorEdit", function()
     end)
 end)
 
-net.Receive("VendorFaction", function()
+net.Receive("liaVendorFaction", function()
     local factionID = net.ReadUInt(8)
     if IsValid(liaVendorEnt) then liaVendorEnt.factions[factionID] = true end
 end)
 
-net.Receive("VendorPrice", function()
+net.Receive("liaVendorPrice", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
@@ -71,7 +71,7 @@ net.Receive("VendorPrice", function()
     hook.Run("VendorItemPriceUpdated", vendor, itemType, value)
 end)
 
-net.Receive("VendorMode", function()
+net.Receive("liaVendorMode", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
@@ -82,7 +82,7 @@ net.Receive("VendorMode", function()
     hook.Run("VendorItemModeUpdated", vendor, itemType, value)
 end)
 
-net.Receive("VendorStock", function()
+net.Receive("liaVendorStock", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
@@ -92,7 +92,7 @@ net.Receive("VendorStock", function()
     hook.Run("VendorItemStockUpdated", vendor, itemType, value)
 end)
 
-net.Receive("VendorMaxStock", function()
+net.Receive("liaVendorMaxStock", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
@@ -103,7 +103,7 @@ net.Receive("VendorMaxStock", function()
     hook.Run("VendorItemMaxStockUpdated", vendor, itemType, value)
 end)
 
-net.Receive("VendorAllowFaction", function()
+net.Receive("liaVendorAllowFaction", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local id = net.ReadUInt(8)
@@ -117,7 +117,7 @@ net.Receive("VendorAllowFaction", function()
     hook.Run("VendorFactionUpdated", vendor, id, allowed)
 end)
 
-net.Receive("VendorAllowClass", function()
+net.Receive("liaVendorAllowClass", function()
     if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local id = net.ReadUInt(8)

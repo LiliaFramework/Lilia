@@ -98,14 +98,14 @@ function MODULE:TicketFrame(requester, message, claimed)
                 chat.AddText(Color(255, 150, 0), "[" .. L("error") .. "] " .. L("caseAlreadyClaimed"))
                 surface.PlaySound("common/wpn_denyselect.wav")
             else
-                net.Start("TicketSystemClaim")
+                net.Start("liaTicketSystemClaim")
                 net.WriteEntity(requester)
                 net.SendToServer()
                 shouldClose = true
                 claimButton:SetText("          " .. L("closeCase"))
             end
         else
-            net.Start("TicketSystemClose")
+            net.Start("liaTicketSystemClose")
             net.WriteEntity(requester)
             net.SendToServer()
         end

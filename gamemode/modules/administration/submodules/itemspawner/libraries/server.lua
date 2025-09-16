@@ -25,7 +25,7 @@ local function tryFixPropPosition(client, ent)
     fixupProp(client, ent, Vector(0, 0, m.z), Vector(0, 0, M.z))
 end
 
-net.Receive("SpawnMenuSpawnItem", function(_, client)
+net.Receive("liaSpawnMenuSpawnItem", function(_, client)
     local id = net.ReadString()
     if not IsValid(client) or not id or not client:hasPrivilege("canUseItemSpawner") then return end
     local startPos, dir = client:EyePos(), client:GetAimVector()
@@ -57,7 +57,7 @@ net.Receive("SpawnMenuSpawnItem", function(_, client)
     end, angle_zero, {})
 end)
 
-net.Receive("SpawnMenuGiveItem", function(_, client)
+net.Receive("liaSpawnMenuGiveItem", function(_, client)
     local id, targetID = net.ReadString(), net.ReadString()
     if not IsValid(client) then return end
     if not id then return end

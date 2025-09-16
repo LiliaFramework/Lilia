@@ -257,7 +257,7 @@ function PANEL:createStartButton()
                 if lia.workshop and lia.workshop.mountContent then
                     lia.workshop.mountContent()
                 else
-                    net.Start("WorkshopDownloader_Request")
+                    net.Start("liaWorkshopDownloaderRequest")
                     net.SendToServer()
                 end
             end

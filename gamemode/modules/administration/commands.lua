@@ -56,7 +56,7 @@ lia.command.add("managesitrooms", {
     onRun = function(client)
         if not client:hasPrivilege("manageSitRooms") then return end
         local rooms = lia.data.get("sitrooms", {})
-        net.Start("managesitrooms")
+        net.Start("liaManagesitrooms")
         net.WriteTable(rooms)
         net.Send(client)
     end
@@ -337,7 +337,7 @@ lia.command.add("charlist", {
             end
 
             sendData = sanitizeForNet(sendData)
-            net.Start("DisplayCharList")
+            net.Start("liaDisplayCharList")
             net.WriteTable(sendData)
             net.WriteString(steamID)
             net.Send(client)
@@ -534,7 +534,7 @@ lia.command.add("plyblindfade", {
             local fadeOut = tonumber(arguments[5])
             fadeIn = fadeIn or duration * 0.05
             fadeOut = fadeOut or duration * 0.05
-            net.Start("blindFade")
+            net.Start("liaBlindFade")
             net.WriteBool(colorName == "white")
             net.WriteFloat(duration)
             net.WriteFloat(fadeIn)
@@ -578,7 +578,7 @@ lia.command.add("blindfadeall", {
         local isWhite = colorName == "white"
         for _, ply in player.Iterator() do
             if not ply:isStaffOnDuty() then
-                net.Start("blindFade")
+                net.Start("liaBlindFade")
                 net.WriteBool(isWhite)
                 net.WriteFloat(duration)
                 net.WriteFloat(fadeIn)
@@ -1185,7 +1185,7 @@ lia.command.add("checkinventory", {
         inventory:addAccessRule(function(_, action, _) return action == "transfer" end, 1)
         inventory:addAccessRule(function(_, action, _) return action == "repl" end, 1)
         inventory:sync(client)
-        net.Start("OpenInvMenu")
+        net.Start("liaOpenInvMenu")
         net.WriteEntity(target)
         net.WriteType(inventory:getID())
         net.Send(client)

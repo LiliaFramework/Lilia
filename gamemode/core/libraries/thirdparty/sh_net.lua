@@ -359,7 +359,7 @@ if SERVER then
         local dataTable = {...}
         local encodedData = pon.encode(dataTable)
         if encodedData and #encodedData > 0 and bShouldSend then
-            net.Start("NetStreamDS")
+            net.Start("liaNetStreamData")
             net.WriteString(name)
             net.WriteUInt(#encodedData, 32)
             net.WriteData(encodedData, #encodedData)
@@ -371,7 +371,7 @@ if SERVER then
         end
     end
 
-    net.Receive("NetStreamDS", function(_, player)
+    net.Receive("liaNetStreamData", function(_, player)
         local NS_DS_NAME = net.ReadString()
         local NS_DS_LENGTH = net.ReadUInt(32)
         local NS_DS_DATA = net.ReadData(NS_DS_LENGTH)
@@ -399,7 +399,7 @@ else
         local dataTable = {...}
         local encodedData = pon.encode(dataTable)
         if encodedData and #encodedData > 0 then
-            net.Start("NetStreamDS")
+            net.Start("liaNetStreamData")
             net.WriteString(name)
             net.WriteUInt(#encodedData, 32)
             net.WriteData(encodedData, #encodedData)
@@ -407,7 +407,7 @@ else
         end
     end
 
-    net.Receive("NetStreamDS", function()
+    net.Receive("liaNetStreamData", function()
         local NS_DS_NAME = net.ReadString()
         local NS_DS_LENGTH = net.ReadUInt(32)
         local NS_DS_DATA = net.ReadData(NS_DS_LENGTH)

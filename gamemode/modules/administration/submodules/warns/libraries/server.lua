@@ -31,7 +31,7 @@ function MODULE:RemoveWarning(charID, index)
     return d
 end
 
-net.Receive("RequestRemoveWarning", function(_, client)
+net.Receive("liaRequestRemoveWarning", function(_, client)
     if not client:hasPrivilege("canRemoveWarns") then return end
     local charID = net.ReadInt(32)
     local rowData = net.ReadTable()

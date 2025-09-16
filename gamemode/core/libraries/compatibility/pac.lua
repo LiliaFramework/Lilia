@@ -5,13 +5,13 @@ end
 
 if SERVER then
     function playerMeta:syncParts()
-        net.Start("liaPACSync")
+        net.Start("liaPacSync")
         net.Send(self)
     end
 
     function playerMeta:addPart(partID)
         if self:getParts()[partID] then return end
-        net.Start("liaPACPartAdd")
+        net.Start("liaPacPartAdd")
         net.WriteEntity(self)
         net.WriteString(partID)
         net.Broadcast()
@@ -21,7 +21,7 @@ if SERVER then
     end
 
     function playerMeta:removePart(partID)
-        net.Start("liaPACPartRemove")
+        net.Start("liaPacPartRemove")
         net.WriteEntity(self)
         net.WriteString(partID)
         net.Broadcast()
@@ -31,7 +31,7 @@ if SERVER then
     end
 
     function playerMeta:resetParts()
-        net.Start("liaPACPartReset")
+        net.Start("liaPacPartReset")
         net.WriteEntity(self)
         net.Broadcast()
         self:setNetVar("parts", {})
@@ -161,7 +161,7 @@ else
     end)
 end
 
-net.Receive("liaPACSync", function()
+net.Receive("liaPacSync", function()
     for _, client in player.Iterator() do
         for id in pairs(client:getParts()) do
             hook.Run("attachPart", client, id)
@@ -169,21 +169,21 @@ net.Receive("liaPACSync", function()
     end
 end)
 
-net.Receive("liaPACPartAdd", function()
+net.Receive("liaPacPartAdd", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
     hook.Run("attachPart", client, id)
 end)
 
-net.Receive("liaPACPartRemove", function()
+net.Receive("liaPacPartRemove", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
     hook.Run("removePart", client, id)
 end)
 
-net.Receive("liaPACPartReset", function()
+net.Receive("liaPacPartReset", function()
     local client = net.ReadEntity()
     if not IsValid(client) or not client.RemovePACPart then return end
     if client.liaPACParts then

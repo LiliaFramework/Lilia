@@ -298,6 +298,42 @@ local function deleteDirectoryRecursive(dir)
     end
 end
 
+concommand.Add("lia_cleanup_images", function()
+    local files = findImagesRecursive(baseDir)
+    local removedCount = 0
+    for _, filePath in ipairs(files) do
+        local fileData = file.Read(filePath, "DATA")
+        if fileData then
+            local isValid = false
+            if string.lower(string.sub(fileData, 2, 4)) == "png" then
+                isValid = true
+            elseif string.lower(string.sub(fileData, 7, 10)) == "jfif" or string.lower(string.sub(fileData, 7, 10)) == "exif" then
+                isValid = true
+            end
+
+            if not isValid then
+                file.Delete(filePath)
+                removedCount = removedCount + 1
+                print(string.format("[WebImage] Removed corrupted file: %s", filePath:sub(#baseDir + 1)))
+            end
+        else
+            file.Delete(filePath)
+            removedCount = removedCount + 1
+            print(string.format("[WebImage] Removed unreadable file: %s", filePath:sub(#baseDir + 1)))
+        end
+    end
+
+    for fileName, _ in pairs(cache) do
+        local savePath = baseDir .. fileName
+        if not file.Exists(savePath, "DATA") then
+            cache[fileName] = nil
+            print(string.format("[WebImage] Removed from cache: %s", fileName))
+        end
+    end
+
+    print(string.format("[WebImage] Cleanup complete: %d files removed", removedCount))
+end)
+
 concommand.Add("lia_wipewebimages", function()
     deleteDirectoryRecursive(baseDir)
     cache = {}

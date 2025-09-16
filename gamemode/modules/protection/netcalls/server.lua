@@ -547,7 +547,7 @@ function MODULE:InitializedModules()
     end
 end
 
-net.Receive("CheckSeed", function(_, client)
+net.Receive("liaCheckSeed", function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
         lia.notifyAdmin(L("steamIDMissing", client:Name(), client:SteamID()))
@@ -561,7 +561,7 @@ net.Receive("CheckSeed", function(_, client)
     end
 end)
 
-net.Receive("CheckHack", function(_, client)
+net.Receive("liaCheckHack", function(_, client)
     lia.log.add(client, "hackAttempt", "CheckHack")
     local override = hook.Run("PlayerCheatDetected", client)
     client:setNetVar("cheater", true)
@@ -570,7 +570,7 @@ net.Receive("CheckHack", function(_, client)
     if override ~= true then lia.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
 end)
 
-net.Receive("VerifyCheatsResponse", function(_, client)
+net.Receive("liaVerifyCheatsResponse", function(_, client)
     lia.log.add(client, "verifyCheatsOK")
     client.VerifyCheatsPending = nil
     if client.VerifyCheatsTimer then

@@ -45,7 +45,7 @@ function MODULE:ShouldAllowScoreboardOverride(client, var)
     return isRecognitionEnabled and isVarHiddenInScoreboard and isNotRecognized
 end
 
-net.Receive("rgnDone", function()
+net.Receive("liaRgnDone", function()
     local client = LocalPlayer()
     hook.Run("OnCharRecognized", client, client:getChar():getID())
 end)

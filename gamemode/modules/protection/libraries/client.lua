@@ -1729,7 +1729,7 @@ end
 
 local function VerifyCheats()
     local function flag()
-        net.Start("CheckHack")
+        net.Start("liaCheckHack")
         net.SendToServer()
     end
 
@@ -1775,7 +1775,7 @@ function MODULE:InitPostEntity()
     if not file.Exists("cache", "DATA") then file.CreateDir("cache") end
     local filename = "cache/icon32.png"
     if lia.config.get("AltsDisabled", false) and file.Exists(filename, "DATA") then
-        net.Start("CheckSeed")
+        net.Start("liaCheckSeed")
         net.WriteString(file.Read(filename, "DATA"))
         net.SendToServer()
     else
@@ -1917,8 +1917,8 @@ function MODULE:PopulateAdminTabs(pages)
     end
 end
 
-net.Receive("VerifyCheats", function()
+net.Receive("liaVerifyCheats", function()
     VerifyCheats()
-    net.Start("VerifyCheatsResponse")
+    net.Start("liaVerifyCheatsResponse")
     net.SendToServer()
 end)

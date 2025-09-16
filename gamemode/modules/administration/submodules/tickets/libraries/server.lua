@@ -125,7 +125,7 @@ end
 function MODULE:PlayerDisconnected(client)
     for _, v in player.Iterator() do
         if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
-            net.Start("TicketSystemClose")
+            net.Start("liaTicketSystemClose")
             net.WriteEntity(client)
             net.Send(v)
         end
@@ -137,7 +137,7 @@ end
 function MODULE:SendPopup(noob, message)
     for _, v in player.Iterator() do
         if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
-            net.Start("TicketSystem")
+            net.Start("liaTicketSystem")
             net.WriteEntity(noob)
             net.WriteString(message)
             net.WriteEntity(noob.CaseClaimed)

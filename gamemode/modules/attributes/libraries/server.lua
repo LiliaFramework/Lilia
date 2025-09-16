@@ -80,7 +80,7 @@ function MODULE:PlayerStaminaLost(client)
     end)
 end
 
-net.Receive("ChangeAttribute", function(_, client)
+net.Receive("liaChangeAttribute", function(_, client)
     if not client:hasPrivilege("manageAttributes") then return end
     local charID = net.ReadInt(32)
     local _ = net.ReadTable()

@@ -45,7 +45,7 @@ if SERVER then
 
     hook.Add("InitializedModules", "liaWorkshopInitializedModules", function() lia.workshop.cache = lia.workshop.gather() end)
     function lia.workshop.send(ply)
-        net.Start("WorkshopDownloader_Start")
+        net.Start("liaWorkshopDownloaderStart")
         net.WriteTable(lia.workshop.cache)
         net.Send(ply)
     end
@@ -53,14 +53,14 @@ if SERVER then
     hook.Add("PlayerInitialSpawn", "liaWorkshopInit", function(ply)
         timer.Simple(2, function()
             if IsValid(ply) then
-                net.Start("WorkshopDownloader_Info")
+                net.Start("liaWorkshopDownloaderInfo")
                 net.WriteTable(lia.workshop.cache or {})
                 net.Send(ply)
             end
         end)
     end)
 
-    net.Receive("WorkshopDownloader_Request", function(_, client) lia.workshop.send(client) end)
+    net.Receive("liaWorkshopDownloaderRequest", function(_, client) lia.workshop.send(client) end)
     lia.workshop.AddWorkshop("3527535922")
     resource.AddWorkshop = lia.workshop.AddWorkshop
 else
@@ -208,13 +208,13 @@ else
         end
     end
 
-    net.Receive("WorkshopDownloader_Start", function()
+    net.Receive("liaWorkshopDownloaderStart", function()
         refresh(net.ReadTable())
         buildQueue(true)
         start()
     end)
 
-    net.Receive("WorkshopDownloader_Info", function() refresh(net.ReadTable()) end)
+    net.Receive("liaWorkshopDownloaderInfo", function() refresh(net.ReadTable()) end)
     function lia.workshop.mountContent()
         local ids = lia.workshop.serverIds or {}
         local needed = {}
@@ -234,7 +234,7 @@ else
                 pending = pending - 1
                 if pending <= 0 then
                     Derma_Query(L("workshopConfirmMount", formatSize(totalSize)), L("workshopDownloader"), L("yes"), function()
-                        net.Start("WorkshopDownloader_Request")
+                        net.Start("liaWorkshopDownloaderRequest")
                         net.SendToServer()
                     end, L("no"))
                 end

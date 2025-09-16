@@ -279,7 +279,7 @@ if SERVER then
         end
 
         if receivers or self:getOwner() then
-            net.Start("invData")
+            net.Start("liaInvData")
             net.WriteUInt(self:getID(), 32)
             net.WriteString(key)
             net.WriteType(value)
@@ -320,7 +320,7 @@ if SERVER then
         end
 
         if receivers or self:getOwner() then
-            net.Start("invQuantity")
+            net.Start("liaInvQuantity")
             net.WriteUInt(self:getID(), 32)
             net.WriteUInt(self.quantity, 32)
             if receivers then

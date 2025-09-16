@@ -36,7 +36,7 @@ local function CharRecognize(ply, lvl, nm)
         lia.log.add(ply, "charRecognize", v:getChar():getID(), nm)
     end
 
-    net.Start("rgnDone")
+    net.Start("liaRgnDone")
     net.Send(ply)
     hook.Run("OnCharRecognized", ply)
 end
@@ -79,7 +79,7 @@ lia.playerinteract.addInteraction("recognizeOption", {
             if tgt:getChar():recognize(ply:getChar(), nm) then
                 ply:notifySuccessLocalized("recognitionGiven", 1)
                 lia.log.add(ply, "charRecognize", tgt:getChar():getID(), nm)
-                net.Start("rgnDone")
+                net.Start("liaRgnDone")
                 net.Send(ply)
                 hook.Run("OnCharRecognized", ply)
             end

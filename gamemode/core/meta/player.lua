@@ -150,7 +150,7 @@ end
 
 function playerMeta:notify(message, notifType)
     if SERVER then
-        lia.notices.notify(message, self, notifType or "default")
+        lia.notices.notify(self, message, notifType or "default")
     else
         lia.notices.notify(message, notifType or "default")
     end
@@ -158,7 +158,7 @@ end
 
 function playerMeta:notifyLocalized(message, notifType, ...)
     if SERVER then
-        lia.notices.notifyLocalized(message, self, notifType or "default", ...)
+        lia.notices.notifyLocalized(self, message, notifType or "default", ...)
     else
         lia.notices.notifyLocalized(message, notifType or "default", ...)
     end
@@ -166,7 +166,7 @@ end
 
 function playerMeta:notifyError(message)
     if SERVER then
-        lia.notices.notify(message, self, "error")
+        lia.notices.notify(self, message, "error")
     else
         lia.notices.notify(message, "error")
     end
@@ -174,7 +174,7 @@ end
 
 function playerMeta:notifyWarning(message)
     if SERVER then
-        lia.notices.notify(message, self, "warning")
+        lia.notices.notify(self, message, "warning")
     else
         lia.notices.notify(message, "warning")
     end
@@ -182,7 +182,7 @@ end
 
 function playerMeta:notifyInfo(message)
     if SERVER then
-        lia.notices.notify(message, self, "info")
+        lia.notices.notify(self, message, "info")
     else
         lia.notices.notify(message, "info")
     end
@@ -190,7 +190,7 @@ end
 
 function playerMeta:notifySuccess(message)
     if SERVER then
-        lia.notices.notify(message, self, "success")
+        lia.notices.notify(self, message, "success")
     else
         lia.notices.notify(message, "success")
     end
@@ -198,7 +198,7 @@ end
 
 function playerMeta:notifyMoney(message)
     if SERVER then
-        lia.notices.notify(message, self, "money")
+        lia.notices.notify(self, message, "money")
     else
         lia.notices.notify(message, "money")
     end
@@ -206,7 +206,7 @@ end
 
 function playerMeta:notifyAdmin(message)
     if SERVER then
-        lia.notices.notify(message, self, "admin")
+        lia.notices.notify(self, message, "admin")
     else
         lia.notices.notify(message, "admin")
     end
@@ -214,7 +214,7 @@ end
 
 function playerMeta:notifyErrorLocalized(key, ...)
     if SERVER then
-        lia.notices.notifyLocalized(key, self, "error", ...)
+        lia.notices.notifyLocalized(self, key, "error", ...)
     else
         lia.notices.notifyLocalized(key, "error", ...)
     end
@@ -222,7 +222,7 @@ end
 
 function playerMeta:notifyWarningLocalized(key, ...)
     if SERVER then
-        lia.notices.notifyLocalized(key, self, "warning", ...)
+        lia.notices.notifyLocalized(self, key, "warning", ...)
     else
         lia.notices.notifyLocalized(key, "warning", ...)
     end
@@ -230,7 +230,7 @@ end
 
 function playerMeta:notifyInfoLocalized(key, ...)
     if SERVER then
-        lia.notices.notifyLocalized(key, self, "info", ...)
+        lia.notices.notifyLocalized(self, key, "info", ...)
     else
         lia.notices.notifyLocalized(key, "info", ...)
     end
@@ -238,7 +238,7 @@ end
 
 function playerMeta:notifySuccessLocalized(key, ...)
     if SERVER then
-        lia.notices.notifyLocalized(key, self, "success", ...)
+        lia.notices.notifyLocalized(self, key, "success", ...)
     else
         lia.notices.notifyLocalized(key, "success", ...)
     end
@@ -246,7 +246,7 @@ end
 
 function playerMeta:notifyMoneyLocalized(key, ...)
     if SERVER then
-        lia.notices.notifyLocalized(key, self, "money", ...)
+        lia.notices.notifyLocalized(self, key, "money", ...)
     else
         lia.notices.notifyLocalized(key, "money", ...)
     end
@@ -254,7 +254,7 @@ end
 
 function playerMeta:notifyAdminLocalized(key, ...)
     if SERVER then
-        lia.notices.notifyLocalized(key, self, "admin", ...)
+        lia.notices.notifyLocalized(self, key, "admin", ...)
     else
         lia.notices.notifyLocalized(key, "admin", ...)
     end
@@ -376,7 +376,7 @@ end
 function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
     hook.Run("OnPlayerEnterSequence", self, sequenceName, callback, time, noFreeze)
     if not sequenceName then
-        net.Start("seqSet")
+        net.Start("liaSeqSet")
         net.WriteEntity(self)
         net.WriteBool(false)
         net.Broadcast()
@@ -395,7 +395,7 @@ function playerMeta:forceSequence(sequenceName, callback, time, noFreeze)
         self.liaForceSeq = seqId
         if not noFreeze then self:SetMoveType(MOVETYPE_NONE) end
         if dur > 0 then timer.Create("liaSeq" .. self:EntIndex(), dur, 1, function() if IsValid(self) then self:leaveSequence() end end) end
-        net.Start("seqSet")
+        net.Start("liaSeqSet")
         net.WriteEntity(self)
         net.WriteBool(true)
         net.WriteInt(seqId, 16)
@@ -407,7 +407,7 @@ end
 
 function playerMeta:leaveSequence()
     hook.Run("OnPlayerLeaveSequence", self)
-    net.Start("seqSet")
+    net.Start("liaSeqSet")
     net.WriteEntity(self)
     net.WriteBool(false)
     net.Broadcast()
@@ -578,7 +578,7 @@ if SERVER then
         self.liaData = self.liaData or {}
         self.liaData[key] = value
         if not noNetworking then
-            net.Start("liaData")
+            net.Start("liaDataSync")
             net.WriteString(key)
             net.WriteType(value)
             net.Send(self)
@@ -588,7 +588,7 @@ if SERVER then
     end
 
     function playerMeta:setWaypoint(name, vector)
-        net.Start("setWaypoint")
+        net.Start("liaSetWaypoint")
         net.WriteString(name)
         net.WriteVector(vector)
         net.Send(self)
@@ -599,7 +599,7 @@ if SERVER then
     end
 
     function playerMeta:setWaypointWithLogo(name, vector, logo)
-        net.Start("setWaypointWithLogo")
+        net.Start("liaSetWaypointWithLogo")
         net.WriteString(name)
         net.WriteVector(vector)
         net.WriteString(logo)
@@ -647,7 +647,7 @@ if SERVER then
     end
 
     function playerMeta:NetworkAnimation(active, boneData)
-        net.Start("AnimationStatus")
+        net.Start("liaAnimationStatus")
         net.WriteEntity(self)
         net.WriteBool(active)
         net.WriteTable(boneData)
@@ -678,13 +678,13 @@ if SERVER then
         time = time or 5
         if not text then
             timer.Remove("liaAct" .. self:SteamID64())
-            net.Start("actBar")
+            net.Start("liaActBar")
             net.WriteBool(false)
             net.Send(self)
             return
         end
 
-        net.Start("actBar")
+        net.Start("liaActBar")
         net.WriteBool(true)
         net.WriteString(text)
         net.WriteFloat(time)
@@ -718,7 +718,7 @@ if SERVER then
     function playerMeta:stopAction()
         timer.Remove("liaAct" .. self:SteamID64())
         timer.Remove("liaStare" .. self:SteamID64())
-        net.Start("actBar")
+        net.Start("liaActBar")
         net.Send(self)
     end
 
@@ -729,7 +729,7 @@ if SERVER then
             allowed = options or {}
         })
 
-        net.Start("RequestDropdown")
+        net.Start("liaRequestDropdown")
         net.WriteUInt(id, 32)
         net.WriteString(title)
         net.WriteString(subTitle)
@@ -745,7 +745,7 @@ if SERVER then
             limit = tonumber(limit) or 1
         })
 
-        net.Start("OptionsRequest")
+        net.Start("liaOptionsRequest")
         net.WriteUInt(id, 32)
         net.WriteString(title)
         net.WriteString(subTitle)
@@ -764,7 +764,7 @@ if SERVER then
 
         self.liaStrReqs = self.liaStrReqs or {}
         local id = table.insert(self.liaStrReqs, callback)
-        net.Start("StringRequest")
+        net.Start("liaStringRequest")
         net.WriteUInt(id, 32)
         net.WriteString(title)
         net.WriteString(subTitle)
@@ -786,7 +786,7 @@ if SERVER then
             spec = argTypes or {}
         })
 
-        net.Start("ArgumentsRequest")
+        net.Start("liaArgumentsRequest")
         net.WriteUInt(id, 32)
         net.WriteString(title or "")
         net.WriteTable(argTypes or {})
@@ -797,7 +797,7 @@ if SERVER then
     function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
         self.liaBinaryReqs = self.liaBinaryReqs or {}
         local id = table.insert(self.liaBinaryReqs, callback)
-        net.Start("BinaryQuestionRequest")
+        net.Start("liaBinaryQuestionRequest")
         net.WriteUInt(id, 32)
         net.WriteString(question)
         net.WriteString(option1)
@@ -816,7 +816,7 @@ if SERVER then
         end
 
         local id = table.insert(self.buttonRequests, callbacks)
-        net.Start("ButtonRequest")
+        net.Start("liaButtonRequest")
         net.WriteUInt(id, 32)
         net.WriteString(title or "")
         net.WriteUInt(#labels, 8)
@@ -874,6 +874,8 @@ if SERVER then
         entity:Activate()
         if self:IsOnFire() then entity:Ignite(8) end
         if isDead then self:setNetVar("ragdoll", entity) end
+        local handsWeapon = self:GetActiveWeapon()
+        if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
         hook.Run("OnCreatePlayerRagdoll", self, entity, isDead)
         local velocity = self:GetVelocity()
         for i = 0, entity:GetPhysicsObjectCount() - 1 do
@@ -901,6 +903,8 @@ if SERVER then
         local ragdoll = self:getRagdoll()
         local time = hook.Run("GetRagdollTime", self, time) or baseTime or 10
         if state then
+            local handsWeapon = self:GetActiveWeapon()
+            if IsValid(handsWeapon) and handsWeapon:GetClass() == "lia_hands" and handsWeapon:IsHoldingObject() then handsWeapon:DropObject() end
             if IsValid(ragdoll) then SafeRemoveEntity(ragdoll) end
             local entity = self:createRagdoll()
             entity:setNetVar("player", self)
@@ -994,14 +998,14 @@ if SERVER then
         for entity, data in pairs(lia.net) do
             if entity == "globals" then
                 for k, v in pairs(data) do
-                    net.Start("gVar")
+                    net.Start("liaGlobalVar")
                     net.WriteString(k)
                     net.WriteType(v)
                     net.Send(self)
                 end
             elseif IsValid(entity) then
                 for k, v in pairs(data) do
-                    net.Start("nVar")
+                    net.Start("liaNetVar")
                     net.WriteUInt(entity:EntIndex(), 16)
                     net.WriteString(k)
                     net.WriteType(v)
@@ -1016,7 +1020,7 @@ if SERVER then
         lia.net[self] = lia.net[self] or {}
         local oldValue = lia.net[self][key]
         lia.net[self][key] = value
-        net.Start("nLcl")
+        net.Start("liaNetLocal")
         net.WriteString(key)
         net.WriteType(value)
         net.Send(self)

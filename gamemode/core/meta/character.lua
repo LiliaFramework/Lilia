@@ -306,7 +306,7 @@ if SERVER then
         local maxLevel = hook.Run("GetAttributeMax", client, key) or math.huge
         attrib[key] = math.min(currentLevel + value, maxLevel)
         if IsValid(client) then
-            net.Start("attrib")
+            net.Start("liaAttributeData")
             net.WriteUInt(self:getID(), 32)
             net.WriteString(key)
             net.WriteType(attrib[key])
@@ -322,7 +322,7 @@ if SERVER then
             local attrib = self:getAttribs()
             attrib[key] = value
             if IsValid(client) then
-                net.Start("attrib")
+                net.Start("liaAttributeData")
                 net.WriteUInt(self:getID(), 32)
                 net.WriteString(key)
                 net.WriteType(attrib[key])
@@ -351,7 +351,7 @@ if SERVER then
     function characterMeta:setFlags(flags)
         local oldFlags = self:getFlags()
         self.vars.flags = flags
-        net.Start("charSet")
+        net.Start("liaCharSet")
         net.WriteString("flags")
         net.WriteType(flags)
         net.WriteType(self:getID())
@@ -449,7 +449,7 @@ if SERVER then
                     if lia.char.vars[k] ~= nil and not lia.char.vars[k].noNetworking then data[k] = v end
                 end
 
-                net.Start("charInfo")
+                net.Start("liaCharInfo")
                 net.WriteTable(data)
                 net.WriteUInt(self:getID(), 32)
                 net.Send(player)
@@ -463,7 +463,7 @@ if SERVER then
                 if not v.noNetworking and not v.isLocal then data[k] = self.vars[k] end
             end
 
-            net.Start("charInfo")
+            net.Start("liaCharInfo")
             net.WriteTable(data)
             net.WriteUInt(self:getID(), 32)
             net.WriteEntity(self:getPlayer())
@@ -514,11 +514,11 @@ if SERVER then
         local isCurChar = curChar and curChar:getID() == self:getID() or false
         if self.steamID == steamID then
             if isCurChar then
-                net.Start("removeF1")
+                net.Start("liaRemoveFOne")
                 net.Send(client)
             end
 
-            net.Start("charKick")
+            net.Start("liaCharKick")
             net.WriteUInt(self:getID(), 32)
             net.WriteBool(isCurChar)
             net.Send(client)

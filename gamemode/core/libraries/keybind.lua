@@ -153,7 +153,7 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                     client:setNetVar("OriginalPosition", nil)
                 end
 
-                net.Start("AdminModeSwapCharacter")
+                net.Start("liaAdminModeSwapCharacter")
                 net.WriteInt(oldCharID, 32)
                 net.Send(client)
                 client:setNetVar("OldCharID", nil)
@@ -169,7 +169,7 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                     local id = tonumber(row.id)
                     if row.faction == "staff" then
                         client:setNetVar("OldCharID", client:getChar():getID())
-                        net.Start("AdminModeSwapCharacter")
+                        net.Start("liaAdminModeSwapCharacter")
                         net.WriteInt(id, 32)
                         net.Send(client)
                         lia.log.add(client, "adminMode", id, L("adminModeLogStaff"))
@@ -189,7 +189,7 @@ lia.keybind.add(KEY_NONE, "adminMode", {
                     lia.char.create(staffCharData, function(charID)
                         if IsValid(client) and charID then
                             client:setNetVar("OldCharID", client:getChar():getID())
-                            net.Start("AdminModeSwapCharacter")
+                            net.Start("liaAdminModeSwapCharacter")
                             net.WriteInt(charID, 32)
                             net.Send(client)
                             lia.log.add(client, "adminMode", charID, L("adminModeLogStaff"))

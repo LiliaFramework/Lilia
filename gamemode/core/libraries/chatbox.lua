@@ -133,7 +133,7 @@ if SERVER then
                 if #receivers == 0 then return end
             end
 
-            net.Start("cMsg")
+            net.Start("liaChatMsg")
             net.WriteEntity(speaker)
             net.WriteString(chatType)
             net.WriteString(hook.Run("PlayerMessageSend", speaker, chatType, text, anonymous, receivers) or text)

@@ -92,7 +92,7 @@ if SERVER then
     sam.command.new("blind"):SetPermission("blind", "superadmin"):AddArg("player"):Help(L("blindCommandHelp")):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
-            net.Start("blindTarget")
+            net.Start("liaBlindTarget")
             net.WriteBool(true)
             net.Send(target)
         end
@@ -108,7 +108,7 @@ if SERVER then
     sam.command.new("unblind"):SetPermission("blind", "superadmin"):AddArg("player"):Help(L("unblindCommandHelp")):OnExecute(function(client, targets)
         for i = 1, #targets do
             local target = targets[i]
-            net.Start("blindTarget")
+            net.Start("liaBlindTarget")
             net.WriteBool(false)
             net.Send(target)
         end

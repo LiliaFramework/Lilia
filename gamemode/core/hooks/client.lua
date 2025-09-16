@@ -371,7 +371,7 @@ function GM:ItemShowEntityMenu(entity)
     if not itemTable then return end
     if input.IsShiftDown() then
         if IsValid(entity) then
-            net.Start("invAct")
+            net.Start("liaInvAct")
             net.WriteString("take")
             net.WriteType(entity)
             net.WriteType(nil)

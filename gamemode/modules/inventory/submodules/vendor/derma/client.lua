@@ -242,14 +242,14 @@ function PANEL:DrawModels()
 end
 
 function PANEL:buyItemFromVendor(id)
-    net.Start("VendorTrade")
+    net.Start("liaVendorTrade")
     net.WriteString(id)
     net.WriteBool(false)
     net.SendToServer()
 end
 
 function PANEL:sellItemToVendor(id)
-    net.Start("VendorTrade")
+    net.Start("liaVendorTrade")
     net.WriteString(id)
     net.WriteBool(true)
     net.SendToServer()
@@ -429,7 +429,7 @@ end
 
 function PANEL:OnRemove()
     if not self.noSendExit then
-        net.Start("VendorExit")
+        net.Start("liaVendorExit")
         net.SendToServer()
         self.noSendExit = true
     end
@@ -780,7 +780,7 @@ function PANEL:OnRemove()
 end
 
 function PANEL:updateVendor(key, value)
-    net.Start("VendorEdit")
+    net.Start("liaVendorEdit")
     net.WriteString(key)
     if value ~= nil then
         if istable(value) then

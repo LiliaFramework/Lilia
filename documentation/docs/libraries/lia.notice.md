@@ -101,3 +101,80 @@ local function notifyLocalizedDirect(client, key, ...)
     client:notifyLocalized(key, ...)
 end
 ```
+
+---
+
+### receiveNotify
+
+**Purpose**
+
+Receives and displays a notification from the server on the client side. This function is automatically called when the server sends a notification via the `liaNotificationData` network message.
+
+**Parameters**
+
+*None* (reads from network data)
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- This function is automatically called by the network receiver
+-- It reads the message and notification type from the network data
+-- and creates a visual notice panel for the player
+
+-- The function automatically:
+-- 1. Reads the message from the network
+-- 2. Reads the notification type from the network
+-- 3. Creates a liaNotice panel
+-- 4. Adds it to the notices table
+-- 5. Organizes the notice display
+-- 6. Plays a notification sound
+-- 7. Prints the message to console
+```
+
+---
+
+### receiveNotifyL
+
+**Purpose**
+
+Receives and displays a localized notification from the server on the client side. This function is automatically called when the server sends a localized notification via the `liaNotifyLocal` network message.
+
+**Parameters**
+
+*None* (reads from network data)
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- This function is automatically called by the network receiver
+-- It reads the localization key, arguments, and notification type from the network data
+-- and creates a localized visual notice panel for the player
+
+-- The function automatically:
+-- 1. Reads the localization key from the network
+-- 2. Reads the number of arguments from the network
+-- 3. Reads all argument strings from the network
+-- 4. Reads the notification type from the network
+-- 5. Uses the L() function to localize the message
+-- 6. Creates a liaNotice panel with the localized text
+-- 7. Adds it to the notices table
+-- 8. Organizes the notice display
+-- 9. Plays a notification sound
+-- 10. Prints the localized message to console
+```

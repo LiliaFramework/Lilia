@@ -99,7 +99,7 @@ function MODULE:HUDPaint()
     end
 end
 
-net.Receive("DisplayCharList", function()
+net.Receive("liaDisplayCharList", function()
     local sendData = net.ReadTable()
     local targetSteamIDsafe = net.ReadString()
     local extraColumns, extraOrder = {}, {}

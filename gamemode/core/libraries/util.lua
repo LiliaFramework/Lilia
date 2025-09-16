@@ -270,7 +270,7 @@ if SERVER then
             characterID = characterID
         }
 
-        lia.net.writeBigTable(client, "SendTableUI", tableUIData)
+        lia.net.writeBigTable(client, "liaSendTableUI", tableUIData)
     end
 
     function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)

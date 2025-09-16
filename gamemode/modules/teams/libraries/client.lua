@@ -51,7 +51,7 @@ function MODULE:CreateInformationButtons(pages)
                 if IsValid(lia.gui.roster) then
                     lia.gui.roster:SetRosterType("faction")
                     lia.gui.currentRosterType = "faction"
-                    net.Start("RequestFactionRoster")
+                    net.Start("liaRequestFactionRoster")
                     net.SendToServer()
                 end
             end
