@@ -28,18 +28,6 @@ Sets up the panel to automatically listen for inventory changes and call appropr
 
 Client.
 
-**Notes**
-
-This method listens for the following inventory events:
-- InventoryInitialized
-- InventoryDeleted
-- InventoryDataChanged
-- InventoryItemAdded
-- InventoryItemRemoved
-- ItemDataChanged
-
-When these events occur, corresponding methods on the panel will be called (e.g., InventoryItemAdded, InventoryItemRemoved, etc.).
-
 **Example Usage**
 
 ```lua

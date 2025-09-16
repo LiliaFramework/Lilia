@@ -549,10 +549,6 @@ Gets the tool's owner (player).
 
 Shared.
 
-**Notes**
-
-This method first tries to get the owner from the tool's SWEP (self:GetSWEP().Owner), and falls back to the tool's internal Owner field if that fails.
-
 **Example Usage**
 
 ```lua
@@ -593,10 +589,6 @@ Gets the tool's weapon entity.
 **Realm**
 
 Shared.
-
-**Notes**
-
-This method first tries to get the weapon from the tool's SWEP (self:GetSWEP().Weapon), and falls back to the tool's internal Weapon field if that fails.
 
 **Example Usage**
 
