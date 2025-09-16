@@ -10,6 +10,34 @@ The `Player` meta table extends Garry's Mod's base player functionality with Lil
 
 ---
 
+### tostring
+
+**Purpose**
+
+Returns a string representation of the player.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `string` (*string*): String representation of the player.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function logPlayer(player)
+    print("Player info: " .. tostring(player))
+end
+```
+
+---
+
 ### getChar
 
 **Purpose**
@@ -2271,104 +2299,6 @@ concommand.Add("animate_bones", function(ply, cmd, args)
 end)
 ```
 
----
-
-### WhitelistAllClasses
-
-**Purpose**
-
-Gives the player whitelist access to all available classes.
-
-**Parameters**
-
-*None.*
-
-**Returns**
-
-*None.*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-local function whitelistAllClasses(player)
-    player:WhitelistAllClasses()
-    player:ChatPrint("You now have access to all classes!")
-end
-
-concommand.Add("whitelist_all_classes", function(ply)
-    whitelistAllClasses(ply)
-end)
-```
-
----
-
-### WhitelistAllFactions
-
-**Purpose**
-
-Gives the player whitelist access to all available factions.
-
-**Parameters**
-
-*None.*
-
-**Returns**
-
-*None.*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-local function whitelistAllFactions(player)
-    player:WhitelistAllFactions()
-    player:ChatPrint("You now have access to all factions!")
-end
-
-concommand.Add("whitelist_all_factions", function(ply)
-    whitelistAllFactions(ply)
-end)
-```
-
----
-
-### WhitelistEverything
-
-**Purpose**
-
-Gives the player whitelist access to all classes and factions.
-
-**Parameters**
-
-*None.*
-
-**Returns**
-
-*None.*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
-local function whitelistEverything(player)
-    player:WhitelistEverything()
-    player:ChatPrint("You now have access to everything!")
-end
-
-concommand.Add("whitelist_everything", function(ply)
-    whitelistEverything(ply)
-end)
-```
 
 ---
 

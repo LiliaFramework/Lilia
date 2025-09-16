@@ -45,6 +45,43 @@ end
 
 ---
 
+### tostring
+
+**Purpose**
+
+Returns a string representation of the character for debugging and display purposes.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `string`: A formatted string containing "character[ID]" where ID is the character's unique identifier.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displayCharacterInfo(character)
+    local charString = character:tostring()
+    print("Character info: " .. charString)
+    return charString
+end
+
+hook.Add("PlayerSpawn", "LogCharacterString", function(ply)
+    local char = ply:getChar()
+    if char then
+        displayCharacterInfo(char)
+    end
+end)
+```
+
+---
+
 ### getID
 
 **Purpose**

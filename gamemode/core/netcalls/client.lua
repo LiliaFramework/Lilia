@@ -434,7 +434,7 @@ net.Receive("liaProvideInteractOptions", function()
 
     local isInteraction = kind == "interaction"
     if optionCount == 0 then return end
-    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and "playerInteractions" or "actionsMenu", isInteraction and lia.keybind.get(L("interactionMenu"), KEY_TAB) or lia.keybind.get(L("personalActions"), KEY_G), "RunInteraction", true)
+    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and "playerInteractions" or "actionsMenu", isInteraction and lia.keybind.get(L("interactionMenu"), KEY_TAB) or lia.keybind.get(L("personalActions"), KEY_G), "liaRunInteraction", true)
 end)
 
 net.Receive("liaRequestDropdown", function()

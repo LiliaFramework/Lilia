@@ -478,22 +478,6 @@ if SERVER then
         if character then character:giveMoney(-amount) end
     end
 
-    function playerMeta:WhitelistAllClasses()
-        for class, _ in pairs(lia.class.list) do
-            self:classWhitelist(class)
-        end
-    end
-
-    function playerMeta:WhitelistAllFactions()
-        for faction, _ in pairs(lia.faction.indices) do
-            self:setWhitelisted(faction, true)
-        end
-    end
-
-    function playerMeta:WhitelistEverything()
-        self:WhitelistAllFactions()
-        self:WhitelistAllClasses()
-    end
 
     function playerMeta:classWhitelist(class)
         local char = self:getChar()

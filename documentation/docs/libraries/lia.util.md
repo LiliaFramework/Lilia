@@ -88,6 +88,57 @@ end
 
 ---
 
+### getBySteamID
+
+**Purpose**
+
+Finds a player by their SteamID, supporting both SteamID and SteamID64 formats. Only returns players who have a character loaded.
+
+**Parameters**
+
+* `steamID` (*string*): The SteamID or SteamID64 to search for.
+
+**Returns**
+
+* `player` (*Player*): The player with the matching SteamID or nil if not found.
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Find player by SteamID
+local function findPlayerBySteamID(steamID)
+    return lia.util.getBySteamID(steamID)
+end
+
+-- Use in a function
+local function getPlayerBySteamID64(steamID64)
+    local player = lia.util.getBySteamID(steamID64)
+    if player then
+        print("Player found: " .. player:Name())
+        return player
+    else
+        print("Player not found with SteamID64: " .. steamID64)
+        return nil
+    end
+end
+
+-- Find player with SteamID format
+local function findPlayerWithSteamID(steamID)
+    local player = lia.util.getBySteamID("STEAM_0:1:123456")
+    if player and player:getChar() then
+        print("Player found with character: " .. player:getChar():getName())
+        return player
+    end
+    return nil
+end
+```
+
+---
+
 ### findPlayerItems
 
 **Purpose**

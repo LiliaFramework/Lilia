@@ -56,42 +56,6 @@ end
 
 ---
 
-### Add
-
-**Purpose**
-
-Adds a Workshop addon ID to the server's required addons list.
-
-**Parameters**
-
-* `id` (*string*): The Workshop addon ID.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Add a Workshop addon
-local function addWorkshopAddon(id)
-    lia.workshop.Add(id)
-end
-
--- Use in a function
-local function setupRequiredAddons()
-    lia.workshop.Add("123456789")
-    lia.workshop.Add("987654321")
-    print("Required addons added")
-end
-```
-
----
-
 ### gather
 
 **Purpose**
@@ -144,43 +108,7 @@ end
 
 ---
 
-### Gather
-
-**Purpose**
-
-Gathers all Workshop addon IDs from various sources.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-* `ids` (*table*): Table of all addon IDs.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Gather all addon IDs
-local function gatherAddonIDs()
-    return lia.workshop.Gather()
-end
-
--- Use in a function
-local function refreshAddonList()
-    local ids = lia.workshop.Gather()
-    print("Found " .. table.Count(ids) .. " addon IDs")
-    return ids
-end
-```
-
----
-
-### Send
+### send
 
 **Purpose**
 
@@ -203,123 +131,13 @@ Server.
 ```lua
 -- Send addon list to player
 local function sendAddonList(ply)
-    lia.workshop.Send(ply)
+    lia.workshop.send(ply)
 end
 
 -- Use in a function
 local function syncAddonsWithPlayer(ply)
-    lia.workshop.Send(ply)
+    lia.workshop.send(ply)
     print("Addon list sent to " .. ply:Name())
-end
-```
-
----
-
-### IsMounted
-
-**Purpose**
-
-Checks if a Workshop addon is mounted on the client.
-
-**Parameters**
-
-* `id` (*string*): The Workshop addon ID.
-
-**Returns**
-
-* `isMounted` (*boolean*): True if the addon is mounted.
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Check if addon is mounted
-local function isAddonMounted(id)
-    return lia.workshop.IsMounted(id)
-end
-
--- Use in a function
-local function checkAddonStatus(id)
-    if lia.workshop.IsMounted(id) then
-        print("Addon " .. id .. " is mounted")
-        return true
-    else
-        print("Addon " .. id .. " is not mounted")
-        return false
-    end
-end
-```
-
----
-
-### Enqueue
-
-**Purpose**
-
-Adds a Workshop addon to the download queue.
-
-**Parameters**
-
-* `id` (*string*): The Workshop addon ID.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Queue addon for download
-local function queueAddon(id)
-    lia.workshop.Enqueue(id)
-end
-
--- Use in a function
-local function downloadAddon(id)
-    lia.workshop.Enqueue(id)
-    print("Addon " .. id .. " queued for download")
-end
-```
-
----
-
-### ProcessQueue
-
-**Purpose**
-
-Processes the download queue for Workshop addons.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Process download queue
-local function processQueue()
-    lia.workshop.ProcessQueue()
-end
-
--- Use in a function
-local function startDownloadProcess()
-    lia.workshop.ProcessQueue()
-    print("Download process started")
 end
 ```
 
@@ -397,10 +215,3 @@ local function openWorkshopManager()
     print("Workshop manager opened")
 end
 ```
-
-
-
-
-
-
-
