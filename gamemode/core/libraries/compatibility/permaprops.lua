@@ -18,7 +18,9 @@ hook.Add("PermaProps.OnEntityCreated", "liaPermaPropsOverlapWarning", function(e
     local pos = entity:GetPos()
     for _, existing in ipairs(spawnedPositions) do
         if pos:DistToSqr(existing) <= radiusSqr then
-            LocalPlayer():notifyWarningLocalized("permaPropOverlapWarning")
+            if CLIENT then
+                LocalPlayer():notifyWarningLocalized("permaPropOverlapWarning")
+            end
             break
         end
     end

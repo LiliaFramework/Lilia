@@ -19,9 +19,9 @@ local function loadDependencies(dependencies)
     for _, dep in ipairs(dependencies) do
         local realm = dep.Realm
         if dep.File then
-            lia.include(MODULE.folder .. "/" .. dep.File, realm)
+            lia.loader.include(MODULE.folder .. "/" .. dep.File, realm)
         elseif dep.Folder then
-            lia.includeDir(MODULE.folder .. "/" .. dep.Folder, true, true, realm)
+            lia.loader.includeDir(MODULE.folder .. "/" .. dep.Folder, true, true, realm)
         end
     end
 end
@@ -56,15 +56,15 @@ local function loadExtras(path)
     lia.attribs.loadFromDir(path .. "/attributes")
     for fileName, realm in pairs(ModuleFiles) do
         local filePath = path .. "/" .. fileName .. ".lua"
-        if file.Exists(filePath, "LUA") then lia.include(filePath, realm) end
+        if file.Exists(filePath, "LUA") then lia.loader.include(filePath, realm) end
     end
 
     for _, folder in ipairs(ModuleFolders) do
         local subPath = path .. "/" .. folder
-        if file.Exists(subPath, "LUA") then lia.includeDir(subPath, true, true) end
+        if file.Exists(subPath, "LUA") then lia.loader.includeDir(subPath, true, true) end
     end
 
-    lia.includeEntities(path .. "/entities")
+    lia.loader.includeEntities(path .. "/entities")
     if MODULE.uniqueID ~= "schema" then lia.item.loadFromDir(path .. "/items") end
     if SERVER then
         if MODULE.NetworkStrings and istable(MODULE.NetworkStrings) then
@@ -124,7 +124,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     MODULE.isSingleFile = isSingleFile
     MODULE.variable = variable
     if isSingleFile then
-        lia.include(path, "shared")
+        lia.loader.include(path, "shared")
     else
         if not file.Exists(coreFile, "LUA") then
             lia.bootstrap(L("moduleSkipped"), L("moduleSkipMissing", uniqueID, lowerVar))
@@ -132,7 +132,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
             return
         end
 
-        lia.include(coreFile, "shared")
+        lia.loader.include(coreFile, "shared")
     end
 
     local enabled, disableReason

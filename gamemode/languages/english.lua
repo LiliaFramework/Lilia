@@ -2265,4 +2265,27 @@ Reload: Drop]],
     inventoryError = "An error occurred while adding the item to your inventory.",
     convertedEntityDesc = "A converted %s entity",
     convertedEntities = "Converted Entities",
+    
+    -- Administration
+    noclipWhileDead = "You cannot use noclip while dead",
+    
+    -- Doors
+    doorIDProperty = "Door ID",
+    positionLabel = "Position: ",
+    modelLabel = " Model: ",
+    doorIDsOnMap = "Door IDs on %s",
+    doorIDColumn = "Door ID",
+    detailsColumn = "Details",
+    
+    -- Vendor
+    vendorSavePreset = "Save Preset",
+    noPermission = "You do not have permission to perform this action",
+    vendorPresetName = "Preset Name",
+    vendorPresetNameDesc = "Enter a name for this vendor preset:",
+    vendorPresetNameRequired = "Preset name is required",
+    vendorPresetOverwrite = "A preset named '%s' already exists. Do you want to overwrite it?",
+    vendorPresetOverwriteTitle = "Overwrite Preset",
+    animation = "Animation",
+    vendorAnimationTooltip = "Select an animation for the vendor",
+    vendorPresetSaved = "Vendor preset '%s' has been saved successfully",
 }

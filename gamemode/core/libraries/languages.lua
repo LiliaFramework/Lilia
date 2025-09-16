@@ -10,7 +10,7 @@ function lia.lang.loadFromDir(directory)
             niceName = v:sub(1, -5):lower()
         end
 
-        lia.include(directory .. "/" .. v, "shared")
+        lia.loader.include(directory .. "/" .. v, "shared")
         if LANGUAGE then
             if NAME then
                 lia.lang.names[niceName] = NAME

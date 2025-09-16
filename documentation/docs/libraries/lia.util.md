@@ -11,46 +11,6 @@ The util library (`lia.util`) provides a comprehensive system for managing utili
 ---
 
 
-### getBySteamID
-
-**Purpose**
-
-Gets a player by SteamID.
-
-**Parameters**
-
-* `steamID` (*string*): The SteamID to search for.
-
-**Returns**
-
-* `player` (*Player*): The player or nil.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Get player by SteamID
-local function getPlayerBySteamID(steamID)
-    return lia.util.getBySteamID(steamID)
-end
-
--- Use in a function
-local function findPlayerBySteamID(steamID)
-    local player = lia.util.getBySteamID(steamID)
-    if player then
-        print("Player found: " .. player:Name())
-        return player
-    else
-        print("Player not found")
-        return nil
-    end
-end
-```
-
----
 
 ### FindPlayersInSphere
 

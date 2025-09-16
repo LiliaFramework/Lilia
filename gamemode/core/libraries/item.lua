@@ -242,7 +242,7 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         hook.Run("ItemDefaultFunctions", ITEM.functions)
     end
 
-    if not luaGenerated and path then lia.include(path, "shared") end
+    if not luaGenerated and path then lia.loader.include(path, "shared") end
     for funcName, funcTable in pairs(ITEM.functions) do
         if isstring(funcTable.name) then
             funcTable.name = L(funcTable.name)

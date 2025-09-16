@@ -10,37 +10,6 @@ The `Character` meta table exposes properties and behaviors for character entiti
 
 ---
 
-### tostring
-
-**Purpose**
-
-Returns a string representation of the character.
-
-**Parameters**
-
-*None.*
-
-**Returns**
-
-* `string` (*string*): String representation in format "character[ID]".
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
-local function logCharacter(character)
-    print("Character info: " .. tostring(character))
-end
-
-hook.Add("OnCharacterCreated", "LogCharacterCreation", function(character)
-    logCharacter(character) -- Output: "character[123]"
-end)
-```
-
----
 
 ### eq
 

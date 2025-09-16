@@ -3613,3 +3613,178 @@ end)
 ```
 
 ---
+
+### getParts
+
+**Purpose**
+
+Gets the player's current PAC parts.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+* `parts` (*table*): Table of currently active PAC parts.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function displayPlayerParts(player)
+    local parts = player:getParts()
+    player:ChatPrint("Current PAC parts: " .. table.Count(parts))
+    for partID, _ in pairs(parts) do
+        player:ChatPrint("  - " .. partID)
+    end
+    return parts
+end
+
+concommand.Add("my_parts", function(ply)
+    displayPlayerParts(ply)
+end)
+```
+
+---
+
+### addPart
+
+**Purpose**
+
+Adds a PAC part to the player.
+
+**Parameters**
+
+* `partID` (*string*): The unique ID of the part to add.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function givePlayerPart(player, partID)
+    player:addPart(partID)
+    player:ChatPrint("Added PAC part: " .. partID)
+end
+
+concommand.Add("add_part", function(ply, cmd, args)
+    local partID = args[1]
+    if partID then
+        givePlayerPart(ply, partID)
+    end
+end)
+```
+
+---
+
+### removePart
+
+**Purpose**
+
+Removes a PAC part from the player.
+
+**Parameters**
+
+* `partID` (*string*): The unique ID of the part to remove.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function removePlayerPart(player, partID)
+    player:removePart(partID)
+    player:ChatPrint("Removed PAC part: " .. partID)
+end
+
+concommand.Add("remove_part", function(ply, cmd, args)
+    local partID = args[1]
+    if partID then
+        removePlayerPart(ply, partID)
+    end
+end)
+```
+
+---
+
+### resetParts
+
+**Purpose**
+
+Removes all PAC parts from the player.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function clearPlayerParts(player)
+    player:resetParts()
+    player:ChatPrint("All PAC parts removed!")
+end
+
+concommand.Add("reset_parts", function(ply)
+    clearPlayerParts(ply)
+end)
+```
+
+---
+
+### syncParts
+
+**Purpose**
+
+Synchronizes the player's PAC parts with all clients.
+
+**Parameters**
+
+*None.*
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+local function syncPlayerParts(player)
+    player:syncParts()
+    player:ChatPrint("PAC parts synchronized!")
+end
+
+concommand.Add("sync_parts", function(ply)
+    syncPlayerParts(ply)
+end)
+```
+
+---

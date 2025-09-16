@@ -220,6 +220,14 @@ local function camiBootstrapFromExisting()
     rebuildPrivileges()
 end
 
+function lia.administrator.applyPunishment(client, infraction, kick, ban, time, kickKey, banKey)
+    local bantime = time or 0
+    kickKey = kickKey or "kickedForInfraction"
+    banKey = banKey or "bannedForInfraction"
+    if kick then lia.administrator.execCommand("kick", client, nil, L(kickKey, infraction)) end
+    if ban then lia.administrator.execCommand("ban", client, bantime, L(banKey, infraction)) end
+end
+
 function lia.administrator.hasAccess(ply, privilege)
     if not isstring(privilege) then
         lia.error("hasAccess expected a string privilege, got " .. tostring(privilege))
@@ -508,6 +516,12 @@ function lia.administrator.renameGroup(oldName, newName)
 end
 
 if SERVER then
+    function lia.adminstrator.notifyAdmin(notification)
+        for _, client in player.Iterator() do
+            if IsValid(client) and client:hasPrivilege("canSeeAltingNotifications") then client:notifyAdminLocalized(notification) end
+        end
+    end
+
     function lia.administrator.addPermission(groupName, permission, silent)
         if not lia.administrator.groups[groupName] then
             if lia.administrator._loading then return end

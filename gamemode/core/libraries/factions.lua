@@ -64,7 +64,7 @@ function lia.faction.loadFromDir(directory)
             isDefault = true
         }
 
-        lia.include(directory .. "/" .. v, "shared")
+        lia.loader.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
             FACTION.name = "unknown"
             lia.error(L("factionMissingName", niceName))

@@ -59,7 +59,7 @@ function lia.class.loadFromDir(directory)
         CLASS.name = L("unknown")
         CLASS.desc = L("noDesc")
         CLASS.limit = 0
-        lia.include(directory .. "/" .. v, "shared")
+        lia.loader.include(directory .. "/" .. v, "shared")
         if not CLASS.faction or not team.Valid(CLASS.faction) then
             lia.error(L("classNoValidFaction", niceName))
             CLASS = nil

@@ -8,6 +8,7 @@ arrange:
   - lia.color.md
   - lia.commands.md
   - lia.config.md
+  - lia.core.md
   - lia.currency.md
   - lia.darkrp.md
   - lia.data.md
@@ -21,9 +22,9 @@ arrange:
   - lia.item.md
   - lia.keybind.md
   - lia.languages.md
+  - lia.loader.md
   - lia.logger.md
   - lia.markup.md
-  - lia.md
   - lia.menu.md
   - lia.modularity.md
   - lia.net.md

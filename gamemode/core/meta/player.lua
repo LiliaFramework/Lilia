@@ -7,6 +7,15 @@ do
         return lia.char.getCharacter(self.getNetVar(self, "char"), self)
     end
 
+    function playerMeta:tostring()
+        local character = self:getChar()
+        if character and character.getName then
+            return character:getName()
+        else
+            return self:SteamName()
+        end
+    end
+
     function playerMeta:Name()
         local character = self.getChar(self)
         return character and character.getName(character) or self.steamName(self)

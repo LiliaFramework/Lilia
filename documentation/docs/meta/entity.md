@@ -52,6 +52,8 @@ hook.Add("OnEntityCreated", "PlayWelcomeSound", function(ent)
 end)
 ```
 
+
+
 ---
 
 ### isProp
@@ -75,16 +77,19 @@ Shared.
 **Example Usage**
 
 ```lua
-local function handlePropInteraction(entity, player)
+local function checkEntityType(entity, player)
     if entity:isProp() then
-        player:ChatPrint("You interacted with a prop!")
-        entity:EmitSound("buttons/button15.wav")
+        player:ChatPrint("This is a physics prop!")
+        return true
+    else
+        player:ChatPrint("This is not a physics prop.")
+        return false
     end
 end
 
-hook.Add("OnPlayerUse", "HandlePropInteraction", function(ply, ent)
+hook.Add("OnPlayerUse", "CheckPropType", function(ply, ent)
     if IsValid(ent) then
-        handlePropInteraction(ent, ply)
+        checkEntityType(ent, ply)
     end
 end)
 ```

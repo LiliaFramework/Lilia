@@ -550,13 +550,13 @@ end
 net.Receive("liaCheckSeed", function(_, client)
     local sentSteamID = net.ReadString()
     if not sentSteamID or sentSteamID == "" then
-        lia.notifyAdmin(L("steamIDMissing", client:Name(), client:SteamID()))
+        lia.adminstrator.notifyAdmin(L("steamIDMissing", client:Name(), client:SteamID()))
         lia.log.add(client, "steamIDMissing", client:Name(), client:SteamID())
         return
     end
 
     if client:SteamID() ~= sentSteamID then
-        lia.notifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID(), sentSteamID))
+        lia.adminstrator.notifyAdmin(L("steamIDMismatch", client:Name(), client:SteamID(), sentSteamID))
         lia.log.add(client, "steamIDMismatch", client:Name(), client:SteamID(), sentSteamID)
     end
 end)
@@ -567,7 +567,7 @@ net.Receive("liaCheckHack", function(_, client)
     client:setNetVar("cheater", true)
     client:setLiliaData("cheater", true)
     hook.Run("OnCheaterCaught", client)
-    if override ~= true then lia.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
+    if override ~= true then lia.adminstrator.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
 end)
 
 net.Receive("liaVerifyCheatsResponse", function(_, client)
