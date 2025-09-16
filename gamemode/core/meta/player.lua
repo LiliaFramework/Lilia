@@ -478,7 +478,6 @@ if SERVER then
         if character then character:giveMoney(-amount) end
     end
 
-
     function playerMeta:classWhitelist(class)
         local char = self:getChar()
         if not char then return end
