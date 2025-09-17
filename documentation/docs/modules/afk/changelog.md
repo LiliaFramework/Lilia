@@ -1,10 +1,10 @@
 # Changelog
 
-- Version 1.2
+### Version 1.2
 
 - Better UI
 
-- Version 1.1
+### Version 1.1
 
 - Added comprehensive multi-language support (English, Spanish, French, German, Portuguese, Italian)
 - Updated all hardcoded strings to use language system
@@ -13,6 +13,6 @@
 - Updated version number to reflect improvements
 - Add Docs
 
-- Version 1.0
+### Version 1.0
 
 - Initial Release
