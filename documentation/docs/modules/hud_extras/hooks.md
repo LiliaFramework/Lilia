@@ -1,4 +1,4 @@
-# HUD Extras Module Hooks
+# Hooks
 
 This document describes the hooks available in the HUD Extras module for managing additional HUD elements and effects.
 

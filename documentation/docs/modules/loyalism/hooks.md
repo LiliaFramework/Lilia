@@ -1,4 +1,4 @@
-# Loyalism Module Hooks
+# Hooks
 
 This document describes the hooks available in the Loyalism module for managing loyalty tier system functionality.
 

@@ -1,4 +1,4 @@
-# Door Kick Module Hooks
+# Hooks
 
 This document describes the hooks available in the Door Kick module for managing door kicking functionality.
 

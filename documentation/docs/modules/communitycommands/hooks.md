@@ -1,4 +1,4 @@
-# Community Commands Module Hooks
+# Hooks
 
 This document describes the hooks available in the Community Commands module for managing community URL commands and external link handling.
 

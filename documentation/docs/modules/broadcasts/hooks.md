@@ -1,4 +1,4 @@
-# Broadcasts Module Hooks
+# Hooks
 
 This document describes the hooks available in the Broadcasts module for managing class and faction broadcast systems.
 

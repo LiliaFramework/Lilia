@@ -1,4 +1,4 @@
-# Flashlight Module Hooks
+# Hooks
 
 This document describes the hooks available in the Flashlight module for managing flashlight functionality.
 

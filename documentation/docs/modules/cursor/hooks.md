@@ -1,4 +1,4 @@
-# Cursor Module Hooks
+# Hooks
 
 This document describes the hooks available in the Cursor module for managing custom cursor functionality.
 

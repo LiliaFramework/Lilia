@@ -1,4 +1,4 @@
-# Tying Module Hooks
+# Hooks
 
 This document describes the hooks available in the Tying module for managing player handcuffing and restraint functionality.
 

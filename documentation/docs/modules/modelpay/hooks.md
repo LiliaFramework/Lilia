@@ -1,4 +1,4 @@
-# Model Pay Module Hooks
+# Hooks
 
 This document describes the hooks available in the Model Pay module for managing model-based payment functionality.
 

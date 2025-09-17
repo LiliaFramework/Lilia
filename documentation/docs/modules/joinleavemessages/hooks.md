@@ -1,4 +1,4 @@
-# Join Leave Messages Module Hooks
+# Hooks
 
 This document describes the hooks available in the Join Leave Messages module for managing player join and leave announcements.
 

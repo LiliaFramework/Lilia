@@ -1,4 +1,4 @@
-# View Bob Module Hooks
+# Hooks
 
 This document describes the hooks available in the View Bob module for managing camera bobbing and view punch effects.
 

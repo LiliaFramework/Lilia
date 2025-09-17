@@ -1,4 +1,4 @@
-# Cutscenes Module Hooks
+# Hooks
 
 This document describes the hooks available in the Cutscenes module for managing cutscene playback and control.
 

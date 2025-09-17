@@ -1,4 +1,4 @@
-# Radio Module Hooks
+# Hooks
 
 This document describes the hooks available in the Radio module for managing radio communication functionality.
 

@@ -1,4 +1,4 @@
-# Realistic View Module Hooks
+# Hooks
 
 This document describes the hooks available in the Realistic View module for managing first-person view functionality.
 

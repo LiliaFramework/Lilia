@@ -1,4 +1,4 @@
-# View Manipulation Module Hooks
+# Hooks
 
 This document describes the hooks available in the View Manipulation module for managing VManip animations and item interactions.
 

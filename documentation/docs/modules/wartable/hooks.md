@@ -1,4 +1,4 @@
-# War Table Module Hooks
+# Hooks
 
 This document describes the hooks available in the War Table module for managing interactive war table functionality.
 

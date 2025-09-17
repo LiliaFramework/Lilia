@@ -1,4 +1,4 @@
-# Map Cleaner Module Hooks
+# Hooks
 
 This document describes the hooks available in the Map Cleaner module for managing periodic map cleanup functionality.
 

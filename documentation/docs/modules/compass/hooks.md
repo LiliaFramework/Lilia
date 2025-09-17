@@ -1,4 +1,4 @@
-# Compass Module Hooks
+# Hooks
 
 This document describes the hooks available in the Compass module for managing compass markers and spotting functionality.
 

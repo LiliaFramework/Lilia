@@ -1,4 +1,4 @@
-# Realistic Damage Module Hooks
+# Hooks
 
 This document describes the hooks available in the Realistic Damage module for managing damage scaling and sound effects.
 

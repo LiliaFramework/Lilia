@@ -1,4 +1,4 @@
-# NPC Spawner Module Hooks
+# Hooks
 
 This document describes the hooks available in the NPC Spawner module for managing automatic NPC spawning functionality.
 

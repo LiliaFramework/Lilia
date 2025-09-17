@@ -1,4 +1,4 @@
-# Extended Descriptions Module Hooks
+# Hooks
 
 This document describes the hooks available in the Extended Descriptions module for managing detailed item descriptions and editing functionality.
 

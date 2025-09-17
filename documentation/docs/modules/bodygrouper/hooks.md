@@ -1,4 +1,4 @@
-# Bodygrouper Module Hooks
+# Hooks
 
 This document describes the hooks available in the Bodygrouper module for managing bodygroup editing and closet interactions.
 

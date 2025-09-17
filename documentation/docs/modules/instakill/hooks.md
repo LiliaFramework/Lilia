@@ -1,4 +1,4 @@
-# Instakill Module Hooks
+# Hooks
 
 This document describes the hooks available in the Instakill module for managing instant kill functionality.
 

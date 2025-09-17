@@ -1,4 +1,4 @@
-# Auto Restarter Module Hooks
+# Hooks
 
 This document describes the hooks available in the Auto Restarter module for managing automatic server restarts and countdown notifications.
 

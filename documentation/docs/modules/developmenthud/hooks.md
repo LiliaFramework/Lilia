@@ -1,4 +1,4 @@
-# Development HUD Module Hooks
+# Hooks
 
 This document describes the hooks available in the Development HUD module for managing staff-only development interface functionality.
 

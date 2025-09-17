@@ -1,4 +1,4 @@
-# NPC Drop Module Hooks
+# Hooks
 
 This document describes the hooks available in the NPC Drop module for managing NPC item drop functionality.
 

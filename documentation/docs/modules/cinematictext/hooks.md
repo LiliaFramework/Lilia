@@ -1,4 +1,4 @@
-# Cinematic Text Module Hooks
+# Hooks
 
 This document describes the hooks available in the Cinematic Text module for managing cinematic splash text overlays and displays.
 

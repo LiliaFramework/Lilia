@@ -1,4 +1,4 @@
-# Donator Module Hooks
+# Hooks
 
 This document describes the hooks available in the Donator module for managing donor perks and benefits.
 

@@ -1,4 +1,4 @@
-# Development Server Module Hooks
+# Hooks
 
 This document describes the hooks available in the Development Server module for managing development server mode functionality.
 

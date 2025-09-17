@@ -1,4 +1,4 @@
-# Shoot Lock Module Hooks
+# Hooks
 
 This document describes the hooks available in the Shoot Lock module for managing door lock shooting functionality.
 

@@ -1,4 +1,4 @@
-# Slots Module Hooks
+# Hooks
 
 This document describes the hooks available in the Slots module for managing slot machine functionality.
 

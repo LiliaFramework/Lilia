@@ -1,4 +1,4 @@
-# Load Messages Module Hooks
+# Hooks
 
 This document describes the hooks available in the Load Messages module for managing faction-based load messages.
 

@@ -1,4 +1,4 @@
-# Corpse ID Module Hooks
+# Hooks
 
 This document describes the hooks available in the Corpse ID module for managing corpse identification functionality.
 

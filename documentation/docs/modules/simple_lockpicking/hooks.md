@@ -1,4 +1,4 @@
-# Simple Lockpicking Module Hooks
+# Hooks
 
 This document describes the hooks available in the Simple Lockpicking module for managing lockpicking functionality.
 

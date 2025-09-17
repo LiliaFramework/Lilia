@@ -1,4 +1,4 @@
-# Enhanced Death Module Hooks
+# Hooks
 
 This document describes the hooks available in the Enhanced Death module for managing hospital respawn and death functionality.
 

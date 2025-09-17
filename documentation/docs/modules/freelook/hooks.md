@@ -1,4 +1,4 @@
-# Free Look Module Hooks
+# Hooks
 
 This document describes the hooks available in the Free Look module for managing freelook functionality.
 

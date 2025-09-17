@@ -1,4 +1,4 @@
-# Word Filter Module Hooks
+# Hooks
 
 This document describes the hooks available in the Word Filter module for managing chat word filtering and content moderation.
 

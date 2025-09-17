@@ -1,4 +1,4 @@
-# Model Tweaker Module Hooks
+# Hooks
 
 This document describes the hooks available in the Model Tweaker module for managing wardrobe model change functionality.
 

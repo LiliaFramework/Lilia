@@ -1,4 +1,4 @@
-# Raised Weapons Module Hooks
+# Hooks
 
 This document describes the hooks available in the Raised Weapons module for managing weapon raising and lowering functionality.
 

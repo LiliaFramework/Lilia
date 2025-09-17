@@ -1,4 +1,4 @@
-# Climb Module Hooks
+# Hooks
 
 This document describes the hooks available in the Climb module for managing player climbing mechanics and ledge climbing.
 

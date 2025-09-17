@@ -1,4 +1,4 @@
-# Perma Remove Module Hooks
+# Hooks
 
 This document describes the hooks available in the Perma Remove module for managing permanent entity removal functionality.
 

@@ -1,4 +1,4 @@
-# Chat Messages Module Hooks
+# Hooks
 
 This document describes the hooks available in the Chat Messages module for managing automated chat messages.
 

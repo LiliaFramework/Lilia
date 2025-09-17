@@ -1,4 +1,4 @@
-# Rumour Module Hooks
+# Hooks
 
 This document describes the hooks available in the Rumour module for managing anonymous rumour functionality.
 

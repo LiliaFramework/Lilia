@@ -1,4 +1,4 @@
-# Cards Module Hooks
+# Hooks
 
 This document describes the hooks available in the Cards module for managing card-related functionality.
 

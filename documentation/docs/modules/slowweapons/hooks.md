@@ -1,4 +1,4 @@
-# Slow Weapons Module Hooks
+# Hooks
 
 This document describes the hooks available in the Slow Weapons module for managing weapon movement speed penalties.
 

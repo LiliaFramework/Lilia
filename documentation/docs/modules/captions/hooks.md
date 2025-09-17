@@ -1,4 +1,4 @@
-# Captions Module Hooks
+# Hooks
 
 This document describes the hooks available in the Captions module for managing on-screen captions.
 

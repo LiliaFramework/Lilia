@@ -1,4 +1,4 @@
-# First Person Effects Module Hooks
+# Hooks
 
 This document describes the hooks available in the First Person Effects module for managing head bob and view sway functionality.
 
