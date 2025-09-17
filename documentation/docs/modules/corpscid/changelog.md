@@ -1,3 +1,5 @@
-﻿# Version 1.0
+﻿# Changelog
+
+- Version 1.0
 
 - Initial Release

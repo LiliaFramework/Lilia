@@ -17,7 +17,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Comprehensive AFK protection system that automatically detects inactive players, prevents exploitation of AFK players, and integrates with restraint systems. Features configurable AFK detection, admin commands, multi-language support, and protection against various player actions.",
-    "version": "1.01",
+    "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip",
     "source": "https://liliaframework.github.io/Modules/afk.html",
     "features": [],
