@@ -1,5 +1,9 @@
 # Changelog
 
+- Version 1.2
+
+- Better UI
+
 - Version 1.1
 
 - Added comprehensive multi-language support (English, Spanish, French, German, Portuguese, Italian)
