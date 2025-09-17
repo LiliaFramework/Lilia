@@ -2785,7 +2785,7 @@ lia.command.add("dropmoney", {
             money.charID = character:getID()
             client:notifyMoneyLocalized("moneyDropped", lia.currency.get(amount))
             lia.log.add(client, "moneyDropped", amount)
-            client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
+            client:DoAnimation(PLAYER_ATTACK1)
         end
     end
 })
