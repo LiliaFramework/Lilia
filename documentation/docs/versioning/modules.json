@@ -17,7 +17,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.",
-    "version": "1.01",
+    "version": "1",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/afk.zip",
     "source": "https://liliaframework.github.io/Modules/afk.html",
     "features": [],
