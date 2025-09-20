@@ -168,10 +168,7 @@ function PANEL:setItemType(itemTypeOrID)
             entity:SetMaterial("")
         end
 
-        -- Force icon rebuild if bodygroups or skin were set to ensure they display properly
-        if skin or (bodygroups and next(bodygroups)) then
-            item.forceRender = true
-        end
+        if skin or (bodygroups and next(bodygroups)) then item.forceRender = true end
     end
 
     self:updateTooltip()
@@ -182,8 +179,6 @@ function PANEL:setItemType(itemTypeOrID)
         self.ExtraPaint = function(pnl, w, h) drawIcon(itemIcon, pnl, w, h) end
     else
         renderNewIcon(self, item)
-
-        -- Update visuals for spawn icon if it exists
         if self.Icon and self.Icon.UpdateVisuals then
             self.Icon.ItemTable = item
             self.Icon:UpdateVisuals()
@@ -197,11 +192,7 @@ end
 
 function PANEL:ItemDataChanged()
     self:updateTooltip()
-
-    -- Update visuals if the icon supports it
-    if self.Icon and self.Icon.UpdateVisuals then
-        self.Icon:UpdateVisuals()
-    end
+    if self.Icon and self.Icon.UpdateVisuals then self.Icon:UpdateVisuals() end
 end
 
 vgui.Register("liaItemIcon", PANEL, "SpawnIcon")

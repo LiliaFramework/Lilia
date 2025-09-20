@@ -216,32 +216,13 @@ function GM:CanPlayerTakeItem(client, item)
     elseif IsValid(item.entity) then
         local character = client:getChar()
         if character and item.entity.liaCharID then
-            -- Allow pickup if the item has no character ID (public items)
-            if item.entity.liaCharID == 0 then
-                return true
-            end
-
-            -- Allow pickup if the item belongs to the current character
-            if item.entity.liaCharID == character:getID() then
-                return true
-            end
-
-            -- Check if the original owner still exists and has this character
+            if item.entity.liaCharID == 0 then return true end
+            if item.entity.liaCharID == character:getID() then return true end
             local originalCharID = item.entity.liaCharID
             local originalChar = lia.char.getCharacter(originalCharID)
-            if not originalChar then
-                -- Original character no longer exists, item is free to take
-                return true
-            end
-
-            -- Check if the original owner is currently playing with this character
+            if not originalChar then return true end
             local originalPlayer = originalChar:getPlayer()
-            if not IsValid(originalPlayer) or originalPlayer:getChar() ~= originalChar then
-                -- Original owner is not currently playing with this character, item is free to take
-                return true
-            end
-
-            -- Item belongs to another active character
+            if not IsValid(originalPlayer) or originalPlayer:getChar() ~= originalChar then return true end
             client:notifyErrorLocalized("playerCharBelonging")
             return false
         end

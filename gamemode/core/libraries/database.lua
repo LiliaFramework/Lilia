@@ -628,7 +628,6 @@ end
 function lia.db.delete(dbTable, condition)
     dbTable = "lia_" .. (dbTable or "character")
     local query = "DELETE FROM " .. dbTable .. buildWhereClause(condition)
-
     local d = deferred.new()
     lia.db.query(query, function(results, lastID)
         d:resolve({
