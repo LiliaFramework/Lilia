@@ -380,7 +380,7 @@ Updates data in a Lilia database table.
 * `data` (*table*): The data to update.
 * `callback` (*function*): Optional callback function for the query result.
 * `dbTable` (*string*): The table name (without 'lia_' prefix).
-* `condition` (*string*): Optional WHERE condition.
+* `condition` (*string|table*): Optional WHERE condition (string or table with field-value pairs).
 
 **Returns**
 
@@ -400,12 +400,34 @@ local function updateData(data, dbTable, condition)
     end, dbTable, condition)
 end
 
--- Use in a function
+-- Use in a function with string condition
 local function updatePlayerData(client, newData)
     local condition = "steamID = '" .. client:SteamID() .. "'"
     lia.db.updateTable(newData, function(results, lastID)
         print("Player data updated")
     end, "players", condition)
+end
+
+-- Use in a function with table condition
+local function updatePlayerDataAdvanced(client, newData)
+    local conditions = {
+        steamID = client:SteamID(),
+        userGroup = "user"
+    }
+    lia.db.updateTable(newData, function(results, lastID)
+        print("Player data updated")
+    end, "players", conditions)
+end
+
+-- Use in a function with advanced table condition
+local function updateActivePlayerData(client, newData)
+    local conditions = {
+        steamID = client:SteamID(),
+        lastOnline = {operator = ">", value = os.time() - 3600} -- Active players only
+    }
+    lia.db.updateTable(newData, function(results, lastID)
+        print("Active player data updated")
+    end, "players", conditions)
 end
 
 -- Use in a command
@@ -441,7 +463,7 @@ Selects data from a Lilia database table and returns a promise.
 
 * `fields` (*string|table*): The fields to select.
 * `dbTable` (*string*): The table name (without 'lia_' prefix).
-* `condition` (*string*): Optional WHERE condition.
+* `condition` (*string|table*): Optional WHERE condition.
 * `limit` (*number*): Optional LIMIT clause.
 
 **Returns**
@@ -460,7 +482,7 @@ local function selectData(fields, dbTable, condition, limit)
     return lia.db.select(fields, dbTable, condition, limit)
 end
 
--- Use in a function
+-- Use in a function with string condition
 local function getPlayerData(client)
     local condition = "steamID = '" .. client:SteamID() .. "'"
     lia.db.select("*", "players", condition):next(function(result)
@@ -471,6 +493,21 @@ local function getPlayerData(client)
         return nil
     end):catch(function(err)
         print("Error getting player data:", err)
+    end)
+end
+
+-- Use in a function with table condition
+local function getActivePlayers()
+    local conditions = {
+        lastOnline = {operator = ">", value = os.time() - 3600},
+        userGroup = "user"
+    }
+    lia.db.select("*", "players", conditions, 10):next(function(result)
+        if result.results then
+            print("Found", #result.results, "active players")
+        end
+    end):catch(function(err)
+        print("Error getting active players:", err)
     end)
 end
 
@@ -567,7 +604,7 @@ Counts records in a Lilia database table and returns a promise.
 **Parameters**
 
 * `dbTable` (*string*): The table name (without 'lia_' prefix).
-* `condition` (*string*): Optional WHERE condition.
+* `condition` (*string|table*): Optional WHERE condition.
 
 **Returns**
 
@@ -595,7 +632,7 @@ local function getPlayerCount()
     end)
 end
 
--- Use in a function
+-- Use in a function with string condition
 local function getActivePlayers()
     local condition = "lastOnline > " .. (os.time() - 3600)
     lia.db.count("players", condition):next(function(count)
@@ -603,6 +640,20 @@ local function getActivePlayers()
         return count
     end):catch(function(err)
         print("Error counting active players:", err)
+    end)
+end
+
+-- Use in a function with table condition
+local function getActiveUserCount()
+    local conditions = {
+        lastOnline = {operator = ">", value = os.time() - 3600},
+        userGroup = "user"
+    }
+    lia.db.count("players", conditions):next(function(count)
+        print("Active users:", count)
+        return count
+    end):catch(function(err)
+        print("Error counting active users:", err)
     end)
 end
 ```
@@ -618,7 +669,7 @@ Checks if a record exists in a Lilia database table and returns a promise.
 **Parameters**
 
 * `dbTable` (*string*): The table name (without 'lia_' prefix).
-* `condition` (*string*): The WHERE condition.
+* `condition` (*string|table*): The WHERE condition.
 
 **Returns**
 
@@ -636,7 +687,7 @@ local function recordExists(dbTable, condition)
     return lia.db.exists(dbTable, condition)
 end
 
--- Use in a function
+-- Use in a function with string condition
 local function playerExists(client)
     local condition = "steamID = '" .. client:SteamID() .. "'"
     lia.db.exists("players", condition):next(function(exists)
@@ -648,6 +699,17 @@ local function playerExists(client)
         return exists
     end):catch(function(err)
         print("Error checking player existence:", err)
+    end)
+end
+
+-- Use in a function with table condition
+local function checkPlayerByNameAndGroup(name, userGroup)
+    local conditions = {
+        steamName = name,
+        userGroup = userGroup
+    }
+    return lia.db.exists("players", conditions):next(function(exists)
+        return exists
     end)
 end
 
@@ -783,7 +845,7 @@ Selects a single record from a Lilia database table and returns a promise.
 
 * `fields` (*string|table*): The fields to select.
 * `dbTable` (*string*): The table name (without 'lia_' prefix).
-* `condition` (*string*): Optional WHERE condition.
+* `condition` (*string|table*): Optional WHERE condition.
 
 **Returns**
 
@@ -801,7 +863,7 @@ local function selectOne(fields, dbTable, condition)
     return lia.db.selectOne(fields, dbTable, condition)
 end
 
--- Use in a function
+-- Use in a function with string condition
 local function getPlayer(client)
     local condition = "steamID = '" .. client:SteamID() .. "'"
     lia.db.selectOne("*", "players", condition):next(function(record)
@@ -814,6 +876,17 @@ local function getPlayer(client)
         end
     end):catch(function(err)
         print("Error getting player:", err)
+    end)
+end
+
+-- Use in a function with table condition
+local function findPlayerByNameAndGroup(name, userGroup)
+    local conditions = {
+        steamName = name,
+        userGroup = userGroup
+    }
+    return lia.db.selectOne("*", "players", conditions):next(function(record)
+        return record
     end)
 end
 
@@ -1288,7 +1361,7 @@ Deletes records from a Lilia database table and returns a promise.
 **Parameters**
 
 * `dbTable` (*string*): The table name (without 'lia_' prefix).
-* `condition` (*string*): Optional WHERE condition.
+* `condition` (*string|table*): Optional WHERE condition.
 
 **Returns**
 
@@ -1306,13 +1379,26 @@ local function deleteRecords(dbTable, condition)
     return lia.db.delete(dbTable, condition)
 end
 
--- Use in a function
+-- Use in a function with string condition
 local function deletePlayer(client)
     local condition = "steamID = '" .. client:SteamID() .. "'"
     lia.db.delete("players", condition):next(function(result)
         print("Player deleted")
     end):catch(function(err)
         print("Error deleting player:", err)
+    end)
+end
+
+-- Use in a function with table condition
+local function deleteInactivePlayers(daysOld)
+    local conditions = {
+        lastOnline = {operator = "<", value = os.time() - (daysOld * 86400)},
+        userGroup = {operator = "!=", value = "admin"}
+    }
+    return lia.db.delete("players", conditions):next(function(result)
+        print("Inactive non-admin players deleted")
+    end):catch(function(err)
+        print("Error deleting inactive players:", err)
     end)
 end
 
