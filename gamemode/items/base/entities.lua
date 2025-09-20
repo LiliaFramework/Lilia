@@ -36,7 +36,11 @@ ITEM.functions.Place = {
         entity:SetPos(data.endpos)
         entity:Spawn()
         local entityData
-        if SERVER then entityData = item:getEntity():getNetVar("entityData", {}) end
+        if SERVER then
+            local itemEntity = item:getEntity()
+            entityData = itemEntity and itemEntity:getNetVar("entityData", {})
+        end
+
         if entityData and table.Count(entityData) > 0 then
             restoreEntityData(entity, entityData)
         else
