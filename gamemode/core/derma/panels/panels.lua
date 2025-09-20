@@ -577,7 +577,7 @@ classes.DualText = function(pnl, toptext, topfont, topcol, bottomtext, bottomfon
 end
 
 classes.Blur = function(pnl, amount)
-    pnl:On("Paint", function(s, _, _)
+    pnl:On("Paint", function(s)
         local x, y = s:LocalToScreen(0, 0)
         local scrW, scrH = ScrW(), ScrH()
         surface.SetDrawColor(255, 255, 255)

@@ -30,7 +30,18 @@ function PANEL:Init()
         oldSetModel(panel, model)
         local entity = panel.Entity
         if skin then entity:SetSkin(skin) end
+
+        -- Apply bodygroups if ItemTable has them
         if panel.ItemTable then
+            local bodygroups = panel.ItemTable:getBodygroups()
+            if bodygroups and istable(bodygroups) then
+                for groupIndex, groupValue in pairs(bodygroups) do
+                    if isnumber(groupIndex) and isnumber(groupValue) then
+                        entity:SetBodygroup(groupIndex, groupValue)
+                    end
+                end
+            end
+
             local paintMat = hook.Run("PaintItem", panel.ItemTable)
             if isstring(paintMat) and paintMat ~= "" then
                 entity:SetMaterial(paintMat)
@@ -40,6 +51,10 @@ function PANEL:Init()
                 entity:SetMaterial("")
             end
         end
+
+        -- Force entity update to ensure bodygroups and skins are visible
+        entity:InvalidateBoneCache()
+        entity:SetupBones()
 
         setSequence(entity)
         local data = PositionSpawnIcon(entity, entity:GetPos())
@@ -74,6 +89,48 @@ end
 
 function PANEL:OnMousePressed()
     if self.DoClick then self:DoClick() end
+end
+
+function PANEL:UpdateVisuals()
+    local entity = self.Entity
+    if not IsValid(entity) then return end
+
+    if self.ItemTable then
+        local bodygroups = self.ItemTable:getBodygroups()
+        if bodygroups and istable(bodygroups) then
+            for groupIndex, groupValue in pairs(bodygroups) do
+                if isnumber(groupIndex) and isnumber(groupValue) then
+                    entity:SetBodygroup(groupIndex, groupValue)
+                end
+            end
+        end
+
+        local skin = self.ItemTable:getSkin()
+        if skin and isnumber(skin) then entity:SetSkin(skin) end
+
+        local paintMat = hook.Run("PaintItem", self.ItemTable)
+        if isstring(paintMat) and paintMat ~= "" then
+            entity:SetMaterial(paintMat)
+        elseif isstring(self.ItemTable.material) and self.ItemTable.material ~= "" then
+            entity:SetMaterial(self.ItemTable.material)
+        else
+            entity:SetMaterial("")
+        end
+
+        -- Force entity update to ensure bodygroups and skins are visible
+        entity:InvalidateBoneCache()
+        entity:SetupBones()
+
+        setSequence(entity)
+        local data = PositionSpawnIcon(entity, entity:GetPos())
+        if data then
+            self:SetFOV(data.fov)
+            self:SetCamPos(data.origin)
+            self:SetLookAng(data.angles)
+        end
+
+        entity:SetEyeTarget(Vector(0, 0, 64))
+    end
 end
 
 vgui.Register("liaSpawnIcon", PANEL, "DModelPanel")

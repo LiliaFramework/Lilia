@@ -2,10 +2,14 @@
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()
-    if loginTime and loginTime > 0 then
-        local total = character:getPlayTime()
-        character:setPlayTime(total + os.time() - loginTime)
-        character:setLoginTime(os.time())
+    if IsValid(client) and client:getChar() == character then
+        if loginTime and loginTime > 0 then
+            local total = character:getPlayTime()
+            character:setPlayTime(total + os.time() - loginTime)
+            character:setLoginTime(os.time())
+        else
+            character:setLoginTime(os.time())
+        end
     end
 
     if not character:getInv() then return end
@@ -211,7 +215,33 @@ function GM:CanPlayerTakeItem(client, item)
         return false
     elseif IsValid(item.entity) then
         local character = client:getChar()
-        if character and item.entity.liaCharID and item.entity.liaCharID ~= character:getID() then
+        if character and item.entity.liaCharID then
+            -- Allow pickup if the item has no character ID (public items)
+            if item.entity.liaCharID == 0 then
+                return true
+            end
+
+            -- Allow pickup if the item belongs to the current character
+            if item.entity.liaCharID == character:getID() then
+                return true
+            end
+
+            -- Check if the original owner still exists and has this character
+            local originalCharID = item.entity.liaCharID
+            local originalChar = lia.char.getCharacter(originalCharID)
+            if not originalChar then
+                -- Original character no longer exists, item is free to take
+                return true
+            end
+
+            -- Check if the original owner is currently playing with this character
+            local originalPlayer = originalChar:getPlayer()
+            if not IsValid(originalPlayer) or originalPlayer:getChar() ~= originalChar then
+                -- Original owner is not currently playing with this character, item is free to take
+                return true
+            end
+
+            -- Item belongs to another active character
             client:notifyErrorLocalized("playerCharBelonging")
             return false
         end
@@ -877,7 +907,7 @@ local function versionCompare(localVersion, remoteVersion)
 end
 
 local publicURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/docs/versioning/modules.json"
-local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/version.json"
+local privateURL = "https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/docs/versioning/modules.json"
 local versionURL = "https://raw.githubusercontent.com/LiliaFramework/LiliaFramework.github.io/main/docs/versioning/lilia.json"
 local function checkPublicModules()
     local hasPublic = false

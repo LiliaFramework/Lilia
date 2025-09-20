@@ -141,7 +141,7 @@ function PANEL:setItemType(itemTypeOrID)
     assert(item, L("invalidItemTypeOrID", item and item.name or itemTypeOrID))
     self.liaToolTip = true
     self.itemTable = item
-    self:SetModel(item:getModel(), item:getSkin())
+    self:SetModel(item:getModel())
     local paintMat = hook.Run("PaintItem", item)
     local entity
     if self.Icon and self.Icon.GetEntity then
@@ -151,12 +151,26 @@ function PANEL:setItemType(itemTypeOrID)
     end
 
     if IsValid(entity) then
+        local skin = item:getSkin()
+        if skin and isnumber(skin) then entity:SetSkin(skin) end
+        local bodygroups = item:getBodygroups()
+        if bodygroups and istable(bodygroups) then
+            for groupIndex, groupValue in pairs(bodygroups) do
+                if isnumber(groupIndex) and isnumber(groupValue) then entity:SetBodygroup(groupIndex, groupValue) end
+            end
+        end
+
         if isstring(paintMat) and paintMat ~= "" then
             entity:SetMaterial(paintMat)
         elseif isstring(item.material) and item.material ~= "" then
             entity:SetMaterial(item.material)
         else
             entity:SetMaterial("")
+        end
+
+        -- Force icon rebuild if bodygroups or skin were set to ensure they display properly
+        if skin or (bodygroups and next(bodygroups)) then
+            item.forceRender = true
         end
     end
 
@@ -168,6 +182,12 @@ function PANEL:setItemType(itemTypeOrID)
         self.ExtraPaint = function(pnl, w, h) drawIcon(itemIcon, pnl, w, h) end
     else
         renderNewIcon(self, item)
+
+        -- Update visuals for spawn icon if it exists
+        if self.Icon and self.Icon.UpdateVisuals then
+            self.Icon.ItemTable = item
+            self.Icon:UpdateVisuals()
+        end
     end
 end
 
@@ -177,6 +197,11 @@ end
 
 function PANEL:ItemDataChanged()
     self:updateTooltip()
+
+    -- Update visuals if the icon supports it
+    if self.Icon and self.Icon.UpdateVisuals then
+        self.Icon:UpdateVisuals()
+    end
 end
 
 vgui.Register("liaItemIcon", PANEL, "SpawnIcon")

@@ -257,7 +257,6 @@ local KnownExploits = {
     ["NDES_SelectedEmblem"] = true,
     ["join_disconnect"] = true,
     ["Morpheus.StaffTracker"] = true,
-    ["casinokit_chipexchange"] = true,
     ["BuyKey"] = true,
     ["BuyCrate"] = true,
     ["FactionInviteConsole"] = true,

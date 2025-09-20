@@ -48,6 +48,10 @@ function ITEM:getSkin()
     return self.skin
 end
 
+function ITEM:getBodygroups()
+    return self.bodygroups or {}
+end
+
 function ITEM:getPrice()
     local price = self.price
     if self.calcPrice then price = self:calcPrice(self.price) end
@@ -228,7 +232,12 @@ if SERVER then
             if self.scale and self.scale ~= 1 then entity:SetModelScale(self.scale) end
             if IsValid(client) then
                 entity.SteamID = client:SteamID()
-                entity.liaCharID = client:getChar():getID()
+                if client:getChar() then
+                    entity.liaCharID = client:getChar():getID()
+                else
+                    entity.liaCharID = 0
+                end
+
                 entity:SetCreator(client)
             end
             return entity

@@ -1,12 +1,8 @@
-﻿local characterMeta = lia.meta.character or {}
-lia.char = lia.char or {}
+﻿lia.char = lia.char or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.names = lia.char.names or {}
 lia.char.varHooks = lia.char.varHooks or {}
 lia.char.vars = lia.char.vars or {}
-characterMeta.__index = characterMeta
-characterMeta.id = characterMeta.id or 0
-characterMeta.vars = characterMeta.vars or {}
 if SERVER and #lia.char.names < 1 then
     lia.db.query("SELECT id, name FROM lia_characters", function(data)
         if data and #data > 0 then
@@ -102,11 +98,11 @@ function lia.char.registerVar(key, data)
     local upperName = key:sub(1, 1):upper() .. key:sub(2)
     if SERVER and not data.isNotModifiable then
         if data.onSet then
-            characterMeta["set" .. upperName] = data.onSet
+            lia.meta.character["set" .. upperName] = data.onSet
         elseif data.noNetworking then
-            characterMeta["set" .. upperName] = function(self, value) self.vars[key] = value end
+            lia.meta.character["set" .. upperName] = function(self, value) self.vars[key] = value end
         elseif data.isLocal then
-            characterMeta["set" .. upperName] = function(self, value)
+            lia.meta.character["set" .. upperName] = function(self, value)
                 local curChar = self:getPlayer() and self:getPlayer():getChar()
                 local sendID = true
                 if curChar and curChar == self then sendID = false end
@@ -124,7 +120,7 @@ function lia.char.registerVar(key, data)
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
             end
         else
-            characterMeta["set" .. upperName] = function(self, value)
+            lia.meta.character["set" .. upperName] = function(self, value)
                 local oldVar = self.vars[key]
                 self.vars[key] = value
                 net.Start("liaCharSet")
@@ -138,9 +134,9 @@ function lia.char.registerVar(key, data)
     end
 
     if data.onGet then
-        characterMeta["get" .. upperName] = data.onGet
+        lia.meta.character["get" .. upperName] = data.onGet
     else
-        characterMeta["get" .. upperName] = function(self, default)
+        lia.meta.character["get" .. upperName] = function(self, default)
             local value = self.vars[key]
             if value ~= nil then return value end
             if default == nil then return lia.char.vars[key] and lia.char.vars[key].default or nil end
@@ -148,7 +144,7 @@ function lia.char.registerVar(key, data)
         end
     end
 
-    characterMeta.vars[key] = data.default
+    lia.meta.character.vars[key] = data.default
 end
 
 lia.char.registerVar("name", {
@@ -813,7 +809,7 @@ if SERVER then
         end
 
         for _, ply in player.Iterator() do
-            if IsValid(ply) and ply:hasPrivilege("listCharacters") then
+            if IsValid(ply) then
                 net.Start("liaCharDeleted")
                 net.Send(ply)
             end

@@ -299,6 +299,31 @@ local function genUpdateList(value)
     return table.concat(changes, ", ")
 end
 
+local function buildWhereClause(conditions)
+    if not conditions then return "" end
+    if isstring(conditions) then return " WHERE " .. tostring(conditions) end
+    if istable(conditions) and next(conditions) then
+        local whereParts = {}
+        for field, value in pairs(conditions) do
+            if value ~= nil then
+                local operator = "="
+                local conditionValue = value
+                if istable(value) and value.operator and value.value ~= nil then
+                    operator = value.operator
+                    conditionValue = value.value
+                end
+
+                local escapedField = lia.db.escapeIdentifier(field)
+                local convertedValue = lia.db.convertDataType(conditionValue)
+                table.insert(whereParts, escapedField .. " " .. operator .. " " .. convertedValue)
+            end
+        end
+
+        if #whereParts > 0 then return " WHERE " .. table.concat(whereParts, " AND ") end
+    end
+    return ""
+end
+
 function lia.db.convertDataType(value, noEscape)
     if value == nil then
         return "NULL"
@@ -337,7 +362,7 @@ end
 
 function lia.db.updateTable(value, callback, dbTable, condition)
     local d = deferred.new()
-    local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. (condition and " WHERE " .. condition or "")
+    local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. buildWhereClause(condition)
     lia.db.query(query, function(results, lastID)
         if callback then callback(results, lastID) end
         d:resolve({
@@ -353,7 +378,7 @@ function lia.db.select(fields, dbTable, condition, limit)
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
     local tableName = "lia_" .. (dbTable or "characters")
     local query = "SELECT " .. from .. " FROM " .. tableName
-    if condition then query = query .. " WHERE " .. tostring(condition) end
+    query = query .. buildWhereClause(condition)
     if limit then query = query .. " LIMIT " .. tostring(limit) end
     lia.db.query(query, function(results, lastID)
         d:resolve({
@@ -405,7 +430,7 @@ end
 function lia.db.count(dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
-    local q = "SELECT COUNT(*) AS cnt FROM " .. tbl .. (condition and " WHERE " .. condition or "")
+    local q = "SELECT COUNT(*) AS cnt FROM " .. tbl .. buildWhereClause(condition)
     lia.db.query(q, function(results)
         if istable(results) then
             c:resolve(tonumber(results[1].cnt))
@@ -450,7 +475,7 @@ function lia.db.selectOne(fields, dbTable, condition)
     local tbl = "`lia_" .. dbTable .. "`"
     local f = istable(fields) and table.concat(fields, ", ") or fields
     local q = "SELECT " .. f .. " FROM " .. tbl
-    if condition then q = q .. " WHERE " .. condition end
+    q = q .. buildWhereClause(condition)
     q = q .. " LIMIT 1"
     lia.db.query(q, function(results)
         if istable(results) then
@@ -601,13 +626,8 @@ function lia.db.upsert(value, dbTable)
 end
 
 function lia.db.delete(dbTable, condition)
-    local query
     dbTable = "lia_" .. (dbTable or "character")
-    if condition then
-        query = "DELETE FROM " .. dbTable .. " WHERE " .. condition
-    else
-        query = "DELETE * FROM " .. dbTable
-    end
+    local query = "DELETE FROM " .. dbTable .. buildWhereClause(condition)
 
     local d = deferred.new()
     lia.db.query(query, function(results, lastID)
