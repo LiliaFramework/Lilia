@@ -42,7 +42,6 @@ net.Receive("liaSpawnMenuSpawnItem", function(_, client)
         tryFixPropPosition(client, ent)
         if IsValid(client) then
             ent.SteamID = client:SteamID()
-            -- Admin-spawned items should be public (liaCharID = 0) so anyone can pick them up
             ent.liaCharID = 0
             ent:SetCreator(client)
         end
