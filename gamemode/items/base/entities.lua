@@ -44,7 +44,7 @@ ITEM.functions.Place = {
         if entityData and table.Count(entityData) > 0 then
             restoreEntityData(entity, entityData)
         else
-            local itemData = item:getData()
+            local itemData = item.data or {}
             if itemData.angles then entity:SetAngles(itemData.angles) end
             if itemData.material and itemData.material ~= "" then entity:SetMaterial(itemData.material) end
             if itemData.color then entity:SetColor(itemData.color) end
