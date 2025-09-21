@@ -557,10 +557,8 @@ function GM:OnReloaded()
         return
     end
 
-    -- Mark reload as in progress
     lia.reloadInProgress = true
     lia.lastReloadTime = currentTime
-    -- Perform the actual reload
     lia.module.initialize()
     lia.config.load()
     lia.faction.formatModelData()
@@ -573,7 +571,6 @@ function GM:OnReloaded()
         chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Gamemode hotreloaded successfully!")
     end
 
-    -- Mark reload as complete
     lia.reloadInProgress = false
 end
 
