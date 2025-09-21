@@ -71,6 +71,7 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
         Unsorted = {}
     }
 
+    tree:Clear()
     for uniqueID, itemData in pairs(allItems) do
         local category = itemData:getCategory()
         categorized[category] = categorized[category] or {}
@@ -104,6 +105,31 @@ function MODULE:PopulateInventoryItems(pnlContent, tree)
     end
 end
 
+search.AddProvider(function(str)
+    local results = {}
+    if not str or str == "" then return results end
+    local query = string.lower(str)
+    for uniqueID, itemData in pairs(lia.item.list or {}) do
+        local name = tostring(itemData.name or "")
+        local desc = tostring(itemData.desc or "")
+        local category = tostring((itemData.getCategory and itemData:getCategory()) or "")
+        if string.find(string.lower(name), query, 1, true) or string.find(string.lower(desc), query, 1, true) or string.find(string.lower(category), query, 1, true) or string.find(string.lower(uniqueID), query, 1, true) then
+            local icon = spawnmenu.CreateContentIcon("inventoryitem", g_SpawnMenu and g_SpawnMenu.SearchPropPanel or nil, {
+                name = name ~= "" and name or uniqueID,
+                id = uniqueID
+            })
+
+            table.insert(results, {
+                text = name ~= "" and name or uniqueID,
+                icon = icon
+            })
+        end
+    end
+
+    table.SortByMember(results, "text", true)
+    return results
+end, "inventoryitems")
+
 spawnmenu.AddCreationTab(L("inventoryItems"), function()
     local client = LocalPlayer()
     if not IsValid(client) or not client.hasPrivilege or not client:hasPrivilege("canUseItemSpawner") then
@@ -113,7 +139,8 @@ spawnmenu.AddCreationTab(L("inventoryItems"), function()
         return pnl
     else
         local ctrl = vgui.Create("SpawnmenuContentPanel")
-        ctrl:CallPopulateHook("PopulateInventoryItems")
+        if isfunction(ctrl.EnableSearch) then ctrl:EnableSearch("inventoryitems", "PopulateInventoryItems") end
+        timer.Simple(0, function() if IsValid(ctrl) then ctrl:CallPopulateHook("PopulateInventoryItems") end end)
         return ctrl
     end
 end, "icon16/briefcase.png")

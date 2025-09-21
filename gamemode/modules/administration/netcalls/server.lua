@@ -199,6 +199,31 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
     end)
 end)
 
+-- Returns a concise list of characters with their Level and XP for the Admin Leveling tab
+net.Receive("liaRequestLevelingList", function(_, client)
+    if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
+    local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
+    local fields = table.concat({"c.id", "c.name", "c.steamID", "c.faction", "c.level", "c.xp"}, ", ")
+    local query = "SELECT " .. fields .. " FROM lia_characters AS c WHERE c.schema = '" .. lia.db.escape(gamemode) .. "'"
+    lia.db.query(query, function(rows)
+        local data = {}
+        for _, row in ipairs(rows or {}) do
+            local factionData = lia.faction.teams[row.faction]
+            local factionName = factionData and factionData.name or "Unknown"
+            data[#data + 1] = {
+                ID = row.id,
+                Name = row.name,
+                SteamID = tostring(row.steamID or ""),
+                Faction = factionName,
+                Level = tonumber(row.level) or 1,
+                XP = tonumber(row.xp) or 0
+            }
+        end
+
+        lia.net.writeBigTable(client, "liaLevelingList", data)
+    end)
+end)
+
 net.Receive("liaRequestAllFlags", function(_, client)
     if not client:hasPrivilege("canAccessFlagManagement") then return end
     local data = {}

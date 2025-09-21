@@ -5,6 +5,8 @@
     loader = {}
 }
 
+lia.reloadInProgress = false
+lia.lastReloadTime = 0
 local FilesToLoad = {
     {
         path = "lilia/gamemode/core/libraries/net.lua",
@@ -542,6 +544,23 @@ function GM:Initialize()
 end
 
 function GM:OnReloaded()
+    local currentTime = CurTime()
+    local timeSinceLastReload = currentTime - lia.lastReloadTime
+    if lia.config then lia.reloadCooldown = 5 end
+    if timeSinceLastReload < lia.reloadCooldown then
+        local remaining = math.ceil(lia.reloadCooldown - timeSinceLastReload)
+        if SERVER then
+            print("[Lilia] Reload cooldown active. " .. remaining .. " seconds remaining.")
+        else
+            chat.AddText(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Reload cooldown active. " .. remaining .. " seconds remaining.")
+        end
+        return
+    end
+
+    -- Mark reload as in progress
+    lia.reloadInProgress = true
+    lia.lastReloadTime = currentTime
+    -- Perform the actual reload
     lia.module.initialize()
     lia.config.load()
     lia.faction.formatModelData()
@@ -553,6 +572,9 @@ function GM:OnReloaded()
     else
         chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Gamemode hotreloaded successfully!")
     end
+
+    -- Mark reload as complete
+    lia.reloadInProgress = false
 end
 
 local loadedCompatibility = {}

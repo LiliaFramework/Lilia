@@ -340,6 +340,13 @@ concommand.Add("lia_wipewebimages", function()
     urlMap = {}
     lia.information(L("webImagesCleared"))
     ensureDir(baseDir)
+    timer.Simple(0.1, function()
+        for name, data in pairs(lia.webimage.stored) do
+            lia.webimage.download(name, data.url, nil, data.flags)
+        end
+
+        lia.information("Started re-downloading stored web images...")
+    end)
 end)
 
 concommand.Add("test_webimage_menu", function()

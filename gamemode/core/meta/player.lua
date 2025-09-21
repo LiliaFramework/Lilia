@@ -169,7 +169,7 @@ function playerMeta:notifyLocalized(message, notifType, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, message, notifType or "default", ...)
     else
-        lia.notices.notifyLocalized(message, notifType or "default", ...)
+        lia.notices.notifyLocalized(nil, message, notifType or "default", ...)
     end
 end
 
@@ -225,7 +225,7 @@ function playerMeta:notifyErrorLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "error", ...)
     else
-        lia.notices.notifyLocalized(key, "error", ...)
+        lia.notices.notifyLocalized(nil, key, "error", ...)
     end
 end
 
@@ -233,7 +233,7 @@ function playerMeta:notifyWarningLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "warning", ...)
     else
-        lia.notices.notifyLocalized(key, "warning", ...)
+        lia.notices.notifyLocalized(nil, key, "warning", ...)
     end
 end
 
@@ -241,7 +241,7 @@ function playerMeta:notifyInfoLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "info", ...)
     else
-        lia.notices.notifyLocalized(key, "info", ...)
+        lia.notices.notifyLocalized(nil, key, "info", ...)
     end
 end
 
@@ -249,7 +249,7 @@ function playerMeta:notifySuccessLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "success", ...)
     else
-        lia.notices.notifyLocalized(key, "success", ...)
+        lia.notices.notifyLocalized(nil, key, "success", ...)
     end
 end
 
@@ -257,7 +257,7 @@ function playerMeta:notifyMoneyLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "money", ...)
     else
-        lia.notices.notifyLocalized(key, "money", ...)
+        lia.notices.notifyLocalized(nil, key, "money", ...)
     end
 end
 
@@ -265,7 +265,7 @@ function playerMeta:notifyAdminLocalized(key, ...)
     if SERVER then
         lia.notices.notifyLocalized(self, key, "admin", ...)
     else
-        lia.notices.notifyLocalized(key, "admin", ...)
+        lia.notices.notifyLocalized(nil, key, "admin", ...)
     end
 end
 
@@ -433,7 +433,7 @@ if SERVER then
         local maxStamina = char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100)
         local value = math.Clamp(current + amount, 0, maxStamina)
         self:setLocalVar("stamina", value)
-        if value >= maxStamina * 0.5 and self:getNetVar("brth", false) then
+        if value >= maxStamina * 0.25 and self:getNetVar("brth", false) then
             self:setNetVar("brth", nil)
             hook.Run("PlayerStaminaGained", self)
         end

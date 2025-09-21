@@ -421,6 +421,21 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
+    if client:hasPrivilege("listCharacters") then
+        table.insert(pages, {
+            name = "Leveling",
+            icon = "icon16/chart_bar.png",
+            drawFunc = function(panel)
+                panelRef = panel
+                panel:Clear()
+                panel:DockPadding(10, 10, 10, 10)
+                panel.Paint = function() end
+                net.Start("liaRequestLevelingList")
+                net.SendToServer()
+            end
+        })
+    end
+
     if client:hasPrivilege("viewDBTables") then
         table.insert(pages, {
             name = L("databaseView"),
@@ -505,18 +520,6 @@ function MODULE:PopulateAdminTabs(pages)
                     net.Start("liaRequestAllFlags")
                     net.SendToServer()
                 end
-            end
-        })
-    end
-
-    if client:hasPrivilege("canManageFactions") then
-        table.insert(pages, {
-            name = L("factionManagement"),
-            icon = "icon16/chart_organisation.png",
-            drawFunc = function(panel)
-                rosterPanel = panel
-                net.Start("liaRequestFactionRoster")
-                net.SendToServer()
             end
         })
     end

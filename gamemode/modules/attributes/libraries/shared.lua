@@ -20,7 +20,7 @@
         if value == 0 and not client:getNetVar("brth", false) then
             client:setNetVar("brth", true)
             hook.Run("PlayerStaminaLost", client)
-        elseif value >= max * 0.5 and client:getNetVar("brth", false) then
+        elseif value >= max * 0.25 and client:getNetVar("brth", false) then
             client:setNetVar("brth", nil)
             hook.Run("PlayerStaminaGained", client)
         end

@@ -525,8 +525,14 @@ end
 
 function GM:SetupBotPlayer(client)
     local botID = os.time()
-    local index = math.random(1, table.Count(lia.faction.indices))
-    local faction = lia.faction.indices[index]
+    local defaultFactions = {}
+    for _, faction in pairs(lia.faction.indices) do
+        if faction.isDefault then table.insert(defaultFactions, faction) end
+    end
+
+    if #defaultFactions == 0 then return end
+    local index = math.random(1, #defaultFactions)
+    local faction = defaultFactions[index]
     local invType = hook.Run("GetDefaultInventoryType") or "GridInv"
     if not invType then return end
     local inventory = lia.inventory.new(invType)

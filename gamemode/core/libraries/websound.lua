@@ -337,6 +337,13 @@ concommand.Add("lia_wipe_sounds", function()
     cache = {}
     urlMap = {}
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " " .. L("webSoundCacheCleared") .. "\n")
+    timer.Simple(0.1, function()
+        for name, url in pairs(lia.websound.stored) do
+            lia.websound.download(name, url)
+        end
+
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " Started re-downloading stored sounds...\n")
+    end)
 end)
 
 concommand.Add("lia_validate_sounds", function()

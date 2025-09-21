@@ -598,7 +598,14 @@ lia.net.readBigTable("liaAllFlags", function(data)
     end
 end)
 
-lia.net.readBigTable("liaFactionRosterData", function(data) if IsValid(rosterPanel) then OpenRoster(rosterPanel, data or {}) end end)
+lia.net.readBigTable("liaFactionRosterData", function(data)
+    if IsValid(panelRef) and isfunction(panelRef.buildSheets) then
+        panelRef:buildSheets(data or {})
+    elseif IsValid(rosterPanel) then
+        OpenRoster(rosterPanel, data or {})
+    end
+end)
+
 lia.net.readBigTable("liaDatabaseViewData", function(data)
     if not IsValid(panelRef) or not isfunction(panelRef.buildSheets) then return end
     panelRef:buildSheets(data)
@@ -785,6 +792,74 @@ lia.net.readBigTable("liaAllPlayers", function(players)
             if lia.command.hasAccess(LocalPlayer(), "viewwarns") then menu:AddOption(L("viewWarnings"), function() LocalPlayer():ConCommand("say /viewwarns " .. steamID) end):SetIcon("icon16/error.png") end
             if lia.command.hasAccess(LocalPlayer(), "viewtickets") then menu:AddOption(L("viewTicketRequests"), function() LocalPlayer():ConCommand("say /viewtickets " .. steamID) end):SetIcon("icon16/help.png") end
         end)
+    end
+end)
+
+-- Admin Leveling Tab: render list of characters with Level and XP
+lia.net.readBigTable("liaLevelingList", function(data)
+    if not IsValid(panelRef) then return end
+    panelRef:Clear()
+    local search = panelRef:Add("DTextEntry")
+    search:Dock(TOP)
+    search:SetPlaceholderText(L("search"))
+    search:SetTextColor(Color(255, 255, 255))
+    local list = panelRef:Add("DListView")
+    list:Dock(FILL)
+    local function addSizedColumn(text)
+        local col = list:AddColumn(text)
+        surface.SetFont(col.Header:GetFont())
+        local w = surface.GetTextSize(col.Header:GetText())
+        col:SetMinWidth(w + 16)
+        col:SetWidth(w + 16)
+        return col
+    end
+
+    addSizedColumn(L("id"))
+    addSizedColumn(L("name"))
+    addSizedColumn(L("steamID"))
+    addSizedColumn(L("faction"))
+    addSizedColumn("Level")
+    addSizedColumn("XP")
+    local function populate(filter)
+        list:Clear()
+        filter = string.lower(filter or "")
+        for _, row in ipairs(data or {}) do
+            local id = tonumber(row.ID) or 0
+            local name = row.Name or ""
+            local steamID = row.SteamID or ""
+            local faction = row.Faction or ""
+            local level = tonumber(row.Level) or 1
+            local xp = tonumber(row.XP) or 0
+            local searchStr = string.format("%s %s %s %s %d %d", id, name, steamID, faction, level, xp)
+            if filter == "" or searchStr:lower():find(filter, 1, true) then
+                local line = list:AddLine(id, name, steamID, faction, level, xp)
+                line.SteamID = steamID
+            end
+        end
+    end
+
+    search.OnChange = function() populate(search:GetValue()) end
+    populate("")
+    function list:OnRowRightClick(_, line)
+        if not IsValid(line) then return end
+        local menu = DermaMenu()
+        if line.SteamID and line.SteamID ~= "" then
+            menu:AddOption(L("copySteamID"), function() SetClipboardText(line.SteamID) end):SetIcon("icon16/page_copy.png")
+            menu:AddOption(L("openSteamProfile"), function() gui.OpenURL("https://steamcommunity.com/profiles/" .. util.SteamIDTo64(line.SteamID)) end):SetIcon("icon16/world.png")
+        end
+
+        menu:AddOption(L("copyRow"), function()
+            local rowString = ""
+            for i, column in ipairs(self.Columns or {}) do
+                local header = column.Header and column.Header:GetText() or L("columnWithNumber", i)
+                local value = line:GetColumnText(i) or ""
+                rowString = rowString .. header .. " " .. value .. " | "
+            end
+
+            SetClipboardText(string.sub(rowString, 1, -4))
+        end):SetIcon("icon16/page_copy.png")
+
+        menu:Open()
     end
 end)
 

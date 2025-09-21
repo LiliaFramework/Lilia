@@ -527,12 +527,6 @@ lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, nil, {
     max = 200
 })
 
-lia.config.add("WallPeek", "wallPeek", true, nil, {
-    desc = "wallPeekDesc",
-    category = "categoryRendering",
-    type = "Boolean",
-})
-
 lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, {
     desc = "maxThirdPersonHorizontalDesc",
     category = "categoryThirdPerson",

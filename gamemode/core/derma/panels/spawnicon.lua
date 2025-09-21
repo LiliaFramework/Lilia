@@ -8,11 +8,14 @@ local function setSequence(entity)
         return
     end
 
-    for _, name in ipairs(entity:GetSequenceList()) do
-        local lname = name:lower()
-        if lname ~= "idlenoise" and (lname:find("idle") or lname:find("fly")) then
-            entity:ResetSequence(name)
-            return
+    local sequenceList = entity:GetSequenceList()
+    if sequenceList and istable(sequenceList) then
+        for _, name in ipairs(sequenceList) do
+            local lname = name:lower()
+            if lname ~= "idlenoise" and (lname:find("idle") or lname:find("fly")) then
+                entity:ResetSequence(name)
+                return
+            end
         end
     end
 

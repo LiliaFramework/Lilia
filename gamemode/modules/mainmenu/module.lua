@@ -90,7 +90,7 @@ else
     end
 
     function MODULE:LiliaLoaded()
-        if hook.Run("ShouldOpenMainMenu") ~= false then vgui.Create("liaCharacter") end
+        vgui.Create("liaCharacter")
     end
 
     function MODULE:KickedFromChar(_, isCurrentChar)

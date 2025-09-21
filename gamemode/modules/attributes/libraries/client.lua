@@ -54,8 +54,8 @@ function MODULE:HUDPaintBackground()
         stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, targetAmount)
         lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), stmBlurAmount, 0.2, stmBlurAlpha)
     else
-        stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, 0)
-        stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, 0)
+        stmBlurAlpha = 0
+        stmBlurAmount = 0
     end
 end
 
@@ -97,4 +97,6 @@ function MODULE:OnReloaded()
     local char = client:getChar()
     if not char then return end
     predictedStamina = client:getLocalVar("stamina", char:getMaxStamina())
+    stmBlurAlpha = 0
+    stmBlurAmount = 0
 end

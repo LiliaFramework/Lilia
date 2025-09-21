@@ -1786,11 +1786,16 @@ end
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     local entitiesByCreator = {}
+    local nonPlayerEntities = {}
     for _, ent in ents.Iterator() do
-        if IsValid(ent) and ent.GetCreator and IsValid(ent:GetCreator()) then
-            local owner = ent:GetCreator():Nick()
-            entitiesByCreator[owner] = entitiesByCreator[owner] or {}
-            table.insert(entitiesByCreator[owner], ent)
+        if IsValid(ent) then
+            if ent.GetCreator and IsValid(ent:GetCreator()) then
+                local owner = ent:GetCreator():Nick()
+                entitiesByCreator[owner] = entitiesByCreator[owner] or {}
+                table.insert(entitiesByCreator[owner], ent)
+            else
+                table.insert(nonPlayerEntities, ent)
+            end
         end
     end
 
@@ -1829,9 +1834,91 @@ function MODULE:PopulateAdminTabs(pages)
         end)
     end
 
+    local function createEntityPanel(entPanel, entities, title)
+        local sheetContainer = vgui.Create("DPropertySheet", entPanel)
+        sheetContainer:Dock(FILL)
+        sheetContainer:DockPadding(0, 0, 0, 10)
+        local ownerPanel = vgui.Create("DPanel", sheetContainer)
+        ownerPanel:Dock(FILL)
+        ownerPanel.Paint = function() end
+        local searchSheet = vgui.Create("liaSheet", ownerPanel)
+        searchSheet:Dock(FILL)
+        searchSheet:SetPlaceholderText(L("searchEntities"))
+        for _, ent in ipairs(entities) do
+            if not IsValid(ent) then continue end
+            local displayName = getEntityDisplayName(ent)
+            local itemPanel = vgui.Create("DPanel")
+            itemPanel:SetTall(100)
+            itemPanel.Paint = function(pnl, w, h)
+                derma.SkinHook("Paint", "Panel", pnl, w, h)
+                draw.SimpleText(displayName, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+
+            local icon = vgui.Create("liaSpawnIcon", itemPanel)
+            icon:Dock(LEFT)
+            icon:SetWide(64)
+            icon:SetTall(64)
+            icon:DockMargin(5, 5, 0, 0)
+            local modelPath = ent:GetModel()
+            if not modelPath or modelPath == "" then modelPath = "models/error.mdl" end
+            icon:SetModel(modelPath, ent:GetSkin() or 0)
+            local btnContainer = vgui.Create("DPanel", itemPanel)
+            btnContainer:Dock(RIGHT)
+            btnContainer:SetWide(380)
+            btnContainer:DockMargin(-250, 5, 5, 0)
+            btnContainer.Paint = function() end
+            local btnLayout = vgui.Create("DIconLayout", btnContainer)
+            btnLayout:Dock(FILL)
+            btnLayout:SetSpaceX(10)
+            btnLayout:SetSpaceY(0)
+            btnLayout:DockMargin(0, 5, 0, 0)
+            local function makeBtn(key, func)
+                local btn = btnLayout:Add("liaSmallButton")
+                btn:SetWide(120)
+                btn:SetTall(60)
+                btn:SetText(L(key))
+                btn.DoClick = func
+            end
+
+            makeBtn("view", function()
+                if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                local prevTP = lia.option.get("thirdPersonEnabled", false)
+                lia.option.set("thirdPersonEnabled", false)
+                startSpectateView(ent, prevTP)
+            end)
+
+            if client:hasPrivilege("teleportToEntity") then
+                makeBtn("teleport", function()
+                    if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                    net.Start("liaTeleportToEntity")
+                    net.WriteEntity(ent)
+                    net.SendToServer()
+                end)
+            end
+
+            if client.previousPosition then
+                makeBtn("return", function()
+                    if IsValid(lia.gui.menu) then lia.gui.menu:remove() end
+                    net.Start("liaReturnFromEntity")
+                    net.SendToServer()
+                end)
+            end
+
+            makeBtn("waypointButton", function() client:setWaypoint(getEntityDisplayName(ent), ent:GetPos()) end)
+            searchSheet:AddPanelRow(itemPanel, {
+                height = 100,
+                filterText = displayName:lower()
+            })
+        end
+
+        searchSheet:Refresh()
+        sheetContainer:AddSheet(title .. " - " .. #entities .. " " .. L("entities"), ownerPanel)
+    end
+
+    -- Player Entities Tab
     if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
         pages[#pages + 1] = {
-            name = "entities",
+            name = "Player Entities",
             icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
                 local sheetContainer = vgui.Create("DPropertySheet", entPanel)
@@ -1859,7 +1946,9 @@ function MODULE:PopulateAdminTabs(pages)
                         icon:SetWide(64)
                         icon:SetTall(64)
                         icon:DockMargin(5, 5, 0, 0)
-                        icon:SetModel(ent:GetModel() or "models/error.mdl", ent:GetSkin() or 0)
+                        local modelPath = ent:GetModel()
+                        if not modelPath or modelPath == "" then modelPath = "models/error.mdl" end
+                        icon:SetModel(modelPath, ent:GetSkin() or 0)
                         local btnContainer = vgui.Create("DPanel", itemPanel)
                         btnContainer:Dock(RIGHT)
                         btnContainer:SetWide(380)
@@ -1913,6 +2002,15 @@ function MODULE:PopulateAdminTabs(pages)
                     sheetContainer:AddSheet(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
                 end
             end
+        }
+    end
+
+    -- Map Entities Tab (entities not owned by players)
+    if #nonPlayerEntities > 0 and client:hasPrivilege("viewEntityTab") then
+        pages[#pages + 1] = {
+            name = "Map Entities",
+            icon = "icon16/world.png",
+            drawFunc = function(entPanel) createEntityPanel(entPanel, nonPlayerEntities, "Map Entities") end
         }
     end
 end
