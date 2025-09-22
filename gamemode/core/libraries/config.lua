@@ -661,6 +661,22 @@ lia.config.add("PunchStamina", "punchStamina", 10, nil, {
     max = 100
 })
 
+lia.config.add("PunchLethality", "punchLethality", true, nil, {
+    desc = "punchLethalityDesc",
+    category = "attributes",
+    isGlobal = true,
+    type = "Boolean"
+})
+
+lia.config.add("PunchRagdollTime", "punchRagdollTime", 25, nil, {
+    desc = "punchRagdollTimeDesc",
+    category = "attributes",
+    isGlobal = true,
+    type = "Int",
+    min = 1,
+    max = 120
+})
+
 lia.config.add("MaxHoldWeight", "maximumHoldWeight", 100, nil, {
     desc = "maximumHoldWeightDesc",
     category = "categoryGeneral",

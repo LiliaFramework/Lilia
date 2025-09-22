@@ -873,6 +873,86 @@ end)
 
 ---
 
+### PlayerThrowPunch
+
+**Purpose**
+
+Called when a player successfully throws a punch.
+
+**When Called**
+
+This hook is triggered when:
+- A player completes a punch action
+- After damage/ragdoll effects are applied
+- During melee combat resolution
+
+**Parameters**
+
+* `attacker` (*Player*): Player who threw the punch.
+* `trace` (*TraceResult*): Trace result from the punch.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+**Server**
+
+**Example Usage**
+
+```lua
+-- Track punch statistics
+hook.Add("PlayerThrowPunch", "PunchStats", function(attacker, trace)
+    if trace.Hit and IsValid(trace.Entity) then
+        if trace.Entity:IsPlayer() then
+            attacker:getChar():setData("punches", attacker:getChar():getData("punches", 0) + 1)
+        end
+    end
+end)
+```
+
+---
+
+### GetPlayerPunchRagdollTime
+
+**Purpose**
+
+Determines the ragdoll duration when a punch knocks out a player instead of dealing damage.
+
+**When Called**
+
+This hook is triggered when:
+- A punch hits a player
+- Punch lethality is disabled
+- Before ragdoll is applied
+
+**Parameters**
+
+* `attacker` (*Player*): Player who threw the punch.
+* `victim` (*Player*): Player being punched.
+
+**Returns**
+
+* number: Ragdoll duration in seconds (default: 25, configurable via PunchRagdollTime config)
+
+**Realm**
+
+**Server**
+
+**Example Usage**
+
+```lua
+-- Increase ragdoll time for admin punches
+hook.Add("GetPlayerPunchRagdollTime", "AdminPunchRagdoll", function(attacker, victim)
+    if attacker:IsAdmin() then
+        return 10
+    end
+end)
+```
+
+---
+
 ### CanPlayerViewInventory
 
 **Purpose**
