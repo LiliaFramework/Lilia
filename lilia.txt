@@ -5,5 +5,4 @@
 	"author"      "Samael"
 	"category"    "rp"
 	"menusystem"  "1"
-	"hide"        "1"
 }
