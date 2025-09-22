@@ -369,14 +369,12 @@ net.Receive("liaAdminSetCharProperty", function(_, client)
     local charID = net.ReadInt(32)
     local property = net.ReadString()
     local value = net.ReadType()
-    
     local charIDsafe = tonumber(charID)
     if not charIDsafe then
         client:notifyErrorLocalized("invalidCharID")
         return
     end
 
-    
     lia.db.query("SELECT name, money, model FROM lia_characters WHERE id = " .. charIDsafe, function(data)
         if not data or #data == 0 then
             client:notifyErrorLocalized("characterNotFound")

@@ -199,7 +199,6 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
     end)
 end)
 
-
 net.Receive("liaRequestLevelingList", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()

@@ -1915,7 +1915,6 @@ function MODULE:PopulateAdminTabs(pages)
         sheetContainer:AddSheet(title .. " - " .. #entities .. " " .. L("entities"), ownerPanel)
     end
 
-    
     if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
         pages[#pages + 1] = {
             name = "Player Entities",
@@ -2005,7 +2004,6 @@ function MODULE:PopulateAdminTabs(pages)
         }
     end
 
-    
     if #nonPlayerEntities > 0 and client:hasPrivilege("viewEntityTab") then
         pages[#pages + 1] = {
             name = "Map Entities",
