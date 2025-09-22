@@ -795,6 +795,7 @@ lia.net.readBigTable("liaAllPlayers", function(players)
     end
 end)
 
+
 lia.net.readBigTable("liaLevelingList", function(data)
     if not IsValid(panelRef) then return end
     panelRef:Clear()
