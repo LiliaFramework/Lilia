@@ -291,7 +291,6 @@ function SWEP:PrimaryAttack()
                 target:setRagdolled(true, ragdollTime)
                 self:GetOwner():EmitSound("physics/body/body_medium_impact_hard" .. math.random(1, 6) .. ".wav", 80)
             else
-                -- Apply normal damage
                 local dmgInfo = DamageInfo()
                 dmgInfo:SetAttacker(self:GetOwner())
                 dmgInfo:SetInflictor(self)
