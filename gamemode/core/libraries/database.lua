@@ -800,8 +800,8 @@ function lia.db.createSnapshot(tableName)
                 path = filePath,
                 records = #results
             })
-        end, function(err) d:reject("Database error: " .. tostring(err)) end)
-    end, function(err) d:reject("Table check error: " .. tostring(err)) end)
+        end, function(err) d:reject(L("databaseError") .. " " .. tostring(err)) end)
+    end, function(err) d:reject(L("tableCheckError") .. " " .. tostring(err)) end)
     return d
 end
 
@@ -876,7 +876,7 @@ function lia.db.loadSnapshot(fileName)
 
             insertNextBatch()
         end, function(err) d:reject("Failed to clear table: " .. tostring(err)) end)
-    end, function(err) d:reject("Table check error: " .. tostring(err)) end)
+    end, function(err) d:reject(L("tableCheckError") .. " " .. tostring(err)) end)
     return d
 end
 

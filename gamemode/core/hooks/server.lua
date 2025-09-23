@@ -1430,17 +1430,17 @@ concommand.Add("lia_fix_characters", function(client)
         return
     end
 
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Starting character data fix...\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("startingCharacterDataFix") .. "\n")
     lia.db.query("SELECT id, name, steamID FROM lia_characters WHERE id IS NULL OR id = '' OR id = '0'", function(data)
         if not data or #data == 0 then
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No characters with invalid IDs found.\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("noCharactersWithInvalidIDs") .. "\n")
         else
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "Found " .. #data .. " characters with invalid IDs. Fixing...\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), L("foundCharactersWithInvalidIDs", #data) .. "\n")
             for _, char in ipairs(data) do
                 local charName = char.name or "Unknown"
                 local steamID = char.steamID or "Unknown"
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Fixing character: " .. charName .. " (SteamID: " .. steamID .. ")\n")
-                lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.convertDataType(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed invalid character: " .. charName .. "\n") end)
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("fixingCharacter", charName, steamID) .. "\n")
+                lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.convertDataType(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("removedInvalidCharacter", charName) .. "\n") end)
             end
         end
     end)
@@ -1454,26 +1454,26 @@ concommand.Add("lia_fix_characters", function(client)
             end
 
             if #invalidChars > 0 then
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "Found " .. #invalidChars .. " characters with non-numeric IDs. Fixing...\n")
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), L("foundCharactersWithNonNumericIDs", #invalidChars) .. "\n")
                 for _, char in ipairs(invalidChars) do
                     local charName = char.name or "Unknown"
                     local steamID = char.steamID or "Unknown"
                     local invalidID = char.id
-                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Fixing character with invalid ID '" .. tostring(invalidID) .. "': " .. charName .. "\n")
-                    lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.convertDataType(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Removed character with invalid ID: " .. charName .. "\n") end)
+                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("fixingCharacterWithInvalidID", tostring(invalidID), charName) .. "\n")
+                    lia.db.query("DELETE FROM lia_characters WHERE name = " .. lia.db.convertDataType(charName) .. " AND steamID = " .. lia.db.convertDataType(steamID), function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("removedCharacterWithInvalidID", charName) .. "\n") end)
                 end
             else
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "No characters with non-numeric IDs found.\n")
+                MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("noCharactersWithNonNumericIDs") .. "\n")
             end
         end
     end)
 
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Cleaning up orphaned character data...\n")
-    lia.db.query("DELETE FROM lia_chardata WHERE charID NOT IN (SELECT id FROM lia_characters WHERE id IS NOT NULL AND id != '' AND id != '0')", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned character data.\n") end)
-    lia.db.query("DELETE FROM lia_inventories WHERE charID NOT IN (SELECT id FROM lia_characters WHERE id IS NOT NULL AND id != '' AND id != '0')", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned inventories.\n") end)
-    lia.db.query("DELETE FROM lia_invdata WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned inventory data.\n") end)
-    lia.db.query("DELETE FROM lia_items WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Cleaned up orphaned items.\n") end)
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Character data fix completed!\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("cleaningUpOrphanedCharacterData") .. "\n")
+    lia.db.query("DELETE FROM lia_chardata WHERE charID NOT IN (SELECT id FROM lia_characters WHERE id IS NOT NULL AND id != '' AND id != '0')", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("cleanedUpOrphanedCharacterData") .. "\n") end)
+    lia.db.query("DELETE FROM lia_inventories WHERE charID NOT IN (SELECT id FROM lia_characters WHERE id IS NOT NULL AND id != '' AND id != '0')", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("cleanedUpOrphanedInventories") .. "\n") end)
+    lia.db.query("DELETE FROM lia_invdata WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("cleanedUpOrphanedInventoryData") .. "\n") end)
+    lia.db.query("DELETE FROM lia_items WHERE invID NOT IN (SELECT invID FROM lia_inventories)", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("cleanedUpOrphanedItems") .. "\n") end)
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("characterDataFixCompleted") .. "\n")
 end)
 
 concommand.Add("test_all_notifications", function()
@@ -1515,10 +1515,10 @@ concommand.Add("test_all_notifications", function()
         }
     }
 
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Starting notification type demonstration...\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("startingNotificationTypeDemo") .. "\n")
     for i, notif in ipairs(notificationTypes) do
         timer.Simple(i - 1, function()
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Sending " .. notif.type .. " notification to all players: " .. notif.message .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("sendingNotificationToAllPlayers", notif.type, notif.message) .. "\n")
             for _, ply in ipairs(player.GetAll()) do
                 if IsValid(ply) then
                     if notif.method == "notify" then
@@ -1574,4 +1574,30 @@ concommand.Add("test_existing_notifications", function(client)
             ply:notifyAdmin("This is an admin notification")
         end
     end
+end)
+
+concommand.Add("print_vector", function(client, _, args)
+    if not IsValid(client) then
+        MsgC(Color(255, 0, 0), "[Lilia] Error: This command can only be used by players.\n")
+        return
+    end
+
+    local pos = client:GetPos()
+    local vectorString = string.format("Vector(%g, %g, %g)", pos.x, pos.y, pos.z)
+
+    client:notify(string.format("Your position: %s", vectorString))
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Player " .. client:Name() .. " position: " .. vectorString .. "\n")
+end)
+
+concommand.Add("print_angle", function(client, _, args)
+    if not IsValid(client) then
+        MsgC(Color(255, 0, 0), "[Lilia] Error: This command can only be used by players.\n")
+        return
+    end
+
+    local ang = client:GetAngles()
+    local angleString = string.format("Angle(%g, %g, %g)", ang.p, ang.y, ang.r)
+
+    client:notify(string.format("Your angles: %s", angleString))
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Player " .. client:Name() .. " angles: " .. angleString .. "\n")
 end)

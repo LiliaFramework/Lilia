@@ -25,13 +25,13 @@ function PANEL:Init()
 
     self.titleLabel = self.container:Add("DLabel")
     self.titleLabel:SetFont("liaBigFont")
-    self.titleLabel:SetText("Server Failed To Load")
+    self.titleLabel:SetText(L("serverFailedToLoad"))
     self.titleLabel:SizeToContents()
     self.titleLabel:SetPos((600 - self.titleLabel:GetWide()) / 2, 30)
     self.titleLabel:SetTextColor(Color(255, 100, 100))
     self.messageLabel = self.container:Add("DLabel")
     self.messageLabel:SetFont("liaMediumFont")
-    self.messageLabel:SetText("The server encountered critical errors during startup.\nPlease refer to the server console for detailed error information.")
+    self.messageLabel:SetText(L("serverCriticalErrors"))
     self.messageLabel:SetSize(550, 80)
     self.messageLabel:SetPos(25, 80)
     self.messageLabel:SetWrap(true)
@@ -47,7 +47,7 @@ function PANEL:Init()
     self.reasonLabel:SetContentAlignment(5)
     self.hintLabel = self.container:Add("DLabel")
     self.hintLabel:SetFont("liaSmallFont")
-    self.hintLabel:SetText("Press F1 for console or check server logs for more details")
+    self.hintLabel:SetText(L("pressF1ForConsole"))
     self.hintLabel:SetSize(550, 30)
     self.hintLabel:SetPos(25, 240)
     self.hintLabel:SetWrap(true)
@@ -56,7 +56,7 @@ function PANEL:Init()
     self.retryButton = self.container:Add("DButton")
     self.retryButton:SetSize(100, 30)
     self.retryButton:SetPos((600 - 100) / 2, 260)
-    self.retryButton:SetText("Retry")
+    self.retryButton:SetText(L("retry"))
     self.retryButton:SetFont("liaSmallFont")
     self.retryButton.DoClick = function() RunConsoleCommand("retry") end
     self.retryButton.Paint = function(panel, w, h)
@@ -68,8 +68,8 @@ end
 
 function PANEL:SetFailureInfo(reason, details)
     if reason then
-        local errorText = "Error: " .. reason
-        if details and details ~= "" then errorText = errorText .. "\n\nDetails: " .. details end
+        local errorText = L("errorPrefix") .. reason
+        if details and details ~= "" then errorText = errorText .. "\n\n" .. L("detailsPrefix") .. details end
         self.reasonLabel:SetText(errorText)
         self:SetVisible(true)
         self:SetAlpha(255)
@@ -84,9 +84,9 @@ function PANEL:AddError(errorMessage, line, file)
 
     self.errorCount = self.errorCount + 1
     table.insert(self.errorList, {
-        message = errorMessage or "Unknown error",
+        message = errorMessage or L("unknownError"),
         line = line or "N/A",
-        file = file or "Unknown"
+        file = file or L("unknownFile")
     })
 
     self:UpdateErrorDisplay()
@@ -96,11 +96,11 @@ end
 
 function PANEL:UpdateErrorDisplay()
     if not self.errorList or #self.errorList == 0 then return end
-    local errorText = "Recent Errors:\n" .. string.rep("=", 50) .. "\n"
+    local errorText = L("recentErrors") .. "\n" .. string.rep("=", 50) .. "\n"
     for i, err in ipairs(self.errorList) do
-        local fileInfo = err.file and err.file ~= "Unknown" and err.file or "Unknown File"
-        local lineInfo = err.line and err.line ~= "N/A" and "Line " .. err.line or "Unknown Line"
-        errorText = errorText .. string.format("%d. %s\n   File: %s | %s\n\n", i, err.message, fileInfo, lineInfo)
+        local fileInfo = err.file and err.file ~= L("unknownFile") and err.file or L("unknownFile") .. " " .. L("fileLabel")
+        local lineInfo = err.line and err.line ~= "N/A" and L("lineLabel") .. " " .. err.line or L("unknownLine")
+        errorText = errorText .. string.format("%d. %s\n   %s %s | %s\n\n", i, err.message, L("fileLabel"), fileInfo, lineInfo)
     end
 
     if not IsValid(self.errorDisplayLabel) then

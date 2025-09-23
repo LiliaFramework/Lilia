@@ -13,11 +13,11 @@ MODULE.adminStickCategories = MODULE.adminStickCategories or {
                 icon = "icon16/wrench.png"
             },
             warnings = {
-                name = "Warnings",
+                name = L("adminStickCategoryWarnings"),
                 icon = "icon16/error.png"
             },
             misc = {
-                name = "Miscellaneous",
+                name = L("adminStickCategoryMiscellaneous"),
                 icon = "icon16/application_view_tile.png"
             }
         }
@@ -113,11 +113,11 @@ MODULE.adminStickCategories = MODULE.adminStickCategories or {
                 icon = "icon16/page.png"
             },
             items = {
-                name = "Items",
+                name = L("adminStickCategoryItems"),
                 icon = "icon16/box.png"
             },
             ooc = {
-                name = "Out of Character",
+                name = L("adminStickCategoryOutOfCharacter"),
                 icon = "icon16/comment.png"
             }
         }
@@ -127,11 +127,11 @@ MODULE.adminStickCategories = MODULE.adminStickCategories or {
         icon = "icon16/lock.png",
         subcategories = {
             server = {
-                name = "Server",
+                name = L("adminStickCategoryServer"),
                 icon = "icon16/cog.png"
             },
             permissions = {
-                name = "Permissions",
+                name = L("adminStickCategoryPermissions"),
                 icon = "icon16/key.png"
             }
         }
@@ -200,11 +200,11 @@ local function GetSubMenuIcon(name)
     local setFactionLocalized = L("setFactionTitle", ""):match("^([^%(]+)") or L("setFactionTitle", "")
     setFactionLocalized = setFactionLocalized:gsub("^%s*(.-)%s*$", "%1")
     if name:find(setFactionLocalized, 1, true) == 1 then return subMenuIcons["setFactionTitle"] end
-    if name:find("Set Faction", 1, true) == 1 then return subMenuIcons["setFactionTitle"] end
-    if name:lower() == "misc" or name:lower() == "miscellaneous" then return "icon16/application_view_tile.png" end
-    if name:lower() == "items" then return "icon16/box.png" end
-    if name:lower() == "ooc" or name:lower():find("out of character") then return "icon16/comment.png" end
-    if name:lower() == "warnings" then return "icon16/error.png" end
+    if name:find(L("adminStickSetFaction"), 1, true) == 1 then return subMenuIcons["setFactionTitle"] end
+    if name:lower() == "misc" or name:lower() == "miscellaneous" or name:lower() == L("adminStickCategoryMiscellaneous"):lower() then return "icon16/application_view_tile.png" end
+    if name:lower() == "items" or name:lower() == L("adminStickCategoryItems"):lower() then return "icon16/box.png" end
+    if name:lower() == "ooc" or name:lower():find("out of character") or name:lower() == L("adminStickCategoryOutOfCharacter"):lower() then return "icon16/comment.png" end
+    if name:lower() == "warnings" or name:lower() == L("adminStickCategoryWarnings"):lower() then return "icon16/error.png" end
     if name:lower() == "commands" then return "icon16/page.png" end
     return "icon16/page.png"
 end
