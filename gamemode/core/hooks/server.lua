@@ -314,15 +314,11 @@ function GM:EntityTakeDamage(entity, dmgInfo)
 
         local player = entity:getNetVar("player")
         local damage = dmgInfo:GetDamage()
-        -- Handle ragdoll damage transfer if enabled
         if IsValid(player) and lia.config.get("RagdollDamageTransfer", true) then
             local currentHealth = player:Health()
             local newHealth = math.max(currentHealth - damage, 0)
-            -- Set the new health
             player:SetHealth(newHealth)
-            -- If health reaches 0, kill the player
             if newHealth <= 0 and currentHealth > 0 then player:Kill() end
-            -- Prevent the original damage from being applied
             dmgInfo:SetDamage(0)
         end
     end
@@ -388,21 +384,13 @@ end
 
 function GM:DoPlayerDeath(client, attacker)
     client:AddDeaths(1)
-    -- Check if player is already in ragdoll state
     local existingRagdoll = client:getRagdoll()
     if IsValid(existingRagdoll) then
-        -- Player is already in ragdoll state - make it permanent
         existingRagdoll.liaIsDeadRagdoll = true
         existingRagdoll.liaNoReset = true
-        existingRagdoll:CallOnRemove("deadRagdoll", function()
-            -- This ragdoll should not trigger player restoration
-            existingRagdoll.liaIgnoreDelete = true
-        end)
-
-        -- Mark the player as having died in ragdoll state
+        existingRagdoll:CallOnRemove("deadRagdoll", function() existingRagdoll.liaIgnoreDelete = true end)
         client:setNetVar("diedInRagdoll", true)
     elseif hook.Run("ShouldSpawnClientRagdoll", client) ~= false then
-        -- Create new ragdoll for normal death
         client:createRagdoll(false, true)
     end
 
@@ -420,11 +408,9 @@ end
 function GM:PlayerSpawn(client)
     client:stopAction()
     client:SetDSP(1, false)
-    -- Only remove ragdoll if player didn't die in ragdoll state
     if not client:getNetVar("diedInRagdoll", false) then
         client:removeRagdoll()
     else
-        -- Clear the died in ragdoll flag for next respawn
         client:setNetVar("diedInRagdoll", nil)
     end
 
