@@ -314,8 +314,8 @@ function GM:EntityTakeDamage(entity, dmgInfo)
 
         local player = entity:getNetVar("player")
         local damage = dmgInfo:GetDamage()
-        -- Handle ragdoll damage transfer
-        if IsValid(player) then
+        -- Handle ragdoll damage transfer if enabled
+        if IsValid(player) and lia.config.get("RagdollDamageTransfer", true) then
             local currentHealth = player:Health()
             local newHealth = math.max(currentHealth - damage, 0)
             -- Set the new health

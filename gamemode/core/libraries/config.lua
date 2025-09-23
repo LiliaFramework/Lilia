@@ -1000,6 +1000,12 @@ lia.config.add("StaffHasGodMode", "staffGodMode", true, nil, {
     type = "Boolean"
 })
 
+lia.config.add("RagdollDamageTransfer", "ragdollDamageTransfer", true, nil, {
+    desc = "ragdollDamageTransferDesc",
+    category = "categoryQualityOfLife",
+    type = "Boolean"
+})
+
 lia.config.add("ClassDisplay", "displayClassesOnCharacters", true, nil, {
     desc = "displayClassesOnCharactersDesc",
     category = "character",
