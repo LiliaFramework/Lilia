@@ -9,8 +9,8 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "Manages door ownership, access control, and door-related permissions."
 lia.doors.AccessLabels = {
-    [DOOR_NONE] = "none",
-    [DOOR_GUEST] = "guest",
-    [DOOR_TENANT] = "tenant",
-    [DOOR_OWNER] = "owner"
+    [DOOR_NONE] = "doorAccessNone",
+    [DOOR_GUEST] = "doorAccessGuest",
+    [DOOR_TENANT] = "doorAccessTenant",
+    [DOOR_OWNER] = "doorAccessOwner"
 }

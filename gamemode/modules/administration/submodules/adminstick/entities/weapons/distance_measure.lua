@@ -26,13 +26,13 @@ function SWEP:PrimaryAttack()
         self.StartPos = tr.HitPos
         if CLIENT then
             surface.PlaySound("buttons/button17.wav")
-            owner:ChatPrint("Start point marked")
+            owner:ChatPrint(L("distanceMeasureStartPoint"))
         end
     else
         local distance = self.StartPos:Distance(tr.HitPos)
         if CLIENT then
             surface.PlaySound("buttons/button17.wav")
-            owner:ChatPrint("Distance: " .. math.Round(distance) .. " units")
+            owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
         end
 
         self.StartPos = nil
@@ -44,7 +44,7 @@ function SWEP:SecondaryAttack()
     self.StartPos = nil
     if CLIENT then
         surface.PlaySound("buttons/button16.wav")
-        self:GetOwner():ChatPrint("Measurement cancelled")
+        self:GetOwner():ChatPrint(L("distanceMeasureCancelled"))
     end
 end
 

@@ -114,13 +114,13 @@ else
     end
 
     net.Receive("liaStaffDiscordPrompt", function()
-        Derma_StringRequest("Staff Character Setup", "Please enter your Discord username for your staff character description:", "", function(discord)
+        Derma_StringRequest(L("staffCharacterSetup"), L("discordUsernamePrompt"), "", function(discord)
             if discord and discord:Trim() ~= "" then
                 net.Start("liaStaffDiscordResponse")
                 net.WriteString(discord:Trim())
                 net.SendToServer()
             else
-                LocalPlayer():notifyErrorLocalized("Discord username cannot be empty!")
+                LocalPlayer():notifyErrorLocalized("discordUsernameEmpty")
             end
         end, function()
             net.Start("liaStaffDiscordResponse")
