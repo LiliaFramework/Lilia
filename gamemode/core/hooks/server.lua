@@ -1584,7 +1584,6 @@ concommand.Add("print_vector", function(client)
 
     local pos = client:GetPos()
     local vectorString = string.format("Vector(%g, %g, %g)", pos.x, pos.y, pos.z)
-
     client:notify(string.format("Your position: %s", vectorString))
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Player " .. client:Name() .. " position: " .. vectorString .. "\n")
 end)
@@ -1597,7 +1596,6 @@ concommand.Add("print_angle", function(client)
 
     local ang = client:GetAngles()
     local angleString = string.format("Angle(%g, %g, %g)", ang.p, ang.y, ang.r)
-
     client:notify(string.format("Your angles: %s", angleString))
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Player " .. client:Name() .. " angles: " .. angleString .. "\n")
 end)
