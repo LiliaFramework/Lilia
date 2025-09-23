@@ -1125,15 +1125,15 @@ end)
 
 concommand.Add("lia_reload", function(client)
     if IsValid(client) and not client:IsSuperAdmin() then
-        client:notifyErrorLocalized("You don't have permission to use this command.")
+        client:notifyErrorLocalized("staffPermissionDenied")
         return
     end
 
     if lia.reloadInProgress then
         if IsValid(client) then
-            client:notifyWarningLocalized("A reload is already in progress.")
+            client:notifyWarningLocalized("reloadInProgress")
         else
-            print("[Lilia] A reload is already in progress.")
+            print("[Lilia] " .. L("reloadInProgress"))
         end
         return
     end
@@ -1143,17 +1143,17 @@ concommand.Add("lia_reload", function(client)
     if timeSinceLastReload < lia.reloadCooldown then
         local remaining = math.ceil(lia.reloadCooldown - timeSinceLastReload)
         if IsValid(client) then
-            client:notifyWarningLocalized("Reload cooldown active. " .. remaining .. " seconds remaining.")
+            client:notifyWarningLocalized("reloadCooldownActive", remaining)
         else
-            print("[Lilia] Reload cooldown active. " .. remaining .. " seconds remaining.")
+            print("[Lilia] " .. L("reloadCooldownActive", remaining))
         end
         return
     end
 
     if IsValid(client) then
-        client:notifyInfoLocalized("Starting controlled reload...")
+        client:notifyInfoLocalized("reloadStarting")
     else
-        print("[Lilia] Starting controlled reload...")
+        print("[Lilia] " .. L("reloadStarting"))
     end
 
     hook.Run("OnReloaded")
@@ -1233,12 +1233,12 @@ concommand.Add("lia_wipecharacters", function(client)
 
     if resetCalled < RealTime() then
         resetCalled = RealTime() + 3
-        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL characters? Run this command again within 3 seconds to confirm.\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipeCharsConfirm") .. "\n")
     else
         resetCalled = 0
-        MsgC(Color(255, 0, 0), "[Lilia] Wiping all characters...\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipingChars") .. "\n")
         for _, ply in player.Iterator() do
-            if IsValid(ply) then ply:Kick("Server is wiping character data. Please reconnect after the wipe is complete.") end
+            if IsValid(ply) then ply:Kick(L("serverWipingChars")) end
         end
 
         lia.db.query("DELETE FROM lia_chardata", function()
@@ -1290,11 +1290,11 @@ concommand.Add("lia_wipelogs", function(client)
 
     if resetCalled < RealTime() then
         resetCalled = RealTime() + 3
-        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL logs? This cannot be undone.\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipeLogsConfirm") .. "\n")
     else
         resetCalled = 0
-        MsgC(Color(255, 0, 0), "[Lilia] Wiping all logs...\n")
-        lia.db.query("DELETE FROM lia_logs", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All logs have been wiped!\n") end)
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipingLogs") .. "\n")
+        lia.db.query("DELETE FROM lia_logs", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("logsWiped") .. "\n") end)
     end
 end)
 
@@ -1306,11 +1306,11 @@ concommand.Add("lia_wipebans", function(client)
 
     if resetCalled < RealTime() then
         resetCalled = RealTime() + 3
-        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL bans? This cannot be undone.\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipeBansConfirm") .. "\n")
     else
         resetCalled = 0
-        MsgC(Color(255, 0, 0), "[Lilia] Wiping all bans...\n")
-        lia.db.query("DELETE FROM lia_bans", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All bans have been wiped!\n") end)
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipingBans") .. "\n")
+        lia.db.query("DELETE FROM lia_bans", function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("bansWiped") .. "\n") end)
     end
 end)
 
@@ -1322,12 +1322,12 @@ concommand.Add("lia_wipepersistence", function(client)
 
     if resetCalled < RealTime() then
         resetCalled = RealTime() + 3
-        MsgC(Color(255, 0, 0), "[Lilia] " .. "Are you sure you want to wipe ALL persistence data? This will remove all saved entities.\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipePersistenceConfirm") .. "\n")
     else
         resetCalled = 0
-        MsgC(Color(255, 0, 0), "[Lilia] Wiping all persistence data...\n")
+        MsgC(Color(255, 0, 0), "[Lilia] " .. L("wipingPersistence") .. "\n")
         lia.db.query("DELETE FROM lia_persistence", function()
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " All persistence data has been wiped!\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[Database]", Color(255, 255, 255), " " .. L("persistenceWiped") .. "\n")
             game.ConsoleCommand("changelevel " .. game.GetMap() .. "\n")
         end)
     end
