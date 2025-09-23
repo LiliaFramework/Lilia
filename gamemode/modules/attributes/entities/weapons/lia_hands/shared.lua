@@ -259,6 +259,7 @@ function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire(CurTime() + (isnumber(scaledDelay) and scaledDelay or defaultDelay))
     if SERVER then self:GetOwner():EmitSound("npc/vort/claw_swing" .. math.random(1, 2) .. ".wav") end
     timer.Simple(0.1, function()
+        if not IsValid(self) or not IsValid(self:GetOwner()) then return end
         self:DoPunchAnimation()
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
         self:GetOwner():ViewPunch(Angle(self.lastHand + 2, self.lastHand + 5, 0.125))
