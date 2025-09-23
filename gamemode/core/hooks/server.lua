@@ -1576,7 +1576,7 @@ concommand.Add("test_existing_notifications", function(client)
     end
 end)
 
-concommand.Add("print_vector", function(client, _, args)
+concommand.Add("print_vector", function(client)
     if not IsValid(client) then
         MsgC(Color(255, 0, 0), "[Lilia] Error: This command can only be used by players.\n")
         return
@@ -1589,7 +1589,7 @@ concommand.Add("print_vector", function(client, _, args)
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Player " .. client:Name() .. " position: " .. vectorString .. "\n")
 end)
 
-concommand.Add("print_angle", function(client, _, args)
+concommand.Add("print_angle", function(client)
     if not IsValid(client) then
         MsgC(Color(255, 0, 0), "[Lilia] Error: This command can only be used by players.\n")
         return

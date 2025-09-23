@@ -1182,8 +1182,8 @@ lia.command.add("checkinventory", {
         end
 
         local inventory = target:getChar():getInv()
-        inventory:addAccessRule(function(_, action, _) return action == "transfer" end, 1)
-        inventory:addAccessRule(function(_, action, _) return action == "repl" end, 1)
+        inventory:addAccessRule(function(_, action) return action == "transfer" end, 1)
+        inventory:addAccessRule(function(_, action) return action == "repl" end, 1)
         inventory:sync(client)
         net.Start("liaOpenInvMenu")
         net.WriteEntity(target)

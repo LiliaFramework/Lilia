@@ -595,7 +595,7 @@ classes.CircleClick = function(pnl, col, speed, trad)
     col = col or Color(255, 255, 255, 50)
     speed = speed or 5
     pnl.Rad, pnl.Alpha, pnl.ClickX, pnl.ClickY = 0, 0, 0, 0
-    pnl:On("Paint", function(s, w, _)
+    pnl:On("Paint", function(s, w)
         if s.Alpha >= 1 then
             surface.SetDrawColor(ColorAlpha(col, s.Alpha))
             draw.NoTexture()
@@ -618,7 +618,7 @@ classes.CircleHover = function(pnl, col, speed, trad)
     pnl.LastX, pnl.LastY = 0, 0
     pnl:SetupTransition("CircleHover", speed, function(s) return s:IsHovered() end)
     pnl:On("Think", function(s) if s:IsHovered() then s.LastX, s.LastY = s:CursorPos() end end)
-    pnl:On("PaintOver", function(s, w, _)
+    pnl:On("PaintOver", function(s, w)
         draw.NoTexture()
         surface.SetDrawColor(ColorAlpha(col, col.a * s.CircleHover))
         drawCircle(s.LastX, s.LastY, s.CircleHover * (trad or w))

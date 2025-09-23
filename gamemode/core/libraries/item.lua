@@ -104,7 +104,7 @@ local DefaultFunctions = {
         tip = "giveForwardTip",
         icon = "icon16/arrow_up.png",
         onRun = function(item)
-            local function canTransferItemsFromInventoryUsingGiveForward(_, action, _)
+            local function canTransferItemsFromInventoryUsingGiveForward(_, action)
                 if action == "transfer" then return true end
             end
 
