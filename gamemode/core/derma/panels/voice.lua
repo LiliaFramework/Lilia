@@ -15,7 +15,7 @@ function PANEL:Init()
     self.Icon:Dock(LEFT)
     self.Icon:DockMargin(8, 0, 8, 0)
     self.Icon:SetSize(32, 32)
-    self.LabelName = vgui.Create("DLabel", self)
+    self.LabelName = vgui.Create("liaText", self)
     self.LabelName:Dock(FILL)
     self.LabelName:SetFont("liaMediumFont")
     self.LabelName:SetTextColor(color_white)
@@ -64,14 +64,14 @@ function PANEL:FadeOut(anim, delta)
     self:SetAlpha(255 - 255 * delta * 2)
 end
 
-vgui.Register("VoicePanel", PANEL, "DPanel")
+vgui.Register("VoicePanel", PANEL, "liaBasePanel")
 local function CreateVoicePanelList()
     if IsValid(g_VoicePanelList) then g_VoicePanelList:Remove() end
     for _, pnl in pairs(VoicePanels) do
         if IsValid(pnl) then pnl:Remove() end
     end
 
-    g_VoicePanelList = vgui.Create("DPanel")
+    g_VoicePanelList = vgui.Create("liaBasePanel")
     g_VoicePanelList:ParentToHUD()
     g_VoicePanelList:SetSize(270, ScrH() - 200)
     g_VoicePanelList:SetPos(ScrW() - 320, 100)

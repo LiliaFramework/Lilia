@@ -1,14 +1,14 @@
 ﻿lia.command.add("plytransfer", {
     adminOnly = true,
-    desc = "plyTransferDesc",
+    desc = "@plyTransferDesc",
     alias = {"charsetfaction"},
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "faction",
+            name = "@faction",
             type = "table",
             options = function()
                 local options = {}
@@ -57,15 +57,15 @@
 
 lia.command.add("plywhitelist", {
     adminOnly = true,
-    desc = "plyWhitelistDesc",
+    desc = "@plyWhitelistDesc",
     alias = {"factionwhitelist"},
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "faction",
+            name = "@faction",
             type = "table",
             options = function()
                 local options = {}
@@ -106,15 +106,15 @@ lia.command.add("plywhitelist", {
 
 lia.command.add("plyunwhitelist", {
     adminOnly = true,
-    desc = "plyUnwhitelistDesc",
+    desc = "@plyUnwhitelistDesc",
     alias = {"factionunwhitelist"},
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "faction",
+            name = "@faction",
             type = "table",
             options = function()
                 local options = {}
@@ -157,10 +157,10 @@ lia.command.add("plyunwhitelist", {
 
 lia.command.add("beclass", {
     adminOnly = false,
-    desc = "beClassDesc",
+    desc = "@beClassDesc",
     arguments = {
         {
-            name = "class",
+            name = "@class",
             type = "table",
             options = function()
                 local options = {}
@@ -196,14 +196,14 @@ lia.command.add("beclass", {
 
 lia.command.add("setclass", {
     adminOnly = true,
-    desc = "setClassDesc",
+    desc = "@setClassDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "class",
+            name = "@class",
             type = "table",
             options = function(client, prefix)
                 local options = {}
@@ -244,14 +244,14 @@ lia.command.add("setclass", {
 
 lia.command.add("classwhitelist", {
     adminOnly = true,
-    desc = "classWhitelistDesc",
+    desc = "@classWhitelistDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "class",
+            name = "@class",
             type = "table",
             options = function()
                 local options = {}
@@ -289,14 +289,14 @@ lia.command.add("classwhitelist", {
 
 lia.command.add("classunwhitelist", {
     adminOnly = true,
-    desc = "classUnwhitelistDesc",
+    desc = "@classUnwhitelistDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "class",
+            name = "@class",
             type = "table",
             options = function()
                 local options = {}

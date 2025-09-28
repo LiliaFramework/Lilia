@@ -19,7 +19,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     local frameWidth, frameHeight = 300, 120
-    local frm = vgui.Create("DFrame")
+    local frm = vgui.Create("liaFrame")
     frm:SetSize(frameWidth, frameHeight)
     frm:SetPos(xpos, ypos)
     frm.idiot = requester
@@ -59,7 +59,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     msg:AppendText(message)
     local function createButton(text, material, position, clickFunc, disabled)
         text = L(text)
-        local btn = vgui.Create("DButton", frm)
+        local btn = vgui.Create("liaButton", frm)
         btn:SetPos(215, position)
         btn:SetSize(83, 18)
         btn:SetText("          " .. text)
@@ -111,7 +111,7 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end, isLocalPlayer)
 
-    local closeButton = vgui.Create("DButton", frm)
+    local closeButton = vgui.Create("liaButton", frm)
     closeButton:SetText("")
     closeButton:SetTooltip(L("close"))
     closeButton:SetColor(Color(255, 255, 255))

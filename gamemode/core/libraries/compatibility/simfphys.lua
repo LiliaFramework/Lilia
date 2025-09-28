@@ -32,7 +32,7 @@
         local delay = lia.config.get("TimeToEnterVehicle", 5)
         if entity:isSimfphysCar() and delay > 0 then
             entity.IsBeingEntered = true
-            client:setAction(L("enteringVehicle"), delay)
+            client:setAction("@enteringVehicle", delay)
             client:doStaredAction(entity, function()
                 if IsValid(entity) then
                     entity.IsBeingEntered = false
@@ -45,6 +45,15 @@
         end
         return true
     end)
+
+    if REN then
+        REN._L4D2Handbrake = REN._L4D2Handbrake or REN.L4D2Handbrake
+        REN.L4D2Handbrake = function(self)
+            if not IsValid(self) then return end
+            if not IsValid(self.DriverSeat) then return end
+            return REN._L4D2Handbrake(self)
+        end
+    end
 else
     hook.Remove("HUDPaint", "simfphys_HUD")
 end
@@ -54,21 +63,21 @@ hook.Add("CheckValidSit", "liaSimfphys", function(client)
     if IsValid(vehicle) and vehicle:isSimfphysCar() then return false end
 end)
 
-lia.config.add("DamageInCars", "takeDamageInCars", true, nil, {
-    desc = "takeDamageInCarsDesc",
-    category = "simfphysVehicles",
+lia.config.add("DamageInCars", "@takeDamageInCars", true, nil, {
+    desc = "@takeDamageInCarsDesc",
+    category = "@simfphysVehicles",
     type = "Boolean"
 })
 
-lia.config.add("CarEntryDelayEnabled", "carEntryDelayEnabled", true, nil, {
-    desc = "carEntryDelayEnabledDesc",
-    category = "simfphysVehicles",
+lia.config.add("CarEntryDelayEnabled", "@carEntryDelayEnabled", true, nil, {
+    desc = "@carEntryDelayEnabledDesc",
+    category = "@simfphysVehicles",
     type = "Boolean"
 })
 
-lia.config.add("TimeToEnterVehicle", "timeToEnterVehicle", 4, nil, {
-    desc = "timeToEnterVehicleDesc",
-    category = "simfphysVehicles",
+lia.config.add("TimeToEnterVehicle", "@timeToEnterVehicle", 4, nil, {
+    desc = "@timeToEnterVehicleDesc",
+    category = "@simfphysVehicles",
     type = "Int",
     min = 1,
     max = 30

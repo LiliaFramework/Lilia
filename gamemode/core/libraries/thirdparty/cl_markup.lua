@@ -537,4 +537,4 @@ function PANEL:setMarkup(text, onDrawText)
     self.Paint = function() object:draw(0, 0) end
 end
 
-vgui.Register("liaMarkupPanel", PANEL, "DPanel")
+vgui.Register("liaMarkupPanel", PANEL, "liaBasePanel")

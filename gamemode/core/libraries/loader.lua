@@ -13,6 +13,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/derma.lua",
+        realm = "client"
+    },
+    {
         path = "lilia/gamemode/core/libraries/keybind.lua",
         realm = "shared"
     },
@@ -284,7 +288,7 @@ local ConditionalFiles = {
 }
 
 function lia.loader.include(path, realm)
-    if not path then lia.error(L("missingFilePath")) end
+    if not path then lia.error("Missing file path") end
     local resolved = realm
     if not resolved then
         local filename = path:match("([^/\\]+)%.lua$")
@@ -361,51 +365,46 @@ end
 
 lia.loader.include("lilia/gamemode/core/libraries/languages.lua", "shared")
 lia.loader.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
+lia.loader.include("lilia/gamemode/core/libraries/rdnx.lua", "client")
 lia.loader.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.loader.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
-function lia.error(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
-    MsgC(Color(255, 0, 0), tostring(msg), "\n")
+function lia.error(msg, ...)
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[Error] ")
+    MsgC(Color(255, 0, 0), string.format(msg, ...), "\n")
 end
 
-function lia.warning(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logWarning") .. "] ")
-    MsgC(Color(255, 255, 0), tostring(msg), "\n")
+function lia.warning(msg, ...)
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[Warning] ")
+    MsgC(Color(255, 255, 0), string.format(msg, ...), "\n")
 end
 
-function lia.deprecated(methodName, callback)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logDeprecated") .. "] ")
-    MsgC(Color(255, 255, 0), L("deprecatedMessage", methodName), "\n")
-    if callback and isfunction(callback) then callback() end
+function lia.updater(msg, ...)
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[Updater] ")
+    MsgC(Color(0, 255, 255), string.format(msg, ...), "\n")
 end
 
-function lia.updater(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logUpdater") .. "] ")
-    MsgC(Color(0, 255, 255), tostring(msg), "\n")
+function lia.information(msg, ...)
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[Information] ")
+    MsgC(Color(83, 143, 239), string.format(msg, ...), "\n")
 end
 
-function lia.information(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logInformation") .. "] ")
-    MsgC(Color(83, 143, 239), tostring(msg), "\n")
-end
-
-function lia.admin(msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
-    MsgC(Color(255, 153, 0), tostring(msg), "\n")
+function lia.admin(msg, ...)
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[Admin] ")
+    MsgC(Color(255, 153, 0), string.format(msg, ...), "\n")
 end
 
 function lia.bootstrap(section, msg)
-    MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
+    MsgC(Color(83, 143, 239), "[Lilia] ", "[Bootstrap] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
     MsgC(Color(255, 255, 255), tostring(msg), "\n")
 end
 
-function lia.printLog(category, logString)
+function lia.printLog(category, logString, ...)
     MsgC(Color(83, 143, 239), "[LOG] ")
-    MsgC(Color(0, 255, 0), "[" .. L("logCategory") .. ": " .. tostring(category) .. "] ")
-    MsgC(Color(255, 255, 255), tostring(logString) .. "\n")
+    MsgC(Color(0, 255, 0), "[Category: " .. tostring(category) .. "] ")
+    MsgC(Color(255, 255, 255), string.format(logString, ...), "\n")
 end
 
 for _, files in ipairs(FilesToLoad) do
@@ -536,7 +535,7 @@ end
 
 local hasInitializedModules = false
 function GM:Initialize()
-    if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
+    if engine.ActiveGamemode() == "lilia" then lia.error("No schema loaded") end
     if not hasInitializedModules then
         lia.module.initialize()
         hasInitializedModules = true
@@ -549,11 +548,7 @@ function GM:OnReloaded()
     if lia.config then lia.reloadCooldown = 5 end
     if timeSinceLastReload < lia.reloadCooldown then
         local remaining = math.ceil(lia.reloadCooldown - timeSinceLastReload)
-        if SERVER then
-            print("[Lilia] Reload cooldown active. " .. remaining .. " seconds remaining.")
-        else
-            chat.AddText(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), "Reload cooldown active. " .. remaining .. " seconds remaining.")
-        end
+        lia.bootstrap("HotReload", "Reload cooldown active: " .. remaining .. " seconds remaining")
         return
     end
 
@@ -566,9 +561,9 @@ function GM:OnReloaded()
         timer.Simple(0.1, function() lia.config.send() end)
         timer.Simple(0.2, function() lia.administrator.sync() end)
         timer.Simple(0.3, function() lia.playerinteract.syncToClients() end)
-        timer.Simple(0.5, function() lia.bootstrap("HotReload", "Gamemode hotreloaded successfully!") end)
+        timer.Simple(0.5, function() lia.bootstrap("HotReload", "Hot reload completed successfully") end)
     else
-        chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Gamemode hotreloaded successfully!")
+        chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Hot reload completed successfully")
     end
 
     lia.reloadInProgress = false
@@ -582,7 +577,7 @@ for _, compatFile in ipairs(ConditionalFiles) do
         if ok then
             shouldLoad = result
         else
-            lia.error(L("compatibilityConditionError", tostring(result)))
+            lia.error("Compatibility condition error: " .. tostring(result))
         end
     elseif compatFile.global then
         shouldLoad = _G[compatFile.global] ~= nil
@@ -594,5 +589,5 @@ for _, compatFile in ipairs(ConditionalFiles) do
     end
 end
 
-if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
+if #loadedCompatibility > 0 then lia.bootstrap("Compatibility", #loadedCompatibility == 1 and "Loaded compatibility module: " .. loadedCompatibility[1] or "Loaded compatibility modules: " .. table.concat(loadedCompatibility, ", ")) end
 if game.IsDedicated() then concommand.Remove("gm_save") end

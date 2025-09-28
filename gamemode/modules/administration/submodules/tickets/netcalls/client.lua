@@ -5,11 +5,11 @@ net.Receive("liaActiveTickets", function()
     local tickets = net.ReadTable() or {}
     if not IsValid(ticketPanel) then return end
     ticketPanel:Clear()
-    local search = ticketPanel:Add("DTextEntry")
+    local search = ticketPanel:Add("liaEntry")
     search:Dock(TOP)
     search:SetPlaceholderText(L("search"))
     search:SetTextColor(Color(255, 255, 255))
-    local list = ticketPanel:Add("DListView")
+    local list = ticketPanel:Add("liaTable")
     list:Dock(FILL)
     local function addSizedColumn(text)
         local col = list:AddColumn(text)

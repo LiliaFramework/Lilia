@@ -1,30 +1,30 @@
-﻿MODULE.name = "Protection"
+﻿MODULE.name = "@protection"
 MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides anti-cheat and anti-exploit protections."
+MODULE.discord = "liliaplayer"
+MODULE.desc = "@protectionDesc"
 MODULE.Privileges = {
     {
-        Name = "canSeeAltingNotifications",
+        Name = "@canSeeAltingNotifications",
         ID = "canSeeAltingNotifications",
         MinAccess = "admin",
-        Category = "protection",
+        Category = "@protection",
     },
     {
-        Name = "View Entity Tab",
+        Name = "@viewEntityTab",
         ID = "viewEntityTab",
         MinAccess = "admin",
-        Category = "protection",
+        Category = "@protection",
     },
     {
-        Name = "Teleport to Entity",
+        Name = "@teleportToEntity",
         ID = "teleportToEntity",
         MinAccess = "admin",
-        Category = "protection",
+        Category = "@protection",
     },
     {
-        Name = "Bypass Noclip Shooting Restriction",
+        Name = "@bypassNoclipShooting",
         ID = "bypassNoclipShooting",
         MinAccess = "admin",
-        Category = "protection",
+        Category = "@protection",
     },
 }

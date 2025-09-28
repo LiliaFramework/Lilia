@@ -1,4 +1,5 @@
 ﻿local PANEL = {}
+PANEL.isCharCreatePanel = true
 function PANEL:configureSteps()
     self:addStep(vgui.Create("liaCharacterFaction"))
     self:addStep(vgui.Create("liaCharacterBiography"))
@@ -86,7 +87,7 @@ function PANEL:showError(msg, ...)
     if IsValid(self.error) then self.error:Remove() end
     if not msg or msg == "" then return end
     assert(IsValid(self.content), L("noStepAvailable"))
-    local err = self.content:Add("DLabel")
+    local err = self.content:Add("liaText")
     err:SetFont("liaCharSubTitleFont")
     err:SetText(L(msg, ...))
     err:SetTextColor(color_white)
@@ -113,7 +114,7 @@ function PANEL:showMessage(msg, ...)
     end
 
     if IsValid(self.message) then self.message:SetText(L(msg, ...):upper()) end
-    local lbl = self:Add("DLabel")
+    local lbl = self:Add("liaText")
     lbl:SetFont("liaCharButtonFont")
     lbl:SetTextColor(lia.gui.character.color)
     lbl:Dock(FILL)
@@ -234,9 +235,8 @@ function PANEL:Init()
     self:Dock(FILL)
     local ok, reason = self:canCreateCharacter()
     if not ok then return self:showMessage(reason) end
-    lia.gui.charCreate = self
     local margin = ScrW() > 1280 and ScrW() * 0.15 or ScrW() > 720 and ScrW() * 0.075 or 0
-    self.content = self:Add("DPanel")
+    self.content = self:Add("liaBasePanel")
     self.content:Dock(FILL)
     self.content:DockMargin(margin, 64, margin, 0)
     self.content:SetPaintBackground(false)
@@ -246,7 +246,7 @@ function PANEL:Init()
     self.model:SetModel("models/error.mdl")
     self.model:fitFOV()
     self.model:SetVisible(false)
-    self.buttons = self:Add("DPanel")
+    self.buttons = self:Add("liaBasePanel")
     self.buttons:Dock(BOTTOM)
     self.buttons:SetTall(48)
     self.buttons:SetPaintBackground(false)

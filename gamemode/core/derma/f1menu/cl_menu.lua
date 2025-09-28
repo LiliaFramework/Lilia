@@ -12,7 +12,7 @@ function PANEL:Init()
     self.invKey = lia.keybind.get(L("openInventory"), KEY_I)
     local baseBtnW, btnH, spacing = 150, 40, 20
     self.baseBtnW = baseBtnW
-    local topBar = self:Add("DPanel")
+    local topBar = self:Add("liaBasePanel")
     topBar:Dock(TOP)
     topBar:SetTall(70)
     topBar:DockPadding(30, 10, 30, 10)
@@ -164,7 +164,7 @@ function PANEL:Init()
 end
 
 function PANEL:addTab(name, callback)
-    local colors = lia.color.ReturnMainAdjustedColors()
+    local colors = lia.color.theme
     local tab = self.tabs:Add("liaSmallButton")
     tab:SetText(L(name))
     tab:SetFont("liaMediumFont")

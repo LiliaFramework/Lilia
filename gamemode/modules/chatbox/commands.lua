@@ -1,15 +1,15 @@
 ﻿lia.command.add("banooc", {
     adminOnly = true,
-    desc = "banOOCCommandDesc",
+    desc = "@banOOCCommandDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
     AdminStick = {
-        Name = "banOOCStickName",
-        Category = "utility",
+        Name = "@banOOCStickName",
+        Category = "@utility",
         SubCategory = "ooc",
         Icon = "icon16/sound_mute.png"
     },
@@ -28,16 +28,16 @@
 
 lia.command.add("unbanooc", {
     adminOnly = true,
-    desc = "unbanOOCCommandDesc",
+    desc = "@unbanOOCCommandDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
     AdminStick = {
-        Name = "unbanOOCStickName",
-        Category = "utility",
+        Name = "@unbanOOCStickName",
+        Category = "@utility",
         SubCategory = "ooc",
         Icon = "icon16/sound.png"
     },
@@ -56,7 +56,7 @@ lia.command.add("unbanooc", {
 
 lia.command.add("blockooc", {
     superAdminOnly = true,
-    desc = "blockOOCCommandDesc",
+    desc = "@blockOOCCommandDesc",
     onRun = function(client)
         local blocked = GetGlobalBool("oocblocked", false)
         SetGlobalBool("oocblocked", not blocked)
@@ -67,7 +67,7 @@ lia.command.add("blockooc", {
 
 lia.command.add("clearchat", {
     adminOnly = true,
-    desc = "clearChatCommandDesc",
+    desc = "@clearChatCommandDesc",
     onRun = function(client)
         net.Start("liaRegenChat")
         net.Broadcast()

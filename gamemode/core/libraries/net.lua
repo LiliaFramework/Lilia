@@ -5,7 +5,7 @@ lia.net.buffers = lia.net.buffers or {}
 lia.net.registry = lia.net.registry or {}
 function lia.net.register(name, callback)
     if not isstring(name) or not isfunction(callback) then
-        lia.error("Invalid arguments for lia.net.register")
+        lia.error(L("@invalidNetRegisterArgs"))
         return false
     end
 
@@ -15,7 +15,7 @@ end
 
 function lia.net.send(name, target, ...)
     if not isstring(name) then
-        lia.error("Invalid net message name")
+        lia.error("@invalidNetMessageName")
         return false
     end
 
@@ -33,7 +33,7 @@ function lia.net.send(name, target, ...)
         elseif IsValid(target) then
             net.Send(target)
         else
-            lia.error("Invalid target for lia.net.send")
+            lia.error(L("@invalidNetSendTarget"))
             return false
         end
     else

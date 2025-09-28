@@ -230,7 +230,7 @@ end
 
 function lia.administrator.hasAccess(ply, privilege)
     if not isstring(privilege) then
-        lia.error("hasAccess expected a string privilege, got " .. tostring(privilege))
+        lia.error(L("hasAccessExpectedString", tostring(privilege)))
         return false
     end
 
@@ -325,7 +325,7 @@ end
 
 function lia.administrator.registerPrivilege(priv)
     if not priv or not priv.ID then
-        lia.error("Privilege registration requires an ID field")
+        lia.error(L("privilegeRegistrationRequiresID"))
         return
     end
 
@@ -920,6 +920,9 @@ else
         elseif cmd == "unblind" then
             RunConsoleCommand("say", "/plyunblind " .. string.format("'%s'", tostring(id)))
             return true
+        elseif cmd == "spectate" then
+            RunConsoleCommand("say", "/plyspectate " .. string.format("'%s'", tostring(id)))
+            return true
         end
     end
 end
@@ -1128,7 +1131,7 @@ else
         lia.gui.usergroups.checks = lia.gui.usergroups.checks or {}
         lia.gui.usergroups.checks[g] = lia.gui.usergroups.checks[g] or {}
         local function addRow(list, name)
-            local row = list:Add("DPanel")
+            local row = list:Add("liaBasePanel")
             row:Dock(TOP)
             row:DockMargin(0, 0, 0, 8)
             local displayKey = lia.administrator.privilegeNames[name] or name
@@ -1141,13 +1144,13 @@ else
             local rowHeight = math.max(textHeight + 28, boxSize + 14)
             row:SetTall(rowHeight)
             row.Paint = function(pnl, w, h) derma.SkinHook("Paint", "Panel", pnl, w, h) end
-            local lbl = row:Add("DLabel")
+            local lbl = row:Add("liaText")
             lbl:Dock(FILL)
             lbl:DockMargin(8, 0, isUsergroup and 16 or 0, 0)
             lbl:SetText(L(displayKey))
             lbl:SetFont(font)
             lbl:SetContentAlignment(4)
-            local chk = row:Add("liaCheckbox")
+            local chk = row:Add("liaSimpleCheckbox")
             chk:SetSize(boxSize, boxSize)
             row.PerformLayout = function(_, w, h) chk:SetPos(w - boxSize - rightOffset, h - boxSize) end
             chk:SetChecked(current[name] and true or false)
@@ -1183,7 +1186,7 @@ else
         local _, hfh = surface.GetTextSize("W")
         local headerH = math.max(hfh + 18, 36)
         for _, cat in ipairs(ordered) do
-            local wrap = vgui.Create("DPanel")
+            local wrap = vgui.Create("liaBasePanel")
             wrap.Paint = function(pnl, w, h) derma.SkinHook("Paint", "InnerPanel", pnl, w, h) end
             local list = vgui.Create("DListLayout", wrap)
             list:Dock(TOP)
@@ -1214,22 +1217,22 @@ else
         local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[g] ~= nil
         local editable = not isDefault
         local bottomTall, bottomMargin = 44, 12
-        local bottom = parent:Add("DPanel")
+        local bottom = parent:Add("liaBasePanel")
         bottom:Dock(BOTTOM)
         bottom:SetTall(bottomTall)
         bottom:DockMargin(10, 0, 10, bottomMargin)
         bottom.Paint = function() end
-        local content = parent:Add("DPanel")
+        local content = parent:Add("liaBasePanel")
         content:Dock(FILL)
         content:DockMargin(0, 0, 0, bottomTall + bottomMargin)
         content.Paint = function() end
-        local details = content:Add("DPanel")
+        local details = content:Add("liaBasePanel")
         details:Dock(TOP)
         details:DockMargin(20, 20, 20, 10)
         details.Paint = function() end
         details:InvalidateLayout(true)
         details:SizeToChildren(true, true)
-        local privContainer = content:Add("DPanel")
+        local privContainer = content:Add("liaBasePanel")
         privContainer:Dock(FILL)
         privContainer:DockMargin(20, 0, 20, 0)
         privContainer.Paint = function() end
@@ -1284,7 +1287,7 @@ else
 
     local function buildGroupsUI(panel, groups)
         panel:Clear()
-        local sheet = panel:Add("DPropertySheet")
+        local sheet = panel:Add("liaTabs")
         sheet:Dock(FILL)
         sheet:DockMargin(10, 10, 10, 10)
         panel.pages = {}
@@ -1297,7 +1300,7 @@ else
 
         table.sort(keys, function(a, b) return a:lower() < b:lower() end)
         for _, g in ipairs(keys) do
-            local page = sheet:Add("DPanel")
+            local page = sheet:Add("liaBasePanel")
             page:Dock(FILL)
             page.Paint = function(pnl, w, h) derma.SkinHook("Paint", "Panel", pnl, w, h) end
             renderGroupInfo(page, g, groups)

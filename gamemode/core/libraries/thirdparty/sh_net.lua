@@ -6,7 +6,7 @@ do
     local format = string.format
     local encode = {}
     local cacheSize = 0
-    encode['table'] = function(self, tbl, output, cache)
+    encode["table"] = function(self, tbl, output, cache)
         if cache[tbl] then
             output[#output + 1] = format('(%x)', cache[tbl])
             return
@@ -23,7 +23,7 @@ do
                 if k == predictedNumeric then
                     predictedNumeric = predictedNumeric + 1
                     local tv = type(v)
-                    if tv == 'string' then
+                    if tv == "string" then
                         local pid = cache[v]
                         if pid then
                             output[#output + 1] = format('(%x)', pid)
@@ -53,7 +53,7 @@ do
 
         for k, v in next, tbl, predictedNumeric do
             local tk, tv = type(k), type(v)
-            if tk == 'string' then
+            if tk == "string" then
                 local pid = cache[k]
                 if pid then
                     output[#output + 1] = format('(%x)', pid)
@@ -66,7 +66,7 @@ do
                 self[tk](self, k, output, cache)
             end
 
-            if tv == 'string' then
+            if tv == "string" then
                 local pid = cache[v]
                 if pid then
                     output[#output + 1] = format('(%x)', pid)
@@ -84,7 +84,7 @@ do
     end
 
     local gsub = string.gsub
-    encode['string'] = function(_, str, output)
+    encode["string"] = function(_, str, output)
         local estr, count = gsub(str, ";", "\\;")
         if count == 0 then
             output[#output + 1] = '\'' .. str .. ';'
@@ -93,7 +93,7 @@ do
         end
     end
 
-    encode['number'] = function(_, num, output)
+    encode["number"] = function(_, num, output)
         if num % 1 == 0 then
             if num < 0 then
                 output[#output + 1] = format('x%x;', -num)
@@ -105,20 +105,20 @@ do
         end
     end
 
-    encode['boolean'] = function(_, val, output) output[#output + 1] = val and 't' or 'f' end
-    encode['Vector'] = function(_, val, output) output[#output + 1] = 'v' .. val.x .. ',' .. val.y .. ',' .. val.z .. ';' end
-    encode['Angle'] = function(_, val, output) output[#output + 1] = 'a' .. val.p .. ',' .. val.y .. ',' .. val.r .. ';' end
-    encode['Entity'] = function(_, val, output) output[#output + 1] = 'E' .. (IsValid(val) and val:EntIndex() .. ';' or '#') end
-    encode['Player'] = encode['Entity']
-    encode['Vehicle'] = encode['Entity']
-    encode['Weapon'] = encode['Entity']
-    encode['NPC'] = encode['Entity']
-    encode['NextBot'] = encode['Entity']
-    encode['PhysObj'] = encode['Entity']
-    encode['nil'] = function() output[#output + 1] = '?' end
+    encode["boolean"] = function(_, val, output) output[#output + 1] = val and "t" or "f" end
+    encode["Vector"] = function(_, val, output) output[#output + 1] = "v" .. val.x .. ',' .. val.y .. ',' .. val.z .. ';' end
+    encode["Angle"] = function(_, val, output) output[#output + 1] = "a" .. val.p .. ',' .. val.y .. ',' .. val.r .. ';' end
+    encode["Entity"] = function(_, val, output) output[#output + 1] = "E" .. (IsValid(val) and val:EntIndex() .. ';' or '#') end
+    encode["Player"] = encode["Entity"]
+    encode["Vehicle"] = encode["Entity"]
+    encode["Weapon"] = encode["Entity"]
+    encode["NPC"] = encode["Entity"]
+    encode["NextBot"] = encode["Entity"]
+    encode["PhysObj"] = encode["Entity"]
+    encode["nil"] = function() output[#output + 1] = '?' end
     encode.__index = function(key)
-        lia.error(L('netTypeCannotEncode', key))
-        return encode['nil']
+        lia.error(L("netTypeCannotEncode", key))
+        return encode["nil"]
     end
 
     do
@@ -126,7 +126,7 @@ do
         function pon.encode(tbl)
             local output = {}
             cacheSize = 0
-            encode['table'](encode, tbl, output, {})
+            encode["table"](encode, tbl, output, {})
             local res = concat(output)
             return res
         end
@@ -219,7 +219,7 @@ do
         return index, res
     end
 
-    decode['n'] = function(_, index, str)
+    decode["n"] = function(_, index, str)
         index = index - 1
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1))
@@ -227,25 +227,25 @@ do
         return index, num
     end
 
-    decode['0'] = decode['n']
-    decode['1'] = decode['n']
-    decode['2'] = decode['n']
-    decode['3'] = decode['n']
-    decode['4'] = decode['n']
-    decode['5'] = decode['n']
-    decode['6'] = decode['n']
-    decode['7'] = decode['n']
-    decode['8'] = decode['n']
-    decode['9'] = decode['n']
-    decode['-'] = decode['n']
-    decode['X'] = function(_, index, str)
+    decode["0"] = decode["n"]
+    decode["1"] = decode["n"]
+    decode["2"] = decode["n"]
+    decode["3"] = decode["n"]
+    decode["4"] = decode["n"]
+    decode["5"] = decode["n"]
+    decode["6"] = decode["n"]
+    decode["7"] = decode["n"]
+    decode["8"] = decode["n"]
+    decode["9"] = decode["n"]
+    decode['-'] = decode["n"]
+    decode["X"] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
         return index, num
     end
 
-    decode['x'] = function(_, index, str)
+    decode["x"] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local num = -tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
@@ -259,9 +259,9 @@ do
         return index, cache[num]
     end
 
-    decode['t'] = function(_, index) return index, true end
-    decode['f'] = function(_, index) return index, false end
-    decode['v'] = function(_, index, str)
+    decode["t"] = function(_, index) return index, true end
+    decode["f"] = function(_, index) return index, false end
+    decode["v"] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local vecStr = sub(str, index, finish - 1)
         index = finish + 1
@@ -269,7 +269,7 @@ do
         return index, Vector(tonumber(segs[1]), tonumber(segs[2]), tonumber(segs[3]))
     end
 
-    decode['a'] = function(_, index, str)
+    decode["a"] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local angStr = sub(str, index, finish - 1)
         index = finish + 1
@@ -277,7 +277,7 @@ do
         return index, Angle(tonumber(segs[1]), tonumber(segs[2]), tonumber(segs[3]))
     end
 
-    decode['E'] = function(_, index, str)
+    decode["E"] = function(_, index, str)
         if str[index] == '#' then
             index = index + 1
             return index, NULL
@@ -289,7 +289,7 @@ do
         end
     end
 
-    decode['P'] = function(_, index, str)
+    decode["P"] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1))
         index = finish + 1

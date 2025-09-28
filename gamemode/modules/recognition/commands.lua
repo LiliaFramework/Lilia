@@ -9,11 +9,11 @@ lia.command.add("recogwhisper", {
     adminOnly = true,
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
-    desc = "recogWhisperDesc",
+    desc = "@recogWhisperDesc",
     onRun = function(client, arguments) runCommand(client, arguments, "whisper") end
 })
 
@@ -21,11 +21,11 @@ lia.command.add("recognormal", {
     adminOnly = true,
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
-    desc = "recogNormalDesc",
+    desc = "@recogNormalDesc",
     onRun = function(client, arguments) runCommand(client, arguments, "normal") end
 })
 
@@ -33,11 +33,11 @@ lia.command.add("recogyell", {
     adminOnly = true,
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
-    desc = "recogYellDesc",
+    desc = "@recogYellDesc",
     onRun = function(client, arguments) runCommand(client, arguments, "yell") end
 })
 
@@ -45,17 +45,17 @@ lia.command.add("recogbots", {
     superAdminOnly = true,
     arguments = {
         {
-            name = "range",
+            name = "@range",
             type = "string",
             optional = true
         },
         {
-            name = "name",
+            name = "@name",
             type = "string",
             optional = true
         },
     },
-    desc = "recogBotsDesc",
+    desc = "@recogBotsDesc",
     onRun = function(_, arguments)
         local range = arguments[1] or "normal"
         local fakeName = arguments[2]

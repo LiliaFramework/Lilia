@@ -4,14 +4,14 @@ function PANEL:Init()
     self:SetTitle(L("door") .. " " .. L("settings"))
     self:Center()
     self:MakePopup()
-    self.access = self:Add("DListView")
+    self.access = self:Add("liaDListView")
     self.access:Dock(FILL)
     local headerColor = Color(25, 25, 25)
     self.access:AddColumn(L("name")).Header:SetTextColor(headerColor)
     self.access:AddColumn(L("doorAccess")).Header:SetTextColor(headerColor)
     self.access.OnClickLine = function(_, line)
         if not IsValid(line.player) then return end
-        local menu = DermaMenu()
+        local menu = vgui.Create("liaDermaMenu")
         local ply = line.player
         local accessData = self.accessData
         local door = self.door
@@ -43,7 +43,7 @@ function PANEL:setDoor(door, accessData, fallback)
     end
 
     if self:CheckAccess(DOOR_OWNER) then
-        local btn = self:Add("DButton")
+        local btn = self:Add("liaButton")
         btn:Dock(BOTTOM)
         btn:DockMargin(0, 5, 0, 0)
         btn:SetText(L("doorSell"))
@@ -57,7 +57,7 @@ function PANEL:setDoor(door, accessData, fallback)
     end
 
     if self:CheckAccess(DOOR_TENANT) then
-        local entry = self:Add("DTextEntry")
+        local entry = self:Add("liaEntry")
         entry:Dock(TOP)
         entry:DockMargin(0, 0, 0, 5)
         entry.Think = function()
@@ -81,4 +81,4 @@ function PANEL:Think()
     if self.accessData and not IsValid(self.door) and self:CheckAccess() then self:Remove() end
 end
 
-vgui.Register("liaDoorMenu", PANEL, "DFrame")
+vgui.Register("liaDoorMenu", PANEL, "liaFrame")

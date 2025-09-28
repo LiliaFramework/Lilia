@@ -157,7 +157,7 @@ properties.Add("npc_weapon", {
     end,
     Action = function(_, ent)
         if not IsValid(ent) then return false end
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetSize(ScrW() / 1.2, ScrH() / 1.1)
         frame:SetTitle(L("changeWeaponOf", language.GetPhrase("#" .. ent:GetClass())))
         frame:Center()
@@ -220,20 +220,13 @@ properties.Add("npc_weapon", {
                 draw.RoundedBox(0, 0, 0, w, h, Color(255, 0, 0))
             end
 
-            local WarningText = vgui.Create("DLabel", WarningThing)
+            local WarningText = vgui.Create("liaText", WarningThing)
             WarningText:Dock(TOP)
             WarningText:SetHeight(35)
             WarningText:SetContentAlignment(5)
             WarningText:SetTextColor(color_white)
             WarningText:SetFont("DermaLarge")
-            WarningText:SetText(L("npcWeaponWarning1"))
-            local WarningText2 = vgui.Create("DLabel", WarningThing)
-            WarningText2:Dock(TOP)
-            WarningText2:SetHeight(35)
-            WarningText2:SetContentAlignment(5)
-            WarningText2:SetTextColor(color_white)
-            WarningText2:SetFont("DermaLarge")
-            WarningText2:SetText(L("npcWeaponWarning2"))
+            WarningText:SetText(L("npcWeaponWarning"))
         end
     end,
     Receive = function(_, _, ply)

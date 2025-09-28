@@ -243,4 +243,4 @@ function PANEL:OnCursorExited()
     if lia.item.heldPanel == self then lia.item.heldPanel = nil end
 end
 
-vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")
+vgui.Register("liaGridInventoryPanel", PANEL, "liaBasePanel")

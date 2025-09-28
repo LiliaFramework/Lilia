@@ -84,7 +84,7 @@ function PANEL:openActionMenu()
     local itemTable = self.itemTable
     assert(itemTable, L("invalidActionMenuItem"))
     itemTable.player = LocalPlayer()
-    local menu = DermaMenu()
+    local menu = vgui.Create("liaDermaMenu")
     if hook.Run("OnCreateItemInteractionMenu", self, menu, itemTable) then
         if IsValid(menu) then menu:Remove() end
         return

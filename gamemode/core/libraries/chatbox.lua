@@ -7,7 +7,7 @@ end
 function lia.chat.register(chatType, data)
     data.arguments = data.arguments or {}
     data.syntax = L(lia.command.buildSyntaxFromArguments(data.arguments))
-    data.desc = data.desc or ""
+    data.desc = L(data.desc or "")
     if data.prefix then
         local prefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local processed, lookup = {}, {}
@@ -69,7 +69,7 @@ function lia.chat.register(chatType, data)
         if #aliases > 0 then
             lia.command.add(chatType, {
                 arguments = data.arguments,
-                desc = data.desc,
+                desc = L(data.desc),
                 alias = aliases,
                 onRun = function(_, args) lia.chat.parse(LocalPlayer(), table.concat(args, " ")) end
             })

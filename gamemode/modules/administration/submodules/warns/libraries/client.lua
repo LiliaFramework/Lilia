@@ -4,11 +4,11 @@ net.Receive("liaAllWarnings", function()
     local warnings = net.ReadTable() or {}
     if not IsValid(panelRef) then return end
     panelRef:Clear()
-    local search = panelRef:Add("DTextEntry")
+    local search = panelRef:Add("liaEntry")
     search:Dock(TOP)
     search:SetPlaceholderText(L("search"))
     search:SetTextColor(Color(255, 255, 255))
-    local list = panelRef:Add("DListView")
+    local list = panelRef:Add("liaTable")
     list:Dock(FILL)
     local function addSizedColumn(text)
         local col = list:AddColumn(text)

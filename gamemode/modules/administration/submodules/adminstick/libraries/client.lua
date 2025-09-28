@@ -311,7 +311,7 @@ end
 
 local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
-    local fr = vgui.Create("DFrame")
+    local fr = vgui.Create("liaFrame")
     fr:SetTitle(L("changePlayerModel"))
     fr:SetSize(450, 300)
     fr:Center()
@@ -320,14 +320,15 @@ local function OpenPlayerModelUI(tgt)
         AdminStickIsOpen = false
     end
 
-    local sc = vgui.Create("DScrollPanel", fr)
+    local sc = vgui.Create("liaScrollPanel", fr)
     sc:Dock(FILL)
-    local wr = vgui.Create("DIconLayout", sc)
+    local wr = vgui.Create("liaBasePanel", sc)
     wr:Dock(FILL)
-    local ed = vgui.Create("DTextEntry", fr)
+    wr:DockPadding(4, 4, 4, 4)
+    local ed = vgui.Create("liaEntry", fr)
     ed:Dock(BOTTOM)
     ed:SetText(tgt:GetModel())
-    local bt = vgui.Create("DButton", fr)
+    local bt = vgui.Create("liaButton", fr)
     bt:SetText(L("change"))
     bt:Dock(TOP)
     function bt:DoClick()
@@ -361,7 +362,7 @@ end
 
 local function OpenReasonUI(tgt, cmd)
     AdminStickIsOpen = true
-    local fr = vgui.Create("DFrame")
+    local fr = vgui.Create("liaFrame")
     fr:SetTitle(L("reasonFor", cmd))
     fr:SetSize(300, 150)
     fr:Center()
@@ -370,13 +371,13 @@ local function OpenReasonUI(tgt, cmd)
         AdminStickIsOpen = false
     end
 
-    local ed = vgui.Create("DTextEntry", fr)
+    local ed = vgui.Create("liaEntry", fr)
     ed:Dock(FILL)
     ed:SetMultiline(true)
     ed:SetPlaceholderText(L("reason"))
     local ts
     if cmd == "banid" then
-        ts = vgui.Create("DNumSlider", fr)
+        ts = vgui.Create("liaSlideBox", fr)
         ts:Dock(TOP)
         ts:SetText(L("lengthInDays"))
         ts:SetMin(0)
@@ -384,7 +385,7 @@ local function OpenReasonUI(tgt, cmd)
         ts:SetDecimals(0)
     end
 
-    local bt = vgui.Create("DButton", fr)
+    local bt = vgui.Create("liaButton", fr)
     bt:Dock(BOTTOM)
     bt:SetText(L("change"))
     function bt:DoClick()

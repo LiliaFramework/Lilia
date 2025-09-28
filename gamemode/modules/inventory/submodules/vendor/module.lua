@@ -1,19 +1,19 @@
-﻿MODULE.name = "Vendors"
+﻿MODULE.name = "@vendors"
 MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides NPC vendors who can buy and sell items with stock management and dialogue-driven transactions."
+MODULE.discord = "liliaplayer"
+MODULE.desc = "@vendorsDesc"
 MODULE.Privileges = {
     {
-        Name = "canEditVendors",
+        Name = "@canEditVendors",
         ID = "canEditVendors",
         MinAccess = "superadmin",
-        Category = "vendors",
+        Category = "@vendors",
     },
     {
-        Name = "canCreateVendorPresets",
+        Name = "@canCreateVendorPresets",
         ID = "canCreateVendorPresets",
         MinAccess = "admin",
-        Category = "vendors",
+        Category = "@vendors",
     },
 }
 
@@ -27,14 +27,14 @@ VENDOR_MAXSTOCK = 4
 VENDOR_SELLANDBUY = 1
 VENDOR_SELLONLY = 2
 VENDOR_BUYONLY = 3
-lia.config.add("vendorSaleScale", "vendorSaleScale", 0.5, function(value)
+lia.config.add("vendorSaleScale", "@vendorSaleScale", 0.5, function(value)
     local num = tonumber(value)
     if not num then return false, L("configValueMustBeNumber") end
     if num < 0.1 or num > 2.0 then return false, L("configValueMustBeBetween", 0.1, 2.0) end
     return true
 end, {
     desc = "The default sale scale for all vendors (multiplier for selling items to vendors)",
-    category = "Vendors",
+    category = "@vendors",
     type = "Float",
     min = 0.1,
     max = 2.0,

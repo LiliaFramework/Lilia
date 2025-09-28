@@ -1,7 +1,7 @@
 ﻿if not pac then return end
-ITEM.name = "pacoutfitName"
-ITEM.desc = "pacoutfitDesc"
-ITEM.category = "outfit"
+ITEM.name = "@pacoutfitName"
+ITEM.desc = "@pacoutfitDesc"
+ITEM.category = "@outfit"
 ITEM.model = "models/Gibs/HGIBS.mdl"
 ITEM.width = 1
 ITEM.height = 1
@@ -28,8 +28,8 @@ function ITEM:removePart(client)
 end
 
 ITEM.functions.Unequip = {
-    name = "unequip",
-    tip = "equipTip",
+    name = "@unequip",
+    tip = "@equipTip",
     icon = "icon16/cross.png",
     onRun = function(item)
         local client = item.player
@@ -40,8 +40,8 @@ ITEM.functions.Unequip = {
 }
 
 ITEM.functions.Equip = {
-    name = "equip",
-    tip = "equipTip",
+    name = "@equip",
+    tip = "@equipTip",
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player

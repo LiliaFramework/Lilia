@@ -45,28 +45,28 @@ local function doRange(ply, lvl)
     promptName(ply, function(nm) CharRecognize(ply, lvl, nm) end)
 end
 
-lia.playerinteract.addAction("recognizeInWhisperRange", {
-    category = L("categoryRecognition"),
+lia.playerinteract.addAction("@recognizeInWhisperRange", {
+    category = "categoryRecognition",
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply) doRange(ply, 1) end,
     serverOnly = true
 })
 
-lia.playerinteract.addAction("recognizeInTalkRange", {
-    category = L("categoryRecognition"),
+lia.playerinteract.addAction("@recognizeInTalkRange", {
+    category = "categoryRecognition",
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply) doRange(ply, 3) end,
     serverOnly = true
 })
 
-lia.playerinteract.addAction("recognizeInYellRange", {
-    category = L("categoryRecognition"),
+lia.playerinteract.addAction("@recognizeInYellRange", {
+    category = "categoryRecognition",
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply) doRange(ply, 4) end,
     serverOnly = true
 })
 
-lia.playerinteract.addInteraction("recognizeOption", {
+lia.playerinteract.addInteraction("@recognizeOption", {
     serverOnly = true,
     shouldShow = function(ply, tgt)
         if not canRecog(ply) then return false end

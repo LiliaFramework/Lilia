@@ -1,20 +1,20 @@
 ﻿local MODULE = MODULE
 lia.command.add("warn", {
     adminOnly = true,
-    desc = "warnDesc",
+    desc = "@warnDesc",
     arguments = {
         {
-            name = "target",
+            name = "@target",
             type = "player"
         },
         {
-            name = "reason",
+            name = "@reason",
             type = "string"
         },
     },
     AdminStick = {
-        Name = "warnPlayer",
-        Category = "moderation",
+        Name = "@warnPlayer",
+        Category = "@moderation",
         SubCategory = "warnings",
         Icon = "icon16/error.png"
     },
@@ -47,16 +47,16 @@ lia.command.add("warn", {
 
 lia.command.add("viewwarns", {
     adminOnly = true,
-    desc = "viewWarnsDesc",
+    desc = "@viewWarnsDesc",
     arguments = {
         {
-            name = "target",
+            name = "@target",
             type = "player"
         },
     },
     AdminStick = {
-        Name = "viewPlayerWarnings",
-        Category = "moderation",
+        Name = "@viewPlayerWarnings",
+        Category = "@moderation",
         SubCategory = "warnings",
         Icon = "icon16/eye.png"
     },
@@ -85,24 +85,24 @@ lia.command.add("viewwarns", {
 
             lia.util.SendTableUI(client, L("playerWarningsTitle", target:Nick()), {
                 {
-                    name = "id",
+                    name = "@id",
                     field = "index"
                 },
                 {
-                    name = "timestamp",
+                    name = "@timestamp",
                     field = "timestamp"
                 },
                 {
-                    name = "admin",
+                    name = "@admin",
                     field = "admin"
                 },
                 {
-                    name = "warningMessage",
+                    name = "@warningMessage",
                     field = "warningMessage"
                 }
             }, warningList, {
                 {
-                    name = "removeWarning",
+                    name = "@removeWarning",
                     net = "RequestRemoveWarning"
                 }
             }, target:getChar():getID())
@@ -114,10 +114,10 @@ lia.command.add("viewwarns", {
 
 lia.command.add("viewwarnsissued", {
     adminOnly = true,
-    desc = "viewWarnsIssuedDesc",
+    desc = "@viewWarnsIssuedDesc",
     arguments = {
         {
-            name = "staff",
+            name = "@staff",
             type = "string"
         },
     },
@@ -153,19 +153,19 @@ lia.command.add("viewwarnsissued", {
 
             lia.util.SendTableUI(client, L("warningsIssuedTitle", displayName), {
                 {
-                    name = "id",
+                    name = "@id",
                     field = "index"
                 },
                 {
-                    name = "timestamp",
+                    name = "@timestamp",
                     field = "timestamp"
                 },
                 {
-                    name = "player",
+                    name = "@player",
                     field = "player"
                 },
                 {
-                    name = "warningMessage",
+                    name = "@warningMessage",
                     field = "warningMessage"
                 }
             }, warningList)

@@ -41,4 +41,4 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.Text, self.Font, cx, cy, Color(240, 240, 240), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
-vgui.Register("DProgressBar", PANEL, "DPanel")
+vgui.Register("DProgressBar", PANEL, "liaBasePanel")

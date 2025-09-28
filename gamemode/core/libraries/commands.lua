@@ -14,7 +14,7 @@ function lia.command.buildSyntaxFromArguments(args)
             typ = "string"
         end
 
-        local name = arg.name or typ
+        local name = L(arg.name or typ)
         local optional = arg.optional and " optional" or ""
         tokens[#tokens + 1] = string.format("[%s %s%s]", typ, name, optional)
     end
@@ -25,7 +25,7 @@ function lia.command.add(command, data)
     data.arguments = data.arguments or {}
     data.syntax = lia.command.buildSyntaxFromArguments(data.arguments)
     data.syntax = L(data.syntax or "")
-    data.desc = data.desc or ""
+    data.desc = L(data.desc or "")
     data.privilege = data.privilege or nil
     local superAdminOnly = data.superAdminOnly
     local adminOnly = data.adminOnly
@@ -120,7 +120,7 @@ function lia.command.hasAccess(client, command, data)
     local hasAccess = true
     if accessLevels ~= "user" then
         if not isstring(privilegeID) then
-            lia.error("Command '" .. tostring(command) .. "' has invalid privilege ID type: " .. tostring(privilegeID))
+            lia.error(L("invalidPrivilegeIDType", tostring(command), tostring(privilegeID)))
             return false, privilegeName
         end
 
@@ -239,7 +239,7 @@ if SERVER then
                     for i, field in ipairs(fields) do
                         local arg = tokens[i]
                         if not arg or isPlaceholder(arg) then
-                            if not field.optional then missing[#missing + 1] = field.name end
+                            if not field.optional then missing[#missing + 1] = L(field.name) end
                         else
                             prefix[#prefix + 1] = arg
                         end
@@ -285,7 +285,7 @@ else
         prefix = prefix or {}
         local numFields = table.Count(fields)
         local frameW, frameH = 600, 200 + numFields * 75
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetTitle("")
         frame:SetSize(frameW, frameH)
         frame:Center()
@@ -296,7 +296,7 @@ else
             draw.SimpleText(L(cmdKey), "liaMediumFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
         end
 
-        local scroll = vgui.Create("DScrollPanel", frame)
+        local scroll = vgui.Create("liaScrollPanel", frame)
         scroll:Dock(FILL)
         scroll:DockMargin(10, 40, 10, 10)
         surface.SetFont("liaSmallFont")
@@ -308,15 +308,15 @@ else
             local optional = data.optional
             local options = data.options
             local filter = data.filter
-            local panel = vgui.Create("DPanel", scroll)
+            local panel = vgui.Create("liaBasePanel", scroll)
             panel:Dock(TOP)
             panel:DockMargin(0, 0, 0, 5)
             panel:SetTall(70)
             panel.Paint = function() end
-            local textW = select(1, surface.GetTextSize(L(data.description or name)))
+            local textW = select(1, surface.GetTextSize(L(L(data.description or name))))
             local ctrl
             if fieldType == "player" then
-                ctrl = vgui.Create("DComboBox", panel)
+                ctrl = vgui.Create("liaComboBox", panel)
                 ctrl:SetValue(L("select") .. " " .. L("player"))
                 local players = {}
                 for _, plyObj in player.Iterator() do
@@ -332,7 +332,7 @@ else
                     ctrl:AddChoice(plyObj:Name(), plyObj:SteamID())
                 end
             elseif fieldType == "table" then
-                ctrl = vgui.Create("DComboBox", panel)
+                ctrl = vgui.Create("liaComboBox", panel)
                 ctrl:SetValue(L("select") .. " " .. L(name))
                 local opts = options
                 if isfunction(opts) then
@@ -350,13 +350,13 @@ else
                     end
                 end
             elseif fieldType == "bool" then
-                ctrl = vgui.Create("DCheckBox", panel)
+                ctrl = vgui.Create("liaCheckBox", panel)
             else
-                ctrl = vgui.Create("DTextEntry", panel)
+                ctrl = vgui.Create("liaEntry", panel)
                 ctrl:SetFont("liaSmallFont")
             end
 
-            local label = vgui.Create("DLabel", panel)
+            local label = vgui.Create("liaText", panel)
             label:SetFont("liaSmallFont")
             label:SetText(L(data.description or name))
             label:SizeToContents()
@@ -404,12 +404,12 @@ else
             end
         end
 
-        local buttons = vgui.Create("DPanel", frame)
+        local buttons = vgui.Create("liaBasePanel", frame)
         buttons:Dock(BOTTOM)
         buttons:SetTall(90)
         buttons:DockPadding(15, 15, 15, 15)
         buttons.Paint = function() end
-        local submit = vgui.Create("DButton", buttons)
+        local submit = vgui.Create("liaButton", buttons)
         submit:Dock(LEFT)
         submit:DockMargin(0, 0, 15, 0)
         submit:SetWide(270)
@@ -447,7 +447,7 @@ else
         end
 
         validate()
-        local cancel = vgui.Create("DButton", buttons)
+        local cancel = vgui.Create("liaButton", buttons)
         cancel:Dock(RIGHT)
         cancel:SetWide(270)
         cancel:SetText(L("cancel"))

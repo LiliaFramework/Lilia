@@ -1,8 +1,8 @@
 ﻿lia.command.add("restockvendor", {
     superAdminOnly = true,
-    desc = "restockVendorDesc",
+    desc = "@restockVendorDesc",
     AdminStick = {
-        Name = "restockVendorStickName",
+        Name = "@restockVendorStickName",
         TargetClass = "lia_vendor",
         Icon = "icon16/box.png"
     },
@@ -28,7 +28,7 @@
 
 lia.command.add("restockallvendors", {
     superAdminOnly = true,
-    desc = "restockAllVendorsDesc",
+    desc = "@restockAllVendorsDesc",
     onRun = function(client)
         local count = 0
         for _, vendor in ipairs(ents.FindByClass("lia_vendor")) do
@@ -47,7 +47,7 @@ lia.command.add("restockallvendors", {
 
 lia.command.add("createvendorpreset", {
     adminOnly = true,
-    desc = "createVendorPresetDesc",
+    desc = "@createVendorPresetDesc",
     arguments = {
         {
             name = "presetName",
@@ -92,7 +92,7 @@ lia.command.add("createvendorpreset", {
 
 lia.command.add("deletevendorpreset", {
     adminOnly = true,
-    desc = "deleteVendorPresetDesc",
+    desc = "@deleteVendorPresetDesc",
     arguments = {
         {
             name = "presetName",
@@ -126,7 +126,7 @@ lia.command.add("deletevendorpreset", {
 
 lia.command.add("listvendorpresets", {
     adminOnly = true,
-    desc = "listVendorPresetsDesc",
+    desc = "@listVendorPresetsDesc",
     onRun = function(client)
         if not client:hasPrivilege("canCreateVendorPresets") then
             client:notifyErrorLocalized("noPermission")

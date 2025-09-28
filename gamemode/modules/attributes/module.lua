@@ -1,4 +1,4 @@
-﻿MODULE.name = "Attributes"
+﻿MODULE.name = "@attributes"
 MODULE.author = "76561198312513285"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "Implements character attributes and provides tools for managing them."
+MODULE.discord = "liliaplayer"
+MODULE.desc = "@attributesDesc"

@@ -1,7 +1,7 @@
-﻿ITEM.name = "entitiesName"
+﻿ITEM.name = "@entitiesName"
 ITEM.model = ""
-ITEM.desc = "entitiesDesc"
-ITEM.category = "entities"
+ITEM.desc = "@entitiesDesc"
+ITEM.category = "@entities"
 ITEM.entityid = ""
 local function restoreEntityData(entity, data)
     if not IsValid(entity) or not data then return end
@@ -25,7 +25,7 @@ local function restoreEntityData(entity, data)
 end
 
 ITEM.functions.Place = {
-    name = "placeDownEntity",
+    name = "@placeDownEntity",
     onRun = function(item)
         local client = item.player
         local data = {}

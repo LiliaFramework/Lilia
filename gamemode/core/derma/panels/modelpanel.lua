@@ -5,7 +5,7 @@ function PANEL:Init()
 end
 
 function PANEL:SetModel(model)
-    DModelPanel.SetModel(self, model)
+    liaModelPanel.SetModel(self, model)
     local ent = self.Entity
     if not IsValid(ent) then return end
     local seq = ent:SelectWeightedSequence(ACT_IDLE)
@@ -74,7 +74,7 @@ function PANEL:fitFOV()
     self:SetFOV(math.deg(2 * math.atan(h / (2 * d))))
 end
 
-vgui.Register("liaModelPanel", PANEL, "DModelPanel")
+vgui.Register("liaModelPanel", PANEL, "liaModelPanel")
 PANEL = {}
 local HEAD_BONE = "ValveBiped.Bip01_Head1"
 local DEFAULT_ANGLE = Angle(0, 45, 0)
@@ -93,4 +93,4 @@ function PANEL:LayoutEntity(ent)
     ent:SetAngles(DEFAULT_ANGLE)
 end
 
-vgui.Register("FacingModelPanel", PANEL, "DModelPanel")
+vgui.Register("FacingModelPanel", PANEL, "liaModelPanel")

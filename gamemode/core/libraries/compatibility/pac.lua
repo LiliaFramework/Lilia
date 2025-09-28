@@ -4,6 +4,14 @@ function playerMeta:getParts()
 end
 
 if SERVER then
+    local netToRemove = {"pac3_test_suite_backdoor", "pac3_test_sutie_backdoor"}
+    hook.Add("InitPostEntity", "lia_RemoveBadNetReceivers", function()
+        if not enabled:GetBool() then return end
+        for _, name in ipairs(netToRemove) do
+            if net.Receivers[name] then net.Receivers[name] = nil end
+        end
+    end)
+
     function playerMeta:syncParts()
         net.Start("liaPacSync")
         net.Send(self)
@@ -197,7 +205,7 @@ end)
 
 lia.command.add("fixpac", {
     adminOnly = false,
-    desc = "pacFixCommandDesc",
+    desc = "@pacFixCommandDesc",
     onRun = function(client)
         timer.Simple(0, function() if IsValid(client) then client:ConCommand("pac_clear_parts") end end)
         timer.Simple(0.5, function()
@@ -214,7 +222,7 @@ lia.command.add("fixpac", {
 
 lia.command.add("pacenable", {
     adminOnly = false,
-    desc = "pacEnableCommandDesc",
+    desc = "@pacEnableCommandDesc",
     onRun = function(client)
         client:ConCommand("pac_enable 1")
         client:notifySuccessLocalized("pacenable_success")
@@ -223,15 +231,15 @@ lia.command.add("pacenable", {
 
 lia.command.add("pacdisable", {
     adminOnly = false,
-    desc = "pacDisableCommandDesc",
+    desc = "@pacDisableCommandDesc",
     onRun = function(client)
         client:ConCommand("pac_enable 0")
         client:notifyInfoLocalized("pacdisable_message")
     end
 })
 
-lia.config.add("BlockPackURLoad", "blockPackUrlLoad", true, nil, {
-    desc = "blockPackUrlLoadDesc",
+lia.config.add("BlockPackURLoad", "@blockPackUrlLoad", true, nil, {
+    desc = "@blockPackUrlLoadDesc",
     category = "categoryPAC3",
     noNetworking = false,
     schemaOnly = false,

@@ -22,12 +22,12 @@ function PANEL:Init()
     self:MakePopup()
     self:SetAlpha(0)
     self:AlphaTo(255, 0.2)
-    self.tabs = self:Add("DPanel")
+    self.tabs = self:Add("liaBasePanel")
     self.tabs:Dock(TOP)
     self.tabs:DockMargin(64, 32, 64, 0)
     self.tabs:SetTall(48)
     self.tabs:SetPaintBackground(false)
-    self.content = self:Add("DPanel")
+    self.content = self:Add("liaBasePanel")
     self.content:Dock(FILL)
     self.content:DockMargin(64, 0, 64, 64)
     self.content:SetPaintBackground(false)
@@ -122,7 +122,7 @@ function PANEL:loadBackground()
                 self.background:SetKeyboardInputEnabled(false)
             end
 
-            self.bgLoader = self:Add("DPanel")
+            self.bgLoader = self:Add("liaBasePanel")
             self.bgLoader:SetSize(ScrW(), ScrH())
             self.bgLoader:SetZPos(-998)
             self.bgLoader.Paint = function(_, w, h)
@@ -162,8 +162,7 @@ function PANEL:createStartButton()
 
     if hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
-            id = "create",
-            text = "Create Character",
+            text = "@createCharacter",
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -179,8 +178,7 @@ function PANEL:createStartButton()
 
     if hasNonStaffChar then
         table.insert(buttonsData, {
-            id = "load",
-            text = "Load Character",
+            text = "@loadCharacter",
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -203,8 +201,7 @@ function PANEL:createStartButton()
 
     if client:hasPrivilege("createStaffCharacter") and not client:isStaffOnDuty() then
         table.insert(buttonsData, {
-            id = "staff",
-            text = hasStaffChar and "Load Staff Character" or "Create Staff Character",
+            text = hasStaffChar and "@loadStaffCharacter" or "@createStaffCharacter",
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -228,8 +225,7 @@ function PANEL:createStartButton()
 
     if discordURL ~= "" then
         table.insert(buttonsData, {
-            id = "discord",
-            text = "Discord",
+            text = "@discord",
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(discordURL)
@@ -239,8 +235,7 @@ function PANEL:createStartButton()
 
     if workshopURL ~= "" then
         table.insert(buttonsData, {
-            id = "workshop",
-            text = "Workshop",
+            text = "@workshop",
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(workshopURL)
@@ -249,24 +244,18 @@ function PANEL:createStartButton()
     end
 
     if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
-        table.insert(buttonsData, {
-            id = "mount",
-            text = "Mount Content",
-            doClick = function()
-                self:clickSound()
-                if lia.workshop and lia.workshop.mountContent then
-                    lia.workshop.mountContent()
-                else
-                    net.Start("liaWorkshopDownloaderRequest")
-                    net.SendToServer()
-                end
+        timer.Simple(1, function()
+            if lia.workshop and lia.workshop.mountContent then
+                lia.workshop.mountContent()
+            else
+                net.Start("liaWorkshopDownloaderRequest")
+                net.SendToServer()
             end
-        })
+        end)
     end
 
     table.insert(buttonsData, {
-        id = "disconnect",
-        text = "Disconnect",
+        text = "@disconnectButton",
         doClick = function()
             self:clickSound()
             RunConsoleCommand("disconnect")
@@ -275,8 +264,7 @@ function PANEL:createStartButton()
 
     if clientChar then
         table.insert(buttonsData, {
-            id = "return",
-            text = "Return",
+            text = "return",
             doClick = function() self:Remove() end
         })
     end
@@ -287,7 +275,7 @@ function PANEL:createStartButton()
         local btn = self:Add("liaMediumButton")
         btn:SetSize(w, h)
         btn:SetPos(x, y)
-        btn:SetText(string.upper(data.text))
+        btn:SetText(string.upper(L(data.text)))
         btn.DoClick = data.doClick
         local oldSetPos = btn.SetPos
         btn.SetPos = function(b, nx, ny)
@@ -295,7 +283,7 @@ function PANEL:createStartButton()
             if IsValid(self) then self:UpdateLogoPosition() end
         end
 
-        self.buttons[data.id] = btn
+        self.buttons[#self.buttons + 1] = btn
     end
 
     if logoPath ~= "" then
@@ -341,7 +329,7 @@ end
 
 function PANEL:createTabs()
     self.tabs:Clear()
-    if not self.isKickedFromChar then self:addTab(L("returnText"), function() self:backToMainMenu() end, true) end
+    if not self.isKickedFromChar then self:addTab("@returnText", function() self:backToMainMenu() end, true) end
 end
 
 function PANEL:backToMainMenu()
@@ -434,7 +422,7 @@ function PANEL:createStaffCharacter()
         groups = {}
     }
 
-    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or "Failed to create staff character") end)
+    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or "@failedToCreateStaffCharacter") end)
 end
 
 function PANEL:updateSelectedCharacter()
@@ -478,31 +466,33 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.infoFrame:SetTitle("")
     self.infoFrame:SetDraggable(false)
     self.infoFrame:ShowCloseButton(false)
-    local scroll = vgui.Create("DScrollPanel", self.infoFrame)
+    local scroll = vgui.Create("liaScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
     for i, text in ipairs(info) do
         if i == 1 then
-            local line = scroll:Add("DPanel")
+            local line = vgui.Create("liaBasePanel")
+            scroll:AddItem(line)
             line:Dock(TOP)
             line:DockMargin(10, 3, 10, 0)
             line:SetHeight(20)
             line.Paint = function() end
-            local nameLabel = line:Add("DLabel")
+            local nameLabel = line:Add("liaText")
             nameLabel:Dock(LEFT)
             nameLabel:SetFont("liaSmallFont")
             nameLabel:SetTextColor(Color(255, 255, 255))
             nameLabel:SetText(text)
             nameLabel:SizeToContents()
             nameLabel.Paint = function() end
-            local countLabel = line:Add("DLabel")
+            local countLabel = line:Add("liaText")
             countLabel:Dock(RIGHT)
             countLabel:SetFont("liaSmallFont")
             countLabel:SetTextColor(Color(255, 255, 255))
-            countLabel:SetText(index .. "/" .. total)
+            countLabel:SetText(L("indexOfTotal", index, total))
             countLabel:SizeToContents()
             countLabel.Paint = function() end
         else
-            local lbl = scroll:Add("DLabel")
+            local lbl = vgui.Create("liaText")
+            scroll:AddItem(lbl)
             lbl:Dock(TOP)
             lbl:DockMargin(10, 5, 10, 10)
             lbl:SetFont("liaSmallFont")
@@ -514,7 +504,8 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         end
     end
 
-    local spacer = scroll:Add("DPanel")
+    local spacer = vgui.Create("liaBasePanel")
+    scroll:AddItem(spacer)
     spacer:Dock(TOP)
     spacer:SetTall(5)
     spacer.Paint = function() end
@@ -531,7 +522,8 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         local minValue = entry.attr.min or 0
         local maxValue = entry.attr.max or 100
         local currentValue = character:getAttrib(entry.id) or minValue
-        local label = scroll:Add("DLabel")
+        local label = vgui.Create("liaText")
+        scroll:AddItem(label)
         label:Dock(TOP)
         label:DockMargin(10, 3, 10, 5)
         label:SetFont("liaSmallFont")
@@ -539,12 +531,13 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         label:SetText(entry.attr.name)
         label:SetContentAlignment(5)
         label:SizeToContentsY()
-        local progressBar = scroll:Add("DProgressBar")
+        local progressBar = vgui.Create("DProgressBar")
+        scroll:AddItem(progressBar)
         progressBar:Dock(TOP)
         progressBar:DockMargin(10, 0, 10, 10)
         progressBar:SetBarColor(entry.attr.color or lia.config.get("Color"))
         progressBar:SetFraction(math.Clamp(currentValue / maxValue, 0, 1))
-        progressBar:SetText(currentValue .. "/" .. maxValue)
+        progressBar:SetText(L("valueOfMax", currentValue, maxValue))
         progressBar.Font = "liaSmallFont"
         progressBar:SetTall(20)
     end
@@ -724,7 +717,7 @@ function PANEL:setFadeToBlack(fade)
     local d = deferred.new()
     if fade then
         if IsValid(self.fade) then self.fade:Remove() end
-        local p = vgui.Create("DPanel")
+        local p = vgui.Create("liaBasePanel")
         p:SetSize(ScrW(), ScrH())
         p:SetSkin("Default")
         p:SetBackgroundColor(color_black)

@@ -1,13 +1,13 @@
 ﻿lia.command.add("charsetattrib", {
     superAdminOnly = true,
-    desc = "setAttributes",
+    desc = "@setAttributes",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "attribute",
+            name = "@attribute",
             type = "table",
             options = function()
                 local options = {}
@@ -18,13 +18,13 @@
             end
         },
         {
-            name = "level",
+            name = "@level",
             type = "number"
         }
     },
     AdminStick = {
-        Name = "setAttributes",
-        Category = "characterManagement",
+        Name = "@setAttributes",
+        Category = "@characterManagement",
         SubCategory = "attributes",
         Icon = "icon16/wrench.png"
     },
@@ -54,16 +54,16 @@
 
 lia.command.add("checkattributes", {
     adminOnly = true,
-    desc = "checkAttributes",
+    desc = "@checkAttributes",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
     AdminStick = {
-        Name = "checkAttributes",
-        Category = "characterManagement",
+        Name = "@checkAttributes",
+        Category = "@characterManagement",
         SubCategory = "attributes",
         Icon = "icon16/zoom.png"
     },
@@ -120,14 +120,14 @@ lia.command.add("checkattributes", {
 
 lia.command.add("charaddattrib", {
     superAdminOnly = true,
-    desc = "addAttributes",
+    desc = "@addAttributes",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "attribute",
+            name = "@attribute",
             type = "table",
             options = function()
                 local options = {}
@@ -138,13 +138,13 @@ lia.command.add("charaddattrib", {
             end
         },
         {
-            name = "level",
+            name = "@level",
             type = "number"
         }
     },
     AdminStick = {
-        Name = "addAttributes",
-        Category = "characterManagement",
+        Name = "@addAttributes",
+        Category = "@characterManagement",
         SubCategory = "attributes",
         Icon = "icon16/add.png"
     },

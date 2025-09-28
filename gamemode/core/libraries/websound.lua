@@ -153,7 +153,7 @@ function lia.websound.download(name, url, cb)
                     if cb then cb(nil, false, "Cached file invalid: " .. cachedValidationError) end
                 end
             else
-                if cb then cb(nil, false, "Could not read cached file") end
+                if cb then cb(nil, false, L("couldNotReadCachedFile")) end
             end
         elseif cb then
             cb(nil, false, err)
@@ -309,21 +309,22 @@ end
 concommand.Add("lia_saved_sounds", function()
     local files = file.Find(baseDir .. "*", "DATA")
     if not files or #files == 0 then return end
-    local f = vgui.Create("DFrame")
+    local f = vgui.Create("liaFrame")
     f:SetTitle(L("webSoundsTitle"))
     f:SetSize(ScrW() * 0.6, ScrH() * 0.6)
     f:Center()
     f:MakePopup()
-    local scroll = vgui.Create("DScrollPanel", f)
+    local scroll = vgui.Create("liaScrollPanel", f)
     scroll:Dock(FILL)
-    local layout = vgui.Create("DIconLayout", scroll)
+    local layout = vgui.Create("liaBasePanel", scroll)
     layout:Dock(FILL)
-    layout:SetSpaceX(4)
-    layout:SetSpaceY(4)
+    layout:DockPadding(4, 4, 4, 4)
     for _, fn in ipairs(files) do
-        local btn = layout:Add("DButton")
+        local btn = vgui.Create("liaButton", layout)
+        btn:Dock(TOP)
+        btn:DockMargin(0, 0, 0, 4)
         btn:SetText(fn)
-        btn:SetSize(200, 20)
+        btn:SetTall(30)
         btn.DoClick = function() sound.PlayFile(buildPath(baseDir .. fn), "", function(chan) if chan then chan:Play() end end) end
     end
 end)
@@ -342,7 +343,7 @@ concommand.Add("lia_wipe_sounds", function()
             lia.websound.download(name, url)
         end
 
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " Started re-downloading stored sounds...\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " " .. L("startedRedownloadingWebSounds") .. "\n")
     end)
 end)
 
@@ -361,19 +362,19 @@ concommand.Add("lia_validate_sounds", function()
             else
                 invalidCount = invalidCount + 1
                 table.insert(corruptedFiles, fileName)
-                print(string.format("[WebSound] ? Invalid: %s - %s", fileName, errorMsg))
+                print(L("websoundInvalidFile", fileName, errorMsg))
             end
         else
             invalidCount = invalidCount + 1
             table.insert(corruptedFiles, fileName)
-            print(string.format("[WebSound] ? Could not read: %s", fileName))
+            print(L("websoundCouldNotRead", fileName))
         end
     end
 
-    print(string.format("[WebSound] Validation complete: %d valid, %d invalid", validCount, invalidCount))
+    print(L("websoundValidationComplete", validCount, invalidCount))
     if #corruptedFiles > 0 then
         for _, fileName in ipairs(corruptedFiles) do
-            print(string.format("[WebSound]  - %s", fileName))
+            print(L("websoundFileListEntry", fileName, fileSize))
         end
     end
 end)
@@ -389,12 +390,12 @@ concommand.Add("lia_cleanup_sounds", function()
             if not isValid then
                 file.Delete(filePath)
                 removedCount = removedCount + 1
-                print(string.format("[WebSound] Removed corrupted file: %s (%s)", fileName, errorMsg))
+                print(L("websoundRemovedCorruptedFile", fileName, errorMsg))
             end
         else
             file.Delete(filePath)
             removedCount = removedCount + 1
-            print(string.format("[WebSound] Removed unreadable file: %s", fileName))
+            print(L("websoundRemovedUnreadableFile", fileName))
         end
     end
 
@@ -402,11 +403,11 @@ concommand.Add("lia_cleanup_sounds", function()
         local savePath = baseDir .. fileName
         if not file.Exists(savePath, "DATA") then
             cache[fileName] = nil
-            print(string.format("[WebSound] Removed from cache: %s", fileName))
+            print(L("websoundRemovedFromCache", fileName))
         end
     end
 
-    print(string.format("[WebSound] Cleanup complete: %d files removed", removedCount))
+    print(L("websoundCleanupComplete", removedCount))
 end)
 
 concommand.Add("lia_list_sounds", function()
@@ -414,7 +415,7 @@ concommand.Add("lia_list_sounds", function()
     if #files == 0 then return end
     for _, fileName in ipairs(files) do
         local fileSize = file.Size(baseDir .. fileName, "DATA")
-        print(string.format("[WebSound] %s (%d bytes)", fileName, fileSize))
+        print(L("websoundFileListEntry", fileName, fileSize))
     end
 end)
 
@@ -430,4 +431,6 @@ function lia.websound.getStats()
     }
 end
 
+lia.websound.register("ratio_button.wav", "https://bleonheart.github.io/Samael-Assets/misc/ratio_button.wav")
+lia.websound.register("ratio_button.wav", "https://bleonheart.github.io/Samael-Assets/misc/ratio_button.wav")
 ensureDir(baseDir)

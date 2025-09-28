@@ -1,13 +1,13 @@
-﻿ITEM.name = "grenadeName"
-ITEM.desc = "grenadeDesc"
-ITEM.category = "itemCatGrenades"
+﻿ITEM.name = "@grenadeName"
+ITEM.desc = "@grenadeDesc"
+ITEM.category = "@itemCatGrenades"
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 ITEM.class = "weapon_frag"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.DropOnDeath = true
 ITEM.functions.Use = {
-    name = "useGrenade",
+    name = "@useGrenade",
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player

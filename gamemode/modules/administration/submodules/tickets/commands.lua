@@ -1,10 +1,10 @@
 ﻿local MODULE = MODULE
 lia.command.add("viewtickets", {
     adminOnly = true,
-    desc = "viewTicketsDesc",
+    desc = "@viewTicketsDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
@@ -42,15 +42,15 @@ lia.command.add("viewtickets", {
 
             lia.util.SendTableUI(client, L("ticketsForTitle", displayName), {
                 {
-                    name = "timestamp",
+                    name = "@timestamp",
                     field = "timestamp"
                 },
                 {
-                    name = "admin",
+                    name = "@admin",
                     field = "admin"
                 },
                 {
-                    name = "message",
+                    name = "@message",
                     field = "message"
                 }
             }, ticketsData)
@@ -62,16 +62,16 @@ lia.command.add("viewtickets", {
 
 lia.command.add("plyviewclaims", {
     adminOnly = true,
-    desc = "plyViewClaimsDesc",
+    desc = "@plyViewClaimsDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
     AdminStick = {
-        Name = "viewTicketClaims",
-        Category = "moderation",
+        Name = "@viewTicketClaims",
+        Category = "@moderation",
         SubCategory = "misc",
         Icon = "icon16/page_white_text.png"
     },
@@ -115,27 +115,27 @@ lia.command.add("plyviewclaims", {
 
             lia.util.SendTableUI(client, L("claimsForTitle", target:Nick()), {
                 {
-                    name = "steamID",
+                    name = "@steamID",
                     field = "steamID"
                 },
                 {
-                    name = "adminName",
+                    name = "@adminName",
                     field = "name"
                 },
                 {
-                    name = "totalClaims",
+                    name = "@totalClaims",
                     field = "claims"
                 },
                 {
-                    name = "lastClaimDate",
+                    name = "@lastClaimDate",
                     field = "lastclaim"
                 },
                 {
-                    name = "timeSinceLastClaim",
+                    name = "@timeSinceLastClaim",
                     field = "timeSinceLastClaim"
                 },
                 {
-                    name = "claimedFor",
+                    name = "@claimedFor",
                     field = "claimedFor"
                 }
             }, claimsData)
@@ -147,7 +147,7 @@ lia.command.add("plyviewclaims", {
 
 lia.command.add("viewallclaims", {
     adminOnly = true,
-    desc = "viewAllClaimsDesc",
+    desc = "@viewAllClaimsDesc",
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
@@ -175,27 +175,27 @@ lia.command.add("viewallclaims", {
 
             lia.util.SendTableUI(client, "adminClaimsTitle", {
                 {
-                    name = "steamID",
+                    name = "@steamID",
                     field = "steamID"
                 },
                 {
-                    name = "adminName",
+                    name = "@adminName",
                     field = "name"
                 },
                 {
-                    name = "totalClaims",
+                    name = "@totalClaims",
                     field = "claims"
                 },
                 {
-                    name = "lastClaimDate",
+                    name = "@lastClaimDate",
                     field = "lastclaim"
                 },
                 {
-                    name = "timeSinceLastClaim",
+                    name = "@timeSinceLastClaim",
                     field = "timeSinceLastClaim"
                 },
                 {
-                    name = "claimedFor",
+                    name = "@claimedFor",
                     field = "claimedFor"
                 }
             }, claimsData)
@@ -207,7 +207,7 @@ lia.command.add("viewallclaims", {
 
 lia.command.add("viewclaims", {
     adminOnly = true,
-    desc = "viewClaimsDesc",
+    desc = "@viewClaimsDesc",
     onRun = function(client)
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             if table.IsEmpty(caseclaims) then
@@ -236,27 +236,27 @@ lia.command.add("viewclaims", {
 
             lia.util.SendTableUI(client, "adminClaimsTitle", {
                 {
-                    name = "steamID",
+                    name = "@steamID",
                     field = "steamID"
                 },
                 {
-                    name = "adminName",
+                    name = "@adminName",
                     field = "name"
                 },
                 {
-                    name = "totalClaims",
+                    name = "@totalClaims",
                     field = "claims"
                 },
                 {
-                    name = "lastClaimDate",
+                    name = "@lastClaimDate",
                     field = "lastclaim"
                 },
                 {
-                    name = "timeSinceLastClaim",
+                    name = "@timeSinceLastClaim",
                     field = "timeSinceLastClaim"
                 },
                 {
-                    name = "claimedFor",
+                    name = "@claimedFor",
                     field = "claimedFor"
                 }
             }, claimsData)

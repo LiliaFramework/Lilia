@@ -1,7 +1,7 @@
-﻿MODULE.name = "MainMenu"
+﻿MODULE.name = "@mainmenu"
 MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "Creates the in-game main menu used for selecting, creating, and managing player characters before entering the world."
+MODULE.discord = "liliaplayer"
+MODULE.desc = "@mainmenuDesc"
 if SERVER then
     function MODULE:syncCharList(client)
         if not client.liaCharList then return end

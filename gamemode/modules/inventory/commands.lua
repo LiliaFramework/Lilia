@@ -1,9 +1,9 @@
 ﻿lia.command.add("updateinvsize", {
     adminOnly = true,
-    desc = "updateInventorySizeDesc",
+    desc = "@updateInventorySizeDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
     },
@@ -45,18 +45,18 @@
 
 lia.command.add("setinventorysize", {
     adminOnly = true,
-    desc = "setInventorySizeDesc",
+    desc = "@setInventorySizeDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "width",
+            name = "@width",
             type = "string"
         },
         {
-            name = "height",
+            name = "@height",
             type = "string"
         },
     },
@@ -93,18 +93,18 @@ lia.command.add("setinventorysize", {
 
 lia.command.add("setinventorysizeoverride", {
     adminOnly = true,
-    desc = "setInventorySizeOverrideDesc",
+    desc = "@setInventorySizeOverrideDesc",
     arguments = {
         {
-            name = "name",
+            name = "@name",
             type = "player"
         },
         {
-            name = "width",
+            name = "@width",
             type = "string"
         },
         {
-            name = "height",
+            name = "@height",
             type = "string"
         },
     },

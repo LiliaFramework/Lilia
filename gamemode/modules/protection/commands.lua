@@ -1,9 +1,9 @@
 ﻿lia.command.add("togglecheater", {
     adminOnly = true,
-    desc = "toggleCheaterDesc",
+    desc = "@toggleCheaterDesc",
     arguments = {
         {
-            name = "target",
+            name = "@target",
             type = "player"
         },
     },

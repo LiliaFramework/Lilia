@@ -1,12 +1,12 @@
-﻿MODULE.name = "Item Spawner"
+﻿MODULE.name = "@itemSpawner"
 MODULE.author = "Samael"
-MODULE.discord = "@liliaplayer"
-MODULE.desc = "Offers an in-game item spawner interface so administrators can quickly create items for testing, events, or moderation purposes."
+MODULE.discord = "liliaplayer"
+MODULE.desc = "@itemSpawnerDesc"
 MODULE.Privileges = {
     {
-        Name = "canUseItemSpawner",
+        Name = "@canUseItemSpawner",
         ID = "canUseItemSpawner",
         MinAccess = "admin",
-        Category = "categoryStaffItems",
+        Category = "@categoryStaffItems",
     }
 }
