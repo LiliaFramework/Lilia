@@ -277,7 +277,7 @@ end
 
 -- Use in a timer
 timer.Create("AutoCommand", 60, 0, function()
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         if client:IsValid() then
             lia.command.run(client, "checkstatus", {})
         end

@@ -137,7 +137,7 @@ end
 hook.Add("PlayerSay", "UpdateEntityOnCommand", function(ply, text)
     if text == "!saveentities" then
         -- Find all persistent entities and update them
-        for _, ent in pairs(ents.GetAll()) do
+        for _, ent in ents.iterator do
             if ent:GetPersistent() then
                 hook.Run("UpdateEntityPersistence", ent)
             end
@@ -264,7 +264,7 @@ hook.Add("OnDataSet", "TrackImportantData", function(key, value)
         print("Configuration updated:", key, "to", tostring(value))
         
         -- Notify administrators of config changes
-        for _, ply in pairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 ply:ChatPrint("Config changed: " .. key)
             end
@@ -518,7 +518,7 @@ end)
 hook.Add("OnEntityPersisted", "NotifyAdmins", function(ent)
     -- Notify for vendor saves
     if ent:GetClass() == "lia_vendor" then
-        for _, ply in pairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 ply:ChatPrint("Vendor entity saved: " .. (ent:GetName() or "Unnamed"))
             end
@@ -725,7 +725,7 @@ hook.Add("PostLoadData", "InitializeAfterLoad", function()
     end)
     
     -- Notify all players that data is ready
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         ply:ChatPrint("Server data loaded and ready!")
     end
 end)
@@ -888,7 +888,7 @@ end)
 
 -- Notify administrators of database status
 hook.Add("DatabaseConnected", "NotifyAdmins", function()
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("Database connection established successfully")
         end
@@ -2086,7 +2086,7 @@ hook.Add("PreCharDelete", "LogDeletion", function(character)
     )
     
     -- Notify administrators
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("Character being deleted: " .. charName)
         end
@@ -2158,7 +2158,7 @@ hook.Add("OnCharDelete", "NotifyAdmins", function(character)
     local charName = character:getName()
     
     -- Notify all administrators
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("Character deletion completed: " .. charName)
         end

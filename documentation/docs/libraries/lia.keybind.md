@@ -177,7 +177,7 @@ end
 
 -- Use in a function
 local function saveAllPlayerKeybinds()
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         lia.keybind.save(client)
     end
     print("All player keybinds saved")
@@ -225,7 +225,7 @@ end
 
 -- Use in a function
 local function loadAllPlayerKeybinds()
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         lia.keybind.load(client)
     end
     print("All player keybinds loaded")

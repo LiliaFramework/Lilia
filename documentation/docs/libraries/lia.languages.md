@@ -223,7 +223,7 @@ end
 local function showPlayerCount()
     local count = #player.GetAll()
     local message = L("player_count", count)
-    print(message)
+print(message)
 end
 
 -- Use in a function
@@ -231,6 +231,73 @@ local function showTimeMessage()
     local time = os.time()
     local message = L("current_time", os.date("%H:%M:%S", time))
     print(message)
+end
+```
+
+---
+
+### getLocalizedString
+
+**Purpose**
+
+Retrieves localized text based on the current language setting. This is the core function for translating text keys into their localized equivalents, supporting parameter substitution for dynamic content. If a translation key is not found in the current language, it falls back to English, and if still not found, returns the original key.
+
+**Parameters**
+
+* `str` (*string*): The translation key to look up.
+* `...` (*any*): Optional parameters for string formatting using Lua's string.format.
+
+**Returns**
+
+* `localizedText` (*string*): The translated text with parameters substituted, or the original key if not found.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get localized text
+local function getLocalizedText(key, ...)
+    return lia.lang.getLocalizedString(key, ...)
+end
+
+-- Use in a function
+local function showWelcomeMessage(client)
+    local message = lia.lang.getLocalizedString("welcome")
+    client:notify(message)
+end
+
+-- Use in a function
+local function showErrorMessage(client, errorCode)
+    local message = lia.lang.getLocalizedString("error_" .. errorCode)
+    client:notify(message)
+end
+
+-- Use in a function
+local function showFormattedMessage(client, key, ...)
+    local message = lia.lang.getLocalizedString(key, ...)
+    client:notify(message)
+end
+
+-- Use in a function
+local function showPlayerCount()
+    local count = #player.GetAll()
+    local message = lia.lang.getLocalizedString("player_count", count)
+    print(message)
+end
+
+-- Use in a function
+local function showTimeMessage()
+    local time = os.time()
+    local message = lia.lang.getLocalizedString("current_time", os.date("%H:%M:%S", time))
+    print(message)
+end
+
+-- Use with @ prefix for explicit lookup
+local function getExplicitTranslation(key, ...)
+    return lia.lang.getLocalizedString("@" .. key, ...)
 end
 ```
 

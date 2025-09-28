@@ -177,10 +177,49 @@ lia.command.add("refreshfonts", {
 })
 ```
 
+---
 
+### loadFonts
 
+**Purpose**
 
+Initializes and loads all predefined fonts into the font system. This function clears the current font registry and registers all the default fonts used throughout the Lilia framework, including various sizes and styles for UI elements, chat, menus, and other components.
 
+**Parameters**
 
+*None*
 
+**Returns**
 
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Load all default fonts
+local function initializeFonts()
+    lia.font.loadFonts()
+    print("All default fonts loaded")
+end
+
+-- Use during initialization
+local function setupUI()
+    lia.font.loadFonts()
+    -- UI setup code here
+end
+
+-- Use after changing font configuration
+local function reloadFontConfiguration()
+    lia.font.loadFonts()
+    print("Font configuration reloaded")
+end
+
+-- Use in a hook
+hook.Add("OnScreenSizeChanged", "ReloadFontsOnResolutionChange", function()
+    lia.font.loadFonts()
+end)
+```

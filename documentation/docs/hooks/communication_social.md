@@ -2519,7 +2519,7 @@ end)
 
 -- Notify admins of OOC messages
 hook.Add("OnOOCMessageSent", "NotifyAdmins", function(client, text)
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("[OOC] " .. client:Nick() .. ": " .. text)
         end
@@ -2626,7 +2626,7 @@ end)
 
 -- Notify all admins of warnings
 hook.Add("WarningIssued", "NotifyAdmins", function(target, issuer, reason)
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("[WARNING] " .. target:Nick() .. " warned by " .. issuer:Nick() .. ": " .. reason)
         end
@@ -2929,7 +2929,7 @@ end)
 
 -- Notify admins of new tickets
 hook.Add("TicketSystemCreated", "NotifyAdmins", function(ticket)
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("[TICKET] New ticket #" .. ticket.id .. " from " .. ticket.creator)
         end

@@ -542,7 +542,7 @@ end)
 -- Notify all admins when permissions change
 hook.Add("OnUsergroupPermissionsChanged", "NotifyAdmins", function(groupName, groupData)
     -- Iterate through all players
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         -- Check if player is an admin
         if ply:IsAdmin() then
             -- Send notification about permission changes

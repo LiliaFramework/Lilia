@@ -64,10 +64,17 @@ The panel library provides a comprehensive set of custom Derma panels that exten
 | `liaMiniButton` | `DButton` | Very small button variant. |
 | `liaNoBGButton` | `DButton` | Text-only button with no background. |
 | `liaQuick` | `EditablePanel` | Quick settings panel showing options flagged with `isQuick`. |
-| `liaCheckbox` | `DButton` | Checkbox that draws the config icons. |
-| `liaItemList` | `DFrame` | Generic list frame for displaying items. |
+| `liaSimpleCheckbox` | `DButton` | Checkbox that draws the config icons. |
 | `liaItemSelector` | `DFrame` | Item selection dialog with search and filtering. |
 | `liaDListView` | `DFrame` | Enhanced list view with search, sorting, and context menus. |
+| `liaColorPicker` | `EditablePanel` | Interactive color picker with HSV color model. |
+| `liaComboBox` | `Panel` | Dropdown selection with animated popup menu. |
+| `liaDermaMenu` | `DPanel` | Context menu system with submenus and icons. |
+| `liaLoadingFailure` | `DFrame` | Error display for server loading failures. |
+| `liaPlayerSelector` | `liaFrame` | Player selection interface with avatars. |
+| `liaRadialPanel` | `DPanel` | Circular radial menu with keyboard shortcuts. |
+| `liaSlideBox` | `Panel` | Dual-purpose slider or slide container. |
+| `liaTabs` | `Panel` | Tabbed interface with modern styling options. |
 
 ---
 
@@ -265,7 +272,7 @@ progressBar:SetBarColor(Color(0, 255, 0)) -- Green bar
 
 **Purpose**
 
-Small label for quick notifications. It draws a blurred backdrop and fades away after a short delay.
+Small label for quick notifications. It draws a blurred backdrop and fades away after a short delay. Supports different notification types with icons and colors.
 
 **Base Panel**
 
@@ -275,9 +282,15 @@ Small label for quick notifications. It draws a blurred backdrop and fades away 
 
 Client.
 
+**Functions**
+
+- `SetText(text)` – sets the notification message text.
+- `SetType(type)` – sets the notification type (info, error, success, warning, money, admin, default) to change icon and color.
+
 **Behaviour**
 
 - When `start` and `endTime` fields are populated, a colour bar fills from left to right to indicate progress.
+- Automatically positions itself and fades out after a configurable time.
 
 **Example Usage**
 
@@ -285,8 +298,11 @@ Client.
 -- Create a notification
 local notice = vgui.Create("liaNotice")
 notice:SetText("This is a notification!")
+notice:SetType("info") -- Sets icon and color
+
+-- Or create with specific positioning
 notice:SetPos(10, 10)
-notice:SetSize(200, 30)
+notice:SetSize(300, 54)
 ```
 
 ---
@@ -1284,7 +1300,7 @@ vendor:MakePopup()
 
 **Purpose**
 
-Large button styled with `liaHugeFont` and an underline effect on hover. ```lua local btn = vgui.Create("liaHugeButton") btn:SetText("Play") btn:SetSelected(true) -- keep underline visible ```
+Large button styled with `liaHugeFont` and an underline effect on hover. Supports selection state with persistent underline when `SetSelected(true)` is called.
 
 **Base Panel**
 
@@ -1293,6 +1309,11 @@ Large button styled with `liaHugeFont` and an underline effect on hover. ```lua 
 **Realm**
 
 Client.
+
+**Functions**
+
+- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
+- `IsSelected()` – returns whether the button is currently selected.
 
 **Example Usage**
 
@@ -1304,6 +1325,9 @@ button:SetSize(100, 30)
 button.DoClick = function()
     print("Button clicked!")
 end
+
+-- Set as selected to show persistent underline
+button:SetSelected(true)
 ```
 
 ---
@@ -1312,7 +1336,7 @@ end
 
 **Purpose**
 
-Big-font button with the same underline hover animation.
+Big-font button with the same underline hover animation and selection state support.
 
 **Base Panel**
 
@@ -1321,6 +1345,11 @@ Big-font button with the same underline hover animation.
 **Realm**
 
 Client.
+
+**Functions**
+
+- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
+- `IsSelected()` – returns whether the button is currently selected.
 
 **Example Usage**
 
@@ -1332,6 +1361,9 @@ button:SetSize(100, 30)
 button.DoClick = function()
     print("Button clicked!")
 end
+
+-- Set as selected to show persistent underline
+button:SetSelected(true)
 ```
 
 ---
@@ -1340,7 +1372,7 @@ end
 
 **Purpose**
 
-Medium-size button using `liaMediumFont`.
+Medium-size button using `liaMediumFont` with underline hover animation and selection state support.
 
 **Base Panel**
 
@@ -1349,6 +1381,11 @@ Medium-size button using `liaMediumFont`.
 **Realm**
 
 Client.
+
+**Functions**
+
+- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
+- `IsSelected()` – returns whether the button is currently selected.
 
 **Example Usage**
 
@@ -1360,6 +1397,9 @@ button:SetSize(100, 30)
 button.DoClick = function()
     print("Button clicked!")
 end
+
+-- Set as selected to show persistent underline
+button:SetSelected(true)
 ```
 
 ---
@@ -1368,7 +1408,7 @@ end
 
 **Purpose**
 
-Small button sized for compact layouts.
+Small button sized for compact layouts with underline hover animation and selection state support.
 
 **Base Panel**
 
@@ -1377,6 +1417,11 @@ Small button sized for compact layouts.
 **Realm**
 
 Client.
+
+**Functions**
+
+- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
+- `IsSelected()` – returns whether the button is currently selected.
 
 **Example Usage**
 
@@ -1388,6 +1433,9 @@ button:SetSize(100, 30)
 button.DoClick = function()
     print("Button clicked!")
 end
+
+-- Set as selected to show persistent underline
+button:SetSelected(true)
 ```
 
 ---
@@ -1396,7 +1444,7 @@ end
 
 **Purpose**
 
-Tiny button using `liaMiniFont` for dense interfaces.
+Tiny button using `liaMiniFont` for dense interfaces with underline hover animation and selection state support.
 
 **Base Panel**
 
@@ -1405,6 +1453,11 @@ Tiny button using `liaMiniFont` for dense interfaces.
 **Realm**
 
 Client.
+
+**Functions**
+
+- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
+- `IsSelected()` – returns whether the button is currently selected.
 
 **Example Usage**
 
@@ -1416,6 +1469,9 @@ button:SetSize(100, 30)
 button.DoClick = function()
     print("Button clicked!")
 end
+
+-- Set as selected to show persistent underline
+button:SetSelected(true)
 ```
 
 ---
@@ -1424,7 +1480,7 @@ end
 
 **Purpose**
 
-Text-only button that still shows the underline animation.
+Text-only button with no background that still shows the underline animation and supports selection state.
 
 **Base Panel**
 
@@ -1433,6 +1489,11 @@ Text-only button that still shows the underline animation.
 **Realm**
 
 Client.
+
+**Functions**
+
+- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
+- `IsSelected()` – returns whether the button is currently selected.
 
 **Example Usage**
 
@@ -1444,6 +1505,9 @@ button:SetSize(100, 30)
 button.DoClick = function()
     print("Button clicked!")
 end
+
+-- Set as selected to show persistent underline
+button:SetSelected(true)
 ```
 
 ---
@@ -1462,14 +1526,6 @@ Quick settings menu that lists options flagged with `isQuick`.
 
 Client.
 
-**Example Usage**
-
-```lua
--- Create a liaquick
-local panel = vgui.Create("liaQuick")
-panel:SetSize(200, 100)
-```
-
 **Functions:**
 
 - `addCategory(text)` – inserts a non-interactive section label.
@@ -1480,15 +1536,27 @@ panel:SetSize(200, 100)
 - `setIcon(char)` – sets the icon character displayed on the expand button.
 - `populateOptions()` – fills the panel using registered quick options.
 
-**Example Usage:**
+**Example Usage**
 
 ```lua
-vgui.Create("liaQuick")
+-- Create a quick settings panel
+local quickPanel = vgui.Create("liaQuick")
+quickPanel:SetSize(200, 100)
+
+-- Add various UI elements
+quickPanel:addCategory("Audio Settings")
+quickPanel:addSlider("Volume", function(panel, value) print("Volume:", value) end, 50, 0, 100)
+quickPanel:addCheck("Enable Sound", function(panel, state) print("Sound enabled:", state) end, true)
+quickPanel:addButton("Reset", function() print("Reset clicked") end)
+
+-- Or automatically populate with registered quick options
+local autoQuick = vgui.Create("liaQuick")
+autoQuick:populateOptions()
 ```
 
 ---
 
-### `liaCheckbox`
+### `liaSimpleCheckbox`
 
 **Purpose**
 
@@ -1502,49 +1570,33 @@ Checkbox that paints the same checkmark icons used in the configuration menu.
 
 Client.
 
-**Example Usage**
-
-```lua
--- Create a liacheckbox
-local panel = vgui.Create("liaCheckbox")
-panel:SetSize(200, 100)
-```
-
 **Functions:**
 
 - `SetChecked(state)` – toggles the checkmark and fires `OnChange`.
 - `GetChecked()` – returns whether the box is checked.
 - `DoClick()` – default click handler that flips the checked state.
 
-**Example Usage:**
-
-```lua
-local cb = vgui.Create("liaCheckbox")
-cb:SetChecked(true)
-```
-
----
-
-### `liaItemList`
-
-**Purpose**
-
-Generic list frame for displaying items with search functionality and context menus.
-
-**Base Panel**
-
-`DFrame`
-
-**Realm**
-
-Client.
-
 **Example Usage**
 
 ```lua
--- Create a liaitemlist
-local panel = vgui.Create("liaItemList")
-panel:SetSize(200, 100)
+-- Create a simple checkbox
+local checkbox = vgui.Create("liaSimpleCheckbox")
+checkbox:SetSize(200, 30)
+checkbox:SetPos(10, 10)
+
+-- Set initial state
+checkbox:SetChecked(true)
+
+-- Listen for changes
+checkbox.OnChange = function(panel, state)
+    print("Checkbox state changed to:", state)
+end
+
+-- Manual click handling
+checkbox.DoClick = function()
+    print("Checkbox was clicked!")
+    checkbox:SetChecked(not checkbox:GetChecked())
+end
 ```
 
 ---
@@ -1603,3 +1655,429 @@ panel:SetSize(200, 100)
 - `SetData(rows)` – populates the list with data rows.
 - `SetSort(column, desc)` – sets the sort column and direction.
 - `Populate()` – refreshes the list based on current search filter.
+
+---
+
+### `liaColorPicker`
+
+**Purpose**
+
+Interactive color picker that allows users to select colors using HSV (Hue, Saturation, Value) color model. Features a color field, hue slider, and preview panel with real-time updates.
+
+**Base Panel**
+
+`EditablePanel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetColor(color)` – sets the initial color to display and edit.
+- `GetColor()` – returns the currently selected color.
+- `OnCallback(callback)` – sets a callback function that is called when a color is selected.
+
+**Example Usage**
+
+```lua
+-- Create a color picker
+local colorPicker = vgui.Create("liaColorPicker")
+colorPicker:SetSize(400, 300)
+colorPicker:Center()
+colorPicker:MakePopup()
+
+-- Set initial color
+colorPicker:SetColor(Color(255, 100, 50))
+
+-- Set callback for when color is selected
+colorPicker:OnCallback(function(color)
+    print("Selected color:", color.r, color.g, color.b)
+end)
+```
+
+---
+
+### `liaComboBox`
+
+**Purpose**
+
+Dropdown selection panel that displays a list of options in an animated popup menu. Supports placeholder text and custom selection callbacks.
+
+**Base Panel**
+
+`Panel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `AddChoice(text, data)` – adds a new option to the dropdown list.
+- `SetValue(val)` – sets the currently selected value.
+- `GetValue()` – returns the currently selected value.
+- `SetPlaceholder(text)` – sets the placeholder text shown when no option is selected.
+
+**Example Usage**
+
+```lua
+-- Create a combo box
+local comboBox = vgui.Create("liaComboBox")
+comboBox:SetSize(200, 26)
+comboBox:SetPlaceholder("Select an option")
+
+-- Add choices
+comboBox:AddChoice("Option 1", {id = 1})
+comboBox:AddChoice("Option 2", {id = 2})
+comboBox:AddChoice("Option 3", {id = 3})
+
+-- Set selection callback
+comboBox.OnSelect = function(index, text, data)
+    print("Selected:", text, "with data:", data)
+end
+```
+
+---
+
+### `liaDermaMenu`
+
+**Purpose**
+
+Context menu system that displays a list of options with support for submenus, icons, and custom data. Features smooth animations and proper menu positioning.
+
+**Base Panel**
+
+`DPanel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `AddOption(text, func, icon, optData)` – adds a menu option with text, callback function, icon, and optional data.
+- `AddSubMenu()` – creates and returns a submenu panel that can be attached to an option.
+- `AddSpacer()` – adds a visual separator line between menu sections.
+- `UpdateSize()` – recalculates the menu size based on its contents.
+
+**Example Usage**
+
+```lua
+-- Create a context menu
+local menu = vgui.Create("liaDermaMenu")
+
+-- Add menu options
+menu:AddOption("Option 1", function() print("Option 1 selected") end, "icon16/application.png")
+menu:AddSpacer()
+menu:AddOption("Option 2", function() print("Option 2 selected") end)
+
+-- Create submenu
+local submenu = menu:AddOption("Submenu", nil, "icon16/folder.png")
+submenu:AddSubMenu():AddOption("Sub-option 1", function() print("Sub-option 1") end)
+submenu:AddSubMenu():AddOption("Sub-option 2", function() print("Sub-option 2") end)
+```
+
+---
+
+### `liaItemList`
+
+**Purpose**
+
+Generic list frame for displaying items in a structured format. Supports custom columns, data population, and item management.
+
+**Base Panel**
+
+`DFrame`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetTitle(title)` – sets the window title.
+- `SetData(data)` – populates the list with item data.
+- `SetColumns(columns)` – defines the column structure.
+- `PopulateItems()` – refreshes the list display.
+
+**Example Usage**
+
+```lua
+-- Create an item list
+local itemList = vgui.Create("liaItemList")
+itemList:SetSize(600, 500)
+itemList:Center()
+itemList:MakePopup()
+
+-- Set columns
+itemList:SetColumns({"Item Name", "Value", "Description"})
+
+-- Set data
+itemList:SetData({
+    {"Sword", "100", "A sharp blade"},
+    {"Shield", "50", "Protective gear"},
+    {"Potion", "25", "Healing item"}
+})
+```
+
+---
+
+### `liaItemSelector`
+
+**Purpose**
+
+Item selection dialog with search functionality and filtering capabilities. Allows users to select from a list of items with confirmation buttons.
+
+**Base Panel**
+
+`DFrame`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetTitle(title)` – sets the dialog title.
+- `SetData(data)` – populates the selector with item data.
+- `SetColumns(columns)` – defines the column structure.
+- `SetActionText(text)` – sets the text for the action button.
+
+**Example Usage**
+
+```lua
+-- Create an item selector
+local selector = vgui.Create("liaItemSelector")
+selector:SetSize(600, 500)
+selector:Center()
+selector:MakePopup()
+
+-- Configure selector
+selector:SetTitle("Select an Item")
+selector:SetActionText("Choose Item")
+selector:SetColumns({"Item", "Value", "Quantity"})
+
+-- Set selection callback
+selector.OnAction = function(line, selectedIndex)
+    print("Selected item:", line:GetColumnText(1))
+end
+
+-- Populate with data
+selector:SetData({
+    {"Sword", "100", "5"},
+    {"Shield", "50", "10"},
+    {"Potion", "25", "20"}
+})
+```
+
+---
+
+### `liaLoadingFailure`
+
+**Purpose**
+
+Error display panel shown when the server fails to load properly. Displays error messages, failure reasons, and provides options for retry or console access.
+
+**Base Panel**
+
+`DFrame`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetFailureInfo(reason, details)` – sets the failure reason and detailed information.
+- `AddError(errorMessage, line, file)` – adds individual error entries to the display.
+- `UpdateErrorDisplay()` – refreshes the error information panel.
+
+**Example Usage**
+
+```lua
+-- Loading failure panel is automatically shown by the framework
+-- when server initialization fails - no manual creation needed
+```
+
+---
+
+### `liaPlayerSelector`
+
+**Purpose**
+
+Player selection interface that displays all players with their avatars, names, and status information. Supports custom validation and selection callbacks.
+
+**Base Panel**
+
+`liaFrame`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetTitle(title)` – sets the selector title.
+- `SetCheckFunc(func)` – sets a validation function for player selection.
+- `GetSelectedPlayer()` – returns the currently selected player.
+- `RefreshPlayers()` – refreshes the player list.
+
+**Example Usage**
+
+```lua
+-- Create a player selector
+local selector = vgui.Create("liaPlayerSelector")
+selector:SetSize(340, 398)
+selector:Center()
+selector:MakePopup()
+
+-- Set validation function
+selector:SetCheckFunc(function(player)
+    return player ~= LocalPlayer() -- Can't select self
+end)
+
+-- Set selection callback
+selector.OnAction = function(player)
+    print("Selected player:", player:Name())
+end
+```
+
+---
+
+### `liaRadialPanel`
+
+**Purpose**
+
+Circular radial menu system that displays options in a wheel pattern around a center point. Supports keyboard shortcuts, submenus, and smooth animations.
+
+**Base Panel**
+
+`DPanel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `AddOption(text, func, icon, desc, submenu)` – adds a radial menu option.
+- `AddSubMenuOption(text, submenu, icon, desc)` – adds an option with a submenu.
+- `CreateSubMenu(title, desc)` – creates a new submenu.
+- `SetCenterText(title, desc)` – sets the center text and description.
+
+**Example Usage**
+
+```lua
+-- Create a radial menu
+local radialMenu = vgui.Create("liaRadialPanel")
+
+-- Add options
+radialMenu:AddOption("Option 1", function() print("Option 1") end, "icon16/star.png", "First option")
+radialMenu:AddOption("Option 2", function() print("Option 2") end, "icon16/heart.png", "Second option")
+
+-- Add submenu option
+local submenu = radialMenu:CreateSubMenu("Actions", "Choose an action")
+submenu:AddOption("Attack", function() print("Attack") end)
+submenu:AddOption("Defend", function() print("Defend") end)
+radialMenu:AddSubMenuOption("Actions", submenu, "icon16/folder.png", "Action submenu")
+```
+
+---
+
+### `liaSlideBox`
+
+**Purpose**
+
+Dual-purpose panel that can function as either a numeric slider with range controls or a slide container for displaying multiple content panels with navigation.
+
+**Base Panel**
+
+`Panel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetRange(min_value, max_value, decimals)` – configures the slider range and decimal precision.
+- `SetConvar(convar)` – binds the slider to a console variable.
+- `SetText(text)` – sets the slider label text.
+- `SetValue(val, fromConVar)` – sets the slider value.
+- `GetValue()` – returns the current slider value.
+- `AddSlide(panel)` – adds a slide panel to the container.
+- `NextSlide()` – advances to the next slide.
+- `PreviousSlide()` – goes to the previous slide.
+
+**Example Usage**
+
+```lua
+-- Create a slider
+local slider = vgui.Create("liaSlideBox")
+slider:SetSize(300, 60)
+slider:SetText("Volume")
+slider:SetRange(0, 100, 0)
+
+-- Set slider callback
+slider.OnValueChanged = function(value)
+    print("Volume changed to:", value)
+end
+
+-- Or create a slide container
+local slideBox = vgui.Create("liaSlideBox")
+slideBox:SetSize(400, 300)
+
+-- Add slides
+local slide1 = vgui.Create("DPanel")
+slide1:SetBackgroundColor(Color(255, 0, 0))
+slideBox:AddSlide(slide1)
+
+local slide2 = vgui.Create("DPanel")
+slide2:SetBackgroundColor(Color(0, 255, 0))
+slideBox:AddSlide(slide2)
+```
+
+---
+
+### `liaTabs`
+
+**Purpose**
+
+Tabbed interface system that organizes content into multiple tabs with smooth animations and modern styling options. Supports both horizontal and vertical tab layouts.
+
+**Base Panel**
+
+`Panel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `AddTab(name, pan, icon)` – adds a new tab with name, content panel, and optional icon.
+- `SetTabStyle(style)` – sets the tab style ("modern" or "classic").
+- `SetTabHeight(height)` – sets the height of the tab bar.
+- `SetIndicatorHeight(height)` – sets the height of the active tab indicator.
+
+**Example Usage**
+
+```lua
+-- Create a tabbed interface
+local tabs = vgui.Create("liaTabs")
+tabs:SetSize(500, 400)
+
+-- Add tabs with content panels
+local tab1 = vgui.Create("DPanel")
+tab1:SetBackgroundColor(Color(255, 0, 0))
+tabs:AddTab("Tab 1", tab1)
+
+local tab2 = vgui.Create("DPanel")
+tab2:SetBackgroundColor(Color(0, 255, 0))
+tabs:AddTab("Tab 2", tab2, "icon16/user.png")
+
+local tab3 = vgui.Create("DPanel")
+tab3:SetBackgroundColor(Color(0, 0, 255))
+tabs:AddTab("Tab 3", tab3)
+```

@@ -177,7 +177,7 @@ local function saveGameState()
         time = os.time()
     }
     
-    for _, client in ipairs(player.GetAll()) do
+    for _, client in player.Iterator() do
         table.insert(state.players, {
             name = client:Name(),
             pos = client:GetPos(),

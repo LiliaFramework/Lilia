@@ -1160,3 +1160,595 @@ local function showOptionsMenu(client)
     print("Options menu opened for " .. client:Name())
 end
 ```
+
+---
+
+### animateAppearance
+
+**Purpose**
+
+Animates the appearance of a panel with scaling and fading effects.
+
+**Parameters**
+
+* `panel` (*Panel*): The panel to animate.
+* `target_w` (*number*): The target width for the animation.
+* `target_h` (*number*): The target height for the animation.
+* `duration` (*number*, optional): The duration of the animation in seconds.
+* `alpha_dur` (*number*, optional): The duration of the alpha transition.
+* `callback` (*function*, optional): Function to call when animation completes.
+* `scale_factor` (*number*, optional): The initial scale factor for the animation.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Basic panel appearance animation
+local panel = vgui.Create("DPanel", parent)
+lia.util.animateAppearance(panel, 300, 200, 0.3, 0.2)
+
+-- Animate with callback
+local function onAnimationComplete(panel)
+    print("Animation completed!")
+    panel:SetVisible(true)
+end
+
+lia.util.animateAppearance(myPanel, 400, 300, 0.5, 0.3, onAnimationComplete)
+
+-- Custom scale factor
+lia.util.animateAppearance(smallPanel, 200, 100, 0.2, 0.1, nil, 0.5)
+
+-- Use in menu system
+local function showMenu()
+    local menu = createMainMenu()
+    menu:SetVisible(false)
+    lia.util.animateAppearance(menu, menu:GetWide(), menu:GetTall(), 0.4, 0.3, function()
+        menu:SetVisible(true)
+        menu:MakePopup()
+    end)
+end
+
+-- Animate multiple panels in sequence
+local function animatePanelSequence(panels)
+    for i, panel in ipairs(panels) do
+        timer.Simple((i - 1) * 0.1, function()
+            if IsValid(panel) then
+                lia.util.animateAppearance(panel, panel:GetWide(), panel:GetTall(), 0.2)
+            end
+        end)
+    end
+end
+```
+
+---
+
+### approachExp
+
+**Purpose**
+
+Smoothly approaches a target value using exponential interpolation with delta time.
+
+**Parameters**
+
+* `current` (*number*): The current value.
+* `target` (*number*): The target value to approach.
+* `speed` (*number*): The speed of approach.
+* `dt` (*number*): The delta time (usually FrameTime()).
+
+**Returns**
+
+* `newValue` (*number*): The new value after approaching the target.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Basic exponential approach
+local currentValue = 0
+local targetValue = 100
+local approachSpeed = 5
+
+hook.Add("Think", "ApproachExample", function()
+    currentValue = lia.util.approachExp(currentValue, targetValue, approachSpeed, FrameTime())
+    print("Current value:", currentValue)
+end)
+
+-- Smooth camera movement
+local cameraPos = Vector(0, 0, 0)
+local targetPos = Vector(100, 50, 20)
+local cameraSpeed = 3
+
+local function smoothCameraMovement()
+    cameraPos.x = lia.util.approachExp(cameraPos.x, targetPos.x, cameraSpeed, FrameTime())
+    cameraPos.y = lia.util.approachExp(cameraPos.y, targetPos.y, cameraSpeed, FrameTime())
+    cameraPos.z = lia.util.approachExp(cameraPos.z, targetPos.z, cameraSpeed, FrameTime())
+end
+
+-- Smooth health bar filling
+local healthBar = {
+    currentHealth = 100,
+    displayHealth = 100,
+    approachSpeed = 8
+}
+
+local function updateHealthBar(current, max)
+    healthBar.currentHealth = current
+end
+
+hook.Add("HUDPaint", "HealthBar", function()
+    healthBar.displayHealth = lia.util.approachExp(healthBar.displayHealth, healthBar.currentHealth, healthBar.approachSpeed, FrameTime())
+    drawHealthBar(healthBar.displayHealth, 100)
+end)
+
+-- Smooth color transitions
+local currentColor = Color(255, 255, 255)
+local targetColor = Color(255, 0, 0)
+local colorSpeed = 2
+
+local function updateColor()
+    currentColor.r = lia.util.approachExp(currentColor.r, targetColor.r, colorSpeed, FrameTime())
+    currentColor.g = lia.util.approachExp(currentColor.g, targetColor.g, colorSpeed, FrameTime())
+    currentColor.b = lia.util.approachExp(currentColor.b, targetColor.b, colorSpeed, FrameTime())
+end
+```
+
+---
+
+### clampMenuPosition
+
+**Purpose**
+
+Clamps a menu panel position to stay within screen boundaries.
+
+**Parameters**
+
+* `panel` (*Panel*): The panel to clamp the position of.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Clamp menu position
+local menu = vgui.Create("DFrame")
+menu:SetSize(300, 200)
+menu:SetPos(ScrW() - 150, ScrH() - 100) -- Position near bottom-right
+lia.util.clampMenuPosition(menu)
+
+-- Use in context menu creation
+local function createContextMenu(x, y)
+    local menu = lia.derma.dermaMenu()
+    menu:SetPos(x, y)
+    lia.util.clampMenuPosition(menu)
+    return menu
+end
+
+-- Clamp after showing animation
+local function showMenuAtPosition(x, y)
+    local menu = createMenu()
+    menu:SetPos(x, y)
+    menu:ShowAnimation()
+
+    -- Clamp after animation to ensure it stays on screen
+    timer.Simple(0.1, function()
+        if IsValid(menu) then
+            lia.util.clampMenuPosition(menu)
+        end
+    end)
+end
+
+-- Automatic menu positioning
+local function showMenuNearMouse()
+    local x, y = input.GetCursorPos()
+    local menu = createMenu()
+    menu:SetPos(x + 10, y + 10)
+    lia.util.clampMenuPosition(menu)
+end
+
+-- Clamp multiple panels
+local function clampAllMenus()
+    local menus = {}
+    -- Collect all menu panels
+    table.insert(menus, mainMenu)
+    table.insert(menus, contextMenu)
+    table.insert(menus, dropdownMenu)
+
+    for _, menu in ipairs(menus) do
+        if IsValid(menu) then
+            lia.util.clampMenuPosition(menu)
+        end
+    end
+end
+```
+
+---
+
+### drawEntityText
+
+**Purpose**
+
+Draws 3D text above an entity with smooth scaling and fading based on distance.
+
+**Parameters**
+
+* `ent` (*Entity*): The entity to draw text above.
+* `text` (*string*): The text to display.
+* `posY` (*number*, optional): The Y offset for the text position.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Basic entity text drawing
+local npc = ents.Create("npc_citizen")
+npc:Spawn()
+lia.util.drawEntityText(npc, "Friendly NPC")
+
+-- Draw player names above their heads
+hook.Add("PostPlayerDraw", "PlayerNames", function(player)
+    if player ~= LocalPlayer() then
+        lia.util.drawEntityText(player, player:Name())
+    end
+end)
+
+-- Draw health above entities
+hook.Add("PostDrawOpaqueRenderables", "EntityHealth", function()
+    for _, ent in ents.iterator do
+        if ent:GetClass() == "npc_zombie" then
+            local health = ent:Health()
+            local maxHealth = ent:GetMaxHealth()
+            lia.util.drawEntityText(ent, "HP: " .. health .. "/" .. maxHealth)
+        end
+    end
+end)
+
+-- Custom entity text with offset
+local function drawCustomEntityText(entity, text, yOffset)
+    lia.util.drawEntityText(entity, text, yOffset or 0)
+end
+
+-- Draw item information
+hook.Add("PostDrawOpaqueRenderables", "ItemInfo", function()
+    for _, ent in ipairs(ents.FindByClass("lia_item")) do
+        local itemTable = ent:getItemTable()
+        if itemTable then
+            lia.util.drawEntityText(ent, itemTable.name, 10)
+        end
+    end
+end)
+
+-- Conditional text display
+local function shouldShowText(entity, text)
+    local distance = LocalPlayer():GetPos():Distance(entity:GetPos())
+    return distance < 500 -- Only show text within 500 units
+end
+
+hook.Add("PostDrawOpaqueRenderables", "SmartEntityText", function()
+    for _, ent in ents.iterator do
+        if shouldShowText(ent, "Target") then
+            lia.util.drawEntityText(ent, "Target")
+        end
+    end
+end)
+```
+
+---
+
+### drawGradient
+
+**Purpose**
+
+Draws a gradient rectangle with specified direction and colors.
+
+**Parameters**
+
+* `x` (*number*): The X position to draw at.
+* `y` (*number*): The Y position to draw at.
+* `w` (*number*): The width of the gradient.
+* `h` (*number*): The height of the gradient.
+* `direction` (*number*): The gradient direction (1-4: up, down, left, right).
+* `color_shadow` (*Color*): The shadow color for the gradient.
+* `radius` (*number*, optional): The corner radius for rounded gradients.
+* `flags` (*number*, optional): Additional drawing flags.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Basic gradient drawing
+lia.util.drawGradient(0, 0, 200, 100, 1, Color(0, 0, 0, 100))
+
+-- Different gradient directions
+local directions = {1, 2, 3, 4} -- up, down, left, right
+for i, dir in ipairs(directions) do
+    local x = (i - 1) * 50
+    lia.util.drawGradient(x, 0, 40, 40, dir, Color(100, 100, 100, 150))
+end
+
+-- Gradient with rounded corners
+lia.util.drawGradient(10, 10, 180, 80, 2, Color(0, 0, 0, 80), 8)
+
+-- Use in panel painting
+local panel = vgui.Create("DPanel")
+panel.Paint = function(self, w, h)
+    -- Draw background gradient
+    lia.util.drawGradient(0, 0, w, h, 2, Color(50, 50, 50, 100))
+
+    -- Draw accent gradient
+    lia.util.drawGradient(0, h - 20, w, 20, 1, Color(100, 150, 255, 150))
+end
+
+-- Animated gradient
+local gradientOffset = 0
+hook.Add("HUDPaint", "AnimatedGradient", function()
+    gradientOffset = (gradientOffset + 1) % 200
+    lia.util.drawGradient(gradientOffset, 100, 100, 50, 3, Color(255, 100, 100, 100))
+end)
+
+-- Gradient for UI elements
+local function drawGradientButton(x, y, w, h, direction, baseColor)
+    local shadowColor = Color(baseColor.r * 0.7, baseColor.g * 0.7, baseColor.b * 0.7, baseColor.a)
+    lia.util.drawGradient(x, y, w, h, direction, shadowColor, 4)
+end
+```
+
+---
+
+### easeInOutCubic
+
+**Purpose**
+
+Applies cubic ease-in-out interpolation to a value between 0 and 1.
+
+**Parameters**
+
+* `t` (*number*): The input value between 0 and 1.
+
+**Returns**
+
+* `easedValue` (*number*): The eased value.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Basic cubic ease-in-out
+local progress = 0.5
+local eased = lia.util.easeInOutCubic(progress)
+print("Eased value:", eased)
+
+-- Animation using ease-in-out
+local animProgress = 0
+hook.Add("Think", "CubicAnimation", function()
+    animProgress = math.min(animProgress + FrameTime(), 1)
+    local easedProgress = lia.util.easeInOutCubic(animProgress)
+
+    -- Apply to position, scale, etc.
+    someElement:SetPos(0, easedProgress * 100)
+end)
+
+-- Smooth transitions
+local function smoothTransition(startValue, endValue, progress)
+    local easedProgress = lia.util.easeInOutCubic(progress)
+    return startValue + (endValue - startValue) * easedProgress
+end
+
+-- Multiple easing curves comparison
+local function compareEasing(progress)
+    return {
+        linear = progress,
+        easeInOutCubic = lia.util.easeInOutCubic(progress),
+        easeOutCubic = lia.util.easeOutCubic(progress)
+    }
+end
+
+-- Use in color transitions
+local startColor = Color(255, 0, 0)
+local endColor = Color(0, 255, 0)
+
+local function getTransitionColor(progress)
+    local eased = lia.util.easeInOutCubic(progress)
+    return Color(
+        Lerp(eased, startColor.r, endColor.r),
+        Lerp(eased, startColor.g, endColor.g),
+        Lerp(eased, startColor.b, endColor.b)
+    )
+end
+
+-- Smooth UI animations
+local menuSlideProgress = 0
+local function slideInMenu()
+    menuSlideProgress = math.min(menuSlideProgress + FrameTime() * 2, 1)
+    local eased = lia.util.easeInOutCubic(menuSlideProgress)
+    menuPanel:SetPos(menuPanel.x - (1 - eased) * menuPanel:GetWide(), menuPanel.y)
+end
+```
+
+---
+
+### easeOutCubic
+
+**Purpose**
+
+Applies cubic ease-out interpolation to a value between 0 and 1.
+
+**Parameters**
+
+* `t` (*number*): The input value between 0 and 1.
+
+**Returns**
+
+* `easedValue` (*number*): The eased value.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Basic cubic ease-out
+local progress = 0.7
+local eased = lia.util.easeOutCubic(progress)
+print("Eased value:", eased)
+
+-- Animation with ease-out
+local animTime = 0
+hook.Add("Think", "EaseOutAnimation", function()
+    animTime = math.min(animTime + FrameTime(), 1)
+    local easedTime = lia.util.easeOutCubic(animTime)
+
+    -- Apply easing to movement
+    object:SetPos(Lerp(easedTime, startPos, endPos))
+end)
+
+-- Bouncing effect
+local bounceProgress = 0
+local function createBounceEffect()
+    bounceProgress = (bounceProgress + FrameTime() * 3) % (math.pi * 2)
+    local eased = lia.util.easeOutCubic(math.abs(math.sin(bounceProgress)))
+    element:SetScale(1 + eased * 0.2)
+end
+
+-- Smooth deceleration
+local function decelerateMovement(currentSpeed, targetSpeed, deltaTime)
+    local speedDiff = targetSpeed - currentSpeed
+    local deceleration = 5
+    local newSpeed = currentSpeed + speedDiff * lia.util.easeOutCubic(deltaTime * deceleration)
+    return newSpeed
+end
+
+-- Camera easing
+local cameraTarget = Vector(100, 100, 50)
+local cameraCurrent = Vector(0, 0, 0)
+
+local function smoothCameraMovement()
+    local distance = cameraTarget - cameraCurrent
+    local moveSpeed = 2
+    local easedFactor = lia.util.easeOutCubic(FrameTime() * moveSpeed)
+
+    cameraCurrent = cameraCurrent + distance * easedFactor
+end
+
+-- UI element reveal
+local revealProgress = 0
+local function revealElement(element)
+    revealProgress = math.min(revealProgress + FrameTime() * 2, 1)
+    local eased = lia.util.easeOutCubic(revealProgress)
+    element:SetAlpha(eased * 255)
+    element:SetSize(element.targetWidth * eased, element.targetHeight)
+end
+```
+
+---
+
+### previewPlayer
+
+**Purpose**
+
+Creates a player preview/selection interface with enhanced visuals and hover effects.
+
+**Parameters**
+
+* `callback` (*function*): Function called when a player is selected.
+* `checkFunc` (*function*, optional): Function to validate player selection.
+* `title` (*string*, optional): The title for the preview window.
+* `size` (*table*, optional): Custom size with w and h properties.
+
+**Returns**
+
+* `frame` (*liaFrame*): The player preview frame.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Basic player preview
+lia.util.previewPlayer(function(player)
+    print("Selected player:", player:Name())
+end)
+
+-- Player preview with validation
+lia.util.previewPlayer(function(player)
+    if player:Team() == TEAM_ADMIN then
+        promotePlayer(player)
+    else
+        print("Cannot promote non-admin players")
+    end
+end, function(player)
+    return player ~= LocalPlayer()
+end)
+
+-- Custom titled preview
+lia.util.previewPlayer(function(player)
+    startPrivateMessage(player)
+end, nil, "Select Player to Message")
+
+-- Custom sized preview
+lia.util.previewPlayer(function(player)
+    teleportToPlayer(player)
+end, nil, "Teleport Target", {w = 400, h = 500})
+
+-- Use in admin menu
+local adminMenu = lia.derma.frame(nil, "Admin Tools", 300, 400)
+local selectPlayerBtn = lia.derma.button(adminMenu, "icon16/user.png")
+selectPlayerBtn:SetText("Select Player")
+selectPlayerBtn.DoClick = function()
+    lia.util.previewPlayer(function(player)
+        -- Show admin options for selected player
+        showPlayerAdminOptions(player)
+    end, function(player)
+        return player ~= LocalPlayer()
+    end, "Select Target Player")
+end
+
+-- Player preview for team management
+lia.util.previewPlayer(function(player)
+    local teams = team.GetAllTeams()
+    local menu = lia.derma.dermaMenu()
+
+    for teamID, teamInfo in pairs(teams) do
+        menu:AddOption("Move to " .. teamInfo.Name, function()
+            player:SetTeam(teamID)
+            print("Moved " .. player:Name() .. " to " .. teamInfo.Name)
+        end)
+    end
+end, function(player)
+    return IsValid(player) and player:Alive()
+end, "Team Management")

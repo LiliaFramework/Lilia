@@ -147,7 +147,7 @@ end)
 hook.Add("ConfigChanged", "NotifyPlayers", function(key, oldValue, newValue)
     -- Notify all players of important configuration changes
     if key == "serverRules" then
-        for _, ply in pairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             ply:ChatPrint("Server rules have been updated!")
         end
     end
@@ -788,12 +788,12 @@ hook.Add("liaOptionReceived", "HandleReceivedOptions", function(key, value)
     end
 end)
 
--- Update UI when options are received
-hook.Add("liaOptionReceived", "UpdateUI", function(key, value)
-    -- Update UI elements when options are received
-    if key == "theme" then
+-- Update UI when config values are received
+hook.Add("OnConfigUpdated", "UpdateUI", function(key, oldValue, newValue)
+    -- Update UI elements when config values are received
+    if key == "Theme" then
         -- Update theme when received from server
-        UpdateTheme(value)
+        UpdateTheme(newValue)
     end
 end)
 ```
@@ -1034,7 +1034,7 @@ end)
 -- Notify administrators of successful relay
 hook.Add("DiscordRelayed", "NotifyAdmins", function(embed)
     -- Notify online admins of successful Discord relay
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("Message successfully sent to Discord: " .. (embed.title or "Untitled"))
         end
@@ -1074,7 +1074,7 @@ end)
 -- Notify administrators of Discord issues
 hook.Add("DiscordRelayUnavailable", "NotifyAdmins", function()
     -- Notify online admins about Discord relay issues
-    for _, ply in pairs(player.GetAll()) do
+    for _, ply in player.Iterator() do
         if ply:IsAdmin() then
             ply:ChatPrint("Warning: Discord relay is unavailable!")
         end
