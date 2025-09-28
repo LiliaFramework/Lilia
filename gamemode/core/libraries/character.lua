@@ -1015,7 +1015,7 @@ if SERVER then
                     if callback then callback(character) end
                 end
             end, function(err)
-                lia.information(L("failedLoadInventories", charID, tostring(err)))
+                lia.information("Failed to load inventories for character " .. charID .. ": " .. tostring(err))
                 if callback then callback(nil) end
             end)
         end)

@@ -78,11 +78,11 @@ function TooltipPanel:Close()
     self:Remove()
 end
 
-derma.DefineControl("DTooltip", "", TooltipPanel, "liaText")
+derma.DefineControl("DTooltip", "", TooltipPanel, "DLabel")
 local tblRow = vgui.RegisterTable({
     Init = function(self)
         self:Dock(TOP)
-        self.Label = self:Add("liaText")
+        self.Label = self:Add("DLabel")
         self.Label:Dock(LEFT)
         self.Label:DockMargin(4, 2, 2, 2)
         self.Container = self:Add("Panel")
@@ -151,7 +151,7 @@ local tblCategory = vgui.RegisterTable({
         self.Rows = {}
         self.Header = self:Add("Panel")
         self.Header:Dock(TOP)
-        self.Label = self.Header:Add("liaText")
+        self.Label = self.Header:Add("DLabel")
         self.Label:Dock(FILL)
         self.Label:SetContentAlignment(4)
         self.Expand = self.Header:Add("DExpandButton")
@@ -165,7 +165,7 @@ local tblCategory = vgui.RegisterTable({
             self:InvalidateLayout()
         end
 
-        self.Container = self:Add("liaBasePanel")
+        self.Container = self:Add("Panel")
         self.Container:Dock(TOP)
         self.Container:DockMargin(16, 0, 0, 0)
         self.Container.Paint = function(_, w, h)
@@ -211,7 +211,7 @@ end
 
 function PropertiesPanel:GetCanvas()
     if not isValid(self.Canvas) then
-        self.Canvas = self:Add("liaScrollPanel")
+        self.Canvas = self:Add("DScrollPanel")
         self.Canvas:Dock(FILL)
     end
     return self.Canvas

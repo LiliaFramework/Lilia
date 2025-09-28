@@ -7,7 +7,7 @@ function PANEL:Init()
     self:SetSize(width, height)
     self:SetPos(border, screenH - height - border)
     self.active = false
-    self.tabs = self:Add("liaBasePanel")
+    self.tabs = self:Add("DPanel")
     self.tabs:Dock(TOP)
     self.tabs:SetTall(28)
     self.tabs:DockPadding(4, 4, 4, 4)
@@ -20,7 +20,7 @@ function PANEL:Init()
     end
 
     self.arguments = {}
-    self.scroll = self:Add("liaScrollPanel")
+    self.scroll = self:Add("DScrollPanel")
     self.scroll:SetPos(4, 31)
     self.scroll:SetSize(width - 8, height - 66)
     self.scroll:GetVBar():SetWide(0)
@@ -60,7 +60,7 @@ function PANEL:setActive(state)
         self.entry.OnRemove = function() hook.Run("FinishChat") end
         self.entry:SetTall(28)
         lia.chat.history = lia.chat.history or {}
-        self.text = self.entry:Add("liaEntry")
+        self.text = self.entry:Add("DTextEntry")
         self.text:Dock(FILL)
         self.text.History = lia.chat.history
         self.text:SetHistoryEnabled(true)
@@ -108,13 +108,13 @@ function PANEL:setActive(state)
                     self.commandList = nil
                 end
 
-                self.commandList = self:Add("liaScrollPanel")
+                self.commandList = self:Add("DScrollPanel")
                 self.commandList:SetPos(4, 31)
                 self.commandList:SetSize(self:GetWide() - 8, self:GetTall() - 66)
                 self.commandList:GetVBar():SetWide(8)
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
                     if not tobool(string.find(cmdName, input:sub(2), 1, true)) then continue end
-                    local btn = self.commandList:Add("liaButton")
+                    local btn = self.commandList:Add("DButton")
                     btn:SetText("/" .. cmdName .. " - " .. (cmdInfo.desc ~= "" and L(cmdInfo.desc) or L("noDesc")))
                     btn:Dock(TOP)
                     btn:DockMargin(0, 0, 0, 2)
@@ -183,7 +183,7 @@ function PANEL:setActive(state)
                 end
                 return true
             end
-            return liaEntry.OnKeyCodeTyped(entry, key)
+            return DTextEntry.OnKeyCodeTyped(entry, key)
         end
 
         self.text.OnLoseFocus = function(entry)
@@ -225,7 +225,7 @@ local function PaintFilterButton(btn, btnW, btnH)
 end
 
 function PANEL:addFilterButton(filter)
-    local tab = self.tabs:Add("liaButton")
+    local tab = self.tabs:Add("DButton")
     tab:SetFont("liaChatFont")
     tab:SetText(L(filter):upper())
     tab:SizeToContents()
@@ -277,35 +277,31 @@ function PANEL:addText(...)
 
     markup = markup .. "</font>"
     local panel = self.scroll:Add("liaMarkupPanel")
-    if IsValid(panel) then
-        panel:SetWide(self:GetWide() - 8)
-        panel:setMarkup(markup, OnDrawText)
-        panel.start = CurTime() + 5
-        panel.finish = panel.start + 5
-        panel.Think = function(p)
-            if self.active then
-                p:SetAlpha(255)
-            else
-                local alpha = (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255
-                p:SetAlpha(math.max(alpha, 0))
-            end
-        end
-
-        self.list[#self.list + 1] = panel
-        local cls = CHAT_CLASS and CHAT_CLASS.filter and CHAT_CLASS.filter:lower() or "ic"
-        panel.filter = cls
-        if LIA_CVAR_CHATFILTER:GetString():lower():find(cls) then
-            self.filtered[panel] = cls
-            panel:SetVisible(false)
+    panel:SetWide(self:GetWide() - 8)
+    panel:setMarkup(markup, OnDrawText)
+    panel.start = CurTime() + 5
+    panel.finish = panel.start + 5
+    panel.Think = function(p)
+        if self.active then
+            p:SetAlpha(255)
         else
-            panel:SetPos(0, self.lastY)
-            self.lastY = self.lastY + panel:GetTall()
-            self.scroll:ScrollToChild(panel)
+            local alpha = (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255
+            p:SetAlpha(math.max(alpha, 0))
         end
-        return panel:IsVisible()
-    else
-        return false
     end
+
+    self.list[#self.list + 1] = panel
+    local cls = CHAT_CLASS and CHAT_CLASS.filter and CHAT_CLASS.filter:lower() or "ic"
+    panel.filter = cls
+    if LIA_CVAR_CHATFILTER:GetString():lower():find(cls) then
+        self.filtered[panel] = cls
+        panel:SetVisible(false)
+    else
+        panel:SetPos(0, self.lastY)
+        self.lastY = self.lastY + panel:GetTall()
+        self.scroll:ScrollToChild(panel)
+    end
+    return panel:IsVisible()
 end
 
 function PANEL:setFilter(filter, state)
@@ -352,4 +348,4 @@ function PANEL:Think()
     end
 end
 
-vgui.Register("liaChatBox", PANEL, "liaBasePanel")
+vgui.Register("liaChatBox", PANEL, "DPanel")

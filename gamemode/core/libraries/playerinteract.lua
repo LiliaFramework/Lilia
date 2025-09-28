@@ -36,7 +36,7 @@ end
 function lia.playerinteract.getCategorizedOptions(options)
     local categorized = {}
     for name, entry in pairs(options) do
-        local category = entry.opt and L(entry.opt.category) or L("categoryUnsorted")
+        local category = entry.opt and entry.opt.category or L("categoryUnsorted")
         if not categorized[category] then categorized[category] = {} end
         categorized[category][name] = entry
     end
@@ -47,7 +47,7 @@ if SERVER then
     function lia.playerinteract.addInteraction(name, data)
         data.type = "interaction"
         data.range = data.range or 250
-        data.category = data.category or "categoryUnsorted"
+        data.category = data.category or L("categoryUnsorted")
         data.target = data.target or "player"
         data.timeToComplete = data.timeToComplete or nil
         data.actionText = data.actionText or nil
@@ -74,7 +74,7 @@ if SERVER then
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
         data.range = data.range or 250
-        data.category = data.category or "categoryUnsorted"
+        data.category = data.category or L("categoryUnsorted")
         data.timeToComplete = data.timeToComplete or nil
         data.actionText = data.actionText or nil
         data.targetActionText = data.targetActionText or nil
@@ -105,7 +105,7 @@ if SERVER then
                 serverOnly = data.serverOnly and true or false,
                 name = name,
                 range = data.range,
-                category = data.category or "categoryUnsorted",
+                category = data.category or L("categoryUnsorted"),
                 target = data.target,
                 timeToComplete = data.timeToComplete,
                 actionText = data.actionText,
@@ -117,7 +117,7 @@ if SERVER then
         lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
     end
 
-    lia.playerinteract.addInteraction("@giveMoney", {
+    lia.playerinteract.addInteraction("giveMoney", {
         serverOnly = true,
         shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
         onRun = function(client, target)
@@ -156,8 +156,8 @@ if SERVER then
         end
     })
 
-    lia.playerinteract.addAction("@changeToWhisper", {
-        category = "@categoryVoice",
+    lia.playerinteract.addAction("changeToWhisper", {
+        category = L("categoryVoice"),
         shouldShow = function(client) return client:getChar() and client:Alive() end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("whispering"))
@@ -166,8 +166,8 @@ if SERVER then
         serverOnly = true
     })
 
-    lia.playerinteract.addAction("@changeToTalk", {
-        category = "@categoryVoice",
+    lia.playerinteract.addAction("changeToTalk", {
+        category = L("categoryVoice"),
         shouldShow = function(client) return client:getChar() and client:Alive() end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("talking"))
@@ -176,8 +176,8 @@ if SERVER then
         serverOnly = true
     })
 
-    lia.playerinteract.addAction("@changeToYell", {
-        category = "@categoryVoice",
+    lia.playerinteract.addAction("changeToYell", {
+        category = L("categoryVoice"),
         shouldShow = function(client) return client:getChar() and client:Alive() end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("yelling"))
@@ -240,7 +240,7 @@ else
         local padding = ScrW() * 0.15
         local xPos = ScrW() - frameW - padding
         local yPos = (ScrH() - frameH) / 2
-        local frame = vgui.Create("liaFrame")
+        local frame = vgui.Create("DFrame")
         frame:SetSize(frameW, frameH)
         frame:SetPos(xPos, yPos)
         frame:MakePopup()
@@ -267,7 +267,7 @@ else
 
         timer.Remove("InteractionMenu_Frame_Timer")
         timer.Create("InteractionMenu_Frame_Timer", 30, 1, function() if IsValid(frame) then frame:Close() end end)
-        local title = frame:Add("liaText")
+        local title = frame:Add("DLabel")
         title:SetPos(0, titleY)
         title:SetSize(frameW, titleH)
         title:SetText(titleText)
@@ -278,7 +278,7 @@ else
             surface.SetDrawColor(Color(60, 60, 60))
         end
 
-        local scroll = frame:Add("liaScrollPanel")
+        local scroll = frame:Add("DScrollPanel")
         scroll:SetPos(0, titleH + titleY + gap)
         scroll:SetSize(frameW, frameH - titleH - titleY - gap)
         local layout = vgui.Create("DListLayout", scroll)
@@ -291,7 +291,7 @@ else
         end
 
         for categoryName, categoryOptions in pairs(categorized) do
-            local categoryHeader = vgui.Create("liaBasePanel", layout)
+            local categoryHeader = vgui.Create("DPanel", layout)
             categoryHeader:SetTall(categoryH)
             categoryHeader:Dock(TOP)
             categoryHeader:DockMargin(15, 0, 15, 0)
@@ -305,7 +305,7 @@ else
                 draw.SimpleText(categoryName, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
 
-            local collapseBtn = categoryHeader:Add("liaButton")
+            local collapseBtn = categoryHeader:Add("DButton")
             collapseBtn:SetSize(20, 20)
             collapseBtn:SetPos(10, (categoryH - 20) / 2)
             collapseBtn:SetText("")
@@ -335,11 +335,11 @@ else
 
             layout:Add(categoryHeader)
             for _, entry in pairs(categoryOptions) do
-                local btn = vgui.Create("liaButton", layout)
+                local btn = vgui.Create("DButton", layout)
                 btn:SetTall(entryH)
                 btn:Dock(TOP)
                 btn:DockMargin(15, 8, 15, 0)
-                btn:SetText(L("@" .. entry.name))
+                btn:SetText(L(entry.name))
                 btn:SetFont("liaSmallFont")
                 btn:SetTextColor(color_white)
                 btn:SetContentAlignment(5)
@@ -380,7 +380,7 @@ else
                 table.insert(categoryContent, btn)
             end
 
-            local spacer = vgui.Create("liaBasePanel", layout)
+            local spacer = vgui.Create("DPanel", layout)
             spacer:SetTall(10)
             spacer:Dock(TOP)
             spacer:DockMargin(0, 0, 0, 0)
@@ -403,7 +403,7 @@ else
             merged.type = incoming.type or localEntry.type
             merged.serverOnly = incoming.serverOnly and true or false
             merged.name = name
-            merged.category = incoming.category or localEntry.category or "categoryUnsorted"
+            merged.category = incoming.category or localEntry.category or L("categoryUnsorted")
             if incoming.range ~= nil then merged.range = incoming.range end
             merged.target = incoming.target or localEntry.target or "player"
             if incoming.timeToComplete ~= nil then merged.timeToComplete = incoming.timeToComplete end

@@ -5,7 +5,7 @@ function PANEL:Init()
     self:SetSize(ScrW() * 0.85, ScrH() * 0.8)
     self:SetPos(50, 50)
     self.Paint = function() end
-    local scroll = vgui.Create("liaScrollPanel", self)
+    local scroll = vgui.Create("DScrollPanel", self)
     scroll:Dock(FILL)
     local canvas = scroll:GetCanvas()
     canvas:DockPadding(8, 10, 8, 10)
@@ -23,11 +23,11 @@ function PANEL:Init()
 end
 
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, marginBot, valueFunc)
-    local entry = parent:Add("liaBasePanel")
+    local entry = parent:Add("DPanel")
     entry:Dock(TOP)
     entry:DockMargin(0, 0, 0, marginBot or 0)
     entry:SetTall(25)
-    local lbl = entry:Add("liaText")
+    local lbl = entry:Add("DLabel")
     lbl:Dock(LEFT)
     lbl:SetFont("liaSmallFont")
     lbl:SetText(labelText or "")
@@ -37,7 +37,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
     lbl:DockMargin(0, 0, 10, 0)
     lbl:SetContentAlignment(5)
     lbl:SetTextColor(color_white)
-    local txt = entry:Add("liaEntry")
+    local txt = entry:Add("DTextEntry")
     txt:Dock(FILL)
     txt:SetFont("liaSmallFont")
     txt:SetTall(20)
@@ -60,11 +60,11 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
 end
 
 function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, margin, valueFunc)
-    local entry = parent:Add("liaBasePanel")
+    local entry = parent:Add("DPanel")
     entry:Dock(TOP)
     entry:DockMargin(0, margin or 0, 0, margin or 0)
     entry:SetTall(30)
-    local lbl = entry:Add("liaText")
+    local lbl = entry:Add("DLabel")
     lbl:Dock(LEFT)
     lbl:SetFont("liaSmallFont")
     lbl:SetText(labelText or "")
@@ -94,7 +94,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
 end
 
 function PANEL:AddSpacer(parent, height)
-    local sp = parent:Add("liaBasePanel")
+    local sp = parent:Add("DPanel")
     sp:Dock(TOP)
     sp:SetTall(height)
     sp.Paint = function() end
@@ -139,7 +139,7 @@ function PANEL:CreateSection(parent, title)
         draw.SimpleText(L(title), "liaSmallFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    local contents = vgui.Create("liaBasePanel", cat)
+    local contents = vgui.Create("DPanel", cat)
     contents:Dock(FILL)
     contents:DockPadding(8, 10, 8, 10)
     contents.Paint = function() end

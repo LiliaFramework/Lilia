@@ -5,11 +5,11 @@ function PANEL:Init()
     self.spacingY = 8
     self.padding = 10
     self.rows = {}
-    self.search = vgui.Create("liaEntry", self)
+    self.search = vgui.Create("DTextEntry", self)
     self.search:Dock(TOP)
     self.search:SetTall(30)
     self.search:DockMargin(0, 0, 0, 8)
-    self.scroll = vgui.Create("liaScrollPanel", self)
+    self.scroll = vgui.Create("DScrollPanel", self)
     self.scroll:Dock(FILL)
     self.canvas = self.scroll:GetCanvas()
     self.search.OnTextChanged = function() self:Refresh() end
@@ -38,7 +38,7 @@ function PANEL:Clear()
 end
 
 function PANEL:AddRow(builder)
-    local p = vgui.Create("liaBasePanel", self.canvas)
+    local p = vgui.Create("DPanel", self.canvas)
     p:Dock(TOP)
     p:DockMargin(0, 0, 0, self.spacingY)
     p:DockPadding(self.padding, self.padding, self.padding, self.padding)
@@ -77,13 +77,13 @@ function PANEL:AddTextRow(data)
     local row = self:AddRow(function(p, row)
         local titleFont = compact and "liaSmallFont" or "liaMediumFont"
         local descFont = compact and "liaMiniFont" or "liaSmallFont"
-        local t = vgui.Create("liaText", p)
+        local t = vgui.Create("DLabel", p)
         t:SetFont(titleFont)
         t:SetText(title)
         t:SizeToContents()
         local d
         if desc ~= "" then
-            d = vgui.Create("liaText", p)
+            d = vgui.Create("DLabel", p)
             d:SetFont(descFont)
             d:SetWrap(true)
             d:SetAutoStretchVertical(true)
@@ -92,7 +92,7 @@ function PANEL:AddTextRow(data)
 
         local r
         if right ~= "" then
-            r = vgui.Create("liaText", p)
+            r = vgui.Create("DLabel", p)
             r:SetFont(descFont)
             r:SetText(right)
             r:SizeToContents()
@@ -130,7 +130,7 @@ function PANEL:AddSubsheetRow(cfg)
     local title = cfg.title or ""
     local build = cfg.build
     return self:AddRow(function(p, row)
-        local cat = vgui.Create("liaCategory", p)
+        local cat = vgui.Create("DCollapsibleCategory", p)
         cat:Dock(FILL)
         cat:SetLabel("")
         cat:SetExpanded(false)
@@ -170,13 +170,13 @@ function PANEL:AddPreviewRow(data)
         html:SetSize(size, size)
         if url ~= "" then html:OpenURL(url) end
         html:SetMouseInputEnabled(false)
-        local t = vgui.Create("liaText", p)
+        local t = vgui.Create("DLabel", p)
         t:SetFont("liaMediumFont")
         t:SetText(title)
         t:SizeToContents()
         local d
         if desc ~= "" then
-            d = vgui.Create("liaText", p)
+            d = vgui.Create("DLabel", p)
             d:SetFont("liaSmallFont")
             d:SetWrap(true)
             d:SetAutoStretchVertical(true)
@@ -185,7 +185,7 @@ function PANEL:AddPreviewRow(data)
 
         local r
         if right ~= "" then
-            r = vgui.Create("liaText", p)
+            r = vgui.Create("DLabel", p)
             r:SetFont("liaSmallFont")
             r:SetText(right)
             r:SizeToContents()
@@ -225,7 +225,7 @@ function PANEL:AddListViewRow(cfg)
     local height = cfg.height or 260
     local getLineText = cfg.getLineText
     local row = self:AddRow(function(p, row)
-        local lv = vgui.Create("liaDListView", p)
+        local lv = vgui.Create("DListView", p)
         lv:Dock(FILL)
         for _, v in ipairs(cols) do
             lv:AddColumn(v)
@@ -268,9 +268,10 @@ function PANEL:AddIconLayoutRow(cfg)
     local build = cfg.build
     local space = cfg.space or 6
     local row = self:AddRow(function(p, row)
-        local layout = vgui.Create("liaBasePanel", p)
+        local layout = vgui.Create("DIconLayout", p)
         layout:Dock(FILL)
-        layout:DockPadding(space, space, space, space)
+        layout:SetSpaceX(space)
+        layout:SetSpaceY(space)
         if build then build(layout) end
         p:SetTall(height)
         row.widget = layout
@@ -315,4 +316,4 @@ function PANEL:Refresh()
     self.canvas:SizeToChildren(false, true)
 end
 
-vgui.Register("liaSheet", PANEL, "liaBasePanel")
+vgui.Register("liaSheet", PANEL, "DPanel")

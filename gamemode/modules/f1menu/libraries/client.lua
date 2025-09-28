@@ -99,7 +99,7 @@ function MODULE:CreateMenuButtons(tabs)
     end
 
     tabs["information"] = function(infoTabPanel)
-        local sheet = infoTabPanel:Add("liaTabs")
+        local sheet = infoTabPanel:Add("DPropertySheet")
         sheet:Dock(FILL)
         sheet:DockMargin(10, 10, 10, 10)
         local pages = {}
@@ -112,7 +112,7 @@ function MODULE:CreateMenuButtons(tabs)
         end)
 
         for _, page in ipairs(pages) do
-            local panel = vgui.Create("liaBasePanel")
+            local panel = vgui.Create("DPanel")
             panel:Dock(FILL)
             panel.Paint = function() end
             panel:DockPadding(10, 10, 10, 10)
@@ -130,7 +130,7 @@ function MODULE:CreateMenuButtons(tabs)
     end
 
     tabs["settings"] = function(settingsPanel)
-        local sheet = settingsPanel:Add("liaTabs")
+        local sheet = settingsPanel:Add("DPropertySheet")
         sheet:Dock(FILL)
         sheet:DockMargin(10, 10, 10, 10)
         local pages = {}
@@ -143,7 +143,7 @@ function MODULE:CreateMenuButtons(tabs)
         end)
 
         for _, page in ipairs(pages) do
-            local panel = sheet:Add("liaBasePanel")
+            local panel = sheet:Add("DPanel")
             panel:Dock(FILL)
             panel.Paint = function() end
             page.drawFunc(panel)
@@ -155,7 +155,7 @@ function MODULE:CreateMenuButtons(tabs)
     hook.Run("PopulateAdminTabs", adminPages)
     if not table.IsEmpty(adminPages) then
         tabs["admin"] = function(adminPanel)
-            local sheet = adminPanel:Add("liaTabs")
+            local sheet = adminPanel:Add("DPropertySheet")
             sheet:Dock(FILL)
             sheet:DockMargin(10, 10, 10, 10)
             local pages = {}
@@ -168,7 +168,7 @@ function MODULE:CreateMenuButtons(tabs)
             end)
 
             for _, page in ipairs(pages) do
-                local panel = sheet:Add("liaBasePanel")
+                local panel = sheet:Add("DPanel")
                 panel:Dock(FILL)
                 panel.Paint = function() end
                 local sheetData = sheet:AddSheet(L(page.name), panel, page.icon)

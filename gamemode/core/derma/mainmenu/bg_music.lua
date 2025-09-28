@@ -52,4 +52,4 @@ function PANEL:OnRemove()
     end)
 end
 
-vgui.Register("liaCharBGMusic", PANEL, "liaBasePanel")
+vgui.Register("liaCharBGMusic", PANEL, "DPanel")

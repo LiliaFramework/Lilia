@@ -1,11 +1,11 @@
 ﻿local MODULE = MODULE
 lia.command.add("doorsell", {
-    desc = "@doorsellDesc",
+    desc = "doorsellDesc",
     adminOnly = false,
     AdminStick = {
-        Name = "@adminStickDoorSellName",
-        Category = "@doorManagement",
-        SubCategory = "@doorActions",
+        Name = "adminStickDoorSellName",
+        Category = "doorManagement",
+        SubCategory = "doorActions",
         TargetClass = "door",
         Icon = "icon16/money.png"
     },
@@ -34,12 +34,12 @@ lia.command.add("doorsell", {
 })
 
 lia.command.add("admindoorsell", {
-    desc = "@admindoorsellDesc",
+    desc = "admindoorsellDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickAdminDoorSellName",
-        Category = "@doorManagement",
-        SubCategory = "@doorActions",
+        Name = "adminStickAdminDoorSellName",
+        Category = "doorManagement",
+        SubCategory = "doorActions",
         TargetClass = "door",
         Icon = "icon16/money_delete.png"
     },
@@ -70,12 +70,12 @@ lia.command.add("admindoorsell", {
 })
 
 lia.command.add("doortogglelock", {
-    desc = "@doortogglelockDesc",
+    desc = "doortogglelockDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickToggleDoorLockName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickToggleDoorLockName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/lock.png"
     },
@@ -116,12 +116,12 @@ lia.command.add("doortogglelock", {
 })
 
 lia.command.add("doorbuy", {
-    desc = "@doorbuyDesc",
+    desc = "doorbuyDesc",
     adminOnly = false,
     AdminStick = {
-        Name = "@buyDoor",
-        Category = "@doorManagement",
-        SubCategory = "@doorActions",
+        Name = "buyDoor",
+        Category = "doorManagement",
+        SubCategory = "doorActions",
         TargetClass = "door",
         Icon = "icon16/money_add.png"
     },
@@ -168,12 +168,12 @@ lia.command.add("doorbuy", {
 })
 
 lia.command.add("doortoggleownable", {
-    desc = "@doortoggleownableDesc",
+    desc = "doortoggleownableDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickToggleDoorOwnableName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickToggleDoorOwnableName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/pencil.png"
     },
@@ -200,12 +200,12 @@ lia.command.add("doortoggleownable", {
 })
 
 lia.command.add("doorresetdata", {
-    desc = "@doorresetdataDesc",
+    desc = "doorresetdataDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickResetDoorDataName",
-        Category = "@doorManagement",
-        SubCategory = "@doorMaintenance",
+        Name = "adminStickResetDoorDataName",
+        Category = "doorManagement",
+        SubCategory = "doorMaintenance",
         TargetClass = "door",
         Icon = "icon16/arrow_refresh.png"
     },
@@ -234,12 +234,12 @@ lia.command.add("doorresetdata", {
 })
 
 lia.command.add("doortoggleenabled", {
-    desc = "@doortoggleenabledDesc",
+    desc = "doortoggleenabledDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickToggleDoorEnabledName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickToggleDoorEnabledName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/stop.png"
     },
@@ -262,12 +262,12 @@ lia.command.add("doortoggleenabled", {
 })
 
 lia.command.add("doortogglehidden", {
-    desc = "@doortogglehiddenDesc",
+    desc = "doortogglehiddenDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickToggleDoorHiddenName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickToggleDoorHiddenName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/eye.png"
     },
@@ -290,18 +290,18 @@ lia.command.add("doortogglehidden", {
 })
 
 lia.command.add("doorsetprice", {
-    desc = "@doorsetpriceDesc",
+    desc = "doorsetpriceDesc",
     arguments = {
         {
-            name = "@price",
+            name = "price",
             type = "string"
         },
     },
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickSetDoorPriceName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickSetDoorPriceName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/money.png"
     },
@@ -328,18 +328,18 @@ lia.command.add("doorsetprice", {
 })
 
 lia.command.add("doorsettitle", {
-    desc = "@doorsettitleDesc",
+    desc = "doorsettitleDesc",
     arguments = {
         {
-            name = "@title",
+            name = "title",
             type = "string"
         },
     },
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickSetDoorTitleName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickSetDoorTitleName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/textfield.png"
     },
@@ -369,12 +369,12 @@ lia.command.add("doorsettitle", {
 })
 
 lia.command.add("savedoors", {
-    desc = "@savedoorsDesc",
+    desc = "savedoorsDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickSaveDoorsName",
-        Category = "@doorManagement",
-        SubCategory = "@doorMaintenance",
+        Name = "adminStickSaveDoorsName",
+        Category = "doorManagement",
+        SubCategory = "doorMaintenance",
         TargetClass = "door",
         Icon = "icon16/disk.png"
     },
@@ -386,12 +386,12 @@ lia.command.add("savedoors", {
 })
 
 lia.command.add("doorinfo", {
-    desc = "@doorinfoDesc",
+    desc = "doorinfoDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickDoorInfoName",
-        Category = "@doorManagement",
-        SubCategory = "@doorInformation",
+        Name = "adminStickDoorInfoName",
+        Category = "doorManagement",
+        SubCategory = "doorInformation",
         TargetClass = "door",
         Icon = "icon16/information.png"
     },
@@ -446,7 +446,7 @@ lia.command.add("doorinfo", {
                     value = tostring(not table.IsEmpty(classNames) and table.concat(classNames, ", ") or L("none"))
                 },
                 {
-                    property = L("group") or L("factionGroup"),
+                    property = L("group") or "Faction Group",
                     value = tostring(group ~= "" and group or L("none"))
                 },
                 {
@@ -476,10 +476,10 @@ lia.command.add("doorinfo", {
 })
 
 lia.command.add("dooraddfaction", {
-    desc = "@dooraddfactionDesc",
+    desc = "dooraddfactionDesc",
     arguments = {
         {
-            name = "@faction",
+            name = "faction",
             type = "string"
         }
     },
@@ -538,10 +538,10 @@ lia.command.add("dooraddfaction", {
 })
 
 lia.command.add("doorremovefaction", {
-    desc = "@doorremovefactionDesc",
+    desc = "doorremovefactionDesc",
     arguments = {
         {
-            name = "@faction",
+            name = "faction",
             type = "string"
         }
     },
@@ -600,10 +600,10 @@ lia.command.add("doorremovefaction", {
 })
 
 lia.command.add("doorsetclass", {
-    desc = "@doorsetclassDesc",
+    desc = "doorsetclassDesc",
     arguments = {
         {
-            name = "@class",
+            name = "class",
             type = "string"
         }
     },
@@ -670,18 +670,18 @@ lia.command.add("doorsetclass", {
 })
 
 lia.command.add("doorremoveclass", {
-    desc = "@doorremoveclassDesc",
+    desc = "doorremoveclassDesc",
     arguments = {
         {
-            name = "@class",
+            name = "class",
             type = "string"
         }
     },
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickDoorRemoveClassName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickDoorRemoveClassName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/delete.png"
     },
@@ -750,7 +750,7 @@ lia.command.add("doorremoveclass", {
 })
 
 lia.command.add("togglealldoors", {
-    desc = "@togglealldoorsDesc",
+    desc = "togglealldoorsDesc",
     adminOnly = true,
     onRun = function(client)
         local toggleToDisable = false
@@ -782,7 +782,7 @@ lia.command.add("togglealldoors", {
 })
 
 lia.command.add("doorid", {
-    desc = "@doorIDDesc",
+    desc = "doorIDDesc",
     adminOnly = true,
     onRun = function(client)
         local door = client:getTracedEntity()
@@ -802,18 +802,18 @@ lia.command.add("doorid", {
 })
 
 lia.command.add("doorsetgroup", {
-    desc = "@doorsetgroupDesc",
+    desc = "doorsetgroupDesc",
     arguments = {
         {
-            name = "@group",
+            name = "group",
             type = "string"
         }
     },
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickSetDoorGroupName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickSetDoorGroupName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/group.png"
     },
@@ -862,18 +862,18 @@ lia.command.add("doorsetgroup", {
 })
 
 lia.command.add("dooraddgroup", {
-    desc = "@dooraddgroupDesc",
+    desc = "dooraddgroupDesc",
     arguments = {
         {
-            name = "@group",
+            name = "group",
             type = "string"
         }
     },
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickAddDoorGroupName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickAddDoorGroupName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/group_add.png"
     },
@@ -934,12 +934,12 @@ lia.command.add("dooraddgroup", {
 })
 
 lia.command.add("doorremovegroup", {
-    desc = "@doorremovegroupDesc",
+    desc = "doorremovegroupDesc",
     adminOnly = true,
     AdminStick = {
-        Name = "@adminStickRemoveDoorGroupName",
-        Category = "@doorManagement",
-        SubCategory = "@doorSettings",
+        Name = "adminStickRemoveDoorGroupName",
+        Category = "doorManagement",
+        SubCategory = "doorSettings",
         TargetClass = "door",
         Icon = "icon16/group_delete.png"
     },
@@ -963,7 +963,7 @@ lia.command.add("doorremovegroup", {
 })
 
 lia.command.add("listdoorids", {
-    desc = "@listDoorIDsDesc",
+    desc = "listDoorIDsDesc",
     adminOnly = true,
     onRun = function(client)
         local doorData = {}

@@ -56,18 +56,18 @@ function PANEL:Populate(data, canKick)
                 logo:SetSize(logoSize, logoSize)
                 logo:SetMaterial(Material(classData.logo))
                 logo:SetPos(margin, margin)
-                local t = vgui.Create("liaText", p)
+                local t = vgui.Create("DLabel", p)
                 t:SetFont("liaMediumFont")
                 t:SetText(title)
                 t:SizeToContents()
                 t:SetPos(margin + logoSize + margin, margin)
-                local d = vgui.Create("liaText", p)
+                local d = vgui.Create("DLabel", p)
                 d:SetFont("liaSmallFont")
                 d:SetWrap(true)
                 d:SetAutoStretchVertical(true)
                 d:SetText(desc)
                 d:SetPos(margin + logoSize + margin, margin + t:GetTall() + 5)
-                local r = vgui.Create("liaText", p)
+                local r = vgui.Create("DLabel", p)
                 r:SetFont("liaSmallFont")
                 r:SetText(right)
                 r:SizeToContents()
@@ -104,7 +104,7 @@ function PANEL:Populate(data, canKick)
         row.OnRightClick = function()
             if not IsValid(row) or not row.rowData then return end
             local rowData = row.rowData
-            local menu = vgui.Create("liaDermaMenu")
+            local menu = DermaMenu()
             if canKick and rowData.steamID ~= LocalPlayer():SteamID() then
                 menu:AddOption(L("kick"), function()
                     Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()
@@ -139,50 +139,6 @@ function PANEL:Populate(data, canKick)
             self:SizeToChildren(false, true)
         end
     end)
-end
-
-function PANEL:AddColumn(name, width)
-    if not self.columns then self.columns = {} end
-    table.insert(self.columns, {
-        name = name,
-        width = width or 100
-    })
-end
-
-function PANEL:AddLine(...)
-    local args = {...}
-    return 0
-end
-
-function PANEL:GetSelectedLine()
-    return nil
-end
-
-function PANEL:GetSelected()
-    return {}, 0
-end
-
-function PANEL:RemoveLine(index)
-end
-
-function PANEL:ClearSelection()
-end
-
-function PANEL:SelectItem(line)
-end
-
-function PANEL:SelectFirstItem()
-end
-
-function PANEL:SortByColumn(index, descending)
-end
-
-function PANEL:GetMultiSelect()
-    return false
-end
-
-function PANEL:SetMultiSelect(multi)
-    self.multiSelect = multi
 end
 
 vgui.Register("liaRoster", PANEL, "EditablePanel")

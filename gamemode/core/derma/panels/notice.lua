@@ -118,13 +118,13 @@ function PANEL:Paint(w, h)
     draw.SimpleText(self.msg or "", "liaSmallFont", self.padding + self.iconSize + self.padding / 2, h / 2, Color(255, 255, 255, self.alpha), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
-vgui.Register("liaNotice", PANEL, "liaBasePanel")
+vgui.Register("liaNotice", PANEL, "DPanel")
 PANEL = {}
 function PANEL:Init()
     self.padding = 80
     self:SetSize(400, 60)
     self:SetContentAlignment(5)
-    self.text = self:Add("liaText")
+    self.text = self:Add("DLabel")
     self.text:SetText(L("unassigned"))
     self.text:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     self.text:SetFont("liaMediumFont")
@@ -154,4 +154,4 @@ function PANEL:Paint(w, h)
     surfaceDrawOutlinedRect(0, 0, w, h)
 end
 
-vgui.Register("noticePanel", PANEL, "liaBasePanel")
+vgui.Register("noticePanel", PANEL, "DPanel")

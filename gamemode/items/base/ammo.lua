@@ -1,13 +1,12 @@
-﻿ITEM.name = "@ammoName"
-ITEM.desc = "@ammoItemDesc"
+﻿ITEM.name = "ammoName"
 ITEM.model = "models/props_c17/SuitCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.ammo = "pistol"
-ITEM.category = "@itemCatAmmunition"
+ITEM.category = "itemCatAmmunition"
 ITEM.functions.use = {
-    name = "@load",
-    tip = "@useTip",
+    name = "load",
+    tip = "useTip",
     icon = "icon16/add.png",
     multiOptions = {
         [L("ammoLoadAll")] = {

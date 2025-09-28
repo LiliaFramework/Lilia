@@ -1575,7 +1575,7 @@ local hideWeaponSet = {
 }
 
 local function getEntityDisplayName(ent)
-    if not IsValid(ent) then return L("unknownEntity") end
+    if not IsValid(ent) then return "Unknown Entity" end
     if ent:GetClass() == "lia_item" and ent.getItemTable then
         local item = ent:getItemTable()
         if item and item.getName then
@@ -1835,10 +1835,10 @@ function MODULE:PopulateAdminTabs(pages)
     end
 
     local function createEntityPanel(entPanel, entities, title)
-        local sheetContainer = vgui.Create("liaTabs", entPanel)
+        local sheetContainer = vgui.Create("DPropertySheet", entPanel)
         sheetContainer:Dock(FILL)
         sheetContainer:DockPadding(0, 0, 0, 10)
-        local ownerPanel = vgui.Create("liaBasePanel", sheetContainer)
+        local ownerPanel = vgui.Create("DPanel", sheetContainer)
         ownerPanel:Dock(FILL)
         ownerPanel.Paint = function() end
         local searchSheet = vgui.Create("liaSheet", ownerPanel)
@@ -1847,7 +1847,7 @@ function MODULE:PopulateAdminTabs(pages)
         for _, ent in ipairs(entities) do
             if not IsValid(ent) then continue end
             local displayName = getEntityDisplayName(ent)
-            local itemPanel = vgui.Create("liaBasePanel")
+            local itemPanel = vgui.Create("DPanel")
             itemPanel:SetTall(100)
             itemPanel.Paint = function(pnl, w, h)
                 derma.SkinHook("Paint", "Panel", pnl, w, h)
@@ -1862,19 +1862,20 @@ function MODULE:PopulateAdminTabs(pages)
             local modelPath = ent:GetModel()
             if not modelPath or modelPath == "" then modelPath = "models/error.mdl" end
             icon:SetModel(modelPath, ent:GetSkin() or 0)
-            local btnContainer = vgui.Create("liaBasePanel", itemPanel)
+            local btnContainer = vgui.Create("DPanel", itemPanel)
             btnContainer:Dock(RIGHT)
             btnContainer:SetWide(380)
             btnContainer:DockMargin(-250, 5, 5, 0)
             btnContainer.Paint = function() end
-            local btnLayout = vgui.Create("liaBasePanel", btnContainer)
+            local btnLayout = vgui.Create("DIconLayout", btnContainer)
             btnLayout:Dock(FILL)
-            btnLayout:DockPadding(10, 5, 10, 0)
+            btnLayout:SetSpaceX(10)
+            btnLayout:SetSpaceY(0)
+            btnLayout:DockMargin(0, 5, 0, 0)
             local function makeBtn(key, func)
-                local btn = vgui.Create("liaSmallButton", btnLayout)
-                btn:Dock(TOP)
-                btn:DockMargin(0, 0, 0, 5)
-                btn:SetTall(30)
+                local btn = btnLayout:Add("liaSmallButton")
+                btn:SetWide(120)
+                btn:SetTall(60)
                 btn:SetText(L(key))
                 btn.DoClick = func
             end
@@ -1911,7 +1912,7 @@ function MODULE:PopulateAdminTabs(pages)
         end
 
         searchSheet:Refresh()
-        sheetContainer:AddTab(title .. " - " .. #entities .. " " .. L("entities"), ownerPanel)
+        sheetContainer:AddSheet(title .. " - " .. #entities .. " " .. L("entities"), ownerPanel)
     end
 
     if not table.IsEmpty(entitiesByCreator) and client:hasPrivilege("viewEntityTab") then
@@ -1919,11 +1920,11 @@ function MODULE:PopulateAdminTabs(pages)
             name = "Player Entities",
             icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
-                local sheetContainer = vgui.Create("liaTabs", entPanel)
+                local sheetContainer = vgui.Create("DPropertySheet", entPanel)
                 sheetContainer:Dock(FILL)
                 sheetContainer:DockPadding(0, 0, 0, 10)
                 for owner, list in SortedPairs(entitiesByCreator) do
-                    local ownerPanel = vgui.Create("liaBasePanel", sheetContainer)
+                    local ownerPanel = vgui.Create("DPanel", sheetContainer)
                     ownerPanel:Dock(FILL)
                     ownerPanel.Paint = function() end
                     local searchSheet = vgui.Create("liaSheet", ownerPanel)
@@ -1932,7 +1933,7 @@ function MODULE:PopulateAdminTabs(pages)
                     for _, ent in ipairs(list) do
                         if not IsValid(ent) then continue end
                         local displayName = getEntityDisplayName(ent)
-                        local itemPanel = vgui.Create("liaBasePanel")
+                        local itemPanel = vgui.Create("DPanel")
                         itemPanel:SetTall(100)
                         itemPanel.Paint = function(pnl, w, h)
                             derma.SkinHook("Paint", "Panel", pnl, w, h)
@@ -1947,12 +1948,12 @@ function MODULE:PopulateAdminTabs(pages)
                         local modelPath = ent:GetModel()
                         if not modelPath or modelPath == "" then modelPath = "models/error.mdl" end
                         icon:SetModel(modelPath, ent:GetSkin() or 0)
-                        local btnContainer = vgui.Create("liaBasePanel", itemPanel)
+                        local btnContainer = vgui.Create("DPanel", itemPanel)
                         btnContainer:Dock(RIGHT)
                         btnContainer:SetWide(380)
                         btnContainer:DockMargin(-250, 5, 5, 0)
                         btnContainer.Paint = function() end
-                        local btnLayout = vgui.Create("liaBasePanel", btnContainer)
+                        local btnLayout = vgui.Create("DIconLayout", btnContainer)
                         btnLayout:Dock(FILL)
                         btnLayout:SetSpaceX(10)
                         btnLayout:SetSpaceY(0)
@@ -1997,7 +1998,7 @@ function MODULE:PopulateAdminTabs(pages)
                     end
 
                     searchSheet:Refresh()
-                    sheetContainer:AddTab(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
+                    sheetContainer:AddSheet(owner .. " - " .. #list .. " " .. L("entities"), ownerPanel)
                 end
             end
         }

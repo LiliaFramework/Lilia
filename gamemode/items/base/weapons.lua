@@ -1,6 +1,6 @@
-﻿ITEM.name = "@weaponsName"
-ITEM.desc = "@weaponsDesc"
-ITEM.category = "@weapons"
+﻿ITEM.name = "weaponsName"
+ITEM.desc = "weaponsDesc"
+ITEM.category = "weapons"
 ITEM.model = "models/weapons/w_pistol.mdl"
 ITEM.class = "weapon_pistol"
 ITEM.width = 2
@@ -40,8 +40,8 @@ ITEM:hook("drop", function(item)
 end)
 
 ITEM.functions.Unequip = {
-    name = "@unequip",
-    tip = "@equipTip",
+    name = "unequip",
+    tip = "equipTip",
     icon = "icon16/cross.png",
     onRun = function(item)
         local client = item.player
@@ -71,8 +71,8 @@ ITEM.functions.Unequip = {
 }
 
 ITEM.functions.Equip = {
-    name = "@equip",
-    tip = "@equipTip",
+    name = "equip",
+    tip = "equipTip",
     icon = "icon16/tick.png",
     onRun = function(item)
         local client = item.player

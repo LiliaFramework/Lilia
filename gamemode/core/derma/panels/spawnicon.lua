@@ -124,4 +124,4 @@ function PANEL:UpdateVisuals()
     end
 end
 
-vgui.Register("liaSpawnIcon", PANEL, "liaModelPanel")
+vgui.Register("liaSpawnIcon", PANEL, "DModelPanel")

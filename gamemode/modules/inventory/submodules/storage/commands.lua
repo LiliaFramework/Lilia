@@ -1,10 +1,10 @@
 ﻿local MODULE = MODULE
 lia.command.add("storagelock", {
     adminOnly = true,
-    desc = "@storagelockDesc",
+    desc = "storagelockDesc",
     arguments = {
         {
-            name = "@password",
+            name = "password",
             type = "string",
             optional = true
         },
@@ -32,7 +32,7 @@ lia.command.add("storagelock", {
 
 lia.command.add("trunk", {
     adminOnly = false,
-    desc = "@trunkOpenDesc",
+    desc = "trunkOpenDesc",
     onRun = function(client)
         local entity = client:getTracedEntity()
         local maxDistance = 128
@@ -48,7 +48,7 @@ lia.command.add("trunk", {
         end
 
         client.liaStorageEntity = entity
-        client:setAction("@openingTrunk", openTime, function()
+        client:setAction(L("openingTrunk"), openTime, function()
             if client:GetPos():Distance(entity:GetPos()) > maxDistance then
                 client.liaStorageEntity = nil
                 return

@@ -262,7 +262,7 @@ net.Receive("liaKickCharacter", function(_, client)
             if oldFactionData and oldFactionData.isDefault then return end
             lia.db.updateTable({
                 faction = defaultFaction.uniqueID
-            }, nil, "characters", "id = " .. characterID):next(function() lia.char.setCharDatabase(characterID, "factionKickWarn", true) end):catch(function(err) lia.error(L("failedUpdateCharacterFaction", tostring(err))) end)
-        end):catch(function(err) lia.error(L("failedQueryCharacterFaction", tostring(err))) end)
+            }, nil, "characters", "id = " .. characterID):next(function() lia.char.setCharDatabase(characterID, "factionKickWarn", true) end):catch(function(err) lia.error("Failed to update character faction: " .. tostring(err)) end)
+        end):catch(function(err) lia.error("Failed to query character faction: " .. tostring(err)) end)
     end
 end)

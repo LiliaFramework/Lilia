@@ -1,8 +1,8 @@
 ﻿lia.command.add("staffdiscord", {
-    desc = "@staffdiscordDesc",
+    desc = "staffdiscordDesc",
     arguments = {
         {
-            name = "@discord",
+            name = "discord",
             type = "string"
         }
     },
@@ -15,7 +15,7 @@
         end
 
         client:setLiliaData("staffDiscord", discord)
-        local description = L("staffCharacterDiscord") .. discord .. ", SteamID: " .. client:SteamID()
+        local description = "A Staff Character, Discord: " .. discord .. ", SteamID: " .. client:SteamID()
         character:setDesc(description)
         client:notifySuccessLocalized("staffDescUpdated")
     end

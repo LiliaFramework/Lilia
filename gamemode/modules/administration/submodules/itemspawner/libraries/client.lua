@@ -27,15 +27,15 @@
         local menu = DermaMenu()
         menu:AddOption(L("copy"), function() SetClipboardText(icon:GetSpawnName()) end):SetIcon("icon16/page_copy.png")
         menu:AddOption(L("giveToCharacter"), function()
-            local popup = vgui.Create("liaFrame")
+            local popup = vgui.Create("DFrame")
             popup:SetTitle(L("spawnItemTitle", data.id))
             popup:SetSize(300, 100)
             popup:Center()
             popup:MakePopup()
-            local label = vgui.Create("liaText", popup)
+            local label = vgui.Create("DLabel", popup)
             label:Dock(TOP)
             label:SetText(L("giveTo") .. ":")
-            local combo = vgui.Create("liaComboBox", popup)
+            local combo = vgui.Create("DComboBox", popup)
             combo:Dock(TOP)
             for _, character in pairs(lia.char.getAll()) do
                 local ply = character:getPlayer()
@@ -133,7 +133,7 @@ end, "inventoryitems")
 spawnmenu.AddCreationTab(L("inventoryItems"), function()
     local client = LocalPlayer()
     if not IsValid(client) or not client.hasPrivilege or not client:hasPrivilege("canUseItemSpawner") then
-        local pnl = vgui.Create("liaBasePanel")
+        local pnl = vgui.Create("DPanel")
         pnl:Dock(FILL)
         pnl.Paint = function(_, w, h) draw.SimpleText(L("noItemSpawnerPermission"), "DermaDefault", w / 2, h / 2, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
         return pnl

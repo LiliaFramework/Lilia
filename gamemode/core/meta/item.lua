@@ -122,9 +122,9 @@ end
 
 function ITEM:print(detail)
     if detail then
-        print(L("itemDebugInfo", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
+        print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
     else
-        print(L("itemDebugInfoSimple", self.uniqueID, self.id))
+        print(Format("%s[%s]", self.uniqueID, self.id))
     end
 end
 

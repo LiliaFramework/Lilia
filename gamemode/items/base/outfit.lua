@@ -1,6 +1,6 @@
-﻿ITEM.name = "@outfit"
-ITEM.desc = "@outfitDesc"
-ITEM.category = "@outfit"
+﻿ITEM.name = "outfit"
+ITEM.desc = "outfitDesc"
+ITEM.category = "outfit"
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
 ITEM.width = 1
 ITEM.height = 1
@@ -67,8 +67,8 @@ function ITEM:wearOutfit(client, isForLoadout)
 end
 
 ITEM.functions.Unequip = {
-    name = "@unequip",
-    tip = "@equipTip",
+    name = "unequip",
+    tip = "equipTip",
     icon = "icon16/cross.png",
     onRun = function(item)
         item:removeOutfit(item.player)
@@ -78,8 +78,8 @@ ITEM.functions.Unequip = {
 }
 
 ITEM.functions.Equip = {
-    name = "@equip",
-    tip = "@equipTip",
+    name = "equip",
+    tip = "equipTip",
     icon = "icon16/tick.png",
     onRun = function(item)
         local character = item.player:getChar()

@@ -28,7 +28,7 @@ end
 
 function playerMeta:hasPrivilege(privilegeName)
     if not isstring(privilegeName) then
-        lia.error(L("hasPrivilegeExpectedString", tostring(privilegeName)))
+        lia.error("hasPrivilege expected a string, got " .. tostring(privilegeName))
         return false
     end
     return lia.administrator.hasAccess(self, privilegeName)

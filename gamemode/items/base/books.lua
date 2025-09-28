@@ -1,12 +1,12 @@
-﻿ITEM.name = "@booksName"
-ITEM.desc = "@booksDesc"
-ITEM.category = "@itemCatLiterature"
+﻿ITEM.name = "booksName"
+ITEM.desc = "booksDesc"
+ITEM.category = "itemCatLiterature"
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 ITEM.contents = ""
 ITEM.functions.Read = {
-    name = "@read",
+    name = "read",
     onClick = function(item)
-        local frame = vgui.Create("liaFrame")
+        local frame = vgui.Create("DFrame")
         frame:SetSize(540, 680)
         frame:SetTitle(item.name)
         frame:MakePopup()

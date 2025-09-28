@@ -1,7 +1,7 @@
-﻿SWEP.PrintName = L("distanceMeasureTool")
+﻿SWEP.PrintName = "Distance Measure Tool"
 SWEP.Author = "Samael"
-SWEP.Contact = "liliaplayer"
-SWEP.Purpose = L("distanceMeasurePurpose")
+SWEP.Contact = "@liliaplayer"
+SWEP.Purpose = "Measure distance between two points"
 SWEP.Category = "Lilia"
 SWEP.Spawnable = true
 SWEP.AdminOnly = false

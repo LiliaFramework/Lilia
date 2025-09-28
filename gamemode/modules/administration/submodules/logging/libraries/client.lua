@@ -1,7 +1,7 @@
 ﻿local receivedPanel
 local function OpenLogsUI(panel, categorizedLogs)
     panel:Clear()
-    local sheet = panel:Add("liaTabs")
+    local sheet = panel:Add("DPropertySheet")
     sheet:Dock(FILL)
     sheet:DockMargin(10, 10, 10, 10)
     local function addSizedColumn(list, text)
@@ -14,14 +14,14 @@ local function OpenLogsUI(panel, categorizedLogs)
     end
 
     for category, logs in pairs(categorizedLogs) do
-        local page = sheet:Add("liaBasePanel")
+        local page = sheet:Add("DPanel")
         page:Dock(FILL)
         page:DockPadding(10, 10, 10, 10)
-        local search = page:Add("liaEntry")
+        local search = page:Add("DTextEntry")
         search:Dock(TOP)
         search:SetPlaceholderText(L("searchLogs"))
         search:SetTextColor(Color(255, 255, 255))
-        local list = page:Add("liaTable")
+        local list = page:Add("DListView")
         list:Dock(FILL)
         list:SetMultiSelect(false)
         addSizedColumn(list, L("timestamp"))

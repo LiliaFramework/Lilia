@@ -117,7 +117,7 @@ function lia.keybind.add(k, d, cb)
     d = isstring(d) and L(d) or d
     if not c then return end
     if not istable(cb) or not cb.onPress then
-        lia.error(L("invalidKeybindCallbackFormat", tostring(d)))
+        lia.error("lia.keybind.add: Invalid callback format in lia.keybind.add of function '" .. tostring(d) .. "'. Must use table with 'onPress' function. (Function: lia.keybind.add)")
         return
     end
 
@@ -143,7 +143,7 @@ lia.keybind.add(KEY_NONE, "adminMode", {
     onPress = function(client)
         if not IsValid(client) then return end
         local steamID = client:SteamID()
-        client:ChatPrint(L("keybindTestMessage"))
+        client:ChatPrint("hi")
         if client:isStaffOnDuty() then
             local oldCharID = client:getNetVar("OldCharID", 0)
             if oldCharID > 0 then
@@ -397,17 +397,17 @@ if CLIENT then
 
             for _, action in ipairs(sortedActions) do
                 local data = lia.keybind.stored[action]
-                local rowPanel = vgui.Create("liaBasePanel")
+                local rowPanel = vgui.Create("DPanel")
                 rowPanel:SetTall(70)
                 rowPanel:DockPadding(4, 4, 4, 4)
                 rowPanel.Paint = nil
-                local lbl = rowPanel:Add("liaText")
+                local lbl = rowPanel:Add("DLabel")
                 lbl:Dock(FILL)
                 lbl:SetFont("liaBigFont")
                 lbl:SetText(L(action))
                 local currentKey = lia.keybind.get(action, KEY_NONE)
                 if allowEdit then
-                    local combo = rowPanel:Add("liaComboBox")
+                    local combo = rowPanel:Add("DComboBox")
                     combo:Dock(RIGHT)
                     combo:SetWide(200)
                     combo:SetFont("liaMediumFont")
@@ -445,7 +445,7 @@ if CLIENT then
                         currentKey = newKey
                     end
 
-                    local unbindButton = rowPanel:Add("liaButton")
+                    local unbindButton = rowPanel:Add("DButton")
                     unbindButton:Dock(RIGHT)
                     unbindButton:SetWide(100)
                     unbindButton:SetFont("liaMediumFont")
@@ -460,7 +460,7 @@ if CLIENT then
                         currentKey = KEY_NONE
                     end
                 else
-                    local textLabel = rowPanel:Add("liaText")
+                    local textLabel = rowPanel:Add("DLabel")
                     textLabel:Dock(RIGHT)
                     textLabel:SetFont("liaBigFont")
                     textLabel:SetText(input.GetKeyName(currentKey) or "NONE")

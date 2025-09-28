@@ -1,4 +1,4 @@
-﻿lia.config.add("invW", "@invWidth", 6, function(_, newW)
+﻿lia.config.add("invW", "invWidth", 6, function(_, newW)
     if not SERVER then return end
     for _, client in player.Iterator() do
         if not IsValid(client) then continue end
@@ -25,7 +25,7 @@ end, {
     max = 20
 })
 
-lia.config.add("invH", "@invHeight", 4, function(_, newH)
+lia.config.add("invH", "invHeight", 4, function(_, newH)
     if not SERVER then return end
     for _, client in player.Iterator() do
         if not IsValid(client) then continue end
@@ -52,7 +52,7 @@ end, {
     max = 20
 })
 
-lia.config.add("trunkInvW", "@trunkInvWidth", 10, nil, {
+lia.config.add("trunkInvW", "trunkInvWidth", 10, nil, {
     desc = "trunkInvWidthDesc",
     category = "general",
     type = "Int",
@@ -60,7 +60,7 @@ lia.config.add("trunkInvW", "@trunkInvWidth", 10, nil, {
     max = 20
 })
 
-lia.config.add("trunkInvH", "@trunkInvHeight", 2, nil, {
+lia.config.add("trunkInvH", "trunkInvHeight", 2, nil, {
     desc = "trunkInvHeightDesc",
     category = "general",
     type = "Int",

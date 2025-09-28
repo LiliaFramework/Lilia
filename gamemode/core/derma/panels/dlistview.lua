@@ -20,39 +20,39 @@ function PANEL:Init()
         draw.SimpleText(self.windowTitle, "liaMediumFont", w / 2, self.headerHeight / 2, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    self.topBar = vgui.Create("liaBasePanel", self)
+    self.topBar = vgui.Create("DPanel", self)
     self.topBar:Dock(TOP)
     self.topBar:SetTall(44)
     self.topBar.Paint = nil
-    self.searchBox = vgui.Create("liaEntry", self.topBar)
+    self.searchBox = vgui.Create("DTextEntry", self.topBar)
     self.searchBox:Dock(FILL)
     self.searchBox:SetTall(32)
-    self.searchBox:SetPlaceholderText(L("search"))
+    self.searchBox:SetPlaceholderText("")
     self.searchBox:SetText("")
     self.searchBox.OnTextChanged = function() self:Populate() end
-    self.refreshButton = vgui.Create("liaButton", self.topBar)
+    self.refreshButton = vgui.Create("DButton", self.topBar)
     self.refreshButton:Dock(RIGHT)
     self.refreshButton:SetWide(100)
-    self.refreshButton:SetText(L("refresh"))
+    self.refreshButton:SetText(L("refresh") or "Refresh")
     self.refreshButton.DoClick = function()
         self:Populate()
         client:notifySuccessLocalized("privilegeListRefreshed")
     end
 
-    self.listView = vgui.Create("liaDListView", self)
+    self.listView = vgui.Create("DListView", self)
     self.listView:Dock(FILL)
     self.listView:SetMultiSelect(false)
     self.listView.OnRowRightClick = function(_, _, line)
-        local m = vgui.Create("liaDermaMenu")
+        local m = DermaMenu()
         for i, header in ipairs(self.columns) do
-            m:AddOption(L("copyColumn", header), function()
+            m:AddOption("Copy " .. header, function()
                 SetClipboardText(line:GetColumnText(i) or "")
                 client:notifySuccessLocalized("copied")
             end)
         end
 
         m:AddSpacer()
-        m:AddOption(L("copyAll"), function()
+        m:AddOption("Copy All", function()
             local t = {}
             for i, header in ipairs(self.columns) do
                 t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
@@ -70,10 +70,10 @@ function PANEL:Init()
         client:notifySuccessLocalized("privilegeIdCopied")
     end
 
-    self.statusBar = vgui.Create("liaBasePanel", self)
+    self.statusBar = vgui.Create("DPanel", self)
     self.statusBar:Dock(BOTTOM)
     self.statusBar:SetTall(24)
-    self.statusBar.Paint = function() draw.SimpleText(L("totalCount", tostring(self.visibleCount or 0)), "liaSmallFont", 5, 4, Color(200, 200, 200, 255), TEXT_ALIGN_LEFT) end
+    self.statusBar.Paint = function() draw.SimpleText("Total: " .. tostring(self.visibleCount or 0), "liaSmallFont", 5, 4, Color(200, 200, 200, 255), TEXT_ALIGN_LEFT) end
 end
 
 function PANEL:SetWindowTitle(t)
@@ -130,4 +130,4 @@ function PANEL:Populate()
     if self.sortColumn then self.listView:SortByColumn(self.sortColumn, self.sortDesc) end
 end
 
-vgui.Register("liaDListView", PANEL, "liaFrame")
+vgui.Register("liaDListView", PANEL, "DFrame")

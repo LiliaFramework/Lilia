@@ -51,12 +51,12 @@ function PANEL:Init()
     lia.gui.score = self
     hook.Run("ScoreboardOpened", self)
     self:ApplyConfig()
-    local header = self:Add("liaBasePanel")
+    local header = self:Add("DPanel")
     header:Dock(TOP)
     header:SetTall(80)
     header:DockMargin(0, 0, 0, 5)
     header.Paint = function() end
-    local serverName = header:Add("liaText")
+    local serverName = header:Add("DLabel")
     serverName:Dock(TOP)
     serverName:SetText(GetHostName())
     serverName:SetFont("liaBigFont")
@@ -64,32 +64,32 @@ function PANEL:Init()
     serverName:SetTextColor(color_white)
     serverName:SetExpensiveShadow(1, color_black)
     serverName:SizeToContentsY()
-    local stats = header:Add("liaBasePanel")
+    local stats = header:Add("DPanel")
     stats:Dock(BOTTOM)
     stats:DockMargin(10, 15, 10, 0)
     stats:SetTall(24)
     stats.Paint = function() end
-    local staffOnline = stats:Add("liaText")
+    local staffOnline = stats:Add("DLabel")
     staffOnline:Dock(LEFT)
     staffOnline:DockMargin(0, 0, 10, 0)
     staffOnline:SetFont("liaSmallFont")
     staffOnline:SetTextColor(color_white)
     staffOnline:SetExpensiveShadow(1, color_black)
     staffOnline:SetContentAlignment(4)
-    local playersOnline = stats:Add("liaText")
+    local playersOnline = stats:Add("DLabel")
     playersOnline:Dock(FILL)
     playersOnline:SetFont("liaSmallFont")
     playersOnline:SetTextColor(color_white)
     playersOnline:SetExpensiveShadow(1, color_black)
     playersOnline:SetContentAlignment(5)
-    local staffOnDuty = stats:Add("liaText")
+    local staffOnDuty = stats:Add("DLabel")
     staffOnDuty:Dock(RIGHT)
     staffOnDuty:DockMargin(10, 0, 0, 0)
     staffOnDuty:SetFont("liaSmallFont")
     staffOnDuty:SetTextColor(color_white)
     staffOnDuty:SetExpensiveShadow(1, color_black)
     staffOnDuty:SetContentAlignment(6)
-    local scroll = self:Add("liaScrollPanel")
+    local scroll = self:Add("DScrollPanel")
     scroll:Dock(FILL)
     scroll:DockMargin(1, 0, 1, 0)
     scroll.VBar:SetWide(0)
@@ -102,7 +102,7 @@ function PANEL:Init()
         local facColor = team.GetColor(facID)
         local facCont = layout:Add("DListLayout")
         facCont:Dock(TOP)
-        local facHeader = facCont:Add("liaBasePanel")
+        local facHeader = facCont:Add("DPanel")
         facHeader:Dock(TOP)
         facHeader:SetTall(40)
         facHeader.Paint = function(_, ww, hh)
@@ -112,7 +112,7 @@ function PANEL:Init()
             surface.DrawOutlinedRect(0, 0, ww, hh)
         end
 
-        local facInner = facHeader:Add("liaBasePanel")
+        local facInner = facHeader:Add("DPanel")
         facInner:Dock(FILL)
         if facData.logo and facData.logo ~= "" then
             local img = facInner:Add("DImage")
@@ -122,7 +122,7 @@ function PANEL:Init()
             img:SetMaterial(Material(facData.logo))
         end
 
-        local lbl = facInner:Add("liaText")
+        local lbl = facInner:Add("DLabel")
         lbl:SetFont("liaMediumFont")
         lbl:SetTextColor(color_white)
         lbl:SetExpensiveShadow(1, color_black)
@@ -165,7 +165,7 @@ function PANEL:Init()
                     ico:SetMaterial(Material(clsData.logo))
                 end
 
-                local hlbl = cat.Header:Add("liaText")
+                local hlbl = cat.Header:Add("DLabel")
                 hlbl:Dock(LEFT)
                 hlbl:SetFont("liaMediumFont")
                 hlbl:SetTextColor(color_white)
@@ -206,7 +206,6 @@ function PANEL:Think()
         local char = ply:getChar()
         if not char then continue end
         local facCont = self.factionLists[ply:Team()]
-        if not facCont then continue end
         local parent = facCont.classLists[char:getClass()] or facCont.noClass
         if not IsValid(ply.liaScoreSlot) then
             self:addPlayer(ply, parent)
@@ -236,7 +235,7 @@ function PANEL:Think()
 end
 
 function PANEL:addPlayer(ply, parent)
-    local slot = parent:Add("liaBasePanel")
+    local slot = parent:Add("DPanel")
     slot:Dock(TOP)
     local height = ScrH() * 0.07
     slot:SetTall(height)
@@ -264,7 +263,7 @@ function PANEL:addPlayer(ply, parent)
         local opts = {}
         hook.Run("ShowPlayerOptions", ply, opts)
         if #opts > 0 then
-            local menu = vgui.Create("liaDermaMenu")
+            local menu = DermaMenu()
             for _, o in ipairs(opts) do
                 menu:AddOption(L(o.name), o.func):SetImage(o.image)
             end
@@ -287,19 +286,19 @@ function PANEL:addPlayer(ply, parent)
         hook.Run("ModifyScoreboardModel", slot.model.Entity, ply)
     end)
 
-    slot.name = vgui.Create("liaText", slot)
+    slot.name = vgui.Create("DLabel", slot)
     slot.name:SetFont("liaMediumFont")
     slot.name:SetTextColor(color_white)
     slot.name:SetExpensiveShadow(1, color_black)
-    slot.desc = vgui.Create("liaText", slot)
+    slot.desc = vgui.Create("DLabel", slot)
     slot.desc:SetAutoStretchVertical(true)
     slot.desc:SetWrap(true)
     slot.desc:SetContentAlignment(7)
     slot.desc:SetFont("liaSmallFont")
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    slot.ping = vgui.Create("liaText", slot)
-    slot.ping:SetFont("liaSmallFont")
+    slot.ping = vgui.Create("DLabel", slot)
+    slot.ping:SetFont("liaGenericFont")
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
@@ -457,50 +456,6 @@ end
 function PANEL:OnRemove()
     hook.Run("ScoreboardClosed", self)
     CloseDermaMenus()
-end
-
-function PANEL:AddColumn(name, width)
-    if not self.columns then self.columns = {} end
-    table.insert(self.columns, {
-        name = name,
-        width = width or 100
-    })
-end
-
-function PANEL:AddLine(...)
-    local args = {...}
-    return 0
-end
-
-function PANEL:GetSelectedLine()
-    return nil
-end
-
-function PANEL:GetSelected()
-    return {}, 0
-end
-
-function PANEL:RemoveLine(index)
-end
-
-function PANEL:ClearSelection()
-end
-
-function PANEL:SelectItem(line)
-end
-
-function PANEL:SelectFirstItem()
-end
-
-function PANEL:SortByColumn(index, descending)
-end
-
-function PANEL:GetMultiSelect()
-    return false
-end
-
-function PANEL:SetMultiSelect(multi)
-    self.multiSelect = multi
 end
 
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")

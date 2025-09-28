@@ -17,7 +17,7 @@ function PANEL:Init()
     self:MakePopup()
     self:SetAlpha(0)
     self:AlphaTo(255, 0.2, 0)
-    self.buttons = self:Add("liaBasePanel")
+    self.buttons = self:Add("DPanel")
     self.buttons:DockMargin(0, 32, 0, 0)
     self.buttons:Dock(TOP)
     self.buttons:SetTall(36)
@@ -25,15 +25,15 @@ function PANEL:Init()
     local y0 = 64 + 44
     local panelW = math.max(sw * 0.25, 220)
     local panelH = sh - y0
-    self.vendorPanel = self:Add("liaBasePanel")
+    self.vendorPanel = self:Add("DPanel")
     self.vendorPanel:SetSize(panelW, panelH)
     self.vendorPanel:SetPos(sw * 0.5 - panelW - 32, y0)
-    self.vendorPanel.items = self.vendorPanel:Add("liaScrollPanel")
+    self.vendorPanel.items = self.vendorPanel:Add("DScrollPanel")
     self.vendorPanel.items:Dock(FILL)
-    self.mePanel = self:Add("liaBasePanel")
+    self.mePanel = self:Add("DPanel")
     self.mePanel:SetSize(panelW, panelH)
     self.mePanel:SetPos(sw * 0.5 + 32, y0)
-    self.mePanel.items = self.mePanel:Add("liaScrollPanel")
+    self.mePanel.items = self.mePanel:Add("DScrollPanel")
     self.mePanel.items:Dock(FILL)
     self:listenForChanges()
     self:liaListenForInventoryChanges(ply:getChar():getInv())
@@ -43,14 +43,14 @@ function PANEL:Init()
     }
 
     self.currentCategory = nil
-    local lbl = self:Add("liaText")
+    local lbl = self:Add("DLabel")
     lbl:SetText(L("vendorYourItems"))
     lbl:SetFont("liaBigFont")
     lbl:SetTextColor(color_white)
     lbl:SetContentAlignment(5)
     lbl:SizeToContents()
     lbl:SetPos(self.mePanel.x + panelW * 0.5 - lbl:GetWide() * 0.5, y0 - lbl:GetTall() - 10)
-    local lbl2 = self:Add("liaText")
+    local lbl2 = self:Add("DLabel")
     lbl2:SetText(L("vendorItemsTitle"))
     lbl2:SetFont("liaBigFont")
     lbl2:SetTextColor(color_white)
@@ -59,7 +59,7 @@ function PANEL:Init()
     lbl2:SetPos(self.vendorPanel.x + panelW * 0.5 - lbl2:GetWide() * 0.5, y0 - lbl2:GetTall() - 10)
     self:populateItems()
     self:createCategoryDropdown()
-    self.left = self:Add("liaFrame")
+    self.left = self:Add("DFrame")
     self.left:SetPos(sw * 0.015, sh * 0.35)
     self.left:SetSize(sw * 0.212, sh * 0.24)
     self.left:SetTitle("")
@@ -82,7 +82,7 @@ function PANEL:Init()
         draw.DrawText(count == 0 and L("vendorNoItems") or count == 1 and L("vendorOneItem") or L("vendorItems", count), "liaSmallFont", sw * 0.2, sh * 0.065, color_white, TEXT_ALIGN_RIGHT)
     end
 
-    self.right = self:Add("liaFrame")
+    self.right = self:Add("DFrame")
     self.right:SetPos(sw * 0.78, sh * 0.35)
     self.right:SetSize(sw * 0.212, sh * 0.61)
     self.right:SetTitle("")
@@ -158,7 +158,7 @@ function PANEL:createCategoryDropdown()
             return
         end
 
-        menu = vgui.Create("liaScrollPanel", self)
+        menu = vgui.Create("DScrollPanel", self)
         menu:SetSize(btn:GetWide(), #sorted * 24)
         menu:SetPos(btn.x, btn.y + btn:GetTall() + 2)
         for i, cat in ipairs(sorted) do
@@ -197,7 +197,7 @@ function PANEL:updateVendorModel()
 end
 
 function PANEL:DrawModels()
-    self.vendorModel = self:Add("liaModelPanel")
+    self.vendorModel = self:Add("DModelPanel")
     self.vendorModel:SetSize(ScreenScale(160), ScreenScaleH(170))
     self.vendorModel:SetPos(self:GetWide() * 0.25 - ScreenScale(350) - ScreenScale(100), sh * 0.36 + ScreenScaleH(25))
     local model = liaVendorEnt and liaVendorEnt.GetModel and liaVendorEnt:GetModel() or ""
@@ -219,7 +219,7 @@ function PANEL:DrawModels()
         end
     end
 
-    self.playerModel = self:Add("liaModelPanel")
+    self.playerModel = self:Add("DModelPanel")
     self.playerModel:SetSize(ScreenScale(160), ScreenScaleH(170))
     self.playerModel:SetPos(self:GetWide() * 0.75 + ScreenScale(110) - ScreenScale(50), sh * 0.36 + ScreenScaleH(25))
     local pm = LocalPlayer():GetModel()
@@ -291,7 +291,7 @@ function PANEL:updateItem(id, which, qty)
 
     local parent = which == "me" and self.mePanel or self.vendorPanel
     if not IsValid(parent.items) then
-        parent.items = vgui.Create("liaBasePanel", parent)
+        parent.items = vgui.Create("DPanel", parent)
         parent.items:Dock(FILL)
         parent.items:SetPaintBackground(false)
     end
@@ -457,10 +457,10 @@ function PANEL:Init()
     self:Dock(TOP)
     self:SetPaintBackground(false)
     self:SetCursor("hand")
-    self.background = self:Add("liaBasePanel")
+    self.background = self:Add("DPanel")
     self.background:Dock(FILL)
     self.background:DockMargin(0, 0, 0, 10)
-    self.iconFrame = self.background:Add("liaBasePanel")
+    self.iconFrame = self.background:Add("DPanel")
     self.iconFrame:SetSize(96, 96)
     self.iconFrame:Dock(LEFT)
     self.iconFrame:DockMargin(10, 10, 10, 10)
@@ -470,18 +470,18 @@ function PANEL:Init()
     self.icon:SetSize(96, 96)
     self.icon:Dock(FILL)
     self.icon.Paint = function() end
-    self.textContainer = self.background:Add("liaBasePanel")
+    self.textContainer = self.background:Add("DPanel")
     self.textContainer:Dock(FILL)
     self.textContainer:DockMargin(0, 10, 10, 10)
     self.textContainer:SetPaintBackground(false)
-    self.name = self.textContainer:Add("liaText")
+    self.name = self.textContainer:Add("DLabel")
     self.name:SetFont("VendorItemNameFont")
     self.name:SetExpensiveShadow(1, color_black)
     self.name:Dock(TOP)
     self.name:DockMargin(0, 0, 0, 8)
     self.name:SetContentAlignment(5)
     self.name:SetText("")
-    self.description = self.textContainer:Add("liaText")
+    self.description = self.textContainer:Add("DLabel")
     self.description:SetFont("VendorItemDescFont")
     self.description:SetTextColor(Color(200, 200, 200))
     self.description:Dock(TOP)
@@ -490,7 +490,7 @@ function PANEL:Init()
     self.description:SetContentAlignment(1)
     self.description:SetAutoStretchVertical(true)
     self.description:SetText("")
-    self.spacer = self.textContainer:Add("liaBasePanel")
+    self.spacer = self.textContainer:Add("DPanel")
     self.spacer:Dock(FILL)
     self.spacer:SetPaintBackground(false)
     self.action = self.textContainer:Add("liaSmallButton")
@@ -581,7 +581,7 @@ function PANEL:setItemType(itemType)
 
     self:updateLabel()
     self:updateAction()
-    local rarity = item.rarity or L("commonRarity")
+    local rarity = item.rarity or "Common"
     local nameColor = RarityColors[rarity] or color_white
     self.name:SetTextColor(nameColor)
 end
@@ -610,7 +610,7 @@ function PANEL:updateLabel()
     self.action:SetText(self.isSelling and L("vendorSellAction", priceSuffix) or L("vendorBuyAction", priceSuffix))
 end
 
-vgui.Register("VendorItem", PANEL, "liaBasePanel")
+vgui.Register("VendorItem", PANEL, "DPanel")
 PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.vendorEditor) then lia.gui.vendorEditor:Remove() end
@@ -622,12 +622,12 @@ function PANEL:Init()
     self:MakePopup()
     self:Center()
     self:SetTitle(L("vendorEditor"))
-    self.name = self:Add("liaEntry")
+    self.name = self:Add("DTextEntry")
     self.name:Dock(TOP)
     self.name:SetTooltip(L("name"))
     self.name:SetText(entity:getName())
     self.name.OnEnter = function(this) if entity:getNetVar("name") ~= this:GetText() then lia.vendor.editor.name(this:GetText()) end end
-    self.model = self:Add("liaEntry")
+    self.model = self:Add("DTextEntry")
     self.model:Dock(TOP)
     self.model:SetTooltip(L("model"))
     self.model:DockMargin(0, 4, 0, 0)
@@ -637,7 +637,7 @@ function PANEL:Init()
         if entity:GetModel():lower() ~= modelText then lia.vendor.editor.model(modelText) end
     end
 
-    self.welcome = self:Add("liaEntry")
+    self.welcome = self:Add("DTextEntry")
     self.welcome:Dock(TOP)
     self.welcome:DockMargin(0, 4, 0, 0)
     self.welcome:SetText(entity:getWelcomeMessage())
@@ -647,7 +647,7 @@ function PANEL:Init()
         if msg ~= entity:getWelcomeMessage() then lia.vendor.editor.welcome(msg) end
     end
 
-    self.searchBar = self:Add("liaEntry")
+    self.searchBar = self:Add("DTextEntry")
     self.searchBar:Dock(TOP)
     self.searchBar:DockMargin(0, 4, 0, 0)
     self.searchBar:SetUpdateOnType(true)
@@ -662,7 +662,7 @@ function PANEL:Init()
     end
 
     if hasBodygroups or entity:SkinCount() > 1 then
-        self.bodygroups = self:Add("liaButton")
+        self.bodygroups = self:Add("DButton")
         self.bodygroups:Dock(TOP)
         self.bodygroups:DockMargin(0, 4, 0, 0)
         self.bodygroups:SetText(L("bodygroups"))
@@ -670,13 +670,13 @@ function PANEL:Init()
         self.bodygroups.DoClick = function() vgui.Create("VendorBodygroupEditor", self):MoveLeftOf(self, 4) end
     end
 
-    self.faction = self:Add("liaButton")
+    self.faction = self:Add("DButton")
     self.faction:SetText(L("vendorFaction"))
     self.faction:Dock(TOP)
     self.faction:SetTextColor(color_white)
     self.faction:DockMargin(0, 4, 0, 0)
     self.faction.DoClick = function() vgui.Create("VendorFactionEditor", self):MoveLeftOf(self, 4) end
-    self.savePreset = self:Add("liaButton")
+    self.savePreset = self:Add("DButton")
     self.savePreset:Dock(TOP)
     self.savePreset:SetText(L("vendorSavePreset"))
     self.savePreset:SetTextColor(color_white)
@@ -702,7 +702,7 @@ function PANEL:Init()
         end, function() end, L("vendorSavePreset"), L("cancel"))
     end
 
-    self.preset = self:Add("liaComboBox")
+    self.preset = self:Add("DComboBox")
     self.preset:Dock(TOP)
     self.preset:SetSortItems(false)
     self.preset:DockMargin(0, 4, 0, 0)
@@ -716,7 +716,7 @@ function PANEL:Init()
         lia.vendor.editor.preset(value)
     end
 
-    self.animation = self:Add("liaComboBox")
+    self.animation = self:Add("DComboBox")
     self.animation:Dock(TOP)
     self.animation:SetSortItems(false)
     self.animation:DockMargin(0, 4, 0, 0)
@@ -733,7 +733,7 @@ function PANEL:Init()
     end
 
     if entity:SkinCount() > 1 then
-        self.skin = self:Add("liaSlideBox")
+        self.skin = self:Add("DNumSlider")
         self.skin:Dock(TOP)
         self.skin:DockMargin(16, 4, 16, 0)
         self.skin:SetText(L("skin"))
@@ -747,7 +747,7 @@ function PANEL:Init()
         end
     end
 
-    self.items = self:Add("liaTable")
+    self.items = self:Add("DListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
     self.items:AddColumn(L("name")).Header:SetTextColor(color_white)
@@ -958,7 +958,7 @@ function PANEL:ReloadItemList(filter)
     end
 end
 
-vgui.Register("VendorEditor", PANEL, "liaFrame")
+vgui.Register("VendorEditor", PANEL, "DFrame")
 PANEL = {}
 local function onFactionStateChanged(checkBox, state)
     lia.vendor.editor.faction(checkBox.factionID, state)
@@ -975,17 +975,17 @@ function PANEL:Init()
     self:Center()
     self:MakePopup()
     self:SetTitle(L("vendorFaction"))
-    self.scroll = self:Add("liaScrollPanel")
+    self.scroll = self:Add("DScrollPanel")
     self.scroll:Dock(FILL)
     self.scroll:DockPadding(0, 0, 0, 4)
     self.factions = {}
     self.classes = {}
     for k, v in ipairs(lia.faction.indices) do
-        local panel = self.scroll:Add("liaBasePanel")
+        local panel = self.scroll:Add("DPanel")
         panel:Dock(TOP)
         panel:DockPadding(4, 4, 4, 4)
         panel:DockMargin(0, 0, 0, 4)
-        local faction = panel:Add("liaCheckBoxLabel")
+        local faction = panel:Add("DCheckBoxLabel")
         faction:Dock(TOP)
         faction:SetTextColor(color_white)
         faction:SetText(L(v.name))
@@ -995,7 +995,7 @@ function PANEL:Init()
         self.factions[k] = faction
         for k2, v2 in ipairs(lia.class.list) do
             if v2.faction == k then
-                local class = panel:Add("liaCheckBoxLabel")
+                local class = panel:Add("DCheckBoxLabel")
                 class:Dock(TOP)
                 class:DockMargin(16, 0, 0, 4)
                 class:SetText(L(v2.name))
@@ -1025,7 +1025,7 @@ function PANEL:updateChecked()
     end
 end
 
-vgui.Register("VendorFactionEditor", PANEL, "liaFrame")
+vgui.Register("VendorFactionEditor", PANEL, "DFrame")
 PANEL = {}
 function PANEL:Init()
     if IsValid(lia.gui.vendorBodygroupEditor) then lia.gui.vendorBodygroupEditor:Remove() end
@@ -1034,14 +1034,14 @@ function PANEL:Init()
     self:Center()
     self:MakePopup()
     self:SetTitle(L("bodygroups"))
-    self.scroll = self:Add("liaScrollPanel")
+    self.scroll = self:Add("DScrollPanel")
     self.scroll:Dock(FILL)
     self.scroll:DockPadding(0, 0, 0, 4)
     self.sliders = {}
     local entity = liaVendorEnt
     for i = 0, entity:GetNumBodyGroups() - 1 do
         if entity:GetBodygroupCount(i) <= 1 then continue end
-        local slider = self.scroll:Add("liaSlideBox")
+        local slider = self.scroll:Add("DNumSlider")
         slider:Dock(TOP)
         slider:DockMargin(0, 0, 0, 4)
         slider:SetText(entity:GetBodygroupName(i))
@@ -1068,4 +1068,4 @@ function PANEL:OnRemove()
     hook.Remove("VendorEdited", self)
 end
 
-vgui.Register("VendorBodygroupEditor", PANEL, "liaFrame")
+vgui.Register("VendorBodygroupEditor", PANEL, "DFrame")

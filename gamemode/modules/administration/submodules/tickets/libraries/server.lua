@@ -49,12 +49,12 @@ function MODULE:GetTicketsByRequester(steamID)
 end
 
 local function GetPlayerInfo(ply)
-    if not IsValid(ply) then return L("unknownPlayer") end
+    if not IsValid(ply) then return "Unknown Player" end
     return string.format("%s (%s)", ply:Nick(), ply:SteamID64())
 end
 
 local function GetAdminInfo(admin)
-    if not IsValid(admin) then return L("consoleAdmin") end
+    if not IsValid(admin) then return "Console" end
     return string.format("%s (%s)", admin:Nick(), admin:SteamID64())
 end
 

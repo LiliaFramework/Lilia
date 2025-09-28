@@ -80,7 +80,76 @@ function MODULE:PlayerStaminaLost(client)
     end)
 end
 
-if not timer.Exists("liaGlobalStamina") then
+net.Receive("liaChangeAttribute", function(_, client)
+    if not client:hasPrivilege("manageAttributes") then return end
+    local charID = net.ReadInt(32)
+    local _ = net.ReadTable()
+    local attribKey = net.ReadString()
+    local amountStr = net.ReadString()
+    local mode = net.ReadString()
+    if not attribKey or not lia.attribs.list[attribKey] then
+        for k, v in pairs(lia.attribs.list) do
+            if lia.util.stringMatches(L(v.name), attribKey) or lia.util.stringMatches(k, attribKey) then
+                attribKey = k
+                break
+            end
+        end
+    end
+
+    if not attribKey or not lia.attribs.list[attribKey] then
+        client:notifyErrorLocalized("invalidAttributeKey")
+        return
+    end
+
+    local attribValue = tonumber(amountStr)
+    if not attribValue then
+        client:notifyErrorLocalized("invalidAmount")
+        return
+    end
+
+    local targetClient = lia.char.getBySteamID(charID)
+    if not IsValid(targetClient) then
+        client:notifyErrorLocalized("characterNotFound")
+        return
+    end
+
+    local targetChar = targetClient:getChar()
+    if not targetChar then
+        client:notifyErrorLocalized("characterNotFound")
+        return
+    end
+
+    if mode == L("set") then
+        if attribValue < 0 then
+            client:notifyErrorLocalized("attribNonNegative")
+            return
+        end
+
+        targetChar:setAttrib(attribKey, attribValue)
+        client:notifySuccessLocalized("attribSet", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
+        targetChar:getPlayer():notifyInfoLocalized("yourAttributeSet", lia.attribs.list[attribKey].name, attribValue, client:Nick())
+    elseif mode == L("add") then
+        if attribValue <= 0 then
+            client:notifyErrorLocalized("attribPositive")
+            return
+        end
+
+        local current = targetChar:getAttrib(attribKey, 0) or 0
+        local newValue = current + attribValue
+        if not isnumber(newValue) or newValue < 0 then
+            client:notifyErrorLocalized("attribCalculationError")
+            return
+        end
+
+        targetChar:updateAttrib(attribKey, newValue)
+        client:notifySuccessLocalized("attribUpdate", targetChar:getPlayer():Name(), L(lia.attribs.list[attribKey].name), attribValue)
+        targetChar:getPlayer():notifyInfoLocalized("yourAttributeIncreased", lia.attribs.list[attribKey].name, attribValue, client:Nick())
+    else
+        client:notifyErrorLocalized("invalidMode")
+    end
+end)
+
+if SERVER and not timer.Exists("liaGlobalStamina") then
     timer.Create("liaGlobalStamina", 0.25, 0, function()
         for client, _ in pairs(staminaPlayers) do
             if IsValid(client) then

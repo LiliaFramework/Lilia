@@ -55,7 +55,7 @@ function MODULE:LoadData()
             if row.factions and row.factions ~= "NULL" and row.factions ~= "" then
                 if tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
                     lia.warning("Door " .. id .. " has coordinate-like data in factions column: " .. tostring(row.factions))
-                    lia.warning(L("dataCorruptionClearingFactions"))
+                    lia.warning("This suggests data corruption. Clearing factions data.")
                     row.factions = ""
                 else
                     local success, result = pcall(lia.data.deserialize, row.factions)
@@ -77,7 +77,7 @@ function MODULE:LoadData()
                             ent:setNetVar("factions", util.TableToJSON(factions))
                         end
                     else
-                        lia.warning(L("failedDeserializeDoorFactions", id, tostring(result)))
+                        lia.warning("Failed to deserialize factions for door " .. id .. ": " .. tostring(result))
                         lia.warning("Raw factions data: " .. tostring(row.factions))
                     end
                 end
@@ -87,7 +87,7 @@ function MODULE:LoadData()
             if row.classes and row.classes ~= "NULL" and row.classes ~= "" then
                 if tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
                     lia.warning("Door " .. id .. " has coordinate-like data in classes column: " .. tostring(row.classes))
-                    lia.warning(L("dataCorruptionClearingClasses"))
+                    lia.warning("This suggests data corruption. Clearing classes data.")
                     row.classes = ""
                 else
                     local success, result = pcall(lia.data.deserialize, row.classes)
@@ -109,7 +109,7 @@ function MODULE:LoadData()
                             ent:setNetVar("classes", util.TableToJSON(classes))
                         end
                     else
-                        lia.warning(L("failedDeserializeDoorClasses", id, tostring(result)))
+                        lia.warning("Failed to deserialize classes for door " .. id .. ": " .. tostring(result))
                         lia.warning("Raw classes data: " .. tostring(row.classes))
                     end
                 end
@@ -158,8 +158,8 @@ function MODULE:LoadData()
             end
         end
     end):catch(function(err)
-        lia.error(L("failedLoadDoorData", tostring(err)))
-        lia.error(L("doorDatabaseConnectionIssue"))
+        lia.error("Failed to load door data: " .. tostring(err))
+        lia.error("This may indicate a database connection issue or missing table")
     end)
 end
 
@@ -182,7 +182,7 @@ function MODULE:SaveData()
                     if success and istable(result) then
                         factionsTable = result
                     else
-                        lia.warning(L("failedParseDoorFactionsJSON", mapID))
+                        lia.warning("Failed to parse factions JSON for door " .. mapID .. ", using empty table")
                     end
                 elseif door.liaFactions then
                     factionsTable = door.liaFactions
@@ -196,7 +196,7 @@ function MODULE:SaveData()
                     if success and istable(result) then
                         classesTable = result
                     else
-                        lia.warning(L("failedParseDoorClassesJSON", mapID))
+                        lia.warning("Failed to parse classes JSON for door " .. mapID .. ", using empty table")
                     end
                 elseif door.liaClasses then
                     classesTable = door.liaClasses
@@ -257,8 +257,8 @@ function MODULE:SaveData()
 
     if #rows > 0 then
         lia.db.bulkUpsert("doors", rows):next(function() end):catch(function(err)
-            lia.error(L("failedSaveDoorData", tostring(err)))
-            lia.error(L("doorDatabaseSchemaProblem"))
+            lia.error("Failed to save door data: " .. tostring(err))
+            lia.error("This may indicate a database connection issue or schema problem")
         end)
     end
 end
@@ -281,7 +281,7 @@ function lia.doors.VerifyDatabaseSchema()
     if lia.db.module == "sqlite" then
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
             if not res or not res.results then
-                lia.error(L("failedGetDoorTableInfo"))
+                lia.error("Failed to get table info for lia_doors")
                 return
             end
 
@@ -307,7 +307,7 @@ function lia.doors.VerifyDatabaseSchema()
 
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
-                    lia.error(L("missingExpectedDoorColumn", colName))
+                    lia.error("Missing expected column: " .. colName)
                 elseif columns[colName]:lower() ~= expectedType:lower() then
                     lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
                 end
@@ -316,7 +316,7 @@ function lia.doors.VerifyDatabaseSchema()
     else
         lia.db.query("DESCRIBE lia_doors"):next(function(res)
             if not res or not res.results then
-                lia.error(L("failedGetDoorTableInfo"))
+                lia.error("Failed to get table info for lia_doors")
                 return
             end
 
@@ -343,7 +343,7 @@ function lia.doors.VerifyDatabaseSchema()
 
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
-                    lia.error(L("missingExpectedDoorColumn", colName))
+                    lia.error("Missing expected column: " .. colName)
                 elseif not columns[colName]:lower():match(expectedType:lower()) then
                     lia.warning("Column " .. colName .. " has type " .. columns[colName] .. ", expected " .. expectedType)
                 end
@@ -382,12 +382,12 @@ function lia.doors.CleanupCorruptedData()
 
             if needsUpdate then
                 local updateQuery = "UPDATE lia_doors SET factions = " .. lia.db.convertDataType(newFactions) .. ", classes = " .. lia.db.convertDataType(newClasses) .. " WHERE " .. condition .. " AND id = " .. id
-                lia.db.query(updateQuery):next(function() lia.information(L("fixedCorruptedDoorData", id)) end):catch(function(err) lia.error(L("failedFixCorruptedDoorData", id, tostring(err))) end)
+                lia.db.query(updateQuery):next(function() lia.information("Fixed corrupted data for door " .. id) end):catch(function(err) lia.error("Failed to fix corrupted data for door " .. id .. ": " .. tostring(err)) end)
             end
         end
 
-        if corruptedCount > 0 then lia.information(L("foundAndFixedCorruptedDoorRecords", corruptedCount)) end
-    end):catch(function(err) lia.error(L("failedCheckCorruptedDoorData", tostring(err))) end)
+        if corruptedCount > 0 then lia.information("Found and fixed " .. corruptedCount .. " corrupted door records") end
+    end):catch(function(err) lia.error("Failed to check for corrupted door data: " .. tostring(err)) end)
 end
 
 function MODULE:InitPostEntity()
@@ -511,7 +511,7 @@ function MODULE:KeyLock(client, door, time)
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and not door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
-        client:setAction("@locking", time, function() end)
+        client:setAction(L("locking"), time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, true) end, time, function() client:stopAction() end)
         lia.log.add(client, "lockDoor", door)
     end
@@ -528,7 +528,7 @@ function MODULE:KeyUnlock(client, door, time)
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
-        client:setAction("@unlocking", time, function() end)
+        client:setAction(L("unlocking"), time, function() end)
         client:doStaredAction(door, function() self:ToggleLock(client, door, false) end, time, function() client:stopAction() end)
         lia.log.add(client, "unlockDoor", door)
     end

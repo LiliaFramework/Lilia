@@ -1,10 +1,10 @@
 ﻿local MODULE = MODULE
 lia.command.add("spawnadd", {
     adminOnly = true,
-    desc = "@spawnAddDesc",
+    desc = "spawnAddDesc",
     arguments = {
         {
-            name = "@faction",
+            name = "faction",
             type = "table",
             options = function()
                 local options = {}
@@ -46,10 +46,10 @@ lia.command.add("spawnadd", {
 
 lia.command.add("spawnremoveinradius", {
     adminOnly = true,
-    desc = "@spawnRemoveInRadiusDesc",
+    desc = "spawnRemoveInRadiusDesc",
     arguments = {
         {
-            name = "@radius",
+            name = "radius",
             type = "string",
             optional = true
         },
@@ -91,10 +91,10 @@ lia.command.add("spawnremoveinradius", {
 
 lia.command.add("spawnremovebyname", {
     adminOnly = true,
-    desc = "@spawnRemoveByNameDesc",
+    desc = "spawnRemoveByNameDesc",
     arguments = {
         {
-            name = "@faction",
+            name = "faction",
             type = "table",
             options = function()
                 local options = {}
@@ -143,16 +143,16 @@ lia.command.add("spawnremovebyname", {
 
 lia.command.add("returnitems", {
     superAdminOnly = true,
-    desc = "@returnItemsDesc",
+    desc = "returnItemsDesc",
     arguments = {
         {
-            name = "@name",
+            name = "name",
             type = "player"
         },
     },
     AdminStick = {
-        Name = "@returnItems",
-        Category = "@characterManagement",
+        Name = "returnItems",
+        Category = "characterManagement",
         SubCategory = "items",
         Icon = "icon16/arrow_refresh.png"
     },

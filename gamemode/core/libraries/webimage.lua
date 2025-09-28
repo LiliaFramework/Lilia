@@ -110,7 +110,7 @@ function lia.webimage.download(n, u, cb, flags)
         end
 
         if not extension then
-            if cb then cb(nil, false, L("invalidFileFormat")) end
+            if cb then cb(nil, false, "Invalid file format - not PNG or JPEG") end
             return
         end
 
@@ -263,18 +263,19 @@ end
 concommand.Add("lia_saved_images", function()
     local files = findImagesRecursive(baseDir)
     if not files or #files == 0 then return end
-    local f = vgui.Create("liaFrame")
+    local f = vgui.Create("DFrame")
     f:SetTitle(L("webImagesTitle"))
     f:SetSize(ScrW() * 0.6, ScrH() * 0.6)
     f:Center()
     f:MakePopup()
-    local scroll = vgui.Create("liaScrollPanel", f)
+    local scroll = vgui.Create("DScrollPanel", f)
     scroll:Dock(FILL)
-    local layout = vgui.Create("liaBasePanel", scroll)
+    local layout = vgui.Create("DIconLayout", scroll)
     layout:Dock(FILL)
-    layout:DockPadding(4, 4, 4, 4)
+    layout:SetSpaceX(4)
+    layout:SetSpaceY(4)
     for _, filePath in ipairs(files) do
-        local img = vgui.Create("DImage", layout)
+        local img = layout:Add("DImage")
         img:SetMaterial(buildMaterial(filePath))
         img:SetSize(128, 128)
         img:SetTooltip(filePath:sub(#baseDir + 1))
@@ -313,12 +314,12 @@ concommand.Add("lia_cleanup_images", function()
             if not isValid then
                 file.Delete(filePath)
                 removedCount = removedCount + 1
-                print(L("webimageRemovedCorruptedFile", filePath:sub(#baseDir + 1)))
+                print(string.format("[WebImage] Removed corrupted file: %s", filePath:sub(#baseDir + 1)))
             end
         else
             file.Delete(filePath)
             removedCount = removedCount + 1
-            print(L("webimageRemovedUnreadableFile", filePath:sub(#baseDir + 1)))
+            print(string.format("[WebImage] Removed unreadable file: %s", filePath:sub(#baseDir + 1)))
         end
     end
 
@@ -326,11 +327,11 @@ concommand.Add("lia_cleanup_images", function()
         local savePath = baseDir .. fileName
         if not file.Exists(savePath, "DATA") then
             cache[fileName] = nil
-            print(L("webimageRemovedFromCache", fileName))
+            print(string.format("[WebImage] Removed from cache: %s", fileName))
         end
     end
 
-    print(L("webimageCleanupComplete", removedCount))
+    print(string.format("[WebImage] Cleanup complete: %d files removed", removedCount))
 end)
 
 concommand.Add("lia_wipewebimages", function()
@@ -344,26 +345,26 @@ concommand.Add("lia_wipewebimages", function()
             lia.webimage.download(name, data.url, nil, data.flags)
         end
 
-        lia.information(L("startedRedownloadingWebImages"))
+        lia.information("Started re-downloading stored web images...")
     end)
 end)
 
 concommand.Add("test_webimage_menu", function()
-    local frame = vgui.Create("liaFrame")
+    local frame = vgui.Create("DFrame")
     frame:SetTitle(L("webImageTesterTitle"))
     frame:SetSize(500, 400)
     frame:Center()
     frame:MakePopup()
-    local urlEntry = vgui.Create("liaEntry", frame)
+    local urlEntry = vgui.Create("DTextEntry", frame)
     urlEntry:SetPos(10, 30)
     urlEntry:SetSize(frame:GetWide() - 20, 25)
     urlEntry:SetText("")
     urlEntry:SetPlaceholderText(L("imageURLPlaceholder"))
-    local loadBtn = vgui.Create("liaButton", frame)
+    local loadBtn = vgui.Create("DButton", frame)
     loadBtn:SetPos(10, 65)
     loadBtn:SetSize(frame:GetWide() - 20, 30)
     loadBtn:SetText(L("loadImage"))
-    local imgPanel = vgui.Create("liaBasePanel", frame)
+    local imgPanel = vgui.Create("DPanel", frame)
     imgPanel:SetPos(10, 105)
     imgPanel:SetSize(frame:GetWide() - 20, frame:GetTall() - 115)
     loadBtn.DoClick = function()
@@ -391,8 +392,6 @@ function lia.webimage.getStats()
     }
 end
 
-lia.webimage.register("slider.png", "https://bleonheart.github.io/Samael-Assets/misc/slider.png")
-lia.webimage.register("close_button.png", "https://bleonheart.github.io/Samael-Assets/misc/close_button.png")
 lia.webimage.register("lilia.png", "https://bleonheart.github.io/Samael-Assets/lilia.png")
 lia.webimage.register("locked.png", "https://bleonheart.github.io/Samael-Assets/misc/locked.png")
 lia.webimage.register("unlocked.png", "https://bleonheart.github.io/Samael-Assets/misc/unlocked.png")

@@ -67,7 +67,7 @@ function PANEL:Clear()
     self.canvas:Clear()
 end
 
-vgui.Register("liaHorizontalScroll", PANEL, "liaBasePanel")
+vgui.Register("liaHorizontalScroll", PANEL, "DPanel")
 PANEL = {}
 function PANEL:Init()
     self.btnLeft = self.btnUp

@@ -35,6 +35,7 @@ function BlurredDFrame:Init()
 end
 
 function BlurredDFrame:PerformLayout()
+    DFrame.PerformLayout(self)
     if IsValid(self.btnClose) then self.btnClose:SetZPos(1000) end
 end
 
@@ -42,7 +43,7 @@ function BlurredDFrame:Paint(w, h)
     PaintFrame(self, w, h)
 end
 
-vgui.Register("BlurredDFrame", BlurredDFrame, "liaFrame")
+vgui.Register("BlurredDFrame", BlurredDFrame, "DFrame")
 local TransparentDFrame = {}
 function TransparentDFrame:Init()
     self:SetTitle("")
@@ -52,6 +53,7 @@ function TransparentDFrame:Init()
 end
 
 function TransparentDFrame:PerformLayout()
+    DFrame.PerformLayout(self)
     if IsValid(self.btnClose) then self.btnClose:SetZPos(1000) end
 end
 
@@ -59,19 +61,13 @@ function TransparentDFrame:Paint(w, h)
     PaintPanel(self, w, h)
 end
 
-vgui.Register("SemiTransparentDFrame", TransparentDFrame, "liaFrame")
+vgui.Register("SemiTransparentDFrame", TransparentDFrame, "DFrame")
 local SimplePanel = {}
 function SimplePanel:Paint(w, h)
     PaintPanel(self, w, h)
 end
 
-vgui.Register("SemiTransparentDPanel", SimplePanel, "liaBasePanel")
-local LiaBasePanel = {}
-function LiaBasePanel:Init()
-    if self.SetText then self:SetText("") end
-end
-
-vgui.Register("liaBasePanel", LiaBasePanel, "liaBasePanel")
+vgui.Register("SemiTransparentDPanel", SimplePanel, "DPanel")
 timer.Create("derma_convar_fix", 0.5, 0, function()
     if len == 0 then return end
     local name
@@ -137,7 +133,7 @@ function QuickPanel:Init()
     self:SetKeyboardInputEnabled(false)
     self:SetZPos(999)
     self:SetMouseInputEnabled(true)
-    self.title = self:Add("liaText")
+    self.title = self:Add("DLabel")
     self.title:SetTall(36)
     self.title:Dock(TOP)
     self.title:SetFont("liaMediumFont")
@@ -151,7 +147,7 @@ function QuickPanel:Init()
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.expand = self:Add("liaButton")
+    self.expand = self:Add("DButton")
     self.expand:SetContentAlignment(5)
     self.expand:SetText("")
     self.expand:SetFont("DermaDefaultBold")
@@ -185,7 +181,7 @@ function QuickPanel:Init()
         end
     end
 
-    self.scroll = self:Add("liaScrollPanel")
+    self.scroll = self:Add("DScrollPanel")
     self.items = {}
     hook.Run("SetupQuickMenu", self)
     self:populateOptions()
@@ -234,7 +230,7 @@ function QuickPanel:addCategory(text)
 end
 
 function QuickPanel:addButton(text, cb)
-    local btn = self.scroll:Add("liaButton")
+    local btn = self.scroll:Add("DButton")
     btn:SetText(text)
     btn:SetTall(36)
     btn:Dock(TOP)
@@ -251,7 +247,7 @@ function QuickPanel:addButton(text, cb)
 end
 
 function QuickPanel:addSpacer()
-    local pnl = self.scroll:Add("liaBasePanel")
+    local pnl = self.scroll:Add("DPanel")
     pnl:SetTall(1)
     pnl:Dock(TOP)
     pnl:DockMargin(0, 1, 0, 0)
@@ -265,7 +261,7 @@ function QuickPanel:addSpacer()
 end
 
 function QuickPanel:addSlider(text, cb, val, min, max, dec)
-    local s = self.scroll:Add("liaSlideBox")
+    local s = self.scroll:Add("DNumSlider")
     s:SetText(text)
     s:SetTall(36)
     s:Dock(TOP)
@@ -295,7 +291,7 @@ end
 
 function QuickPanel:addCheck(text, cb, checked)
     local btn = self:addButton(text)
-    local chk = btn:Add("liaSimpleCheckbox")
+    local chk = btn:Add("liaCheckbox")
     chk:SetChecked(checked)
     chk:SetSize(22, 22)
     chk.OnChange = function(_, v) if cb then cb(btn, v) end end
@@ -815,7 +811,7 @@ end
 
 function meta:Class(name, ...)
     local class = classes[name]
-    assert(class, L("classDoesNotExist", name))
+    assert(class, "Class " .. name .. " does not exist.")
     class(self, ...)
     return self
 end
@@ -823,97 +819,3 @@ end
 for k, _ in pairs(classes) do
     meta[k] = function(s, ...) return s:Class(k, ...) end
 end
-
-local math_sin = math.sin
-local math_cos = math.cos
-local math_rad = math.rad
-local math_ceil = math.ceil
-hook.Add("OnScreenSizeChanged", "UIShadows", function()
-    BShadows = {}
-    local resStr = ScrW() .. ScrH()
-    BShadows.RenderTarget = GetRenderTarget("BShadows_original_" .. resStr, ScrW(), ScrH())
-    BShadows.RenderTarget2 = GetRenderTarget("BShadows_shadow_" .. resStr, ScrW(), ScrH())
-    BShadows.ShadowMaterial = CreateMaterial("BShadows", "UnlitGeneric", {
-        ['$translucent'] = 1,
-        ['$vertexalpha'] = 1,
-        ["alpha"] = 1
-    })
-
-    BShadows.ShadowMaterialGrayscale = CreateMaterial("BShadows_grayscale", "UnlitGeneric", {
-        ['$translucent'] = 1,
-        ['$vertexalpha'] = 1,
-        ['$alpha'] = 1,
-        ['$color'] = '0 0 0',
-        ['$color2'] = '0 0 0'
-    })
-
-    BShadows.BeginShadow = function()
-        render.PushRenderTarget(BShadows.RenderTarget)
-        render.OverrideAlphaWriteEnable(true, true)
-        render.Clear(0, 0, 0, 0)
-        render.OverrideAlphaWriteEnable(false, false)
-        cam.Start2D()
-    end
-
-    BShadows.EndShadow = function(intensity, spread, blur, opacity, direction, distance, bool_shadow_only)
-        opacity = opacity or 255
-        direction = direction or 0
-        distance = distance or 0
-        bool_shadow_only = bool_shadow_only or false
-        render.CopyRenderTargetToTexture(BShadows.RenderTarget2)
-        if blur > 0 then
-            render.OverrideAlphaWriteEnable(true, true)
-            render.BlurRenderTarget(BShadows.RenderTarget2, spread, spread, blur)
-            render.OverrideAlphaWriteEnable(false, false)
-        end
-
-        render.PopRenderTarget()
-        BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
-        BShadows.ShadowMaterialGrayscale:SetTexture('$basetexture', BShadows.RenderTarget2)
-        local xOffset = math_sin(math_rad(direction)) * distance
-        local yOffset = math_cos(math_rad(direction)) * distance
-        BShadows.ShadowMaterialGrayscale:SetFloat('$alpha', opacity / 255)
-        render.SetMaterial(BShadows.ShadowMaterialGrayscale)
-        for i = 1, math_ceil(intensity) do
-            render.DrawScreenQuadEx(xOffset, yOffset, ScrW(), ScrH())
-        end
-
-        if not bool_shadow_only then
-            BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
-            render.SetMaterial(BShadows.ShadowMaterial)
-            render.DrawScreenQuad()
-        end
-
-        cam.End2D()
-    end
-
-    BShadows.DrawShadowTexture = function(texture, intensity, spread, blur, opacity, direction, distance, bool_shadow_only)
-        opacity = opacity or 255
-        direction = direction or 0
-        distance = distance or 0
-        bool_shadow_only = bool_shadow_only or false
-        render.CopyTexture(texture, BShadows.RenderTarget2)
-        if blur > 0 then
-            render.PushRenderTarget(BShadows.RenderTarget2)
-            render.OverrideAlphaWriteEnable(true, true)
-            render.BlurRenderTarget(BShadows.RenderTarget2, spread, spread, blur)
-            render.OverrideAlphaWriteEnable(false, false)
-            render.PopRenderTarget()
-        end
-
-        BShadows.ShadowMaterialGrayscale:SetTexture('$basetexture', BShadows.RenderTarget2)
-        local xOffset = math_sin(math_rad(direction)) * distance
-        local yOffset = math_cos(math_rad(direction)) * distance
-        BShadows.ShadowMaterialGrayscale:SetFloat('$alpha', opacity / 255)
-        render.SetMaterial(BShadows.ShadowMaterialGrayscale)
-        for i = 1, math_ceil(intensity) do
-            render.DrawScreenQuadEx(xOffset, yOffset, ScrW(), ScrH())
-        end
-
-        if not bool_shadow_only then
-            BShadows.ShadowMaterial:SetTexture('$basetexture', texture)
-            render.SetMaterial(BShadows.ShadowMaterial)
-            render.DrawScreenQuad()
-        end
-    end
-end)

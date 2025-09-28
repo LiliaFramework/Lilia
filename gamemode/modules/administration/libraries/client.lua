@@ -137,14 +137,14 @@ function MODULE:PopulateAdminTabs(pages)
                 panel.Paint = function() end
                 function panel:buildSheet()
                     if IsValid(self.sheet) then self.sheet:Remove() end
-                    self.sheet = self:Add("liaBasePanel")
+                    self.sheet = self:Add("DPanel")
                     self.sheet:Dock(FILL)
                     self.sheet.Paint = function() end
                     local privileges = lia.administrator.privileges or {}
                     local names = lia.administrator.privilegeNames or {}
                     local cats = lia.administrator.privilegeCategories or {}
                     local headers = {"ID", "Name", "Min Access", "Category"}
-                    local listView = self.sheet:Add("liaTable")
+                    local listView = self.sheet:Add("DListView")
                     listView:Dock(FILL)
                     listView:SetMultiSelect(false)
                     for _, header in ipairs(headers) do
@@ -172,14 +172,14 @@ function MODULE:PopulateAdminTabs(pages)
                     listView.OnRowRightClick = function(_, _, line)
                         local m = DermaMenu()
                         for i, header in ipairs(headers) do
-                            m:AddOption(L("copy") .. " " .. header, function()
+                            m:AddOption("Copy " .. header, function()
                                 SetClipboardText(line:GetColumnText(i) or "")
                                 client:notifySuccessLocalized("copied")
                             end)
                         end
 
                         m:AddSpacer()
-                        m:AddOption(L("copyAll"), function()
+                        m:AddOption("Copy All", function()
                             local t = {}
                             for i, header in ipairs(headers) do
                                 t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
@@ -198,7 +198,7 @@ function MODULE:PopulateAdminTabs(pages)
                     end
                 end
 
-                local refreshButton = vgui.Create("liaButton", panel)
+                local refreshButton = vgui.Create("DButton", panel)
                 refreshButton:Dock(TOP)
                 refreshButton:DockMargin(0, 0, 0, 10)
                 refreshButton:SetText(L("refresh"))
@@ -230,11 +230,11 @@ function MODULE:PopulateAdminTabs(pages)
                 panel:Clear()
                 panel:DockPadding(10, 10, 10, 10)
                 panel.Paint = function() end
-                panel.sheet = panel:Add("liaTabs")
+                panel.sheet = panel:Add("DPropertySheet")
                 panel.sheet:Dock(FILL)
                 function panel:buildSheets(data)
                     if IsValid(self.sheet) then self.sheet:Remove() end
-                    self.sheet = self:Add("liaTabs")
+                    self.sheet = self:Add("DPropertySheet")
                     self.sheet:Dock(FILL)
                     local function formatPlayTime(secs)
                         local h = math.floor(secs / 3600)
@@ -314,14 +314,14 @@ function MODULE:PopulateAdminTabs(pages)
 
                     hook.Run("CharListColumns", columns)
                     local function createList(parent, rows)
-                        local container = parent:Add("liaBasePanel")
+                        local container = parent:Add("DPanel")
                         container:Dock(FILL)
                         container.Paint = function() end
-                        local search = container:Add("liaEntry")
+                        local search = container:Add("DTextEntry")
                         search:Dock(TOP)
                         search:SetPlaceholderText(L("search"))
                         search:SetTextColor(Color(255, 255, 255))
-                        local list = container:Add("liaTable")
+                        local list = container:Add("DListView")
                         list:Dock(FILL)
                         local steamIDColumnIndex
                         for i, col in ipairs(columns) do
@@ -399,14 +399,14 @@ function MODULE:PopulateAdminTabs(pages)
                         end
                     end
 
-                    local allPanel = self.sheet:Add("liaBasePanel")
+                    local allPanel = self.sheet:Add("DPanel")
                     allPanel:Dock(FILL)
                     allPanel.Paint = function() end
                     createList(allPanel, data.all or {})
                     self.sheet:AddSheet(L("allCharacters"), allPanel)
                     for steamID, chars in pairs(data.players or {}) do
                         local ply = lia.util.getBySteamID(tostring(steamID))
-                        local pnl = self.sheet:Add("liaBasePanel")
+                        local pnl = self.sheet:Add("DPanel")
                         pnl:Dock(FILL)
                         pnl.Paint = function() end
                         createList(pnl, chars)
@@ -445,7 +445,7 @@ function MODULE:PopulateAdminTabs(pages)
                 panel:Clear()
                 panel:DockPadding(10, 10, 10, 10)
                 panel.Paint = function() end
-                panel.sheet = panel:Add("liaTabs")
+                panel.sheet = panel:Add("DPropertySheet")
                 panel.sheet:Dock(FILL)
                 function panel:buildSheets(data)
                     for _, v in ipairs(self.sheet.Items or {}) do
@@ -454,10 +454,10 @@ function MODULE:PopulateAdminTabs(pages)
 
                     self.sheet.Items = {}
                     for tbl, rows in SortedPairs(data or {}) do
-                        local pnl = self.sheet:Add("liaBasePanel")
+                        local pnl = self.sheet:Add("DPanel")
                         pnl:Dock(FILL)
                         pnl.Paint = function() end
-                        local list = pnl:Add("liaTable")
+                        local list = pnl:Add("DListView")
                         list:Dock(FILL)
                         local columns = {}
                         function list:OnRowRightClick(_, line)

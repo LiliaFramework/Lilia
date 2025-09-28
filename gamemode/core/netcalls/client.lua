@@ -313,13 +313,7 @@ net.Receive("liaOptionsRequest", function()
     local subTitleKey = net.ReadString()
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
-    if titleKey:sub(1, 1) == "@" then titleKey = titleKey:sub(2) end
-    if subTitleKey:sub(1, 1) == "@" then subTitleKey = subTitleKey:sub(2) end
-    for i = 1, #options do
-        if options[i]:sub(1, 1) == "@" then options[i] = options[i]:sub(2) end
-    end
-
-    local frame = vgui.Create("liaFrame")
+    local frame = vgui.Create("DFrame")
     frame:SetTitle(L(titleKey))
     frame:SetSize(400, 300)
     frame:Center()
@@ -330,12 +324,12 @@ net.Receive("liaOptionsRequest", function()
         net.SendToServer()
     end
 
-    local label = vgui.Create("liaText", frame)
+    local label = vgui.Create("DLabel", frame)
     label:SetText(L(subTitleKey))
     label:SetPos(10, 30)
     label:SizeToContents()
     label:SetTextColor(Color(255, 255, 255))
-    local list = vgui.Create("liaScrollPanel", frame)
+    local list = vgui.Create("DPanelList", frame)
     list:SetPos(10, 50)
     list:SetSize(380, 200)
     list:EnableVerticalScrollbar(true)
@@ -343,7 +337,7 @@ net.Receive("liaOptionsRequest", function()
     local selected = {}
     local checkboxes = {}
     for _, option in ipairs(options) do
-        local checkbox = vgui.Create("liaCheckBox")
+        local checkbox = vgui.Create("DCheckBoxLabel")
         checkbox:SetText(L(option))
         checkbox:SetValue(false)
         checkbox:SizeToContents()
@@ -369,7 +363,7 @@ net.Receive("liaOptionsRequest", function()
         table.insert(checkboxes, checkbox)
     end
 
-    local submitBtn = vgui.Create("liaButton", frame)
+    local submitBtn = vgui.Create("DButton", frame)
     submitBtn:SetText(L("submit"))
     submitBtn:SetPos(10, 260)
     submitBtn:SetSize(185, 30)
@@ -389,7 +383,7 @@ net.Receive("liaOptionsRequest", function()
         frame:Close()
     end
 
-    local cancelBtn = vgui.Create("liaButton", frame)
+    local cancelBtn = vgui.Create("DButton", frame)
     cancelBtn:SetText(L("cancel"))
     cancelBtn:SetPos(205, 260)
     cancelBtn:SetSize(185, 30)
@@ -448,13 +442,7 @@ net.Receive("liaRequestDropdown", function()
     local titleKey = net.ReadString()
     local subTitleKey = net.ReadString()
     local options = net.ReadTable()
-    if titleKey:sub(1, 1) == "@" then titleKey = titleKey:sub(2) end
-    if subTitleKey:sub(1, 1) == "@" then subTitleKey = subTitleKey:sub(2) end
-    for i = 1, #options do
-        if options[i]:sub(1, 1) == "@" then options[i] = options[i]:sub(2) end
-    end
-
-    local frame = vgui.Create("liaFrame")
+    local frame = vgui.Create("DFrame")
     frame:SetTitle(L(titleKey))
     frame:SetSize(500, 250)
     frame:Center()
@@ -465,7 +453,7 @@ net.Receive("liaRequestDropdown", function()
         net.SendToServer()
     end
 
-    local dropdown = vgui.Create("liaComboBox", frame)
+    local dropdown = vgui.Create("DComboBox", frame)
     dropdown:SetPos(15, 50)
     dropdown:SetSize(470, 30)
     dropdown:SetValue(L(subTitleKey))
@@ -481,7 +469,7 @@ net.Receive("liaRequestDropdown", function()
         frame:Close()
     end
 
-    local cancelBtn = vgui.Create("liaButton", frame)
+    local cancelBtn = vgui.Create("DButton", frame)
     cancelBtn:SetText(L("cancel"))
     cancelBtn:SetPos(15, 200)
     cancelBtn:SetSize(470, 35)
@@ -497,7 +485,6 @@ net.Receive("liaArgumentsRequest", function()
     local id = net.ReadUInt(32)
     local title = net.ReadString()
     local fields = net.ReadTable()
-    if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     lia.util.requestArguments(title, fields, function(success, data)
         if success then
             net.Start("liaArgumentsRequest")
@@ -519,17 +506,17 @@ net.Receive("liaStringRequest", function()
     local default = net.ReadString()
     if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    local frame = vgui.Create("liaFrame")
+    local frame = vgui.Create("DFrame")
     frame:SetTitle(title)
     frame:SetSize(500, 250)
     frame:Center()
     frame:MakePopup()
     frame:SetKeyboardInputEnabled(true)
-    local label = vgui.Create("liaText", frame)
+    local label = vgui.Create("DLabel", frame)
     label:SetText(subTitle)
     label:Dock(TOP)
     label:DockMargin(10, 30, 10, 5)
-    local entry = vgui.Create("liaEntry", frame)
+    local entry = vgui.Create("DTextEntry", frame)
     entry:Dock(FILL)
     entry:DockMargin(10, 5, 10, 40)
     entry:SetValue(default)
@@ -542,11 +529,11 @@ net.Receive("liaStringRequest", function()
         frame:Remove()
     end
 
-    local buttonPanel = vgui.Create("liaBasePanel", frame)
+    local buttonPanel = vgui.Create("DPanel", frame)
     buttonPanel:Dock(BOTTOM)
     buttonPanel:SetTall(35)
     buttonPanel:DockMargin(10, 5, 10, 5)
-    local submit = vgui.Create("liaButton", buttonPanel)
+    local submit = vgui.Create("DButton", buttonPanel)
     submit:Dock(LEFT)
     submit:SetWide((frame:GetWide() - 20) * 0.50)
     submit:SetText(L("submit"))
@@ -558,7 +545,7 @@ net.Receive("liaStringRequest", function()
         frame:Remove()
     end
 
-    local cancel = vgui.Create("liaButton", buttonPanel)
+    local cancel = vgui.Create("DButton", buttonPanel)
     cancel:Dock(RIGHT)
     cancel:SetWide((frame:GetWide() - 20) * 0.50)
     cancel:SetText(L("cancel"))
@@ -641,9 +628,6 @@ net.Receive("liaBinaryQuestionRequest", function()
     local option1Key = net.ReadString()
     local option2Key = net.ReadString()
     local manualDismiss = net.ReadBool()
-    if questionKey:sub(1, 1) == "@" then questionKey = questionKey:sub(2) end
-    if option1Key:sub(1, 1) == "@" then option1Key = option1Key:sub(2) end
-    if option2Key:sub(1, 1) == "@" then option2Key = option2Key:sub(2) end
     local notice = CreateNoticePanel(10, manualDismiss)
     table.insert(lia.notices, notice)
     notice.isQuery = true
@@ -652,11 +636,11 @@ net.Receive("liaBinaryQuestionRequest", function()
     notice:SetTall(36 * 2.3)
     notice:CalcWidth(120)
     if manualDismiss then notice.start = nil end
-    notice.opt1 = notice:Add("liaButton")
+    notice.opt1 = notice:Add("DButton")
     notice.opt1:SetAlpha(0)
-    notice.opt2 = notice:Add("liaButton")
+    notice.opt2 = notice:Add("DButton")
     notice.opt2:SetAlpha(0)
-    notice.cancelBtn = notice:Add("liaButton")
+    notice.cancelBtn = notice:Add("DButton")
     notice.cancelBtn:SetAlpha(0)
     notice.oh = notice:GetTall()
     notice:SetTall(0)
@@ -770,18 +754,13 @@ net.Receive("liaButtonRequest", function()
         options[i] = net.ReadString()
     end
 
-    if titleKey:sub(1, 1) == "@" then titleKey = titleKey:sub(2) end
-    for i = 1, count do
-        if options[i]:sub(1, 1) == "@" then options[i] = options[i]:sub(2) end
-    end
-
-    local frame = vgui.Create("liaFrame")
+    local frame = vgui.Create("DFrame")
     frame:SetTitle(L(titleKey))
     frame:SetSize(500, 80 + count * 40)
     frame:Center()
     frame:MakePopup()
     for i, key in ipairs(options) do
-        local btn = frame:Add("liaButton")
+        local btn = frame:Add("DButton")
         btn:Dock(TOP)
         btn:DockMargin(15, 10, 15, 5)
         btn:SetText(L(key))
@@ -879,9 +858,9 @@ net.Receive("liaNetMessage", function()
     local args = net.ReadTable()
     if lia.net.registry[name] then
         local success, err = pcall(lia.net.registry[name], LocalPlayer(), unpack(args))
-        if not success then lia.error(L("errorInNetMessageCallback", name, tostring(err))) end
+        if not success then lia.error("Error in net message callback '" .. name .. "': " .. tostring(err)) end
     else
-        lia.error(L("receivedUnregisteredNetMessage", name))
+        lia.error("Received unregistered net message: " .. name)
     end
 end)
 
@@ -889,10 +868,10 @@ net.Receive("liaAssureClientSideAssets", function()
     lia.webimage.allowDownloads = true
     local webimages = lia.webimage.stored
     local websounds = lia.websound.stored
-    print(L("assetDownloadStartHeader"))
-    print(L("assetDownloadWebImagesCount", table.Count(webimages)))
-    print(L("assetDownloadWebSoundsCount", table.Count(websounds)))
-    print(L("assetDownloadCompleteSeparator"))
+    print("=== STARTING CLIENT-SIDE ASSET DOWNLOAD ===")
+    print("WebImages to download:", table.Count(webimages))
+    print("WebSounds to download:", table.Count(websounds))
+    print("===========================================")
     local downloadQueue = {}
     local activeDownloads = 0
     local maxConcurrent = 5
@@ -919,8 +898,8 @@ net.Receive("liaAssureClientSideAssets", function()
         })
     end
 
-    print(L("assetDownloadQueueSize", #downloadQueue))
-    print(L("assetDownloadProcessingMax", maxConcurrent))
+    print("Download queue size:", #downloadQueue)
+    print("Processing with max concurrent downloads:", maxConcurrent)
     local function processNextDownload()
         if #downloadQueue == 0 then return end
         local download = table.remove(downloadQueue, 1)
@@ -930,12 +909,12 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if material then
                     completedImages = completedImages + 1
-                    if not fromCache then print(L("assetDownloadImageSuccess", download.name)) end
+                    if not fromCache then print(string.format("[?] Image downloaded: %s", download.name)) end
                 else
                     failedImages = failedImages + 1
-                    local errorMessage = errorMsg or L("unknownError")
-                    print(L("assetDownloadImageFailedConsole", download.name, errorMessage))
-                    chat.AddText(Color(255, 100, 100), L("assetDownloadImagePrefix"), " ", Color(255, 255, 255), L("assetDownloadImageFailed", download.name, errorMessage))
+                    local errorMessage = errorMsg or "Unknown error"
+                    print(string.format("[?] Image failed: %s - %s", download.name, errorMessage))
+                    chat.AddText(Color(255, 100, 100), "[Image Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -945,12 +924,12 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if path then
                     completedSounds = completedSounds + 1
-                    if not fromCache then print(L("assetDownloadSoundSuccessConsole", download.name)) end
+                    if not fromCache then print(string.format("[?] Sound downloaded: %s", download.name)) end
                 else
                     failedSounds = failedSounds + 1
-                    local errorMessage = errorMsg or L("unknownError")
-                    print(L("assetDownloadSoundFailedConsole", download.name, errorMessage))
-                    chat.AddText(Color(255, 100, 100), L("assetDownloadSoundPrefix"), " ", Color(255, 255, 255), L("assetDownloadSoundFailed", download.name, errorMessage))
+                    local errorMessage = errorMsg or "Unknown error"
+                    print(string.format("[?] Sound failed: %s - %s", download.name, errorMessage))
+                    chat.AddText(Color(255, 100, 100), "[Sound Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -971,41 +950,26 @@ net.Receive("liaAssureClientSideAssets", function()
             timer.Simple(1.0, function()
                 local imageStats = lia.webimage.getStats()
                 local soundStats = lia.websound.getStats()
-                print(L("assetDownloadCompleteSeparator"))
-                print(L("assetDownloadCompleteHeader"))
-                print(L("downloadSummary"))
-                print(L("downloadCompletedFormat", "Images", completedImages, totalImages, failedImages))
-                print(L("downloadCompletedFormat", "Sounds", completedSounds, totalSounds, failedSounds))
-                print(L("assetDownloadCurrentStats"))
-                print(L("assetDownloadStatsImagesFormat", imageStats.downloaded, imageStats.stored))
-                print(L("assetDownloadStatsSoundsFormat", soundStats.downloaded, soundStats.stored))
-                print(L("assetDownloadStatsCombinedFormat", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
-                print(L("assetDownloadCompleteSeparator"))
+                print("===========================================")
+                print("=== CLIENT-SIDE ASSETS DOWNLOAD COMPLETE ===")
+                print("Download Summary")
+                print(string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
+                print(string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
+                print("Current Statistics")
+                print(string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
+                print(string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
+                print(string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
+                print("===========================================")
                 if failedImages > 0 or failedSounds > 0 then
-                    print(L("assetDownloadWarningConsole"))
-                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), L("assetDownloadPrefix"), " ", Color(255, 255, 255), string.format(L("assetDownloadWarningImages"), failedImages)) end
-                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), L("assetDownloadPrefix"), " ", Color(255, 255, 255), string.format(L("assetDownloadWarningSounds"), failedSounds)) end
+                    print("WARNING: Some assets failed to download. Check console output above for details.")
+                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %d image(s) failed to download. Check console for details.", failedImages)) end
+                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %d sound(s) failed to download. Check console for details.", failedSounds)) end
                 else
-                    chat.AddText(Color(100, 255, 100), L("assetDownloadPrefix"), " ", Color(255, 255, 255), L("allAssetsDownloadedSuccess"))
+                    chat.AddText(Color(100, 255, 100), "[Asset Download] ", Color(255, 255, 255), "All assets downloaded successfully!")
                 end
             end)
         else
-            print(L("assetDownloadProgress", activeDownloads, #downloadQueue, completedImages, totalImages, completedSounds, totalSounds))
+            print(string.format("Download progress: %d active, %d queued, %d/%d images, %d/%d sounds", activeDownloads, #downloadQueue, completedImages, totalImages, completedSounds, totalSounds))
         end
     end)
-end)
-
-net.Receive("liaLoadingFailure", function()
-    local reason = net.ReadString()
-    local details = net.ReadString()
-    local errorCount = net.ReadUInt(8)
-    if IsValid(lia.loadingFailurePanel) then lia.loadingFailurePanel:Remove() end
-    lia.loadingFailurePanel = vgui.Create("liaLoadingFailure")
-    lia.loadingFailurePanel:SetFailureInfo(reason, details)
-    for _ = 1, errorCount do
-        local errorMessage = net.ReadString()
-        local line = net.ReadString()
-        local file = net.ReadString()
-        lia.loadingFailurePanel:AddError(errorMessage, line, file)
-    end
 end)
