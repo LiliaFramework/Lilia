@@ -250,7 +250,7 @@ This hook is triggered when:
 hook.Add("OnDataSet", "LogDataChanges", function(key, value)
     -- Convert value to string for logging
     local valueStr = tostring(value)
-    if type(value) == "table" then
+    if istable(value) then
         valueStr = util.TableToJSON(value)
     end
     

@@ -1379,84 +1379,6 @@ end
 
 ---
 
-### drawEntityText
-
-**Purpose**
-
-Draws 3D text above an entity with smooth scaling and fading based on distance.
-
-**Parameters**
-
-* `ent` (*Entity*): The entity to draw text above.
-* `text` (*string*): The text to display.
-* `posY` (*number*, optional): The Y offset for the text position.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Basic entity text drawing
-local npc = ents.Create("npc_citizen")
-npc:Spawn()
-lia.util.drawEntityText(npc, "Friendly NPC")
-
--- Draw player names above their heads
-hook.Add("PostPlayerDraw", "PlayerNames", function(player)
-    if player ~= LocalPlayer() then
-        lia.util.drawEntityText(player, player:Name())
-    end
-end)
-
--- Draw health above entities
-hook.Add("PostDrawOpaqueRenderables", "EntityHealth", function()
-    for _, ent in ents.iterator do
-        if ent:GetClass() == "npc_zombie" then
-            local health = ent:Health()
-            local maxHealth = ent:GetMaxHealth()
-            lia.util.drawEntityText(ent, "HP: " .. health .. "/" .. maxHealth)
-        end
-    end
-end)
-
--- Custom entity text with offset
-local function drawCustomEntityText(entity, text, yOffset)
-    lia.util.drawEntityText(entity, text, yOffset or 0)
-end
-
--- Draw item information
-hook.Add("PostDrawOpaqueRenderables", "ItemInfo", function()
-    for _, ent in ipairs(ents.FindByClass("lia_item")) do
-        local itemTable = ent:getItemTable()
-        if itemTable then
-            lia.util.drawEntityText(ent, itemTable.name, 10)
-        end
-    end
-end)
-
--- Conditional text display
-local function shouldShowText(entity, text)
-    local distance = LocalPlayer():GetPos():Distance(entity:GetPos())
-    return distance < 500 -- Only show text within 500 units
-end
-
-hook.Add("PostDrawOpaqueRenderables", "SmartEntityText", function()
-    for _, ent in ents.iterator do
-        if shouldShowText(ent, "Target") then
-            lia.util.drawEntityText(ent, "Target")
-        end
-    end
-end)
-```
-
----
-
 ### drawGradient
 
 **Purpose**
@@ -1752,3 +1674,81 @@ lia.util.previewPlayer(function(player)
 end, function(player)
     return IsValid(player) and player:Alive()
 end, "Team Management")
+
+---
+
+### drawEntText
+
+**Purpose**
+
+Draws floating text above entities with smooth fade-in/fade-out effects based on distance from the player's view. The text appears as a styled tooltip with background blur and theme colors.
+
+**Parameters**
+
+* `ent` (*Entity*): The entity to draw text above.
+* `text` (*string*): The text to display.
+* `posY` (*number*, optional): Vertical offset for the text position.
+* `alphaOverride` (*number*, optional): Override the alpha fade value (0-1 or 0-255).
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Basic entity text drawing
+local function drawEntityName(entity)
+    lia.util.drawEntText(entity, entity:GetClass())
+end
+
+-- Draw text with custom position offset
+lia.util.drawEntText(myEntity, "Important Item", 20)
+
+-- Draw text with alpha override
+lia.util.drawEntText(doorEntity, "Locked Door", 0, 0.8)
+
+-- Use in entity think hook
+hook.Add("Think", "EntityLabels", function()
+    for _, entity in ipairs(ents.FindByClass("prop_*")) do
+        if entity:GetModel() == "models/props_c17/furnitureStove001a.mdl" then
+            lia.util.drawEntText(entity, "Stove")
+        end
+    end
+end)
+
+-- Draw player names above their heads
+hook.Add("PostPlayerDraw", "PlayerNames", function(player)
+    if player ~= LocalPlayer() and player:Alive() then
+        lia.util.drawEntText(player, player:Name(), 10)
+    end
+end)
+
+-- Draw health above NPCs
+hook.Add("PostDrawOpaqueRenderables", "NPCLabels", function()
+    for _, npc in ipairs(ents.FindByClass("npc_*")) do
+        if IsValid(npc) and npc:Health() > 0 then
+            local healthText = "NPC: " .. npc:Health() .. " HP"
+            lia.util.drawEntText(npc, healthText, 15)
+        end
+    end
+end)
+
+-- Draw item information
+local function drawItemInfo(itemEntity)
+    if itemEntity:isItem() then
+        local itemName = itemEntity:getNetVar("name", "Unknown Item")
+        lia.util.drawEntText(itemEntity, itemName, 0, 200)
+    end
+end
+
+-- Conditional text display
+local function drawConditionalEntityText(entity, condition, text, offset)
+    if condition and IsValid(entity) then
+        lia.util.drawEntText(entity, text, offset or 0)
+    end
+end

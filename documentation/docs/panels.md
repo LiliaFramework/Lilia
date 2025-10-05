@@ -75,6 +75,12 @@ The panel library provides a comprehensive set of custom Derma panels that exten
 | `liaRadialPanel` | `DPanel` | Circular radial menu with keyboard shortcuts. |
 | `liaSlideBox` | `Panel` | Dual-purpose slider or slide container. |
 | `liaTabs` | `Panel` | Tabbed interface with modern styling options. |
+| `liaCategory` | `Panel` | Collapsible category panel for organizing UI elements. |
+| `liaEntry` | `EditablePanel` | Enhanced text entry field with placeholder and animations. |
+| `liaNumSlider` | `Panel` | Numeric slider control with customizable range and precision. |
+| `liaTable` | `Panel` | Advanced table component with sortable columns and selection. |
+| `liaScrollPanel` | `DScrollPanel` | Enhanced scroll panel with custom scrollbar styling. |
+| `liaItemList` | `DFrame` | Generic list frame for displaying structured item data. |
 
 ---
 
@@ -1652,7 +1658,7 @@ panel:SetSize(200, 100)
 - `SetWindowTitle(title)` – sets the window title.
 - `SetPlaceholderText(text)` – sets the search box placeholder text.
 - `SetColumns(columns)` – defines the list columns.
-- `SetData(rows)` – populates the list with data rows.
+- `setData(rows)` – populates the list with data rows.
 - `SetSort(column, desc)` – sets the sort column and direction.
 - `Populate()` – refreshes the list based on current search filter.
 
@@ -1797,7 +1803,7 @@ Client.
 **Functions:**
 
 - `SetTitle(title)` – sets the window title.
-- `SetData(data)` – populates the list with item data.
+- `setData(data)` – populates the list with item data.
 - `SetColumns(columns)` – defines the column structure.
 - `PopulateItems()` – refreshes the list display.
 
@@ -1814,7 +1820,7 @@ itemList:MakePopup()
 itemList:SetColumns({"Item Name", "Value", "Description"})
 
 -- Set data
-itemList:SetData({
+itemList:setData({
     {"Sword", "100", "A sharp blade"},
     {"Shield", "50", "Protective gear"},
     {"Potion", "25", "Healing item"}
@@ -1840,7 +1846,7 @@ Client.
 **Functions:**
 
 - `SetTitle(title)` – sets the dialog title.
-- `SetData(data)` – populates the selector with item data.
+- `setData(data)` – populates the selector with item data.
 - `SetColumns(columns)` – defines the column structure.
 - `SetActionText(text)` – sets the text for the action button.
 
@@ -1864,7 +1870,7 @@ selector.OnAction = function(line, selectedIndex)
 end
 
 -- Populate with data
-selector:SetData({
+selector:setData({
     {"Sword", "100", "5"},
     {"Shield", "50", "10"},
     {"Potion", "25", "20"}
@@ -2080,4 +2086,278 @@ tabs:AddTab("Tab 2", tab2, "icon16/user.png")
 local tab3 = vgui.Create("DPanel")
 tab3:SetBackgroundColor(Color(0, 0, 255))
 tabs:AddTab("Tab 3", tab3)
+```
+
+---
+
+### `liaCategory`
+
+**Purpose**
+
+Collapsible category panel that can contain other UI elements. When clicked, it expands or collapses to show/hide its contents with smooth animation.
+
+**Base Panel**
+
+`Panel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetText(name)` – sets the category header text.
+- `SetCenterText(is_centered)` – centers the header text if true.
+- `SetLabel(label)` – alias for SetText.
+- `SetContents(panel)` – sets the content panel that will be shown/hidden.
+- `SetExpanded(is_active)` – expands or collapses the category.
+- `SetActive(is_active)` – alias for SetExpanded.
+- `Toggle()` – toggles the expanded state.
+- `GetHeader()` – returns the header button panel.
+- `AddItem(panel)` – adds a panel to the content area.
+- `SetColor(col)` – sets the header color.
+
+**Example Usage**
+
+```lua
+-- Create a collapsible category
+local category = vgui.Create("liaCategory")
+category:SetSize(300, 100)
+category:SetText("Settings")
+
+-- Add content panel
+local content = vgui.Create("DPanel")
+content:SetBackgroundColor(Color(100, 100, 100))
+category:SetContents(content)
+
+-- Start expanded
+category:SetExpanded(true)
+```
+
+---
+
+### `liaEntry`
+
+**Purpose**
+
+Enhanced text entry field with placeholder text, smooth animations, and customizable appearance. Supports title labels and value callbacks.
+
+**Base Panel**
+
+`EditablePanel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetTitle(title)` – sets an optional title label above the entry field.
+- `SetPlaceholder(placeholder)` – sets the placeholder text shown when empty.
+- `SetPlaceholderText(placeholder)` – alias for SetPlaceholder.
+- `SetValue(value)` – sets the current text value.
+- `SetText(value)` – alias for SetValue.
+- `GetValue()` – returns the current text value.
+- `SelectAll()` – selects all text in the entry field.
+- `SetFont(font)` – sets the font used for the text.
+- `SetNumeric(isNumeric)` – restricts input to numeric characters if true.
+- `AllowInput(callback)` – sets a custom input validation function.
+- `SetTextColor(color)` – sets the text color.
+
+**Example Usage**
+
+```lua
+-- Create a text entry with title
+local entry = vgui.Create("liaEntry")
+entry:SetSize(300, 60)
+entry:SetTitle("Player Name")
+entry:SetPlaceholder("Enter your name...")
+entry:SetValue("Default Name")
+
+-- Handle value changes
+entry.action = function(value)
+    print("Entered:", value)
+end
+```
+
+---
+
+### `liaNumSlider`
+
+**Purpose**
+
+Numeric slider control with customizable range, decimal precision, and smooth animations. Displays current value and supports drag interaction.
+
+**Base Panel**
+
+`Panel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetMin(min)` – sets the minimum value.
+- `GetMin()` – returns the minimum value.
+- `SetMax(max)` – sets the maximum value.
+- `GetMax()` – returns the maximum value.
+- `SetDecimals(decimals)` – sets the number of decimal places.
+- `GetDecimals()` – returns the number of decimal places.
+- `SetValue(value)` – sets the current value.
+- `GetValue()` – returns the current value.
+- `SetText(text)` – sets the label text prefix.
+- `GetText()` – returns the label text prefix.
+- `UpdateSliderPosition()` – refreshes the slider position.
+- `OnValueChanged()` – callback for value changes (override).
+- `OnDragStart()` – callback for drag start (override).
+- `OnDragEnd()` – callback for drag end (override).
+
+**Example Usage**
+
+```lua
+-- Create a numeric slider
+local slider = vgui.Create("liaNumSlider")
+slider:SetSize(300, 60)
+slider:SetText("Volume: ")
+slider:SetMin(0)
+slider:SetMax(100)
+slider:SetValue(50)
+slider:SetDecimals(0)
+
+-- Handle value changes
+slider.OnValueChanged = function(value)
+    print("Volume changed to:", value)
+end
+```
+
+---
+
+### `liaTable`
+
+**Purpose**
+
+Advanced table component with sortable columns, selection support, and context menus. Supports custom column definitions and row data management.
+
+**Base Panel**
+
+`Panel`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `AddColumn(name, width, align, sortable)` – adds a column definition.
+- `AddItem(...)` – adds a row with the provided data.
+- `AddLine(...)` – alias for AddItem.
+- `SortByColumn(columnIndex)` – sorts the table by the specified column.
+- `CreateHeader()` – creates the table header.
+- `CreateRow(rowIndex, rowData)` – creates a row panel.
+- `CalculateColumnWidths()` – auto-sizes columns based on content.
+- `RebuildRows()` – refreshes all rows.
+- `SetAction(func)` – sets the callback for row clicks.
+- `SetRightClickAction(func)` – sets the callback for right-clicks.
+- `Clear()` – removes all rows.
+- `ClearSelection()` – deselects the current row.
+- `GetSelectedRow()` – returns the selected row data.
+- `RemoveRow(index)` – removes a row by index.
+- `OnSizeChanged()` – handles panel resizing.
+
+**Example Usage**
+
+```lua
+-- Create a table
+local table = vgui.Create("liaTable")
+table:SetSize(400, 300)
+
+-- Add columns
+table:AddColumn("Name", 150, TEXT_ALIGN_LEFT, true)
+table:AddColumn("Value", 100, TEXT_ALIGN_CENTER, true)
+table:AddColumn("Description", 150, TEXT_ALIGN_LEFT, false)
+
+-- Add rows
+table:AddItem("Sword", "100", "A sharp blade")
+table:AddItem("Shield", "50", "Protective gear")
+
+-- Handle row selection
+table.OnAction = function(rowData)
+    print("Selected:", rowData[1])
+end
+```
+
+---
+
+### `liaScrollPanel`
+
+**Purpose**
+
+Enhanced scroll panel with custom scrollbar styling and smooth scrolling behavior. Extends DScrollPanel with Lilia theming.
+
+**Base Panel**
+
+`DScrollPanel`
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Create a scroll panel
+local scrollPanel = vgui.Create("liaScrollPanel")
+scrollPanel:SetSize(300, 200)
+
+-- Add content that exceeds the panel size
+for i = 1, 20 do
+    local panel = vgui.Create("DPanel", scrollPanel)
+    panel:Dock(TOP)
+    panel:SetTall(50)
+    panel:SetBackgroundColor(Color(100 * i % 255, 150, 200))
+end
+```
+
+---
+
+### `liaItemList`
+
+**Purpose**
+
+Generic list frame for displaying items in a structured format. Supports custom columns and data population for item management.
+
+**Base Panel**
+
+`DFrame`
+
+**Realm**
+
+Client.
+
+**Functions:**
+
+- `SetTitle(title)` – sets the window title.
+- `setData(data)` – populates the list with item data.
+- `SetColumns(columns)` – defines the column structure.
+- `PopulateItems()` – refreshes the list display.
+
+**Example Usage**
+
+```lua
+-- Create an item list
+local itemList = vgui.Create("liaItemList")
+itemList:SetSize(600, 500)
+itemList:Center()
+itemList:MakePopup()
+
+-- Set columns
+itemList:SetColumns({"Item Name", "Value", "Description"})
+
+-- Set data
+itemList:setData({
+    {"Sword", "100", "A sharp blade"},
+    {"Shield", "50", "Protective gear"},
+    {"Potion", "25", "Healing item"}
+})
 ```

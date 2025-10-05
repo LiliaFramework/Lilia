@@ -2182,6 +2182,44 @@ end)
 
 ---
 
+### doGesture
+
+**Purpose**
+
+Makes the player perform a gesture animation and synchronizes it across all clients.
+
+**Parameters**
+
+* `a` (*number*): The gesture slot (0-255).
+* `b` (*number*): The gesture type (0-255).
+* `c` (*boolean*): Whether the gesture should loop.
+
+**Returns**
+
+*None.*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+local function makePlayerGesture(player, slot, gestureType, loop)
+    player:doGesture(slot, gestureType, loop)
+    player:ChatPrint("Playing gesture in slot " .. slot)
+end
+
+concommand.Add("do_gesture", function(ply, cmd, args)
+    local slot = tonumber(args[1]) or 1
+    local gestureType = tonumber(args[2]) or 1
+    local loop = tobool(args[3])
+    makePlayerGesture(ply, slot, gestureType, loop)
+end)
+```
+
+---
+
 ### forceSequence
 
 **Purpose**

@@ -216,15 +216,106 @@ end
 
 ---
 
+### checkForUpdates
+
+**Purpose**
+
+Performs comprehensive version checking for the Lilia framework and all loaded modules. This function checks for updates to public modules, private modules, and the core framework version by fetching remote version information and comparing it against local versions.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server (automatically called during module initialization).
+
+**Example Usage**
+
+```lua
+-- Manually trigger version checking
+lia.loader.checkForUpdates()
+
+-- The function will:
+-- 1. Check all public modules (versionID starting with "public_")
+-- 2. Check all private modules (versionID starting with "private_")
+-- 3. Check the core framework version
+-- 4. Display colored console messages for any outdated components
+
+-- Check versions on server startup (automatic)
+-- This function is automatically called in GM:InitializedModules()
+-- No manual intervention required for normal operation
+
+-- Check versions manually for debugging
+local function debugVersionCheck()
+    lia.information("Checking for framework and module updates...")
+    lia.loader.checkForUpdates()
+
+    -- Wait a moment for HTTP requests to complete
+    timer.Simple(5, function()
+        lia.information("Version check completed")
+    end)
+end
+
+-- Usage in a custom module
+local function myModuleVersionCheck()
+    -- Only check versions if we're on the server
+    if SERVER then
+        -- Check if any modules need updating
+        lia.loader.checkForUpdates()
+
+        -- Your custom logic here
+        lia.information("MyModule loaded and checked for updates")
+    end
+end
+
+-- Console command for manual version checking
+concommand.Add("lia_check_updates", function(client)
+    if IsValid(client) then
+        client:notifyErrorLocalized("commandConsoleOnly")
+        return
+    end
+
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Checking for updates...\n")
+    lia.loader.checkForUpdates()
+end)
+```
+
+**Version URLs Checked**
+
+* Public modules: `https://liliaframework.github.io/versioning/modules.json`
+* Private modules: `https://raw.githubusercontent.com/bleonheart/bleonheart.github.io/main/docs/versioning/modules.json`
+* Framework version: `https://liliaframework.github.io/versioning/lilia.json`
+
+**Console Output Examples**
+
+```
+[Lilia] [Updater] Module 'Advertisements' is outdated! Remote version: 2, Local version: 1
+[Lilia] [Updater] Framework is 3 versions behind
+[Lilia] [Updater] Private module 'CustomModule' has an update available
+[Lilia] [Updater] Module 'ModuleName' not found in remote repository
+[Lilia] [Updater] HTTP Error: 404 for module list
+```
+
+**Notes**
+
+This function is automatically called during framework initialization in `GM:InitializedModules()`. It can also be called manually for testing or re-checking versions. The function handles HTTP errors gracefully and provides detailed error messages for debugging. Version checking is performed asynchronously using HTTP requests, so results may not be immediate.
+
+---
+
 ## Rules
 
-- Only document functions from the `lia.*` namespace.  
-- Always follow the structure exactly as shown.  
-- Always write in clear, concise English.  
-- Always generate **full Markdown pages** ready to be placed in documentation.  
-- Always provide **extensive usage examples** in GLua code fences.  
-- Always format code cleanly and consistently.  
-- Always save documentation files as `lia.libraryname.md`.  
-- Never omit any of the sections (Purpose, Parameters, Returns, Realm, Example Usage).  
-- Never include comments in code unless they clarify the example's intent.  
+- Only document functions from the `lia.*` namespace.
+- Always follow the structure exactly as shown.
+- Always write in clear, concise English.
+- Always generate **full Markdown pages** ready to be placed in documentation.
+- Always provide **extensive usage examples** in GLua code fences.
+- Always format code cleanly and consistently.
+- Always save documentation files as `lia.libraryname.md`.
+- Never omit any of the sections (Purpose, Parameters, Returns, Realm, Example Usage).
+- Never include comments in code unless they clarify the example's intent.
 - Never document hooks, enums, or config variables unless they are explicitly part of the `lia.*` namespace.

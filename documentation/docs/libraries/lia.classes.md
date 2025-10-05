@@ -423,108 +423,6 @@ end
 
 ---
 
-### getBodygroupsForModel
-
-**Purpose**
-
-Retrieves the bodygroup configuration for a specific class and model combination.
-
-**Parameters**
-
-* `class` (*table*): The class object containing bodygroup data.
-* `model` (*string*): The model path to get bodygroups for.
-
-**Returns**
-
-* `bodygroups` (*table*): Table of bodygroup index-value pairs, or empty table if none found.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Get bodygroups for a specific class and model
-local class = lia.class.get("police")
-local bodygroups = lia.class.getBodygroupsForModel(class, "models/player/barney.mdl")
-if bodygroups and not table.IsEmpty(bodygroups) then
-    for bodygroupIndex, bodygroupValue in pairs(bodygroups) do
-        print("Bodygroup " .. bodygroupIndex .. " = " .. bodygroupValue)
-    end
-end
-
--- Check if a class has bodygroups for a model
-local function hasBodygroups(class, model)
-    local bodygroups = lia.class.getBodygroupsForModel(class, model)
-    return bodygroups and not table.IsEmpty(bodygroups)
-end
-
--- Use in a class definition
-CLASS.bodygroups = {
-    ["models/player/barney.mdl"] = {
-        [0] = 1, -- bodygroup 0 = value 1
-        [1] = 2  -- bodygroup 1 = value 2
-    }
-}
-```
-
----
-
-### applyBodygroups
-
-**Purpose**
-
-Applies bodygroup settings to a client based on their class and model.
-
-**Parameters**
-
-* `client` (*Player*): The client to apply bodygroups to.
-* `class` (*table*): The class object containing bodygroup data.
-* `model` (*string*): The model path to get bodygroups for.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Apply bodygroups when a player spawns
-local function onPlayerSpawn(client)
-    local char = client:getChar()
-    if char then
-        local class = char:getClass()
-        local model = char:getModel()
-        lia.class.applyBodygroups(client, class, model)
-    end
-end
-
--- Apply bodygroups in a class OnSet hook
-function CLASS:OnSet(client)
-    local char = client:getChar()
-    if char then
-        lia.class.applyBodygroups(client, self, char:getModel())
-    end
-end
-
--- Apply bodygroups when changing models
-local function changePlayerModel(client, newModel)
-    client:SetModel(newModel)
-    local char = client:getChar()
-    if char then
-        local class = char:getClass()
-        lia.class.applyBodygroups(client, class, newModel)
-    end
-end
-```
-
----
-
 ### retrieveJoinable
 
 **Purpose**
@@ -992,27 +890,6 @@ CLASS.bloodcolor = BLOOD_COLOR_RED
 
 ---
 
-### CLASS.bodyGroups
-
-**Type:**
-
-`table`
-
-**Description:**
-
-Mapping of bodygroup names to index values applied when the player spawns. If omitted, bodygroups are not modified.
-
-**Example Usage:**
-
-```lua
-CLASS.bodyGroups = {
-    hands = 2, -- apply option 2 to the "hands" bodygroup
-    torso = 0  -- index value 0 keeps the default option
-}
-```
-
----
-
 ### CLASS.logo
 
 **Type:**
@@ -1231,10 +1108,6 @@ CLASS.skin = 0
 CLASS.subMaterials = {
     "models/example/custom_cloth", -- sub-material 0
     "models/example/custom_armor" -- sub-material 1
-}
-CLASS.bodyGroups = {
-    hands = 2, -- apply option 2 to the "hands" bodygroup
-    torso = 0  -- index value 0 keeps the default option
 }
 CLASS.model = {
     "models/player/Group03/male_07.mdl",
@@ -1481,10 +1354,6 @@ CLASS.skin = 0
 CLASS.subMaterials = {
     "models/example/custom_cloth", -- sub-material 0
     "models/example/custom_armor" -- sub-material 1
-}
-CLASS.bodyGroups = {
-    hands = 2, -- apply option 2 to the "hands" bodygroup
-    torso = 0  -- index value 0 keeps the default option
 }
 CLASS.model = {
     "models/player/Group03/male_07.mdl",

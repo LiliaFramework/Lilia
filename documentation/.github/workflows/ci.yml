@@ -26,4 +26,9 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material mkdocs-awesome-pages-plugin
+      - run: mkdocs build
+      - name: Copy versioning files to build directory
+        run: |
+          mkdir -p site/versioning
+          cp docs/versioning/*.json site/versioning/
       - run: mkdocs gh-deploy --force

@@ -62,8 +62,8 @@ Shared.
 
 ```lua
 -- Log a warning
-lia.warning("Deprecated function used: " .. functionName)
--- Console output: [Lilia] [Warning] Deprecated function used: oldFunction
+lia.warning("Invalid function used: " .. functionName)
+-- Console output: [Lilia] [Warning] Invalid function used: oldFunction
 
 -- Log configuration warning
 lia.warning("Invalid configuration value for: " .. configKey)
@@ -104,37 +104,6 @@ lia.information("Database connection established")
 
 ---
 
-### admin
-
-**Purpose**
-
-Prints an admin message to the console with orange color formatting.
-
-**Parameters**
-
-* `msg` (*string*): The admin message to display.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Log admin action
-lia.admin("Player " .. player:Name() .. " was banned")
--- Console output: [Lilia] [Admin] Player JohnDoe was banned
-
--- Log admin command
-lia.admin("Admin " .. admin:Name() .. " executed command: " .. command)
--- Console output: [Lilia] [Admin] Admin AdminUser executed command: ban
-```
-
----
 
 ### bootstrap
 
@@ -168,100 +137,3 @@ lia.bootstrap("Entities", "Entity registration complete")
 ```
 
 ---
-
-### updater
-
-**Purpose**
-
-Prints an updater message to the console with cyan color formatting.
-
-**Parameters**
-
-* `msg` (*string*): The updater message to display.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Log update progress
-lia.updater("Checking for updates...")
--- Console output: [Lilia] [Updater] Checking for updates...
-
--- Log update completion
-lia.updater("Update completed successfully")
--- Console output: [Lilia] [Updater] Update completed successfully
-```
-
----
-
-### printLog
-
-**Purpose**
-
-Prints a formatted log message with category and green color formatting.
-
-**Parameters**
-
-* `category` (*string*): The log category.
-* `logString` (*string*): The log message.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Log with category
-lia.printLog("Database", "Connection established")
--- Console output: [LOG] [Category: Database] Connection established
-
--- Log player action
-lia.printLog("Player", player:Name() .. " joined the server")
--- Console output: [LOG] [Category: Player] JohnDoe joined the server
-```
-
-### deprecated
-
-**Purpose**
-
-Handles deprecated method warnings with yellow color formatting and optional callback execution.
-
-**Parameters**
-
-* `methodName` (*string*): The name of the deprecated method.
-* `callback` (*function*, optional): Callback function to execute after warning.
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Mark a function as deprecated
-lia.deprecated("oldFunction", function()
-    return newFunction()
-end)
--- Console output: [Lilia] [Deprecated] The function 'oldFunction' is deprecated and will be removed in a future version.
-
--- Simple deprecation warning
-lia.deprecated("deprecatedMethod")
--- Console output: [Lilia] [Deprecated] The function 'deprecatedMethod' is deprecated and will be removed in a future version.
-```
-
