@@ -211,7 +211,7 @@ end
 
 function PropertiesPanel:GetCanvas()
     if not isValid(self.Canvas) then
-        self.Canvas = self:Add("DScrollPanel")
+        self.Canvas = self:Add("liaScrollPanel")
         self.Canvas:Dock(FILL)
     end
     return self.Canvas

@@ -12,8 +12,11 @@ function PANEL:Init()
     self.nameLabel:SetTextColor(color_white)
     self.nameLabel:SetContentAlignment(5)
     self.nameLabel:Dock(TOP)
-    self.infoScroll = vgui.Create("DScrollPanel", self)
+    self.infoScroll = vgui.Create("liaScrollPanel", self)
     self.infoScroll:Dock(TOP)
+    self.infoScroll:InvalidateLayout(true) -- Ensure proper layout initialization
+    -- Ensure scrollbar is properly initialized
+    if not IsValid(self.infoScroll.VBar) then self.infoScroll:PerformLayout() end
     self.infoScroll:SetTall(self:GetTall() * 0.55)
     self.btnArea = vgui.Create("EditablePanel", self)
     self.btnArea:Dock(BOTTOM)

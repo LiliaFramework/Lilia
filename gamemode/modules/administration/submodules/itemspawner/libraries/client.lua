@@ -24,7 +24,7 @@
     end
 
     icon.OpenMenu = function()
-        local menu = DermaMenu()
+        local menu = lia.derma.dermaMenu()
         menu:AddOption(L("copy"), function() SetClipboardText(icon:GetSpawnName()) end):SetIcon("icon16/page_copy.png")
         menu:AddOption(L("giveToCharacter"), function()
             local popup = vgui.Create("DFrame")

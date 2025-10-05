@@ -20,7 +20,7 @@ function PANEL:Init()
     end
 
     self.arguments = {}
-    self.scroll = self:Add("DScrollPanel")
+    self.scroll = self:Add("liaScrollPanel")
     self.scroll:SetPos(4, 31)
     self.scroll:SetSize(width - 8, height - 66)
     self.scroll:GetVBar():SetWide(0)
@@ -108,7 +108,7 @@ function PANEL:setActive(state)
                     self.commandList = nil
                 end
 
-                self.commandList = self:Add("DScrollPanel")
+                self.commandList = self:Add("liaScrollPanel")
                 self.commandList:SetPos(4, 31)
                 self.commandList:SetSize(self:GetWide() - 8, self:GetTall() - 66)
                 self.commandList:GetVBar():SetWide(8)
@@ -258,12 +258,12 @@ function PANEL:addText(...)
     if CHAT_CLASS then markup = "<font=" .. (CHAT_CLASS.font or "liaChatFont") .. ">" end
     markup = hook.Run("ChatAddText", markup, ...) or markup
     for _, item in ipairs({...}) do
-        if type(item) == "IMaterial" then
+        if item and istable(item) and item.GetName and item.Width and item.Height then
             local matName = item:GetName()
             markup = markup .. "<img=" .. matName .. "," .. item:Width() .. "x" .. item:Height() .. ">"
         elseif IsColor(item) then
             markup = markup .. "<color=" .. item.r .. "," .. item.g .. "," .. item.b .. ">"
-        elseif type(item) == "Player" then
+        elseif IsValid(item) and item:IsPlayer() then
             local clr = team.GetColor(item:Team())
             markup = markup .. "<color=" .. clr.r .. "," .. clr.g .. "," .. clr.b .. ">" .. item:Name():gsub("<", "&lt;"):gsub(">", "&gt;"):gsub("#", "\226\128\139#")
         else

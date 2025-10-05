@@ -11,7 +11,7 @@ function PANEL:Init()
     self.access:AddColumn(L("doorAccess")).Header:SetTextColor(headerColor)
     self.access.OnClickLine = function(_, line)
         if not IsValid(line.player) then return end
-        local menu = DermaMenu()
+        local menu = lia.derma.dermaMenu()
         local ply = line.player
         local accessData = self.accessData
         local door = self.door

@@ -89,7 +89,7 @@ function PANEL:Init()
     staffOnDuty:SetTextColor(color_white)
     staffOnDuty:SetExpensiveShadow(1, color_black)
     staffOnDuty:SetContentAlignment(6)
-    local scroll = self:Add("DScrollPanel")
+    local scroll = self:Add("liaScrollPanel")
     scroll:Dock(FILL)
     scroll:DockMargin(1, 0, 1, 0)
     scroll.VBar:SetWide(0)
@@ -150,14 +150,16 @@ function PANEL:Init()
                 local cat = facCont:Add("DCollapsibleCategory")
                 cat:SetLabel("")
                 cat:SetExpanded(true)
-                cat.Header:SetTall(28)
-                cat.Header.Paint = function(_, ww, hh)
-                    local c = clsData.color or facColor
-                    surface.SetDrawColor(c.r, c.g, c.b, 80)
-                    surface.DrawRect(0, 0, ww, hh)
+                if IsValid(cat.Header) then
+                    cat.Header:SetTall(28)
+                    cat.Header.Paint = function(_, ww, hh)
+                        local c = clsData.color or facColor
+                        surface.SetDrawColor(c.r, c.g, c.b, 80)
+                        surface.DrawRect(0, 0, ww, hh)
+                    end
                 end
 
-                if clsData.logo and clsData.logo ~= "" then
+                if clsData.logo and clsData.logo ~= "" and IsValid(cat.Header) then
                     local ico = cat.Header:Add("DImage")
                     ico:Dock(LEFT)
                     ico:DockMargin(5, 4, 5, 4)
@@ -165,7 +167,13 @@ function PANEL:Init()
                     ico:SetMaterial(Material(clsData.logo))
                 end
 
-                local hlbl = cat.Header:Add("DLabel")
+                local hlbl
+                if IsValid(cat.Header) then
+                    hlbl = cat.Header:Add("DLabel")
+                else
+                    hlbl = vgui.Create("DLabel")
+                end
+
                 hlbl:Dock(LEFT)
                 hlbl:SetFont("liaMediumFont")
                 hlbl:SetTextColor(color_white)
@@ -263,7 +271,7 @@ function PANEL:addPlayer(ply, parent)
         local opts = {}
         hook.Run("ShowPlayerOptions", ply, opts)
         if #opts > 0 then
-            local menu = DermaMenu()
+            local menu = lia.derma.dermaMenu()
             for _, o in ipairs(opts) do
                 menu:AddOption(L(o.name), o.func):SetImage(o.image)
             end

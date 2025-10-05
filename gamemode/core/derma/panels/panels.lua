@@ -1,9 +1,10 @@
 ﻿local cacheKeys, cache, len = {}, {}, 0
 local function PaintPanel(_, w, h)
-    surface.SetDrawColor(0, 0, 0, 255)
-    surface.DrawOutlinedRect(0, 0, w, h, 2)
-    surface.SetDrawColor(0, 0, 0, 150)
-    surface.DrawRect(1, 1, w - 2, h - 2)
+    local radius = 16
+    -- Draw shadow/background
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
+    -- Draw main panel background
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
 local function PaintFrame(pnl, w, h)
@@ -12,8 +13,9 @@ local function PaintFrame(pnl, w, h)
         if btn and btn:IsValid() then
             btn:SetPos(w - 16, 4)
             btn:SetSize(24, 24)
-            btn:SetFont("marlett")
-            btn:SetText("r")
+            btn:SetFont("Marlett")
+            -- Use Unicode X symbol instead of Marlett "r"
+            btn:SetText("✕")
             btn:SetTextColor(Color(255, 255, 255))
             btn:PerformLayout()
         end
@@ -22,8 +24,8 @@ local function PaintFrame(pnl, w, h)
     end
 
     lia.util.drawBlur(pnl, 10)
-    surface.SetDrawColor(45, 45, 45, 200)
-    surface.DrawRect(0, 0, w, h)
+    local radius = 16
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(45, 45, 45, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
 end
 
 local BlurredDFrame = {}
@@ -140,7 +142,7 @@ function QuickPanel:Init()
     self.title:SetText(L"quickSettings")
     self.title:SetContentAlignment(4)
     self.title:SetTextInset(44, 0)
-    self.title:SetTextColor(color_white)
+    self.title:SetTextColor(lia.color.theme.text or color_white)
     self.title:SetExpensiveShadow(1, Color(0, 0, 0, 175))
     self.title.Paint = function(_, w, h)
         surface.SetDrawColor(lia.config.get("Color"))
@@ -152,7 +154,7 @@ function QuickPanel:Init()
     self.expand:SetText("")
     self.expand:SetFont("DermaDefaultBold")
     self.expand:SetPaintBackground(false)
-    self.expand:SetTextColor(color_white)
+    self.expand:SetTextColor(lia.color.theme.text or color_white)
     self.expand:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     self.expand:SetSize(36, 36)
     self.expand:SetPos(0, 0)
@@ -181,7 +183,7 @@ function QuickPanel:Init()
         end
     end
 
-    self.scroll = self:Add("DScrollPanel")
+    self.scroll = self:Add("liaScrollPanel")
     self.items = {}
     hook.Run("SetupQuickMenu", self)
     self:populateOptions()
@@ -223,7 +225,7 @@ function QuickPanel:addCategory(text)
     label:Dock(TOP)
     label:DockMargin(0, 1, 0, 0)
     label:SetFont("liaMediumFont")
-    label:SetTextColor(color_white)
+    label:SetTextColor(lia.color.theme.text or color_white)
     label:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     label:SetContentAlignment(5)
     label.Paint = function() end
@@ -239,7 +241,7 @@ function QuickPanel:addButton(text, cb)
     btn:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     btn:SetContentAlignment(4)
     btn:SetTextInset(8, 0)
-    btn:SetTextColor(color_white)
+    btn:SetTextColor(lia.color.theme.text or color_white)
     btn.Paint = paintButton
     if cb then btn.DoClick = cb end
     self.items[#self.items + 1] = btn
@@ -272,11 +274,11 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
     s:SetDecimals(dec or 0)
     s:SetValue(val or 0)
     s.Label:SetFont("liaMediumLightFont")
-    s.Label:SetTextColor(color_white)
+    s.Label:SetTextColor(lia.color.theme.text or color_white)
     s.Label:DockMargin(8, 0, 0, 0)
     local te = s:GetTextArea()
     te:SetFont("liaMediumLightFont")
-    te:SetTextColor(color_white)
+    te:SetTextColor(lia.color.theme.text or color_white)
     if cb then
         s.OnValueChanged = function(this, newVal)
             local r = math.Round(newVal, dec or 0)
@@ -291,7 +293,7 @@ end
 
 function QuickPanel:addCheck(text, cb, checked)
     local btn = self:addButton(text)
-    local chk = btn:Add("liaCheckbox")
+    local chk = vgui.Create("liaCheckbox", btn)
     chk:SetChecked(checked)
     chk:SetSize(22, 22)
     chk.OnChange = function(_, v) if cb then cb(btn, v) end end
@@ -305,11 +307,10 @@ function QuickPanel:setIcon(ch)
 end
 
 function QuickPanel:Paint(w, h)
-    surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawRect(0, 0, w, h)
+    local radius = 16
     lia.util.drawBlur(self)
-    surface.SetDrawColor(lia.config.get("Color"))
-    surface.DrawRect(0, 0, w, 36)
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
+    lia.derma.rect(0, 0, w, 36):Rad(radius):Color(lia.config.get("Color")):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
 function QuickPanel:populateOptions()
@@ -811,7 +812,7 @@ end
 
 function meta:Class(name, ...)
     local class = classes[name]
-    assert(class, "Class " .. name .. " does not exist.")
+    assert(class, L("classDoesNotExist", name))
     class(self, ...)
     return self
 end
