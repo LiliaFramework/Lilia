@@ -614,7 +614,7 @@ if SERVER then
             if reason and reason:find("An inventory has a missing item") then
                 lia.error(reason)
             else
-                lia.error("Failed to spawn item: " .. tostring(reason or "Unknown error"))
+                lia.error(L("failedToSpawnItem", tostring(reason or L("unknownError"))))
             end
 
             if callback then callback(nil) end

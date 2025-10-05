@@ -11,9 +11,32 @@ net.Receive("liaSetWaypointWithLogo", function()
     LocalPlayer():setWaypointWithLogo(name, pos, logo)
 end)
 
+net.Receive("liaLoadingFailure", function()
+    local reason = net.ReadString()
+    local details = net.ReadString()
+    local errorCount = net.ReadUInt(8)
+    if IsValid(lia.loadingFailurePanel) then lia.loadingFailurePanel:Remove() end
+    lia.loadingFailurePanel = vgui.Create("liaLoadingFailure")
+    lia.loadingFailurePanel:SetFailureInfo(reason, details)
+    for _ = 1, errorCount do
+        local errorMessage = net.ReadString()
+        local line = net.ReadString()
+        local file = net.ReadString()
+        lia.loadingFailurePanel:AddError(errorMessage, line, file)
+    end
+end)
+
 net.Receive("liaServerChatAddText", function()
     local args = net.ReadTable()
     chat.AddText(unpack(args))
+end)
+
+net.Receive("liaSyncGesture", function()
+    local entity = net.ReadEntity()
+    local a = net.ReadUInt(8)
+    local b = net.ReadUInt(8)
+    local c = net.ReadBool()
+    if IsValid(entity) then entity:AnimRestartGesture(a, b, c) end
 end)
 
 net.Receive("liaProvideServerPassword", function()
@@ -290,7 +313,7 @@ net.Receive("liaActBar", function()
 end)
 
 net.Receive("liaOpenInvMenu", function()
-    if not LocalPlayer():hasPrivilege("checkInventories") then return end
+    if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("checkInventories") then return end
     local target = net.ReadEntity()
     local index = net.ReadType()
     local targetInv = lia.inventory.instances[index]
@@ -310,89 +333,33 @@ lia.net.readBigTable("liaSendTableUI", function(data) lia.util.CreateTableUI(dat
 net.Receive("liaOptionsRequest", function()
     local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
-    local subTitleKey = net.ReadString()
+    net.ReadString() -- subTitleKey (unused)
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L(titleKey))
-    frame:SetSize(400, 300)
-    frame:Center()
-    frame:MakePopup()
-    frame.OnClose = function()
-        net.Start("liaOptionsRequestCancel")
-        net.WriteUInt(id, 32)
-        net.SendToServer()
-    end
-
-    local label = vgui.Create("DLabel", frame)
-    label:SetText(L(subTitleKey))
-    label:SetPos(10, 30)
-    label:SizeToContents()
-    label:SetTextColor(Color(255, 255, 255))
-    local list = vgui.Create("DPanelList", frame)
-    list:SetPos(10, 50)
-    list:SetSize(380, 200)
-    list:EnableVerticalScrollbar(true)
-    list:SetSpacing(5)
-    local selected = {}
-    local checkboxes = {}
-    for _, option in ipairs(options) do
-        local checkbox = vgui.Create("DCheckBoxLabel")
-        checkbox:SetText(L(option))
-        checkbox:SetValue(false)
-        checkbox:SizeToContents()
-        checkbox:SetTextColor(Color(255, 255, 255))
-        checkbox.OnChange = function(self, value)
-            if value then
-                if #selected < limit then
-                    table.insert(selected, option)
-                else
-                    self:SetValue(false)
-                end
-            else
-                for i, v in ipairs(selected) do
-                    if v == option then
-                        table.remove(selected, i)
-                        break
-                    end
-                end
-            end
-        end
-
-        list:AddItem(checkbox)
-        table.insert(checkboxes, checkbox)
-    end
-
-    local submitBtn = vgui.Create("DButton", frame)
-    submitBtn:SetText(L("submit"))
-    submitBtn:SetPos(10, 260)
-    submitBtn:SetSize(185, 30)
-    submitBtn.DoClick = function()
-        if #selected == 0 then
+    -- Use lia.derma.requestOptions with limit handling
+    lia.derma.requestOptions(L(titleKey), options, function(selectedOptions)
+        if selectedOptions == false then
+            -- User cancelled
             net.Start("liaOptionsRequestCancel")
             net.WriteUInt(id, 32)
             net.SendToServer()
-            frame:Close()
-            return
+        else
+            -- Apply limit if needed
+            if limit > 0 and #selectedOptions > limit then
+                local limited = {}
+                for i = 1, limit do
+                    if selectedOptions[i] then table.insert(limited, selectedOptions[i]) end
+                end
+
+                selectedOptions = limited
+            end
+
+            net.Start("liaOptionsRequest")
+            net.WriteUInt(id, 32)
+            net.WriteTable(selectedOptions)
+            net.SendToServer()
         end
-
-        net.Start("liaOptionsRequest")
-        net.WriteUInt(id, 32)
-        net.WriteTable(selected)
-        net.SendToServer()
-        frame:Close()
-    end
-
-    local cancelBtn = vgui.Create("DButton", frame)
-    cancelBtn:SetText(L("cancel"))
-    cancelBtn:SetPos(205, 260)
-    cancelBtn:SetSize(185, 30)
-    cancelBtn.DoClick = function()
-        net.Start("liaOptionsRequestCancel")
-        net.WriteUInt(id, 32)
-        net.SendToServer()
-        frame:Close()
-    end
+    end)
 end)
 
 net.Receive("liaProvideInteractOptions", function()
@@ -440,45 +407,22 @@ end)
 net.Receive("liaRequestDropdown", function()
     local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
-    local subTitleKey = net.ReadString()
+    net.ReadString() -- subTitleKey (unused)
     local options = net.ReadTable()
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L(titleKey))
-    frame:SetSize(500, 250)
-    frame:Center()
-    frame:MakePopup()
-    frame.OnClose = function()
-        net.Start("liaRequestDropdownCancel")
-        net.WriteUInt(id, 32)
-        net.SendToServer()
-    end
-
-    local dropdown = vgui.Create("DComboBox", frame)
-    dropdown:SetPos(15, 50)
-    dropdown:SetSize(470, 30)
-    dropdown:SetValue(L(subTitleKey))
-    for _, option in ipairs(options) do
-        dropdown:AddChoice(L(option))
-    end
-
-    dropdown.OnSelect = function(_, _, value)
-        net.Start("liaRequestDropdown")
-        net.WriteUInt(id, 32)
-        net.WriteString(value)
-        net.SendToServer()
-        frame:Close()
-    end
-
-    local cancelBtn = vgui.Create("DButton", frame)
-    cancelBtn:SetText(L("cancel"))
-    cancelBtn:SetPos(15, 200)
-    cancelBtn:SetSize(470, 35)
-    cancelBtn.DoClick = function()
-        net.Start("liaRequestDropdownCancel")
-        net.WriteUInt(id, 32)
-        net.SendToServer()
-        frame:Close()
-    end
+    -- Use lia.derma.requestDropdown
+    lia.derma.requestDropdown(L(titleKey), options, function(selectedText)
+        if selectedText == false then
+            -- User cancelled
+            net.Start("liaRequestDropdownCancel")
+            net.WriteUInt(id, 32)
+            net.SendToServer()
+        else
+            net.Start("liaRequestDropdown")
+            net.WriteUInt(id, 32)
+            net.WriteString(selectedText)
+            net.SendToServer()
+        end
+    end)
 end)
 
 net.Receive("liaArgumentsRequest", function()
@@ -506,61 +450,20 @@ net.Receive("liaStringRequest", function()
     local default = net.ReadString()
     if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
-    frame:SetSize(500, 250)
-    frame:Center()
-    frame:MakePopup()
-    frame:SetKeyboardInputEnabled(true)
-    local label = vgui.Create("DLabel", frame)
-    label:SetText(subTitle)
-    label:Dock(TOP)
-    label:DockMargin(10, 30, 10, 5)
-    local entry = vgui.Create("DTextEntry", frame)
-    entry:Dock(FILL)
-    entry:DockMargin(10, 5, 10, 40)
-    entry:SetValue(default)
-    entry:SelectAll()
-    entry.OnEnter = function()
-        net.Start("liaStringRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(entry:GetValue())
-        net.SendToServer()
-        frame:Remove()
-    end
-
-    local buttonPanel = vgui.Create("DPanel", frame)
-    buttonPanel:Dock(BOTTOM)
-    buttonPanel:SetTall(35)
-    buttonPanel:DockMargin(10, 5, 10, 5)
-    local submit = vgui.Create("DButton", buttonPanel)
-    submit:Dock(LEFT)
-    submit:SetWide((frame:GetWide() - 20) * 0.50)
-    submit:SetText(L("submit"))
-    submit.DoClick = function()
-        net.Start("liaStringRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(entry:GetValue())
-        net.SendToServer()
-        frame:Remove()
-    end
-
-    local cancel = vgui.Create("DButton", buttonPanel)
-    cancel:Dock(RIGHT)
-    cancel:SetWide((frame:GetWide() - 20) * 0.50)
-    cancel:SetText(L("cancel"))
-    cancel.DoClick = function()
-        net.Start("liaStringRequestCancel")
-        net.WriteUInt(id, 32)
-        net.SendToServer()
-        frame:Remove()
-    end
-
-    frame.OnClose = function()
-        net.Start("liaStringRequestCancel")
-        net.WriteUInt(id, 32)
-        net.SendToServer()
-    end
+    -- Use lia.derma.requestString
+    lia.derma.requestString(title, subTitle, function(value)
+        if value == false then
+            -- User cancelled
+            net.Start("liaStringRequestCancel")
+            net.WriteUInt(id, 32)
+            net.SendToServer()
+        else
+            net.Start("liaStringRequest")
+            net.WriteUInt(id, 32)
+            net.WriteString(value)
+            net.SendToServer()
+        end
+    end, default)
 end)
 
 local function OrganizeNotices()
@@ -631,6 +534,7 @@ net.Receive("liaBinaryQuestionRequest", function()
     local notice = CreateNoticePanel(10, manualDismiss)
     table.insert(lia.notices, notice)
     notice.isQuery = true
+    notice.text:SetText("")
     notice.text:SetText(L(questionKey))
     notice:SetPos(ScrW() / 2 - notice:GetWide() / 2, 4)
     notice:SetTall(36 * 2.3)
@@ -645,7 +549,7 @@ net.Receive("liaBinaryQuestionRequest", function()
     notice.oh = notice:GetTall()
     notice:SetTall(0)
     notice:SizeTo(notice:GetWide(), 36 * 2.3, 0.2, 0, -1, function()
-        notice.text:SetPos(0, 0)
+        notice.text:Center()
         local function styleOpt(o)
             o.color = Color(0, 0, 0, 30)
             AccessorFunc(o, "color", "Color")
@@ -754,24 +658,22 @@ net.Receive("liaButtonRequest", function()
         options[i] = net.ReadString()
     end
 
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L(titleKey))
-    frame:SetSize(500, 80 + count * 40)
-    frame:Center()
-    frame:MakePopup()
+    -- Convert options to button format for lia.derma.requestButtons
+    local buttons = {}
     for i, key in ipairs(options) do
-        local btn = frame:Add("DButton")
-        btn:Dock(TOP)
-        btn:DockMargin(15, 10, 15, 5)
-        btn:SetText(L(key))
-        btn.DoClick = function()
-            net.Start("liaButtonRequest")
-            net.WriteUInt(id, 32)
-            net.WriteUInt(i, 8)
-            net.SendToServer()
-            frame:Close()
-        end
+        table.insert(buttons, {
+            text = L(key),
+            callback = function()
+                net.Start("liaButtonRequest")
+                net.WriteUInt(id, 32)
+                net.WriteUInt(i, 8)
+                net.SendToServer()
+            end
+        })
     end
+
+    -- Use lia.derma.requestButtons
+    lia.derma.requestButtons(L(titleKey), buttons, function(selectedIndex) if selectedIndex and selectedIndex > 0 and selectedIndex <= #buttons then buttons[selectedIndex].callback() end end)
 end)
 
 net.Receive("liaAnimationStatus", function()
@@ -858,9 +760,9 @@ net.Receive("liaNetMessage", function()
     local args = net.ReadTable()
     if lia.net.registry[name] then
         local success, err = pcall(lia.net.registry[name], LocalPlayer(), unpack(args))
-        if not success then lia.error("Error in net message callback '" .. name .. "': " .. tostring(err)) end
+        if not success then lia.error(L("netMessageCallbackError", name, tostring(err))) end
     else
-        lia.error("Received unregistered net message: " .. name)
+        lia.error(L("unregisteredNetMessage", name))
     end
 end)
 
@@ -868,9 +770,9 @@ net.Receive("liaAssureClientSideAssets", function()
     lia.webimage.allowDownloads = true
     local webimages = lia.webimage.stored
     local websounds = lia.websound.stored
-    print("=== STARTING CLIENT-SIDE ASSET DOWNLOAD ===")
-    print("WebImages to download:", table.Count(webimages))
-    print("WebSounds to download:", table.Count(websounds))
+    print(L("assetDownloadStart"))
+    print(L("webImagesToDownload"), table.Count(webimages))
+    print(L("webSoundsToDownload"), table.Count(websounds))
     print("===========================================")
     local downloadQueue = {}
     local activeDownloads = 0
@@ -898,8 +800,8 @@ net.Receive("liaAssureClientSideAssets", function()
         })
     end
 
-    print("Download queue size:", #downloadQueue)
-    print("Processing with max concurrent downloads:", maxConcurrent)
+    print(L("downloadQueueSize"), #downloadQueue)
+    print(L("processingWithMaxConcurrentDownloads"), maxConcurrent)
     local function processNextDownload()
         if #downloadQueue == 0 then return end
         local download = table.remove(downloadQueue, 1)
@@ -909,12 +811,12 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if material then
                     completedImages = completedImages + 1
-                    if not fromCache then print(string.format("[?] Image downloaded: %s", download.name)) end
+                    if not fromCache then print(L("imageDownloaded") .. ": " .. download.name) end
                 else
                     failedImages = failedImages + 1
-                    local errorMessage = errorMsg or "Unknown error"
-                    print(string.format("[?] Image failed: %s - %s", download.name, errorMessage))
-                    chat.AddText(Color(255, 100, 100), "[Image Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
+                    local errorMessage = errorMsg or L("unknownError")
+                    print(L("imageFailed") .. ": " .. download.name .. " - " .. errorMessage)
+                    chat.AddText(Color(255, 100, 100), L("imageDownload"), Color(255, 255, 255), string.format(L("failedToDownloadImage", download.name, errorMessage)))
                 end
 
                 processNextDownload()
@@ -924,12 +826,12 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if path then
                     completedSounds = completedSounds + 1
-                    if not fromCache then print(string.format("[?] Sound downloaded: %s", download.name)) end
+                    if not fromCache then print(L("soundDownloaded") .. ": " .. download.name) end
                 else
                     failedSounds = failedSounds + 1
-                    local errorMessage = errorMsg or "Unknown error"
-                    print(string.format("[?] Sound failed: %s - %s", download.name, errorMessage))
-                    chat.AddText(Color(255, 100, 100), "[Sound Download] ", Color(255, 255, 255), string.format("Failed to download: %s (%s)", download.name, errorMessage))
+                    local errorMessage = errorMsg or L("unknownError")
+                    print(L("soundFailed") .. ": " .. download.name .. " - " .. errorMessage)
+                    chat.AddText(Color(255, 100, 100), "[Sound Download] ", Color(255, 255, 255), L("failedToDownloadSound", download.name, errorMessage))
                 end
 
                 processNextDownload()
@@ -951,21 +853,21 @@ net.Receive("liaAssureClientSideAssets", function()
                 local imageStats = lia.webimage.getStats()
                 local soundStats = lia.websound.getStats()
                 print("===========================================")
-                print("=== CLIENT-SIDE ASSETS DOWNLOAD COMPLETE ===")
-                print("Download Summary")
+                print(L("assetDownloadComplete"))
+                print(L("downloadSummary"))
                 print(string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
                 print(string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
-                print("Current Statistics")
+                print(L("currentStatistics"))
                 print(string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
                 print(string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
                 print(string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
                 print("===========================================")
                 if failedImages > 0 or failedSounds > 0 then
-                    print("WARNING: Some assets failed to download. Check console output above for details.")
-                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %d image(s) failed to download. Check console for details.", failedImages)) end
-                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), string.format("Warning: %d sound(s) failed to download. Check console for details.", failedSounds)) end
+                    print(L("warningAssetsFailedToDownload"))
+                    if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), L("assetsDownloadWarning", failedImages, "image(s)")) end
+                    if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), L("assetsDownloadWarning", failedSounds, "sound(s)")) end
                 else
-                    chat.AddText(Color(100, 255, 100), "[Asset Download] ", Color(255, 255, 255), "All assets downloaded successfully!")
+                    chat.AddText(Color(100, 255, 100), "[Asset Download] ", Color(255, 255, 255), L("allAssetsDownloadedSuccessfully"))
                 end
             end)
         else

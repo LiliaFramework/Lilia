@@ -288,8 +288,22 @@ function SWEP:PrimaryAttack()
             local target = trace.Entity
             local lethalityEnabled = lia.config.get("PunchLethality", true)
             if target:IsPlayer() and not lethalityEnabled then
-                local ragdollTime = hook.Run("GetPlayerPunchRagdollTime", self:GetOwner(), target) or lia.config.get("PunchRagdollTime", 25)
-                target:setRagdolled(true, ragdollTime)
+                -- Only ragdoll if the punch would kill the player
+                if target:Health() - damage <= 0 then
+                    local ragdollTime = hook.Run("GetPlayerPunchRagdollTime", self:GetOwner(), target) or lia.config.get("PunchRagdollTime", 25)
+                    target:setRagdolled(true, ragdollTime)
+                else
+                    -- Apply damage normally if punch wouldn't kill
+                    local dmgInfo = DamageInfo()
+                    dmgInfo:SetAttacker(self:GetOwner())
+                    dmgInfo:SetInflictor(self)
+                    dmgInfo:SetDamage(damage)
+                    dmgInfo:SetDamageType(DMG_GENERIC)
+                    dmgInfo:SetDamagePosition(trace.HitPos)
+                    dmgInfo:SetDamageForce(self:GetOwner():GetAimVector() * 1024)
+                    target:DispatchTraceAttack(dmgInfo, startPos, endPos)
+                end
+
                 self:GetOwner():EmitSound("physics/body/body_medium_impact_hard" .. math.random(1, 6) .. ".wav", 80)
             else
                 local dmgInfo = DamageInfo()

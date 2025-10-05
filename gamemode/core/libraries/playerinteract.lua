@@ -278,7 +278,7 @@ else
             surface.SetDrawColor(Color(60, 60, 60))
         end
 
-        local scroll = frame:Add("DScrollPanel")
+        local scroll = frame:Add("liaScrollPanel")
         scroll:SetPos(0, titleH + titleY + gap)
         scroll:SetSize(frameW, frameH - titleH - titleY - gap)
         local layout = vgui.Create("DListLayout", scroll)

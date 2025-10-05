@@ -15,7 +15,7 @@ hook.Add("WarningIssued", "AdvancedWarningLogger", function(admin, target, reaso
         server_name = GetHostName()
     }
 
-    print("Advanced Warning Log:", util.TableToJSON(logEntry, true))
+    print(L("advancedWarningLog"), util.TableToJSON(logEntry, true))
 end)
 
 hook.Add("WarningRemoved", "AdvancedWarningRemovalLogger", function(admin, target, warning, index)
@@ -35,5 +35,5 @@ hook.Add("WarningRemoved", "AdvancedWarningRemovalLogger", function(admin, targe
         server_name = GetHostName()
     }
 
-    print("Advanced Warning Removal Log:", util.TableToJSON(logEntry, true))
+    print(L("advancedWarningRemovalLog"), util.TableToJSON(logEntry, true))
 end)

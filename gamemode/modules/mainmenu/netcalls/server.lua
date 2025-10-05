@@ -28,7 +28,7 @@
             end
 
             local unloadedCount = lia.char.unloadUnusedCharacters(client, id)
-            if unloadedCount > 0 then lia.information("Unloaded " .. unloadedCount .. " unused characters for " .. client:Name()) end
+            if unloadedCount > 0 then lia.information(L("unloadedUnusedCharacters") .. " " .. unloadedCount .. " " .. L("forPlayer") .. " " .. client:Name()) end
             hook.Run("PrePlayerLoadedChar", client, character, currentChar)
             character:setup()
             hook.Run("PlayerLoadedChar", client, character, currentChar)
@@ -57,7 +57,7 @@
     end
 
     local unloadedCount = lia.char.unloadUnusedCharacters(client, id)
-    if unloadedCount > 0 then lia.information("Unloaded " .. unloadedCount .. " unused characters for " .. client:Name()) end
+    if unloadedCount > 0 then lia.information(L("unloadedUnusedCharacters") .. " " .. unloadedCount .. " " .. L("forPlayer") .. " " .. client:Name()) end
     hook.Run("PrePlayerLoadedChar", client, character, currentChar)
     character:setup()
     hook.Run("PlayerLoadedChar", client, character, currentChar)
@@ -136,12 +136,12 @@ hook.Add("PlayerLoadedChar", "StaffCharacterDiscordPrompt", function(client, cha
     if character:getFaction() ~= FACTION_STAFF then return end
     local storedDiscord = client:getLiliaData("staffDiscord")
     if storedDiscord and storedDiscord ~= "" then
-        local description = "A Staff Character, Discord: " .. storedDiscord .. ", SteamID: " .. client:SteamID()
+        local description = L("staffCharacterDiscordSteamID", storedDiscord, client:SteamID())
         character:setDesc(description)
         return
     end
 
-    if character:getDesc() == "" or character:getDesc():find("^A Staff Character") then
+    if character:getDesc() == "" or character:getDesc():find(L("staffCharacter")) then
         timer.Simple(2, function()
             if IsValid(client) and client:getChar() == character then
                 net.Start("liaStaffDiscordPrompt")

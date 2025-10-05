@@ -31,7 +31,8 @@ function SWEP:DrawHUD()
     local client = LocalPlayer()
     local x, y = ScrW() / 2, ScrH() / 2
     local target = IsValid(client.AdminStickTarget) and client.AdminStickTarget or client:GetEyeTrace().Entity
-    local crossColor = Color(0, 255, 0)
+    local themeColors = lia.color.ReturnMainAdjustedColors()
+    local crossColor = themeColors.text
     local information = {}
     if IsValid(target) then
         if not target:IsPlayer() then
@@ -85,7 +86,7 @@ function SWEP:DrawHUD()
         surface.DrawRect(boxX, boxY, boxWidth, boxHeight)
         local startPosX, startPosY, buffer = boxX + 10, boxY + 10, 0
         for _, v in pairs(information) do
-            surface.SetTextColor(color_black)
+            surface.SetTextColor(lia.color.darken(themeColors.text, 0.5))
             surface.SetTextPos(startPosX + 1, startPosY + buffer + 1)
             surface.DrawText(v)
             surface.SetTextColor(crossColor)

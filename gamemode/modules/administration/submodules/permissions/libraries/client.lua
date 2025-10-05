@@ -189,7 +189,7 @@ net.Receive("liaDisplayCharList", function()
             if not (ln and ln.CharID) then return end
             if not (lia.command.hasAccess(LocalPlayer(), "charban") or lia.command.hasAccess(LocalPlayer(), "charwipe") or lia.command.hasAccess(LocalPlayer(), "charunban") or lia.command.hasAccess(LocalPlayer(), "charbanoffline") or lia.command.hasAccess(LocalPlayer(), "charwipeoffline") or lia.command.hasAccess(LocalPlayer(), "charunbanoffline")) then return end
             local owner = ln.SteamID and lia.util.getBySteamID(ln.SteamID)
-            local dMenu = DermaMenu()
+            local dMenu = lia.derma.dermaMenu()
             if IsValid(owner) then
                 if lia.command.hasAccess(LocalPlayer(), "charban") then
                     local opt1 = dMenu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. ln.CharID .. '"') end)

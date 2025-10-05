@@ -104,7 +104,7 @@ function PANEL:loadBackground()
             self.rightArrow = nil
         end
 
-        local url = lia.config.get("BackgroundURL")
+        local url = lia.config.get("BackgroundURL") or ""
         if url and url:find("%S") then
             self.background = self:Add("DHTML")
             self.background:SetSize(ScrW(), ScrH())
@@ -117,7 +117,7 @@ function PANEL:loadBackground()
             self.background.OnDocumentReady = function() if IsValid(self.bgLoader) then self.bgLoader:AlphaTo(0, 2, 1, function() self.bgLoader:Remove() end) end end
             self.background:MoveToBack()
             self.background:SetZPos(-999)
-            if lia.config.get("CharMenuBGInputDisabled") then
+            if lia.config.get("CharMenuBGInputDisabled", true) then
                 self.background:SetMouseInputEnabled(false)
                 self.background:SetKeyboardInputEnabled(false)
             end
@@ -142,7 +142,7 @@ function PANEL:createStartButton()
 
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
-    local logoPath = lia.config.get("CenterLogo")
+    local logoPath = lia.config.get("CenterLogo") or ""
     local discordURL = lia.config.get("DiscordURL", "")
     local workshopURL = lia.config.get("Workshop", "")
     local buttonsData = {}
@@ -163,7 +163,7 @@ function PANEL:createStartButton()
     if hook.Run("CanPlayerCreateChar", client) ~= false then
         table.insert(buttonsData, {
             id = "create",
-            text = "Create Character",
+            text = L("createCharacter"),
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -180,7 +180,7 @@ function PANEL:createStartButton()
     if hasNonStaffChar then
         table.insert(buttonsData, {
             id = "load",
-            text = "Load Character",
+            text = L("loadCharacter"),
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -204,7 +204,7 @@ function PANEL:createStartButton()
     if client:hasPrivilege("createStaffCharacter") and not client:isStaffOnDuty() then
         table.insert(buttonsData, {
             id = "staff",
-            text = hasStaffChar and "Load Staff Character" or "Create Staff Character",
+            text = hasStaffChar and L("loadStaffCharacter") or L("createStaffCharacter"),
             doClick = function()
                 for _, b in pairs(self.buttons) do
                     if IsValid(b) then b:Remove() end
@@ -229,7 +229,7 @@ function PANEL:createStartButton()
     if discordURL ~= "" then
         table.insert(buttonsData, {
             id = "discord",
-            text = "Discord",
+            text = L("discord"),
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(discordURL)
@@ -240,7 +240,7 @@ function PANEL:createStartButton()
     if workshopURL ~= "" then
         table.insert(buttonsData, {
             id = "workshop",
-            text = "Workshop",
+            text = L("workshop"),
             doClick = function()
                 self:clickSound()
                 gui.OpenURL(workshopURL)
@@ -251,7 +251,7 @@ function PANEL:createStartButton()
     if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then
         table.insert(buttonsData, {
             id = "mount",
-            text = "Mount Content",
+            text = L("mountContent"),
             doClick = function()
                 self:clickSound()
                 if lia.workshop and lia.workshop.mountContent then
@@ -266,7 +266,7 @@ function PANEL:createStartButton()
 
     table.insert(buttonsData, {
         id = "disconnect",
-        text = "Disconnect",
+        text = L("disconnect"),
         doClick = function()
             self:clickSound()
             RunConsoleCommand("disconnect")
@@ -276,7 +276,7 @@ function PANEL:createStartButton()
     if clientChar then
         table.insert(buttonsData, {
             id = "return",
-            text = "Return",
+            text = L("returnButton"),
             doClick = function() self:Remove() end
         })
     end
@@ -434,7 +434,7 @@ function PANEL:createStaffCharacter()
         groups = {}
     }
 
-    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or "Failed to create staff character") end)
+    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or L("failedToCreateStaffCharacter")) end)
 end
 
 function PANEL:updateSelectedCharacter()
@@ -478,8 +478,11 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.infoFrame:SetTitle("")
     self.infoFrame:SetDraggable(false)
     self.infoFrame:ShowCloseButton(false)
-    local scroll = vgui.Create("DScrollPanel", self.infoFrame)
+    local scroll = vgui.Create("liaScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
+    scroll:InvalidateLayout(true) -- Ensure proper layout initialization
+    -- Ensure scrollbar is properly initialized
+    if not IsValid(scroll.VBar) then scroll:PerformLayout() end
     for i, text in ipairs(info) do
         if i == 1 then
             local line = scroll:Add("DPanel")
@@ -490,14 +493,14 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             local nameLabel = line:Add("DLabel")
             nameLabel:Dock(LEFT)
             nameLabel:SetFont("liaSmallFont")
-            nameLabel:SetTextColor(Color(255, 255, 255))
+            nameLabel:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
             nameLabel:SetText(text)
             nameLabel:SizeToContents()
             nameLabel.Paint = function() end
             local countLabel = line:Add("DLabel")
             countLabel:Dock(RIGHT)
             countLabel:SetFont("liaSmallFont")
-            countLabel:SetTextColor(Color(255, 255, 255))
+            countLabel:SetTextColor(lia.color.theme.gray or Color(255, 255, 255))
             countLabel:SetText(index .. "/" .. total)
             countLabel:SizeToContents()
             countLabel.Paint = function() end
@@ -508,7 +511,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             lbl:SetFont("liaSmallFont")
             lbl:SetWrap(true)
             lbl:SetAutoStretchVertical(true)
-            lbl:SetTextColor(Color(255, 255, 255))
+            lbl:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
             lbl:SetText(text)
             lbl:SizeToContentsY()
         end
@@ -535,14 +538,14 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         label:Dock(TOP)
         label:DockMargin(10, 3, 10, 5)
         label:SetFont("liaSmallFont")
-        label:SetTextColor(Color(255, 255, 255))
+        label:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
         label:SetText(entry.attr.name)
         label:SetContentAlignment(5)
         label:SizeToContentsY()
         local progressBar = scroll:Add("DProgressBar")
         progressBar:Dock(TOP)
         progressBar:DockMargin(10, 0, 10, 10)
-        progressBar:SetBarColor(entry.attr.color or lia.config.get("Color"))
+        progressBar:SetBarColor(entry.attr.color or lia.config.get("Color") or Color(255, 255, 255))
         progressBar:SetFraction(math.Clamp(currentValue / maxValue, 0, 1))
         progressBar:SetText(currentValue .. "/" .. maxValue)
         progressBar.Font = "liaSmallFont"
@@ -568,7 +571,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.selectBtn:SetText(selectText)
     if clientChar and character:getID() == clientChar:getID() then
         self.selectBtn:SetEnabled(false)
-        self.selectBtn:SetTextColor(Color(255, 255, 255))
+        self.selectBtn:SetTextColor(lia.color.theme.gray or Color(255, 255, 255))
     end
 
     self.selectBtn.DoClick = function()
@@ -610,7 +613,67 @@ function PANEL:updateModelEntity(character)
     end
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)
-    local pos, ang = hook.Run("GetMainMenuPosition", character)
+    -- Initialize default position and angle
+    local pos, ang = nil, nil
+    -- Check if the character's faction has a custom main menu position FIRST
+    -- Factions can define a mainMenuPosition property to control where the character appears in the main menu
+    -- Usage in faction definition:
+    -- FACTION_CITIZEN = lia.faction.register("citizen", {
+    --     name = "Citizen",
+    --     desc = "A regular citizen",
+    --     color = Color(255, 125, 0),
+    --     mainMenuPosition = {
+    --         ["rp_nycity_day"] = { -- Map-specific positions
+    --             position = Vector(0, 0, 0),
+    --             angles = Angle(0, 180, 0)
+    --         },
+    --         ["rp_downtown_v4c"] = { -- Different position for another map
+    --             position = Vector(100, 0, 0),
+    --             angles = Angle(0, 90, 0)
+    --         }
+    --     }
+    -- })
+    -- Or for a single position that works on all maps:
+    -- mainMenuPosition = {
+    --     position = Vector(0, 0, 0),
+    --     angles = Angle(0, 180, 0)
+    -- }
+    -- Or for simple position-only changes:
+    -- mainMenuPosition = Vector(100, 0, 0)
+    if character and character:getFaction() then
+        local faction = lia.faction.get(character:getFaction())
+        if faction and faction.mainMenuPosition then
+            local menuPos = faction.mainMenuPosition
+            local currentMap = game.GetMap()
+            if istable(menuPos) then
+                -- Check if this is a map-based table
+                if menuPos[currentMap] then
+                    -- Map-specific position exists
+                    local mapPos = menuPos[currentMap]
+                    if istable(mapPos) then
+                        pos = mapPos.position or pos
+                        ang = mapPos.angles or ang
+                    elseif isvector(mapPos) then
+                        pos = mapPos
+                    end
+                elseif menuPos.position then
+                    -- Fallback to general position/angles if no map-specific entry
+                    pos = menuPos.position or pos
+                    ang = menuPos.angles or ang
+                else
+                    -- Legacy support for direct vector/angle table
+                    pos = menuPos.position or pos
+                    ang = menuPos.angles or ang
+                end
+            elseif isvector(menuPos) then
+                -- Legacy support for direct vector
+                pos = menuPos
+            end
+        end
+    end
+
+    -- Only call the hook if no faction position was set
+    if not pos or not ang then pos, ang = hook.Run("GetMainMenuPosition", character) end
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")
         pos = #spawns > 0 and spawns[1]:GetPos() or Vector()

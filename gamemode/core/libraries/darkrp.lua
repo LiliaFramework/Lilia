@@ -52,7 +52,7 @@ else
     function lia.darkrp.textWrap(text, fontName, maxLineWidth)
         local accumulatedWidth = 0
         surface.SetFont(fontName)
-        local spaceWidth = surface.GetTextSize(' ')
+        local spaceWidth = surface.GetTextSize(" ")
         text = text:gsub("(%s?[%S]+)", function(word)
             local firstChar = string.sub(word, 1, 1)
             if firstChar == "\n" or firstChar == "\t" then accumulatedWidth = 0 end
@@ -66,13 +66,13 @@ else
                 return word
             end
 
-            if firstChar == ' ' then
+            if firstChar == " " then
                 accumulatedWidth = wordWidth - spaceWidth
-                return '\n' .. string.sub(word, 2)
+                return "\n" .. string.sub(word, 2)
             end
 
             accumulatedWidth = wordWidth
-            return '\n' .. word
+            return "\n" .. word
         end)
         return text
     end
@@ -111,7 +111,7 @@ function DarkRP.defineChatCommand(cmd, callback)
         onRun = function(client, args)
             local success, result = pcall(callback, client, unpack(args))
             if not success then
-                ErrorNoHalt("Error in DarkRP chat command '" .. cmd .. "': " .. result)
+                ErrorNoHalt(L("darkRPChatCommandError", cmd, result))
                 return
             end
 
@@ -128,7 +128,7 @@ function DarkRP.definePrivilegedChatCommand(cmd, priv, callback)
         onRun = function(client, args)
             local success, result = pcall(callback, client, unpack(args))
             if not success then
-                ErrorNoHalt("Error in DarkRP privileged chat command '" .. cmd .. "': " .. result)
+                ErrorNoHalt(L("darkRPPrivilegedChatCommandError", cmd, result))
                 return
             end
 

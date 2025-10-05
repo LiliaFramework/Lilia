@@ -60,7 +60,7 @@ local function ensureDefaults(groups)
 end
 
 ensureDefaults(lia.administrator.groups)
-local function getPrivilegeCategory(privilegeName)
+function getPrivilegeCategory(privilegeName)
     local categoryChecks = {
         {
             match = function(name) return string.match(name, "^tool_") end,
@@ -230,7 +230,7 @@ end
 
 function lia.administrator.hasAccess(ply, privilege)
     if not isstring(privilege) then
-        lia.error("hasAccess expected a string privilege, got " .. tostring(privilege))
+        lia.error(L("hasAccessExpectedString", tostring(privilege)))
         return false
     end
 
@@ -325,7 +325,7 @@ end
 
 function lia.administrator.registerPrivilege(priv)
     if not priv or not priv.ID then
-        lia.error("Privilege registration requires an ID field")
+        lia.error(L("privilegeRegistrationError"))
         return
     end
 
@@ -416,7 +416,8 @@ function lia.administrator.load()
             camiBootstrapFromExisting()
         end
 
-        lia.admin(L("adminSystemLoaded"))
+        MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
+        MsgC(Color(255, 153, 0), L("adminSystemLoaded"), "\n")
         hook.Run("OnAdminSystemLoaded", lia.administrator.groups or {}, lia.administrator.privileges or {})
     end
 
@@ -635,7 +636,7 @@ if SERVER then
             }, nil, "staffactions")
             return true
         elseif cmd == "ban" then
-            target:banPlayer(reason, dur, admin)
+            target:banPlayer(reason, tonumber(dur) or 0, admin)
             admin:notifySuccessLocalized("plyBanned")
             lia.log.add(admin, "plyBan", target:Name())
             return true
@@ -687,7 +688,7 @@ if SERVER then
             return true
         elseif cmd == "freeze" then
             target:Freeze(true)
-            local duration = dur or 0
+            local duration = tonumber(dur) or 0
             if duration > 0 then timer.Simple(duration, function() if IsValid(target) then target:Freeze(false) end end) end
             lia.log.add(admin, "plyFreeze", target:Name(), duration)
             return true
@@ -772,7 +773,7 @@ if SERVER then
             lia.log.add(admin, "plyUngod", target:Name())
             return true
         elseif cmd == "ignite" then
-            local duration = dur or 5
+            local duration = tonumber(dur) or 5
             target:Ignite(duration)
             lia.log.add(admin, "plyIgnite", target:Name(), duration)
             return true
@@ -810,7 +811,7 @@ if SERVER then
             net.Start("liaBlindTarget")
             net.WriteBool(true)
             net.Send(target)
-            local duration = dur or 0
+            local duration = tonumber(dur) or 0
             if duration > 0 then
                 timer.Create("liaBlind" .. target:SteamID(), duration, 1, function()
                     if IsValid(target) then
@@ -919,6 +920,9 @@ else
             return true
         elseif cmd == "unblind" then
             RunConsoleCommand("say", "/plyunblind " .. string.format("'%s'", tostring(id)))
+            return true
+        elseif cmd == "spectate" then
+            RunConsoleCommand("say", "/plyspectate " .. string.format("'%s'", tostring(id)))
             return true
         end
     end
@@ -1101,7 +1105,8 @@ else
             Staff = "boolean",
             User = "boolean",
             VIP = "boolean"
-        }, function(data)
+        }, function(success, data)
+            if not success then return end
             local name = string.Trim(tostring(data.Name or ""))
             if name == "" then return end
             local types = {}
@@ -1128,37 +1133,14 @@ else
         lia.gui.usergroups.checks = lia.gui.usergroups.checks or {}
         lia.gui.usergroups.checks[g] = lia.gui.usergroups.checks[g] or {}
         local function addRow(list, name)
-            local row = list:Add("DPanel")
+            local row = list:Add("liaPrivilegeRow")
             row:Dock(TOP)
+            row:SetTall(50)
             row:DockMargin(0, 0, 0, 8)
-            local displayKey = lia.administrator.privilegeNames[name] or name
-            local isUsergroup = false
-            local font = isUsergroup and "liaBigFont" or "liaMediumFont"
-            local boxSize = 72
-            local rightOffset = isUsergroup and 16 or 12
-            surface.SetFont(font)
-            local _, textHeight = surface.GetTextSize("W")
-            local rowHeight = math.max(textHeight + 28, boxSize + 14)
-            row:SetTall(rowHeight)
-            row.Paint = function(pnl, w, h) derma.SkinHook("Paint", "Panel", pnl, w, h) end
-            local lbl = row:Add("DLabel")
-            lbl:Dock(FILL)
-            lbl:DockMargin(8, 0, isUsergroup and 16 or 0, 0)
-            lbl:SetText(L(displayKey))
-            lbl:SetFont(font)
-            lbl:SetContentAlignment(4)
-            local chk = row:Add("liaCheckbox")
-            chk:SetSize(boxSize, boxSize)
-            row.PerformLayout = function(_, w, h) chk:SetPos(w - boxSize - rightOffset, h - boxSize) end
-            chk:SetChecked(current[name] and true or false)
+            row:SetPrivilege(name, current[name] and true or false, editable)
             if editable then
-                chk.OnChange = function(_, v)
-                    if chk._suppress then
-                        chk._suppress = false
-                        return
-                    end
-
-                    if v then
+                row.OnChange = function(_, value)
+                    if value then
                         current[name] = true
                     else
                         current[name] = nil
@@ -1167,15 +1149,12 @@ else
                     net.Start("liaGroupsSetPerm")
                     net.WriteString(g)
                     net.WriteString(name)
-                    net.WriteBool(v)
+                    net.WriteBool(value)
                     net.SendToServer()
                 end
-            else
-                chk:SetMouseInputEnabled(false)
-                chk:SetCursor("arrow")
             end
 
-            lia.gui.usergroups.checks[g][name] = chk
+            lia.gui.usergroups.checks[g][name] = row
         end
 
         local ordered = computeCategoryMap(groups)
@@ -1184,7 +1163,7 @@ else
         local headerH = math.max(hfh + 18, 36)
         for _, cat in ipairs(ordered) do
             local wrap = vgui.Create("DPanel")
-            wrap.Paint = function(pnl, w, h) derma.SkinHook("Paint", "InnerPanel", pnl, w, h) end
+            wrap.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[3]):Shape(lia.derma.SHAPE_IOS):Draw() end
             local list = vgui.Create("DListLayout", wrap)
             list:Dock(TOP)
             list:DockMargin(8, 8, 8, 8)
@@ -1203,6 +1182,10 @@ else
                 header:SetTall(headerH)
                 header:SetTextInset(12, 0)
                 header:SetContentAlignment(4)
+                header.Paint = function(_, w, h)
+                    lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw()
+                    draw.SimpleText(cat.label, "liaBigFont", 12, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
             end
         end
 
@@ -1319,7 +1302,15 @@ else
 
     lia.net.readBigTable("liaUpdateAdminGroups", function(tbl)
         lia.administrator.groups = tbl
-        if IsValid(lia.gui.usergroups) then buildGroupsUI(lia.gui.usergroups, tbl) end
+        if IsValid(lia.gui.usergroups) then
+            if lia.gui.usergroups.groupsList then
+                -- New interface
+                lia.gui.usergroups.groupsList:SetGroups(tbl)
+            else
+                -- Fallback to old interface
+                buildGroupsUI(lia.gui.usergroups, tbl)
+            end
+        end
     end)
 
     lia.net.readBigTable("liaUpdateAdminPrivileges", function(tbl)
@@ -1343,14 +1334,112 @@ else
             lia.administrator.groups[group][privilege] = nil
         end
 
-        if IsValid(lia.gui.usergroups) and lia.gui.usergroups.checks and lia.gui.usergroups.checks[group] then
-            local chk = lia.gui.usergroups.checks[group][privilege]
-            if IsValid(chk) and chk:GetChecked() ~= value then
-                chk._suppress = true
-                chk:SetChecked(value)
+        if IsValid(lia.gui.usergroups) then
+            if lia.gui.usergroups.groupsList then
+                -- New interface - refresh the group details if the current group is the one being updated
+                local selectedGroup = lia.gui.usergroups.groupsList:GetSelectedGroup()
+                if selectedGroup == group and lia.gui.usergroups.updateGroupDetails then lia.gui.usergroups.updateGroupDetails(group) end
+            elseif lia.gui.usergroups.checks and lia.gui.usergroups.checks[group] then
+                -- Fallback to old interface
+                local chk = lia.gui.usergroups.checks[group][privilege]
+                if IsValid(chk) and chk:GetChecked() ~= value then
+                    chk._suppress = true
+                    chk:SetChecked(value)
+                end
             end
         end
     end)
+
+    local function SetupUserGroupInterface(parent)
+        -- Main container
+        local container = parent:Add("DPanel")
+        container:Dock(FILL)
+        container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+        -- Groups list
+        local groupsList = container:Add("liaUserGroupList")
+        groupsList:Dock(LEFT)
+        groupsList:SetWide(200)
+        groupsList:DockMargin(10, 5, 5, 10)
+        -- Group details
+        local groupDetails = container:Add("DPanel")
+        groupDetails:Dock(FILL)
+        groupDetails:DockMargin(5, 5, 10, 10)
+        groupDetails.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw() end
+        -- Bottom buttons
+        local bottom = container:Add("DPanel")
+        bottom:Dock(BOTTOM)
+        bottom:SetTall(50)
+        bottom:DockMargin(10, 5, 10, 10)
+        bottom.Paint = function() end
+        -- Create group button
+        local createBtn = vgui.Create("liaButton", bottom)
+        createBtn:Dock(LEFT)
+        createBtn:SetWide(120)
+        createBtn:DockMargin(0, 0, 10, 0)
+        createBtn:SetTxt(L("create") .. " " .. L("group"))
+        createBtn.DoClick = function() promptCreateGroup() end
+        -- Rename group button
+        local renameBtn = vgui.Create("liaButton", bottom)
+        renameBtn:Dock(LEFT)
+        renameBtn:SetWide(120)
+        renameBtn:DockMargin(0, 0, 10, 0)
+        renameBtn:SetTxt(L("rename") .. " " .. L("group"))
+        renameBtn.DoClick = function()
+            local selectedGroup = groupsList:GetSelectedGroup()
+            if not selectedGroup then return end
+            Derma_StringRequest(L("rename") .. " " .. L("group"), L("renameGroupPrompt", selectedGroup) .. ":", selectedGroup, function(txt)
+                txt = string.Trim(txt or "")
+                if txt ~= "" and txt ~= selectedGroup then
+                    net.Start("liaGroupsRename")
+                    net.WriteString(selectedGroup)
+                    net.WriteString(txt)
+                    net.SendToServer()
+                end
+            end)
+        end
+
+        -- Delete group button
+        local deleteBtn = vgui.Create("liaButton", bottom)
+        deleteBtn:Dock(LEFT)
+        deleteBtn:SetWide(120)
+        deleteBtn:DockMargin(0, 0, 10, 0)
+        deleteBtn:SetTxt(L("delete") .. " " .. L("group"))
+        deleteBtn.DoClick = function()
+            local selectedGroup = groupsList:GetSelectedGroup()
+            if not selectedGroup then return end
+            Derma_Query(L("deleteGroupPrompt", selectedGroup), L("confirm"), L("yes"), function()
+                net.Start("liaGroupsRemove")
+                net.WriteString(selectedGroup)
+                net.SendToServer()
+            end, L("no"))
+        end
+
+        -- Function to update group details
+        local function updateGroupDetails(groupName)
+            if not groupName or not lia.administrator.groups[groupName] then
+                groupDetails:Clear()
+                return
+            end
+
+            groupDetails:Clear()
+            local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[groupName] ~= nil
+            local editable = not isDefault
+            -- Privileges container
+            local privContainer = groupDetails:Add("DPanel")
+            privContainer:Dock(FILL)
+            privContainer:DockMargin(20, 0, 20, 20)
+            privContainer.Paint = function() end
+            buildPrivilegeList(privContainer, groupName, lia.administrator.groups, editable)
+        end
+
+        -- Connect the group list to the details panel
+        groupsList.OnGroupSelected = function(_, groupName) updateGroupDetails(groupName) end
+        -- Set initial groups
+        groupsList:SetGroups(lia.administrator.groups)
+        -- Store references for updates
+        parent.groupsList = groupsList
+        parent.updateGroupDetails = updateGroupDetails
+    end
 
     hook.Add("PopulateAdminTabs", "liaAdmin", function(pages)
         if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("manageUsergroups") then return end
@@ -1362,7 +1451,8 @@ else
                 parent:Clear()
                 parent:DockPadding(10, 10, 10, 10)
                 parent.Paint = function(p, w, h) derma.SkinHook("Paint", "Frame", p, w, h) end
-                buildGroupsUI(parent, lia.administrator.groups)
+                -- Create the user group interface directly in the parent panel
+                SetupUserGroupInterface(parent)
                 net.Start("liaGroupsRequest")
                 net.SendToServer()
             end

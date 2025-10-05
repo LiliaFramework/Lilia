@@ -61,7 +61,7 @@ function lia.config.getOptions(key)
             end
             return result
         else
-            print("Warning: Config options function for '" .. key .. "' failed or returned invalid result")
+            print(L("configOptionsFunctionWarning", key))
             return {}
         end
     elseif istable(config.data.options) then
@@ -116,6 +116,8 @@ function lia.config.get(key, default)
             return config.default
         end
     end
+
+    if key == "Color" and CLIENT then return lia.color.getMainColor() end
     return default
 end
 
@@ -217,7 +219,7 @@ if SERVER then
     end
 end
 
-lia.config.add("MoneyModel", "moneyModel", "models/props_lab/box01a.mdl", nil, {
+lia.config.add("MoneyModel", "moneyModel", "models/props/cs_office/money.mdl", nil, {
     desc = "moneyModelDesc",
     category = "money",
     type = "Generic"
@@ -434,16 +436,6 @@ lia.config.add("AdminConsoleNetworkLogs", "adminConsoleNetworkLogs", true, nil, 
     desc = "adminConsoleNetworkLogsDesc",
     category = "categoryLogging",
     type = "Boolean"
-})
-
-lia.config.add("Color", "themeColor", {
-    r = 37,
-    g = 116,
-    b = 108
-}, nil, {
-    desc = "themeColorDesc",
-    category = "categoryVisuals",
-    type = "Color"
 })
 
 lia.config.add("CharMenuBGInputDisabled", "charMenuBGInputDisabled", true, nil, {
@@ -1102,7 +1094,15 @@ lia.config.add("DefaultMenuTab", "defaultMenuTab", "you", nil, {
     desc = "defaultMenuTabDesc",
     category = "categoryMenu",
     type = "Table",
-    options = CLIENT and getMenuTabNames() or {"you"}
+    options = function()
+        local tabs = {}
+        local tabNames = CLIENT and getMenuTabNames() or {"you"}
+        for _, tabName in ipairs(tabNames) do
+            -- Use localized name as display text, tab name as value
+            tabs[L(tabName) or tabName] = tabName
+        end
+        return tabs
+    end
 })
 
 lia.config.add("DoorLockTime", "doorLockTime", 0.5, nil, {
@@ -1128,37 +1128,69 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
+            panel:DockMargin(300, 5, 300, 5)
+            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
             label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
+            label:SetText("")
+            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local slider = panel:Add("DNumSlider")
-            slider:Dock(FILL)
-            slider:DockMargin(10, 0, 10, 0)
-            slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
-            slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
-            slider:SetDecimals(0)
+            description:SetText("")
+            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local slider = panel:Add("liaSlideBox")
+            slider:Dock(TOP)
+            slider:DockMargin(300, 10, 300, 0)
+            slider:SetTall(60)
+            slider:SetRange(lia.config.get(key .. "_min", config.data and config.data.min or 0), lia.config.get(key .. "_max", config.data and config.data.max or 1), 0)
             slider:SetValue(lia.config.get(key, config.value))
             slider:SetText("")
-            slider.PerformLayout = function()
-                slider.Label:SetWide(0)
-                slider.TextArea:SetWide(50)
+            -- Override Paint function to remove extra text underneath slider
+            slider.Paint = function(s, w)
+                local padX = 16
+                local padTop = 2
+                local barY = 32
+                local barH = 6
+                local barR = barH / 2
+                local handleW, handleH = 14, 14
+                local handleR = handleH / 2
+                local textFont = "Fated.18"
+                local valueFont = "Fated.16"
+                -- Draw the slider label text (if any)
+                if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
+                local barStart = padX + handleW / 2
+                local barEnd = w - padX - handleW / 2
+                local barW = barEnd - barStart
+                local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
+                local activeW = math.Clamp(barW * progress, 0, barW)
+                -- Draw slider track background
+                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
+                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
+                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
+                -- Draw active progress bar
+                lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
+                s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
+                -- Draw handle
+                local handleX = barStart + s.smoothPos
+                local handleY = barY + barH / 2
+                lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
+                local targetAlpha = s.dragging and 100 or 255
+                s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
+                local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
+                lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
+                -- Draw current value (keep this, but ensure it fits)
+                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20) -- Ensure it doesn't go off the edge
+                draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                -- Remove min/max value text underneath slider (commented out)
+                -- draw.SimpleText(s.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_LEFT)
+                -- draw.SimpleText(s.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_RIGHT)
             end
 
             slider.OnValueChanged = function(_, v)
@@ -1178,37 +1210,69 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
+            panel:DockMargin(300, 5, 300, 5)
+            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
             label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
+            label:SetText("")
+            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local slider = panel:Add("DNumSlider")
-            slider:Dock(FILL)
-            slider:DockMargin(10, 0, 10, 0)
-            slider:SetMin(lia.config.get(key .. "_min", config.data and config.data.min or 0))
-            slider:SetMax(lia.config.get(key .. "_max", config.data and config.data.max or 1))
-            slider:SetDecimals(2)
+            description:SetText("")
+            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local slider = panel:Add("liaSlideBox")
+            slider:Dock(TOP)
+            slider:DockMargin(300, 10, 300, 0)
+            slider:SetTall(60)
+            slider:SetRange(lia.config.get(key .. "_min", config.data and config.data.min or 0), lia.config.get(key .. "_max", config.data and config.data.max or 1), config.data and config.data.decimals or 2)
             slider:SetValue(lia.config.get(key, config.value))
             slider:SetText("")
-            slider.PerformLayout = function()
-                slider.Label:SetWide(0)
-                slider.TextArea:SetWide(50)
+            -- Override Paint function to remove extra text underneath slider
+            slider.Paint = function(s, w)
+                local padX = 16
+                local padTop = 2
+                local barY = 32
+                local barH = 6
+                local barR = barH / 2
+                local handleW, handleH = 14, 14
+                local handleR = handleH / 2
+                local textFont = "Fated.18"
+                local valueFont = "Fated.16"
+                -- Draw the slider label text (if any)
+                if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
+                local barStart = padX + handleW / 2
+                local barEnd = w - padX - handleW / 2
+                local barW = barEnd - barStart
+                local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
+                local activeW = math.Clamp(barW * progress, 0, barW)
+                -- Draw slider track background
+                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
+                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
+                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
+                -- Draw active progress bar
+                lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
+                s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
+                -- Draw handle
+                local handleX = barStart + s.smoothPos
+                local handleY = barY + barH / 2
+                lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
+                local targetAlpha = s.dragging and 100 or 255
+                s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
+                local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
+                lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
+                -- Draw current value (keep this, but ensure it fits)
+                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20) -- Ensure it doesn't go off the edge
+                draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                -- Remove min/max value text underneath slider (commented out)
+                -- draw.SimpleText(s.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_LEFT)
+                -- draw.SimpleText(s.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_RIGHT)
             end
 
             slider.OnValueChanged = function(_, v)
@@ -1228,47 +1292,40 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function() end
+            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
+            panel:DockMargin(300, 5, 300, 5)
+            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
             label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
+            label:SetText("")
+            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local entry = panel:Add("DTextEntry")
-            entry:Dock(TOP)
-            entry:SetTall(60)
-            entry:DockMargin(300, 10, 300, 0)
-            entry:SetText(tostring(lia.config.get(key, config.value)))
-            entry:SetFont("ConfigFontLarge")
-            entry:SetTextColor(Color(255, 255, 255))
-            entry.Paint = function(self, w, h)
-                draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
-                self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
-            end
-
-            entry.OnEnter = function()
-                local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function()
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(entry:GetText())
-                    net.SendToServer()
-                end)
+            description:SetText("")
+            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local entry = vgui.Create("liaEntry", panel)
+            if IsValid(entry) then
+                entry:Dock(TOP)
+                entry:SetTall(60)
+                entry:DockMargin(300, 10, 300, 0)
+                entry:SetValue(tostring(lia.config.get(key, config.value)))
+                entry:SetFont("ConfigFontLarge")
+                entry.textEntry.OnEnter = function()
+                    local value = entry:GetValue()
+                    if value ~= "" then
+                        net.Start("liaCfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(value)
+                        net.SendToServer()
+                    end
+                end
             end
             return container
         end,
@@ -1277,46 +1334,39 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
+            panel:DockMargin(300, 5, 300, 5)
+            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
             label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
+            label:SetText("")
+            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local button = panel:Add("DButton")
-            button:Dock(TOP)
-            button:SetTall(120)
-            button:DockMargin(90, 10, 90, 10)
-            button:SetText("")
-            button.Paint = function(_, w, h)
-                local v = lia.config.get(key, config.value)
-                local ic = v and "checkbox.png" or "unchecked.png"
-                lia.util.drawTexture(ic, color_white, w / 2 - 48, h / 2 - 64, 96, 96)
-            end
-
-            button.DoClick = function()
-                local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function()
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(not lia.config.get(key, config.value))
-                    net.SendToServer()
-                end)
+            description:SetText("")
+            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local checkbox = vgui.Create("liaCheckbox", panel)
+            if IsValid(checkbox) then
+                checkbox:Dock(TOP)
+                checkbox:SetTall(160)
+                checkbox:DockMargin(10, 25, 10, 15)
+                checkbox:SetChecked(lia.config.get(key, config.value))
+                checkbox.OnChange = function(_, state)
+                    local t = "ConfigChange_" .. key .. "_" .. os.time()
+                    timer.Create(t, 0.5, 1, function()
+                        net.Start("liaCfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(state)
+                        net.SendToServer()
+                    end)
+                end
             end
             return container
         end,
@@ -1325,81 +1375,48 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
+            panel:DockMargin(300, 5, 300, 5)
+            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
             label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
+            label:SetText("")
+            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local button = panel:Add("DButton")
-            button:Dock(FILL)
-            button:DockMargin(10, 0, 10, 0)
-            button:SetText("")
-            button.Paint = function(_, w, h)
-                local c = lia.config.get(key, config.value)
-                surface.SetDrawColor(c)
-                surface.DrawRect(10, h / 2 - 15, w - 20, 30)
-                draw.RoundedBox(2, 10, h / 2 - 15, w - 20, 30, Color(255, 255, 255, 50))
-            end
-
-            button.DoClick = function()
-                if IsValid(button.picker) then button.picker:Remove() end
-                local f = vgui.Create("DFrame")
-                f:SetSize(300, 400)
-                f:Center()
-                f:MakePopup()
-                local m = f:Add("DColorMixer")
-                m:Dock(FILL)
-                m:SetPalette(true)
-                m:SetAlphaBar(true)
-                m:SetWangs(true)
-                m:SetColor(lia.config.get(key, config.value))
-                local apply = f:Add("DButton")
-                apply:Dock(BOTTOM)
-                apply:SetTall(40)
-                apply:SetText(L("apply"))
-                apply:SetFont("ConfigFontLarge")
-                apply.Paint = function(_, w, h)
-                    surface.SetDrawColor(Color(0, 150, 0))
-                    surface.DrawRect(0, 0, w, h)
-                    if apply:IsHovered() then
-                        surface.SetDrawColor(Color(0, 180, 0))
-                        surface.DrawRect(0, 0, w, h)
-                    end
-
-                    surface.SetDrawColor(Color(255, 255, 255))
-                    surface.DrawOutlinedRect(0, 0, w, h)
+            description:SetText("")
+            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local button = vgui.Create("liaButton", panel)
+            if IsValid(button) then
+                button:Dock(TOP)
+                button:DockMargin(300, 10, 300, 0)
+                button:SetTall(60)
+                button:SetTxt("")
+                button.Paint = function(_, w, h)
+                    local c = lia.config.get(key, config.value)
+                    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
+                    lia.derma.rect(0, 0, w, h):Rad(16):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
+                    draw.RoundedBox(2, 0, 0, w, h, Color(255, 255, 255, 50))
                 end
 
-                apply.DoClick = function()
-                    local color = m:GetColor()
-                    local t = "ConfigChange_" .. key .. "_" .. os.time()
-                    timer.Create(t, 0.5, 1, function()
-                        net.Start("liaCfgSet")
-                        net.WriteString(key)
-                        net.WriteString(name)
-                        net.WriteType(color)
-                        net.SendToServer()
-                    end)
-
-                    f:Remove()
+                button.DoClick = function()
+                    lia.derma.colorPicker(function(color)
+                        local t = "ConfigChange_" .. key .. "_" .. os.time()
+                        timer.Create(t, 0.5, 1, function()
+                            net.Start("liaCfgSet")
+                            net.WriteString(key)
+                            net.WriteString(name)
+                            net.WriteType(color)
+                            net.SendToServer()
+                        end)
+                    end, lia.config.get(key, config.value))
                 end
-
-                button.picker = f
             end
             return container
         end,
@@ -1408,50 +1425,45 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             container:SetTall(220)
             container:Dock(TOP)
             container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200)) end
+            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local panel = container:Add("DPanel")
             panel:Dock(FILL)
-            panel.Paint = nil
-            local label = panel:Add("DLabel")
+            panel:DockMargin(300, 5, 300, 5)
+            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+            local label = vgui.Create("DLabel", panel)
             label:Dock(TOP)
             label:SetTall(45)
-            label:SetText(name)
-            label:SetFont("ConfigFontLarge")
-            label:SetContentAlignment(5)
-            label:SetTextColor(Color(255, 255, 255))
             label:DockMargin(0, 20, 0, 0)
-            local description = panel:Add("DLabel")
+            label:SetText("")
+            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
-            description:SetText(config.desc or "")
-            description:SetFont("DescriptionFontLarge")
-            description:SetContentAlignment(5)
-            description:SetTextColor(Color(200, 200, 200))
             description:DockMargin(0, 10, 0, 0)
-            local combo = panel:Add("DComboBox")
-            combo:Dock(TOP)
-            combo:SetTall(60)
-            combo:DockMargin(300, 10, 300, 0)
-            combo:SetValue(tostring(lia.config.get(key, config.value)))
-            combo:SetFont("ConfigFontLarge")
-            combo.Paint = function(self, w, h)
-                draw.RoundedBox(0, 0, 0, w, h, Color(50, 50, 50, 200))
-                self:DrawTextEntryText(Color(255, 255, 255), Color(255, 255, 255), Color(255, 255, 255))
-            end
+            description:SetText("")
+            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            local combo = vgui.Create("liaComboBox", panel)
+            if IsValid(combo) then
+                combo:Dock(TOP)
+                combo:SetTall(60)
+                combo:DockMargin(300, 10, 300, 0)
+                combo:SetValue(tostring(lia.config.get(key, config.value)))
+                combo:SetFont("ConfigFontLarge")
+                local options = lia.config.getOptions(key)
+                for _, text in pairs(options) do
+                    -- Always use the display text as the data value to ensure consistent types
+                    combo:AddChoice(text, text)
+                end
 
-            for _, o in ipairs(lia.config.getOptions(key)) do
-                combo:AddChoice(o)
-            end
-
-            combo.OnSelect = function(_, _, v)
-                local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function()
+                -- Force UI refresh after adding all options to ensure proper sizing
+                combo:FinishAddingOptions()
+                combo.OnSelect = function(_, _, v)
                     net.Start("liaCfgSet")
                     net.WriteString(key)
                     net.WriteString(name)
                     net.WriteType(v)
                     net.SendToServer()
-                end)
+                end
             end
             return container
         end
@@ -1474,12 +1486,12 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 local configA = lia.config.stored[a]
                 local configB = lia.config.stored[b]
                 if not configA then
-                    lia.error("Config with key '" .. tostring(a) .. "' not found in stored configs")
+                    lia.error(L("configWithKey") .. "\"" .. tostring(a) .. "\" not found in stored configs")
                     return false
                 end
 
                 if not configB then
-                    lia.error("Config with key '" .. tostring(b) .. "' not found in stored configs")
+                    lia.error(L("configWithKey") .. "\"" .. tostring(b) .. "\" not found in stored configs")
                     return true
                 end
 
@@ -1491,7 +1503,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             for _, k in ipairs(keys) do
                 local opt = lia.config.stored[k]
                 if not opt then
-                    lia.error("Config with key '" .. tostring(k) .. "' is missing from stored configs")
+                    lia.error(L("configWithKey") .. "\"" .. tostring(k) .. "\" is missing from stored configs")
                 else
                     local n = tostring(opt.name or "")
                     local d = tostring(opt.desc or "")
@@ -1523,32 +1535,25 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 cat:SetLabel(categoryName)
                 cat:SetExpanded(true)
                 cat:DockMargin(0, 0, 0, 10)
-                cat.Header:SetContentAlignment(5)
-                cat.Header:SetTall(30)
-                cat.Header:SetFont("liaMediumFont")
-                cat.Header:SetTextColor(Color(255, 255, 255))
-                cat.Paint = function() end
-                cat.Header.Paint = function(_, w, h)
-                    surface.SetDrawColor(0, 0, 0, 255)
-                    surface.DrawOutlinedRect(0, 0, w, h, 2)
-                    surface.SetDrawColor(0, 0, 0, 150)
-                    surface.DrawRect(1, 1, w - 2, h - 2)
+                if IsValid(cat.Header) then
+                    cat.Header:SetContentAlignment(5)
+                    cat.Header:SetTall(30)
+                    cat.Header:SetFont("liaMediumFont")
+                    cat.Header:SetTextColor(lia.color.theme.text)
+                    cat.Header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 120)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
 
-                cat.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(40, 40, 40, 60)) end
+                cat.Paint = function() end
                 local body = vgui.Create("DPanel", cat)
                 body:SetTall(#items * 240)
-                body.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 50)) end
+                body:DockMargin(5, 5, 5, 5)
+                body.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(45, 45, 55, 60)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 cat:SetContents(body)
                 for _, it in ipairs(items) do
                     local el = ConfigFormatting[it.elemType](it.key, it.name, it.config, body)
                     el:Dock(TOP)
                     el:DockMargin(10, 10, 10, 0)
-                    el.Paint = function(_, w, h)
-                        draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-                        surface.SetDrawColor(255, 255, 255)
-                        surface.DrawOutlinedRect(0, 0, w, h)
-                    end
+                    el.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
             end
         end

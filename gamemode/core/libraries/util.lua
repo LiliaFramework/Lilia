@@ -302,94 +302,84 @@ if SERVER then
         return output
     end
 else
-    function lia.util.ShadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
-        surface.SetFont(font)
-        local _, h = surface.GetTextSize(text)
-        if yalign == TEXT_ALIGN_CENTER then
-            y = y - h / 2
-        elseif yalign == TEXT_ALIGN_BOTTOM then
-            y = y - h
-        end
-
-        draw.DrawText(text, font, x + dist, y + dist, colorshadow, xalign)
-        draw.DrawText(text, font, x, y, colortext, xalign)
-    end
-
-    function lia.util.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
-        local steps = (outlinewidth * 2) / 3
-        if steps < 1 then steps = 1 end
-        for ox = -outlinewidth, outlinewidth, steps do
-            for oy = -outlinewidth, outlinewidth, steps do
-                draw.DrawText(text, font, x + ox, y + oy, outlinecolour, xalign)
+    -- UI functions moved to lia.derma - aliases for backward compatibility
+    lia.util.ShadowText = lia.derma.ShadowText
+    lia.util.DrawTextOutlined = lia.derma.DrawTextOutlined
+    lia.util.DrawTip = lia.derma.DrawTip
+    lia.util.drawText = lia.derma.drawText
+    lia.util.drawTexture = lia.derma.drawSurfaceTexture
+    lia.util.skinFunc = lia.derma.skinFunc
+    lia.util.approachExp = lia.derma.approachExp
+    lia.util.easeOutCubic = lia.derma.easeOutCubic
+    lia.util.easeInOutCubic = lia.derma.easeInOutCubic
+    function lia.util.animateAppearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)
+        local scaleFactor = 0.8
+        if not IsValid(panel) then return end
+        duration = (duration and duration > 0) and duration or 0.18
+        alpha_dur = (alpha_dur and alpha_dur > 0) and alpha_dur or duration
+        local targetX, targetY = panel:GetPos()
+        local initialW = target_w * (scale_factor and scale_factor or scaleFactor)
+        local initialH = target_h * (scale_factor and scale_factor or scaleFactor)
+        local initialX = targetX + (target_w - initialW) / 2
+        local initialY = targetY + (target_h - initialH) / 2
+        panel:SetSize(initialW, initialH)
+        panel:SetPos(initialX, initialY)
+        panel:SetAlpha(0)
+        local curW, curH = initialW, initialH
+        local curX, curY = initialX, initialY
+        local curA = 0
+        local eps = 0.5
+        local alpha_eps = 1
+        local speedSize = 3 / math.max(0.0001, duration)
+        local speedAlpha = 3 / math.max(0.0001, alpha_dur)
+        panel.Think = function()
+            if not IsValid(panel) then return end
+            local dt = FrameTime()
+            curW = lia.util.approachExp(curW, target_w, speedSize, dt)
+            curH = lia.util.approachExp(curH, target_h, speedSize, dt)
+            curX = lia.util.approachExp(curX, targetX, speedSize, dt)
+            curY = lia.util.approachExp(curY, targetY, speedSize, dt)
+            curA = lia.util.approachExp(curA, 255, speedAlpha, dt)
+            panel:SetSize(curW, curH)
+            panel:SetPos(curX, curY)
+            panel:SetAlpha(math.floor(curA + 0.5))
+            local doneSize = math.abs(curW - target_w) <= eps and math.abs(curH - target_h) <= eps
+            local donePos = math.abs(curX - targetX) <= eps and math.abs(curY - targetY) <= eps
+            local doneAlpha = math.abs(curA - 255) <= alpha_eps
+            if doneSize and donePos and doneAlpha then
+                panel:SetSize(target_w, target_h)
+                panel:SetPos(targetX, targetY)
+                panel:SetAlpha(255)
+                panel.Think = nil
+                if callback then callback(panel) end
             end
         end
-        return draw.DrawText(text, font, x, y, colour, xalign)
     end
 
-    function lia.util.DrawTip(x, y, w, h, text, font, textCol, outlineCol)
-        draw.NoTexture()
-        local rectH = 0.85
-        local triW = 0.1
-        local verts = {
-            {
-                x = x,
-                y = y
-            },
-            {
-                x = x + w,
-                y = y
-            },
-            {
-                x = x + w,
-                y = y + h * rectH
-            },
-            {
-                x = x + w / 2 + w * triW,
-                y = y + h * rectH
-            },
-            {
-                x = x + w / 2,
-                y = y + h
-            },
-            {
-                x = x + w / 2 - w * triW,
-                y = y + h * rectH
-            },
-            {
-                x = x,
-                y = y + h * rectH
-            }
-        }
+    function lia.util.clampMenuPosition(panel)
+        if not IsValid(panel) then return end
+        local x, y = panel:GetPos()
+        local w, h = panel:GetSize()
+        local sw, sh = ScrW(), ScrH()
+        if x < 5 then
+            x = 5
+        elseif x + w > sw - 5 then
+            x = sw - 5 - w
+        end
 
-        surface.SetDrawColor(outlineCol)
-        surface.DrawPoly(verts)
-        draw.SimpleText(text, font, x + w / 2, y + h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if y < 5 then
+            y = 5
+        elseif y + h > sh - 5 then
+            y = sh - 5 - h
+        end
+
+        panel:SetPos(x, y)
     end
 
-    function lia.util.drawText(text, x, y, color, alignX, alignY, font, alpha)
-        color = color or color_white
-        return draw.TextShadow({
-            text = text,
-            font = font or "liaGenericFont",
-            pos = {x, y},
-            color = color,
-            xalign = alignX or 0,
-            yalign = alignY or 0
-        }, 1, alpha or color.a * 0.575)
-    end
-
-    function lia.util.drawTexture(material, color, x, y, w, h)
-        surface.SetDrawColor(color or color_white)
-        surface.SetMaterial(lia.util.getMaterial(material))
-        surface.DrawTexturedRect(x, y, w, h)
-    end
-
-    function lia.util.skinFunc(name, panel, a, b, c, d, e, f, g)
-        local skin = ispanel(panel) and IsValid(panel) and panel:GetSkin() or derma.GetDefaultSkin()
-        if not skin then return end
-        local func = skin[name]
-        if not func then return end
-        return func(skin, panel, a, b, c, d, e, f, g)
+    function lia.util.drawGradient(_x, _y, _w, _h, direction, color_shadow, radius, flags)
+        local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
+        radius = radius and radius or 0
+        lia.derma.drawMaterial(radius, _x, _y, _w, _h, color_shadow, listGradients[direction], flags)
     end
 
     function lia.util.wrapText(text, width, font)
@@ -474,224 +464,27 @@ else
         end
     end
 
-    function lia.util.requestArguments(title, argTypes, onSubmit, defaults)
-        defaults = defaults or {}
-        local count = table.Count(argTypes)
-        local frameW, frameH = 600, 200 + count * 75
-        local frame = vgui.Create("DFrame")
-        frame:SetTitle("")
-        frame:SetSize(frameW, frameH)
-        frame:Center()
-        frame:MakePopup()
-        frame:ShowCloseButton(false)
-        frame.Paint = function(self, w, h)
-            derma.SkinHook("Paint", "Frame", self, w, h)
-            draw.SimpleText(title or "", "liaMediumFont", w / 2, 10, color_white, TEXT_ALIGN_CENTER)
-        end
-
-        local scroll = vgui.Create("DScrollPanel", frame)
-        scroll:Dock(FILL)
-        scroll:DockMargin(10, 40, 10, 10)
-        surface.SetFont("liaSmallFont")
-        local controls, watchers = {}, {}
-        local validate
-        local ordered = {}
-        local grouped = {
-            strings = {},
-            dropdowns = {},
-            bools = {},
-            rest = {}
-        }
-
-        for name, typeInfo in pairs(argTypes) do
-            local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
-            if istable(typeInfo) then
-                fieldType, dataTbl = typeInfo[1], typeInfo[2]
-                if typeInfo[3] ~= nil then defaultVal = typeInfo[3] end
-            end
-
-            fieldType = string.lower(tostring(fieldType))
-            if defaultVal == nil and defaults[name] ~= nil then defaultVal = defaults[name] end
-            local info = {
-                name = name,
-                fieldType = fieldType,
-                dataTbl = dataTbl,
-                defaultVal = defaultVal
-            }
-
-            if fieldType == "string" then
-                table.insert(grouped.strings, info)
-            elseif fieldType == "table" then
-                table.insert(grouped.dropdowns, info)
-            elseif fieldType == "boolean" then
-                table.insert(grouped.bools, info)
-            else
-                table.insert(grouped.rest, info)
-            end
-        end
-
-        for _, group in ipairs({grouped.strings, grouped.dropdowns, grouped.bools, grouped.rest}) do
-            for _, v in ipairs(group) do
-                table.insert(ordered, v)
-            end
-        end
-
-        for _, info in ipairs(ordered) do
-            local name, fieldType, dataTbl, defaultVal = info.name, info.fieldType, info.dataTbl, info.defaultVal
-            local panel = vgui.Create("DPanel", scroll)
-            panel:Dock(TOP)
-            panel:DockMargin(0, 0, 0, 5)
-            panel:SetTall(70)
-            panel.Paint = nil
-            local label = vgui.Create("DLabel", panel)
-            label:SetFont("liaSmallFont")
-            label:SetText(name)
-            label:SizeToContents()
-            local textW = select(1, surface.GetTextSize(name))
-            local ctrl
-            local isBool = fieldType == "boolean"
-            if isBool then
-                ctrl = vgui.Create("liaCheckbox", panel)
-                if defaultVal ~= nil then ctrl:SetChecked(tobool(defaultVal)) end
-            elseif fieldType == "table" then
-                ctrl = vgui.Create("DComboBox", panel)
-                local defaultChoiceIndex
-                if istable(dataTbl) then
-                    for idx, v in ipairs(dataTbl) do
-                        if istable(v) then
-                            ctrl:AddChoice(v[1], v[2])
-                            if defaultVal ~= nil and (v[2] == defaultVal or v[1] == defaultVal) then defaultChoiceIndex = idx end
-                        else
-                            ctrl:AddChoice(tostring(v))
-                            if defaultVal ~= nil and v == defaultVal then defaultChoiceIndex = idx end
-                        end
-                    end
-                end
-
-                if defaultChoiceIndex then ctrl:ChooseOptionID(defaultChoiceIndex) end
-            elseif fieldType == "int" or fieldType == "number" then
-                ctrl = vgui.Create("DTextEntry", panel)
-                ctrl:SetFont("liaSmallFont")
-                if ctrl.SetNumeric then ctrl:SetNumeric(true) end
-                if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
-            else
-                ctrl = vgui.Create("DTextEntry", panel)
-                ctrl:SetFont("liaSmallFont")
-                if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
-            end
-
-            panel.PerformLayout = function(_, w, h)
-                local ctrlH, ctrlW
-                if isBool then
-                    ctrlH, ctrlW = 22, 22
-                else
-                    ctrlH, ctrlW = 30, w * 0.7
-                end
-
-                local totalW = textW + 10 + ctrlW
-                local xOff = (w - totalW) / 2
-                label:SetPos(xOff, (h - label:GetTall()) / 2)
-                ctrl:SetPos(xOff + textW + 10, (h - ctrlH) / 2)
-                ctrl:SetSize(ctrlW, ctrlH)
-            end
-
-            controls[name] = {
-                ctrl = ctrl,
-                type = fieldType
-            }
-
-            watchers[#watchers + 1] = function()
-                local function trigger()
-                    validate()
-                end
-
-                ctrl.OnValueChange, ctrl.OnTextChanged, ctrl.OnChange, ctrl.OnSelect = trigger, trigger, trigger, trigger
-            end
-        end
-
-        local btnPanel = vgui.Create("DPanel", frame)
-        btnPanel:Dock(BOTTOM)
-        btnPanel:SetTall(90)
-        btnPanel:DockPadding(15, 15, 15, 15)
-        btnPanel.Paint = nil
-        local submit = vgui.Create("DButton", btnPanel)
-        submit:Dock(LEFT)
-        submit:DockMargin(0, 0, 15, 0)
-        submit:SetWide(270)
-        submit:SetText(L("submit"))
-        submit:SetFont("liaSmallFont")
-        submit:SetIcon("icon16/tick.png")
-        submit:SetEnabled(false)
-        local cancel = vgui.Create("DButton", btnPanel)
-        cancel:Dock(RIGHT)
-        cancel:SetWide(270)
-        cancel:SetText(L("cancel"))
-        cancel:SetFont("liaSmallFont")
-        cancel:SetIcon("icon16/cross.png")
-        cancel.DoClick = function()
-            if isfunction(onSubmit) then onSubmit(false) end
-            frame:Remove()
-        end
-
-        validate = function()
-            for _, data in pairs(controls) do
-                local ctl, ftype, ok = data.ctrl, data.type, true
-                if ftype == "boolean" then
-                    ok = true
-                elseif ctl.GetSelected then
-                    local txt = select(1, ctl:GetSelected())
-                    ok = txt and txt ~= ""
-                elseif ctl.GetValue then
-                    local val = ctl:GetValue()
-                    ok = val and val ~= ""
-                end
-
-                if not ok then
-                    submit:SetEnabled(false)
-                    return
-                end
-            end
-
-            submit:SetEnabled(true)
-        end
-
-        for _, fn in ipairs(watchers) do
-            fn()
-        end
-
-        validate()
-        submit.DoClick = function()
-            local result = {}
-            for k, data in pairs(controls) do
-                local ctl, ftype = data.ctrl, data.type
-                if ftype == "boolean" then
-                    result[k] = ctl:GetChecked()
-                elseif ctl.GetSelected then
-                    local txt, val = ctl:GetSelected()
-                    result[k] = val or txt
-                else
-                    local val = ctl:GetValue()
-                    result[k] = (ftype == "int" or ftype == "number") and tonumber(val) or val
-                end
-            end
-
-            if isfunction(onSubmit) then onSubmit(true, result) end
-            frame:Remove()
-        end
-
-        frame.OnClose = function() if isfunction(onSubmit) then onSubmit(false) end end
-    end
-
+    lia.util.requestArguments = lia.derma.requestArguments
     function lia.util.CreateTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
-        local frame = vgui.Create("liaDListView")
-        frame:SetWindowTitle(title and L(title) or L("tableListTitle"))
+        local frame = vgui.Create("DFrame")
+        frame:SetTitle(title and L(title) or L("tableListTitle"))
         frame:SetSize(frameWidth, frameHeight)
         frame:Center()
         frame:MakePopup()
-        if IsValid(frame.topBar) then frame.topBar:Remove() end
-        if IsValid(frame.statusBar) then frame.statusBar:Remove() end
-        local listView = frame.listView
+        frame.Paint = function(self, w, h)
+            lia.util.drawBlur(self, 4)
+            draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
+        end
+
+        local sheet = frame:Add("liaTabs")
+        sheet:Dock(FILL)
+        -- Create a panel for the table content
+        local tablePanel = vgui.Create("DPanel")
+        tablePanel:Dock(FILL)
+        tablePanel:DockPadding(10, 10, 10, 10)
+        tablePanel.Paint = function() end
+        local listView = tablePanel:Add("liaDListView")
         listView:Dock(FILL)
         listView:Clear()
         if listView.ClearColumns then listView:ClearColumns() end
@@ -715,10 +508,11 @@ else
             line.rowData = row
         end
 
+        sheet:AddSheet(L("table"), tablePanel)
         listView.OnRowRightClick = function(_, _, line)
             if not IsValid(line) or not line.rowData then return end
             local rowData = line.rowData
-            local menu = DermaMenu()
+            local menu = lia.derma.dermaMenu()
             menu:AddOption(L("copyRow"), function()
                 local rowString = ""
                 for key, value in pairs(rowData) do
@@ -898,5 +692,100 @@ else
             end
         end
         return frame
+    end
+
+    local vectorMeta = FindMetaTable("Vector")
+    local toScreen = vectorMeta and vectorMeta.ToScreen or function()
+        return {
+            x = 0,
+            y = 0,
+            visible = false
+        }
+    end
+
+    local defaultTheme = {
+        background_alpha = Color(34, 34, 34, 210),
+        header = Color(34, 34, 34, 210),
+        accent = Color(255, 255, 255, 180),
+        text = Color(255, 255, 255)
+    }
+
+    local function scaleColorAlpha(col, scale)
+        col = col or defaultTheme.background_alpha
+        local a = col.a or 255
+        return Color(col.r, col.g, col.b, math.Clamp(a * scale, 0, 255))
+    end
+
+    local function EntText(text, x, y, fade)
+        surface.SetFont("Fated.40")
+        local tw, th = surface.GetTextSize(text)
+        local bx, by = math.Round(x - tw * 0.5 - 18), math.Round(y - 12)
+        local bw, bh = tw + 36, th + 24
+        local theme = lia.color.theme or defaultTheme
+        local fadeAlpha = math.Clamp(fade, 0, 1)
+        local headerColor = scaleColorAlpha(theme.background_panelpopup or theme.header or defaultTheme.header, fadeAlpha)
+        local accentColor = scaleColorAlpha(theme.theme or theme.text or defaultTheme.accent, fadeAlpha)
+        local textColor = scaleColorAlpha(theme.text or defaultTheme.text, fadeAlpha)
+        lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
+        lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
+        draw.SimpleText(text, "Fated.40", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        return bh
+    end
+
+    lia.util.entsScales = lia.util.entsScales or {}
+    function lia.util.drawEntText(ent, text, posY, alphaOverride)
+        if not (IsValid(ent) and text and text ~= "") then return end
+        posY = posY or 0
+        local distSqr = EyePos():DistToSqr(ent:GetPos())
+        local maxDist = 380
+        if distSqr > maxDist * maxDist then return end
+        local dist = math.sqrt(distSqr)
+        local minDist = 20
+        local idx = ent:EntIndex()
+        local prev = lia.util.entsScales[idx] or 0
+        local normalized = math.Clamp((maxDist - dist) / math.max(1, maxDist - minDist), 0, 1)
+        local appearThreshold = 0.8
+        local disappearThreshold = 0.01
+        local target
+        if normalized <= disappearThreshold then
+            target = 0
+        elseif normalized >= appearThreshold then
+            target = 1
+        else
+            target = (normalized - disappearThreshold) / (appearThreshold - disappearThreshold)
+        end
+
+        local dt = FrameTime() or 0.016
+        local appearSpeed = 18
+        local disappearSpeed = 12
+        local speed = (target > prev) and appearSpeed or disappearSpeed
+        local cur = lia.util.approachExp(prev, target, speed, dt)
+        if math.abs(cur - target) < 0.0005 then cur = target end
+        if cur == 0 and target == 0 then
+            lia.util.entsScales[idx] = nil
+            return
+        end
+
+        lia.util.entsScales[idx] = cur
+        local eased = lia.util.easeInOutCubic(cur)
+        if eased <= 0 then return end
+        local fade = eased
+        if alphaOverride then
+            if alphaOverride > 1 then
+                fade = fade * math.Clamp(alphaOverride / 255, 0, 1)
+            else
+                fade = fade * math.Clamp(alphaOverride, 0, 1)
+            end
+        end
+
+        if fade <= 0 then return end
+        local mins, maxs = ent:OBBMins(), ent:OBBMaxs()
+        local _, rotatedMax = ent:GetRotatedAABB(mins, maxs)
+        local bob = math.sin(CurTime() + idx) / 3 + 0.5
+        local center = ent:LocalToWorld(ent:OBBCenter()) + Vector(0, 0, math.abs(rotatedMax.z / 2) + 12 + bob)
+        local screenPos = toScreen(center)
+        if screenPos.visible == false then return end
+        EntText(text, screenPos.x, screenPos.y + posY, fade)
     end
 end

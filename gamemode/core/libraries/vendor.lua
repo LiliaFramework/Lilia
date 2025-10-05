@@ -133,7 +133,7 @@ function lia.vendor.addPreset(name, items)
         if lia.item.list[itemType] then
             validItems[itemType] = itemData
         else
-            print("[Vendor] Warning: Item '" .. itemType .. "' in preset '" .. name .. "' does not exist and will be skipped.")
+            print(L("vendorItemNotFoundWarning", itemType, name))
         end
     end
 

@@ -3,11 +3,11 @@ function PANEL:Init()
     lia.gui.classes = self
     local w, h = self:GetParent():GetSize()
     self:SetSize(w, h)
-    self.sidebar = self:Add("DScrollPanel")
+    self.sidebar = self:Add("liaScrollPanel")
     self.sidebar:Dock(LEFT)
     self.sidebar:SetWide(200)
     self.sidebar:DockMargin(20, 20, 0, 20)
-    self.mainContent = self:Add("DScrollPanel")
+    self.mainContent = self:Add("liaScrollPanel")
     self.mainContent:Dock(FILL)
     self.mainContent:DockMargin(10, 10, 10, 10)
     self.tabList = {}

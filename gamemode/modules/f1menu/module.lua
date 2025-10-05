@@ -1,4 +1,4 @@
-﻿MODULE.name = "F1 Menu"
+﻿MODULE.name = "f1MenuModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides the main F1 menu interface for players."
+MODULE.desc = "providesMainF1MenuInterface"

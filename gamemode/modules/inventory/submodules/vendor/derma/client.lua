@@ -28,12 +28,12 @@ function PANEL:Init()
     self.vendorPanel = self:Add("DPanel")
     self.vendorPanel:SetSize(panelW, panelH)
     self.vendorPanel:SetPos(sw * 0.5 - panelW - 32, y0)
-    self.vendorPanel.items = self.vendorPanel:Add("DScrollPanel")
+    self.vendorPanel.items = self.vendorPanel:Add("liaScrollPanel")
     self.vendorPanel.items:Dock(FILL)
     self.mePanel = self:Add("DPanel")
     self.mePanel:SetSize(panelW, panelH)
     self.mePanel:SetPos(sw * 0.5 + 32, y0)
-    self.mePanel.items = self.mePanel:Add("DScrollPanel")
+    self.mePanel.items = self.mePanel:Add("liaScrollPanel")
     self.mePanel.items:Dock(FILL)
     self:listenForChanges()
     self:liaListenForInventoryChanges(ply:getChar():getInv())
@@ -158,7 +158,7 @@ function PANEL:createCategoryDropdown()
             return
         end
 
-        menu = vgui.Create("DScrollPanel", self)
+        menu = vgui.Create("liaScrollPanel", self)
         menu:SetSize(btn:GetWide(), #sorted * 24)
         menu:SetPos(btn.x, btn.y + btn:GetTall() + 2)
         for i, cat in ipairs(sorted) do
@@ -682,7 +682,7 @@ function PANEL:Init()
     self.savePreset:SetTextColor(color_white)
     self.savePreset:DockMargin(0, 4, 0, 0)
     self.savePreset.DoClick = function()
-        if not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
+        if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
             LocalPlayer():notifyErrorLocalized(L("noPermission"))
             return
         end
@@ -806,7 +806,7 @@ function PANEL:OnFocusChanged(gained)
 end
 
 function PANEL:saveVendorPreset(_, displayName)
-    if not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
+    if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("canCreateVendorPresets") then
         LocalPlayer():notifyError(L("noPermission"))
         return
     end
@@ -908,7 +908,7 @@ function PANEL:OnRowRightClick(line)
     if IsValid(menu) then menu:Remove() end
     local uniqueID = line.item
     local itemTable = lia.item.list[uniqueID]
-    menu = DermaMenu(self)
+    menu = lia.derma.dermaMenu()
     local mode, modePanel = menu:AddSubMenu(L("mode"))
     modePanel:SetImage("icon16/key.png")
     mode:AddOption(L("none"), function() lia.vendor.editor.mode(uniqueID, nil) end):SetImage("icon16/cog_error.png")
@@ -975,7 +975,7 @@ function PANEL:Init()
     self:Center()
     self:MakePopup()
     self:SetTitle(L("vendorFaction"))
-    self.scroll = self:Add("DScrollPanel")
+    self.scroll = self:Add("liaScrollPanel")
     self.scroll:Dock(FILL)
     self.scroll:DockPadding(0, 0, 0, 4)
     self.factions = {}
@@ -1034,7 +1034,7 @@ function PANEL:Init()
     self:Center()
     self:MakePopup()
     self:SetTitle(L("bodygroups"))
-    self.scroll = self:Add("DScrollPanel")
+    self.scroll = self:Add("liaScrollPanel")
     self.scroll:Dock(FILL)
     self.scroll:DockPadding(0, 0, 0, 4)
     self.sliders = {}

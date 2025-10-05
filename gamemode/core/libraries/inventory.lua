@@ -139,11 +139,11 @@ if SERVER then
     end
 
     function lia.inventory.registerStorage(model, data)
-        assert(isstring(model), "Model must be a string")
-        assert(istable(data), "Data must be a table")
-        assert(isstring(data.name), "Storage name is required")
-        assert(isstring(data.invType), "Inventory type is required")
-        assert(istable(data.invData), "Inventory data is required")
+        assert(isstring(model), L("storageModelMustBeString"))
+        assert(istable(data), L("storageDataMustBeTable"))
+        assert(isstring(data.name), L("storageNameRequired"))
+        assert(isstring(data.invType), L("storageInvTypeRequired"))
+        assert(istable(data.invData), L("storageInvDataRequired"))
         lia.inventory.storage[model:lower()] = data
         return data
     end

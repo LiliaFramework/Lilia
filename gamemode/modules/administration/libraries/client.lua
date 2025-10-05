@@ -126,89 +126,6 @@ function MODULE:PopulateAdminTabs(pages)
         })
     end
 
-    if client:hasPrivilege("privilegeViewer") then
-        table.insert(pages, {
-            name = "privileges",
-            icon = "icon16/key.png",
-            drawFunc = function(panel)
-                panelRef = panel
-                panel:Clear()
-                panel:DockPadding(10, 10, 10, 10)
-                panel.Paint = function() end
-                function panel:buildSheet()
-                    if IsValid(self.sheet) then self.sheet:Remove() end
-                    self.sheet = self:Add("DPanel")
-                    self.sheet:Dock(FILL)
-                    self.sheet.Paint = function() end
-                    local privileges = lia.administrator.privileges or {}
-                    local names = lia.administrator.privilegeNames or {}
-                    local cats = lia.administrator.privilegeCategories or {}
-                    local headers = {"ID", "Name", "Min Access", "Category"}
-                    local listView = self.sheet:Add("DListView")
-                    listView:Dock(FILL)
-                    listView:SetMultiSelect(false)
-                    for _, header in ipairs(headers) do
-                        listView:AddColumn(header)
-                    end
-
-                    local rows = {}
-                    for id, minAccess in pairs(privileges) do
-                        local name = names[id] or id
-                        local categoryKey = cats[id] or "unassigned"
-                        local category = L(categoryKey)
-                        rows[#rows + 1] = {category, id, name, tostring(minAccess or "user")}
-                    end
-
-                    table.sort(rows, function(a, b)
-                        if a[1] == b[1] then return a[2] < b[2] end
-                        return a[1] < b[1]
-                    end)
-
-                    for _, r in ipairs(rows) do
-                        listView:AddLine(r[2], r[3], r[4], r[1])
-                    end
-
-                    listView:SortByColumn(4, false)
-                    listView.OnRowRightClick = function(_, _, line)
-                        local m = DermaMenu()
-                        for i, header in ipairs(headers) do
-                            m:AddOption("Copy " .. header, function()
-                                SetClipboardText(line:GetColumnText(i) or "")
-                                client:notifySuccessLocalized("copied")
-                            end)
-                        end
-
-                        m:AddSpacer()
-                        m:AddOption("Copy All", function()
-                            local t = {}
-                            for i, header in ipairs(headers) do
-                                t[#t + 1] = header .. ": " .. (line:GetColumnText(i) or "")
-                            end
-
-                            SetClipboardText(table.concat(t, "\n"))
-                            client:notifySuccessLocalized("allPrivilegeInfo")
-                        end)
-
-                        m:Open()
-                    end
-
-                    listView.OnRowDoubleClick = function(_, _, line)
-                        SetClipboardText(line:GetColumnText(1) or "")
-                        client:notifySuccessLocalized("privilegeIdCopied")
-                    end
-                end
-
-                local refreshButton = vgui.Create("DButton", panel)
-                refreshButton:Dock(TOP)
-                refreshButton:DockMargin(0, 0, 0, 10)
-                refreshButton:SetText(L("refresh"))
-                refreshButton:SetTall(30)
-                refreshButton.DoClick = function() panel:buildSheet() end
-                panel:buildSheet()
-            end
-        })
-    end
-
     if client:hasPrivilege("canAccessPlayerList") then
         table.insert(pages, {
             name = "players",
@@ -227,14 +144,18 @@ function MODULE:PopulateAdminTabs(pages)
             icon = "icon16/book.png",
             drawFunc = function(panel)
                 panelRef = panel
+                -- Force recreation of UI elements when tab is revisited
                 panel:Clear()
-                panel:DockPadding(10, 10, 10, 10)
+                panel:DockPadding(6, 6, 6, 6)
                 panel.Paint = function() end
-                panel.sheet = panel:Add("DPropertySheet")
+                -- Remove existing sheet if it exists to force recreation
+                if IsValid(panel.sheet) then panel.sheet:Remove() end
+                panel.sheet = panel:Add("liaTabs")
                 panel.sheet:Dock(FILL)
                 function panel:buildSheets(data)
+                    -- Force complete recreation of all UI elements
                     if IsValid(self.sheet) then self.sheet:Remove() end
-                    self.sheet = self:Add("DPropertySheet")
+                    self.sheet = self:Add("liaTabs")
                     self.sheet:Dock(FILL)
                     local function formatPlayTime(secs)
                         local h = math.floor(secs / 3600)
@@ -252,10 +173,6 @@ function MODULE:PopulateAdminTabs(pages)
                     end
 
                     local columns = {
-                        {
-                            name = "id",
-                            field = L("id")
-                        },
                         {
                             name = "name",
                             field = L("name")
@@ -314,14 +231,18 @@ function MODULE:PopulateAdminTabs(pages)
 
                     hook.Run("CharListColumns", columns)
                     local function createList(parent, rows)
-                        local container = parent:Add("DPanel")
+                        local container = parent:Add("Panel")
                         container:Dock(FILL)
+                        container:DockMargin(0, 20, 0, 0)
                         container.Paint = function() end
                         local search = container:Add("DTextEntry")
                         search:Dock(TOP)
+                        search:DockMargin(0, 0, 0, 15)
+                        search:SetTall(30)
                         search:SetPlaceholderText(L("search"))
-                        search:SetTextColor(Color(255, 255, 255))
-                        local list = container:Add("DListView")
+                        search:SetTextColor(Color(200, 200, 200))
+                        search.PaintOver = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                        local list = container:Add("liaTable")
                         list:Dock(FILL)
                         local steamIDColumnIndex
                         for i, col in ipairs(columns) do
@@ -365,7 +286,7 @@ function MODULE:PopulateAdminTabs(pages)
                         populate("")
                         function list:OnRowRightClick(_, line)
                             if not IsValid(line) then return end
-                            local menu = DermaMenu()
+                            local menu = lia.derma.dermaMenu()
                             if steamIDColumnIndex then menu:AddOption(L("copySteamID"), function() SetClipboardText(line:GetColumnText(steamIDColumnIndex) or "") end):SetIcon("icon16/page_copy.png") end
                             menu:AddOption(L("copyRow"), function()
                                 local rowString = ""
@@ -399,14 +320,14 @@ function MODULE:PopulateAdminTabs(pages)
                         end
                     end
 
-                    local allPanel = self.sheet:Add("DPanel")
+                    local allPanel = self.sheet:Add("Panel")
                     allPanel:Dock(FILL)
                     allPanel.Paint = function() end
                     createList(allPanel, data.all or {})
                     self.sheet:AddSheet(L("allCharacters"), allPanel)
                     for steamID, chars in pairs(data.players or {}) do
                         local ply = lia.util.getBySteamID(tostring(steamID))
-                        local pnl = self.sheet:Add("DPanel")
+                        local pnl = self.sheet:Add("Panel")
                         pnl:Dock(FILL)
                         pnl.Paint = function() end
                         createList(pnl, chars)
@@ -415,93 +336,8 @@ function MODULE:PopulateAdminTabs(pages)
                     end
                 end
 
+                -- Request fresh data every time the tab is accessed
                 net.Start("liaRequestFullCharList")
-                net.SendToServer()
-            end
-        })
-    end
-
-    if client:hasPrivilege("listCharacters") then
-        table.insert(pages, {
-            name = "Leveling",
-            icon = "icon16/chart_bar.png",
-            drawFunc = function(panel)
-                panelRef = panel
-                panel:Clear()
-                panel:DockPadding(10, 10, 10, 10)
-                panel.Paint = function() end
-                net.Start("liaRequestLevelingList")
-                net.SendToServer()
-            end
-        })
-    end
-
-    if client:hasPrivilege("viewDBTables") then
-        table.insert(pages, {
-            name = L("databaseView"),
-            icon = "icon16/database.png",
-            drawFunc = function(panel)
-                panelRef = panel
-                panel:Clear()
-                panel:DockPadding(10, 10, 10, 10)
-                panel.Paint = function() end
-                panel.sheet = panel:Add("DPropertySheet")
-                panel.sheet:Dock(FILL)
-                function panel:buildSheets(data)
-                    for _, v in ipairs(self.sheet.Items or {}) do
-                        if IsValid(v.Tab) then self.sheet:CloseTab(v.Tab, true) end
-                    end
-
-                    self.sheet.Items = {}
-                    for tbl, rows in SortedPairs(data or {}) do
-                        local pnl = self.sheet:Add("DPanel")
-                        pnl:Dock(FILL)
-                        pnl.Paint = function() end
-                        local list = pnl:Add("DListView")
-                        list:Dock(FILL)
-                        local columns = {}
-                        function list:OnRowRightClick(_, line)
-                            if not IsValid(line) or not line.rowData then return end
-                            local menu = DermaMenu()
-                            menu:AddOption(L("copyRow"), function()
-                                local rowString = ""
-                                for i, column in ipairs(self.Columns or {}) do
-                                    local header = column.Header and column.Header:GetText() or L("columnWithNumber", i)
-                                    local value = line:GetColumnText(i) or ""
-                                    rowString = rowString .. header .. " " .. value .. " | "
-                                end
-
-                                SetClipboardText(string.sub(rowString, 1, -4))
-                            end):SetIcon("icon16/page_copy.png")
-
-                            menu:AddOption(L("viewEntry"), function() openRowInfo(line.rowData) end):SetIcon("icon16/table.png")
-                            menu:AddOption(L("viewDecodedTable"), function() openDecodedTable(tbl, columns, rows) end):SetIcon("icon16/table_go.png")
-                            menu:Open()
-                        end
-
-                        if rows and rows[1] then
-                            for col in pairs(rows[1]) do
-                                list:AddColumn(col)
-                                columns[#columns + 1] = col
-                            end
-
-                            for _, row in ipairs(rows) do
-                                local lineData = {}
-                                for _, col in ipairs(columns) do
-                                    lineData[#lineData + 1] = tostring(row[col])
-                                end
-
-                                local line = list:AddLine(unpack(lineData))
-                                line.rowData = row
-                            end
-                        end
-
-                        local sheetName = tbl:gsub("^lia_", "")
-                        self.sheet:AddSheet(sheetName, pnl)
-                    end
-                end
-
-                net.Start("liaRequestDatabaseView")
                 net.SendToServer()
             end
         })

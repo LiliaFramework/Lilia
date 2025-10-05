@@ -1,7 +1,7 @@
-﻿MODULE.name = "Permissions"
+﻿MODULE.name = "permissionsModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides fine-grained permission management for commands and modules across the framework."
+MODULE.desc = "permissionsSystemDescription"
 MODULE.Privileges = {
     {
         Name = "canBypassCharacterLock",

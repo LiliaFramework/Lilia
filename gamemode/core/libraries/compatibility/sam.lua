@@ -126,6 +126,7 @@ end
 
 local function CanReadNotifications(client)
     if not lia.config.get("AdminOnlyNotification", true) then return true end
+    if not IsValid(client) then return false end
     return client:hasPrivilege("canSeeSAMNotificationsOutsideStaff") or client:isStaffOnDuty()
 end
 

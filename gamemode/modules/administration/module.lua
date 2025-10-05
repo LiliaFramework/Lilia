@@ -1,7 +1,7 @@
-﻿MODULE.name = "Administration"
+﻿MODULE.name = "administrationModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Provides comprehensive administration tools and staff management features."
+MODULE.desc = "administrationToolsDescription"
 MODULE.Privileges = {
     {
         Name = "managePropBlacklist",
@@ -44,12 +44,6 @@ MODULE.Privileges = {
         ID = "listCharacters",
         MinAccess = "admin",
         Category = "character",
-    },
-    {
-        Name = "viewDBTables",
-        ID = "viewDBTables",
-        MinAccess = "superadmin",
-        Category = "database",
     },
     {
         Name = "canAccessFlagManagement",
@@ -158,11 +152,5 @@ MODULE.Privileges = {
         Name = "viewPlayerWarnings",
         MinAccess = "admin",
         Category = "warning",
-    },
-    {
-        ID = "privilegeViewer",
-        Name = "privilegeViewer",
-        MinAccess = "admin",
-        Category = "categoryStaffManagement",
     },
 }

@@ -72,7 +72,7 @@ net.Receive("liaCharacterInfo", function()
         list.OnRowRightClick = function(_, _, line)
             if not IsValid(line) or not line.rowData then return end
             local rowData = line.rowData
-            local menu = DermaMenu()
+            local menu = lia.derma.dermaMenu()
             if canKick and rowData.steamID ~= LocalPlayer():SteamID() then
                 menu:AddOption(L("kick"), function()
                     Derma_Query(L("kickConfirm"), L("confirm"), L("yes"), function()

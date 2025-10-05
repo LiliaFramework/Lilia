@@ -1,7 +1,7 @@
-﻿MODULE.name = "AdminStick"
+﻿MODULE.name = "adminStickModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Adds the Admin Stick tool, allowing staff to quickly perform common moderation actions on players and entities with a single click."
+MODULE.desc = "adminStickDescription"
 MODULE.Privileges = {
     {
         Name = "alwaysSpawnAdminStick",

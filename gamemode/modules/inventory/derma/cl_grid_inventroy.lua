@@ -34,7 +34,7 @@ function PANEL:OnRemove()
     self:liaDeleteInventoryHooks()
 end
 
-vgui.Register("liaInventory", PANEL, "DFrame")
+vgui.Register("liaInventory", PANEL, "liaFrame")
 PANEL = {}
 local function headerHeight(f)
     return IsValid(f.btnClose) and f.btnClose:GetTall() + 4 or 24
@@ -84,7 +84,7 @@ function PANEL:updateRestoreButton()
     local data = char and char:getData("overflowItems")
     if data and data.items and #data.items > 0 then
         local size = data.size or {}
-        self.restoreBtn:SetText("Move Items Back " .. (size[1] or 0) .. "x" .. (size[2] or 0))
+        self.restoreBtn:SetText(L("moveItemsBack", size[1] or 0, size[2] or 0))
         self.restoreBtn:SetVisible(true)
         self:SetTall(self.baseHeight + self.restoreBtn:GetTall() + 4)
     else

@@ -258,7 +258,7 @@ local function GetOrCreateSubCategoryMenu(parent, categoryKey, subcategoryKey, s
 end
 
 local function CreateOrganizedAdminStickMenu(tgt, stores)
-    local menu = DermaMenu()
+    local menu = lia.derma.dermaMenu()
     local cl = LocalPlayer()
     local categoryOrder = MODULE.adminStickCategoryOrder or {}
     for _, categoryKey in ipairs(categoryOrder) do
@@ -320,7 +320,7 @@ local function OpenPlayerModelUI(tgt)
         AdminStickIsOpen = false
     end
 
-    local sc = vgui.Create("DScrollPanel", fr)
+    local sc = vgui.Create("liaScrollPanel", fr)
     sc:Dock(FILL)
     local wr = vgui.Create("DIconLayout", sc)
     wr:Dock(FILL)
@@ -1007,7 +1007,7 @@ function MODULE:OpenAdminStickUI(tgt)
     local cl = LocalPlayer()
     if not IsValid(tgt) or not tgt:isDoor() and not tgt:IsPlayer() and not hasAdminStickTargetClass(tgt:GetClass()) then return end
     if not (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then return end
-    local tempMenu = DermaMenu()
+    local tempMenu = lia.derma.dermaMenu()
     local stores = {}
     local hasOptions = false
     if tgt:IsPlayer() then

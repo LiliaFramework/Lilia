@@ -117,7 +117,7 @@ function lia.keybind.add(k, d, cb)
     d = isstring(d) and L(d) or d
     if not c then return end
     if not istable(cb) or not cb.onPress then
-        lia.error("lia.keybind.add: Invalid callback format in lia.keybind.add of function '" .. tostring(d) .. "'. Must use table with 'onPress' function. (Function: lia.keybind.add)")
+        lia.error(L("keybindAddInvalidCallbackFormat") .. " '" .. tostring(d) .. "'. Must use table with 'onPress' function. (Function: lia.keybind.add)")
         return
     end
 
@@ -143,7 +143,7 @@ lia.keybind.add(KEY_NONE, "adminMode", {
     onPress = function(client)
         if not IsValid(client) then return end
         local steamID = client:SteamID()
-        client:ChatPrint("hi")
+        client:ChatPrint(L("adminModeToggle"))
         if client:isStaffOnDuty() then
             local oldCharID = client:getNetVar("OldCharID", 0)
             if oldCharID > 0 then
@@ -397,18 +397,21 @@ if CLIENT then
 
             for _, action in ipairs(sortedActions) do
                 local data = lia.keybind.stored[action]
-                local rowPanel = vgui.Create("DPanel")
+                local rowPanel = vgui.Create("SemiTransparentDPanel")
                 rowPanel:SetTall(70)
                 rowPanel:DockPadding(4, 4, 4, 4)
-                rowPanel.Paint = nil
+                rowPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw() end
                 local lbl = rowPanel:Add("DLabel")
                 lbl:Dock(FILL)
+                lbl:DockMargin(10, 10, 10, 10)
                 lbl:SetFont("liaBigFont")
-                lbl:SetText(L(action))
+                lbl:SetText("")
+                lbl.Paint = function(_, w, h) draw.SimpleText(L(action), "liaBigFont", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
                 local currentKey = lia.keybind.get(action, KEY_NONE)
                 if allowEdit then
-                    local combo = rowPanel:Add("DComboBox")
+                    local combo = rowPanel:Add("liaComboBox")
                     combo:Dock(RIGHT)
+                    combo:DockMargin(10, 10, 10, 10)
                     combo:SetWide(200)
                     combo:SetFont("liaMediumFont")
                     combo:SetValue(input.GetKeyName(currentKey) or "NONE")
@@ -445,11 +448,12 @@ if CLIENT then
                         currentKey = newKey
                     end
 
-                    local unbindButton = rowPanel:Add("DButton")
+                    local unbindButton = rowPanel:Add("liaButton")
                     unbindButton:Dock(RIGHT)
+                    unbindButton:DockMargin(10, 10, 10, 10)
                     unbindButton:SetWide(100)
                     unbindButton:SetFont("liaMediumFont")
-                    unbindButton:SetText(L("unbind"):upper())
+                    unbindButton:SetTxt(L("unbind"):upper())
                     unbindButton.DoClick = function()
                         taken[currentKey] = nil
                         if lia.keybind.stored[currentKey] == action then lia.keybind.stored[currentKey] = nil end
@@ -462,8 +466,10 @@ if CLIENT then
                 else
                     local textLabel = rowPanel:Add("DLabel")
                     textLabel:Dock(RIGHT)
+                    textLabel:DockMargin(10, 10, 10, 10)
                     textLabel:SetFont("liaBigFont")
-                    textLabel:SetText(input.GetKeyName(currentKey) or "NONE")
+                    textLabel:SetText("")
+                    textLabel.Paint = function(_, w, h) draw.SimpleText(input.GetKeyName(currentKey) or "NONE", "liaBigFont", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
                 end
 
                 sheet:AddPanelRow(rowPanel, {

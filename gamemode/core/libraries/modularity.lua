@@ -123,6 +123,8 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     MODULE.path = path
     MODULE.isSingleFile = isSingleFile
     MODULE.variable = variable
+    MODULE.name = L(MODULE.name)
+    MODULE.desc = L(MODULE.desc)
     if isSingleFile then
         lia.loader.include(path, "shared")
     else
@@ -213,6 +215,11 @@ function lia.module.initialize()
             if not ok then lia.module.list[id] = nil end
         end
     end
+
+    if lia.UpdateCheckDone then return end
+    lia.loader.checkForUpdates()
+    if SERVER then lia.db.addDatabaseFields() end
+    lia.UpdateCheckDone = true
 end
 
 function lia.module.loadFromDir(directory, group, skip)
@@ -226,29 +233,3 @@ end
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end
-
-hook.Add("CreateInformationButtons", "liaInformationModulesUnified", function(pages)
-    table.insert(pages, {
-        name = "modules",
-        drawFunc = function(parent)
-            local sheet = vgui.Create("liaSheet", parent)
-            sheet:SetPlaceholderText(L("searchModules"))
-            sheet:SetPadding(5)
-            sheet:SetSpacing(4)
-            for _, moduleData in SortedPairs(lia.module.list) do
-                local title = moduleData.name or ""
-                local desc = moduleData.desc or ""
-                local right = moduleData.version and tostring(moduleData.version) or ""
-                local row = sheet:AddTextRow({
-                    title = title,
-                    desc = desc,
-                    right = right,
-                })
-
-                row.filterText = (title .. " " .. desc .. " " .. right):lower()
-            end
-
-            sheet:Refresh()
-        end
-    })
-end)

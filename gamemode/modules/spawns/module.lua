@@ -1,4 +1,4 @@
-﻿MODULE.name = "Spawns"
+﻿MODULE.name = "spawnsModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Manages player spawns and spawn protection systems."
+MODULE.desc = "spawnSystemDescription"

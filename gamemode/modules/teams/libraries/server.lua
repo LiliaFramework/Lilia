@@ -130,23 +130,10 @@ local function applyAttributes(client, attr)
     end
 end
 
-local function applyBodyGroups(client, bodyGroups)
-    if not bodyGroups or not istable(bodyGroups) then return end
-    for name, value in pairs(bodyGroups) do
-        local index = client:FindBodygroupByName(name)
-        if index > -1 then client:SetBodygroup(index, value) end
-    end
-end
-
 function MODULE:FactionOnLoadout(client)
     local faction = lia.faction.indices[client:Team()]
     if not faction then return end
     applyAttributes(client, faction)
-end
-
-function MODULE:FactionPostLoadout(client)
-    local faction = lia.faction.indices[client:Team()]
-    if faction and faction.bodyGroups then applyBodyGroups(client, faction.bodyGroups) end
 end
 
 function MODULE:CanCharBeTransfered(character, faction)
@@ -195,7 +182,7 @@ end
 function MODULE:ClassPostLoadout(client)
     local character = client:getChar()
     local class = lia.class.list[character:getClass()]
-    if class and class.bodyGroups then applyBodyGroups(client, class.bodyGroups) end
+    if not class then return end
 end
 
 function MODULE:CanPlayerUseChar(client, character)
@@ -262,7 +249,7 @@ net.Receive("liaKickCharacter", function(_, client)
             if oldFactionData and oldFactionData.isDefault then return end
             lia.db.updateTable({
                 faction = defaultFaction.uniqueID
-            }, nil, "characters", "id = " .. characterID):next(function() lia.char.setCharDatabase(characterID, "factionKickWarn", true) end):catch(function(err) lia.error("Failed to update character faction: " .. tostring(err)) end)
-        end):catch(function(err) lia.error("Failed to query character faction: " .. tostring(err)) end)
+            }, nil, "characters", "id = " .. characterID):next(function() lia.char.setCharDatabase(characterID, "factionKickWarn", true) end):catch(function(err) lia.error(L("failedToUpdateCharacterFaction") .. " " .. tostring(err)) end)
+        end):catch(function(err) lia.error(L("failedToQueryCharacterFaction") .. " " .. tostring(err)) end)
     end
 end)

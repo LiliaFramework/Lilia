@@ -23,18 +23,6 @@
     end
 end)
 
-net.Receive("liaRequestTableData", function(_, client)
-    if not client:hasPrivilege("viewDBTables") then return end
-    local tbl = net.ReadString()
-    if not tbl or tbl == "" then return end
-    lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
-        net.Start("liaDbTableData")
-        net.WriteString(tbl)
-        net.WriteTable(res or {})
-        net.Send(client)
-    end)
-end)
-
 net.Receive("liaManagesitroomsAction", function(_, client)
     if not client:hasPrivilege("manageSitRooms") then return end
     local action = net.ReadUInt(2)
@@ -199,30 +187,6 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
     end)
 end)
 
-net.Receive("liaRequestLevelingList", function(_, client)
-    if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
-    local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local fields = table.concat({"c.id", "c.name", "c.steamID", "c.faction", "c.level", "c.xp"}, ", ")
-    local query = "SELECT " .. fields .. " FROM lia_characters AS c WHERE c.schema = '" .. lia.db.escape(gamemode) .. "'"
-    lia.db.query(query, function(rows)
-        local data = {}
-        for _, row in ipairs(rows or {}) do
-            local factionData = lia.faction.teams[row.faction]
-            local factionName = factionData and factionData.name or "Unknown"
-            data[#data + 1] = {
-                ID = row.id,
-                Name = row.name,
-                SteamID = tostring(row.steamID or ""),
-                Faction = factionName,
-                Level = tonumber(row.level) or 1,
-                XP = tonumber(row.xp) or 0
-            }
-        end
-
-        lia.net.writeBigTable(client, "liaLevelingList", data)
-    end)
-end)
-
 net.Receive("liaRequestAllFlags", function(_, client)
     if not client:hasPrivilege("canAccessFlagManagement") then return end
     local data = {}
@@ -256,27 +220,6 @@ net.Receive("liaModifyFlags", function(_, client)
         char:setFlags(flags)
         client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
     end
-end)
-
-net.Receive("liaRequestDatabaseView", function(_, client)
-    if not IsValid(client) or not client:hasPrivilege("viewDBTables") then return end
-    lia.db.getTables():next(function(tables)
-        tables = tables or {}
-        local data = {}
-        local remaining = #tables
-        if remaining == 0 then
-            lia.net.writeBigTable(client, "liaDatabaseViewData", data)
-            return
-        end
-
-        for _, tbl in ipairs(tables) do
-            lia.db.query("SELECT * FROM " .. lia.db.escapeIdentifier(tbl), function(res)
-                data[tbl] = res or {}
-                remaining = remaining - 1
-                if remaining == 0 then lia.net.writeBigTable(client, "liaDatabaseViewData", data) end
-            end)
-        end
-    end)
 end)
 
 local function buildSummary()
@@ -404,23 +347,98 @@ FROM lia_players
     end)
 end)
 
-net.Receive("liaRequestPlayerCharacters", function(_, client)
-    if not (client:hasPrivilege("canAccessPlayerList") or client:hasPrivilege("canManageFactions")) then return end
-    local steamID = net.ReadString()
-    if not steamID or steamID == "" then return end
-    local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local query = string.format("SELECT name FROM lia_characters WHERE steamID = %s AND schema = '%s'", lia.db.convertDataType(steamID), lia.db.escape(gamemode))
-    lia.db.query(query, function(data)
-        local chars = {}
-        if data then
-            for _, v in ipairs(data) do
-                chars[#chars + 1] = v.name
-            end
+net.Receive("liaRequestMapEntities", function(_, client)
+    if not client:hasPrivilege("manageCharacters") then return end
+    local entities = {}
+    for _, entity in ents.Iterator() do
+        if IsValid(entity) and (entity:CreatedByMap() or entity:isDoor() or entity:isProp()) then
+            entities[#entities + 1] = {
+                class = entity:GetClass(),
+                model = entity:GetModel(),
+                name = entity:GetName() or entity.PrintName or "",
+                position = tostring(entity:GetPos()),
+                angles = tostring(entity:GetAngles()),
+                mapCreated = entity:CreatedByMap(),
+                isDoor = entity:isDoor(),
+                isProp = entity:isProp(),
+                health = entity:Health(),
+                maxHealth = entity:GetMaxHealth(),
+                material = entity:GetMaterial(),
+                skin = entity:GetSkin(),
+                color = entity:GetColor()
+            }
+        end
+    end
+
+    lia.net.writeBigTable(client, "liaMapEntities", entities)
+end)
+
+net.Receive("liaRequestOnlineStaffData", function(_, client)
+    local d = deferred.new()
+    -- Send data for all online staff members with their ticket and warning counts
+    local staffData = {}
+    for _, ply in player.Iterator() do
+        if IsValid(ply) and ply:isStaff() then
+            local char = ply:getChar()
+            local charID = char and char:getID() or 0
+            local steamID = ply:SteamID()
+            local usergroup = ply:GetUserGroup()
+            local isStaffOnDuty = ply:isStaffOnDuty()
+            local characterName = char and char:getName() or "N/A"
+            staffData[#staffData + 1] = {
+                steamID = steamID,
+                charID = charID,
+                name = ply:Nick(),
+                usergroup = usergroup,
+                isStaffOnDuty = isStaffOnDuty,
+                characterName = characterName,
+                tickets = 0,
+                warnings = 0
+            }
+        end
+    end
+
+    -- If no staff online, send immediately
+    if #staffData == 0 then
+        net.Start("liaOnlineStaffData")
+        net.WriteTable({})
+        net.Send(client)
+        return
+    end
+
+    -- Get warning and ticket counts for each staff member
+    local completedQueries = 0
+    local totalQueries = #staffData * 2 -- 2 queries per staff member (warnings + tickets)
+    for i, staffInfo in ipairs(staffData) do
+        local charID = staffInfo.charID
+        local steamID = staffInfo.steamID
+        -- Get warning count for this character
+        if charID and charID > 0 then
+            lia.db.count("warnings", "charID = " .. lia.db.convertDataType(charID)):next(function(count)
+                staffData[i].warnings = count or 0
+                completedQueries = completedQueries + 1
+                if completedQueries >= totalQueries then d:resolve(staffData) end
+            end)
+        else
+            completedQueries = completedQueries + 1
         end
 
-        lia.net.writeBigTable(client, "liaPlayerCharacters", {
-            steamID = steamID,
-            characters = chars
-        })
+        -- Get ticket count for this player
+        if steamID and steamID ~= "" then
+            lia.db.count("ticketclaims", "requesterSteamID = " .. lia.db.convertDataType(steamID)):next(function(count)
+                staffData[i].tickets = count or 0
+                completedQueries = completedQueries + 1
+                if completedQueries >= totalQueries then d:resolve(staffData) end
+            end)
+        else
+            completedQueries = completedQueries + 1
+        end
+    end
+
+    -- Send the data when all queries complete
+    d:next(function(data)
+        net.Start("liaOnlineStaffData")
+        net.WriteTable(data)
+        net.Send(client)
     end)
 end)

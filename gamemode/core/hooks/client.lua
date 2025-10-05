@@ -479,248 +479,69 @@ function GM:InitPostEntity()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
 
-concommand.Add("lia_vgui_cleanup", function()
-    for _, v in pairs(vgui.GetWorldPanel():GetChildren()) do
-        if not (v.Init and debug.getinfo(v.Init, "Sln").short_src:find("chatbox")) then v:Remove() end
-    end
-end, nil, L("vguiCleanupCommandDesc"))
+function GM:HUDDrawTargetID()
+    return false
+end
 
-concommand.Add("weighpoint_stop", function() hook.Add("HUDPaint", "WeighPoint", function() end) end)
-net.Receive("liaLoadingFailure", function()
-    local reason = net.ReadString()
-    local details = net.ReadString()
-    local errorCount = net.ReadUInt(8)
-    if IsValid(lia.loadingFailurePanel) then lia.loadingFailurePanel:Remove() end
-    lia.loadingFailurePanel = vgui.Create("liaLoadingFailure")
-    lia.loadingFailurePanel:SetFailureInfo(reason, details)
-    for _ = 1, errorCount do
-        local errorMessage = net.ReadString()
-        local line = net.ReadString()
-        local file = net.ReadString()
-        lia.loadingFailurePanel:AddError(errorMessage, line, file)
-    end
-end)
+function GM:HUDDrawPickupHistory()
+    return false
+end
 
-local dermaPreviewFrame
-concommand.Add("lia_open_derma_preview", function()
-    if IsValid(dermaPreviewFrame) then dermaPreviewFrame:Remove() end
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(L("dermaPreviewTitle"))
-    frame:SetSize(ScrW() * 0.8, ScrH() * 0.8)
-    frame:Center()
-    frame:MakePopup()
-    dermaPreviewFrame = frame
-    local scroll = vgui.Create("DScrollPanel", frame)
-    scroll:Dock(FILL)
-    local function addPreview(name, creator)
-        local label = scroll:Add("DLabel")
-        label:Dock(TOP)
-        label:DockMargin(10, 10, 10, 2)
-        label:SetText(name)
-        label:SizeToContents()
-        local panel = creator()
-        if IsValid(panel) then
-            panel:Dock(TOP)
-            panel:DockMargin(10, 2, 10, 0)
+function GM:HUDAmmoPickedUp()
+    return false
+end
+
+function GM:DrawDeathNotice()
+    return false
+end
+
+-- Refresh UI elements when fonts change
+hook.Add("RefreshFonts", "liaRefreshUIElements", function()
+    print("RefreshFonts hook triggered - refreshing UI elements")
+    -- Force all VGUI elements to invalidate their layout and refresh fonts
+    local function refreshPanel(panel)
+        if not IsValid(panel) then return end
+        -- Invalidate layout to force re-calculation with new fonts
+        panel:InvalidateLayout(true)
+        -- Force re-render
+        panel:SetVisible(false)
+        panel:SetVisible(true)
+        -- Recursively refresh child panels
+        for _, child in pairs(panel:GetChildren()) do
+            refreshPanel(child)
         end
     end
 
-    addPreview("DFrame", function()
-        local container = scroll:Add("DPanel")
-        container:SetTall(70)
-        container:SetPaintBackground(false)
-        local miniFrame = vgui.Create("DFrame", container)
-        miniFrame:SetTitle("DFrame")
-        miniFrame:SetSize(150, 60)
-        miniFrame:SetDraggable(false)
-        miniFrame:ShowCloseButton(true)
-        miniFrame:SetPos(0, 5)
-        return container
-    end)
+    -- Refresh F1 menu if open
+    if IsValid(lia.gui.menu) then
+        lia.gui.menu:Update()
+        refreshPanel(lia.gui.menu)
+    end
 
-    addPreview("DPanel", function()
-        local panel = scroll:Add("DPanel")
-        panel:SetTall(50)
-        return panel
-    end)
+    -- Refresh character menu if open
+    if IsValid(lia.gui.character) then
+        lia.gui.character:Update()
+        refreshPanel(lia.gui.character)
+    end
 
-    addPreview("DButton", function()
-        local btn = scroll:Add("DButton")
-        btn:SetText("DButton")
-        return btn
-    end)
+    -- Refresh main menu if open
+    if IsValid(lia.gui.main) then
+        lia.gui.main:Update()
+        refreshPanel(lia.gui.main)
+    end
 
-    addPreview("DLabel", function()
-        local lbl = scroll:Add("DLabel")
-        lbl:SetText("DLabel")
-        lbl:SizeToContents()
-        return lbl
-    end)
+    -- Refresh scoreboard if open
+    if IsValid(lia.gui.score) then
+        lia.gui.score:Update()
+        refreshPanel(lia.gui.score)
+    end
 
-    addPreview("DTextEntry", function()
-        local txt = scroll:Add("DTextEntry")
-        txt:SetText("DTextEntry")
-        return txt
-    end)
+    -- Refresh chatbox if open
+    if IsValid(lia.gui.chat) then
+        lia.gui.chat:Update()
+        refreshPanel(lia.gui.chat)
+    end
 
-    addPreview("DCheckBox", function()
-        local cb = scroll:Add("DCheckBox")
-        cb:SetValue(true)
-        return cb
-    end)
-
-    addPreview("DComboBox", function()
-        local combo = scroll:Add("DComboBox")
-        combo:AddChoice(L("optionWithNumber", 1))
-        combo:AddChoice(L("optionWithNumber", 2))
-        combo:ChooseOption(L("optionWithNumber", 1), 1)
-        return combo
-    end)
-
-    addPreview("DListView", function()
-        local listView = scroll:Add("DListView")
-        listView:SetTall(120)
-        listView:AddColumn(L("columnWithNumber", 1))
-        listView:AddColumn(L("columnWithNumber", 2))
-        listView:AddLine(L("rowColumn", 1, 1), L("rowColumn", 1, 2))
-        listView:AddLine(L("rowColumn", 2, 1), L("rowColumn", 2, 2))
-        return listView
-    end)
-
-    addPreview("DImage", function()
-        local container = scroll:Add("DPanel")
-        container:SetTall(40)
-        container:SetPaintBackground(false)
-        local img = vgui.Create("DImage", container)
-        img:SetImage("icon16/star.png")
-        img:SetSize(32, 32)
-        img:SetPos(0, 4)
-        return container
-    end)
-
-    addPreview("DPanelList", function()
-        local list = scroll:Add("DPanelList")
-        list:SetTall(80)
-        list:EnableVerticalScrollbar()
-        list:SetPadding(5)
-        for i = 1, 10 do
-            local item = vgui.Create("DLabel")
-            item:SetText(L("item") .. " " .. i)
-            item:SizeToContents()
-            list:AddItem(item)
-        end
-        return list
-    end)
-
-    addPreview("DProgressBar", function()
-        local progress = scroll:Add("DProgress")
-        progress:SetTall(20)
-        progress:SetFraction(0.5)
-        return progress
-    end)
-
-    addPreview("DNumSlider", function()
-        local slider = scroll:Add("DNumSlider")
-        slider:SetText("DNumSlider")
-        slider:SetMin(0)
-        slider:SetMax(100)
-        slider:SetValue(50)
-        slider:SetDecimals(0)
-        slider:SetTall(35)
-        return slider
-    end)
-
-    addPreview("DScrollPanel", function()
-        local subScroll = scroll:Add("DScrollPanel")
-        subScroll:SetTall(100)
-        for i = 1, 20 do
-            local line = subScroll:Add("DLabel")
-            line:SetText(L("line") .. " " .. i)
-            line:Dock(TOP)
-            line:DockMargin(0, 0, 0, 5)
-        end
-        return subScroll
-    end)
-
-    addPreview("DTree", function()
-        local tree = scroll:Add("DTree")
-        tree:SetTall(100)
-        local node1 = tree:AddNode(L("nodeWithNumber", 1))
-        node1:AddNode(L("childWithNumber", 1))
-        node1:AddNode(L("childWithNumber", 2))
-        tree:AddNode(L("nodeWithNumber", 2))
-        return tree
-    end)
-
-    addPreview("DColorMixer", function()
-        local mixer = scroll:Add("DColorMixer")
-        mixer:SetTall(150)
-        mixer:SetPalette(true)
-        mixer:SetAlphaBar(true)
-        mixer:SetWangs(true)
-        return mixer
-    end)
-
-    addPreview("DPropertySheet", function()
-        local sheet = scroll:Add("DPropertySheet")
-        sheet:SetTall(120)
-        local tab1 = vgui.Create("DPanel")
-        tab1:Dock(FILL)
-        local lbl1 = vgui.Create("DLabel", tab1)
-        lbl1:Dock(TOP)
-        lbl1:DockMargin(0, 0, 0, 4)
-        lbl1:SetText(L("settings"))
-        lbl1:SizeToContents()
-        local btn1 = vgui.Create("DButton", tab1)
-        btn1:Dock(TOP)
-        btn1:SetText(L("apply"))
-        local tab2 = vgui.Create("DPanel")
-        tab2:Dock(FILL)
-        local entry = vgui.Create("DTextEntry", tab2)
-        entry:Dock(TOP)
-        entry:SetPlaceholderText(L("enterValue"))
-        local chkLabel = vgui.Create("DCheckBoxLabel", tab2)
-        chkLabel:Dock(TOP)
-        chkLabel:DockMargin(0, 4, 0, 0)
-        chkLabel:SetText(L("enableFeature"))
-        sheet:AddSheet(L("tabWithNumber", 1), tab1, "icon16/wrench.png")
-        sheet:AddSheet(L("tabWithNumber", 2), tab2, "icon16/cog.png")
-        return sheet
-    end)
-
-    addPreview("DCategoryList", function()
-        local catList = scroll:Add("DCategoryList")
-        catList:SetTall(100)
-        local category = catList:Add(L("categoryWithNumber", 1))
-        category:Add(L("itemWithNumber", 1))
-        category:Add(L("itemWithNumber", 2))
-        category:SetExpanded(true)
-        return catList
-    end)
-
-    addPreview("DCollapsibleCategory", function()
-        local collCat = scroll:Add("DCollapsibleCategory")
-        collCat:SetLabel("DCollapsibleCategory")
-        local content = vgui.Create("DPanel")
-        content:SetTall(40)
-        collCat:SetContents(content)
-        collCat:SetExpanded(true)
-        if collCat.GetHeaderHeight then
-            collCat:SetTall(collCat:GetHeaderHeight() + content:GetTall())
-        else
-            collCat:SetTall(60)
-        end
-        return collCat
-    end)
-
-    addPreview("DModelPanel", function()
-        local container = scroll:Add("DPanel")
-        container:SetTall(300)
-        container:SetPaintBackground(false)
-        local modelPanel = vgui.Create("DModelPanel", container)
-        modelPanel:SetModel("models/props_c17/oildrum001.mdl")
-        modelPanel:SetSize(300, 300)
-        modelPanel:SetPos(0, 0)
-        return container
-    end)
+    -- Refresh any other open UI elements that use fonts
+    hook.Run("OnFontsRefreshed")
 end)

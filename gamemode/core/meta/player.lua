@@ -26,9 +26,21 @@ do
     playerMeta.GetName = playerMeta.Name
 end
 
+function playerMeta:doGesture(a, b, c)
+    self:AnimRestartGesture(a, b, c)
+    if SERVER then
+        net.Start("liaSyncGesture")
+        net.WriteEntity(self)
+        net.WriteUInt(a, 8)
+        net.WriteUInt(b, 8)
+        net.WriteBool(c)
+        net.Broadcast()
+    end
+end
+
 function playerMeta:hasPrivilege(privilegeName)
     if not isstring(privilegeName) then
-        lia.error("hasPrivilege expected a string, got " .. tostring(privilegeName))
+        lia.error(L("hasPrivilegeExpectedString", tostring(privilegeName)))
         return false
     end
     return lia.administrator.hasAccess(self, privilegeName)

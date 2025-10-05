@@ -126,7 +126,7 @@ function MODULE:OnDatabaseLoaded()
 end
 
 lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
-    name = "Storage Container",
+    name = L("storageContainer"),
     invType = "GridInv",
     invData = {
         w = 6,
@@ -135,7 +135,7 @@ lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
 })
 
 lia.inventory.registerTrunk("vehicle", {
-    name = "Vehicle Trunk",
+    name = L("vehicleTrunk"),
     invType = "GridInv",
     invData = {
         w = lia.config.get("trunkInvW", 10),

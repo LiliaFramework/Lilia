@@ -5,53 +5,66 @@ net.Receive("liaActiveTickets", function()
     local tickets = net.ReadTable() or {}
     if not IsValid(ticketPanel) then return end
     ticketPanel:Clear()
+    ticketPanel:DockPadding(6, 6, 6, 6)
+    ticketPanel.Paint = function() end
     local search = ticketPanel:Add("DTextEntry")
     search:Dock(TOP)
+    search:DockMargin(0, 0, 0, 15)
+    search:SetTall(30)
     search:SetPlaceholderText(L("search"))
-    search:SetTextColor(Color(255, 255, 255))
-    local list = ticketPanel:Add("DListView")
+    search:SetTextColor(Color(200, 200, 200))
+    search.PaintOver = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+    local list = ticketPanel:Add("liaTable")
     list:Dock(FILL)
-    local function addSizedColumn(text)
-        local col = list:AddColumn(text)
-        surface.SetFont(col.Header:GetFont())
-        local w = surface.GetTextSize(col.Header:GetText())
-        col:SetMinWidth(w + 16)
-        col:SetWidth(w + 16)
-        return col
+    local columns = {
+        {
+            name = L("timestamp"),
+            field = "timestamp"
+        },
+        {
+            name = L("requester"),
+            field = "requesterDisplay"
+        },
+        {
+            name = L("admin"),
+            field = "adminDisplay"
+        },
+        {
+            name = L("message"),
+            field = "message"
+        }
+    }
+
+    for _, col in ipairs(columns) do
+        list:AddColumn(col.name)
     end
 
-    addSizedColumn(L("timestamp"))
-    addSizedColumn(L("requester"))
-    addSizedColumn(L("admin"))
-    addSizedColumn(L("message"))
     local function populate(filter)
         list:Clear()
         filter = string.lower(filter or "")
         for _, t in pairs(tickets) do
             local requester = t.requester or ""
+            local requesterDisplay = ""
             if requester ~= "" then
                 local requesterPly = lia.util.getBySteamID(requester)
                 local requesterName = IsValid(requesterPly) and requesterPly:Nick() or requester
-                requester = string.format("%s (%s)", requesterName, requester)
+                requesterDisplay = string.format("%s (%s)", requesterName, requester)
             end
 
             local ts = os.date("%Y-%m-%d %H:%M:%S", t.timestamp or os.time())
-            local entries = {
-                ts,
-                requester,
-                t.admin and (function()
-                    local adminPly = lia.util.getBySteamID(t.admin)
-                    local adminName = IsValid(adminPly) and adminPly:Nick() or t.admin
-                    return string.format("%s (%s)", adminName, t.admin)
-                end)() or L("unassigned"),
-                t.message or ""
-            }
+            local adminDisplay = L("unassigned")
+            if t.admin then
+                local adminPly = lia.util.getBySteamID(t.admin)
+                local adminName = IsValid(adminPly) and adminPly:Nick() or t.admin
+                adminDisplay = string.format("%s (%s)", adminName, t.admin)
+            end
 
+            local values = {ts, requesterDisplay, adminDisplay, t.message or ""}
             local match = false
             if filter == "" then
                 match = true
             else
-                for _, value in ipairs(entries) do
+                for _, value in ipairs(values) do
                     if tostring(value):lower():find(filter, 1, true) then
                         match = true
                         break
@@ -59,7 +72,7 @@ net.Receive("liaActiveTickets", function()
                 end
             end
 
-            if match then list:AddLine(unpack(entries)) end
+            if match then list:AddLine(unpack(values)) end
         end
     end
 
@@ -67,7 +80,7 @@ net.Receive("liaActiveTickets", function()
     populate("")
     function list:OnRowRightClick(_, line)
         if not IsValid(line) then return end
-        local menu = DermaMenu()
+        local menu = lia.derma.dermaMenu()
         menu:AddOption(L("copyRow"), function()
             local rowString = ""
             for i, column in ipairs(self.Columns or {}) do
@@ -85,29 +98,26 @@ end)
 
 net.Receive("liaTicketsCount", function()
     local count = net.ReadInt(32)
-    if count > 0 and not ticketsTabAdded then
-        ticketsTabAdded = true
-        hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
-            if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
-            table.insert(pages, {
-                name = "tickets",
-                icon = "icon16/report.png",
-                drawFunc = function(panel)
-                    ticketPanel = panel
-                    net.Start("liaRequestActiveTickets")
-                    net.SendToServer()
-                end
-            })
-        end)
+    ticketsCount = count
+    if not ticketsTabAdded and count > 0 then ticketsTabAdded = true end
+end)
+
+hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
+    if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
+    if ticketsCount and ticketsCount > 0 then
+        table.insert(pages, {
+            name = "tickets",
+            icon = "icon16/report.png",
+            drawFunc = function(panel)
+                ticketPanel = panel
+                net.Start("liaRequestActiveTickets")
+                net.SendToServer()
+            end
+        })
     end
 end)
 
-function MODULE:PopulateAdminTabs()
-    if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
-    net.Start("liaRequestTicketsCount")
-    net.SendToServer()
-end
-
+-- Tickets count is requested and handled by the hook above
 net.Receive("liaViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()
@@ -125,7 +135,7 @@ net.Receive("liaTicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
-    if LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets") then MODULE:TicketFrame(pl, msg, claimed) end
+    if IsValid(LocalPlayer()) and (LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets")) then MODULE:TicketFrame(pl, msg, claimed) end
 end)
 
 net.Receive("liaTicketSystemClaim", function()

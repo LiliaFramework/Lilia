@@ -197,7 +197,7 @@ properties.Add("npc_weapon", {
             Header:SetText(CategoryName)
             PropPanel:Add(Header)
             for _, WeaponTable in SortedPairsByMemberValue(v, "PrintName") do
-                if WeaponTable.AdminOnly and not LocalPlayer():hasPrivilege("canSpawnSWEPs") then continue end
+                if WeaponTable.AdminOnly and (not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("canSpawnSWEPs")) then continue end
                 local icon = vgui.Create("ContentIcon", PropPanel)
                 icon:SetMaterial("entities/" .. WeaponTable.ClassName .. ".png")
                 icon:SetName(WeaponTable.PrintName and language.GetPhrase(WeaponTable.PrintName) or "#" .. WeaponTable.ClassName)

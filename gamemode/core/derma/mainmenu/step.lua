@@ -69,4 +69,4 @@ end
 function PANEL:onHide()
 end
 
-vgui.Register("liaCharacterCreateStep", PANEL, "DScrollPanel")
+vgui.Register("liaCharacterCreateStep", PANEL, "liaScrollPanel")

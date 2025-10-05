@@ -1,10 +1,10 @@
-﻿MODULE.name = "Inventory"
+﻿MODULE.name = "inventoryModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
-MODULE.desc = "Implements a modular grid-based inventory with item stacking, weight limits, and support for hot-loading additional modules."
+MODULE.desc = "inventorySystemDescription"
 MODULE.Privileges = {
     {
-        Name = "No item cooldown",
+        Name = "noItemCooldown",
         ID = "noItemCooldown",
         MinAccess = "admin",
         Category = "categoryStaffManagement"

@@ -48,36 +48,36 @@ local function validateSoundFile(filePath, fileData)
     if not extMatch then return false, "no file extension" end
     local ext = extMatch:lower()
     if ext == "wav" then
-        if not fileData:find("^RIFF") or not fileData:find("WAVE") then return false, "invalid wav header" end
+        if not fileData:find("^RIFF") or not fileData:find("WAVE") then return false, L("invalidWAVHeader") end
     elseif ext == "mp3" then
         if not fileData:find("^ID3") and not fileData:find("\255\251") and not fileData:find("\255\250") then return false, "invalid mp3 format" end
     elseif ext == "ogg" then
-        if not fileData:find("^OggS") then return false, "invalid ogg header" end
+        if not fileData:find("^OggS") then return false, L("invalidOGGHeader") end
     end
     return true
 end
 
 local function validateURL(url)
-    if not url or type(url) ~= "string" then return false, "URL is not a valid string" end
-    if not url:find("^https?://") then return false, "URL must start with http:// or https://" end
+    if not url or type(url) ~= "string" then return false, L("urlNotValidString") end
+    if not url:find("^https?://") then return false, L("urlMustStartWithHttp") end
     local domain = url:match("^https?://([^/]+)")
-    if not domain then return false, "URL has no valid domain" end
-    if domain:find("^localhost") or domain:find("^127%.0%.0%.1") then return false, "localhost URLs are not allowed" end
+    if not domain then return false, L("urlNoValidDomain") end
+    if domain:find("^localhost") or domain:find("^127%.0%.0%.1") then return false, L("localhostUrlsNotAllowed") end
     local ipPattern = "^%d+%.%d+%.%d+%.%d+$"
     if domain:match(ipPattern) then
         local parts = string.Explode(".", domain)
-        if #parts ~= 4 then return false, "invalid IP address format" end
+        if #parts ~= 4 then return false, L("invalidIPAddressFormat") end
         for _, part in ipairs(parts) do
             local num = tonumber(part)
-            if not num or num < 0 or num > 255 then return false, "invalid IP address octet" end
+            if not num or num < 0 or num > 255 then return false, L("invalidIPAddressOctet") end
         end
     else
-        if not domain:find("%.") then return false, "domain name must contain at least one dot" end
-        if domain:find("%.%.") then return false, "domain contains consecutive dots" end
+        if not domain:find("%.") then return false, L("domainMustContainDot") end
+        if domain:find("%.%.") then return false, L("domainContainsConsecutiveDots") end
     end
 
-    if url:find("[<>\"\\|]") then return false, "URL contains invalid characters" end
-    if #url > 2048 then return false, "URL is too long (max 2048 characters)" end
+    if url:find("[<>\"\\|]") then return false, L("urlContainsInvalidChars") end
+    if #url > 2048 then return false, L("urlTooLong") end
     return true
 end
 
@@ -86,13 +86,13 @@ function lia.websound.download(name, url, cb)
     name = normalizeName(name)
     local u = url or lia.websound.stored[name]
     if not u or u == "" then
-        if cb then cb(nil, false, "no url") end
+        if cb then cb(nil, false, L("noUrlProvided")) end
         return
     end
 
     local isValidURL, urlValidationError = validateURL(u)
     if not isValidURL then
-        if cb then cb(nil, false, "invalid url: " .. urlValidationError) end
+        if cb then cb(nil, false, L("invalidUrl") .. ": " .. urlValidationError) end
         return
     end
 
@@ -150,10 +150,10 @@ function lia.websound.download(name, url, cb)
                     finalize(true)
                 else
                     file.Delete(savePath)
-                    if cb then cb(nil, false, "Cached file invalid: " .. cachedValidationError) end
+                    if cb then cb(nil, false, L("cachedFileInvalid") .. ": " .. cachedValidationError) end
                 end
             else
-                if cb then cb(nil, false, "Could not read cached file") end
+                if cb then cb(nil, false, L("couldNotReadCachedFile")) end
             end
         elseif cb then
             cb(nil, false, err)
@@ -314,7 +314,7 @@ concommand.Add("lia_saved_sounds", function()
     f:SetSize(ScrW() * 0.6, ScrH() * 0.6)
     f:Center()
     f:MakePopup()
-    local scroll = vgui.Create("DScrollPanel", f)
+    local scroll = vgui.Create("liaScrollPanel", f)
     scroll:Dock(FILL)
     local layout = vgui.Create("DIconLayout", scroll)
     layout:Dock(FILL)
@@ -430,4 +430,6 @@ function lia.websound.getStats()
     }
 end
 
+lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav")
+lia.websound.register("radio_button.wav", "https://bleonheart.github.io/Samael-Assets/misc/radio_button.wav")
 ensureDir(baseDir)

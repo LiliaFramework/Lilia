@@ -26,6 +26,8 @@ function lia.faction.register(uniqueID, data)
     faction.desc = L(faction.desc) or "noDesc"
     faction.color = faction.color or Color(150, 150, 150)
     faction.models = faction.models or DefaultModels
+    -- Set default group to "jedi" if neither isJedi nor isSith are defined
+    if not faction.isJedi and not faction.isSith then faction.group = "jedi" end
     local overrideName = hook.Run("OverrideFactionName", uniqueID, faction.name)
     if overrideName then faction.name = overrideName end
     local overrideDesc = hook.Run("OverrideFactionDesc", uniqueID, faction.desc)
@@ -84,6 +86,8 @@ function lia.faction.loadFromDir(directory)
         local overrideModels = hook.Run("OverrideFactionModels", niceName, FACTION.models)
         if overrideModels then FACTION.models = overrideModels end
         if not FACTION.color then FACTION.color = Color(150, 150, 150) end
+        -- Set default group to "jedi" if neither isJedi nor isSith are defined
+        if not FACTION.isJedi and not FACTION.isSith then FACTION.group = "jedi" end
         team.SetUp(FACTION.index, FACTION.name or L("unknown"), FACTION.color or Color(125, 125, 125))
         FACTION.models = FACTION.models or DefaultModels
         FACTION.uniqueID = FACTION.uniqueID or niceName
@@ -273,7 +277,7 @@ if CLIENT then
         if data then
             if data.isDefault then return true end
             if faction == FACTION_STAFF then
-                local hasPriv = LocalPlayer():hasPrivilege("createStaffCharacter")
+                local hasPriv = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("createStaffCharacter") or false
                 return hasPriv
             end
 

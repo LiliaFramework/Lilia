@@ -7,8 +7,8 @@ SKIN.fontButton = "liaSmallFont"
 SKIN.Colours = table.Copy(derma.SkinList.Default.Colours)
 SKIN.Colours.Window.TitleActive = Color(255, 255, 255)
 SKIN.Colours.Window.TitleInactive = Color(255, 255, 255)
-SKIN.Colours.Label.Dark = Color(200, 200, 200)
-SKIN.Colours.Button.Normal = Color(200, 200, 200)
+SKIN.Colours.Label.Dark = lia.color.theme and lia.color.theme.text or Color(200, 200, 200)
+SKIN.Colours.Button.Normal = lia.color.theme and lia.color.theme.text or Color(200, 200, 200)
 SKIN.Colours.Button.Hover = Color(255, 255, 255)
 SKIN.Colours.Button.Down = Color(180, 180, 180)
 SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
@@ -20,8 +20,9 @@ function SKIN:PaintFrame(panel, w, h)
         if panel.btnClose and panel.btnClose:IsValid() then
             panel.btnClose:SetPos(panel:GetWide() - 16, 4)
             panel.btnClose:SetScaledSize(24, 24)
-            panel.btnClose:SetFont("marlett")
-            panel.btnClose:SetText("r")
+            -- Use Unicode X symbol instead of Marlett for close button
+            panel.btnClose:SetFont("Marlett")
+            panel.btnClose:SetText("✕")
             panel.btnClose:SetTextColor(Color(255, 255, 255))
             panel.btnClose:PerformLayout()
         end
@@ -189,7 +190,7 @@ end
 function SKIN:PaintMenuOption(panel, w, h)
     if not panel.LaidOut then
         panel.LaidOut = true
-        panel:SetTextColor(Color(200, 200, 200, 255))
+        panel:SetTextColor(lia.color.theme.text or Color(200, 200, 200, 255))
     end
 
     if panel.m_bBackground and (panel.Hovered or panel.Highlight) then

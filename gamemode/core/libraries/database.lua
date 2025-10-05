@@ -69,7 +69,7 @@ function lia.db.wipeTables(callback)
     local wipedTables = {}
     local function realCallback()
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), L("dataWiped") .. "\n")
-        if #wipedTables > 0 then MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), "Wiped tables: " .. table.concat(wipedTables, ", ") .. "\n") end
+        if #wipedTables > 0 then MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), L("wipedTables", table.concat(wipedTables, ", ")) .. "\n") end
         if isfunction(callback) then callback() end
     end
 
@@ -724,7 +724,7 @@ function lia.db.removeColumn(tableName, columnName)
 
             lia.db.query("PRAGMA table_info(" .. fullTableName .. ")", function(columns)
                 if not columns then
-                    d:reject("Failed to get table info")
+                    d:reject(L("failedToGetTableInfo"))
                     return
                 end
 
@@ -740,7 +740,7 @@ function lia.db.removeColumn(tableName, columnName)
                 end
 
                 if #newColumns == 0 then
-                    d:reject("Cannot remove the last column from table")
+                    d:reject(L("cannotRemoveLastColumnFromTable"))
                     return
                 end
 
@@ -875,7 +875,7 @@ function lia.db.loadSnapshot(fileName)
             end
 
             insertNextBatch()
-        end, function(err) d:reject("Failed to clear table: " .. tostring(err)) end)
+        end, function(err) d:reject(L("failedToClearTable") .. " " .. tostring(err)) end)
     end, function(err) d:reject(L("tableCheckError") .. " " .. tostring(err)) end)
     return d
 end
@@ -887,19 +887,19 @@ concommand.Add("lia_snapshot", function(_, _, args)
     end
 
     local tableName = args[1]
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Creating snapshot for table: " .. tableName .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("creatingSnapshot", tableName) .. "\n")
     lia.db.createSnapshot(tableName):next(function(result)
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Snapshot created successfully!\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "File: " .. result.file .. "\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Records: " .. result.records .. "\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Path: " .. result.path .. "\n")
-    end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Snapshot failed: " .. tostring(err) .. "\n") end)
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("snapshotCreated") .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotFile", result.file) .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotRecords", result.records) .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotPath", result.path) .. "\n")
+    end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("snapshotFailed", tostring(err)) .. "\n") end)
 end)
 
 concommand.Add("lia_snapshot_load", function(_, _, args)
     if not args[1] then
-        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Usage: lia_snapshot_load <filename>\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Available snapshots:\n")
+        MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotUsage") .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("availableSnapshots") .. "\n")
         local files, _ = file.Find("lilia/snapshots/*.json", "DATA")
         if files and #files > 0 then
             for _, file in ipairs(files) do
@@ -912,24 +912,24 @@ concommand.Add("lia_snapshot_load", function(_, _, args)
     end
 
     local fileName = args[1]
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Loading snapshot: " .. fileName .. "\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("loadingSnapshot", fileName) .. "\n")
     lia.db.loadSnapshot(fileName):next(function(result)
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Snapshot loaded successfully!\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Table: " .. result.table .. "\n")
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Records: " .. result.records .. "\n")
-        if result.timestamp then MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Original timestamp: " .. os.date("%Y-%m-%d %H:%M:%S", result.timestamp) .. "\n") end
-    end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Snapshot load failed: " .. tostring(err) .. "\n") end)
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("snapshotLoaded") .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotTable", result.table) .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotRecords", result.records) .. "\n")
+        if result.timestamp then MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotOriginalTimestamp", os.date("%Y-%m-%d %H:%M:%S", result.timestamp)) .. "\n") end
+    end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("snapshotLoadFailed", tostring(err)) .. "\n") end)
 end)
 
 concommand.Add("lia_add_door_group_column", function()
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Adding door_group column to lia_doors table...\n")
+    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("addingDoorGroupColumn") .. "\n")
     lia.db.fieldExists("lia_doors", "door_group"):next(function(exists)
         if not exists then
-            lia.db.query("ALTER TABLE lia_doors ADD COLUMN door_group TEXT"):next(function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "Successfully added door_group column to lia_doors table\n") end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to add door_group column: " .. tostring(err) .. "\n") end)
+            lia.db.query("ALTER TABLE lia_doors ADD COLUMN door_group TEXT"):next(function() MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), L("doorGroupColumnAdded") .. "\n") end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("doorGroupColumnFailed", tostring(err)) .. "\n") end)
         else
-            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), "door_group column already exists in lia_doors table\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 0), L("doorGroupColumnExists") .. "\n")
         end
-    end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), "Failed to check for door_group column: " .. tostring(err) .. "\n") end)
+    end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("doorGroupColumnCheckFailed", tostring(err)) .. "\n") end)
 end)
 
 function GM:RegisterPreparedStatements()

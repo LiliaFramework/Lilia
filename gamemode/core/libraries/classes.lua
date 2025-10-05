@@ -67,6 +67,8 @@ function lia.class.loadFromDir(directory)
         end
 
         if not CLASS.OnCanBe then CLASS.OnCanBe = function() return true end end
+        CLASS.name = L(CLASS.name)
+        CLASS.desc = L(CLASS.desc)
         lia.class.list[index] = CLASS
         CLASS = nil
     end

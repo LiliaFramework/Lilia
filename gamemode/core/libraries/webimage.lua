@@ -34,26 +34,26 @@ local function buildMaterial(p, flags)
 end
 
 local function validateURL(url)
-    if not url or type(url) ~= "string" then return false, "URL is not a valid string" end
-    if not url:find("^https?://") then return false, "URL must start with http:// or https://" end
+    if not url or type(url) ~= "string" then return false, L("urlNotValidString") end
+    if not url:find("^https?://") then return false, L("urlMustStartWithHttp") end
     local domain = url:match("^https?://([^/]+)")
-    if not domain then return false, "URL has no valid domain" end
-    if domain:find("^localhost") or domain:find("^127%.0%.0%.1") then return false, "localhost URLs are not allowed" end
+    if not domain then return false, L("urlNoValidDomain") end
+    if domain:find("^localhost") or domain:find("^127%.0%.0%.1") then return false, L("localhostUrlsNotAllowed") end
     local ipPattern = "^%d+%.%d+%.%d+%.%d+$"
     if domain:match(ipPattern) then
         local parts = string.Explode(".", domain)
-        if #parts ~= 4 then return false, "invalid IP address format" end
+        if #parts ~= 4 then return false, L("invalidIPAddressFormat") end
         for _, part in ipairs(parts) do
             local num = tonumber(part)
-            if not num or num < 0 or num > 255 then return false, "invalid IP address octet" end
+            if not num or num < 0 or num > 255 then return false, L("invalidIPAddressOctet") end
         end
     else
-        if not domain:find("%.") then return false, "domain name must contain at least one dot" end
-        if domain:find("%.%.") then return false, "domain contains consecutive dots" end
+        if not domain:find("%.") then return false, L("domainMustContainDot") end
+        if domain:find("%.%.") then return false, L("domainContainsConsecutiveDots") end
     end
 
-    if url:find("[<>\"\\|]") then return false, "URL contains invalid characters" end
-    if #url > 2048 then return false, "URL is too long (max 2048 characters)" end
+    if url:find("[<>\"\\|]") then return false, L("urlContainsInvalidChars") end
+    if #url > 2048 then return false, L("urlTooLong") end
     return true
 end
 
@@ -110,7 +110,7 @@ function lia.webimage.download(n, u, cb, flags)
         end
 
         if not extension then
-            if cb then cb(nil, false, "Invalid file format - not PNG or JPEG") end
+            if cb then cb(nil, false, L("invalidFileFormatNotPngJpeg")) end
             return
         end
 
@@ -268,7 +268,7 @@ concommand.Add("lia_saved_images", function()
     f:SetSize(ScrW() * 0.6, ScrH() * 0.6)
     f:Center()
     f:MakePopup()
-    local scroll = vgui.Create("DScrollPanel", f)
+    local scroll = vgui.Create("liaScrollPanel", f)
     scroll:Dock(FILL)
     local layout = vgui.Create("DIconLayout", scroll)
     layout:Dock(FILL)
@@ -345,7 +345,7 @@ concommand.Add("lia_wipewebimages", function()
             lia.webimage.download(name, data.url, nil, data.flags)
         end
 
-        lia.information("Started re-downloading stored web images...")
+        lia.information(L("startedRedownloadingStoredWebImages"))
     end)
 end)
 
@@ -406,4 +406,5 @@ lia.webimage.register("vignette.png", "https://bleonheart.github.io/Samael-Asset
 lia.webimage.register("dark_vignette.png", "https://bleonheart.github.io/Samael-Assets/misc/dark_vignette.png")
 lia.webimage.register("invslotblocked.png", "https://bleonheart.github.io/Samael-Assets/misc/invslotblocked.png")
 lia.webimage.register("settings.png", "https://bleonheart.github.io/Samael-Assets/misc/settings.png")
+lia.webimage.register("close_button.png", "https://bleonheart.github.io/Samael-Assets/misc/close_button.png")
 ensureDir(baseDir)

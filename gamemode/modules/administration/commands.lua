@@ -195,7 +195,8 @@ lia.command.add("charkill", {
             [playerKey] = {"table", choices},
             [reasonKey] = "string",
             [evidenceKey] = "string"
-        }, function(data)
+        }, function(success, data)
+            if not success then return end
             local selection = data[playerKey]
             local reason = data[reasonKey]
             local evidence = data[evidenceKey]
@@ -526,7 +527,7 @@ lia.command.add("plyblindfade", {
         },
     },
     onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
+        local target = lia.util.findPlayer(client, arguments[1])
         if IsValid(target) then
             local duration = tonumber(arguments[2]) or 0
             local colorName = (arguments[3] or "black"):lower()
@@ -899,6 +900,77 @@ lia.command.add("playglobalsound", {
         for _, target in player.Iterator() do
             target:PlaySound(sound)
         end
+    end
+})
+
+lia.command.add("plyspectate", {
+    adminOnly = true,
+    desc = "plySpectateDesc",
+    arguments = {
+        {
+            name = "name",
+            type = "player"
+        },
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not target or not IsValid(target) then
+            client:notifyErrorLocalized("targetNotFound")
+            return
+        end
+
+        if target == client then
+            client:notifyErrorLocalized("cannotSpectateSelf")
+            return
+        end
+
+        if target:getNetVar("liaSpectating") then
+            client:notifyErrorLocalized("targetAlreadySpectated")
+            return
+        end
+
+        client:setNetVar("liaSpectateReturnPos", client:GetPos())
+        client:setNetVar("liaSpectateReturnAng", client:EyeAngles())
+        client:Spectate(OBS_MODE_CHASE)
+        client:SpectateEntity(target)
+        client:GodEnable()
+        client:setNetVar("liaSpectating", true)
+        client:StripWeapons()
+        client:notifySuccessLocalized("spectateStarted", target:Nick())
+        target:notifyInfoLocalized("beingSpectated", client:Nick())
+        lia.log.add(client, "plySpectate", target:Nick())
+    end
+})
+
+lia.command.add("stopspectate", {
+    adminOnly = true,
+    desc = "stopSpectateDesc",
+    onRun = function(client)
+        if not client:getNetVar("liaSpectating") then
+            client:notifyErrorLocalized("notSpectating")
+            return
+        end
+
+        client:UnSpectate()
+        client:GodDisable()
+        client:setNetVar("liaSpectating", false)
+        local returnPos = client:getNetVar("liaSpectateReturnPos")
+        local returnAng = client:getNetVar("liaSpectateReturnAng")
+        if returnPos then
+            client:SetPos(returnPos)
+            client:setNetVar("liaSpectateReturnPos", nil)
+        end
+
+        if returnAng then
+            client:SetEyeAngles(returnAng)
+            client:setNetVar("liaSpectateReturnAng", nil)
+        end
+
+        client:Give("weapon_physgun")
+        client:Give("weapon_physcannon")
+        client:Give("gmod_tool")
+        client:notifySuccessLocalized("spectateStopped")
+        lia.log.add(client, "stopSpectate")
     end
 })
 
@@ -2785,7 +2857,7 @@ lia.command.add("dropmoney", {
             money.charID = character:getID()
             client:notifyMoneyLocalized("moneyDropped", lia.currency.get(amount))
             lia.log.add(client, "moneyDropped", amount)
-            client:DoAnimation(PLAYER_ATTACK1)
+            client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
         end
     end
 })
@@ -2906,37 +2978,38 @@ lia.command.add("exportprivileges", {
 
         if wrote then
             client:notifySuccessLocalized("privilegesExportedSuccessfully", filename)
-            lia.admin(L("privilegesExportedBy", client:Nick(), filename))
+            MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
+            MsgC(Color(255, 153, 0), L("privilegesExportedBy", client:Nick(), filename), "\n")
             lia.log.add(client, "privilegesExported", filename)
         else
             client:notifyErrorLocalized("privilegesExportFailed")
-            lia.error("Failed to export privileges to expected locations")
+            lia.error(L("privilegesExportFailed"))
         end
     end
 })
 
 lia.command.add("serverpassword", {
     superAdminOnly = true,
-    desc = "Get the current server password and copy it to your clipboard.",
+    desc = "serverpasswordDesc",
     alias = {"svpassword", "getserverpassword"},
     onRun = function(client)
         if not IsValid(client) then
             local cvar = GetConVar("sv_password")
             local pw = cvar and cvar:GetString() or ""
             if pw == "" then
-                print("[Lilia] Server password is not set.")
+                print(L("liliaServerPasswordNotSet"))
             else
-                print("[Lilia] Server password: " .. pw)
+                print(L("liliaServerPassword") .. " " .. pw)
             end
             return
         end
 
         local cvar = GetConVar("sv_password")
         local pw = cvar and cvar:GetString() or ""
-        if not isstring(pw) or pw == "" then return "Server password is not set." end
+        if not isstring(pw) or pw == "" then return L("serverPasswordNotSet") end
         net.Start("liaProvideServerPassword")
         net.WriteString(pw)
         net.Send(client)
-        return "Server password sent to you."
+        return L("serverPasswordSent")
     end
 })

@@ -13,8 +13,8 @@ SKIN.fontButton = "liaSmallFont"
 SKIN.Colours = table.Copy(derma.SkinList.Default.Colours)
 SKIN.Colours.Window.TitleActive = Color(255, 255, 255)
 SKIN.Colours.Window.TitleInactive = Color(255, 255, 255)
-SKIN.Colours.Label.Dark = Color(200, 200, 200)
-SKIN.Colours.Button.Normal = Color(200, 200, 200)
+SKIN.Colours.Label.Dark = lia.color.theme and lia.color.theme.text or Color(200, 200, 200)
+SKIN.Colours.Button.Normal = lia.color.theme and lia.color.theme.text or Color(200, 200, 200)
 SKIN.Colours.Button.Hover = Color(255, 255, 255)
 SKIN.Colours.Button.Down = Color(180, 180, 180)
 SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
@@ -160,21 +160,23 @@ function SKIN:PaintScrollBarGrip(_, w, h)
 end
 
 function SKIN:PaintButtonUp(_, w, h)
+    if w <= 0 then return end
     surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
     surface.SetTextColor(255, 255, 255, 255)
-    surface.SetFont("marlett")
+    surface.SetFont("Marlett")
     surface.SetTextPos(1, 1)
-    surface.DrawText("5")
+    surface.DrawText("▲")
 end
 
 function SKIN:PaintButtonDown(_, w, h)
+    if w <= 0 then return end
     surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
     surface.SetTextColor(255, 255, 255, 255)
-    surface.SetFont("marlett")
+    surface.SetFont("Marlett")
     surface.SetTextPos(1, 0)
-    surface.DrawText("6")
+    surface.DrawText("▼")
 end
 
 function SKIN:PaintVScrollBar(_, w, h)
@@ -200,7 +202,7 @@ end
 function SKIN:PaintMenuOption(panel, w, h)
     if not panel.LaidOut then
         panel.LaidOut = true
-        panel:SetTextColor(Color(200, 200, 200, 255))
+        panel:SetTextColor(lia.color.theme.text or Color(200, 200, 200, 255))
     end
 
     if panel.m_bBackground and (panel.Hovered or panel.Highlight) then
@@ -303,4 +305,3 @@ function SKIN:PaintMenuBar(panel, w, h)
 end
 
 derma.DefineSkin(L("liliaSkin"), L("liliaSkinDesc"), SKIN)
-derma.RefreshSkins()

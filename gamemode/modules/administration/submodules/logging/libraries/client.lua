@@ -1,32 +1,43 @@
 ﻿local receivedPanel
 local function OpenLogsUI(panel, categorizedLogs)
     panel:Clear()
-    local sheet = panel:Add("DPropertySheet")
+    panel:DockPadding(6, 6, 6, 6)
+    panel.Paint = function() end
+    local sheet = panel:Add("liaTabs")
     sheet:Dock(FILL)
-    sheet:DockMargin(10, 10, 10, 10)
-    local function addSizedColumn(list, text)
-        local col = list:AddColumn(text)
-        surface.SetFont(col.Header:GetFont())
-        local w = surface.GetTextSize(col.Header:GetText())
-        col:SetMinWidth(w + 16)
-        col:SetWidth(w + 16)
-        return col
-    end
-
     for category, logs in pairs(categorizedLogs) do
-        local page = sheet:Add("DPanel")
+        local page = vgui.Create("DPanel")
         page:Dock(FILL)
         page:DockPadding(10, 10, 10, 10)
+        page.Paint = function() end
         local search = page:Add("DTextEntry")
         search:Dock(TOP)
+        search:DockMargin(0, 0, 0, 15)
+        search:SetTall(30)
         search:SetPlaceholderText(L("searchLogs"))
-        search:SetTextColor(Color(255, 255, 255))
-        local list = page:Add("DListView")
+        search:SetTextColor(Color(200, 200, 200))
+        search.PaintOver = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        local list = page:Add("liaTable")
         list:Dock(FILL)
-        list:SetMultiSelect(false)
-        addSizedColumn(list, L("timestamp"))
-        addSizedColumn(list, L("message"))
-        addSizedColumn(list, L("steamID"))
+        local columns = {
+            {
+                name = L("timestamp"),
+                field = "timestamp"
+            },
+            {
+                name = L("message"),
+                field = "message"
+            },
+            {
+                name = L("steamID"),
+                field = "steamID"
+            }
+        }
+
+        for _, col in ipairs(columns) do
+            list:AddColumn(col.name)
+        end
+
         local function populate(filter)
             filter = string.lower(filter or "")
             list:Clear()
@@ -41,12 +52,12 @@ local function OpenLogsUI(panel, categorizedLogs)
         end
 
         search.OnChange = function() populate(search:GetValue()) end
-        list.OnRowRightClick = function(_, _, line)
+        function list:OnRowRightClick(_, line)
             if not IsValid(line) or not line.rowData then return end
             local data = line.rowData
-            local menu = DermaMenu()
-            if data.steamID and data.steamID ~= "" then menu:AddOption(L("copySteamID"), function() SetClipboardText(data.steamID) end) end
-            menu:AddOption(L("copyLogMessage"), function() SetClipboardText(data.message or "") end)
+            local menu = lia.derma.dermaMenu()
+            if data.steamID and data.steamID ~= "" then menu:AddOption(L("copySteamID"), function() SetClipboardText(data.steamID) end):SetIcon("icon16/page_copy.png") end
+            menu:AddOption(L("copyLogMessage"), function() SetClipboardText(data.message or "") end):SetIcon("icon16/page_copy.png")
             menu:Open()
         end
 

@@ -1,10 +1,6 @@
 ﻿local xpos = xpos or 20
 local ypos = ypos or 20
 function MODULE:TicketFrame(requester, message, claimed)
-    local mat_lightning = Material("icon16/lightning_go.png")
-    local mat_arrow = Material("icon16/arrow_left.png")
-    local mat_link = Material("icon16/link.png")
-    local mat_case = Material("icon16/briefcase.png")
     if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then
@@ -19,82 +15,54 @@ function MODULE:TicketFrame(requester, message, claimed)
     end
 
     local frameWidth, frameHeight = 300, 120
-    local frm = vgui.Create("DFrame")
+    local frm = vgui.Create("liaFrame")
     frm:SetSize(frameWidth, frameHeight)
     frm:SetPos(xpos, ypos)
     frm.idiot = requester
-    function frm:Paint(paintWidth, paintHeight)
-        draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
-    end
-
-    frm.lblTitle:SetColor(Color(255, 255, 255))
-    frm.lblTitle:SetFont("ticketsystem")
-    frm.lblTitle:SetContentAlignment(7)
+    frm:ShowCloseButton(false)
     if claimed and IsValid(claimed) and claimed:IsPlayer() then
         frm:SetTitle(L("ticketTitleClaimed", requester:Nick(), claimed:Nick()))
         if claimed == LocalPlayer() then
-            function frm:Paint(paintWidth, paintHeight)
-                draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
-                draw.RoundedBox(0, 2, 2, paintWidth - 4, 16, Color(38, 166, 91))
-            end
+            frm.headerColor = Color(38, 166, 91)
         else
-            function frm:Paint(paintWidth, paintHeight)
-                draw.RoundedBox(0, 0, 0, paintWidth, paintHeight, Color(10, 10, 10, 230))
-                draw.RoundedBox(0, 2, 2, paintWidth - 4, 16, Color(207, 0, 15))
-            end
+            frm.headerColor = Color(207, 0, 15)
         end
     else
         frm:SetTitle(requester:Nick())
     end
 
-    local msg = vgui.Create("RichText", frm)
+    local msg = vgui.Create("SemiTransparentDPanel", frm)
     msg:SetPos(10, 30)
     msg:SetSize(190, frameHeight - 35)
-    msg:SetContentAlignment(7)
-    msg:SetVerticalScrollbarEnabled(false)
-    function msg:PerformLayout()
-        self:SetFontInternal("DermaDefault")
+    msg.message = message
+    msg.Paint = function(panel, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw()
+        draw.SimpleText(panel.message, "DermaDefault", w * 0.5, h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    msg:AppendText(message)
-    local function createButton(text, material, position, clickFunc, disabled)
+    local function createButton(text, position, clickFunc, disabled)
         text = L(text)
-        local btn = vgui.Create("DButton", frm)
+        local btn = vgui.Create("liaButton", frm)
         btn:SetPos(215, position)
         btn:SetSize(83, 18)
-        btn:SetText("          " .. text)
-        btn:SetColor(Color(255, 255, 255))
-        btn:SetContentAlignment(4)
+        btn:SetText(text)
         btn.Disabled = disabled
         btn.DoClick = function() if not btn.Disabled then clickFunc() end end
-        btn.Paint = function(panel, paintWidth, paintHeight)
-            if panel.Depressed or panel.m_bSelected then
-                draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, Color(255, 50, 50, 255))
-            elseif panel.Hovered and not panel.Disabled then
-                draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, Color(205, 30, 30, 255))
-            else
-                draw.RoundedBox(1, 0, 0, paintWidth, paintHeight, panel.Disabled and Color(100, 100, 100, 255) or Color(80, 80, 80, 255))
-            end
-
-            surface.SetDrawColor(Color(255, 255, 255))
-            surface.SetMaterial(material)
-            surface.DrawTexturedRect(5, 1, 16, 16)
-        end
-
         if disabled then btn:SetTooltip(L("ticketActionSelf")) end
         return btn
     end
 
     local isLocalPlayer = requester == LocalPlayer()
-    createButton("goTo", mat_lightning, 20, function() lia.administrator.execCommand("goto", requester) end, isLocalPlayer)
-    createButton("returnText", mat_arrow, 40, function() lia.administrator.execCommand("return", requester) end, isLocalPlayer)
-    createButton("freeze", mat_link, 60, function() lia.administrator.execCommand("freeze", requester) end, isLocalPlayer)
-    createButton("bring", mat_arrow, 80, function() lia.administrator.execCommand("bring", requester) end, isLocalPlayer)
+    createButton("goTo", 20, function() lia.administrator.execCommand("goto", requester) end, isLocalPlayer)
+    createButton("returnText", 40, function() lia.administrator.execCommand("return", requester) end, isLocalPlayer)
+    createButton("freeze", 60, function() lia.administrator.execCommand("freeze", requester) end, isLocalPlayer)
+    createButton("bring", 80, function() lia.administrator.execCommand("bring", requester) end, isLocalPlayer)
     local shouldClose = false
     local claimButton
-    claimButton = createButton("claimCase", mat_case, 100, function()
+    claimButton = createButton("claimCase", 100, function()
+        if not IsValid(frm) then return end
         if not shouldClose then
-            if frm.lblTitle:GetText():lower():find(L("claimedBy"):lower()) then
+            if frm:GetTitle():lower():find(L("claimedBy"):lower()) then
                 chat.AddText(Color(255, 150, 0), "[" .. L("error") .. "] " .. L("caseAlreadyClaimed"))
                 surface.PlaySound("common/wpn_denyselect.wav")
             else
@@ -102,7 +70,7 @@ function MODULE:TicketFrame(requester, message, claimed)
                 net.WriteEntity(requester)
                 net.SendToServer()
                 shouldClose = true
-                claimButton:SetText("          " .. L("closeCase"))
+                claimButton:SetText(L("closeCase"))
             end
         else
             net.Start("liaTicketSystemClose")
@@ -111,17 +79,12 @@ function MODULE:TicketFrame(requester, message, claimed)
         end
     end, isLocalPlayer)
 
-    local closeButton = vgui.Create("DButton", frm)
-    closeButton:SetText("")
+    local closeButton = vgui.Create("liaButton", frm)
+    closeButton:SetText("X")
     closeButton:SetTooltip(L("close"))
-    closeButton:SetColor(Color(255, 255, 255))
     closeButton:SetPos(frameWidth - 18, 2)
     closeButton:SetSize(16, 16)
-    function closeButton:Paint()
-    end
-
-    closeButton.DoClick = function() frm:Close() end
-    frm:ShowCloseButton(false)
+    closeButton.DoClick = function() frm:Remove() end
     frm:SetPos(xpos, ypos + 130 * #TicketFrames)
     frm:MoveTo(xpos, ypos + 130 * #TicketFrames, 0.2, 0, 1, function() surface.PlaySound("garrysmod/balloon_pop_cute.wav") end)
     function frm:OnRemove()

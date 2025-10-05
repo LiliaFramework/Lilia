@@ -34,7 +34,7 @@ end
 
 function ENT:setStock(itemType, value)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot set stock for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotSetStock") .. " '" .. itemType .. "'")
         return
     end
 
@@ -50,7 +50,7 @@ end
 
 function ENT:addStock(itemType, value)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot add stock for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotAddStock") .. " '" .. itemType .. "'")
         return
     end
 
@@ -61,7 +61,7 @@ end
 
 function ENT:takeStock(itemType, value)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot take stock for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotTakeStock") .. " '" .. itemType .. "'")
         return
     end
 
@@ -136,7 +136,7 @@ end
 
 function ENT:setTradeMode(itemType, mode)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot set trade mode for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotSetTradeMode") .. " '" .. itemType .. "'")
         return
     end
 
@@ -151,7 +151,7 @@ end
 
 function ENT:setItemPrice(itemType, value)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot set price for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotSetPrice") .. " '" .. itemType .. "'")
         return
     end
 
@@ -166,7 +166,7 @@ end
 
 function ENT:setItemStock(itemType, value)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot set stock for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotSetStock") .. " '" .. itemType .. "'")
         return
     end
 
@@ -181,7 +181,7 @@ end
 
 function ENT:setItemMaxStock(itemType, value)
     if not lia.item.list[itemType] then
-        print("[Vendor] Warning: Cannot set max stock for non-existent item '" .. itemType .. "'")
+        print(L("vendorWarningCannotSetMaxStock") .. " '" .. itemType .. "'")
         return
     end
 
@@ -274,7 +274,7 @@ function ENT:applyPreset(name)
             if data.maxStock ~= nil then self:setMaxStock(itemType, data.maxStock) end
             if data.stock ~= nil then self:setStock(itemType, data.stock) end
         else
-            print("[Vendor] Warning: Skipping invalid item '" .. itemType .. "' when applying preset '" .. name .. "' to vendor.")
+            print(L("vendorWarningSkippingInvalidItem") .. " '" .. itemType .. "' when applying preset '" .. name .. "' to vendor.")
         end
     end
 

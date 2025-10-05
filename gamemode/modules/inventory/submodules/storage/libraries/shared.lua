@@ -5,7 +5,7 @@ end
 function MODULE:InitializeStorage(entity)
     if not IsValid(entity) then
         local d = deferred.new()
-        d:reject("Invalid entity")
+        d:reject(L("invalidEntity"))
         return d
     end
 
@@ -34,7 +34,7 @@ function MODULE:InitializeStorage(entity)
         if not def and entity:IsVehicle() then def = lia.inventory.storage["vehicle"] end
         if not def then
             def = {
-                name = "Storage Container",
+                name = L("storageContainer"),
                 invType = "GridInv",
                 invData = {
                     w = 4,
@@ -55,7 +55,7 @@ function MODULE:InitializeStorage(entity)
             return d
         else
             local d = deferred.new()
-            d:reject("Storage initialization only available on server")
+            d:reject(L("storageInitServerOnly"))
             return d
         end
     end
