@@ -302,7 +302,6 @@ if SERVER then
         return output
     end
 else
-    -- UI functions moved to lia.derma - aliases for backward compatibility
     lia.util.ShadowText = lia.derma.ShadowText
     lia.util.DrawTextOutlined = lia.derma.DrawTextOutlined
     lia.util.DrawTip = lia.derma.DrawTip
@@ -361,17 +360,13 @@ else
         local x, y = panel:GetPos()
         local w, h = panel:GetSize()
         local sw, sh = ScrW(), ScrH()
-        -- Check if logo exists and adjust positioning
         local logoMargin = 0
         if IsValid(lia.gui.character) and IsValid(lia.gui.character.logo) then
             local logoX, logoY = lia.gui.character.logo:GetPos()
             local logoW, logoH = lia.gui.character.logo:GetSize()
             local logoRight = logoX + logoW
             local logoBottom = logoY + logoH
-            -- If menu would overlap with logo area, add margin
-            if x < logoRight and x + w > logoX and y < logoBottom and y + h > logoY then
-                logoMargin = logoH + (ScrH() * 0.01) -- Logo height + padding
-            end
+            if x < logoRight and x + w > logoX and y < logoBottom and y + h > logoY then logoMargin = logoH + (ScrH() * 0.01) end
         end
 
         if x < 5 then
@@ -386,7 +381,6 @@ else
             y = sh - 5 - h
         end
 
-        -- Apply logo margin if needed
         if logoMargin > 0 and y < logoMargin then y = logoMargin end
         panel:SetPos(x, y)
     end
@@ -494,7 +488,6 @@ else
 
         local sheet = frame:Add("liaTabs")
         sheet:Dock(FILL)
-        -- Create a panel for the table content
         local tablePanel = vgui.Create("DPanel")
         tablePanel:Dock(FILL)
         tablePanel:DockPadding(10, 10, 10, 10)

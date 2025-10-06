@@ -117,7 +117,6 @@ hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
     end
 end)
 
--- Tickets count is requested and handled by the hook above
 net.Receive("liaViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()

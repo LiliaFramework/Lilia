@@ -2,7 +2,7 @@
 local PANEL = {}
 function PANEL:Init()
     self._activeShadowTimer = 0
-    self._activeShadowMinTime = 0.03 -- L("minDuration")
+    self._activeShadowMinTime = 0.03
     self._activeShadowLerp = 0
     self.hover_status = 0
     self.bool_hover = true
@@ -90,7 +90,7 @@ function PANEL:Paint(w, h)
     if isActive then self._activeShadowTimer = SysTime() + self._activeShadowMinTime end
     local showActiveShadow = isActive or (self._activeShadowTimer > SysTime())
     local activeTarget = showActiveShadow and 10 or 0
-    local activeSpeed = (activeTarget > 0) and 7 or 3 -- L("fadeSpeed")
+    local activeSpeed = (activeTarget > 0) and 7 or 3
     self._activeShadowLerp = Lerp(FrameTime() * activeSpeed, self._activeShadowLerp, activeTarget)
     if self._activeShadowLerp > 0 then
         local col = Color(self.col_hov.r, self.col_hov.g, self.col_hov.b, math.Clamp(self.col_hov.a * 1.5, 0, 255))
@@ -107,7 +107,6 @@ function PANEL:Paint(w, h)
         lia.derma.rect(self.click_x - ripple_size * 0.5, self.click_y - ripple_size * 0.5, ripple_size, ripple_size):Rad(100):Color(ripple_color):Shape(btnFlags):Draw()
     end
 
-    -- Ensure icon_size is never nil
     local iconSize = self.icon_size or 16
     if self.text ~= "" then
         draw.SimpleText(self.text, self.font, w * 0.5 + (self.icon ~= "" and iconSize * 0.5 + 2 or 0), h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -126,30 +125,23 @@ end
 
 vgui.Register("liaButton", PANEL, "Button")
 local function PaintButton(self, w, h)
-    -- Get color from config with fallback
     local colorTable = lia.config.get("Color")
     local r = (colorTable and colorTable.r) or 255
     local g = (colorTable and colorTable.g) or 255
     local b = (colorTable and colorTable.b) or 255
     local cornerRadius = 8
     if self.Base then
-        -- Draw shadow/background
         lia.derma.rect(0, 0, w, h):Rad(cornerRadius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
-        -- Draw main background
         lia.derma.rect(0, 0, w, h):Rad(cornerRadius):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw()
     end
 
-    -- Draw text
     draw.SimpleText(self:GetText(), self:GetFont(), w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    -- Draw hover/selected effects
     if self:IsHovered() or self:IsSelected() then
         self.startTime = self.startTime or CurTime()
         local elapsed = CurTime() - self.startTime
         local anim = math.min(w, elapsed / animDuration * w) / 2
-        -- Draw hover overlay with subtle shadow effect
         lia.derma.rect(0, 0, w, h):Rad(cornerRadius):Color(Color(0, 0, 0, 30)):Shape(lia.derma.SHAPE_IOS):Shadow(2, 8):Draw()
         lia.derma.rect(0, 0, w, h):Rad(cornerRadius):Color(Color(r, g, b, 40)):Shape(lia.derma.SHAPE_IOS):Draw()
-        -- Draw animated underline that grows from center
         if anim > 0 then
             local lineWidth = math.min(w - cornerRadius * 2, anim * 2)
             local lineX = (w - lineWidth) / 2

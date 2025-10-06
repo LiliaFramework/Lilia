@@ -861,13 +861,10 @@ else
     end)
 
     concommand.Add("lia_open_panels_preview", function()
-        -- Debug: Check current theme status
         local currentTheme = lia.color.getCurrentTheme()
         local themeData = lia.color.themes[currentTheme]
         local isTransitionActive = lia.color.isTransitionActive()
-        -- Ensure the current theme is properly applied to lia.color.theme before creating preview
         if themeData then
-            -- If there's an active theme transition, complete it immediately to ensure preview shows the latest theme
             if isTransitionActive then
                 local to = lia.color.transition.to
                 if to then
@@ -875,14 +872,12 @@ else
                         lia.color.stored[k] = v
                     end
 
-                    -- Also update lia.color.theme to match the final theme
                     lia.color.theme = table.Copy(to)
                 end
 
                 lia.color.transition.active = false
                 hook.Remove("Think", "LiliaThemeTransition")
             else
-                -- No active transition, just ensure lia.color.theme is up to date
                 lia.color.theme = table.Copy(themeData)
             end
         end
@@ -1381,7 +1376,6 @@ else
         MsgC(Color(255, 255, 255), "Vector: (" .. math.Round(pos.x, 2) .. "," .. math.Round(pos.y, 2) .. "," .. math.Round(pos.z, 2) .. ") Angle:(" .. math.Round(ang.x, 2) .. "," .. math.Round(ang.y, 2) .. "," .. math.Round(ang.z, 2) .. ")\n")
     end)
 
-    -- Test command for argument prompt
     lia.command.add("testargs", {
         desc = "Test command for argument prompt",
         arguments = {
@@ -1420,19 +1414,14 @@ lia.command.add("demorequests", {
     onRun = function(client)
         if SERVER then
             client:notify("Opening request UI demo...")
-            -- Start with binary question
             client:binaryQuestion("Would you like to see all the request UI demos?", "Yes, show me!", "No, thanks", false, function(confirmed)
                 if confirmed then
-                    -- Show dropdown demo
                     client:requestDropdown("Demo: Dropdown Selection", "Choose your favorite color:", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected)
                         if selected then
-                            -- Show options demo
                             client:requestOptions("Demo: Multi-Select Options", "Select your favorite activities (max 3):", {{"Gaming", "gaming"}, {"Reading", "reading"}, {"Sports", "sports"}, {"Music", "music"}, {"Cooking", "cooking"}, {"Travel", "travel"}}, 3, function(selectedOptions)
                                 if selectedOptions and #selectedOptions > 0 then
-                                    -- Show string input demo
                                     client:requestString("Demo: Text Input", "Enter a fun message (max 50 characters):", function(message)
                                         if message then
-                                            -- Show arguments demo
                                             client:requestArguments("Demo: Structured Input", {
                                                 {"Name", "string"},
                                                 {
@@ -1449,7 +1438,6 @@ lia.command.add("demorequests", {
                                                 {"Agree to Terms", "boolean"}
                                             }, function(success, argumentsData)
                                                 if success and argumentsData then
-                                                    -- Show buttons demo
                                                     client:requestButtons("Demo: Button Selection", {
                                                         {
                                                             text = "Save Progress",

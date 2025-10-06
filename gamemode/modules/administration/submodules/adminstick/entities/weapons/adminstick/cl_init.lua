@@ -64,11 +64,9 @@ function SWEP:DrawHUD()
     end
 
     hook.Run("AddToAdminStickHUD", client, target, information)
-    -- Draw crosshair using liapanels
     local length, thickness = 20, 1
     lia.derma.rect(x - length / 2, y - thickness / 2, length, thickness):Color(themeColors.text):Draw()
     lia.derma.rect(x - thickness / 2, y - length / 2, thickness, length):Color(themeColors.text):Draw()
-    -- Draw information box using liapanels with theme colors
     if #information > 0 then
         local maxWidth, totalHeight = 0, 0
         surface.SetFont("liaMediumFont")
@@ -82,13 +80,9 @@ function SWEP:DrawHUD()
         local boxHeight = totalHeight + 40
         local boxX = (ScrW() - boxWidth) / 2
         local boxY = ScrH() - boxHeight - 40
-        -- Draw background with blur effect and theme colors
         lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, 3, 3, 0.9)
-        -- Draw background
         lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeColors.background):Rad(8):Draw()
-        -- Draw border with accent color
         lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeColors.accent):Rad(8):Outline(2):Draw()
-        -- Draw information text with theme colors
         local startPosX, startPosY, buffer = boxX + 20, boxY + 20, 0
         for _, v in pairs(information) do
             lia.derma.drawText(v, startPosX, startPosY + buffer, themeColors.text, 0, 0, "liaMediumFont")

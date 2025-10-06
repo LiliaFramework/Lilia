@@ -375,7 +375,6 @@ end)
 
 net.Receive("liaRequestOnlineStaffData", function(_, client)
     local d = deferred.new()
-    -- Send data for all online staff members with their ticket and warning counts
     local staffData = {}
     for _, ply in player.Iterator() do
         if IsValid(ply) and ply:isStaff() then
@@ -398,7 +397,6 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
         end
     end
 
-    -- If no staff online, send immediately
     if #staffData == 0 then
         net.Start("liaOnlineStaffData")
         net.WriteTable({})
@@ -406,13 +404,11 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
         return
     end
 
-    -- Get warning and ticket counts for each staff member
     local completedQueries = 0
-    local totalQueries = #staffData * 2 -- 2 queries per staff member (warnings + tickets)
+    local totalQueries = #staffData * 2
     for i, staffInfo in ipairs(staffData) do
         local charID = staffInfo.charID
         local steamID = staffInfo.steamID
-        -- Get warning count for this character
         if charID and charID > 0 then
             lia.db.count("warnings", "charID = " .. lia.db.convertDataType(charID)):next(function(count)
                 staffData[i].warnings = count or 0
@@ -423,7 +419,6 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
             completedQueries = completedQueries + 1
         end
 
-        -- Get ticket count for this player
         if steamID and steamID ~= "" then
             lia.db.count("ticketclaims", "requesterSteamID = " .. lia.db.convertDataType(steamID)):next(function(count)
                 staffData[i].tickets = count or 0
@@ -435,7 +430,6 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
         end
     end
 
-    -- Send the data when all queries complete
     d:next(function(data)
         net.Start("liaOnlineStaffData")
         net.WriteTable(data)

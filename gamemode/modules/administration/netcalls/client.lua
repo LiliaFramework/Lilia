@@ -235,12 +235,11 @@ local function OpenRoster(panel, data)
         page:DockPadding(10, 10, 10, 10)
         local rosterTable = page:Add("liaTable")
         rosterTable:Dock(FILL)
-        -- Define columns for faction roster
-        rosterTable:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size name column
-        rosterTable:AddColumn(L("steamID"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size SteamID column
-        rosterTable:AddColumn(L("class"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size class column
-        rosterTable:AddColumn(L("playTime"), 100, TEXT_ALIGN_CENTER, true) -- Fixed width for play time
-        rosterTable:AddColumn(L("lastOnline"), 120, TEXT_ALIGN_CENTER, true) -- Fixed width for last online
+        rosterTable:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true)
+        rosterTable:AddColumn(L("steamID"), nil, TEXT_ALIGN_LEFT, true)
+        rosterTable:AddColumn(L("class"), nil, TEXT_ALIGN_LEFT, true)
+        rosterTable:AddColumn(L("playTime"), 100, TEXT_ALIGN_CENTER, true)
+        rosterTable:AddColumn(L("lastOnline"), 120, TEXT_ALIGN_CENTER, true)
         local function populate()
             rosterTable:Clear()
             for _, member in ipairs(membersData) do
@@ -291,7 +290,6 @@ local function OpenRoster(panel, data)
                     menu:Open()
                 end
             end
-            -- liaTable doesn't need a refresh call like liaSheet
         end
 
         populate()

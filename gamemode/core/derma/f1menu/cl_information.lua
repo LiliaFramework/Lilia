@@ -7,8 +7,7 @@ function PANEL:Init()
     self.Paint = function() end
     local scroll = vgui.Create("liaScrollPanel", self)
     scroll:Dock(FILL)
-    scroll:InvalidateLayout(true) -- Ensure proper layout initialization
-    -- Ensure scrollbar is properly initialized
+    scroll:InvalidateLayout(true)
     if not IsValid(scroll.VBar) then scroll:PerformLayout() end
     local canvas = scroll:GetCanvas()
     canvas:DockPadding(8, 10, 8, 10)
@@ -17,7 +16,6 @@ function PANEL:Init()
     hook.Run("LoadCharInformation")
     self:GenerateSections()
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
-    -- Ensure colors are up to date when panel opens - refresh immediately and after a short delay
     self:Refresh()
     timer.Simple(0.1, function() if IsValid(self) then self:Refresh() end end)
     timer.Create("liaCharInfo_UpdateValues", 1, 0, function()
@@ -84,11 +82,8 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
         local mx = isfunction(maxFunc) and maxFunc() or tonumber(maxFunc) or 1
         local val = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
         local frac = mx > mn and math.Clamp((val - mn) / (mx - mn), 0, 1) or 0
-        -- Background
         lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw()
-        -- Progress bar
         if frac > 0 then lia.derma.rect(0, 0, w * frac, h):Rad(6):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw() end
-        -- Text
         local text = L("barProgress", math.Round(val), math.Round(mx))
         draw.SimpleText(text, "liaSmallFont", w / 2, h / 2, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
@@ -134,28 +129,23 @@ function PANEL:CreateSection(parent, title)
     local frame = parent:Add("DPanel")
     frame:Dock(TOP)
     frame:DockMargin(0, 10, 0, 10)
-    frame:SetTall(200) -- Will be auto-sized
+    frame:SetTall(200)
     frame.Paint = function(_, w, h)
-        -- Draw Lilia-styled section background
         lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw()
-        -- Draw section title (centered)
         draw.SimpleText(L(title), "liaSmallFont", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-        -- Draw subtle line under title
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
         surface.DrawLine(12, 28, w - 12, 28)
     end
 
     local contents = vgui.Create("DPanel", frame)
     contents:Dock(FILL)
-    contents:DockPadding(8, 35, 8, 10) -- Extra top padding for title
+    contents:DockPadding(8, 35, 8, 10)
     contents.Paint = function() end
-    -- Auto-size the frame based on content
     contents.PerformLayout = function(s)
-        local contentHeight = 35 -- Start with title height
+        local contentHeight = 35
         for _, child in ipairs(s:GetChildren()) do
             if IsValid(child) then
                 contentHeight = contentHeight + child:GetTall()
-                -- Add margin if child has one - check if it's a DPanel with margins
                 if child.GetDockMargin then
                     local _, top = child:GetDockMargin()
                     if top then contentHeight = contentHeight + top end
@@ -163,7 +153,6 @@ function PANEL:CreateSection(parent, title)
             end
         end
 
-        -- Add bottom padding
         contentHeight = contentHeight + 10
         frame:SetTall(math.max(60, contentHeight))
     end
@@ -180,15 +169,12 @@ function PANEL:OnThemeChanged()
 end
 
 function PANEL:Refresh()
-    -- Ensure current theme is applied before regenerating
     self:ApplyCurrentTheme()
-    -- Clear content and regenerate with current theme colors
     self.content:Clear()
     self:GenerateSections()
 end
 
 function PANEL:ApplyCurrentTheme()
-    -- Ensure the current theme is properly applied
     local currentTheme = lia.color.getCurrentTheme()
     if currentTheme and lia.color.themes[currentTheme] then lia.color.theme = table.Copy(lia.color.themes[currentTheme]) end
 end

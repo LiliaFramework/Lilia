@@ -1,6 +1,5 @@
 ﻿lia.derma = lia.derma or {}
 local color_disconnect = Color(210, 65, 65)
--- Panel color index counter for automatic color swapping
 lia.derma.panelColorIndex = lia.derma.panelColorIndex or 1
 function lia.derma.getNextPanelColor()
     local color = lia.color.theme.panel[lia.derma.panelColorIndex] or lia.color.theme.panel[1]
@@ -1557,7 +1556,6 @@ end
 
 lia.derma.entsScales = lia.derma.entsScales or {}
 function lia.derma.drawEntText(ent, text, posY, alphaOverride)
-    -- Refresh skins after initialization to avoid stack overflow during panel creation
     timer.Simple(0, function() if derma.RefreshSkins then derma.RefreshSkins() end end)
     if not (IsValid(ent) and text and text ~= "") then return end
     posY = posY or 0
@@ -1613,7 +1611,6 @@ function lia.derma.drawEntText(ent, text, posY, alphaOverride)
     EntText(text, screenPos.x, screenPos.y + posY, fade)
 end
 
--- Request UI Functions using liaXXXX Panels
 function lia.derma.requestDropdown(title, options, callback, defaultValue)
     if IsValid(lia.derma.menuRequestDropdown) then lia.derma.menuRequestDropdown:Remove() end
     local frame = vgui.Create("liaFrame")
@@ -1637,7 +1634,6 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
         end
     end
 
-    -- Set default value if provided
     if defaultValue then
         if istable(defaultValue) then
             dropdown:ChooseOptionData(defaultValue[2])
@@ -1899,11 +1895,8 @@ function lia.derma.requestButtons(title, buttons, callback, description)
         button.DoClick = function()
             if buttonCallback then
                 local result = buttonCallback()
-                if result ~= false then -- If callback doesn't explicitly return false, close the dialog
-                    frame:Remove()
-                end
+                if result ~= false then frame:Remove() end
             else
-                -- Default behavior: pass the button index and text to callback
                 if callback then
                     local result = callback(i, buttonText)
                     if result ~= false then frame:Remove() end

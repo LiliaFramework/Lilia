@@ -11,8 +11,7 @@ function PANEL:Init()
     self.search:DockMargin(0, 0, 0, 8)
     self.scroll = vgui.Create("liaScrollPanel", self)
     self.scroll:Dock(FILL)
-    self.scroll:InvalidateLayout(true) -- Ensure proper layout initialization
-    -- Ensure scrollbar is properly initialized
+    self.scroll:InvalidateLayout(true)
     if not IsValid(self.scroll.VBar) then self.scroll:PerformLayout() end
     self.canvas = self.scroll:GetCanvas()
     self.search.OnTextChanged = function() self:Refresh() end
@@ -26,7 +25,6 @@ function PANEL:PerformLayout()
     self:SizeToChildren(false, true)
     if self.scroll then
         self.scroll:InvalidateLayout(true)
-        -- Ensure all rows get properly laid out when container resizes
         for _, row in ipairs(self.rows) do
             if row.panel and row.panel.PerformLayout then
                 row.panel:PerformLayout()
@@ -68,14 +66,13 @@ end
 
 function PANEL:AddPanelRow(widget, opts)
     opts = opts or {}
-    local responsiveHeight = opts.responsiveHeight ~= false -- Default to true for responsive behavior
+    local responsiveHeight = opts.responsiveHeight ~= false
     local minHeight = opts.minHeight or 100
     local maxHeight = opts.maxHeight or 500
     return self:AddRow(function(p, row)
         widget:SetParent(p)
         if opts.dock ~= false then widget:Dock(FILL) end
         local h = opts.height or 200
-        -- Make panel row responsive
         local function updatePanelDimensions()
             if responsiveHeight and not opts.height then
                 local calculatedHeight = widget:GetTall() or h
@@ -203,7 +200,6 @@ function PANEL:AddPreviewRow(data)
         html:SetSize(size, size)
         if url ~= "" then html:OpenURL(url) end
         html:SetMouseInputEnabled(false)
-        -- Make HTML responsive to available space
         local function updateHTMLSize()
             local availableWidth = p:GetWide() - self.padding * 3
             local availableHeight = p:GetTall() - self.padding * 2
@@ -235,7 +231,7 @@ function PANEL:AddPreviewRow(data)
 
         p.PerformLayout = function()
             local pad = self.padding
-            updateHTMLSize() -- Update HTML size based on current panel width
+            updateHTMLSize()
             local htmlSize = html:GetWide()
             t:SetPos(pad + htmlSize + pad, pad)
             if d then
@@ -267,13 +263,12 @@ function PANEL:AddListViewRow(cfg)
     local data = cfg.data or {}
     local height = cfg.height or 260
     local getLineText = cfg.getLineText
-    local autoResizeColumns = cfg.autoResizeColumns ~= false -- Default to true for responsive behavior
+    local autoResizeColumns = cfg.autoResizeColumns ~= false
     local minColumnWidth = cfg.minColumnWidth or 80
     local maxColumnWidth = cfg.maxColumnWidth or 200
     local rowData = self:AddRow(function(p, row)
         local lv = vgui.Create("DListView", p)
         lv:Dock(FILL)
-        -- Add columns with initial sizing
         for _, colName in ipairs(cols) do
             lv:AddColumn(colName)
         end
@@ -282,11 +277,10 @@ function PANEL:AddListViewRow(cfg)
             lv:AddLine(unpack(v))
         end
 
-        -- Make list view responsive
         local function resizeColumns()
             if not autoResizeColumns or #cols == 0 then return end
             local totalWidth = p:GetWide()
-            local availableWidth = totalWidth - 20 -- Account for scrollbar and padding
+            local availableWidth = totalWidth - 20
             if availableWidth <= 0 then return end
             local colWidth = math.max(minColumnWidth, math.min(maxColumnWidth, availableWidth / #cols))
             for i = 1, #cols do
@@ -329,7 +323,7 @@ function PANEL:AddIconLayoutRow(cfg)
     cfg = cfg or {}
     local build = cfg.build
     local space = cfg.space or 6
-    local responsiveHeight = cfg.responsiveHeight ~= false -- Default to true
+    local responsiveHeight = cfg.responsiveHeight ~= false
     local minHeight = cfg.minHeight or 100
     local maxHeight = cfg.maxHeight or 400
     local rowData = self:AddRow(function(p, row)
@@ -338,18 +332,16 @@ function PANEL:AddIconLayoutRow(cfg)
         layout:SetSpaceX(space)
         layout:SetSpaceY(space)
         if build then build(layout) end
-        -- Make icon layout responsive to container size
         local function updateLayoutDimensions()
             if not responsiveHeight then return end
             local children = layout:GetChildren()
             if #children == 0 then return end
-            -- Calculate optimal height based on content and container width
             local containerWidth = p:GetWide()
-            local iconsPerRow = math.floor((containerWidth - space) / (64 + space)) -- Assume 64px icon size
+            local iconsPerRow = math.floor((containerWidth - space) / (64 + space))
             iconsPerRow = math.max(1, iconsPerRow)
             local totalIcons = #children
             local rowsNeeded = math.ceil(totalIcons / iconsPerRow)
-            local iconHeight = 64 + space -- Assume standard icon size plus spacing
+            local iconHeight = 64 + space
             local calculatedHeight = rowsNeeded * iconHeight + space
             calculatedHeight = math.max(minHeight, math.min(maxHeight, calculatedHeight))
             p:SetTall(calculatedHeight)
@@ -396,7 +388,6 @@ function PANEL:Refresh()
 
     self.canvas:InvalidateLayout(true)
     self.canvas:SizeToChildren(false, true)
-    -- Trigger layout updates for all visible rows after filtering
     for _, row in ipairs(self.rows) do
         if row.panel:IsVisible() and row.panel.PerformLayout then
             row.panel:PerformLayout()

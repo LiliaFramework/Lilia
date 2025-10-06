@@ -234,7 +234,7 @@ local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     local category = MODULE.adminStickCategories[categoryKey]
     if not category then return end
     if not store[categoryKey] then
-        local menu, option = parent:AddSubMenu(category.name, function() end) -- Add empty function to prevent nil function error
+        local menu, option = parent:AddSubMenu(category.name, function() end)
         if category.icon and option then option:SetIcon(category.icon) end
         if IsValid(menu) then
             store[categoryKey] = menu
@@ -252,7 +252,7 @@ local function GetOrCreateSubCategoryMenu(parent, categoryKey, subcategoryKey, s
     local subcategory = category.subcategories[subcategoryKey]
     local fullKey = categoryKey .. "_" .. subcategoryKey
     if not store[fullKey] then
-        local menu, option = parent:AddSubMenu(subcategory.name, function() end) -- Add empty function to prevent nil function error
+        local menu, option = parent:AddSubMenu(subcategory.name, function() end)
         if subcategory.icon and option then option:SetIcon(subcategory.icon) end
         if IsValid(menu) then
             store[fullKey] = menu
@@ -294,7 +294,6 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
         end
     end
 
-    -- Update main menu size after adding all categories
     if menu.UpdateSize then menu:UpdateSize() end
     return menu
 end
@@ -429,7 +428,6 @@ local function HandleModerationOption(opt, tgt)
         RunAdminCommand(opt.cmd, tgt)
     end
 
-    -- Let the menu system handle cleanup
     timer.Simple(0.1, function()
         LocalPlayer().AdminStickTarget = nil
         AdminStickIsOpen = false
@@ -524,7 +522,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         end
     end
 
-    -- Update submenu size after adding items
     if modSubCategory.UpdateSize then modSubCategory:UpdateSize() end
 end
 
@@ -566,7 +563,6 @@ local function IncludeTeleportation(tgt, menu, stores)
         end):SetIcon(o.icon)
     end
 
-    -- Update menu size after adding items
     if tpCategory.UpdateSize then tpCategory:UpdateSize() end
 end
 
@@ -603,7 +599,6 @@ local function IncludeUtility(tgt, menu, stores)
         end):SetIcon(cmd.icon)
     end
 
-    -- Update submenu size after adding items
     if commandsSubCategory.UpdateSize then commandsSubCategory:UpdateSize() end
 end
 
@@ -644,7 +639,6 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                             end):SetIcon("icon16/group.png")
                         end
 
-                        -- Update submenu size after adding items
                         if factionsSubCategory.UpdateSize then factionsSubCategory:UpdateSize() end
                     end
                 end
@@ -673,7 +667,6 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                         end):SetIcon("icon16/user.png")
                     end
 
-                    -- Update submenu size after adding items
                     if classesSubCategory.UpdateSize then classesSubCategory:UpdateSize() end
                 end
             end
@@ -720,7 +713,6 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                         end):SetIcon("icon16/group_delete.png")
                     end
 
-                    -- Update submenu size after adding items
                     if whitelistsSubCategory.UpdateSize then whitelistsSubCategory:UpdateSize() end
                 end
 
@@ -757,7 +749,6 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                             end):SetIcon("icon16/user_delete.png")
                         end
 
-                        -- Update submenu size after adding items
                         if whitelistsSubCategory.UpdateSize then whitelistsSubCategory:UpdateSize() end
                     end
                 end
@@ -772,7 +763,6 @@ local function IncludeCharacterManagement(tgt, menu, stores)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/user_suit.png")
 
-        -- Update submenu size after adding items
         if attributesSubCategory.UpdateSize then attributesSubCategory:UpdateSize() end
     end
 end

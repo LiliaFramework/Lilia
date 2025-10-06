@@ -218,8 +218,6 @@ function GM:CanPlayerTakeItem(client, item)
         if character and item.entity.liaCharID then
             if item.entity.liaCharID == 0 then return true end
             if item.entity.liaCharID == character:getID() then return true end
-            -- Allow pickup of dropped items regardless of original owner
-            -- Items on the ground should be free for anyone to pick up
             return true
         end
     end

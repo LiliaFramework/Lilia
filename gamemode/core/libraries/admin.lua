@@ -1304,10 +1304,8 @@ else
         lia.administrator.groups = tbl
         if IsValid(lia.gui.usergroups) then
             if lia.gui.usergroups.groupsList then
-                -- New interface
                 lia.gui.usergroups.groupsList:SetGroups(tbl)
             else
-                -- Fallback to old interface
                 buildGroupsUI(lia.gui.usergroups, tbl)
             end
         end
@@ -1336,11 +1334,9 @@ else
 
         if IsValid(lia.gui.usergroups) then
             if lia.gui.usergroups.groupsList then
-                -- New interface - refresh the group details if the current group is the one being updated
                 local selectedGroup = lia.gui.usergroups.groupsList:GetSelectedGroup()
                 if selectedGroup == group and lia.gui.usergroups.updateGroupDetails then lia.gui.usergroups.updateGroupDetails(group) end
             elseif lia.gui.usergroups.checks and lia.gui.usergroups.checks[group] then
-                -- Fallback to old interface
                 local chk = lia.gui.usergroups.checks[group][privilege]
                 if IsValid(chk) and chk:GetChecked() ~= value then
                     chk._suppress = true
@@ -1351,34 +1347,28 @@ else
     end)
 
     local function SetupUserGroupInterface(parent)
-        -- Main container
         local container = parent:Add("DPanel")
         container:Dock(FILL)
         container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw() end
-        -- Groups list
         local groupsList = container:Add("liaUserGroupList")
         groupsList:Dock(LEFT)
         groupsList:SetWide(200)
         groupsList:DockMargin(10, 5, 5, 10)
-        -- Group details
         local groupDetails = container:Add("DPanel")
         groupDetails:Dock(FILL)
         groupDetails:DockMargin(5, 5, 10, 10)
         groupDetails.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw() end
-        -- Bottom buttons
         local bottom = container:Add("DPanel")
         bottom:Dock(BOTTOM)
         bottom:SetTall(50)
         bottom:DockMargin(10, 5, 10, 10)
         bottom.Paint = function() end
-        -- Create group button
         local createBtn = vgui.Create("liaButton", bottom)
         createBtn:Dock(LEFT)
         createBtn:SetWide(120)
         createBtn:DockMargin(0, 0, 10, 0)
         createBtn:SetTxt(L("create") .. " " .. L("group"))
         createBtn.DoClick = function() promptCreateGroup() end
-        -- Rename group button
         local renameBtn = vgui.Create("liaButton", bottom)
         renameBtn:Dock(LEFT)
         renameBtn:SetWide(120)
@@ -1398,7 +1388,6 @@ else
             end)
         end
 
-        -- Delete group button
         local deleteBtn = vgui.Create("liaButton", bottom)
         deleteBtn:Dock(LEFT)
         deleteBtn:SetWide(120)
@@ -1414,7 +1403,6 @@ else
             end, L("no"))
         end
 
-        -- Function to update group details
         local function updateGroupDetails(groupName)
             if not groupName or not lia.administrator.groups[groupName] then
                 groupDetails:Clear()
@@ -1424,7 +1412,6 @@ else
             groupDetails:Clear()
             local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[groupName] ~= nil
             local editable = not isDefault
-            -- Privileges container
             local privContainer = groupDetails:Add("DPanel")
             privContainer:Dock(FILL)
             privContainer:DockMargin(20, 0, 20, 20)
@@ -1432,11 +1419,8 @@ else
             buildPrivilegeList(privContainer, groupName, lia.administrator.groups, editable)
         end
 
-        -- Connect the group list to the details panel
         groupsList.OnGroupSelected = function(_, groupName) updateGroupDetails(groupName) end
-        -- Set initial groups
         groupsList:SetGroups(lia.administrator.groups)
-        -- Store references for updates
         parent.groupsList = groupsList
         parent.updateGroupDetails = updateGroupDetails
     end
@@ -1451,7 +1435,6 @@ else
                 parent:Clear()
                 parent:DockPadding(10, 10, 10, 10)
                 parent.Paint = function(p, w, h) derma.SkinHook("Paint", "Frame", p, w, h) end
-                -- Create the user group interface directly in the parent panel
                 SetupUserGroupInterface(parent)
                 net.Start("liaGroupsRequest")
                 net.SendToServer()

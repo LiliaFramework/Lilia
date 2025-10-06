@@ -480,8 +480,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.infoFrame:ShowCloseButton(false)
     local scroll = vgui.Create("liaScrollPanel", self.infoFrame)
     scroll:Dock(FILL)
-    scroll:InvalidateLayout(true) -- Ensure proper layout initialization
-    -- Ensure scrollbar is properly initialized
+    scroll:InvalidateLayout(true)
     if not IsValid(scroll.VBar) then scroll:PerformLayout() end
     for i, text in ipairs(info) do
         if i == 1 then
@@ -613,42 +612,14 @@ function PANEL:updateModelEntity(character)
     end
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)
-    -- Initialize default position and angle
     local pos, ang = nil, nil
-    -- Check if the character's faction has a custom main menu position FIRST
-    -- Factions can define a mainMenuPosition property to control where the character appears in the main menu
-    -- Usage in faction definition:
-    -- FACTION_CITIZEN = lia.faction.register("citizen", {
-    --     name = "Citizen",
-    --     desc = "A regular citizen",
-    --     color = Color(255, 125, 0),
-    --     mainMenuPosition = {
-    --         ["rp_nycity_day"] = { -- Map-specific positions
-    --             position = Vector(0, 0, 0),
-    --             angles = Angle(0, 180, 0)
-    --         },
-    --         ["rp_downtown_v4c"] = { -- Different position for another map
-    --             position = Vector(100, 0, 0),
-    --             angles = Angle(0, 90, 0)
-    --         }
-    --     }
-    -- })
-    -- Or for a single position that works on all maps:
-    -- mainMenuPosition = {
-    --     position = Vector(0, 0, 0),
-    --     angles = Angle(0, 180, 0)
-    -- }
-    -- Or for simple position-only changes:
-    -- mainMenuPosition = Vector(100, 0, 0)
     if character and character:getFaction() then
         local faction = lia.faction.get(character:getFaction())
         if faction and faction.mainMenuPosition then
             local menuPos = faction.mainMenuPosition
             local currentMap = game.GetMap()
             if istable(menuPos) then
-                -- Check if this is a map-based table
                 if menuPos[currentMap] then
-                    -- Map-specific position exists
                     local mapPos = menuPos[currentMap]
                     if istable(mapPos) then
                         pos = mapPos.position or pos
@@ -657,22 +628,18 @@ function PANEL:updateModelEntity(character)
                         pos = mapPos
                     end
                 elseif menuPos.position then
-                    -- Fallback to general position/angles if no map-specific entry
                     pos = menuPos.position or pos
                     ang = menuPos.angles or ang
                 else
-                    -- Legacy support for direct vector/angle table
                     pos = menuPos.position or pos
                     ang = menuPos.angles or ang
                 end
             elseif isvector(menuPos) then
-                -- Legacy support for direct vector
                 pos = menuPos
             end
         end
     end
 
-    -- Only call the hook if no faction position was set
     if not pos or not ang then pos, ang = hook.Run("GetMainMenuPosition", character) end
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")

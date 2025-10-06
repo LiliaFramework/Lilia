@@ -8,12 +8,10 @@ function PANEL:Init()
     self.circleAnim = 0
     self:SetText("")
     self:SetCursor("hand")
-    -- Create the toggle button as the main element
     self.toggle = vgui.Create("DButton", self)
-    self.toggle:Dock(FILL) -- Fill the entire panel
+    self.toggle:Dock(FILL)
     self.toggle:SetText("")
     self.toggle:SetCursor("hand")
-    -- Move all the checkbox logic to the toggle button
     self.toggle.hoverAnim = 0
     self.toggle.circleAnim = 0
     self.toggle.Paint = function(toggle, w, h)
@@ -26,8 +24,8 @@ function PANEL:Init()
         self.circleAnim = Lerp(FrameTime() * 12, self.circleAnim, self.value and 1 or 0)
         local trackH = math.min(20, h - 4)
         local trackY = (h - trackH) / 2
-        local trackW = math.min(w, 120) -- Limit width to 120 pixels for bigger checkboxes
-        local trackX = (w - trackW) / 2 -- Center the track
+        local trackW = math.min(w, 120)
+        local trackX = (w - trackW) / 2
         lia.derma.rect(trackX, trackY, trackW, trackH):Rad(16):Color(lia.color.theme.button):Shape(lia.derma.SHAPE_IOS):Draw()
         if self.hoverAnim > 0 then lia.derma.rect(trackX, trackY, trackW, trackH):Rad(16):Color(Color(lia.color.theme.button_hovered.r, lia.color.theme.button_hovered.g, lia.color.theme.button_hovered.b, self.hoverAnim * 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
         local circleSize = math.min(16, trackH - 4)
@@ -46,7 +44,6 @@ function PANEL:Init()
         surface.PlaySound('button_click.wav')
     end
 
-    -- Override the main panel's click to go to the toggle
     self.DoClick = function() self.toggle:DoClick() end
 end
 
@@ -91,27 +88,19 @@ function PANEL:SetDescription(desc)
 end
 
 function PANEL:Paint()
-    -- No background painting needed - the toggle button handles everything
-    -- Text and description are now handled externally since this is just the button
 end
 
 function PANEL:DoClick()
-    -- Clicking now goes directly to the toggle button
     self.toggle:DoClick()
 end
 
 function PANEL:OnChange()
-    -- Base OnChange method - can be overridden
-    -- val is the new boolean value of the checkbox
 end
 
 function PANEL:PerformLayout()
-    -- No special layout needed - toggle fills the entire panel
 end
 
--- Override SetSize to ensure proper sizing
 function PANEL:SetSize()
-    -- The toggle will automatically resize to fill the panel due to Dock(FILL)
 end
 
 vgui.Register('liaCheckbox', PANEL, 'Panel')

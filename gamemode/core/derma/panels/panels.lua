@@ -1,9 +1,7 @@
 ﻿local cacheKeys, cache, len = {}, {}, 0
 local function PaintPanel(_, w, h)
     local radius = 16
-    -- Draw shadow/background
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
-    -- Draw main panel background
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
@@ -14,7 +12,6 @@ local function PaintFrame(pnl, w, h)
             btn:SetPos(w - 16, 4)
             btn:SetSize(24, 24)
             btn:SetFont("Marlett")
-            -- Use Unicode X symbol instead of Marlett "r"
             btn:SetText("✕")
             btn:SetTextColor(Color(255, 255, 255))
             btn:PerformLayout()

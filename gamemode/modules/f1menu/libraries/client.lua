@@ -99,13 +99,12 @@ function MODULE:CreateMenuButtons(tabs)
     end
 
     tabs["information"] = function(infoTabPanel)
-        -- Create a custom frame instead of DPropertySheet
         local frame = infoTabPanel:Add("liaFrame")
         frame:Dock(FILL)
         frame:DockMargin(10, 10, 10, 10)
         frame:SetTitle(L("information"))
-        frame:LiteMode() -- Use lite mode for cleaner look
-        frame:DisableCloseBtn() -- Remove close button from information tab
+        frame:LiteMode()
+        frame:DisableCloseBtn()
         local pages = {}
         hook.Run("CreateInformationButtons", pages)
         if not pages then return end
@@ -115,7 +114,6 @@ function MODULE:CreateMenuButtons(tabs)
             return an < bn
         end)
 
-        -- Create tab container and content area
         local tabContainer = vgui.Create("DPanel", frame)
         tabContainer:Dock(TOP)
         tabContainer:SetTall(40)
@@ -128,62 +126,46 @@ function MODULE:CreateMenuButtons(tabs)
         local tabPanels = {}
         local baseTabWidths = {}
         local baseMargin = 8
-        -- Calculate base tab widths first
         for i, page in ipairs(pages) do
             surface.SetFont("Fated.18")
             local textWidth = surface.GetTextSize(L(page.name))
-            local iconWidth = 0 -- Disable icons for information tabs
+            local iconWidth = 0
             local padding = 20
             local minWidth = 80
             local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
             baseTabWidths[i] = btnWidth
         end
 
-        -- Create tab buttons and panels
         for i, page in ipairs(pages) do
-            -- Create tab button using the new liaTabButton panel
             local tabButton = vgui.Create("liaTabButton", tabContainer)
             tabButton:Dock(LEFT)
             tabButton:DockMargin(i == 1 and 0 or baseMargin, 0, 0, 0)
             tabButton:SetTall(36)
             tabButton:SetText(L(page.name))
-            tabButton:SetActive(i == 1) -- First tab is active by default
-            -- Set base width initially (will be adjusted in PerformLayout)
+            tabButton:SetActive(i == 1)
             tabButton:SetWide(baseTabWidths[i] or 80)
             tabButton:SetDoClick(function()
                 if activeTab == i then return end
-                -- Hide current panel
                 if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
-                -- Show new panel
                 activeTab = i
                 tabPanels[i]:SetVisible(true)
-                -- Update button states - set active state for the new button
                 for j, btn in ipairs(tabButtons) do
                     if IsValid(btn) then btn:SetActive(j == i) end
                 end
 
                 surface.PlaySound("buttons/button14.wav")
-                -- Call the page's draw function if it exists
                 if page.drawFunc then page.drawFunc(tabPanels[i]) end
             end)
 
             tabButtons[i] = tabButton
-            -- Create content panel for this tab
             local contentPanel = vgui.Create("DPanel", contentArea)
             contentPanel:Dock(TOP)
             contentPanel:SetVisible(i == 1)
             contentPanel.Paint = function() end
-            -- Override PerformLayout to set proper height after parent layout is complete
-            contentPanel.PerformLayout = function(s)
-                if IsValid(frame) and IsValid(tabContainer) then
-                    s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) -- Account for margins
-                end
-            end
-
+            contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
             tabPanels[i] = contentPanel
         end
 
-        -- Function to adjust tab widths based on available space
         local function AdjustTabWidths()
             if not IsValid(tabContainer) then return end
             local totalTabsWidth = 0
@@ -195,14 +177,12 @@ function MODULE:CreateMenuButtons(tabs)
             local totalMargins = baseMargin * (#pages - 1)
             local extraSpace = availableWidth - totalTabsWidth - totalMargins
             if extraSpace > 0 and #pages > 1 then
-                -- Distribute extra space evenly among tabs
                 local extraPerTab = math.floor(extraSpace / #pages)
                 local adjustedWidths = {}
                 for tabId, baseWidth in pairs(baseTabWidths) do
                     adjustedWidths[tabId] = baseWidth + extraPerTab
                 end
 
-                -- Handle remainder
                 local remainder = extraSpace % #pages
                 if remainder > 0 then
                     for remainderId = 1, math.min(remainder, #pages) do
@@ -210,33 +190,28 @@ function MODULE:CreateMenuButtons(tabs)
                     end
                 end
 
-                -- Apply new widths to existing buttons
                 for childId, child in ipairs(tabContainer:GetChildren()) do
                     if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
                 end
             end
         end
 
-        -- Override tab container PerformLayout to adjust tab widths
         local originalPerformLayout = tabContainer.PerformLayout
         tabContainer.PerformLayout = function(s, w, h)
             if originalPerformLayout then originalPerformLayout(s, w, h) end
-            -- Adjust tab widths after layout
             timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
         end
 
-        -- Initialize first tab
         if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end
     end
 
     tabs["settings"] = function(settingsPanel)
-        -- Create a custom frame instead of DPropertySheet
         local frame = settingsPanel:Add("liaFrame")
         frame:Dock(FILL)
         frame:DockMargin(10, 10, 10, 10)
         frame:SetTitle(L("settings"))
-        frame:LiteMode() -- Use lite mode for cleaner look
-        frame:DisableCloseBtn() -- Remove close button from settings tab
+        frame:LiteMode()
+        frame:DisableCloseBtn()
         local pages = {}
         hook.Run("PopulateConfigurationButtons", pages)
         if not pages then return end
@@ -246,7 +221,6 @@ function MODULE:CreateMenuButtons(tabs)
             return an < bn
         end)
 
-        -- Create tab container and content area
         local tabContainer = vgui.Create("DPanel", frame)
         tabContainer:Dock(TOP)
         tabContainer:SetTall(40)
@@ -258,62 +232,46 @@ function MODULE:CreateMenuButtons(tabs)
         local tabPanels = {}
         local baseTabWidths = {}
         local baseMargin = 8
-        -- Calculate base tab widths first
         for i, page in ipairs(pages) do
             surface.SetFont("Fated.18")
             local textWidth = surface.GetTextSize(L(page.name))
-            local iconWidth = 0 -- Disable icons for settings tabs
+            local iconWidth = 0
             local padding = 20
             local minWidth = 80
             local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
             baseTabWidths[i] = btnWidth
         end
 
-        -- Create tab buttons and panels
         for i, page in ipairs(pages) do
-            -- Create tab button using the new liaTabButton panel
             local tabButton = vgui.Create("liaTabButton", tabContainer)
             tabButton:Dock(LEFT)
             tabButton:DockMargin(i == 1 and 0 or baseMargin, 0, 0, 0)
             tabButton:SetTall(36)
             tabButton:SetText(L(page.name))
-            tabButton:SetActive(i == 1) -- First tab is active by default
-            -- Set base width initially (will be adjusted in PerformLayout)
+            tabButton:SetActive(i == 1)
             tabButton:SetWide(baseTabWidths[i] or 80)
             tabButton:SetDoClick(function()
                 if activeTab == i then return end
-                -- Hide current panel
                 if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
-                -- Show new panel
                 activeTab = i
                 tabPanels[i]:SetVisible(true)
-                -- Update button states - set active state for the new button
                 for j, btn in ipairs(tabButtons) do
                     if IsValid(btn) then btn:SetActive(j == i) end
                 end
 
                 surface.PlaySound("buttons/button14.wav")
-                -- Call the page's draw function if it exists
                 if page.drawFunc then page.drawFunc(tabPanels[i]) end
             end)
 
             tabButtons[i] = tabButton
-            -- Create content panel for this tab
             local contentPanel = vgui.Create("DPanel", contentArea)
             contentPanel:Dock(TOP)
             contentPanel:SetVisible(i == 1)
             contentPanel.Paint = function() end
-            -- Override PerformLayout to set proper height after parent layout is complete
-            contentPanel.PerformLayout = function(s)
-                if IsValid(frame) and IsValid(tabContainer) then
-                    s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) -- Account for margins
-                end
-            end
-
+            contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
             tabPanels[i] = contentPanel
         end
 
-        -- Function to adjust tab widths based on available space
         local function AdjustTabWidths()
             if not IsValid(tabContainer) then return end
             local totalTabsWidth = 0
@@ -325,14 +283,12 @@ function MODULE:CreateMenuButtons(tabs)
             local totalMargins = baseMargin * (#pages - 1)
             local extraSpace = availableWidth - totalTabsWidth - totalMargins
             if extraSpace > 0 and #pages > 1 then
-                -- Distribute extra space evenly among tabs
                 local extraPerTab = math.floor(extraSpace / #pages)
                 local adjustedWidths = {}
                 for tabId, baseWidth in pairs(baseTabWidths) do
                     adjustedWidths[tabId] = baseWidth + extraPerTab
                 end
 
-                -- Handle remainder
                 local remainder = extraSpace % #pages
                 if remainder > 0 then
                     for remainderId = 1, math.min(remainder, #pages) do
@@ -340,22 +296,18 @@ function MODULE:CreateMenuButtons(tabs)
                     end
                 end
 
-                -- Apply new widths to existing buttons
                 for childId, child in ipairs(tabContainer:GetChildren()) do
                     if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
                 end
             end
         end
 
-        -- Override tab container PerformLayout to adjust tab widths
         local originalPerformLayout = tabContainer.PerformLayout
         tabContainer.PerformLayout = function(s, w, h)
             if originalPerformLayout then originalPerformLayout(s, w, h) end
-            -- Adjust tab widths after layout
             timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
         end
 
-        -- Initialize first tab
         if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end
     end
 
@@ -363,13 +315,12 @@ function MODULE:CreateMenuButtons(tabs)
     hook.Run("PopulateAdminTabs", adminPages)
     if not table.IsEmpty(adminPages) then
         tabs["admin"] = function(adminPanel)
-            -- Create a custom frame instead of liaTabs
             local frame = adminPanel:Add("liaFrame")
             frame:Dock(FILL)
             frame:DockMargin(10, 10, 10, 10)
             frame:SetTitle(L("admin"))
-            frame:LiteMode() -- Use lite mode for cleaner look
-            frame:DisableCloseBtn() -- Remove close button from admin tab
+            frame:LiteMode()
+            frame:DisableCloseBtn()
             local pages = {}
             hook.Run("PopulateAdminTabs", pages)
             if table.IsEmpty(pages) then return end
@@ -379,15 +330,12 @@ function MODULE:CreateMenuButtons(tabs)
                 return an < bn
             end)
 
-            -- Add default Online Staff tab as the first tab
             table.insert(pages, 1, {
                 name = "onlineStaff",
                 icon = "icon16/user.png",
                 drawFunc = function(panel)
-                    -- Store original staff data and filtered data
                     panel.originalStaffData = {}
                     panel.filteredStaffData = {}
-                    -- Create search functionality
                     local function filterStaffData(searchText)
                         if not searchText or searchText == "" then
                             panel.filteredStaffData = panel.originalStaffData
@@ -404,10 +352,8 @@ function MODULE:CreateMenuButtons(tabs)
                         return panel.filteredStaffData
                     end
 
-                    -- Create staff table display using liaTable
                     local function createStaffTable(staffData)
                         panel:Clear()
-                        -- Add search
                         local searchEntry = panel:Add("DTextEntry")
                         searchEntry:Dock(TOP)
                         searchEntry:DockMargin(0, 0, 0, 15)
@@ -423,15 +369,12 @@ function MODULE:CreateMenuButtons(tabs)
 
                         local staffTable = panel:Add("liaTable")
                         staffTable:Dock(FILL)
-                        panel.staffTable = staffTable -- Keep reference for resizing
-                        -- Add 5 columns as requested
-                        -- Create columns with responsive sizing (nil width = auto-size)
-                        staffTable:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size name column
-                        staffTable:AddColumn(L("usergroup"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size usergroup column
-                        staffTable:AddColumn(L("tickets"), 80, TEXT_ALIGN_CENTER, true) -- Fixed width for tickets
-                        staffTable:AddColumn(L("warnings"), 80, TEXT_ALIGN_CENTER, true) -- Fixed width for warnings
-                        staffTable:AddColumn(L("staffOnDuty", ""), 100, TEXT_ALIGN_CENTER, true) -- Fixed width for duty status
-                        -- Function to update table data
+                        panel.staffTable = staffTable
+                        staffTable:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true)
+                        staffTable:AddColumn(L("usergroup"), nil, TEXT_ALIGN_LEFT, true)
+                        staffTable:AddColumn(L("tickets"), 80, TEXT_ALIGN_CENTER, true)
+                        staffTable:AddColumn(L("warnings"), 80, TEXT_ALIGN_CENTER, true)
+                        staffTable:AddColumn(L("staffOnDuty", ""), 100, TEXT_ALIGN_CENTER, true)
                         function updateStaffTable(dataToShow)
                             staffTable:Clear()
                             local staffFound = false
@@ -445,28 +388,21 @@ function MODULE:CreateMenuButtons(tabs)
                             if not staffFound then staffTable:AddLine(L("noStaffCurrentlyOnline"), "", "", "", "") end
                         end
 
-                        -- Store the update function for external use
                         panel.updateStaffTable = updateStaffTable
-                        -- Update table with provided data
                         updateStaffTable(staffData)
                     end
 
-                    -- Override PerformLayout to ensure table resizes properly when panel changes size
                     panel.PerformLayout = function(s)
                         if IsValid(s.staffTable) and s.staffTable.CalculateColumnWidths and s.staffTable.RebuildRows then
-                            -- Trigger responsive column recalculation for the staff table
                             s.staffTable:CalculateColumnWidths()
                             s.staffTable:RebuildRows()
                         end
                     end
 
-                    -- Also add a resize timer for more reliable resizing
                     panel.resizeTimer = nil
                     panel.OnSizeChanged = function(s)
                         if IsValid(s.staffTable) and s.staffTable.CalculateColumnWidths and s.staffTable.RebuildRows then
-                            -- Clear existing timer
                             if s.resizeTimer then timer.Remove(s.resizeTimer) end
-                            -- Set a new timer to handle resizing after a short delay
                             s.resizeTimer = "liaStaffTableResize_" .. CurTime()
                             timer.Create(s.resizeTimer, 0.1, 1, function()
                                 if IsValid(s) and IsValid(s.staffTable) then
@@ -477,13 +413,10 @@ function MODULE:CreateMenuButtons(tabs)
                         end
                     end
 
-                    -- Hook to receive staff data
                     local function onStaffDataReceived(staffData)
                         if IsValid(panel) then
-                            -- Store original data
                             panel.originalStaffData = staffData or {}
                             panel.filteredStaffData = panel.originalStaffData
-                            -- Update table with current data
                             if panel.updateStaffTable then
                                 panel.updateStaffTable(panel.filteredStaffData)
                             else
@@ -493,10 +426,8 @@ function MODULE:CreateMenuButtons(tabs)
                     end
 
                     hook.Add("liaOnlineStaffDataReceived", "liaF1MenuStaffData", onStaffDataReceived)
-                    -- Request staff data from server
                     net.Start("liaRequestOnlineStaffData")
                     net.SendToServer()
-                    -- Refresh the table periodically
                     panel.refreshTimer = timer.Create("liaAdminStaffTableRefresh", 30, 0, function()
                         if IsValid(panel) then
                             net.Start("liaRequestOnlineStaffData")
@@ -510,12 +441,11 @@ function MODULE:CreateMenuButtons(tabs)
                         hook.Remove("liaOnlineStaffDataReceived", "liaF1MenuStaffData")
                         if timer.Exists("liaAdminStaffTableRefresh") then timer.Remove("liaAdminStaffTableRefresh") end
                         if panel.resizeTimer and timer.Exists(panel.resizeTimer) then timer.Remove(panel.resizeTimer) end
-                        panel.staffTable = nil -- Clear reference
+                        panel.staffTable = nil
                     end
                 end
             })
 
-            -- Create tab container and content area
             local tabContainer = vgui.Create("DPanel", frame)
             tabContainer:Dock(TOP)
             tabContainer:SetTall(40)
@@ -527,62 +457,46 @@ function MODULE:CreateMenuButtons(tabs)
             local tabPanels = {}
             local baseTabWidths = {}
             local baseMargin = 8
-            -- Calculate base tab widths first
             for i, page in ipairs(pages) do
                 surface.SetFont("Fated.18")
                 local textWidth = surface.GetTextSize(L(page.name))
-                local iconWidth = 0 -- Disable icons for admin tabs
+                local iconWidth = 0
                 local padding = 20
                 local minWidth = 80
                 local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
                 baseTabWidths[i] = btnWidth
             end
 
-            -- Create tab buttons and panels
             for i, page in ipairs(pages) do
-                -- Create tab button using the new liaTabButton panel
                 local tabButton = vgui.Create("liaTabButton", tabContainer)
                 tabButton:Dock(LEFT)
                 tabButton:DockMargin(i == 1 and 0 or baseMargin, 0, 0, 0)
                 tabButton:SetTall(36)
                 tabButton:SetText(L(page.name))
-                tabButton:SetActive(i == 1) -- First tab is active by default
-                -- Set base width initially (will be adjusted in PerformLayout)
+                tabButton:SetActive(i == 1)
                 tabButton:SetWide(baseTabWidths[i] or 80)
                 tabButton:SetDoClick(function()
                     if activeTab == i then return end
-                    -- Hide current panel
                     if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
-                    -- Show new panel
                     activeTab = i
                     tabPanels[i]:SetVisible(true)
-                    -- Update button states - set active state for the new button
                     for j, btn in ipairs(tabButtons) do
                         if IsValid(btn) then btn:SetActive(j == i) end
                     end
 
                     surface.PlaySound("buttons/button14.wav")
-                    -- Call the page's draw function if it exists
                     if page.drawFunc then page.drawFunc(tabPanels[i]) end
                 end)
 
                 tabButtons[i] = tabButton
-                -- Create content panel for this tab
                 local contentPanel = vgui.Create("DPanel", contentArea)
                 contentPanel:Dock(TOP)
                 contentPanel:SetVisible(i == 1)
                 contentPanel.Paint = function() end
-                -- Override PerformLayout to set proper height after parent layout is complete
-                contentPanel.PerformLayout = function(s)
-                    if IsValid(frame) and IsValid(tabContainer) then
-                        s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) -- Account for margins
-                    end
-                end
-
+                contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
                 tabPanels[i] = contentPanel
             end
 
-            -- Function to adjust tab widths based on available space
             local function AdjustTabWidths()
                 if not IsValid(tabContainer) then return end
                 local totalTabsWidth = 0
@@ -594,14 +508,12 @@ function MODULE:CreateMenuButtons(tabs)
                 local totalMargins = baseMargin * (#pages - 1)
                 local extraSpace = availableWidth - totalTabsWidth - totalMargins
                 if extraSpace > 0 and #pages > 1 then
-                    -- Distribute extra space evenly among tabs
                     local extraPerTab = math.floor(extraSpace / #pages)
                     local adjustedWidths = {}
                     for tabId, baseWidth in pairs(baseTabWidths) do
                         adjustedWidths[tabId] = baseWidth + extraPerTab
                     end
 
-                    -- Handle remainder
                     local remainder = extraSpace % #pages
                     if remainder > 0 then
                         for remainderId = 1, math.min(remainder, #pages) do
@@ -609,22 +521,18 @@ function MODULE:CreateMenuButtons(tabs)
                         end
                     end
 
-                    -- Apply new widths to existing buttons
                     for childId, child in ipairs(tabContainer:GetChildren()) do
                         if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
                     end
                 end
             end
 
-            -- Override tab container PerformLayout to adjust tab widths
             local originalPerformLayout = tabContainer.PerformLayout
             tabContainer.PerformLayout = function(s, w, h)
                 if originalPerformLayout then originalPerformLayout(s, w, h) end
-                -- Adjust tab widths after layout
                 timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
             end
 
-            -- Initialize first tab after a short delay to ensure proper layout
             if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then timer.Simple(0.01, function() if IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end end) end
         end
     end
@@ -636,7 +544,6 @@ function MODULE:CreateMenuButtons(tabs)
             sheet:Dock(FILL)
             sheet:DockMargin(10, 10, 10, 10)
             local function getLocalizedThemeName(themeID)
-                -- Convert lowercase theme ID to proper case for localization key
                 local properCaseName = themeID:gsub("(%a)([%w]*)", function(first, rest) return first:upper() .. rest:lower() end)
                 local localizationKey = "theme" .. properCaseName:gsub(" ", ""):gsub("-", "")
                 return L(localizationKey) or themeID
@@ -758,5 +665,4 @@ function MODULE:CanDisplayCharInfo(name)
     return true
 end
 
--- Refresh the F1 menu when fonts change
 hook.Add("RefreshFonts", "liaF1MenuRefreshFonts", function() if IsValid(lia.gui.menu) then lia.gui.menu:Update() end end)

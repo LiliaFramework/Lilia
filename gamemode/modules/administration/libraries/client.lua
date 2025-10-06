@@ -144,16 +144,13 @@ function MODULE:PopulateAdminTabs(pages)
             icon = "icon16/book.png",
             drawFunc = function(panel)
                 panelRef = panel
-                -- Force recreation of UI elements when tab is revisited
                 panel:Clear()
                 panel:DockPadding(6, 6, 6, 6)
                 panel.Paint = function() end
-                -- Remove existing sheet if it exists to force recreation
                 if IsValid(panel.sheet) then panel.sheet:Remove() end
                 panel.sheet = panel:Add("liaTabs")
                 panel.sheet:Dock(FILL)
                 function panel:buildSheets(data)
-                    -- Force complete recreation of all UI elements
                     if IsValid(self.sheet) then self.sheet:Remove() end
                     self.sheet = self:Add("liaTabs")
                     self.sheet:Dock(FILL)
@@ -336,7 +333,6 @@ function MODULE:PopulateAdminTabs(pages)
                     end
                 end
 
-                -- Request fresh data every time the tab is accessed
                 net.Start("liaRequestFullCharList")
                 net.SendToServer()
             end

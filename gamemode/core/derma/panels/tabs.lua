@@ -4,7 +4,7 @@ function PANEL:Init()
     self.active_id = 1
     self.tab_height = 38
     self.animation_speed = 8
-    self.tab_style = "modern" -- modern or classic
+    self.tab_style = "modern"
     self.indicator_height = 2
     self.panel_tabs = vgui.Create("Panel", self)
     self.panel_tabs.Paint = nil
@@ -53,7 +53,6 @@ end
 function PANEL:Rebuild()
     self.panel_tabs:Clear()
     if self.tab_style == 'modern' then
-        -- Calculate base tab widths first
         local tabWidths = {}
         local baseMargin = 6
         for id, tab in ipairs(self.tabs) do
@@ -62,15 +61,13 @@ function PANEL:Rebuild()
             local iconW = tab.icon and 16 or 0
             local iconTextGap = tab.icon and 8 or 0
             local padding = 16
-            local minWidth = 80 -- Minimum tab width
+            local minWidth = 80
             local btnWidth = math.max(minWidth, padding + iconW + iconTextGap + textW + padding)
             tabWidths[id] = btnWidth
         end
 
-        -- Store tab widths for later adjustment in PerformLayout
         self._tabWidths = tabWidths
         self._baseMargin = baseMargin
-        -- Create tabs with base widths initially
         for id, tab in ipairs(self.tabs) do
             local btnTab = vgui.Create('Button', self.panel_tabs)
             local btnWidth = tabWidths[id] or 80
@@ -101,14 +98,10 @@ function PANEL:Rebuild()
                 local isActive = self.active_id == id
                 local colorText = isActive and lia.color.theme.theme or lia.color.theme.text
                 local colorIcon = isActive and lia.color.theme.theme or color_white
-                -- Override the default button hover behavior by not calling the parent paint
-                -- and ensuring no hover effects are drawn
                 if self.tab_style == 'modern' then
-                    -- Only draw active indicator for modern style, no hover effects
                     if isActive then lia.derma.rect(0, h - self.indicator_height, w, self.indicator_height):Color(lia.color.theme.theme):Draw() end
                     local iconW = tab.icon and 16 or 0
                     local iconTextGap = tab.icon and 8 or 0
-                    -- Calculate visual center accounting for icon and text, but maintain minimum content width
                     local contentWidth = iconW + iconTextGap + surface.GetTextSize(tab.name)
                     local startX = (w - contentWidth) / 2
                     local textX = startX + (iconW > 0 and (iconW + iconTextGap) or 0)
@@ -117,7 +110,6 @@ function PANEL:Rebuild()
                 else
                     local iconW = tab.icon and 16 or 0
                     local iconTextGap = tab.icon and 8 or 0
-                    -- Calculate visual center accounting for icon and text, but maintain minimum content width
                     local contentWidth = iconW + iconTextGap + surface.GetTextSize(tab.name)
                     local startX = (w - contentWidth) / 2
                     local textX = startX + (iconW > 0 and (iconW + iconTextGap) or 0)
@@ -138,7 +130,6 @@ function PANEL:Rebuild()
             self.panel_tabs:Dock(TOP)
             self.panel_tabs:DockMargin(0, 0, 0, 4)
             self.panel_tabs:SetTall(self.tab_height)
-            -- Distribute extra space evenly among tabs for modern style
             if self._tabWidths and #self.tabs > 0 then
                 local totalTabsWidth = 0
                 for _, width in pairs(self._tabWidths) do
@@ -149,14 +140,12 @@ function PANEL:Rebuild()
                 local totalMargins = self._baseMargin * (#self.tabs - 1)
                 local extraSpace = availableWidth - totalTabsWidth - totalMargins
                 if extraSpace > 0 and #self.tabs > 1 then
-                    -- Distribute extra space evenly among tabs
                     local extraPerTab = math.floor(extraSpace / #self.tabs)
                     local adjustedWidths = {}
                     for tabId, baseWidth in pairs(self._tabWidths) do
                         adjustedWidths[tabId] = baseWidth + extraPerTab
                     end
 
-                    -- Handle remainder
                     local remainder = extraSpace % #self.tabs
                     if remainder > 0 then
                         for remainderId = 1, math.min(remainder, #self.tabs) do
@@ -164,7 +153,6 @@ function PANEL:Rebuild()
                         end
                     end
 
-                    -- Apply new widths to existing buttons
                     local children = self.panel_tabs:GetChildren()
                     for childId, child in ipairs(children) do
                         if adjustedWidths[childId] then child:SetWide(adjustedWidths[childId]) end
@@ -174,7 +162,6 @@ function PANEL:Rebuild()
         else
             self.panel_tabs:Dock(LEFT)
             self.panel_tabs:DockMargin(0, 0, 4, 0)
-            -- Calculate the maximum width needed for all tabs
             local maxWidth = 0
             for _, classicTab in ipairs(self.tabs) do
                 surface.SetFont('Fated.18')

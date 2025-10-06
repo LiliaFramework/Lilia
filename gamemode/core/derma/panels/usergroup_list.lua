@@ -8,7 +8,6 @@ function PANEL:Init()
 end
 
 function PANEL:SetupUI()
-    -- Header
     local header = self:Add("DPanel")
     header:Dock(TOP)
     header:SetTall(40)
@@ -18,7 +17,6 @@ function PANEL:SetupUI()
         draw.SimpleText(L("groups"), "liaMediumFont", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
-    -- Scroll panel for groups
     self.scrollPanel = self:Add("liaScrollPanel")
     self.scrollPanel:Dock(FILL)
 end

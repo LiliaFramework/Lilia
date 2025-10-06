@@ -349,7 +349,6 @@ function GM:CalcView(client, origin, angles, fov)
     return view
 end
 
--- Global variables to track use key state and item menu
 liaUseKeyHeld = false
 liaItemMenuVisible = false
 function GM:PlayerBindPress(client, bind, pressed)
@@ -359,14 +358,10 @@ function GM:PlayerBindPress(client, bind, pressed)
         local entity = client:getTracedEntity()
         local hasValidEntity = IsValid(entity) and (entity:isItem() or entity.hasMenu)
         if pressed then
-            -- Use key was pressed
             liaUseKeyHeld = true
-            -- Check if we should show item menu (only if not already visible)
             if hasValidEntity and not liaItemMenuVisible then hook.Run("ItemShowEntityMenu", entity, true) end
         else
-            -- Use key was released
             liaUseKeyHeld = false
-            -- Hide item menu if it was shown by holding use
             if liaItemMenuVisible and IsValid(liaItemDermaMenu) then
                 liaItemDermaMenu:Remove()
                 liaItemMenuVisible = false
@@ -387,7 +382,6 @@ function GM:ItemShowEntityMenu(entity, useKeyHeld)
 
     local itemTable = entity:getItemTable()
     if not itemTable then return end
-    -- Handle shift+click for quick take (only when not holding use key)
     if not useKeyHeld and input.IsShiftDown() then
         if IsValid(entity) then
             net.Start("liaInvAct")
@@ -399,14 +393,11 @@ function GM:ItemShowEntityMenu(entity, useKeyHeld)
         return
     end
 
-    -- Create a derma menu with item options instead of the full item panel
     if IsValid(liaItemDermaMenu) then liaItemDermaMenu:Remove() end
     liaItemDermaMenu = vgui.Create("liaDermaMenu")
-    -- Create a temporary item instance with proper properties for function checks
     local tempItem = table.Copy(itemTable)
     tempItem.player = LocalPlayer()
     tempItem.entity = entity
-    -- Add item actions to the derma menu
     for key, fn in SortedPairs(itemTable.functions) do
         if key == "combine" then continue end
         if hook.Run("CanRunItemAction", tempItem, key) == false then continue end
@@ -426,22 +417,17 @@ function GM:ItemShowEntityMenu(entity, useKeyHeld)
         end, fn.icon)
     end
 
-    -- Position the menu at cursor if use key is held, otherwise above item
     if useKeyHeld then
-        -- Position at cursor
         local mouseX, mouseY = input.GetCursorPos()
         local menuW, menuH = liaItemDermaMenu:GetSize()
         local menuX = math.Clamp(mouseX - menuW / 2, 0, ScrW() - menuW)
-        local menuY = math.Clamp(mouseY - menuH - 10, 0, ScrH() - menuH) -- 10 pixels above cursor
+        local menuY = math.Clamp(mouseY - menuH - 10, 0, ScrH() - menuH)
         liaItemDermaMenu:SetPos(menuX, menuY)
     else
-        -- Position above the item entity
         local pos = entity:GetPos()
         local screenPos = pos:ToScreen()
-        -- Adjust position to be above the item and centered
         local menuX = screenPos.x - liaItemDermaMenu:GetWide() / 2
-        local menuY = screenPos.y - liaItemDermaMenu:GetTall() - 20 -- 20 pixels above the item
-        -- Keep menu on screen
+        local menuY = screenPos.y - liaItemDermaMenu:GetTall() - 20
         menuX = math.Clamp(menuX, 0, ScrW() - liaItemDermaMenu:GetWide())
         menuY = math.Clamp(menuY, 0, ScrH() - liaItemDermaMenu:GetTall())
         liaItemDermaMenu:SetPos(menuX, menuY)
@@ -450,15 +436,11 @@ function GM:ItemShowEntityMenu(entity, useKeyHeld)
     liaItemDermaMenu:MakePopup()
     liaItemDermaMenu:SetVisible(true)
     liaItemDermaMenu:SetKeyboardInputEnabled(false)
-    liaItemDermaMenu:SetMouseInputEnabled(true) -- Enable mouse input for click-outside detection
-    -- Ensure menu state is properly reset when menu is removed
+    liaItemDermaMenu:SetMouseInputEnabled(true)
     liaItemDermaMenu.OnRemove = function() liaItemMenuVisible = false end
     liaItemMenuVisible = true
 end
 
--- Removed automatic item menu opening when looking at items
--- Item menus now only open when explicitly pressing the use key
--- Cleanup hooks for item menu functionality
 hook.Add("OnScreenSizeChanged", "liaItemMenuCleanup", function()
     if IsValid(liaItemDermaMenu) then liaItemDermaMenu:Remove() end
     liaItemMenuVisible = false
@@ -580,52 +562,41 @@ function GM:DrawDeathNotice()
     return false
 end
 
--- Refresh UI elements when fonts change
 hook.Add("RefreshFonts", "liaRefreshUIElements", function()
-    -- Force all VGUI elements to invalidate their layout and refresh fonts
     local function refreshPanel(panel)
         if not IsValid(panel) then return end
-        -- Invalidate layout to force re-calculation with new fonts
         panel:InvalidateLayout(true)
-        -- Force re-render
         panel:SetVisible(false)
         panel:SetVisible(true)
-        -- Recursively refresh child panels
         for _, child in pairs(panel:GetChildren()) do
             refreshPanel(child)
         end
     end
 
-    -- Refresh F1 menu if open
     if IsValid(lia.gui.menu) then
         lia.gui.menu:Update()
         refreshPanel(lia.gui.menu)
     end
 
-    -- Refresh character menu if open
     if IsValid(lia.gui.character) then
         lia.gui.character:Update()
         refreshPanel(lia.gui.character)
     end
 
-    -- Refresh main menu if open
     if IsValid(lia.gui.main) then
         lia.gui.main:Update()
         refreshPanel(lia.gui.main)
     end
 
-    -- Refresh scoreboard if open
     if IsValid(lia.gui.score) then
         lia.gui.score:Update()
         refreshPanel(lia.gui.score)
     end
 
-    -- Refresh chatbox if open
     if IsValid(lia.gui.chat) then
         lia.gui.chat:Update()
         refreshPanel(lia.gui.chat)
     end
 
-    -- Refresh any other open UI elements that use fonts
     hook.Run("OnFontsRefreshed")
 end)

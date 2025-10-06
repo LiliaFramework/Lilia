@@ -101,4 +101,3 @@ hook.Add("PopulateAdminTabs", "liaWarningsTab", function(pages)
         })
     end
 end)
--- Warnings count is requested and handled by the hook above

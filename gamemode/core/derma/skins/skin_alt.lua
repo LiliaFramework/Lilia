@@ -20,7 +20,6 @@ function SKIN:PaintFrame(panel, w, h)
         if panel.btnClose and panel.btnClose:IsValid() then
             panel.btnClose:SetPos(panel:GetWide() - 16, 4)
             panel.btnClose:SetScaledSize(24, 24)
-            -- Use Unicode X symbol instead of Marlett for close button
             panel.btnClose:SetFont("Marlett")
             panel.btnClose:SetText("✕")
             panel.btnClose:SetTextColor(Color(255, 255, 255))

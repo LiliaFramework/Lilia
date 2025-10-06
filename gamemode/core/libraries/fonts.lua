@@ -354,13 +354,9 @@ lia.font.register("liaCharButtonFont", {
 
 if CLIENT then
     function lia.font.refresh()
-        -- Clear stored fonts and re-register with current configuration
         lia.font.stored = {}
-        -- Get the current font configuration
         local currentFont = lia.config.get("Font", "Montserrat Medium")
-        -- Force VGUI to refresh font cache
         if vgui and vgui.RefreshFonts then vgui.RefreshFonts() end
-        -- Clear surface font cache to force re-creation
         if surface and surface.ClearFontCache then surface.ClearFontCache() end
         lia.font.register("ConfigFont", {
             font = currentFont,
@@ -699,22 +695,18 @@ if CLIENT then
         })
 
         hook.Run("PostLoadFonts", currentFont, currentFont)
-        -- Force all VGUI elements to refresh their font references
         local function refreshVGUIElement(element)
             if not IsValid(element) then return end
-            -- Force element to re-render with new fonts
             if element.SetFont and element.GetFont then
                 local elementFont = element:GetFont()
                 if elementFont and elementFont ~= "" then element:SetFont(elementFont) end
             end
 
-            -- Recursively refresh child elements
             for _, child in pairs(element:GetChildren()) do
                 refreshVGUIElement(child)
             end
         end
 
-        -- Refresh all root VGUI elements
         for _, element in pairs(vgui.GetWorldPanel():GetChildren()) do
             refreshVGUIElement(element)
         end
@@ -765,7 +757,6 @@ end, {
 })
 
 hook.Run("PostLoadFonts", lia.config.get("Font", "Montserrat Medium"), lia.config.get("Font", "Montserrat Medium"))
--- Console command to manually refresh fonts for testing
 if CLIENT then
     concommand.Add("lia_refresh_fonts", function()
         lia.information("Refreshing fonts...")
@@ -776,14 +767,12 @@ if CLIENT then
         lia.information("Available fonts: " .. table.concat(lia.font.getAvailableFonts(), ", "))
     end)
 
-    -- Debug command to check font status
     concommand.Add("lia_debug_fonts", function()
         local currentFont = lia.config.get("Font", "Montserrat Medium")
         lia.information("=== Font Debug Info ===")
         lia.information("Current font setting: " .. currentFont)
         lia.information("Stored fonts count: " .. table.Count(lia.font.stored))
         lia.information("Available fonts: " .. table.concat(lia.font.getAvailableFonts(), ", "))
-        -- Test a specific font
         surface.SetFont("ConfigFontLarge")
         local w, h = surface.GetTextSize("Test Text")
         lia.information("ConfigFontLarge test - Width: " .. w .. " Height: " .. h)

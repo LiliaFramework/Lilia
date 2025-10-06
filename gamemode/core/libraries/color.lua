@@ -36,11 +36,9 @@ if CLIENT then
         themeName = themeName or lia.color.getCurrentTheme()
         local themeData = lia.color.themes[themeName]
         if not themeData then
-            -- If the theme doesn't exist, fall back to default theme
             themeName = "Teal"
             themeData = lia.color.themes[themeName]
             if not themeData then
-                -- If even the default theme doesn't exist, create a basic fallback
                 ErrorNoHalt("[Lilia] Warning: No valid themes found! Using emergency fallback colors.\n")
                 lia.color.theme = {
                     maincolor = Color(80, 180, 180),
@@ -51,7 +49,6 @@ if CLIENT then
                 hook.Run("OnThemeChanged", themeName, useTransition)
                 return
             else
-                -- Update the config to use the valid fallback theme
                 lia.config.set("Theme", themeName)
             end
         end
@@ -145,7 +142,6 @@ if CLIENT then
 
                     lia.color.transition.active = false
                     hook.Remove("Think", "LiliaThemeTransition")
-                    -- Notify UI that theme transition has completed
                     hook.Run("OnThemeChanged", name, false)
                 end
             end)
@@ -159,7 +155,6 @@ if CLIENT then
     function lia.color.ReturnMainAdjustedColors()
         local base = lia.color.getMainColor()
         local background = lia.color.Adjust(base, -20, -10, -50, 0)
-        -- Compute text color based on background brightness for optimal contrast
         local brightness = background.r * 0.299 + background.g * 0.587 + background.b * 0.114
         local textColor = brightness > 128 and Color(30, 30, 30, 255) or Color(245, 245, 220, 255)
         return {
@@ -598,7 +593,6 @@ lia.color.registerTheme("Coral", {
 lia.config.add("Theme", "theme", "Teal", function(_, newValue)
     if CLIENT then
         if not lia.color.themes[newValue] then
-            -- If theme doesn't exist, fall back to default theme
             newValue = "Teal"
             if not lia.color.themes[newValue] then
                 ErrorNoHalt("[Lilia] Warning: Invalid theme '" .. tostring(newValue) .. "' - no valid themes available!\n")
@@ -616,7 +610,6 @@ end, {
         local themes = {}
         local themeIDs = lia.color.getAllThemes()
         for _, themeID in ipairs(themeIDs) do
-            -- Convert theme ID to proper display name
             local displayName = themeID:gsub("_", " "):gsub("(%a)([%w]*)", function(first, rest) return first:upper() .. rest:lower() end)
             themes[displayName] = themeID
         end

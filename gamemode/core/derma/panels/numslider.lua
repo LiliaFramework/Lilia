@@ -9,12 +9,10 @@ function PANEL:Init()
     self.font = "Fated.18"
     self.text = ""
     self:SetTall(60)
-    -- Create the slider track
     self.track = vgui.Create("DPanel", self)
     self.track:Dock(TOP)
     self.track:DockMargin(10, 20, 10, 10)
     self.track:SetTall(20)
-    -- Create the slider button
     self.slider = vgui.Create("DButton", self.track)
     self.slider:Dock(TOP)
     self.slider:DockMargin(0, 0, 0, 0)
@@ -26,12 +24,9 @@ function PANEL:Init()
         local sliderWidth = 20
         local sliderHeight = h
         local sliderX = ((self.value - self.min) / (self.max - self.min)) * (trackWidth - sliderWidth)
-        -- Draw track background
         lia.derma.rect(0, 0, trackWidth, sliderHeight):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw()
         lia.derma.rect(0, 0, trackWidth, sliderHeight):Rad(16):Color(lia.color.theme.slider_track or Color(60, 60, 60)):Shape(lia.derma.SHAPE_IOS):Draw()
-        -- Draw slider button
         lia.derma.rect(sliderX, 0, sliderWidth, sliderHeight):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw()
-        -- Draw hover effect
         if s:IsHovered() or self.dragging then
             self.hoverAnim = math.Clamp(self.hoverAnim + FrameTime() * 8, 0, 1)
         else
@@ -75,7 +70,6 @@ function PANEL:Init()
         end
     end
 
-    -- Value display
     self.valueLabel = vgui.Create("DLabel", self)
     self.valueLabel:Dock(TOP)
     self.valueLabel:DockMargin(10, 5, 10, 0)
@@ -91,9 +85,7 @@ function PANEL:PerformLayout()
 end
 
 function PANEL:Paint(w, h)
-    -- Background
     lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
-    -- Update value label
     if IsValid(self.valueLabel) then
         local displayValue = self.decimals == 0 and math.Round(self.value) or math.Round(self.value, self.decimals)
         self.valueLabel:SetText(self.text .. displayValue)
@@ -152,15 +144,12 @@ function PANEL:UpdateSliderPosition()
 end
 
 function PANEL:OnValueChanged()
-    -- Override this function to handle value changes
 end
 
 function PANEL:OnDragStart()
-    -- Override this function to handle drag start
 end
 
 function PANEL:OnDragEnd()
-    -- Override this function to handle drag end
 end
 
 vgui.Register("liaNumSlider", PANEL, "Panel")

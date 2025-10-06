@@ -11,7 +11,6 @@ function PANEL:Init()
 end
 
 function PANEL:SetupUI()
-    -- Checkbox
     self.checkbox = self:Add("liaSimpleCheckbox")
     self.checkbox:SetSize(24, 24)
     self.checkbox:SetPos(self:GetWide() - 30, (self:GetTall() - 24) / 2)
@@ -20,7 +19,6 @@ function PANEL:SetupUI()
         if self.OnChange then self:OnChange(value) end
     end
 
-    -- Label
     self.label = self:Add("DLabel")
     self.label:Dock(FILL)
     self.label:DockMargin(15, 0, 40, 0)
@@ -63,10 +61,8 @@ end
 
 function PANEL:Paint(w, h)
     local bgColor = self.panelColor
-    -- Hover effect
     if self.hovered then bgColor = ColorAlpha(lia.config.get("Color"), 10) end
     lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-    -- Bottom border
     surface.SetDrawColor(self.borderColor)
     surface.DrawRect(0, h - 1, w, 1)
 end

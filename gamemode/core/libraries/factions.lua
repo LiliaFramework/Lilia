@@ -26,7 +26,6 @@ function lia.faction.register(uniqueID, data)
     faction.desc = L(faction.desc) or "noDesc"
     faction.color = faction.color or Color(150, 150, 150)
     faction.models = faction.models or DefaultModels
-    -- Set default group to "jedi" if neither isJedi nor isSith are defined
     if not faction.isJedi and not faction.isSith then faction.group = "jedi" end
     local overrideName = hook.Run("OverrideFactionName", uniqueID, faction.name)
     if overrideName then faction.name = overrideName end
@@ -86,7 +85,6 @@ function lia.faction.loadFromDir(directory)
         local overrideModels = hook.Run("OverrideFactionModels", niceName, FACTION.models)
         if overrideModels then FACTION.models = overrideModels end
         if not FACTION.color then FACTION.color = Color(150, 150, 150) end
-        -- Set default group to "jedi" if neither isJedi nor isSith are defined
         if not FACTION.isJedi and not FACTION.isSith then FACTION.group = "jedi" end
         team.SetUp(FACTION.index, FACTION.name or L("unknown"), FACTION.color or Color(125, 125, 125))
         FACTION.models = FACTION.models or DefaultModels

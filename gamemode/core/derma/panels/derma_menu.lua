@@ -7,7 +7,7 @@ function PANEL:Init()
     self:SetKeyboardInputEnabled(false)
     self:SetMouseInputEnabled(true)
     self:SetDrawOnTop(true)
-    self:SetZPos(10000) -- Ensure menu appears above logo (which has z-index 9999)
+    self:SetZPos(10000)
     self.MaxTextWidth = 0
     self.MaxIconWidth = 0
     self._openTime = CurTime()
@@ -15,9 +15,7 @@ function PANEL:Init()
     self.maxHeight = nil
     self.Think = function()
         if CurTime() - self._openTime < 0.1 then return end
-        -- Only close on mouse clicks outside the menu, not on submenus
         if (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) and not self:IsChildHovered() then
-            -- Check if any submenu is hovered before closing
             local anySubmenuHovered = false
             for _, item in ipairs(self.Items or {}) do
                 if IsValid(item) and item._submenu and item._submenu_open and IsValid(item._submenu) and item._submenu:IsHovered() then
@@ -30,11 +28,9 @@ function PANEL:Init()
         end
     end
 
-    -- Enhanced keyboard navigation
     self.OnKeyCodePressed = function(panel, keyCode)
         local focusedItem = nil
         local focusedIndex = 1
-        -- Find currently focused item
         for i, item in ipairs(panel.Items) do
             if IsValid(item) and item:IsHovered() then
                 focusedItem = item
@@ -44,7 +40,6 @@ function PANEL:Init()
         end
 
         if keyCode == KEY_DOWN then
-            -- Navigate down
             local nextIndex = focusedIndex + 1
             if nextIndex > #panel.Items then nextIndex = 1 end
             for i = nextIndex, #panel.Items do
@@ -56,7 +51,6 @@ function PANEL:Init()
                 end
             end
         elseif keyCode == KEY_UP then
-            -- Navigate up
             local prevIndex = focusedIndex - 1
             if prevIndex < 1 then prevIndex = #panel.Items end
             for i = prevIndex, 1, -1 do
@@ -68,20 +62,16 @@ function PANEL:Init()
                 end
             end
         elseif keyCode == KEY_RIGHT and focusedItem and focusedItem._submenu then
-            -- Open submenu
             if not focusedItem._submenu_open then focusedItem:OpenSubMenu() end
         elseif keyCode == KEY_LEFT then
-            -- Close submenu or go back
             if focusedItem and focusedItem._submenu and focusedItem._submenu_open then
                 focusedItem:CloseSubMenu()
             else
                 panel:Remove()
             end
         elseif keyCode == KEY_ENTER or keyCode == KEY_SPACE then
-            -- Activate item
             if focusedItem then focusedItem:DoClick() end
         elseif keyCode == KEY_ESCAPE then
-            -- Close menu
             panel:Remove()
         end
     end
@@ -112,9 +102,8 @@ function PANEL:AddOption(text, func, icon, optData)
     option._cachedIconMat = nil
     function option:SetImage(newIcon)
         option.Icon = newIcon
-        option._cachedIconMat = nil -- Clear cached material
+        option._cachedIconMat = nil
         local newIconWidth = newIcon and 16 or 0
-        -- Update the parent menu's max icon width
         if IsValid(option:GetParent()) then
             local parent = option:GetParent()
             if parent.MaxIconWidth then
@@ -145,7 +134,6 @@ function PANEL:AddOption(text, func, icon, optData)
             surface.PlaySound('button_click.wav')
         end
 
-        -- Close menus after function execution with a small delay to ensure function completes
         timer.Simple(0.01, function()
             local function closeAllMenus(panel)
                 while IsValid(panel) do
@@ -163,7 +151,6 @@ function PANEL:AddOption(text, func, icon, optData)
         end)
     end
 
-    -- Enhanced keyboard navigation for menu items
     option.OnKeyCodePressed = function(panel, keyCode)
         if keyCode == KEY_RIGHT and panel._submenu then
             if not panel._submenu_open then panel:OpenSubMenu() end
@@ -178,14 +165,13 @@ function PANEL:AddOption(text, func, icon, optData)
         if IsValid(option._submenu) then option._submenu:Remove() end
         local submenu = vgui.Create("liaDermaMenu")
         submenu:SetDrawOnTop(true)
-        submenu:SetParent(nil) -- Don't set parent to avoid positioning conflicts
+        submenu:SetParent(nil)
         submenu:SetVisible(false)
-        submenu:SetZPos(10000) -- Ensure submenu appears above logo
+        submenu:SetZPos(10000)
         option._submenu = submenu
         option._submenu_open = false
         option.OnRemove = function()
             if IsValid(submenu) then
-                -- Close submenu first to ensure proper cleanup
                 if option._submenu_open then option:CloseSubMenu() end
                 submenu:Remove()
                 submenu = nil
@@ -198,41 +184,25 @@ function PANEL:AddOption(text, func, icon, optData)
                 if IsValid(sibling) and sibling ~= self and sibling.CloseSubMenu then sibling:CloseSubMenu() end
             end
 
-            -- Enhanced positioning logic
             local parentX, parentY = self:LocalToScreen(self:GetWide(), 0)
             local submenuWidth, submenuHeight = submenu:GetSize()
             local screenWidth, screenHeight = ScrW(), ScrH()
-            -- Default: position to the right
             local x, y = parentX, parentY
-            -- Check if submenu would go off the right edge
-            if parentX + submenuWidth > screenWidth - 10 then
-                -- Position to the left instead
-                x = parentX - submenuWidth - self:GetWide()
-            end
-
-            -- Check if submenu would go off the bottom edge
-            if parentY + submenuHeight > screenHeight - 10 then
-                -- Position above instead
-                y = parentY - submenuHeight + self:GetTall()
-            end
-
-            -- Check if submenu would go off the top edge
+            if parentX + submenuWidth > screenWidth - 10 then x = parentX - submenuWidth - self:GetWide() end
+            if parentY + submenuHeight > screenHeight - 10 then y = parentY - submenuHeight + self:GetTall() end
             if y < 10 then y = 10 end
-            -- Check if submenu would go off the left edge
             if x < 10 then x = 10 end
             submenu:SetPos(x, y)
             submenu:MakePopup()
             submenu:SetVisible(true)
             submenu:SetKeyboardInputEnabled(false)
             submenu:SetMouseInputEnabled(true)
-            -- Remove fade animation for more stable behavior
             submenu:SetAlpha(255)
             option._submenu_open = true
         end
 
         function option:CloseSubMenu()
             if IsValid(submenu) then
-                -- Close immediately for more stable behavior
                 submenu:SetVisible(false)
                 submenu:SetAlpha(0)
             end
@@ -281,7 +251,6 @@ function PANEL:AddOption(text, func, icon, optData)
             return false
         end
 
-        -- Improved hover detection with proper timing
         option.OnCursorExited = function() timer.Simple(0.3, function() if IsValid(option) and not isAnySubmenuHovered(option) then option:CloseSubMenu() end end) end
         submenu.OnCursorExited = function() timer.Simple(0.3, function() if IsValid(option) and not isAnySubmenuHovered(option) then option:CloseSubMenu() end end) end
         return submenu
@@ -301,7 +270,6 @@ function PANEL:AddOption(text, func, icon, optData)
         if pnl:IsHovered() then
             lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
             lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
-            -- Only open submenu after a brief delay to prevent flickering
             if pnl._submenu and not pnl._submenu_open and not pnl._hoverTimer then
                 pnl._hoverTimer = timer.Simple(0.1, function()
                     if IsValid(pnl) and pnl:IsHovered() and pnl._submenu and not pnl._submenu_open then pnl:OpenSubMenu() end
@@ -309,7 +277,6 @@ function PANEL:AddOption(text, func, icon, optData)
                 end)
             end
         else
-            -- Cancel hover timer if not hovering
             if pnl._hoverTimer then
                 timer.Remove(pnl._hoverTimer)
                 pnl._hoverTimer = nil
@@ -331,17 +298,14 @@ function PANEL:AddOption(text, func, icon, optData)
         local currentIconWidth = pnl.Icon and 16 or 0
         local iconTextGap = currentIconWidth > 0 and 8 or 0
         local textX = textPadding + currentIconWidth + iconTextGap
-        -- Draw submenu indicator arrow if this option has a submenu
         if pnl._submenu then
             local arrowSize = 16
             local arrowX = w - arrowSize - 8
             local arrowY = h * 0.5
-            -- Use Unicode symbols for arrows
             local arrowSymbol = pnl._submenu_open and "◄" or "►"
             draw.SimpleText(arrowSymbol, 'Fated.16', arrowX, arrowY, colors.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
-        -- Update parent menu's max icon width if needed
         if currentIconWidth > 0 then
             local parent = pnl:GetParent()
             if IsValid(parent) and parent.MaxIconWidth and currentIconWidth > parent.MaxIconWidth then
@@ -409,7 +373,6 @@ function PANEL:UpdateSize()
         if IsValid(item) then height = height + item.sumTall end
     end
 
-    -- Account for icons when calculating width (icon width + gap)
     local iconExtra = self.MaxIconWidth > 0 and (self.MaxIconWidth + 8) or 0
     local maxWidth = math.max(200, self.MaxTextWidth + 60 + iconExtra)
     local limit = self.maxHeight or (ScrH() * 0.8)
@@ -441,11 +404,9 @@ function PANEL:SetMaxHeight(height)
 end
 
 function PANEL:Clear()
-    -- Close all submenus first to ensure proper cleanup
     self:CloseAllSubMenus()
     for _, item in ipairs(self.Items) do
         if IsValid(item) then
-            -- Remove submenu if it exists
             if item._submenu and IsValid(item._submenu) then
                 item._submenu:Remove()
                 item._submenu = nil
@@ -462,7 +423,6 @@ function PANEL:Clear()
 end
 
 function PANEL:Close()
-    -- Close all submenus before closing the main menu
     self:CloseAllSubMenus()
     if self.deleteSelf ~= false then
         self:Remove()

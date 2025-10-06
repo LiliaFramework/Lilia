@@ -3,12 +3,11 @@ function PANEL:Init()
     self:SetTall(500)
     self.table = self:Add("liaTable")
     self.table:Dock(FILL)
-    -- Define columns for faction roster
-    self.table:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size name column
-    self.table:AddColumn(L("steamID"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size SteamID column
-    self.table:AddColumn(L("class"), nil, TEXT_ALIGN_LEFT, true) -- Auto-size class column
-    self.table:AddColumn(L("playTime"), 100, TEXT_ALIGN_CENTER, true) -- Fixed width for play time
-    self.table:AddColumn(L("lastOnline"), 120, TEXT_ALIGN_CENTER, true) -- Fixed width for last online
+    self.table:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true)
+    self.table:AddColumn(L("steamID"), nil, TEXT_ALIGN_LEFT, true)
+    self.table:AddColumn(L("class"), nil, TEXT_ALIGN_LEFT, true)
+    self.table:AddColumn(L("playTime"), 100, TEXT_ALIGN_CENTER, true)
+    self.table:AddColumn(L("lastOnline"), 120, TEXT_ALIGN_CENTER, true)
     timer.Simple(0.1, function()
         if IsValid(self) then
             self:InvalidateLayout(true)
@@ -46,7 +45,6 @@ function PANEL:Populate(data, canKick)
         local lastOnline = v.lastOnline or L("na")
         local row = self.table:AddLine(name, steamID, className, playTime, lastOnline)
         row.rowData = v
-        -- Set up right-click context menu for the row
         row.DoRightClick = function()
             if not IsValid(row) or not row.rowData then return end
             local rowData = row.rowData

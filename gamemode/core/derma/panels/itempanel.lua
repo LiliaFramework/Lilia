@@ -14,8 +14,7 @@ function PANEL:Init()
     self.nameLabel:Dock(TOP)
     self.infoScroll = vgui.Create("liaScrollPanel", self)
     self.infoScroll:Dock(TOP)
-    self.infoScroll:InvalidateLayout(true) -- Ensure proper layout initialization
-    -- Ensure scrollbar is properly initialized
+    self.infoScroll:InvalidateLayout(true)
     if not IsValid(self.infoScroll.VBar) then self.infoScroll:PerformLayout() end
     self.infoScroll:SetTall(self:GetTall() * 0.55)
     self.btnArea = vgui.Create("EditablePanel", self)

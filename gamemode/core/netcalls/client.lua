@@ -333,18 +333,15 @@ lia.net.readBigTable("liaSendTableUI", function(data) lia.util.CreateTableUI(dat
 net.Receive("liaOptionsRequest", function()
     local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
-    net.ReadString() -- subTitleKey (unused)
+    net.ReadString()
     local options = net.ReadTable()
     local limit = net.ReadUInt(32)
-    -- Use lia.derma.requestOptions with limit handling
     lia.derma.requestOptions(L(titleKey), options, function(selectedOptions)
         if selectedOptions == false then
-            -- User cancelled
             net.Start("liaOptionsRequestCancel")
             net.WriteUInt(id, 32)
             net.SendToServer()
         else
-            -- Apply limit if needed
             if limit > 0 and #selectedOptions > limit then
                 local limited = {}
                 for i = 1, limit do
@@ -407,12 +404,10 @@ end)
 net.Receive("liaRequestDropdown", function()
     local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
-    net.ReadString() -- subTitleKey (unused)
+    net.ReadString()
     local options = net.ReadTable()
-    -- Use lia.derma.requestDropdown
     lia.derma.requestDropdown(L(titleKey), options, function(selectedText)
         if selectedText == false then
-            -- User cancelled
             net.Start("liaRequestDropdownCancel")
             net.WriteUInt(id, 32)
             net.SendToServer()
@@ -450,10 +445,8 @@ net.Receive("liaStringRequest", function()
     local default = net.ReadString()
     if title:sub(1, 1) == "@" then title = L(title:sub(2)) end
     if subTitle:sub(1, 1) == "@" then subTitle = L(subTitle:sub(2)) end
-    -- Use lia.derma.requestString
     lia.derma.requestString(title, subTitle, function(value)
         if value == false then
-            -- User cancelled
             net.Start("liaStringRequestCancel")
             net.WriteUInt(id, 32)
             net.SendToServer()
@@ -658,7 +651,6 @@ net.Receive("liaButtonRequest", function()
         options[i] = net.ReadString()
     end
 
-    -- Convert options to button format for lia.derma.requestButtons
     local buttons = {}
     for i, key in ipairs(options) do
         table.insert(buttons, {
@@ -672,7 +664,6 @@ net.Receive("liaButtonRequest", function()
         })
     end
 
-    -- Use lia.derma.requestButtons
     lia.derma.requestButtons(L(titleKey), buttons, function(selectedIndex) if selectedIndex and selectedIndex > 0 and selectedIndex <= #buttons then buttons[selectedIndex].callback() end end)
 end)
 

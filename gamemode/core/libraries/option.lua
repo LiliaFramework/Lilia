@@ -147,7 +147,6 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             slider:SetRange(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0), lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1), 0)
             slider:SetValue(lia.option.get(key, cfg.value))
             slider:SetText("")
-            -- Override Paint function to remove extra text underneath slider
             slider.Paint = function(s, w)
                 local padX = 16
                 local padTop = 2
@@ -158,21 +157,17 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local handleR = handleH / 2
                 local textFont = "Fated.18"
                 local valueFont = "Fated.16"
-                -- Draw the slider label text (if any)
                 if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
                 local barStart = padX + handleW / 2
                 local barEnd = w - padX - handleW / 2
                 local barW = barEnd - barStart
                 local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
                 local activeW = math.Clamp(barW * progress, 0, barW)
-                -- Draw slider track background
                 lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
                 lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
                 lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-                -- Draw active progress bar
                 lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
                 s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-                -- Draw handle
                 local handleX = barStart + s.smoothPos
                 local handleY = barY + barH / 2
                 lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
@@ -180,12 +175,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
                 local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
                 lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                -- Draw current value (keep this, but ensure it fits)
-                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20) -- Ensure it doesn't go off the edge
+                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20)
                 draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                -- Remove min/max value text underneath slider (commented out)
-                -- draw.SimpleText(s.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_LEFT)
-                -- draw.SimpleText(s.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_RIGHT)
             end
 
             slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(v)) end) end
@@ -220,7 +211,6 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             slider:SetRange(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0), lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1), cfg.data and cfg.data.decimals or 2)
             slider:SetValue(lia.option.get(key, cfg.value))
             slider:SetText("")
-            -- Override Paint function to remove extra text underneath slider
             slider.Paint = function(s, w)
                 local padX = 16
                 local padTop = 2
@@ -231,21 +221,17 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local handleR = handleH / 2
                 local textFont = "Fated.18"
                 local valueFont = "Fated.16"
-                -- Draw the slider label text (if any)
                 if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
                 local barStart = padX + handleW / 2
                 local barEnd = w - padX - handleW / 2
                 local barW = barEnd - barStart
                 local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
                 local activeW = math.Clamp(barW * progress, 0, barW)
-                -- Draw slider track background
                 lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
                 lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
                 lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-                -- Draw active progress bar
                 lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
                 s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-                -- Draw handle
                 local handleX = barStart + s.smoothPos
                 local handleY = barY + barH / 2
                 lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
@@ -253,12 +239,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
                 local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
                 lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                -- Draw current value (keep this, but ensure it fits)
-                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20) -- Ensure it doesn't go off the edge
+                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20)
                 draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                -- Remove min/max value text underneath slider (commented out)
-                -- draw.SimpleText(s.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_LEFT)
-                -- draw.SimpleText(s.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_RIGHT)
             end
 
             slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(v, 2)) end) end
@@ -402,11 +384,9 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 combo:SetFont("ConfigFontLarge")
                 local options = lia.option.getOptions(key)
                 for _, text in pairs(options) do
-                    -- Always use the display text as the data value to ensure consistent types
                     combo:AddChoice(text, text)
                 end
 
-                -- Force UI refresh after adding all options to ensure proper sizing
                 combo:FinishAddingOptions()
                 combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
             end
