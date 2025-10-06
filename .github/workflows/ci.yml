@@ -36,6 +36,15 @@ jobs:
       - name: Generate file list for formatting
         run: |
           find gamemode -type f -name "*.lua" -print0 > lua_files_to_format.txt
+      - name: Create workspace archive
+        run: |
+          tar \
+            --exclude=.git \
+            --exclude=.install \
+            --exclude=.lua \
+            --exclude=.luarocks \
+            --exclude=luacheck \
+            -cf workspace.tar .
       - uses: actions/upload-artifact@v4
         with:
           name: workspace
