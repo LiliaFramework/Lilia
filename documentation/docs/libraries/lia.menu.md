@@ -14,11 +14,13 @@ The menu library (`lia.menu`) provides a comprehensive system for managing 3D co
 
 **Purpose**
 
-Adds a new menu to the menu system.
+Adds a new 3D context menu at a specific position or attached to an entity.
 
 **Parameters**
 
-* `menuData` (*table*): The menu data table containing name, options, etc.
+* `opts` (*table*): The menu options table containing key-value pairs for menu items.
+* `pos` (*Vector* or *Entity*, optional): The position to show the menu, or an entity to attach it to.
+* `onRemove` (*function*, optional): Callback function called when the menu is removed.
 
 **Returns**
 
@@ -26,59 +28,54 @@ Adds a new menu to the menu system.
 
 **Realm**
 
-Shared.
+Client.
 
 **Example Usage**
 
 ```lua
--- Add a basic menu
+-- Add a basic menu at a position
 lia.menu.add({
-    name = "Test Menu",
-    options = {
-        {
-            text = "Option 1",
-            callback = function(client)
-                client:notify("Option 1 selected")
-            end
-        },
-        {
-            text = "Option 2",
-            callback = function(client)
-                client:notify("Option 2 selected")
-            end
-        }
-    }
-})
+    ["Option 1"] = function()
+        LocalPlayer():notify("Option 1 selected")
+    end,
+    ["Option 2"] = function()
+        LocalPlayer():notify("Option 2 selected")
+    end
+}, Vector(0, 0, 0))
 
--- Add a menu with more options
-lia.menu.add({
-    name = "Player Menu",
-    options = {
-        {
-            text = "Teleport",
-            callback = function(client, target)
-                client:SetPos(target:GetPos())
-                client:notify("Teleported to " .. target:Name())
-            end
-        },
-        {
-            text = "Give Item",
-            callback = function(client, target)
-                local item = lia.item.new("weapon_pistol")
-                target:getChar():getInventory():add(item)
-                client:notify("Gave item to " .. target:Name())
-            end
-        }
-    }
-})
+-- Add a menu attached to an entity
+local function addEntityMenu(entity)
+    lia.menu.add({
+        ["Examine"] = function()
+            LocalPlayer():notify("Examining " .. entity:GetClass())
+        end,
+        ["Use"] = function()
+            LocalPlayer():notify("Using " .. entity:GetClass())
+        end,
+        ["Destroy"] = function()
+            LocalPlayer():notify("Destroying " .. entity:GetClass())
+        end
+    }, entity)
+end
+
+-- Add a menu with removal callback
+local function addMenuWithCallback()
+    lia.menu.add({
+        ["Save Game"] = function()
+            LocalPlayer():notify("Game saved!")
+        end,
+        ["Load Game"] = function()
+            LocalPlayer():notify("Game loaded!")
+        end
+    }, Vector(100, 200, 50), function()
+        print("Menu was removed")
+    end)
+end
 
 -- Use in a function
-local function createMenu(name, options)
-    lia.menu.add({
-        name = name,
-        options = options
-    })
-    print("Menu created: " .. name)
+local function createContextMenu(entity, options)
+    lia.menu.add(options, entity)
+    print("Context menu created for " .. entity:GetClass())
 end
 ```
 
@@ -133,7 +130,7 @@ end
 
 **Purpose**
 
-Gets the currently active menu.
+Gets the currently active menu and the selected item if the mouse is hovering over it.
 
 **Parameters**
 
@@ -141,7 +138,8 @@ Gets the currently active menu.
 
 **Returns**
 
-* `menu` (*table*): The active menu or nil.
+* `menuIndex` (*number*): The index of the active menu in the menu list.
+* `callback` (*function*): The callback function of the hovered menu item, or nil if no item is hovered.
 
 **Realm**
 
@@ -150,40 +148,50 @@ Client.
 **Example Usage**
 
 ```lua
--- Get active menu
-local function getActiveMenu()
+-- Get active menu and selected item
+local function getActiveMenuAndItem()
     return lia.menu.getActiveMenu()
 end
 
 -- Use in a function
-local function checkMenuActive()
-    local menu = lia.menu.getActiveMenu()
-    if menu then
-        print("Active menu: " .. menu.name)
-        return true
+local function checkMenuInteraction()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if menuIndex then
+        print("Active menu index: " .. menuIndex)
+        if callback then
+            print("Hovered item has callback")
+            -- The callback can be called later when button is pressed
+            return menuIndex, callback
+        else
+            print("No item hovered")
+            return menuIndex, nil
+        end
     else
         print("No active menu")
-        return false
+        return nil, nil
     end
 end
 
 -- Use in a function
-local function showActiveMenuInfo()
-    local menu = lia.menu.getActiveMenu()
-    if menu then
-        print("Menu: " .. menu.name)
-        print("Options: " .. #menu.options)
-        return menu
+local function getHoveredMenuItem()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if callback then
+        print("Currently hovering over a menu item")
+        return callback
     else
-        print("No active menu")
+        print("Not hovering over any menu item")
         return nil
     end
 end
 
 -- Use in a function
-local function getActiveMenuOptions()
-    local menu = lia.menu.getActiveMenu()
-    return menu and menu.options or {}
+local function handleMenuSelection()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if callback then
+        -- Execute the callback when item is selected
+        callback()
+        print("Menu item executed")
+    end
 end
 ```
 
@@ -193,15 +201,16 @@ end
 
 **Purpose**
 
-Handles button press events for menus.
+Handles button press events for menus and executes the selected menu item callback.
 
 **Parameters**
 
-* `button` (*string*): The button that was pressed.
+* `id` (*number*): The index of the menu in the menu list.
+* `cb` (*function*): The callback function to execute for the selected menu item.
 
 **Returns**
 
-*None*
+* `success` (*boolean*): True if a menu item was executed, false otherwise.
 
 **Realm**
 
@@ -210,24 +219,46 @@ Client.
 **Example Usage**
 
 ```lua
--- Handle button press
-local function onButtonPress(button)
-    lia.menu.onButtonPressed(button)
+-- Handle button press for menu selection
+local function handleMenuButtonPress()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if callback then
+        local success = lia.menu.onButtonPressed(menuIndex, callback)
+        if success then
+            print("Menu item executed successfully")
+        end
+    end
 end
 
 -- Use in a function
-local function handleMenuInput(button)
-    lia.menu.onButtonPressed(button)
+local function processMenuSelection()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if menuIndex and callback then
+        lia.menu.onButtonPressed(menuIndex, callback)
+        print("Menu selection processed")
+    end
 end
 
 -- Use in a function
-local function processMenuInput(button)
-    lia.menu.onButtonPressed(button)
+local function executeMenuAction()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if callback then
+        local executed = lia.menu.onButtonPressed(menuIndex, callback)
+        if executed then
+            print("Menu action executed")
+        else
+            print("Menu action failed")
+        end
+    end
 end
 
 -- Use in a function
-local function handleMenuNavigation(button)
-    lia.menu.onButtonPressed(button)
+local function handleMenuInteraction()
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if menuIndex and callback then
+        lia.menu.onButtonPressed(menuIndex, callback)
+        print("Menu interaction completed")
+    end
 end
 ```
 

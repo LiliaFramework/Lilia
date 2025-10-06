@@ -311,7 +311,7 @@ else
             local textW = select(1, surface.GetTextSize(L(data.description or name)))
             local ctrl
             if fieldType == "player" then
-                ctrl = vgui.Create("DComboBox", panel)
+                ctrl = vgui.Create("liaComboBox", panel)
                 ctrl:SetValue(L("select") .. " " .. L("player"))
                 local players = {}
                 for _, plyObj in player.Iterator() do
@@ -327,7 +327,7 @@ else
                     ctrl:AddChoice(plyObj:Name(), plyObj:SteamID())
                 end
             elseif fieldType == "table" then
-                ctrl = vgui.Create("DComboBox", panel)
+                ctrl = vgui.Create("liaComboBox", panel)
                 ctrl:SetValue(L("select") .. " " .. L(name))
                 local opts = options
                 if isfunction(opts) then
@@ -345,9 +345,9 @@ else
                     end
                 end
             elseif fieldType == "bool" then
-                ctrl = vgui.Create("DCheckBox", panel)
+                ctrl = vgui.Create("liaCheckbox", panel)
             else
-                ctrl = vgui.Create("DTextEntry", panel)
+                ctrl = vgui.Create("liaEntry", panel)
                 ctrl:SetFont("liaSmallFont")
             end
 
@@ -417,7 +417,7 @@ else
                     local ftype = data.type
                     local filled
                     if ftype == "player" or ftype == "table" then
-                        local txt, _ = ctl:GetSelected()
+                        local txt = ctl:GetValue()
                         filled = txt ~= nil and txt ~= ""
                     elseif ftype == "bool" then
                         filled = true
@@ -453,7 +453,7 @@ else
                 local typ = info.type
                 local val
                 if typ == "player" or typ == "table" then
-                    local _, dataVal = ctl:GetSelected()
+                    local dataVal = ctl:GetSelectedData()
                     val = dataVal or ctl:GetValue()
                 elseif typ == "bool" then
                     val = ctl:GetChecked()

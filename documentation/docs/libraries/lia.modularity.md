@@ -14,62 +14,15 @@ The modularity library (`lia.module`) provides a comprehensive system for managi
 
 **Purpose**
 
-Loads a module from a file.
+Loads a module by its unique identifier and path.
 
 **Parameters**
 
-* `modulePath` (*string*): The path to the module file.
-
-**Returns**
-
-* `success` (*boolean*): True if the module was loaded successfully.
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Load a module
-local function loadModule(modulePath)
-    return lia.module.load(modulePath)
-end
-
--- Use in a function
-local function loadPlayerModule()
-    local success = lia.module.load("gamemode/modules/player.lua")
-    if success then
-        print("Player module loaded")
-    else
-        print("Failed to load player module")
-    end
-    return success
-end
-
--- Use in a function
-local function loadInventoryModule()
-    local success = lia.module.load("gamemode/modules/inventory.lua")
-    if success then
-        print("Inventory module loaded")
-    else
-        print("Failed to load inventory module")
-    end
-    return success
-end
-```
-
----
-
-### initialize
-
-**Purpose**
-
-Initializes a module.
-
-**Parameters**
-
-* `moduleName` (*string*): The name of the module to initialize.
+* `uniqueID` (*string*): The unique identifier of the module.
+* `path` (*string*): The filesystem path to the module directory.
+* `isSingleFile` (*boolean*, optional): Whether the module is loaded from a single file.
+* `variable` (*string*, optional): The variable name to use for the module table (default: "MODULE").
+* `skipSubmodules` (*boolean*, optional): Whether to skip loading submodules.
 
 **Returns**
 
@@ -82,21 +35,69 @@ Server.
 **Example Usage**
 
 ```lua
--- Initialize a module
-local function initializeModule(moduleName)
-    lia.module.initialize(moduleName)
+-- Load a module by unique ID and path
+local function loadModule(uniqueID, path)
+    lia.module.load(uniqueID, path)
 end
 
 -- Use in a function
-local function initializePlayerModule()
-    lia.module.initialize("player")
-    print("Player module initialized")
+local function loadPlayerModule()
+    lia.module.load("player", "gamemode/modules/player")
+    print("Player module loaded")
 end
 
 -- Use in a function
-local function initializeInventoryModule()
-    lia.module.initialize("inventory")
-    print("Inventory module initialized")
+local function loadInventoryModule()
+    lia.module.load("inventory", "gamemode/modules/inventory")
+    print("Inventory module loaded")
+end
+
+-- Load a single-file module
+local function loadSingleFileModule()
+    lia.module.load("mymodule", "gamemode/modules/mymodule.lua", true)
+    print("Single-file module loaded")
+end
+```
+
+---
+
+### initialize
+
+**Purpose**
+
+Initializes all modules in the framework, including the schema, preload modules, and gamemode modules.
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Server.
+
+**Example Usage**
+
+```lua
+-- Initialize all modules
+local function initializeAllModules()
+    lia.module.initialize()
+    print("All modules initialized")
+end
+
+-- Use in a hook
+hook.Add("Initialize", "InitializeModules", function()
+    lia.module.initialize()
+    print("Framework modules initialized")
+end)
+
+-- Use in a function
+local function reloadAllModules()
+    lia.module.initialize()
+    print("All modules reloaded")
 end
 ```
 
@@ -106,11 +107,13 @@ end
 
 **Purpose**
 
-Loads all modules from a directory.
+Loads all modules from a directory, optionally skipping specific modules.
 
 **Parameters**
 
-* `directory` (*string*): The directory path to load from.
+* `directory` (*string*): The directory path to load modules from.
+* `group` (*string*, optional): The variable name to use for modules (default: "MODULE").
+* `skip` (*table*, optional): Table of module IDs to skip loading.
 
 **Returns**
 
@@ -135,9 +138,19 @@ local function loadAllModules()
 end
 
 -- Use in a function
-local function reloadModules()
-    lia.module.loadFromDir("gamemode/modules/")
-    print("Modules reloaded")
+local function loadModulesSkipSome()
+    local skipList = {
+        ["disabled_module"] = true,
+        ["test_module"] = true
+    }
+    lia.module.loadFromDir("gamemode/modules/", "MODULE", skipList)
+    print("Modules loaded, skipping some")
+end
+
+-- Use with custom variable name
+local function loadModulesCustomVar()
+    lia.module.loadFromDir("gamemode/modules/", "MYMODULE")
+    print("Modules loaded with custom variable name")
 end
 ```
 
@@ -183,37 +196,6 @@ end
 ```
 
 ---
-
-### printDisabledModules
-
-**Purpose**
-
-Prints all disabled modules.
-
-**Parameters**
-
-*None*
-
-**Returns**
-
-*None*
-
-**Realm**
-
-Server.
-
-**Example Usage**
-
-```lua
--- Print disabled modules
-local function printDisabledModules()
-    lia.module.printDisabledModules()
-end
-
--- Use in a function
-local function showDisabledModules()
-    lia.module.printDisabledModules()
-end
 
 ---
 

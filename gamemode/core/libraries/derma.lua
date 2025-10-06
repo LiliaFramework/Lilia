@@ -1,5 +1,17 @@
 ﻿lia.derma = lia.derma or {}
 local color_disconnect = Color(210, 65, 65)
+-- Panel color index counter for automatic color swapping
+lia.derma.panelColorIndex = lia.derma.panelColorIndex or 1
+function lia.derma.getNextPanelColor()
+    local color = lia.color.theme.panel[lia.derma.panelColorIndex] or lia.color.theme.panel[1]
+    lia.derma.panelColorIndex = (lia.derma.panelColorIndex % 3) + 1
+    return color
+end
+
+function lia.derma.resetPanelColorIndex()
+    lia.derma.panelColorIndex = 1
+end
+
 local color_bot = Color(70, 150, 220)
 local color_online = Color(120, 180, 70)
 local color_close = Color(210, 65, 65)
@@ -222,7 +234,7 @@ function lia.derma.playerSelector(do_click)
         end
 
         card.Paint = function(self, w, h)
-            lia.derma.rect(0, 0, w, h):Rad(10):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
+            lia.derma.rect(0, 0, w, h):Rad(10):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw()
             if self.hover_status > 0 then lia.derma.rect(0, 0, w, h):Rad(10):Color(Color(0, 0, 0, 40 * self.hover_status)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local infoX = AVATAR_X + AVATAR_SIZE + 10
             if not IsValid(pl) then

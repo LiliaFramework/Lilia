@@ -122,9 +122,9 @@ end
 
 function ITEM:print(detail)
     if detail then
-        print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
+        lia.information(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
     else
-        print(Format("%s[%s]", self.uniqueID, self.id))
+        lia.information(Format("%s[%s]", self.uniqueID, self.id))
     end
 end
 

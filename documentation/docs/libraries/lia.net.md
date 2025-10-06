@@ -63,40 +63,56 @@ end
 
 **Purpose**
 
-Sends a network message to a client.
+Sends a network message to clients or broadcasts to all players.
 
 **Parameters**
 
-* `client` (*Player*): The client to send the message to.
-* `messageName` (*string*): The name of the message.
-* `data` (*any*): The data to send.
+* `messageName` (*string*): The name of the registered network message.
+* `target` (*Player* or *table* or *nil*): The target(s) to send to. Can be a single player, table of players, or nil to broadcast to all.
+* `...` (*any*): Variable number of arguments to pass to the message callback.
 
 **Returns**
 
-*None*
+* `success` (*boolean*): True if the message was sent successfully.
 
 **Realm**
 
-Server.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Send network message
-local function sendMessage(client, messageName, data)
-    lia.net.send(client, messageName, data)
+-- Send message to a specific player
+local function sendMessageToPlayer(player, messageName, ...)
+    return lia.net.send(messageName, player, ...)
 end
 
 -- Use in a function
 local function sendPlayerData(client, data)
-    lia.net.send(client, "PlayerData", data)
-    print("Player data sent to " .. client:Name())
+    local success = lia.net.send("PlayerData", client, data)
+    if success then
+        print("Player data sent to " .. client:Name())
+    end
+    return success
 end
 
 -- Use in a function
 local function sendInventoryUpdate(client, data)
-    lia.net.send(client, "InventoryUpdate", data)
-    print("Inventory update sent to " .. client:Name())
+    local success = lia.net.send("InventoryUpdate", client, data)
+    if success then
+        print("Inventory update sent to " .. client:Name())
+    end
+    return success
+end
+
+-- Broadcast to all players
+local function broadcastMessage(messageName, ...)
+    return lia.net.send(messageName, nil, ...)
+end
+
+-- Send to multiple players
+local function sendToMultiplePlayers(players, messageName, ...)
+    return lia.net.send(messageName, players, ...)
 end
 ```
 
@@ -106,38 +122,66 @@ end
 
 **Purpose**
 
-Reads a big table from network data.
+Sets up a network receiver for big table data that arrives in chunks over multiple network packets.
 
 **Parameters**
 
-*None*
+* `netStr` (*string*): The network string identifier for the big table data.
+* `callback` (*function*): Callback function called when the complete table is received. Receives (player, table) on server, (table) on client.
 
 **Returns**
 
-* `table*): The read table.
+*None*
 
 **Realm**
 
-Client.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Read big table from network
-local function readBigTable()
-    return lia.net.readBigTable()
+-- Set up big table receiver
+local function setupBigTableReceiver(netStr, callback)
+    lia.net.readBigTable(netStr, callback)
 end
 
 -- Use in a function
-local function receiveBigData()
-    local data = lia.net.readBigTable()
-    if data then
-        print("Big table received with " .. #data .. " entries")
-        return data
-    else
-        print("Failed to read big table")
-        return nil
-    end
+local function receivePlayerInventory(netStr)
+    lia.net.readBigTable(netStr, function(data)
+        if data then
+            print("Player inventory received with " .. #data .. " items")
+            -- Process the inventory data
+            processInventoryData(data)
+        else
+            print("Failed to receive inventory data")
+        end
+    end)
+end
+
+-- Use in a function
+local function receiveServerConfig(netStr)
+    lia.net.readBigTable(netStr, function(data)
+        if data then
+            print("Server configuration received")
+            -- Apply server configuration
+            applyServerConfig(data)
+        else
+            print("Failed to receive server configuration")
+        end
+    end)
+end
+
+-- Use in a function
+local function receiveGameData(netStr)
+    lia.net.readBigTable(netStr, function(data)
+        if data then
+            print("Game data received successfully")
+            -- Handle game data
+            handleGameData(data)
+        else
+            print("Failed to receive game data")
+        end
+    end)
 end
 ```
 
@@ -147,11 +191,14 @@ end
 
 **Purpose**
 
-Writes a big table to network data.
+Sends a large table over the network by splitting it into chunks and sending them as separate network packets.
 
 **Parameters**
 
-* `table*): The table to write.
+* `targets` (*Player* or *table* or *nil*): The target(s) to send to. Can be a single player, table of players, or nil to send to all.
+* `netStr` (*string*): The network string identifier for the big table data.
+* `tbl` (*table*): The table data to send.
+* `chunkSize` (*number*, optional): Size of each chunk in bytes (default varies based on reload state).
 
 **Returns**
 
@@ -164,14 +211,33 @@ Server.
 **Example Usage**
 
 ```lua
--- Write big table to network
-local function writeBigTable(table)
-    lia.net.writeBigTable(table)
+-- Send big table to specific player
+local function sendBigTableToPlayer(player, netStr, data, chunkSize)
+    lia.net.writeBigTable(player, netStr, data, chunkSize)
 end
 
 -- Use in a function
-local function sendBigData(client, data)
-    lia.net.writeBigTable(data)
-    print("Big table sent to " .. client:Name())
+local function sendPlayerInventory(client, inventoryData)
+    lia.net.writeBigTable(client, "PlayerInventory", inventoryData)
+    print("Player inventory sent to " .. client:Name())
+end
+
+-- Use in a function
+local function sendServerConfigToAll(configData)
+    lia.net.writeBigTable(nil, "ServerConfig", configData)
+    print("Server configuration broadcasted to all players")
+end
+
+-- Use in a function
+local function sendGameDataToPlayers(players, gameData, chunkSize)
+    lia.net.writeBigTable(players, "GameData", gameData, chunkSize)
+    print("Game data sent to " .. #players .. " players")
+end
+
+-- Use in a function
+local function sendLargeInventoryUpdate(client, inventoryData)
+    -- Use smaller chunk size for large inventory data
+    lia.net.writeBigTable(client, "InventoryUpdate", inventoryData, 256)
+    print("Large inventory update sent to " .. client:Name())
 end
 ```

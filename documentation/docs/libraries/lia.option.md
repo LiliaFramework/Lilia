@@ -14,11 +14,16 @@ The option library (`lia.option`) provides a comprehensive system for managing c
 
 **Purpose**
 
-Adds a new client-side option.
+Adds a new client-side option to the options system.
 
 **Parameters**
 
-* `optionData` (*table*): The option data table containing name, type, default, etc.
+* `key` (*string*): The unique identifier for the option.
+* `name` (*string*): The display name for the option.
+* `desc` (*string*): The description of the option.
+* `default` (*any*): The default value for the option.
+* `callback` (*function*, optional): Function called when the option value changes.
+* `data` (*table*): Additional option configuration data.
 
 **Returns**
 
@@ -32,33 +37,43 @@ Shared.
 
 ```lua
 -- Add a client option
-local function addOption(optionData)
-    lia.option.add(optionData)
+local function addOption(key, name, desc, default, callback, data)
+    lia.option.add(key, name, desc, default, callback, data)
 end
 
 -- Use in a function
 local function createVolumeOption()
-    lia.option.add({
-        name = "Volume",
-        type = "slider",
-        default = 1.0,
+    lia.option.add("volume", "Volume", "Audio volume level", 1.0, nil, {
+        category = "Audio",
         min = 0.0,
         max = 1.0,
-        category = "Audio"
+        type = "Float"
     })
     print("Volume option created")
 end
 
 -- Use in a function
 local function createLanguageOption()
-    lia.option.add({
-        name = "Language",
-        type = "combo",
-        default = "en",
-        options = {"en", "es", "fr"},
-        category = "Interface"
+    lia.option.add("language", "Language", "Interface language", "en", nil, {
+        category = "Interface",
+        type = "Table",
+        options = {"en", "es", "fr"}
     })
     print("Language option created")
+end
+
+-- Use in a function
+local function createESPEnabledOption()
+    lia.option.add("espEnabled", "ESP Enabled", "Enable ESP display", false, function(old, new)
+        print("ESP toggled from " .. tostring(old) .. " to " .. tostring(new))
+    end, {
+        category = "ESP",
+        type = "Boolean",
+        visible = function()
+            return LocalPlayer():isStaffOnDuty()
+        end
+    })
+    print("ESP option created")
 end
 ```
 
@@ -68,15 +83,15 @@ end
 
 **Purpose**
 
-Gets all client options.
+Gets the available options for a specific option key, typically used for dropdown/combo box options.
 
 **Parameters**
 
-*None*
+* `key` (*string*): The option key to get options for.
 
 **Returns**
 
-* `options` (*table*): Table of all options.
+* `options` (*table*): Table of available options for the specified key.
 
 **Realm**
 
@@ -85,18 +100,29 @@ Shared.
 **Example Usage**
 
 ```lua
--- Get all options
-local function getAllOptions()
-    return lia.option.getOptions()
+-- Get options for a specific option
+local function getOptionsForKey(key)
+    return lia.option.getOptions(key)
 end
 
 -- Use in a function
-local function showAllOptions()
-    local options = lia.option.getOptions()
-    print("Available options:")
+local function getLanguageOptions()
+    local options = lia.option.getOptions("language")
+    print("Available languages:")
     for _, option in ipairs(options) do
-        print("- " .. option.name)
+        print("- " .. option)
     end
+    return options
+end
+
+-- Use in a function
+local function getWeaponSelectorPositions()
+    local options = lia.option.getOptions("weaponSelectorPosition")
+    print("Available positions:")
+    for _, option in ipairs(options) do
+        print("- " .. option)
+    end
+    return options
 end
 ```
 
@@ -106,13 +132,12 @@ end
 
 **Purpose**
 
-Sets an option value for a client.
+Sets an option value and triggers any associated callbacks and hooks.
 
 **Parameters**
 
-* `client` (*Player*): The client to set the option for.
-* `optionName` (*string*): The option name.
-* `value` (*any*): The option value.
+* `key` (*string*): The option key to set.
+* `value` (*any*): The new value for the option.
 
 **Returns**
 
@@ -120,20 +145,33 @@ Sets an option value for a client.
 
 **Realm**
 
-Server.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Set option for client
-local function setOption(client, optionName, value)
-    lia.option.set(client, optionName, value)
+-- Set option value
+local function setOption(key, value)
+    lia.option.set(key, value)
 end
 
 -- Use in a function
-local function setVolume(client, volume)
-    lia.option.set(client, "Volume", volume)
-    print("Volume set for " .. client:Name())
+local function setVolume(volume)
+    lia.option.set("volume", volume)
+    print("Volume set to " .. volume)
+end
+
+-- Use in a function
+local function setLanguage(language)
+    lia.option.set("language", language)
+    print("Language set to " .. language)
+end
+
+-- Use in a function
+local function toggleESP()
+    local current = lia.option.get("espEnabled", false)
+    lia.option.set("espEnabled", not current)
+    print("ESP toggled to " .. tostring(not current))
 end
 ```
 
@@ -143,16 +181,16 @@ end
 
 **Purpose**
 
-Gets an option value for a client.
+Gets an option value, returning the current value, default value, or provided default.
 
 **Parameters**
 
-* `client` (*Player*): The client to get the option for.
-* `optionName` (*string*): The option name.
+* `key` (*string*): The option key to get.
+* `default` (*any*, optional): Default value to return if option doesn't exist.
 
 **Returns**
 
-* `value` (*any*): The option value.
+* `value` (*any*): The current option value, default value, or provided default.
 
 **Realm**
 
@@ -161,16 +199,30 @@ Shared.
 **Example Usage**
 
 ```lua
--- Get option for client
-local function getOption(client, optionName)
-    return lia.option.get(client, optionName)
+-- Get option value
+local function getOption(key, default)
+    return lia.option.get(key, default)
 end
 
 -- Use in a function
-local function getVolume(client)
-    local volume = lia.option.get(client, "Volume")
-    print("Volume for " .. client:Name() .. ": " .. volume)
+local function getVolume()
+    local volume = lia.option.get("volume", 1.0)
+    print("Current volume: " .. volume)
     return volume
+end
+
+-- Use in a function
+local function getLanguage()
+    local language = lia.option.get("language", "en")
+    print("Current language: " .. language)
+    return language
+end
+
+-- Use in a function
+local function getESPEnabled()
+    local espEnabled = lia.option.get("espEnabled", false)
+    print("ESP enabled: " .. tostring(espEnabled))
+    return espEnabled
 end
 ```
 
@@ -180,11 +232,11 @@ end
 
 **Purpose**
 
-Saves options for a client.
+Saves all current option values to the options.json file for persistence across sessions.
 
 **Parameters**
 
-* `client` (*Player*): The client to save options for.
+*None*
 
 **Returns**
 
@@ -192,20 +244,27 @@ Saves options for a client.
 
 **Realm**
 
-Server.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Save options for client
-local function saveOptions(client)
-    lia.option.save(client)
+-- Save all options
+local function saveAllOptions()
+    lia.option.save()
+    print("All options saved")
 end
 
 -- Use in a function
-local function savePlayerOptions(client)
-    lia.option.save(client)
-    print("Options saved for " .. client:Name())
+local function saveOptionsOnExit()
+    lia.option.save()
+    print("Options saved before exit")
+end
+
+-- Use in a function
+local function saveOptionsAfterChanges()
+    lia.option.save()
+    print("Options saved after configuration changes")
 end
 ```
 
@@ -215,11 +274,11 @@ end
 
 **Purpose**
 
-Loads options for a client.
+Loads option values from the options.json file and applies them to the current session.
 
 **Parameters**
 
-* `client` (*Player*): The client to load options for.
+*None*
 
 **Returns**
 
@@ -227,19 +286,26 @@ Loads options for a client.
 
 **Realm**
 
-Server.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Load options for client
-local function loadOptions(client)
-    lia.option.load(client)
+-- Load all options
+local function loadAllOptions()
+    lia.option.load()
+    print("All options loaded")
 end
 
 -- Use in a function
-local function loadPlayerOptions(client)
-    lia.option.load(client)
-    print("Options loaded for " .. client:Name())
+local function loadOptionsOnStart()
+    lia.option.load()
+    print("Options loaded on game start")
+end
+
+-- Use in a function
+local function restoreOptions()
+    lia.option.load()
+    print("Options restored from previous session")
 end
 ```

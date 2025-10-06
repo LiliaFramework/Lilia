@@ -32,7 +32,6 @@ function SWEP:DrawHUD()
     local x, y = ScrW() / 2, ScrH() / 2
     local target = IsValid(client.AdminStickTarget) and client.AdminStickTarget or client:GetEyeTrace().Entity
     local themeColors = lia.color.ReturnMainAdjustedColors()
-    local crossColor = themeColors.text
     local information = {}
     if IsValid(target) then
         if not target:IsPlayer() then
@@ -65,35 +64,36 @@ function SWEP:DrawHUD()
     end
 
     hook.Run("AddToAdminStickHUD", client, target, information)
+    -- Draw crosshair using liapanels
     local length, thickness = 20, 1
-    surface.SetDrawColor(crossColor)
-    surface.DrawRect(x - length / 2, y - thickness / 2, length, thickness)
-    surface.DrawRect(x - thickness / 2, y - length / 2, thickness, length)
-    surface.SetFont("DebugFixed")
-    local maxWidth, totalHeight = 0, 0
-    for _, v in pairs(information) do
-        local t_w, t_h = surface.GetTextSize(v)
-        maxWidth = math.max(maxWidth, t_w)
-        totalHeight = totalHeight + t_h + 4
-    end
-
-    if totalHeight > 0 then
-        local boxWidth = maxWidth + 20
-        local boxHeight = totalHeight + 20
-        local boxX = (ScrW() - boxWidth) / 2
-        local boxY = ScrH() - boxHeight - 20
-        surface.SetDrawColor(Color(0, 0, 0, 200))
-        surface.DrawRect(boxX, boxY, boxWidth, boxHeight)
-        local startPosX, startPosY, buffer = boxX + 10, boxY + 10, 0
+    lia.derma.rect(x - length / 2, y - thickness / 2, length, thickness):Color(themeColors.text):Draw()
+    lia.derma.rect(x - thickness / 2, y - length / 2, thickness, length):Color(themeColors.text):Draw()
+    -- Draw information box using liapanels with theme colors
+    if #information > 0 then
+        local maxWidth, totalHeight = 0, 0
+        surface.SetFont("liaMediumFont")
         for _, v in pairs(information) do
-            surface.SetTextColor(lia.color.darken(themeColors.text, 0.5))
-            surface.SetTextPos(startPosX + 1, startPosY + buffer + 1)
-            surface.DrawText(v)
-            surface.SetTextColor(crossColor)
-            surface.SetTextPos(startPosX, startPosY + buffer)
-            surface.DrawText(v)
+            local t_w, t_h = surface.GetTextSize(v)
+            maxWidth = math.max(maxWidth, t_w)
+            totalHeight = totalHeight + t_h + 8
+        end
+
+        local boxWidth = maxWidth + 40
+        local boxHeight = totalHeight + 40
+        local boxX = (ScrW() - boxWidth) / 2
+        local boxY = ScrH() - boxHeight - 40
+        -- Draw background with blur effect and theme colors
+        lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, 3, 3, 0.9)
+        -- Draw background
+        lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeColors.background):Rad(8):Draw()
+        -- Draw border with accent color
+        lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeColors.accent):Rad(8):Outline(2):Draw()
+        -- Draw information text with theme colors
+        local startPosX, startPosY, buffer = boxX + 20, boxY + 20, 0
+        for _, v in pairs(information) do
+            lia.derma.drawText(v, startPosX, startPosY + buffer, themeColors.text, 0, 0, "liaMediumFont")
             local _, t_h = surface.GetTextSize(v)
-            buffer = buffer + t_h + 4
+            buffer = buffer + t_h + 8
         end
     end
 end
@@ -106,4 +106,10 @@ function SWEP:Reload()
         client.AdminStickTarget = client
         MODULE:OpenAdminStickUI(client)
     end
+end
+
+function SWEP:Holster()
+    local client = LocalPlayer()
+    if IsValid(client) then client.AdminStickTarget = nil end
+    return true
 end

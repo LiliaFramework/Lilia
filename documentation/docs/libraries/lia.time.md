@@ -14,15 +14,15 @@ The time library (`lia.time`) provides a comprehensive system for managing time,
 
 **Purpose**
 
-Calculates the time since a given timestamp.
+Calculates and formats the time since a given timestamp or date string.
 
 **Parameters**
 
-* `timestamp` (*number*): The timestamp to calculate from.
+* `strTime` (*number* or *string*): The timestamp (number) or date string to calculate from.
 
 **Returns**
 
-* `timeSince` (*number*): The time since the timestamp in seconds.
+* `formattedTime` (*string*): The formatted time string (e.g., "5 minutes ago", "2 hours ago").
 
 **Realm**
 
@@ -40,7 +40,7 @@ end
 local function checkPlayerLastSeen(client)
     local lastSeen = client:getChar():getLastSeen()
     local timeSince = lia.time.TimeSince(lastSeen)
-    print("Player last seen " .. timeSince .. " seconds ago")
+    print("Player last seen " .. timeSince)
     return timeSince
 end
 
@@ -48,8 +48,15 @@ end
 local function checkItemAge(item)
     local created = item:getCreatedTime()
     local age = lia.time.TimeSince(created)
-    print("Item age: " .. age .. " seconds")
+    print("Item age: " .. age)
     return age
+end
+
+-- Use in a function
+local function timeSinceString(dateString)
+    local timeSince = lia.time.TimeSince(dateString)
+    print("Time since " .. dateString .. ": " .. timeSince)
+    return timeSince
 end
 ```
 
@@ -59,15 +66,15 @@ end
 
 **Purpose**
 
-Converts a time string to a number.
+Parses a time string and returns a table with individual time components.
 
 **Parameters**
 
-* `timeString` (*string*): The time string to convert.
+* `str` (*string*, optional): The time string to parse (format: "YYYY-MM-DD HH:MM:SS"). If not provided, uses current time.
 
 **Returns**
 
-* `timeNumber` (*number*): The time as a number.
+* `timeTable` (*table*): Table containing year, month, day, hour, min, sec components.
 
 **Realm**
 
@@ -76,21 +83,37 @@ Shared.
 **Example Usage**
 
 ```lua
--- Convert time string to number
+-- Parse time string to table
 local function timeToNumber(timeString)
     return lia.time.toNumber(timeString)
 end
 
 -- Use in a function
 local function parseTimeString(timeString)
-    local timeNumber = lia.time.toNumber(timeString)
-    if timeNumber then
-        print("Time parsed: " .. timeNumber)
-        return timeNumber
+    local timeTable = lia.time.toNumber(timeString)
+    if timeTable then
+        print("Parsed time:")
+        print("  Year: " .. timeTable.year)
+        print("  Month: " .. timeTable.month)
+        print("  Day: " .. timeTable.day)
+        print("  Hour: " .. timeTable.hour)
+        print("  Minute: " .. timeTable.min)
+        print("  Second: " .. timeTable.sec)
+        return timeTable
     else
         print("Failed to parse time string")
         return nil
     end
+end
+
+-- Use in a function
+local function getCurrentTimeTable()
+    local timeTable = lia.time.toNumber()
+    print("Current time components:")
+    for key, value in pairs(timeTable) do
+        print("  " .. key .. ": " .. value)
+    end
+    return timeTable
 end
 ```
 
@@ -185,7 +208,7 @@ end
 
 **Purpose**
 
-Gets the current hour.
+Gets the current hour, either as a number or formatted string depending on AmericanTimeStamps configuration.
 
 **Parameters**
 
@@ -193,7 +216,7 @@ Gets the current hour.
 
 **Returns**
 
-* `hour` (*number*): The current hour (0-23).
+* `hour` (*number* or *string*): The current hour. Returns a number (0-23) if AmericanTimeStamps is false, or a formatted string (e.g., "3PM") if true.
 
 **Realm**
 
@@ -210,14 +233,20 @@ end
 -- Use in a function
 local function checkTimeOfDay()
     local hour = lia.time.GetHour()
-    if hour >= 6 and hour < 12 then
-        print("Good morning!")
-    elseif hour >= 12 and hour < 18 then
-        print("Good afternoon!")
-    elseif hour >= 18 and hour < 22 then
-        print("Good evening!")
+    if type(hour) == "number" then
+        -- Handle as number (0-23)
+        if hour >= 6 and hour < 12 then
+            print("Good morning!")
+        elseif hour >= 12 and hour < 18 then
+            print("Good afternoon!")
+        elseif hour >= 18 and hour < 22 then
+            print("Good evening!")
+        else
+            print("Good night!")
+        end
     else
-        print("Good night!")
+        -- Handle as formatted string
+        print("Current time: " .. hour)
     end
     return hour
 end
@@ -225,6 +254,18 @@ end
 -- Use in a function
 local function isDayTime()
     local hour = lia.time.GetHour()
-    return hour >= 6 and hour < 18
+    if type(hour) == "number" then
+        return hour >= 6 and hour < 18
+    else
+        -- For formatted strings, you'd need to parse it differently
+        return true -- Simplified for example
+    end
+end
+
+-- Use in a function
+local function displayCurrentHour()
+    local hour = lia.time.GetHour()
+    print("Current hour: " .. tostring(hour))
+    return hour
 end
 ```

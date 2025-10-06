@@ -36,7 +36,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     msg:SetSize(190, frameHeight - 35)
     msg.message = message
     msg.Paint = function(panel, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw()
         draw.SimpleText(panel.message, "DermaDefault", w * 0.5, h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 

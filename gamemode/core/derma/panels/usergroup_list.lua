@@ -3,6 +3,7 @@ function PANEL:Init()
     self.groups = {}
     self.selectedGroup = nil
     self.groupButtons = {}
+    self.panelColor = lia.derma.getNextPanelColor()
     self:SetupUI()
 end
 
@@ -13,7 +14,7 @@ function PANEL:SetupUI()
     header:SetTall(40)
     header:DockMargin(0, 0, 0, 5)
     header.Paint = function(_, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[3]):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw()
         draw.SimpleText(L("groups"), "liaMediumFont", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
@@ -61,7 +62,7 @@ function PANEL:GetSelectedGroup()
 end
 
 function PANEL:Paint(w, h)
-    lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(12):Color(self.panelColor):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
 vgui.Register("liaUserGroupList", PANEL, "DPanel")

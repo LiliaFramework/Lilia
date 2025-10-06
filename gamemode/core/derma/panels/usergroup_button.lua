@@ -9,6 +9,8 @@ function PANEL:Init()
     self:SetText("")
     self:SetupTransition("HoverAlpha", 6, function(s) return s:IsHovered() end)
     self:SetupTransition("SelectedAlpha", 8, function(s) return s.selected end)
+    -- Cache the panel color for this button
+    self.panelColor = lia.derma.getNextPanelColor()
 end
 
 function PANEL:SetGroup(groupName, groupData, isDefault)
@@ -34,7 +36,7 @@ function PANEL:OnCursorExited()
 end
 
 function PANEL:Paint(w, h)
-    local bgColor = lia.color.theme.panel[3]
+    local bgColor = self.panelColor
     local textColor = lia.color.theme.text
     local accentColor = lia.config.get("Color")
     -- Background

@@ -15,6 +15,8 @@ function PANEL:Init()
     self.minWidth = 120
     self.minHeight = 80
     self.iconMat = nil
+    -- Get a panel color for this frame
+    self.panelColor = lia.derma.getNextPanelColor()
     self:DockPadding(6, 30, 6, 6)
     self.top_panel = vgui.Create("DButton", self)
     self.top_panel:SetText("")
@@ -225,7 +227,7 @@ function PANEL:Paint(w, h)
     end
 
     local radiusTop = self.bool_lite and 6 or 0
-    lia.derma.rect(0, headerTall, w, h - headerTall):Radii(radiusTop, radiusTop, 6, 6):Color(self.bool_alpha and lia.color.theme.background_alpha or lia.color.theme.background):Draw()
+    lia.derma.rect(0, headerTall, w, h - headerTall):Radii(radiusTop, radiusTop, 6, 6):Color(self.bool_alpha and lia.color.theme.background_alpha or self.panelColor):Draw()
     if not self.bool_lite then
         if self.iconMat then
             surface.SetMaterial(self.iconMat)

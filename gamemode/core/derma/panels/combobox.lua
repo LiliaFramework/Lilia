@@ -63,8 +63,11 @@ function PANEL:AddChoice(text, data)
         data = data
     })
 
-    -- Force UI refresh after adding choices to ensure proper sizing
-    if IsValid(self.menu) and self.opened then
+    -- Auto-resize if menu is not open for immediate visual feedback
+    if not self.opened then
+        self:AutoSize()
+    else
+        -- Force UI refresh after adding choices to ensure proper sizing
         self:CloseMenu()
         self:OpenMenu()
     end
@@ -118,8 +121,10 @@ function PANEL:OpenMenu()
     if IsValid(self.menu) then self.menu:Remove() end
     local menuPadding = 6
     local itemHeight = 26
-    local maxMenuHeight = 200 -- Maximum height before scrolling
     local numChoices = #self.choices
+    local calculatedHeight = numChoices * (itemHeight + 2) + (menuPadding * 2) + 2
+    local maxMenuHeight = math.max(200, math.min(500, calculatedHeight)) -- Dynamic height based on content, increased max
+    print("ComboBox Debug - Dropdown Height - Choices:", numChoices, "Calculated:", calculatedHeight, "Max:", maxMenuHeight)
     -- Calculate optimal width based on option text lengths
     surface.SetFont(self.font)
     local maxTextWidth = 0
@@ -131,14 +136,19 @@ function PANEL:OpenMenu()
     -- Add padding for text and ensure minimum width
     local optimalWidth = math.max(self:GetWide(), maxTextWidth + 40) -- 40px padding for text
     local menuWidth = math.min(optimalWidth, ScrW() * 0.4) -- Cap at 40% of screen width
-    -- Calculate if we need scrolling
-    local needsScroll = numChoices * (itemHeight + 2) > maxMenuHeight - (menuPadding * 2) - 2
+    -- Calculate if we need scrolling (now less likely since we auto-size height)
+    local scrollThreshold = maxMenuHeight - (menuPadding * 2) - 2
+    local needsScroll = numChoices * (itemHeight + 2) > scrollThreshold
+    print("ComboBox Debug - Scroll check - Choices:", numChoices, "Item height total:", numChoices * (itemHeight + 2), "Threshold:", scrollThreshold, "Needs scroll:", needsScroll)
     if needsScroll then
         -- Use scroll panel for many options
         self.menu = vgui.Create("liaScrollPanel")
         self.menu:SetSize(menuWidth, maxMenuHeight)
+        print("ComboBox Debug - Created scroll panel - Width:", menuWidth, "Height:", maxMenuHeight)
         local x, y = self:LocalToScreen(0, self:GetTall())
+        local originalY = y
         if y + maxMenuHeight > ScrH() - 10 then y = y - maxMenuHeight - self:GetTall() end
+        print("ComboBox Debug - Positioning - X:", x, "Original Y:", originalY, "Final Y:", y, "Menu height:", maxMenuHeight, "Screen height:", ScrH())
         self.menu:SetPos(x, y)
         self.menu:SetDrawOnTop(true)
         self.menu:MakePopup()
@@ -182,8 +192,8 @@ function PANEL:OpenMenu()
             end
         end
     else
-        -- Use regular panel for few options
-        local menuHeight = (numChoices * (itemHeight + 2)) + (menuPadding * 2) + 2
+        -- Use regular panel for few options (now with dynamic height)
+        local menuHeight = math.min((numChoices * (itemHeight + 2)) + (menuPadding * 2) + 2, maxMenuHeight)
         self.menu = vgui.Create("DPanel")
         self.menu:SetSize(menuWidth, menuHeight)
         local x, y = self:LocalToScreen(0, self:GetTall())
@@ -231,19 +241,21 @@ function PANEL:OpenMenu()
 
     self.opened = true
     local oldMouseDown = false
-    self.menu.Think = function()
-        if not self.menu:IsVisible() then return end
-        local mouseDown = input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)
-        if mouseDown and not oldMouseDown then
-            local mx, my = gui.MousePos()
-            local menuX, menuY = self.menu:LocalToScreen(0, 0)
-            if not (mx >= menuX and mx <= menuX + self.menu:GetWide() and my >= menuY and my <= menuY + self.menu:GetTall()) then self:CloseMenu() end
+    if IsValid(self.menu) then
+        self.menu.Think = function()
+            if not self.menu:IsVisible() then return end
+            local mouseDown = input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)
+            if mouseDown and not oldMouseDown then
+                local mx, my = gui.MousePos()
+                local menuX, menuY = self.menu:LocalToScreen(0, 0)
+                if not (mx >= menuX and mx <= menuX + self.menu:GetWide() and my >= menuY and my <= menuY + self.menu:GetTall()) then self:CloseMenu() end
+            end
+
+            oldMouseDown = mouseDown
         end
 
-        oldMouseDown = mouseDown
+        self.menu.OnRemove = function() self.opened = false end
     end
-
-    self.menu.OnRemove = function() self.opened = false end
 end
 
 function PANEL:CloseMenu()
@@ -295,10 +307,46 @@ function PANEL:RefreshDropdown()
     end
 end
 
+function PANEL:AutoSize()
+    -- Calculate optimal width based on option text lengths
+    if #self.choices == 0 then return end
+    surface.SetFont(self.font)
+    local maxTextWidth = 0
+    for _, choice in ipairs(self.choices) do
+        local textWidth = surface.GetTextSize(choice.text)
+        if textWidth > maxTextWidth then maxTextWidth = textWidth end
+    end
+
+    -- Add padding for text and ensure minimum width
+    local optimalWidth = math.max(150, maxTextWidth + 50) -- 50px padding for text, minimum 150px
+    local cappedWidth = math.min(optimalWidth, ScrW() * 0.5) -- Cap at 50% of screen width
+    -- Only resize if the calculated width is larger than current width
+    if cappedWidth > self:GetWide() then
+        self:SetWide(cappedWidth)
+        -- Trigger layout update for parent containers
+        local parent = self:GetParent()
+        if parent then
+            if parent.InvalidateLayout then parent:InvalidateLayout() end
+            -- Also trigger layout for grandparent if needed (for nested panels)
+            local grandparent = parent:GetParent()
+            if grandparent and grandparent.InvalidateLayout then grandparent:InvalidateLayout() end
+        end
+    end
+end
+
 function PANEL:FinishAddingOptions()
     -- This method can be called after all options have been added
     -- to ensure the dropdown is properly sized
     self:RefreshDropdown()
+    -- Only auto-size if not handled by config formatter
+    local parent = self:GetParent()
+    if not (parent and parent.ClassName == "DPanel" and self:GetDock() == TOP) then self:AutoSize() end
+end
+
+function PANEL:RecalculateSize()
+    -- Method to manually recalculate and resize the combobox
+    -- Useful for existing comboboxes that need to be resized
+    self:AutoSize()
 end
 
 vgui.Register("liaComboBox", PANEL, "Panel")

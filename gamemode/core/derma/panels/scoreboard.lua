@@ -1,10 +1,13 @@
 ﻿local PANEL = {}
 local rowPaint = {
     [0] = function(_, w, h)
-        surface.SetDrawColor(0, 0, 0, 50)
+        surface.SetDrawColor(0, 0, 0, 120)
         surface.DrawRect(0, 0, w, h)
     end,
-    [1] = function() end
+    [1] = function(_, w, h)
+        surface.SetDrawColor(0, 0, 0, 80)
+        surface.DrawRect(0, 0, w, h)
+    end
 }
 
 local function wrap(text, maxWidth, font)
@@ -100,40 +103,48 @@ function PANEL:Init()
     self.playerSlots, self.factionLists = {}, {}
     for facID, facData in ipairs(lia.faction.indices) do
         local facColor = team.GetColor(facID)
-        local facCont = layout:Add("DListLayout")
-        facCont:Dock(TOP)
-        local facHeader = facCont:Add("DPanel")
-        facHeader:Dock(TOP)
-        facHeader:SetTall(40)
-        facHeader.Paint = function(_, ww, hh)
-            surface.SetDrawColor(facColor.r, facColor.g, facColor.b, 80)
-            surface.DrawRect(0, 0, ww, hh)
-            surface.SetDrawColor(facColor.r, facColor.g, facColor.b, 200)
-            surface.DrawOutlinedRect(0, 0, ww, hh)
+        local facCat = layout:Add("DCollapsibleCategory")
+        facCat:SetLabel("")
+        facCat:SetExpanded(true)
+        if IsValid(facCat.Header) then
+            facCat.Header:SetTall(40)
+            facCat.Header.Paint = function(_, ww, hh)
+                local radius = 8
+                lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(facColor.r, facColor.g, facColor.b, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(facColor.r, facColor.g, facColor.b, 200)):Shape(lia.derma.SHAPE_IOS):Draw()
+            end
         end
 
-        local facInner = facHeader:Add("DPanel")
-        facInner:Dock(FILL)
-        if facData.logo and facData.logo ~= "" then
-            local img = facInner:Add("DImage")
+        if facData.logo and facData.logo ~= "" and IsValid(facCat.Header) then
+            local img = facCat.Header:Add("DImage")
             img:Dock(LEFT)
             img:DockMargin(5, 5, 5, 5)
             img:SetWide(30)
             img:SetMaterial(Material(facData.logo))
         end
 
-        local lbl = facInner:Add("DLabel")
+        local lbl
+        if IsValid(facCat.Header) then
+            lbl = facCat.Header:Add("DLabel")
+        else
+            lbl = vgui.Create("DLabel")
+        end
+
         lbl:SetFont("liaMediumFont")
         lbl:SetTextColor(color_white)
         lbl:SetExpensiveShadow(1, color_black)
         lbl:SetText(L(facData.name))
         lbl:SizeToContents()
         lbl:SetContentAlignment(5)
-        facHeader.PerformLayout = function(_, ww, hh)
-            lbl:SizeToContents()
-            lbl:SetPos((ww - lbl:GetWide()) * 0.5, (hh - lbl:GetTall()) * 0.5)
+        if IsValid(facCat.Header) then
+            facCat.Header.PerformLayout = function(_, ww, hh)
+                lbl:SizeToContents()
+                lbl:SetPos((ww - lbl:GetWide()) * 0.5, (hh - lbl:GetTall()) * 0.5)
+            end
         end
 
+        local facCont = vgui.Create("DListLayout", facCat)
+        facCat:SetContents(facCont)
         facCont.noClass = facCont:Add("DListLayout")
         facCont.noClass:Dock(TOP)
         facCont.classLists = {}
@@ -154,8 +165,8 @@ function PANEL:Init()
                     cat.Header:SetTall(28)
                     cat.Header.Paint = function(_, ww, hh)
                         local c = clsData.color or facColor
-                        surface.SetDrawColor(c.r, c.g, c.b, 80)
-                        surface.DrawRect(0, 0, ww, hh)
+                        local radius = 6
+                        lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(c.r, c.g, c.b, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
                     end
                 end
 
@@ -174,13 +185,19 @@ function PANEL:Init()
                     hlbl = vgui.Create("DLabel")
                 end
 
-                hlbl:Dock(LEFT)
                 hlbl:SetFont("liaMediumFont")
                 hlbl:SetTextColor(color_white)
                 hlbl:SetExpensiveShadow(1, color_black)
                 hlbl:SetText(L(clsData.name))
-                hlbl:SizeToContentsX()
-                if not (clsData.logo and clsData.logo ~= "") then hlbl:DockMargin(5, 0, 0, 0) end
+                hlbl:SizeToContents()
+                hlbl:SetContentAlignment(5)
+                if IsValid(cat.Header) then
+                    cat.Header.PerformLayout = function(_, ww, hh)
+                        hlbl:SizeToContents()
+                        hlbl:SetPos((ww - hlbl:GetWide()) * 0.5, (hh - hlbl:GetTall()) * 0.5)
+                    end
+                end
+
                 local lst = vgui.Create("DListLayout", cat)
                 cat:SetContents(lst)
                 facCont.classLists[clsID] = lst
@@ -231,7 +248,8 @@ function PANEL:Think()
             if hasPlayers then showFaction = true end
         end
 
-        facCont:SetVisible(showFaction)
+        local facCat = facCont:GetParent()
+        if IsValid(facCat) then facCat:SetVisible(showFaction) end
     end
 
     for _, slot in ipairs(self.playerSlots) do
@@ -277,7 +295,6 @@ function PANEL:addPlayer(ply, parent)
             end
 
             menu:Open()
-            RegisterDermaMenuForClose(menu)
         end
     end
 
@@ -439,6 +456,7 @@ function PANEL:addPlayer(ply, parent)
 end
 
 function PANEL:Paint(w, h)
+    local radius = 16
     if lia.config.get("UseSolidBackground", false) then
         local bg = lia.config.get("ScoreboardBackgroundColor", {
             r = 50,
@@ -447,18 +465,13 @@ function PANEL:Paint(w, h)
             a = 255
         })
 
-        surface.SetDrawColor(bg.r, bg.g, bg.b, bg.a)
-        surface.DrawRect(0, 0, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(bg.r, bg.g, bg.b, bg.a)):Shape(lia.derma.SHAPE_IOS):Draw()
     else
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawOutlinedRect(0, 0, w, h, 2)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(1, 1, w - 2, h - 2)
+        lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
     end
 
     local alpha = lia.config.get("UseSolidBackground", false) and 200 or 150
-    surface.SetDrawColor(0, 0, 0, alpha)
-    surface.DrawOutlinedRect(0, 0, w, h)
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
 function PANEL:OnRemove()

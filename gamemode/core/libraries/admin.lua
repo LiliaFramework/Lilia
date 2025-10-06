@@ -1163,7 +1163,7 @@ else
         local headerH = math.max(hfh + 18, 36)
         for _, cat in ipairs(ordered) do
             local wrap = vgui.Create("DPanel")
-            wrap.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[3]):Shape(lia.derma.SHAPE_IOS):Draw() end
+            wrap.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw() end
             local list = vgui.Create("DListLayout", wrap)
             list:Dock(TOP)
             list:DockMargin(8, 8, 8, 8)
@@ -1183,7 +1183,7 @@ else
                 header:SetTextInset(12, 0)
                 header:SetContentAlignment(4)
                 header.Paint = function(_, w, h)
-                    lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw()
+                    lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw()
                     draw.SimpleText(cat.label, "liaBigFont", 12, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
@@ -1354,7 +1354,7 @@ else
         -- Main container
         local container = parent:Add("DPanel")
         container:Dock(FILL)
-        container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+        container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw() end
         -- Groups list
         local groupsList = container:Add("liaUserGroupList")
         groupsList:Dock(LEFT)
@@ -1364,7 +1364,7 @@ else
         local groupDetails = container:Add("DPanel")
         groupDetails:Dock(FILL)
         groupDetails:DockMargin(5, 5, 10, 10)
-        groupDetails.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[2]):Shape(lia.derma.SHAPE_IOS):Draw() end
+        groupDetails.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.derma.getNextPanelColor()):Shape(lia.derma.SHAPE_IOS):Draw() end
         -- Bottom buttons
         local bottom = container:Add("DPanel")
         bottom:Dock(BOTTOM)

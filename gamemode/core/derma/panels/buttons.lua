@@ -11,7 +11,7 @@ function PANEL:Init()
     self.icon = ""
     self.icon_size = 16
     self.text = L("button")
-    self.col = lia.color.theme.button
+    self.col = lia.derma.getNextPanelColor()
     self.col_hov = lia.color.theme.button_hovered
     self.bool_gradient = true
     self.click_alpha = 0

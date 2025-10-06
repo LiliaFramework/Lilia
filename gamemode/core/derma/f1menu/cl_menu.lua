@@ -10,6 +10,7 @@ function PANEL:Init()
     self.noAnchor = CurTime() + 0.4
     self.anchorMode = true
     self.invKey = lia.keybind.get(L("openInventory"), KEY_I)
+    hook.Add("OnThemeChanged", self, self.OnThemeChanged)
     local baseBtnW, btnH, spacing = 150, 40, 20
     self.baseBtnW = baseBtnW
     local topBar = self:Add("DPanel")
@@ -161,17 +162,20 @@ function PANEL:Init()
     end
 
     if defaultTab then self:setActiveTab(defaultTab) end
+    -- Ensure tab colors are up to date when menu opens
+    -- Use a timer to ensure theme colors are fully applied
+    timer.Simple(0.1, function() if IsValid(self) then self:UpdateTabColors() end end)
 end
 
 function PANEL:addTab(name, callback)
-    local colors = lia.color.ReturnMainAdjustedColors()
     local tab = self.tabs:Add("liaSmallButton")
     tab:SetText(L(name))
     tab:SetFont("liaMediumFont")
     surface.SetFont(tab:GetFont())
     local tw = select(1, surface.GetTextSize(tab:GetText()))
     tab.calcW = math.max(self.baseBtnW or 150, tw + 20)
-    tab:SetTextColor(colors.text)
+    -- Use the same text color as other UI elements for consistency
+    tab:SetTextColor(lia.color.theme.text or Color(210, 235, 235))
     tab:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     tab:SetContentAlignment(5)
     tab.DoClick = function()
@@ -185,6 +189,10 @@ function PANEL:addTab(name, callback)
         self.panel:Clear()
         self.panel:AlphaTo(255, 0.3, 0)
         if callback then
+            -- Ensure theme colors are current before creating tab content
+            self:UpdateTabColors()
+            -- Force current theme colors to be applied
+            self:ApplyCurrentTheme()
             callback(self.panel)
             self.panel:InvalidateLayout(true)
         end
@@ -219,6 +227,36 @@ end
 
 function PANEL:OnRemove()
     hook.Run("F1MenuClosed")
+    hook.Remove("OnThemeChanged", self)
+end
+
+function PANEL:OnThemeChanged()
+    if not IsValid(self) then return end
+    self:UpdateTabColors()
+end
+
+function PANEL:ApplyCurrentTheme()
+    -- Ensure the current theme is properly applied
+    local currentTheme = lia.color.getCurrentTheme()
+    if currentTheme and lia.color.themes[currentTheme] then lia.color.theme = table.Copy(lia.color.themes[currentTheme]) end
+end
+
+function PANEL:UpdateTabColors()
+    if not self.tabList then return end
+    -- Update all existing tabs with current theme colors (use same source as other UI elements)
+    local textColor = lia.color.theme.text or Color(210, 235, 235)
+    -- Debug: Print current theme info (remove this after testing)
+    -- print("[F1 Menu Debug] Current theme:", lia.color.getCurrentTheme())
+    -- print("[F1 Menu Debug] Theme text color:", textColor)
+    -- if lia.color.theme then
+    --     print("[F1 Menu Debug] Theme data exists, text field:", lia.color.theme.text)
+    -- else
+    --     print("[F1 Menu Debug] lia.color.theme is nil!")
+    -- end
+    -- Update all existing tabs with current theme colors
+    for _, tab in pairs(self.tabList) do
+        if IsValid(tab) then tab:SetTextColor(textColor) end
+    end
 end
 
 function PANEL:OnKeyCodePressed(key)

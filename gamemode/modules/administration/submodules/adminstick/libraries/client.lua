@@ -1,8 +1,6 @@
 ﻿local MODULE = MODULE
 AdminStickIsOpen = false
 local playerInfoLabel = L("player") .. " " .. L("information")
-local giveFlagsLabel = L("give") .. " " .. L("flags")
-local takeFlagsLabel = L("take") .. " " .. L("flags")
 MODULE.adminStickCategories = MODULE.adminStickCategories or {
     moderation = {
         name = L("adminStickCategoryModeration"),
@@ -210,6 +208,7 @@ local function GetSubMenuIcon(name)
 end
 
 local function GetOrCreateSubMenu(parent, name, store, category, subcategory)
+    if not parent or not IsValid(parent) then return end
     local fullName = name
     if category and subcategory then
         fullName = category .. "_" .. subcategory .. "_" .. name
@@ -220,45 +219,53 @@ local function GetOrCreateSubMenu(parent, name, store, category, subcategory)
     if not store[fullName] then
         local menu, panel = parent:AddSubMenu(L(name))
         local icon = GetSubMenuIcon(name)
-        if icon then panel:SetIcon(icon) end
-        store[fullName] = menu
+        if icon and panel then panel:SetIcon(icon) end
+        if IsValid(menu) then
+            store[fullName] = menu
+        else
+            return parent
+        end
     end
-    return store[fullName]
+    return store[fullName] or parent
 end
 
 local function GetOrCreateCategoryMenu(parent, categoryKey, store)
+    if not parent or not IsValid(parent) then return end
     local category = MODULE.adminStickCategories[categoryKey]
-    if not category then return parent end
+    if not category then return end
     if not store[categoryKey] then
-        local menu, panel = parent:AddSubMenu(category.name)
-        if category.icon then panel:SetIcon(category.icon) end
-        store[categoryKey] = menu
+        local menu, option = parent:AddSubMenu(category.name, function() end) -- Add empty function to prevent nil function error
+        if category.icon and option then option:SetIcon(category.icon) end
+        if IsValid(menu) then
+            store[categoryKey] = menu
+        else
+            return parent
+        end
     end
-    return store[categoryKey]
+    return store[categoryKey] or parent
 end
 
 local function GetOrCreateSubCategoryMenu(parent, categoryKey, subcategoryKey, store)
+    if not parent or not IsValid(parent) then return end
     local category = MODULE.adminStickCategories[categoryKey]
-    if not category or not category.subcategories or not category.subcategories[subcategoryKey] then return parent end
-    local count = 0
-    for _ in pairs(category.subcategories) do
-        count = count + 1
-        if count > 1 then break end
-    end
-
-    if count <= 1 then return parent end
+    if not category or not category.subcategories or not category.subcategories[subcategoryKey] then return end
     local subcategory = category.subcategories[subcategoryKey]
     local fullKey = categoryKey .. "_" .. subcategoryKey
     if not store[fullKey] then
-        local menu, panel = parent:AddSubMenu(subcategory.name)
-        if subcategory.icon then panel:SetIcon(subcategory.icon) end
-        store[fullKey] = menu
+        local menu, option = parent:AddSubMenu(subcategory.name, function() end) -- Add empty function to prevent nil function error
+        if subcategory.icon and option then option:SetIcon(subcategory.icon) end
+        if IsValid(menu) then
+            store[fullKey] = menu
+        else
+            return parent
+        end
     end
-    return store[fullKey]
+    return store[fullKey] or parent
 end
 
 local function CreateOrganizedAdminStickMenu(tgt, stores)
     local menu = lia.derma.dermaMenu()
+    if not IsValid(menu) then return end
     local cl = LocalPlayer()
     local categoryOrder = MODULE.adminStickCategoryOrder or {}
     for _, categoryKey in ipairs(categoryOrder) do
@@ -286,6 +293,9 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
             if hasContent then GetOrCreateCategoryMenu(menu, categoryKey, stores) end
         end
     end
+
+    -- Update main menu size after adding all categories
+    if menu.UpdateSize then menu:UpdateSize() end
     return menu
 end
 
@@ -317,6 +327,7 @@ local function OpenPlayerModelUI(tgt)
     fr:Center()
     function fr:OnClose()
         fr:Remove()
+        LocalPlayer().AdminStickTarget = nil
         AdminStickIsOpen = false
     end
 
@@ -335,6 +346,7 @@ local function OpenPlayerModelUI(tgt)
         local id = GetIdentifier(tgt)
         if id ~= "" then RunConsoleCommand("say", "/charsetmodel " .. QuoteArgs(id, txt)) end
         fr:Remove()
+        LocalPlayer().AdminStickTarget = nil
         AdminStickIsOpen = false
     end
 
@@ -367,6 +379,7 @@ local function OpenReasonUI(tgt, cmd)
     fr:Center()
     function fr:OnClose()
         fr:Remove()
+        LocalPlayer().AdminStickTarget = nil
         AdminStickIsOpen = false
     end
 
@@ -400,6 +413,7 @@ local function OpenReasonUI(tgt, cmd)
         end
 
         fr:Remove()
+        LocalPlayer().AdminStickTarget = nil
         AdminStickIsOpen = false
     end
 
@@ -415,14 +429,20 @@ local function HandleModerationOption(opt, tgt)
         RunAdminCommand(opt.cmd, tgt)
     end
 
-    AdminStickIsOpen = false
+    -- Let the menu system handle cleanup
+    timer.Simple(0.1, function()
+        LocalPlayer().AdminStickTarget = nil
+        AdminStickIsOpen = false
+    end)
 end
 
 local function IncludeAdminMenu(tgt, menu, stores)
     local cl = LocalPlayer()
     if not (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then return end
     local modCategory = GetOrCreateCategoryMenu(menu, "moderation", stores)
+    if not modCategory then return end
     local modSubCategory = GetOrCreateSubCategoryMenu(modCategory, "moderation", "moderationTools", stores)
+    if not modSubCategory then return end
     local mods = {
         {
             action = {
@@ -503,6 +523,9 @@ local function IncludeAdminMenu(tgt, menu, stores)
             modSubCategory:AddOption(L(p.name), function() HandleModerationOption(p, tgt) end):SetIcon(p.icon)
         end
     end
+
+    -- Update submenu size after adding items
+    if modSubCategory.UpdateSize then modSubCategory:UpdateSize() end
 end
 
 local function IncludeTeleportation(tgt, menu, stores)
@@ -536,14 +559,22 @@ local function IncludeTeleportation(tgt, menu, stores)
     for _, o in ipairs(tp) do
         tpCategory:AddOption(L(o.name), function()
             RunAdminCommand(o.cmd, tgt)
-            AdminStickIsOpen = false
+            timer.Simple(0.1, function()
+                LocalPlayer().AdminStickTarget = nil
+                AdminStickIsOpen = false
+            end)
         end):SetIcon(o.icon)
     end
+
+    -- Update menu size after adding items
+    if tpCategory.UpdateSize then tpCategory:UpdateSize() end
 end
 
 local function IncludeUtility(tgt, menu, stores)
     local utilityCategory = GetOrCreateCategoryMenu(menu, "utility", stores)
+    if not utilityCategory then return end
     local commandsSubCategory = GetOrCreateSubCategoryMenu(utilityCategory, "utility", "commands", stores)
+    if not commandsSubCategory then return end
     local utilityCommands = {
         {
             name = L("noclip"),
@@ -565,9 +596,15 @@ local function IncludeUtility(tgt, menu, stores)
     for _, cmd in ipairs(utilityCommands) do
         commandsSubCategory:AddOption(L(cmd.name), function()
             RunAdminCommand(cmd.cmd, tgt)
-            AdminStickIsOpen = false
+            timer.Simple(0.1, function()
+                LocalPlayer().AdminStickTarget = nil
+                AdminStickIsOpen = false
+            end)
         end):SetIcon(cmd.icon)
     end
+
+    -- Update submenu size after adding items
+    if commandsSubCategory.UpdateSize then commandsSubCategory:UpdateSize() end
 end
 
 local function IncludeCharacterManagement(tgt, menu, stores)
@@ -576,16 +613,15 @@ local function IncludeCharacterManagement(tgt, menu, stores)
     local canClass = cl:hasPrivilege("manageClasses")
     local canWhitelist = cl:hasPrivilege("manageWhitelists")
     local charCategory = GetOrCreateCategoryMenu(menu, "characterManagement", stores)
+    if not charCategory then return end
     local char = tgt:getChar()
     if char then
         local facID = char:getFaction()
-        local curName
         if facID then
             if canFaction then
                 local facOptions = {}
                 for _, f in pairs(lia.faction.teams) do
                     if f.index == facID then
-                        curName = f.name
                         for _, v in pairs(lia.faction.teams) do
                             table.insert(facOptions, {
                                 name = v.name,
@@ -600,12 +636,16 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                 table.sort(facOptions, function(a, b) return a.name < b.name end)
                 if #facOptions > 0 then
                     local factionsSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "factions", stores)
-                    local fm = GetOrCreateSubMenu(factionsSubCategory, L("setFactionTitle", curName or L("unknown")), stores)
-                    for _, o in ipairs(facOptions) do
-                        fm:AddOption(L(o.name), function()
-                            cl:ConCommand(o.cmd)
-                            AdminStickIsOpen = false
-                        end):SetIcon("icon16/group.png")
+                    if factionsSubCategory and IsValid(factionsSubCategory) then
+                        for _, o in ipairs(facOptions) do
+                            factionsSubCategory:AddOption(L(o.name), function()
+                                cl:ConCommand(o.cmd)
+                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                            end):SetIcon("icon16/group.png")
+                        end
+
+                        -- Update submenu size after adding items
+                        if factionsSubCategory.UpdateSize then factionsSubCategory:UpdateSize() end
                     end
                 end
             end
@@ -622,12 +662,19 @@ local function IncludeCharacterManagement(tgt, menu, stores)
 
                 table.sort(cls, function(a, b) return a.name < b.name end)
                 local classesSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "classes", stores)
-                local cm = GetOrCreateSubMenu(classesSubCategory, "adminStickSetClassName", stores)
-                for _, o in ipairs(cls) do
-                    cm:AddOption(L(o.name), function()
-                        cl:ConCommand(o.cmd)
-                        AdminStickIsOpen = false
-                    end):SetIcon("icon16/user.png")
+                if classesSubCategory and IsValid(classesSubCategory) then
+                    for _, o in ipairs(cls) do
+                        classesSubCategory:AddOption(L(o.name), function()
+                            cl:ConCommand(o.cmd)
+                            timer.Simple(0.1, function()
+                                LocalPlayer().AdminStickTarget = nil
+                                AdminStickIsOpen = false
+                            end)
+                        end):SetIcon("icon16/user.png")
+                    end
+
+                    -- Update submenu size after adding items
+                    if classesSubCategory.UpdateSize then classesSubCategory:UpdateSize() end
                 end
             end
 
@@ -652,20 +699,29 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                 table.sort(facAdd, function(a, b) return a.name < b.name end)
                 table.sort(facRemove, function(a, b) return a.name < b.name end)
                 local whitelistsSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "whitelists", stores)
-                local fw = GetOrCreateSubMenu(whitelistsSubCategory, "adminStickFactionWhitelistName", stores)
-                for _, o in ipairs(facAdd) do
-                    fw:AddOption(L(o.name), function()
-                        cl:ConCommand(o.cmd)
-                        AdminStickIsOpen = false
-                    end):SetIcon("icon16/group_add.png")
-                end
+                if whitelistsSubCategory and IsValid(whitelistsSubCategory) then
+                    for _, o in ipairs(facAdd) do
+                        whitelistsSubCategory:AddOption(L(o.name), function()
+                            cl:ConCommand(o.cmd)
+                            timer.Simple(0.1, function()
+                                LocalPlayer().AdminStickTarget = nil
+                                AdminStickIsOpen = false
+                            end)
+                        end):SetIcon("icon16/group_add.png")
+                    end
 
-                local fu = GetOrCreateSubMenu(whitelistsSubCategory, "adminStickUnwhitelistName", stores)
-                for _, o in ipairs(facRemove) do
-                    fu:AddOption(L(o.name), function()
-                        cl:ConCommand(o.cmd)
-                        AdminStickIsOpen = false
-                    end):SetIcon("icon16/group_delete.png")
+                    for _, o in ipairs(facRemove) do
+                        whitelistsSubCategory:AddOption(L(o.name), function()
+                            cl:ConCommand(o.cmd)
+                            timer.Simple(0.1, function()
+                                LocalPlayer().AdminStickTarget = nil
+                                AdminStickIsOpen = false
+                            end)
+                        end):SetIcon("icon16/group_delete.png")
+                    end
+
+                    -- Update submenu size after adding items
+                    if whitelistsSubCategory.UpdateSize then whitelistsSubCategory:UpdateSize() end
                 end
 
                 if classes and #classes > 0 then
@@ -686,20 +742,23 @@ local function IncludeCharacterManagement(tgt, menu, stores)
 
                     table.sort(cw, function(a, b) return a.name < b.name end)
                     table.sort(cu, function(a, b) return a.name < b.name end)
-                    local cwm = GetOrCreateSubMenu(whitelistsSubCategory, "adminStickClassWhitelistName", stores)
-                    for _, o in ipairs(cw) do
-                        cwm:AddOption(L(o.name), function()
-                            cl:ConCommand(o.cmd)
-                            AdminStickIsOpen = false
-                        end):SetIcon("icon16/user_add.png")
-                    end
+                    if whitelistsSubCategory and IsValid(whitelistsSubCategory) then
+                        for _, o in ipairs(cw) do
+                            whitelistsSubCategory:AddOption(L(o.name), function()
+                                cl:ConCommand(o.cmd)
+                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                            end):SetIcon("icon16/user_add.png")
+                        end
 
-                    local cum = GetOrCreateSubMenu(whitelistsSubCategory, "adminStickClassUnwhitelistName", stores)
-                    for _, o in ipairs(cu) do
-                        cum:AddOption(L(o.name), function()
-                            cl:ConCommand(o.cmd)
-                            AdminStickIsOpen = false
-                        end):SetIcon("icon16/user_delete.png")
+                        for _, o in ipairs(cu) do
+                            whitelistsSubCategory:AddOption(L(o.name), function()
+                                cl:ConCommand(o.cmd)
+                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                            end):SetIcon("icon16/user_delete.png")
+                        end
+
+                        -- Update submenu size after adding items
+                        if whitelistsSubCategory.UpdateSize then whitelistsSubCategory:UpdateSize() end
                     end
                 end
             end
@@ -710,8 +769,11 @@ local function IncludeCharacterManagement(tgt, menu, stores)
         local attributesSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "attributes", stores)
         attributesSubCategory:AddOption(L("changePlayerModel"), function()
             OpenPlayerModelUI(tgt)
-            AdminStickIsOpen = false
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/user_suit.png")
+
+        -- Update submenu size after adding items
+        if attributesSubCategory.UpdateSize then attributesSubCategory:UpdateSize() end
     end
 end
 
@@ -719,9 +781,9 @@ local function IncludeFlagManagement(tgt, menu, stores)
     local cl = LocalPlayer()
     if not cl:hasPrivilege("manageFlags") then return end
     local flagCategory = GetOrCreateCategoryMenu(menu, "flagManagement", stores)
+    if not flagCategory then return end
     local cf = GetOrCreateSubCategoryMenu(flagCategory, "flagManagement", "characterFlags", stores)
-    local cGive = GetOrCreateSubMenu(cf, giveFlagsLabel, stores, "flagManagement", "characterFlags")
-    local cTake = GetOrCreateSubMenu(cf, takeFlagsLabel, stores, "flagManagement", "characterFlags")
+    if not cf then return end
     local charObj = tgt:getChar()
     local toGive, toTake = {}, {}
     for fl in pairs(lia.flag.list) do
@@ -742,79 +804,82 @@ local function IncludeFlagManagement(tgt, menu, stores)
 
     table.sort(toGive, function(a, b) return a.name < b.name end)
     table.sort(toTake, function(a, b) return a.name < b.name end)
-    for _, f in ipairs(toGive) do
-        cGive:AddOption(L(f.name), function()
-            cl:ConCommand(f.cmd)
-            AdminStickIsOpen = false
-        end):SetIcon(f.icon)
-    end
-
-    for _, f in ipairs(toTake) do
-        cTake:AddOption(L(f.name), function()
-            cl:ConCommand(f.cmd)
-            AdminStickIsOpen = false
-        end):SetIcon(f.icon)
-    end
-
-    cf:AddOption(L("modifyCharFlags"), function()
-        local currentFlags = charObj and charObj:getFlags() or ""
-        Derma_StringRequest(L("modifyCharFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
-            text = string.gsub(text or "", "%s", "")
-            net.Start("liaModifyFlags")
-            net.WriteString(tgt:SteamID())
-            net.WriteString(text)
-            net.WriteBool(false)
-            net.SendToServer()
-        end)
-
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/flag_orange.png")
-
-    cf:AddOption(L("giveAllCharFlags"), function()
-        local allFlags = ""
-        for fl in pairs(lia.flag.list) do
-            allFlags = allFlags .. fl
+    if cf and IsValid(cf) then
+        for _, f in ipairs(toGive) do
+            cf:AddOption(L(f.name), function()
+                cl:ConCommand(f.cmd)
+                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+            end):SetIcon(f.icon)
         end
 
-        if allFlags ~= "" then
-            net.Start("liaModifyFlags")
-            net.WriteString(tgt:SteamID())
-            net.WriteString(allFlags)
-            net.WriteBool(false)
-            net.SendToServer()
+        for _, f in ipairs(toTake) do
+            cf:AddOption(L(f.name), function()
+                cl:ConCommand(f.cmd)
+                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+            end):SetIcon(f.icon)
         end
+    end
 
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/flag_blue.png")
+    if cf and IsValid(cf) then
+        cf:AddOption(L("modifyCharFlags"), function()
+            local currentFlags = charObj and charObj:getFlags() or ""
+            Derma_StringRequest(L("modifyCharFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
+                text = string.gsub(text or "", "%s", "")
+                net.Start("liaModifyFlags")
+                net.WriteString(tgt:SteamID())
+                net.WriteString(text)
+                net.WriteBool(false)
+                net.SendToServer()
+            end)
 
-    cf:AddOption(L("takeAllCharFlags"), function()
-        net.Start("liaModifyFlags")
-        net.WriteString(tgt:SteamID())
-        net.WriteString("")
-        net.WriteBool(false)
-        net.SendToServer()
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/flag_red.png")
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/flag_orange.png")
 
-    cf:AddOption(L("listCharFlags"), function()
-        local currentFlags = charObj and charObj:getFlags() or ""
-        local flagList = ""
-        if currentFlags ~= "" then
-            for i = 1, #currentFlags do
-                local flag = currentFlags:sub(i, i)
-                flagList = flagList .. flag .. " "
+        cf:AddOption(L("giveAllCharFlags"), function()
+            local allFlags = ""
+            for fl in pairs(lia.flag.list) do
+                allFlags = allFlags .. fl
             end
 
-            flagList = string.Trim(flagList)
-        end
+            if allFlags ~= "" then
+                net.Start("liaModifyFlags")
+                net.WriteString(tgt:SteamID())
+                net.WriteString(allFlags)
+                net.WriteBool(false)
+                net.SendToServer()
+            end
 
-        Derma_Message(L("currentCharFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("charFlagsTitle"), L("ok"))
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/information.png")
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/flag_blue.png")
+
+        cf:AddOption(L("takeAllCharFlags"), function()
+            net.Start("liaModifyFlags")
+            net.WriteString(tgt:SteamID())
+            net.WriteString("")
+            net.WriteBool(false)
+            net.SendToServer()
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/flag_red.png")
+
+        cf:AddOption(L("listCharFlags"), function()
+            local currentFlags = charObj and charObj:getFlags() or ""
+            local flagList = ""
+            if currentFlags ~= "" then
+                for i = 1, #currentFlags do
+                    local flag = currentFlags:sub(i, i)
+                    flagList = flagList .. flag .. " "
+                end
+
+                flagList = string.Trim(flagList)
+            end
+
+            Derma_Message(L("currentCharFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("charFlagsTitle"), L("ok"))
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/information.png")
+    end
 
     local pf = GetOrCreateSubCategoryMenu(flagCategory, "flagManagement", "playerFlags", stores)
-    local pGive = GetOrCreateSubMenu(pf, giveFlagsLabel, stores, "flagManagement", "playerFlags")
-    local pTake = GetOrCreateSubMenu(pf, takeFlagsLabel, stores, "flagManagement", "playerFlags")
+    if not pf then return end
     local toGiveP, toTakeP = {}, {}
     for fl in pairs(lia.flag.list) do
         if not tgt:hasFlags(fl, "player") then
@@ -834,75 +899,79 @@ local function IncludeFlagManagement(tgt, menu, stores)
 
     table.sort(toGiveP, function(a, b) return a.name < b.name end)
     table.sort(toTakeP, function(a, b) return a.name < b.name end)
-    for _, f in ipairs(toGiveP) do
-        pGive:AddOption(L(f.name), function()
-            cl:ConCommand(f.cmd)
-            AdminStickIsOpen = false
-        end):SetIcon(f.icon)
-    end
-
-    for _, f in ipairs(toTakeP) do
-        pTake:AddOption(L(f.name), function()
-            cl:ConCommand(f.cmd)
-            AdminStickIsOpen = false
-        end):SetIcon(f.icon)
-    end
-
-    pf:AddOption(L("modifyPlayerFlags"), function()
-        local currentFlags = tgt:getFlags("player")
-        Derma_StringRequest(L("modifyPlayerFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
-            text = string.gsub(text or "", "%s", "")
-            net.Start("liaModifyFlags")
-            net.WriteString(tgt:SteamID())
-            net.WriteString(text)
-            net.WriteBool(true)
-            net.SendToServer()
-        end)
-
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/flag_orange.png")
-
-    pf:AddOption(L("giveAllPlayerFlags"), function()
-        local allFlags = ""
-        for fl in pairs(lia.flag.list) do
-            allFlags = allFlags .. fl
+    if pf and IsValid(pf) then
+        for _, f in ipairs(toGiveP) do
+            pf:AddOption(L(f.name), function()
+                cl:ConCommand(f.cmd)
+                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+            end):SetIcon(f.icon)
         end
 
-        if allFlags ~= "" then
-            net.Start("liaModifyFlags")
-            net.WriteString(tgt:SteamID())
-            net.WriteString(allFlags)
-            net.WriteBool(true)
-            net.SendToServer()
+        for _, f in ipairs(toTakeP) do
+            pf:AddOption(L(f.name), function()
+                cl:ConCommand(f.cmd)
+                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+            end):SetIcon(f.icon)
         end
 
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/flag_blue.png")
+        pf:AddOption(L("modifyPlayerFlags"), function()
+            local currentFlags = tgt:getFlags("player")
+            Derma_StringRequest(L("modifyPlayerFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
+                text = string.gsub(text or "", "%s", "")
+                net.Start("liaModifyFlags")
+                net.WriteString(tgt:SteamID())
+                net.WriteString(text)
+                net.WriteBool(true)
+                net.SendToServer()
+            end)
 
-    pf:AddOption(L("takeAllPlayerFlags"), function()
-        net.Start("liaModifyFlags")
-        net.WriteString(tgt:SteamID())
-        net.WriteString("")
-        net.WriteBool(true)
-        net.SendToServer()
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/flag_red.png")
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/flag_orange.png")
+    end
 
-    pf:AddOption(L("listPlayerFlags"), function()
-        local currentFlags = tgt:getFlags("player") or ""
-        local flagList = ""
-        if currentFlags ~= "" then
-            for i = 1, #currentFlags do
-                local flag = currentFlags:sub(i, i)
-                flagList = flagList .. flag .. " "
+    if pf and IsValid(pf) then
+        pf:AddOption(L("giveAllPlayerFlags"), function()
+            local allFlags = ""
+            for fl in pairs(lia.flag.list) do
+                allFlags = allFlags .. fl
             end
 
-            flagList = string.Trim(flagList)
-        end
+            if allFlags ~= "" then
+                net.Start("liaModifyFlags")
+                net.WriteString(tgt:SteamID())
+                net.WriteString(allFlags)
+                net.WriteBool(true)
+                net.SendToServer()
+            end
 
-        Derma_Message(L("currentPlayerFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("playerFlagsTitle"), L("ok"))
-        AdminStickIsOpen = false
-    end):SetIcon("icon16/information.png")
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/flag_blue.png")
+
+        pf:AddOption(L("takeAllPlayerFlags"), function()
+            net.Start("liaModifyFlags")
+            net.WriteString(tgt:SteamID())
+            net.WriteString("")
+            net.WriteBool(true)
+            net.SendToServer()
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/flag_red.png")
+
+        pf:AddOption(L("listPlayerFlags"), function()
+            local currentFlags = tgt:getFlags("player") or ""
+            local flagList = ""
+            if currentFlags ~= "" then
+                for i = 1, #currentFlags do
+                    local flag = currentFlags:sub(i, i)
+                    flagList = flagList .. flag .. " "
+                end
+
+                flagList = string.Trim(flagList)
+            end
+
+            Derma_Message(L("currentPlayerFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("playerFlagsTitle"), L("ok"))
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon("icon16/information.png")
+    end
 end
 
 local function AddCommandToMenu(menu, data, key, tgt, name, stores)
@@ -992,7 +1061,7 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         local cmd = "say /" .. key
         if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
         cl:ConCommand(cmd)
-        AdminStickIsOpen = false
+        timer.Simple(0.1, function() AdminStickIsOpen = false end)
     end):SetIcon(ic)
 end
 
@@ -1082,7 +1151,7 @@ function MODULE:OpenAdminStickUI(tgt)
                         SetClipboardText(tgt:getChar():getID())
                     end
 
-                    AdminStickIsOpen = false
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
             },
@@ -1091,7 +1160,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 cmd = function()
                     cl:notifySuccessLocalized("adminStickCopiedToClipboard", L("name"))
                     SetClipboardText(tgt:Name())
-                    AdminStickIsOpen = false
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
             },
@@ -1100,7 +1169,7 @@ function MODULE:OpenAdminStickUI(tgt)
                 cmd = function()
                     cl:notifySuccessLocalized("adminStickCopiedToClipboard", L("steamID"))
                     SetClipboardText(tgt:SteamID())
-                    AdminStickIsOpen = false
+                    timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
             },
@@ -1108,9 +1177,9 @@ function MODULE:OpenAdminStickUI(tgt)
 
         table.sort(info, function(a, b) return a.name < b.name end)
         local infoCategory = GetOrCreateCategoryMenu(menu, "playerInformation", stores)
-        local copyInfoSubCategory = GetOrCreateSubCategoryMenu(infoCategory, "playerInformation", "copyInfo", stores)
+        if not infoCategory then return end
         for _, o in ipairs(info) do
-            copyInfoSubCategory:AddOption(L(o.name), o.cmd):SetIcon(o.icon)
+            infoCategory:AddOption(L(o.name), o.cmd):SetIcon(o.icon)
         end
 
         IncludeAdminMenu(tgt, menu, stores)
@@ -1140,7 +1209,9 @@ function MODULE:OpenAdminStickUI(tgt)
 
     if #uncategorizedCommands > 0 then
         local utilityCategory = GetOrCreateCategoryMenu(menu, "utility", stores)
+        if not utilityCategory then return end
         local commandsSubCategory = GetOrCreateSubCategoryMenu(utilityCategory, "utility", "commands", stores)
+        if not commandsSubCategory then return end
         for _, c in ipairs(uncategorizedCommands) do
             local ic = c.data.AdminStick and c.data.AdminStick.Icon or "icon16/page.png"
             commandsSubCategory:AddOption(L(c.name), function()
@@ -1148,13 +1219,21 @@ function MODULE:OpenAdminStickUI(tgt)
                 local cmd = "say /" .. c.key
                 if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
                 cl:ConCommand(cmd)
-                AdminStickIsOpen = false
+                timer.Simple(0.1, function()
+                    LocalPlayer().AdminStickTarget = nil
+                    AdminStickIsOpen = false
+                end)
             end):SetIcon(ic)
         end
     end
 
     hook.Run("PopulateAdminStick", menu, tgt)
     function menu:OnRemove()
+        cl.AdminStickTarget = nil
+        AdminStickIsOpen = false
+    end
+
+    function menu:OnClose()
         cl.AdminStickTarget = nil
         AdminStickIsOpen = false
     end

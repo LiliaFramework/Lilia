@@ -14,12 +14,13 @@ The flags library (`lia.flag`) provides a comprehensive system for managing play
 
 **Purpose**
 
-Adds a flag to a player.
+Registers a new flag with the flag system.
 
 **Parameters**
 
-* `client` (*Player*): The player to add the flag to.
-* `flag` (*string*): The flag to add.
+* `flag` (*string*): The flag identifier.
+* `desc` (*string*): The flag description.
+* `callback` (*function*, optional): Optional callback function called when flag is given/removed.
 
 **Returns**
 
@@ -27,47 +28,44 @@ Adds a flag to a player.
 
 **Realm**
 
-Server.
+Shared.
 
 **Example Usage**
 
 ```lua
--- Add a flag to a player
-local function addFlag(client, flag)
-    lia.flag.add(client, flag)
+-- Register a new flag
+local function registerFlag(flag, desc, callback)
+    lia.flag.add(flag, desc, callback)
 end
 
--- Use in a function
-local function giveAdminFlag(client)
-    lia.flag.add(client, "admin")
-    client:notify("Admin flag added")
-end
+-- Register a basic flag
+lia.flag.add("admin", "Administrator privileges")
 
--- Use in a command
-lia.command.add("addflag", {
-    arguments = {
-        {name = "player", type = "string"},
-        {name = "flag", type = "string"}
-    },
-    privilege = "Admin Access",
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if target then
-            lia.flag.add(target, arguments[2])
-            client:notify("Flag added to " .. target:Name())
-        else
-            client:notify("Player not found")
-        end
+-- Register a flag with callback
+lia.flag.add("vip", "VIP member benefits", function(client, isGiven)
+    if isGiven then
+        client:notify("VIP privileges granted!")
+    else
+        client:notify("VIP privileges removed")
     end
-})
+end)
 
--- Use in a function
-local function giveSpecialFlags(client)
-    lia.flag.add(client, "vip")
-    lia.flag.add(client, "donator")
-    lia.flag.add(client, "beta_tester")
-    client:notify("Special flags added")
+-- Register multiple flags
+local function registerCustomFlags()
+    lia.flag.add("moderator", "Moderation capabilities")
+    lia.flag.add("donator", "Donator benefits")
+    lia.flag.add("beta_tester", "Beta testing access")
 end
+
+-- Register a flag that gives a weapon
+lia.flag.add("physgun", "Physgun access", function(client, isGiven)
+    if isGiven then
+        client:Give("weapon_physgun")
+        client:SelectWeapon("weapon_physgun")
+    else
+        client:StripWeapon("weapon_physgun")
+    end
+end)
 ```
 
 ---
@@ -76,7 +74,7 @@ end
 
 **Purpose**
 
-Handles flag-related actions when a player spawns.
+Processes flag callbacks when a player spawns, executing any registered flag actions for the player's current flags.
 
 **Parameters**
 
@@ -93,8 +91,8 @@ Server.
 **Example Usage**
 
 ```lua
--- Handle flag spawn actions
-local function onPlayerSpawn(client)
+-- Process flag callbacks on spawn
+local function processSpawnFlags(client)
     lia.flag.onSpawn(client)
 end
 
@@ -106,13 +104,14 @@ end)
 -- Use in a function
 local function spawnWithFlags(client)
     lia.flag.onSpawn(client)
-    print("Flags processed for " .. client:Name())
+    print("Flag callbacks processed for " .. client:Name())
 end
 
 -- Use in a function
 local function checkSpawnFlags(client)
     lia.flag.onSpawn(client)
-    if client:hasFlag("admin") then
+    -- Check if player has specific flags after processing
+    if client:getChar() and client:getChar():hasFlags("admin") then
         client:notify("Admin privileges active")
     end
 end

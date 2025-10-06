@@ -14,12 +14,13 @@ The playerinteract library (`lia.playerinteract`) provides a comprehensive syste
 
 **Purpose**
 
-Checks if a player is within interaction range.
+Checks if a player is within interaction range of an entity.
 
 **Parameters**
 
 * `client` (*Player*): The client to check.
-* `target` (*Entity*): The target entity.
+* `entity` (*Entity*): The target entity.
+* `customRange` (*number*, optional): Custom interaction range (default: 250).
 
 **Returns**
 
@@ -33,17 +34,28 @@ Shared.
 
 ```lua
 -- Check if within interaction range
-local function isWithinRange(client, target)
-    return lia.playerinteract.isWithinRange(client, target)
+local function isWithinRange(client, entity)
+    return lia.playerinteract.isWithinRange(client, entity)
 end
 
 -- Use in a function
-local function checkInteractionRange(client, target)
-    if lia.playerinteract.isWithinRange(client, target) then
+local function checkInteractionRange(client, entity)
+    if lia.playerinteract.isWithinRange(client, entity) then
         print("Player is within interaction range")
         return true
     else
         print("Player is not within interaction range")
+        return false
+    end
+end
+
+-- Use in a function
+local function checkCustomRange(client, entity, range)
+    if lia.playerinteract.isWithinRange(client, entity, range) then
+        print("Player is within custom range of " .. range .. " units")
+        return true
+    else
+        print("Player is not within custom range")
         return false
     end
 end
@@ -131,15 +143,15 @@ end
 
 **Purpose**
 
-Gets categorized interaction options for a client.
+Organizes interaction options into categories for display in menus.
 
 **Parameters**
 
-* `client` (*Player*): The client to get options for.
+* `options` (*table*): Table of interaction options to categorize.
 
 **Returns**
 
-* `options` (*table*): Table of categorized options.
+* `categorized` (*table*): Table of options organized by category.
 
 **Realm**
 
@@ -148,18 +160,27 @@ Shared.
 **Example Usage**
 
 ```lua
--- Get categorized options for client
-local function getCategorizedOptions(client)
-    return lia.playerinteract.getCategorizedOptions(client)
+-- Get categorized options
+local function getCategorizedOptions(options)
+    return lia.playerinteract.getCategorizedOptions(options)
 end
 
 -- Use in a function
-local function showCategorizedOptions(client)
-    local options = lia.playerinteract.getCategorizedOptions(client)
-    print("Categorized options for " .. client:Name() .. ":")
-    for category, options in pairs(options) do
-        print("- " .. category .. ": " .. #options .. " options")
+local function showCategorizedOptions(options)
+    local categorized = lia.playerinteract.getCategorizedOptions(options)
+    print("Categorized options:")
+    for category, categoryOptions in pairs(categorized) do
+        print("- " .. category .. ": " .. #categoryOptions .. " options")
+        for name, option in pairs(categoryOptions) do
+            print("  * " .. name)
+        end
     end
+end
+
+-- Use in a function
+local function organizeMenuOptions(options)
+    local categorized = lia.playerinteract.getCategorizedOptions(options)
+    return categorized
 end
 ```
 
@@ -169,11 +190,12 @@ end
 
 **Purpose**
 
-Adds a new interaction.
+Adds a new interaction that can be triggered by players interacting with entities.
 
 **Parameters**
 
-* `interactionData` (*table*): The interaction data table.
+* `name` (*string*): The unique name for the interaction.
+* `data` (*table*): The interaction configuration data.
 
 **Returns**
 
@@ -181,26 +203,50 @@ Adds a new interaction.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
 -- Add interaction
-local function addInteraction(interactionData)
-    lia.playerinteract.addInteraction(interactionData)
+local function addInteraction(name, data)
+    lia.playerinteract.addInteraction(name, data)
 end
 
 -- Use in a function
 local function createDoorInteraction()
-    lia.playerinteract.addInteraction({
+    lia.playerinteract.addInteraction("door_open", {
         name = "Open Door",
-        callback = function(client, door)
+        range = 100,
+        category = "Doors",
+        target = "entity",
+        shouldShow = function(client, door)
+            return IsValid(door) and door:GetClass() == "func_door"
+        end,
+        onRun = function(client, door)
             door:Fire("Open")
             client:notify("Door opened")
         end
     })
     print("Door interaction created")
+end
+
+-- Use in a function
+local function createPickupInteraction()
+    lia.playerinteract.addInteraction("item_pickup", {
+        name = "Pick Up",
+        range = 50,
+        category = "Items",
+        target = "entity",
+        shouldShow = function(client, item)
+            return IsValid(item) and item:isItem()
+        end,
+        onRun = function(client, item)
+            item:remove()
+            client:notify("Item picked up")
+        end
+    })
+    print("Pickup interaction created")
 end
 ```
 
@@ -210,11 +256,12 @@ end
 
 **Purpose**
 
-Adds a new action.
+Adds a new action that can be triggered by players through the action menu.
 
 **Parameters**
 
-* `actionData` (*table*): The action data table.
+* `name` (*string*): The unique name for the action.
+* `data` (*table*): The action configuration data.
 
 **Returns**
 
@@ -222,26 +269,47 @@ Adds a new action.
 
 **Realm**
 
-Shared.
+Server.
 
 **Example Usage**
 
 ```lua
 -- Add action
-local function addAction(actionData)
-    lia.playerinteract.addAction(actionData)
+local function addAction(name, data)
+    lia.playerinteract.addAction(name, data)
 end
 
 -- Use in a function
 local function createUseAction()
-    lia.playerinteract.addAction({
-        name = "Use",
-        callback = function(client, target)
-            target:Use(client)
-            client:notify("Used " .. target:GetClass())
+    lia.playerinteract.addAction("item_use", {
+        name = "Use Item",
+        category = "Items",
+        shouldShow = function(client)
+            local char = client:getChar()
+            return char and char:getInventory():hasItems()
+        end,
+        onRun = function(client)
+            -- Show item selection menu or use default item
+            client:notify("Item used")
         end
     })
     print("Use action created")
+end
+
+-- Use in a function
+local function createVoiceAction()
+    lia.playerinteract.addAction("voice_settings", {
+        name = "Voice Settings",
+        category = "Communication",
+        shouldShow = function(client)
+            return client:getChar() and client:Alive()
+        end,
+        onRun = function(client)
+            -- Open voice settings menu
+            client:notify("Voice settings opened")
+        end
+    })
+    print("Voice action created")
 end
 ```
 
@@ -251,11 +319,11 @@ end
 
 **Purpose**
 
-Syncs interactions to all clients.
+Syncs interaction data to a specific client or all clients.
 
 **Parameters**
 
-*None*
+* `client` (*Player*, optional): The client to sync to. If not provided, syncs to all clients.
 
 **Returns**
 
@@ -268,15 +336,22 @@ Server.
 **Example Usage**
 
 ```lua
--- Sync interactions to clients
-local function syncInteractions()
+-- Sync interactions to all clients
+local function syncInteractionsToAll()
     lia.playerinteract.syncToClients()
+    print("Interactions synced to all clients")
 end
 
 -- Use in a function
-local function syncAllInteractions()
+local function syncInteractionsToClient(client)
+    lia.playerinteract.syncToClients(client)
+    print("Interactions synced to " .. client:Name())
+end
+
+-- Use in a function
+local function syncOnModuleLoad()
     lia.playerinteract.syncToClients()
-    print("Interactions synced to all clients")
+    print("Interactions synced after module load")
 end
 ```
 
@@ -286,12 +361,16 @@ end
 
 **Purpose**
 
-Opens an interaction menu for a client.
+Opens an interaction menu displaying available interactions and actions for the player.
 
 **Parameters**
 
-* `client` (*Player*): The client to open the menu for.
-* `target` (*Entity*): The target entity.
+* `options` (*table*): Table of interaction options to display.
+* `isInteraction` (*boolean*): Whether this is an interaction menu (true) or action menu (false).
+* `titleText` (*string*, optional): Title text for the menu.
+* `closeKey` (*number*, optional): Key code to close the menu (default: KEY_TAB for interactions, KEY_G for actions).
+* `netMsg` (*string*, optional): Network message to send for server-side interactions.
+* `preFiltered` (*boolean*, optional): Whether options are already filtered.
 
 **Returns**
 
@@ -299,19 +378,30 @@ Opens an interaction menu for a client.
 
 **Realm**
 
-Server.
+Client.
 
 **Example Usage**
 
 ```lua
 -- Open interaction menu
-local function openMenu(client, target)
-    lia.playerinteract.openMenu(client, target)
+local function openInteractionMenu(options, targetEntity)
+    lia.playerinteract.openMenu(options, true, "Interact with " .. targetEntity:GetClass())
 end
 
 -- Use in a function
-local function openInteractionMenu(client, target)
-    lia.playerinteract.openMenu(client, target)
-    print("Interaction menu opened for " .. client:Name())
+local function openActionMenu(options)
+    lia.playerinteract.openMenu(options, false, "Actions", KEY_G, "liaRequestInteractOptions")
+end
+
+-- Use in a function
+local function openCustomMenu(options, title)
+    lia.playerinteract.openMenu(options, false, title, KEY_ESCAPE)
+    print("Custom menu opened")
+end
+
+-- Use in a function
+local function openFilteredMenu(options)
+    lia.playerinteract.openMenu(options, true, "Filtered Interactions", KEY_TAB, nil, true)
+    print("Filtered interaction menu opened")
 end
 ```

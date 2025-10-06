@@ -10,13 +10,14 @@ function PANEL:Init()
     self.textEntry:SetText('')
     self.textEntry.OnCloseFocus = function() self.action(self:GetValue()) end
     self._text_offset = 0
+    self.panelColor = lia.derma.getNextPanelColor()
     self.textEntry.Paint = nil
     self.textEntry.PaintOver = function(s, w, h)
         if not s._shadowLerp then s._shadowLerp = 5 end
         local target = s:IsEditing() and 10 or 5
         s._shadowLerp = Lerp(FrameTime() * 10, s._shadowLerp, target)
         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(s._shadowLerp, 20):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Rad(16):Color(self.panelColor):Shape(lia.derma.SHAPE_IOS):Draw()
         local value = self:GetValue()
         surface.SetFont(font)
         local padding = 6

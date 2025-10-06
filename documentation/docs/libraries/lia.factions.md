@@ -18,11 +18,13 @@ Registers a new faction with the faction system.
 
 **Parameters**
 
-* `factionData` (*table*): The faction data table containing name, color, etc.
+* `uniqueID` (*string*): The unique identifier for the faction.
+* `data` (*table*): The faction data table containing name, color, etc.
 
 **Returns**
 
-*None*
+* `index` (*number*): The faction index.
+* `faction` (*table*): The registered faction table.
 
 **Realm**
 
@@ -32,14 +34,14 @@ Shared.
 
 ```lua
 -- Register a basic faction
-lia.faction.register({
+lia.faction.register("citizen", {
     name = "Citizen",
     color = Color(255, 255, 255),
     description = "Regular citizens of the city"
 })
 
 -- Register a faction with more options
-lia.faction.register({
+lia.faction.register("police", {
     name = "Police",
     color = Color(0, 0, 255),
     description = "Law enforcement officers",
@@ -49,7 +51,7 @@ lia.faction.register({
 })
 
 -- Register a faction with whitelist
-lia.faction.register({
+lia.faction.register("mayor", {
     name = "Mayor",
     color = Color(255, 215, 0),
     description = "City mayor",
@@ -58,8 +60,8 @@ lia.faction.register({
 })
 
 -- Use in a function
-local function createFaction(name, color, description)
-    lia.faction.register({
+local function createFaction(uniqueID, name, color, description)
+    lia.faction.register(uniqueID, {
         name = name,
         color = color,
         description = description
@@ -400,11 +402,12 @@ end
 
 **Purpose**
 
-Checks if a faction is a category.
+Checks if a faction is a category within the given category factions list.
 
 **Parameters**
 
-* `factionName` (*string*): The faction name.
+* `faction` (*string|number*): The faction name or index.
+* `categoryFactions` (*table*): Table of factions that belong to a category.
 
 **Returns**
 
@@ -418,16 +421,16 @@ Shared.
 
 ```lua
 -- Check if faction is category
-local function isFactionCategory(factionName)
-    return lia.faction.isFactionCategory(factionName)
+local function isFactionCategory(faction, categoryFactions)
+    return lia.faction.isFactionCategory(faction, categoryFactions)
 end
 
 -- Use in a function
-local function getCategories()
+local function getCategories(categoryFactions)
     local factions = lia.faction.getAll()
     local categories = {}
     for _, faction in ipairs(factions) do
-        if lia.faction.isFactionCategory(faction.name) then
+        if lia.faction.isFactionCategory(faction.name, categoryFactions) then
             table.insert(categories, faction)
         end
     end
@@ -436,7 +439,8 @@ end
 
 -- Use in a function
 local function showCategories()
-    local categories = getCategories()
+    local categoryFactions = {"police", "fire", "medical"}
+    local categories = getCategories(categoryFactions)
     print("Faction categories:")
     for _, category in ipairs(categories) do
         print("- " .. category.name)
@@ -450,15 +454,19 @@ end
 
 **Purpose**
 
-Generates job data for a faction.
+Generates job data for a faction with specified parameters.
 
 **Parameters**
 
-* `factionData` (*table*): The faction data.
+* `index` (*number*): The faction index.
+* `name` (*string*): The faction name.
+* `color` (*Color*): The faction color.
+* `default` (*boolean*, optional): Whether this is a default faction.
+* `models` (*table*, optional): Table of player models.
 
 **Returns**
 
-* `jobData` (*table*): The generated job data.
+* `faction` (*table*): The generated faction table.
 
 **Realm**
 
@@ -468,15 +476,15 @@ Shared.
 
 ```lua
 -- Generate job data
-local function generateJobData(factionData)
-    return lia.faction.jobGenerate(factionData)
+local function generateJobData(index, name, color, default, models)
+    return lia.faction.jobGenerate(index, name, color, default, models)
 end
 
 -- Use in a function
 local function createJobFromFaction(factionName)
     local faction = lia.faction.get(factionName)
     if faction then
-        local jobData = lia.faction.jobGenerate(faction)
+        local jobData = lia.faction.jobGenerate(faction.index, faction.name, faction.color, faction.isDefault, faction.models)
         print("Job data generated for " .. factionName)
         return jobData
     end
@@ -487,7 +495,7 @@ end
 local function generateAllJobs()
     local factions = lia.faction.getAll()
     for _, faction in ipairs(factions) do
-        local jobData = lia.faction.jobGenerate(faction)
+        local jobData = lia.faction.jobGenerate(faction.index, faction.name, faction.color, faction.isDefault, faction.models)
         print("Generated job for " .. faction.name)
     end
 end

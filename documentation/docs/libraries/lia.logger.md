@@ -19,7 +19,8 @@ Adds a new log type to the logging system.
 **Parameters**
 
 * `logType` (*string*): The log type name.
-* `logData` (*table*): The log data table containing color, description, etc.
+* `func` (*function*): The function that generates the log message.
+* `category` (*string*): The category for this log type.
 
 **Returns**
 
@@ -33,37 +34,31 @@ Shared.
 
 ```lua
 -- Add a new log type
-local function addLogType(logType, logData)
-    lia.log.addType(logType, logData)
+local function addLogType(logType, func, category)
+    lia.log.addType(logType, func, category)
 end
 
 -- Use in a function
 local function createAdminLogType()
-    lia.log.addType("admin", {
-        name = "Admin Actions",
-        color = Color(255, 0, 0),
-        description = "Administrative actions and commands"
-    })
+    lia.log.addType("admin", function(client, action)
+        return "Admin " .. client:Name() .. " performed: " .. action
+    end, "Admin Actions")
     print("Admin log type created")
 end
 
 -- Use in a function
 local function createPlayerLogType()
-    lia.log.addType("player", {
-        name = "Player Actions",
-        color = Color(0, 255, 0),
-        description = "Player actions and events"
-    })
+    lia.log.addType("player", function(client, action)
+        return "Player " .. client:Name() .. " performed: " .. action
+    end, "Player Actions")
     print("Player log type created")
 end
 
 -- Use in a function
 local function createSystemLogType()
-    lia.log.addType("system", {
-        name = "System Events",
-        color = Color(0, 0, 255),
-        description = "System events and errors"
-    })
+    lia.log.addType("system", function(client, event, details)
+        return "System event: " .. event .. " - " .. details
+    end, "System Events")
     print("System log type created")
 end
 ```
@@ -74,17 +69,18 @@ end
 
 **Purpose**
 
-Gets a formatted log string.
+Gets a formatted log string for a specific log type.
 
 **Parameters**
 
+* `client` (*Player*): The client associated with the log entry.
 * `logType` (*string*): The log type.
-* `message` (*string*): The log message.
-* `data` (*table*): Optional log data.
+* `...` (*any*): Additional arguments passed to the log type function.
 
 **Returns**
 
 * `logString` (*string*): The formatted log string.
+* `category` (*string*): The log category.
 
 **Realm**
 
@@ -94,37 +90,27 @@ Shared.
 
 ```lua
 -- Get formatted log string
-local function getLogString(logType, message, data)
-    return lia.log.getString(logType, message, data)
+local function getLogString(client, logType, ...)
+    return lia.log.getString(client, logType, ...)
 end
 
 -- Use in a function
-local function formatLogMessage(logType, message, data)
-    local logString = lia.log.getString(logType, message, data)
-    print("Formatted log: " .. logString)
-    return logString
+local function formatLogMessage(client, logType, ...)
+    local logString, category = lia.log.getString(client, logType, ...)
+    print("Formatted log: " .. logString .. " (Category: " .. category .. ")")
+    return logString, category
 end
 
 -- Use in a function
-local function createAdminLogMessage(action, client)
-    local message = "Admin " .. client:Name() .. " performed: " .. action
-    local data = {
-        admin = client:SteamID(),
-        action = action,
-        time = os.time()
-    }
-    return lia.log.getString("admin", message, data)
+local function createAdminLogMessage(client, action)
+    local logString, category = lia.log.getString(client, "admin", action)
+    return logString, category
 end
 
 -- Use in a function
-local function createPlayerLogMessage(action, client)
-    local message = "Player " .. client:Name() .. " performed: " .. action
-    local data = {
-        player = client:SteamID(),
-        action = action,
-        time = os.time()
-    }
-    return lia.log.getString("player", message, data)
+local function createPlayerLogMessage(client, action)
+    local logString, category = lia.log.getString(client, "player", action)
+    return logString, category
 end
 ```
 
@@ -138,9 +124,9 @@ Adds a log entry to the logging system.
 
 **Parameters**
 
+* `client` (*Player*): The client associated with the log entry.
 * `logType` (*string*): The log type.
-* `message` (*string*): The log message.
-* `data` (*table*): Optional log data.
+* `...` (*any*): Additional arguments passed to the log type function.
 
 **Returns**
 
@@ -154,43 +140,25 @@ Server.
 
 ```lua
 -- Add a log entry
-local function addLog(logType, message, data)
-    lia.log.add(logType, message, data)
+local function addLog(client, logType, ...)
+    lia.log.add(client, logType, ...)
 end
 
 -- Use in a function
 local function logAdminAction(client, action)
-    local message = "Admin " .. client:Name() .. " performed: " .. action
-    local data = {
-        admin = client:SteamID(),
-        action = action,
-        time = os.time()
-    }
-    lia.log.add("admin", message, data)
+    lia.log.add(client, "admin", action)
     print("Admin action logged: " .. action)
 end
 
 -- Use in a function
 local function logPlayerAction(client, action)
-    local message = "Player " .. client:Name() .. " performed: " .. action
-    local data = {
-        player = client:SteamID(),
-        action = action,
-        time = os.time()
-    }
-    lia.log.add("player", message, data)
+    lia.log.add(client, "player", action)
     print("Player action logged: " .. action)
 end
 
 -- Use in a function
 local function logSystemEvent(event, details)
-    local message = "System event: " .. event .. " - " .. details
-    local data = {
-        event = event,
-        details = details,
-        time = os.time()
-    }
-    lia.log.add("system", message, data)
+    lia.log.add(nil, "system", event, details)
     print("System event logged: " .. event)
 end
 ```

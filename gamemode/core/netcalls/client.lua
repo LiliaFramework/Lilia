@@ -800,8 +800,8 @@ net.Receive("liaAssureClientSideAssets", function()
         })
     end
 
-    print(L("downloadQueueSize"), #downloadQueue)
-    print(L("processingWithMaxConcurrentDownloads"), maxConcurrent)
+    lia.information(L("downloadQueueSize") .. ": " .. #downloadQueue)
+    lia.information(L("processingWithMaxConcurrentDownloads") .. ": " .. maxConcurrent)
     local function processNextDownload()
         if #downloadQueue == 0 then return end
         local download = table.remove(downloadQueue, 1)
@@ -811,11 +811,11 @@ net.Receive("liaAssureClientSideAssets", function()
                 activeDownloads = activeDownloads - 1
                 if material then
                     completedImages = completedImages + 1
-                    if not fromCache then print(L("imageDownloaded") .. ": " .. download.name) end
+                    if not fromCache then lia.information(L("imageDownloaded") .. ": " .. download.name) end
                 else
                     failedImages = failedImages + 1
                     local errorMessage = errorMsg or L("unknownError")
-                    print(L("imageFailed") .. ": " .. download.name .. " - " .. errorMessage)
+                    lia.warning(L("imageFailed") .. ": " .. download.name .. " - " .. errorMessage)
                     chat.AddText(Color(255, 100, 100), L("imageDownload"), Color(255, 255, 255), string.format(L("failedToDownloadImage", download.name, errorMessage)))
                 end
 
@@ -852,18 +852,18 @@ net.Receive("liaAssureClientSideAssets", function()
             timer.Simple(1.0, function()
                 local imageStats = lia.webimage.getStats()
                 local soundStats = lia.websound.getStats()
-                print("===========================================")
-                print(L("assetDownloadComplete"))
-                print(L("downloadSummary"))
-                print(string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
-                print(string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
-                print(L("currentStatistics"))
-                print(string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
-                print(string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
-                print(string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
-                print("===========================================")
+                lia.bootstrap("AssetDownload", "===========================================")
+                lia.bootstrap("AssetDownload", L("assetDownloadComplete"))
+                lia.bootstrap("AssetDownload", L("downloadSummary"))
+                lia.bootstrap("AssetDownload", string.format("Images: %d/%d completed (%d failed)", completedImages, totalImages, failedImages))
+                lia.bootstrap("AssetDownload", string.format("Sounds: %d/%d completed (%d failed)", completedSounds, totalSounds, failedSounds))
+                lia.bootstrap("AssetDownload", L("currentStatistics"))
+                lia.bootstrap("AssetDownload", string.format("Images: %d downloaded | %d stored", imageStats.downloaded, imageStats.stored))
+                lia.bootstrap("AssetDownload", string.format("Sounds: %d downloaded | %d stored", soundStats.downloaded, soundStats.stored))
+                lia.bootstrap("AssetDownload", string.format("Combined: %d downloaded | %d stored", imageStats.downloaded + soundStats.downloaded, imageStats.stored + soundStats.stored))
+                lia.bootstrap("AssetDownload", "===========================================")
                 if failedImages > 0 or failedSounds > 0 then
-                    print(L("warningAssetsFailedToDownload"))
+                    lia.warning(L("warningAssetsFailedToDownload"))
                     if failedImages > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), L("assetsDownloadWarning", failedImages, "image(s)")) end
                     if failedSounds > 0 then chat.AddText(Color(255, 150, 100), "[Asset Download] ", Color(255, 255, 255), L("assetsDownloadWarning", failedSounds, "sound(s)")) end
                 else

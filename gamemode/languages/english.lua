@@ -2891,4 +2891,8 @@ Reload: Drop]],
     gameBunnyHop = "Bunny Hop",
     uiLiliaSkin = "Lilia Skin",
     uiLiliaFrameNotification = "Lilia frame notification!",
+    themeWine = "Wine",
+    themeViolet = "Violet",
+    themeMoss = "Moss",
+    themeCoral = "Coral",
 }

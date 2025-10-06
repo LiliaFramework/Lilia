@@ -14,12 +14,12 @@ The `lia.darkrp` library provides comprehensive DarkRP compatibility functions f
 
 **Purpose**
 
-Checks if a position is empty and suitable for spawning entities.
+Checks if a position is empty and suitable for spawning entities by verifying no solid contents and no blocking entities within a 35-unit radius.
 
 **Parameters**
 
 * `position` (*Vector*): The position to check.
-* `entitiesToIgnore` (*table*): Optional table of entities to ignore during the check.
+* `entitiesToIgnore` (*table*, optional): Table of entities to ignore during the check.
 
 **Returns**
 
@@ -52,15 +52,15 @@ end
 
 **Purpose**
 
-Finds an empty position near a starting position by searching in expanding circles.
+Finds an empty position near a starting position by searching in expanding circles. Checks both the position and position + checkArea for emptiness.
 
 **Parameters**
 
 * `startPos` (*Vector*): The starting position to search from.
-* `entitiesToIgnore` (*table*): Optional table of entities to ignore.
+* `entitiesToIgnore` (*table*, optional): Table of entities to ignore.
 * `maxDistance` (*number*): Maximum distance to search.
 * `searchStep` (*number*): Step size for the search.
-* `checkArea` (*Vector*): Area to check around each position.
+* `checkArea` (*Vector*): Area to check around each position (added to position for collision check).
 
 **Returns**
 
@@ -222,4 +222,89 @@ Shared.
 ```lua
 -- Create a category (placeholder)
 lia.darkrp.createCategory()
+```
+
+---
+
+### DarkRP.removeChatCommand
+
+**Purpose**
+
+Removes a DarkRP chat command (compatibility function).
+
+**Parameters**
+
+*None*
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+```lua
+-- Remove a DarkRP chat command
+DarkRP.removeChatCommand()
+```
+
+---
+
+### DarkRP.defineChatCommand
+
+**Purpose**
+
+Defines a DarkRP chat command (compatibility function).
+
+**Parameters**
+
+* `cmd` (*string*): The command name.
+* `callback` (*function*): The callback function for the command.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+```lua
+-- Define a DarkRP chat command
+DarkRP.defineChatCommand("test", function(ply, args)
+    ply:notify("Test command executed!")
+end)
+```
+
+---
+
+### DarkRP.definePrivilegedChatCommand
+
+**Purpose**
+
+Defines a privileged DarkRP chat command (compatibility function).
+
+**Parameters**
+
+* `cmd` (*string*): The command name.
+* `priv` (*string*): The required privilege.
+* `callback` (*function*): The callback function for the command.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+```lua
+-- Define a privileged DarkRP chat command
+DarkRP.definePrivilegedChatCommand("admincmd", "Admin Access", function(ply, args)
+    ply:notify("Admin command executed!")
+end)
 ```

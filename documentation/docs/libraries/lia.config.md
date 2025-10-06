@@ -19,7 +19,10 @@ Adds a new configuration option to the config system.
 **Parameters**
 
 * `key` (*string*): The configuration key.
-* `data` (*table*): The configuration data table containing type, default, etc.
+* `name` (*string*): The display name for the configuration.
+* `value` (*any*): The default value for the configuration.
+* `callback` (*function*, optional): Function called when the value changes.
+* `data` (*table*): Configuration data table containing type, category, desc, etc.
 
 **Returns**
 
@@ -72,15 +75,15 @@ lia.config.add("ThemeColor", {
 
 **Purpose**
 
-Gets all configuration options.
+Gets configuration options for a specific key or all options if no key provided.
 
 **Parameters**
 
-*None*
+* `key` (*string*, optional): The configuration key to get options for.
 
 **Returns**
 
-* `options` (*table*): Table of all configuration options.
+* `options` (*table*): Table of configuration options.
 
 **Realm**
 
@@ -171,6 +174,7 @@ Forces a configuration value to be set without triggering callbacks.
 
 * `key` (*string*): The configuration key.
 * `value` (*any*): The value to set.
+* `noSave` (*boolean*, optional): If true, prevents saving to database.
 
 **Returns**
 
@@ -258,6 +262,7 @@ Gets a configuration value.
 **Parameters**
 
 * `key` (*string*): The configuration key.
+* `default` (*any*, optional): Default value to return if key not found.
 
 **Returns**
 
@@ -477,11 +482,11 @@ lia.command.add("saveconfig", {
 
 **Purpose**
 
-Resets a configuration value to its default.
+Resets all configuration values to their defaults.
 
 **Parameters**
 
-* `key` (*string*): The configuration key to reset.
+*None*
 
 **Returns**
 
@@ -494,27 +499,15 @@ Server.
 **Example Usage**
 
 ```lua
--- Reset a configuration to default
-lia.config.reset("ServerName")
-
--- Reset multiple configurations
-local function resetMultiple()
-    lia.config.reset("MaxPlayers")
-    lia.config.reset("EnablePVP")
-    lia.config.reset("ThemeColor")
-end
+-- Reset all configurations to defaults
+lia.config.reset()
 
 -- Use in a command
-lia.command.add("resetconfig", {
-    arguments = {
-        {name = "key", type = "string"}
-    },
+lia.command.add("resetallconfigs", {
     privilege = "Admin Access",
     onRun = function(client, arguments)
-        lia.config.reset(arguments[1])
-        client:notify("Configuration reset: " .. arguments[1])
+        lia.config.reset()
+        client:notify("All configurations reset to defaults")
     end
 })
 ```
-
-

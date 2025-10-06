@@ -5,6 +5,8 @@ function PANEL:Init()
     self.editable = true
     self.hovered = false
     self:SetupTransition("HoverAlpha", 6, function(s) return s:IsHovered() end)
+    self.panelColor = lia.derma.getNextPanelColor()
+    self.borderColor = lia.derma.getNextPanelColor()
     self:SetupUI()
 end
 
@@ -60,12 +62,12 @@ function PANEL:PerformLayout(w, h)
 end
 
 function PANEL:Paint(w, h)
-    local bgColor = lia.color.theme.panel[3]
+    local bgColor = self.panelColor
     -- Hover effect
     if self.hovered then bgColor = ColorAlpha(lia.config.get("Color"), 10) end
     lia.derma.rect(0, 0, w, h):Rad(6):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
     -- Bottom border
-    surface.SetDrawColor(lia.color.theme.panel[2])
+    surface.SetDrawColor(self.borderColor)
     surface.DrawRect(0, h - 1, w, 1)
 end
 

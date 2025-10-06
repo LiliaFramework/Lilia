@@ -14,17 +14,15 @@ The discord library (`lia.discord`) provides a comprehensive system for Discord 
 
 **Purpose**
 
-Relays a message to Discord via webhook.
+Relays an embed message to Discord via webhook using the configured webhook URL.
 
 **Parameters**
 
-* `message` (*string*): The message to relay.
-* `webhookUrl` (*string*): The Discord webhook URL.
-* `options` (*table*): Optional webhook options.
+* `embed` (*table*): The embed data table containing title, description, color, timestamp, footer, etc.
 
 **Returns**
 
-* `success` (*boolean*): True if message was sent successfully.
+*None*
 
 **Realm**
 
@@ -33,43 +31,76 @@ Server.
 **Example Usage**
 
 ```lua
--- Relay a message to Discord
-local function relayMessage(message, webhookUrl, options)
-    return lia.discord.relayMessage(message, webhookUrl, options)
+-- Relay an embed message to Discord
+local function relayDiscordMessage(embed)
+    lia.discord.relayMessage(embed)
 end
 
 -- Use in a function
 local function sendPlayerJoin(client)
-    local message = "Player " .. client:Name() .. " joined the server"
-    local webhookUrl = lia.config.get("DiscordWebhookURL")
-    if webhookUrl then
-        lia.discord.relayMessage(message, webhookUrl)
-    end
+    local embed = {
+        title = "Player Joined",
+        description = "Player " .. client:Name() .. " joined the server",
+        color = 7506394,
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }
+    lia.discord.relayMessage(embed)
 end
 
 -- Use in a hook
 hook.Add("PlayerInitialSpawn", "DiscordRelay", function(client)
-    local message = "Player " .. client:Name() .. " joined the server"
-    local webhookUrl = lia.config.get("DiscordWebhookURL")
-    if webhookUrl then
-        lia.discord.relayMessage(message, webhookUrl)
-    end
+    local embed = {
+        title = "Player Joined",
+        description = "Player " .. client:Name() .. " joined the server",
+        color = 7506394,
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }
+    lia.discord.relayMessage(embed)
 end)
 
 -- Use in a command
 lia.command.add("discordmessage", {
     arguments = {
+        {name = "title", type = "string"},
         {name = "message", type = "string"}
     },
     privilege = "Admin Access",
     onRun = function(client, arguments)
-        local webhookUrl = lia.config.get("DiscordWebhookURL")
-        if webhookUrl then
-            local success = lia.discord.relayMessage(arguments[1], webhookUrl)
-            client:notify("Message " .. (success and "sent" or "failed to send"))
-        else
-            client:notify("Discord webhook not configured")
-        end
+        local embed = {
+            title = arguments[1],
+            description = arguments[2],
+            color = 7506394,
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }
+        lia.discord.relayMessage(embed)
+        client:notify("Message sent to Discord")
     end
 })
+
+-- Advanced embed example
+local function sendRichEmbed()
+    local embed = {
+        title = "Server Status",
+        description = "Server is online and accepting connections",
+        color = 65280, -- Green color
+        fields = {
+            {
+                name = "Players Online",
+                value = tostring(player.GetCount()),
+                inline = true
+            },
+            {
+                name = "Uptime",
+                value = "2h 30m",
+                inline = true
+            }
+        },
+        footer = {
+            text = "Lilia Framework",
+            icon_url = "https://example.com/icon.png"
+        },
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }
+    lia.discord.relayMessage(embed)
+end
 ```

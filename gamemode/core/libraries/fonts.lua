@@ -354,12 +354,10 @@ lia.font.register("liaCharButtonFont", {
 
 if CLIENT then
     function lia.font.refresh()
-        print("lia.font.refresh() called")
         -- Clear stored fonts and re-register with current configuration
         lia.font.stored = {}
         -- Get the current font configuration
         local currentFont = lia.config.get("Font", "Montserrat Medium")
-        print("Refreshing fonts with:", currentFont)
         -- Force VGUI to refresh font cache
         if vgui and vgui.RefreshFonts then vgui.RefreshFonts() end
         -- Clear surface font cache to force re-creation
@@ -770,24 +768,24 @@ hook.Run("PostLoadFonts", lia.config.get("Font", "Montserrat Medium"), lia.confi
 -- Console command to manually refresh fonts for testing
 if CLIENT then
     concommand.Add("lia_refresh_fonts", function()
-        print("Refreshing fonts...")
+        lia.information("Refreshing fonts...")
         local currentFont = lia.config.get("Font", "Montserrat Medium")
-        print("Current font setting:", currentFont)
+        lia.information("Current font setting: " .. currentFont)
         lia.font.refresh()
-        print("Fonts refreshed!")
-        print("Available fonts:", table.concat(lia.font.getAvailableFonts(), ", "))
+        lia.information("Fonts refreshed!")
+        lia.information("Available fonts: " .. table.concat(lia.font.getAvailableFonts(), ", "))
     end)
 
     -- Debug command to check font status
     concommand.Add("lia_debug_fonts", function()
         local currentFont = lia.config.get("Font", "Montserrat Medium")
-        print("=== Font Debug Info ===")
-        print("Current font setting:", currentFont)
-        print("Stored fonts count:", table.Count(lia.font.stored))
-        print("Available fonts:", table.concat(lia.font.getAvailableFonts(), ", "))
+        lia.information("=== Font Debug Info ===")
+        lia.information("Current font setting: " .. currentFont)
+        lia.information("Stored fonts count: " .. table.Count(lia.font.stored))
+        lia.information("Available fonts: " .. table.concat(lia.font.getAvailableFonts(), ", "))
         -- Test a specific font
         surface.SetFont("ConfigFontLarge")
         local w, h = surface.GetTextSize("Test Text")
-        print("ConfigFontLarge test - Width:", w, "Height:", h)
+        lia.information("ConfigFontLarge test - Width: " .. w .. " Height: " .. h)
     end)
 end

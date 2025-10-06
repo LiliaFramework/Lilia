@@ -418,16 +418,18 @@ end
 
 **Purpose**
 
-Sets a data value for a key.
+Sets a data value for a key with optional global and map scope.
 
 **Parameters**
 
 * `key` (*string*): The data key.
 * `value` (*any*): The value to set.
+* `global` (*boolean*, optional): If true, sets data globally across all gamemodes and maps.
+* `ignoreMap` (*boolean*, optional): If true, ignores current map scope.
 
 **Returns**
 
-*None*
+* `path` (*string*): The data path where the value was stored.
 
 **Realm**
 
@@ -476,15 +478,17 @@ end
 
 **Purpose**
 
-Deletes a data value by key.
+Deletes a data value by key with optional global and map scope.
 
 **Parameters**
 
 * `key` (*string*): The data key to delete.
+* `global` (*boolean*, optional): If true, deletes data globally across all gamemodes and maps.
+* `ignoreMap` (*boolean*, optional): If true, ignores current map scope.
 
 **Returns**
 
-*None*
+* `success` (*boolean*): True if deletion was successful.
 
 **Realm**
 
@@ -612,11 +616,11 @@ end
 
 **Purpose**
 
-Saves persistence data to the database.
+Saves persistence data to the database for the specified entities.
 
 **Parameters**
 
-*None*
+* `entities` (*table*): Table of entity data to save.
 
 **Returns**
 
@@ -712,64 +716,6 @@ end
 ```
 
 ---
-
-### get
-
-**Purpose**
-
-Gets a data value by key.
-
-**Parameters**
-
-* `key` (*string*): The data key.
-
-**Returns**
-
-* `value` (*any*): The data value.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Get a data value
-local function getData(key)
-    return lia.data.get(key)
-end
-
--- Use in a function
-local function getPlayerStats(client)
-    local stats = lia.data.get("player_" .. client:SteamID())
-    if stats then
-        print("Player stats:", stats.kills, stats.deaths)
-        return stats
-    end
-    return nil
-end
-
--- Use in a command
-lia.command.add("getdata", {
-    arguments = {
-        {name = "key", type = "string"}
-    },
-    onRun = function(client, arguments)
-        local data = lia.data.get(arguments[1])
-        if data then
-            client:notify("Data: " .. util.TableToJSON(data))
-        else
-            client:notify("No data found")
-        end
-    end
-})
-
--- Use in a function
-local function checkDataExists(key)
-    local data = lia.data.get(key)
-    return data ~= nil
-end
-```
 
 ---
 

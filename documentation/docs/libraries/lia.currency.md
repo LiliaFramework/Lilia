@@ -14,15 +14,15 @@ The currency library (`lia.currency`) provides a comprehensive system for managi
 
 **Purpose**
 
-Gets the current currency symbol.
+Formats a currency amount with the appropriate symbol and singular/plural form.
 
 **Parameters**
 
-*None*
+* `amount` (*number*): The amount of currency to format.
 
 **Returns**
 
-* `symbol` (*string*): The currency symbol.
+* `formatted` (*string*): The formatted currency string.
 
 **Realm**
 
@@ -31,29 +31,34 @@ Shared.
 **Example Usage**
 
 ```lua
--- Get the currency symbol
-local function getCurrencySymbol()
-    return lia.currency.get()
+-- Format a currency amount
+local function formatMoney(amount)
+    return lia.currency.get(amount)
 end
 
 -- Use in a function
-local function formatMoney(amount)
-    local symbol = lia.currency.get()
-    return symbol .. amount
+local function showFormattedMoney(amount)
+    local formatted = lia.currency.get(amount)
+    print("You have " .. formatted)
 end
 
 -- Use in a display
 local function showMoney(amount)
-    local symbol = lia.currency.get()
-    draw.SimpleText(symbol .. amount, "liaMediumFont", 10, 10, Color(255, 255, 255))
+    local formatted = lia.currency.get(amount)
+    draw.SimpleText(formatted, "liaMediumFont", 10, 10, Color(255, 255, 255))
 end
 
 -- Use in a command
 lia.command.add("showmoney", {
+    arguments = {
+        {name = "amount", type = "number"}
+    },
     onRun = function(client, arguments)
-        local symbol = lia.currency.get()
-        local money = client:getChar():getMoney()
-        client:notify("You have " .. symbol .. money)
+        local amount = tonumber(arguments[1])
+        if amount then
+            local formatted = lia.currency.get(amount)
+            client:notify("Formatted amount: " .. formatted)
+        end
     end
 })
 ```
@@ -68,12 +73,13 @@ Spawns a money entity at the specified position.
 
 **Parameters**
 
-* `position` (*Vector*): The position to spawn the money at.
+* `pos` (*Vector*): The position to spawn the money at.
 * `amount` (*number*): The amount of money to spawn.
+* `angle` (*Angle*, optional): The angle for the spawned money entity.
 
 **Returns**
 
-* `moneyEntity` (*Entity*): The spawned money entity.
+* `moneyEntity` (*Entity*): The spawned money entity or nil if spawning failed.
 
 **Realm**
 
@@ -83,16 +89,17 @@ Server.
 
 ```lua
 -- Spawn money at a position
-local function spawnMoneyAt(pos, amount)
-    return lia.currency.spawn(pos, amount)
+local function spawnMoneyAt(pos, amount, angle)
+    return lia.currency.spawn(pos, amount, angle)
 end
 
 -- Use in a function
 local function dropMoney(client, amount)
     local pos = client:GetPos() + client:GetForward() * 50
-    local money = lia.currency.spawn(pos, amount)
+    local angle = client:GetAngles()
+    local money = lia.currency.spawn(pos, amount, angle)
     if money then
-        client:notify("Dropped " .. lia.currency.get() .. amount)
+        client:notify("Dropped " .. lia.currency.get(amount))
     end
 end
 
@@ -105,8 +112,13 @@ lia.command.add("dropmoney", {
         local amount = tonumber(arguments[1])
         if amount and amount > 0 then
             local pos = client:GetPos() + client:GetForward() * 50
-            lia.currency.spawn(pos, amount)
-            client:notify("Dropped " .. lia.currency.get() .. amount)
+            local angle = client:GetAngles()
+            local money = lia.currency.spawn(pos, amount, angle)
+            if money then
+                client:notify("Dropped " .. lia.currency.get(amount))
+            else
+                client:notify("Failed to drop money")
+            end
         else
             client:notify("Invalid amount")
         end
@@ -116,77 +128,7 @@ lia.command.add("dropmoney", {
 -- Use in a timer
 timer.Create("SpawnMoney", 60, 0, function()
     local pos = Vector(math.random(-1000, 1000), math.random(-1000, 1000), 0)
-    lia.currency.spawn(pos, math.random(10, 100))
+    local angle = Angle(0, math.random(0, 360), 0)
+    lia.currency.spawn(pos, math.random(10, 100), angle)
 end)
 ```
-
-
-
-
-
----
-
-### get
-
-**Purpose**
-
-Gets the money amount for a character.
-
-**Parameters**
-
-* `character` (*Character*): The character to get money from.
-
-**Returns**
-
-* `amount` (*number*): The money amount.
-
-**Realm**
-
-Shared.
-
-**Example Usage**
-
-```lua
--- Get money amount for a character
-local function getMoney(character)
-    return lia.currency.get(character)
-end
-
--- Use in a function
-local function showMoney(client)
-    local character = client:getChar()
-    if character then
-        local money = lia.currency.get(character)
-        client:notify("You have " .. lia.currency.format(money))
-    end
-end
-
--- Use in a command
-lia.command.add("checkmoney", {
-    arguments = {
-        {name = "player", type = "string"}
-    },
-    onRun = function(client, arguments)
-        local target = lia.command.findPlayer(client, arguments[1])
-        if target then
-            local character = target:getChar()
-            if character then
-                local money = lia.currency.get(character)
-                client:notify(target:Name() .. " has " .. lia.currency.format(money))
-            end
-        else
-            client:notify("Player not found")
-        end
-    end
-})
-
--- Use in a function
-local function createMoneyDisplay(character)
-    local money = lia.currency.get(character)
-    local formatted = lia.currency.format(money)
-    local label = vgui.Create("DLabel")
-    label:SetText(formatted)
-    return label
-end
-```
-

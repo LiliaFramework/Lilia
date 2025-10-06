@@ -1,4 +1,4 @@
-﻿function lia.util.FindPlayersInBox(mins, maxs)
+﻿function lia.util.findPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
     local plyList = {}
     for _, v in pairs(entsList) do
@@ -16,7 +16,7 @@ function lia.util.getBySteamID(steamID)
     end
 end
 
-function lia.util.FindPlayersInSphere(origin, radius)
+function lia.util.findPlayersInSphere(origin, radius)
     local plys = {}
     local r2 = radius ^ 2
     for _, client in player.Iterator() do
@@ -361,6 +361,19 @@ else
         local x, y = panel:GetPos()
         local w, h = panel:GetSize()
         local sw, sh = ScrW(), ScrH()
+        -- Check if logo exists and adjust positioning
+        local logoMargin = 0
+        if IsValid(lia.gui.character) and IsValid(lia.gui.character.logo) then
+            local logoX, logoY = lia.gui.character.logo:GetPos()
+            local logoW, logoH = lia.gui.character.logo:GetSize()
+            local logoRight = logoX + logoW
+            local logoBottom = logoY + logoH
+            -- If menu would overlap with logo area, add margin
+            if x < logoRight and x + w > logoX and y < logoBottom and y + h > logoY then
+                logoMargin = logoH + (ScrH() * 0.01) -- Logo height + padding
+            end
+        end
+
         if x < 5 then
             x = 5
         elseif x + w > sw - 5 then
@@ -373,6 +386,8 @@ else
             y = sh - 5 - h
         end
 
+        -- Apply logo margin if needed
+        if logoMargin > 0 and y < logoMargin then y = logoMargin end
         panel:SetPos(x, y)
     end
 

@@ -16,6 +16,10 @@ function PANEL:Init()
     self.content = canvas
     hook.Run("LoadCharInformation")
     self:GenerateSections()
+    hook.Add("OnThemeChanged", self, self.OnThemeChanged)
+    -- Ensure colors are up to date when panel opens - refresh immediately and after a short delay
+    self:Refresh()
+    timer.Simple(0.1, function() if IsValid(self) then self:Refresh() end end)
     timer.Create("liaCharInfo_UpdateValues", 1, 0, function()
         if IsValid(self) then
             self:setup()
@@ -40,7 +44,7 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
     lbl:SetWide(lw + 20)
     lbl:DockMargin(8, 0, 10, 0)
     lbl:SetContentAlignment(5)
-    lbl:SetTextColor(lia.color.theme.text)
+    lbl:SetTextColor(lia.color.theme.text or Color(210, 235, 235))
     local txt = entry:Add("liaEntry")
     txt:Dock(FILL)
     txt:DockMargin(0, 4, 8, 4)
@@ -71,7 +75,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     lbl:SetWide(lbl:GetWide() + 20)
     lbl:DockMargin(8, 0, 10, 0)
     lbl:SetContentAlignment(5)
-    lbl:SetTextColor(lia.color.theme.text)
+    lbl:SetTextColor(lia.color.theme.text or Color(210, 235, 235))
     local bar = entry:Add("DPanel")
     bar:Dock(FILL)
     bar:DockMargin(0, 6, 8, 6)
@@ -86,7 +90,7 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
         if frac > 0 then lia.derma.rect(0, 0, w * frac, h):Rad(6):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw() end
         -- Text
         local text = L("barProgress", math.Round(val), math.Round(mx))
-        draw.SimpleText(text, "liaSmallFont", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, "liaSmallFont", w / 2, h / 2, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     parent[name] = bar
@@ -135,7 +139,7 @@ function PANEL:CreateSection(parent, title)
         -- Draw Lilia-styled section background
         lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw()
         -- Draw section title (centered)
-        draw.SimpleText(L(title), "liaSmallFont", w / 2, 8, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        draw.SimpleText(L(title), "liaSmallFont", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         -- Draw subtle line under title
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
         surface.DrawLine(12, 28, w - 12, 28)
@@ -166,9 +170,27 @@ function PANEL:CreateSection(parent, title)
     return contents
 end
 
+function PANEL:OnRemove()
+    hook.Remove("OnThemeChanged", self)
+end
+
+function PANEL:OnThemeChanged()
+    if not IsValid(self) then return end
+    self:Refresh()
+end
+
 function PANEL:Refresh()
+    -- Ensure current theme is applied before regenerating
+    self:ApplyCurrentTheme()
+    -- Clear content and regenerate with current theme colors
     self.content:Clear()
     self:GenerateSections()
+end
+
+function PANEL:ApplyCurrentTheme()
+    -- Ensure the current theme is properly applied
+    local currentTheme = lia.color.getCurrentTheme()
+    if currentTheme and lia.color.themes[currentTheme] then lia.color.theme = table.Copy(lia.color.themes[currentTheme]) end
 end
 
 function PANEL:setup()
