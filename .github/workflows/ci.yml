@@ -83,6 +83,7 @@ jobs:
 
   compute-version:
     if: github.repository == 'LiliaFramework/Lilia' && github.ref == 'refs/heads/main'
+    needs: linter
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.calc_version.outputs.version }}
