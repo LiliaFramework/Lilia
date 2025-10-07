@@ -985,7 +985,7 @@ else
                     row:DockMargin(12, 4, 12, 4)
                     row:SetTall(88)
                     row.Paint = function(_, w, h)
-                        lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel_alpha[2]):Shape(lia.derma.SHAPE_IOS):Draw()
+                        lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw()
                         draw.SimpleText(info.title, "Fated.18", 12, 24, lia.color.theme.text)
                         draw.SimpleText(info.desc, "Fated.14", 12, h - 24, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
                     end

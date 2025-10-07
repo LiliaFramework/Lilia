@@ -22,8 +22,8 @@ function PANEL:Init()
     self.arguments = {}
     self.scroll = self:Add("liaScrollPanel")
     self.scroll:SetPos(4, 31)
-    self.scroll:SetSize(width - 8, height - 66)
-    self.scroll:GetVBar():SetWide(0)
+    self.scroll:SetSize(width - 16, height - 66)
+    self.scroll:GetVBar():SetWide(8)
     self.lastY = 0
     self.list = {}
     self.filtered = {}
@@ -56,7 +56,7 @@ function PANEL:setActive(state)
     if state then
         self.entry = self:Add("EditablePanel")
         self.entry:SetPos(self.x + 4, self.y + self:GetTall() - 32)
-        self.entry:SetWide(self:GetWide() - 8)
+        self.entry:SetWide(self:GetWide() - 16)
         self.entry.OnRemove = function() hook.Run("FinishChat") end
         self.entry:SetTall(28)
         lia.chat.history = lia.chat.history or {}
@@ -74,6 +74,7 @@ function PANEL:setActive(state)
             if IsValid(self.commandList) then
                 self.commandList:Remove()
                 self.commandList = nil
+                self.commandListCreateTime = nil
             end
 
             if IsValid(self.entry) then self.entry:Remove() end
@@ -106,12 +107,21 @@ function PANEL:setActive(state)
                 if IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandListCreateTime = nil
                 end
 
-                self.commandList = self:Add("liaScrollPanel")
-                self.commandList:SetPos(4, 31)
-                self.commandList:SetSize(self:GetWide() - 8, self:GetTall() - 66)
+                self.commandList = vgui.Create("liaScrollPanel")
+                local listHeight = math.min(self:GetTall() - 66, 200)
+                local listWidth = self:GetWide() - 16
+                local chatX, chatY = self:LocalToScreen(0, 0)
+                local listY = chatY - listHeight - 4
+                if listY < 0 then listY = chatY + self:GetTall() + 4 end
+                self.commandList:SetPos(chatX + 4, listY)
+                self.commandList:SetSize(listWidth, listHeight)
                 self.commandList:GetVBar():SetWide(8)
+                self.commandList:MakePopup()
+                self.commandList:SetKeyboardInputEnabled(false)
+                self.commandListCreateTime = CurTime()
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
                     if not tobool(string.find(cmdName, input:sub(2), 1, true)) then continue end
                     local btn = self.commandList:Add("DButton")
@@ -130,6 +140,7 @@ function PANEL:setActive(state)
                         self.text:RequestFocus()
                         self.commandList:Remove()
                         self.commandList = nil
+                        self.commandListCreateTime = nil
                     end
                 end
 
@@ -138,6 +149,7 @@ function PANEL:setActive(state)
                 if IsValid(self.commandList) then
                     self.commandList:Remove()
                     self.commandList = nil
+                    self.commandListCreateTime = nil
                 end
 
                 self.commandIndex = 0
@@ -151,33 +163,40 @@ function PANEL:setActive(state)
             if key == KEY_ESCAPE and IsValid(self.commandList) then
                 self.commandList:Remove()
                 self.commandList = nil
+                self.commandListCreateTime = nil
                 return true
             end
 
             if entry:GetText():sub(1, 1) == "/" and key == KEY_TAB and IsValid(self.commandList) then
-                local canvasChildren = self.commandList:GetCanvas():GetChildren()
-                if #canvasChildren > 0 then
-                    self.commandIndex = (self.commandIndex or 0) + 1
-                    if self.commandIndex > #canvasChildren then self.commandIndex = 1 end
-                    for idx, listChild in ipairs(canvasChildren) do
-                        listChild.commandIndex = idx
-                        if not listChild.PaintConfigured then
-                            listChild.Paint = function(btn, bw, bh)
-                                local isSel = btn.commandIndex == self.commandIndex
-                                surface.SetDrawColor(isSel and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_black, 200))
-                                surface.DrawRect(0, 0, bw, bh)
-                                if IsValid(btn.text) then btn.text:SetTextColor(isSel and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_white, 200)) end
+                local canvas = self.commandList:GetCanvas()
+                if IsValid(canvas) then
+                    local canvasChildren = canvas:GetChildren()
+                    if #canvasChildren > 0 then
+                        self.commandIndex = (self.commandIndex or 0) + 1
+                        if self.commandIndex > #canvasChildren then self.commandIndex = 1 end
+                        for idx, listChild in ipairs(canvasChildren) do
+                            listChild.commandIndex = idx
+                            if not listChild.PaintConfigured then
+                                listChild.Paint = function(btn, bw, bh)
+                                    local isSel = btn.commandIndex == self.commandIndex
+                                    surface.SetDrawColor(isSel and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_black, 200))
+                                    surface.DrawRect(0, 0, bw, bh)
+                                    if IsValid(btn.text) then btn.text:SetTextColor(isSel and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_white, 200)) end
+                                end
+
+                                listChild.PaintConfigured = true
                             end
-
-                            listChild.PaintConfigured = true
                         end
-                    end
 
-                    local selected = canvasChildren[self.commandIndex]
-                    if IsValid(selected) then
-                        local selName = selected:GetText():match("^/([^ ]+)")
-                        self.text:SetText("/" .. (selName or ""))
-                        self.text:SetCaretPos(#self.text:GetText())
+                        local selected = canvasChildren[self.commandIndex]
+                        if IsValid(selected) then
+                            local selName = selected:GetText():match("^/([^ ]+)")
+                            if selName then
+                                self.text:SetText("/" .. selName)
+                                self.text:SetCaretPos(#self.text:GetText())
+                            end
+                        end
+
                         self.text:RequestFocus()
                     end
                 end
@@ -188,8 +207,14 @@ function PANEL:setActive(state)
 
         self.text.OnLoseFocus = function(entry)
             if IsValid(self.commandList) then
-                self.commandList:Remove()
-                self.commandList = nil
+                local currentText = entry:GetText()
+                local timeSinceCreation = self.commandListCreateTime and (CurTime() - self.commandListCreateTime) or 0
+                local isTypingCommand = currentText:sub(1, 1) == "/"
+                if not isTypingCommand and timeSinceCreation > 0.5 then
+                    self.commandList:Remove()
+                    self.commandList = nil
+                    self.commandListCreateTime = nil
+                end
             end
 
             entry:RequestFocus()
@@ -277,7 +302,7 @@ function PANEL:addText(...)
 
     markup = markup .. "</font>"
     local panel = self.scroll:Add("liaMarkupPanel")
-    panel:SetWide(self:GetWide() - 8)
+    panel:SetWide(self:GetWide() - 16)
     panel:setMarkup(markup, OnDrawText)
     panel.start = CurTime() + 5
     panel.finish = panel.start + 5
@@ -298,8 +323,8 @@ function PANEL:addText(...)
         panel:SetVisible(false)
     else
         panel:SetPos(0, self.lastY)
-        self.lastY = self.lastY + panel:GetTall()
-        self.scroll:ScrollToChild(panel)
+        self.lastY = self.lastY + panel:GetTall() + 2
+        timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(panel) then self.scroll:ScrollToChild(panel) end end)
     end
     return panel:IsVisible()
 end
@@ -331,18 +356,38 @@ function PANEL:setFilter(filter, state)
         end
     end
 
-    if IsValid(lastChild) then self.scroll:ScrollToChild(lastChild) end
+    if IsValid(lastChild) then timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(lastChild) then self.scroll:ScrollToChild(lastChild) end end) end
 end
 
 function PANEL:Think()
     if gui.IsGameUIVisible() and self.active then
         self.tabs:SetVisible(false)
         self.active = false
+        if IsValid(self.commandList) then
+            self.commandList:Remove()
+            self.commandList = nil
+            self.commandListCreateTime = nil
+        end
+
         if IsValid(self.entry) then self.entry:Remove() end
     end
 
     if not self.active then self.tabs:SetVisible(false) end
-    if self.active and IsValid(self.text) and not self.text:HasFocus() and IsValid(self.commandList) then
+    if self.active and IsValid(self.text) and IsValid(self.commandList) then
+        local textHasFocus = self.text:HasFocus()
+        local currentText = self.text:GetText()
+        local timeSinceCreation = self.commandListCreateTime and (CurTime() - self.commandListCreateTime) or 0
+        local isTypingCommand = currentText:sub(1, 1) == "/"
+        if not textHasFocus and not isTypingCommand and timeSinceCreation > 0.1 then
+            self.commandList:Remove()
+            self.commandList = nil
+            self.commandListCreateTime = nil
+        end
+    end
+end
+
+function PANEL:OnRemove()
+    if IsValid(self.commandList) then
         self.commandList:Remove()
         self.commandList = nil
     end

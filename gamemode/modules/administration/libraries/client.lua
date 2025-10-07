@@ -146,7 +146,7 @@ function MODULE:PopulateAdminTabs(pages)
                 panelRef = panel
                 panel:Clear()
                 panel:DockPadding(6, 6, 6, 6)
-                panel.Paint = function() end
+                panel.Paint = nil
                 if IsValid(panel.sheet) then panel.sheet:Remove() end
                 panel.sheet = panel:Add("liaTabs")
                 panel.sheet:Dock(FILL)
@@ -345,12 +345,15 @@ function MODULE:PopulateAdminTabs(pages)
             icon = "icon16/flag_red.png",
             drawFunc = function(panel)
                 flagsPanel = panel
-                if flagsData then
-                    OpenFlagsPanel(panel, flagsData)
-                    flagsData = nil
-                else
-                    net.Start("liaRequestAllFlags")
-                    net.SendToServer()
+                if not panel.flagsInitialized then
+                    panel.flagsInitialized = true
+                    if flagsData then
+                        self:OpenFlagsPanel(panel, flagsData)
+                        flagsData = nil
+                    else
+                        net.Start("liaRequestAllFlags")
+                        net.SendToServer()
+                    end
                 end
             end
         })

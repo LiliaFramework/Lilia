@@ -52,7 +52,7 @@ function PANEL:AddRow(builder)
     p:Dock(TOP)
     p:DockMargin(0, 0, 0, self.spacingY)
     p:DockPadding(self.padding, self.padding, self.padding, self.padding)
-    p.Paint = function(pnl, w, h) derma.SkinHook("Paint", "Panel", pnl, w, h) end
+    p.Paint = function() end
     local row = {
         panel = p,
         filterText = "",

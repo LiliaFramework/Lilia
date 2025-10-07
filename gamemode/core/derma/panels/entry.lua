@@ -10,7 +10,7 @@ function PANEL:Init()
     self.textEntry:SetText('')
     self.textEntry.OnCloseFocus = function() self.action(self:GetValue()) end
     self._text_offset = 0
-    self.panelColor = lia.derma.getNextPanelColor()
+    self.panelColor = lia.color.theme.panel[1]
     self.textEntry.Paint = nil
     self.textEntry.PaintOver = function(s, w, h)
         if not s._shadowLerp then s._shadowLerp = 5 end

@@ -203,7 +203,7 @@ properties.Add("npc_weapon", {
                 icon:SetName(WeaponTable.PrintName and language.GetPhrase(WeaponTable.PrintName) or "#" .. WeaponTable.ClassName)
                 icon:SetAdminOnly(WeaponTable.AdminOnly or false)
                 icon.DoClick = function()
-                    changeWep(_, ent, WeaponTable.ClassName)
+                    changeWep(properties.Get("npc_weapon"), ent, WeaponTable.ClassName)
                     frame:Close()
                 end
 

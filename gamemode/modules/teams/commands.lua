@@ -209,8 +209,18 @@ lia.command.add("setclass", {
                 local options = {}
                 local targetName = prefix and prefix[1]
                 local target = targetName and lia.util.findPlayer(client, targetName)
-                for _, v in pairs(lia.class.list) do
-                    if not target or not target:getChar() or target:getChar():getClass() ~= v.uniqueID then options[L(v.name)] = v.uniqueID end
+                if not lia.class.list or table.IsEmpty(lia.class.list) then return options end
+                if target and target:getChar() then
+                    local targetFaction = target:Team()
+                    local factionClasses = lia.faction.getClasses(targetFaction)
+                    if not factionClasses or #factionClasses == 0 then return options end
+                    for _, v in pairs(lia.class.list) do
+                        if v.faction == targetFaction then
+                            local canAccess = true
+                            if lia.class.hasWhitelist(v.index) then canAccess = target:hasClassWhitelist(v.index) end
+                            if canAccess and target:getChar():getClass() ~= v.uniqueID then options[L(v.name)] = v.uniqueID end
+                        end
+                    end
                 end
                 return options
             end
@@ -220,6 +230,23 @@ lia.command.add("setclass", {
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
+            return
+        end
+
+        if not target:getChar() then
+            client:notifyErrorLocalized("invalidTarget")
+            return
+        end
+
+        if not lia.class.list or table.IsEmpty(lia.class.list) then
+            client:notifyErrorLocalized("noClassesAvailable")
+            return
+        end
+
+        local targetFaction = target:Team()
+        local factionClasses = lia.faction.getClasses(targetFaction)
+        if not factionClasses or #factionClasses == 0 then
+            client:notifyErrorLocalized("factionHasNoClasses")
             return
         end
 

@@ -553,7 +553,7 @@ function GM:SetupBotPlayer(client)
     if not invType then return end
     local inventory = lia.inventory.new(invType)
     local character = lia.char.new({
-        name = client:Name(),
+        name = lia.util.generateRandomName(),
         faction = faction and faction.uniqueID or "unknown",
         desc = L("botDesc", botID),
         model = "models/player/phoenix.mdl",
@@ -582,6 +582,11 @@ function GM:SetupBotPlayer(client)
         local randomItemID = itemKeys[randomIndex]
         inventory:add(randomItemID)
         table.remove(itemKeys, randomIndex)
+    end
+
+    if lia.botCreator and IsValid(lia.botCreator) then
+        lia.botCreator:notifySuccessLocalized("botSpawned", character:getName())
+        lia.botCreator = nil
     end
 
     client:Spawn()

@@ -87,6 +87,7 @@ hook.Add("CAMI.OnPrivilegeRegistered", "liaAdminPrivAdded", function(priv)
     if lia.administrator.privileges[name] ~= nil then return end
     local min = tostring(priv.MinAccess or "user"):lower()
     lia.administrator.privileges[name] = min
+    if lia.administrator and lia.administrator.clearPrivilegeCategoryCache then lia.administrator.clearPrivilegeCategoryCache() end
     for groupName in pairs(lia.administrator.groups or {}) do
         if shouldGrant(groupName, min) then lia.administrator.groups[groupName][name] = true end
     end
@@ -102,6 +103,7 @@ hook.Add("CAMI.OnPrivilegeUnregistered", "liaAdminPrivRemoved", function(priv)
     if not isstring(name) or name == "" then return end
     if lia.administrator.privileges[name] == nil then return end
     lia.administrator.privileges[name] = nil
+    if lia.administrator and lia.administrator.clearPrivilegeCategoryCache then lia.administrator.clearPrivilegeCategoryCache() end
     for _, g in pairs(lia.administrator.groups or {}) do
         g[name] = nil
     end

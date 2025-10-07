@@ -2,14 +2,14 @@
 local function OpenLogsUI(panel, categorizedLogs)
     panel:Clear()
     panel:DockPadding(6, 6, 6, 6)
-    panel.Paint = function() end
+    panel.Paint = nil
     local sheet = panel:Add("liaTabs")
     sheet:Dock(FILL)
     for category, logs in pairs(categorizedLogs) do
         local page = vgui.Create("DPanel")
         page:Dock(FILL)
         page:DockPadding(10, 10, 10, 10)
-        page.Paint = function() end
+        page.Paint = nil
         local search = page:Add("DTextEntry")
         search:Dock(TOP)
         search:DockMargin(0, 0, 0, 15)

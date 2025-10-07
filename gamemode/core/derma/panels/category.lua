@@ -6,7 +6,7 @@ function PANEL:Init()
     self.bool_opened = false
     self.bool_header_centered = false
     self.content_size = 0
-    self.header_color = lia.derma.getNextPanelColor()
+    self.header_color = lia.color.theme.panel[1]
     self.header_color_standard = self.header_color
     self.header_color_opened = lia.color.theme.category_opened
     self.header = vgui.Create("Button", self)

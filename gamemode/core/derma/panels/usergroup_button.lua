@@ -8,7 +8,7 @@ function PANEL:Init()
     self:SetText("")
     self:SetupTransition("HoverAlpha", 6, function(s) return s:IsHovered() end)
     self:SetupTransition("SelectedAlpha", 8, function(s) return s.selected end)
-    self.panelColor = lia.derma.getNextPanelColor()
+    self.panelColor = lia.color.theme.panel[1]
 end
 
 function PANEL:SetGroup(groupName, groupData, isDefault)

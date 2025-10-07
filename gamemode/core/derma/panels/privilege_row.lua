@@ -5,8 +5,8 @@ function PANEL:Init()
     self.editable = true
     self.hovered = false
     self:SetupTransition("HoverAlpha", 6, function(s) return s:IsHovered() end)
-    self.panelColor = lia.derma.getNextPanelColor()
-    self.borderColor = lia.derma.getNextPanelColor()
+    self.panelColor = lia.color.theme.panel[1]
+    self.borderColor = lia.color.theme.panel[1]
     self:SetupUI()
 end
 

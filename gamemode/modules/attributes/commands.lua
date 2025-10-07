@@ -29,6 +29,11 @@
         Icon = "icon16/wrench.png"
     },
     onRun = function(client, arguments)
+        if table.IsEmpty(lia.attribs.list) then
+            client:notifyErrorLocalized("noAttributesRegistered")
+            return
+        end
+
         local target = lia.util.findPlayer(client, arguments[1])
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])
@@ -68,6 +73,11 @@ lia.command.add("checkattributes", {
         Icon = "icon16/zoom.png"
     },
     onRun = function(client, arguments)
+        if table.IsEmpty(lia.attribs.list) then
+            client:notifyErrorLocalized("noAttributesRegistered")
+            return
+        end
+
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
@@ -149,6 +159,11 @@ lia.command.add("charaddattrib", {
         Icon = "icon16/add.png"
     },
     onRun = function(client, arguments)
+        if table.IsEmpty(lia.attribs.list) then
+            client:notifyErrorLocalized("noAttributesRegistered")
+            return
+        end
+
         local target = lia.util.findPlayer(client, arguments[1])
         local attribName = arguments[2]
         local attribNumber = tonumber(arguments[3])

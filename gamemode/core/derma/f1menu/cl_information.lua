@@ -10,14 +10,31 @@ function PANEL:Init()
     scroll:InvalidateLayout(true)
     if not IsValid(scroll.VBar) then scroll:PerformLayout() end
     local canvas = scroll:GetCanvas()
-    canvas:DockPadding(8, 10, 8, 10)
+    canvas:DockPadding(8, 10, 8, 20)
     canvas.Paint = function() end
     self.content = canvas
     hook.Run("LoadCharInformation")
-    self:GenerateSections()
+    if lia.module and lia.module.list then
+        for _, module in pairs(lia.module.list) do
+            if module.LoadCharInformation then module:LoadCharInformation() end
+        end
+    end
+
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
-    self:Refresh()
-    timer.Simple(0.1, function() if IsValid(self) then self:Refresh() end end)
+    local function tryGenerate()
+        if not IsValid(self) then return end
+        local client = LocalPlayer()
+        local char = client:getChar()
+        local info = lia.module.list and lia.module.list["f1menu"] and lia.module.list["f1menu"].CharacterInformation or {}
+        if char and not table.IsEmpty(info) then
+            self:GenerateSections()
+            self:Refresh()
+        else
+            timer.Simple(0.1, tryGenerate)
+        end
+    end
+
+    timer.Simple(0.1, tryGenerate)
     timer.Create("liaCharInfo_UpdateValues", 1, 0, function()
         if IsValid(self) then
             self:setup()
@@ -100,8 +117,9 @@ function PANEL:AddSpacer(parent, height)
 end
 
 function PANEL:GenerateSections()
-    local info = lia.module.list["f1menu"].CharacterInformation
+    local info = lia.module.list and lia.module.list["f1menu"] and lia.module.list["f1menu"].CharacterInformation or {}
     local secs = {}
+    if table.IsEmpty(info) then return end
     for name, data in pairs(info) do
         secs[#secs + 1] = {
             name = name,
@@ -110,7 +128,7 @@ function PANEL:GenerateSections()
     end
 
     table.sort(secs, function(a, b) return a.data.priority < b.data.priority end)
-    for _, sec in ipairs(secs) do
+    for i, sec in ipairs(secs) do
         local container = self:CreateSection(self.content, sec.name)
         local fields = isfunction(sec.data.fields) and sec.data.fields() or sec.data.fields
         for _, f in ipairs(fields) do
@@ -122,6 +140,12 @@ function PANEL:GenerateSections()
 
             self:AddSpacer(container, 5)
         end
+
+        if i < #secs then
+            self:AddSpacer(container, 10)
+        else
+            self:AddSpacer(container, 15)
+        end
     end
 end
 
@@ -130,8 +154,7 @@ function PANEL:CreateSection(parent, title)
     frame:Dock(TOP)
     frame:DockMargin(0, 10, 0, 10)
     frame:SetTall(200)
-    frame.Paint = function(_, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw()
+    frame.Paint = function(_, w, _)
         draw.SimpleText(L(title), "liaSmallFont", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
         surface.DrawLine(12, 28, w - 12, 28)
@@ -172,6 +195,7 @@ function PANEL:Refresh()
     self:ApplyCurrentTheme()
     self.content:Clear()
     self:GenerateSections()
+    self:setup()
 end
 
 function PANEL:ApplyCurrentTheme()
@@ -180,7 +204,8 @@ function PANEL:ApplyCurrentTheme()
 end
 
 function PANEL:setup()
-    local info = lia.module.list["f1menu"].CharacterInformation
+    local info = lia.module.list and lia.module.list["f1menu"] and lia.module.list["f1menu"].CharacterInformation or {}
+    if table.IsEmpty(info) then return end
     for _, data in pairs(info) do
         local fields = isfunction(data.fields) and data.fields() or data.fields
         for _, f in ipairs(fields) do

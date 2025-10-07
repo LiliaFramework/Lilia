@@ -1750,3 +1750,149 @@ local function drawConditionalEntityText(entity, condition, text, offset)
         lia.util.drawEntText(entity, text, offset or 0)
     end
 end
+```
+
+---
+
+### generateRandomName
+
+**Purpose**
+
+Generates a random full name by combining a random first name and last name from provided or default name lists. This function is useful for creating random character names, NPC names, or any scenario requiring realistic-sounding English names for gaming/role-playing purposes.
+
+**Parameters**
+
+* `firstNames` (*table*, optional): Custom table of first names to choose from. If nil, uses the comprehensive default list of 124 names.
+* `lastNames` (*table*, optional): Custom table of last names to choose from. If nil, uses the comprehensive default list of 120 names.
+
+**Returns**
+
+* `name` (*string*): A randomly generated full name in the format "FirstName LastName".
+
+**Realm**
+
+Shared (works on both client and server).
+
+**Example Usage**
+
+```lua
+-- Use default name lists (124 first names × 120 last names = 14,880+ possible combinations)
+local function generateRandomName()
+    return lia.util.generateRandomName()
+end
+
+-- Basic usage
+local randomName = lia.util.generateRandomName()
+print("Generated name: " .. randomName) -- Output: "Michael Johnson"
+
+-- Use custom name lists
+local function generateCustomName()
+    local firstNames = {"Alice", "Bob", "Charlie"}
+    local lastNames = {"Smith", "Jones", "Williams"}
+    return lia.util.generateRandomName(firstNames, lastNames)
+end
+
+local customName = generateCustomName()
+print("Custom name: " .. customName) -- Output: "Bob Smith"
+
+-- Mix custom and default lists
+local function generateMixedName()
+    local firstNames = {"Xavier", "Yvonne", "Zara"}
+    -- Uses custom first names with default last names (120 options)
+    return lia.util.generateRandomName(firstNames)
+end
+
+local mixedName = generateMixedName()
+print("Mixed name: " .. mixedName) -- Output: "Yvonne Martinez"
+
+-- Use in character creation
+local function createRandomCharacter()
+    local charName = lia.util.generateRandomName()
+    local charClass = "citizen"
+    print("Created character: " .. charName .. " (" .. charClass .. ")")
+    return {
+        name = charName,
+        class = charClass
+    }
+end
+
+-- Generate multiple names for NPCs
+local function generateNPCNames(count)
+    local names = {}
+    for i = 1, count do
+        names[i] = lia.util.generateRandomName()
+    end
+    return names
+end
+
+-- Use in server-side NPC spawning
+local npcNames = generateNPCNames(5)
+for i, name in ipairs(npcNames) do
+    print("NPC " .. i .. ": " .. name)
+end
+
+-- Use in client-side UI for random name generation
+local function createNameGeneratorButton()
+    local button = vgui.Create("DButton")
+    button:SetText("Generate Name")
+    button.DoClick = function()
+        local newName = lia.util.generateRandomName()
+        print("New random name: " .. newName)
+        -- Update some UI element with the name
+        nameLabel:SetText(newName)
+    end
+    return button
+end
+
+-- Advanced usage with name validation
+local function generateUniqueCharacterName(existingNames)
+    local newName
+    local attempts = 0
+    local maxAttempts = 50
+
+    repeat
+        newName = lia.util.generateRandomName()
+        attempts = attempts + 1
+    until not table.HasValue(existingNames, newName) or attempts >= maxAttempts
+
+    if attempts >= maxAttempts then
+        print("Warning: Could not generate unique name after " .. maxAttempts .. " attempts")
+    end
+
+    return newName
+end
+
+-- Batch name generation for testing
+local function testNameGeneration(samples)
+    print("Testing name generation with " .. samples .. " samples:")
+    for i = 1, samples do
+        local name = lia.util.generateRandomName()
+        print(i .. ": " .. name)
+    end
+end
+
+-- Use in admin commands
+lia.command.add("generatename", {
+    description = "Generates a random name for testing purposes.",
+    privilege = "admin",
+    onRun = function(client, arguments)
+        local name = lia.util.generateRandomName()
+        client:notify("Generated name: " .. name)
+        return name
+    end
+})
+
+-- Use in data seeding/population
+local function populateTestData()
+    local testCharacters = {}
+    for i = 1, 100 do
+        local character = {
+            name = lia.util.generateRandomName(),
+            level = math.random(1, 50),
+            class = "citizen"
+        }
+        table.insert(testCharacters, character)
+    end
+    return testCharacters
+end
+```

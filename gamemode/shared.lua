@@ -1,4 +1,4 @@
-GM.Name = "Lilia"
+﻿GM.Name = "Lilia"
 GM.version = 6.741
 GM.Author = "Samael"
 GM.Website = "https://discord.gg/esCRH5ckbQ"

@@ -2988,6 +2988,35 @@ lia.command.add("exportprivileges", {
     end
 })
 
+lia.command.add("bots", {
+    superAdminOnly = true,
+    desc = "botsManageDesc",
+    onRun = function(client)
+        if not SERVER then return end
+        if not timer.Exists("Bots_Add_Timer") then
+            timer.Create("Bots_Add_Timer", 2, 0, function()
+                if #player.GetAll() < game.MaxPlayers() then
+                    game.ConsoleCommand("bot\n")
+                else
+                    timer.Remove("Bots_Add_Timer")
+                end
+            end)
+        else
+            client:notifyErrorLocalized("botsAlreadyAdding")
+        end
+    end
+})
+
+lia.command.add("bot", {
+    superAdminOnly = true,
+    desc = "botSpawnDesc",
+    onRun = function(client)
+        if not SERVER then return end
+        lia.botCreator = client
+        game.ConsoleCommand("bot\n")
+    end
+})
+
 lia.command.add("serverpassword", {
     superAdminOnly = true,
     desc = "serverpasswordDesc",
