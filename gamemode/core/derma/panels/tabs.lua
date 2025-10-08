@@ -11,22 +11,18 @@ function PANEL:Init()
     self.content = vgui.Create("Panel", self)
     self.content.Paint = nil
 end
-
 function PANEL:SetTabStyle(style)
     self.tab_style = style
     self:Rebuild()
 end
-
 function PANEL:SetTabHeight(height)
     self.tab_height = height
     self:Rebuild()
 end
-
 function PANEL:SetIndicatorHeight(height)
     self.indicator_height = height
     self:Rebuild()
 end
-
 function PANEL:AddTab(name, pan, icon)
     local newId = #self.tabs + 1
     self.tabs[newId] = {
@@ -34,13 +30,11 @@ function PANEL:AddTab(name, pan, icon)
         pan = pan,
         icon = icon
     }
-
     self.tabs[newId].pan:SetParent(self.content)
     self.tabs[newId].pan:Dock(FILL)
     self.tabs[newId].pan:SetVisible(newId == 1 and true or false)
     self:Rebuild()
 end
-
 function PANEL:AddSheet(label, panel, material)
     local newId = #self.tabs + 1
     self:AddTab(label, panel, material)
@@ -49,7 +43,6 @@ function PANEL:AddSheet(label, panel, material)
         Panel = panel
     }
 end
-
 function PANEL:Rebuild()
     self.panel_tabs:Clear()
     if self.tab_style == 'modern' then
@@ -65,7 +58,6 @@ function PANEL:Rebuild()
             local btnWidth = math.max(minWidth, padding + iconW + iconTextGap + textW + padding)
             tabWidths[id] = btnWidth
         end
-
         self._tabWidths = tabWidths
         self._baseMargin = baseMargin
         for id, tab in ipairs(self.tabs) do
@@ -82,7 +74,6 @@ function PANEL:Rebuild()
                 self.active_id = id
                 surface.PlaySound('button_click.wav')
             end
-
             btnTab.DoRightClick = function()
                 local dm = lia.derma.dermaMenu()
                 for k, v in pairs(self.tabs) do
@@ -93,7 +84,6 @@ function PANEL:Rebuild()
                     end, v.icon)
                 end
             end
-
             btnTab.Paint = function(_, w, h)
                 local isActive = self.active_id == id
                 local colorText = isActive and lia.color.theme.theme or lia.color.theme.text
@@ -118,13 +108,11 @@ function PANEL:Rebuild()
                     else
                         lia.derma.rect(startX, (h - 16) * 0.5, 16, 16):Rad(24):Color(colorIcon):Shape(lia.derma.SHAPE_IOS):Draw()
                     end
-
                     draw.SimpleText(tab.name, 'LiliaFont.18', textX, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
     end
-
     function PANEL:PerformLayout()
         if self.tab_style == 'modern' then
             self.panel_tabs:Dock(TOP)
@@ -135,7 +123,6 @@ function PANEL:Rebuild()
                 for _, width in pairs(self._tabWidths) do
                     totalTabsWidth = totalTabsWidth + width
                 end
-
                 local availableWidth = self:GetWide()
                 local totalMargins = self._baseMargin * (#self.tabs - 1)
                 local extraSpace = availableWidth - totalTabsWidth - totalMargins
@@ -145,14 +132,12 @@ function PANEL:Rebuild()
                     for tabId, baseWidth in pairs(self._tabWidths) do
                         adjustedWidths[tabId] = baseWidth + extraPerTab
                     end
-
                     local remainder = extraSpace % #self.tabs
                     if remainder > 0 then
                         for remainderId = 1, math.min(remainder, #self.tabs) do
                             adjustedWidths[remainderId] = adjustedWidths[remainderId] + 1
                         end
                     end
-
                     local children = self.panel_tabs:GetChildren()
                     for childId, child in ipairs(children) do
                         if adjustedWidths[childId] then child:SetWide(adjustedWidths[childId]) end
@@ -173,14 +158,11 @@ function PANEL:Rebuild()
                 local btnWidth = math.max(minWidth, padding + iconW + iconTextGap + textW + padding)
                 maxWidth = math.max(maxWidth, btnWidth)
             end
-
             self.panel_tabs:SetWide(math.max(190, maxWidth))
         end
     end
-
     self.content:Dock(FILL)
 end
-
 function PANEL:SetActiveTab(tab)
     if type(tab) == 'number' then
         if not self.tabs[tab] then return end
@@ -198,11 +180,9 @@ function PANEL:SetActiveTab(tab)
         end
     end
 end
-
 function PANEL:GetActiveTab()
     return self.panel_tabs:GetChild(self.active_id)
 end
-
 function PANEL:CloseTab(tab)
     local id
     if type(tab) == 'number' then
@@ -215,7 +195,6 @@ function PANEL:CloseTab(tab)
             end
         end
     end
-
     if not id or not self.tabs[id] then return end
     local panel = self.tabs[id].pan
     if IsValid(panel) then panel:Remove() end
@@ -223,11 +202,8 @@ function PANEL:CloseTab(tab)
     self.active_id = math.Clamp(self.active_id, 1, #self.tabs)
     self:Rebuild()
 end
-
 function PANEL:SetFadeTime()
 end
-
 function PANEL:SetShowIcons()
 end
-
 vgui.Register('liaTabs', PANEL, 'Panel')

@@ -11,7 +11,6 @@ function PANEL:Init()
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
     end
-
     self.faction:SetTextColor(color_white)
     self.faction.OnSelect = function(_, _, data)
         if data then
@@ -25,7 +24,6 @@ function PANEL:Init()
             self.desc:SetVisible(false)
         end
     end
-
     self.desc = self:addLabel(L("description"))
     self.desc:DockMargin(0, 8, 0, 0)
     self.desc:SetFont("LiliaFont.18")
@@ -40,10 +38,8 @@ function PANEL:Init()
             self.skipFirstSelect = false
         end
     end
-
     self.faction:FinishAddingOptions()
 end
-
 function PANEL:onDisplay()
     self.skipFirstSelect = true
     if self.faction.choices and #self.faction.choices > 0 then
@@ -55,7 +51,6 @@ function PANEL:onDisplay()
                 availableFactions = availableFactions + 1
             end
         end
-
         if availableFactions ~= currentChoices then
             self.faction:Clear()
             for id, fac in SortedPairsByMemberValue(lia.faction.teams, "name") do
@@ -64,11 +59,9 @@ function PANEL:onDisplay()
                     self.faction:AddChoice(L(fac.name), id)
                 end
             end
-
             self.faction:FinishAddingOptions()
         end
     end
-
     local id = self.faction:GetSelectedData()
     if id then
         local fac = lia.faction.teams[id]
@@ -85,7 +78,6 @@ function PANEL:onDisplay()
         self.desc:SetVisible(false)
     end
 end
-
 function PANEL:onFactionSelected(fac)
     self.desc:SetText(L(fac.desc or "noDesc"))
     self.desc:SizeToContentsY()
@@ -99,10 +91,8 @@ function PANEL:onFactionSelected(fac)
         self.skipFirstSelect = false
         return
     end
-
     lia.gui.character:clickSound()
 end
-
 function PANEL:shouldSkip()
     local availableFactions = 0
     for _, fac in SortedPairsByMemberValue(lia.faction.teams, "name") do
@@ -113,15 +103,12 @@ function PANEL:shouldSkip()
     end
     return availableFactions == 1
 end
-
 function PANEL:onSkip()
     local id = self.faction:GetSelectedData()
     if id then
         local fac = lia.faction.teams[id]
         if fac then self:setContext("faction", fac.index) end
     end
-
     self:setContext("model", self:getContext("model", 1))
 end
-
 vgui.Register("liaCharacterFaction", PANEL, "liaCharacterCreateStep")

@@ -13,7 +13,6 @@ function MODULE:TicketFrame(requester, message, claimed)
             return
         end
     end
-
     local frameWidth, frameHeight = 300, 120
     local frm = vgui.Create("liaFrame")
     frm:SetSize(frameWidth, frameHeight)
@@ -30,7 +29,6 @@ function MODULE:TicketFrame(requester, message, claimed)
     else
         frm:SetTitle(requester:Nick())
     end
-
     local msg = vgui.Create("SemiTransparentDPanel", frm)
     msg:SetPos(10, 30)
     msg:SetSize(190, frameHeight - 35)
@@ -39,7 +37,6 @@ function MODULE:TicketFrame(requester, message, claimed)
         lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
         draw.SimpleText(panel.message, "DermaDefault", w * 0.5, h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-
     local function createButton(text, position, clickFunc, disabled)
         text = L(text)
         local btn = vgui.Create("liaButton", frm)
@@ -51,7 +48,6 @@ function MODULE:TicketFrame(requester, message, claimed)
         if disabled then btn:SetTooltip(L("ticketActionSelf")) end
         return btn
     end
-
     local isLocalPlayer = requester == LocalPlayer()
     createButton("goTo", 20, function() lia.administrator.execCommand("goto", requester) end, isLocalPlayer)
     createButton("returnText", 40, function() lia.administrator.execCommand("return", requester) end, isLocalPlayer)
@@ -78,7 +74,6 @@ function MODULE:TicketFrame(requester, message, claimed)
             net.SendToServer()
         end
     end, isLocalPlayer)
-
     local closeButton = vgui.Create("liaButton", frm)
     closeButton:SetText("X")
     closeButton:SetTooltip(L("close"))
@@ -94,10 +89,8 @@ function MODULE:TicketFrame(requester, message, claimed)
                 v:MoveTo(xpos, ypos + 130 * (k - 1), 0.1, 0, 1)
             end
         end
-
         if IsValid(requester) and timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
     end
-
     table.insert(TicketFrames, frm)
     timer.Create("ticketsystem-" .. requester:SteamID(), 60, 1, function() if IsValid(frm) then frm:Remove() end end)
 end

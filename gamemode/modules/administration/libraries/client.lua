@@ -105,12 +105,10 @@
             func = function() RunConsoleCommand("say", "!return " .. target:SteamID()) end
         }
     }
-
     for _, v in ipairs(orderedOptions) do
         options[#options + 1] = v
     end
 end
-
 function MODULE:PopulateAdminTabs(pages)
     local client = LocalPlayer()
     if not IsValid(client) then return end
@@ -125,7 +123,6 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
-
     if client:hasPrivilege("canAccessPlayerList") then
         table.insert(pages, {
             name = "players",
@@ -137,7 +134,6 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
-
     if client:hasPrivilege("listCharacters") then
         table.insert(pages, {
             name = "characterList",
@@ -160,7 +156,6 @@ function MODULE:PopulateAdminTabs(pages)
                         local s = secs % 60
                         return string.format("%02i:%02i:%02i", h, m, s)
                     end
-
                     local hasBanInfo = false
                     for _, row in ipairs(data.all or {}) do
                         if row.Banned then
@@ -168,7 +163,6 @@ function MODULE:PopulateAdminTabs(pages)
                             break
                         end
                     end
-
                     local columns = {
                         {
                             name = "name",
@@ -196,36 +190,30 @@ function MODULE:PopulateAdminTabs(pages)
                             format = function(val) return val and L("yes") or L("no") end
                         }
                     }
-
                     if hasBanInfo then
                         table.insert(columns, {
                             name = "banningAdminName",
                             field = "BanningAdminName"
                         })
-
                         table.insert(columns, {
                             name = "banningAdminSteamID",
                             field = "BanningAdminSteamID"
                         })
-
                         table.insert(columns, {
                             name = "banningAdminRank",
                             field = "BanningAdminRank"
                         })
                     end
-
                     table.insert(columns, {
                         name = "playtime",
                         field = "PlayTime",
                         format = function(val) return formatPlayTime(val or 0) end
                     })
-
                     table.insert(columns, {
                         name = "money",
                         field = L("money"),
                         format = function(val) return lia.currency.get(tonumber(val) or 0) end
                     })
-
                     hook.Run("CharListColumns", columns)
                     local function createList(parent, rows)
                         local container = parent:Add("Panel")
@@ -246,7 +234,6 @@ function MODULE:PopulateAdminTabs(pages)
                             list:AddColumn(col.name)
                             if col.field == L("steamID") then steamIDColumnIndex = i end
                         end
-
                         local function populate(filter)
                             list:Clear()
                             filter = string.lower(filter or "")
@@ -257,7 +244,6 @@ function MODULE:PopulateAdminTabs(pages)
                                     if col.format then value = col.format(value, row) end
                                     values[#values + 1] = value or ""
                                 end
-
                                 local match = false
                                 if filter == "" then
                                     match = true
@@ -269,7 +255,6 @@ function MODULE:PopulateAdminTabs(pages)
                                         end
                                     end
                                 end
-
                                 if match then
                                     local line = list:AddLine(unpack(values))
                                     line.CharID = row.ID
@@ -278,7 +263,6 @@ function MODULE:PopulateAdminTabs(pages)
                                 end
                             end
                         end
-
                         search.OnChange = function() populate(search:GetValue()) end
                         populate("")
                         function list:OnRowRightClick(_, line)
@@ -292,10 +276,8 @@ function MODULE:PopulateAdminTabs(pages)
                                     local value = line:GetColumnText(i) or ""
                                     rowString = rowString .. header .. " " .. value .. " | "
                                 end
-
                                 SetClipboardText(string.sub(rowString, 1, -4))
                             end):SetIcon("icon16/page_copy.png")
-
                             if line.CharID then
                                 local owner = line.SteamID and lia.util.getBySteamID(line.SteamID)
                                 if IsValid(owner) then
@@ -304,7 +286,6 @@ function MODULE:PopulateAdminTabs(pages)
                                     else
                                         if lia.command.hasAccess(LocalPlayer(), "charban") then menu:AddOption(L("banCharacter"), function() LocalPlayer():ConCommand('say "/charban ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
                                     end
-
                                     if lia.command.hasAccess(LocalPlayer(), "charwipe") then menu:AddOption(L("wipeCharacter"), function() LocalPlayer():ConCommand('say "/charwipe ' .. line.CharID .. '"') end):SetIcon("icon16/user_delete.png") end
                                 else
                                     if not line.Banned and lia.command.hasAccess(LocalPlayer(), "charbanoffline") then menu:AddOption(L("banCharacterOffline"), function() LocalPlayer():ConCommand('say "/charbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/cancel.png") end
@@ -312,11 +293,9 @@ function MODULE:PopulateAdminTabs(pages)
                                     if line.Banned and lia.command.hasAccess(LocalPlayer(), "charunbanoffline") then menu:AddOption(L("unbanCharacterOffline"), function() LocalPlayer():ConCommand('say "/charunbanoffline ' .. line.CharID .. '"') end):SetIcon("icon16/accept.png") end
                                 end
                             end
-
                             menu:Open()
                         end
                     end
-
                     local allPanel = self.sheet:Add("Panel")
                     allPanel:Dock(FILL)
                     allPanel.Paint = function() end
@@ -332,13 +311,11 @@ function MODULE:PopulateAdminTabs(pages)
                         self.sheet:AddSheet(tabName, pnl)
                     end
                 end
-
                 net.Start("liaRequestFullCharList")
                 net.SendToServer()
             end
         })
     end
-
     if client:hasPrivilege("canAccessFlagManagement") then
         table.insert(pages, {
             name = L("flagsManagement"),
@@ -358,13 +335,11 @@ function MODULE:PopulateAdminTabs(pages)
             end
         })
     end
-
     if client:hasPrivilege("manageCharacters") then
         net.Start("liaRequestPksCount")
         net.SendToServer()
     end
 end
-
 local pksTabAdded = false
 net.Receive("liaPksCount", function()
     local count = net.ReadInt(32)

@@ -5,20 +5,16 @@ function lia.font.register(fontName, fontData)
     lia.font.stored[fontName] = SERVER and {
         font = true
     } or fontData
-
     if CLIENT then surface.CreateFont(fontName, fontData) end
 end
-
 function lia.font.getAvailableFonts()
     local list = {}
     for name in pairs(lia.font.stored) do
         list[#list + 1] = name
     end
-
     table.sort(list)
     return list
 end
-
 function lia.font.getBoldFontName(fontName)
     if string.find(fontName, "Montserrat") then
         return fontName:gsub(" Medium", " Bold"):gsub("Montserrat$", "Montserrat Bold")
@@ -26,7 +22,6 @@ function lia.font.getBoldFontName(fontName)
         return fontName:gsub(" Medium", " Bold")
     end
 end
-
 function lia.font.registerFonts(fontName)
     local mainFont = fontName or lia.config.get("Font", "Montserrat Medium")
     lia.font.register("Montserrat Regular", {
@@ -35,7 +30,6 @@ function lia.font.registerFonts(fontName)
         extended = true,
         antialias = true
     })
-
     lia.font.register("Montserrat Medium", {
         font = "Montserrat Medium",
         size = 16,
@@ -43,7 +37,6 @@ function lia.font.registerFonts(fontName)
         antialias = true,
         weight = 500
     })
-
     lia.font.register("Montserrat Bold", {
         font = "Montserrat Bold",
         size = 16,
@@ -51,42 +44,36 @@ function lia.font.registerFonts(fontName)
         antialias = true,
         weight = 700
     })
-
     lia.font.register("liaHugeFont", {
         font = mainFont,
         size = 72,
         extended = true,
         weight = 1000
     })
-
     lia.font.register("liaBigFont", {
         font = mainFont,
         size = 36,
         extended = true,
         weight = 1000
     })
-
     lia.font.register("liaMediumFont", {
         font = mainFont,
         size = 25,
         extended = true,
         weight = 1000
     })
-
     lia.font.register("liaSmallFont", {
         font = mainFont,
         size = 17,
         extended = true,
         weight = 500
     })
-
     lia.font.register("liaMiniFont", {
         font = mainFont,
         size = 14,
         extended = true,
         weight = 400
     })
-
     local fontSizes = {12, 14, 15, 16, 17, 18, 20, 22, 24, 25, 28, 30, 34, 36, 40, 48}
     for _, size in ipairs(fontSizes) do
         lia.font.register("LiliaFont." .. size, {
@@ -96,7 +83,6 @@ function lia.font.registerFonts(fontName)
             antialias = true,
             weight = 500
         })
-
         lia.font.register("LiliaFont." .. size .. "b", {
             font = lia.font.getBoldFontName(mainFont),
             size = size,
@@ -105,7 +91,6 @@ function lia.font.registerFonts(fontName)
             weight = 700
         })
     end
-
     lia.font.register("LiliaFont.17i", {
         font = mainFont,
         size = 17,
@@ -113,7 +98,6 @@ function lia.font.registerFonts(fontName)
         weight = 200,
         italic = true
     })
-
     lia.font.register("LiliaFont.17s", {
         font = mainFont,
         size = 17,
@@ -121,7 +105,6 @@ function lia.font.registerFonts(fontName)
         shadow = true,
         weight = 500
     })
-
     lia.font.register("LiliaFont.16a", {
         font = mainFont,
         size = 16,
@@ -129,7 +112,6 @@ function lia.font.registerFonts(fontName)
         weight = 500,
         antialias = true
     })
-
     lia.font.register("LiliaFont.20s", {
         font = mainFont,
         shadow = true,
@@ -137,35 +119,30 @@ function lia.font.registerFonts(fontName)
         extended = true,
         weight = 800
     })
-
     lia.font.register("LiliaFont.22a", {
         font = mainFont,
         weight = 200,
         size = 22,
         additive = true
     })
-
     lia.font.register("LiliaFont.34a", {
         font = mainFont,
         weight = 200,
         size = 34,
         additive = true
     })
-
     lia.font.register("LiliaFont.25l", {
         font = mainFont,
         size = 25,
         extended = true,
         weight = 200
     })
-
     lia.font.register("LiliaFont.20h", {
         font = mainFont,
         size = 20,
         extended = true,
         weight = 1000
     })
-
     lia.font.register("Montserrat Regular Italic", {
         font = "Montserrat",
         size = 16,
@@ -173,7 +150,6 @@ function lia.font.registerFonts(fontName)
         antialias = true,
         italic = true
     })
-
     lia.font.register("Montserrat Regular Shadow", {
         font = "Montserrat",
         size = 16,
@@ -181,7 +157,6 @@ function lia.font.registerFonts(fontName)
         antialias = true,
         shadow = true
     })
-
     lia.font.register("Montserrat Medium Italic", {
         font = "Montserrat Medium",
         size = 16,
@@ -190,7 +165,6 @@ function lia.font.registerFonts(fontName)
         weight = 500,
         italic = true
     })
-
     lia.font.register("Montserrat Medium Shadow", {
         font = "Montserrat Medium",
         size = 16,
@@ -199,7 +173,6 @@ function lia.font.registerFonts(fontName)
         weight = 500,
         shadow = true
     })
-
     lia.font.register("Montserrat Bold Italic", {
         font = "Montserrat Bold",
         size = 16,
@@ -208,7 +181,6 @@ function lia.font.registerFonts(fontName)
         weight = 700,
         italic = true
     })
-
     lia.font.register("Montserrat Bold Shadow", {
         font = "Montserrat Bold",
         size = 16,
@@ -217,7 +189,6 @@ function lia.font.registerFonts(fontName)
         weight = 700,
         shadow = true
     })
-
     lia.font.register("liaHugeFont Italic", {
         font = mainFont,
         size = 72,
@@ -225,7 +196,6 @@ function lia.font.registerFonts(fontName)
         weight = 1000,
         italic = true
     })
-
     lia.font.register("liaHugeFont Shadow", {
         font = mainFont,
         size = 72,
@@ -233,7 +203,6 @@ function lia.font.registerFonts(fontName)
         weight = 1000,
         shadow = true
     })
-
     lia.font.register("liaBigFont Italic", {
         font = mainFont,
         size = 36,
@@ -241,7 +210,6 @@ function lia.font.registerFonts(fontName)
         weight = 1000,
         italic = true
     })
-
     lia.font.register("liaBigFont Shadow", {
         font = mainFont,
         size = 36,
@@ -249,7 +217,6 @@ function lia.font.registerFonts(fontName)
         weight = 1000,
         shadow = true
     })
-
     lia.font.register("liaMediumFont Italic", {
         font = mainFont,
         size = 25,
@@ -257,7 +224,6 @@ function lia.font.registerFonts(fontName)
         weight = 1000,
         italic = true
     })
-
     lia.font.register("liaMediumFont Shadow", {
         font = mainFont,
         size = 25,
@@ -265,7 +231,6 @@ function lia.font.registerFonts(fontName)
         weight = 1000,
         shadow = true
     })
-
     lia.font.register("liaSmallFont Italic", {
         font = mainFont,
         size = 17,
@@ -273,7 +238,6 @@ function lia.font.registerFonts(fontName)
         weight = 500,
         italic = true
     })
-
     lia.font.register("liaSmallFont Shadow", {
         font = mainFont,
         size = 17,
@@ -281,7 +245,6 @@ function lia.font.registerFonts(fontName)
         weight = 500,
         shadow = true
     })
-
     lia.font.register("liaMiniFont Italic", {
         font = mainFont,
         size = 14,
@@ -289,7 +252,6 @@ function lia.font.registerFonts(fontName)
         weight = 400,
         italic = true
     })
-
     lia.font.register("liaMiniFont Shadow", {
         font = mainFont,
         size = 14,
@@ -297,7 +259,6 @@ function lia.font.registerFonts(fontName)
         weight = 400,
         shadow = true
     })
-
     for _, size in ipairs(fontSizes) do
         lia.font.register("LiliaFont." .. size .. "i", {
             font = mainFont,
@@ -307,7 +268,6 @@ function lia.font.registerFonts(fontName)
             weight = 500,
             italic = true
         })
-
         lia.font.register("LiliaFont." .. size .. "s", {
             font = mainFont,
             size = size,
@@ -316,7 +276,6 @@ function lia.font.registerFonts(fontName)
             weight = 500,
             shadow = true
         })
-
         lia.font.register("LiliaFont." .. size .. "bi", {
             font = lia.font.getBoldFontName(mainFont),
             size = size,
@@ -325,7 +284,6 @@ function lia.font.registerFonts(fontName)
             weight = 700,
             italic = true
         })
-
         lia.font.register("LiliaFont." .. size .. "bs", {
             font = lia.font.getBoldFontName(mainFont),
             size = size,
@@ -335,10 +293,8 @@ function lia.font.registerFonts(fontName)
             shadow = true
         })
     end
-
     hook.Run("PostLoadFonts", mainFont, mainFont)
 end
-
 if CLIENT then
     local oldSurfaceSetFont = surface.SetFont
     function surface.SetFont(font)
@@ -350,19 +306,16 @@ if CLIENT then
                 antialias = true,
                 weight = 500
             }
-
             local baseFont, sizeStr = font:match("^([^%.]+)%.(%d+)$")
             if baseFont and sizeStr then
                 fontData.font = baseFont
                 fontData.size = tonumber(sizeStr) or 16
             end
-
             local boldMatch = font:match("^(.-)(%d+)b$")
             if boldMatch then
                 fontData.font = boldMatch
                 fontData.weight = 700
             end
-
             local italicMatch = font:match("^(.-)(%d+)i$")
             if italicMatch then fontData.italic = true end
             local shadowMatch = font:match("^(.-)(%d+)s$")
@@ -373,20 +326,17 @@ if CLIENT then
                 fontData.weight = 700
                 fontData.italic = true
             end
-
             local boldShadowMatch = font:match("^(.-)(%d+)bs$")
             if boldShadowMatch then
                 fontData.font = boldShadowMatch
                 fontData.weight = 700
                 fontData.shadow = true
             end
-
             lia.font.register(font, fontData)
         end
         return oldSurfaceSetFont(font)
     end
 end
-
 lia.config.add("Font", "font", "Montserrat Medium", function()
     if not CLIENT then return end
     hook.Run("RefreshFonts")
@@ -396,7 +346,6 @@ end, {
     type = "Table",
     options = lia.font.getAvailableFonts()
 })
-
 hook.Add("InitializedConfig", "liaFontsOnConfigLoad", function()
     if CLIENT then
         if not lia.config.stored or not lia.config.stored.Font then

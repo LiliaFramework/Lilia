@@ -7,14 +7,12 @@
             client:notifyErrorLocalized("playtimeError")
             return
         end
-
         local h = math.floor(secs / 3600)
         local m = math.floor((secs % 3600) / 60)
         local s = secs % 60
         client:notifyInfoLocalized("playtimeYour", h, m, s)
     end
 })
-
 lia.command.add("plygetplaytime", {
     adminOnly = true,
     arguments = {
@@ -35,13 +33,11 @@ lia.command.add("plygetplaytime", {
             client:notifyErrorLocalized("specifyPlayer")
             return
         end
-
         local target = lia.util.findPlayer(client, args[1])
         if not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local secs = target:getPlayTime()
         local h = math.floor(secs / 3600)
         local m = math.floor((secs % 3600) / 60)
@@ -49,7 +45,6 @@ lia.command.add("plygetplaytime", {
         client:ChatPrint(L("playtimeFor", target:Nick(), h, m, s))
     end
 })
-
 lia.command.add("managesitrooms", {
     superAdminOnly = true,
     desc = "manageSitroomsDesc",
@@ -61,7 +56,6 @@ lia.command.add("managesitrooms", {
         net.Send(client)
     end
 })
-
 lia.command.add("addsitroom", {
     superAdminOnly = true,
     desc = "setSitroomDesc",
@@ -71,7 +65,6 @@ lia.command.add("addsitroom", {
                 client:notifyErrorLocalized("invalidName")
                 return
             end
-
             local rooms = lia.data.get("sitrooms", {})
             rooms[name] = client:GetPos()
             lia.data.set("sitrooms", rooms)
@@ -80,7 +73,6 @@ lia.command.add("addsitroom", {
         end)
     end
 })
-
 lia.command.add("sendtositroom", {
     adminOnly = true,
     desc = "sendToSitRoomDesc",
@@ -102,25 +94,21 @@ lia.command.add("sendtositroom", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local rooms = lia.data.get("sitrooms", {})
         local names = {}
         for n in pairs(rooms) do
             names[#names + 1] = n
         end
-
         if #names == 0 then
             client:notifyErrorLocalized("sitroomNotSet")
             return
         end
-
         client:requestDropdown(L("chooseSitroomTitle"), L("selectSitroomPrompt") .. ":", names, function(selection)
             local pos = rooms[selection]
             if not pos then
                 client:notifyErrorLocalized("sitroomNotSet")
                 return
             end
-
             target:SetPos(pos)
             client:notifySuccessLocalized("sitroomTeleport", target:Nick())
             target:notifyInfoLocalized("sitroomArrive")
@@ -128,7 +116,6 @@ lia.command.add("sendtositroom", {
         end)
     end
 })
-
 lia.command.add("returnsitroom", {
     adminOnly = true,
     desc = "returnFromSitroomDesc",
@@ -150,20 +137,17 @@ lia.command.add("returnsitroom", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local prev = target:getNetVar("previousSitroomPos")
         if not prev then
             client:notifyErrorLocalized("noPreviousSitroomPos")
             return
         end
-
         target:SetPos(prev)
         client:notifySuccessLocalized("sitroomReturnSuccess", target:Nick())
         if target ~= client then target:notifyInfoLocalized("sitroomReturned") end
         lia.log.add(client, "sitRoomReturn", target:Nick())
     end
 })
-
 lia.command.add("charkill", {
     superAdminOnly = true,
     desc = "charkillDesc",
@@ -187,7 +171,6 @@ lia.command.add("charkill", {
                 }
             end
         end
-
         local playerKey = L("player")
         local reasonKey = L("reason")
         local evidenceKey = L("evidence")
@@ -204,7 +187,6 @@ lia.command.add("charkill", {
                 client:notifyErrorLocalized("evidenceInvalidURL")
                 return
             end
-
             lia.db.insertTable({
                 player = selection.name,
                 reason = reason,
@@ -215,7 +197,6 @@ lia.command.add("charkill", {
                 timestamp = os.time(),
                 evidence = evidence
             }, nil, "permakills")
-
             for _, ply in player.Iterator() do
                 if ply:SteamID() == selection.steamID and ply:getChar() then
                     ply:getChar():ban()
@@ -225,7 +206,6 @@ lia.command.add("charkill", {
         end)
     end
 })
-
 local function sanitizeForNet(tbl)
     if istable(tbl) then return tbl end
     local result = {}
@@ -238,7 +218,6 @@ local function sanitizeForNet(tbl)
     end
     return result
 end
-
 lia.command.add("charlist", {
     adminOnly = true,
     desc = "charListDesc",
@@ -271,14 +250,12 @@ lia.command.add("charlist", {
         else
             steamID = client:SteamID()
         end
-
         local query = [[SELECT c.*, d.value AS charBanInfo FROM lia_characters AS c LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo' WHERE c.steamID = ]] .. lia.db.convertDataType(steamID)
         lia.db.query(query, function(data)
             if not data or #data == 0 then
                 client:notifyInfoLocalized("noCharactersForPlayer")
                 return
             end
-
             local sendData = {}
             for _, row in ipairs(data) do
                 local charID = tonumber(row.id) or row.id
@@ -300,11 +277,9 @@ lia.command.add("charlist", {
                                 value = stored.vars and stored.vars[varName]
                             end
                         end
-
                         allVars[varName] = value
                     end
                 end
-
                 local banInfo = info.charBanInfo
                 if not banInfo and row.charBanInfo and row.charBanInfo ~= "" then
                     local ok, decoded = pcall(pon.decode, row.charBanInfo)
@@ -314,7 +289,6 @@ lia.command.add("charlist", {
                         banInfo = util.JSONToTable(row.charBanInfo) or {}
                     end
                 end
-
                 local bannedVal = stored and stored:getBanned() or tonumber(row.banned) or 0
                 local isBanned = bannedVal ~= 0 and (bannedVal == -1 or bannedVal > os.time())
                 local entry = {
@@ -330,13 +304,11 @@ lia.command.add("charlist", {
                     LastUsed = stored and L("onlineNow") or row.lastJoinTime,
                     allVars = allVars
                 }
-
                 entry.extraDetails = {}
                 hook.Run("CharListExtraDetails", client, entry, stored)
                 entry = sanitizeForNet(entry)
                 table.insert(sendData, entry)
             end
-
             sendData = sanitizeForNet(sendData)
             net.Start("liaDisplayCharList")
             net.WriteTable(sendData)
@@ -345,7 +317,6 @@ lia.command.add("charlist", {
         end)
     end
 })
-
 lia.command.add("plyban", {
     adminOnly = true,
     desc = "plyBanDesc",
@@ -366,7 +337,6 @@ lia.command.add("plyban", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("ban", arguments[1], arguments[2], arguments[3], client) end
 })
-
 lia.command.add("plykick", {
     adminOnly = true,
     desc = "plyKickDesc",
@@ -383,7 +353,6 @@ lia.command.add("plykick", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("kick", arguments[1], nil, arguments[2], client) end
 })
-
 lia.command.add("plykill", {
     adminOnly = true,
     desc = "plyKillDesc",
@@ -395,7 +364,6 @@ lia.command.add("plykill", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("kill", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyunban", {
     adminOnly = true,
     desc = "plyUnbanDesc",
@@ -414,7 +382,6 @@ lia.command.add("plyunban", {
         end
     end
 })
-
 lia.command.add("plyfreeze", {
     adminOnly = true,
     desc = "plyFreezeDesc",
@@ -431,7 +398,6 @@ lia.command.add("plyfreeze", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("freeze", arguments[1], arguments[2], nil, client) end
 })
-
 lia.command.add("plyunfreeze", {
     adminOnly = true,
     desc = "plyUnfreezeDesc",
@@ -443,7 +409,6 @@ lia.command.add("plyunfreeze", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("unfreeze", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyslay", {
     adminOnly = true,
     desc = "plySlayDesc",
@@ -455,7 +420,6 @@ lia.command.add("plyslay", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("slay", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyrespawn", {
     adminOnly = true,
     desc = "plyRespawnDesc",
@@ -467,7 +431,6 @@ lia.command.add("plyrespawn", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("respawn", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyblind", {
     adminOnly = true,
     desc = "plyBlindDesc",
@@ -484,7 +447,6 @@ lia.command.add("plyblind", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("blind", arguments[1], arguments[2], nil, client) end
 })
-
 lia.command.add("plyunblind", {
     adminOnly = true,
     desc = "plyUnblindDesc",
@@ -496,7 +458,6 @@ lia.command.add("plyunblind", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("unblind", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyblindfade", {
     adminOnly = true,
     desc = "plyBlindFadeDesc",
@@ -545,7 +506,6 @@ lia.command.add("plyblindfade", {
         end
     end
 })
-
 lia.command.add("blindfadeall", {
     adminOnly = true,
     desc = "blindFadeAllDesc",
@@ -589,7 +549,6 @@ lia.command.add("blindfadeall", {
         end
     end
 })
-
 lia.command.add("plygag", {
     adminOnly = true,
     desc = "plyGagDesc",
@@ -601,7 +560,6 @@ lia.command.add("plygag", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("gag", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyungag", {
     adminOnly = true,
     desc = "plyUngagDesc",
@@ -613,7 +571,6 @@ lia.command.add("plyungag", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("ungag", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plymute", {
     adminOnly = true,
     desc = "plyMuteDesc",
@@ -625,7 +582,6 @@ lia.command.add("plymute", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("mute", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyunmute", {
     adminOnly = true,
     desc = "plyUnmuteDesc",
@@ -637,7 +593,6 @@ lia.command.add("plyunmute", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("unmute", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plybring", {
     adminOnly = true,
     desc = "plyBringDesc",
@@ -649,7 +604,6 @@ lia.command.add("plybring", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("bring", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plygoto", {
     adminOnly = true,
     desc = "plyGotoDesc",
@@ -661,7 +615,6 @@ lia.command.add("plygoto", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("goto", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyreturn", {
     adminOnly = true,
     desc = "plyReturnDesc",
@@ -674,7 +627,6 @@ lia.command.add("plyreturn", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("return", arguments[1] or client:Name(), nil, nil, client) end
 })
-
 lia.command.add("plyjail", {
     adminOnly = true,
     desc = "plyJailDesc",
@@ -686,7 +638,6 @@ lia.command.add("plyjail", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("jail", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyunjail", {
     adminOnly = true,
     desc = "plyUnjailDesc",
@@ -698,7 +649,6 @@ lia.command.add("plyunjail", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("unjail", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plycloak", {
     adminOnly = true,
     desc = "plyCloakDesc",
@@ -710,7 +660,6 @@ lia.command.add("plycloak", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("cloak", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyuncloak", {
     adminOnly = true,
     desc = "plyUncloakDesc",
@@ -722,7 +671,6 @@ lia.command.add("plyuncloak", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("uncloak", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plygod", {
     adminOnly = true,
     desc = "plyGodDesc",
@@ -734,7 +682,6 @@ lia.command.add("plygod", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("god", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyungod", {
     adminOnly = true,
     desc = "plyUngodDesc",
@@ -746,7 +693,6 @@ lia.command.add("plyungod", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("ungod", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plyignite", {
     adminOnly = true,
     desc = "plyIgniteDesc",
@@ -763,7 +709,6 @@ lia.command.add("plyignite", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("ignite", arguments[1], arguments[2], nil, client) end
 })
-
 lia.command.add("plyextinguish", {
     adminOnly = true,
     desc = "plyExtinguishDesc",
@@ -775,7 +720,6 @@ lia.command.add("plyextinguish", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("extinguish", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("plystrip", {
     adminOnly = true,
     desc = "plyStripDesc",
@@ -787,7 +731,6 @@ lia.command.add("plystrip", {
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("strip", arguments[1], nil, nil, client) end
 })
-
 lia.command.add("pktoggle", {
     adminOnly = true,
     desc = "togglePermakillDesc",
@@ -809,13 +752,11 @@ lia.command.add("pktoggle", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local character = target:getChar()
         if not character then
             client:notifyErrorLocalized("invalid", L("character"))
             return
         end
-
         local currentState = character:getMarkedForDeath()
         local newState = not currentState
         character:setMarkedForDeath(newState)
@@ -826,7 +767,6 @@ lia.command.add("pktoggle", {
         end
     end
 })
-
 lia.command.add("charunbanoffline", {
     superAdminOnly = true,
     desc = "charUnbanOfflineDesc",
@@ -847,7 +787,6 @@ lia.command.add("charunbanoffline", {
         lia.log.add(client, "charUnbanOffline", charID)
     end
 })
-
 lia.command.add("charbanoffline", {
     superAdminOnly = true,
     desc = "charBanOfflineDesc",
@@ -868,19 +807,16 @@ lia.command.add("charbanoffline", {
             steamID = client:SteamID(),
             rank = client:GetUserGroup()
         })
-
         for _, ply in player.Iterator() do
             if ply:getChar() and ply:getChar():getID() == charID then
                 ply:Kick(L("youHaveBeenBanned"))
                 break
             end
         end
-
         client:notifySuccessLocalized("offlineCharBanned", charID)
         lia.log.add(client, "charBanOffline", charID)
     end
 })
-
 lia.command.add("playglobalsound", {
     superAdminOnly = true,
     desc = "playGlobalSoundDesc",
@@ -896,13 +832,11 @@ lia.command.add("playglobalsound", {
             client:notifyErrorLocalized("mustSpecifySound")
             return
         end
-
         for _, target in player.Iterator() do
             target:PlaySound(sound)
         end
     end
 })
-
 lia.command.add("plyspectate", {
     adminOnly = true,
     desc = "plySpectateDesc",
@@ -918,17 +852,14 @@ lia.command.add("plyspectate", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if target == client then
             client:notifyErrorLocalized("cannotSpectateSelf")
             return
         end
-
         if target:getNetVar("liaSpectating") then
             client:notifyErrorLocalized("targetAlreadySpectated")
             return
         end
-
         client:setNetVar("liaSpectateReturnPos", client:GetPos())
         client:setNetVar("liaSpectateReturnAng", client:EyeAngles())
         client:Spectate(OBS_MODE_CHASE)
@@ -941,7 +872,6 @@ lia.command.add("plyspectate", {
         lia.log.add(client, "plySpectate", target:Nick())
     end
 })
-
 lia.command.add("stopspectate", {
     adminOnly = true,
     desc = "stopSpectateDesc",
@@ -950,7 +880,6 @@ lia.command.add("stopspectate", {
             client:notifyErrorLocalized("notSpectating")
             return
         end
-
         client:UnSpectate()
         client:GodDisable()
         client:setNetVar("liaSpectating", false)
@@ -960,12 +889,10 @@ lia.command.add("stopspectate", {
             client:SetPos(returnPos)
             client:setNetVar("liaSpectateReturnPos", nil)
         end
-
         if returnAng then
             client:SetEyeAngles(returnAng)
             client:setNetVar("liaSpectateReturnAng", nil)
         end
-
         client:Give("weapon_physgun")
         client:Give("weapon_physcannon")
         client:Give("gmod_tool")
@@ -973,7 +900,6 @@ lia.command.add("stopspectate", {
         lia.log.add(client, "stopSpectate")
     end
 })
-
 lia.command.add("playsound", {
     superAdminOnly = true,
     desc = "playSoundDesc",
@@ -994,16 +920,13 @@ lia.command.add("playsound", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if not sound or sound == "" then
             client:notifyErrorLocalized("noSound")
             return
         end
-
         target:PlaySound(sound)
     end
 })
-
 lia.command.add("returntodeathpos", {
     adminOnly = true,
     desc = "returnToDeathPosDesc",
@@ -1022,7 +945,6 @@ lia.command.add("returntodeathpos", {
         end
     end
 })
-
 lia.command.add("roll", {
     adminOnly = false,
     desc = "rollDesc",
@@ -1031,7 +953,6 @@ lia.command.add("roll", {
         lia.chat.send(client, "roll", rollValue)
     end
 })
-
 lia.command.add("forcefallover", {
     adminOnly = true,
     desc = "forceFalloverDesc",
@@ -1052,7 +973,6 @@ lia.command.add("forcefallover", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if target:getNetVar("FallOverCooldown", false) then
             target:notifyWarningLocalized("cmdCooldown")
             return
@@ -1069,14 +989,12 @@ lia.command.add("forcefallover", {
             target:notifyWarningLocalized("cmdNoclip")
             return
         end
-
         local time = tonumber(arguments[2])
         if not time or time < 1 then
             time = 5
         else
             time = math.Clamp(time, 1, 60)
         end
-
         target:setNetVar("FallOverCooldown", true)
         if not IsValid(target:getRagdoll()) then
             target:setRagdolled(true, time)
@@ -1084,7 +1002,6 @@ lia.command.add("forcefallover", {
         end
     end
 })
-
 lia.command.add("forcegetup", {
     adminOnly = true,
     desc = "forceGetUpDesc",
@@ -1100,12 +1017,10 @@ lia.command.add("forcegetup", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if not IsValid(target:getRagdoll()) then
             target:notifyErrorLocalized("noRagdoll")
             return
         end
-
         local entity = target:getRagdoll()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
@@ -1118,7 +1033,6 @@ lia.command.add("forcegetup", {
         end
     end
 })
-
 lia.command.add("chardesc", {
     adminOnly = false,
     desc = "changeCharDesc",
@@ -1137,7 +1051,6 @@ lia.command.add("chardesc", {
         return "@descChanged"
     end
 })
-
 lia.command.add("chargetup", {
     adminOnly = false,
     desc = "forceSelfGetUpDesc",
@@ -1146,7 +1059,6 @@ lia.command.add("chargetup", {
             client:notifyErrorLocalized("noRagdoll")
             return
         end
-
         local entity = client:getRagdoll()
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
@@ -1160,7 +1072,6 @@ lia.command.add("chargetup", {
     end,
     alias = {"getup"}
 })
-
 lia.command.add("fallover", {
     adminOnly = false,
     desc = "fallOverDesc",
@@ -1176,34 +1087,28 @@ lia.command.add("fallover", {
             client:notifyWarningLocalized("cmdCooldown")
             return
         end
-
         if client:IsFrozen() then
             client:notifyWarningLocalized("cmdFrozen")
             return
         end
-
         if not client:Alive() then
             client:notifyErrorLocalized("cmdDead")
             return
         end
-
         if client:hasValidVehicle() then
             client:notifyWarningLocalized("cmdVehicle")
             return
         end
-
         if client:isNoClipping() then
             client:notifyWarningLocalized("cmdNoclip")
             return
         end
-
         local t = tonumber(arguments[1])
         if not t or t < 1 then
             t = 5
         else
             t = math.Clamp(t, 1, 60)
         end
-
         client:setNetVar("FallOverCooldown", true)
         if not IsValid(client:getRagdoll()) then
             client:setRagdolled(true, t)
@@ -1211,7 +1116,6 @@ lia.command.add("fallover", {
         end
     end
 })
-
 lia.command.add("togglelockcharacters", {
     superAdminOnly = true,
     desc = "toggleCharLockDesc",
@@ -1225,7 +1129,6 @@ lia.command.add("togglelockcharacters", {
         end
     end
 })
-
 lia.command.add("checkinventory", {
     adminOnly = true,
     desc = "checkInventoryDesc",
@@ -1247,12 +1150,10 @@ lia.command.add("checkinventory", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if target == client then
             client:notifyErrorLocalized("invCheckSelf")
             return
         end
-
         local inventory = target:getChar():getInv()
         inventory:addAccessRule(function(_, action) return action == "transfer" end, 1)
         inventory:addAccessRule(function(_, action) return action == "repl" end, 1)
@@ -1263,7 +1164,6 @@ lia.command.add("checkinventory", {
         net.Send(client)
     end
 })
-
 lia.command.add("flaggive", {
     adminOnly = true,
     desc = "flagGiveDesc",
@@ -1283,14 +1183,12 @@ lia.command.add("flaggive", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local flags = arguments[2]
         if not flags then
             local available = ""
             for k in SortedPairs(lia.flag.list) do
                 if not target:hasFlags(k) then available = available .. k .. " " end
             end
-
             available = available:Trim()
             if available == "" then
                 client:notifyInfoLocalized("noAvailableFlags")
@@ -1298,14 +1196,12 @@ lia.command.add("flaggive", {
             end
             return client:requestString(L("give") .. " " .. L("flags"), L("flagGiveDesc"), function(text) lia.command.run(client, "flaggive", {target:Name(), text}) end, available)
         end
-
         target:giveFlags(flags)
         client:notifySuccessLocalized("flagGive", client:Name(), flags, target:Name())
         lia.log.add(client, "flagGive", target:Name(), flags)
     end,
     alias = {"giveflag", "chargiveflag"}
 })
-
 lia.command.add("flaggiveall", {
     adminOnly = true,
     desc = "giveAllFlagsDesc",
@@ -1321,16 +1217,13 @@ lia.command.add("flaggiveall", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         for k, _ in SortedPairs(lia.flag.list) do
             if not target:hasFlags(k) then target:giveFlags(k) end
         end
-
         client:notifySuccessLocalized("gaveAllFlags")
         lia.log.add(client, "flagGiveAll", target:Name())
     end
 })
-
 lia.command.add("flagtakeall", {
     adminOnly = true,
     desc = "takeAllFlagsDesc",
@@ -1352,21 +1245,17 @@ lia.command.add("flagtakeall", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if not target:getChar() then
             client:notifyErrorLocalized("invalidTarget")
             return
         end
-
         for k, _ in SortedPairs(lia.flag.list) do
             if target:hasFlags(k) then target:takeFlags(k) end
         end
-
         client:notifySuccessLocalized("tookAllFlags")
         lia.log.add(client, "flagTakeAll", target:Name())
     end
 })
-
 lia.command.add("flagtake", {
     adminOnly = true,
     desc = "flagTakeDesc",
@@ -1386,20 +1275,17 @@ lia.command.add("flagtake", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local flags = arguments[2]
         if not flags then
             local currentFlags = target:getFlags()
             return client:requestString(L("take") .. " " .. L("flags"), L("flagTakeDesc"), function(text) lia.command.run(client, "flagtake", {target:Name(), text}) end, table.concat(currentFlags, ", "))
         end
-
         target:takeFlags(flags)
         client:notifySuccessLocalized("flagTake", client:Name(), flags, target:Name())
         lia.log.add(client, "flagTake", target:Name(), flags)
     end,
     alias = {"takeflag"}
 })
-
 lia.command.add("bringlostitems", {
     superAdminOnly = true,
     desc = "bringLostItemsDesc",
@@ -1409,7 +1295,6 @@ lia.command.add("bringlostitems", {
         end
     end
 })
-
 lia.command.add("charvoicetoggle", {
     adminOnly = true,
     desc = "charVoiceToggleDesc",
@@ -1431,12 +1316,10 @@ lia.command.add("charvoicetoggle", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if target == client then
             client:notifyErrorLocalized("cannotMuteSelf")
             return false
         end
-
         if target:getChar() then
             local isBanned = target:getLiliaData("VoiceBan", false)
             target:setLiliaData("VoiceBan", not isBanned)
@@ -1447,14 +1330,12 @@ lia.command.add("charvoicetoggle", {
                 client:notifySuccessLocalized("voiceMuted", target:Name())
                 target:notifyWarningLocalized("voiceMutedByAdmin")
             end
-
             lia.log.add(client, "voiceToggle", target:Name(), isBanned and L("unmuted") or L("muted"))
         else
             client:notifyErrorLocalized("noValidCharacter")
         end
     end
 })
-
 lia.command.add("cleanitems", {
     superAdminOnly = true,
     desc = "cleanItemsDesc",
@@ -1464,11 +1345,9 @@ lia.command.add("cleanitems", {
             count = count + 1
             SafeRemoveEntity(v)
         end
-
         client:notifySuccessLocalized("cleaningFinished", L("items"), count)
     end
 })
-
 lia.command.add("cleanprops", {
     superAdminOnly = true,
     desc = "cleanPropsDesc",
@@ -1480,11 +1359,9 @@ lia.command.add("cleanprops", {
                 SafeRemoveEntity(entity)
             end
         end
-
         client:notifySuccessLocalized("cleaningFinished", L("props"), count)
     end
 })
-
 lia.command.add("cleannpcs", {
     superAdminOnly = true,
     desc = "cleanNPCsDesc",
@@ -1496,11 +1373,9 @@ lia.command.add("cleannpcs", {
                 SafeRemoveEntity(entity)
             end
         end
-
         client:notifySuccessLocalized("cleaningFinished", L("npcs"), count)
     end
 })
-
 lia.command.add("charunban", {
     superAdminOnly = true,
     desc = "charUnbanDesc",
@@ -1530,7 +1405,6 @@ lia.command.add("charunban", {
                 end
             end
         end
-
         if charFound then
             if charFound:isBanned() then
                 charFound:setBanned(0)
@@ -1543,7 +1417,6 @@ lia.command.add("charunban", {
                 return L("charNotBanned")
             end
         end
-
         client.liaNextSearch = CurTime() + 15
         local sqlCondition = id and "id = " .. id or "name LIKE \"%" .. lia.db.escape(queryArg) .. "%\""
         lia.db.query("SELECT id, name FROM lia_characters WHERE " .. sqlCondition .. " LIMIT 1", function(data)
@@ -1555,7 +1428,6 @@ lia.command.add("charunban", {
                     client:notifyInfoLocalized("charNotBanned")
                     return
                 end
-
                 lia.char.setCharDatabase(charID, "banned", 0)
                 lia.char.setCharDatabase(charID, "charBanInfo", nil)
                 client:notifySuccessLocalized("charUnBan", client:Name(), data[1].name)
@@ -1564,7 +1436,6 @@ lia.command.add("charunban", {
         end)
     end
 })
-
 lia.command.add("clearinv", {
     superAdminOnly = true,
     desc = "clearInvDesc",
@@ -1586,12 +1457,10 @@ lia.command.add("clearinv", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:getChar():getInv():wipeItems()
         client:notifySuccessLocalized("resetInv", target:getChar():getName())
     end
 })
-
 lia.command.add("charkick", {
     adminOnly = true,
     desc = "kickCharDesc",
@@ -1613,13 +1482,11 @@ lia.command.add("charkick", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local character = target:getChar()
         if character then
             for _, targets in player.Iterator() do
                 targets:notifyInfoLocalized("charKick", client:Name(), target:Name())
             end
-
             character:kick()
             lia.log.add(client, "charKick", target:Name(), character:getID())
         else
@@ -1627,7 +1494,6 @@ lia.command.add("charkick", {
         end
     end
 })
-
 lia.command.add("freezeallprops", {
     superAdminOnly = true,
     desc = "freezeAllPropsDesc",
@@ -1643,7 +1509,6 @@ lia.command.add("freezeallprops", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local count = 0
         local tbl = cleanup.GetList(target)[target:UniqueID()] or {}
         for _, propTable in pairs(tbl) do
@@ -1654,12 +1519,10 @@ lia.command.add("freezeallprops", {
                 end
             end
         end
-
         client:notifySuccessLocalized("freezeAllProps", target:Name())
         client:notifySuccessLocalized("freezeAllPropsCount", count, target:Name())
     end
 })
-
 lia.command.add("charban", {
     superAdminOnly = true,
     desc = "banCharDesc",
@@ -1689,12 +1552,10 @@ lia.command.add("charban", {
         else
             target = lia.util.findPlayer(client, arguments[1])
         end
-
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local character = target:getChar()
         if character then
             character:setBanned(-1)
@@ -1703,7 +1564,6 @@ lia.command.add("charban", {
                 steamID = client:SteamID(),
                 rank = client:GetUserGroup()
             })
-
             character:save()
             character:kick()
             client:notifySuccessLocalized("charBan", client:Name(), target:Name())
@@ -1713,7 +1573,6 @@ lia.command.add("charban", {
         end
     end
 })
-
 lia.command.add("charwipe", {
     superAdminOnly = true,
     desc = "charWipeDesc",
@@ -1743,12 +1602,10 @@ lia.command.add("charwipe", {
         else
             target = lia.util.findPlayer(client, arguments[1])
         end
-
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local character = target:getChar()
         if character then
             local charID = character:getID()
@@ -1762,7 +1619,6 @@ lia.command.add("charwipe", {
         end
     end
 })
-
 lia.command.add("charwipeoffline", {
     superAdminOnly = true,
     desc = "charWipeOfflineDesc",
@@ -1780,7 +1636,6 @@ lia.command.add("charwipeoffline", {
                 client:notifyErrorLocalized("characterNotFound")
                 return
             end
-
             local charName = data[1].name
             for _, ply in player.Iterator() do
                 if ply:getChar() and ply:getChar():getID() == charID then
@@ -1788,14 +1643,12 @@ lia.command.add("charwipeoffline", {
                     break
                 end
             end
-
             lia.char.delete(charID)
             client:notifySuccessLocalized("offlineCharWiped", charID)
             lia.log.add(client, "charWipeOffline", charName, charID)
         end)
     end
 })
-
 lia.command.add("checkmoney", {
     adminOnly = true,
     desc = "checkMoneyDesc",
@@ -1817,12 +1670,10 @@ lia.command.add("checkmoney", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local money = target:getChar():getMoney()
         client:notifyMoneyLocalized("playerMoney", target:GetName(), lia.currency.get(money))
     end
 })
-
 lia.command.add("listbodygroups", {
     adminOnly = true,
     desc = "listBodygroupsDesc",
@@ -1838,7 +1689,6 @@ lia.command.add("listbodygroups", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local bodygroups = {}
         for i = 0, target:GetNumBodyGroups() - 1 do
             if target:GetBodygroupCount(i) > 1 then
@@ -1849,7 +1699,6 @@ lia.command.add("listbodygroups", {
                 })
             end
         end
-
         if #bodygroups > 0 then
             lia.util.SendTableUI(client, L("uiBodygroupsFor", target:Nick()), {
                 {
@@ -1870,7 +1719,6 @@ lia.command.add("listbodygroups", {
         end
     end
 })
-
 lia.command.add("charsetspeed", {
     adminOnly = true,
     desc = "setSpeedDesc",
@@ -1897,12 +1745,10 @@ lia.command.add("charsetspeed", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local speed = tonumber(arguments[2]) or lia.config.get("WalkSpeed")
         target:SetRunSpeed(speed)
     end
 })
-
 lia.command.add("charsetmodel", {
     adminOnly = true,
     desc = "setModelDesc",
@@ -1923,7 +1769,6 @@ lia.command.add("charsetmodel", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local oldModel = target:getChar():getModel()
         target:getChar():setModel(arguments[2] or oldModel)
         target:SetupHands()
@@ -1931,7 +1776,6 @@ lia.command.add("charsetmodel", {
         lia.log.add(client, "charsetmodel", target:Name(), arguments[2], oldModel)
     end
 })
-
 lia.command.add("chargiveitem", {
     superAdminOnly = true,
     desc = "giveItemDesc",
@@ -1957,13 +1801,11 @@ lia.command.add("chargiveitem", {
             client:notifyErrorLocalized("mustSpecifyItem")
             return
         end
-
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local uniqueID
         for _, v in SortedPairs(lia.item.list) do
             if lia.util.stringMatches(v.name, itemName) or lia.util.stringMatches(v.uniqueID, itemName) then
@@ -1971,12 +1813,10 @@ lia.command.add("chargiveitem", {
                 break
             end
         end
-
         if not uniqueID then
             client:notifyErrorLocalized("itemNoExist")
             return
         end
-
         local inv = target:getChar():getInv()
         local succ, err = inv:add(uniqueID)
         if succ then
@@ -1988,7 +1828,6 @@ lia.command.add("chargiveitem", {
         end
     end
 })
-
 lia.command.add("charsetdesc", {
     adminOnly = true,
     desc = "setDescDesc",
@@ -2015,19 +1854,16 @@ lia.command.add("charsetdesc", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if not target:getChar() then
             client:notifyErrorLocalized("noChar")
             return
         end
-
         local desc = table.concat(arguments, " ", 2)
         if not desc:find("%S") then return client:requestString(L("chgDescTitle", target:Name()), L("enterNewDesc"), function(text) lia.command.run(client, "charsetdesc", {arguments[1], text}) end, target:getChar():getDesc()) end
         target:getChar():setDesc(desc)
         return L("descChangedTarget", client:Name(), target:Name())
     end
 })
-
 lia.command.add("charsetname", {
     adminOnly = true,
     desc = "setNameDesc",
@@ -2054,7 +1890,6 @@ lia.command.add("charsetname", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local newName = table.concat(arguments, " ", 2)
         if newName == "" then return client:requestString(L("chgName"), L("chgNameDesc"), function(text) lia.command.run(client, "charsetname", {target:Name(), text}) end, target:Name()) end
         local oldName = target:getChar():getName()
@@ -2062,7 +1897,6 @@ lia.command.add("charsetname", {
         client:notifySuccessLocalized("changeName", client:Name(), oldName, newName)
     end
 })
-
 lia.command.add("charsetscale", {
     adminOnly = true,
     desc = "setScaleDesc",
@@ -2090,12 +1924,10 @@ lia.command.add("charsetscale", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:SetModelScale(scale, 0)
         client:notifySuccessLocalized("changedScale", target:Name(), scale)
     end
 })
-
 lia.command.add("charsetjump", {
     adminOnly = true,
     desc = "setJumpDesc",
@@ -2123,12 +1955,10 @@ lia.command.add("charsetjump", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:SetJumpPower(power)
         client:notifySuccessLocalized("changedJump", target:Name(), power)
     end
 })
-
 lia.command.add("charsetbodygroup", {
     adminOnly = true,
     desc = "setBodygroupDesc",
@@ -2155,7 +1985,6 @@ lia.command.add("charsetbodygroup", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local index = target:FindBodygroupByName(bodyGroup)
         if index > -1 then
             if value and value < 1 then value = nil end
@@ -2169,7 +1998,6 @@ lia.command.add("charsetbodygroup", {
         end
     end
 })
-
 lia.command.add("charsetskin", {
     adminOnly = true,
     desc = "setSkinDesc",
@@ -2197,13 +2025,11 @@ lia.command.add("charsetskin", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:getChar():setSkin(skin)
         target:SetSkin(skin or 0)
         client:notifySuccessLocalized("changeSkin", client:Name(), target:Name(), skin or 0)
     end
 })
-
 lia.command.add("charsetmoney", {
     superAdminOnly = true,
     desc = "setMoneyDesc",
@@ -2224,18 +2050,15 @@ lia.command.add("charsetmoney", {
             client:notifyErrorLocalized("invalidArg")
             return
         end
-
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         target:getChar():setMoney(math.floor(amount))
         client:notifyMoneyLocalized("setMoney", target:Name(), lia.currency.get(math.floor(amount)))
         lia.log.add(client, "charSetMoney", target:Name(), math.floor(amount))
     end
 })
-
 lia.command.add("charaddmoney", {
     superAdminOnly = true,
     desc = "addMoneyDesc",
@@ -2256,12 +2079,10 @@ lia.command.add("charaddmoney", {
             client:notifyErrorLocalized("invalidArg")
             return
         end
-
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         amount = math.Round(amount)
         local currentMoney = target:getChar():getMoney()
         target:getChar():setMoney(currentMoney + amount)
@@ -2270,7 +2091,6 @@ lia.command.add("charaddmoney", {
     end,
     alias = {"chargivemoney"}
 })
-
 lia.command.add("globalbotsay", {
     superAdminOnly = true,
     desc = "globalBotSayDesc",
@@ -2286,13 +2106,11 @@ lia.command.add("globalbotsay", {
             client:notifyErrorLocalized("noMessage")
             return
         end
-
         for _, bot in player.Iterator() do
             if bot:IsBot() then bot:Say(message) end
         end
     end
 })
-
 lia.command.add("botsay", {
     superAdminOnly = true,
     desc = "botSayDesc",
@@ -2311,7 +2129,6 @@ lia.command.add("botsay", {
             client:notifyErrorLocalized("needBotAndMessage")
             return
         end
-
         local botName = arguments[1]
         local message = table.concat(arguments, " ", 2)
         local targetBot
@@ -2321,16 +2138,13 @@ lia.command.add("botsay", {
                 break
             end
         end
-
         if not targetBot then
             client:notifyErrorLocalized("botNotFound", botName)
             return
         end
-
         targetBot:Say(message)
     end
 })
-
 lia.command.add("forcesay", {
     superAdminOnly = true,
     desc = "forceSayDesc",
@@ -2357,17 +2171,14 @@ lia.command.add("forcesay", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if message == "" then
             client:notifyErrorLocalized("noMessage")
             return
         end
-
         target:Say(message)
         lia.log.add(client, "forceSay", target:Name(), message)
     end
 })
-
 lia.command.add("getmodel", {
     desc = "getModelDesc",
     onRun = function(client)
@@ -2376,12 +2187,10 @@ lia.command.add("getmodel", {
             client:notifyErrorLocalized("noEntityInFront")
             return
         end
-
         local model = entity:GetModel()
         client:ChatPrint(model and L("modelIs", model) or L("noModelFound"))
     end
 })
-
 lia.command.add("pm", {
     desc = "pmDesc",
     arguments = {
@@ -2399,7 +2208,6 @@ lia.command.add("pm", {
             client:notifyErrorLocalized("pmsDisabled")
             return
         end
-
         local targetName = arguments[1]
         local message = table.concat(arguments, " ", 2)
         local target = lia.util.findPlayer(client, targetName)
@@ -2407,16 +2215,13 @@ lia.command.add("pm", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if not message:find("%S") then
             client:notifyErrorLocalized("noMessage")
             return
         end
-
         lia.chat.send(client, "pm", message, false, {client, target})
     end
 })
-
 lia.command.add("chargetmodel", {
     adminOnly = true,
     desc = "getCharModelDesc",
@@ -2438,11 +2243,9 @@ lia.command.add("chargetmodel", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         client:ChatPrint(L("charModelIs", target:GetModel()))
     end
 })
-
 lia.command.add("checkallmoney", {
     superAdminOnly = true,
     desc = "checkAllMoneyDesc",
@@ -2453,7 +2256,6 @@ lia.command.add("checkallmoney", {
         end
     end
 })
-
 lia.command.add("checkflags", {
     adminOnly = true,
     desc = "checkFlagsDesc",
@@ -2475,7 +2277,6 @@ lia.command.add("checkflags", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local flags = target:getFlags()
         if flags and #flags > 0 then
             client:ChatPrint(L("charFlags", target:Name(), table.concat(flags, ", ")))
@@ -2484,7 +2285,6 @@ lia.command.add("checkflags", {
         end
     end
 })
-
 lia.command.add("chargetname", {
     adminOnly = true,
     desc = "getCharNameDesc",
@@ -2506,11 +2306,9 @@ lia.command.add("chargetname", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         client:ChatPrint(L("charNameIs", target:getChar():getName()))
     end
 })
-
 lia.command.add("chargethealth", {
     adminOnly = true,
     desc = "getHealthDesc",
@@ -2532,11 +2330,9 @@ lia.command.add("chargethealth", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         client:ChatPrint(L("charHealthIs", target:Health(), target:GetMaxHealth()))
     end
 })
-
 lia.command.add("chargetmoney", {
     adminOnly = true,
     desc = "getMoneyDesc",
@@ -2558,12 +2354,10 @@ lia.command.add("chargetmoney", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local money = target:getChar():getMoney()
         client:ChatPrint(L("charMoneyIs", lia.currency.get(money)))
     end
 })
-
 lia.command.add("chargetinventory", {
     adminOnly = true,
     desc = "getInventoryDesc",
@@ -2585,23 +2379,19 @@ lia.command.add("chargetinventory", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local inventory = target:getChar():getInv()
         local items = inventory:getItems()
         if not items or table.Count(items) < 1 then
             client:notifyInfoLocalized("charInvEmpty")
             return
         end
-
         local result = {}
         for _, item in pairs(items) do
             table.insert(result, item.name)
         end
-
         client:ChatPrint(L("charInventoryIs", table.concat(result, ", ")))
     end
 })
-
 lia.command.add("getallinfos", {
     adminOnly = true,
     desc = "getAllInfosDesc",
@@ -2623,19 +2413,16 @@ lia.command.add("getallinfos", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local char = target:getChar()
         if not char then
             client:notifyErrorLocalized("noChar")
             return
         end
-
         local data = lia.char.getCharData(char:getID())
         if not data then
             client:notifyErrorLocalized("noChar")
             return
         end
-
         lia.administrator(L("allInfoFor", char:getName()))
         for column, value in pairs(data) do
             if istable(value) then
@@ -2645,11 +2432,9 @@ lia.command.add("getallinfos", {
                 lia.administrator(column .. " = " .. tostring(value))
             end
         end
-
         client:notifyInfoLocalized("infoPrintedConsole")
     end
 })
-
 lia.command.add("dropmoney", {
     adminOnly = true,
     desc = "dropMoneyDesc",
@@ -2665,24 +2450,20 @@ lia.command.add("dropmoney", {
             client:notifyErrorLocalized("invalidArg")
             return
         end
-
         local character = client:getChar()
         if not character or not character:hasMoney(amount) then
             client:notifyErrorLocalized("notEnoughMoney")
             return
         end
-
         local maxEntities = lia.config.get("MaxMoneyEntities", 3)
         local existingMoneyEntities = 0
         for _, entity in pairs(ents.FindByClass("lia_money")) do
             if entity.client == client then existingMoneyEntities = existingMoneyEntities + 1 end
         end
-
         if existingMoneyEntities >= maxEntities then
             client:notifyErrorLocalized("maxMoneyEntitiesReached", maxEntities)
             return
         end
-
         character:takeMoney(amount)
         local money = lia.currency.spawn(client:getItemDropPos(), amount)
         if IsValid(money) then
@@ -2694,7 +2475,6 @@ lia.command.add("dropmoney", {
         end
     end
 })
-
 lia.command.add("exportprivileges", {
     adminOnly = true,
     desc = "exportprivilegesDesc",
@@ -2714,7 +2494,6 @@ lia.command.add("exportprivileges", {
                 name = name and tostring(name) or ""
             })
         end
-
         local function walk(v)
             if istable(v) then return end
             for k, val in pairs(v) do
@@ -2733,18 +2512,15 @@ lia.command.add("exportprivileges", {
                             end
                         end
                     end
-
                     walk(val)
                 elseif isstring(val) or isnumber(val) then
                     if isstring(k) and k:lower() == "id" then add(val) end
                 end
             end
         end
-
         local function collect(t)
             if istable(t) == "table" then walk(t) end
         end
-
         local srcs = {}
         if lia then
             if lia.administrator then
@@ -2754,7 +2530,6 @@ lia.command.add("exportprivileges", {
                     if ok then table.insert(srcs, r) end
                 end
             end
-
             if lia.administrator then
                 table.insert(srcs, lia.administrator.privileges)
                 if isfunction(lia.administrator.getPrivileges) then
@@ -2762,7 +2537,6 @@ lia.command.add("exportprivileges", {
                     if ok then table.insert(srcs, r) end
                 end
             end
-
             if lia.permission then
                 table.insert(srcs, lia.permission.list)
                 if isfunction(lia.permission.getAll) then
@@ -2770,7 +2544,6 @@ lia.command.add("exportprivileges", {
                     if ok then table.insert(srcs, r) end
                 end
             end
-
             if lia.permissions then table.insert(srcs, lia.permissions) end
             if lia.privileges then table.insert(srcs, lia.privileges) end
             if lia.command then table.insert(srcs, lia.command.stored or lia.command.list) end
@@ -2783,16 +2556,13 @@ lia.command.add("exportprivileges", {
                 end
             end
         end
-
         for _, s in pairs(srcs) do
             collect(s)
         end
-
         table.sort(list, function(a, b) return a.id < b.id end)
         local payload = {
             privileges = list
         }
-
         local jsonData = util.TableToJSON(payload, true)
         local wrote = false
         do
@@ -2803,12 +2573,10 @@ lia.command.add("exportprivileges", {
                 wrote = true
             end
         end
-
         if not wrote then
             if not file.Exists("data", "DATA") then file.CreateDir("data") end
             wrote = file.Write("data/" .. filename, jsonData) and true or false
         end
-
         if wrote then
             client:notifySuccessLocalized("privilegesExportedSuccessfully", filename)
             MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logAdmin") .. "] ")
@@ -2820,7 +2588,6 @@ lia.command.add("exportprivileges", {
         end
     end
 })
-
 lia.command.add("bots", {
     superAdminOnly = true,
     desc = "botsManageDesc",
@@ -2839,7 +2606,6 @@ lia.command.add("bots", {
         end
     end
 })
-
 lia.command.add("bot", {
     superAdminOnly = true,
     desc = "botSpawnDesc",
@@ -2849,7 +2615,6 @@ lia.command.add("bot", {
         game.ConsoleCommand("bot\n")
     end
 })
-
 lia.command.add("serverpassword", {
     superAdminOnly = true,
     desc = "serverpasswordDesc",
@@ -2865,7 +2630,6 @@ lia.command.add("serverpassword", {
             end
             return
         end
-
         local cvar = GetConVar("sv_password")
         local pw = cvar and cvar:GetString() or ""
         if not isstring(pw) or pw == "" then return L("serverPasswordNotSet") end

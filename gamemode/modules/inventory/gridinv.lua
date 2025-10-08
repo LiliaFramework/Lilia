@@ -16,7 +16,6 @@ local function CanAccessInventoryIfCharacterIsOwner(inventory, action, context)
         end
     end
 end
-
 local function CanNotAddItemIfNoSpace(inventory, action, context)
     if action ~= "add" then return end
     if inventory.virtual then return true end
@@ -30,19 +29,15 @@ local function CanNotAddItemIfNoSpace(inventory, action, context)
     end
     return true
 end
-
 function GridInv:getWidth()
     return self:getData("w", lia.config.get("invW"))
 end
-
 function GridInv:getHeight()
     return self:getData("h", lia.config.get("invH"))
 end
-
 function GridInv:getSize()
     return self:getWidth(), self:getHeight()
 end
-
 function GridInv:canAdd(item)
     if isstring(item) then item = lia.item.list[item] end
     assert(istable(item), L("itemMustBeTable"))
@@ -54,7 +49,6 @@ function GridInv:canAdd(item)
     if itemH <= invW and itemW <= invH then return true end
     return false
 end
-
 function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     local testX2, testY2 = x + testItem:getWidth(), y + testItem:getHeight()
     local itemX, itemY = item:getData("x"), item:getData("y")
@@ -64,7 +58,6 @@ function GridInv:doesItemOverlapWithOther(testItem, x, y, item)
     if y >= itemY2 or itemY >= testY2 then return false end
     return true
 end
-
 function GridInv:doesFitInventory(item)
     if isstring(item) then item = lia.item.list[item] end
     local x, y = self:findFreePosition(item)
@@ -78,19 +71,16 @@ function GridInv:doesFitInventory(item)
     end
     return false
 end
-
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
     local itemW, itemH = item:getWidth() - 1, item:getHeight() - 1
     return x >= 1 and y >= 1 and x + itemW <= invW and y + itemH <= invH
 end
-
 function GridInv:doesItemFitAtPos(testItem, x, y)
     if not self:canItemFitInInventory(testItem, x, y) then return false end
     for _, v in pairs(self.items) do
         if self:doesItemOverlapWithOther(testItem, x, y, v) then return false, v end
     end
-
     if self.occupied then
         local w, h = testItem:getWidth(), testItem:getHeight()
         for x2 = 0, w - 1 do
@@ -101,7 +91,6 @@ function GridInv:doesItemFitAtPos(testItem, x, y)
     end
     return true
 end
-
 function GridInv:findFreePosition(item)
     local w, h = self:getSize()
     for x = 1, w do
@@ -110,14 +99,12 @@ function GridInv:findFreePosition(item)
         end
     end
 end
-
 function GridInv:configure()
     if SERVER then
         self:addAccessRule(CanNotAddItemIfNoSpace)
         self:addAccessRule(CanAccessInventoryIfCharacterIsOwner)
     end
 end
-
 function GridInv:getItems(noRecurse)
     local items = self.items
     if noRecurse then return items end
@@ -128,26 +115,22 @@ function GridInv:getItems(noRecurse)
     end
     return allItems
 end
-
 if SERVER then
     function GridInv:setSize(w, h)
         self:setData("w", w)
         self:setData("h", h)
     end
-
     function GridInv:wipeItems()
         for _, item in pairs(self:getItems()) do
             item:remove()
         end
     end
-
     function GridInv:setOwner(owner, fullUpdate)
         if IsValid(owner) and owner:IsPlayer() and owner:getChar() then
             owner = owner:getChar():getID()
         elseif not isnumber(owner) then
             return
         end
-
         if fullUpdate then
             for _, client in player.Iterator() do
                 if client:getChar():getID() == owner then
@@ -156,11 +139,9 @@ if SERVER then
                 end
             end
         end
-
         self:setData("char", owner)
         self.owner = owner
     end
-
     function GridInv:add(itemTypeOrItem, xOrQuantity, yOrData, noReplicate)
         local x, y, data
         local isStackCommand = isstring(itemTypeOrItem) and isnumber(xOrQuantity)
@@ -178,7 +159,6 @@ if SERVER then
             x = tonumber(xOrQuantity)
             y = tonumber(yOrData)
         end
-
         local d = deferred.new()
         local item, justAddDirectly
         if lia.item.isItem(itemTypeOrItem) then
@@ -187,7 +167,6 @@ if SERVER then
         else
             item = lia.item.list[itemTypeOrItem]
         end
-
         if not item then return d:reject(L("invalidItemTypeOrID", item and item.name or tostring(itemTypeOrItem))) end
         local targetInventory = self
         if not targetInventory:canAdd(itemTypeOrItem) then return d:reject(L("noSpaceForItem")) end
@@ -206,7 +185,6 @@ if SERVER then
                 end
             end
         end
-
         if isStackCommand and item.isStackable ~= true then isStackCommand = false end
         local targetAssignments, remainingQuantity = {}, xOrQuantity
         if isStackCommand then
@@ -228,7 +206,6 @@ if SERVER then
                 end
             end
         end
-
         if isStackCommand and remainingQuantity == 0 then
             local resultItems = {}
             for targetItem, assignedQuantity in pairs(targetAssignments) do
@@ -237,13 +214,11 @@ if SERVER then
             end
             return d:resolve(resultItems)
         end
-
         local context = {
             item = item,
             x = x,
             y = y
         }
-
         local canAccess, reason = targetInventory:canAccess("add", context)
         if not canAccess then
             if istable(reason) then
@@ -253,26 +228,22 @@ if SERVER then
             end
             return d:reject(tostring(reason or L("noAccess")))
         end
-
         if not isStackCommand and justAddDirectly then
             item:setData("x", x)
             item:setData("y", y)
             targetInventory:addItem(item, noReplicate)
             return d:resolve(item)
         end
-
         targetInventory.occupied = targetInventory.occupied or {}
         for x2 = 0, item:getWidth() - 1 do
             for y2 = 0, item:getHeight() - 1 do
                 targetInventory.occupied[x + x2 .. y + y2] = true
             end
         end
-
         data = table.Merge({
             x = x,
             y = y
         }, data or {})
-
         local itemType = item.uniqueID
         lia.item.instance(targetInventory:getID(), itemType, data, 0, 0, function(instItem)
             if targetInventory.occupied then
@@ -282,7 +253,6 @@ if SERVER then
                     end
                 end
             end
-
             targetInventory:addItem(instItem, noReplicate)
             d:resolve(instItem)
         end):next(function(returnedItem)
@@ -290,26 +260,22 @@ if SERVER then
                 for targetItem, assignedQuantity in pairs(targetAssignments) do
                     targetItem:addQuantity(assignedQuantity)
                 end
-
                 local overStacks = math.ceil(remainingQuantity / returnedItem.maxQuantity) - 1
                 if overStacks > 0 then
                     local items = {}
                     for i = 1, overStacks do
                         items[i] = self:add(itemTypeOrItem)
                     end
-
                     deferred.all(items):next(nil, function() hook.Run("OnPlayerLostStackItem", itemTypeOrItem) end)
                     returnedItem:setQuantity(remainingQuantity - returnedItem.maxQuantity * overStacks)
                     targetInventory:addItem(returnedItem, noReplicate)
                     return d:resolve(items)
                 end
-
                 returnedItem:setQuantity(remainingQuantity)
             end
         end)
         return d
     end
-
     function GridInv:remove(itemTypeOrID, quantity)
         quantity = quantity or 1
         assert(isnumber(quantity), L("quantityMustBeNumber"))
@@ -323,7 +289,6 @@ if SERVER then
                 self:removeItem(items[i]:getID())
             end
         end
-
         d:resolve()
         return d
     end
@@ -337,7 +302,6 @@ else
             if not inventory then return end
             item = inventory.items[itemID]
         end
-
         if item and item:getData("x") == x and item:getData("y") == y then return end
         if item and inventory and (x > inventory:getWidth() or y > inventory:getHeight() or x + item:getWidth() - 1 < 1 or y + item:getHeight() - 1 < 1) then destinationID = nil end
         net.Start("liaTransferItem")
@@ -348,5 +312,4 @@ else
         net.SendToServer()
     end
 end
-
 GridInv:register("GridInv")

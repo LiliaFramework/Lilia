@@ -34,11 +34,9 @@ net.Receive("liaActiveTickets", function()
             field = "message"
         }
     }
-
     for _, col in ipairs(columns) do
         list:AddColumn(col.name)
     end
-
     local function populate(filter)
         list:Clear()
         filter = string.lower(filter or "")
@@ -50,7 +48,6 @@ net.Receive("liaActiveTickets", function()
                 local requesterName = IsValid(requesterPly) and requesterPly:Nick() or requester
                 requesterDisplay = string.format("%s (%s)", requesterName, requester)
             end
-
             local ts = os.date("%Y-%m-%d %H:%M:%S", t.timestamp or os.time())
             local adminDisplay = L("unassigned")
             if t.admin then
@@ -58,7 +55,6 @@ net.Receive("liaActiveTickets", function()
                 local adminName = IsValid(adminPly) and adminPly:Nick() or t.admin
                 adminDisplay = string.format("%s (%s)", adminName, t.admin)
             end
-
             local values = {ts, requesterDisplay, adminDisplay, t.message or ""}
             local match = false
             if filter == "" then
@@ -71,11 +67,9 @@ net.Receive("liaActiveTickets", function()
                     end
                 end
             end
-
             if match then list:AddLine(unpack(values)) end
         end
     end
-
     search.OnChange = function() populate(search:GetValue()) end
     populate("")
     function list:OnRowRightClick(_, line)
@@ -88,20 +82,16 @@ net.Receive("liaActiveTickets", function()
                 local value = line:GetColumnText(i) or ""
                 rowString = rowString .. header .. " " .. value .. " | "
             end
-
             SetClipboardText(string.sub(rowString, 1, -4))
         end):SetIcon("icon16/page_copy.png")
-
         menu:Open()
     end
 end)
-
 net.Receive("liaTicketsCount", function()
     local count = net.ReadInt(32)
     ticketsCount = count
     if not ticketsTabAdded and count > 0 then ticketsTabAdded = true end
 end)
-
 hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
     if not IsValid(LocalPlayer()) or not (LocalPlayer():hasPrivilege("alwaysSeeTickets") or LocalPlayer():isStaffOnDuty()) then return end
     if ticketsCount and ticketsCount > 0 then
@@ -116,7 +106,6 @@ hook.Add("PopulateAdminTabs", "liaTicketsTab", function(pages)
         })
     end
 end)
-
 net.Receive("liaViewClaims", function()
     local tbl = net.ReadTable()
     local steamid = net.ReadString()
@@ -129,14 +118,12 @@ net.Receive("liaViewClaims", function()
         end
     end
 end)
-
 net.Receive("liaTicketSystem", function()
     local pl = net.ReadEntity()
     local msg = net.ReadString()
     local claimed = net.ReadEntity()
     if IsValid(LocalPlayer()) and (LocalPlayer():isStaffOnDuty() or LocalPlayer():hasPrivilege("alwaysSeeTickets")) then MODULE:TicketFrame(pl, msg, claimed) end
 end)
-
 net.Receive("liaTicketSystemClaim", function()
     local pl = net.ReadEntity()
     local requester = net.ReadEntity()
@@ -155,7 +142,6 @@ net.Receive("liaTicketSystemClaim", function()
                     draw.RoundedBox(0, 2, 2, w - 4, 16, Color(207, 0, 15))
                 end
             end
-
             local bu = v:GetChildren()[11]
             bu.DoClick = function()
                 if LocalPlayer() == pl then
@@ -169,13 +155,11 @@ net.Receive("liaTicketSystemClaim", function()
         end
     end
 end)
-
 net.Receive("liaTicketSystemClose", function()
     local requester = net.ReadEntity()
     if not IsValid(requester) or not requester:IsPlayer() then return end
     for _, v in pairs(TicketFrames) do
         if v.idiot == requester then v:Remove() end
     end
-
     if timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
 end)

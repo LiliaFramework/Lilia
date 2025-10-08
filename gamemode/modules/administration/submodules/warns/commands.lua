@@ -27,12 +27,10 @@ lia.command.add("warn", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if target == client then
             client:notifyErrorLocalized("cannotWarnSelf")
             return
         end
-
         local timestamp = os.date("%Y-%m-%d %H:%M:%S")
         local warnerName = client:Nick()
         local warnerSteamID = client:SteamID()
@@ -44,7 +42,6 @@ lia.command.add("warn", {
         end)
     end
 })
-
 lia.command.add("viewwarns", {
     adminOnly = true,
     desc = "viewWarnsDesc",
@@ -66,13 +63,11 @@ lia.command.add("viewwarns", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         MODULE:GetWarnings(target:getChar():getID()):next(function(warns)
             if #warns == 0 then
                 client:notifyInfoLocalized("noWarnings", target:Nick())
                 return
             end
-
             local warningList = {}
             for index, warn in ipairs(warns) do
                 table.insert(warningList, {
@@ -82,7 +77,6 @@ lia.command.add("viewwarns", {
                     warningMessage = warn.message or L("na")
                 })
             end
-
             lia.util.SendTableUI(client, L("playerWarningsTitle", target:Nick()), {
                 {
                     name = "id",
@@ -106,12 +100,10 @@ lia.command.add("viewwarns", {
                     net = "RequestRemoveWarning"
                 }
             }, target:getChar():getID())
-
             lia.log.add(client, "viewWarns", target)
         end)
     end
 })
-
 lia.command.add("viewwarnsissued", {
     adminOnly = true,
     desc = "viewWarnsIssuedDesc",
@@ -127,20 +119,17 @@ lia.command.add("viewwarnsissued", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local target = lia.util.findPlayer(client, targetName)
         local steamID, displayName = targetName, targetName
         if IsValid(target) then
             steamID = target:SteamID()
             displayName = target:Nick()
         end
-
         MODULE:GetWarningsByIssuer(steamID):next(function(warns)
             if #warns == 0 then
                 client:notifyInfoLocalized("noWarnings", displayName)
                 return
             end
-
             local warningList = {}
             for index, warn in ipairs(warns) do
                 warningList[#warningList + 1] = {
@@ -150,7 +139,6 @@ lia.command.add("viewwarnsissued", {
                     warningMessage = warn.message or L("na")
                 }
             end
-
             lia.util.SendTableUI(client, L("warningsIssuedTitle", displayName), {
                 {
                     name = "id",
@@ -169,7 +157,6 @@ lia.command.add("viewwarnsissued", {
                     field = "warningMessage"
                 }
             }, warningList)
-
             lia.log.add(client, "viewWarnsIssued", target or steamID)
         end)
     end

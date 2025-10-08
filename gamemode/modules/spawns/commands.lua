@@ -21,7 +21,6 @@ lia.command.add("spawnadd", {
             client:notifyErrorLocalized("invalidArg")
             return
         end
-
         local factionInfo = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
         if factionInfo then
             MODULE:FetchSpawns():next(function(spawns)
@@ -31,7 +30,6 @@ lia.command.add("spawnadd", {
                     ang = client:EyeAngles(),
                     map = game.GetMap()
                 }
-
                 table.insert(spawns[factionInfo.uniqueID], newSpawn)
                 MODULE:StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnAdd", factionInfo.name)
@@ -43,7 +41,6 @@ lia.command.add("spawnadd", {
         end
     end
 })
-
 lia.command.add("spawnremoveinradius", {
     adminOnly = true,
     desc = "spawnRemoveInRadiusDesc",
@@ -72,10 +69,8 @@ lia.command.add("spawnremoveinradius", {
                         end
                     end
                 end
-
                 if #list == 0 then spawns[faction] = nil end
             end
-
             if removedCount > 0 then
                 MODULE:StoreSpawns(spawns):next(function()
                     lia.log.add(client, "spawnRemoveRadius", radius, removedCount)
@@ -88,7 +83,6 @@ lia.command.add("spawnremoveinradius", {
         end)
     end
 })
-
 lia.command.add("spawnremovebyname", {
     adminOnly = true,
     desc = "spawnRemoveByNameDesc",
@@ -121,7 +115,6 @@ lia.command.add("spawnremovebyname", {
                             removedCount = removedCount + 1
                         end
                     end
-
                     if removedCount > 0 then
                         if #list == 0 then spawns[factionInfo.uniqueID] = nil end
                         MODULE:StoreSpawns(spawns):next(function()
@@ -140,7 +133,6 @@ lia.command.add("spawnremovebyname", {
         end
     end
 })
-
 lia.command.add("returnitems", {
     superAdminOnly = true,
     desc = "returnItemsDesc",
@@ -162,13 +154,11 @@ lia.command.add("returnitems", {
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         if lia.config.get("LoseItemsonDeathHuman", false) or lia.config.get("LoseItemsonDeathNPC", false) then
             if not target.LostItems or table.IsEmpty(target.LostItems) then
                 client:notifyInfoLocalized("returnItemsTargetNoItems")
                 return
             end
-
             local character = target:getChar()
             if not character then return end
             local inv = character:getInv()
@@ -176,7 +166,6 @@ lia.command.add("returnitems", {
             for _, item in pairs(target.LostItems) do
                 inv:add(item)
             end
-
             target.LostItems = nil
             target:notifySuccessLocalized("returnItemsReturnedToPlayer")
             client:notifySuccessLocalized("returnItemsAdminConfirmed")

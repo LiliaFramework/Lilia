@@ -33,11 +33,9 @@ net.Receive("liaAllWarnings", function()
             field = "message"
         }
     }
-
     for _, col in ipairs(columns) do
         list:AddColumn(col.name)
     end
-
     local function populate(filter)
         list:Clear()
         filter = string.lower(filter or "")
@@ -56,11 +54,9 @@ net.Receive("liaAllWarnings", function()
                     end
                 end
             end
-
             if match then list:AddLine(unpack(values)) end
         end
     end
-
     search.OnChange = function() populate(search:GetValue()) end
     populate("")
     function list:OnRowRightClick(_, line)
@@ -73,20 +69,16 @@ net.Receive("liaAllWarnings", function()
                 local value = line:GetColumnText(i) or ""
                 rowString = rowString .. header .. " " .. value .. " | "
             end
-
             SetClipboardText(string.sub(rowString, 1, -4))
         end):SetIcon("icon16/page_copy.png")
-
         menu:Open()
     end
 end)
-
 net.Receive("liaWarningsCount", function()
     local count = net.ReadInt(32)
     warningsCount = count
     if not warningsTabAdded and count > 0 then warningsTabAdded = true end
 end)
-
 hook.Add("PopulateAdminTabs", "liaWarningsTab", function(pages)
     if not IsValid(LocalPlayer()) or not LocalPlayer():hasPrivilege("viewPlayerWarnings") then return end
     if warningsCount and warningsCount > 0 then
