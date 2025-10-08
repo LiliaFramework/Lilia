@@ -8,7 +8,6 @@
             local perm = net.ReadUInt(2)
             access[ply] = perm
         end
-
         local door2 = net.ReadEntity()
         if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
         if IsValid(entity) then
@@ -19,7 +18,6 @@
         lia.gui.door:Remove()
     end
 end)
-
 net.Receive("liaDoorPerm", function()
     local door = net.ReadEntity()
     local client = net.ReadEntity()

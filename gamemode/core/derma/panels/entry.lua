@@ -36,11 +36,9 @@ function PANEL:Init()
             text = value
             col = lia.color.theme.text_entry or lia.color.theme.text
         end
-
         draw.SimpleText(text, font, padding - self._text_offset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 end
-
 function PANEL:SetTitle(title)
     self.title = title
     self:SetTall(52)
@@ -50,39 +48,30 @@ function PANEL:SetTitle(title)
     self.titlePanel:SetTall(18)
     self.titlePanel.Paint = function() draw.SimpleText(self.title, 'LiliaFont.18', 0, 0, lia.color.theme.text_entry or lia.color.theme.text) end
 end
-
 function PANEL:SetPlaceholder(placeholder)
     self.placeholder = placeholder
 end
-
 function PANEL:SetPlaceholderText(placeholder)
     self.placeholder = placeholder
 end
-
 function PANEL:SetValue(value)
     self.textEntry:SetText(value or '')
 end
-
 function PANEL:SetText(value)
     self:SetValue(value)
 end
-
 function PANEL:GetValue()
     return self.textEntry:GetText()
 end
-
 function PANEL:SelectAll()
     if self.textEntry.SelectAllText then self.textEntry:SelectAllText(true) end
 end
-
 function PANEL:SetFont(font)
     self.textEntry:SetFont(font)
 end
-
 function PANEL:SetNumeric(isNumeric)
     if self.textEntry.SetNumeric then self.textEntry:SetNumeric(isNumeric) end
 end
-
 function PANEL:AllowInput(callback)
     if isfunction(callback) then
         self.textEntry.AllowInput = function(_, char) return callback(self, char) end
@@ -90,9 +79,7 @@ function PANEL:AllowInput(callback)
         self.textEntry.AllowInput = nil
     end
 end
-
 function PANEL:SetTextColor(color)
     if IsValid(self.textEntry) then self.textEntry:SetTextColor(color) end
 end
-
 vgui.Register('liaEntry', PANEL, 'EditablePanel')

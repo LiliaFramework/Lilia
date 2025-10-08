@@ -10,7 +10,6 @@ MODULE.Privileges = {
         Category = "categoryStaffManagement"
     }
 }
-
 MODULE.Dependencies = {
     {
         File = "gridinv.lua",

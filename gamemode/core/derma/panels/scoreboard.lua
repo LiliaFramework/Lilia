@@ -9,14 +9,12 @@ local rowPaint = {
         surface.DrawRect(0, 0, w, h)
     end
 }
-
 local function wrap(text, maxWidth, font)
     surface.SetFont(font)
     local words, lines, current = {}, {}, ""
     for w in text:gmatch("%S+") do
         words[#words + 1] = w
     end
-
     for _, w in ipairs(words) do
         local trial = current == "" and w or current .. " " .. w
         if select(1, surface.GetTextSize(trial)) > maxWidth then
@@ -30,11 +28,9 @@ local function wrap(text, maxWidth, font)
             current = trial
         end
     end
-
     if current ~= "" then lines[#lines + 1] = current end
     return lines
 end
-
 function PANEL:ApplyConfig()
     local screenW, screenH = ScrW(), ScrH()
     local w, h = screenW * lia.config.get("sbWidth", 0.35), screenH * lia.config.get("sbHeight", 0.65)
@@ -48,7 +44,6 @@ function PANEL:ApplyConfig()
         self:Center()
     end
 end
-
 function PANEL:Init()
     if IsValid(lia.gui.score) then lia.gui.score:Remove() end
     lia.gui.score = self
@@ -114,7 +109,6 @@ function PANEL:Init()
                 lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(facColor.r, facColor.g, facColor.b, 200)):Shape(lia.derma.SHAPE_IOS):Draw()
             end
         end
-
         if facData.logo and facData.logo ~= "" and IsValid(facCat.Header) then
             local img = facCat.Header:Add("DImage")
             img:Dock(LEFT)
@@ -122,14 +116,12 @@ function PANEL:Init()
             img:SetWide(30)
             img:SetMaterial(Material(facData.logo))
         end
-
         local lbl
         if IsValid(facCat.Header) then
             lbl = facCat.Header:Add("DLabel")
         else
             lbl = vgui.Create("DLabel")
         end
-
         lbl:SetFont("liaMediumFont")
         lbl:SetTextColor(color_white)
         lbl:SetExpensiveShadow(1, color_black)
@@ -142,7 +134,6 @@ function PANEL:Init()
                 lbl:SetPos((ww - lbl:GetWide()) * 0.5, (hh - lbl:GetTall()) * 0.5)
             end
         end
-
         local facCont = vgui.Create("DListLayout", facCat)
         facCat:SetContents(facCont)
         facCont.noClass = facCont:Add("DListLayout")
@@ -157,7 +148,6 @@ function PANEL:Init()
                     facCont.classLists[clsID] = lst
                     continue
                 end
-
                 local cat = facCont:Add("DCollapsibleCategory")
                 cat:SetLabel("")
                 cat:SetExpanded(true)
@@ -169,7 +159,6 @@ function PANEL:Init()
                         lia.derma.rect(0, 0, ww, hh):Rad(radius):Color(Color(c.r, c.g, c.b, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
                     end
                 end
-
                 if clsData.logo and clsData.logo ~= "" and IsValid(cat.Header) then
                     local ico = cat.Header:Add("DImage")
                     ico:Dock(LEFT)
@@ -177,14 +166,12 @@ function PANEL:Init()
                     ico:SetWide(20)
                     ico:SetMaterial(Material(clsData.logo))
                 end
-
                 local hlbl
                 if IsValid(cat.Header) then
                     hlbl = cat.Header:Add("DLabel")
                 else
                     hlbl = vgui.Create("DLabel")
                 end
-
                 hlbl:SetFont("liaMediumFont")
                 hlbl:SetTextColor(color_white)
                 hlbl:SetExpensiveShadow(1, color_black)
@@ -197,24 +184,20 @@ function PANEL:Init()
                         hlbl:SetPos((ww - hlbl:GetWide()) * 0.5, (hh - hlbl:GetTall()) * 0.5)
                     end
                 end
-
                 local lst = vgui.Create("DListLayout", cat)
                 cat:SetContents(lst)
                 facCont.classLists[clsID] = lst
             end
         end
-
         self.factionLists[facID] = facCont
     end
 end
-
 function PANEL:updateStaff()
     local total, duty = 0, 0
     for _, ply in player.Iterator() do
         if ply:isStaff() then total = total + 1 end
         if ply:isStaffOnDuty() then duty = duty + 1 end
     end
-
     local current, maximum = player.GetCount(), game.MaxPlayers()
     self.staffOnline:SetText(L("staffOnline", total))
     self.playersOnline:SetText(L("playersOnline", current .. "/" .. maximum))
@@ -223,7 +206,6 @@ function PANEL:updateStaff()
     self.playersOnline:SizeToContentsX()
     self.staffOnDuty:SizeToContentsX()
 end
-
 function PANEL:Think()
     if (self.nextUpdate or 0) > CurTime() then return end
     for _, ply in player.Iterator() do
@@ -239,7 +221,6 @@ function PANEL:Think()
             parent:InvalidateLayout(true)
         end
     end
-
     for _, facCont in pairs(self.factionLists) do
         local showFaction = facCont.noClass:ChildCount() > 0
         for _, lst in pairs(facCont.classLists) do
@@ -247,19 +228,15 @@ function PANEL:Think()
             cat:SetVisible(hasPlayers)
             if hasPlayers then showFaction = true end
         end
-
         local facCat = facCont:GetParent()
         if IsValid(facCat) then facCat:SetVisible(showFaction) end
     end
-
     for _, slot in ipairs(self.playerSlots) do
         if IsValid(slot) then slot:update() end
     end
-
     self:updateStaff()
     self.nextUpdate = CurTime() + 0.1
 end
-
 function PANEL:addPlayer(ply, parent)
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
@@ -279,7 +256,6 @@ function PANEL:addPlayer(ply, parent)
         ent:SetAngles(Angle(0, 0, 0))
         slot.model:RunAnimation()
     end
-
     slot.lastHidden = hook.Run("ShouldAllowScoreboardOverride", ply, "model")
     slot.model:setHidden(slot.lastHidden)
     local initialOpts = {}
@@ -293,24 +269,19 @@ function PANEL:addPlayer(ply, parent)
             for _, o in ipairs(opts) do
                 menu:AddOption(L(o.name), o.func):SetImage(o.image)
             end
-
             menu:Open()
         end
     end
-
     timer.Simple(0, function()
         if not IsValid(slot.model) or not IsValid(slot.model.Entity) then return end
         for _, bg in ipairs(ply:GetBodyGroups()) do
             slot.model.Entity:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
         end
-
         for i in ipairs(ply:GetMaterials()) do
             slot.model.Entity:SetSubMaterial(i - 1, ply:GetSubMaterial(i - 1))
         end
-
         hook.Run("ModifyScoreboardModel", slot.model.Entity, ply)
     end)
-
     slot.name = vgui.Create("DLabel", slot)
     slot.name:SetFont("liaMediumFont")
     slot.name:SetTextColor(color_white)
@@ -346,10 +317,8 @@ function PANEL:addPlayer(ply, parent)
         else
             self.classLogo:SetVisible(false)
         end
-
         self.ping:SetPos(totalW - pingW, (height - self.ping:GetTall()) * 0.5)
     end
-
     slot.ping.Think = function(lbl)
         if not IsValid(ply) then return end
         local txt = tostring(ply:Ping())
@@ -359,34 +328,29 @@ function PANEL:addPlayer(ply, parent)
             slot:layout()
         end
     end
-
     function slot:update()
         if not IsValid(ply) then
             hook.Run("ScoreboardRowRemoved", self, ply)
             self:Remove()
             return
         end
-
         local char = ply:getChar()
         if not char or char ~= self.character then
             hook.Run("ScoreboardRowRemoved", self, ply)
             self:Remove()
             return
         end
-
         local overrideModel = hook.Run("ShouldAllowScoreboardOverride", ply, "model")
         if self.lastHidden ~= overrideModel then
             slot.model:setHidden(overrideModel)
             self.lastHidden = overrideModel
         end
-
         local name = hook.Run("ShouldAllowScoreboardOverride", ply, "name") and hook.Run("GetDisplayedName", ply) or char:getName()
         name = name:gsub("#", "\226\128\139#")
         if self.lastName ~= name then
             self.name:SetText(name)
             self.lastName = name
         end
-
         local desc = hook.Run("ShouldAllowScoreboardOverride", ply, "desc") and hook.Run("GetDisplayedDescription", ply, false) or char:getDesc()
         desc = desc:gsub("#", "\226\128\139#")
         local wrapped = wrap(desc, self.desc:GetWide(), "liaSmallFont")
@@ -399,24 +363,20 @@ function PANEL:addPlayer(ply, parent)
                 wrapped[i] = nil
             end
         end
-
         local finalDesc = table.concat(wrapped, "\n")
         if self.lastDesc ~= finalDesc then
             self.desc:SetText(finalDesc)
             self.lastDesc = finalDesc
         end
-
         local mdl, sk = ply:GetModel(), ply:GetSkin()
         if self.lastModel ~= mdl or self.lastSkin ~= sk then
             slot.model:SetModel(mdl, sk)
             for _, bg in ipairs(ply:GetBodyGroups()) do
                 slot.model.Entity:SetBodygroup(bg.id, ply:GetBodygroup(bg.id))
             end
-
             hook.Run("ModifyScoreboardModel", slot.model.Entity, ply)
             self.lastModel, self.lastSkin = mdl, sk
         end
-
         local clsData = lia.class.list[char:getClass()]
         local showLogo = lia.config.get("ClassLogo", false) and clsData and not clsData.scoreboardHidden and clsData.logo and clsData.logo ~= ""
         if showLogo then
@@ -425,17 +385,14 @@ function PANEL:addPlayer(ply, parent)
                 self.classLogo:SetMaterial(Material(logoMat))
                 self.lastClassLogo = logoMat
             end
-
             self.hideLogo = false
         else
             self.classLogo:SetMaterial(nil)
             self.lastClassLogo = nil
             self.hideLogo = true
         end
-
         slot:layout()
     end
-
     parent:InvalidateLayout(true)
     self.playerSlots[#self.playerSlots + 1] = slot
     local idx = 0
@@ -450,11 +407,9 @@ function PANEL:addPlayer(ply, parent)
             end
         end
     end
-
     slot:update()
     hook.Run("ScoreboardRowCreated", slot, ply)
 end
-
 function PANEL:Paint(w, h)
     local radius = 16
     if lia.config.get("UseSolidBackground", false) then
@@ -464,26 +419,21 @@ function PANEL:Paint(w, h)
             b = 50,
             a = 255
         })
-
         lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(bg.r, bg.g, bg.b, bg.a)):Shape(lia.derma.SHAPE_IOS):Draw()
     else
         lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
     end
-
     local alpha = lia.config.get("UseSolidBackground", false) and 200 or 150
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
 end
-
 function PANEL:Update()
     if IsValid(self) then
         self:Remove()
         vgui.Create("liaScoreboard")
     end
 end
-
 function PANEL:OnRemove()
     hook.Run("ScoreboardClosed", self)
     CloseDermaMenus()
 end
-
 vgui.Register("liaScoreboard", PANEL, "EditablePanel")

@@ -5,7 +5,6 @@ net.Receive("liaForceUpdateFOne", function()
         vgui.Create("liaMenu")
     end
 end)
-
 net.Receive("liaCfgSet", function()
     local key = net.ReadString()
     local value = net.ReadType()

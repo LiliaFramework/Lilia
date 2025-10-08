@@ -16,7 +16,6 @@ MODULE.Privileges = {
         Category = "vendors",
     },
 }
-
 VENDOR_WELCOME = 1
 VENDOR_LEAVE = 2
 VENDOR_NOTRADE = 3

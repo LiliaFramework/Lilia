@@ -4,7 +4,6 @@ local function runCommand(client, args, range)
     if not IsValid(target) or not target:getChar() then return end
     MODULE:ForceRecognizeRange(target, range)
 end
-
 lia.command.add("recogwhisper", {
     adminOnly = true,
     arguments = {
@@ -16,7 +15,6 @@ lia.command.add("recogwhisper", {
     desc = "recogWhisperDesc",
     onRun = function(client, arguments) runCommand(client, arguments, "whisper") end
 })
-
 lia.command.add("recognormal", {
     adminOnly = true,
     arguments = {
@@ -28,7 +26,6 @@ lia.command.add("recognormal", {
     desc = "recogNormalDesc",
     onRun = function(client, arguments) runCommand(client, arguments, "normal") end
 })
-
 lia.command.add("recogyell", {
     adminOnly = true,
     arguments = {
@@ -40,7 +37,6 @@ lia.command.add("recogyell", {
     desc = "recogYellDesc",
     onRun = function(client, arguments) runCommand(client, arguments, "yell") end
 })
-
 lia.command.add("recogbots", {
     superAdminOnly = true,
     arguments = {

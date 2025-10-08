@@ -46,11 +46,9 @@ ITEM.functions.use = {
         }
     }
 }
-
 function ITEM:getDesc()
     return L("ammoDesc", self:getQuantity())
 end
-
 function ITEM:paintOver(item)
     local quantity = item:getQuantity()
     lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")

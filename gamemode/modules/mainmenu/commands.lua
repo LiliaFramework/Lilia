@@ -13,7 +13,6 @@
             client:notifyErrorLocalized("noStaffChar")
             return
         end
-
         client:setLiliaData("staffDiscord", discord)
         local description = L("staffCharacterDiscordSteamID", discord, client:SteamID())
         character:setDesc(description)

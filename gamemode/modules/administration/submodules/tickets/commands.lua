@@ -14,7 +14,6 @@ lia.command.add("viewtickets", {
             client:notifyErrorLocalized("mustSpecifyPlayer")
             return
         end
-
         local target = lia.util.findPlayer(client, targetName)
         local steamID, displayName
         if IsValid(target) then
@@ -24,13 +23,11 @@ lia.command.add("viewtickets", {
             steamID = targetName
             displayName = targetName
         end
-
         MODULE:GetTicketsByRequester(steamID):next(function(tickets)
             if #tickets == 0 then
                 client:notifyInfoLocalized("noTicketsFound")
                 return
             end
-
             local ticketsData = {}
             for _, ticket in ipairs(tickets) do
                 ticketsData[#ticketsData + 1] = {
@@ -39,7 +36,6 @@ lia.command.add("viewtickets", {
                     message = ticket.message or ""
                 }
             end
-
             lia.util.SendTableUI(client, L("ticketsForTitle", displayName), {
                 {
                     name = "timestamp",
@@ -54,12 +50,10 @@ lia.command.add("viewtickets", {
                     field = "message"
                 }
             }, ticketsData)
-
             lia.log.add(client, "viewPlayerTickets", displayName)
         end)
     end
 })
-
 lia.command.add("plyviewclaims", {
     adminOnly = true,
     desc = "plyViewClaimsDesc",
@@ -81,13 +75,11 @@ lia.command.add("plyviewclaims", {
             client:notifyErrorLocalized("mustSpecifyPlayer")
             return
         end
-
         local target = lia.util.findPlayer(client, targetName)
         if not target or not IsValid(target) then
             client:notifyErrorLocalized("targetNotFound")
             return
         end
-
         local steamID = target:SteamID()
         MODULE:GetAllCaseClaims():next(function(caseclaims)
             local claim = caseclaims[steamID]
@@ -95,7 +87,6 @@ lia.command.add("plyviewclaims", {
                 client:notifyInfoLocalized("noClaimsFound")
                 return
             end
-
             local claimsData = {
                 {
                     steamID = steamID,
@@ -112,7 +103,6 @@ lia.command.add("plyviewclaims", {
                     end)(), "\n")
                 }
             }
-
             lia.util.SendTableUI(client, L("claimsForTitle", target:Nick()), {
                 {
                     name = "steamID",
@@ -139,12 +129,10 @@ lia.command.add("plyviewclaims", {
                     field = "claimedFor"
                 }
             }, claimsData)
-
             lia.log.add(client, "viewPlayerClaims", target:Name())
         end)
     end
 })
-
 lia.command.add("viewallclaims", {
     adminOnly = true,
     desc = "viewAllClaimsDesc",
@@ -154,7 +142,6 @@ lia.command.add("viewallclaims", {
                 client:notifyInfoLocalized("noClaimsRecorded")
                 return
             end
-
             local claimsData = {}
             for steamID, claim in pairs(caseclaims) do
                 table.insert(claimsData, {
@@ -172,7 +159,6 @@ lia.command.add("viewallclaims", {
                     end)(), ", ")
                 })
             end
-
             lia.util.SendTableUI(client, "adminClaimsTitle", {
                 {
                     name = "steamID",
@@ -199,12 +185,10 @@ lia.command.add("viewallclaims", {
                     field = "claimedFor"
                 }
             }, claimsData)
-
             lia.log.add(client, "viewAllClaims")
         end)
     end
 })
-
 lia.command.add("viewclaims", {
     adminOnly = true,
     desc = "viewClaimsDesc",
@@ -214,7 +198,6 @@ lia.command.add("viewclaims", {
                 client:notifyInfoLocalized("noClaimsData")
                 return
             end
-
             lia.log.add(client, "viewAllClaims")
             local claimsData = {}
             for steamID, claim in pairs(caseclaims) do
@@ -233,7 +216,6 @@ lia.command.add("viewclaims", {
                     end)(), "\n")
                 })
             end
-
             lia.util.SendTableUI(client, "adminClaimsTitle", {
                 {
                     name = "steamID",

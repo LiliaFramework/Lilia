@@ -11,7 +11,6 @@ function PANEL:Init()
         lbl:DockMargin(0, 0, 0, 4)
         return lbl
     end
-
     self.nameLabel = makeLabel("name")
     self.nameEntry = self:makeTextEntry("name")
     self.nameEntry:SetTall(32)
@@ -30,7 +29,6 @@ function PANEL:Init()
             end
         end
     end
-
     self.models = self:Add("DIconLayout")
     self.models:Dock(TOP)
     self.models:DockMargin(0, 4, 0, 4)
@@ -52,7 +50,6 @@ function PANEL:Init()
             lia.gui.character:clickSound()
             self:updateModelPanel()
         end
-
         if isstring(data) then
             icon:SetModel(data)
             icon.model, icon.skin, icon.bodyGroups = data, 0, ""
@@ -62,15 +59,12 @@ function PANEL:Init()
             for i = 0, 8 do
                 groups[i + 1] = tostring(bg[i] or 0)
             end
-
             icon:SetModel(m, skin, table.concat(groups))
             icon.model, icon.skin, icon.bodyGroups = m, skin, table.concat(groups)
         end
-
         if self:getContext("model") == idx then icon:DoClick() end
     end
 end
-
 function PANEL:makeTextEntry(key)
     local entry = self:Add("DTextEntry")
     entry:Dock(TOP)
@@ -83,22 +77,18 @@ function PANEL:makeTextEntry(key)
         surface.DrawRect(0, 0, w, h)
         entry:DrawTextEntryText(color_white, HIGHLIGHT, HIGHLIGHT)
     end
-
     entry.OnValueChange = function(_, val) self:setContext(key, string.Trim(val)) end
     local saved = self:getContext(key)
     if saved then entry:SetValue(saved) end
     return entry
 end
-
 function PANEL:shouldSkip()
     local faction = lia.faction.indices[self:getContext("faction")]
     return faction and #faction.models == 1 or false
 end
-
 function PANEL:onSkip()
     self:setContext("model", 1)
 end
-
 function PANEL:validate()
     for _, info in ipairs({{self.nameEntry, "name"}, {self.descEntry, "desc"}}) do
         local val = string.Trim(info[1]:GetValue() or "")
@@ -106,7 +96,6 @@ function PANEL:validate()
     end
     return true
 end
-
 function PANEL:onDisplay()
     local n, d, m = self.nameEntry:GetValue(), self.descEntry:GetValue(), self:getContext("model")
     self:Clear()
@@ -117,5 +106,4 @@ function PANEL:onDisplay()
     local children = self.models:GetChildren()
     if children[m] then children[m].DoClick(children[m]) end
 end
-
 vgui.Register("liaCharacterBiography", PANEL, "liaCharacterCreateStep")

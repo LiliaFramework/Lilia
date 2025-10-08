@@ -23,11 +23,9 @@ function PANEL:Init()
                     break
                 end
             end
-
             if not anySubmenuHovered then self:Remove() end
         end
     end
-
     self.OnKeyCodePressed = function(panel, keyCode)
         local focusedItem = nil
         local focusedIndex = 1
@@ -38,7 +36,6 @@ function PANEL:Init()
                 break
             end
         end
-
         if keyCode == KEY_DOWN then
             local nextIndex = focusedIndex + 1
             if nextIndex > #panel.Items then nextIndex = 1 end
@@ -76,12 +73,10 @@ function PANEL:Init()
         end
     end
 end
-
 function PANEL:Paint(w, h)
     lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
     lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
 end
-
 function PANEL:AddOption(text, func, icon, optData)
     surface.SetFont('LiliaFont.18')
     local textW = select(1, surface.GetTextSize(text))
@@ -112,11 +107,9 @@ function PANEL:AddOption(text, func, icon, optData)
             end
         end
     end
-
     function option:SetIcon(newIcon)
         return option:SetImage(newIcon)
     end
-
     option._submenu = nil
     option._submenu_open = false
     option.DoClick = function()
@@ -128,12 +121,10 @@ function PANEL:AddOption(text, func, icon, optData)
             end
             return
         end
-
         if option.Func then
             option.Func()
             surface.PlaySound('button_click.wav')
         end
-
         timer.Simple(0.01, function()
             local function closeAllMenus(panel)
                 while IsValid(panel) do
@@ -146,11 +137,9 @@ function PANEL:AddOption(text, func, icon, optData)
                     end
                 end
             end
-
             closeAllMenus(option)
         end)
     end
-
     option.OnKeyCodePressed = function(panel, keyCode)
         if keyCode == KEY_RIGHT and panel._submenu then
             if not panel._submenu_open then panel:OpenSubMenu() end
@@ -160,7 +149,6 @@ function PANEL:AddOption(text, func, icon, optData)
             panel:DoClick()
         end
     end
-
     function option:AddSubMenu()
         if IsValid(option._submenu) then option._submenu:Remove() end
         local submenu = vgui.Create("liaDermaMenu")
@@ -177,13 +165,11 @@ function PANEL:AddOption(text, func, icon, optData)
                 submenu = nil
             end
         end
-
         function option:OpenSubMenu()
             if not IsValid(submenu) then return end
             for _, sibling in ipairs(self:GetParent().Items or {}) do
                 if IsValid(sibling) and sibling ~= self and sibling.CloseSubMenu then sibling:CloseSubMenu() end
             end
-
             local parentX, parentY = self:LocalToScreen(self:GetWide(), 0)
             local submenuWidth, submenuHeight = submenu:GetSize()
             local screenWidth, screenHeight = ScrW(), ScrH()
@@ -200,13 +186,11 @@ function PANEL:AddOption(text, func, icon, optData)
             submenu:SetAlpha(255)
             option._submenu_open = true
         end
-
         function option:CloseSubMenu()
             if IsValid(submenu) then
                 submenu:SetVisible(false)
                 submenu:SetAlpha(0)
             end
-
             option._submenu_open = false
             if submenu and submenu.Items then
                 for _, item in ipairs(submenu.Items) do
@@ -214,15 +198,12 @@ function PANEL:AddOption(text, func, icon, optData)
                 end
             end
         end
-
         function option:GetSubMenu()
             return option._submenu
         end
-
         function option:IsSubMenuOpen()
             return option._submenu_open and IsValid(option._submenu) and option._submenu:IsVisible()
         end
-
         function option:ToggleSubMenu()
             if option._submenu_open then
                 option:CloseSubMenu()
@@ -230,15 +211,12 @@ function PANEL:AddOption(text, func, icon, optData)
                 option:OpenSubMenu()
             end
         end
-
         function option:SetSubMenuPositionMode(mode)
             option._submenu_position_mode = mode or 'auto'
         end
-
         function option:GetSubMenuPositionMode()
             return option._submenu_position_mode or 'auto'
         end
-
         local function isAnySubmenuHovered(opt)
             if not IsValid(opt) then return false end
             if opt:IsHovered() then return true end
@@ -250,19 +228,16 @@ function PANEL:AddOption(text, func, icon, optData)
             end
             return false
         end
-
         option.OnCursorExited = function() timer.Simple(0.3, function() if IsValid(option) and not isAnySubmenuHovered(option) then option:CloseSubMenu() end end) end
         submenu.OnCursorExited = function() timer.Simple(0.3, function() if IsValid(option) and not isAnySubmenuHovered(option) then option:CloseSubMenu() end end) end
         return submenu
     end
-
     option.AddSubMenu = option.AddSubMenu
     if optData then
         for k, v in pairs(optData) do
             option[k] = v
         end
     end
-
     option.Paint = function(pnl, w, h)
         w = w or pnl:GetWide()
         h = h or pnl:GetTall()
@@ -282,19 +257,16 @@ function PANEL:AddOption(text, func, icon, optData)
                 pnl._hoverTimer = nil
             end
         end
-
         local textPadding = 14
         local iconMat = pnl._cachedIconMat
         if pnl.Icon and not iconMat then
             iconMat = type(pnl.Icon) == 'IMaterial' and pnl.Icon or Material(pnl.Icon)
             pnl._cachedIconMat = iconMat
         end
-
         if iconMat then
             local iconSize = 16
             lia.derma.drawSurfaceTexture(iconMat, color_white, textPadding, (h - iconSize) * 0.5, iconSize, iconSize)
         end
-
         local currentIconWidth = pnl.Icon and 16 or 0
         local iconTextGap = currentIconWidth > 0 and 8 or 0
         local textX = textPadding + currentIconWidth + iconTextGap
@@ -305,7 +277,6 @@ function PANEL:AddOption(text, func, icon, optData)
             local arrowSymbol = pnl._submenu_open and "◄" or "►"
             draw.SimpleText(arrowSymbol, 'LiliaFont.16', arrowX, arrowY, colors.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
-
         if currentIconWidth > 0 then
             local parent = pnl:GetParent()
             if IsValid(parent) and parent.MaxIconWidth and currentIconWidth > parent.MaxIconWidth then
@@ -313,15 +284,12 @@ function PANEL:AddOption(text, func, icon, optData)
                 parent:UpdateSize()
             end
         end
-
         draw.SimpleText(pnl.Text, 'LiliaFont.18', textX, h * 0.5, colors.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
-
     table.insert(self.Items, option)
     self:UpdateSize()
     return option
 end
-
 function PANEL:AddSpacer()
     local spacer = vgui.Create('DPanel', self)
     spacer:Dock(TOP)
@@ -333,13 +301,11 @@ function PANEL:AddSpacer()
     self:UpdateSize()
     return spacer
 end
-
 function PANEL:AddSubMenu(text, func, icon)
     local option = self:AddOption(text, func, icon)
     local submenu = option:AddSubMenu()
     return submenu, option
 end
-
 function PANEL:AddSubMenuSeparator()
     if not IsValid(self) then return end
     local spacer = vgui.Create('DPanel', self)
@@ -352,13 +318,11 @@ function PANEL:AddSubMenuSeparator()
     self:UpdateSize()
     return spacer
 end
-
 function PANEL:CloseAllSubMenus()
     for _, item in ipairs(self.Items or {}) do
         if IsValid(item) and item.CloseSubMenu then item:CloseSubMenu() end
     end
 end
-
 function PANEL:GetAllSubMenus()
     local submenus = {}
     for _, item in ipairs(self.Items or {}) do
@@ -366,43 +330,35 @@ function PANEL:GetAllSubMenus()
     end
     return submenus
 end
-
 function PANEL:UpdateSize()
     local height = 16
     for _, item in ipairs(self.Items) do
         if IsValid(item) then height = height + item.sumTall end
     end
-
     local iconExtra = self.MaxIconWidth > 0 and (self.MaxIconWidth + 8) or 0
     local maxWidth = math.max(200, self.MaxTextWidth + 60 + iconExtra)
     local limit = self.maxHeight or (ScrH() * 0.8)
     self:SetSize(maxWidth, math.min(height, limit))
 end
-
 function PANEL:Open()
     self:SetVisible(true)
     self:SetMouseInputEnabled(true)
     self:SetKeyboardInputEnabled(false)
     self._openTime = CurTime()
 end
-
 function PANEL:CloseMenu()
     self:Close()
 end
-
 function PANEL:GetDeleteSelf()
     return self.deleteSelf ~= false
 end
-
 function PANEL:SetDeleteSelf(deleteSelf)
     self.deleteSelf = tobool(deleteSelf)
 end
-
 function PANEL:SetMaxHeight(height)
     self.maxHeight = tonumber(height)
     self:UpdateSize()
 end
-
 function PANEL:Clear()
     self:CloseAllSubMenus()
     for _, item in ipairs(self.Items) do
@@ -411,17 +367,14 @@ function PANEL:Clear()
                 item._submenu:Remove()
                 item._submenu = nil
             end
-
             item:Remove()
         end
     end
-
     self.Items = {}
     self.MaxTextWidth = 0
     self.MaxIconWidth = 0
     self:UpdateSize()
 end
-
 function PANEL:Close()
     self:CloseAllSubMenus()
     if self.deleteSelf ~= false then
@@ -430,7 +383,6 @@ function PANEL:Close()
         self:SetVisible(false)
     end
 end
-
 function PANEL:SetPadding(left, top, right, bottom)
     if bottom == nil and right == nil and top == nil then
         local pad = left or 0
@@ -439,5 +391,4 @@ function PANEL:SetPadding(left, top, right, bottom)
         self:DockPadding(left or 0, top or 0, right or 0, bottom or 0)
     end
 end
-
 vgui.Register('liaDermaMenu', PANEL, 'DPanel')
