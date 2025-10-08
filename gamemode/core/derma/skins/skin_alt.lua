@@ -174,7 +174,6 @@ function SKIN:PaintMenuOption(panel, w, h)
     if panel:GetChecked() then skin.tex.Menu_Check(5, h / 2 - 7, 15, 15) end
 end
 local function DrawSpawnBG(w, h)
-    -- Optimized: No blur for better performance in spawn menu
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)

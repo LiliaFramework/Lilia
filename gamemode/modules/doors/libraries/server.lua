@@ -4,30 +4,24 @@
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
                 local doorData = door:getNetVar("doorData", {})
-                -- Only modify doors that don't already have netvar data
                 if not doorData or table.IsEmpty(doorData) then
                     door:setNetVar("doorData", {
                         disabled = true
                     })
-
                     count = count + 1
                 else
-                    -- If door already has data, just set disabled flag
                     doorData.disabled = true
                     door:setNetVar("doorData", doorData)
                     count = count + 1
                 end
             end
         end
-
         lia.information(L("doorDisableAll"))
     end
 end
-
 local function buildCondition(gamemode, map)
     return "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
 end
-
 function MODULE:LoadData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local mapName = game.GetMap()
@@ -42,25 +36,21 @@ function MODULE:LoadData()
             local id = tonumber(row.id)
             if id then doorsWithData[id] = true end
         end
-
         for _, row in ipairs(rows) do
             local id = tonumber(row.id)
             if not id then
                 lia.warning(L("skippingDoorRecordWithInvalidID") .. ": " .. tostring(row.id))
                 continue
             end
-
             local ent = ents.GetMapCreatedEntity(id)
             if not IsValid(ent) then
                 lia.warning(L("doorEntityNotFound", id))
                 continue
             end
-
             if not ent:isDoor() then
                 lia.warning(L("entityIsNotADoorSkipping") .. " " .. id)
                 continue
             end
-
             local factions
             if row.factions and row.factions ~= "NULL" and row.factions ~= "" then
                 if tostring(row.factions):match("^[%d%.%-%s]+$") and not tostring(row.factions):match("[{}%[%]]") then
@@ -76,7 +66,6 @@ function MODULE:LoadData()
                         else
                             isEmpty = next(result) == nil
                         end
-
                         if not isEmpty then
                             factions = result
                             ent.liaFactions = factions
@@ -92,7 +81,6 @@ function MODULE:LoadData()
                     end
                 end
             end
-
             local classes
             if row.classes and row.classes ~= "NULL" and row.classes ~= "" then
                 if tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
@@ -108,7 +96,6 @@ function MODULE:LoadData()
                         else
                             isEmpty = next(result) == nil
                         end
-
                         if not isEmpty then
                             classes = result
                             ent.liaClasses = classes
@@ -124,58 +111,46 @@ function MODULE:LoadData()
                     end
                 end
             end
-
-            -- Only create doorData if there's actual data to store
             local hasData = false
             local doorData = {}
             if row.name and row.name ~= "NULL" and row.name ~= "" then
                 doorData.name = tostring(row.name)
                 hasData = true
             end
-
             local price = tonumber(row.price)
             if price and price > 0 then
                 doorData.price = price
                 hasData = true
             end
-
             if tonumber(row.locked) == 1 then
                 doorData.locked = true
                 hasData = true
             end
-
             if tonumber(row.disabled) == 1 then
                 doorData.disabled = true
                 hasData = true
             end
-
             if tonumber(row.hidden) == 1 then
                 doorData.hidden = true
                 hasData = true
             end
-
             if tonumber(row.ownable) == 0 then
                 doorData.noSell = true
                 hasData = true
             end
-
             if factions and #factions > 0 then
                 doorData.factions = factions
                 hasData = true
             end
-
             if classes and #classes > 0 then
                 doorData.classes = classes
                 hasData = true
             end
-
-            -- Only set netvar if there's actual data
             if hasData then
                 ent:setNetVar("doorData", doorData)
                 loadedCount = loadedCount + 1
             end
         end
-
         if presetData then
             for doorID, doorVars in pairs(presetData) do
                 if not doorsWithData[doorID] then
@@ -187,45 +162,36 @@ function MODULE:LoadData()
                             doorData.name = tostring(doorVars.name)
                             hasPresetData = true
                         end
-
                         if doorVars.price and doorVars.price > 0 then
                             doorData.price = doorVars.price
                             hasPresetData = true
                         end
-
                         if doorVars.locked then
                             doorData.locked = true
                             hasPresetData = true
                         end
-
                         if doorVars.disabled then
                             doorData.disabled = true
                             hasPresetData = true
                         end
-
                         if doorVars.hidden then
                             doorData.hidden = true
                             hasPresetData = true
                         end
-
                         if doorVars.noSell then
                             doorData.noSell = true
                             hasPresetData = true
                         end
-
                         if doorVars.factions and istable(doorVars.factions) and not table.IsEmpty(doorVars.factions) then
                             doorData.factions = doorVars.factions
                             ent.liaFactions = doorVars.factions
                             hasPresetData = true
                         end
-
                         if doorVars.classes and istable(doorVars.classes) and not table.IsEmpty(doorVars.classes) then
                             doorData.classes = doorVars.classes
                             ent.liaClasses = doorVars.classes
                             hasPresetData = true
                         end
-
-                        -- Only set netvar if there's actual preset data
                         if hasPresetData then
                             ent:setNetVar("doorData", doorData)
                             lia.information(L("appliedPresetToDoor", doorID))
@@ -242,7 +208,6 @@ function MODULE:LoadData()
         lia.error(L("databaseConnectionIssue"))
     end)
 end
-
 function MODULE:SaveData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -253,7 +218,6 @@ function MODULE:SaveData()
             local mapID = door:MapCreationID()
             if not mapID or mapID <= 0 then continue end
             local doorData = door:getNetVar("doorData", {})
-            -- Only save doors that actually have netvar data
             if not doorData or table.IsEmpty(doorData) then continue end
             local factionsTable = doorData.factions or {}
             local classesTable = doorData.classes or {}
@@ -270,7 +234,6 @@ function MODULE:SaveData()
                     factionsTable = door.liaFactions
                 end
             end
-
             if not doorData.classes then
                 local classes = door:getNetVar("classes")
                 if classes and classes ~= "[]" then
@@ -284,17 +247,14 @@ function MODULE:SaveData()
                     classesTable = door.liaClasses
                 end
             end
-
             if not istable(factionsTable) then
                 lia.warning(L("doorInvalidFactionsType", mapID, type(factionsTable)))
                 factionsTable = {}
             end
-
             if not istable(classesTable) then
                 lia.warning(L("doorInvalidClassesType", mapID, type(classesTable)))
                 classesTable = {}
             end
-
             local factionsSerialized = lia.data.serialize(factionsTable)
             local classesSerialized = lia.data.serialize(classesTable)
             if factionsSerialized and factionsSerialized:match("^[%d%.%-%s]+$") and not factionsSerialized:match("[{}%[%]]") then
@@ -302,20 +262,17 @@ function MODULE:SaveData()
                 factionsTable = {}
                 factionsSerialized = lia.data.serialize(factionsTable)
             end
-
             if classesSerialized and classesSerialized:match("^[%d%.%-%s]+$") and not classesSerialized:match("[{}%[%]]") then
                 lia.warning(L("doorClassesCoordinateReset", mapID))
                 classesTable = {}
                 classesSerialized = lia.data.serialize(classesTable)
             end
-
             local name = doorData.name or ""
             if name and name ~= "" then
                 name = tostring(name):sub(1, 255)
             else
                 name = ""
             end
-
             local price = tonumber(doorData.price) or 0
             if price < 0 then price = 0 end
             if price > 999999999 then price = 999999999 end
@@ -332,11 +289,9 @@ function MODULE:SaveData()
                 price = price,
                 locked = doorData.locked and 1 or 0
             }
-
             doorCount = doorCount + 1
         end
     end
-
     if #rows > 0 then
         lia.db.bulkUpsert("doors", rows):next(function() end):catch(function(err)
             lia.error(L("failedToSaveDoorData", tostring(err)))
@@ -344,21 +299,17 @@ function MODULE:SaveData()
         end)
     end
 end
-
 function lia.doors.AddPreset(mapName, presetData)
     if not mapName or not presetData then
         error("lia.doors.AddPreset: Missing required parameters (mapName, presetData)")
         return
     end
-
     lia.doors.presets[mapName] = presetData
     lia.information(L("addedDoorPresetForMap") .. ": " .. mapName)
 end
-
 function lia.doors.GetPreset(mapName)
     return lia.doors.presets[mapName]
 end
-
 function lia.doors.VerifyDatabaseSchema()
     if lia.db.module == "sqlite" then
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
@@ -366,12 +317,10 @@ function lia.doors.VerifyDatabaseSchema()
                 lia.error(L("failedToGetTableInfo"))
                 return
             end
-
             local columns = {}
             for _, row in ipairs(res.results) do
                 columns[row.name] = row.type
             end
-
             local expectedColumns = {
                 gamemode = "text",
                 map = "text",
@@ -386,7 +335,6 @@ function lia.doors.VerifyDatabaseSchema()
                 locked = "integer",
                 door_group = "text"
             }
-
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
                     lia.error(L("missingExpectedColumn") .. " " .. colName)
@@ -401,12 +349,10 @@ function lia.doors.VerifyDatabaseSchema()
                 lia.error(L("failedToGetTableInfo"))
                 return
             end
-
             local columns = {}
             for _, row in ipairs(res.results) do
                 columns[row.Field] = row.Type
             end
-
             lia.information(L("liaDoorsTableColumns") .. ": " .. table.concat(table.GetKeys(columns), ", "))
             local expectedColumns = {
                 gamemode = "text",
@@ -422,7 +368,6 @@ function lia.doors.VerifyDatabaseSchema()
                 locked = "tinyint",
                 door_group = "text"
             }
-
             for colName, expectedType in pairs(expectedColumns) do
                 if not columns[colName] then
                     lia.error(L("missingExpectedColumn") .. " " .. colName)
@@ -433,7 +378,6 @@ function lia.doors.VerifyDatabaseSchema()
         end):catch(function(err) lia.error(L("failedToVerifyDatabaseSchema") .. " " .. tostring(err)) end)
     end
 end
-
 function lia.doors.CleanupCorruptedData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -454,24 +398,20 @@ function lia.doors.CleanupCorruptedData()
                 needsUpdate = true
                 corruptedCount = corruptedCount + 1
             end
-
             if row.classes and row.classes ~= "NULL" and row.classes ~= "" and tostring(row.classes):match("^[%d%.%-%s]+$") and not tostring(row.classes):match("[{}%[%]]") then
                 lia.warning(L("corruptedClassesData", id, tostring(row.classes)))
                 newClasses = ""
                 needsUpdate = true
                 corruptedCount = corruptedCount + 1
             end
-
             if needsUpdate then
                 local updateQuery = "UPDATE lia_doors SET factions = " .. lia.db.convertDataType(newFactions) .. ", classes = " .. lia.db.convertDataType(newClasses) .. " WHERE " .. condition .. " AND id = " .. id
                 lia.db.query(updateQuery):next(function() lia.information(L("fixedCorruptedDoorData", id)) end):catch(function(err) lia.error(L("failedToFixCorruptedDoorData", id, tostring(err))) end)
             end
         end
-
         if corruptedCount > 0 then lia.information(L("foundAndFixedCorruptedDoors", corruptedCount)) end
     end):catch(function(err) lia.error(L("failedToCheckCorruptedDoorData", tostring(err))) end)
 end
-
 function MODULE:InitPostEntity()
     local doors = ents.FindByClass("prop_door_rotating")
     for _, v in ipairs(doors) do
@@ -489,11 +429,9 @@ function MODULE:InitPostEntity()
             end
         end
     end
-
     timer.Simple(1, function() lia.doors.CleanupCorruptedData() end)
     timer.Simple(3, function() lia.doors.VerifyDatabaseSchema() end)
 end
-
 function MODULE:PlayerUse(client, door)
     if door:IsVehicle() and door:isLocked() then return false end
     if door:isDoor() then
@@ -506,12 +444,10 @@ function MODULE:PlayerUse(client, door)
         end
     end
 end
-
 function MODULE:CanPlayerUseDoor(_, door)
     local doorData = door:getNetVar("doorData", {})
     if doorData.disabled then return false end
 end
-
 function MODULE:CanPlayerAccessDoor(client, door)
     local doorData = door:getNetVar("doorData", {})
     local factions = doorData.factions
@@ -523,7 +459,6 @@ function MODULE:CanPlayerAccessDoor(client, door)
             if id == unique or lia.faction.getIndex(id) == playerFaction then return true end
         end
     end
-
     local classes = doorData.classes
     local charClass = client:getChar():getClass()
     local charClassData = lia.class.list[charClass]
@@ -541,11 +476,9 @@ function MODULE:CanPlayerAccessDoor(client, door)
         return false
     end
 end
-
 function MODULE:PostPlayerLoadout(client)
     client:Give("lia_keys")
 end
-
 function MODULE:ShowTeam(client)
     local entity = client:getTracedEntity()
     if IsValid(entity) and entity:isDoor() then
@@ -563,7 +496,6 @@ function MODULE:ShowTeam(client)
                     net.WriteEntity(ply)
                     net.WriteUInt(perm or 0, 2)
                 end
-
                 net.WriteEntity(entity)
                 net.Send(client)
             elseif not IsValid(entity:GetDTEntity(0)) then
@@ -575,20 +507,17 @@ function MODULE:ShowTeam(client)
         end
     end
 end
-
 function MODULE:PlayerDisconnected(client)
     for _, v in ents.Iterator() do
         if v ~= client and v.isDoor and v:isDoor() and v:GetDTEntity(0) == client then v:removeDoorAccessData() end
     end
 end
-
 function MODULE:KeyLock(client, door, time)
     if not IsValid(door) or not IsValid(client) then return end
     if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
         lia.log.add(client, "cheaterAction", L("cheaterActionLockDoor"))
         return
     end
-
     if hook.Run("CanPlayerLock", client, door) == false then return end
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
@@ -598,14 +527,12 @@ function MODULE:KeyLock(client, door, time)
         lia.log.add(client, "lockDoor", door)
     end
 end
-
 function MODULE:KeyUnlock(client, door, time)
     if not IsValid(door) or not IsValid(client) then return end
     if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
         lia.log.add(client, "cheaterAction", L("cheaterActionUnlockDoor"))
         return
     end
-
     if hook.Run("CanPlayerUnlock", client, door) == false then return end
     local distance = client:GetPos():Distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
@@ -615,14 +542,12 @@ function MODULE:KeyUnlock(client, door, time)
         lia.log.add(client, "unlockDoor", door)
     end
 end
-
 function MODULE:ToggleLock(client, door, state)
     if not IsValid(door) then return end
     if lia.config.get("DisableCheaterActions", true) and IsValid(client) and client:getNetVar("cheater", false) then
         lia.log.add(client, "cheaterAction", state and L("cheaterActionLockDoor") or L("cheaterActionUnlockDoor"))
         return
     end
-
     if door:isDoor() then
         local partner = door:getDoorPartner()
         if state then
@@ -634,7 +559,6 @@ function MODULE:ToggleLock(client, door, state)
             door:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
         end
-
         door:setLocked(state)
     elseif (door:GetCreator() == client or client:hasPrivilege("manageDoors") or client:isStaffOnDuty()) and (door:IsVehicle() or door:isSimfphysCar()) then
         if state then
@@ -644,10 +568,8 @@ function MODULE:ToggleLock(client, door, state)
             door:Fire("unlock")
             client:EmitSound("doors/door_latch1.wav")
         end
-
         door:setLocked(state)
     end
-
     hook.Run("DoorLockToggled", client, door, state)
     lia.log.add(client, "toggleLock", door, state and L("locked") or L("unlocked"))
 end
