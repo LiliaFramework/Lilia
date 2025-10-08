@@ -4,8 +4,8 @@ function PANEL:Init()
     self.rows = {}
     self.headerHeight = 36
     self.rowHeight = 32
-    self.font = "Fated.18"
-    self.rowFont = "Fated.16"
+    self.font = "LiliaFont.18"
+    self.rowFont = "LiliaFont.16"
     self.selectedRow = nil
     self.sortColumn = nil
     self.hoverAnim = 0

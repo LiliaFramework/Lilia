@@ -35,8 +35,9 @@
             local label = vgui.Create("DLabel", popup)
             label:Dock(TOP)
             label:SetText(L("giveTo") .. ":")
-            local combo = vgui.Create("DComboBox", popup)
+            local combo = vgui.Create("liaComboBox", popup)
             combo:Dock(TOP)
+            combo:PostInit()
             for _, character in pairs(lia.char.getAll()) do
                 local ply = character:getPlayer()
                 if IsValid(ply) then

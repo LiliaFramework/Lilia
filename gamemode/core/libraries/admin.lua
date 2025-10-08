@@ -1175,7 +1175,7 @@ else
     end
 
     local function promptCreateGroup()
-        lia.util.requestArguments(L("create") .. " " .. L("group"), {
+        lia.derma.requestArguments(L("create") .. " " .. L("group"), {
             Name = "string",
             Inheritance = {"table", {"user", "admin", "superadmin"}},
             Staff = "boolean",

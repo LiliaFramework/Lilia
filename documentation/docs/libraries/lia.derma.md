@@ -852,10 +852,10 @@ Client.
 
 ```lua
 -- Basic tooltip
-lia.derma.DrawTip(100, 100, 200, 60, "This is a tooltip", "liaSmallFont", Color(255, 255, 255), Color(50, 50, 50, 200))
+lia.derma.DrawTip(100, 100, 200, 60, "This is a tooltip", "LiliaFont.16", Color(255, 255, 255), Color(50, 50, 50, 200))
 
 -- Tooltip with different colors
-lia.derma.DrawTip(ScrW() / 2 - 100, ScrH() / 2, 200, 50, "Hover tooltip", "liaMediumFont", Color(255, 255, 0), Color(100, 100, 255, 220))
+lia.derma.DrawTip(ScrW() / 2 - 100, ScrH() / 2, 200, 50, "Hover tooltip", "LiliaFont.20", Color(255, 255, 0), Color(100, 100, 255, 220))
 
 -- Use in button hover effects
 local function drawButtonWithTooltip(x, y, w, h, text, tooltipText)
@@ -864,10 +864,10 @@ local function drawButtonWithTooltip(x, y, w, h, text, tooltipText)
     lia.derma.draw(8, x, y, w, h, isHovered and Color(150, 150, 255) or Color(100, 100, 200))
 
     if isHovered and tooltipText then
-        lia.derma.DrawTip(x, y - 70, 200, 50, tooltipText, "liaSmallFont", Color(255, 255, 255), Color(0, 0, 0, 200))
+        lia.derma.DrawTip(x, y - 70, 200, 50, tooltipText, "LiliaFont.16", Color(255, 255, 255), Color(0, 0, 0, 200))
     end
 
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawButtonWithTooltip(100, 100, 150, 40, "Hover Me!", "This button does something important")
@@ -880,7 +880,7 @@ local function drawInventoryTooltip(item, x, y)
     local textWidth = 250
     local textHeight = 80
 
-    lia.derma.DrawTip(x, y - textHeight - 20, textWidth, textHeight, tooltipText, "liaSmallFont", Color(255, 255, 255), Color(50, 50, 50, 220))
+    lia.derma.DrawTip(x, y - textHeight - 20, textWidth, textHeight, tooltipText, "LiliaFont.16", Color(255, 255, 255), Color(50, 50, 50, 220))
 end
 
 -- Tooltip for HUD elements
@@ -892,7 +892,7 @@ local function drawHUDTooltip()
         local health = LocalPlayer():Health()
         local maxHealth = LocalPlayer():GetMaxHealth()
         lia.derma.DrawTip(mouseX + 10, mouseY - 60, 200, 40,
-                         "Health: " .. health .. "/" .. maxHealth, "liaSmallFont",
+                         "Health: " .. health .. "/" .. maxHealth, "LiliaFont.16",
                          Color(255, 255, 255), Color(100, 0, 0, 200))
     end
 
@@ -900,7 +900,7 @@ local function drawHUDTooltip()
     if mouseX > 200 and mouseX < 300 and mouseY > ScrH() - 80 and mouseY < ScrH() - 20 then
         local armor = LocalPlayer():Armor()
         lia.derma.DrawTip(mouseX + 10, mouseY - 60, 200, 40,
-                         "Armor: " .. armor, "liaSmallFont",
+                         "Armor: " .. armor, "LiliaFont.16",
                          Color(255, 255, 255), Color(0, 100, 0, 200))
     end
 end
@@ -908,7 +908,7 @@ end
 hook.Add("HUDPaint", "DrawHUDTooltips", drawHUDTooltip)
 
 -- Tooltip with multiple lines
-lia.derma.DrawTip(200, 200, 250, 100, "Line 1\nLine 2\nLine 3", "liaSmallFont", Color(255, 255, 255), Color(50, 50, 50, 200))
+lia.derma.DrawTip(200, 200, 250, 100, "Line 1\nLine 2\nLine 3", "LiliaFont.16", Color(255, 255, 255), Color(50, 50, 50, 200))
 ```
 
 ---
@@ -943,21 +943,21 @@ Client.
 
 ```lua
 -- Basic shadowed text
-lia.derma.ShadowText("Hello World", "liaMediumFont", 100, 100, Color(255, 255, 255), Color(0, 0, 0), 2)
+lia.derma.ShadowText("Hello World", "LiliaFont.20", 100, 100, Color(255, 255, 255), Color(0, 0, 0), 2)
 
 -- Shadowed text with different colors
-lia.derma.ShadowText("Colored Shadow", "liaLargeFont", ScrW() / 2, ScrH() / 2, Color(255, 100, 100), Color(100, 0, 100), 3, TEXT_ALIGN_CENTER)
+lia.derma.ShadowText("Colored Shadow", "LiliaFont.24", ScrW() / 2, ScrH() / 2, Color(255, 100, 100), Color(100, 0, 100), 3, TEXT_ALIGN_CENTER)
 
 -- Shadowed text aligned to different positions
-lia.derma.ShadowText("Right Aligned", "liaSmallFont", ScrW() - 50, 50, Color(100, 255, 100), Color(0, 100, 0), 1, TEXT_ALIGN_RIGHT)
+lia.derma.ShadowText("Right Aligned", "LiliaFont.16", ScrW() - 50, 50, Color(100, 255, 100), Color(0, 100, 0), 1, TEXT_ALIGN_RIGHT)
 
 -- Shadowed text with large shadow distance for dramatic effect
-lia.derma.ShadowText("DRAMATIC!", "liaLargeFont", 200, 200, Color(255, 255, 0), Color(255, 0, 0), 5, TEXT_ALIGN_CENTER)
+lia.derma.ShadowText("DRAMATIC!", "LiliaFont.24", 200, 200, Color(255, 255, 0), Color(255, 0, 0), 5, TEXT_ALIGN_CENTER)
 
 -- Use in UI elements for depth
 local function drawShadowedButton(x, y, w, h, text)
     lia.derma.draw(8, x, y, w, h, Color(100, 150, 255))
-    lia.derma.ShadowText(text, "liaMediumFont", x + w/2, y + h/2, Color(255, 255, 255), Color(0, 0, 0), 2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    lia.derma.ShadowText(text, "LiliaFont.20", x + w/2, y + h/2, Color(255, 255, 255), Color(0, 0, 0), 2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawShadowedButton(100, 100, 200, 50, "Click Me!")
@@ -967,7 +967,7 @@ local function drawPlayerHUD()
     local health = LocalPlayer():Health()
     local maxHealth = LocalPlayer():GetMaxHealth()
 
-    lia.derma.ShadowText("Health: " .. health .. "/" .. maxHealth, "liaMediumFont", 100, ScrH() - 100,
+    lia.derma.ShadowText("Health: " .. health .. "/" .. maxHealth, "LiliaFont.20", 100, ScrH() - 100,
                          health > 50 and Color(100, 255, 100) or Color(255, 100, 100),
                          Color(0, 0, 0), 2, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
@@ -975,15 +975,15 @@ end
 hook.Add("HUDPaint", "DrawPlayerHUD", drawPlayerHUD)
 
 -- Shadowed text with custom shadow color and distance
-lia.derma.ShadowText("Custom Shadow", "liaMediumFont", 100, 300, Color(150, 150, 255), Color(50, 50, 150), 4)
+lia.derma.ShadowText("Custom Shadow", "LiliaFont.20", 100, 300, Color(150, 150, 255), Color(50, 50, 150), 4)
 
 -- Multiple shadowed text elements for layered effect
-lia.derma.ShadowText("Layer 1", "liaLargeFont", 300, 300, Color(255, 255, 255), Color(100, 100, 100), 1)
-lia.derma.ShadowText("Layer 2", "liaLargeFont", 302, 302, Color(255, 255, 255), Color(50, 50, 50), 2)
-lia.derma.ShadowText("Layer 3", "liaLargeFont", 304, 304, Color(255, 255, 255), Color(0, 0, 0), 3)
+lia.derma.ShadowText("Layer 1", "LiliaFont.24", 300, 300, Color(255, 255, 255), Color(100, 100, 100), 1)
+lia.derma.ShadowText("Layer 2", "LiliaFont.24", 302, 302, Color(255, 255, 255), Color(50, 50, 50), 2)
+lia.derma.ShadowText("Layer 3", "LiliaFont.24", 304, 304, Color(255, 255, 255), Color(0, 0, 0), 3)
 
 -- Shadowed text for game titles or important messages
-lia.derma.ShadowText("IMPORTANT ANNOUNCEMENT", "liaLargeFont", ScrW() / 2, 150, Color(255, 255, 0), Color(255, 0, 0), 4, TEXT_ALIGN_CENTER)
+lia.derma.ShadowText("IMPORTANT ANNOUNCEMENT", "LiliaFont.24", ScrW() / 2, 150, Color(255, 255, 0), Color(255, 0, 0), 4, TEXT_ALIGN_CENTER)
 ```
 
 ---
@@ -1017,38 +1017,38 @@ Client.
 
 ```lua
 -- Draw basic outlined text
-lia.derma.DrawTextOutlined("Hello World", "liaMediumFont", 100, 100, Color(255, 255, 255), TEXT_ALIGN_LEFT, 2, Color(0, 0, 0))
+lia.derma.DrawTextOutlined("Hello World", "LiliaFont.20", 100, 100, Color(255, 255, 255), TEXT_ALIGN_LEFT, 2, Color(0, 0, 0))
 
 -- Draw centered outlined text
-lia.derma.DrawTextOutlined("Centered Text", "liaLargeFont", ScrW() / 2, ScrH() / 2, Color(255, 100, 100), TEXT_ALIGN_CENTER, 3, Color(100, 0, 0))
+lia.derma.DrawTextOutlined("Centered Text", "LiliaFont.24", ScrW() / 2, ScrH() / 2, Color(255, 100, 100), TEXT_ALIGN_CENTER, 3, Color(100, 0, 0))
 
 -- Draw right-aligned outlined text
-lia.derma.DrawTextOutlined("Right Aligned", "liaSmallFont", ScrW() - 50, 50, Color(100, 255, 100), TEXT_ALIGN_RIGHT, 1, Color(0, 100, 0))
+lia.derma.DrawTextOutlined("Right Aligned", "LiliaFont.16", ScrW() - 50, 50, Color(100, 255, 100), TEXT_ALIGN_RIGHT, 1, Color(0, 100, 0))
 
 -- Draw outlined text with thick outline for emphasis
-lia.derma.DrawTextOutlined("IMPORTANT!", "liaLargeFont", 200, 200, Color(255, 255, 0), TEXT_ALIGN_CENTER, 5, Color(255, 0, 0))
+lia.derma.DrawTextOutlined("IMPORTANT!", "LiliaFont.24", 200, 200, Color(255, 255, 0), TEXT_ALIGN_CENTER, 5, Color(255, 0, 0))
 
 -- Draw outlined text in a custom color scheme
-lia.derma.DrawTextOutlined("Custom Colors", "liaMediumFont", 100, 300, Color(150, 150, 255), TEXT_ALIGN_LEFT, 2, Color(50, 50, 150))
+lia.derma.DrawTextOutlined("Custom Colors", "LiliaFont.20", 100, 300, Color(150, 150, 255), TEXT_ALIGN_LEFT, 2, Color(50, 50, 150))
 
 -- Use in UI elements
 local function drawOutlinedButton(x, y, w, h, text)
     lia.derma.draw(8, x, y, w, h, Color(100, 150, 255))
-    lia.derma.DrawTextOutlined(text, "liaMediumFont", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, 2, Color(0, 0, 0))
+    lia.derma.DrawTextOutlined(text, "LiliaFont.20", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, 2, Color(0, 0, 0))
 end
 
 drawOutlinedButton(100, 100, 200, 50, "Click Me!")
 
 -- Draw outlined text with different font sizes for headings
-lia.derma.DrawTextOutlined("Main Title", "liaLargeFont", ScrW() / 2, 100, Color(255, 255, 255), TEXT_ALIGN_CENTER, 3, Color(0, 0, 0))
-lia.derma.DrawTextOutlined("Subtitle", "liaMediumFont", ScrW() / 2, 150, Color(200, 200, 200), TEXT_ALIGN_CENTER, 2, Color(50, 50, 50))
+lia.derma.DrawTextOutlined("Main Title", "LiliaFont.24", ScrW() / 2, 100, Color(255, 255, 255), TEXT_ALIGN_CENTER, 3, Color(0, 0, 0))
+lia.derma.DrawTextOutlined("Subtitle", "LiliaFont.20", ScrW() / 2, 150, Color(200, 200, 200), TEXT_ALIGN_CENTER, 2, Color(50, 50, 50))
 
 -- Draw outlined text for game UI elements
 local function drawPlayerHUD()
     local health = LocalPlayer():Health()
     local maxHealth = LocalPlayer():GetMaxHealth()
 
-    lia.derma.DrawTextOutlined("Health: " .. health .. "/" .. maxHealth, "liaMediumFont", 100, ScrH() - 100,
+    lia.derma.DrawTextOutlined("Health: " .. health .. "/" .. maxHealth, "LiliaFont.20", 100, ScrH() - 100,
                                health > 50 and Color(100, 255, 100) or Color(255, 100, 100),
                                TEXT_ALIGN_LEFT, 2, Color(0, 0, 0))
 end
@@ -1418,7 +1418,7 @@ drawGradientBackground(50, 50, 300, 200, Color(50, 100, 150), 2)
 local function drawGradientButton(x, y, w, h, text, isHovered)
     local gradientColor = isHovered and Color(150, 200, 255) or Color(100, 150, 255)
     lia.derma.drawGradient(x, y, w, h, 2, gradientColor, 8)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 -- Gradient for progress bars
@@ -1562,7 +1562,7 @@ end
 -- Texture for button backgrounds
 local function drawTexturedButton(x, y, w, h, text, texture, color)
     lia.derma.drawSurfaceTexture(texture, color, x, y, w, h)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawTexturedButton(100, 100, 200, 50, "Textured Button", "gui/gradient", Color(100, 150, 255))
@@ -1604,10 +1604,10 @@ end
 
 -- Use in UI elements
 local function drawWrappedText(text, x, y, width, font)
-    local lines, maxWidth = lia.derma.wrapText(text, width, font or "liaSmallFont")
+    local lines, maxWidth = lia.derma.wrapText(text, width, font or "LiliaFont.16")
 
     for i, line in ipairs(lines) do
-        draw.SimpleText(line, font or "liaSmallFont", x, y + (i - 1) * 20, Color(255, 255, 255))
+        draw.SimpleText(line, font or "LiliaFont.16", x, y + (i - 1) * 20, Color(255, 255, 255))
     end
 
     return #lines * 20 -- Return total height
@@ -1638,7 +1638,7 @@ local function createWrappedTooltip(x, y, width, text)
     lia.derma.draw(8, x, y, width, tooltipHeight, Color(50, 50, 50, 220))
 
     for i, line in ipairs(lines) do
-        draw.SimpleText(line, "liaSmallFont", x + 10, y + 5 + (i - 1) * 18, Color(255, 255, 255))
+        draw.SimpleText(line, "LiliaFont.16", x + 10, y + 5 + (i - 1) * 18, Color(255, 255, 255))
     end
 end
 
@@ -1650,7 +1650,7 @@ local function drawResponsiveText(text, x, y, maxWidth)
     local lines, actualMaxWidth = lia.derma.wrapText(text, adaptiveWidth)
 
     for i, line in ipairs(lines) do
-        draw.SimpleText(line, "liaMediumFont", x, y + (i - 1) * 25, Color(255, 255, 255))
+        draw.SimpleText(line, "LiliaFont.20", x, y + (i - 1) * 25, Color(255, 255, 255))
     end
 
     return #lines * 25, actualMaxWidth
@@ -1666,7 +1666,7 @@ end
 
 -- Text wrapping with different fonts
 local function getOptimalFontSize(text, maxWidth, maxHeight)
-    local fonts = {"liaSmallFont", "liaMediumFont", "liaLargeFont"}
+    local fonts = {"LiliaFont.16", "LiliaFont.20", "LiliaFont.24"}
 
     for _, font in ipairs(fonts) do
         local lines, _ = lia.derma.wrapText(text, maxWidth, font)
@@ -1677,7 +1677,7 @@ local function getOptimalFontSize(text, maxWidth, maxHeight)
         end
     end
 
-    return "liaSmallFont", lia.derma.wrapText(text, maxWidth, "liaSmallFont")
+    return "LiliaFont.16", lia.derma.wrapText(text, maxWidth, "LiliaFont.16")
 end
 ```
 
@@ -2002,7 +2002,7 @@ lia.derma.drawShadows(12, 300, 50, 120, 120, Color(0, 0, 0, 100), 20, 15)
 -- Draw multiple rounded rectangles
 local function drawButton(x, y, w, h, text, color)
     lia.derma.draw(8, x, y, w, h, color)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawButton(100, 200, 120, 40, "Click Me", Color(100, 150, 255))
@@ -2091,7 +2091,7 @@ end
 
 -- Create blurred background for text
 lia.derma.drawBlur(200, 200, 300, 60, nil, 15, 15, 15, 15)
-draw.SimpleText("Blurred Background Text", "liaLargeFont", 350, 230, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+draw.SimpleText("Blurred Background Text", "LiliaFont.24", 350, 230, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 ```
 
 ---
@@ -2231,7 +2231,7 @@ end
 -- Create textured buttons with materials
 local function drawMaterialButton(x, y, radius, text, material, color)
     lia.derma.drawCircleMaterial(x, y, radius, color, material)
-    draw.SimpleText(text, "liaMediumFont", x, y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x, y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawMaterialButton(200, 250, 30, "Save", Material("icon16/disk.png"), Color(100, 200, 100))
@@ -2303,7 +2303,7 @@ end
 -- Draw outlined circle buttons
 local function drawOutlinedButton(x, y, radius, text, color, thickness)
     lia.derma.drawCircleOutlined(x, y, radius, color, thickness)
-    draw.SimpleText(text, "liaMediumFont", x, y, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x, y, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawOutlinedButton(200, 300, 25, "OK", Color(100, 200, 100), 2)
@@ -2385,7 +2385,7 @@ end
 -- Create textured circle buttons
 local function drawTextureButton(x, y, radius, text, texture, color)
     lia.derma.drawCircleTexture(x, y, radius, color, texture)
-    draw.SimpleText(text, "liaMediumFont", x, y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x, y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawTextureButton(200, 250, 30, "Save", "icon16/disk.png", Color(100, 200, 100))
@@ -2490,7 +2490,7 @@ end
 -- Create material-based UI elements
 local function drawMaterialButton(x, y, w, h, text, material, color)
     lia.derma.drawMaterial(8, x, y, w, h, color, material)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawMaterialButton(200, 250, 120, 40, "Save", Material("icon16/disk.png"), Color(100, 200, 100))
@@ -2554,7 +2554,7 @@ lia.derma.drawOutlined(12, 300, 100, 120, 80, Color(100, 200, 255), 3, lia.derma
 -- Create outlined buttons
 local function drawOutlinedButton(x, y, w, h, text, color, thickness)
     lia.derma.drawOutlined(8, x, y, w, h, color, thickness)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawOutlinedButton(200, 200, 120, 40, "OK", Color(100, 200, 100), 2)
@@ -2629,7 +2629,7 @@ end
 local function drawShadowedButton(x, y, w, h, text, shadowColor, mainColor)
     lia.derma.drawShadows(8, x, y, w, h, shadowColor, 20, 15)
     lia.derma.draw(8, x, y, w, h, mainColor)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawShadowedButton(100, 300, 120, 40, "Save", Color(0, 0, 0, 150), Color(100, 200, 100))
@@ -2693,7 +2693,7 @@ lia.derma.drawShadowsOutlined(12, 50, 50, 150, 80, Color(0, 0, 0, 100), 3, 25, 2
 local function drawShadowedOutlinedButton(x, y, w, h, text, shadowColor, mainColor, thickness)
     lia.derma.drawShadowsOutlined(8, x, y, w, h, shadowColor, thickness, 20, 15)
     lia.derma.draw(8, x, y, w, h, mainColor)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawShadowedOutlinedButton(100, 300, 120, 40, "Save", Color(0, 0, 0, 150), Color(100, 200, 100), 2)
@@ -2780,7 +2780,7 @@ end
 -- Create textured buttons
 local function drawTextureButton(x, y, w, h, text, texture, color)
     lia.derma.drawTexture(8, x, y, w, h, color, texture)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawTextureButton(200, 150, 120, 40, "Save", "icon16/disk.png", Color(100, 200, 100))
@@ -2865,7 +2865,7 @@ lia.derma.drawShadowsEx(300, 100, 120, 80, Color(0, 0, 0, 100), lia.derma.BLUR, 
 local function drawAdvancedShadowedButton(x, y, w, h, text, shadowColor, mainColor, tl, tr, bl, br)
     lia.derma.drawShadowsEx(x, y, w, h, shadowColor, nil, tl, tr, bl, br, 20, 15)
     lia.derma.draw(tl, x, y, w, h, mainColor)
-    draw.SimpleText(text, "liaMediumFont", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(text, "LiliaFont.20", x + w/2, y + h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 drawAdvancedShadowedButton(100, 300, 120, 40, "Rounded", Color(0, 0, 0, 150), Color(100, 200, 100), 8, 8, 8, 8)
@@ -3534,7 +3534,7 @@ Draws text with advanced formatting options including shadow effects, custom fon
 * `color` (*Color*, optional): The color of the text (default: white).
 * `alignX` (*number*, optional): The horizontal alignment (TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT).
 * `alignY` (*number*, optional): The vertical alignment (TEXT_ALIGN_TOP, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM).
-* `font` (*string*, optional): The font to use for drawing (default: "liaGenericFont").
+* `font` (*string*, optional): The font to use for drawing (default: "LiliaFont.16").
 * `alpha` (*number*, optional): The alpha transparency override for the text shadow.
 
 **Returns**
@@ -3555,7 +3555,7 @@ lia.derma.drawText("Hello World", 100, 100, Color(255, 255, 255))
 lia.derma.drawText("Centered Text", ScrW() / 2, ScrH() / 2, Color(255, 100, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 -- Text with custom font
-lia.derma.drawText("Custom Font Text", 100, 200, Color(100, 255, 100), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaLargeFont")
+lia.derma.drawText("Custom Font Text", 100, 200, Color(100, 255, 100), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.24")
 
 -- Right-aligned text
 lia.derma.drawText("Right Aligned", ScrW() - 50, 50, Color(255, 255, 100), TEXT_ALIGN_RIGHT)
@@ -3567,13 +3567,13 @@ local function drawPlayerHUD()
 
     lia.derma.drawText("Health: " .. health .. "/" .. maxHealth, 100, ScrH() - 100,
                        health > 50 and Color(100, 255, 100) or Color(255, 100, 100),
-                       TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, "liaMediumFont")
+                       TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, "LiliaFont.20")
 end
 
 hook.Add("HUDPaint", "DrawPlayerHUD", drawPlayerHUD)
 
 -- Text with custom shadow alpha
-lia.derma.drawText("Custom Shadow", 100, 300, Color(150, 150, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaMediumFont", 128)
+lia.derma.drawText("Custom Shadow", 100, 300, Color(150, 150, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.20", 128)
 
 -- Use in UI elements
 local function drawTextButton(x, y, w, h, text)
@@ -3584,10 +3584,10 @@ end
 drawTextButton(100, 100, 200, 50, "Click Me!")
 
 -- Text for game titles
-lia.derma.drawText("MY GAME TITLE", ScrW() / 2, 100, Color(255, 255, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, "liaLargeFont")
+lia.derma.drawText("MY GAME TITLE", ScrW() / 2, 100, Color(255, 255, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, "LiliaFont.24")
 
 -- Text for status messages
-lia.derma.drawText("Ready to Play", ScrW() / 2, ScrH() - 50, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, "liaMediumFont")
+lia.derma.drawText("Ready to Play", ScrW() / 2, ScrH() - 50, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM, "LiliaFont.20")
 
 -- Text with different vertical alignments
 lia.derma.drawText("Top Aligned", 200, 200, Color(255, 150, 150), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
@@ -3598,7 +3598,7 @@ lia.derma.drawText("Bottom Aligned", 200, 300, Color(150, 150, 255), TEXT_ALIGN_
 local function drawInventoryText()
     local itemCount = #LocalPlayer():getChar():getInv():getItems()
 
-    lia.derma.drawText("Items: " .. itemCount, 50, 50, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "liaSmallFont")
+    lia.derma.drawText("Items: " .. itemCount, 50, 50, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
 end
 
 hook.Add("HUDPaint", "DrawInventoryText", drawInventoryText)
@@ -4444,7 +4444,7 @@ local function createCharacterSheet(parent)
     local title = vgui.Create("DLabel", sheet)
     title:Dock(TOP)
     title:SetText("Character Attributes")
-    title:SetFont("liaMediumFont")
+    title:SetFont("LiliaFont.20")
 
     local attribsContainer = lia.derma.characterAttribs(sheet)
 

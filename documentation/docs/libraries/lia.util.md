@@ -807,7 +807,7 @@ end
 
 -- Use in a function
 local function drawTitleText(text, x, y)
-    lia.util.DrawTextOutlined(text, "liaLargeFont", x, y, Color(255, 255, 255), Color(0, 0, 0))
+    lia.util.DrawTextOutlined(text, "LiliaFont.24", x, y, Color(255, 255, 255), Color(0, 0, 0))
 end
 ```
 

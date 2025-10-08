@@ -413,7 +413,7 @@ if CLIENT then
                     combo:Dock(RIGHT)
                     combo:DockMargin(10, 10, 10, 10)
                     combo:SetWide(200)
-                    combo:SetFont("liaMediumFont")
+                    combo:SetFont("LiliaFont.18")
                     combo:SetValue(input.GetKeyName(currentKey) or "NONE")
                     local choices = {}
                     for name, code in pairs(KeybindKeys) do
@@ -448,6 +448,7 @@ if CLIENT then
                         currentKey = newKey
                     end
 
+                    combo:PostInit()
                     local unbindButton = rowPanel:Add("liaButton")
                     unbindButton:Dock(RIGHT)
                     unbindButton:DockMargin(10, 10, 10, 10)

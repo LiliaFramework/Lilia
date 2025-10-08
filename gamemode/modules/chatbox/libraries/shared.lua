@@ -9,7 +9,7 @@
     format = "emoteFormat",
     onCanHear = lia.config.get("ChatRange", 280) * 0.25,
     prefix = {"/meclose", "/actionclose"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -39,7 +39,7 @@ lia.chat.register("mefar", {
     format = "emoteFormat",
     onCanHear = lia.config.get("ChatRange", 280) * 2,
     prefix = {"/mefar", "/actionfar"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -55,7 +55,7 @@ lia.chat.register("itclose", {
     onChatAdd = function(_, text) chat.AddText(lia.config.get("ChatColor"), "**" .. text) end,
     onCanHear = lia.config.get("ChatRange", 280) * 0.25,
     prefix = {"/itclose"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -71,7 +71,7 @@ lia.chat.register("itfar", {
     onChatAdd = function(_, text) chat.AddText(lia.config.get("ChatColor"), "**" .. text) end,
     onCanHear = lia.config.get("ChatRange", 280) * 2,
     prefix = {"/itfar"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -83,7 +83,7 @@ lia.chat.register("coinflip", {
     prefix = {"/coinflip"},
     color = Color(236, 100, 9),
     filter = "actions",
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     deadCanChat = false
 })
 
@@ -124,7 +124,7 @@ lia.chat.register("me", {
         return false
     end,
     prefix = {"/me", "/action"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -141,7 +141,7 @@ lia.chat.register("globalme", {
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function() return true end,
     prefix = {"/globalme"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -161,7 +161,7 @@ lia.chat.register("it", {
         return false
     end,
     prefix = {"/it"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -265,7 +265,7 @@ lia.chat.register("roll", {
     format = "rollFormat",
     color = Color(155, 111, 176),
     filter = "actions",
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     deadCanChat = true,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
@@ -393,7 +393,7 @@ lia.chat.register("me's", {
         chat.AddText(nameCol, L("mePossessiveFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or language.GetPhrase("#Console"), ""), texCol, text)
     end,
     prefix = {"/me's", "/action's"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })
@@ -422,7 +422,7 @@ lia.chat.register("mefarfar", {
     end,
     onCanHear = lia.config.get("ChatRange", 280) * 4,
     prefix = {"/mefarfar", "/actionyy", "/meyy"},
-    font = "liaChatFontItalics",
+    font = "LiliaFont.17i",
     filter = "actions",
     deadCanChat = true
 })

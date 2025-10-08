@@ -4,15 +4,15 @@ function PANEL:Init()
     self.selected = nil
     self.opened = false
     self:SetText("")
-    self.font = "Fated.18"
+    self.font = "LiliaFont.18"
     self.hoverAnim = 0
     self.OnSelect = function() end
-    self:AutoSize()
     self.btn = vgui.Create("DButton", self)
     self.btn:Dock(FILL)
     self.btn:SetText("")
     self.btn:SetCursor("hand")
     self.btn.Paint = function(_, w, h)
+        if not IsValid(self) then return end
         if self.btn:IsHovered() then
             self.hoverAnim = math.Clamp(self.hoverAnim + FrameTime() * 4, 0, 1)
         else
@@ -22,7 +22,7 @@ function PANEL:Init()
         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw()
         if self.hoverAnim > 0 then lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(lia.color.theme.button_hovered.r, lia.color.theme.button_hovered.g, lia.color.theme.button_hovered.b, self.hoverAnim * 255)):Shape(lia.derma.SHAPE_IOS):Draw() end
-        draw.SimpleText(self.selected or self.placeholder or L("choose"), self.font, 12, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.selected or self.placeholder or L("choose"), self.font, 12, h * 0.5, self:GetTextColor(), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         local arrowSize = 6
         local arrowX = w - 16
         local arrowY = h / 2
@@ -48,6 +48,7 @@ function PANEL:Init()
     end
 
     self.btn.DoClick = function()
+        if not IsValid(self) then return end
         if self.opened then
             self:CloseMenu()
         else
@@ -65,6 +66,7 @@ function PANEL:AddChoice(text, data)
 
     if not self.opened then
         self:AutoSize()
+        self:RefreshDropdown()
     else
         self:CloseMenu()
         self:OpenMenu()
@@ -76,6 +78,7 @@ function PANEL:SetValue(val)
 end
 
 function PANEL:ChooseOption(text, index)
+    if not IsValid(self) then return end
     self.selected = text
     if self.convar then RunConsoleCommand(self.convar, tostring(text)) end
     if self.OnSelect then
@@ -118,11 +121,9 @@ end
 function PANEL:OpenMenu()
     if IsValid(self.menu) then self.menu:Remove() end
     local menuPadding = 6
-    local itemHeight = 26
+    local itemHeight = 32
     local numChoices = #self.choices
     local calculatedHeight = numChoices * (itemHeight + 2) + (menuPadding * 2) + 2
-    local maxMenuHeight = math.max(200, math.min(500, calculatedHeight))
-    print("ComboBox Debug - Dropdown Height - Choices:", numChoices, "Calculated:", calculatedHeight, "Max:", maxMenuHeight)
     surface.SetFont(self.font)
     local maxTextWidth = 0
     for _, choice in ipairs(self.choices) do
@@ -132,38 +133,38 @@ function PANEL:OpenMenu()
 
     local optimalWidth = math.max(self:GetWide(), maxTextWidth + 40)
     local menuWidth = math.min(optimalWidth, ScrW() * 0.4)
-    local scrollThreshold = maxMenuHeight - (menuPadding * 2) - 2
-    local needsScroll = numChoices * (itemHeight + 2) > scrollThreshold
-    print("ComboBox Debug - Scroll check - Choices:", numChoices, "Item height total:", numChoices * (itemHeight + 2), "Threshold:", scrollThreshold, "Needs scroll:", needsScroll)
+    local sx, sy = self:LocalToScreen(0, self:GetTall())
+    local spaceBelow = ScrH() - sy - 10
+    local spaceAbove = (sy - self:GetTall()) - 10
+    local maxAvailable = math.max(spaceBelow, spaceAbove)
+    local menuHeight = math.Clamp(calculatedHeight, 0, math.max(0, maxAvailable))
+    local needsScroll = calculatedHeight > menuHeight
     if needsScroll then
         self.menu = vgui.Create("liaScrollPanel")
-        self.menu:SetSize(menuWidth, maxMenuHeight)
-        print("ComboBox Debug - Created scroll panel - Width:", menuWidth, "Height:", maxMenuHeight)
-        local x, y = self:LocalToScreen(0, self:GetTall())
-        local originalY = y
-        if y + maxMenuHeight > ScrH() - 10 then y = y - maxMenuHeight - self:GetTall() end
-        print("ComboBox Debug - Positioning - X:", x, "Original Y:", originalY, "Final Y:", y, "Menu height:", maxMenuHeight, "Screen height:", ScrH())
+        self.menu:SetSize(menuWidth, menuHeight)
+        local x, y = sx, sy
+        if spaceBelow < menuHeight then y = sy - menuHeight - self:GetTall() end
         self.menu:SetPos(x, y)
         self.menu:SetDrawOnTop(true)
         self.menu:MakePopup()
         self.menu:SetKeyboardInputEnabled(false)
-        local container = vgui.Create("DPanel", self.menu)
-        container:Dock(FILL)
-        container:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding)
-        container.Paint = function(_, w, h)
+        self.menu.Paint = function(_, w, h)
             lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
             lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
         end
 
+        local canvas = self.menu:GetCanvas()
+        if IsValid(canvas) then canvas:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding) end
         surface.SetFont(self.font)
         for i, choice in ipairs(self.choices) do
-            local option = vgui.Create("DButton", container)
+            local option = self.menu:Add("DButton")
             option:SetText("")
             option:Dock(TOP)
             option:DockMargin(2, 2, 2, 0)
             option:SetTall(itemHeight)
             option:SetCursor("hand")
             option.Paint = function(s, w, h)
+                if not IsValid(self) then return end
                 local isSelected = self.selected == choice.text
                 local isHovered = s:IsHovered()
                 if isSelected then
@@ -173,21 +174,22 @@ function PANEL:OpenMenu()
                 end
 
                 local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
-                draw.SimpleText(choice.text, "Fated.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 
             option.DoClick = function()
+                if not IsValid(self) then return end
                 self:ChooseOption(choice.text, i)
                 self:CloseMenu()
                 surface.PlaySound("button_click.wav")
             end
         end
     else
-        local menuHeight = math.min((numChoices * (itemHeight + 2)) + (menuPadding * 2) + 2, maxMenuHeight)
+        menuHeight = (numChoices * (itemHeight + 2)) + (menuPadding * 2) + 2
         self.menu = vgui.Create("DPanel")
         self.menu:SetSize(menuWidth, menuHeight)
-        local x, y = self:LocalToScreen(0, self:GetTall())
-        if y + menuHeight > ScrH() - 10 then y = y - menuHeight - self:GetTall() end
+        local x, y = sx, sy
+        if spaceBelow < menuHeight then y = sy - menuHeight - self:GetTall() end
         self.menu:SetPos(x, y)
         self.menu:SetDrawOnTop(true)
         self.menu:MakePopup()
@@ -207,6 +209,7 @@ function PANEL:OpenMenu()
             option:SetTall(itemHeight)
             option:SetCursor("hand")
             option.Paint = function(s, w, h)
+                if not IsValid(self) then return end
                 local isSelected = self.selected == choice.text
                 local isHovered = s:IsHovered()
                 if isSelected then
@@ -216,10 +219,11 @@ function PANEL:OpenMenu()
                 end
 
                 local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
-                draw.SimpleText(choice.text, "Fated.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
 
             option.DoClick = function()
+                if not IsValid(self) then return end
                 self:ChooseOption(choice.text, i)
                 self:CloseMenu()
                 surface.PlaySound("button_click.wav")
@@ -231,7 +235,7 @@ function PANEL:OpenMenu()
     local oldMouseDown = false
     if IsValid(self.menu) then
         self.menu.Think = function()
-            if not self.menu:IsVisible() then return end
+            if not IsValid(self.menu) or not self.menu:IsVisible() then return end
             local mouseDown = input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)
             if mouseDown and not oldMouseDown then
                 local mx, my = gui.MousePos()
@@ -242,17 +246,17 @@ function PANEL:OpenMenu()
             oldMouseDown = mouseDown
         end
 
-        if IsValid(self.menu) then self.menu.OnRemove = function() self.opened = false end end
+        self.menu.OnRemove = function() if IsValid(self) then self.opened = false end end
     end
 end
 
 function PANEL:CloseMenu()
     if IsValid(self.menu) then self.menu:Remove() end
-    self.opened = false
+    if IsValid(self) then self.opened = false end
 end
 
 function PANEL:OnRemove()
-    self:CloseMenu()
+    if IsValid(self) then self:CloseMenu() end
 end
 
 function PANEL:GetOptionData(index)
@@ -285,6 +289,8 @@ end
 
 function PANEL:SetFont(font)
     self.font = font
+    self:AutoSize()
+    self:RefreshDropdown()
 end
 
 function PANEL:RefreshDropdown()
@@ -299,7 +305,7 @@ function PANEL:AutoSize()
     local _, fontHeight = surface.GetTextSize("Ag")
     local padding = 8
     local optimalHeight = fontHeight + padding
-    if not self.userSetHeight then self:SetTall(optimalHeight) end
+    if not self.userSetHeight then self:SetTall(optimalHeight, true) end
     if #self.choices == 0 then return end
     local maxTextWidth = 0
     for _, choice in ipairs(self.choices) do
@@ -326,13 +332,34 @@ function PANEL:FinishAddingOptions()
     if not (parent and parent.ClassName == "DPanel" and self:GetDock() == TOP) then self:AutoSize() end
 end
 
-function PANEL:SetTall(tall)
-    self.BaseClass.SetTall(self, tall)
-    self.userSetHeight = true
+function PANEL:SetTall(tall, internal)
+    if self.BaseClass and self.BaseClass.SetTall then
+        self.BaseClass.SetTall(self, tall)
+    else
+        local panel = vgui.GetControlTable("Panel")
+        if panel and panel.SetTall then panel.SetTall(self, tall) end
+    end
+
+    if not internal then self.userSetHeight = true end
 end
 
 function PANEL:RecalculateSize()
     self:AutoSize()
+end
+
+function PANEL:PostInit()
+    if not self.postInitDone then
+        self:AutoSize()
+        self.postInitDone = true
+    end
+end
+
+function PANEL:SetTextColor(color)
+    self.textColor = color
+end
+
+function PANEL:GetTextColor()
+    return self.textColor or lia.color.theme.text
 end
 
 vgui.Register("liaComboBox", PANEL, "Panel")

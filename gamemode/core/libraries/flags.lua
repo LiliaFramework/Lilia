@@ -10,7 +10,7 @@ end
 
 if SERVER then
     function lia.flag.onSpawn(client)
-        local flags = client:getFlags() .. client:getFlags("player")
+        local flags = client:getFlags()
         local processed = {}
         for i = 1, #flags do
             local flag = flags:sub(i, i)
@@ -69,35 +69,6 @@ hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(page
                     pnl.Paint = function(_, w, h)
                         local char = client:getChar()
                         local hasFlag = char and char:hasFlags(flagName)
-                        local icon = hasFlag and "checkbox.png" or "unchecked.png"
-                        local s = 40
-                        lia.util.drawTexture(icon, color_white, w - s - sheet.padding, h * 0.5 - s * 0.5, s, s)
-                    end
-
-                    row.filterText = (flagName .. " " .. descText):lower()
-                end
-            end
-
-            sheet:Refresh()
-        end
-    })
-
-    table.insert(pages, {
-        name = L("playerFlagsTitle"),
-        drawFunc = function(parent)
-            local sheet = vgui.Create("liaSheet", parent)
-            sheet:SetPlaceholderText(L("searchFlags"))
-            for flagName, flagData in SortedPairs(lia.flag.list) do
-                if not isnumber(flagName) then
-                    local descText = flagData.desc or ""
-                    local row = sheet:AddTextRow({
-                        title = L("flag") .. " '" .. flagName .. "'",
-                        desc = descText
-                    })
-
-                    local pnl = row.panel
-                    pnl.Paint = function(_, w, h)
-                        local hasFlag = client:getFlags("player"):find(flagName, 1, true)
                         local icon = hasFlag and "checkbox.png" or "unchecked.png"
                         local s = 40
                         lia.util.drawTexture(icon, color_white, w - s - sheet.padding, h * 0.5 - s * 0.5, s, s)

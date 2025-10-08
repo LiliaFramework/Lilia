@@ -109,6 +109,7 @@ function SKIN:PaintWindowMaximizeButton()
 end
 
 function SKIN:PaintComboBox(panel, w, h)
+    if panel:GetFont() == "Default" or panel:GetFont() == "" then panel:SetFont("LiliaFont.18") end
     DrawButton(panel, w, h)
 end
 

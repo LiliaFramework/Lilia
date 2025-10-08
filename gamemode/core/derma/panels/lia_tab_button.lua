@@ -83,7 +83,7 @@ function PANEL:Paint(w, h)
 
     local iconW = self.icon and 16 or 0
     local iconTextGap = self.icon and 8 or 0
-    surface.SetFont("Fated.18")
+    surface.SetFont("LiliaFont.18")
     local totalContentWidth = iconW + iconTextGap + surface.GetTextSize(self.text)
     local startX = (w - totalContentWidth) / 2
     local textX = startX + (iconW > 0 and (iconW + iconTextGap) or 0)

@@ -1,6 +1,4 @@
 ﻿local predictedStamina = 100
-local stmBlurAmount = 0
-local stmBlurAlpha = 0
 function MODULE:ConfigureCharacterCreationSteps(panel)
     for _, attrib in pairs(lia.attribs.list) do
         if not attrib.noStartBonus then
@@ -38,25 +36,6 @@ end
 function MODULE:LocalVarChanged(client, key, _, newVar)
     if client ~= LocalPlayer() or key ~= "stamina" then return end
     predictedStamina = newVar
-end
-
-function MODULE:HUDPaintBackground()
-    local client = LocalPlayer()
-    if not lia.config.get("StaminaBlur", false) or not client:getChar() then return end
-    local character = client:getChar()
-    local maxStamina = character:getMaxStamina()
-    local stamina = client:getLocalVar("stamina", maxStamina)
-    if stamina < maxStamina * 0.25 then
-        local ratio = (maxStamina * 0.25 - stamina) / (maxStamina * 0.25)
-        local targetAlpha = ratio * 255
-        local targetAmount = ratio * 5
-        stmBlurAlpha = Lerp(RealFrameTime() / 2, stmBlurAlpha, targetAlpha)
-        stmBlurAmount = Lerp(RealFrameTime() / 2, stmBlurAmount, targetAmount)
-        lia.util.drawBlurAt(0, 0, ScrW(), ScrH(), stmBlurAmount, 0.2, stmBlurAlpha)
-    else
-        stmBlurAlpha = 0
-        stmBlurAmount = 0
-    end
 end
 
 function MODULE:LoadCharInformation()
@@ -97,6 +76,4 @@ function MODULE:OnReloaded()
     local char = client:getChar()
     if not char then return end
     predictedStamina = client:getLocalVar("stamina", char:getMaxStamina())
-    stmBlurAlpha = 0
-    stmBlurAmount = 0
 end

@@ -404,7 +404,7 @@ else
     end
 
     function lia.util.wrapText(text, width, font)
-        font = font or "liaChatFont"
+        font = font or "LiliaFont.16"
         surface.SetFont(font)
         local exploded = string.Explode("%s", text, true)
         local line = ""
@@ -575,9 +575,10 @@ else
                                     ftype = "text"
                                 }
                             elseif isstring(fType) and fType == "combo" then
-                                local combo = vgui.Create("DComboBox", form)
+                                local combo = vgui.Create("liaComboBox", form)
                                 combo:Dock(TOP)
                                 combo:DockMargin(5, 5, 5, 0)
+                                combo:PostInit()
                                 combo:SetValue(L("selectPrompt", fName))
                                 form:AddItem(combo)
                                 inputs[fName] = {
@@ -585,14 +586,16 @@ else
                                     ftype = "combo"
                                 }
                             elseif istable(fType) then
-                                local combo = vgui.Create("DComboBox", form)
+                                local combo = vgui.Create("liaComboBox", form)
                                 combo:Dock(TOP)
                                 combo:DockMargin(5, 5, 5, 0)
+                                combo:PostInit()
                                 combo:SetValue(L("selectPrompt", fName))
                                 for _, choice in ipairs(fType) do
                                     combo:AddChoice(choice)
                                 end
 
+                                combo:FinishAddingOptions()
                                 form:AddItem(combo)
                                 inputs[fName] = {
                                     panel = combo,
@@ -737,7 +740,7 @@ else
     end
 
     local function EntText(text, x, y, fade)
-        surface.SetFont("Fated.40")
+        surface.SetFont("LiliaFont.40")
         local tw, th = surface.GetTextSize(text)
         local bx, by = math.Round(x - tw * 0.5 - 18), math.Round(y - 12)
         local bw, bh = tw + 36, th + 24
@@ -749,7 +752,7 @@ else
         lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
         lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
         lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
-        draw.SimpleText(text, "Fated.40", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        draw.SimpleText(text, "LiliaFont.40", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         return bh
     end
 

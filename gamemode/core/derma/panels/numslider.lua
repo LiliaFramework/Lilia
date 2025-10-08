@@ -6,7 +6,7 @@ function PANEL:Init()
     self.decimals = 0
     self.hoverAnim = 0
     self.dragging = false
-    self.font = "Fated.18"
+    self.font = "LiliaFont.18"
     self.text = ""
     self:SetTall(60)
     self.track = vgui.Create("DPanel", self)
@@ -75,7 +75,7 @@ function PANEL:Init()
     self.valueLabel:DockMargin(10, 5, 10, 0)
     self.valueLabel:SetTall(20)
     self.valueLabel:SetContentAlignment(5)
-    self.valueLabel:SetFont("Fated.16")
+    self.valueLabel:SetFont("LiliaFont.16")
 end
 
 function PANEL:PerformLayout()

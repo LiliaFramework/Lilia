@@ -187,7 +187,7 @@ function PANEL:Notify(text, duration, col)
     if IsValid(self.messagePanel) then self.messagePanel:Remove() end
     duration = duration or 2
     col = col or lia.color.theme.theme
-    surface.SetFont('Fated.20')
+    surface.SetFont('LiliaFont.20')
     local tw, th = surface.GetTextSize(text)
     local mp = vgui.Create('DPanel', self)
     mp:SetSize(tw + 16, th + 8)
@@ -199,7 +199,7 @@ function PANEL:Notify(text, duration, col)
     mp.Paint = function(_, w, h)
         lia.derma.rect(0, 0, w, h):Rad(16):Color(col):Shadow(7, 20):Outline(3):Clip(self):Draw()
         lia.derma.rect(0, 0, w, h):Rad(16):Color(col):Draw()
-        draw.SimpleText(text, 'Fated.20', w * 0.5, h * 0.5 - 1, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, 'LiliaFont.20', w * 0.5, h * 0.5 - 1, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     mp:MoveTo(mp.x, endY, 0.3, 0, 0.7)
@@ -234,9 +234,9 @@ function PANEL:Paint(w, h)
             surface.DrawTexturedRect(6, 4, 16, 16)
         end
 
-        if self.center_title ~= '' then draw.SimpleText(self.center_title, 'Fated.20b', w * 0.5, 12, lia.color.theme.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        if self.center_title ~= '' then draw.SimpleText(self.center_title, 'LiliaFont.20b', w * 0.5, 12, lia.color.theme.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
         local titleOffset = self.iconMat and 26 or 6
-        draw.SimpleText(self.title, 'Fated.16', titleOffset, 4, lia.color.theme.header_text)
+        draw.SimpleText(self.title, 'LiliaFont.16', titleOffset, 4, lia.color.theme.header_text)
     end
 end
 

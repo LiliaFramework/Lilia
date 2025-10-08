@@ -324,6 +324,31 @@ end
 
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov)
+    if factionViewEnabled and factionViewPosition then
+        view.origin = factionViewPosition
+        if factionViewAngles then view.angles = factionViewAngles end
+        view.znear = 1
+        if not factionViewModel or not IsValid(factionViewModel) then factionViewModel = ClientsideModel("models/error.mdl", RENDERGROUP_OPAQUE) end
+        if IsValid(factionViewModel) then
+            local forwardOffset = factionViewAngles and factionViewAngles:Forward() * 50 or Vector(0, 0, 50)
+            local modelPos = factionViewPosition + forwardOffset
+            factionViewModel:SetPos(modelPos)
+            factionViewModel:SetAngles(factionViewAngles or Angle(0, 180, 0))
+            if factionViewFaction then
+                local faction = lia.faction.teams[factionViewFaction]
+                if faction and faction.models then
+                    local modelInfo = faction.models[1]
+                    local modelPath = modelInfo
+                    if istable(modelInfo) then modelPath = modelInfo[1] end
+                    if modelPath and modelPath ~= factionViewModel:GetModel() then factionViewModel:SetModel(modelPath) end
+                end
+            end
+
+            factionViewModel:DrawModel()
+        end
+        return view
+    end
+
     local ragEntity = client:getRagdoll()
     local ragdoll = client:GetRagdollEntity()
     local ent
@@ -562,7 +587,7 @@ function GM:DrawDeathNotice()
     return false
 end
 
-hook.Add("RefreshFonts", "liaRefreshUIElements", function()
+function GM:RefreshFonts()
     local function refreshPanel(panel)
         if not IsValid(panel) then return end
         panel:InvalidateLayout(true)
@@ -583,11 +608,6 @@ hook.Add("RefreshFonts", "liaRefreshUIElements", function()
         refreshPanel(lia.gui.character)
     end
 
-    if IsValid(lia.gui.main) then
-        lia.gui.main:Update()
-        refreshPanel(lia.gui.main)
-    end
-
     if IsValid(lia.gui.score) then
         lia.gui.score:Update()
         refreshPanel(lia.gui.score)
@@ -599,4 +619,28 @@ hook.Add("RefreshFonts", "liaRefreshUIElements", function()
     end
 
     hook.Run("OnFontsRefreshed")
-end)
+end
+
+function GM:GetMainMenuPosition(character)
+    if character and character:getFaction() then
+        local faction = lia.faction.get(character:getFaction())
+        if faction and faction.mainMenuPosition then
+            local menuPos = faction.mainMenuPosition
+            local currentMap = game.GetMap()
+            if istable(menuPos) and menuPos[currentMap] then
+                local mapPos = menuPos[currentMap]
+                if istable(mapPos) then
+                    return mapPos.position, mapPos.angles
+                elseif isvector(mapPos) then
+                    return mapPos, Angle(0, 0, 0)
+                end
+            end
+
+            if istable(menuPos) then
+                return menuPos.position, menuPos.angles
+            elseif isvector(menuPos) then
+                return menuPos, Angle(0, 0, 0)
+            end
+        end
+    end
+end

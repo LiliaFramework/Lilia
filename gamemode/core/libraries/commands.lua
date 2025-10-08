@@ -326,6 +326,9 @@ else
                 for _, plyObj in ipairs(players) do
                     ctrl:AddChoice(plyObj:Name(), plyObj:SteamID())
                 end
+
+                ctrl:FinishAddingOptions()
+                ctrl:PostInit()
             elseif fieldType == "table" then
                 ctrl = vgui.Create("liaComboBox", panel)
                 ctrl:SetValue(L("select") .. " " .. L(name))
@@ -344,6 +347,9 @@ else
                         end
                     end
                 end
+
+                ctrl:FinishAddingOptions()
+                ctrl:PostInit()
             elseif fieldType == "bool" then
                 ctrl = vgui.Create("liaCheckbox", panel)
             else
@@ -906,7 +912,7 @@ else
         local function createFeedbackLabel(text)
             clearFeedback()
             local label = vgui.Create("DLabel", contentPanel)
-            label:SetFont("Fated.16")
+            label:SetFont("LiliaFont.16")
             label:SetText(text or "")
             label:SetWrap(true)
             label:SetTall(48)
@@ -946,8 +952,8 @@ else
                     card:SetTall(52)
                     card.Paint = function(_, w, h)
                         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw()
-                        draw.SimpleText(L("scrollableItem", i), "Fated.18", 16, h * 0.3, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-                        draw.SimpleText(L("useDockToStackCards"), "Fated.16", 16, h * 0.65, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        draw.SimpleText(L("scrollableItem", i), "LiliaFont.18", 16, h * 0.3, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                        draw.SimpleText(L("useDockToStackCards"), "LiliaFont.16", 16, h * 0.65, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                     end
                 end
             elseif elementName == "liaTable" then
@@ -986,8 +992,8 @@ else
                     row:SetTall(88)
                     row.Paint = function(_, w, h)
                         lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel_alpha[1]):Shape(lia.derma.SHAPE_IOS):Draw()
-                        draw.SimpleText(info.title, "Fated.18", 12, 24, lia.color.theme.text)
-                        draw.SimpleText(info.desc, "Fated.14", 12, h - 24, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+                        draw.SimpleText(info.title, "LiliaFont.18", 12, 24, lia.color.theme.text)
+                        draw.SimpleText(info.desc, "LiliaFont.14", 12, h - 24, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
                     end
 
                     element:AddItem(row)
@@ -1013,8 +1019,8 @@ else
                 for _, tabInfo in ipairs(tabs) do
                     local tabPanel = vgui.Create("DPanel")
                     tabPanel.Paint = function()
-                        draw.SimpleText(tabInfo.name, "Fated.24", 24, 24, lia.color.theme.text)
-                        draw.SimpleText(tabInfo.description, "Fated.16", 24, 56, lia.color.theme.gray)
+                        draw.SimpleText(tabInfo.name, "LiliaFont.24", 24, 24, lia.color.theme.text)
+                        draw.SimpleText(tabInfo.description, "LiliaFont.16", 24, 56, lia.color.theme.gray)
                     end
 
                     element:AddTab(tabInfo.name, tabPanel)
@@ -1057,7 +1063,7 @@ else
                 element:ShowCloseButton(false)
                 element:DockPadding(16, 42, 16, 16)
                 local description = vgui.Create("DLabel", element)
-                description:SetFont("Fated.16")
+                description:SetFont("LiliaFont.16")
                 description:SetWrap(true)
                 description:SetText(L("liliaFrameDescription"))
                 description:Dock(TOP)
@@ -1083,7 +1089,7 @@ else
             wrapper:DockMargin(5, 5, 5, 5)
             wrapper.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw() end
             local info = vgui.Create("DLabel", wrapper)
-            info:SetFont("Fated.18")
+            info:SetFont("LiliaFont.18")
             info:SetWrap(true)
             info:SetText(L("radialPanelDescription"))
             info:Dock(TOP)
@@ -1126,7 +1132,7 @@ else
             wrapper:DockMargin(5, 5, 5, 5)
             wrapper.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.background_panelpopup):Shape(lia.derma.SHAPE_IOS):Draw() end
             local info = vgui.Create("DLabel", wrapper)
-            info:SetFont("Fated.18")
+            info:SetFont("LiliaFont.18")
             info:SetWrap(true)
             info:SetText(L("contextMenuDescription"))
             info:Dock(TOP)
@@ -1374,6 +1380,168 @@ else
         local pos = client:GetPos()
         local ang = client:GetAngles()
         MsgC(Color(255, 255, 255), "Vector: (" .. math.Round(pos.x, 2) .. "," .. math.Round(pos.y, 2) .. "," .. math.Round(pos.z, 2) .. ") Angle:(" .. math.Round(ang.x, 2) .. "," .. math.Round(ang.y, 2) .. "," .. math.Round(ang.z, 2) .. ")\n")
+    end)
+
+    factionViewEnabled = factionViewEnabled or false
+    factionViewPosition = factionViewPosition or nil
+    factionViewAngles = factionViewAngles or nil
+    factionViewModel = factionViewModel or nil
+    factionViewFaction = factionViewFaction or nil
+    concommand.Add("viewAsFaction", function(client)
+        if not IsValid(client) then
+            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
+            return
+        end
+
+        local factionOptions = {}
+        for uniqueID, faction in pairs(lia.faction.teams) do
+            table.insert(factionOptions, {faction.name, uniqueID})
+        end
+
+        if table.IsEmpty(factionOptions) then
+            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. "No factions found.\n")
+            return
+        end
+
+        lia.util.requestArguments("Select Faction to View As", {
+            ["Faction"] = {"table", factionOptions}
+        }, function(success, data)
+            if not success or not data or not data.Faction then return end
+            local factionUniqueID = data.Faction
+            local faction = lia.faction.teams[factionUniqueID]
+            if not faction then
+                client:notify("Faction not found.")
+                return
+            end
+
+            local menuPos = faction.mainMenuPosition
+            if not menuPos then
+                client:notify("Faction '" .. faction.name .. "' has no mainMenuPosition defined.")
+                return
+            end
+
+            local position, angles = nil, nil
+            local currentMap = game.GetMap()
+            if isvector(menuPos) then
+                position = menuPos
+                angles = Angle(0, 180, 0)
+            elseif istable(menuPos) then
+                if menuPos[currentMap] then
+                    local mapPos = menuPos[currentMap]
+                    if istable(mapPos) then
+                        position = mapPos.position or mapPos
+                        angles = mapPos.angles or Angle(0, 180, 0)
+                    elseif isvector(mapPos) then
+                        position = mapPos
+                        angles = Angle(0, 180, 0)
+                    end
+                else
+                    local fallbackMap, fallbackPos = next(menuPos)
+                    if fallbackMap and fallbackPos then
+                        if istable(fallbackPos) then
+                            position = fallbackPos.position or fallbackPos
+                            angles = fallbackPos.angles or Angle(0, 180, 0)
+                        elseif isvector(fallbackPos) then
+                            position = fallbackPos
+                            angles = Angle(0, 180, 0)
+                        end
+                    elseif menuPos.position then
+                        position = menuPos.position
+                        angles = menuPos.angles or Angle(0, 180, 0)
+                    end
+                end
+            end
+
+            if not position then
+                client:notify("Could not determine position for faction '" .. faction.name .. "' on map '" .. currentMap .. "'. Make sure the faction has a mainMenuPosition defined for this map.")
+                return
+            end
+
+            factionViewEnabled = true
+            factionViewPosition = position
+            factionViewAngles = angles or Angle(0, 180, 0)
+            factionViewFaction = factionUniqueID
+            MsgC(Color(0, 255, 0), "[Lilia] ViewAsFaction: Using map '" .. currentMap .. "' for faction '" .. faction.name .. "'\n")
+            MsgC(Color(0, 255, 0), "[Lilia] ViewAsFaction: Position = " .. tostring(position) .. "\n")
+            if angles then MsgC(Color(0, 255, 0), "[Lilia] ViewAsFaction: Angles = " .. tostring(angles) .. "\n") end
+            client:notify("Now viewing as faction: " .. faction.name)
+            client:notify("Position: " .. tostring(position))
+            if angles then client:notify("Angles: " .. tostring(angles)) end
+            client:notify("Use 'stopFactionView' to return to normal view.")
+        end)
+    end)
+
+    concommand.Add("debugFactionMaps", function(client, _, args)
+        if not IsValid(client) then
+            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
+            return
+        end
+
+        local factionName = args[1]
+        if not factionName then
+            MsgC(Color(255, 193, 7), "[Lilia] Usage: debugFactionMaps <faction_name>\n")
+            return
+        end
+
+        local faction = nil
+        for _, f in pairs(lia.faction.teams) do
+            if string.lower(f.name) == string.lower(factionName) then
+                faction = f
+                break
+            end
+        end
+
+        if not faction then
+            MsgC(Color(255, 0, 0), "[Lilia] Faction '" .. factionName .. "' not found.\n")
+            return
+        end
+
+        MsgC(Color(0, 255, 0), "[Lilia] Debug info for faction '" .. faction.name .. "':\n")
+        MsgC(Color(255, 255, 0), "Current map: " .. game.GetMap() .. "\n")
+        if not faction.mainMenuPosition then
+            MsgC(Color(255, 0, 0), "No mainMenuPosition defined for this faction.\n")
+            return
+        end
+
+        if isvector(faction.mainMenuPosition) then
+            MsgC(Color(0, 255, 0), "Simple vector position: " .. tostring(faction.mainMenuPosition) .. "\n")
+        elseif istable(faction.mainMenuPosition) then
+            MsgC(Color(0, 255, 0), "Map-specific positions:\n")
+            for mapName, posData in pairs(faction.mainMenuPosition) do
+                local isCurrentMap = mapName == game.GetMap()
+                local mapColor = isCurrentMap and Color(0, 255, 0) or Color(255, 255, 255)
+                MsgC(mapColor, "  " .. (isCurrentMap and ">>> " or "    ") .. mapName .. ":\n")
+                if istable(posData) then
+                    MsgC(mapColor, "    Position: " .. tostring(posData.position or posData) .. "\n")
+                    if posData.angles then MsgC(mapColor, "    Angles: " .. tostring(posData.angles) .. "\n") end
+                elseif isvector(posData) then
+                    MsgC(mapColor, "    Position: " .. tostring(posData) .. "\n")
+                end
+            end
+        end
+    end)
+
+    concommand.Add("stopFactionView", function(client)
+        if not IsValid(client) then
+            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
+            return
+        end
+
+        if not factionViewEnabled then
+            MsgC(Color(255, 193, 7), "[Lilia] Faction view is not currently active.\n")
+            return
+        end
+
+        factionViewEnabled = false
+        factionViewPosition = nil
+        factionViewAngles = nil
+        factionViewFaction = nil
+        if IsValid(factionViewModel) then
+            factionViewModel:Remove()
+            factionViewModel = nil
+        end
+
+        MsgC(Color(0, 255, 0), "[Lilia] Faction view disabled. Returning to normal view.\n")
     end)
 
     lia.command.add("testargs", {

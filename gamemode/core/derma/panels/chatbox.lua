@@ -65,7 +65,7 @@ function PANEL:setActive(state)
         self.text.History = lia.chat.history
         self.text:SetHistoryEnabled(true)
         self.text:DockMargin(0, 0, 0, 0)
-        self.text:SetFont("liaChatFont")
+        self.text:SetFont("LiliaFont.16")
         self.text.OnEnter = function(entry)
             local input = entry:GetText()
             entry:Remove()
@@ -251,7 +251,7 @@ end
 
 function PANEL:addFilterButton(filter)
     local tab = self.tabs:Add("DButton")
-    tab:SetFont("liaChatFont")
+    tab:SetFont("LiliaFont.16")
     tab:SetText(L(filter):upper())
     tab:SizeToContents()
     tab:DockMargin(0, 0, 3, 0)
@@ -279,8 +279,8 @@ function PANEL:addFilterButton(filter)
 end
 
 function PANEL:addText(...)
-    local markup = "<font=liaChatFont>"
-    if CHAT_CLASS then markup = "<font=" .. (CHAT_CLASS.font or "liaChatFont") .. ">" end
+    local markup = "<font=LiliaFont.16>"
+    if CHAT_CLASS then markup = "<font=" .. (CHAT_CLASS.font or "LiliaFont.16") .. ">" end
     markup = hook.Run("ChatAddText", markup, ...) or markup
     for _, item in ipairs({...}) do
         if item and istable(item) and item.GetName and item.Width and item.Height then
@@ -295,7 +295,7 @@ function PANEL:addText(...)
             local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
             markup = markup .. str:gsub("%b**", function(val)
                 local inner = val:sub(2, -2)
-                if inner:find("%S") then return "<font=liaChatFontItalics>" .. inner .. "</font>" end
+                if inner:find("%S") then return "<font=LiliaFont.16Italics>" .. inner .. "</font>" end
             end)
         end
     end
@@ -383,6 +383,13 @@ function PANEL:Think()
             self.commandList = nil
             self.commandListCreateTime = nil
         end
+    end
+end
+
+function PANEL:Update()
+    if IsValid(self) then
+        self:Remove()
+        vgui.Create("liaChatBox")
     end
 end
 

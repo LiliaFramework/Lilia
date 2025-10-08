@@ -451,6 +451,27 @@ function PANEL:updateSelectedCharacter()
     self:updateModelEntity(character)
 end
 
+function PANEL:updateSelectedCharacterForID(charID)
+    if not self.isLoadMode then return end
+    local chars = self.availableCharacters or {}
+    if #chars == 0 then return end
+    local selectedIndex = 1
+    for i, cID in ipairs(chars) do
+        if cID == charID then
+            selectedIndex = i
+            break
+        end
+    end
+
+    self.currentIndex = selectedIndex
+    local character = lia.char.getCharacter(charID)
+    if IsValid(self.infoFrame) then self.infoFrame:Remove() end
+    if IsValid(self.selectBtn) then self.selectBtn:Remove() end
+    if IsValid(self.deleteBtn) then self.deleteBtn:Remove() end
+    self:createSelectedCharacterInfoPanel(character)
+    self:updateModelEntity(character)
+end
+
 function PANEL:createSelectedCharacterInfoPanel(character)
     if not character then return end
     local chars = self.availableCharacters or {}
@@ -612,35 +633,7 @@ function PANEL:updateModelEntity(character)
     end
 
     hook.Run("SetupPlayerModel", self.modelEntity, character)
-    local pos, ang = nil, nil
-    if character and character:getFaction() then
-        local faction = lia.faction.get(character:getFaction())
-        if faction and faction.mainMenuPosition then
-            local menuPos = faction.mainMenuPosition
-            local currentMap = game.GetMap()
-            if istable(menuPos) then
-                if menuPos[currentMap] then
-                    local mapPos = menuPos[currentMap]
-                    if istable(mapPos) then
-                        pos = mapPos.position or pos
-                        ang = mapPos.angles or ang
-                    elseif isvector(mapPos) then
-                        pos = mapPos
-                    end
-                elseif menuPos.position then
-                    pos = menuPos.position or pos
-                    ang = menuPos.angles or ang
-                else
-                    pos = menuPos.position or pos
-                    ang = menuPos.angles or ang
-                end
-            elseif isvector(menuPos) then
-                pos = menuPos
-            end
-        end
-    end
-
-    if not pos or not ang then pos, ang = hook.Run("GetMainMenuPosition", character) end
+    local pos, ang = hook.Run("GetMainMenuPosition", character)
     if not pos or not ang then
         local spawns = ents.FindByClass("info_player_start")
         pos = #spawns > 0 and spawns[1]:GetPos() or Vector()
@@ -801,6 +794,13 @@ end
 
 function PANEL:warningSound()
     LocalPlayer():EmitSound("friends/friend_join.wav", 40, 255)
+end
+
+function PANEL:Update()
+    if IsValid(self) then
+        self:Remove()
+        vgui.Create("liaCharacter")
+    end
 end
 
 function PANEL:OnRemove()

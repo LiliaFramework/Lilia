@@ -97,9 +97,9 @@ function PANEL:Paint(w)
     local barR = barH / 2
     local handleW, handleH = 14, 14
     local handleR = handleH / 2
-    local textFont = 'Fated.18'
-    local minmaxFont = 'Fated.14'
-    local valueFont = 'Fated.16'
+    local textFont = 'LiliaFont.18'
+    local minmaxFont = 'LiliaFont.14'
+    local valueFont = 'LiliaFont.16'
     local minmaxPadY = 12
     draw.SimpleText(self.text, textFont, padX, padTop, lia.color.theme.text)
     local barStart = padX + handleW / 2

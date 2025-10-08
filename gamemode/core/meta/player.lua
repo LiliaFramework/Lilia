@@ -438,6 +438,11 @@ function playerMeta:leaveSequence()
     self.liaSeqCallback = nil
 end
 
+function playerMeta:getFlags()
+    local char = self:getChar()
+    return char and char:getFlags() or ""
+end
+
 if SERVER then
     function playerMeta:restoreStamina(amount)
         local char = self:getChar()
@@ -598,10 +603,6 @@ if SERVER then
         net.Send(self)
     end
 
-    function playerMeta:setWeighPoint(name, vector)
-        self:setWaypoint(name, vector)
-    end
-
     function playerMeta:setWaypointWithLogo(name, vector, logo)
         net.Start("liaSetWaypointWithLogo")
         net.WriteString(name)
@@ -620,34 +621,6 @@ if SERVER then
     function playerMeta:getAllLiliaData()
         self.liaData = self.liaData or {}
         return self.liaData
-    end
-
-    function playerMeta:getFlags()
-        local char = self:getChar()
-        return char and char:getFlags() or ""
-    end
-
-    function playerMeta:setFlags(flags)
-        local char = self:getChar()
-        if char then char:setFlags(flags) end
-    end
-
-    function playerMeta:giveFlags(flags)
-        local char = self:getChar()
-        if char then char:giveFlags(flags) end
-    end
-
-    function playerMeta:takeFlags(flags)
-        local char = self:getChar()
-        if char then char:takeFlags(flags) end
-    end
-
-    function playerMeta:hasFlags(flags)
-        for i = 1, #flags do
-            local flag = flags:sub(i, i)
-            if self:getFlags():find(flag, 1, true) or self:getFlags("player"):find(flag, 1, true) then return true end
-        end
-        return hook.Run("CharHasFlags", self, flags) or false
     end
 
     function playerMeta:NetworkAnimation(active, boneData)
@@ -1104,10 +1077,6 @@ else
         end)
     end
 
-    function playerMeta:setWeighPoint(name, vector, onReach)
-        self:setWaypoint(name, vector, onReach)
-    end
-
     function playerMeta:setWaypointWithLogo(name, vector, logo, onReach)
         if not isstring(name) or not isvector(vector) then return end
         local logoMaterial
@@ -1163,30 +1132,10 @@ else
         return lia.localData
     end
 
-    function playerMeta:getFlags()
-        local char = self:getChar()
-        return char and char:getFlags() or ""
-    end
-
-    function playerMeta:setFlags(flags)
-        local char = self:getChar()
-        if char then char:setFlags(flags) end
-    end
-
-    function playerMeta:giveFlags(flags)
-        local char = self:getChar()
-        if char then char:giveFlags(flags) end
-    end
-
-    function playerMeta:takeFlags(flags)
-        local char = self:getChar()
-        if char then char:takeFlags(flags) end
-    end
-
     function playerMeta:hasFlags(flags)
         for i = 1, #flags do
             local flag = flags:sub(i, i)
-            if self:getFlags():find(flag, 1, true) or self:getFlags("player"):find(flag, 1, true) then return true end
+            if self:getFlags():find(flag, 1, true) then return true end
         end
         return hook.Run("CharHasFlags", self, flags) or false
     end
@@ -1199,25 +1148,20 @@ else
     end
 end
 
+function playerMeta:setWeighPoint(name, vector, onReach)
+    self:setWaypoint(name, vector, onReach)
+end
+
+function playerMeta:hasFlags(flags)
+    for i = 1, #flags do
+        local flag = flags:sub(i, i)
+        if self:getFlags():find(flag, 1, true) then return true end
+    end
+    return hook.Run("CharHasFlags", self, flags) or false
+end
+
 function playerMeta:playTimeGreaterThan(time)
     local playTime = self:getPlayTime()
     if not playTime or not time then return false end
     return playTime > time
-end
-
-function playerMeta:notify(message, type)
-    if SERVER then
-        lia.notices.notify(self, message, type)
-    else
-        lia.notices.notify(nil, message, type)
-    end
-end
-
-function playerMeta:notifyLocalized(key, type, ...)
-    local args = {...}
-    if SERVER then
-        lia.notices.notifyLocalized(self, key, type, unpack(args))
-    else
-        lia.notices.notifyLocalized(nil, key, type, unpack(args))
-    end
 end

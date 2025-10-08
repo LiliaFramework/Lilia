@@ -83,7 +83,7 @@ function PANEL:Paint(w, h)
 end
 
 function PANEL:AddOption(text, func, icon, optData)
-    surface.SetFont('Fated.18')
+    surface.SetFont('LiliaFont.18')
     local textW = select(1, surface.GetTextSize(text))
     local iconW = icon and 16 or 0
     self.MaxTextWidth = math.max(self.MaxTextWidth or 0, textW)
@@ -303,7 +303,7 @@ function PANEL:AddOption(text, func, icon, optData)
             local arrowX = w - arrowSize - 8
             local arrowY = h * 0.5
             local arrowSymbol = pnl._submenu_open and "◄" or "►"
-            draw.SimpleText(arrowSymbol, 'Fated.16', arrowX, arrowY, colors.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(arrowSymbol, 'LiliaFont.16', arrowX, arrowY, colors.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
         if currentIconWidth > 0 then
@@ -314,7 +314,7 @@ function PANEL:AddOption(text, func, icon, optData)
             end
         end
 
-        draw.SimpleText(pnl.Text, 'Fated.18', textX, h * 0.5, colors.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(pnl.Text, 'LiliaFont.18', textX, h * 0.5, colors.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end
 
     table.insert(self.Items, option)

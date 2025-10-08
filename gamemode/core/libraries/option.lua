@@ -133,13 +133,13 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             label:SetTall(45)
             label:DockMargin(0, 20, 0, 0)
             label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local slider = panel:Add("liaSlideBox")
             slider:Dock(TOP)
             slider:DockMargin(300, 10, 300, 0)
@@ -155,8 +155,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local barR = barH / 2
                 local handleW, handleH = 14, 14
                 local handleR = handleH / 2
-                local textFont = "Fated.18"
-                local valueFont = "Fated.16"
+                local textFont = "LiliaFont.18"
+                local valueFont = "LiliaFont.16"
                 if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
                 local barStart = padX + handleW / 2
                 local barEnd = w - padX - handleW / 2
@@ -197,13 +197,13 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             label:SetTall(45)
             label:DockMargin(0, 20, 0, 0)
             label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local slider = panel:Add("liaSlideBox")
             slider:Dock(TOP)
             slider:DockMargin(300, 10, 300, 0)
@@ -219,8 +219,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local barR = barH / 2
                 local handleW, handleH = 14, 14
                 local handleR = handleH / 2
-                local textFont = "Fated.18"
-                local valueFont = "Fated.16"
+                local textFont = "LiliaFont.18"
+                local valueFont = "LiliaFont.16"
                 if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
                 local barStart = padX + handleW / 2
                 local barEnd = w - padX - handleW / 2
@@ -261,20 +261,20 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             label:SetTall(45)
             label:DockMargin(0, 20, 0, 0)
             label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local entry = vgui.Create("liaEntry", panel)
             if IsValid(entry) then
                 entry:Dock(TOP)
                 entry:SetTall(60)
                 entry:DockMargin(300, 10, 300, 0)
                 entry:SetValue(tostring(lia.option.get(key, cfg.value)))
-                entry:SetFont("ConfigFontLarge")
+                entry:SetFont("LiliaFont.36")
                 entry.textEntry.OnEnter = function()
                     local value = entry:GetValue()
                     if value ~= "" then lia.option.set(key, value) end
@@ -297,13 +297,13 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             label:SetTall(45)
             label:DockMargin(0, 20, 0, 0)
             label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local checkbox = vgui.Create("liaCheckbox", panel)
             if IsValid(checkbox) then
                 checkbox:Dock(TOP)
@@ -329,13 +329,13 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             label:SetTall(45)
             label:DockMargin(0, 20, 0, 0)
             label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local button = vgui.Create("liaButton", panel)
             if IsValid(button) then
                 button:Dock(TOP)
@@ -368,26 +368,27 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             label:SetTall(45)
             label:DockMargin(0, 20, 0, 0)
             label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "ConfigFontLarge", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local description = vgui.Create("DLabel", panel)
             description:Dock(TOP)
             description:SetTall(35)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "DescriptionFontLarge", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+            description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local combo = vgui.Create("liaComboBox", panel)
             if IsValid(combo) then
                 combo:Dock(TOP)
                 combo:SetTall(60)
-                combo:DockMargin(300, 10, 300, 0)
+                combo:DockMargin(300, 20, 300, 0)
                 combo:SetValue(tostring(lia.option.get(key, cfg.value)))
-                combo:SetFont("ConfigFontLarge")
+                combo:SetFont("LiliaFont.18")
                 local options = lia.option.getOptions(key)
                 for _, text in pairs(options) do
                     combo:AddChoice(text, text)
                 end
 
                 combo:FinishAddingOptions()
+                combo:PostInit()
                 combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
             end
             return container

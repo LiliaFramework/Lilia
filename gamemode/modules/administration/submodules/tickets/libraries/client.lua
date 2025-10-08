@@ -60,7 +60,7 @@ function MODULE:TicketFrame(requester, message, claimed)
     local shouldClose = false
     local claimButton
     claimButton = createButton("claimCase", 100, function()
-        if not IsValid(frm) then return end
+        if not IsValid(frm) or not frm.GetTitle then return end
         if not shouldClose then
             if frm:GetTitle():lower():find(L("claimedBy"):lower()) then
                 chat.AddText(Color(255, 150, 0), "[" .. L("error") .. "] " .. L("caseAlreadyClaimed"))

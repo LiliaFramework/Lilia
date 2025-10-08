@@ -196,7 +196,6 @@ net.Receive("liaRequestAllFlags", function(_, client)
             name = ply:Name(),
             steamID = ply:SteamID(),
             flags = char and char:getFlags() or "",
-            playerFlags = ply:getFlags("player"),
         }
     end
 
@@ -207,19 +206,13 @@ net.Receive("liaModifyFlags", function(_, client)
     if not client:hasPrivilege("canAccessFlagManagement") then return end
     local steamID = net.ReadString()
     local flags = net.ReadString()
-    local isPlayer = net.ReadBool()
     local target = lia.util.findPlayerBySteamID(steamID)
     if not IsValid(target) then return end
     flags = string.gsub(flags or "", "%s", "")
-    if isPlayer then
-        target:setFlags(flags, "player")
-        client:notifySuccessLocalized("playerFlagSet", client:Name(), target:Name(), flags)
-    else
-        local char = target:getChar()
-        if not char then return end
-        char:setFlags(flags)
-        client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
-    end
+    local char = target:getChar()
+    if not char then return end
+    char:setFlags(flags)
+    client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
 end)
 
 local function buildSummary()

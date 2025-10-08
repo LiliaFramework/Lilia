@@ -7,7 +7,7 @@ function TooltipPanel:Init()
     self:SetDrawOnTop(true)
     self.DeleteContentsOnClose = false
     self:SetText("")
-    self:SetFont("liaToolTipText")
+    self:SetFont("LiliaFont.20")
 end
 
 function TooltipPanel:UpdateColours()

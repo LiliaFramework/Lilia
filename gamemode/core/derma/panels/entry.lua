@@ -4,7 +4,7 @@ function PANEL:Init()
     self.placeholder = L("enterText")
     self:SetTall(26)
     self.action = function() end
-    local font = 'Fated.18'
+    local font = 'LiliaFont.18'
     self.textEntry = vgui.Create('DTextEntry', self)
     self.textEntry:Dock(FILL)
     self.textEntry:SetText('')
@@ -48,7 +48,7 @@ function PANEL:SetTitle(title)
     self.titlePanel:Dock(TOP)
     self.titlePanel:DockMargin(0, 0, 0, 6)
     self.titlePanel:SetTall(18)
-    self.titlePanel.Paint = function() draw.SimpleText(self.title, 'Fated.18', 0, 0, lia.color.theme.text_entry or lia.color.theme.text) end
+    self.titlePanel.Paint = function() draw.SimpleText(self.title, 'LiliaFont.18', 0, 0, lia.color.theme.text_entry or lia.color.theme.text) end
 end
 
 function PANEL:SetPlaceholder(placeholder)

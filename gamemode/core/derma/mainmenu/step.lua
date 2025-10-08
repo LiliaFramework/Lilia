@@ -59,7 +59,7 @@ end
 
 function PANEL:addLabel(text)
     local lbl = self:Add("DLabel")
-    lbl:SetFont("liaCharButtonFont")
+    lbl:SetFont("LiliaFont.16")
     lbl:SetText(L(text):upper())
     lbl:SizeToContents()
     lbl:Dock(TOP)

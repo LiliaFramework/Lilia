@@ -323,7 +323,7 @@ function PANEL:addPlayer(ply, parent)
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.ping = vgui.Create("DLabel", slot)
-    slot.ping:SetFont("liaGenericFont")
+    slot.ping:SetFont("LiliaFont.16")
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
@@ -338,7 +338,7 @@ function PANEL:addPlayer(ply, parent)
         local availW = totalW - (iconSize + margin * 2) - extra - pingW - margin
         self.name:SetPos(iconSize + margin * 2, 2)
         self.name:SetWide(availW)
-        self.desc:SetPos(iconSize + margin * 2, 24)
+        self.desc:SetPos(iconSize + margin * 2, 48)
         self.desc:SetWide(availW)
         if hasLogo then
             self.classLogo:SetVisible(true)
@@ -392,7 +392,7 @@ function PANEL:addPlayer(ply, parent)
         local wrapped = wrap(desc, self.desc:GetWide(), "liaSmallFont")
         surface.SetFont("liaSmallFont")
         local _, lineH = surface.GetTextSize("W")
-        local maxLines = math.floor((height - 24) / lineH)
+        local maxLines = math.floor((height - 48) / lineH)
         if #wrapped > maxLines then
             wrapped[maxLines] = wrapped[maxLines] .. " (...)"
             for i = maxLines + 1, #wrapped do
@@ -472,6 +472,13 @@ function PANEL:Paint(w, h)
 
     local alpha = lia.config.get("UseSolidBackground", false) and 200 or 150
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
+end
+
+function PANEL:Update()
+    if IsValid(self) then
+        self:Remove()
+        vgui.Create("liaScoreboard")
+    end
 end
 
 function PANEL:OnRemove()

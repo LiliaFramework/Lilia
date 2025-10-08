@@ -226,15 +226,15 @@ function lia.derma.playerSelector(do_click)
             if self.hover_status > 0 then lia.derma.rect(0, 0, w, h):Rad(10):Color(Color(0, 0, 0, 40 * self.hover_status)):Shape(lia.derma.SHAPE_IOS):Draw() end
             local infoX = AVATAR_X + AVATAR_SIZE + 10
             if not IsValid(pl) then
-                draw.SimpleText(L("disconnected"), 'Fated.18', infoX, h * 0.5, color_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(L("disconnected"), 'LiliaFont.18', infoX, h * 0.5, color_disconnect, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 return
             end
 
-            draw.SimpleText(pl:Name(), 'Fated.18', infoX, 6, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            draw.SimpleText(pl:Name(), 'LiliaFont.18', infoX, 6, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             local group = pl:GetUserGroup() or 'user'
             group = string.upper(string.sub(group, 1, 1)) .. string.sub(group, 2)
-            draw.SimpleText(group, 'Fated.14', infoX, h - 6, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-            draw.SimpleText(pl:Ping() .. ' ' .. L("ping"), 'Fated.16', w - 20, h - 6, lia.color.theme.gray, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(group, 'LiliaFont.14', infoX, h - 6, lia.color.theme.gray, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(pl:Ping() .. ' ' .. L("ping"), 'LiliaFont.16', w - 20, h - 6, lia.color.theme.gray, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
             if pl:IsBot() then
                 statusColor = color_bot
             else
@@ -884,7 +884,7 @@ function lia.derma.drawText(text, x, y, color, alignX, alignY, font, alpha)
     color = color or Color(255, 255, 255)
     return draw.TextShadow({
         text = text,
-        font = font or "liaGenericFont",
+        font = font or "LiliaFont.16",
         pos = {x, y},
         color = color,
         xalign = alignX or 0,
@@ -999,7 +999,7 @@ function lia.derma.drawGradient(_x, _y, _w, _h, direction, color_shadow, radius,
 end
 
 function lia.derma.wrapText(text, width, font)
-    font = font or "liaChatFont"
+    font = font or "LiliaFont.16"
     surface.SetFont(font)
     local exploded = string.Explode("%s", text, true)
     local line = ""
@@ -1175,6 +1175,8 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
             end
 
             if defaultChoiceIndex then ctrl:ChooseOptionID(defaultChoiceIndex) end
+            ctrl:FinishAddingOptions()
+            ctrl:PostInit()
         elseif fieldType == "int" or fieldType == "number" then
             ctrl = vgui.Create("liaEntry", panel)
             ctrl:SetFont("liaSmallFont")
@@ -1365,9 +1367,10 @@ function lia.derma.CreateTableUI(title, columns, data, options, charID)
                                 ftype = "text"
                             }
                         elseif isstring(fType) and fType == "combo" then
-                            local combo = vgui.Create("DComboBox", form)
+                            local combo = vgui.Create("liaComboBox", form)
                             combo:Dock(TOP)
                             combo:DockMargin(5, 5, 5, 0)
+                            combo:PostInit()
                             combo:SetValue(L("selectPrompt", fName))
                             form:AddItem(combo)
                             inputs[fName] = {
@@ -1375,14 +1378,16 @@ function lia.derma.CreateTableUI(title, columns, data, options, charID)
                                 ftype = "combo"
                             }
                         elseif istable(fType) then
-                            local combo = vgui.Create("DComboBox", form)
+                            local combo = vgui.Create("liaComboBox", form)
                             combo:Dock(TOP)
                             combo:DockMargin(5, 5, 5, 0)
+                            combo:PostInit()
                             combo:SetValue(L("selectPrompt", fName))
                             for _, choice in ipairs(fType) do
                                 combo:AddChoice(choice)
                             end
 
+                            combo:FinishAddingOptions()
                             form:AddItem(combo)
                             inputs[fName] = {
                                 panel = combo,
@@ -1527,7 +1532,7 @@ local function scaleColorAlpha(col, scale)
 end
 
 local function EntText(text, x, y, fade)
-    surface.SetFont("Fated.40")
+    surface.SetFont("LiliaFont.40")
     local tw, th = surface.GetTextSize(text)
     local bx, by = math.Round(x - tw * 0.5 - 18), math.Round(y - 12)
     local bw, bh = tw + 36, th + 24
@@ -1539,7 +1544,7 @@ local function EntText(text, x, y, fade)
     lia.derma.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
     lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
     lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
-    draw.SimpleText(text, "Fated.40", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+    draw.SimpleText(text, "LiliaFont.40", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     return bh
 end
 
@@ -1636,6 +1641,7 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
         end
     end
 
+    dropdown:PostInit()
     local buttonPanel = vgui.Create("Panel", frame)
     buttonPanel:Dock(BOTTOM)
     buttonPanel:DockMargin(20, 10, 20, 20)

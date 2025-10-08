@@ -55,20 +55,10 @@ MODULE.adminStickCategories = MODULE.adminStickCategories or {
             adminStickSubCategoryGetInfos = {
                 name = L("adminStickSubCategoryGetInfos"),
                 icon = "icon16/magnifier.png"
-            }
-        }
-    },
-    flagManagement = {
-        name = L("adminStickCategoryFlagManagement"),
-        icon = "icon16/flag_blue.png",
-        subcategories = {
-            characterFlags = {
+            },
+            flags = {
                 name = L("adminStickSubCategoryCharacterFlags"),
                 icon = "icon16/flag_green.png"
-            },
-            playerFlags = {
-                name = L("adminStickSubCategoryPlayerFlags"),
-                icon = "icon16/flag_orange.png"
             }
         }
     },
@@ -120,23 +110,9 @@ MODULE.adminStickCategories = MODULE.adminStickCategories or {
             }
         }
     },
-    administration = {
-        name = L("adminStickCategoryAdministration"),
-        icon = "icon16/lock.png",
-        subcategories = {
-            server = {
-                name = L("adminStickCategoryServer"),
-                icon = "icon16/cog.png"
-            },
-            permissions = {
-                name = L("adminStickCategoryPermissions"),
-                icon = "icon16/key.png"
-            }
-        }
-    }
 }
 
-MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {"playerInformation", "moderation", "characterManagement", "flagManagement", "doorManagement", "teleportation", "utility", "administration"}
+MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {"playerInformation", "moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
 function MODULE:addAdminStickCategory(key, data, index)
     self.adminStickCategories = self.adminStickCategories or {}
     self.adminStickCategories[key] = data
@@ -165,7 +141,6 @@ local subMenuIcons = {
     flagManagement = "icon16/flag_blue.png",
     attributes = "icon16/chart_line.png",
     charFlagsTitle = "icon16/flag_green.png",
-    playerFlagsTitle = "icon16/flag_orange.png",
     giveFlagsLabel = "icon16/flag_blue.png",
     takeFlagsLabel = "icon16/flag_red.png",
     doorManagement = "icon16/door.png",
@@ -276,15 +251,11 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
                 hasContent = true
             elseif categoryKey == "moderation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
                 hasContent = true
-            elseif categoryKey == "characterManagement" and tgt:IsPlayer() and (cl:hasPrivilege("manageTransfers") or cl:hasPrivilege("manageClasses") or cl:hasPrivilege("manageWhitelists") or cl:hasPrivilege("manageCharacterInformation")) then
-                hasContent = true
-            elseif categoryKey == "flagManagement" and tgt:IsPlayer() and cl:hasPrivilege("manageFlags") then
+            elseif categoryKey == "characterManagement" and tgt:IsPlayer() and (cl:hasPrivilege("manageTransfers") or cl:hasPrivilege("manageClasses") or cl:hasPrivilege("manageWhitelists") or cl:hasPrivilege("manageCharacterInformation") or cl:hasPrivilege("manageFlags")) then
                 hasContent = true
             elseif categoryKey == "doorManagement" and tgt:isDoor() then
                 hasContent = true
             elseif categoryKey == "teleportation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
-                hasContent = true
-            elseif categoryKey == "administration" and tgt:IsPlayer() then
                 hasContent = true
             elseif categoryKey == "utility" and tgt:IsPlayer() then
                 hasContent = true
@@ -770,9 +741,9 @@ end
 local function IncludeFlagManagement(tgt, menu, stores)
     local cl = LocalPlayer()
     if not cl:hasPrivilege("manageFlags") then return end
-    local flagCategory = GetOrCreateCategoryMenu(menu, "flagManagement", stores)
-    if not flagCategory then return end
-    local cf = GetOrCreateSubCategoryMenu(flagCategory, "flagManagement", "characterFlags", stores)
+    local charCategory = GetOrCreateCategoryMenu(menu, "characterManagement", stores)
+    if not charCategory then return end
+    local cf = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "flags", stores)
     if not cf then return end
     local charObj = tgt:getChar()
     local toGive, toTake = {}, {}
@@ -867,101 +838,6 @@ local function IncludeFlagManagement(tgt, menu, stores)
             timer.Simple(0.1, function() AdminStickIsOpen = false end)
         end):SetIcon("icon16/information.png")
     end
-
-    local pf = GetOrCreateSubCategoryMenu(flagCategory, "flagManagement", "playerFlags", stores)
-    if not pf then return end
-    local toGiveP, toTakeP = {}, {}
-    for fl in pairs(lia.flag.list) do
-        if not tgt:hasFlags(fl, "player") then
-            table.insert(toGiveP, {
-                name = L("giveFlagFormat", fl),
-                cmd = 'say /pflaggive ' .. QuoteArgs(GetIdentifier(tgt), fl),
-                icon = "icon16/flag_blue.png",
-            })
-        else
-            table.insert(toTakeP, {
-                name = L("takeFlagFormat", fl),
-                cmd = 'say /pflagtake ' .. QuoteArgs(GetIdentifier(tgt), fl),
-                icon = "icon16/flag_red.png",
-            })
-        end
-    end
-
-    table.sort(toGiveP, function(a, b) return a.name < b.name end)
-    table.sort(toTakeP, function(a, b) return a.name < b.name end)
-    if pf and IsValid(pf) then
-        for _, f in ipairs(toGiveP) do
-            pf:AddOption(L(f.name), function()
-                cl:ConCommand(f.cmd)
-                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-            end):SetIcon(f.icon)
-        end
-
-        for _, f in ipairs(toTakeP) do
-            pf:AddOption(L(f.name), function()
-                cl:ConCommand(f.cmd)
-                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-            end):SetIcon(f.icon)
-        end
-
-        pf:AddOption(L("modifyPlayerFlags"), function()
-            local currentFlags = tgt:getFlags("player")
-            Derma_StringRequest(L("modifyPlayerFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
-                text = string.gsub(text or "", "%s", "")
-                net.Start("liaModifyFlags")
-                net.WriteString(tgt:SteamID())
-                net.WriteString(text)
-                net.WriteBool(true)
-                net.SendToServer()
-            end)
-
-            timer.Simple(0.1, function() AdminStickIsOpen = false end)
-        end):SetIcon("icon16/flag_orange.png")
-    end
-
-    if pf and IsValid(pf) then
-        pf:AddOption(L("giveAllPlayerFlags"), function()
-            local allFlags = ""
-            for fl in pairs(lia.flag.list) do
-                allFlags = allFlags .. fl
-            end
-
-            if allFlags ~= "" then
-                net.Start("liaModifyFlags")
-                net.WriteString(tgt:SteamID())
-                net.WriteString(allFlags)
-                net.WriteBool(true)
-                net.SendToServer()
-            end
-
-            timer.Simple(0.1, function() AdminStickIsOpen = false end)
-        end):SetIcon("icon16/flag_blue.png")
-
-        pf:AddOption(L("takeAllPlayerFlags"), function()
-            net.Start("liaModifyFlags")
-            net.WriteString(tgt:SteamID())
-            net.WriteString("")
-            net.WriteBool(true)
-            net.SendToServer()
-            timer.Simple(0.1, function() AdminStickIsOpen = false end)
-        end):SetIcon("icon16/flag_red.png")
-
-        pf:AddOption(L("listPlayerFlags"), function()
-            local currentFlags = tgt:getFlags("player") or ""
-            local flagList = ""
-            if currentFlags ~= "" then
-                for i = 1, #currentFlags do
-                    local flag = currentFlags:sub(i, i)
-                    flagList = flagList .. flag .. " "
-                end
-
-                flagList = string.Trim(flagList)
-            end
-
-            Derma_Message(L("currentPlayerFlags") .. ": " .. (flagList ~= "" and flagList or L("none")), L("playerFlagsTitle"), L("ok"))
-            timer.Simple(0.1, function() AdminStickIsOpen = false end)
-        end):SetIcon("icon16/information.png")
-    end
 end
 
 local function AddCommandToMenu(menu, data, key, tgt, name, stores)
@@ -992,13 +868,9 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         elseif sub == "adminStickSubCategoryGetInfos" then
             subcategoryKey = "adminStickSubCategoryGetInfos"
         end
-    elseif cat == "flagManagement" then
-        categoryKey = "flagManagement"
-        if sub == "characterFlags" then
-            subcategoryKey = "characterFlags"
-        elseif sub == "playerFlags" then
-            subcategoryKey = "playerFlags"
-        end
+    elseif cat == "characterManagement" then
+        categoryKey = "characterManagement"
+        if sub == "flags" then subcategoryKey = "flags" end
     elseif cat == "doorManagement" then
         categoryKey = "doorManagement"
         if sub == "doorActions" then
@@ -1091,7 +963,6 @@ function MODULE:OpenAdminStickUI(tgt)
         if #info > 0 then hasOptions = true end
         if cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty() then hasOptions = true end
         if cl:hasPrivilege("manageTransfers") or cl:hasPrivilege("manageClasses") or cl:hasPrivilege("manageWhitelists") or cl:hasPrivilege("manageCharacterInformation") then hasOptions = true end
-        if cl:hasPrivilege("manageFlags") then hasOptions = true end
     end
 
     local tgtClass = tgt:GetClass()

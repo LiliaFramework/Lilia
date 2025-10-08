@@ -6,7 +6,7 @@ function PANEL:Init()
     self._activeShadowLerp = 0
     self.hover_status = 0
     self.bool_hover = true
-    self.font = "Fated.18"
+    self.font = "LiliaFont.18"
     self.radius = 16
     self.icon = ""
     self.icon_size = 16

@@ -64,30 +64,31 @@ function SWEP:DrawHUD()
     end
 
     hook.Run("AddToAdminStickHUD", client, target, information)
-    local length, thickness = 20, 1
+    local length, thickness = 15, 0.5
     lia.derma.rect(x - length / 2, y - thickness / 2, length, thickness):Color(themeColors.text):Draw()
     lia.derma.rect(x - thickness / 2, y - length / 2, thickness, length):Color(themeColors.text):Draw()
     if #information > 0 then
         local maxWidth, totalHeight = 0, 0
-        surface.SetFont("liaMediumFont")
+        surface.SetFont("LiliaFont.16")
         for _, v in pairs(information) do
             local t_w, t_h = surface.GetTextSize(v)
             maxWidth = math.max(maxWidth, t_w)
-            totalHeight = totalHeight + t_h + 8
+            totalHeight = totalHeight + t_h + 4
         end
 
-        local boxWidth = maxWidth + 40
-        local boxHeight = totalHeight + 40
+        local boxWidth = maxWidth + 80
+        local boxHeight = totalHeight + 20
         local boxX = (ScrW() - boxWidth) / 2
-        local boxY = ScrH() - boxHeight - 40
+        local boxY = ScrH() - boxHeight - 20
         lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, 3, 3, 0.9)
         lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeColors.background):Rad(8):Draw()
         lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeColors.accent):Rad(8):Outline(2):Draw()
-        local startPosX, startPosY, buffer = boxX + 20, boxY + 20, 0
+        local startPosY, buffer = boxY + 10, 0
         for _, v in pairs(information) do
-            lia.derma.drawText(v, startPosX, startPosY + buffer, themeColors.text, 0, 0, "liaMediumFont")
-            local _, t_h = surface.GetTextSize(v)
-            buffer = buffer + t_h + 8
+            local t_w, t_h = surface.GetTextSize(v)
+            local centeredX = boxX + (boxWidth - t_w) / 2
+            lia.derma.drawText(v, centeredX, startPosY + buffer, themeColors.text, 0, 0, "LiliaFont.16")
+            buffer = buffer + t_h + 4
         end
     end
 end

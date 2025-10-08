@@ -329,10 +329,6 @@ function OpenFlagsPanel(panel, data)
             name = L("charFlagsTitle"),
             field = "flags"
         },
-        {
-            name = L("playerFlagsTitle"),
-            field = "playerFlags"
-        }
     }
 
     for _, col in ipairs(columns) do
@@ -349,10 +345,9 @@ function OpenFlagsPanel(panel, data)
             local name = entry.name or ""
             local steamID = entry.steamID or ""
             local cFlags = entry.flags or ""
-            local pFlags = entry.playerFlags or ""
             local entryKey = steamID .. "|" .. name
             if not addedEntries[entryKey] then
-                local values = {name, steamID, cFlags, pFlags}
+                local values = {name, steamID, cFlags}
                 local match = false
                 if filter == "" then
                     match = true
@@ -406,17 +401,16 @@ function OpenFlagsPanel(panel, data)
             end)
         end):SetIcon("icon16/flag_orange.png")
 
-        menu:AddOption(L("modifyPlayerFlags"), function()
+        menu:AddOption(L("modifyCharFlags"), function()
             local steamID = line:GetColumnText(2) or ""
-            local currentFlags = line:GetColumnText(4) or ""
-            Derma_StringRequest(L("modifyPlayerFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
+            local currentFlags = line:GetColumnText(3) or ""
+            Derma_StringRequest(L("modifyCharFlags"), L("modifyFlagsDesc"), currentFlags, function(text)
                 text = string.gsub(text or "", "%s", "")
                 net.Start("liaModifyFlags")
                 net.WriteString(steamID)
                 net.WriteString(text)
-                net.WriteBool(true)
                 net.SendToServer()
-                line:SetColumnText(4, text)
+                line:SetColumnText(3, text)
             end)
         end):SetIcon("icon16/flag_green.png")
 

@@ -26,9 +26,9 @@ function PANEL:Init(options)
     self.hoverAnim = 0
     self.centerText = L("menu")
     self.centerDesc = L("selectOption")
-    self.font = 'Fated.20'
-    self.descFont = 'Fated.16'
-    self.titleFont = 'Fated.28'
+    self.font = 'LiliaFont.20'
+    self.descFont = 'LiliaFont.16'
+    self.titleFont = 'LiliaFont.28'
     self.blurStart = SysTime()
     self.fadeInTime = 0.2
     self.currentAlpha = 0

@@ -15,7 +15,7 @@ function PANEL:Init()
         lia.derma.rect(0, 0, w, h):Rad(16):Color(self.header_color):Shape(lia.derma.SHAPE_IOS):Draw()
         local posX = self.bool_header_centered and w * 0.5 or 8
         local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
-        draw.SimpleText(self.name, "Fated.20", posX, 4, lia.color.theme.text, alignX)
+        draw.SimpleText(self.name, "LiliaFont.20", posX, 4, lia.color.theme.text, alignX)
         self.header_color = lia.color.lerp(8, self.header_color, self.bool_opened and self.header_color_opened or self.header_color_standard)
     end
 

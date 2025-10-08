@@ -87,7 +87,7 @@ function PANEL:showError(msg, ...)
     if not msg or msg == "" then return end
     assert(IsValid(self.content), L("noStepAvailable"))
     local err = self.content:Add("DLabel")
-    err:SetFont("liaCharSubTitleFont")
+    err:SetFont("LiliaFont.18")
     err:SetText(L(msg, ...))
     err:SetTextColor(color_white)
     err:Dock(TOP)
@@ -114,7 +114,7 @@ function PANEL:showMessage(msg, ...)
 
     if IsValid(self.message) then self.message:SetText(L(msg, ...):upper()) end
     local lbl = self:Add("DLabel")
-    lbl:SetFont("liaCharButtonFont")
+    lbl:SetFont("LiliaFont.16")
     lbl:SetTextColor(lia.gui.character.color)
     lbl:Dock(FILL)
     lbl:SetContentAlignment(5)

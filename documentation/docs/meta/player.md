@@ -2070,15 +2070,11 @@ end)
 
 **Purpose**
 
-Gets the player's flags for a specific type.
-
-**Parameters**
-
-* `flagType` (*string|nil*): The flag type to get ("player" or nil for character flags).
+Gets the player's character flags.
 
 **Returns**
 
-* `flags` (*string*): The player's flags.
+* `flags` (*string*): The player's character flags.
 
 **Realm**
 
@@ -2087,16 +2083,14 @@ Shared.
 **Example Usage**
 
 ```lua
-local function displayPlayerFlags(player, flagType)
-    local flags = player:getFlags(flagType)
-    local typeName = flagType or "character"
-    player:ChatPrint(typeName .. " flags: " .. flags)
+local function displayPlayerFlags(player)
+    local flags = player:getFlags()
+    player:ChatPrint("Character flags: " .. flags)
     return flags
 end
 
-concommand.Add("my_flags", function(ply, cmd, args)
-    local flagType = args[1]
-    displayPlayerFlags(ply, flagType)
+concommand.Add("my_flags", function(ply)
+    displayPlayerFlags(ply)
 end)
 ```
 
@@ -2106,12 +2100,11 @@ end)
 
 **Purpose**
 
-Sets the player's flags for a specific type.
+Sets the player's character flags.
 
 **Parameters**
 
 * `flags` (*string*): The flags to set.
-* `flagType` (*string|nil*): The flag type to set ("player" or nil for character flags).
 
 **Returns**
 
@@ -2124,17 +2117,15 @@ Server.
 **Example Usage**
 
 ```lua
-local function setPlayerFlags(player, flags, flagType)
-    player:setFlags(flags, flagType)
-    local typeName = flagType or "character"
-    player:ChatPrint("Set " .. typeName .. " flags to: " .. flags)
+local function setPlayerFlags(player, flags)
+    player:setFlags(flags)
+    player:ChatPrint("Set character flags to: " .. flags)
 end
 
 concommand.Add("set_flags", function(ply, cmd, args)
     local flags = args[1]
-    local flagType = args[2]
     if flags then
-        setPlayerFlags(ply, flags, flagType)
+        setPlayerFlags(ply, flags)
     end
 end)
 ```
@@ -2145,7 +2136,7 @@ end)
 
 **Purpose**
 
-Checks if the player has any of the specified flags.
+Checks if the player has any of the specified character flags.
 
 **Parameters**
 
@@ -2164,10 +2155,10 @@ Shared.
 ```lua
 local function checkPlayerFlags(player, flags)
     if player:hasFlags(flags) then
-        player:ChatPrint("You have the required flags!")
+        player:ChatPrint("You have the required character flags!")
         return true
     else
-        player:ChatPrint("You don't have the required flags.")
+        player:ChatPrint("You don't have the required character flags.")
         return false
     end
 end
@@ -2585,7 +2576,7 @@ Server.
 ```lua
 local function givePlayerFlags(player, flags)
     player:giveFlags(flags)
-    player:ChatPrint("Added flags: " .. flags)
+    player:ChatPrint("Added character flags: " .. flags)
 end
 
 concommand.Add("give_flags", function(ply, cmd, args)
@@ -2621,7 +2612,7 @@ Server.
 ```lua
 local function takePlayerFlags(player, flags)
     player:takeFlags(flags)
-    player:ChatPrint("Removed flags: " .. flags)
+    player:ChatPrint("Removed character flags: " .. flags)
 end
 
 concommand.Add("take_flags", function(ply, cmd, args)

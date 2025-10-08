@@ -56,7 +56,7 @@ function PANEL:Rebuild()
         local tabWidths = {}
         local baseMargin = 6
         for id, tab in ipairs(self.tabs) do
-            surface.SetFont('Fated.18')
+            surface.SetFont('LiliaFont.18')
             local textW = surface.GetTextSize(tab.name)
             local iconW = tab.icon and 16 or 0
             local iconTextGap = tab.icon and 8 or 0
@@ -106,7 +106,7 @@ function PANEL:Rebuild()
                     local startX = (w - contentWidth) / 2
                     local textX = startX + (iconW > 0 and (iconW + iconTextGap) or 0)
                     if tab.icon then lia.derma.drawMaterial(0, startX, (h - 16) * 0.5, 16, 16, colorIcon, tab.icon) end
-                    draw.SimpleText(tab.name, 'Fated.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(tab.name, 'LiliaFont.18', textX, h * 0.5, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 else
                     local iconW = tab.icon and 16 or 0
                     local iconTextGap = tab.icon and 8 or 0
@@ -119,7 +119,7 @@ function PANEL:Rebuild()
                         lia.derma.rect(startX, (h - 16) * 0.5, 16, 16):Rad(24):Color(colorIcon):Shape(lia.derma.SHAPE_IOS):Draw()
                     end
 
-                    draw.SimpleText(tab.name, 'Fated.18', textX, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(tab.name, 'LiliaFont.18', textX, h * 0.5 - 1, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -164,7 +164,7 @@ function PANEL:Rebuild()
             self.panel_tabs:DockMargin(0, 0, 4, 0)
             local maxWidth = 0
             for _, classicTab in ipairs(self.tabs) do
-                surface.SetFont('Fated.18')
+                surface.SetFont('LiliaFont.18')
                 local textW = surface.GetTextSize(classicTab.name)
                 local iconW = classicTab.icon and 16 or 0
                 local iconTextGap = classicTab.icon and 8 or 0

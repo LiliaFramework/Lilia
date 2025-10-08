@@ -127,7 +127,7 @@ function MODULE:CreateMenuButtons(tabs)
         local baseTabWidths = {}
         local baseMargin = 8
         for i, page in ipairs(pages) do
-            surface.SetFont("Fated.18")
+            surface.SetFont("LiliaFont.18")
             local textWidth = surface.GetTextSize(L(page.name))
             local iconWidth = 0
             local padding = 20
@@ -233,7 +233,7 @@ function MODULE:CreateMenuButtons(tabs)
         local baseTabWidths = {}
         local baseMargin = 8
         for i, page in ipairs(pages) do
-            surface.SetFont("Fated.18")
+            surface.SetFont("LiliaFont.18")
             local textWidth = surface.GetTextSize(L(page.name))
             local iconWidth = 0
             local padding = 20
@@ -458,7 +458,7 @@ function MODULE:CreateMenuButtons(tabs)
             local baseTabWidths = {}
             local baseMargin = 8
             for i, page in ipairs(pages) do
-                surface.SetFont("Fated.18")
+                surface.SetFont("LiliaFont.18")
                 local textWidth = surface.GetTextSize(L(page.name))
                 local iconWidth = 0
                 local padding = 20
@@ -664,5 +664,3 @@ function MODULE:CanDisplayCharInfo(name)
     if name == "class" and not class then return false end
     return true
 end
-
-hook.Add("RefreshFonts", "liaF1MenuRefreshFonts", function() if IsValid(lia.gui.menu) then lia.gui.menu:Update() end end)
