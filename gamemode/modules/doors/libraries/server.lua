@@ -4,9 +4,19 @@
         for _, door in ents.Iterator() do
             if IsValid(door) and door:isDoor() then
                 local doorData = door:getNetVar("doorData", {})
-                doorData.disabled = true
-                door:setNetVar("doorData", doorData)
-                count = count + 1
+                -- Only modify doors that don't already have netvar data
+                if not doorData or table.IsEmpty(doorData) then
+                    door:setNetVar("doorData", {
+                        disabled = true
+                    })
+
+                    count = count + 1
+                else
+                    -- If door already has data, just set disabled flag
+                    doorData.disabled = true
+                    door:setNetVar("doorData", doorData)
+                    count = count + 1
+                end
             end
         end
 
@@ -115,19 +125,55 @@ function MODULE:LoadData()
                 end
             end
 
-            local doorData = {
-                name = row.name and row.name ~= "NULL" and row.name ~= "" and tostring(row.name) or nil,
-                price = tonumber(row.price) and tonumber(row.price) >= 0 and tonumber(row.price) or 0,
-                locked = tonumber(row.locked) == 1,
-                disabled = tonumber(row.disabled) == 1,
-                hidden = tonumber(row.hidden) == 1,
-                noSell = tonumber(row.ownable) == 0,
-                factions = factions,
-                classes = classes
-            }
+            -- Only create doorData if there's actual data to store
+            local hasData = false
+            local doorData = {}
+            if row.name and row.name ~= "NULL" and row.name ~= "" then
+                doorData.name = tostring(row.name)
+                hasData = true
+            end
 
-            ent:setNetVar("doorData", doorData)
-            loadedCount = loadedCount + 1
+            local price = tonumber(row.price)
+            if price and price > 0 then
+                doorData.price = price
+                hasData = true
+            end
+
+            if tonumber(row.locked) == 1 then
+                doorData.locked = true
+                hasData = true
+            end
+
+            if tonumber(row.disabled) == 1 then
+                doorData.disabled = true
+                hasData = true
+            end
+
+            if tonumber(row.hidden) == 1 then
+                doorData.hidden = true
+                hasData = true
+            end
+
+            if tonumber(row.ownable) == 0 then
+                doorData.noSell = true
+                hasData = true
+            end
+
+            if factions and #factions > 0 then
+                doorData.factions = factions
+                hasData = true
+            end
+
+            if classes and #classes > 0 then
+                doorData.classes = classes
+                hasData = true
+            end
+
+            -- Only set netvar if there's actual data
+            if hasData then
+                ent:setNetVar("doorData", doorData)
+                loadedCount = loadedCount + 1
+            end
         end
 
         if presetData then
@@ -135,22 +181,56 @@ function MODULE:LoadData()
                 if not doorsWithData[doorID] then
                     local ent = ents.GetMapCreatedEntity(doorID)
                     if IsValid(ent) and ent:isDoor() then
-                        local doorData = {
-                            name = doorVars.name and tostring(doorVars.name) or nil,
-                            price = doorVars.price and doorVars.price >= 0 and doorVars.price or 0,
-                            locked = doorVars.locked and true or false,
-                            disabled = doorVars.disabled and true or nil,
-                            hidden = doorVars.hidden and true or nil,
-                            noSell = doorVars.noSell and true or nil,
-                            factions = doorVars.factions and istable(doorVars.factions) and doorVars.factions or nil,
-                            classes = doorVars.classes and istable(doorVars.classes) and doorVars.classes or nil
-                        }
+                        local hasPresetData = false
+                        local doorData = {}
+                        if doorVars.name and tostring(doorVars.name) ~= "" then
+                            doorData.name = tostring(doorVars.name)
+                            hasPresetData = true
+                        end
 
-                        ent:setNetVar("doorData", doorData)
-                        if doorVars.factions and istable(doorVars.factions) then ent.liaFactions = doorVars.factions end
-                        if doorVars.classes and istable(doorVars.classes) then ent.liaClasses = doorVars.classes end
-                        lia.information(L("appliedPresetToDoor", doorID))
-                        loadedCount = loadedCount + 1
+                        if doorVars.price and doorVars.price > 0 then
+                            doorData.price = doorVars.price
+                            hasPresetData = true
+                        end
+
+                        if doorVars.locked then
+                            doorData.locked = true
+                            hasPresetData = true
+                        end
+
+                        if doorVars.disabled then
+                            doorData.disabled = true
+                            hasPresetData = true
+                        end
+
+                        if doorVars.hidden then
+                            doorData.hidden = true
+                            hasPresetData = true
+                        end
+
+                        if doorVars.noSell then
+                            doorData.noSell = true
+                            hasPresetData = true
+                        end
+
+                        if doorVars.factions and istable(doorVars.factions) and not table.IsEmpty(doorVars.factions) then
+                            doorData.factions = doorVars.factions
+                            ent.liaFactions = doorVars.factions
+                            hasPresetData = true
+                        end
+
+                        if doorVars.classes and istable(doorVars.classes) and not table.IsEmpty(doorVars.classes) then
+                            doorData.classes = doorVars.classes
+                            ent.liaClasses = doorVars.classes
+                            hasPresetData = true
+                        end
+
+                        -- Only set netvar if there's actual preset data
+                        if hasPresetData then
+                            ent:setNetVar("doorData", doorData)
+                            lia.information(L("appliedPresetToDoor", doorID))
+                            loadedCount = loadedCount + 1
+                        end
                     else
                         lia.warning(L("doorNotFoundForPreset", doorID))
                     end
@@ -173,6 +253,8 @@ function MODULE:SaveData()
             local mapID = door:MapCreationID()
             if not mapID or mapID <= 0 then continue end
             local doorData = door:getNetVar("doorData", {})
+            -- Only save doors that actually have netvar data
+            if not doorData or table.IsEmpty(doorData) then continue end
             local factionsTable = doorData.factions or {}
             local classesTable = doorData.classes or {}
             if not doorData.factions then

@@ -204,6 +204,7 @@ function SKIN:PaintMenuOption(panel, w, h)
 end
 
 local function DrawSpawnBG(w, h)
+    -- Optimized: No blur for better performance in spawn menu
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)

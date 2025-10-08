@@ -4,24 +4,26 @@ local serverHooks = {{"OnEntityCreated", "WidgetInit"}, {"Think", "DOFThink"}, {
 local clientHooks = {{"HUDPaint", "DamageEffect"}, {"StartChat", "StartChatIndicator"}, {"FinishChat", "EndChatIndicator"}, {"PostDrawEffects", "RenderWidgets"}, {"PostDrawEffects", "RenderHalos"}, {"OnEntityCreated", "WidgetInit"}, {"GUIMousePressed", "SuperDOFMouseDown"}, {"GUIMouseReleased", "SuperDOFMouseUp"}, {"PreventScreenClicks", "SuperDOFPreventClicks"}, {"Think", "DOFThink"}, {"Think", "CheckSchedules"}, {"NeedsDepthPass", "NeedsDepthPass_Bokeh"}, {"RenderScene", "RenderSuperDoF"}, {"RenderScene", "RenderStereoscopy"}, {"PreRender", "PreRenderFrameBlend"}, {"PostRender", "RenderFrameBlend"}, {"RenderScreenspaceEffects", "RenderBokeh"}}
 local function ExecuteCommands(isServer)
     if isServer then
-        for _, cmd in ipairs(serverCommands) do
-            game.ConsoleCommand(cmd .. "\n")
+        for i, cmd in ipairs(serverCommands) do
+            timer.Simple(i * 0.1, function() game.ConsoleCommand(cmd .. "\n") end)
         end
     else
-        for _, cmd in ipairs(clientCommands) do
-            local command, args = cmd:match("^(%S+)%s+(.*)$")
-            if command then
-                if args then
-                    local argList = {}
-                    for arg in string.gmatch(args, "%S+") do
-                        table.insert(argList, arg)
-                    end
+        for i, cmd in ipairs(clientCommands) do
+            timer.Simple(i * 0.1, function()
+                local command, args = cmd:match("^(%S+)%s+(.*)$")
+                if command then
+                    if args then
+                        local argList = {}
+                        for arg in string.gmatch(args, "%S+") do
+                            table.insert(argList, arg)
+                        end
 
-                    RunConsoleCommand(command, unpack(argList))
-                else
-                    RunConsoleCommand(command)
+                        RunConsoleCommand(command, unpack(argList))
+                    else
+                        RunConsoleCommand(command)
+                    end
                 end
-            end
+            end)
         end
     end
 end
@@ -42,11 +44,6 @@ function widgets.PlayerTick()
 end
 
 hook.Add("Initialize", "liaPerformanceInitialize", function()
-    RemoveHooks(SERVER)
-    ExecuteCommands(SERVER)
-end)
-
-hook.Add("OnReloaded", "liaPerformanceReloaded", function()
     RemoveHooks(SERVER)
     ExecuteCommands(SERVER)
 end)

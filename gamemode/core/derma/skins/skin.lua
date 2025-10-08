@@ -1,7 +1,13 @@
-﻿local surface = surface
+﻿-- PERFORMANCE OPTIMIZATION: This skin has been optimized to reduce lag in spawn menu
+-- by minimizing expensive blur operations on individual UI elements
+local surface = surface
 local Color = Color
 local function drawAltBg(panel, w, h)
-    lia.util.drawBlur(panel, 10)
+    -- Optimized blur: only apply blur to main containers, not individual icons
+    -- This significantly reduces performance impact in spawn menu
+    if panel:GetName() and (panel:GetName():find("ContentContainer") or panel:GetName():find("Tree")) then
+        lia.util.drawBlur(panel, 5)
+    end
     surface.SetDrawColor(45, 45, 45, 200)
     surface.DrawRect(0, 0, w, h)
 end
@@ -237,20 +243,26 @@ function SKIN:PaintCategoryList(panel, w, h)
     drawAltBg(panel, w, h)
 end
 
-function SKIN:PaintCategoryButton(panel, w, h)
-    drawAltBg(panel, w, h)
+function SKIN:PaintCategoryButton(_, w, h)
+    -- Skip blur for category buttons to improve performance
+    surface.SetDrawColor(45, 45, 45, 200)
+    surface.DrawRect(0, 0, w, h)
 end
 
 function SKIN:PaintContentPanel(panel, w, h)
     drawAltBg(panel, w, h)
 end
 
-function SKIN:PaintContentIcon(panel, w, h)
-    drawAltBg(panel, w, h)
+function SKIN:PaintContentIcon(_, w, h)
+    -- Skip blur for individual content icons to improve performance
+    surface.SetDrawColor(45, 45, 45, 200)
+    surface.DrawRect(0, 0, w, h)
 end
 
-function SKIN:PaintSpawnIcon(panel, w, h)
-    drawAltBg(panel, w, h)
+function SKIN:PaintSpawnIcon(_, w, h)
+    -- Skip blur for individual spawn icons to improve performance
+    surface.SetDrawColor(45, 45, 45, 200)
+    surface.DrawRect(0, 0, w, h)
 end
 
 function SKIN:PaintTree(panel, w, h)
