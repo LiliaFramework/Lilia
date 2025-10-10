@@ -4,6 +4,7 @@
     meta = {},
     loader = {}
 }
+
 lia.reloadInProgress = false
 lia.lastReloadTime = 0
 local FilesToLoad = {
@@ -184,6 +185,7 @@ local FilesToLoad = {
         realm = "server"
     },
 }
+
 local ConditionalFiles = {
     {
         path = "lilia/gamemode/core/libraries/compatibility/vcmod.lua",
@@ -276,6 +278,7 @@ local ConditionalFiles = {
         realm = "server"
     }
 }
+
 function lia.loader.include(path, realm)
     if not path then lia.error(L("missingFilePath")) end
     local resolved = realm
@@ -291,8 +294,10 @@ function lia.loader.include(path, realm)
                 resolved = "shared"
             end
         end
+
         resolved = resolved or "shared"
     end
+
     if resolved == "server" then
         if SERVER then include(path) end
     elseif resolved == "client" then
@@ -306,20 +311,24 @@ function lia.loader.include(path, realm)
         include(path)
     end
 end
+
 function lia.loader.includeDir(dir, raw, deep, realm)
     local root = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local function loadDir(folder)
         for _, fileName in ipairs(file.Find(folder .. "/*.lua", "LUA")) do
             lia.loader.include(folder .. "/" .. fileName, realm)
         end
+
         if deep then
             for _, subFolder in ipairs(select(2, file.Find(folder .. "/*", "LUA"))) do
                 loadDir(folder .. "/" .. subFolder)
             end
         end
     end
+
     loadDir(root)
 end
+
 function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
     local baseDir = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local stack = {baseDir}
@@ -333,9 +342,11 @@ function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
                 local prefix = fileName:sub(1, 3)
                 realm = (prefix == "sh_" or fileName == "shared.lua") and "shared" or (prefix == "sv_" or fileName == "server.lua") and "server" or (prefix == "cl_" or fileName == "client.lua") and "client" or "shared"
             end
+
             local filePath = path .. "/" .. fileName
             if file.Exists(filePath, "LUA") then lia.loader.include(filePath, realm) end
         end
+
         if recursive then
             for _, subfolder in ipairs(folders) do
                 table.insert(stack, path .. "/" .. subfolder)
@@ -343,6 +354,7 @@ function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
         end
     end
 end
+
 lia.loader.include("lilia/gamemode/core/libraries/languages.lua", "shared")
 local hasChttp = util.IsBinaryModuleInstalled("chttp")
 if hasChttp then require("chttp") end
@@ -358,6 +370,7 @@ local function fetchURL(url, onSuccess, onError)
         http.Fetch(url, function(body, _, _, code) onSuccess(body, code) end, function(err) onError(err) end)
     end
 end
+
 local function versionCompare(localVersion, remoteVersion)
     local function toParts(v)
         local parts = {}
@@ -367,6 +380,7 @@ local function versionCompare(localVersion, remoteVersion)
         end
         return parts
     end
+
     local lParts = toParts(localVersion)
     local rParts = toParts(remoteVersion)
     local len = math.max(#lParts, #rParts)
@@ -378,6 +392,7 @@ local function versionCompare(localVersion, remoteVersion)
     end
     return 0
 end
+
 local publicURL = "https://liliaframework.github.io/versioning/modules.json"
 local privateURL = "https://bleonheart.github.io/modules.json"
 local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
@@ -393,6 +408,7 @@ function lia.loader.checkForUpdates()
             end
         end
     end
+
     local function processModuleUpdates(modules, remoteData, isPrivate)
         for _, mod in ipairs(modules) do
             local match
@@ -402,6 +418,7 @@ function lia.loader.checkForUpdates()
                     break
                 end
             end
+
             if not match then
                 MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logUpdater") .. "] ")
                 MsgC(Color(0, 255, 255), L("moduleUniqueIDNotFound", mod.versionID), "\n")
@@ -418,53 +435,64 @@ function lia.loader.checkForUpdates()
             end
         end
     end
+
     local function logError(message)
         MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logUpdater") .. "] ")
         MsgC(Color(0, 255, 255), message, "\n")
     end
+
     if #publicModules then
         fetchURL(publicURL, function(body, code)
             if code ~= 200 then
                 logError(L("moduleListHTTPError", code))
                 return
             end
+
             local remote = util.JSONToTable(body)
             if not remote then
                 logError(L("moduleDataParseError"))
                 return
             end
+
             processModuleUpdates(publicModules, remote, false)
         end, function(err) logError(L("moduleListError", err)) end)
     end
+
     if #privateModules then
         fetchURL(privateURL, function(body, code)
             if code ~= 200 then
                 logError(L("privateModuleListHTTPError", code))
                 return
             end
+
             local remote = util.JSONToTable(body)
             if not remote then
                 logError(L("privateModuleDataParseError"))
                 return
             end
+
             processModuleUpdates(privateModules, remote, true)
         end, function(err) logError(L("privateModuleListError", err)) end)
     end
+
     fetchURL(versionURL, function(body, code)
         if code ~= 200 then
             logError(L("frameworkVersionHTTPError", code))
             return
         end
+
         local remote = util.JSONToTable(body)
         if not remote or not remote.version then
             logError(L("frameworkVersionDataParseError"))
             return
         end
+
         local localVersion = GAMEMODE.version
         if not localVersion then
             logError(L("localFrameworkVersionError"))
             return
         end
+
         if versionCompare(localVersion, remote.version) < 0 then
             local localNum, remoteNum = tonumber(localVersion), tonumber(remote.version)
             if localNum and remoteNum then
@@ -475,11 +503,13 @@ function lia.loader.checkForUpdates()
                     MsgC(Color(0, 255, 255), L("frameworkBehindCount", diff), "\n")
                 end
             end
+
             MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logUpdater") .. "] ")
             MsgC(Color(0, 255, 255), L("frameworkOutdated"), "\n")
         end
     end, function(err) logError(L("frameworkVersionError", err)) end)
 end
+
 lia.loader.includeDir("lilia/gamemode/core/libraries/thirdparty", true, true)
 lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/color.lua", "shared")
@@ -492,32 +522,39 @@ function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
     MsgC(Color(255, 0, 0), tostring(msg), "\n")
 end
+
 function lia.warning(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logWarning") .. "] ")
     MsgC(Color(255, 255, 0), tostring(msg), "\n")
 end
+
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logInformation") .. "] ")
     MsgC(Color(83, 143, 239), tostring(msg), "\n")
 end
+
 function lia.bootstrap(section, msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
     MsgC(Color(255, 255, 255), tostring(msg), "\n")
 end
+
 for _, files in ipairs(FilesToLoad) do
     lia.loader.include(files.path, files.realm)
 end
+
 function lia.loader.includeEntities(path)
     local function IncludeFiles(path2)
         if file.Exists(path2 .. "init.lua", "LUA") then lia.loader.include(path2 .. "init.lua", "server") end
         if file.Exists(path2 .. "shared.lua", "LUA") then lia.loader.include(path2 .. "shared.lua", "shared") end
         if file.Exists(path2 .. "cl_init.lua", "LUA") then lia.loader.include(path2 .. "cl_init.lua", "client") end
     end
+
     local function stripRealmPrefix(name)
         local prefix = name:sub(1, 3)
         return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
     end
+
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly, create, complete)
         local files, folders = file.Find(path .. "/" .. folder .. "/*", "LUA")
         default = default or {}
@@ -530,15 +567,18 @@ function lia.loader.includeEntities(path)
             else
                 create(v)
             end
+
             IncludeFiles(path2)
             if clientOnly then
                 if CLIENT then register(_G[variable], v) end
             else
                 register(_G[variable], v)
             end
+
             if isfunction(complete) then complete(_G[variable]) end
             _G[variable] = nil
         end
+
         for _, v in ipairs(files) do
             local niceName = stripRealmPrefix(string.StripExtension(v))
             _G[variable] = table.Copy(default)
@@ -547,37 +587,45 @@ function lia.loader.includeEntities(path)
             else
                 create(niceName)
             end
+
             lia.loader.include(path .. "/" .. folder .. "/" .. v, clientOnly and "client" or "shared")
             if clientOnly then
                 if CLIENT then register(_G[variable], niceName) end
             else
                 register(_G[variable], niceName)
             end
+
             if isfunction(complete) then complete(_G[variable]) end
             _G[variable] = nil
         end
     end
+
     local function RegisterTool(tool, className)
         local gmodTool = weapons.GetStored("gmod_tool")
         if gmodTool then gmodTool.Tool[className] = tool end
     end
+
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
         Type = "anim",
         Base = "base_gmodentity",
         Spawnable = true
     }, false)
+
     HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
         Primary = {},
         Secondary = {},
         Base = "weapon_base"
     })
+
     HandleEntityInclusion("tools", "TOOL", RegisterTool, {}, false, function(className)
         TOOL = lia.meta.tool:Create()
         TOOL.Mode = className
         TOOL:CreateConVars()
     end)
+
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
+
 lia.loader.includeEntities("lilia/gamemode/entities")
 lia.loader.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
 if SERVER then
@@ -588,6 +636,7 @@ if SERVER then
             hook.Run("DatabaseConnected")
         end)
     end
+
     local function SetupPersistence()
         cvars.AddChangeCallback("sbox_persist", function(_, old, new)
             timer.Create("sbox_persist_change_timer", 1, 1, function()
@@ -597,10 +646,12 @@ if SERVER then
             end)
         end, "sbox_persist_load")
     end
+
     local function BootstrapLilia()
         timer.Simple(0, SetupDatabase)
         SetupPersistence()
     end
+
     BootstrapLilia()
 else
     local oldLocalPlayer = LocalPlayer
@@ -608,10 +659,12 @@ else
         lia.localClient = IsValid(lia.localClient) and lia.localClient or oldLocalPlayer()
         return lia.localClient
     end
+
     timer.Remove("HintSystem_OpeningMenu")
     timer.Remove("HintSystem_Annoy1")
     timer.Remove("HintSystem_Annoy2")
 end
+
 local hasInitializedModules = false
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
@@ -620,6 +673,7 @@ function GM:Initialize()
         hasInitializedModules = true
     end
 end
+
 function GM:OnReloaded()
     local currentTime = CurTime()
     local timeSinceLastReload = currentTime - lia.lastReloadTime
@@ -633,6 +687,7 @@ function GM:OnReloaded()
         end
         return
     end
+
     lia.reloadInProgress = true
     lia.lastReloadTime = currentTime
     lia.module.initialize()
@@ -646,8 +701,10 @@ function GM:OnReloaded()
     else
         chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), L("gamemodeHotreloadedSuccessfully"))
     end
+
     lia.reloadInProgress = false
 end
+
 local loadedCompatibility = {}
 for _, compatFile in ipairs(ConditionalFiles) do
     local shouldLoad = false
@@ -661,10 +718,12 @@ for _, compatFile in ipairs(ConditionalFiles) do
     elseif compatFile.global then
         shouldLoad = _G[compatFile.global] ~= nil
     end
+
     if shouldLoad then
         lia.loader.include(compatFile.path, compatFile.realm or "shared")
         loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
     end
 end
+
 if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end

@@ -5,6 +5,7 @@
     hook.Run("InventoryPanelCreated", panel, inventory, parent)
     return panel
 end
+
 function MODULE:getItemStackKey(item)
     local elements = {}
     for key, value in SortedPairs(item.data) do
@@ -13,6 +14,7 @@ function MODULE:getItemStackKey(item)
     end
     return item.uniqueID .. pon.encode(elements)
 end
+
 function MODULE:getItemStacks(inventory)
     local stacks = {}
     local stack, key
@@ -24,6 +26,7 @@ function MODULE:getItemStacks(inventory)
     end
     return stacks
 end
+
 function MODULE:InventoryItemRemoved(_, item)
     if not item.isBag then return end
     local bagInv = item:getInv()
@@ -35,6 +38,7 @@ function MODULE:InventoryItemRemoved(_, item)
         lia.gui["inv" .. bagID] = nil
     end
 end
+
 function MODULE:InventoryItemAdded(inventory, item)
     if not item.isBag then return end
     local bagInv = item:getInv()
@@ -47,6 +51,7 @@ function MODULE:InventoryItemAdded(inventory, item)
     bagPanel:MoveRightOf(mainPanel, 4)
     lia.gui["inv" .. bagInv:getID()] = bagPanel
 end
+
 function MODULE:InventoryItemDataChanged(item, key, _, _, inventory)
     if not item.isBag then return end
     if key ~= "x" and key ~= "y" then return end
@@ -56,6 +61,7 @@ function MODULE:InventoryItemDataChanged(item, key, _, _, inventory)
     local mainPanel = lia.gui["inv" .. inventory:getID()]
     if IsValid(bagPanel) and IsValid(mainPanel) then bagPanel:MoveRightOf(mainPanel, 4) end
 end
+
 hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
     local margin = 10
     if hook.Run("CanPlayerViewInventory") == false then return end
@@ -81,6 +87,7 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
                 end
             end
         end
+
         local px, py, pw, ph = mainPanel:GetBounds()
         local xPos = px + pw / 2 - totalWidth / 2
         local yPos = py + ph / 2
@@ -89,6 +96,7 @@ hook.Add("CreateMenuButtons", "liaInventory", function(tabs)
             panel:SetPos(xPos, yPos - panel:GetTall() / 2)
             xPos = xPos + panel:GetWide() + margin
         end
+
         hook.Add("PostRenderVGUI", mainPanel, function() hook.Run("PostDrawInventory", mainPanel, parentPanel) end)
     end
 end)

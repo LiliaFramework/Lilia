@@ -7,6 +7,7 @@ local maxValues = {
     horizontal = 30,
     distance = 100
 }
+
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
     if client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
@@ -15,6 +16,7 @@ hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
         else
             crouchFactor = Lerp(ft * 5, crouchFactor, 0)
         end
+
         curAng = owner.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
@@ -32,6 +34,7 @@ hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
         return view
     end
 end)
+
 hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     owner = LocalPlayer()
     if owner:CanOverrideView() and owner:GetMoveType() ~= MOVETYPE_NOCLIP and LocalPlayer():GetViewEntity() == LocalPlayer() then
@@ -44,6 +47,7 @@ hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
         return false
     end
 end)
+
 hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
     owner = LocalPlayer()
     if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
@@ -53,6 +57,7 @@ hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
         return true
     end
 end)
+
 hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function() if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():CanOverrideView() then return true end end)
 hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
     local steps = {".stepleft", ".stepright"}
@@ -63,6 +68,7 @@ hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
         if sName:find(steps[1]) or sName:find(steps[2]) then return false end
     end
 end)
+
 hook.Add("PlayerButtonDown", "liaThirdPersonPlayerButtonDown", function(_, button)
     if button == KEY_F4 and IsFirstTimePredicted() then
         local currentState = lia.option.get("thirdPersonEnabled", false)

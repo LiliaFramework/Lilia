@@ -1,6 +1,7 @@
 ﻿local function canRecog(ply)
     return lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
 end
+
 local function promptName(ply, cb)
     if lia.config.get("FakeNamesEnabled", false) then
         ply:requestString(L("recogFakeNamePrompt"), "", function(nm)
@@ -12,6 +13,7 @@ local function promptName(ply, cb)
         cb()
     end
 end
+
 local function CharRecognize(ply, lvl, nm)
     local tgt = {}
     if isnumber(lvl) then
@@ -21,41 +23,49 @@ local function CharRecognize(ply, lvl, nm)
             if ply ~= v and v:getChar() and cls.onCanHear(ply, v) then tgt[#tgt + 1] = v end
         end
     end
+
     if #tgt == 0 then return end
     local count = 0
     for _, v in ipairs(tgt) do
         if v:getChar():recognize(ply:getChar(), nm) then count = count + 1 end
     end
+
     if count == 0 then return end
     ply:notifySuccessLocalized("recognitionGiven", count)
     for _, v in ipairs(tgt) do
         lia.log.add(ply, "charRecognize", v:getChar():getID(), nm)
     end
+
     net.Start("liaRgnDone")
     net.Send(ply)
     hook.Run("OnCharRecognized", ply)
 end
+
 local function doRange(ply, lvl)
     promptName(ply, function(nm) CharRecognize(ply, lvl, nm) end)
 end
+
 lia.playerinteract.addAction("recognizeInWhisperRange", {
     category = L("categoryRecognition"),
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply) doRange(ply, 1) end,
     serverOnly = true
 })
+
 lia.playerinteract.addAction("recognizeInTalkRange", {
     category = L("categoryRecognition"),
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply) doRange(ply, 3) end,
     serverOnly = true
 })
+
 lia.playerinteract.addAction("recognizeInYellRange", {
     category = L("categoryRecognition"),
     shouldShow = function(ply) return canRecog(ply) end,
     onRun = function(ply) doRange(ply, 4) end,
     serverOnly = true
 })
+
 lia.playerinteract.addInteraction("recognizeOption", {
     serverOnly = true,
     shouldShow = function(ply, tgt)

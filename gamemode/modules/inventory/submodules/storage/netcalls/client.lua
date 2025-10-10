@@ -2,6 +2,7 @@
     local entity = net.ReadEntity()
     hook.Run("StorageUnlockPrompt", entity)
 end)
+
 net.Receive("liaStorageOpen", function()
     local isCar = net.ReadBool() or false
     local entity = net.ReadEntity()

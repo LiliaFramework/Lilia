@@ -41,6 +41,7 @@ local extraItems = {
         Spawnable = true
     }
 }
+
 local function SetRelationships(ent, tab, status)
     for id, fnpc in pairs(tab) do
         if not IsValid(fnpc) then
@@ -51,6 +52,7 @@ local function SetRelationships(ent, tab, status)
         end
     end
 end
+
 local function Rbt_ProcessOtherNPC(ent)
     if table.HasValue(friendly, ent:GetClass()) and not table.HasValue(hostaliziedNPCs, ent) then
         SetRelationships(ent, friendliedNPCs, D_LI)
@@ -63,12 +65,14 @@ local function Rbt_ProcessOtherNPC(ent)
         SetRelationships(ent, hostaliziedNPCs, D_HT)
     end
 end
+
 local function rb655_property_filter(filtor, ent, ply)
     if isstring(filtor) and filtor ~= ent:GetClass() then return false end
     if istable(filtor) and not table.HasValue(filtor, ent:GetClass()) then return false end
     if isfunction(filtor) and not filtor(ent, ply) then return false end
     return true
 end
+
 local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
     properties.Add(name, {
         MenuLabel = label,
@@ -91,6 +95,7 @@ local function AddEntFunctionProperty(name, label, pos, filtor, func, icon)
         end
     })
 end
+
 local allWeapons = CreateConVar("ext_properties_npcallweapons", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, L("changeWeaponPropertyDesc"))
 local function GiveWeapon(ply, ent, args)
     if not ent:IsNPC() or not args or not args[1] or not isstring(args[1]) then return end
@@ -106,6 +111,7 @@ local function GiveWeapon(ply, ent, args)
             end
         end
     end
+
     if swep == nil then
         for _, t in pairs(extraItems) do
             if t.ClassName == className then
@@ -114,15 +120,18 @@ local function GiveWeapon(ply, ent, args)
             end
         end
     end
+
     if swep == nil then return end
     if IsValid(ply) then
         local hasPrivilege = ply:hasPrivilege("canSpawnSWEPs")
         if (not swep.Spawnable or swep.AdminOnly) and not hasPrivilege then return end
         if not hook.Run("PlayerGiveSWEP", ply, className, swep) then return end
     end
+
     ent:Give(className)
     if SERVER then duplicator.StoreEntityModifier(ent, "npc_weapon", args) end
 end
+
 duplicator.RegisterEntityModifier("npc_weapon", GiveWeapon)
 local function changeWep(it, ent, wep)
     it:MsgStart()
@@ -130,11 +139,13 @@ local function changeWep(it, ent, wep)
     net.WriteString(wep)
     it:MsgEnd()
 end
+
 local nowep = {"cycler", "npc_furniture", "monster_generic", "npc_seagull", "npc_crow", "npc_piegon", "npc_rollermine", "npc_turret_floor", "npc_stalker", "npc_turret_ground", "npc_combine_camera", "npc_turret_ceiling", "npc_cscanner", "npc_clawscanner", "npc_manhack", "npc_sniper", "npc_combinegunship", "npc_combinedropship", "npc_helicopter", "npc_antlion_worker", "npc_headcrab_black", "npc_hunter", "npc_vortigaunt", "npc_antlion", "npc_antlionguard", "npc_barnacle", "npc_headcrab", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_strider", "npc_fastzombie", "npc_fastzombie_torso", "npc_headcrab_poison", "npc_headcrab_fast", "npc_poisonzombie", "npc_zombie", "npc_zombie_torso", "npc_zombine", "monster_scientist", "monster_zombie", "monster_headcrab", "class C_AI_BaseNPC", "monster_tentacle", "monster_alien_grunt", "monster_alien_slave", "monster_human_assassin", "monster_babycrab", "monster_bullchicken", "monster_cockroach", "monster_alien_controller", "monster_gargantua", "monster_bigmomma", "monster_human_grunt", "monster_houndeye", "monster_nihilanth", "monster_barney", "monster_snark", "monster_turret", "monster_miniturret", "monster_sentry"}
 AddEntFunctionProperty("npc_weapon_strip", L("stripWeapon"), 651, function(ent)
     if ent:IsNPC() and IsValid(ent:GetActiveWeapon()) and not table.HasValue(nowep, ent:GetClass()) then return true end
     return false
 end, function(ent) ent:GetActiveWeapon():Remove() end, "icon16/gun.png")
+
 properties.Add("npc_weapon", {
     MenuLabel = L("changeWeaponPopup"),
     MenuIcon = "icon16/gun.png",
@@ -156,6 +167,7 @@ properties.Add("npc_weapon", {
             Derma_DrawBackgroundBlur(frame, frame.m_fCreateTime)
             draw.RoundedBox(0, 0, 0, w, h, Color(0, 0, 0, 200))
         end
+
         local PropPanel = vgui.Create("ContentContainer", frame)
         PropPanel:SetTriggerSpawnlistChange(false)
         PropPanel:Dock(FILL)
@@ -172,12 +184,14 @@ properties.Add("npc_weapon", {
                     end
                 end
             end
+
             if not NpcUsable or not weapon.Spawnable and not weapon.AdminSpawnable then continue end
             local cat = weapon.Category or L("other")
             if not isstring(cat) then cat = tostring(cat) end
             Categorised[cat] = Categorised[cat] or {}
             table.insert(Categorised[cat], weapon)
         end
+
         for CategoryName, v in SortedPairs(Categorised) do
             local Header = vgui.Create("ContentHeader", PropPanel)
             Header:SetText(CategoryName)
@@ -192,9 +206,11 @@ properties.Add("npc_weapon", {
                     changeWep(properties.Get("npc_weapon"), ent, WeaponTable.ClassName)
                     frame:Close()
                 end
+
                 PropPanel:Add(icon)
             end
         end
+
         if allWeapons:GetBool() then
             local WarningThing = vgui.Create("Panel", frame)
             WarningThing:SetHeight(70)
@@ -203,6 +219,7 @@ properties.Add("npc_weapon", {
             function WarningThing:Paint(w, h)
                 draw.RoundedBox(0, 0, 0, w, h, Color(255, 0, 0))
             end
+
             local WarningText = vgui.Create("DLabel", WarningThing)
             WarningText:Dock(TOP)
             WarningText:SetHeight(35)
@@ -227,10 +244,12 @@ properties.Add("npc_weapon", {
         GiveWeapon(ply, ent, {wep})
     end
 })
+
 AddCSLuaFile()
 function AddEntFireProperty(name, label, pos, class, input, icon)
     AddEntFunctionProperty(name, label, pos, class, function(e) e:Fire(unpack(string.Explode(" ", input))) end, icon)
 end
+
 if SERVER then
     hook.Add("OnEntityCreated", "properties_friently/hostile", function(ent) if ent:IsNPC() then Rbt_ProcessOtherNPC(ent) end end)
     hook.Add("EntityRemoved", "properties_friently/hostile_remove", function(ent)
@@ -240,6 +259,7 @@ if SERVER then
                 break
             end
         end
+
         for id, fnpc in pairs(hostaliziedNPCs) do
             if not IsValid(fnpc) or fnpc == ent then
                 table.remove(hostaliziedNPCs, id)
@@ -247,12 +267,14 @@ if SERVER then
             end
         end
     end)
+
     local SyncFuncs = {}
     SyncFuncs.prop_door_rotating = function(ent)
         ent:setNetVar(L("locked"), ent:GetInternalVariable("m_bLocked"))
         local state = ent:GetInternalVariable("m_eDoorState")
         ent:setNetVar("Closed", state == 0 or state == 3)
     end
+
     SyncFuncs.func_door = function(ent) ent:setNetVar(L("locked"), ent:GetInternalVariable("m_bLocked")) end
     SyncFuncs.func_door_rotating = function(ent) ent:setNetVar(L("locked"), ent:GetInternalVariable("m_bLocked")) end
     SyncFuncs.prop_vehicle_jeep = function(ent)
@@ -260,14 +282,17 @@ if SERVER then
         ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
         ent:setNetVar("m_bRadarEnabled", ent:GetInternalVariable("m_bRadarEnabled"))
     end
+
     SyncFuncs.prop_vehicle_airboat = function(ent)
         ent:setNetVar(L("locked"), ent:GetInternalVariable("VehicleLocked"))
         ent:setNetVar("HasDriver", IsValid(ent:GetDriver()))
     end
+
     SyncFuncs.func_tracktrain = function(ent)
         ent:setNetVar("m_dir", ent:GetInternalVariable("m_dir"))
         ent:setNetVar("m_moving", ent:GetInternalVariable("speed") ~= 0)
     end
+
     local nextSync = 0
     hook.Add("Tick", "propperties_sync", function()
         if nextSync > CurTime() then return end
@@ -277,6 +302,7 @@ if SERVER then
         end
     end)
 end
+
 local ExplodeIcon = "icon16/bomb.png"
 local EnableIcon = "icon16/tick.png"
 local DisableIcon = "icon16/cross.png"
@@ -285,45 +311,55 @@ AddEntFireProperty("door_open", L("open"), 655, function(ent, ply)
     if not ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
 end, "Open", "icon16/door_open.png")
+
 AddEntFireProperty("door_close", L("close"), 656, function(ent, ply)
     if ent:getNetVar("Closed") and ent:GetClass() == "prop_door_rotating" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door"}, ent, ply)
 end, "Close", "icon16/door.png")
+
 AddEntFireProperty("door_lock", L("lock"), 657, function(ent, ply)
     if ent:getNetVar(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Lock", "icon16/lock.png")
+
 AddEntFireProperty("door_unlock", L("unlock"), 658, function(ent, ply)
     if not ent:getNetVar(L("locked")) and ent:GetClass() ~= "prop_vehicle_prisoner_pod" then return false end
     return rb655_property_filter({"prop_door_rotating", "func_door_rotating", "func_door", "prop_vehicle_jeep", "prop_vehicle_airboat", "prop_vehicle_prisoner_pod"}, ent, ply)
 end, "Unlock", "icon16/lock_open.png")
+
 AddEntFireProperty("func_movelinear_open", L("start"), 655, "func_movelinear", "Open", "icon16/arrow_right.png")
 AddEntFireProperty("func_movelinear_close", L("returnText"), 656, "func_movelinear", "Close", "icon16/arrow_left.png")
 AddEntFireProperty("func_tracktrain_StartForward", L("startForward"), 655, function(ent, ply)
     if ent:getNetVar("m_dir") == 1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "StartForward", "icon16/arrow_right.png")
+
 AddEntFireProperty("func_tracktrain_StartBackward", L("startBackward"), 656, function(ent, ply)
     if ent:getNetVar("m_dir") == -1 then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "StartBackward", "icon16/arrow_left.png")
+
 AddEntFireProperty("func_tracktrain_Stop", L("stop"), 658, function(ent, ply)
     if not ent:getNetVar("m_moving") then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Stop", "icon16/shape_square.png")
+
 AddEntFireProperty("func_tracktrain_Resume", L("resume"), 659, function(ent, ply)
     if ent:getNetVar("m_moving") then return false end
     return rb655_property_filter("func_tracktrain", ent, ply)
 end, "Resume", "icon16/resultset_next.png")
+
 AddEntFireProperty("breakable_break", L("breakAction"), 655, function(ent, ply)
     if ent:Health() < 1 then return false end
     return rb655_property_filter({"func_breakable", "func_physbox", "prop_physics", "func_pushable"}, ent, ply)
 end, "Break", ExplodeIcon)
+
 AddEntFunctionProperty("dissolve", L("disintegrate"), 657, function(ent)
     if ent:GetModel() and ent:GetModel():StartWith("*") then return false end
     if ent:IsPlayer() then return false end
     return true
 end, function(ent) ent:Dissolve(0, 100) end, "icon16/wand.png")
+
 AddEntFireProperty("turret_toggle", L("toggle"), 655, {"npc_combine_camera", "npc_turret_ceiling", "npc_turret_floor"}, "Toggle", ToggleIcon)
 AddEntFireProperty("self_destruct", L("selfDestruct"), 656, {"npc_turret_floor", "npc_helicopter"}, "SelfDestruct", ExplodeIcon)
 AddEntFunctionProperty("turret_ammo_remove", L("depleteAmmo"), 657, function(ent)
@@ -334,6 +370,7 @@ end, function(ent)
     ent:SetKeyValue("spawnflags", bit.bor(ent:GetSpawnFlags(), 256))
     ent:Activate()
 end, "icon16/delete.png")
+
 AddEntFunctionProperty("turret_ammo_restore", L("restoreAmmo"), 658, function(ent)
     if bit.band(ent:GetSpawnFlags(), 256) == 0 then return false end
     if ent:GetClass() == "npc_turret_floor" or ent:GetClass() == "npc_turret_ceiling" then return true end
@@ -342,6 +379,7 @@ end, function(ent)
     ent:SetKeyValue("spawnflags", bit.bxor(ent:GetSpawnFlags(), 256))
     ent:Activate()
 end, "icon16/add.png")
+
 AddEntFunctionProperty("turret_make_friendly", L("makeFriendly"), 659, function(ent)
     if bit.band(ent:GetSpawnFlags(), 512) == 512 then return false end
     if ent:GetClass() == "npc_turret_floor" then return true end
@@ -350,6 +388,7 @@ end, function(ent)
     ent:SetKeyValue("spawnflags", bit.bor(ent:GetSpawnFlags(), SF_FLOOR_TURRET_CITIZEN))
     ent:Activate()
 end, "icon16/user_green.png")
+
 AddEntFunctionProperty("turret_make_hostile", L("makeHostile"), 660, function(ent)
     if bit.band(ent:GetSpawnFlags(), 512) == 0 then return false end
     if ent:GetClass() == "npc_turret_floor" then return true end
@@ -358,6 +397,7 @@ end, function(ent)
     ent:SetKeyValue("spawnflags", bit.bxor(ent:GetSpawnFlags(), SF_FLOOR_TURRET_CITIZEN))
     ent:Activate()
 end, "icon16/user_red.png")
+
 AddEntFireProperty("suitcharger_recharge", L("recharge"), 655, "item_suitcharger", "Recharge", "icon16/arrow_refresh.png")
 AddEntFireProperty("manhack_jam", L("jam"), 655, "npc_manhack", "InteractivePowerDown", ExplodeIcon)
 AddEntFireProperty("scanner_mineadd", L("equipMine"), 655, "npc_clawscanner", "EquipMine", "icon16/add.png")
@@ -381,11 +421,13 @@ AddEntFireProperty("alyx_HolsterWeapon", L("holsterWeapon"), 655, function(ent)
     if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
     return true
 end, "HolsterWeapon", "icon16/gun.png")
+
 AddEntFireProperty("alyx_UnholsterWeapon", L("unholsterWeapon"), 656, "npc_alyx", "UnholsterWeapon", "icon16/gun.png")
 AddEntFireProperty("alyx_HolsterAndDestroyWeapon", L("holsterAndDestroyWeapon"), 657, function(ent)
     if not ent:IsNPC() or ent:GetClass() ~= "npc_alyx" or not IsValid(ent:GetActiveWeapon()) then return false end
     return true
 end, "HolsterAndDestroyWeapon", "icon16/gun.png")
+
 AddEntFireProperty("antlion_burrow", L("burrow"), 655, {"npc_antlion", "npc_antlion_worker"}, "BurrowAway", "icon16/arrow_down.png")
 AddEntFireProperty("barnacle_free", L("freeTarget"), 655, "npc_barnacle", "LetGo", "icon16/heart.png")
 AddEntFireProperty("zombine_suicide", L("suicide"), 655, "npc_zombine", "PullGrenade", ExplodeIcon)
@@ -432,6 +474,7 @@ AddEntFunctionProperty("healthcharger_recharge", L("recharge"), 655, "item_healt
     cleanup.ReplaceEntity(ent, n)
     ent:Remove()
 end, "icon16/arrow_refresh.png")
+
 AddEntFunctionProperty("vehicle_exit", L("kickDriver"), 655, function(ent)
     if ent:IsVehicle() and ent:getNetVar("HasDriver") then return true end
     return false
@@ -439,6 +482,7 @@ end, function(ent)
     if not IsValid(ent:GetDriver()) or not ent:GetDriver().ExitVehicle then return end
     ent:GetDriver():ExitVehicle()
 end, "icon16/car.png")
+
 AddEntFireProperty("vehicle_radar", L("enableRadar"), 655, function(ent)
     if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
     if ent:LookupAttachment("controlpanel0_ll") == 0 then return false end
@@ -446,11 +490,13 @@ AddEntFireProperty("vehicle_radar", L("enableRadar"), 655, function(ent)
     if ent:getNetVar("m_bRadarEnabled", false) then return false end
     return true
 end, "EnableRadar", "icon16/application_add.png")
+
 AddEntFireProperty("vehicle_radar_off", L("disableRadar"), 655, function(ent)
     if not ent:IsVehicle() or ent:GetClass() ~= "prop_vehicle_jeep" then return false end
     if not ent:getNetVar("m_bRadarEnabled", false) then return false end
     return true
 end, "DisableRadar", "icon16/application_delete.png")
+
 AddEntFunctionProperty("vehicle_enter", L("enterVehicle"), 656, function(ent)
     if ent:IsVehicle() and not ent:getNetVar("HasDriver") then return true end
     return false
@@ -458,6 +504,7 @@ end, function(ent, ply)
     ply:ExitVehicle()
     ply:EnterVehicle(ent)
 end, "icon16/car.png")
+
 AddEntFunctionProperty("vehicle_add_gun", L("mountGun"), 657, function(ent)
     if not ent:IsVehicle() then return false end
     if ent:getNetVar("EnableGun", false) then return false end
@@ -471,36 +518,44 @@ end, function(ent)
     ent:SetBodygroup(1, 1)
     ent:setNetVar("EnableGun", true)
 end, "icon16/gun.png")
+
 AddEntFunctionProperty("baloon_break", L("pop"), 655, "gmod_balloon", function(ent, ply)
     local dmginfo = DamageInfo()
     dmginfo:SetAttacker(ply)
     ent:OnTakeDamage(dmginfo)
 end, ExplodeIcon)
+
 AddEntFunctionProperty("dynamite_activate", L("explode"), 655, "gmod_dynamite", function(ent, ply) ent:Explode(0, ply) end, ExplodeIcon)
 AddEntFunctionProperty("emitter_on", L("startEmitting"), 655, function(ent)
     if ent:GetClass() == "gmod_emitter" and not ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(true) end, EnableIcon)
+
 AddEntFunctionProperty("emitter_off", L("stopEmitting"), 656, function(ent)
     if ent:GetClass() == "gmod_emitter" and ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(false) end, DisableIcon)
+
 AddEntFunctionProperty("lamp_on", L("enable"), 655, function(ent)
     if ent:GetClass() == "gmod_lamp" and not ent:GetOn() then return true end
     return false
 end, function(ent) ent:Switch(true) end, EnableIcon)
+
 AddEntFunctionProperty("lamp_off", L("disable"), 656, function(ent)
     if ent:GetClass() == "gmod_lamp" and ent:GetOn() then return true end
     return false
 end, function(ent) ent:Switch(false) end, DisableIcon)
+
 AddEntFunctionProperty("light_on", L("enable"), 655, function(ent)
     if ent:GetClass() == "gmod_light" and not ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(true) end, EnableIcon)
+
 AddEntFunctionProperty("light_off", L("disable"), 656, function(ent)
     if ent:GetClass() == "gmod_light" and ent:GetOn() then return true end
     return false
 end, function(ent) ent:SetOn(false) end, DisableIcon)
+
 AddEntFireProperty("func_rotating_forward", L("startForward"), 655, "func_rotating", "StartForward", "icon16/arrow_right.png")
 AddEntFireProperty("func_rotating_backward", L("startBackward"), 656, "func_rotating", "StartBackward", "icon16/arrow_left.png")
 AddEntFireProperty("func_rotating_reverse", L("reverse"), 657, "func_rotating", "Reverse", "icon16/arrow_undo.png")
@@ -519,6 +574,7 @@ end, function(ent, ply)
     ent:Remove()
     ply:EquipSuit()
 end, "icon16/user_green.png")
+
 local CheckFuncs = {}
 CheckFuncs["item_ammo_pistol"] = function(ply) return ply:GetAmmoCount("pistol") < 9999 end
 CheckFuncs["item_ammo_pistol_large"] = function(ply) return ply:GetAmmoCount("pistol") < 9999 end
@@ -545,34 +601,42 @@ end, function(ent, ply)
     ply:Give(ent:GetClass())
     ent:Remove()
 end, "icon16/user_green.png")
+
 local NPCsThisWorksOn = {}
 local function RecalcUsableNPCs()
     for _, class in pairs(friendly) do
         NPCsThisWorksOn[class] = true
     end
+
     for _, class in pairs(hostile) do
         NPCsThisWorksOn[class] = true
     end
+
     for _, class in pairs(monsters) do
         NPCsThisWorksOn[class] = true
     end
 end
+
 RecalcUsableNPCs()
 function ExtProp_AddPassive(class)
     table.insert(passive, class)
 end
+
 function ExtProp_AddFriendly(class)
     table.insert(friendly, class)
     RecalcUsableNPCs()
 end
+
 function ExtProp_AddHostile(class)
     table.insert(hostile, class)
     RecalcUsableNPCs()
 end
+
 function ExtProp_AddMonster(class)
     table.insert(monsters, class)
     RecalcUsableNPCs()
 end
+
 AddEntFunctionProperty("make_friendly", L("makeFriendly"), 652, function(ent)
     if ent:IsNPC() and not table.HasValue(passive, ent:GetClass()) and NPCsThisWorksOn[ent:GetClass()] then return true end
     return false
@@ -584,19 +648,24 @@ end, function(ent)
     for _, class in pairs(friendly) do
         ent:AddRelationship(class .. " D_LI 999")
     end
+
     for _, class in pairs(monsters) do
         ent:AddRelationship(class .. " D_HT 999")
     end
+
     for _, class in pairs(hostile) do
         ent:AddRelationship(class .. " D_HT 999")
     end
+
     SetRelationships(ent, friendliedNPCs, D_LI)
     SetRelationships(ent, hostaliziedNPCs, D_HT)
     for _, oent in ents.Iterator() do
         if oent:IsNPC() and oent ~= ent then Rbt_ProcessOtherNPC(oent) end
     end
+
     ent:Activate()
 end, "icon16/user_green.png")
+
 AddEntFunctionProperty("make_hostile", L("makeHostile"), 653, function(ent)
     if ent:IsNPC() and not table.HasValue(passive, ent:GetClass()) and NPCsThisWorksOn[ent:GetClass()] then return true end
     return false
@@ -608,12 +677,15 @@ end, function(ent)
     for _, class in pairs(hostile) do
         ent:AddRelationship(class .. " D_LI 999")
     end
+
     for _, class in pairs(monsters) do
         ent:AddRelationship(class .. " D_HT 999")
     end
+
     for _, class in pairs(friendly) do
         ent:AddRelationship(class .. " D_HT 999")
     end
+
     SetRelationships(ent, friendliedNPCs, D_HT)
     SetRelationships(ent, hostaliziedNPCs, D_LI)
     for _, oent in ents.Iterator() do

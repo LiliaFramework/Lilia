@@ -21,6 +21,7 @@ function PANEL:Init()
     self.btnArea:Dock(BOTTOM)
     self.btnArea:SetWide(self:GetWide() * 0.4)
 end
+
 function PANEL:addBtn(text, cb)
     local btn = vgui.Create("liaMediumButton", self.btnArea)
     btn:SetFont("LiliaFont.28b")
@@ -30,6 +31,7 @@ function PANEL:addBtn(text, cb)
     btn:DockMargin(0, 0, 0, 8)
     btn.DoClick = cb
 end
+
 function PANEL:buildButtons()
     self.btnArea:Clear()
     for key, fn in SortedPairs(self.item.functions) do
@@ -45,17 +47,21 @@ function PANEL:buildButtons()
                 net.WriteType(nil)
                 net.SendToServer()
             end
+
             self:Remove()
         end)
     end
+
     self:addBtn(L("exit"), function() self:Remove() end)
     local h = 0
     for _, c in ipairs(self.btnArea:GetChildren()) do
         h = h + c:GetTall() + 8
     end
+
     self.btnArea:SetTall(h)
     self.btnArea:SetPos((self:GetWide() - self.btnArea:GetWide()) * 0.5, self:GetTall() - h - 20)
 end
+
 function PANEL:SetEntity(ent)
     self.ent = ent
     self.item = ent:getItemTable()
@@ -63,6 +69,7 @@ function PANEL:SetEntity(ent)
         self:Remove()
         return
     end
+
     self.item.player = LocalPlayer()
     self.item.entity = ent
     self.nameLabel:SetText(self.item:getName() or "")
@@ -71,15 +78,19 @@ function PANEL:SetEntity(ent)
     self:buildButtons()
     hook.Run("ItemPanelOpened", self, ent)
 end
+
 function PANEL:Think()
     if not IsValid(self.ent) or LocalPlayer():GetPos():DistToSqr(self.ent:GetPos()) > 9216 then self:Remove() end
 end
+
 function PANEL:OnRemove()
     if self.item then
         self.item.player = nil
         self.item.entity = nil
     end
+
     hook.Run("ItemPanelClosed", self, self.ent)
     lia.gui.itemPanel = nil
 end
+
 vgui.Register("liaItemMenu", PANEL, "EditablePanel")

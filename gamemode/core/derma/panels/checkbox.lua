@@ -20,6 +20,7 @@ function PANEL:Init()
         else
             self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 10, 0, 1)
         end
+
         self.circleAnim = Lerp(FrameTime() * 12, self.circleAnim, self.value and 1 or 0)
         local trackH = math.min(20, h - 4)
         local trackY = (h - trackH) / 2
@@ -35,57 +36,74 @@ function PANEL:Init()
         local circleCol = self.value and Color(lia.color.theme.theme.r + 50, lia.color.theme.theme.g + 50, lia.color.theme.theme.b + 50) or lia.color.theme.gray
         lia.derma.circle(circleX + circleSize / 2, h / 2, circleSize):Color(circleCol):Draw()
     end
+
     self.toggle.DoClick = function()
         if self.convar ~= "" then LocalPlayer():ConCommand(self.convar .. " " .. (self.value and 0 or 1)) end
         self.value = not self.value
         self:OnChange(self.value)
         surface.PlaySound("button_click.wav")
     end
+
     self.DoClick = function() self.toggle:DoClick() end
 end
+
 function PANEL:SetTxt(text)
     self.text = text
 end
+
 function PANEL:SetValue(val)
     self.value = val
 end
+
 function PANEL:SetChecked(val)
     local oldValue = self.value
     self:SetValue(tobool(val))
     if self.value ~= oldValue then self:OnChange(self.value) end
 end
+
 function PANEL:GetChecked()
     return self.value
 end
+
 function PANEL:IsChecked()
     return self:GetChecked()
 end
+
 function PANEL:Toggle()
     self:SetChecked(not self.value)
 end
+
 function PANEL:GetBool()
     return self.value
 end
+
 function PANEL:SetConvar(convar)
     self.value = GetConVar(convar):GetBool()
     self.convar = convar
 end
+
 function PANEL:SetDescription(desc)
     self.description = desc
     self:SetTooltip(desc)
     self:SetTooltipDelay(1.5)
 end
+
 function PANEL:Paint()
 end
+
 function PANEL:DoClick()
     self.toggle:DoClick()
 end
+
 function PANEL:OnChange()
 end
+
 function PANEL:PerformLayout()
 end
+
 function PANEL:SetSize()
 end
+
 vgui.Register("liaCheckbox", PANEL, "Panel")
 local SIMPLE_CHECKBOX_PANEL = {}
 function SIMPLE_CHECKBOX_PANEL:Init()
@@ -97,26 +115,33 @@ function SIMPLE_CHECKBOX_PANEL:Init()
     self.textColor = color_white
     self.textFont = "DermaDefault"
 end
+
 function SIMPLE_CHECKBOX_PANEL:SetText(text)
     self.text = text
 end
+
 function SIMPLE_CHECKBOX_PANEL:SetTextColor(color)
     self.textColor = color
 end
+
 function SIMPLE_CHECKBOX_PANEL:SetTextFont(font)
     self.textFont = font
 end
+
 function SIMPLE_CHECKBOX_PANEL:SetChecked(state)
     self.checked = state and true or false
     self:SetSelected(self.checked)
     if self.OnChange then self.OnChange(self, self.checked) end
 end
+
 function SIMPLE_CHECKBOX_PANEL:GetChecked()
     return self.checked
 end
+
 function SIMPLE_CHECKBOX_PANEL:DoClick()
     self:SetChecked(not self.checked)
 end
+
 function SIMPLE_CHECKBOX_PANEL:Paint()
     local icon = self.checked and "checkbox.png" or "unchecked.png"
     local w, h = self:GetSize()
@@ -129,4 +154,5 @@ function SIMPLE_CHECKBOX_PANEL:Paint()
     end
     return true
 end
+
 vgui.Register("liaSimpleCheckbox", SIMPLE_CHECKBOX_PANEL, "DButton")

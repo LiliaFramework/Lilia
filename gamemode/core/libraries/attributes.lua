@@ -11,6 +11,7 @@ function lia.attribs.loadFromDir(directory)
         ATTRIBUTE = nil
     end
 end
+
 if SERVER then
     function lia.attribs.setup(client)
         local character = client:getChar()

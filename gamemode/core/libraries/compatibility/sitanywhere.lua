@@ -4,6 +4,7 @@ hook.Add("InitializedModules", "liaSitAnyWhere", function()
         RunConsoleCommand(cmd[1], cmd[2])
     end
 end)
+
 hook.Add("CheckValidSit", "liaSitAnyWhere", function(client)
     local entity = client:getTracedEntity()
     if entity:IsVehicle() or entity:IsPlayer() then return false end

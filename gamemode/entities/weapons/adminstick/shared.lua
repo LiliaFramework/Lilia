@@ -24,9 +24,11 @@ function SWEP:DrawWorldModel()
         self:DrawModel()
         return
     end
+
     if owner:isNoClipping() then return end
     self:DrawModel()
 end
+
 function SWEP:Initialize()
     self:SetHoldType("melee")
 end

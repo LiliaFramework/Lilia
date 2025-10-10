@@ -19,19 +19,23 @@
         for _, fac in pairs(lia.faction.teams) do
             if fac.index == client:Team() then faction = fac end
         end
+
         if not faction then
             client:notifyErrorLocalized("invalidFaction")
             return
         end
+
         if faction.uniqueID == "staff" then
             client:notifyErrorLocalized("staffInviteBlocked")
             return
         end
+
         target:binaryQuestion(L("joinFactionPrompt"), L("yes"), L("no"), false, function(choice)
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return
             end
+
             if hook.Run("CanCharBeTransfered", tChar, faction, tChar:getFaction()) == false then return end
             local oldFaction = tChar:getFaction()
             tChar.vars.faction = faction.uniqueID
@@ -48,6 +52,7 @@
         end)
     end
 })
+
 lia.playerinteract.addInteraction("inviteToClass", {
     serverOnly = true,
     category = L("categoryFactionManagement"),
@@ -71,11 +76,13 @@ lia.playerinteract.addInteraction("inviteToClass", {
             client:notifyErrorLocalized("invalidClass")
             return
         end
+
         target:binaryQuestion(L("joinClassPrompt"), L("yes"), L("no"), false, function(choice)
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return
             end
+
             if hook.Run("CanCharBeTransfered", tChar, class, tChar:getClass()) == false then return end
             local oldClass = tChar:getClass()
             tChar:setClass(class.index)
