@@ -43,7 +43,6 @@ else
             local lp = LocalPlayer()
             if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
         end)
-        MsgN(msg)
     end
     net.Receive("liaNotificationData", lia.notices.receiveNotify)
     function lia.notices.receiveNotifyL()
@@ -65,7 +64,6 @@ else
             local lp = LocalPlayer()
             if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
         end)
-        MsgN(tostring(msg))
     end
     net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
     function lia.notices.notify(_, message, notifType)
@@ -79,7 +77,6 @@ else
             local lp = LocalPlayer()
             if IsValid(lp) then lp:EmitSound("garrysmod/content_downloaded.wav", 50, 250, 1, CHAN_AUTO) end
         end)
-        MsgN(tostring(message))
     end
     function lia.notices.notifyLocalized(client, key, notifType, ...)
         lia.notices.notify(client, L(key, ...), notifType or "default")

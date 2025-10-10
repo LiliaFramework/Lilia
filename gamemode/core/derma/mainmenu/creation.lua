@@ -1,7 +1,7 @@
 ﻿local PANEL = {}
 function PANEL:configureSteps()
-    self:addStep(vgui.Create("liaCharacterFaction"))
     self:addStep(vgui.Create("liaCharacterBiography"))
+    self:addStep(vgui.Create("liaCharacterModel"))
     hook.Run("ConfigureCharacterCreationSteps", self)
     local keys = table.GetKeys(self.steps)
     table.sort(keys)
@@ -62,8 +62,7 @@ function PANEL:onFinish()
         finish()
         self:showError(err)
     end
-    local mainMenu = lia.module.list["mainmenu"]
-    mainMenu:createCharacter(self.context):next(function()
+    lia.module.get("mainmenu"):createCharacter(self.context):next(function()
         finish()
         hook.Run("ResetCharacterPanel")
     end, fail)
@@ -163,7 +162,7 @@ function PANEL:onStepChanged(oldStep, newStep)
     local key = finish and "finish" or "next"
     if IsValid(newStep) then
         local panelName = newStep:GetName()
-        local shouldShowModel = panelName == "liaCharacterBiography" or panelName == "liaCharacterModel"
+        local shouldShowModel = panelName == "liaCharacterModel"
         self.model:SetVisible(shouldShowModel)
     end
     if IsValid(self:getPreviousStep()) then

@@ -23,6 +23,7 @@ function PANEL:Init()
     self.content.Paint = nil
     self.OnAction = function() end
     self.OnRightClick = function() end
+    self.customMenuOptions = {}
 end
 function PANEL:AddColumn(name, width, align, sortable)
     table.insert(self.columns, {
@@ -61,9 +62,9 @@ function PANEL:SortByColumn(columnIndex)
     if not column or not column.sortable then return end
     self.sortColumn = columnIndex
     local function getValueType(value)
-        if value == nil then return 'nil' end
+        if value == nil then return "nil" end
         value = tostring(value)
-        return tonumber(value) and 'number' or 'string'
+        return tonumber(value) and "number" or "string"
     end
     local function compareValues(a, b)
         if a == nil and b == nil then return false end
@@ -72,7 +73,7 @@ function PANEL:SortByColumn(columnIndex)
         local typeA = getValueType(a)
         local typeB = getValueType(b)
         if typeA ~= typeB then return typeA < typeB end
-        if typeA == 'number' then
+        if typeA == "number" then
             local numA = tonumber(a) or 0
             local numB = tonumber(b) or 0
             return numA > numB
@@ -84,7 +85,7 @@ function PANEL:SortByColumn(columnIndex)
     end
     local success, err = pcall(function() table.sort(self.rows, function(a, b) return compareValues(a[columnIndex], b[columnIndex]) end) end)
     if not success then
-        print(L("liaTable") .. ' ' .. L("sortError") .. ':', err)
+        print(L("liaTable") .. " " .. L("sortError") .. ":", err)
         return
     end
     self:RebuildRows()
@@ -94,8 +95,8 @@ function PANEL:CreateHeader()
     self.header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Radii(16, 16, 0, 0):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw() end
     local xPos = 0
     for i, column in ipairs(self.columns) do
-        local label = vgui.Create('DButton', self.header)
-        label:SetText('')
+        local label = vgui.Create("DButton", self.header)
+        label:SetText("")
         label:SetSize(column.width, self.headerHeight)
         label:SetPos(xPos, 0)
         label.Paint = function(s, w, h)
@@ -108,18 +109,18 @@ function PANEL:CreateHeader()
         if column.sortable then
             label.DoClick = function()
                 self:SortByColumn(i)
-                surface.PlaySound('button_click.wav')
+                surface.PlaySound("button_click.wav")
             end
         end
         xPos = xPos + column.width
     end
 end
 function PANEL:CreateRow(rowIndex, rowData)
-    local row = vgui.Create('DButton', self.content)
+    local row = vgui.Create("DButton", self.content)
     row:Dock(TOP)
     row:DockMargin(0, 0, 0, 1)
     row:SetTall(self.rowHeight)
-    row:SetText('')
+    row:SetText("")
     row.Paint = function(s, w, h)
         local bgColor = self.selectedRow == rowIndex and lia.color.theme.theme or (s:IsHovered() and lia.color.theme.hover or lia.color.theme.panel[1])
         lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
@@ -127,21 +128,21 @@ function PANEL:CreateRow(rowIndex, rowData)
     row.DoClick = function()
         self.selectedRow = rowIndex
         self.OnAction(rowData)
-        surface.PlaySound('button_click.wav')
+        surface.PlaySound("button_click.wav")
     end
     row.DoRightClick = function()
         self.selectedRow = rowIndex
         self.OnRightClick(rowData)
         local menu = lia.derma.dermaMenu()
-        for i, column in ipairs(self.columns) do
-            menu:AddOption(L("copy") .. ' ' .. column.name, function() SetClipboardText(tostring(rowData[i])) end)
+        for _, option in ipairs(self.customMenuOptions) do
+            menu:AddOption(option.text, function() option.callback(rowData, rowIndex) end, option.icon)
         end
-        menu:AddSpacer()
-        menu:AddOption(L("deleteRow"), function() self:RemoveRow(rowIndex) end, 'icon16/delete.png')
+        if #self.customMenuOptions == 0 then menu:AddOption(L("adminStickNoOptions"), function() end) end
+        menu:Open()
     end
     local xPos = 0
     for i, column in ipairs(self.columns) do
-        local label = vgui.Create('DLabel', row)
+        local label = vgui.Create("DLabel", row)
         label:SetText(tostring(rowData[i]))
         label:SetFont(self.rowFont)
         label:SetTextColor(lia.color.theme.text)
@@ -246,6 +247,24 @@ end
 function PANEL:SetRightClickAction(func)
     self.OnRightClick = func
 end
+function PANEL:AddMenuOption(text, callback, icon)
+    table.insert(self.customMenuOptions, {
+        text = text,
+        callback = callback,
+        icon = icon
+    })
+end
+function PANEL:RemoveMenuOption(text)
+    for i, option in ipairs(self.customMenuOptions) do
+        if option.text == text then
+            table.remove(self.customMenuOptions, i)
+            break
+        end
+    end
+end
+function PANEL:ClearMenuOptions()
+    self.customMenuOptions = {}
+end
 function PANEL:Clear()
     self.rows = {}
     self.selectedRow = nil
@@ -333,4 +352,4 @@ end
 function PANEL:Paint(w, h)
     lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
 end
-vgui.Register('liaTable', PANEL, 'Panel')
+vgui.Register("liaTable", PANEL, "Panel")

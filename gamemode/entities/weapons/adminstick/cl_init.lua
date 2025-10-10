@@ -1,10 +1,9 @@
-﻿local MODULE = MODULE
-function SWEP:PrimaryAttack()
+﻿function SWEP:PrimaryAttack()
     local target = self:GetTarget()
     local client = LocalPlayer()
     if IsValid(target) then
         client.AdminStickTarget = target
-        MODULE:OpenAdminStickUI(target)
+        lia.module.get("administration"):OpenAdminStickUI(target)
     end
 end
 function SWEP:SecondaryAttack()
@@ -90,7 +89,7 @@ function SWEP:Reload()
     local client = LocalPlayer()
     if client:KeyDown(IN_SPEED) then
         client.AdminStickTarget = client
-        MODULE:OpenAdminStickUI(client)
+        lia.module.get("administration"):OpenAdminStickUI(client)
     end
 end
 function SWEP:Holster()

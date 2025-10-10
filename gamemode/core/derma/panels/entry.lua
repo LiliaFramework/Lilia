@@ -4,11 +4,12 @@ function PANEL:Init()
     self.placeholder = L("enterText")
     self:SetTall(26)
     self.action = function() end
-    local font = 'LiliaFont.18'
-    self.textEntry = vgui.Create('DTextEntry', self)
+    local font = "LiliaFont.18"
+    self.textEntry = vgui.Create("DTextEntry", self)
     self.textEntry:Dock(FILL)
-    self.textEntry:SetText('')
-    self.textEntry.OnCloseFocus = function() self.action(self:GetValue()) end
+    self.textEntry:SetText("")
+    self.textEntry.OnEnter = function() self.action(self:GetValue()) end
+    self.textEntry.OnLoseFocus = function() self.action(self:GetValue()) end
     self._text_offset = 0
     self.panelColor = lia.color.theme.panel[1]
     self.textEntry.Paint = nil
@@ -32,7 +33,7 @@ function PANEL:Init()
         self._text_offset = Lerp(FrameTime() * 15, self._text_offset or 0, desired_offset)
         local text = self.placeholder
         local col = lia.color.theme.gray
-        if value ~= '' then
+        if value ~= "" then
             text = value
             col = lia.color.theme.text_entry or lia.color.theme.text
         end
@@ -42,11 +43,11 @@ end
 function PANEL:SetTitle(title)
     self.title = title
     self:SetTall(52)
-    self.titlePanel = vgui.Create('DPanel', self)
+    self.titlePanel = vgui.Create("DPanel", self)
     self.titlePanel:Dock(TOP)
     self.titlePanel:DockMargin(0, 0, 0, 6)
     self.titlePanel:SetTall(18)
-    self.titlePanel.Paint = function() draw.SimpleText(self.title, 'LiliaFont.18', 0, 0, lia.color.theme.text_entry or lia.color.theme.text) end
+    self.titlePanel.Paint = function() draw.SimpleText(self.title, "LiliaFont.18", 0, 0, lia.color.theme.text_entry or lia.color.theme.text) end
 end
 function PANEL:SetPlaceholder(placeholder)
     self.placeholder = placeholder
@@ -55,7 +56,7 @@ function PANEL:SetPlaceholderText(placeholder)
     self.placeholder = placeholder
 end
 function PANEL:SetValue(value)
-    self.textEntry:SetText(value or '')
+    self.textEntry:SetText(value or "")
 end
 function PANEL:SetText(value)
     self:SetValue(value)
@@ -82,4 +83,4 @@ end
 function PANEL:SetTextColor(color)
     if IsValid(self.textEntry) then self.textEntry:SetTextColor(color) end
 end
-vgui.Register('liaEntry', PANEL, 'EditablePanel')
+vgui.Register("liaEntry", PANEL, "EditablePanel")

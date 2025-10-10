@@ -26,16 +26,16 @@ function PANEL:Init(options)
     self.hoverAnim = 0
     self.centerText = L("menu")
     self.centerDesc = L("selectOption")
-    self.font = 'LiliaFont.20'
-    self.descFont = 'LiliaFont.16'
-    self.titleFont = 'LiliaFont.28'
+    self.font = "LiliaFont.20"
+    self.descFont = "LiliaFont.16"
+    self.titleFont = "LiliaFont.28"
     self.blurStart = SysTime()
     self.fadeInTime = 0.2
     self.currentAlpha = 0
     self.scaleAnim = 0
     self.scale = scale
     self.disable_background = options.disable_background or false
-    self.hover_sound = options.hover_sound or 'ratio_button.wav'
+    self.hover_sound = options.hover_sound or "ratio_button.wav"
     self.scale_animation = options.scale_animation ~= false
     self:SetSize(ScrW(), ScrH())
     self:SetPos(0, 0)
@@ -68,13 +68,13 @@ function PANEL:Init(options)
                     local selectedIndex = math.floor(angle / sectorSize) + 1
                     if selectedIndex <= optionCount then
                         self:SelectOption(selectedIndex)
-                        surface.PlaySound('button_click.wav')
+                        surface.PlaySound("button_click.wav")
                     end
                 end
             elseif dist <= self.innerRadius then
                 if #self.menuStack > 0 then
                     self:GoBack()
-                    surface.PlaySound('button_click.wav')
+                    surface.PlaySound("button_click.wav")
                 else
                     self:Remove()
                 end
@@ -220,10 +220,10 @@ end
 function PANEL:OnRemove()
     if lia.derma.menu_radial == self then lia.derma.menu_radial = nil end
 end
-vgui.Register('liaRadialPanel', PANEL, 'DPanel')
+vgui.Register("liaRadialPanel", PANEL, "DPanel")
 function lia.derma.radial_menu(options)
     if IsValid(lia.derma.menu_radial) then lia.derma.menu_radial:Remove() end
-    local m = vgui.Create('liaRadialPanel')
+    local m = vgui.Create("liaRadialPanel")
     m:Init(options)
     lia.derma.menu_radial = m
     return m

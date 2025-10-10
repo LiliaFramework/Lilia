@@ -83,7 +83,7 @@ function PANEL:setItemType(itemTypeOrID)
     end
 end
 function PANEL:updateTooltip()
-    self:SetTooltip("<font=liaItemBoldFont>" .. self.itemTable:getName() .. "</font>\n<font=liaItemDescFont>" .. self.itemTable:getDesc())
+    self:SetTooltip("<font=LiliaFont.16b>" .. self.itemTable:getName() .. "</font>\n<font=LiliaFont.16>" .. self.itemTable:getDesc())
 end
 function PANEL:ItemDataChanged()
     self:updateTooltip()

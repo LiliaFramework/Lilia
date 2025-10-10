@@ -1,6 +1,6 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    lia.module.list["f1menu"].CharacterInformation = {}
+    lia.module.get("f1menu").CharacterInformation = {}
     lia.gui.menu = self
     hook.Run("F1MenuOpened", self)
     self:SetSize(ScrW(), ScrH())
@@ -50,7 +50,7 @@ function PANEL:Init()
     leftArrow:Dock(LEFT)
     leftArrow:DockMargin(0, 0, spacing, 0)
     leftArrow:SetWide(40)
-    leftArrow:SetText(L("previousPage"))
+    leftArrow:SetText(L("previousArrow"))
     leftArrow:SetFont("liaMediumFont")
     leftArrow:SetTextColor(color_white)
     leftArrow:SetExpensiveShadow(1, Color(0, 0, 0, 100))
@@ -58,7 +58,7 @@ function PANEL:Init()
     rightArrow:Dock(RIGHT)
     rightArrow:DockMargin(spacing, 0, 0, 0)
     rightArrow:SetWide(40)
-    rightArrow:SetText(L("nextPage"))
+    rightArrow:SetText(L("nextArrow"))
     rightArrow:SetFont("liaMediumFont")
     rightArrow:SetTextColor(color_white)
     rightArrow:SetExpensiveShadow(1, Color(0, 0, 0, 100))

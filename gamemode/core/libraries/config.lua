@@ -264,11 +264,6 @@ lia.config.add("WalkRatio", "walkRatio", 0.5, nil, {
     max = 1.0,
     decimals = 2
 })
-lia.config.add("AllowExistNames", "allowDuplicateNames", true, nil, {
-    desc = "allowDuplicateNamesDesc",
-    category = "character",
-    type = "Boolean"
-})
 lia.config.add("WhitelistEnabled", "whitelistEnabled", false, nil, {
     desc = "whitelistEnabledDesc",
     category = "categoryServer",
@@ -570,6 +565,13 @@ lia.config.add("PunchLethality", "punchLethality", true, nil, {
     category = "attributes",
     isGlobal = true,
     type = "Boolean"
+})
+lia.config.add("logsPerPage", "logsPerPage", 50, nil, {
+    desc = "logsPerPageDesc",
+    category = "categoryLogging",
+    type = "Int",
+    min = 10,
+    max = 200
 })
 lia.config.add("PunchRagdollTime", "punchRagdollTime", 25, nil, {
     desc = "punchRagdollTimeDesc",

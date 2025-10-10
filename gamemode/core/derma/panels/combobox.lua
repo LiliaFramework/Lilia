@@ -270,7 +270,7 @@ end
 function PANEL:AutoSize()
     surface.SetFont(self.font)
     local _, fontHeight = surface.GetTextSize("Ag")
-    local padding = 8
+    local padding = 12
     local optimalHeight = fontHeight + padding
     if not self.userSetHeight then self:SetTall(optimalHeight, true) end
     if #self.choices == 0 then return end

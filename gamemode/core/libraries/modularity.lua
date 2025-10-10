@@ -84,7 +84,7 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     local lowerVar = variable:lower()
     local coreFile = path .. "/" .. lowerVar .. ".lua"
     local prev = _G[variable]
-    local existing = lia.module.list[uniqueID]
+    local existing = lia.module.get(uniqueID)
     if existing then
         for hookName, func in pairs(existing) do
             if isfunction(func) then hook.Remove(hookName, existing) end

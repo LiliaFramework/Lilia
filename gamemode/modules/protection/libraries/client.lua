@@ -1797,6 +1797,9 @@ function MODULE:PopulateAdminTabs(pages)
             name = "Player Entities",
             icon = "icon16/bricks.png",
             drawFunc = function(entPanel)
+                entPanel:Clear()
+                entPanel:DockPadding(6, 6, 6, 6)
+                entPanel.Paint = nil
                 local sheetContainer = vgui.Create("liaTabs", entPanel)
                 sheetContainer:Dock(FILL)
                 for owner, list in SortedPairs(entitiesByCreator) do

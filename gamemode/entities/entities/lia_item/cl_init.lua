@@ -1,7 +1,7 @@
 ﻿function ENT:computeDescMarkup(description)
     if self.desc ~= description then
         self.desc = description
-        self.markup = lia.markup.parse("<font=liaItemDescFont>" .. description .. "</font>", ScrW() * 0.5)
+        self.markup = lia.markup.parse("<font=LiliaFont.16>" .. description .. "</font>", ScrW() * 0.5)
     end
     return self.markup
 end

@@ -223,8 +223,10 @@ else
         table.insert(pages, {
             name = "workshopAddons",
             drawFunc = function(parent)
+                parent:Clear()
                 local ids = lia.workshop.serverIds or {}
                 local sheet = vgui.Create("liaSheet", parent)
+                sheet:Dock(FILL)
                 sheet:SetPlaceholderText(L("searchAddons"))
                 local info, totalSize = {}, 0
                 local pending = table.Count(ids)

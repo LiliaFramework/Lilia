@@ -49,6 +49,7 @@ function PANEL:Init()
     lia.gui.score = self
     hook.Run("ScoreboardOpened", self)
     self:ApplyConfig()
+    self:ShowCloseButton(false)
     local header = self:Add("DPanel")
     header:Dock(TOP)
     header:SetTall(80)
@@ -240,7 +241,7 @@ end
 function PANEL:addPlayer(ply, parent)
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
-    local height = ScrH() * 0.07
+    local height = ScrH() * 0.09
     slot:SetTall(height)
     slot.Paint = function() end
     slot.character = ply:getChar()
@@ -265,11 +266,40 @@ function PANEL:addPlayer(ply, parent)
         local opts = {}
         hook.Run("ShowPlayerOptions", ply, opts)
         if #opts > 0 then
-            local menu = lia.derma.dermaMenu()
+            local frame = vgui.Create("liaFrame")
+            frame:SetSize(200, 300)
+            frame:Center()
+            frame:MakePopup()
+            frame:SetTitle(L("sbOptions"))
+            frame:LiteMode()
+            local scrollPanel = vgui.Create("liaScrollPanel", frame)
+            scrollPanel:Dock(FILL)
+            scrollPanel:DockMargin(5, 5, 5, 5)
             for _, o in ipairs(opts) do
-                menu:AddOption(L(o.name), o.func):SetImage(o.image)
+                local button = vgui.Create("liaButton", scrollPanel)
+                button:Dock(TOP)
+                button:DockMargin(5, 5, 5, 0)
+                button:SetTall(32)
+                button:SetText("")
+                button.Paint = function(s, w, h)
+                    if s:IsHovered() then
+                        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.button_hovered):Shape(lia.derma.SHAPE_IOS):Draw()
+                    else
+                        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.button):Shape(lia.derma.SHAPE_IOS):Draw()
+                    end
+                    local localIconSize = 16
+                    if o.image then
+                        surface.SetDrawColor(lia.color.theme.text)
+                        surface.SetMaterial(Material(o.image))
+                        surface.DrawTexturedRect(8, (h - localIconSize) / 2, localIconSize, localIconSize)
+                    end
+                    draw.SimpleText(L(o.name), "liaSmallFont", 32, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                end
+                button.DoClick = function()
+                    o.func()
+                    frame:Remove()
+                end
             end
-            menu:Open()
         end
     end
     timer.Simple(0, function()
@@ -309,7 +339,8 @@ function PANEL:addPlayer(ply, parent)
         local availW = totalW - (iconSize + margin * 2) - extra - pingW - margin
         self.name:SetPos(iconSize + margin * 2, 2)
         self.name:SetWide(availW)
-        self.desc:SetPos(iconSize + margin * 2, 48)
+        self.name:SetTall(30)
+        self.desc:SetPos(iconSize + margin * 2, 35)
         self.desc:SetWide(availW)
         if hasLogo then
             self.classLogo:SetVisible(true)
@@ -356,7 +387,7 @@ function PANEL:addPlayer(ply, parent)
         local wrapped = wrap(desc, self.desc:GetWide(), "liaSmallFont")
         surface.SetFont("liaSmallFont")
         local _, lineH = surface.GetTextSize("W")
-        local maxLines = math.floor((height - 48) / lineH)
+        local maxLines = math.floor((height - 35) / lineH)
         if #wrapped > maxLines then
             wrapped[maxLines] = wrapped[maxLines] .. " (...)"
             for i = maxLines + 1, #wrapped do
@@ -410,22 +441,6 @@ function PANEL:addPlayer(ply, parent)
     slot:update()
     hook.Run("ScoreboardRowCreated", slot, ply)
 end
-function PANEL:Paint(w, h)
-    local radius = 16
-    if lia.config.get("UseSolidBackground", false) then
-        local bg = lia.config.get("ScoreboardBackgroundColor", {
-            r = 50,
-            g = 50,
-            b = 50,
-            a = 255
-        })
-        lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(bg.r, bg.g, bg.b, bg.a)):Shape(lia.derma.SHAPE_IOS):Draw()
-    else
-        lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
-    end
-    local alpha = lia.config.get("UseSolidBackground", false) and 200 or 150
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
-end
 function PANEL:Update()
     if IsValid(self) then
         self:Remove()
@@ -436,4 +451,4 @@ function PANEL:OnRemove()
     hook.Run("ScoreboardClosed", self)
     CloseDermaMenus()
 end
-vgui.Register("liaScoreboard", PANEL, "EditablePanel")
+vgui.Register("liaScoreboard", PANEL, "SemiTransparentDFrame")

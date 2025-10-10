@@ -13,7 +13,9 @@ function PANEL:Init()
     self.header:SetText("")
     self.header.Paint = function(_, w, h)
         lia.derma.rect(0, 0, w, h):Rad(16):Color(self.header_color):Shape(lia.derma.SHAPE_IOS):Draw()
-        local posX = self.bool_header_centered and w * 0.5 or 8
+        local arrow = self.bool_opened and "▼" or "▶"
+        draw.SimpleText(arrow, "LiliaFont.18", 8, h * 0.5 - 1, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        local posX = self.bool_header_centered and w * 0.5 or 24
         local alignX = self.bool_header_centered and TEXT_ALIGN_CENTER or TEXT_ALIGN_LEFT
         draw.SimpleText(self.name, "LiliaFont.20", posX, 4, lia.color.theme.text, alignX)
         self.header_color = lia.color.lerp(8, self.header_color, self.bool_opened and self.header_color_opened or self.header_color_standard)
@@ -22,6 +24,8 @@ function PANEL:Init()
         self.bool_opened = not self.bool_opened
         local totalTall = 30 + (self.bool_opened and self.content_size + 12 or 0)
         self:SizeTo(-1, totalTall, 0.2, 0, 0.2)
+        self:InvalidateLayout(true)
+        self:InvalidateParent(true)
     end
 end
 function PANEL:SetText(name)

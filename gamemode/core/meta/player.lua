@@ -151,7 +151,7 @@ function playerMeta:notify(message, notifType)
     if SERVER then
         lia.notices.notify(self, message, notifType or "default")
     else
-        lia.notices.notify(message, notifType or "default")
+        lia.notices.notify(nil, message, notifType or "default")
     end
 end
 function playerMeta:notifyLocalized(message, notifType, ...)
@@ -165,42 +165,42 @@ function playerMeta:notifyError(message)
     if SERVER then
         lia.notices.notify(self, message, "error")
     else
-        lia.notices.notify(message, "error")
+        lia.notices.notify(nil, message, "error")
     end
 end
 function playerMeta:notifyWarning(message)
     if SERVER then
         lia.notices.notify(self, message, "warning")
     else
-        lia.notices.notify(message, "warning")
+        lia.notices.notify(nil, message, "warning")
     end
 end
 function playerMeta:notifyInfo(message)
     if SERVER then
         lia.notices.notify(self, message, "info")
     else
-        lia.notices.notify(message, "info")
+        lia.notices.notify(nil, message, "info")
     end
 end
 function playerMeta:notifySuccess(message)
     if SERVER then
         lia.notices.notify(self, message, "success")
     else
-        lia.notices.notify(message, "success")
+        lia.notices.notify(nil, message, "success")
     end
 end
 function playerMeta:notifyMoney(message)
     if SERVER then
         lia.notices.notify(self, message, "money")
     else
-        lia.notices.notify(message, "money")
+        lia.notices.notify(nil, message, "money")
     end
 end
 function playerMeta:notifyAdmin(message)
     if SERVER then
         lia.notices.notify(self, message, "admin")
     else
-        lia.notices.notify(message, "admin")
+        lia.notices.notify(nil, message, "admin")
     end
 end
 function playerMeta:notifyErrorLocalized(key, ...)
@@ -384,6 +384,14 @@ end
 function playerMeta:getFlags()
     local char = self:getChar()
     return char and char:getFlags() or ""
+end
+function playerMeta:giveFlags(flags)
+    local char = self:getChar()
+    if char then char:giveFlags(flags) end
+end
+function playerMeta:takeFlags(flags)
+    local char = self:getChar()
+    if char then char:takeFlags(flags) end
 end
 if SERVER then
     function playerMeta:restoreStamina(amount)
@@ -613,98 +621,6 @@ if SERVER then
         timer.Remove("liaAct" .. self:SteamID64())
         timer.Remove("liaStare" .. self:SteamID64())
         net.Start("liaActBar")
-        net.Send(self)
-    end
-    function playerMeta:requestDropdown(title, subTitle, options, callback)
-        self.liaDropdownReqs = self.liaDropdownReqs or {}
-        local id = table.insert(self.liaDropdownReqs, {
-            callback = callback,
-            allowed = options or {}
-        })
-        net.Start("liaRequestDropdown")
-        net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
-        net.WriteTable(options or {})
-        net.Send(self)
-    end
-    function playerMeta:requestOptions(title, subTitle, options, limit, callback)
-        self.liaOptionsReqs = self.liaOptionsReqs or {}
-        local id = table.insert(self.liaOptionsReqs, {
-            callback = callback,
-            allowed = options or {},
-            limit = tonumber(limit) or 1
-        })
-        net.Start("liaOptionsRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
-        net.WriteTable(options or {})
-        net.WriteUInt(tonumber(limit) or 1, 32)
-        net.Send(self)
-    end
-    function playerMeta:requestString(title, subTitle, callback, default)
-        local d
-        if not isfunction(callback) and default == nil then
-            default = callback
-            d = deferred.new()
-            callback = function(value) d:resolve(value) end
-        end
-        self.liaStrReqs = self.liaStrReqs or {}
-        local id = table.insert(self.liaStrReqs, callback)
-        net.Start("liaStringRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(title)
-        net.WriteString(subTitle)
-        net.WriteString(default or "")
-        net.Send(self)
-        return d
-    end
-    function playerMeta:requestArguments(title, argTypes, callback)
-        local d
-        if not isfunction(callback) then
-            d = deferred.new()
-            callback = function(value) d:resolve(value) end
-        end
-        self.liaArgReqs = self.liaArgReqs or {}
-        local id = table.insert(self.liaArgReqs, {
-            callback = callback,
-            spec = argTypes or {}
-        })
-        net.Start("liaArgumentsRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(title or "")
-        net.WriteTable(argTypes or {})
-        net.Send(self)
-        return d
-    end
-    function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
-        self.liaBinaryReqs = self.liaBinaryReqs or {}
-        local id = table.insert(self.liaBinaryReqs, callback)
-        net.Start("liaBinaryQuestionRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(question)
-        net.WriteString(option1)
-        net.WriteString(option2)
-        net.WriteBool(manualDismiss)
-        net.Send(self)
-    end
-    function playerMeta:requestButtons(title, buttons)
-        self.buttonRequests = self.buttonRequests or {}
-        local labels = {}
-        local callbacks = {}
-        for i, data in ipairs(buttons) do
-            labels[i] = data.text or data[1] or ""
-            callbacks[i] = data.callback or data[2]
-        end
-        local id = table.insert(self.buttonRequests, callbacks)
-        net.Start("liaButtonRequest")
-        net.WriteUInt(id, 32)
-        net.WriteString(title or "")
-        net.WriteUInt(#labels, 8)
-        for _, lbl in ipairs(labels) do
-            net.WriteString(lbl)
-        end
         net.Send(self)
     end
     function playerMeta:getPlayTime()
@@ -939,10 +855,25 @@ else
             local spos = vector:ToScreen()
             local howclose = math.Round(dist / 40)
             if spos.visible then
-                render.SuppressEngineLighting(true)
                 surface.SetFont("liaMediumFont")
-                draw.DrawText(name .. "\n" .. L("meters", howclose) .. "\n", "liaMediumFont", spos.x, spos.y, Color(255, 255, 255), TEXT_ALIGN_CENTER)
-                render.SuppressEngineLighting(false)
+                local nameText = name
+                local metersText = L("meters", howclose)
+                local nameTw, nameTh = surface.GetTextSize(nameText)
+                local metersTw, metersTh = surface.GetTextSize(metersText)
+                local containerTw = math.max(nameTw, metersTw)
+                local containerTh = nameTh + metersTh + 10
+                local bx, by = math.Round(spos.x - containerTw * 0.5 - 18), math.Round(spos.y - 12)
+                local bw, bh = containerTw + 36, containerTh + 24
+                local theme = lia.color.theme or {background_panelpopup = Color(30, 30, 30, 180), theme = Color(255, 255, 255), text = Color(255, 255, 255)}
+                local fadeAlpha = 1
+                local headerColor = Color(theme.background_panelpopup.r, theme.background_panelpopup.g, theme.background_panelpopup.b, math.Clamp(theme.background_panelpopup.a * fadeAlpha, 0, 255))
+                local accentColor = Color(theme.theme.r, theme.theme.g, theme.theme.b, math.Clamp(theme.theme.a * fadeAlpha, 0, 255))
+                local textColor = Color(theme.text.r, theme.text.g, theme.text.b, math.Clamp(theme.text.a * fadeAlpha, 0, 255))
+                lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
+                lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
+                draw.SimpleText(nameText, "liaMediumFont", math.Round(spos.x), math.Round(spos.y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                draw.SimpleText(metersText, "liaMediumFont", math.Round(spos.x), math.Round(spos.y - 2 + nameTh + 5), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             end
             if howclose <= 3 then RunConsoleCommand("weighpoint_stop") end
         end)
@@ -975,7 +906,25 @@ else
                     surface.SetMaterial(logoMaterial)
                     surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 40, logoSize, logoSize)
                 end
-                draw.DrawText(name .. "\n" .. L("meters", howClose), "liaBigFont", spos.x, spos.y - 10, Color(255, 255, 255), TEXT_ALIGN_CENTER)
+                surface.SetFont("LiliaFont.40")
+                local nameText = name
+                local metersText = L("meters", howClose)
+                local nameTw, nameTh = surface.GetTextSize(nameText)
+                local metersTw, metersTh = surface.GetTextSize(metersText)
+                local containerTw = math.max(nameTw, metersTw)
+                local containerTh = nameTh + metersTh + 10
+                local bx, by = math.Round(spos.x - containerTw * 0.5 - 18), math.Round(spos.y - 12)
+                local bw, bh = containerTw + 36, containerTh + 24
+                local theme = lia.color.theme or {background_panelpopup = Color(30, 30, 30, 180), theme = Color(255, 255, 255), text = Color(255, 255, 255)}
+                local fadeAlpha = 1
+                local headerColor = Color(theme.background_panelpopup.r, theme.background_panelpopup.g, theme.background_panelpopup.b, math.Clamp(theme.background_panelpopup.a * fadeAlpha, 0, 255))
+                local accentColor = Color(theme.theme.r, theme.theme.g, theme.theme.b, math.Clamp(theme.theme.a * fadeAlpha, 0, 255))
+                local textColor = Color(theme.text.r, theme.text.g, theme.text.b, math.Clamp(theme.text.a * fadeAlpha, 0, 255))
+                lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
+                lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
+                draw.SimpleText(nameText, "LiliaFont.40", math.Round(spos.x), math.Round(spos.y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                draw.SimpleText(metersText, "LiliaFont.40", math.Round(spos.x), math.Round(spos.y - 2 + nameTh + 5), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             end
             if howClose <= 3 then RunConsoleCommand("waypoint_withlogo_stop_" .. waypointID) end
         end)
@@ -1026,4 +975,122 @@ function playerMeta:playTimeGreaterThan(time)
     local playTime = self:getPlayTime()
     if not playTime or not time then return false end
     return playTime > time
+end
+function playerMeta:requestOptions(title, subTitle, options, limit, callback)
+    if SERVER then
+        self.liaOptionsReqs = self.liaOptionsReqs or {}
+        local id = table.insert(self.liaOptionsReqs, {
+            callback = callback,
+            allowed = options or {},
+            limit = tonumber(limit) or 1
+        })
+        net.Start("liaOptionsRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title)
+        net.WriteString(subTitle)
+        net.WriteTable(options or {})
+        net.WriteUInt(tonumber(limit) or 1, 32)
+        net.Send(self)
+    else
+        lia.derma.requestOptions(title, subTitle, options, tonumber(limit) or 1, callback)
+    end
+end
+function playerMeta:requestString(title, subTitle, callback, default)
+    local d
+    if not isfunction(callback) and default == nil then
+        default = callback
+        d = deferred.new()
+        callback = function(value) d:resolve(value) end
+    end
+    if SERVER then
+        self.liaStrReqs = self.liaStrReqs or {}
+        local id = table.insert(self.liaStrReqs, callback)
+        net.Start("liaStringRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title)
+        net.WriteString(subTitle)
+        net.WriteString(default or "")
+        net.Send(self)
+        return d
+    else
+        lia.derma.requestString(title, subTitle, callback, default or "")
+        return d
+    end
+end
+function playerMeta:requestArguments(title, argTypes, callback)
+    local d
+    if not isfunction(callback) then
+        d = deferred.new()
+        callback = function(value) d:resolve(value) end
+    end
+    if SERVER then
+        self.liaArgReqs = self.liaArgReqs or {}
+        local id = table.insert(self.liaArgReqs, {
+            callback = callback,
+            spec = argTypes or {}
+        })
+        net.Start("liaArgumentsRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title or "")
+        net.WriteTable(argTypes or {})
+        net.Send(self)
+        return d
+    else
+        lia.derma.requestArguments(title, argTypes, callback)
+        return d
+    end
+end
+function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
+    if SERVER then
+        self.liaBinaryReqs = self.liaBinaryReqs or {}
+        local id = table.insert(self.liaBinaryReqs, callback)
+        net.Start("liaBinaryQuestionRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(question)
+        net.WriteString(option1)
+        net.WriteString(option2)
+        net.WriteBool(manualDismiss)
+        net.Send(self)
+    else
+        lia.derma.binaryQuestion(question, option1, option2, manualDismiss, callback)
+    end
+end
+function playerMeta:requestButtons(title, buttons)
+    if SERVER then
+        self.buttonRequests = self.buttonRequests or {}
+        local labels = {}
+        local callbacks = {}
+        for i, data in ipairs(buttons) do
+            labels[i] = data.text or data[1] or ""
+            callbacks[i] = data.callback or data[2]
+        end
+        local id = table.insert(self.buttonRequests, callbacks)
+        net.Start("liaButtonRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(title or "")
+        net.WriteUInt(#labels, 8)
+        for _, lbl in ipairs(labels) do
+            net.WriteString(lbl)
+        end
+        net.Send(self)
+    else
+        lia.derma.requestButtons(title, buttons)
+    end
+end
+function playerMeta:requestDropdown(title, subTitle, options, callback)
+    if SERVER then
+        self.liaDropdownReqs = self.liaDropdownReqs or {}
+        local id = table.insert(self.liaDropdownReqs, {
+            callback = callback,
+            allowed = options or {}
+        })
+        net.Start("liaRequestDropdown")
+        net.WriteUInt(id, 32)
+        net.WriteString(title)
+        net.WriteString(subTitle)
+        net.WriteTable(options or {})
+        net.Send(self)
+    else
+        lia.derma.requestDropdown(title, subTitle, options, callback)
+    end
 end

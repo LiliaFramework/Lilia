@@ -3,11 +3,11 @@
     net.SendToServer()
 end
 function MODULE:StorageUnlockPrompt()
-    Derma_StringRequest(L("storPassWrite"), L("storPassWrite"), "", function(val)
+    LocalPlayer():requestString(L("storPassWrite"), L("storPassWrite"), function(val)
         net.Start("liaStorageUnlock")
         net.WriteString(val)
         net.SendToServer()
-    end)
+    end, "")
 end
 function MODULE:StorageOpen(storage, isCar)
     local client = LocalPlayer()

@@ -294,23 +294,6 @@ function MODULE:OnCheaterCaught(client)
             if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
         end
     end
-    lia.discord.relayMessage({
-        title = L("discordAntiCheatTitle"),
-        description = L("discordAntiCheatDescription"),
-        color = 15158332,
-        fields = {
-            {
-                name = L("discordAntiCheatPlayer"),
-                value = GetPlayerInfo(ply),
-                inline = true
-            },
-            {
-                name = L("discordAntiCheatStatus"),
-                value = L("discordAntiCheatConfirmedCheater"),
-                inline = true
-            }
-        }
-    })
 end
 function MODULE:PlayerUse(client)
     if IsCheater(client) then

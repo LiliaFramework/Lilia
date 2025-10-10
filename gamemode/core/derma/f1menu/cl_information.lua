@@ -14,17 +14,15 @@ function PANEL:Init()
     canvas.Paint = function() end
     self.content = canvas
     hook.Run("LoadCharInformation")
-    if lia.module and lia.module.list then
-        for _, module in pairs(lia.module.list) do
-            if module.LoadCharInformation then module:LoadCharInformation() end
-        end
+    for _, module in pairs(lia.module.list) do
+        if module.LoadCharInformation then module:LoadCharInformation() end
     end
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
     local function tryGenerate()
         if not IsValid(self) then return end
         local client = LocalPlayer()
         local char = client:getChar()
-        local info = lia.module.list and lia.module.list["f1menu"] and lia.module.list["f1menu"].CharacterInformation or {}
+        local info = lia.module.get("f1menu") and lia.module.get("f1menu").CharacterInformation or {}
         if char and not table.IsEmpty(info) then
             self:GenerateSections()
             self:Refresh()
@@ -109,7 +107,7 @@ function PANEL:AddSpacer(parent, height)
     sp.Paint = function() end
 end
 function PANEL:GenerateSections()
-    local info = lia.module.list and lia.module.list["f1menu"] and lia.module.list["f1menu"].CharacterInformation or {}
+    local info = lia.module.get("f1menu") and lia.module.get("f1menu").CharacterInformation or {}
     local secs = {}
     if table.IsEmpty(info) then return end
     for name, data in pairs(info) do
@@ -142,7 +140,7 @@ function PANEL:CreateSection(parent, title)
     frame:Dock(TOP)
     frame:DockMargin(0, 10, 0, 10)
     frame:SetTall(200)
-    frame.Paint = function(_, w, _)
+    frame.Paint = function(_, w)
         draw.SimpleText(L(title), "liaSmallFont", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
         surface.DrawLine(12, 28, w - 12, 28)
@@ -185,7 +183,7 @@ function PANEL:ApplyCurrentTheme()
     if currentTheme and lia.color.themes[currentTheme] then lia.color.theme = table.Copy(lia.color.themes[currentTheme]) end
 end
 function PANEL:setup()
-    local info = lia.module.list and lia.module.list["f1menu"] and lia.module.list["f1menu"].CharacterInformation or {}
+    local info = lia.module.get("f1menu") and lia.module.get("f1menu").CharacterInformation or {}
     if table.IsEmpty(info) then return end
     for _, data in pairs(info) do
         local fields = isfunction(data.fields) and data.fields() or data.fields

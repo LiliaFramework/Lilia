@@ -1,17 +1,7 @@
 ﻿lia.char = lia.char or {}
-lia.char.loaded = lia.char.loaded or {}
-lia.char.names = lia.char.names or {}
-lia.char.varHooks = lia.char.varHooks or {}
 lia.char.vars = lia.char.vars or {}
-if SERVER and #lia.char.names < 1 then
-    lia.db.query("SELECT id, name FROM lia_characters", function(data)
-        if data and #data > 0 then
-            for _, v in pairs(data) do
-                lia.char.names[v.id] = v.name
-            end
-        end
-    end)
-end
+lia.char.loaded = lia.char.loaded or {}
+lia.char.varHooks = lia.char.varHooks or {}
 if SERVER then
     function lia.char.getCharacter(charID, client, callback)
         local character = lia.char.loaded[charID]
@@ -139,17 +129,6 @@ lia.char.registerVar("name", {
         local name, override = hook.Run("GetDefaultCharName", client, data.faction, data)
         if isstring(name) and override then return true end
         if not isstring(value) or not value:find("%S") then return false, "invalid", "name" end
-        local allowExistNames = lia.config.get("AllowExistNames", true)
-        if CLIENT and #lia.char.names < 1 and not allowExistNames then
-            net.Start("liaCharFetchNames")
-            net.SendToServer()
-            net.Receive("liaCharFetchNames", function() lia.char.names = net.ReadTable() end)
-        end
-        if not lia.config.get("AllowExistNames", true) then
-            for _, v in pairs(lia.char.names) do
-                if v == value then return false, "nameAlreadyExists" end
-            end
-        end
         return true
     end,
     onAdjust = function(client, data, value, newData)

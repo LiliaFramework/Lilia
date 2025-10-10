@@ -273,29 +273,6 @@ lia.color.registerTheme("Dark Mono", {
     text = Color(255, 255, 255),
     text_entry = Color(255, 255, 255)
 })
-lia.color.registerTheme("Light", {
-    header = Color(240, 240, 240),
-    header_text = Color(150, 150, 150),
-    background = Color(255, 255, 255),
-    background_alpha = Color(255, 255, 255, 170),
-    background_panelpopup = Color(245, 245, 245, 150),
-    button = Color(235, 235, 235),
-    button_shadow = Color(0, 0, 0, 15),
-    button_hovered = Color(196, 199, 218),
-    category = Color(240, 240, 245),
-    category_opened = Color(240, 240, 245, 0),
-    theme = Color(106, 108, 197),
-    maincolor = Color(106, 108, 197),
-    panel = {Color(250, 250, 255), Color(240, 240, 245), Color(230, 230, 235)},
-    panel_alpha = {ColorAlpha(Color(250, 250, 255), 120), ColorAlpha(Color(240, 240, 245), 120), ColorAlpha(Color(230, 230, 235), 120)},
-    toggle = Color(220, 220, 230),
-    focus_panel = Color(245, 245, 255),
-    hover = Color(235, 240, 255),
-    window_shadow = Color(0, 0, 0, 50),
-    gray = Color(130, 130, 130, 220),
-    text = Color(20, 20, 20),
-    text_entry = Color(20, 20, 20)
-})
 lia.color.registerTheme("Blue", {
     header = Color(36, 48, 66),
     header_text = Color(109, 129, 159),

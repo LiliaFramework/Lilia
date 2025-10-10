@@ -390,4 +390,5 @@ function lia.websound.getStats()
     }
 end
 lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav")
+lia.websound.register("ratio_button.wav", "https://bleonheart.github.io/Samael-Assets/misc/ratio_button.wav")
 ensureDir(baseDir)

@@ -26,7 +26,7 @@ function MODULE:CreateInformationButtons(pages)
     local client = LocalPlayer()
     local character = client:getChar()
     if not character or client:isStaffOnDuty() then return end
-    if character:hasFlags("V") then
+    if character:hasFlags("V") or client:hasPrivilege("canSeeFactionRoster") then
         table.insert(pages, {
             name = "factionRoster",
             drawFunc = function(parent)

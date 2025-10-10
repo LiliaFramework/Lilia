@@ -30,6 +30,7 @@ lia.flag.add("e", "flagSpawnProps")
 lia.flag.add("n", "flagSpawnNpcs")
 lia.flag.add("Z", "flagInviteToYourFaction")
 lia.flag.add("X", "flagInviteToYourClass")
+lia.flag.add("V", "flagFactionRoster")
 lia.flag.add("p", "flagPhysgun", function(client, isGiven)
     if isGiven then
         client:Give("weapon_physgun")
@@ -51,7 +52,9 @@ hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(page
     table.insert(pages, {
         name = "charFlagsTitle",
         drawFunc = function(parent)
+            parent:Clear()
             local sheet = vgui.Create("liaSheet", parent)
+            sheet:Dock(FILL)
             sheet:SetPlaceholderText(L("searchFlags"))
             for flagName, flagData in SortedPairs(lia.flag.list) do
                 if not isnumber(flagName) then

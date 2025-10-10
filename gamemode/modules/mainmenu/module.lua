@@ -99,19 +99,19 @@ else
         end
     end
     net.Receive("liaStaffDiscordPrompt", function()
-        Derma_StringRequest(L("staffCharacterSetup"), L("discordUsernamePrompt"), "", function(discord)
+        lia.derma.requestString(L("staffCharacterSetup"), L("discordUsernamePrompt"), function(discord)
             if discord and discord:Trim() ~= "" then
                 net.Start("liaStaffDiscordResponse")
                 net.WriteString(discord:Trim())
                 net.SendToServer()
+            elseif discord == false then
+                net.Start("liaStaffDiscordResponse")
+                net.WriteString("not provided")
+                net.SendToServer()
             else
                 LocalPlayer():notifyErrorLocalized("discordUsernameEmpty")
             end
-        end, function()
-            net.Start("liaStaffDiscordResponse")
-            net.WriteString("not provided")
-            net.SendToServer()
-        end)
+        end, "", nil)
     end)
 end
 function MODULE:CanPlayerCreateChar(client, data)

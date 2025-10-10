@@ -1,8 +1,8 @@
 ﻿local cacheKeys, cache, len = {}, {}, 0
 local function PaintPanel(_, w, h)
     local radius = 16
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 50)):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 local function PaintFrame(pnl, w, h)
     if not pnl.LaidOut then

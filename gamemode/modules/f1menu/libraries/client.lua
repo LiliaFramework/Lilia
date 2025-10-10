@@ -337,8 +337,6 @@ function MODULE:CreateMenuButtons(tabs)
                         panel.staffTable = staffTable
                         staffTable:AddColumn(L("name"), nil, TEXT_ALIGN_LEFT, true)
                         staffTable:AddColumn(L("usergroup"), nil, TEXT_ALIGN_LEFT, true)
-                        staffTable:AddColumn(L("tickets"), 80, TEXT_ALIGN_CENTER, true)
-                        staffTable:AddColumn(L("warnings"), 80, TEXT_ALIGN_CENTER, true)
                         staffTable:AddColumn(L("staffOnDuty", ""), 100, TEXT_ALIGN_CENTER, true)
                         function updateStaffTable(dataToShow)
                             staffTable:Clear()
@@ -346,10 +344,10 @@ function MODULE:CreateMenuButtons(tabs)
                             if dataToShow then
                                 for _, staffInfo in ipairs(dataToShow) do
                                     staffFound = true
-                                    staffTable:AddLine(staffInfo.name .. " (" .. staffInfo.characterName .. ")", staffInfo.usergroup, tostring(staffInfo.tickets), tostring(staffInfo.warnings), staffInfo.isStaffOnDuty and L("yes") or L("no"))
+                                    staffTable:AddLine(staffInfo.name .. " (" .. staffInfo.characterName .. ")", staffInfo.usergroup, staffInfo.isStaffOnDuty and L("yes") or L("no"))
                                 end
                             end
-                            if not staffFound then staffTable:AddLine(L("noStaffCurrentlyOnline"), "", "", "", "") end
+                            if not staffFound then staffTable:AddLine(L("noStaffCurrentlyOnline"), "", "") end
                         end
                         panel.updateStaffTable = updateStaffTable
                         updateStaffTable(staffData)

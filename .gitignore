@@ -41,3 +41,14 @@ luac.out
 .vscode/*
 /documentation/docs/tools
 documentation/report.md
+gamemode/modules/medals/changelog.md
+gamemode/modules/medals/commands/client.lua
+gamemode/modules/medals/commands/server.lua
+gamemode/modules/medals/config/shared.lua
+gamemode/modules/medals/items/base/medal.lua
+gamemode/modules/medals/libraries/client.lua
+gamemode/modules/medals/libraries/server.lua
+gamemode/modules/medals/libraries/shared.lua
+gamemode/modules/medals/medals.lua
+gamemode/modules/medals/module.lua
+gamemode/modules/medals/README.md

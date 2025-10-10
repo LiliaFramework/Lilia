@@ -194,7 +194,7 @@ function PANEL:createStartButton()
                     for _, charID in pairs(lia.characters) do
                         local character = lia.char.getCharacter(charID)
                         if character and character:getFaction() == FACTION_STAFF then
-                            lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+                            lia.module.get("mainmenu"):chooseCharacter(character:getID()):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
                             break
                         end
                     end
@@ -387,7 +387,7 @@ function PANEL:createStaffCharacter()
         skin = 0,
         groups = {}
     }
-    lia.module.list["mainmenu"]:createCharacter(staffData):next(function(charID) lia.module.list["mainmenu"]:chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or L("failedToCreateStaffCharacter")) end)
+    lia.module.get("mainmenu"):createCharacter(staffData):next(function(charID) lia.module.get("mainmenu"):chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or L("failedToCreateStaffCharacter")) end)
 end
 function PANEL:updateSelectedCharacter()
     if not self.isLoadMode then return end
@@ -542,7 +542,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
             return
         end
-        lia.module.list["mainmenu"]:chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+        lia.module.get("mainmenu"):chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end
     self.deleteBtn = self:Add("liaSmallButton")
     self.deleteBtn:SetSize(bw, bh)
@@ -553,7 +553,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             LocalPlayer():notifyErrorLocalized("cannotDeleteChar")
             return
         end
-        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.list["mainmenu"]:deleteCharacter(character:getID()) end)
+        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):deleteCharacter(character:getID()) end)
     end
 end
 function PANEL:updateModelEntity(character)

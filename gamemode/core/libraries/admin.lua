@@ -99,7 +99,7 @@ function getPrivilegeCategory(privilegeName)
         category = L(lia.administrator.privilegeCategories[privilegeName])
     elseif lia.command and lia.command.list and lia.command.list[privilegeName] then
         category = L("commands")
-    elseif lia.module and lia.module.list then
+    else
         for _, module in pairs(lia.module.list) do
             if module.Privileges and istable(module.Privileges) then
                 for _, priv in ipairs(module.Privileges) do
@@ -1186,7 +1186,7 @@ else
             delBtn:SetText(L("delete") .. " " .. L("group"))
             createBtn.DoClick = promptCreateGroup
             renameBtn.DoClick = function()
-                Derma_StringRequest(L("rename") .. " " .. L("group"), L("renameGroupPrompt", g) .. ":", g, function(txt)
+                LocalPlayer():requestString(L("rename") .. " " .. L("group"), L("renameGroupPrompt", g) .. ":", function(txt)
                     txt = string.Trim(txt or "")
                     if txt ~= "" and txt ~= g then
                         net.Start("liaGroupsRename")
@@ -1194,7 +1194,7 @@ else
                         net.WriteString(txt)
                         net.SendToServer()
                     end
-                end)
+                end, g)
             end
             delBtn.DoClick = function()
                 Derma_Query(L("deleteGroupPrompt", g), L("confirm"), L("yes"), function()
@@ -1327,7 +1327,7 @@ else
         renameBtn.DoClick = function()
             local selectedGroup = groupsList:GetSelectedGroup()
             if not selectedGroup then return end
-            Derma_StringRequest(L("rename") .. " " .. L("group"), L("renameGroupPrompt", selectedGroup) .. ":", selectedGroup, function(txt)
+            LocalPlayer():requestString(L("rename") .. " " .. L("group"), L("renameGroupPrompt", selectedGroup) .. ":", function(txt)
                 txt = string.Trim(txt or "")
                 if txt ~= "" and txt ~= selectedGroup then
                     net.Start("liaGroupsRename")
@@ -1335,7 +1335,7 @@ else
                     net.WriteString(txt)
                     net.SendToServer()
                 end
-            end)
+            end, selectedGroup)
         end
         local deleteBtn = vgui.Create("liaButton", bottom)
         deleteBtn:Dock(LEFT)
