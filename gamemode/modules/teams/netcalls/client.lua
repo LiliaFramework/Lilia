@@ -12,7 +12,6 @@ net.Receive("liaClassUpdate", function()
         end
     end
 end)
-
 net.Receive("liaCharacterInfo", function()
     local characterData = net.ReadTable()
     local character = LocalPlayer():getChar()
@@ -23,18 +22,15 @@ net.Receive("liaCharacterInfo", function()
         canKick = character:hasFlags("K")
         if factionData and factionData.isDefault then canKick = false end
     end
-
     if IsValid(lia.gui.roster) then
         lia.gui.roster:Populate(characterData, canKick)
         return
     end
-
     if IsValid(characterPanel) then characterPanel:Remove() end
     local rows = {}
     for _, data in ipairs(characterData) do
         table.insert(rows, data)
     end
-
     local columns = {
         {
             name = "name",
@@ -57,7 +53,6 @@ net.Receive("liaCharacterInfo", function()
             field = "lastOnline"
         }
     }
-
     local actions = {}
     if canKick then
         actions[#actions + 1] = {
@@ -65,7 +60,6 @@ net.Receive("liaCharacterInfo", function()
             net = "KickCharacter"
         }
     end
-
     local frame, list = lia.util.CreateTableUI(L("character") .. " " .. L("information"), columns, rows, actions)
     characterPanel = frame
     if IsValid(list) then
@@ -83,7 +77,6 @@ net.Receive("liaCharacterInfo", function()
                     end, L("no"))
                 end)
             end
-
             menu:AddOption(L("view") .. " " .. L("characterList"), function() LocalPlayer():ConCommand("say /charlist " .. rowData.steamID) end)
             menu:AddOption(L("copySteamID"), function() SetClipboardText(rowData.steamID or "") end)
             menu:AddOption(L("copyRow"), function()
@@ -97,15 +90,12 @@ net.Receive("liaCharacterInfo", function()
                             break
                         end
                     end
-
                     columnName = columnName or key:gsub("^%l", string.upper)
                     rowString = rowString .. columnName .. ": " .. value .. " | "
                 end
-
                 rowString = rowString:sub(1, -4)
                 SetClipboardText(rowString)
             end)
-
             menu:Open()
         end
     end

@@ -19,7 +19,6 @@
         if storage.receivers[client] then return true end
     end
 }
-
 function MODULE:PlayerSpawnedProp(client, model, entity)
     local data = lia.inventory.getStorage(model:lower())
     if not data then return end
@@ -42,30 +41,24 @@ function MODULE:PlayerSpawnedProp(client, model, entity)
         lia.error(L("unableCreateStorageEntity", client:Name(), err))
         if IsValid(storage) then SafeRemoveEntity(storage) end
     end)
-
     SafeRemoveEntity(entity)
 end
-
 function MODULE:CanPlayerSpawnStorage(client, _, info)
     if not client then return true end
     if not client:hasPrivilege("canSpawnStorage") then return false end
     if not info.invType or not lia.inventory.types[info.invType] then return false end
 end
-
 function MODULE:StorageItemRemoved()
     self:SaveData()
 end
-
 local PROHIBITED_ACTIONS = {
     [L("equip")] = true,
     [L("unequip")] = true,
 }
-
 function MODULE:CanPlayerInteractItem(_, action, itemObject)
     local inventory = lia.inventory.instances[itemObject.invID]
     if inventory and inventory.isStorage and PROHIBITED_ACTIONS[action] then return false, "forbiddenActionStorage" end
 end
-
 function MODULE:EntityRemoved(entity)
     if self:IsSuitableForTrunk(entity) == false then return end
     local storageInv = lia.inventory.instances[entity:getNetVar("inv")]
@@ -73,16 +66,13 @@ function MODULE:EntityRemoved(entity)
     entity.liaStorageInitPromise = nil
     entity.receivers = nil
 end
-
 function MODULE:OnEntityCreated(entity)
     if self:IsSuitableForTrunk(entity) == false then return end
     self:InitializeStorage(entity)
 end
-
 function MODULE:StorageInventorySet(_, inventory, isCar)
     inventory:addAccessRule(isCar and RULES.AccessIfCarStorageReceiver or RULES.AccessIfStorageReceiver)
 end
-
 function MODULE:GetEntitySaveData(ent)
     if ent:GetClass() ~= "lia_storage" then return end
     local inventory = ent:getInv()
@@ -93,14 +83,12 @@ function MODULE:GetEntitySaveData(ent)
         password = ent.password
     }
 end
-
 function MODULE:OnEntityLoaded(ent, data)
     if ent:GetClass() ~= "lia_storage" or not data then return end
     if data.password then
         ent.password = data.password
         ent:setNetVar("locked", true)
     end
-
     local invID = data.id
     if invID then
         lia.inventory.loadByID(invID):next(function(inventory)
@@ -114,17 +102,14 @@ function MODULE:OnEntityLoaded(ent, data)
         end)
     end
 end
-
 function MODULE:SaveData()
     for _, ent in ipairs(ents.FindByClass("lia_storage")) do
         hook.Run("UpdateEntityPersistence", ent)
     end
 end
-
 function MODULE:OnDatabaseLoaded()
     self.loadedData = true
 end
-
 lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
     name = L("storageContainer"),
     invType = "GridInv",
@@ -133,7 +118,6 @@ lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
         h = 4
     }
 })
-
 lia.inventory.registerTrunk("vehicle", {
     name = L("vehicleTrunk"),
     invType = "GridInv",

@@ -12,13 +12,11 @@
         owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
     end
 end
-
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     surface.PlaySound("buttons/button16.wav")
     self:GetOwner():ChatPrint(L("distanceMeasureCancelled"))
 end
-
 function SWEP:DrawHUD()
     if not self.StartPos then return end
     local owner = self:GetOwner()

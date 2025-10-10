@@ -7,13 +7,11 @@
                 MinAccess = "admin"
             })
         end
-
         if SERVER then lia.administrator.addPermission(group_name, access, true) end
     else
         if SERVER then lia.administrator.removePermission(group_name, access, true) end
     end
 end)
-
 hook.Add("RunAdminSystemCommand", "liaULX", function(cmd, _, target, dur, reason)
     local id = isstring(target) and target or IsValid(target) and target:SteamID()
     if not id then return end

@@ -6,11 +6,9 @@ function SWEP:Holster()
     self:DropObject()
     return true
 end
-
 function SWEP:OnRemove()
     self:DropObject()
 end
-
 function SWEP:OwnerChanged()
     self:DropObject()
 end

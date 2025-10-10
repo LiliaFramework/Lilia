@@ -7,7 +7,6 @@ local function setSequence(entity)
         entity:ResetSequence(seq)
         return
     end
-
     local sequenceList = entity:GetSequenceList()
     if sequenceList and istable(sequenceList) then
         for _, name in ipairs(sequenceList) do
@@ -18,16 +17,13 @@ local function setSequence(entity)
             end
         end
     end
-
     entity:ResetSequence(4)
 end
-
 function PANEL:Init()
     self:setHidden(false)
     for i = 0, 5 do
         self:SetDirectionalLight(i, (i == 1 or i == 5) and Color(155, 155, 155) or Color(255, 255, 255))
     end
-
     local oldSetModel = self.SetModel
     self.SetModel = function(panel, model, skin)
         oldSetModel(panel, model)
@@ -40,7 +36,6 @@ function PANEL:Init()
                     if isnumber(groupIndex) and isnumber(groupValue) then entity:SetBodygroup(groupIndex, groupValue) end
                 end
             end
-
             local paintMat = hook.Run("PaintItem", panel.ItemTable)
             if isstring(paintMat) and paintMat ~= "" then
                 entity:SetMaterial(paintMat)
@@ -50,7 +45,6 @@ function PANEL:Init()
                 entity:SetMaterial("")
             end
         end
-
         entity:InvalidateBoneCache()
         entity:SetupBones()
         setSequence(entity)
@@ -60,11 +54,9 @@ function PANEL:Init()
             panel:SetCamPos(data.origin)
             panel:SetLookAng(data.angles)
         end
-
         entity:SetEyeTarget(Vector(0, 0, 64))
     end
 end
-
 function PANEL:setHidden(hidden)
     if hidden then
         self:SetAmbientLight(color_black)
@@ -74,20 +66,16 @@ function PANEL:setHidden(hidden)
         self:SetAlpha(255)
         self:SetColor(Color(255, 255, 255))
     end
-
     for i = 0, 5 do
         self:SetDirectionalLight(i, hidden and color_black or (i == 1 or i == 5) and Color(155, 155, 155) or Color(255, 255, 255))
     end
 end
-
 function PANEL:LayoutEntity()
     self:RunAnimation()
 end
-
 function PANEL:OnMousePressed()
     if self.DoClick then self:DoClick() end
 end
-
 function PANEL:UpdateVisuals()
     local entity = self.Entity
     if not IsValid(entity) then return end
@@ -98,7 +86,6 @@ function PANEL:UpdateVisuals()
                 if isnumber(groupIndex) and isnumber(groupValue) then entity:SetBodygroup(groupIndex, groupValue) end
             end
         end
-
         local skin = self.ItemTable:getSkin()
         if skin and isnumber(skin) then entity:SetSkin(skin) end
         local paintMat = hook.Run("PaintItem", self.ItemTable)
@@ -109,7 +96,6 @@ function PANEL:UpdateVisuals()
         else
             entity:SetMaterial("")
         end
-
         entity:InvalidateBoneCache()
         entity:SetupBones()
         setSequence(entity)
@@ -119,9 +105,7 @@ function PANEL:UpdateVisuals()
             self:SetCamPos(data.origin)
             self:SetLookAng(data.angles)
         end
-
         entity:SetEyeTarget(Vector(0, 0, 64))
     end
 end
-
 vgui.Register("liaSpawnIcon", PANEL, "DModelPanel")

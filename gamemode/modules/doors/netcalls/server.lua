@@ -10,7 +10,6 @@
         for k, v in pairs(door.liaAccess) do
             if v > DOOR_GUEST then recipient[#recipient + 1] = k end
         end
-
         if #recipient > 0 then
             net.Start("liaDoorPerm")
             net.WriteEntity(door)

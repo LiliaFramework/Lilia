@@ -15,7 +15,6 @@ ITEM.functions.use = {
         end
     end
 }
-
 ITEM.functions.target = {
     name = "itemUseOnTarget",
     sound = "items/medshot4.wav",

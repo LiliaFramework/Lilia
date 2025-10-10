@@ -5,7 +5,6 @@ lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
 function lia.currency.get(amount)
     return lia.currency.symbol .. (amount == 1 and "1 " .. lia.currency.singular or amount .. " " .. lia.currency.plural)
 end
-
 if SERVER then
     function lia.currency.spawn(pos, amount, angle)
         if not pos then

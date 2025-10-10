@@ -6,16 +6,13 @@ function MODULE:createChat()
     self.panel = vgui.Create("liaChatBox")
     hook.Run("ChatboxPanelCreated", self.panel)
 end
-
 function MODULE:InitPostEntity()
     self:createChat()
 end
-
 local function RegenChat()
     if IsValid(MODULE.panel) then MODULE.panel:Remove() end
     MODULE:createChat()
 end
-
 function MODULE:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then
@@ -24,7 +21,6 @@ function MODULE:PlayerBindPress(_, bind, pressed)
         return true
     end
 end
-
 function chat.AddText(...)
     local show = true
     if IsValid(MODULE.panel) then show = MODULE.panel:addText(...) end
@@ -33,7 +29,6 @@ function chat.AddText(...)
         hook.Run("ChatboxTextAdded", ...)
     end
 end
-
 function MODULE:ChatText(_, _, text, messageType)
     if messageType == "none" and IsValid(self.panel) then
         self.panel:addText(text)
@@ -44,7 +39,6 @@ function MODULE:ChatText(_, _, text, messageType)
         end
     end
 end
-
 function MODULE:ChatAddText(text, ...)
     if not lia.config.get("ChatSizeDiff", false) then return text end
     local chatArgs = {...}
@@ -63,6 +57,5 @@ function MODULE:ChatAddText(text, ...)
         return "<font=LiliaFont.18>"
     end
 end
-
 hook.Add("OnReloaded", "OnReloadedChatbox", RegenChat)
 net.Receive("liaRegenChat", RegenChat)

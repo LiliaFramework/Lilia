@@ -14,7 +14,6 @@
         local removed = lia.inventory.checkOverflow(inv, char, w, h)
         if w ~= dw or h ~= dh or removed then inv:sync(client) end
     end
-
     local json = util.TableToJSON({newW})
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'w' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
@@ -24,7 +23,6 @@ end, {
     min = 1,
     max = 20
 })
-
 lia.config.add("invH", "invHeight", 4, function(_, newH)
     if not SERVER then return end
     for _, client in player.Iterator() do
@@ -41,7 +39,6 @@ lia.config.add("invH", "invHeight", 4, function(_, newH)
         local removed = lia.inventory.checkOverflow(inv, char, w, h)
         if w ~= dw or h ~= dh or removed then inv:sync(client) end
     end
-
     local json = util.TableToJSON({newH})
     lia.db.query("UPDATE lia_invdata SET value = '" .. lia.db.escape(json) .. "' WHERE key = 'h' AND invID IN (SELECT invID FROM lia_inventories WHERE charID IS NOT NULL)")
 end, {
@@ -51,7 +48,6 @@ end, {
     min = 1,
     max = 20
 })
-
 lia.config.add("trunkInvW", "trunkInvWidth", 10, nil, {
     desc = "trunkInvWidthDesc",
     category = "general",
@@ -59,7 +55,6 @@ lia.config.add("trunkInvW", "trunkInvWidth", 10, nil, {
     min = 1,
     max = 20
 })
-
 lia.config.add("trunkInvH", "trunkInvHeight", 2, nil, {
     desc = "trunkInvHeightDesc",
     category = "general",
