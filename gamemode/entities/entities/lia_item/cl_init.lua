@@ -5,7 +5,6 @@
     end
     return self.markup
 end
-
 function ENT:onDrawEntityInfo(alpha)
     if IsValid(lia.gui.itemPanel) then return end
     local item = self:getItemTable()
@@ -16,7 +15,6 @@ function ENT:onDrawEntityInfo(alpha)
     lia.util.drawEntText(self, name, 0, alpha)
     item.data, item.entity = oldD, oldE
 end
-
 function ENT:DrawTranslucent()
     local itemTable = self:getItemTable()
     if itemTable and itemTable.drawEntity then

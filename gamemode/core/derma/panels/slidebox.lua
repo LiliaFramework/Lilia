@@ -16,7 +16,6 @@ function PANEL:Init()
     self._convar_timer = self:CreateConVarSyncTimer()
     self._dragAlpha = 255
 end
-
 function PANEL:CreateConVarSyncTimer()
     return timer.Create("liaSlideBoxSync" .. tostring(self), 0.1, 0, function()
         if not IsValid(self) or not self.convar then return end
@@ -29,18 +28,15 @@ function PANEL:CreateConVarSyncTimer()
         end
     end)
 end
-
 function PANEL:OnRemove()
     timer.Remove("liaSlideBoxSync" .. tostring(self))
 end
-
 function PANEL:SetRange(min_value, max_value, decimals)
     self.min_value = min_value
     self.max_value = max_value
     self.decimals = decimals or 0
     self:SetValue(self.value or min_value)
 end
-
 function PANEL:SetConvar(convar)
     self.convar = convar
     local cvar = GetConVar(convar)
@@ -49,11 +45,9 @@ function PANEL:SetConvar(convar)
         self._convar_last = cvar:GetFloat()
     end
 end
-
 function PANEL:SetText(text)
     self.text = text
 end
-
 function PANEL:SetValue(val, fromConVar)
     val = math.Clamp(val, self.min_value, self.max_value)
     if self.decimals > 0 then
@@ -61,7 +55,6 @@ function PANEL:SetValue(val, fromConVar)
     else
         val = math.Round(val)
     end
-
     self.value = val
     local progress = (val - self.min_value) / (self.max_value - self.min_value)
     self.targetPos = math.Clamp((self:GetWide() - 32) * progress, 0, self:GetWide() - 32)
@@ -69,14 +62,11 @@ function PANEL:SetValue(val, fromConVar)
         RunConsoleCommand(self.convar, tostring(val))
         self._convar_last = val
     end
-
     if self.OnValueChanged then self:OnValueChanged(val) end
 end
-
 function PANEL:GetValue()
     return self.value
 end
-
 function PANEL:UpdateSliderByCursorPos(x)
     local progress = math.Clamp(x / (self:GetWide() - 32), 0, 1)
     local new_value = self.min_value + (progress * (self.max_value - self.min_value))
@@ -85,10 +75,8 @@ function PANEL:UpdateSliderByCursorPos(x)
     else
         new_value = math.Round(new_value)
     end
-
     self:SetValue(new_value)
 end
-
 function PANEL:Paint(w)
     local padX = 16
     local padTop = 2
@@ -123,7 +111,6 @@ function PANEL:Paint(w)
     draw.SimpleText(self.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_LEFT)
     draw.SimpleText(self.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_RIGHT)
 end
-
 function PANEL:OnMousePressed(mcode)
     if mcode == MOUSE_LEFT then
         local x = self:CursorPos()
@@ -135,24 +122,19 @@ function PANEL:OnMousePressed(mcode)
         self.ripple_active = true
     end
 end
-
 function PANEL:OnMouseReleased(mcode)
     if mcode == MOUSE_LEFT then
         self.dragging = false
         self:MouseCapture(false)
     end
 end
-
 function PANEL:OnCursorMoved(x)
     if self.dragging then self:UpdateSliderByCursorPos(x) end
 end
-
 function PANEL:OnCursorEntered()
     self.hover = true
 end
-
 function PANEL:OnCursorExited()
     self.hover = false
 end
-
 vgui.Register("liaSlideBox", PANEL, "Panel")

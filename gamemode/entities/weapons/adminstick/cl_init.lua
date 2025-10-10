@@ -6,7 +6,6 @@
         lia.module.get("administration"):OpenAdminStickUI(target)
     end
 end
-
 function SWEP:SecondaryAttack()
     local client = LocalPlayer()
     if not IsFirstTimePredicted() then return end
@@ -19,13 +18,11 @@ function SWEP:SecondaryAttack()
         client:notifyErrorLocalized("cantFreezeTarget")
     end
 end
-
 function SWEP:GetTarget()
     local client = LocalPlayer()
     local target = IsValid(client.AdminStickTarget) and client.AdminStickTarget or client:GetEyeTrace().Entity
     return target
 end
-
 function SWEP:DrawHUD()
     local client = LocalPlayer()
     local x, y = ScrW() / 2, ScrH() / 2
@@ -38,7 +35,6 @@ function SWEP:DrawHUD()
                 table.insert(information, L("entity") .. " " .. L("class") .. ": " .. target:GetClass())
                 table.insert(information, L("creator") .. ": " .. tostring(target:GetCreator()))
             end
-
             if target.isItem and target:isItem() then
                 local itemTable = target.getItemTable and target:getItemTable()
                 if itemTable then
@@ -46,10 +42,8 @@ function SWEP:DrawHUD()
                     table.insert(information, L("item") .. " " .. L("size") .. ": " .. itemTable:getWidth() .. "x" .. itemTable:getHeight())
                 end
             end
-
             if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         end
-
         if target:IsPlayer() then
             information = {L("nickname") .. ": " .. target:Nick(), L("steamName") .. ": " .. (target.SteamName and target:SteamName() or target:Name()), L("steamID") .. ": " .. target:SteamID(), L("health") .. ": " .. target:Health(), L("armor") .. ": " .. target:Armor(), L("usergroup") .. ": " .. target:GetUserGroup()}
             if target:getChar() then
@@ -61,7 +55,6 @@ function SWEP:DrawHUD()
             end
         end
     end
-
     hook.Run("AddToAdminStickHUD", client, target, information)
     local length, thickness = 15, 0.5
     lia.derma.rect(x - length / 2, y - thickness / 2, length, thickness):Color(themeColors.text):Draw()
@@ -74,7 +67,6 @@ function SWEP:DrawHUD()
             maxWidth = math.max(maxWidth, t_w)
             totalHeight = totalHeight + t_h + 4
         end
-
         local boxWidth = maxWidth + 80
         local boxHeight = totalHeight + 20
         local boxX = (ScrW() - boxWidth) / 2
@@ -91,7 +83,6 @@ function SWEP:DrawHUD()
         end
     end
 end
-
 function SWEP:Reload()
     if self.NextReload and self.NextReload > SysTime() then return end
     self.NextReload = SysTime() + 0.5
@@ -101,7 +92,6 @@ function SWEP:Reload()
         lia.module.get("administration"):OpenAdminStickUI(client)
     end
 end
-
 function SWEP:Holster()
     local client = LocalPlayer()
     if IsValid(client) then client.AdminStickTarget = nil end

@@ -9,7 +9,6 @@
         end
     end
 end
-
 local function RegisterPrivileges()
     if CAMI then
         for _, v in pairs(CAMI.GetPrivileges()) do
@@ -17,7 +16,6 @@ local function RegisterPrivileges()
         end
     end
 end
-
 function serverguard.permission:Add(identifier, priv)
     if isstring(identifier) then
         if not self.stored[identifier] then
@@ -27,7 +25,6 @@ function serverguard.permission:Add(identifier, priv)
                     Name = identifier,
                     MinAccess = "invalid"
                 })
-
                 if lia.administrator and lia.administrator.registerPrivilege then
                     lia.administrator.registerPrivilege({
                         Name = identifier,
@@ -44,14 +41,12 @@ function serverguard.permission:Add(identifier, priv)
         end
     end
 end
-
 function serverguard.permission:Remove(identifier)
     if isstring(identifier) and self.stored[identifier] then
         self.stored[identifier] = nil
         if lia.administrator and lia.administrator.unregisterPrivilege then lia.administrator.unregisterPrivilege(identifier) end
     end
 end
-
 if SERVER then
     hook.Add("serverguard.RanksLoaded", "serverguard.RanksLoaded", RegisterPrivileges)
 else
@@ -128,7 +123,6 @@ else
         end
     end)
 end
-
 hook.Add("serverguard.RankPermissionGiven", "liaServerGuardHandlePermissionGiven", function(rankName, permission)
     if not rankName or not permission then return end
     if CAMI and not CAMI.GetPrivilege(permission) then
@@ -137,15 +131,12 @@ hook.Add("serverguard.RankPermissionGiven", "liaServerGuardHandlePermissionGiven
             MinAccess = "admin"
         })
     end
-
     if SERVER then lia.administrator.addPermission(rankName, permission, true) end
 end)
-
 hook.Add("serverguard.RankPermissionTaken", "liaServerGuardHandlePermissionTaken", function(rankName, permission)
     if not rankName or not permission then return end
     if SERVER then lia.administrator.removePermission(rankName, permission, true) end
 end)
-
 hook.Add("CAMI.OnPrivilegeRegistered", "serverguard.CAMI.OnPrivilegeRegistered", OnPrivilegeRegistered)
 hook.Add("CAMI.PlayerHasAccess", "serverguard.CAMI.PlayerHasAccess", function(client, privilege, callback)
     callback(not not serverguard.player:HasPermission(client, privilege), "serverguard")

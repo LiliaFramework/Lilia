@@ -16,7 +16,6 @@ function lia.data.encodetable(value)
     end
     return value
 end
-
 local function _decodeVector(data)
     if isvector(data) then return data end
     if isstring(data) and data:lower():match("^models/") then return data end
@@ -25,12 +24,10 @@ local function _decodeVector(data)
             local x, y, z = tonumber(data.x), tonumber(data.y), tonumber(data.z)
             if x and y and z then return Vector(x, y, z) end
         end
-
         if data.p and data.y and data.r then
             local x, y, z = tonumber(data.p), tonumber(data.y), tonumber(data.r)
             if x and y and z then return Vector(x, y, z) end
         end
-
         if data[1] and data[2] and data[3] then
             local x, y, z = tonumber(data[1]), tonumber(data[2]), tonumber(data[3])
             if x and y and z then return Vector(x, y, z) end
@@ -46,10 +43,8 @@ local function _decodeVector(data)
                 nums[#nums + 1] = num
                 if #nums >= 3 then break end
             end
-
             if #nums >= 3 then x, y, z = nums[1], nums[2], nums[3] end
         end
-
         if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
         local tbl = util.JSONToTable(data)
         if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
@@ -69,16 +64,13 @@ local function _decodeVector(data)
                     nums[#nums + 1] = num
                     if #nums >= 3 then break end
                 end
-
                 if #nums >= 3 then x, y, z = nums[1], nums[2], nums[3] end
             end
-
             if x then return Vector(tonumber(x), tonumber(y), tonumber(z)) end
         end
     end
     return data
 end
-
 local function _decodeAngle(data)
     if isangle(data) then return data end
     if isstring(data) and data:lower():match("^models/") then return data end
@@ -87,7 +79,6 @@ local function _decodeAngle(data)
             local p, y, r = tonumber(data.p or 0), tonumber(data.y or 0), tonumber(data.r or 0)
             if p and y and r then return Angle(p, y, r) end
         end
-
         if data[1] and data[2] and data[3] then
             local p, y, r = tonumber(data[1]), tonumber(data[2]), tonumber(data[3])
             if p and y and r then return Angle(p, y, r) end
@@ -103,10 +94,8 @@ local function _decodeAngle(data)
                 nums[#nums + 1] = num
                 if #nums >= 3 then break end
             end
-
             if #nums >= 3 then p, y, r = nums[1], nums[2], nums[3] end
         end
-
         if not p then
             local tbl = util.JSONToTable(data)
             if istable(tbl) and tbl[1] and tbl[2] and tbl[3] then
@@ -114,7 +103,6 @@ local function _decodeAngle(data)
                 if p_num and y_num and r_num then p, y, r = p_num, y_num, r_num end
             end
         end
-
         if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
     else
         local s = tostring(data)
@@ -129,35 +117,28 @@ local function _decodeAngle(data)
                     nums[#nums + 1] = num
                     if #nums >= 3 then break end
                 end
-
                 if #nums >= 3 then p, y, r = nums[1], nums[2], nums[3] end
             end
-
             if p then return Angle(tonumber(p), tonumber(y), tonumber(r)) end
         end
     end
     return data
 end
-
 local function deepDecode(value)
     if istable(value) then
         local t = {}
         for k, v in pairs(value) do
             t[k] = deepDecode(v)
         end
-
         value = t
     end
-
     value = _decodeAngle(value)
     value = _decodeVector(value)
     return value
 end
-
 function lia.data.decode(value)
     return deepDecode(value)
 end
-
 function lia.data.serialize(value)
     local encoded = lia.data.encodetable(value) or {}
     if not istable(encoded) then
@@ -167,7 +148,6 @@ function lia.data.serialize(value)
     end
     return util.TableToJSON(encoded)
 end
-
 function lia.data.deserialize(raw)
     if not raw then return nil end
     local decoded
@@ -182,12 +162,10 @@ function lia.data.deserialize(raw)
     else
         decoded = raw
     end
-
     if decoded == nil then return nil end
     if istable(decoded) and decoded.value ~= nil and table.Count(decoded) == 1 then return lia.data.decode(decoded.value) end
     return lia.data.decode(decoded)
 end
-
 function lia.data.decodeVector(raw)
     if not raw then return nil end
     local direct = _decodeVector(raw)
@@ -202,11 +180,9 @@ function lia.data.decodeVector(raw)
     else
         decoded = raw
     end
-
     if decoded == nil then decoded = raw end
     return _decodeVector(decoded)
 end
-
 function lia.data.decodeAngle(raw)
     if not raw then return nil end
     local direct = _decodeAngle(raw)
@@ -221,17 +197,14 @@ function lia.data.decodeAngle(raw)
     else
         decoded = raw
     end
-
     if decoded == nil then decoded = raw end
     return _decodeAngle(decoded)
 end
-
 local function buildCondition(gamemode, map)
     local cond = gamemode and "gamemode = " .. lia.db.convertDataType(gamemode) or "gamemode IS NULL"
     cond = cond .. " AND " .. (map and "map = " .. lia.db.convertDataType(map) or "map IS NULL")
     return cond
 end
-
 function lia.data.set(key, value, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = ignoreMap and NULL or game.GetMap()
@@ -242,7 +215,6 @@ function lia.data.set(key, value, global, ignoreMap)
         if gamemode == nil then gamemode = NULL end
         if map == nil then map = NULL end
     end
-
     lia.data.stored[key] = value
     lia.db.waitForTablesToLoad():next(function()
         local row = {
@@ -252,13 +224,11 @@ function lia.data.set(key, value, global, ignoreMap)
         }
         return lia.db.upsert(row, "data")
     end):next(function() hook.Run("OnDataSet", key, value, gamemode, map) end)
-
     local path = "lilia/"
     if gamemode and gamemode ~= NULL then path = path .. gamemode .. "/" end
     if map and map ~= NULL then path = path .. map .. "/" end
     return path
 end
-
 function lia.data.delete(key, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = ignoreMap and nil or game.GetMap()
@@ -266,7 +236,6 @@ function lia.data.delete(key, global, ignoreMap)
         gamemode = nil
         map = nil
     end
-
     lia.data.stored[key] = nil
     local condition = buildCondition(gamemode, map)
     lia.db.waitForTablesToLoad():next(function()
@@ -283,7 +252,6 @@ function lia.data.delete(key, global, ignoreMap)
     end)
     return true
 end
-
 function lia.data.loadTables()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -299,10 +267,8 @@ function lia.data.loadTables()
             end
         end)
     end
-
     lia.db.waitForTablesToLoad():next(function() return loadData(nil, nil) end):next(function() return loadData(gamemode, nil) end):next(function() return loadData(gamemode, map) end)
 end
-
 local defaultCols = {
     gamemode = true,
     map = true,
@@ -311,12 +277,10 @@ local defaultCols = {
     angles = true,
     model = true
 }
-
 local baseCols = {}
 for col in pairs(defaultCols) do
     baseCols[#baseCols + 1] = col
 end
-
 local function addPersistenceColumn(col)
     local query
     if lia.db.module == "sqlite" then
@@ -326,7 +290,6 @@ local function addPersistenceColumn(col)
     end
     return lia.db.query(query)
 end
-
 local function ensurePersistenceColumns(cols)
     local d = lia.db.waitForTablesToLoad()
     for _, col in ipairs(cols) do
@@ -334,11 +297,9 @@ local function ensurePersistenceColumns(cols)
     end
     return d
 end
-
 function lia.data.loadPersistence()
     return ensurePersistenceColumns(baseCols)
 end
-
 function lia.data.savePersistence(entities)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -354,16 +315,13 @@ function lia.data.savePersistence(entities)
             end
         end
     end
-
     local cols = {}
     for _, c in ipairs(baseCols) do
         cols[#cols + 1] = c
     end
-
     for _, c in ipairs(dynamicList) do
         cols[#cols + 1] = c
     end
-
     ensurePersistenceColumns(cols):next(function() return lia.db.delete("persistence", condition) end):next(function()
         local rows = {}
         for _, ent in ipairs(entities) do
@@ -375,18 +333,14 @@ function lia.data.savePersistence(entities)
                 angles = lia.data.serialize(ent.angles),
                 model = ent.model
             }
-
             for _, col in ipairs(dynamicList) do
                 row[col] = lia.data.serialize(ent[col])
             end
-
             rows[#rows + 1] = row
         end
-
         if #rows > 0 then return lia.db.bulkInsert("persistence", rows) end
     end)
 end
-
 function lia.data.loadPersistenceData(callback)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
@@ -399,19 +353,16 @@ function lia.data.loadPersistenceData(callback)
             for k, v in pairs(row) do
                 if not defaultCols[k] and k ~= "id" and k ~= "gamemode" and k ~= "map" then ent[k] = lia.data.deserialize(v) end
             end
-
             ent.class = row.class
             ent.pos = lia.data.decodeVector(row.pos)
             ent.angles = lia.data.decodeAngle(row.angles)
             ent.model = row.model
             entities[#entities + 1] = ent
         end
-
         lia.data.persistCache = entities
         if callback then callback(entities) end
     end)
 end
-
 function lia.data.get(key, default)
     local stored = lia.data.stored[key]
     if stored ~= nil then
@@ -423,11 +374,9 @@ function lia.data.get(key, default)
     end
     return default
 end
-
 function lia.data.getPersistence()
     return lia.data.persistCache or {}
 end
-
 timer.Create("liaSaveData", lia.config.get("DataSaveInterval", 600), 0, function()
     if lia.shuttingDown then return end
     hook.Run("SaveData")

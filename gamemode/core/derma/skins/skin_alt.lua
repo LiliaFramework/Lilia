@@ -25,16 +25,13 @@ function SKIN:PaintFrame(panel, w, h)
             panel.btnClose:SetTextColor(Color(255, 255, 255))
             panel.btnClose:PerformLayout()
         end
-
         panel.LaidOut = true
     end
-
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
-
 function SKIN:PaintTooltip(_, w, h)
     surface.SetDrawColor(45, 45, 45, 240)
     surface.DrawRect(0, 0, w, h)
@@ -43,7 +40,6 @@ function SKIN:PaintTooltip(_, w, h)
     surface.SetDrawColor(100, 100, 100, 25)
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
 end
-
 function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(45, 45, 45, 240)
     surface.DrawRect(x, y, w, h)
@@ -52,7 +48,6 @@ function SKIN:DrawGenericBackground(x, y, w, h)
     surface.SetDrawColor(100, 100, 100, 25)
     surface.DrawOutlinedRect(x + 1, y + 1, w - 2, h - 2)
 end
-
 function SKIN:PaintPanel(panel)
     if not panel.m_bBackground or panel.GetPaintBackground and not panel:GetPaintBackground() then return end
     local w, h = panel:GetWide(), panel:GetTall()
@@ -61,7 +56,6 @@ function SKIN:PaintPanel(panel)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
-
 local function DrawButton(panel, w, h)
     if not panel.m_bBackground or panel.GetPaintBackground and not panel:GetPaintBackground() then return end
     local alpha = 50
@@ -72,47 +66,37 @@ local function DrawButton(panel, w, h)
     elseif panel.Hovered then
         alpha = 75
     end
-
     surface.SetDrawColor(20, 20, 20, alpha)
     surface.DrawRect(0, 0, w, h)
     surface.SetDrawColor(100, 100, 100, alpha)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
-
 function SKIN:PaintButton(panel)
     local w, h = panel:GetWide(), panel:GetTall()
     DrawButton(panel, w, h)
 end
-
 function SKIN:PaintWindowCloseButton(panel, w, h)
     local base = derma.GetDefaultSkin()
     base.PaintWindowCloseButton(base, panel, w, h)
 end
-
 function SKIN:PaintWindowMinimizeButton(panel, w, h)
     local base = derma.GetDefaultSkin()
     base.PaintWindowMinimizeButton(base, panel, w, h)
 end
-
 function SKIN:PaintWindowMaximizeButton(panel, w, h)
     local base = derma.GetDefaultSkin()
     base.PaintWindowMaximizeButton(base, panel, w, h)
 end
-
 function SKIN:PaintWindowCloseButton()
 end
-
 function SKIN:PaintWindowMinimizeButton()
 end
-
 function SKIN:PaintWindowMaximizeButton()
 end
-
 function SKIN:PaintComboBox(panel, w, h)
     if panel:GetFont() == "Default" or panel:GetFont() == "" then panel:SetFont("LiliaFont.18") end
     DrawButton(panel, w, h)
 end
-
 function SKIN:PaintTextEntry(panel, w, h)
     if panel.m_bBackground then
         local alpha = 50
@@ -123,13 +107,11 @@ function SKIN:PaintTextEntry(panel, w, h)
         elseif panel.Hovered then
             alpha = 75
         end
-
         surface.SetDrawColor(20, 20, 20, alpha)
         surface.DrawRect(0, 0, w, h)
         surface.SetDrawColor(100, 100, 100, alpha)
         surface.DrawRect(2, 2, w - 4, h - 4)
     end
-
     if panel.GetPlaceholderText and panel.GetPlaceholderColor and panel:GetPlaceholderText() and panel:GetPlaceholderText():Trim() ~= "" and panel:GetPlaceholderColor() and (not panel:GetText() or panel:GetText() == "") then
         local oldText = panel:GetText()
         local str = panel:GetPlaceholderText()
@@ -140,30 +122,24 @@ function SKIN:PaintTextEntry(panel, w, h)
         panel:SetText(oldText)
         return
     end
-
     panel:DrawTextEntryText(Color(255, 255, 255), panel:GetHighlightColor(), panel:GetCursorColor())
 end
-
 function SKIN:PaintListView(_, w, h)
     surface.SetDrawColor(20, 20, 20, 100)
     surface.DrawRect(0, 0, w, h)
 end
-
 function SKIN:PaintListViewLine(panel, w, h)
     surface.SetDrawColor((panel:IsHovered() or panel:IsLineSelected()) and lia.config.get("Color", Color(255, 255, 255)) or Color(0, 0, 0, 0))
     surface.DrawRect(0, 0, w, h)
 end
-
 function SKIN:PaintScrollBarGrip(_, w, h)
     surface.SetDrawColor(lia.config.get("Color", Color(255, 255, 255)))
     surface.DrawRect(0, 0, w, h)
 end
-
 function SKIN:PaintVScrollBar(_, w, h)
     surface.SetDrawColor(20, 20, 20, 200)
     surface.DrawRect(0, 0, w, h)
 end
-
 function SKIN:PaintMenu(_, w, h)
     local odd = true
     for i = 0, h, 22 do
@@ -174,11 +150,9 @@ function SKIN:PaintMenu(_, w, h)
             surface.SetDrawColor(50, 50, 50, 255)
             surface.DrawRect(0, i, w, 22)
         end
-
         odd = not odd
     end
 end
-
 function SKIN:PaintPopupMenu(panel, w, h)
     local bg = panel:IsHovered() and Color(70, 70, 70, 240) or Color(45, 45, 45, 240)
     surface.SetDrawColor(bg)
@@ -186,30 +160,25 @@ function SKIN:PaintPopupMenu(panel, w, h)
     surface.SetDrawColor(0, 0, 0, 180)
     surface.DrawOutlinedRect(0, 0, w, h)
 end
-
 function SKIN:PaintMenuOption(panel, w, h)
     if not panel.LaidOut then
         panel.LaidOut = true
         panel:SetTextColor(lia.color.theme.text or Color(200, 200, 200, 255))
     end
-
     if panel.m_bBackground and (panel.Hovered or panel.Highlight) then
         surface.SetDrawColor(70, 70, 70, 255)
         surface.DrawRect(0, 0, w, h)
     end
-
     local skin = derma.GetDefaultSkin()
     skin.MenuOptionOdd = not skin.MenuOptionOdd
     if panel:GetChecked() then skin.tex.Menu_Check(5, h / 2 - 7, 15, 15) end
 end
-
 local function DrawSpawnBG(w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
-
 function SKIN:PaintCollapsibleCategory(p, w, h)
     DrawSpawnBG(w, h)
     if not p.HeaderPainted then
@@ -219,15 +188,12 @@ function SKIN:PaintCollapsibleCategory(p, w, h)
             surface.SetDrawColor(0, 0, 0, 255)
             surface.DrawOutlinedRect(0, 0, hw, hh, 2)
         end
-
         p.HeaderPainted = true
     end
 end
-
 function SKIN:PaintCategoryList(_, w, h)
     DrawSpawnBG(w, h)
 end
-
 function SKIN:PaintCategoryButton(p, w, h)
     local a = p:GetDisabled() and 10 or p.Depressed and 180 or p.Hovered and 75 or 50
     surface.SetDrawColor(20, 20, 20, a)
@@ -235,40 +201,32 @@ function SKIN:PaintCategoryButton(p, w, h)
     surface.SetDrawColor(100, 100, 100, a)
     surface.DrawRect(2, 2, w - 4, h - 4)
 end
-
 function SKIN:PaintContentPanel(_, w, h)
     DrawSpawnBG(w, h)
 end
-
 function SKIN:PaintContentIcon(p, w, h)
     if p:IsHovered() then
         surface.SetDrawColor(255, 255, 255, 5)
         surface.DrawRect(0, 0, w, h)
     end
-
     DrawSpawnBG(w, h)
 end
-
 function SKIN:PaintSpawnIcon(p, w, h)
     if p:IsHovered() then
         surface.SetDrawColor(255, 255, 255, 5)
         surface.DrawRect(0, 0, w, h)
     end
-
     DrawSpawnBG(w, h)
 end
-
 local function DrawTreeBG(w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
-
 function SKIN:PaintTree(_, w, h)
     DrawTreeBG(w, h)
 end
-
 function SKIN:PaintTreeNode(p, _, h)
     if not p.m_bDrawLines then return end
     surface.SetDrawColor(self.Colours.Tree and self.Colours.Tree.Lines or Color(100, 100, 100))
@@ -280,7 +238,6 @@ function SKIN:PaintTreeNode(p, _, h)
         surface.DrawRect(9, 7, 9, 1)
     end
 end
-
 function SKIN:PaintTreeNodeButton(p, w, h)
     w = w + 6
     if p.m_bSelected then
@@ -292,64 +249,49 @@ function SKIN:PaintTreeNodeButton(p, w, h)
         surface.SetDrawColor(255, 255, 255, 10)
         surface.DrawRect(38, 0, w + 6, h)
     end
-
     p:SetTextColor(self.Colours.Tree.Text)
 end
-
 local function basePaint(w, h)
     surface.SetDrawColor(0, 0, 0, 255)
     surface.DrawOutlinedRect(0, 0, w, h, 2)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(1, 1, w - 2, h - 2)
 end
-
 function SKIN:PaintShadow(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintMenuSpacer(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintPropertySheet(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintTab(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintActiveTab(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintButtonLeft(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintButtonRight(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintListBox(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintNumberUp(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintNumberDown(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintSelection(_, w, h)
     basePaint(w, h)
 end
-
 function SKIN:PaintMenuBar(_, w, h)
     basePaint(w, h)
 end
-
 derma.DefineSkin(L("liliaAltSkin"), L("liliaAltSkinDesc"), SKIN)
 derma.RefreshSkins()

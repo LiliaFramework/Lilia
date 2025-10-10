@@ -15,15 +15,12 @@ function MODULE:PostPlayerLoadout(client)
             end
         end
     end
-
     client:setLocalVar("stamina", char:getMaxStamina())
     staminaPlayers[client] = true
 end
-
 function MODULE:PlayerDisconnected(client)
     staminaPlayers[client] = nil
 end
-
 function MODULE:KeyPress(client, key)
     local char = client:getChar()
     if not char then return end
@@ -36,7 +33,6 @@ function MODULE:KeyPress(client, key)
             client.Grabbed = NULL
         end
     end
-
     if key == IN_JUMP and not client:isNoClipping() and not client:InVehicle() and client:Alive() and client:OnGround() and (client.liaNextJump or 0) <= CurTime() then
         client.liaNextJump = CurTime() + 0.1
         local cost = lia.config.get("JumpStaminaCost", 25)
@@ -49,11 +45,9 @@ function MODULE:KeyPress(client, key)
         end
     end
 end
-
 function MODULE:PlayerLoadedChar(client, character)
     timer.Simple(0.25, function() if IsValid(client) then client:setLocalVar("stamina", character:getMaxStamina()) end end)
 end
-
 function MODULE:PlayerStaminaLost(client)
     if client:getNetVar("brth", false) then return end
     client:setNetVar("brth", true)
@@ -66,20 +60,17 @@ function MODULE:PlayerStaminaLost(client)
             timer.Remove("liaStamBreathCheck" .. client:SteamID64())
             return
         end
-
         local char = client:getChar()
         local currentStamina = client:getLocalVar("stamina", char and char:getMaxStamina() or lia.config.get("DefaultStamina", 100))
         if currentStamina <= breathThreshold then
             client:EmitSound("player/breathe1.wav", 35, 100)
             return
         end
-
         client:StopSound("player/breathe1.wav")
         client:setNetVar("brth", nil)
         timer.Remove("liaStamBreathCheck" .. client:SteamID64())
     end)
 end
-
 if SERVER and not timer.Exists("liaGlobalStamina") then
     timer.Create("liaGlobalStamina", 0.25, 0, function()
         for client, _ in pairs(staminaPlayers) do
