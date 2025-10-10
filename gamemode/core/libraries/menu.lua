@@ -35,9 +35,11 @@ local function buildItems(opts)
         list[#list + 1] = {k, v}
         w = math_max(w, surface_GetTextSize(tostring(k)))
     end
+
     table_sort(list, function(a, b) return tostring(a[1]) < tostring(b[1]) end)
     return list, w
 end
+
 function lia.menu.add(opts, pos, onRemove)
     local client = LocalPlayer()
     local items, txtW = buildItems(opts)
@@ -55,6 +57,7 @@ function lia.menu.add(opts, pos, onRemove)
         onRemove = onRemove
     })
 end
+
 local function getScreenPos(d, ft)
     if d.entity then
         if not IsValid(d.entity) then return end
@@ -64,6 +67,7 @@ local function getScreenPos(d, ft)
     end
     return d.position:ToScreen()
 end
+
 local function drawBackground(x, y, w, h, a)
     local a90 = a * 0.9
     surface_SetDrawColor(40, 40, 40, a90)
@@ -74,6 +78,7 @@ local function drawBackground(x, y, w, h, a)
     surface_SetDrawColor(0, 0, 0, a90 * 0.25)
     surface_DrawOutlinedRect(x - 4, y - 4, w + 8, h + 8)
 end
+
 function lia.menu.drawAll()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
@@ -88,6 +93,7 @@ function lia.menu.drawAll()
             if d.onRemove then d:onRemove() end
             continue
         end
+
         local w, h = d.width, d.height
         local x = math_Clamp(sp.x - w * 0.5, 8, sw - w - 8)
         local y = math_Clamp(sp.y, 8, sh - h - 8)
@@ -105,6 +111,7 @@ function lia.menu.drawAll()
                 continue
             end
         end
+
         drawBackground(x, y, w, h, d.alpha)
         local osc = math_cos(RealTime() * 8)
         for idx = 1, #d.items do
@@ -114,10 +121,12 @@ function lia.menu.drawAll()
                 surface_SetDrawColor(ColorAlpha(lia.config.get("Color"), d.alpha + osc * 40))
                 surface_DrawRect(x, oy, w, rowH)
             end
+
             lia_drawText(lbl, x + pad, oy + 2, ColorAlpha(color_white, d.alpha), nil, nil, "liaMediumFont")
         end
     end
 end
+
 function lia.menu.getActiveMenu()
     local client = LocalPlayer()
     local sw, sh = ScrW(), ScrH()
@@ -130,6 +139,7 @@ function lia.menu.getActiveMenu()
             table_remove(lia.menu.list, i)
             continue
         end
+
         local w, h = d.width, d.height
         local x = math_Clamp(sp.x - w * 0.5, 8, sw - w - 8)
         local y = math_Clamp(sp.y, 8, sh - h - 8)
@@ -140,6 +150,7 @@ function lia.menu.getActiveMenu()
         if item then return i, item[2] end
     end
 end
+
 function lia.menu.onButtonPressed(id, cb)
     table_remove(lia.menu.list, id)
     if cb then

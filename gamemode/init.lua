@@ -9,6 +9,7 @@ DeriveGamemode("sandbox")
 for _, fontFile in ipairs(fontFiles) do
     resource.AddSingleFile(fontFile)
 end
+
 for _, netString in ipairs(networkStrings) do
     util.AddNetworkString(netString)
 end

@@ -12,6 +12,7 @@ local function CreateBShadows()
         ['$vertexalpha'] = 1,
         ['alpha'] = 1
     })
+
     BShadows.ShadowMaterialGrayscale = CreateMaterial('BShadows_grayscale', 'UnlitGeneric', {
         ['$translucent'] = 1,
         ['$vertexalpha'] = 1,
@@ -19,6 +20,7 @@ local function CreateBShadows()
         ['$color'] = '0 0 0',
         ['$color2'] = '0 0 0'
     })
+
     BShadows.BeginShadow = function()
         render.PushRenderTarget(BShadows.RenderTarget)
         render.OverrideAlphaWriteEnable(true, true)
@@ -26,6 +28,7 @@ local function CreateBShadows()
         render.OverrideAlphaWriteEnable(false, false)
         cam.Start2D()
     end
+
     BShadows.EndShadow = function(intensity, spread, blur, opacity, direction, distance, bool_shadow_only)
         opacity = opacity or 255
         direction = direction or 0
@@ -37,6 +40,7 @@ local function CreateBShadows()
             render.BlurRenderTarget(BShadows.RenderTarget2, spread, spread, blur)
             render.OverrideAlphaWriteEnable(false, false)
         end
+
         render.PopRenderTarget()
         BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
         BShadows.ShadowMaterialGrayscale:SetTexture('$basetexture', BShadows.RenderTarget2)
@@ -47,13 +51,16 @@ local function CreateBShadows()
         for _ = 1, math_ceil(intensity) do
             render.DrawScreenQuadEx(xOffset, yOffset, ScrW(), ScrH())
         end
+
         if not bool_shadow_only then
             BShadows.ShadowMaterial:SetTexture('$basetexture', BShadows.RenderTarget)
             render.SetMaterial(BShadows.ShadowMaterial)
             render.DrawScreenQuad()
         end
+
         cam.End2D()
     end
+
     BShadows.DrawShadowTexture = function(texture, intensity, spread, blur, opacity, direction, distance, bool_shadow_only)
         opacity = opacity or 255
         direction = direction or 0
@@ -67,6 +74,7 @@ local function CreateBShadows()
             render.OverrideAlphaWriteEnable(false, false)
             render.PopRenderTarget()
         end
+
         BShadows.ShadowMaterialGrayscale:SetTexture('$basetexture', BShadows.RenderTarget2)
         local xOffset = math_sin(math_rad(direction)) * distance
         local yOffset = math_cos(math_rad(direction)) * distance
@@ -75,6 +83,7 @@ local function CreateBShadows()
         for _ = 1, math_ceil(intensity) do
             render.DrawScreenQuadEx(xOffset, yOffset, ScrW(), ScrH())
         end
+
         if not bool_shadow_only then
             BShadows.ShadowMaterial:SetTexture('$basetexture', texture)
             render.SetMaterial(BShadows.ShadowMaterial)
@@ -82,5 +91,6 @@ local function CreateBShadows()
         end
     end
 end
+
 CreateBShadows()
 hook.Add('OnScreenSizeChanged', 'Lilia.Shadows', function() CreateBShadows() end)

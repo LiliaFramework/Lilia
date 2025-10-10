@@ -17,6 +17,7 @@ function PANEL:Init()
     for _, module in pairs(lia.module.list) do
         if module.LoadCharInformation then module:LoadCharInformation() end
     end
+
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
     local function tryGenerate()
         if not IsValid(self) then return end
@@ -30,6 +31,7 @@ function PANEL:Init()
             timer.Simple(0.1, tryGenerate)
         end
     end
+
     timer.Simple(0.1, tryGenerate)
     timer.Create("liaCharInfo_UpdateValues", 1, 0, function()
         if IsValid(self) then
@@ -39,6 +41,7 @@ function PANEL:Init()
         end
     end)
 end
+
 function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, marginBot, valueFunc)
     local entry = parent:Add("DPanel")
     entry:Dock(TOP)
@@ -66,9 +69,11 @@ function PANEL:CreateTextEntryWithBackgroundAndLabel(parent, name, labelText, ma
         local v = valueFunc()
         if isstring(v) then txt:SetValue(v) end
     end
+
     txt.action = function(value) if isDesc and isstring(value) then lia.command.send("chardesc", value) end end
     self[name] = txt
 end
+
 function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, minFunc, maxFunc, margin, valueFunc)
     local entry = parent:Add("DPanel")
     entry:Dock(TOP)
@@ -97,15 +102,18 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
         local text = L("barProgress", math.Round(val), math.Round(mx))
         draw.SimpleText(text, "liaSmallFont", w / 2, h / 2, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
+
     parent[name] = bar
     return bar
 end
+
 function PANEL:AddSpacer(parent, height)
     local sp = parent:Add("DPanel")
     sp:Dock(TOP)
     sp:SetTall(height)
     sp.Paint = function() end
 end
+
 function PANEL:GenerateSections()
     local info = lia.module.get("f1menu") and lia.module.get("f1menu").CharacterInformation or {}
     local secs = {}
@@ -116,6 +124,7 @@ function PANEL:GenerateSections()
             data = data
         }
     end
+
     table.sort(secs, function(a, b) return a.data.priority < b.data.priority end)
     for i, sec in ipairs(secs) do
         local container = self:CreateSection(self.content, sec.name)
@@ -126,8 +135,10 @@ function PANEL:GenerateSections()
             elseif f.type == "bar" then
                 self:CreateFillableBarWithBackgroundAndLabel(container, f.name, L(f.label or ""), f.min, f.max, 5, f.value)
             end
+
             self:AddSpacer(container, 5)
         end
+
         if i < #secs then
             self:AddSpacer(container, 10)
         else
@@ -135,6 +146,7 @@ function PANEL:GenerateSections()
         end
     end
 end
+
 function PANEL:CreateSection(parent, title)
     local frame = parent:Add("DPanel")
     frame:Dock(TOP)
@@ -145,6 +157,7 @@ function PANEL:CreateSection(parent, title)
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
         surface.DrawLine(12, 28, w - 12, 28)
     end
+
     local contents = vgui.Create("DPanel", frame)
     contents:Dock(FILL)
     contents:DockPadding(8, 35, 8, 10)
@@ -160,28 +173,34 @@ function PANEL:CreateSection(parent, title)
                 end
             end
         end
+
         contentHeight = contentHeight + 10
         frame:SetTall(math.max(60, contentHeight))
     end
     return contents
 end
+
 function PANEL:OnRemove()
     hook.Remove("OnThemeChanged", self)
 end
+
 function PANEL:OnThemeChanged()
     if not IsValid(self) then return end
     self:Refresh()
 end
+
 function PANEL:Refresh()
     self:ApplyCurrentTheme()
     self.content:Clear()
     self:GenerateSections()
     self:setup()
 end
+
 function PANEL:ApplyCurrentTheme()
     local currentTheme = lia.color.getCurrentTheme()
     if currentTheme and lia.color.themes[currentTheme] then lia.color.theme = table.Copy(lia.color.themes[currentTheme]) end
 end
+
 function PANEL:setup()
     local info = lia.module.get("f1menu") and lia.module.get("f1menu").CharacterInformation or {}
     if table.IsEmpty(info) then return end
@@ -193,4 +212,5 @@ function PANEL:setup()
         end
     end
 end
+
 vgui.Register("liaCharInfo", PANEL, "EditablePanel")

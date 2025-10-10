@@ -12,12 +12,15 @@ function lia.class.register(uniqueID, data)
             break
         end
     end
+
     local class = existing or {
         index = index
     }
+
     for k, v in pairs(data) do
         class[k] = v
     end
+
     class.uniqueID = uniqueID
     class.name = class.name or L("unknown")
     class.desc = class.desc or L("noDesc")
@@ -26,10 +29,12 @@ function lia.class.register(uniqueID, data)
         lia.error(L("classNoValidFaction", uniqueID))
         return
     end
+
     if not class.OnCanBe then class.OnCanBe = function() return true end end
     lia.class.list[index] = class
     return class
 end
+
 function lia.class.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local index = #lia.class.list + 1
@@ -40,14 +45,17 @@ function lia.class.loadFromDir(directory)
         else
             niceName = v:sub(1, -5)
         end
+
         for _, class in ipairs(lia.class.list) do
             if class.uniqueID == niceName then halt = true end
         end
+
         if halt then continue end
         CLASS = {
             index = index,
             uniqueID = niceName
         }
+
         CLASS.name = L("unknown")
         CLASS.desc = L("noDesc")
         CLASS.limit = 0
@@ -57,6 +65,7 @@ function lia.class.loadFromDir(directory)
             CLASS = nil
             continue
         end
+
         if not CLASS.OnCanBe then CLASS.OnCanBe = function() return true end end
         CLASS.name = L(CLASS.name)
         CLASS.desc = L(CLASS.desc)
@@ -64,6 +73,7 @@ function lia.class.loadFromDir(directory)
         CLASS = nil
     end
 end
+
 function lia.class.canBe(client, class)
     if not lia.class.list then return false, L("classNoInfo") end
     local info = lia.class.list[class]
@@ -76,10 +86,12 @@ function lia.class.canBe(client, class)
     if info.OnCanBe and not info:OnCanBe(client) then return false end
     return info.isDefault
 end
+
 function lia.class.get(identifier)
     if not lia.class.list then return nil end
     return lia.class.list[identifier]
 end
+
 function lia.class.getPlayers(class)
     if not lia.class.list then return {} end
     local players = {}
@@ -89,6 +101,7 @@ function lia.class.getPlayers(class)
     end
     return players
 end
+
 function lia.class.getPlayerCount(class)
     if not lia.class.list then return 0 end
     local count = 0
@@ -98,6 +111,7 @@ function lia.class.getPlayerCount(class)
     end
     return count
 end
+
 function lia.class.retrieveClass(class)
     if not lia.class.list then return nil end
     for key, classTable in pairs(lia.class.list) do
@@ -105,6 +119,7 @@ function lia.class.retrieveClass(class)
     end
     return nil
 end
+
 function lia.class.hasWhitelist(class)
     if not lia.class.list then return false end
     local info = lia.class.list[class]
@@ -112,6 +127,7 @@ function lia.class.hasWhitelist(class)
     if info.isDefault then return false end
     return info.isWhitelisted
 end
+
 function lia.class.retrieveJoinable(client)
     client = client or CLIENT and LocalPlayer() or nil
     if not IsValid(client) then return {} end

@@ -12,11 +12,13 @@ function ENT:Initialize()
         physObj:Wake()
     end
 end
+
 function ENT:setInventory(inventory)
     assert(inventory, L("storageInventoryMissing"))
     self:setNetVar("id", inventory:getID())
     hook.Run("StorageInventorySet", self, inventory, false)
 end
+
 function ENT:deleteInventory()
     local inventory = self:getInv()
     if inventory then
@@ -25,14 +27,17 @@ function ENT:deleteInventory()
         self:setNetVar("id", nil)
     end
 end
+
 function ENT:OnRemove()
     if not self.liaForceDelete then
         if not lia.entityDataLoaded or not MODULE.loadedData then return end
         if self.liaIsSafe then return end
         if lia.shuttingDown then return end
     end
+
     self:deleteInventory()
 end
+
 function ENT:openInv(activator)
     local inventory = self:getInv()
     local storage = self:getStorageInfo()
@@ -41,6 +46,7 @@ function ENT:openInv(activator)
         activator.liaStorageEntity = nil
         return
     end
+
     self.receivers[activator] = true
     inventory:sync(activator)
     net.Start("liaStorageOpen")
@@ -50,6 +56,7 @@ function ENT:openInv(activator)
     local openSound = self:getStorageInfo().openSound
     self:EmitSound(openSound or "items/ammocrate_open.wav")
 end
+
 function ENT:Use(activator)
     if not activator:getChar() then return end
     if (activator.liaNextOpen or 0) > CurTime() then return end
@@ -71,5 +78,6 @@ function ENT:Use(activator)
     else
         if inventory then self:openInv(activator) end
     end
+
     activator.liaNextOpen = CurTime() + 0.7 * 1.5
 end

@@ -4,6 +4,7 @@
     if timeSince:sub(-#suffix) == suffix then return timeSince:sub(1, -#suffix - 1) end
     return timeSince
 end
+
 net.Receive("liaRequestFactionRoster", function(_, client)
     local character = client:getChar()
     if not character or not character:hasFlags("V") then return end
@@ -32,6 +33,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                     local timeStripped = stripAgo(timeSince)
                     lastOnlineText = L("agoFormat", timeStripped, lia.time.formatDHM(lastDiff))
                 end
+
                 local classID = tonumber(v.class) or 0
                 local classData = lia.class.list[classID]
                 local playTime = tonumber(v.playtime) or 0
@@ -42,6 +44,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                         playTime = char:getPlayTime() + os.time() - loginTime
                     end
                 end
+
                 table.insert(characters, {
                     id = charID,
                     name = v.name,
@@ -54,6 +57,7 @@ net.Receive("liaRequestFactionRoster", function(_, client)
                 })
             end
         end
+
         net.Start("liaCharacterInfo")
         net.WriteTable(characters)
         net.Send(client)

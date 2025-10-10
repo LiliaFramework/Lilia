@@ -7,6 +7,7 @@ function lia.flag.add(flag, desc, callback)
         callback = callback
     }
 end
+
 if SERVER then
     function lia.flag.onSpawn(client)
         local flags = client:getFlags()
@@ -21,6 +22,7 @@ if SERVER then
         end
     end
 end
+
 lia.flag.add("C", "flagSpawnVehicles")
 lia.flag.add("z", "flagSpawnSweps")
 lia.flag.add("E", "flagSpawnSents")
@@ -39,6 +41,7 @@ lia.flag.add("p", "flagPhysgun", function(client, isGiven)
         client:StripWeapon("weapon_physgun")
     end
 end)
+
 lia.flag.add("t", "flagToolgun", function(client, isGiven)
     if isGiven then
         client:Give("gmod_tool")
@@ -47,6 +50,7 @@ lia.flag.add("t", "flagToolgun", function(client, isGiven)
         client:StripWeapon("gmod_tool")
     end
 end)
+
 hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(pages)
     local client = LocalPlayer()
     table.insert(pages, {
@@ -63,6 +67,7 @@ hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(page
                         title = L("flag") .. " '" .. flagName .. "'",
                         desc = descText
                     })
+
                     local pnl = row.panel
                     pnl.Paint = function(_, w, h)
                         local char = client:getChar()
@@ -71,9 +76,11 @@ hook.Add("CreateInformationButtons", "liaInformationFlagsUnified", function(page
                         local s = 40
                         lia.util.drawTexture(icon, color_white, w - s - sheet.padding, h * 0.5 - s * 0.5, s, s)
                     end
+
                     row.filterText = (flagName .. " " .. descText):lower()
                 end
             end
+
             sheet:Refresh()
         end
     })

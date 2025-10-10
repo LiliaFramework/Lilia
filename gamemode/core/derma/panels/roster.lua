@@ -15,10 +15,12 @@ function PANEL:Init()
         end
     end)
 end
+
 function PANEL:PerformLayout()
     self:SizeToChildren(false, true)
     if self.table then self.table:InvalidateLayout(true) end
 end
+
 function PANEL:SetRosterType(t)
     self.rosterType = t
     if t == "faction" then
@@ -26,6 +28,7 @@ function PANEL:SetRosterType(t)
         net.SendToServer()
     end
 end
+
 function PANEL:Populate(data, canKick)
     if not IsValid(self.table) then return end
     self.table:Clear()
@@ -33,6 +36,7 @@ function PANEL:Populate(data, canKick)
         self.table:AddLine(L("noMembers"), "", "", "", "")
         return
     end
+
     for _, v in ipairs(data) do
         local name = v.name or L("unnamed")
         local steamID = v.steamID or L("na")
@@ -54,6 +58,7 @@ function PANEL:Populate(data, canKick)
                     end, L("no"))
                 end)
             end
+
             menu:AddOption(L("view") .. " " .. L("characterList"), function() LocalPlayer():ConCommand("say /charlist " .. rowData.steamID) end)
             menu:AddOption(L("copySteamID"), function() SetClipboardText(rowData.steamID or "") end)
             menu:AddOption(L("copyRow"), function()
@@ -62,11 +67,14 @@ function PANEL:Populate(data, canKick)
                     value = tostring(value or L("na"))
                     rowString = rowString .. key:gsub("^%l", string.upper) .. ": " .. value .. " | "
                 end
+
                 rowString = rowString:sub(1, -4)
                 SetClipboardText(rowString)
             end)
+
             menu:Open()
         end
     end
 end
+
 vgui.Register("liaRoster", PANEL, "EditablePanel")

@@ -14,6 +14,7 @@ do
             cacheSize = cacheSize + 1
             cache[tbl] = cacheSize
         end
+
         local first = next(tbl, nil)
         local predictedNumeric = 1
         if first == 1 then
@@ -38,15 +39,18 @@ do
                     break
                 end
             end
+
             predictedNumeric = predictedNumeric - 1
         else
             predictedNumeric = nil
         end
+
         if predictedNumeric == nil then
             output[#output + 1] = '['
         else
             output[#output + 1] = '~'
         end
+
         for k, v in next, tbl, predictedNumeric do
             local tk, tv = type(k), type(v)
             if tk == 'string' then
@@ -61,6 +65,7 @@ do
             else
                 self[tk](self, k, output, cache)
             end
+
             if tv == 'string' then
                 local pid = cache[v]
                 if pid then
@@ -74,8 +79,10 @@ do
                 self[tv](self, v, output, cache)
             end
         end
+
         output[#output + 1] = '}'
     end
+
     local gsub = string.gsub
     encode['string'] = function(_, str, output)
         local estr, count = gsub(str, ";", "\\;")
@@ -85,6 +92,7 @@ do
             output[#output + 1] = '"' .. estr .. '";'
         end
     end
+
     encode['number'] = function(_, num, output)
         if num % 1 == 0 then
             if num < 0 then
@@ -96,6 +104,7 @@ do
             output[#output + 1] = tonumber(num) .. ';'
         end
     end
+
     encode['boolean'] = function(_, val, output) output[#output + 1] = val and 't' or 'f' end
     encode['Vector'] = function(_, val, output) output[#output + 1] = 'v' .. val.x .. ',' .. val.y .. ',' .. val.z .. ';' end
     encode['Angle'] = function(_, val, output) output[#output + 1] = 'a' .. val.p .. ',' .. val.y .. ',' .. val.r .. ';' end
@@ -111,6 +120,7 @@ do
         lia.error(L('netTypeCannotEncode', key))
         return encode['nil']
     end
+
     do
         local _, concat = table.Empty, table.concat
         function pon.encode(tbl)
@@ -122,6 +132,7 @@ do
         end
     end
 end
+
 do
     local tonumber = tonumber
     local find, sub, gsub, Explode = string.find, string.sub, string.gsub, string.Explode
@@ -140,18 +151,21 @@ do
                 index = index + 1
                 break
             end
+
             if tv == '}' then return index + 1, cur end
             index = index + 1
             index, v = self[tv](self, index, str, cache)
             cur[k] = v
             k = k + 1
         end
+
         while true do
             tk = sub(str, index, index)
             if not tk or tk == '}' then
                 index = index + 1
                 break
             end
+
             index = index + 1
             index, k = self[tk](self, index, str, cache)
             tv = sub(str, index, index)
@@ -161,6 +175,7 @@ do
         end
         return index, cur
     end
+
     decode['['] = function(self, index, str, cache)
         local cur = {}
         cache[#cache + 1] = cur
@@ -174,6 +189,7 @@ do
                 index = index + 1
                 break
             end
+
             index = index + 1
             index, k = self[tk](self, index, str, cache)
             if k then
@@ -186,6 +202,7 @@ do
         end
         return index, cur
     end
+
     decode['"'] = function(_, index, str, cache)
         local finish = find(str, '";', index, true)
         local res = gsub(sub(str, index, finish - 1), '\\;', ';')
@@ -193,6 +210,7 @@ do
         cache[#cache + 1] = res
         return index, res
     end
+
     decode['\''] = function(_, index, str, cache)
         local finish = find(str, ';', index, true)
         local res = sub(str, index, finish - 1)
@@ -200,6 +218,7 @@ do
         cache[#cache + 1] = res
         return index, res
     end
+
     decode['n'] = function(_, index, str)
         index = index - 1
         local finish = find(str, ';', index, true)
@@ -207,6 +226,7 @@ do
         index = finish + 1
         return index, num
     end
+
     decode['0'] = decode['n']
     decode['1'] = decode['n']
     decode['2'] = decode['n']
@@ -224,18 +244,21 @@ do
         index = finish + 1
         return index, num
     end
+
     decode['x'] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local num = -tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
         return index, num
     end
+
     decode['('] = function(_, index, str, cache)
         local finish = find(str, ')', index, true)
         local num = tonumber(sub(str, index, finish - 1), 16)
         index = finish + 1
         return index, cache[num]
     end
+
     decode['t'] = function(_, index) return index, true end
     decode['f'] = function(_, index) return index, false end
     decode['v'] = function(_, index, str)
@@ -245,6 +268,7 @@ do
         local segs = Explode(',', vecStr, false)
         return index, Vector(tonumber(segs[1]), tonumber(segs[2]), tonumber(segs[3]))
     end
+
     decode['a'] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local angStr = sub(str, index, finish - 1)
@@ -252,6 +276,7 @@ do
         local segs = Explode(',', angStr, false)
         return index, Angle(tonumber(segs[1]), tonumber(segs[2]), tonumber(segs[3]))
     end
+
     decode['E'] = function(_, index, str)
         if str[index] == '#' then
             index = index + 1
@@ -263,18 +288,21 @@ do
             return index, Entity(num)
         end
     end
+
     decode['P'] = function(_, index, str)
         local finish = find(str, ';', index, true)
         local num = tonumber(sub(str, index, finish - 1))
         index = finish + 1
         return index, Entity(num) or NULL
     end
+
     decode['?'] = function(_, index) return index + 1, nil end
     function pon.decode(data)
         local _, res = decode[sub(data, 1, 1)](decode, 2, data, {})
         return res
     end
 end
+
 local type, pcall, pairs, _player = type, pcall, pairs, player
 netstream = netstream or {}
 netstream.stored = netstream.stored or {}
@@ -290,12 +318,15 @@ function netstream.Split(data)
             buffer = {}
         end
     end
+
     result[#result + 1] = table.concat(buffer)
     return result
 end
+
 function netstream.Hook(name, Callback)
     netstream.stored[name] = Callback
 end
+
 if SERVER then
     function netstream.Start(player, name, ...)
         local recipients = {}
@@ -310,6 +341,7 @@ if SERVER then
                 player = {player}
             end
         end
+
         if type(player) ~= "Vector" then
             for k, v in pairs(player) do
                 if type(v) == "Player" then
@@ -323,6 +355,7 @@ if SERVER then
         else
             bShouldSend = true
         end
+
         local dataTable = {...}
         local encodedData = pon.encode(dataTable)
         if encodedData and #encodedData > 0 and bShouldSend then
@@ -337,6 +370,7 @@ if SERVER then
             end
         end
     end
+
     net.Receive("liaNetStreamData", function(_, player)
         local NS_DS_NAME = net.ReadString()
         local NS_DS_LENGTH = net.ReadUInt(32)
@@ -354,6 +388,7 @@ if SERVER then
                         lia.error(L("netstreamError", NS_DS_NAME, value))
                     end
                 end
+
                 player.nsDataStreamName = nil
                 player.nsDataStreamData = nil
             end
@@ -371,6 +406,7 @@ else
             net.SendToServer()
         end
     end
+
     net.Receive("liaNetStreamData", function()
         local NS_DS_NAME = net.ReadString()
         local NS_DS_LENGTH = net.ReadUInt(32)

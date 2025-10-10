@@ -26,11 +26,13 @@ function PANEL:Init()
         self.BaseClass.OnCursorEntered(self)
         if lia.gui.character and isfunction(lia.gui.character.hoverSound) then lia.gui.character:hoverSound() end
     end
+
     self.confirmButton.DoClick = function()
         if lia.gui.character and isfunction(lia.gui.character.clickSound) then lia.gui.character:clickSound() end
         if isfunction(self.onConfirmCallback) then self.onConfirmCallback() end
         self:Remove()
     end
+
     self.cancelButton = self:Add("liaSmallButton")
     self.cancelButton:SetFont("liaSmallFont")
     self.cancelButton:SetText(L("no"):upper())
@@ -40,14 +42,17 @@ function PANEL:Init()
         self.BaseClass.OnCursorEntered(self)
         if lia.gui.character and isfunction(lia.gui.character.hoverSound) then lia.gui.character:hoverSound() end
     end
+
     self.cancelButton.DoClick = function()
         if lia.gui.character and isfunction(lia.gui.character.clickSound) then lia.gui.character:clickSound() end
         if isfunction(self.onCancelCallback) then self.onCancelCallback() end
         self:Remove()
     end
+
     timer.Simple(0.25, function() if lia.gui.character and isfunction(lia.gui.character.warningSound) then lia.gui.character:warningSound() end end)
     self:Center()
 end
+
 function PANEL:PerformLayout(w, h)
     DFrame.PerformLayout(self, w, h)
     local pad, btnH = self.pad, self.btnH
@@ -65,17 +70,21 @@ function PANEL:PerformLayout(w, h)
     self.cancelButton:SetSize(btnW, btnH)
     self.cancelButton:SetPos(pad * 2 + btnW, h - pad - btnH)
 end
+
 function PANEL:setMessage(text)
     self.messageLabel:SetText(text:upper())
     self:InvalidateLayout()
     return self
 end
+
 function PANEL:onConfirm(cb)
     self.onConfirmCallback = cb
     return self
 end
+
 function PANEL:onCancel(cb)
     self.onCancelCallback = cb
     return self
 end
+
 vgui.Register("liaCharacterConfirm", PANEL, "SemiTransparentDFrame")

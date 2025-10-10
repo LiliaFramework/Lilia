@@ -80,19 +80,26 @@ def main():
         target = sys.argv[1]
     else:
         target = "."
-    
+
+    # Always process gamemode folder for comment removal
+    gamemode_dir = "gamemode"
+
     if os.path.isfile(target) and target.endswith('.lua'):
-        # Single file
-        process_file(target)
+        # Single file - only process if it's in gamemode
+        if gamemode_dir in target or target.startswith(gamemode_dir + os.sep):
+            process_file(target)
     else:
-        # Directory
+        # Directory - always process gamemode folder for comment removal
         count = 0
-        for root, dirs, files in os.walk(target):
+        for root, dirs, files in os.walk(gamemode_dir):
             for file in files:
                 if file.endswith('.lua'):
                     if process_file(os.path.join(root, file)):
                         count += 1
         print(f"Processed {count} files")
+
+        # Run glualint pretty-print on the gamemode directory after processing
+        run_glualint_pretty_print(gamemode_dir)
 
 if __name__ == '__main__':
     main()
