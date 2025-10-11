@@ -81,12 +81,10 @@ function PANEL:paintIcon(icon, w, h)
     end
 end
 function PANEL:updateContext()
-    -- Model context is already updated when selected, but ensure it's set
     if not self:getContext("model") then
         self:setContext("model", 1)
     end
 end
-
 function PANEL:onModelSelected(icon, noSound)
     self:setContext("model", icon.index or 1)
     if not noSound then lia.gui.character:clickSound() end
