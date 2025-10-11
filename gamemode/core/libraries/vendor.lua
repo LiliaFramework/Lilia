@@ -47,6 +47,7 @@ if SERVER then
     addEditor("money", function() return net.ReadUInt(32) end, function(vendor, money) vendor:setMoney(money) end)
     addEditor("scale", function() return net.ReadFloat() end, function(vendor, scale) vendor:setSellScale(scale) end)
     addEditor("preset", function() return net.ReadString() end, function(vendor, preset) vendor:applyPreset(preset) end)
+    addEditor("animation", function() return net.ReadString() end, function(vendor, animation) vendor:setNetVar("animation", animation) end)
 else
     local function addEditor(name, writer)
         lia.vendor.editor[name] = function(...)
@@ -100,6 +101,7 @@ else
     end)
     addEditor("scale", function(scale) net.WriteFloat(scale) end)
     addEditor("preset", function(preset) net.WriteString(preset) end)
+    addEditor("animation", function(animation) net.WriteString(animation) end)
 end
 function lia.vendor.addRarities(name, color)
     assert(isstring(name), L("vendorRarityNameString"))

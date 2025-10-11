@@ -28,7 +28,6 @@ The panel library provides a comprehensive set of custom Derma panels that exten
 | `VoicePanel` | `DPanel` | HUD element showing players using voice. |
 | `liaHorizontalScroll` | `DPanel` | Horizontally scrolling container. |
 | `liaHorizontalScrollBar` | `DVScrollBar` | Scrollbar companion for the horizontal container. |
-| `liaItemMenu` | `EditablePanel` | Context menu for world items. |
 | `liaAttribBar` | `DPanel` | Widget for assigning attribute points. |
 | `liaCharacterAttribs` | `liaCharacterCreateStep` | Step for attribute selection. |
 | `liaCharacterAttribsRow` | `DPanel` | Displays a single attribute row. |
@@ -504,38 +503,6 @@ scrollbar:SetScroll(0.5) -- Scroll to 50% position
 
 ---
 
-### `liaItemMenu`
-
-**Purpose**
-
-Panel shown when you interact with an item entity. Displays item info and action buttons.
-
-**Base Panel**
-
-`EditablePanel`
-
-**Realm**
-
-Client.
-
-**Functions**
-
-- `addBtn(text, cb)` – helper to append a button that calls `cb` when pressed.
-- `openInspect()` – opens a 3D model viewer for the item.
-- `buildButtons()` – populates action buttons based on the item's functions table.
-- `SetEntity(ent)` – assigns the world entity and refreshes the panel contents.
-- `Think()` – closes the menu if the entity becomes invalid or too far away.
-
-**Example Usage**
-
-```lua
--- Called from GM:ItemShowEntityMenu
-if IsValid(liaItemMenuInstance) then liaItemMenuInstance:Remove() end
-liaItemMenuInstance = vgui.Create("liaItemMenu")
-liaItemMenuInstance:SetEntity(entity)
-```
-
----
 
 ### `liaAttribBar`
 

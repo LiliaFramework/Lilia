@@ -590,7 +590,7 @@ if SERVER then
                     ply:notifyInfoLocalized("userGroupSetBy", target:getName(), usergroup)
                     lia.log.add(ply, "usergroup", target, usergroup)
                 else
-                    ply:notifyErrorLocalized("invalidUserGroup", usergroup)
+                    ply:notifyErrorLocalized(L("invalidUsergroup") .. " \"" .. usergroup .. "\"")
                 end
             else
                 ply:notifyErrorLocalized("plyNoExist")
@@ -1831,7 +1831,7 @@ lia.command.add("returnsitroom", {
         end
 
         target:SetPos(prev)
-        client:notifySuccessLocalized("sitroomReturnSuccess", target:Nick())
+        client:notifySuccessLocalized("sitroomReturnSuccess")
         if target ~= client then target:notifyInfoLocalized("sitroomReturned") end
         lia.log.add(client, "sitRoomReturn", target:Nick())
     end
@@ -4752,7 +4752,7 @@ lia.command.add("trunk", {
                 openStorage(inv)
             else
                 lia.module.get("storage"):InitializeStorage(entity):next(openStorage, function(err)
-                    client:notifyErrorLocalized("unableCreateStorageEntity", err)
+                    client:notifyErrorLocalized("unableCreateStorageEntity", entity:GetClass(), err)
                     client.liaStorageEntity = nil
                 end)
             end
@@ -5134,11 +5134,13 @@ lia.command.add("doortogglelock", {
                 if toggleState then
                     door:Fire("lock")
                     door:EmitSound("doors/door_latch3.wav")
+                    door:setNetVar("locked", true)
                     client:notifyInfoLocalized("doorToggleLocked", L("locked"):lower())
                     lia.log.add(client, "toggleLock", door, L("locked"))
                 else
                     door:Fire("unlock")
                     door:EmitSound("doors/door_latch1.wav")
+                    door:setNetVar("locked", false)
                     client:notifyInfoLocalized("doorToggleLocked", L("unlocked"))
                     lia.log.add(client, "toggleLock", door, L("unlocked"))
                 end
@@ -5147,8 +5149,10 @@ lia.command.add("doortogglelock", {
                 if IsValid(partner) then
                     if toggleState then
                         partner:Fire("lock")
+                        partner:setNetVar("locked", true)
                     else
                         partner:Fire("unlock")
+                        partner:setNetVar("locked", false)
                     end
                 end
             else
@@ -5835,7 +5839,7 @@ lia.command.add("doorid", {
             local mapID = door:MapCreationID()
             if mapID and mapID > 0 then
                 local pos = door:GetPos()
-                client:notifyInfoLocalized("doorID" .. mapID .. " | Position: " .. string.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z))
+                client:notifyInfoLocalized(L("doorID") .. " " .. mapID .. " | Position: " .. string.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z))
                 lia.log.add(client, "doorID", door, mapID)
             else
                 client:notifyErrorLocalized("doorNoValidMapID")

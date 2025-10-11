@@ -359,7 +359,7 @@ screenspace_general
 ]==]
 local matrixes = {}
 local function createShaderMat(name, opts)
-    assert(name and isstring(name), "createShaderMat: tex must be a string")
+    assert(name and isstring(name), L("createShaderMatTexMustBeString"))
     local key_values = util.KeyValuesToTable(shader_mat, false, true)
     if opts then
         for k, v in pairs(opts) do

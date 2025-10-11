@@ -137,11 +137,11 @@ if SERVER then
         return lia.inventory.storage[model:lower()]
     end
     function lia.inventory.registerTrunk(vehicleClass, data)
-        assert(isstring(vehicleClass), "Vehicle class must be a string")
+        assert(isstring(vehicleClass), L("vehicleClassMustBeString"))
         assert(istable(data), "Data must be a table")
-        assert(isstring(data.name), "Trunk name is required")
-        assert(isstring(data.invType), "Inventory type is required")
-        assert(istable(data.invData), "Inventory data is required")
+        assert(isstring(data.name), L("trunkNameRequired"))
+        assert(isstring(data.invType), L("storageInvTypeRequired"))
+        assert(istable(data.invData), L("storageInvDataRequired"))
         if not data.invData.w then data.invData.w = lia.config.get("trunkInvW", 10) end
         if not data.invData.h then data.invData.h = lia.config.get("trunkInvH", 2) end
         data.isTrunk = true

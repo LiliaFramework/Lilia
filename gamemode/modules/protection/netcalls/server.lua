@@ -78,7 +78,7 @@ net.Receive("liaTeleportToEntity", function(_, client)
     else
         client:SetPos(entityPos + Vector(0, 0, 50))
     end
-    client:notifySuccessLocalized("teleportedToEntity", getEntityDisplayName(entity))
+    client:notifySuccessLocalized("teleportedToEntity")
     lia.log.add(client, "entityTeleport", client:Name(), getEntityDisplayName(entity), tostring(entity:GetPos()))
 end)
 net.Receive("liaReturnFromEntity", function(_, client)

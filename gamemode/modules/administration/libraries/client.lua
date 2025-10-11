@@ -1573,7 +1573,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("nameCopyFormat", tgt:Name()),
                 cmd = function()
-                    cl:notifySuccessLocalized("adminStickCopiedToClipboard", L("name"))
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
                     SetClipboardText(tgt:Name())
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
@@ -1582,7 +1582,7 @@ function MODULE:OpenAdminStickUI(tgt)
             {
                 name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
-                    cl:notifySuccessLocalized("adminStickCopiedToClipboard", L("steamID"))
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
                     SetClipboardText(tgt:SteamID())
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,

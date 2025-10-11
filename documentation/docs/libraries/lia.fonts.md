@@ -129,6 +129,62 @@ end
 
 ---
 
+### getBoldFontName
+
+**Purpose**
+
+Gets the bold variant name for a given font name. This function handles special cases for Montserrat fonts and provides fallback logic for other font families.
+
+**Parameters**
+
+* `fontName` (*string*): The base font name to get the bold variant for.
+
+**Returns**
+
+* `boldFontName` (*string*): The bold variant font name.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Get bold font name
+local function getBoldFontName(fontName)
+    return lia.font.getBoldFontName(fontName)
+end
+
+-- Use in a function
+local function createBoldFontVariant(baseFont)
+    local boldFont = lia.font.getBoldFontName(baseFont)
+    print("Bold variant of", baseFont, "is", boldFont)
+    return boldFont
+end
+
+-- Use in a command
+lia.command.add("getboldfont", {
+    arguments = {
+        {name = "font", type = "string"}
+    },
+    onRun = function(client, arguments)
+        local boldFont = lia.font.getBoldFontName(arguments[1])
+        client:notify("Bold variant: " .. boldFont)
+    end
+})
+
+-- Use in a function
+local function setupFontPair(baseFont)
+    local boldFont = lia.font.getBoldFontName(baseFont)
+    return {
+        normal = baseFont,
+        bold = boldFont
+    }
+end
+```
+
+---
+
 ### refresh
 
 **Purpose**
@@ -173,6 +229,59 @@ lia.command.add("refreshfonts", {
     onRun = function(client, arguments)
         lia.font.refresh()
         client:notify("Font system refreshed")
+    end
+})
+```
+
+---
+
+### registerFonts
+
+**Purpose**
+
+Initializes and registers a complete set of fonts for the Lilia framework. This function registers all default fonts including various sizes and styles for UI elements, chat, menus, and other components. It supports both regular and bold font variants across multiple sizes.
+
+**Parameters**
+
+* `fontName` (*string*, optional): The base font name to use. Defaults to the configured font in lia.config.
+
+**Returns**
+
+*None*
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Register default fonts
+local function registerDefaultFonts()
+    lia.font.registerFonts()
+    print("Default fonts registered")
+end
+
+-- Register fonts with custom base font
+local function registerCustomFonts(baseFont)
+    lia.font.registerFonts(baseFont)
+    print("Custom fonts registered with base:", baseFont)
+end
+
+-- Use during initialization
+local function setupUI()
+    lia.font.registerFonts()
+    print("Font system initialized")
+end
+
+-- Use in a command
+lia.command.add("registerfonts", {
+    arguments = {
+        {name = "font", type = "string", default = "Montserrat Medium"}
+    },
+    onRun = function(client, arguments)
+        lia.font.registerFonts(arguments[1])
+        client:notify("Fonts registered with base: " .. arguments[1])
     end
 })
 ```

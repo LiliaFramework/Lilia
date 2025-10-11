@@ -40,7 +40,7 @@ local function validateSoundFile(filePath, fileData)
     if fileSize < 44 then return false, "file too small" end
     if fileSize > 50 * 1024 * 1024 then return false, "file too large" end
     local extMatch = filePath:match("%.([^%.]+)$")
-    if not extMatch then return false, "no file extension" end
+    if not extMatch then return false, L("noFileExtension") end
     local ext = extMatch:lower()
     if ext == "wav" then
         if not fileData:find("^RIFF") or not fileData:find("WAVE") then return false, L("invalidWAVHeader") end

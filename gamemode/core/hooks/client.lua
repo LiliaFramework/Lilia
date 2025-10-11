@@ -338,7 +338,6 @@ function GM:CalcView(client, origin, angles, fov)
     return view
 end
 liaUseKeyHeld = false
-liaItemMenuVisible = false
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if bind:find("jump") and IsValid(client:getRagdoll()) then lia.command.send("chargetup") end
@@ -347,13 +346,9 @@ function GM:PlayerBindPress(client, bind, pressed)
         local hasValidEntity = IsValid(entity) and (entity:isItem() or entity.hasMenu)
         if pressed then
             liaUseKeyHeld = true
-            if hasValidEntity and not liaItemMenuVisible then hook.Run("ItemShowEntityMenu", entity, true) end
+            if hasValidEntity then hook.Run("ItemShowEntityMenu", entity, true) end
         else
             liaUseKeyHeld = false
-            if liaItemMenuVisible and IsValid(liaItemDermaMenu) then
-                liaItemDermaMenu:Remove()
-                liaItemMenuVisible = false
-            end
         end
     end
     if (bind:find("use") or bind:find("attack")) and pressed then
@@ -361,74 +356,9 @@ function GM:PlayerBindPress(client, bind, pressed)
         if menu and lia.menu.onButtonPressed(menu, callback) then return true end
     end
 end
-function GM:ItemShowEntityMenu(entity, useKeyHeld)
-    for k, v in ipairs(lia.menu.list) do
-        if v.entity == entity then table.remove(lia.menu.list, k) end
-    end
-    local itemTable = entity:getItemTable()
-    if not itemTable then return end
-    if not useKeyHeld and input.IsShiftDown() then
-        if IsValid(entity) then
-            net.Start("liaInvAct")
-            net.WriteString("take")
-            net.WriteType(entity)
-            net.WriteType(nil)
-            net.SendToServer()
-        end
-        return
-    end
-    if IsValid(liaItemDermaMenu) then liaItemDermaMenu:Remove() end
-    liaItemDermaMenu = vgui.Create("liaDermaMenu")
-    local tempItem = table.Copy(itemTable)
-    tempItem.player = LocalPlayer()
-    tempItem.entity = entity
-    for key, fn in SortedPairs(itemTable.functions) do
-        if key == "combine" then continue end
-        if hook.Run("CanRunItemAction", tempItem, key) == false then continue end
-        if isfunction(fn.onCanRun) and not fn.onCanRun(tempItem) then continue end
-        liaItemDermaMenu:AddOption(L(fn.name or key), function()
-            if fn.sound then surface.PlaySound(fn.sound) end
-            if not fn.onClick or fn.onClick(tempItem) ~= false then
-                net.Start("liaInvAct")
-                net.WriteString(key)
-                net.WriteType(entity)
-                net.WriteType(nil)
-                net.SendToServer()
-            end
-            liaItemDermaMenu:Remove()
-            liaItemMenuVisible = false
-        end, fn.icon)
-    end
-    if useKeyHeld then
-        local mouseX, mouseY = input.GetCursorPos()
-        local menuW, menuH = liaItemDermaMenu:GetSize()
-        local menuX = math.Clamp(mouseX - menuW / 2, 0, ScrW() - menuW)
-        local menuY = math.Clamp(mouseY - menuH - 10, 0, ScrH() - menuH)
-        liaItemDermaMenu:SetPos(menuX, menuY)
-    else
-        local pos = entity:GetPos()
-        local screenPos = pos:ToScreen()
-        local menuX = screenPos.x - liaItemDermaMenu:GetWide() / 2
-        local menuY = screenPos.y - liaItemDermaMenu:GetTall() - 20
-        menuX = math.Clamp(menuX, 0, ScrW() - liaItemDermaMenu:GetWide())
-        menuY = math.Clamp(menuY, 0, ScrH() - liaItemDermaMenu:GetTall())
-        liaItemDermaMenu:SetPos(menuX, menuY)
-    end
-    liaItemDermaMenu:MakePopup()
-    liaItemDermaMenu:SetVisible(true)
-    liaItemDermaMenu:SetKeyboardInputEnabled(false)
-    liaItemDermaMenu:SetMouseInputEnabled(true)
-    liaItemDermaMenu.OnRemove = function() liaItemMenuVisible = false end
-    liaItemMenuVisible = true
-end
-hook.Add("OnScreenSizeChanged", "liaItemMenuCleanup", function()
-    if IsValid(liaItemDermaMenu) then liaItemDermaMenu:Remove() end
-    liaItemMenuVisible = false
-end)
-hook.Add("ShutDown", "liaItemMenuShutdown", function()
+hook.Add("ShutDown", "liaItemDermaMenuShutdown", function()
     if IsValid(liaItemDermaMenu) then liaItemDermaMenu:Remove() end
     liaUseKeyHeld = false
-    liaItemMenuVisible = false
 end)
 function GM:HUDPaintBackground()
     lia.menu.drawAll()

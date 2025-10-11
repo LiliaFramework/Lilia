@@ -738,7 +738,7 @@ function lia.db.loadSnapshot(fileName)
     local d = deferred.new()
     local filePath = "lilia/snapshots/" .. fileName
     if not file.Exists(filePath, "DATA") then
-        d:reject("Snapshot file " .. fileName .. " not found")
+        d:reject(L("snapshotFileNotFound") .. " " .. fileName .. " " .. L("notFound"))
         return d
     end
     local jsonData = file.Read(filePath, "DATA")

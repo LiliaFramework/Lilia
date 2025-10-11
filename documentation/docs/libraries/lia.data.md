@@ -474,6 +474,66 @@ end
 
 ---
 
+### get
+
+**Purpose**
+
+Retrieves a stored data value by key with optional default value fallback.
+
+**Parameters**
+
+* `key` (*string*): The data key to retrieve.
+* `default` (*any*, optional): Default value to return if key doesn't exist.
+
+**Returns**
+
+* `value` (*any*): The stored value, or default value if key doesn't exist.
+
+**Realm**
+
+Shared.
+
+**Example Usage**
+
+```lua
+-- Get a data value
+local function getData(key, default)
+    return lia.data.get(key, default)
+end
+
+-- Use in a function
+local function loadPlayerStats(client)
+    local stats = lia.data.get("player_" .. client:SteamID(), {})
+    if stats then
+        print("Player kills:", stats.kills or 0)
+        print("Player level:", stats.level or 1)
+    end
+end
+
+-- Use in a command
+lia.command.add("getdata", {
+    arguments = {
+        {name = "key", type = "string"}
+    },
+    onRun = function(client, arguments)
+        local value = lia.data.get(arguments[1])
+        if value then
+            client:notify("Data value: " .. util.TableToJSON(value))
+        else
+            client:notify("No data found for key: " .. arguments[1])
+        end
+    end
+})
+
+-- Use in a function
+local function getPlayerInventory(client)
+    local inventory = lia.data.get("inventory_" .. client:SteamID(), {})
+    return inventory.items or {}
+end
+```
+
+---
+
 ### delete
 
 **Purpose**
