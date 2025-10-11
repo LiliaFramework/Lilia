@@ -1,4 +1,4 @@
-﻿function SWEP:PrimaryAttack()
+function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     local owner = self:GetOwner()
     local tr = owner:GetEyeTrace()

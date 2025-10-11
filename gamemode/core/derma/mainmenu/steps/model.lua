@@ -39,7 +39,9 @@ function PANEL:onDisplay()
         if shouldCenter then
             modelPanel:Dock(FILL)
             modelPanel:MoveToFront()
-            if modelCount == 1 and self:getContext("model") == nil then self:setContext("model", firstIdx or 1) end
+            if modelCount == 1 and self:getContext("model") == nil then
+                self:setContext("model", firstIdx or 1)
+            end
             self:updateModelPanel()
         else
             modelPanel:Dock(LEFT)
@@ -78,6 +80,13 @@ function PANEL:paintIcon(icon, w, h)
         surface.DrawOutlinedRect(i, i, w - o, h - o)
     end
 end
+function PANEL:updateContext()
+    -- Model context is already updated when selected, but ensure it's set
+    if not self:getContext("model") then
+        self:setContext("model", 1)
+    end
+end
+
 function PANEL:onModelSelected(icon, noSound)
     self:setContext("model", icon.index or 1)
     if not noSound then lia.gui.character:clickSound() end

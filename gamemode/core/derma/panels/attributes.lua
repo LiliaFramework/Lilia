@@ -160,7 +160,9 @@ function PANEL:onPointChange(k, d)
     local nl = self.left - d
     if nl < 0 or nl > self.total or nq < 0 or nq > self.total or nm and nq > nm then return qty end
     self.left = nl
-    if self.parentBio and self.parentBio.updateAttributesLabel then self.parentBio:updateAttributesLabel() end
+    if self.parentBio and self.parentBio.updateAttributesLabel then
+        self.parentBio:updateAttributesLabel()
+    end
     t[k] = nq
     self:setContext("attribs", t)
     return nq

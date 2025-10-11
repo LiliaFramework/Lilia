@@ -463,6 +463,7 @@ else
             local rowString = ""
             for key, value in pairs(rowData) do
                 value = tostring(value or L("na"))
+                key = tostring(key)
                 rowString = rowString .. key:gsub("^%l", string.upper) .. " " .. value .. " | "
             end
             rowString = rowString:sub(1, -4)

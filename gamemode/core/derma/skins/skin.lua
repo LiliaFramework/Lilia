@@ -1,7 +1,10 @@
-﻿local surface = surface
+﻿
+local surface = surface
 local Color = Color
 local function drawAltBg(panel, w, h)
-    if panel:GetName() and (panel:GetName():find("ContentContainer") or panel:GetName():find("Tree")) then lia.util.drawBlur(panel, 5) end
+    if panel:GetName() and (panel:GetName():find("ContentContainer") or panel:GetName():find("Tree")) then
+        lia.util.drawBlur(panel, 5)
+    end
     surface.SetDrawColor(45, 45, 45, 200)
     surface.DrawRect(0, 0, w, h)
 end

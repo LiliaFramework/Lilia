@@ -60,12 +60,16 @@ net.Receive("liaKeybindServer", function(_, ply)
     if isRelease then
         if data.release and data.serverOnly then
             local success, err = pcall(data.release, player)
-            if not success then lia.error("Keybind release callback error: " .. tostring(err)) end
+            if not success then
+                lia.error("Keybind release callback error: " .. tostring(err))
+            end
         end
     else
         if data.callback and data.serverOnly then
             local success, err = pcall(data.callback, player)
-            if not success then lia.error("Keybind callback error: " .. tostring(err)) end
+            if not success then
+                lia.error("Keybind callback error: " .. tostring(err))
+            end
         end
     end
 end)
@@ -75,12 +79,16 @@ net.Receive("liaRequestDropdown", function(_, client)
     local selectedData = net.ReadString()
     if selectedData == "" then selectedData = nil end
     local req = client.liaDropdownReqs and client.liaDropdownReqs[id]
-    if not req then return end
+    if not req then
+        return
+    end
     local allowed = req.allowed or {}
     local isValid = false
     for _, opt in ipairs(allowed) do
         local optionText = opt
-        if istable(opt) then optionText = opt[1] end
+        if istable(opt) then
+            optionText = opt[1]
+        end
         if string.lower(tostring(optionText)) == string.lower(tostring(selectedOption)) then
             isValid = true
             break
@@ -107,7 +115,9 @@ net.Receive("liaOptionsRequest", function(_, client)
     local id = net.ReadUInt(32)
     local selectedOptions = net.ReadTable()
     local req = client.liaOptionsReqs and client.liaOptionsReqs[id]
-    if not req then return end
+    if not req then
+        return
+    end
     local allowed, limit = req.allowed or {}, tonumber(req.limit) or 1
     if not istable(selectedOptions) or #selectedOptions == 0 or #selectedOptions > limit then
         client.liaOptionsReqs[id] = nil
@@ -117,7 +127,9 @@ net.Receive("liaOptionsRequest", function(_, client)
         local ok = false
         for _, a in ipairs(allowed) do
             local allowedText = a
-            if istable(a) then allowedText = a[1] end
+            if istable(a) then
+                allowedText = a[1]
+            end
             if string.lower(tostring(allowedText)) == string.lower(tostring(opt)) then
                 ok = true
                 break
@@ -128,7 +140,9 @@ net.Receive("liaOptionsRequest", function(_, client)
             return
         end
     end
-    if isfunction(req.callback) then req.callback(selectedOptions) end
+    if isfunction(req.callback) then
+        req.callback(selectedOptions)
+    end
     client.liaOptionsReqs[id] = nil
 end)
 net.Receive("liaOptionsRequestCancel", function(_, client)

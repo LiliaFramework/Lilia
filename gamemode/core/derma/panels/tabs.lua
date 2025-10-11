@@ -61,7 +61,9 @@ function PANEL:CreateNavigationButtons()
     self.btn_left:SetTall(self.tab_height - 4)
     self.btn_left:DockMargin("2", "2", "2", "2")
     self.btn_left:SetText("")
-    self.btn_left.DoClick = function() self:ScrollTabs(-1) end
+    self.btn_left.DoClick = function()
+        self:ScrollTabs(-1)
+    end
     self.btn_left.Paint = function(_, w, h)
         if self.scroll_offset > 0 then
             draw.SimpleText("◀", "LiliaFont.18", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -75,7 +77,9 @@ function PANEL:CreateNavigationButtons()
     self.btn_right:SetTall(self.tab_height - 4)
     self.btn_right:DockMargin("2", "2", "2", "2")
     self.btn_right:SetText("")
-    self.btn_right.DoClick = function() self:ScrollTabs(1) end
+    self.btn_right.DoClick = function()
+        self:ScrollTabs(1)
+    end
     self.btn_right.Paint = function(_, w, h)
         local max_scroll = math.max(0, #self.tabs - self.max_visible_tabs)
         if self.scroll_offset < max_scroll then
@@ -192,7 +196,9 @@ function PANEL:Rebuild()
                     local children = self.panel_tabs:GetChildren()
                     local tab_children = {}
                     for _, child in ipairs(children) do
-                        if child ~= self.btn_left and child ~= self.btn_right then table.insert(tab_children, child) end
+                        if child != self.btn_left and child != self.btn_right then
+                            table.insert(tab_children, child)
+                        end
                     end
                     local startIndex = self.scroll_offset + 1
                     local endIndex = self.scroll_offset + visibleTabs
@@ -228,7 +234,7 @@ function PANEL:Rebuild()
     end
     self.content:Dock(FILL)
     self:UpdateTabVisibility()
-end
+    end
 function PANEL:UpdateActiveTabVisual()
     if self.needs_navigation then
         local max_scroll = math.max(0, #self.tabs - self.max_visible_tabs)

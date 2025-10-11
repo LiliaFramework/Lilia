@@ -9,6 +9,7 @@ function PANEL:Init()
         lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "liaMediumFont", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
         return lbl
     end
+
     self.factionLabel = makeLabel("faction")
     self.factionCombo = self:makeFactionComboBox()
     self.factionCombo:DockMargin(0, 8, 0, 12)
@@ -21,6 +22,7 @@ function PANEL:Init()
     self.descEntry:DockMargin(0, 8, 0, 12)
     self:addAttributes()
 end
+
 function PANEL:makeTextEntry(key)
     local entry = self:Add("liaEntry")
     entry:Dock(TOP)
@@ -31,6 +33,7 @@ function PANEL:makeTextEntry(key)
     if saved then entry:SetValue(saved) end
     return entry
 end
+
 function PANEL:makeFactionComboBox()
     local combo = self:Add("liaComboBox")
     combo:Dock(TOP)
@@ -41,22 +44,25 @@ function PANEL:makeFactionComboBox()
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
     end
-    combo:SetTextColor(color_white)
+
     combo.OnSelect = function(_, _, data)
         if data then
             local fac = lia.faction.teams[data]
             if fac then self:onFactionSelected(fac) end
         end
     end
+
     for id, fac in SortedPairsByMemberValue(lia.faction.teams, "name") do
         if lia.faction.hasWhitelist(fac.index) then
             if fac.uniqueID == "staff" then continue end
             combo:AddChoice(L(fac.name), id)
         end
     end
+
     combo:FinishAddingOptions()
     return combo
 end
+
 function PANEL:addAttributes()
     local function makeLabel(key)
         local lbl = self:Add("DPanel")
@@ -66,6 +72,7 @@ function PANEL:addAttributes()
         lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "liaMediumFont", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
         return lbl
     end
+
     local hasAttributes = false
     for _, attrib in pairs(lia.attribs.list) do
         if not attrib.noStartBonus then
@@ -73,6 +80,7 @@ function PANEL:addAttributes()
             break
         end
     end
+
     if not hasAttributes then return end
     local attrLabel = makeLabel("attributes")
     self.attrLabel = attrLabel
@@ -81,30 +89,50 @@ function PANEL:addAttributes()
     self.attribsPanel:DockMargin(0, 8, 0, 12)
     self.attribsPanel.parentBio = self
 end
+
 function PANEL:shouldSkip()
     return false
 end
+
 function PANEL:updateAttributesLabel()
     if IsValid(self.attrLabel) and IsValid(self.attribsPanel) then
         local points = self.attribsPanel.left or 0
         self.attrLabel:SetText(L("attributes"):upper() .. " - " .. points .. " " .. L("pointsLeft"):lower())
     end
 end
+
 function PANEL:validate()
     for _, info in ipairs({{self.nameEntry, "name"}, {self.descEntry, "desc"}}) do
         local val = string.Trim(info[1]:GetValue() or "")
         if val == "" then return false, L("requiredFieldError", info[2]) end
     end
+
     local factionID = self.factionCombo:GetSelectedData()
     if not factionID then return false, L("requiredFieldError", "faction") end
     return true
 end
+
 function PANEL:onFactionSelected(fac)
     self:setContext("faction", fac.index)
     self:setContext("model", 1)
     self:updateModelPanel()
     lia.gui.character:clickSound()
 end
+
+function PANEL:updateContext()
+    -- Update context with current values from text entries
+    if IsValid(self.nameEntry) then self:setContext("name", string.Trim(self.nameEntry:GetValue() or "")) end
+    if IsValid(self.descEntry) then self:setContext("desc", string.Trim(self.descEntry:GetValue() or "")) end
+    if IsValid(self.factionCombo) then
+        local factionUniqueID = self.factionCombo:GetSelectedData()
+        if factionUniqueID then
+            -- Convert uniqueID to faction index
+            local faction = lia.faction.teams[factionUniqueID]
+            if faction then self:setContext("faction", faction.index) end
+        end
+    end
+end
+
 function PANEL:onDisplay()
     local n, d = self.nameEntry:GetValue(), self.descEntry:GetValue()
     local f = self:getContext("faction")
@@ -117,9 +145,11 @@ function PANEL:onDisplay()
         self:setContext("faction", f)
         self:updateModelPanel()
     end
+
     if IsValid(self.attribsPanel) then
         self.attribsPanel:onDisplay()
         timer.Simple(0.01, function() if IsValid(self) then self:updateAttributesLabel() end end)
     end
 end
+
 vgui.Register("liaCharacterBiography", PANEL, "liaCharacterCreateStep")

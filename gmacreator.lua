@@ -7,7 +7,6 @@ local function read(path)
     handle:close()
     return content
 end
-
 local function map(t, f)
     local out = {}
     for k, v in ipairs(t) do
@@ -15,11 +14,9 @@ local function map(t, f)
     end
     return out
 end
-
 local function pack(name, desc, author, files, steamid, timestamp)
     return "GMAD" .. ("< I1 I8 I8 x z z z I4"):pack(3, steamid or 0, timestamp or os.time(), name, desc, author, 1) .. table.concat(map(files, function(v, k) return ("< I4 z I8 I4"):pack(k, v.path, #v.content, 0) end)) .. "\0\0\0\0" .. table.concat(map(files, function(v) return v.content end)) .. "\0\0\0\0"
 end
-
 local function decode(json)
     local ptr = 0
     local function consume(pattern)
@@ -30,24 +27,19 @@ local function decode(json)
             return match or true
         end
     end
-
     local object, array
     local function number()
         return tonumber(consume("^(%-?%d+%.%d+)") or consume("^(%-?%d+)"))
     end
-
     local function bool()
         return consume("^(true)") or consume("^(false)")
     end
-
     local function string()
         return consume("^\"([^\"]*)\"")
     end
-
     local function value()
         return object() or string() or number() or bool() or array()
     end
-
     function object()
         if consume("^{") then
             local fields = {}
@@ -60,7 +52,6 @@ local function decode(json)
             end
         end
     end
-
     function array()
         if consume("^%[") then
             local values = {}
@@ -73,11 +64,9 @@ local function decode(json)
     end
     return object() or array()
 end
-
 local function wildcard2pattern(s)
     return "^%./" .. s:gsub("%.", "%%."):gsub("%*", ".*") .. "$"
 end
-
 do
     local addon = assert(decode(read(ADDON_JSON)), "Failed to parse addon.json file")
     local files = {}
@@ -95,20 +84,16 @@ do
                         goto cont
                     end
                 end
-
                 files[#files + 1] = {
                     path = normalized:sub(3),
                     content = read(path)
                 }
-
                 goto cont
             end
         end
-
         print("Warning: File " .. normalized .. " not whitelisted. Skipping..")
         ::cont::
     end
-
     dir:close()
     local handle = assert(io.open(OUTPUT_FILE, "wb"), "Failed to create/overwrite output file")
     handle:write(pack(addon.title or "No title provided", addon.description or "No description provided", addon.author or addon.authors and table.concat(addon.authors, ", ") or "No author provided", files))

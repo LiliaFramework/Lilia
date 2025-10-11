@@ -46,6 +46,14 @@ function PANEL:canCreateCharacter()
 end
 function PANEL:onFinish()
     if self.creating then return end
+
+    -- Update context with current values from all steps before validation
+    for _, step in ipairs(self.steps) do
+        if IsValid(step) and step.updateContext then
+            step:updateContext()
+        end
+    end
+
     self.content:SetVisible(false)
     self.buttons:SetVisible(false)
     self:showMessage("creating")
