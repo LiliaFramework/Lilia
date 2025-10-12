@@ -85,7 +85,7 @@ function PANEL:ChooseOption(text, index)
         local actualIndex = index or 0
         local choiceData = nil
         if actualIndex > 0 and self.choices[actualIndex] then choiceData = self.choices[actualIndex].data end
-        self.OnSelect(actualIndex, text, choiceData)
+        self:OnSelect(actualIndex, text, choiceData)
     end
 end
 

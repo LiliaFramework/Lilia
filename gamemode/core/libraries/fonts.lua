@@ -1,5 +1,21 @@
 ﻿lia.font = lia.font or {}
 lia.font.stored = lia.font.stored or {}
+function lia.font.loadFonts()
+    if not CLIENT then return end
+    local loadedCount = 0
+    local failedCount = 0
+    for fontName, fontData in pairs(lia.font.stored) do
+        if istable(fontData) then
+            local success = pcall(function()
+                surface.CreateFont(fontName, fontData)
+                loadedCount = loadedCount + 1
+            end)
+
+            if not success then failedCount = failedCount + 1 end
+        end
+    end
+end
+
 function lia.font.register(fontName, fontData)
     if not (isstring(fontName) and istable(fontData)) then return lia.error(L("invalidFont")) end
     lia.font.stored[fontName] = SERVER and {
@@ -29,28 +45,42 @@ end
 
 function lia.font.registerFonts(fontName)
     local mainFont = fontName or lia.config.get("Font", "Montserrat Medium")
-    lia.font.register("Montserrat Regular", {
-        font = "Montserrat",
-        size = 16,
-        extended = true,
-        antialias = true
-    })
+    local fontsToRegister = {
+        {
+            "Montserrat Regular",
+            {
+                font = "Montserrat",
+                size = 16,
+                extended = true,
+                antialias = true
+            }
+        },
+        {
+            "Montserrat Medium",
+            {
+                font = "Montserrat Medium",
+                size = 16,
+                extended = true,
+                antialias = true,
+                weight = 500
+            }
+        },
+        {
+            "Montserrat Bold",
+            {
+                font = "Montserrat Bold",
+                size = 16,
+                extended = true,
+                antialias = true,
+                weight = 700
+            }
+        }
+    }
 
-    lia.font.register("Montserrat Medium", {
-        font = "Montserrat Medium",
-        size = 16,
-        extended = true,
-        antialias = true,
-        weight = 500
-    })
-
-    lia.font.register("Montserrat Bold", {
-        font = "Montserrat Bold",
-        size = 16,
-        extended = true,
-        antialias = true,
-        weight = 700
-    })
+    for _, fontInfo in ipairs(fontsToRegister) do
+        local registerFontName, fontData = fontInfo[1], fontInfo[2]
+        pcall(function() lia.font.register(registerFontName, fontData) end)
+    end
 
     lia.font.register("liaHugeFont", {
         font = mainFont,
@@ -403,12 +433,18 @@ hook.Add("InitializedConfig", "liaFontsOnConfigLoad", function()
             timer.Simple(0.1, function()
                 local fontName = lia.config.get("Font", "Montserrat Medium")
                 lia.font.registerFonts(fontName)
-                timer.Simple(0.2, function() hook.Run("RefreshFonts") end)
+                timer.Simple(0.2, function()
+                    lia.font.loadFonts()
+                    hook.Run("RefreshFonts")
+                end)
             end)
         else
             local fontName = lia.config.get("Font", "Montserrat Medium")
             lia.font.registerFonts(fontName)
-            timer.Simple(0.2, function() hook.Run("RefreshFonts") end)
+            timer.Simple(0.2, function()
+                lia.font.loadFonts()
+                hook.Run("RefreshFonts")
+            end)
         end
     end
 end)

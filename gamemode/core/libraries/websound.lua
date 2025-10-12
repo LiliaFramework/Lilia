@@ -306,6 +306,17 @@ function sound.PlayURL(url, mode, cb)
     return origPlayURL(url, mode, cb)
 end
 
+local origSurfacePlaySound = surface.PlaySound
+function surface.PlaySound(soundPath)
+    if isstring(soundPath) and lia.websound.stored[soundPath] then
+        local cachedPath = lia.websound.get(soundPath)
+        if cachedPath then return origSurfacePlaySound(cachedPath) end
+        lia.websound.register(soundPath, lia.websound.stored[soundPath], function(localPath) if localPath then return origSurfacePlaySound(localPath) end end)
+        return
+    end
+    return origSurfacePlaySound(soundPath)
+end
+
 concommand.Add("lia_saved_sounds", function()
     local files = file.Find(baseDir .. "*", "DATA")
     if not files or #files == 0 then return end

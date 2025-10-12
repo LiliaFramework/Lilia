@@ -1,4 +1,68 @@
-﻿function MODULE:DrawEntityInfo(entity, alpha)
+﻿function MODULE:GetDoorInfo(entity, doorData, doorInfo)
+    local owner = entity:GetDTEntity(0)
+    local classes = doorData.classes or {}
+    local factions = doorData.factions or {}
+    local price = doorData.price or 0
+    local ownable = not (doorData.noSell or false)
+    local title = doorData.title or doorData.name or ""
+    if title and title ~= "" then
+        table.insert(doorInfo, {
+            text = title
+        })
+    end
+
+    if ownable and price > 0 then
+        table.insert(doorInfo, {
+            text = L("price") .. ": " .. lia.currency.get(price)
+        })
+    end
+
+    if IsValid(owner) then
+        table.insert(doorInfo, {
+            text = L("doorOwnedBy", owner:Name())
+        })
+    end
+
+    if factions and #factions > 0 then
+        table.insert(doorInfo, {
+            text = L("factions") .. ":"
+        })
+
+        for _, id in ipairs(factions) do
+            local info = lia.faction.get(id)
+            if info then
+                table.insert(doorInfo, {
+                    text = info.name,
+                    color = info.color or color_white
+                })
+            end
+        end
+    end
+
+    if classes and #classes > 0 then
+        local classData = {}
+        for _, uid in ipairs(classes) do
+            local index = lia.class.retrieveClass(uid)
+            local info = lia.class.list[index]
+            if info then table.insert(classData, info) end
+        end
+
+        if #classData > 0 then
+            table.insert(doorInfo, {
+                text = L("classes") .. ":"
+            })
+
+            for _, data in ipairs(classData) do
+                table.insert(doorInfo, {
+                    text = data.name,
+                    color = data.color or color_white
+                })
+            end
+        end
+    end
+end
+
+function MODULE:DrawEntityInfo(entity, alpha)
     if entity:isDoor() then
         local doorData = entity:getNetVar("doorData", {})
         if not (doorData.hidden or false) then
@@ -10,56 +74,15 @@
 
             local pos = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
             local x, y = pos.x, pos.y
-            local owner = entity:GetDTEntity(0)
-            local classes = doorData.classes or {}
-            local factions = doorData.factions or {}
-            local price = doorData.price or 0
-            local ownable = not (doorData.noSell or false)
-            local title = doorData.title or doorData.name or (IsValid(owner) and L("doorTitleOwned") or (#classes == 0 and #factions == 0 and L("doorTitle") or ""))
-            lia.util.drawText(title, x, y, ColorAlpha(color_white, alpha), 1, 1)
-            y = y + 20
-            if ownable and price > 0 then
-                lia.util.drawText(L("price") .. ": " .. lia.currency.get(price), x, y, ColorAlpha(color_white, alpha), 1, 1)
-                y = y + 20
-            end
-
-            local classData
-            if classes and #classes > 0 then
-                classData = {}
-                for _, uid in ipairs(classes) do
-                    local index = lia.class.retrieveClass(uid)
-                    local info = lia.class.list[index]
-                    if info then table.insert(classData, info) end
-                end
-            end
-
-            if IsValid(owner) then
-                lia.util.drawText(L("doorOwnedBy", owner:Name()), x, y, ColorAlpha(color_white, alpha), 1, 1)
-                y = y + 20
-            end
-
-            if factions and #factions > 0 then
-                lia.util.drawText(L("factions") .. ":", x, y, ColorAlpha(color_white, alpha), 1, 1)
-                y = y + 20
-                for _, id in ipairs(factions) do
-                    local info = lia.faction.get(id)
-                    if info then
-                        lia.util.drawText(info.name, x, y, info.color or color_white, 1, 1)
-                        y = y + 20
-                    end
-                end
-            end
-
-            if classData and #classData > 0 then
-                lia.util.drawText(L("classes") .. ":", x, y, ColorAlpha(color_white, alpha), 1, 1)
-                y = y + 20
-                for _, data in ipairs(classData) do
-                    lia.util.drawText(data.name, x, y, data.color or color_white, 1, 1)
+            local doorInfo = {}
+            hook.Run("GetDoorInfo", entity, doorData, doorInfo)
+            for _, info in ipairs(doorInfo) do
+                if info.text and info.text ~= "" then
+                    local color = info.color or ColorAlpha(color_white, alpha)
+                    lia.util.drawText(info.text, x, y, color, 1, 1)
                     y = y + 20
                 end
             end
-
-            if not IsValid(owner) and #factions == 0 and #classes == 0 then lia.util.drawText(ownable and L("doorIsOwnable") or L("doorIsNotOwnable"), x, y, ColorAlpha(color_white, alpha), 1, 1) end
         end
     end
 end

@@ -1,4 +1,18 @@
-﻿function MODULE:ShowPlayerOptions(target, options)
+﻿function GetIdentifier(ent)
+    if not IsValid(ent) or not ent:IsPlayer() then return "" end
+    if ent:IsBot() then return ent:Name() end
+    return ent:SteamID()
+end
+
+local function QuoteArgs(...)
+    local args = {}
+    for _, v in ipairs({...}) do
+        args[#args + 1] = string.format("'%s'", tostring(v))
+    end
+    return table.concat(args, " ")
+end
+
+function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end
     if not (client:hasPrivilege("canAccessScoreboardInfoOutOfStaff") or client:hasPrivilege("canAccessScoreboardAdminOptions") and client:isStaffOnDuty()) then return end
@@ -821,20 +835,6 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
 
     if menu.UpdateSize then menu:UpdateSize() end
     return menu
-end
-
-local function GetIdentifier(ent)
-    if not IsValid(ent) or not ent:IsPlayer() then return "" end
-    if ent:IsBot() then return ent:Name() end
-    return ent:SteamID()
-end
-
-local function QuoteArgs(...)
-    local args = {}
-    for _, v in ipairs({...}) do
-        args[#args + 1] = string.format("'%s'", tostring(v))
-    end
-    return table.concat(args, " ")
 end
 
 local function RunAdminCommand(cmd, tgt, dur, reason)

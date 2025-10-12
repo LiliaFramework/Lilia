@@ -18,6 +18,24 @@ function MODULE:LoadCharInformation()
         local client = LocalPlayer()
         return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
     end)
+
+    hook.Run("AddTextField", L("generalInfo"), "salary", L("salaryWord"), function()
+        local client = LocalPlayer()
+        local char = client:getChar()
+        if not char then return lia.currency.get(0) end
+        local faction = lia.faction.get(char:getFaction())
+        local class = lia.class.get(char:getClass())
+        local clearance = tonumber(char:getClearance()) or 0
+        local basePay = class and class.pay or faction and faction.pay or 0
+        local clearanceBonus = 0
+        if clearance > 0 then
+            local clearanceData = lia.module.list.clearance and lia.module.list.clearance.ClearanceLevels[clearance]
+            if clearanceData and clearanceData.pay then clearanceBonus = clearanceData.pay end
+        end
+
+        local totalSalary = basePay + clearanceBonus
+        return lia.currency.get(totalSalary)
+    end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)

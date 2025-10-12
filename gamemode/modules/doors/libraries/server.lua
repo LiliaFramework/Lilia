@@ -167,6 +167,7 @@ function MODULE:LoadData()
             end
 
             if hasData then
+                doorData = hook.Run("PostDoorDataLoad", ent, doorData) or doorData
                 ent:setNetVar("doorData", doorData)
                 loadedCount = loadedCount + 1
                 if ent:isDoor() then
@@ -229,6 +230,7 @@ function MODULE:LoadData()
                         end
 
                         if hasPresetData then
+                            doorData = hook.Run("PostDoorDataLoad", ent, doorData) or doorData
                             ent:setNetVar("doorData", doorData)
                             lia.information(L("appliedPresetToDoor", doorID))
                             loadedCount = loadedCount + 1
@@ -263,6 +265,7 @@ function MODULE:SaveData()
             if not mapID or mapID <= 0 then continue end
             local doorData = door:getNetVar("doorData", {})
             if not doorData or table.IsEmpty(doorData) then continue end
+            doorData = hook.Run("PreDoorDataSave", door, doorData) or doorData
             local factionsTable = doorData.factions or {}
             local classesTable = doorData.classes or {}
             if not doorData.factions then

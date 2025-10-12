@@ -133,6 +133,13 @@ jobs:
       - run: |
           sudo apt-get update -y
           sudo apt-get install -y rsync wget
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: |
+          node documentation/docs/tools/generate-changelog.js
+        env:
+          VERSION: ${{ env.VERSION }}
       - run: |
           wget -O glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
           unzip glualint.zip

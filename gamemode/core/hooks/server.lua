@@ -959,10 +959,12 @@ function GM:CreateSalaryTimers()
                         client:notifyWarningLocalized("salaryLimitReached")
                         char:setMoney(limit)
                     else
-                        local handled = hook.Run("OnSalaryGive", client, char, pay, faction, class)
+                        local handled = hook.Run("PreSalaryGive", client, char, pay, faction, class)
                         if handled ~= true then
+                            local finalPay = hook.Run("OnSalaryGiven", client, char, pay, faction, class)
+                            if isnumber(finalPay) then pay = finalPay end
                             char:giveMoney(pay)
-                            client:notifyMoneyLocalized("salary", lia.currency.get(pay))
+                            client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
                         end
                     end
                 end
