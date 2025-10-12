@@ -137,7 +137,8 @@ jobs:
         with:
           node-version: '18'
       - run: |
-          node documentation/docs/tools/generate-changelog.js
+          cd "${{ github.workspace }}/documentation/docs/tools"
+          node generate-changelog.js
         env:
           VERSION: ${{ env.VERSION }}
       - run: |
