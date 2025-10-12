@@ -139,9 +139,14 @@ jobs:
       - run: |
           cd "${{ github.workspace }}"
           if [ -f "documentation/docs/tools/generate-changelog.js" ]; then
+            echo "Found changelog script, running..."
             node "documentation/docs/tools/generate-changelog.js"
           else
-            echo "Skip changelog generation: script not found"
+            echo "Changelog script not found at: documentation/docs/tools/generate-changelog.js"
+            echo "Current directory contents:"
+            ls -la documentation/docs/tools/ || echo "Tools directory not found"
+            echo "Available files:"
+            find documentation -name "*.js" 2>/dev/null || echo "No JS files found"
           fi
         env:
           VERSION: ${{ env.VERSION }}
