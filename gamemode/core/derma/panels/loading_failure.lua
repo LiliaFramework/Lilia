@@ -22,7 +22,6 @@ function PANEL:Init()
         draw.RoundedBox(8, 0, 0, w, h, Color(40, 40, 40, 255))
         draw.RoundedBox(8, 4, 4, w - 8, h - 8, Color(20, 20, 20, 255))
     end
-
     self.titleLabel = self.container:Add("DLabel")
     self.titleLabel:SetFont("liaBigFont")
     self.titleLabel:SetText(L("serverFailedToLoad"))
@@ -65,7 +64,6 @@ function PANEL:Init()
         draw.RoundedBox(4, 2, 2, w - 4, h - 4, Color(50, 50, 50))
     end
 end
-
 function PANEL:SetFailureInfo(reason, details)
     if reason then
         local errorText = L("errorPrefix") .. reason
@@ -75,25 +73,21 @@ function PANEL:SetFailureInfo(reason, details)
         self:SetAlpha(255)
     end
 end
-
 function PANEL:AddError(errorMessage, line, file)
     if not self.errorList then
         self.errorList = {}
         self.errorCount = 0
     end
-
     self.errorCount = self.errorCount + 1
     table.insert(self.errorList, {
         message = errorMessage or L("unknownError"),
         line = line or "N/A",
         file = file or L("unknownFile")
     })
-
     self:UpdateErrorDisplay()
     self:SetVisible(true)
     self:SetAlpha(255)
 end
-
 function PANEL:UpdateErrorDisplay()
     if not self.errorList or #self.errorList == 0 then return end
     local errorText = L("recentErrors") .. "\n" .. string.rep("=", 50) .. "\n"
@@ -102,7 +96,6 @@ function PANEL:UpdateErrorDisplay()
         local lineInfo = err.line and err.line ~= "N/A" and L("lineLabel") .. " " .. err.line or L("unknownLine")
         errorText = errorText .. string.format("%d. %s\n   %s %s | %s\n\n", i, err.message, L("fileLabel"), fileInfo, lineInfo)
     end
-
     if not IsValid(self.errorDisplayLabel) then
         self.errorDisplayLabel = self.container:Add("DLabel")
         self.errorDisplayLabel:SetFont("liaSmallFont")
@@ -114,10 +107,8 @@ function PANEL:UpdateErrorDisplay()
         self.container:SetSize(600, 520)
         self.container:SetPos((ScrW() - 600) / 2, (ScrH() - 520) / 2)
     end
-
     self.errorDisplayLabel:SetText(errorText)
 end
-
 function PANEL:Paint(w, h)
     local centerX, centerY = w / 2, h / 2
     for i = 1, 20 do
@@ -126,5 +117,4 @@ function PANEL:Paint(w, h)
         draw.RoundedBox(0, centerX - size / 2, centerY - size / 2, size, size, Color(0, 0, 0, alpha))
     end
 end
-
 vgui.Register("liaLoadingFailure", PANEL, "DFrame")

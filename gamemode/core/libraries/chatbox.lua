@@ -3,7 +3,6 @@ lia.chat.classes = lia.chat.classes or {}
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.GetHour() .. ")" .. (ooc and "" or " ") or ""
 end
-
 function lia.chat.register(chatType, data)
     data.arguments = data.arguments or {}
     data.syntax = L(lia.command.buildSyntaxFromArguments(data.arguments))
@@ -16,17 +15,14 @@ function lia.chat.register(chatType, data)
                 processed[#processed + 1] = prefix
                 lookup[prefix] = true
             end
-
             local noSlash = prefix:gsub("^/", "")
             if noSlash ~= "" and not lookup[noSlash] and noSlash:sub(1, 1) ~= "/" then
                 processed[#processed + 1] = noSlash
                 lookup[noSlash] = true
             end
         end
-
         data.prefix = processed
     end
-
     if not data.onCanHear then
         if isfunction(data.radius) then
             data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= data.radius() ^ 2 end
@@ -40,7 +36,6 @@ function lia.chat.register(chatType, data)
         local range = data.onCanHear ^ 2
         data.onCanHear = function(speaker, listener) return (speaker:GetPos() - listener:GetPos()):LengthSqr() <= range end
     end
-
     data.onCanSay = data.onCanSay or function(speaker)
         if not data.deadCanChat and not speaker:Alive() then
             speaker:notifyErrorLocalized("noPerm")
@@ -48,7 +43,6 @@ function lia.chat.register(chatType, data)
         end
         return true
     end
-
     data.color = data.color or Color(242, 230, 160)
     data.format = data.format or "chatFormat"
     data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous) chat.AddText(lia.chat.timestamp(false), data.color, L(data.format, anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"), text)) end
@@ -65,7 +59,6 @@ function lia.chat.register(chatType, data)
                 end
             end
         end
-
         if #aliases > 0 then
             lia.command.add(chatType, {
                 arguments = data.arguments,
@@ -75,11 +68,9 @@ function lia.chat.register(chatType, data)
             })
         end
     end
-
     data.filter = data.filter or "ic"
     lia.chat.classes[chatType] = data
 end
-
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -99,7 +90,6 @@ function lia.chat.parse(client, message, noSend)
             isChosen = message:sub(1, #v.prefix + (noSpaceAfter and 0 or 1)):lower() == (v.prefix .. (v.noSpaceAfter and "" or " ")):lower()
             chosenPrefix = v.prefix .. (v.noSpaceAfter and "" or " ")
         end
-
         if isChosen then
             chatType = k
             message = message:sub(#chosenPrefix + 1)
@@ -107,7 +97,6 @@ function lia.chat.parse(client, message, noSend)
             break
         end
     end
-
     if not message:find("%S") then return end
     local newType, newMsg, newAnon = hook.Run("ChatParsed", client, chatType, message, anonymous)
     chatType = newType or chatType
@@ -119,7 +108,6 @@ function lia.chat.parse(client, message, noSend)
     end
     return chatType, message, anonymous
 end
-
 if SERVER then
     function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         local class = lia.chat.classes[chatType]
@@ -129,10 +117,8 @@ if SERVER then
                 for _, v in player.Iterator() do
                     if v:getChar() and class.onCanHear(speaker, v) ~= false then receivers[#receivers + 1] = v end
                 end
-
                 if #receivers == 0 then return end
             end
-
             net.Start("liaChatMsg")
             net.WriteEntity(speaker)
             net.WriteString(chatType)

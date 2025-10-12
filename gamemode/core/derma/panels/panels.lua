@@ -4,7 +4,6 @@ local function PaintPanel(_, w, h)
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(0, 0, 0, 50)):Shape(lia.derma.SHAPE_IOS):Draw()
 end
-
 local function PaintFrame(pnl, w, h)
     if not pnl.LaidOut then
         local btn = pnl.btnClose
@@ -16,15 +15,12 @@ local function PaintFrame(pnl, w, h)
             btn:SetTextColor(Color(255, 255, 255))
             btn:PerformLayout()
         end
-
         pnl.LaidOut = true
     end
-
     lia.util.drawBlur(pnl, 10)
     local radius = 16
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(Color(45, 45, 45, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
 end
-
 local BlurredDFrame = {}
 function BlurredDFrame:Init()
     self:SetTitle("")
@@ -32,16 +28,13 @@ function BlurredDFrame:Init()
     self:SetDraggable(true)
     self:MakePopup()
 end
-
 function BlurredDFrame:PerformLayout()
     DFrame.PerformLayout(self)
     if IsValid(self.btnClose) then self.btnClose:SetZPos(1000) end
 end
-
 function BlurredDFrame:Paint(w, h)
     PaintFrame(self, w, h)
 end
-
 vgui.Register("BlurredDFrame", BlurredDFrame, "DFrame")
 local TransparentDFrame = {}
 function TransparentDFrame:Init()
@@ -50,22 +43,18 @@ function TransparentDFrame:Init()
     self:SetDraggable(true)
     self:MakePopup()
 end
-
 function TransparentDFrame:PerformLayout()
     DFrame.PerformLayout(self)
     if IsValid(self.btnClose) then self.btnClose:SetZPos(1000) end
 end
-
 function TransparentDFrame:Paint(w, h)
     PaintPanel(self, w, h)
 end
-
 vgui.Register("SemiTransparentDFrame", TransparentDFrame, "DFrame")
 local SimplePanel = {}
 function SimplePanel:Paint(w, h)
     PaintPanel(self, w, h)
 end
-
 vgui.Register("SemiTransparentDPanel", SimplePanel, "DPanel")
 timer.Create("derma_convar_fix", 0.5, 0, function()
     if len == 0 then return end
@@ -76,10 +65,8 @@ timer.Create("derma_convar_fix", 0.5, 0, function()
         cacheKeys[name] = nil
         cache[i] = nil
     end
-
     len = 0
 end)
-
 function Derma_SetCvar_Safe(name, value)
     if not cacheKeys[name] then
         cacheKeys[name] = tostring(value)
@@ -90,18 +77,15 @@ function Derma_SetCvar_Safe(name, value)
         cacheKeys[name] = tostring(value)
     end
 end
-
 function Derma_Install_Convar_Functions(panel)
     function panel:SetConVar(strConVar)
         self.m_strConVar = strConVar
     end
-
     function panel:ConVarChanged(strNewValue)
         local cvar = self.m_strConVar
         if not cvar or string.len(cvar) < 2 then return end
         Derma_SetCvar_Safe(cvar, strNewValue)
     end
-
     function panel:SetConVar(name, isNumber)
         self.m_conVar = GetConVar(name)
         if not self.m_conVar then return end
@@ -109,7 +93,6 @@ function Derma_Install_Convar_Functions(panel)
         self.m_prevValue = isNumber and self.m_conVar:GetFloat() or self.m_conVar:GetString()
         self:SetValue(self.m_prevValue)
     end
-
     function panel:Think()
         local cvar = self.m_conVar
         if not cvar then return end
@@ -120,7 +103,6 @@ function Derma_Install_Convar_Functions(panel)
         end
     end
 end
-
 local QuickPanel = {}
 function QuickPanel:Init()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
@@ -145,7 +127,6 @@ function QuickPanel:Init()
         surface.SetDrawColor(lia.color.theme and lia.color.theme.theme or color_white)
         surface.DrawRect(0, 0, w, h)
     end
-
     self.expand = self:Add("DButton")
     self.expand:SetContentAlignment(5)
     self.expand:SetText("")
@@ -170,16 +151,13 @@ function QuickPanel:Init()
                 for _, v in pairs(self.items) do
                     if IsValid(v) then h = h + v:GetTall() + 1 end
                 end
-
                 h = math.min(h, ScrH() * 0.5)
                 local target = 36 + math.max(h, 0)
                 self:SizeTo(self:GetWide(), target, 0.15)
             end)
-
             self.expanded = true
         end
     end
-
     self.scroll = self:Add("liaScrollPanel")
     self.scroll.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme and lia.color.theme.panel[1] or Color(50, 50, 50)):Shape(lia.derma.SHAPE_IOS):Draw() end
     self.items = {}
@@ -188,12 +166,10 @@ function QuickPanel:Init()
     self:MoveTo(self.x, 30, 0.05)
     hook.Add("OnThemeChanged", self, function() if IsValid(self) then self:RefreshTheme() end end)
 end
-
 function QuickPanel:PerformLayout(w, h)
     self.scroll:SetPos(0, 36)
     self.scroll:SetSize(w, math.max(h - 36, 0))
 end
-
 local function paintButton(button, w, h)
     local baseColor = lia.color.theme and lia.color.theme.button or Color(60, 60, 60)
     local r, g, b = baseColor:Unpack()
@@ -204,7 +180,6 @@ local function paintButton(button, w, h)
     surface.SetMaterial(lia.util.getMaterial("vgui/gradient-l"))
     surface.DrawTexturedRect(w / 2, 0, w / 2, h)
 end
-
 local categoryDoClick = function(this)
     this.expanded = not this.expanded
     local items = lia.gui.quick.items
@@ -215,7 +190,6 @@ local categoryDoClick = function(this)
         items[i]:SizeTo(items[i].w, this.expanded and (items[i].h or 36) or 0, 0.15)
     end
 end
-
 function QuickPanel:addCategory(text)
     local label = self:addButton(text, categoryDoClick)
     label.categoryLabel = true
@@ -234,7 +208,6 @@ function QuickPanel:addCategory(text)
         surface.DrawOutlinedRect(0, 0, w, h, 1)
     end
 end
-
 function QuickPanel:addButton(text, cb)
     local btn = self.scroll:Add("DButton")
     btn:SetText(text)
@@ -251,7 +224,6 @@ function QuickPanel:addButton(text, cb)
     self.items[#self.items + 1] = btn
     return btn
 end
-
 function QuickPanel:addSpacer()
     local pnl = self.scroll:Add("DPanel")
     pnl:SetTall(1)
@@ -261,11 +233,9 @@ function QuickPanel:addSpacer()
         surface.SetDrawColor(lia.color.theme and lia.color.theme.panel[2] or Color(60, 60, 60))
         surface.DrawRect(0, 0, w, h)
     end
-
     self.items[#self.items + 1] = pnl
     return pnl
 end
-
 function QuickPanel:addSlider(text, cb, val, min, max, dec)
     local s = self.scroll:Add("DNumSlider")
     s:SetText(text)
@@ -289,7 +259,6 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
             cb(this, r)
         end
     end
-
     self.items[#self.items + 1] = s
     s.Paint = function(slider, w, h)
         local baseColor = lia.color.theme and lia.color.theme.button or Color(60, 60, 60)
@@ -303,7 +272,6 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
     end
     return s
 end
-
 function QuickPanel:addCheck(text, cb, checked)
     local btn = self:addButton(text)
     local chk = vgui.Create("liaCheckbox", btn)
@@ -314,18 +282,15 @@ function QuickPanel:addCheck(text, cb, checked)
     btn.PerformLayout = function(_, w, h) chk:SetPos(w - chk:GetWide() - 8, math.floor((h - chk:GetTall()) * 0.5)) end
     return btn
 end
-
 function QuickPanel:setIcon(ch)
     self.icon = ch
 end
-
 function QuickPanel:Paint(w, h)
     local radius = 16
     lia.util.drawBlur(self)
     lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme and lia.color.theme.window_shadow or Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
     lia.derma.rect(0, 0, w, 36):Rad(radius):Color(lia.color.theme and lia.color.theme.theme or color_white):Shape(lia.derma.SHAPE_IOS):Draw()
 end
-
 function QuickPanel:RefreshTheme()
     if not IsValid(self) then return end
     if IsValid(self.title) then
@@ -336,12 +301,10 @@ function QuickPanel:RefreshTheme()
             surface.DrawRect(0, 0, w, h)
         end
     end
-
     if IsValid(self.expand) then
         self.expand:SetTextColor(lia.color.theme.text or color_white)
         self.expand:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
     end
-
     if IsValid(self.scroll) then self.scroll.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme and lia.color.theme.panel[1] or Color(50, 50, 50)):Shape(lia.derma.SHAPE_IOS):Draw() end end
     for _, item in ipairs(self.items or {}) do
         if IsValid(item) then
@@ -353,15 +316,12 @@ function QuickPanel:RefreshTheme()
             end
         end
     end
-
     self:InvalidateLayout(true)
 end
-
 function QuickPanel:OnRemove()
     hook.Remove("OnThemeChanged", self)
     if lia.gui.quick == self then lia.gui.quick = nil end
 end
-
 function QuickPanel:populateOptions()
     local cats = {}
     for k, v in pairs(lia.option.stored) do
@@ -374,23 +334,19 @@ function QuickPanel:populateOptions()
             }
         end
     end
-
     if table.IsEmpty(cats) then
         self:Remove()
         return
     end
-
     local names = {}
     for n in pairs(cats) do
         names[#names + 1] = n
     end
-
     table.sort(names, function(a, b)
         if a == L("categoryGeneral") and b ~= L("categoryGeneral") then return true end
         if b == L("categoryGeneral") and a ~= L("categoryGeneral") then return false end
         return a < b
     end)
-
     for i, cat in ipairs(names) do
         self:addCategory(cat)
         local list = cats[cat]
@@ -405,14 +361,11 @@ function QuickPanel:populateOptions()
             elseif opt.type == "Int" or opt.type == "Float" then
                 self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0)
             end
-
             if j < #list then self:addSpacer() end
         end
-
         if i < #names then self:addSpacer() end
     end
 end
-
 vgui.Register("liaQuick", QuickPanel, "EditablePanel")
 local blur = Material("pp/blurscreen")
 local gradLeft = Material("vgui/gradient-l")
@@ -426,10 +379,8 @@ local function drawCircle(x, y, r)
         circle[i].x = x + math.cos(math.rad(i * 360) / 360) * r
         circle[i].y = y + math.sin(math.rad(i * 360) / 360) * r
     end
-
     surface.DrawPoly(circle)
 end
-
 local meta = FindMetaTable("Panel")
 function meta:On(name, fn)
     name = self.AppendOverwrite or name
@@ -439,13 +390,11 @@ function meta:On(name, fn)
         fn(s, ...)
     end
 end
-
 function meta:SetupTransition(name, speed, fn)
     fn = self.TransitionFunc or fn
     self[name] = 0
     self:On("Think", function(s) s[name] = Lerp(FrameTime() * speed, s[name], fn(s) and 1 or 0) end)
 end
-
 local classes = {}
 classes.FadeHover = function(pnl, col, speed, rad)
     col = col or Color(255, 255, 255, 30)
@@ -461,7 +410,6 @@ classes.FadeHover = function(pnl, col, speed, rad)
         end
     end)
 end
-
 classes.BarHover = function(pnl, col, height, speed)
     col = col or Color(255, 255, 255, 255)
     height = height or 2
@@ -473,7 +421,6 @@ classes.BarHover = function(pnl, col, height, speed)
         surface.DrawRect(w / 2 - bar / 2, h - height, bar, height)
     end)
 end
-
 classes.FillHover = function(pnl, col, dir, speed, mat)
     col = col or Color(255, 255, 255, 30)
     dir = dir or LEFT
@@ -493,7 +440,6 @@ classes.FillHover = function(pnl, col, dir, speed, mat)
             local prog = math.Round(h * s.FillHover)
             x, y, fw, fh = 0, h - prog, w, prog
         end
-
         if mat then
             surface.SetMaterial(mat)
             surface.DrawTexturedRect(x, y, fw, fh)
@@ -502,7 +448,6 @@ classes.FillHover = function(pnl, col, dir, speed, mat)
         end
     end)
 end
-
 classes.Background = function(pnl, col, rad, rtl, rtr, rbl, rbr)
     pnl:On("Paint", function(_, w, h)
         if rad and rad > 0 then
@@ -517,7 +462,6 @@ classes.Background = function(pnl, col, rad, rtl, rtr, rbl, rbr)
         end
     end)
 end
-
 classes.Material = function(pnl, mat, col)
     col = col or Color(255, 255, 255)
     pnl:On("Paint", function(_, w, h)
@@ -526,7 +470,6 @@ classes.Material = function(pnl, mat, col)
         surface.DrawTexturedRect(0, 0, w, h)
     end)
 end
-
 classes.TiledMaterial = function(pnl, mat, tw, th, col)
     col = col or Color(255, 255, 255, 255)
     pnl:On("Paint", function(_, w, h)
@@ -535,7 +478,6 @@ classes.TiledMaterial = function(pnl, mat, tw, th, col)
         surface.DrawTexturedRectUV(0, 0, w, h, 0, 0, w / tw, h / th)
     end)
 end
-
 classes.Outline = function(pnl, col, width)
     col = col or Color(255, 255, 255, 255)
     width = width or 1
@@ -546,7 +488,6 @@ classes.Outline = function(pnl, col, width)
         end
     end)
 end
-
 classes.LinedCorners = function(pnl, col, cornerLen)
     col = col or Color(255, 255, 255, 255)
     cornerLen = cornerLen or 15
@@ -558,7 +499,6 @@ classes.LinedCorners = function(pnl, col, cornerLen)
         surface.DrawRect(w - 1, h - cornerLen, 1, cornerLen - 1)
     end)
 end
-
 classes.SideBlock = function(pnl, col, size, side)
     col = col or Color(255, 255, 255, 255)
     size = size or 3
@@ -576,7 +516,6 @@ classes.SideBlock = function(pnl, col, size, side)
         end
     end)
 end
-
 classes.Text = function(pnl, text, font, col, alignment, ox, oy, paint)
     font = font or "Trebuchet24"
     col = col or Color(255, 255, 255, 255)
@@ -595,12 +534,10 @@ classes.Text = function(pnl, text, font, col, alignment, ox, oy, paint)
             elseif alignment == TEXT_ALIGN_RIGHT then
                 x = w
             end
-
             draw.SimpleText(text, font, x + ox, h / 2 + oy, col, alignment, TEXT_ALIGN_CENTER)
         end)
     end
 end
-
 classes.DualText = function(pnl, toptext, topfont, topcol, bottomtext, bottomfont, bottomcol, alignment, centerSpacing)
     topfont = topfont or "Trebuchet24"
     topcol = topcol or Color(0, 127, 255, 255)
@@ -622,12 +559,10 @@ classes.DualText = function(pnl, toptext, topfont, topcol, bottomtext, bottomfon
         elseif alignment == TEXT_ALIGN_RIGHT then
             x = w
         end
-
         draw.SimpleText(toptext, topfont, x, y1 + centerSpacing, topcol, alignment, TEXT_ALIGN_CENTER)
         draw.SimpleText(bottomtext, bottomfont, x, y2 - centerSpacing, bottomcol, alignment, TEXT_ALIGN_CENTER)
     end)
 end
-
 classes.Blur = function(pnl, amount)
     pnl:On("Paint", function(s)
         local x, y = s:LocalToScreen(0, 0)
@@ -642,7 +577,6 @@ classes.Blur = function(pnl, amount)
         end
     end)
 end
-
 classes.CircleClick = function(pnl, col, speed, trad)
     col = col or Color(255, 255, 255, 50)
     speed = speed or 5
@@ -656,14 +590,12 @@ classes.CircleClick = function(pnl, col, speed, trad)
             s.Alpha = Lerp(FrameTime() * speed, s.Alpha, 0)
         end
     end)
-
     pnl:On("DoClick", function(s)
         s.ClickX, s.ClickY = s:CursorPos()
         s.Rad = 0
         s.Alpha = col.a
     end)
 end
-
 classes.CircleHover = function(pnl, col, speed, trad)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -676,7 +608,6 @@ classes.CircleHover = function(pnl, col, speed, trad)
         drawCircle(s.LastX, s.LastY, s.CircleHover * (trad or w))
     end)
 end
-
 classes.SquareCheckbox = function(pnl, inner, outer, speed)
     inner = inner or Color(0, 255, 0, 255)
     outer = outer or Color(255, 255, 255, 255)
@@ -692,7 +623,6 @@ classes.SquareCheckbox = function(pnl, inner, outer, speed)
         surface.DrawRect(w / 2 - bw / 2, h / 2 - bh / 2, bw, bh)
     end)
 end
-
 classes.CircleCheckbox = function(pnl, inner, outer, speed)
     inner = inner or Color(0, 255, 0, 255)
     outer = outer or Color(255, 255, 255, 255)
@@ -706,7 +636,6 @@ classes.CircleCheckbox = function(pnl, inner, outer, speed)
         drawCircle(w / 2, h / 2, w * s.CircleCheckbox / 2)
     end)
 end
-
 classes.AvatarMask = function(pnl, mask)
     pnl.Avatar = vgui.Create("AvatarImage", pnl)
     pnl.Avatar:SetPaintedManually(true)
@@ -734,12 +663,10 @@ classes.AvatarMask = function(pnl, mask)
         render.SetStencilEnable(false)
         render.ClearStencil()
     end
-
     pnl.PerformLayout = function(s) s.Avatar:SetSize(s:GetWide(), s:GetTall()) end
     pnl.SetPlayer = function(s, ply, size) s.Avatar:SetPlayer(ply, size) end
     pnl.SetSteamID = function(s, id, size) s.Avatar:SetSteamID(id, size) end
 end
-
 classes.CircleAvatar = function(pnl) pnl:Class("AvatarMask", function(_, w, h) drawCircle(w / 2, h / 2, w / 2) end) end
 classes.Circle = function(pnl, col)
     col = col or Color(255, 255, 255, 255)
@@ -749,7 +676,6 @@ classes.Circle = function(pnl, col)
         drawCircle(w / 2, h / 2, math.min(w, h) / 2)
     end)
 end
-
 classes.CircleFadeHover = function(pnl, col, speed)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -760,7 +686,6 @@ classes.CircleFadeHover = function(pnl, col, speed)
         drawCircle(w / 2, h / 2, w / 2)
     end)
 end
-
 classes.CircleExpandHover = function(pnl, col, speed)
     col = col or Color(255, 255, 255, 30)
     speed = speed or 6
@@ -772,7 +697,6 @@ classes.CircleExpandHover = function(pnl, col, speed)
         drawCircle(w / 2, h / 2, rad)
     end)
 end
-
 classes.Gradient = function(pnl, col, dir, frac, op)
     dir = dir or BOTTOM
     frac = frac or 1
@@ -796,11 +720,9 @@ classes.Gradient = function(pnl, col, dir, frac, op)
             x, y, gw, gh = 0, h - prog, w, prog
             surface.SetMaterial(op and gradUp or gradDown)
         end
-
         surface.DrawTexturedRect(x, y, gw, gh)
     end)
 end
-
 classes.SetOpenURL = function(pnl, url) pnl:On("DoClick", function() gui.OpenURL(url) end) end
 classes.NetMessage = function(pnl, name, data)
     data = data or function() end
@@ -810,7 +732,6 @@ classes.NetMessage = function(pnl, name, data)
         net.SendToServer()
     end)
 end
-
 classes.Stick = function(pnl, dock, margin, dontInvalidate)
     dock = dock or FILL
     margin = margin or 0
@@ -818,39 +739,33 @@ classes.Stick = function(pnl, dock, margin, dontInvalidate)
     if margin > 0 then pnl:DockMargin(margin, margin, margin, margin) end
     if not dontInvalidate then pnl:InvalidateParent(true) end
 end
-
 classes.DivTall = function(pnl, frac, target)
     frac = frac or 2
     target = target or pnl:GetParent()
     pnl:SetTall(target:GetTall() / frac)
 end
-
 classes.DivWide = function(pnl, frac, target)
     target = target or pnl:GetParent()
     frac = frac or 2
     pnl:SetWide(target:GetWide() / frac)
 end
-
 classes.SquareFromHeight = function(pnl) pnl:SetWide(pnl:GetTall()) end
 classes.SquareFromWidth = function(pnl) pnl:SetTall(pnl:GetWide()) end
 classes.SetRemove = function(pnl, target)
     target = target or pnl
     pnl:On("DoClick", function() if IsValid(target) then target:Remove() end end)
 end
-
 classes.FadeIn = function(pnl, time, alpha)
     time = time or 0.2
     alpha = alpha or 255
     pnl:SetAlpha(0)
     pnl:AlphaTo(alpha, time)
 end
-
 classes.HideVBar = function(pnl)
     local vbar = pnl:GetVBar()
     vbar:SetWide(0)
     vbar:Hide()
 end
-
 classes.SetTransitionFunc = function(pnl, fn) pnl.TransitionFunc = fn end
 classes.ClearTransitionFunc = function(pnl) pnl.TransitionFunc = nil end
 classes.SetAppendOverwrite = function(pnl, fn) pnl.AppendOverwrite = fn end
@@ -860,14 +775,12 @@ classes.ReadyTextbox = function(pnl)
     pnl:SetPaintBackground(false)
     pnl:SetAppendOverwrite("PaintOver"):SetTransitionFunc(function(s) return s:IsEditing() end)
 end
-
 function meta:Class(name, ...)
     local class = classes[name]
     assert(class, L("classDoesNotExist", name))
     class(self, ...)
     return self
 end
-
 for k, _ in pairs(classes) do
     meta[k] = function(s, ...) return s:Class(k, ...) end
 end

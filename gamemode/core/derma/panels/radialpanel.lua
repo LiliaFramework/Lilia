@@ -54,7 +54,6 @@ function PANEL:Init(options)
                 self.scaleAnim = 1
             end
         end
-
         local mouseDown = input.IsMouseDown(MOUSE_LEFT)
         if mouseDown and not self._mouseWasDown then
             local mouseX, mouseY = self:CursorPos()
@@ -83,7 +82,6 @@ function PANEL:Init(options)
                 self:Remove()
             end
         end
-
         local mouseX, mouseY = self:CursorPos()
         local centerX, centerY = ScrW() / 2, ScrH() / 2
         local dist = math_sqrt((mouseX - centerX) ^ 2 + (mouseY - centerY) ^ 2)
@@ -98,14 +96,12 @@ function PANEL:Init(options)
                 if hovered > optionCount then hovered = nil end
             end
         end
-
         if self.hoverOption ~= hovered and hovered and self.hover_sound then surface.PlaySound(self.hover_sound) end
         self.hoverOption = hovered
         self.hoverAnim = math.Clamp(self.hoverAnim + (self.hoverOption and 4 or -8) * FrameTime(), 0, 1)
         self._mouseWasDown = mouseDown
     end
 end
-
 function PANEL:OnMousePressed()
     local mouseX, mouseY = self:CursorPos()
     local centerX, centerY = ScrW() / 2, ScrH() / 2
@@ -114,11 +110,9 @@ function PANEL:OnMousePressed()
     self:Remove()
     return true
 end
-
 function PANEL:OnMouseReleased()
     self:MouseCapture(false)
 end
-
 function PANEL:Paint(w, h)
     local centerX, centerY = ScrW() / 2, ScrH() / 2
     local alpha = self.currentAlpha / 255
@@ -126,7 +120,6 @@ function PANEL:Paint(w, h)
         local bgCol = Color(0, 0, 0, 100 * alpha)
         lia.derma.rect(0, 0, w, h):Color(bgCol):Shape(lia.derma.SHAPE_RECT):Draw()
     end
-
     local outerSize = self.radius * 2 + 20 * (ScrW() / 1920) * self.scale
     local currentRadius = self.radius * self.scaleAnim
     local currentInnerRadius = self.innerRadius * self.scaleAnim
@@ -166,14 +159,12 @@ function PANEL:Paint(w, h)
             end
         end
     end
-
     if optionCount > 0 then
         local lineHighlightColor = ColorAlpha(lia.color.theme.theme, (lia.color.getCurrentTheme() == 'light' and 100 or 60) * alpha)
         self:DrawCircleOutline(centerX, centerY, currentRadius, lineHighlightColor, 1)
         self:DrawCircleOutline(centerX, centerY, currentInnerRadius, lineHighlightColor, 1)
     end
 end
-
 function PANEL:DrawCircleOutline(cx, cy, radius, color)
     local segments = 64
     local points = {}
@@ -184,15 +175,12 @@ function PANEL:DrawCircleOutline(cx, cy, radius, color)
             y = cy + radius * math_sin(angle)
         })
     end
-
     surface.SetDrawColor(color)
     for i = 1, #points - 1 do
         surface.DrawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y)
     end
-
     surface.DrawLine(points[#points].x, points[#points].y, points[1].x, points[1].y)
 end
-
 function PANEL:AddOption(text, func, icon, desc, submenu)
     table.insert(self.options, {
         text = text,
@@ -203,7 +191,6 @@ function PANEL:AddOption(text, func, icon, desc, submenu)
     })
     return #self.options
 end
-
 function PANEL:SelectOption(index)
     local options = self:GetCurrentOptions()
     if options[index] then
@@ -218,26 +205,21 @@ function PANEL:SelectOption(index)
         end
     end
 end
-
 function PANEL:SetCenterText(title, desc)
     self.centerText = title or L("menu")
     self.centerDesc = desc or L("selectOption")
 end
-
 function PANEL:IsMouseOver()
     local mouseX, mouseY = self:CursorPos()
     local centerX, centerY = ScrW() / 2, ScrH() / 2
     return math_sqrt((mouseX - centerX) ^ 2 + (mouseY - centerY) ^ 2) <= self.radius
 end
-
 function PANEL:OnCursorMoved()
     if not self:IsMouseOver() then self.hoverOption = nil end
 end
-
 function PANEL:OnRemove()
     if lia.derma.menu_radial == self then lia.derma.menu_radial = nil end
 end
-
 vgui.Register("liaRadialPanel", PANEL, "DPanel")
 function lia.derma.radial_menu(options)
     if IsValid(lia.derma.menu_radial) then lia.derma.menu_radial:Remove() end
@@ -246,19 +228,16 @@ function lia.derma.radial_menu(options)
     lia.derma.menu_radial = m
     return m
 end
-
 function PANEL:GetCurrentOptions()
     if self.currentMenu then return self.currentMenu.options or {} end
     return self.options
 end
-
 function PANEL:GoBack()
     if #self.menuStack > 0 then
         self.currentMenu = table.remove(self.menuStack)
         self:UpdateCenterText()
     end
 end
-
 function PANEL:UpdateCenterText()
     if self.currentMenu then
         self.centerText = self.currentMenu.title or L("menu")
@@ -268,14 +247,12 @@ function PANEL:UpdateCenterText()
         self.centerDesc = L("selectOption")
     end
 end
-
 function PANEL:CreateSubMenu(title, desc)
     local submenu = {
         title = title,
         desc = desc,
         options = {}
     }
-
     function submenu:AddOption(text, func, icon, optionDesc)
         table.insert(self.options, {
             text = text,
@@ -287,7 +264,6 @@ function PANEL:CreateSubMenu(title, desc)
     end
     return submenu
 end
-
 function PANEL:AddSubMenuOption(text, submenu, icon, desc)
     return self:AddOption(text, nil, icon, desc, submenu)
 end

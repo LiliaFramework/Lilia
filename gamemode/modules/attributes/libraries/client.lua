@@ -13,7 +13,6 @@ function MODULE:PlayerBindPress(client, bind, pressed)
         return true
     end
 end
-
 function MODULE:Think()
     local client = LocalPlayer()
     if not client:getChar() then return end
@@ -23,12 +22,10 @@ function MODULE:Think()
     offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
     if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
 end
-
 function MODULE:LocalVarChanged(client, key, _, newVar)
     if client ~= LocalPlayer() or key ~= "stamina" then return end
     predictedStamina = newVar
 end
-
 function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     if not IsValid(client) then return end
@@ -43,7 +40,6 @@ function MODULE:LoadCharInformation()
             attr = attr
         }
     end
-
     table.sort(attrs, function(a, b) return a.attr.name < b.attr.name end)
     for _, entry in ipairs(attrs) do
         local id, attr = entry.id, entry.attr
@@ -52,7 +48,6 @@ function MODULE:LoadCharInformation()
         hook.Run("AddBarField", L("attributes"), id, attr.name, function() return minVal end, function() return maxVal end, function() return char:getAttrib(id) end)
     end
 end
-
 lia.bar.add(function()
     local client = LocalPlayer()
     local char = client:getChar()
@@ -60,7 +55,6 @@ lia.bar.add(function()
     local max = char:getMaxStamina()
     return predictedStamina / max
 end, Color(200, 200, 40), nil, "stamina")
-
 function MODULE:OnReloaded()
     local client = LocalPlayer()
     if not IsValid(client) then return end

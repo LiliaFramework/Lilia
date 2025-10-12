@@ -12,13 +12,11 @@
         owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
     end
 end
-
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     surface.PlaySound("buttons/button16.wav")
     self:GetOwner():ChatPrint(L("distanceMeasureCancelled"))
 end
-
 function SWEP:Reload()
     if not IsFirstTimePredicted() then return end
     if not self.StartPos then return end
@@ -28,7 +26,6 @@ function SWEP:Reload()
     surface.PlaySound("buttons/button17.wav")
     owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
 end
-
 function SWEP:DrawHUD()
     local owner = self:GetOwner()
     local scrW = ScrW()
@@ -45,7 +42,6 @@ function SWEP:DrawHUD()
     for i, line in ipairs(lines) do
         draw.SimpleText(line, "liaSmallFont", centerX, startY + (i - 1) * 15, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     end
-
     if not self.StartPos then return end
     local tr = owner:GetEyeTrace()
     local start = self.StartPos:ToScreen()

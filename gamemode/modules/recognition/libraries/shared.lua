@@ -4,7 +4,6 @@
     end
     return false
 end
-
 function MODULE:isCharRecognized(character, id)
     if not lia.config.get("RecognitionEnabled", true) then return true end
     if not character or not isfunction(character.getPlayer) then return false end
@@ -23,7 +22,6 @@ function MODULE:isCharRecognized(character, id)
         if otherFaction.isGloballyRecognized then return true end
         if factionID and factionID == otherFactionID and otherFaction.MemberToMemberAutoRecognition then return true end
     end
-
     local clientOnDuty = isfunction(client.isStaffOnDuty) and client:isStaffOnDuty() or false
     local otherOnDuty = isfunction(otherClient.isStaffOnDuty) and otherClient:isStaffOnDuty() or false
     if clientOnDuty or otherOnDuty then return true end
@@ -31,7 +29,6 @@ function MODULE:isCharRecognized(character, id)
     if recognized:find("," .. tostring(id) .. ",", 1, true) then return true end
     return false
 end
-
 function MODULE:isCharFakeRecognized(character, id)
     if not character or not character.getPlayer then return false end
     local other = lia.char.getCharacter(id, character:getPlayer())

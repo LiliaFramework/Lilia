@@ -15,7 +15,6 @@ lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     lia_hands = true,
     lia_keys = true
 }
-
 local DefaultFunctions = {
     drop = {
         tip = "dropTip",
@@ -45,7 +44,6 @@ local DefaultFunctions = {
                     entity.liaIsSafe = true
                     entity:Remove()
                 end
-
                 if not IsValid(client) then return end
                 d:resolve()
             end):catch(function(err)
@@ -54,7 +52,6 @@ local DefaultFunctions = {
                 else
                     client:notifyErrorLocalized(err)
                 end
-
                 client.itemTakeTransaction = nil
                 d:reject()
             end)
@@ -77,7 +74,6 @@ local DefaultFunctions = {
                     if item.player and item.player.notifyLocalized then item.player:notifyErrorLocalized("itemNoFit", w, h) end
                     return false
                 end
-
                 for _, v in pairs(inv:getItems(true)) do
                     if v ~= item then
                         local ix, iy = v:getData("x"), v:getData("y")
@@ -94,7 +90,6 @@ local DefaultFunctions = {
                     end
                 end
             end
-
             item:setData("rotated", newRot)
             return false
         end,
@@ -107,7 +102,6 @@ local DefaultFunctions = {
             local function canTransferItemsFromInventoryUsingGiveForward(_, action)
                 if action == "transfer" then return true end
             end
-
             local client = item.player
             local inv = client:getChar():getInv()
             local target = client:getTracedEntity()
@@ -136,13 +130,11 @@ local DefaultFunctions = {
         end
     },
 }
-
 lia.meta.item.width = 1
 lia.meta.item.height = 1
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
-
 function lia.item.getItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -159,21 +151,18 @@ function lia.item.getItemByID(itemID)
         location = location
     }
 end
-
 function lia.item.getInstancedItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
     if not item then return nil, L("itemNotFound") end
     return item
 end
-
 function lia.item.getItemDataByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
     if not item then return nil, L("itemNotFound") end
     return item.data
 end
-
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -186,15 +175,12 @@ function lia.item.load(path, baseID, isBaseItem)
         lia.error("[Lilia] " .. L("invalidItemNaming", path) .. "\n")
     end
 end
-
 function lia.item.isItem(object)
     return istable(object) and object.isItem
 end
-
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
-
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -211,7 +197,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
             __tostring = baseTable.__tostring,
             __index = baseTable
         })
-
         ITEM.__tostring = baseTable.__tostring
         ITEM.desc = "noDesc"
         ITEM.uniqueID = uniqueID
@@ -231,7 +216,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
             __tostring = baseTable.__tostring,
             __index = baseTable
         })
-
         ITEM.__tostring = baseTable.__tostring
         ITEM.desc = "noDesc"
         ITEM.uniqueID = uniqueID
@@ -241,7 +225,6 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         ITEM.functions = ITEM.functions or table.Copy(baseTable.functions or DefaultFunctions)
         hook.Run("ItemDefaultFunctions", ITEM.functions)
     end
-
     if not luaGenerated and path then lia.loader.include(path, "shared") end
     for funcName, funcTable in pairs(ITEM.functions) do
         if isstring(funcTable.name) then
@@ -249,10 +232,8 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
         else
             funcTable.name = L(funcName)
         end
-
         if isstring(funcTable.tip) then funcTable.tip = L(funcTable.tip) end
     end
-
     if isstring(ITEM.name) then ITEM.name = L(ITEM.name) end
     if isstring(ITEM.desc) then ITEM.desc = L(ITEM.desc) end
     ITEM:onRegistered()
@@ -262,14 +243,12 @@ function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     ITEM = nil
     return targetTable[itemType]
 end
-
 function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
     for _, v in ipairs(files) do
         lia.item.load(directory .. "/base/" .. v, nil, true)
     end
-
     files, folders = file.Find(directory .. "/*", "LUA")
     for _, v in ipairs(folders) do
         if v == "base" then continue end
@@ -277,14 +256,11 @@ function lia.item.loadFromDir(directory)
             lia.item.load(directory .. "/" .. v .. "/" .. v2, "base_" .. v, nil)
         end
     end
-
     for _, v in ipairs(files) do
         lia.item.load(directory .. "/" .. v)
     end
-
     hook.Run("InitializedItems")
 end
-
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), L("itemNonNumberID"))
@@ -299,14 +275,12 @@ function lia.item.new(uniqueID, id)
             __tostring = stockItem.__tostring,
             __index = stockItem
         })
-
         lia.item.instances[id] = item
         return item
     else
         error("[Lilia] " .. L("unknownItem", tostring(uniqueID)) .. "\n")
     end
 end
-
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -315,14 +289,11 @@ function lia.item.registerInv(invType, w, h)
     function inventory:getWidth()
         return w
     end
-
     function inventory:getHeight()
         return h
     end
-
     inventory:register(invType)
 end
-
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -336,11 +307,9 @@ function lia.item.newInv(owner, invType, callback)
                 end
             end
         end
-
         if callback then callback(inventory) end
     end)
 end
-
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -350,11 +319,9 @@ function lia.item.createInv(w, h, id)
         w = w,
         h = h
     }
-
     lia.inventory.instances[id] = instance
     return instance
 end
-
 lia.item.holdTypeToWeaponCategory = {
     grenade = "grenade",
     pistol = "sidearm",
@@ -372,7 +339,6 @@ lia.item.holdTypeToWeaponCategory = {
     slam = "secondary",
     passive = "secondary"
 }
-
 lia.item.holdTypeSizeMapping = {
     grenade = {
         width = 1,
@@ -435,15 +401,12 @@ lia.item.holdTypeSizeMapping = {
         height = 1
     }
 }
-
 function lia.item.addWeaponOverride(className, data)
     lia.item.WeaponOverrides[className] = data
 end
-
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
 end
-
 function lia.item.generateWeapons()
     for _, wep in ipairs(weapons.GetList()) do
         local className = wep.ClassName
@@ -462,20 +425,17 @@ function lia.item.generateWeapons()
             width = 2,
             height = 1
         }
-
         ITEM.width = override.width or size.width
         ITEM.height = override.height or size.height
         ITEM.weaponCategory = override.weaponCategory or lia.item.holdTypeToWeaponCategory[holdType] or "primary"
     end
 end
-
 function lia.item.generateAmmo()
     local entityList = {}
     local scriptedEntities = scripted_ents.GetList()
     for className, _ in pairs(scriptedEntities) do
         if className then entityList[className] = true end
     end
-
     for className, _ in pairs(entityList) do
         if not className then continue end
         local isArc9Ammo = className:find("^arc9_ammo_")
@@ -495,7 +455,6 @@ function lia.item.generateAmmo()
         ITEM.height = override.height or 1
     end
 end
-
 if SERVER then
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
@@ -505,31 +464,26 @@ if SERVER then
         item:setData(key, value, receivers, noSave, noCheckEntity)
         return true
     end
-
     function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or itemData == nil and x == nil) then
             itemData = uniqueID
             uniqueID = index
         end
-
         local d = deferred.new()
         local itemTable = lia.item.list[uniqueID]
         if not itemTable then
             d:reject(L("invalidItemInstantiate", tostring(uniqueID)))
             return d
         end
-
         if not istable(itemData) then itemData = {} end
         if isnumber(itemData.x) then
             x = itemData.x
             itemData.x = nil
         end
-
         if isnumber(itemData.y) then
             y = itemData.y
             itemData.y = nil
         end
-
         local function onItemCreated(_, itemID)
             local item = lia.item.new(uniqueID, itemID)
             if item then
@@ -543,7 +497,6 @@ if SERVER then
                 item:onInstanced(index, x, y, item)
             end
         end
-
         if not isnumber(index) then index = NULL end
         lia.db.insertTable({
             invID = index,
@@ -555,7 +508,6 @@ if SERVER then
         }, onItemCreated, "items")
         return d
     end
-
     function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
@@ -563,7 +515,6 @@ if SERVER then
             lia.db.delete("items", "itemID = " .. id)
         end
     end
-
     function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
@@ -573,7 +524,6 @@ if SERVER then
         else
             return
         end
-
         lia.db.query("SELECT itemID, uniqueID, data, x, y, quantity FROM lia_items WHERE itemID IN " .. range, function(results)
             if not results then return end
             for _, row in ipairs(results) do
@@ -592,7 +542,6 @@ if SERVER then
             end
         end)
     end
-
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then
@@ -600,28 +549,23 @@ if SERVER then
                 angles = callback
                 data = angles
             end
-
             d = deferred.new()
             callback = function(item) d:resolve(item) end
         end
-
         local promise = lia.item.instance(0, uniqueID, data or {}, 1, 1, function(item)
             item:spawn(position, angles)
             if callback then callback(item) end
         end)
-
         promise:next(function(item) if callback then callback(item) end end, function(reason)
             if reason and reason:find("An inventory has a missing item") then
                 lia.error(reason)
             else
                 lia.error(L("failedToSpawnItem", tostring(reason or L("unknownError"))))
             end
-
             if callback then callback(nil) end
         end)
         return d
     end
-
     function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)
             if not inventory then return end
@@ -631,7 +575,6 @@ if SERVER then
         end)
     end
 end
-
 lia.item.loadFromDir("lilia/gamemode/items")
 hook.Add("InitializedModules", "liaItems", function()
     if lia.config.get("AutoWeaponItemGeneration", true) then lia.item.generateWeapons() end

@@ -7,25 +7,21 @@ local function fixupProp(client, ent, mins, maxs)
         endpos = down,
         filter = {ent, client}
     })
-
     local trU = util.TraceLine({
         start = pos,
         endpos = up,
         filter = {ent, client}
     })
-
     if trD.Hit and trU.Hit then return end
     if trD.Hit then ent:SetPos(pos + trD.HitPos - down) end
     if trU.Hit then ent:SetPos(pos + trU.HitPos - up) end
 end
-
 local function tryFixPropPosition(client, ent)
     local m, M = ent:OBBMins(), ent:OBBMaxs()
     fixupProp(client, ent, Vector(m.x, 0, 0), Vector(M.x, 0, 0))
     fixupProp(client, ent, Vector(0, m.y, 0), Vector(0, M.y, 0))
     fixupProp(client, ent, Vector(0, 0, m.z), Vector(0, 0, M.z))
 end
-
 function MODULE:PlayerSay(client, text)
     if client:getNetVar("liaGagged") then return "" end
     if text and string.sub(text, 1, 1) == "@" then
@@ -35,16 +31,13 @@ function MODULE:PlayerSay(client, text)
         return ""
     end
 end
-
 function MODULE:PlayerSpawn(client)
     if IsValid(client) and client:IsPlayer() then client:ConCommand("spawnmenu_reload") end
     lia.log.add(client, "playerSpawn")
 end
-
 function MODULE:PostPlayerLoadout(client)
     if client:hasPrivilege("alwaysSpawnAdminStick") or client:isStaffOnDuty() then client:Give("adminstick") end
 end
-
 net.Receive("liaSpawnMenuSpawnItem", function(_, client)
     local id = net.ReadString()
     if not IsValid(client) or not id or not client:hasPrivilege("canUseItemSpawner") then return end
@@ -54,7 +47,6 @@ net.Receive("liaSpawnMenuSpawnItem", function(_, client)
         endpos = startPos + dir * 4096,
         filter = client
     })
-
     if not tr.Hit then return end
     lia.item.spawn(id, tr.HitPos, function(item)
         local ent = item:getEntity()
@@ -65,7 +57,6 @@ net.Receive("liaSpawnMenuSpawnItem", function(_, client)
             ent.liaCharID = 0
             ent:SetCreator(client)
         end
-
         undo.Create(L("item"))
         undo.SetPlayer(client)
         undo.AddEntity(ent)
@@ -75,7 +66,6 @@ net.Receive("liaSpawnMenuSpawnItem", function(_, client)
         lia.log.add(client, "spawnItem", name, "SpawnMenuSpawnItem")
     end, angle_zero, {})
 end)
-
 net.Receive("liaSpawnMenuGiveItem", function(_, client)
     local id, targetID = net.ReadString(), net.ReadString()
     if not IsValid(client) then return end
@@ -87,15 +77,12 @@ net.Receive("liaSpawnMenuGiveItem", function(_, client)
     targetChar:getInv():add(id)
     lia.log.add(client, "chargiveItem", id, target, "SpawnMenuGiveItem")
 end)
-
 local function SendLogs(client, categorizedLogs)
     lia.net.writeBigTable(client, "liaSendLogs", categorizedLogs)
 end
-
 local function CanPlayerSeeLog(client)
     return lia.config.get("AdminConsoleNetworkLogs", true) and client:hasPrivilege("canSeeLogs")
 end
-
 local function ReadLogEntries(category)
     local d = deferred.new()
     local maxDays = lia.config.get("LogRetentionDays", 7)
@@ -113,24 +100,20 @@ local function ReadLogEntries(category)
                 steamID = row.steamID
             }
         end
-
         d:resolve(logs)
     end)
     return d
 end
-
 net.Receive("liaSendLogsRequest", function(_, client)
     if not CanPlayerSeeLog(client) then return end
     local categories = {}
     for _, v in pairs(lia.log.types) do
         categories[v.category or L("uncategorized")] = true
     end
-
     local catList = {}
     for k in pairs(categories) do
         if hook.Run("CanPlayerSeeLogCategory", client, k) ~= false then catList[#catList + 1] = k end
     end
-
     local logsByCategory = {}
     local function fetch(i)
         if i > #catList then return SendLogs(client, logsByCategory) end
@@ -140,14 +123,11 @@ net.Receive("liaSendLogsRequest", function(_, client)
             fetch(i + 1)
         end)
     end
-
     fetch(1)
 end)
-
 function MODULE:OnCharDelete(client, id)
     lia.log.add(client, "charDelete", id)
 end
-
 function MODULE:OnPlayerInteractItem(client, action, item, result)
     if isentity(item) then
         if IsValid(item) then
@@ -159,7 +139,6 @@ function MODULE:OnPlayerInteractItem(client, action, item, result)
     elseif isnumber(item) then
         item = lia.item.instances[item]
     end
-
     action = string.lower(action)
     if not item then return end
     local name = item.name
@@ -167,7 +146,6 @@ function MODULE:OnPlayerInteractItem(client, action, item, result)
         lia.log.add(client, "itemInteractionFailed", action, name)
         return
     end
-
     if action == "use" then
         lia.log.add(client, "use", name)
     elseif action == "drop" then
@@ -182,67 +160,51 @@ function MODULE:OnPlayerInteractItem(client, action, item, result)
         lia.log.add(client, "itemInteraction", action, item)
     end
 end
-
 function MODULE:PlayerConnect(name, ip)
     lia.log.add(nil, "playerConnect", name, ip)
 end
-
 function MODULE:PlayerInitialSpawn(client)
     lia.log.add(client, "playerInitialSpawn")
 end
-
 function MODULE:PlayerDisconnect(client)
     lia.log.add(client, "playerDisconnected")
 end
-
 function MODULE:PlayerHurt(client, attacker, health, damage)
     lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
 end
-
 function MODULE:PlayerDeath(client, attacker)
     lia.log.add(client, "playerDeath", attacker:IsPlayer() and attacker:Name() or attacker:GetClass())
 end
-
 function MODULE:OnCharCreated(client, character)
     lia.log.add(client, "charCreate", character)
 end
-
 function MODULE:PostPlayerLoadedChar(client, character)
     lia.log.add(client, "charLoad", character:getName(), character:getID())
 end
-
 function MODULE:PlayerSpawnedProp(client, model)
     lia.log.add(client, "spawned_prop", model)
 end
-
 function MODULE:PlayerSpawnedRagdoll(client, model)
     lia.log.add(client, "spawned_ragdoll", model)
 end
-
 function MODULE:PlayerSpawnedEffect(client, model)
     lia.log.add(client, "spawned_effect", model)
 end
-
 function MODULE:PlayerSpawnedVehicle(client, vehicle)
     lia.log.add(client, "spawned_vehicle", vehicle:GetClass(), vehicle:GetModel())
 end
-
 function MODULE:PlayerSpawnedNPC(client, npc)
     lia.log.add(client, "spawned_npc", npc:GetClass(), npc:GetModel())
 end
-
 function MODULE:PlayerSpawnedSENT(client, sent)
     lia.log.add(client, "spawned_sent", sent:GetClass(), sent:GetModel())
 end
-
 function MODULE:PlayerGiveSWEP(client, swep)
     lia.log.add(client, "swep_spawning", swep)
 end
-
 function MODULE:PlayerSpawnSWEP(client, swep)
     lia.log.add(client, "swep_spawning", swep)
 end
-
 function MODULE:CanTool(client, trace, tool)
     local entity = trace.Entity
     local entityInfo = "none"
@@ -257,14 +219,11 @@ function MODULE:CanTool(client, trace, tool)
             entityInfo = "entity:" .. entity:GetClass()
         end
     end
-
     lia.log.add(client, "toolgunUse", tool, entityInfo)
 end
-
 function MODULE:OnPlayerObserve(client, state)
     lia.log.add(client, "observeToggle", state and L("enabled") or L("disabled"))
 end
-
 function MODULE:TicketSystemClaim(admin, requester)
     lia.db.count("ticketclaims", "adminSteamID = " .. lia.db.convertDataType(admin:SteamID())):next(function(count) lia.log.add(admin, "ticketClaimed", requester:Name(), count) end)
     local ticket = ActiveTickets[requester:SteamID()]
@@ -277,19 +236,15 @@ function MODULE:TicketSystemClaim(admin, requester)
         message = ticket and ticket.message or ""
     }, nil, "ticketclaims")
 end
-
 function MODULE:TicketSystemClose(admin, requester)
     lia.db.count("ticketclaims", "adminSteamID = " .. lia.db.convertDataType(admin:SteamID())):next(function(count) lia.log.add(admin, "ticketClosed", requester:Name(), count) end)
 end
-
 function MODULE:WarningIssued(admin, target, reason, index)
     lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count) lia.log.add(admin, "warningIssued", target, reason, count, index) end)
 end
-
 function MODULE:WarningRemoved(admin, target, warning, index)
     lia.db.count("warnings", "charID = " .. lia.db.convertDataType(target:getChar():getID())):next(function(count) lia.log.add(admin, "warningRemoved", target, warning, count, index) end)
 end
-
 function MODULE:ItemTransfered(context)
     local client = context.client
     local item = context.item
@@ -298,22 +253,18 @@ function MODULE:ItemTransfered(context)
     local toID = context.to and context.to:getID() or 0
     lia.log.add(client, "itemTransfer", item:getName(), fromID, toID)
 end
-
 function MODULE:OnItemAdded(owner, item)
     lia.log.add(owner, "itemAdded", item:getName())
 end
-
 function MODULE:ItemFunctionCalled(item, action, client)
     if not action then return end
     local lowered = string.lower(action)
     if lowered == "onloadout" or lowered == "onsave" then return end
     if IsValid(client) then lia.log.add(client, "itemFunction", action, item:getName()) end
 end
-
 function MODULE:ItemDraggedOutOfInventory(client, item)
     lia.log.add(client, "itemDraggedOut", item:getName())
 end
-
 net.Receive("liaCfgSet", function(_, client)
     local key = net.ReadString()
     local name = net.ReadString()
@@ -330,15 +281,12 @@ net.Receive("liaCfgSet", function(_, client)
                 value2 = value2 .. v .. (i == count and "]" or ", ")
                 i = i + 1
             end
-
             value = value2
         end
-
         client:notifySuccessLocalized("cfgSet", client:Name(), name, tostring(value))
         lia.log.add(client, "configChange", name, tostring(oldValue), tostring(value))
     end
 end)
-
 net.Receive("liaManagesitroomsAction", function(_, client)
     if not client:hasPrivilege("manageSitRooms") then return end
     local action = net.ReadUInt(2)
@@ -370,7 +318,6 @@ net.Receive("liaManagesitroomsAction", function(_, client)
         end
     end
 end)
-
 net.Receive("liaRequestAllPks", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     lia.db.query("SELECT * FROM lia_permakills", function(data)
@@ -379,7 +326,6 @@ net.Receive("liaRequestAllPks", function(_, client)
         net.Send(client)
     end)
 end)
-
 net.Receive("liaRequestPksCount", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     lia.db.count("permakills"):next(function(count)
@@ -388,7 +334,6 @@ net.Receive("liaRequestPksCount", function(_, client)
         net.Send(client)
     end)
 end)
-
 net.Receive("liaRequestFullCharList", function(_, client)
     if not IsValid(client) or not client:hasPrivilege("listCharacters") then return end
     lia.db.query([[SELECT c.id, c.name, c.`desc`, c.faction, c.steamID, c.lastJoinTime, c.banned, c.playtime, c.money, d.value AS charBanInfo
@@ -398,7 +343,6 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
             all = {},
             players = {}
         }
-
         for _, row in ipairs(data or {}) do
             local stored = lia.char.getCharacter(row.id)
             local bannedVal = tonumber(row.banned) or 0
@@ -409,7 +353,6 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                 local loginTime = stored:getLoginTime() or os.time()
                 playTime = stored:getPlayTime() + os.time() - loginTime
             end
-
             local entry = {
                 ID = row.id,
                 Name = row.name,
@@ -421,7 +364,6 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                 PlayTime = playTime,
                 Money = tonumber(row.money) or 0
             }
-
             if isBanned then
                 local banInfo = {}
                 if row.charBanInfo and row.charBanInfo ~= "" then
@@ -432,22 +374,18 @@ LEFT JOIN lia_chardata AS d ON d.charID = c.id AND d.key = 'charBanInfo']], func
                         banInfo = util.JSONToTable(row.charBanInfo) or {}
                     end
                 end
-
                 entry.BanningAdminName = banInfo.name or ""
                 entry.BanningAdminSteamID = banInfo.steamID or ""
                 entry.BanningAdminRank = banInfo.rank or ""
             end
-
             hook.Run("CharListEntry", entry, row)
             payload.all[#payload.all + 1] = entry
             payload.players[steamID] = payload.players[steamID] or {}
             table.insert(payload.players[steamID], entry)
         end
-
         lia.net.writeBigTable(client, "liaFullCharList", payload)
     end)
 end)
-
 net.Receive("liaRequestAllFlags", function(_, client)
     if not client:hasPrivilege("manageFlags") then return end
     local data = {}
@@ -461,10 +399,8 @@ net.Receive("liaRequestAllFlags", function(_, client)
             }
         end
     end
-
     lia.net.writeBigTable(client, "liaAllFlags", data)
 end)
-
 net.Receive("liaModifyFlags", function(_, client)
     if not client:hasPrivilege("manageFlags") then return end
     local steamID = net.ReadString()
@@ -477,7 +413,6 @@ net.Receive("liaModifyFlags", function(_, client)
     char:setFlags(flags)
     client:notifySuccessLocalized("flagSet", client:Name(), target:Name(), flags)
 end)
-
 local function buildSummary()
     local d = deferred.new()
     local summary = {}
@@ -496,11 +431,9 @@ local function buildSummary()
             jails = 0,
             strips = 0
         }
-
         if name and name ~= "" then summary[id].player = name end
         return summary[id]
     end
-
     lia.db.query([[SELECT warner AS name, warnerSteamID AS steamID, COUNT(*) AS count FROM lia_warnings GROUP BY warnerSteamID]], function(warnRows)
         for _, row in ipairs(warnRows or {}) do
             local steamID = row.steamID or row.warnerSteamID
@@ -509,7 +442,6 @@ local function buildSummary()
                 entry.warnings = tonumber(row.count) or 0
             end
         end
-
         lia.db.query([[SELECT admin AS name, adminSteamID AS steamID, COUNT(*) AS count FROM lia_ticketclaims GROUP BY adminSteamID]], function(ticketRows)
             for _, row in ipairs(ticketRows or {}) do
                 local steamID = row.steamID or row.adminSteamID
@@ -518,7 +450,6 @@ local function buildSummary()
                     entry.tickets = tonumber(row.count) or 0
                 end
             end
-
             lia.db.query([[SELECT staffName AS name, staffSteamID AS steamID, action, COUNT(*) AS count FROM lia_staffactions GROUP BY staffSteamID, action]], function(actionRows)
                 for _, row in ipairs(actionRows or {}) do
                     local steamID = row.steamID or row.staffSteamID
@@ -542,7 +473,6 @@ local function buildSummary()
                         end
                     end
                 end
-
                 lia.db.query([[SELECT steamName AS name, steamID, userGroup FROM lia_players]], function(playerRows)
                     for _, row in ipairs(playerRows or {}) do
                         local steamID = row.steamID
@@ -551,7 +481,6 @@ local function buildSummary()
                             entry.usergroup = row.userGroup or ""
                         end
                     end
-
                     local list = {}
                     for _, info in pairs(summary) do
                         info.warnings = info.warnings or 0
@@ -566,7 +495,6 @@ local function buildSummary()
                         info.usergroup = info.usergroup or ""
                         list[#list + 1] = info
                     end
-
                     d:resolve(list)
                 end)
             end)
@@ -574,12 +502,10 @@ local function buildSummary()
     end)
     return d
 end
-
 net.Receive("liaRequestStaffSummary", function(_, client)
     if not client:hasPrivilege("viewStaffManagement") then return end
     buildSummary():next(function(data) lia.net.writeBigTable(client, "liaStaffSummary", data) end)
 end)
-
 net.Receive("liaRequestPlayers", function(_, client)
     if not client:hasPrivilege("canAccessPlayerList") then return end
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -598,11 +524,9 @@ FROM lia_players
             local ply = player.GetBySteamID(tostring(row.steamID))
             if IsValid(ply) then row.totalOnlineTime = ply:getPlayTime() end
         end
-
         lia.net.writeBigTable(client, "liaAllPlayers", data)
     end)
 end)
-
 net.Receive("liaRequestMapEntities", function(_, client)
     if not client:hasPrivilege("manageCharacters") then return end
     local entities = {}
@@ -625,10 +549,8 @@ net.Receive("liaRequestMapEntities", function(_, client)
             }
         end
     end
-
     lia.net.writeBigTable(client, "liaMapEntities", entities)
 end)
-
 net.Receive("liaRequestOnlineStaffData", function(_, client)
     local d = deferred.new()
     local staffData = {}
@@ -652,14 +574,12 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
             }
         end
     end
-
     if #staffData == 0 then
         net.Start("liaOnlineStaffData")
         net.WriteTable({})
         net.Send(client)
         return
     end
-
     local completedQueries = 0
     local totalQueries = #staffData * 2
     for i, staffInfo in ipairs(staffData) do
@@ -674,7 +594,6 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
         else
             completedQueries = completedQueries + 1
         end
-
         if steamID and steamID ~= "" then
             lia.db.count("ticketclaims", "requesterSteamID = " .. lia.db.convertDataType(steamID)):next(function(count)
                 staffData[i].tickets = count or 0
@@ -685,21 +604,18 @@ net.Receive("liaRequestOnlineStaffData", function(_, client)
             completedQueries = completedQueries + 1
         end
     end
-
     d:next(function(data)
         net.Start("liaOnlineStaffData")
         net.WriteTable(data)
         net.Send(client)
     end)
 end)
-
 local GM = GM or GAMEMODE
 local restrictedProperties = {
     persist = true,
     drive = true,
     bonemanipulate = true
 }
-
 function GM:PlayerSpawnProp(client, model)
     local list = lia.data.get("prop_blacklist", {})
     if table.HasValue(list, model) and not client:hasPrivilege("canSpawnBlacklistedProps") then
@@ -707,7 +623,6 @@ function GM:PlayerSpawnProp(client, model)
         client:notifyErrorLocalized("blacklistedProp")
         return false
     end
-
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps") or client:hasFlags("e")
     if not canSpawn then
         lia.log.add(client, "spawnDenied", L("prop"), model)
@@ -715,7 +630,6 @@ function GM:PlayerSpawnProp(client, model)
     end
     return canSpawn
 end
-
 local propertyPrivilegeEquivalents = {
     bodygroups = "property_bodygroups",
     bonemanipulate = "property_bonemanipulate",
@@ -737,21 +651,18 @@ local propertyPrivilegeEquivalents = {
     color = "property_color",
     material = "property_material"
 }
-
 function GM:CanProperty(client, property, entity)
     if restrictedProperties[property] then
         lia.log.add(client, "permissionDenied", L("useProperty", property))
         client:notifyErrorLocalized("disabledFeature")
         return false
     end
-
     if IsValid(entity) and entity:IsWorld() then
         if client:hasPrivilege("canPropertyWorldEntities") then return true end
         lia.log.add(client, "permissionDenied", L("modifyWorldProperty", property))
         client:notifyErrorLocalized("noModifyWorldEntities")
         return false
     end
-
     if IsValid(entity) and entity:GetCreator() == client and (property == "remove" or property == "collision") then return true end
     local privilegeName = propertyPrivilegeEquivalents[property] or "property_" .. property
     if client:hasPrivilege(privilegeName) or client:isStaffOnDuty() then return true end
@@ -759,11 +670,9 @@ function GM:CanProperty(client, property, entity)
     client:notifyErrorLocalized("noModifyProperty")
     return false
 end
-
 function GM:DrawPhysgunBeam(client)
     if client:isNoClipping() then return false end
 end
-
 function GM:PhysgunPickup(client, entity)
     if (client:hasPrivilege("physgunPickup") or client:isStaffOnDuty()) and entity.NoPhysgun then
         if not client:hasPrivilege("physgunPickupRestrictedEntities") then
@@ -773,7 +682,6 @@ function GM:PhysgunPickup(client, entity)
         end
         return true
     end
-
     if entity:GetCreator() == client and (entity:isProp() or entity:isItem()) then return true end
     if client:hasPrivilege("physgunPickup") then
         if entity:IsVehicle() then
@@ -800,12 +708,10 @@ function GM:PhysgunPickup(client, entity)
         end
         return true
     end
-
     lia.log.add(client, "permissionDenied", L("physgunEntity"))
     client:notifyErrorLocalized("noPickupEntity")
     return false
 end
-
 function GM:PlayerSpawnVehicle(client, model)
     if not client:hasPrivilege("noCarSpawnDelay") then client.NextVehicleSpawn = SysTime() + lia.config.get("PlayerSpawnVehicleDelay", 30) end
     local list = lia.data.get("carBlacklist", {})
@@ -814,7 +720,6 @@ function GM:PlayerSpawnVehicle(client, model)
         client:notifyErrorLocalized("blacklistedVehicle")
         return false
     end
-
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnCars") or client:hasFlags("C")
     if not canSpawn then
         lia.log.add(client, "spawnDenied", L("vehicle"), model)
@@ -822,27 +727,23 @@ function GM:PlayerSpawnVehicle(client, model)
     end
     return canSpawn
 end
-
 function GM:PlayerNoClip(ply, enabled)
     if not (ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")) then
         lia.log.add(ply, "permissionDenied", L("noclip"))
         ply:notifyErrorLocalized("noNoclip")
         return false
     end
-
     if not ply:Alive() then
         lia.log.add(ply, "permissionDenied", L("noclipWhileDead"))
         ply:notifyErrorLocalized("noNoclipWhileDead")
         return false
     end
-
     ply:DrawShadow(not enabled)
     ply:SetNoTarget(enabled)
     ply:AddFlags(FL_NOTARGET)
     hook.Run("OnPlayerObserve", ply, enabled)
     return true
 end
-
 function GM:PlayerSpawnEffect(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnEffects") or client:hasFlags("L")
     if not canSpawn then
@@ -851,7 +752,6 @@ function GM:PlayerSpawnEffect(client)
     end
     return canSpawn
 end
-
 function GM:PlayerSpawnNPC(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnNPCs") or client:hasFlags("n")
     if not canSpawn then
@@ -860,7 +760,6 @@ function GM:PlayerSpawnNPC(client)
     end
     return canSpawn
 end
-
 function GM:PlayerSpawnRagdoll(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnRagdolls") or client:hasFlags("r")
     if not canSpawn then
@@ -869,7 +768,6 @@ function GM:PlayerSpawnRagdoll(client)
     end
     return canSpawn
 end
-
 function GM:PlayerSpawnSENT(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSENTs") or client:hasFlags("E")
     if not canSpawn then
@@ -878,7 +776,6 @@ function GM:PlayerSpawnSENT(client)
     end
     return canSpawn
 end
-
 function GM:PlayerSpawnSWEP(client)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("z")
     if not canSpawn then
@@ -887,7 +784,6 @@ function GM:PlayerSpawnSWEP(client)
     end
     return canSpawn
 end
-
 function GM:PlayerGiveSWEP(client)
     local canGive = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("W")
     if not canGive then
@@ -896,7 +792,6 @@ function GM:PlayerGiveSWEP(client)
     end
     return canGive
 end
-
 function GM:OnPhysgunReload(_, client)
     local canReload = client:hasPrivilege("canPhysgunReload")
     if not canReload then
@@ -905,7 +800,6 @@ function GM:OnPhysgunReload(_, client)
     end
     return canReload
 end
-
 local DisallowedTools = {
     rope = true,
     light = true,
@@ -915,7 +809,6 @@ local DisallowedTools = {
     faceposer = true,
     stacker = true
 }
-
 function GM:CanTool(client, trace, tool)
     local function CheckDuplicationScale(ply, entities)
         entities = entities or {}
@@ -925,18 +818,15 @@ function GM:CanTool(client, trace, tool)
                 lia.log.add(ply, "dupeCrashAttempt")
                 return false
             end
-
             v.ModelScale = 1
         end
         return true
     end
-
     if DisallowedTools[tool] and not client:hasPrivilege("useDisallowedTools") then
         lia.log.add(client, "toolDenied", tool)
         client:notifyErrorLocalized("toolNotAllowed", tool)
         return false
     end
-
     local formattedTool = tool:gsub("^%l", string.upper)
     local isStaffOrFlagged = client:isStaffOnDuty() or client:hasFlags("t")
     local hasPriv = client:hasPrivilege("tool_" .. tool)
@@ -948,7 +838,6 @@ function GM:CanTool(client, trace, tool)
         client:notifyErrorLocalized("toolNoPermission", tool, table.concat(reasons, ", "))
         return false
     end
-
     local entity = trace.Entity
     if IsValid(entity) then
         local entClass = entity:GetClass()
@@ -970,62 +859,49 @@ function GM:CanTool(client, trace, tool)
             end
             return true
         end
-
         if (tool == "permaall" or tool == "blacklistandremove") and hook.Run("CanPersistEntity", entity) ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
             lia.log.add(client, "toolDenied", tool)
             client:notifyErrorLocalized("toolCantUseEntity", tool)
             return false
         end
-
         if (tool == "duplicator" or tool == "blacklistandremove") and entity.NoDuplicate then
             lia.log.add(client, "toolDenied", tool)
             client:notifyErrorLocalized("cannotDuplicateEntity", tool)
             return false
         end
-
         if tool == "weld" and entClass == "sent_ball" then
             lia.log.add(client, "toolDenied", tool)
             client:notifyErrorLocalized("cannotWeldBall")
             return false
         end
     end
-
     if tool == "duplicator" and client.CurrentDupe and not CheckDuplicationScale(client, client.CurrentDupe.Entities) then return false end
     return true
 end
-
 function GM:PlayerSpawnedNPC(client, entity)
     entity:SetCreator(client)
 end
-
 function GM:PlayerSpawnedEffect(client, _, entity)
     entity:SetCreator(client)
 end
-
 function GM:PlayerSpawnedProp(client, _, entity)
     entity:SetCreator(client)
 end
-
 function GM:PlayerSpawnedRagdoll(client, _, entity)
     entity:SetCreator(client)
 end
-
 function GM:PlayerSpawnedSENT(client, entity)
     entity:SetCreator(client)
 end
-
 function GM:PlayerSpawnedSWEP(client, entity)
     entity:SetCreator(client)
 end
-
 function GM:PlayerSpawnedVehicle(client, entity)
     entity:SetCreator(client)
 end
-
 function GM:CanPlayerUseChar(client)
     if GetGlobalBool("characterSwapLock", false) and not client:hasPrivilege("canBypassCharacterLock") then return false, L("serverEventCharLock") end
 end
-
 local function buildClaimTable(rows)
     local caseclaims = {}
     for _, row in ipairs(rows or {}) do
@@ -1036,7 +912,6 @@ local function buildClaimTable(rows)
             lastclaim = 0,
             claimedFor = {}
         }
-
         local info = caseclaims[adminID]
         info.claims = info.claims + 1
         local rowTime = isnumber(row.timestamp) and row.timestamp or os.time(lia.time.toNumber(row.timestamp))
@@ -1044,18 +919,15 @@ local function buildClaimTable(rows)
         local reqPly = lia.util.getBySteamID(row.requesterSteamID)
         info.claimedFor[row.requesterSteamID] = IsValid(reqPly) and reqPly:Nick() or row.requester
     end
-
     for adminID, info in pairs(caseclaims) do
         local ply = lia.util.getBySteamID(adminID)
         if IsValid(ply) then info.name = ply:Nick() end
     end
     return caseclaims
 end
-
 function MODULE:GetAllCaseClaims()
     return lia.db.select({"timestamp", "requester", "requesterSteamID", "admin", "adminSteamID", "message"}, "ticketclaims"):next(function(res) return buildClaimTable(res.results) end)
 end
-
 function MODULE:GetTicketsByRequester(steamID)
     local condition = "requesterSteamID = " .. lia.db.convertDataType(steamID)
     return lia.db.select({"timestamp", "requester", "requesterSteamID", "admin", "adminSteamID", "message"}, "ticketclaims", condition):next(function(res)
@@ -1073,18 +945,15 @@ function MODULE:GetTicketsByRequester(steamID)
         return tickets
     end)
 end
-
 function MODULE:OnReloaded()
     for steamID, _ in pairs(ActiveTickets) do
         ActiveTickets[steamID] = nil
     end
-
     timer.Simple(0.05, function()
         net.Start("liaClearAllTicketFrames")
         net.Broadcast()
     end)
 end
-
 function MODULE:PlayerDisconnected(client)
     for _, v in player.Iterator() do
         if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
@@ -1093,10 +962,8 @@ function MODULE:PlayerDisconnected(client)
             net.Send(v)
         end
     end
-
     ActiveTickets[client:SteamID()] = nil
 end
-
 function MODULE:SendPopup(noob, message)
     for _, v in player.Iterator() do
         if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
@@ -1107,7 +974,6 @@ function MODULE:SendPopup(noob, message)
             net.Send(v)
         end
     end
-
     if IsValid(noob) and noob:IsPlayer() then
         local requesterSteamID = noob:SteamID()
         ActiveTickets[requesterSteamID] = {
@@ -1116,7 +982,6 @@ function MODULE:SendPopup(noob, message)
             admin = noob.CaseClaimed and IsValid(noob.CaseClaimed) and noob.CaseClaimed:SteamID() or nil,
             message = message
         }
-
         hook.Run("TicketSystemCreated", noob, message)
         hook.Run("OnTicketCreated", noob, message)
         timer.Remove("ticketsystem-" .. requesterSteamID)
@@ -1126,7 +991,6 @@ function MODULE:SendPopup(noob, message)
         end)
     end
 end
-
 net.Receive("liaViewClaims", function(_, client)
     local sid = net.ReadString()
     MODULE:GetAllCaseClaims():next(function(caseclaims)
@@ -1136,14 +1000,12 @@ net.Receive("liaViewClaims", function(_, client)
         net.Send(client)
     end)
 end)
-
 net.Receive("liaTicketSystemClaim", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
         client:notifyErrorLocalized("ticketActionSelf")
         return
     end
-
     if (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) and not requester.CaseClaimed then
         for _, v in player.Iterator() do
             if v:hasPrivilege("alwaysSeeTickets") or v:isStaffOnDuty() then
@@ -1153,27 +1015,23 @@ net.Receive("liaTicketSystemClaim", function(_, client)
                 net.Send(v)
             end
         end
-
         local ticketMessage = ""
         local t = ActiveTickets[requester:SteamID()]
         if t then
             ticketMessage = t.message or ""
             t.admin = client:SteamID()
         end
-
         hook.Run("TicketSystemClaim", client, requester, ticketMessage)
         hook.Run("OnTicketClaimed", client, requester, ticketMessage)
         requester.CaseClaimed = client
     end
 end)
-
 net.Receive("liaTicketSystemClose", function(_, client)
     local requester = net.ReadEntity()
     if client == requester then
         client:notifyErrorLocalized("ticketActionSelf")
         return
     end
-
     if not requester or not IsValid(requester) or requester.CaseClaimed ~= client then return end
     if timer.Exists("ticketsystem-" .. requester:SteamID()) then timer.Remove("ticketsystem-" .. requester:SteamID()) end
     for _, v in player.Iterator() do
@@ -1183,7 +1041,6 @@ net.Receive("liaTicketSystemClose", function(_, client)
             net.Send(v)
         end
     end
-
     local ticketMessage = ""
     local t = ActiveTickets[requester:SteamID()]
     if t then ticketMessage = t.message or "" end
@@ -1192,7 +1049,6 @@ net.Receive("liaTicketSystemClose", function(_, client)
     requester.CaseClaimed = nil
     ActiveTickets[requester:SteamID()] = nil
 end)
-
 net.Receive("liaRequestActiveTickets", function(_, client)
     if not (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) then return end
     lia.db.select({"timestamp", "requesterSteamID", "adminSteamID", "message"}, "ticketclaims"):next(function(res)
@@ -1205,13 +1061,11 @@ net.Receive("liaRequestActiveTickets", function(_, client)
                 message = row.message,
             }
         end
-
         net.Start("liaActiveTickets")
         net.WriteTable(tickets)
         net.Send(client)
     end)
 end)
-
 net.Receive("liaRequestTicketsCount", function(_, client)
     if not (client:hasPrivilege("alwaysSeeTickets") or client:isStaffOnDuty()) then return end
     lia.db.count("ticketclaims"):next(function(count)
@@ -1220,17 +1074,14 @@ net.Receive("liaRequestTicketsCount", function(_, client)
         net.Send(client)
     end)
 end)
-
 function MODULE:GetWarnings(charID)
     local condition = "charID = " .. lia.db.convertDataType(charID)
     return lia.db.select({"id", "timestamp", "message", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
-
 function MODULE:GetWarningsByIssuer(steamID)
     local condition = "warnerSteamID = " .. lia.db.convertDataType(steamID)
     return lia.db.select({"id", "timestamp", "message", "warned", "warnedSteamID", "warner", "warnerSteamID"}, "warnings", condition):next(function(res) return res.results or {} end)
 end
-
 function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
     lia.db.insertTable({
         charID = charID,
@@ -1242,7 +1093,6 @@ function MODULE:AddWarning(charID, warned, warnedSteamID, timestamp, message, wa
         warnerSteamID = warnerSteamID
     }, nil, "warnings")
 end
-
 function MODULE:RemoveWarning(charID, index)
     local d = deferred.new()
     self:GetWarnings(charID):next(function(rows)
@@ -1252,7 +1102,6 @@ function MODULE:RemoveWarning(charID, index)
     end)
     return d
 end
-
 net.Receive("liaRequestRemoveWarning", function(_, client)
     if not client:hasPrivilege("canRemoveWarns") then return end
     local charID = net.ReadInt(32)
@@ -1262,25 +1111,21 @@ net.Receive("liaRequestRemoveWarning", function(_, client)
         client:notifyErrorLocalized("invalidWarningIndex")
         return
     end
-
     lia.char.getCharacter(charID, client, function(targetChar)
         if not targetChar then
             client:notifyErrorLocalized("characterNotFound")
             return
         end
-
         local targetClient = targetChar:getPlayer()
         if not IsValid(targetClient) then
             client:notifyErrorLocalized("playerNotFound")
             return
         end
-
         MODULE:RemoveWarning(charID, warnIndex):next(function(warn)
             if not warn then
                 client:notifyErrorLocalized("invalidWarningIndex")
                 return
             end
-
             targetClient:notifyInfoLocalized("warningRemovedNotify", client:Nick())
             client:notifySuccessLocalized("warningRemoved", warnIndex, targetClient:Nick())
             hook.Run("WarningRemoved", client, targetClient, {
@@ -1292,7 +1137,6 @@ net.Receive("liaRequestRemoveWarning", function(_, client)
         end)
     end)
 end)
-
 net.Receive("liaRequestAllWarnings", function(_, client)
     if not client:hasPrivilege("viewPlayerWarnings") then return end
     lia.db.select({"timestamp", "warned", "warnedSteamID", "warner", "warnerSteamID", "message"}, "warnings"):next(function(res)
@@ -1301,7 +1145,6 @@ net.Receive("liaRequestAllWarnings", function(_, client)
         net.Send(client)
     end)
 end)
-
 net.Receive("liaRequestWarningsCount", function(_, client)
     if not client:hasPrivilege("viewPlayerWarnings") then return end
     lia.db.count("warnings"):next(function(count)

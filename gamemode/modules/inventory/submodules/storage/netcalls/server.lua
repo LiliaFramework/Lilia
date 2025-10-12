@@ -3,7 +3,6 @@
     if IsValid(storage) then storage.receivers[client] = nil end
     client.liaStorageEntity = nil
 end)
-
 net.Receive("liaStorageUnlock", function(_, client)
     local password = net.ReadString()
     local storageFunc = function()
@@ -11,7 +10,6 @@ net.Receive("liaStorageUnlock", function(_, client)
         if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
         return client.liaStorageEntity
     end
-
     local passwordDelay = 1
     local storage = storageFunc()
     if not storage then return end
@@ -26,11 +24,9 @@ net.Receive("liaStorageUnlock", function(_, client)
             client:notifyErrorLocalized("wrongPassword")
             client.liaStorageEntity = nil
         end
-
         client.lastPasswordAttempt = CurTime()
     end
 end)
-
 net.Receive("liaStorageTransfer", function(_, client)
     local itemID = net.ReadUInt(32)
     if not client:getChar() then return end
@@ -39,7 +35,6 @@ net.Receive("liaStorageTransfer", function(_, client)
         if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
         return client.liaStorageEntity
     end
-
     local storage = storageFunc()
     if not storage or not storage.receivers[client] then return end
     local clientInv = client:getChar():getInv()
@@ -57,7 +52,6 @@ net.Receive("liaStorageTransfer", function(_, client)
         from = fromInv,
         to = toInv
     }
-
     if clientInv:canAccess("transfer", context) == false or storageInv:canAccess("transfer", context) == false then return end
     if client.storageTransaction and client.storageTransactionTimeout > RealTime() then return end
     client.storageTransaction = true
