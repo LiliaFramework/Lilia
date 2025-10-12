@@ -408,8 +408,8 @@ lia.config.add("CharacterDataSaveInterval", "characterDataSaveInterval", 300, ni
 lia.config.add("SpawnTime", "respawnTime", 5, nil, {
     desc = "respawnTimeDesc",
     category = "death",
-    type = "Float",
-    min = 0.5,
+    type = "Int",
+    min = 1,
     max = 60
 })
 
