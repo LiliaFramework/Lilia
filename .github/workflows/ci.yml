@@ -148,34 +148,38 @@ jobs:
           # Generate changelog content
           CURRENT_DATE=$(date '+%B %d, %Y')
           
-          # Create new changelog entry
-          NEW_ENTRY="## Version $VERSION ($CURRENT_DATE)
-
-### Changes
-
-"
-          
           # Get recent commits and format them
           echo "Fetching recent commits..."
           COMMITS=$(git log --no-merges --pretty=format:'- %s' -n 20 | grep -v '^Successfully updated')
-          NEW_ENTRY="${NEW_ENTRY}${COMMITS}
-
-"
           
-          # Check if changelog exists and has content
+          # Build new entry with a here-doc (safer for YAML and quoting)
+          cat > new_entry.md <<EOF
+          ## Version $VERSION ($CURRENT_DATE)
+          
+          ### Changes
+          
+          $COMMITS
+          
+          EOF
+          
+          # Check if changelog exists and has content, then prepend
           if [ -f "documentation/docs/changelog.md" ] && [ -s "documentation/docs/changelog.md" ]; then
-            # File exists and has content, prepend new entry
-            echo "# Changelog" > temp_changelog.md
-            echo "" >> temp_changelog.md
-            echo "$NEW_ENTRY" >> temp_changelog.md
-            cat documentation/docs/changelog.md | sed '1,2d' >> temp_changelog.md
+            {
+              echo "# Changelog";
+              echo;
+              cat new_entry.md;
+              # Remove the existing header (first two lines) from current file and append the rest
+              sed '1,2d' "documentation/docs/changelog.md";
+            } > temp_changelog.md
             mv temp_changelog.md documentation/docs/changelog.md
           else
-            # File doesn't exist or is empty, create new one
-            echo "# Changelog" > documentation/docs/changelog.md
-            echo "" >> documentation/docs/changelog.md
-            echo "$NEW_ENTRY" >> documentation/docs/changelog.md
+            {
+              echo "# Changelog";
+              echo;
+              cat new_entry.md;
+            } > documentation/docs/changelog.md
           fi
+          rm -f new_entry.md
           
           echo "Changelog generated successfully at: documentation/docs/changelog.md"
           echo "Changelog preview:"
