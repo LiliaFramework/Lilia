@@ -138,7 +138,11 @@ jobs:
           node-version: '18'
       - run: |
           cd "${{ github.workspace }}"
-          node "documentation/docs/tools/generate-changelog.js"
+          if [ -f "documentation/docs/tools/generate-changelog.js" ]; then
+            node "documentation/docs/tools/generate-changelog.js"
+          else
+            echo "Skip changelog generation: script not found"
+          fi
         env:
           VERSION: ${{ env.VERSION }}
       - run: |
