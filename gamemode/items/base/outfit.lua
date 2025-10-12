@@ -21,6 +21,7 @@ else
         bodygroups = {}
     }
 end
+
 function ITEM:removeOutfit(client)
     local character = client:getChar()
     self:setData("equip", nil)
@@ -42,24 +43,29 @@ function ITEM:removeOutfit(client)
                 end
             end
         end
+
         character:setData("oldGroups", oldGroups)
     end
+
     if self.pacData and client.removePart then client:removePart(self.uniqueID) end
     if self.attribBoosts then
         for k, _ in pairs(self.attribBoosts) do
             character:removeBoost(self.uniqueID, k)
         end
     end
+
     if isnumber(self.armor) then client:SetArmor(math.max(client:Armor() - self.armor, 0)) end
     self:getOwner():SetupHands()
     self:call("onTakeOff", client)
 end
+
 function ITEM:wearOutfit(client, isForLoadout)
     if isnumber(self.armor) then client:SetArmor(client:Armor() + self.armor) end
     if self.pacData and client.addPart then client:addPart(self.uniqueID) end
     self:getOwner():SetupHands()
     self:call("onWear", client, nil, isForLoadout)
 end
+
 ITEM.functions.Unequip = {
     name = "unequip",
     tip = "equipTip",
@@ -70,6 +76,7 @@ ITEM.functions.Unequip = {
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip", false) end
 }
+
 ITEM.functions.Equip = {
     name = "equip",
     tip = "equipTip",
@@ -83,6 +90,7 @@ ITEM.functions.Equip = {
                 return false
             end
         end
+
         item:setData("equip", true)
         if hook.Run("CanOutfitChangeModel", item) ~= false then
             if isfunction(item.onGetReplacement) then
@@ -104,11 +112,13 @@ ITEM.functions.Equip = {
                     character:setModel(tostring(item.replacement or item.replacements))
                 end
             end
+
             if isnumber(item.newSkin) then
                 item:setData("oldSkin", item.player:GetSkin())
                 character:setSkin(item.newSkin)
                 item.player:SetSkin(item.newSkin)
             end
+
             if istable(item.bodyGroups) then
                 local oldGroups = character:getData("oldGroups", {})
                 local groups = {}
@@ -119,6 +129,7 @@ ITEM.functions.Equip = {
                         groups[index] = value
                     end
                 end
+
                 character:setData("oldGroups", oldGroups)
                 item:setData("oldGroups", oldGroups)
                 local newGroups = character:getBodygroups()
@@ -126,27 +137,34 @@ ITEM.functions.Equip = {
                     newGroups[index] = value
                     item.player:SetBodygroup(index, value)
                 end
+
                 if table.Count(newGroups) > 0 then character:setBodygroups(newGroups) end
             end
         end
+
         if istable(item.attribBoosts) then
             for attribute, boost in pairs(item.attribBoosts) do
                 character:addBoost(item.uniqueID, attribute, boost)
             end
         end
+
         item:wearOutfit(item.player, false)
         return false
     end,
     onCanRun = function(item) return not IsValid(item.entity) and item:getData("equip") ~= true end
 }
+
 function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
     return true
 end
+
 function ITEM:onLoadout()
     if self:getData("equip") then self:wearOutfit(self.player, true) end
 end
+
 function ITEM:onRemoved()
     if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
 end
+
 ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)

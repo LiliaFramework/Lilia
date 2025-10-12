@@ -3,6 +3,7 @@
     category = "audio",
     type = "Boolean"
 })
+
 lia.config.add("LimbDamage", "limbDamageMultiplier", 0.5, nil, {
     desc = "limbDamageMultiplierDesc",
     category = "combat",
@@ -10,6 +11,7 @@ lia.config.add("LimbDamage", "limbDamageMultiplier", 0.5, nil, {
     min = 0.1,
     max = 1
 })
+
 lia.config.add("DamageScale", "globalDamageScale", 1, nil, {
     desc = "globalDamageScaleDesc",
     category = "combat",
@@ -17,6 +19,7 @@ lia.config.add("DamageScale", "globalDamageScale", 1, nil, {
     min = 0.1,
     max = 5
 })
+
 lia.config.add("HeadShotDamage", "headshotDamageMultiplier", 2, nil, {
     desc = "headshotDamageMultiplierDesc",
     category = "combat",

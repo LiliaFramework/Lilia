@@ -5,6 +5,7 @@ lia.inventory.instances = lia.inventory.instances or {}
 local function serverOnly(value)
     return SERVER and value or nil
 end
+
 local InvTypeStructType = {
     __index = "table",
     add = serverOnly("function"),
@@ -13,6 +14,7 @@ local InvTypeStructType = {
     typeID = "string",
     className = "string"
 }
+
 local function checkType(typeID, struct, expected, prefix)
     prefix = prefix or ""
     for key, expectedType in pairs(expected) do
@@ -23,6 +25,7 @@ local function checkType(typeID, struct, expected, prefix)
         if istable(expectedType) then checkType(typeID, actualValue, expectedType, prefix .. key .. ".") end
     end
 end
+
 function lia.inventory.newType(typeID, invTypeStruct)
     assert(not lia.inventory.types[typeID], L("duplicateInventoryType", typeID))
     assert(istable(invTypeStruct), L("expectedTableArg", 2))
@@ -30,6 +33,7 @@ function lia.inventory.newType(typeID, invTypeStruct)
     debug.getregistry()[invTypeStruct.className] = invTypeStruct
     lia.inventory.types[typeID] = invTypeStruct
 end
+
 function lia.inventory.new(typeID)
     local class = lia.inventory.types[typeID]
     assert(class ~= nil, L("badInventoryType", typeID))
@@ -38,6 +42,7 @@ function lia.inventory.new(typeID)
         config = table.Copy(class.config)
     }, class)
 end
+
 if SERVER then
     local INV_FIELDS = {"invID", "invType", "charID"}
     local INV_TABLE = "inventories"
@@ -51,6 +56,7 @@ if SERVER then
             d:resolve(instance)
             return d
         end
+
         for _, invType in pairs(lia.inventory.types) do
             local loadFunction = rawget(invType, "loadFromStorage")
             if loadFunction then
@@ -58,9 +64,11 @@ if SERVER then
                 if d then return d end
             end
         end
+
         assert(isnumber(id) and id >= 0, L("noInventoryLoader", tostring(id)))
         return lia.inventory.loadFromDefaultStorage(id, noCache)
     end
+
     function lia.inventory.loadFromDefaultStorage(id, noCache)
         return deferred.all({lia.db.select(INV_FIELDS, INV_TABLE, "invID = " .. id, 1), lia.db.select(DATA_FIELDS, DATA_TABLE, "invID = " .. id)}):next(function(res)
             if lia.inventory.instances[id] and not noCache then return lia.inventory.instances[id] end
@@ -72,6 +80,7 @@ if SERVER then
                 lia.error(L("inventoryInvalidType", id, typeID))
                 return
             end
+
             local instance = invType:new()
             instance.id = id
             instance.data = {}
@@ -79,6 +88,7 @@ if SERVER then
                 local decoded = util.JSONToTable(row.value)
                 instance.data[row.key] = decoded and decoded[1] or nil
             end
+
             instance.data.char = tonumber(results.charID) or instance.data.char
             lia.inventory.instances[id] = instance
             instance:onLoaded()
@@ -88,6 +98,7 @@ if SERVER then
             lia.information(err)
         end)
     end
+
     function lia.inventory.instance(typeID, initialData)
         local invType = lia.inventory.types[typeID]
         assert(istable(invType), L("invalidInventoryType", tostring(typeID)))
@@ -102,6 +113,7 @@ if SERVER then
             return instance
         end)
     end
+
     function lia.inventory.loadAllFromCharID(charID)
         local originalCharID = charID
         charID = tonumber(charID)
@@ -111,6 +123,7 @@ if SERVER then
         end
         return lia.db.select({"invID"}, INV_TABLE, "charID = " .. charID):next(function(res) return deferred.map(res.results or {}, function(result) return lia.inventory.loadByID(tonumber(result.invID)) end) end)
     end
+
     function lia.inventory.deleteByID(id)
         lia.db.delete(DATA_TABLE, "invID = " .. id)
         lia.db.delete(INV_TABLE, "invID = " .. id)
@@ -118,11 +131,13 @@ if SERVER then
         local instance = lia.inventory.instances[id]
         if instance then instance:destroy() end
     end
+
     function lia.inventory.cleanUpForCharacter(character)
         for _, inventory in pairs(character:getInv(true)) do
             inventory:destroy()
         end
     end
+
     function lia.inventory.registerStorage(model, data)
         assert(isstring(model), L("storageModelMustBeString"))
         assert(istable(data), L("storageDataMustBeTable"))
@@ -132,10 +147,12 @@ if SERVER then
         lia.inventory.storage[model:lower()] = data
         return data
     end
+
     function lia.inventory.getStorage(model)
         if not model then return end
         return lia.inventory.storage[model:lower()]
     end
+
     function lia.inventory.registerTrunk(vehicleClass, data)
         assert(isstring(vehicleClass), L("vehicleClassMustBeString"))
         assert(istable(data), "Data must be a table")
@@ -149,11 +166,13 @@ if SERVER then
         lia.inventory.storage[vehicleClass:lower()] = data
         return data
     end
+
     function lia.inventory.getTrunk(vehicleClass)
         if not vehicleClass then return end
         local trunkData = lia.inventory.storage[vehicleClass:lower()]
         return trunkData and trunkData.isTrunk and trunkData or nil
     end
+
     function lia.inventory.getAllTrunks()
         local trunks = {}
         for key, data in pairs(lia.inventory.storage) do
@@ -161,6 +180,7 @@ if SERVER then
         end
         return trunks
     end
+
     function lia.inventory.getAllStorage(includeTrunks)
         if includeTrunks ~= false then
             return lia.inventory.storage
@@ -183,6 +203,7 @@ else
             if oldOnRemove then oldOnRemove(self) end
             hook.Run("InventoryClosed", self, inventory)
         end
+
         lia.gui[globalName] = panel
         return panel
     end

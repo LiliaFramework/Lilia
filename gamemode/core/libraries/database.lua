@@ -14,6 +14,7 @@ lia.db.modules = {
                     })
                 end
             end
+
             local data = sql.Query(query)
             local err = sql.LastError()
             if data == false then
@@ -25,6 +26,7 @@ lia.db.modules = {
                     MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[" .. L("database") .. "]", Color(255, 255, 255), " " .. err .. "\n")
                 end
             end
+
             if callback then
                 local lastID = tonumber(sql.QueryValue("SELECT last_insert_rowid()"))
                 callback(data, lastID)
@@ -38,6 +40,7 @@ lia.db.modules = {
         end
     }
 }
+
 lia.db.escape = lia.db.escape or lia.db.modules.sqlite.escape
 lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueue + 1] = {...} end
 function lia.db.connect(callback, reconnect)
@@ -50,15 +53,18 @@ function lia.db.connect(callback, reconnect)
                 for i = 1, #lia.db.queryQueue do
                     lia.db.query(unpack(lia.db.queryQueue[i]))
                 end
+
                 lia.db.queryQueue = {}
             end)
         end
+
         lia.db.escape = dbModule.escape
         lia.db.query = dbModule.query
     else
         lia.error(L("invalidStorageModule", lia.db.module or "Unavailable"))
     end
 end
+
 function lia.db.wipeTables(callback)
     local wipedTables = {}
     local function realCallback()
@@ -66,6 +72,7 @@ function lia.db.wipeTables(callback)
         if #wipedTables > 0 then MsgC(Color(255, 255, 0), "[Lilia] ", Color(255, 255, 255), L("wipedTables", table.concat(wipedTables, ", ")) .. "\n") end
         if isfunction(callback) then callback() end
     end
+
     lia.db.query([[SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'lia_%';]], function(data)
         data = data or {}
         local remaining = #data
@@ -73,6 +80,7 @@ function lia.db.wipeTables(callback)
             realCallback()
             return
         end
+
         for _, row in ipairs(data) do
             local tableName = row.name or row[1]
             table.insert(wipedTables, tableName)
@@ -83,6 +91,7 @@ function lia.db.wipeTables(callback)
         end
     end)
 end
+
 function lia.db.loadTables()
     local function done()
         lia.db.addDatabaseFields()
@@ -90,6 +99,7 @@ function lia.db.loadTables()
         hook.Run("LiliaTablesLoaded")
         hook.Run("OnDatabaseLoaded")
     end
+
     lia.db.query([[
 CREATE TABLE IF NOT EXISTS lia_players (
     steamID varchar,
@@ -256,6 +266,7 @@ CREATE TABLE IF NOT EXISTS lia_data (
 ]], done)
     hook.Run("OnLoadTables")
 end
+
 function lia.db.waitForTablesToLoad()
     TABLE_WAIT_ID = TABLE_WAIT_ID or 0
     local d = deferred.new()
@@ -264,9 +275,11 @@ function lia.db.waitForTablesToLoad()
     else
         hook.Add("LiliaTablesLoaded", tostring(TABLE_WAIT_ID), function() d:resolve() end)
     end
+
     TABLE_WAIT_ID = TABLE_WAIT_ID + 1
     return d
 end
+
 local function genInsertValues(value, dbTable)
     local query = "lia_" .. (dbTable or "characters") .. " ("
     local keys = {}
@@ -277,6 +290,7 @@ local function genInsertValues(value, dbTable)
     end
     return query .. table.concat(keys, ", ") .. ") VALUES (" .. table.concat(values, ", ") .. ")"
 end
+
 local function genUpdateList(value)
     local changes = {}
     for k, v in pairs(value) do
@@ -284,6 +298,7 @@ local function genUpdateList(value)
     end
     return table.concat(changes, ", ")
 end
+
 local function buildWhereClause(conditions)
     if not conditions then return "" end
     if isstring(conditions) then return " WHERE " .. tostring(conditions) end
@@ -297,15 +312,18 @@ local function buildWhereClause(conditions)
                     operator = value.operator
                     conditionValue = value.value
                 end
+
                 local escapedField = lia.db.escapeIdentifier(field)
                 local convertedValue = lia.db.convertDataType(conditionValue)
                 table.insert(whereParts, escapedField .. " " .. operator .. " " .. convertedValue)
             end
         end
+
         if #whereParts > 0 then return " WHERE " .. table.concat(whereParts, " AND ") end
     end
     return ""
 end
+
 function lia.db.convertDataType(value, noEscape)
     if value == nil then
         return "NULL"
@@ -328,6 +346,7 @@ function lia.db.convertDataType(value, noEscape)
     end
     return value
 end
+
 function lia.db.insertTable(value, callback, dbTable)
     local d = deferred.new()
     local query = "INSERT INTO " .. genInsertValues(value, dbTable)
@@ -340,6 +359,7 @@ function lia.db.insertTable(value, callback, dbTable)
     end, function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.updateTable(value, callback, dbTable, condition)
     local d = deferred.new()
     local query = "UPDATE " .. "lia_" .. (dbTable or "characters") .. " SET " .. genUpdateList(value) .. buildWhereClause(condition)
@@ -352,6 +372,7 @@ function lia.db.updateTable(value, callback, dbTable, condition)
     end, function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
@@ -367,6 +388,7 @@ function lia.db.select(fields, dbTable, condition, limit)
     end)
     return d
 end
+
 function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     local d = deferred.new()
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
@@ -382,15 +404,18 @@ function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
                     operator = value.operator
                     conditionValue = value.value
                 end
+
                 local escapedField = lia.db.escapeIdentifier(field)
                 local convertedValue = lia.db.convertDataType(conditionValue)
                 table.insert(whereParts, escapedField .. " " .. operator .. " " .. convertedValue)
             end
         end
+
         if #whereParts > 0 then query = query .. " WHERE " .. table.concat(whereParts, " AND ") end
     elseif isstring(conditions) then
         query = query .. " WHERE " .. tostring(conditions)
     end
+
     if orderBy then query = query .. " ORDER BY " .. tostring(orderBy) end
     if limit then query = query .. " LIMIT " .. tostring(limit) end
     lia.db.query(query, function(results, lastID)
@@ -401,6 +426,7 @@ function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     end)
     return d
 end
+
 function lia.db.count(dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
@@ -414,6 +440,7 @@ function lia.db.count(dbTable, condition)
     end)
     return c
 end
+
 function lia.db.addDatabaseFields()
     local typeMap = {
         string = function(d) return ("%s VARCHAR(%d)"):format(d.field, d.length or 255) end,
@@ -423,6 +450,7 @@ function lia.db.addDatabaseFields()
         datetime = function(d) return ("%s DATETIME"):format(d.field) end,
         text = function(d) return ("%s TEXT"):format(d.field) end
     }
+
     local ignore = function() end
     if not istable(lia.char.vars) then return end
     for _, v in pairs(lia.char.vars) do
@@ -437,9 +465,11 @@ function lia.db.addDatabaseFields()
         end
     end
 end
+
 function lia.db.exists(dbTable, condition)
     return lia.db.count(dbTable, condition):next(function(n) return n > 0 end)
 end
+
 function lia.db.selectOne(fields, dbTable, condition)
     local c = deferred.new()
     local tbl = "`lia_" .. dbTable .. "`"
@@ -456,6 +486,7 @@ function lia.db.selectOne(fields, dbTable, condition)
     end)
     return c
 end
+
 function lia.db.bulkInsert(dbTable, rows)
     if #rows == 0 then return deferred.new():resolve() end
     local c = deferred.new()
@@ -464,6 +495,7 @@ function lia.db.bulkInsert(dbTable, rows)
     for k in pairs(rows[1]) do
         keys[#keys + 1] = lia.db.escapeIdentifier(k)
     end
+
     local vals = {}
     for _, row in ipairs(rows) do
         local items = {}
@@ -471,12 +503,15 @@ function lia.db.bulkInsert(dbTable, rows)
             local key = k:sub(2, -2)
             items[#items + 1] = lia.db.convertDataType(row[key])
         end
+
         vals[#vals + 1] = "(" .. table.concat(items, ",") .. ")"
     end
+
     local q = "INSERT INTO " .. tbl .. " (" .. table.concat(keys, ",") .. ") VALUES " .. table.concat(vals, ",")
     lia.db.query(q, function() c:resolve() end, function(err) c:reject(err) end)
     return c
 end
+
 function lia.db.bulkUpsert(dbTable, rows)
     if #rows == 0 then return deferred.new():resolve() end
     local c = deferred.new()
@@ -485,6 +520,7 @@ function lia.db.bulkUpsert(dbTable, rows)
     for k in pairs(rows[1]) do
         keys[#keys + 1] = lia.db.escapeIdentifier(k)
     end
+
     local vals = {}
     for _, row in ipairs(rows) do
         local items = {}
@@ -492,12 +528,15 @@ function lia.db.bulkUpsert(dbTable, rows)
             local key = k:sub(2, -2)
             items[#items + 1] = lia.db.convertDataType(row[key])
         end
+
         vals[#vals + 1] = "(" .. table.concat(items, ",") .. ")"
     end
+
     local q = "INSERT OR REPLACE INTO " .. tbl .. " (" .. table.concat(keys, ",") .. ") VALUES " .. table.concat(vals, ",")
     lia.db.query(q, function() c:resolve() end, function(err) c:reject(err) end)
     return c
 end
+
 function lia.db.insertOrIgnore(value, dbTable)
     local c = deferred.new()
     local tbl = "`lia_" .. (dbTable or "characters") .. "`"
@@ -506,6 +545,7 @@ function lia.db.insertOrIgnore(value, dbTable)
         keys[#keys + 1] = lia.db.escapeIdentifier(k)
         vals[#vals + 1] = lia.db.convertDataType(v)
     end
+
     local cmd = "INSERT OR IGNORE"
     local q = cmd .. " INTO " .. tbl .. " (" .. table.concat(keys, ",") .. ") VALUES (" .. table.concat(vals, ",") .. ")"
     lia.db.query(q, function(results, lastID)
@@ -516,22 +556,26 @@ function lia.db.insertOrIgnore(value, dbTable)
     end, function(err) c:reject(err) end)
     return c
 end
+
 function lia.db.tableExists(tbl)
     local d = deferred.new()
     local qt = "'" .. tbl:gsub("'", "''") .. "'"
     lia.db.query("SELECT name FROM sqlite_master WHERE type='table' AND name=" .. qt, function(res) d:resolve(res and #res > 0) end, function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.fieldExists(tbl, field)
     local d = deferred.new()
     lia.db.query("PRAGMA table_info(" .. tbl .. ")", function(res)
         for _, r in ipairs(res) do
             if r.name == field then return d:resolve(true) end
         end
+
         d:resolve(false)
     end, function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.getTables()
     local d = deferred.new()
     lia.db.query("SELECT name FROM sqlite_master WHERE type='table'", function(res)
@@ -539,10 +583,12 @@ function lia.db.getTables()
         for _, row in ipairs(res or {}) do
             if row.name and row.name:StartWith("lia_") then tables[#tables + 1] = row.name end
         end
+
         d:resolve(tables)
     end, function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.transaction(queries)
     local c = deferred.new()
     lia.db.query("BEGIN TRANSACTION", function()
@@ -557,13 +603,16 @@ function lia.db.transaction(queries)
                 end, function(err) lia.db.query("ROLLBACK", function() c:reject(err) end) end)
             end
         end
+
         nextQuery()
     end, function(err) c:reject(err) end)
     return c
 end
+
 function lia.db.escapeIdentifier(id)
     return "`" .. tostring(id):gsub("`", "``") .. "`"
 end
+
 function lia.db.upsert(value, dbTable)
     local query = "INSERT OR REPLACE INTO " .. genInsertValues(value, dbTable)
     local d = deferred.new()
@@ -575,6 +624,7 @@ function lia.db.upsert(value, dbTable)
     end)
     return d
 end
+
 function lia.db.delete(dbTable, condition)
     dbTable = "lia_" .. (dbTable or "character")
     local query = "DELETE FROM " .. dbTable .. buildWhereClause(condition)
@@ -587,6 +637,7 @@ function lia.db.delete(dbTable, condition)
     end)
     return d
 end
+
 function lia.db.createTable(dbName, primaryKey, schema)
     local d = deferred.new()
     local tableName = "lia_" .. dbName
@@ -604,13 +655,16 @@ function lia.db.createTable(dbName, primaryKey, schema)
                 colDef = colDef .. " DEFAULT " .. tostring(column.default)
             end
         end
+
         table.insert(columns, colDef)
     end
+
     if primaryKey then table.insert(columns, "PRIMARY KEY (" .. lia.db.escapeIdentifier(primaryKey) .. ")") end
     local query = "CREATE TABLE IF NOT EXISTS " .. tableName .. " (" .. table.concat(columns, ", ") .. ")"
     lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -619,6 +673,7 @@ function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
             d:resolve(false)
             return
         end
+
         local colDef = lia.db.escapeIdentifier(columnName)
         colDef = colDef .. " " .. columnType:upper()
         if defaultValue ~= nil then
@@ -630,11 +685,13 @@ function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
                 colDef = colDef .. " DEFAULT " .. tostring(defaultValue)
             end
         end
+
         local query = "ALTER TABLE " .. fullTableName .. " ADD COLUMN " .. colDef
         lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
     end):catch(function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.removeTable(tableName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -643,11 +700,13 @@ function lia.db.removeTable(tableName)
             d:resolve(false)
             return
         end
+
         local query = "DROP TABLE " .. fullTableName
         lia.db.query(query, function() d:resolve(true) end, function(err) d:reject(err) end)
     end):catch(function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.removeColumn(tableName, columnName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -656,16 +715,19 @@ function lia.db.removeColumn(tableName, columnName)
             d:resolve(false)
             return
         end
+
         lia.db.fieldExists(fullTableName, columnName):next(function(columnExists)
             if not columnExists then
                 d:resolve(false)
                 return
             end
+
             lia.db.query("PRAGMA table_info(" .. fullTableName .. ")", function(columns)
                 if not columns then
                     d:reject(L("failedToGetTableInfo"))
                     return
                 end
+
                 local newColumns = {}
                 for _, col in ipairs(columns) do
                     if col.name ~= columnName then
@@ -676,10 +738,12 @@ function lia.db.removeColumn(tableName, columnName)
                         table.insert(newColumns, colDef)
                     end
                 end
+
                 if #newColumns == 0 then
                     d:reject(L("cannotRemoveLastColumnFromTable"))
                     return
                 end
+
                 local tempTableName = fullTableName .. "_temp_" .. os.time()
                 local createTempQuery = "CREATE TABLE " .. tempTableName .. " (" .. table.concat(newColumns, ", ") .. ")"
                 local insertQuery = "INSERT INTO " .. tempTableName .. " SELECT " .. table.concat(newColumns, ", ") .. " FROM " .. fullTableName
@@ -691,6 +755,7 @@ function lia.db.removeColumn(tableName, columnName)
     end):catch(function(err) d:reject(err) end)
     return d
 end
+
 function lia.db.GetCharacterTable(callback)
     local query = "PRAGMA table_info(lia_characters)"
     lia.db.query(query, function(results)
@@ -699,9 +764,11 @@ function lia.db.GetCharacterTable(callback)
         for _, row in ipairs(results) do
             table.insert(columns, row.name)
         end
+
         callback(columns)
     end)
 end
+
 function lia.db.createSnapshot(tableName)
     local d = deferred.new()
     local fullTableName = "lia_" .. tableName
@@ -710,16 +777,19 @@ function lia.db.createSnapshot(tableName)
             d:reject("Table " .. fullTableName .. " does not exist")
             return
         end
+
         lia.db.query("SELECT * FROM " .. fullTableName, function(results)
             if not results then
                 d:reject("Failed to query table " .. fullTableName)
                 return
             end
+
             local snapshot = {
                 table = tableName,
                 timestamp = os.time(),
                 data = results
             }
+
             local jsonData = util.TableToJSON(snapshot, true)
             local fileName = "snapshot_" .. tableName .. "_" .. os.time() .. ".json"
             local filePath = "lilia/snapshots/" .. fileName
@@ -734,6 +804,7 @@ function lia.db.createSnapshot(tableName)
     end, function(err) d:reject(L("tableCheckError") .. " " .. tostring(err)) end)
     return d
 end
+
 function lia.db.loadSnapshot(fileName)
     local d = deferred.new()
     local filePath = "lilia/snapshots/" .. fileName
@@ -741,26 +812,31 @@ function lia.db.loadSnapshot(fileName)
         d:reject(L("snapshotFileNotFound") .. " " .. fileName .. " " .. L("notFound"))
         return d
     end
+
     local jsonData = file.Read(filePath, "DATA")
     if not jsonData then
         d:reject("Failed to read snapshot file")
         return d
     end
+
     local success, snapshot = pcall(util.JSONToTable, jsonData)
     if not success then
         d:reject("Failed to parse JSON data: " .. tostring(snapshot))
         return d
     end
+
     if not snapshot.table or not snapshot.data then
         d:reject("Invalid snapshot format")
         return d
     end
+
     local fullTableName = "lia_" .. snapshot.table
     lia.db.tableExists(fullTableName):next(function(exists)
         if not exists then
             d:reject("Target table " .. fullTableName .. " does not exist")
             return
         end
+
         lia.db.query("DELETE FROM " .. fullTableName, function()
             if #snapshot.data == 0 then
                 d:resolve({
@@ -769,6 +845,7 @@ function lia.db.loadSnapshot(fileName)
                 })
                 return
             end
+
             local batchSize = 100
             local batches = {}
             for i = 1, #snapshot.data, batchSize do
@@ -776,8 +853,10 @@ function lia.db.loadSnapshot(fileName)
                 for j = i, math.min(i + batchSize - 1, #snapshot.data) do
                     table.insert(batch, snapshot.data[j])
                 end
+
                 table.insert(batches, batch)
             end
+
             local currentBatch = 1
             local function insertNextBatch()
                 if currentBatch > #batches then
@@ -788,21 +867,25 @@ function lia.db.loadSnapshot(fileName)
                     })
                     return
                 end
+
                 lia.db.bulkInsert(snapshot.table, batches[currentBatch]):next(function()
                     currentBatch = currentBatch + 1
                     insertNextBatch()
                 end, function(err) d:reject("Failed to insert batch " .. currentBatch .. ": " .. tostring(err)) end)
             end
+
             insertNextBatch()
         end, function(err) d:reject(L("failedToClearTable") .. " " .. tostring(err)) end)
     end, function(err) d:reject(L("tableCheckError") .. " " .. tostring(err)) end)
     return d
 end
+
 concommand.Add("lia_snapshot", function(_, _, args)
     if not args[1] then
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), "Usage: lia_snapshot <table_name>\n")
         return
     end
+
     local tableName = args[1]
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("creatingSnapshot", tableName) .. "\n")
     lia.db.createSnapshot(tableName):next(function(result)
@@ -812,6 +895,7 @@ concommand.Add("lia_snapshot", function(_, _, args)
         MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotPath", result.path) .. "\n")
     end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("snapshotFailed", tostring(err)) .. "\n") end)
 end)
+
 concommand.Add("lia_snapshot_load", function(_, _, args)
     if not args[1] then
         MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotUsage") .. "\n")
@@ -826,6 +910,7 @@ concommand.Add("lia_snapshot_load", function(_, _, args)
         end
         return
     end
+
     local fileName = args[1]
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("loadingSnapshot", fileName) .. "\n")
     lia.db.loadSnapshot(fileName):next(function(result)
@@ -835,6 +920,7 @@ concommand.Add("lia_snapshot_load", function(_, _, args)
         if result.timestamp then MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotOriginalTimestamp", os.date("%Y-%m-%d %H:%M:%S", result.timestamp)) .. "\n") end
     end, function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("snapshotLoadFailed", tostring(err)) .. "\n") end)
 end)
+
 concommand.Add("lia_add_door_group_column", function()
     MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("addingDoorGroupColumn") .. "\n")
     lia.db.fieldExists("lia_doors", "door_group"):next(function(exists)
@@ -845,9 +931,11 @@ concommand.Add("lia_add_door_group_column", function()
         end
     end):catch(function(err) MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 0, 0), L("doorGroupColumnCheckFailed", tostring(err)) .. "\n") end)
 end)
+
 function GM:RegisterPreparedStatements()
     lia.bootstrap(L("database"), L("preparedStatementsAdded"))
 end
+
 function GM:SetupDatabase()
     local databasePath = engine.ActiveGamemode() .. "/schema/database.lua"
     local databaseOverrideExists = file.Exists(databasePath, "LUA")
@@ -860,6 +948,7 @@ function GM:SetupDatabase()
             end
         end
     end
+
     if not lia.db.config then
         for k, v in pairs({
             module = "sqlite",
@@ -873,6 +962,7 @@ function GM:SetupDatabase()
         end
     end
 end
+
 function GM:DatabaseConnected()
     lia.bootstrap(L("database"), L("databaseConnected", lia.db.module))
 end

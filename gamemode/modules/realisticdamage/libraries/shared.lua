@@ -7,11 +7,13 @@ function MODULE:GetPlayerDeathSound(_, isFemale)
     soundTable = isFemale and FemaleDeathSounds or MaleDeathSounds
     return soundTable and soundTable[math.random(#soundTable)]
 end
+
 function MODULE:GetPlayerPainSound(_, paintype, isFemale)
     local soundTable
     if paintype == "hurt" then soundTable = isFemale and FemaleHurtSounds or MaleHurtSounds end
     return soundTable and soundTable[math.random(#soundTable)]
 end
+
 function MODULE:GetFallDamage(_, speed)
     return math.max(0, (speed - 580) * 100 / 444)
 end

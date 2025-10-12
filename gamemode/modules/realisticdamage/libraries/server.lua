@@ -7,10 +7,12 @@ function MODULE:ScalePlayerDamage(_, hitgroup, dmgInfo)
     elseif table.HasValue(LimbHitgroups, hitgroup) then
         damageScale = lia.config.get("LimbDamage")
     end
+
     damageScale = hook.Run("GetDamageScale", hitgroup, dmgInfo, damageScale) or damageScale
     dmgInfo:ScaleDamage(damageScale)
     hook.Run("PostScaleDamage", hitgroup, dmgInfo, damageScale)
 end
+
 function MODULE:PlayerDeath(client)
     if not lia.config.get("DeathSoundEnabled") then return end
     local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
@@ -19,6 +21,7 @@ function MODULE:PlayerDeath(client)
         hook.Run("OnDeathSoundPlayed", client, deathSound)
     end
 end
+
 function MODULE:EntityTakeDamage(client)
     if not lia.config.get("PainSoundEnabled") or not client:IsPlayer() or client:Health() <= 0 then return end
     local painSound = self:GetPlayerPainSound(client, "hurt", client:isFemale())

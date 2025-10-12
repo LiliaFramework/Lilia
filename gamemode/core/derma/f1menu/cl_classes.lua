@@ -13,6 +13,7 @@ function PANEL:Init()
         lia.derma.rect(0, 0, sidebarW, sidebarH):Rad(12):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(8, 16):Draw()
         lia.derma.rect(0, 0, sidebarW, sidebarH):Rad(12):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
     end
+
     self.mainContent = self:Add("liaScrollPanel")
     self.mainContent:Dock(FILL)
     self.mainContent:DockMargin(10, 10, 10, 10)
@@ -22,15 +23,18 @@ function PANEL:Init()
         lia.derma.rect(0, 0, contentW, contentH):Rad(12):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(8, 16):Draw()
         lia.derma.rect(0, 0, contentW, contentH):Rad(12):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
     end
+
     self.tabList = {}
     self:loadClasses()
 end
+
 function PANEL:loadClasses()
     local client = LocalPlayer()
     local list = {}
     for _, cl in pairs(lia.class.list) do
         if cl.faction == client:Team() then list[#list + 1] = cl end
     end
+
     table.sort(list, function(a, b) return L(a.name or "") < L(b.name or "") end)
     self.sidebar:Clear()
     self.tabList = {}
@@ -49,11 +53,14 @@ function PANEL:loadClasses()
             for _, b in ipairs(self.tabList) do
                 b:SetSelected(b == btn)
             end
+
             self:populateClassDetails(cl, canBe)
         end
+
         self.tabList[#self.tabList + 1] = btn
     end
 end
+
 function PANEL:populateClassDetails(cl, canBe)
     self.mainContent:Clear()
     local container = self.mainContent:Add("DPanel")
@@ -66,16 +73,19 @@ function PANEL:populateClassDetails(cl, canBe)
         lia.derma.rect(0, 0, w, h):Rad(8):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 12):Draw()
         lia.derma.rect(0, 0, w, h):Rad(8):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
     end
+
     if cl.logo then
         local img = container:Add("DImage")
         img:SetImage(cl.logo)
         img:SetScaledSize(128, 128)
         img.Think = function() img:SetPos(container:GetWide() - img:GetWide() - 10, 10) end
     end
+
     self:createModelPanel(container, cl)
     self:addClassDetails(container, cl)
     self:addJoinButton(container, cl, canBe)
 end
+
 function PANEL:createModelPanel(parent, cl)
     local sizeX, sizeY = 300, 600
     local panel = parent:Add("liaModelPanel")
@@ -90,6 +100,7 @@ function PANEL:createModelPanel(parent, cl)
         lia.derma.rect(0, 0, modelW, modelH):Rad(8):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(5, 12):Draw()
         lia.derma.rect(0, 0, modelW, modelH):Rad(8):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
     end
+
     local function getModel(mdl)
         if isstring(mdl) then return mdl end
         if istable(mdl) then
@@ -103,10 +114,12 @@ function PANEL:createModelPanel(parent, cl)
                     end
                 end
             end
+
             gather(mdl)
             if #models > 0 then return models[math.random(#models)] end
         end
     end
+
     local model = getModel(cl.model) or LocalPlayer():GetModel()
     panel:SetModel(model)
     panel.rotationAngle = 45
@@ -115,9 +128,11 @@ function PANEL:createModelPanel(parent, cl)
     for _, bg in ipairs(cl.bodyGroups or {}) do
         ent:SetBodygroup(bg.id, bg.value or 0)
     end
+
     for i, mat in ipairs(cl.subMaterials or {}) do
         ent:SetSubMaterial(i - 1, mat)
     end
+
     panel.Think = function()
         if IsValid(ent) then
             if input.IsKeyDown(KEY_A) then
@@ -125,10 +140,12 @@ function PANEL:createModelPanel(parent, cl)
             elseif input.IsKeyDown(KEY_D) then
                 panel.rotationAngle = panel.rotationAngle + 0.5
             end
+
             ent:SetAngles(Angle(0, panel.rotationAngle, 0))
         end
     end
 end
+
 function PANEL:addClassDetails(parent, cl)
     local client = LocalPlayer()
     local maxH, maxA, maxJ = client:GetMaxHealth(), client:GetMaxArmor(), client:GetJumpPower()
@@ -144,6 +161,7 @@ function PANEL:addClassDetails(parent, cl)
         lbl:DockMargin(10, 5, 10, 0)
         lbl.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(4):Color(Color(0, 0, 0, 30)):Shape(lia.derma.SHAPE_IOS):Draw() end
     end
+
     add(L("name") .. ": " .. (cl.name and L(cl.name) or L("unnamed")))
     add(L("description") .. ": " .. (cl.desc and L(cl.desc) or L("noDesc")))
     local facName = team.GetName(cl.faction)
@@ -170,6 +188,7 @@ function PANEL:addClassDetails(parent, cl)
         [5] = L("bloodZombie"),
         [6] = L("bloodAntlionBright")
     }
+
     add(L("bloodColor") .. ": " .. (bloodMap[cl.bloodcolor] or L("bloodRed")))
     if cl.requirements then
         local req
@@ -178,13 +197,16 @@ function PANEL:addClassDetails(parent, cl)
             for _, v in ipairs(cl.requirements) do
                 reqs[#reqs + 1] = L(v)
             end
+
             req = table.concat(reqs, ", ")
         else
             req = L(tostring(cl.requirements))
         end
+
         add(L("requirements") .. ": " .. req)
     end
 end
+
 function PANEL:addJoinButton(parent, cl, canBe)
     local isCurrent = LocalPlayer():getChar() and LocalPlayer():getChar():getClass() == cl.index
     local btn = parent:Add("liaMediumButton")
@@ -209,6 +231,7 @@ function PANEL:addJoinButton(parent, cl, canBe)
             lia.derma.rect(2, 2, w - 4, h - 4):Rad(4):Color(baseColor):Shape(lia.derma.SHAPE_IOS):Draw()
         end
     end
+
     btn:SetDisabled(isCurrent or not canBe)
     btn.DoClick = function()
         if canBe and not isCurrent then
@@ -222,4 +245,5 @@ function PANEL:addJoinButton(parent, cl, canBe)
         end
     end
 end
+
 vgui.Register("liaClasses", PANEL, "EditablePanel")

@@ -7,16 +7,19 @@ function MODULE:LoadCharInformation()
         local char = client:getChar()
         return char and char:getName() or L("unknown")
     end)
+
     hook.Run("AddTextField", L("generalInfo"), "desc", L("description"), function()
         local client = LocalPlayer()
         local char = client:getChar()
         return char and char:getDesc() or ""
     end)
+
     hook.Run("AddTextField", L("generalInfo"), "money", L("money"), function()
         local client = LocalPlayer()
         return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
     end)
 end
+
 function MODULE:AddSection(sectionName, color, priority, location)
     hook.Run("F1OnAddSection", sectionName, color, priority, location)
     local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -34,6 +37,7 @@ function MODULE:AddSection(sectionName, color, priority, location)
         info.location = location or info.location
     end
 end
+
 function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
     hook.Run("F1OnAddTextField", sectionName, fieldName, labelText, valueFunc)
     local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -43,6 +47,7 @@ function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
         for _, field in ipairs(section.fields) do
             if field.name == fieldName then return end
         end
+
         table.insert(section.fields, {
             type = "text",
             name = fieldName,
@@ -51,6 +56,7 @@ function MODULE:AddTextField(sectionName, fieldName, labelText, valueFunc)
         })
     end
 end
+
 function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     hook.Run("F1OnAddBarField", sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -60,6 +66,7 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
         for _, field in ipairs(section.fields) do
             if field.name == fieldName then return end
         end
+
         table.insert(section.fields, {
             type = "bar",
             name = fieldName,
@@ -70,6 +77,7 @@ function MODULE:AddBarField(sectionName, fieldName, labelText, minFunc, maxFunc,
         })
     end
 end
+
 function MODULE:PlayerBindPress(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -80,6 +88,7 @@ function MODULE:PlayerBindPress(client, bind, pressed)
         return true
     end
 end
+
 function MODULE:CreateMenuButtons(tabs)
     tabs["you"] = function(statusPanel)
         statusPanel.info = vgui.Create("liaCharInfo", statusPanel)
@@ -88,6 +97,7 @@ function MODULE:CreateMenuButtons(tabs)
         statusPanel.info:SetAlpha(0)
         statusPanel.info:AlphaTo(255, 0.5)
     end
+
     tabs["information"] = function(infoTabPanel)
         local frame = infoTabPanel:Add("liaFrame")
         frame:Dock(FILL)
@@ -103,6 +113,7 @@ function MODULE:CreateMenuButtons(tabs)
             local bn = tostring(b.name):lower()
             return an < bn
         end)
+
         local tabContainer = vgui.Create("DPanel", frame)
         tabContainer:Dock(TOP)
         tabContainer:SetTall(40)
@@ -124,6 +135,7 @@ function MODULE:CreateMenuButtons(tabs)
             local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
             baseTabWidths[i] = btnWidth
         end
+
         for i, page in ipairs(pages) do
             local tabButton = vgui.Create("liaTabButton", tabContainer)
             tabButton:Dock(LEFT)
@@ -140,9 +152,11 @@ function MODULE:CreateMenuButtons(tabs)
                 for j, btn in ipairs(tabButtons) do
                     if IsValid(btn) then btn:SetActive(j == i) end
                 end
+
                 surface.PlaySound("buttons/button14.wav")
                 if page.drawFunc then page.drawFunc(tabPanels[i]) end
             end)
+
             tabButtons[i] = tabButton
             local contentPanel = vgui.Create("DPanel", contentArea)
             contentPanel:Dock(TOP)
@@ -151,12 +165,14 @@ function MODULE:CreateMenuButtons(tabs)
             contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
             tabPanels[i] = contentPanel
         end
+
         local function AdjustTabWidths()
             if not IsValid(tabContainer) then return end
             local totalTabsWidth = 0
             for _, width in pairs(baseTabWidths) do
                 totalTabsWidth = totalTabsWidth + width
             end
+
             local availableWidth = tabContainer:GetWide()
             local totalMargins = baseMargin * (#pages - 1)
             local extraSpace = availableWidth - totalTabsWidth - totalMargins
@@ -166,24 +182,29 @@ function MODULE:CreateMenuButtons(tabs)
                 for tabId, baseWidth in pairs(baseTabWidths) do
                     adjustedWidths[tabId] = baseWidth + extraPerTab
                 end
+
                 local remainder = extraSpace % #pages
                 if remainder > 0 then
                     for remainderId = 1, math.min(remainder, #pages) do
                         adjustedWidths[remainderId] = adjustedWidths[remainderId] + 1
                     end
                 end
+
                 for childId, child in ipairs(tabContainer:GetChildren()) do
                     if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
                 end
             end
         end
+
         local originalPerformLayout = tabContainer.PerformLayout
         tabContainer.PerformLayout = function(s, w, h)
             if originalPerformLayout then originalPerformLayout(s, w, h) end
             timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
         end
+
         if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end
     end
+
     tabs["settings"] = function(settingsPanel)
         local frame = settingsPanel:Add("liaFrame")
         frame:Dock(FILL)
@@ -199,6 +220,7 @@ function MODULE:CreateMenuButtons(tabs)
             local bn = tostring(b.name):lower()
             return an < bn
         end)
+
         local tabContainer = vgui.Create("DPanel", frame)
         tabContainer:Dock(TOP)
         tabContainer:SetTall(40)
@@ -219,6 +241,7 @@ function MODULE:CreateMenuButtons(tabs)
             local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
             baseTabWidths[i] = btnWidth
         end
+
         for i, page in ipairs(pages) do
             local tabButton = vgui.Create("liaTabButton", tabContainer)
             tabButton:Dock(LEFT)
@@ -235,9 +258,11 @@ function MODULE:CreateMenuButtons(tabs)
                 for j, btn in ipairs(tabButtons) do
                     if IsValid(btn) then btn:SetActive(j == i) end
                 end
+
                 surface.PlaySound("buttons/button14.wav")
                 if page.drawFunc then page.drawFunc(tabPanels[i]) end
             end)
+
             tabButtons[i] = tabButton
             local contentPanel = vgui.Create("DPanel", contentArea)
             contentPanel:Dock(TOP)
@@ -246,12 +271,14 @@ function MODULE:CreateMenuButtons(tabs)
             contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
             tabPanels[i] = contentPanel
         end
+
         local function AdjustTabWidths()
             if not IsValid(tabContainer) then return end
             local totalTabsWidth = 0
             for _, width in pairs(baseTabWidths) do
                 totalTabsWidth = totalTabsWidth + width
             end
+
             local availableWidth = tabContainer:GetWide()
             local totalMargins = baseMargin * (#pages - 1)
             local extraSpace = availableWidth - totalTabsWidth - totalMargins
@@ -261,24 +288,29 @@ function MODULE:CreateMenuButtons(tabs)
                 for tabId, baseWidth in pairs(baseTabWidths) do
                     adjustedWidths[tabId] = baseWidth + extraPerTab
                 end
+
                 local remainder = extraSpace % #pages
                 if remainder > 0 then
                     for remainderId = 1, math.min(remainder, #pages) do
                         adjustedWidths[remainderId] = adjustedWidths[remainderId] + 1
                     end
                 end
+
                 for childId, child in ipairs(tabContainer:GetChildren()) do
                     if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
                 end
             end
         end
+
         local originalPerformLayout = tabContainer.PerformLayout
         tabContainer.PerformLayout = function(s, w, h)
             if originalPerformLayout then originalPerformLayout(s, w, h) end
             timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
         end
+
         if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end
     end
+
     local adminPages = {}
     hook.Run("PopulateAdminTabs", adminPages)
     if not table.IsEmpty(adminPages) then
@@ -297,6 +329,7 @@ function MODULE:CreateMenuButtons(tabs)
                 local bn = tostring(b.name):lower()
                 return an < bn
             end)
+
             table.insert(pages, 1, {
                 name = "onlineStaff",
                 icon = "icon16/user.png",
@@ -318,6 +351,7 @@ function MODULE:CreateMenuButtons(tabs)
                         end
                         return panel.filteredStaffData
                     end
+
                     local function createStaffTable(staffData)
                         panel:Clear()
                         local searchEntry = panel:Add("DTextEntry")
@@ -332,6 +366,7 @@ function MODULE:CreateMenuButtons(tabs)
                             local filteredData = filterStaffData(textEntry:GetValue())
                             updateStaffTable(filteredData)
                         end
+
                         local staffTable = panel:Add("liaTable")
                         staffTable:Dock(FILL)
                         panel.staffTable = staffTable
@@ -347,17 +382,21 @@ function MODULE:CreateMenuButtons(tabs)
                                     staffTable:AddLine(staffInfo.name .. " (" .. staffInfo.characterName .. ")", staffInfo.usergroup, staffInfo.isStaffOnDuty and L("yes") or L("no"))
                                 end
                             end
+
                             if not staffFound then staffTable:AddLine(L("noStaffCurrentlyOnline"), "", "") end
                         end
+
                         panel.updateStaffTable = updateStaffTable
                         updateStaffTable(staffData)
                     end
+
                     panel.PerformLayout = function(s)
                         if IsValid(s.staffTable) and s.staffTable.CalculateColumnWidths and s.staffTable.RebuildRows then
                             s.staffTable:CalculateColumnWidths()
                             s.staffTable:RebuildRows()
                         end
                     end
+
                     panel.resizeTimer = nil
                     panel.OnSizeChanged = function(s)
                         if IsValid(s.staffTable) and s.staffTable.CalculateColumnWidths and s.staffTable.RebuildRows then
@@ -371,6 +410,7 @@ function MODULE:CreateMenuButtons(tabs)
                             end)
                         end
                     end
+
                     local function onStaffDataReceived(staffData)
                         if IsValid(panel) then
                             panel.originalStaffData = staffData or {}
@@ -382,6 +422,7 @@ function MODULE:CreateMenuButtons(tabs)
                             end
                         end
                     end
+
                     hook.Add("liaOnlineStaffDataReceived", "liaF1MenuStaffData", onStaffDataReceived)
                     net.Start("liaRequestOnlineStaffData")
                     net.SendToServer()
@@ -393,6 +434,7 @@ function MODULE:CreateMenuButtons(tabs)
                             timer.Remove("liaAdminStaffTableRefresh")
                         end
                     end)
+
                     panel.OnRemove = function()
                         hook.Remove("liaOnlineStaffDataReceived", "liaF1MenuStaffData")
                         if timer.Exists("liaAdminStaffTableRefresh") then timer.Remove("liaAdminStaffTableRefresh") end
@@ -401,6 +443,7 @@ function MODULE:CreateMenuButtons(tabs)
                     end
                 end
             })
+
             local tabContainer = vgui.Create("DPanel", frame)
             tabContainer:Dock(TOP)
             tabContainer:SetTall(40)
@@ -421,6 +464,7 @@ function MODULE:CreateMenuButtons(tabs)
                 local btnWidth = math.max(minWidth, padding + iconWidth + textWidth + padding)
                 baseTabWidths[i] = btnWidth
             end
+
             for i, page in ipairs(pages) do
                 local tabButton = vgui.Create("liaTabButton", tabContainer)
                 tabButton:Dock(LEFT)
@@ -437,9 +481,11 @@ function MODULE:CreateMenuButtons(tabs)
                     for j, btn in ipairs(tabButtons) do
                         if IsValid(btn) then btn:SetActive(j == i) end
                     end
+
                     surface.PlaySound("buttons/button14.wav")
                     if page.drawFunc then page.drawFunc(tabPanels[i]) end
                 end)
+
                 tabButtons[i] = tabButton
                 local contentPanel = vgui.Create("DPanel", contentArea)
                 contentPanel:Dock(TOP)
@@ -448,12 +494,14 @@ function MODULE:CreateMenuButtons(tabs)
                 contentPanel.PerformLayout = function(s) if IsValid(frame) and IsValid(tabContainer) then s:SetTall(frame:GetTall() - tabContainer:GetTall() - 20) end end
                 tabPanels[i] = contentPanel
             end
+
             local function AdjustTabWidths()
                 if not IsValid(tabContainer) then return end
                 local totalTabsWidth = 0
                 for _, width in pairs(baseTabWidths) do
                     totalTabsWidth = totalTabsWidth + width
                 end
+
                 local availableWidth = tabContainer:GetWide()
                 local totalMargins = baseMargin * (#pages - 1)
                 local extraSpace = availableWidth - totalTabsWidth - totalMargins
@@ -463,25 +511,30 @@ function MODULE:CreateMenuButtons(tabs)
                     for tabId, baseWidth in pairs(baseTabWidths) do
                         adjustedWidths[tabId] = baseWidth + extraPerTab
                     end
+
                     local remainder = extraSpace % #pages
                     if remainder > 0 then
                         for remainderId = 1, math.min(remainder, #pages) do
                             adjustedWidths[remainderId] = adjustedWidths[remainderId] + 1
                         end
                     end
+
                     for childId, child in ipairs(tabContainer:GetChildren()) do
                         if adjustedWidths[childId] and IsValid(child) then child:SetWide(adjustedWidths[childId]) end
                     end
                 end
             end
+
             local originalPerformLayout = tabContainer.PerformLayout
             tabContainer.PerformLayout = function(s, w, h)
                 if originalPerformLayout then originalPerformLayout(s, w, h) end
                 timer.Simple(0, function() if IsValid(s) then AdjustTabWidths() end end)
             end
+
             if pages[1] and pages[1].drawFunc and IsValid(tabPanels[1]) then timer.Simple(0.01, function() if IsValid(tabPanels[1]) then pages[1].drawFunc(tabPanels[1]) end end) end
         end
     end
+
     local hasPrivilege = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("accessEditConfigurationMenu") or false
     if hasPrivilege then
         tabs["themes"] = function(themesPanel)
@@ -493,10 +546,12 @@ function MODULE:CreateMenuButtons(tabs)
                 local localizationKey = "theme" .. properCaseName:gsub(" ", ""):gsub("-", "")
                 return L(localizationKey) or themeID
             end
+
             local function prettify(name)
                 name = name:gsub("_", " ")
                 return name:gsub("(%a)([%w]*)", function(first, rest) return first:upper() .. rest:lower() end)
             end
+
             local themeIDs = lia.color.getAllThemes()
             table.sort(themeIDs, function(a, b) return getLocalizedThemeName(a) < getLocalizedThemeName(b) end)
             local currentTheme = lia.color.getCurrentTheme()
@@ -534,6 +589,7 @@ function MODULE:CreateMenuButtons(tabs)
                             for _, subValue in ipairs(value) do
                                 if lia.color.isColor(subValue) then colors[#colors + 1] = subValue end
                             end
+
                             if #colors > 0 then
                                 entries[#entries + 1] = {
                                     name = key,
@@ -542,6 +598,7 @@ function MODULE:CreateMenuButtons(tabs)
                             end
                         end
                     end
+
                     table.sort(entries, function(a, b) return a.name < b.name end)
                     for _, entry in ipairs(entries) do
                         local row = scroll:Add("DPanel")
@@ -564,6 +621,7 @@ function MODULE:CreateMenuButtons(tabs)
                             end
                         end
                     end
+
                     local sheetInfo = sheet:AddSheet(displayName, page)
                     local function updateStatus()
                         local isActive = currentTheme == themeID
@@ -572,6 +630,7 @@ function MODULE:CreateMenuButtons(tabs)
                             applyButton:SetText(isActive and L("currentlySelected") or L("apply"))
                         end
                     end
+
                     table.insert(statusUpdaters, updateStatus)
                     updateStatus()
                     applyButton.DoClick = function()
@@ -583,13 +642,16 @@ function MODULE:CreateMenuButtons(tabs)
                         net.WriteType(themeID)
                         net.SendToServer()
                     end
+
                     if themeID == currentTheme and not activeTab and sheetInfo and sheetInfo.Tab then activeTab = sheetInfo.Tab end
                 end
             end
+
             if activeTab then sheet:SetActiveTab(activeTab) end
         end
     end
 end
+
 function MODULE:CanDisplayCharInfo(name)
     local client = LocalPlayer()
     if not client then return true end

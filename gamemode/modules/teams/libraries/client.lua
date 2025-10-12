@@ -9,6 +9,7 @@
     local classData = lia.class.list[classID]
     if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("class"), function() return classData.name end) end
 end
+
 function MODULE:DrawCharInfo(client, _, info)
     if not lia.config.get("ClassDisplay", true) then return end
     local charClass = client:getClassData()
@@ -17,6 +18,7 @@ function MODULE:DrawCharInfo(client, _, info)
         info[#info + 1] = {L(charClass.name) or L("undefinedClass"), classColor}
     end
 end
+
 function MODULE:CreateMenuButtons(tabs)
     if not lia.class or not lia.class.list then return end
     local joinable = lia.class.retrieveJoinable(LocalPlayer())

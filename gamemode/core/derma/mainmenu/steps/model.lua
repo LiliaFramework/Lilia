@@ -12,6 +12,7 @@ function PANEL:filterCharacterModels(faction)
     end
     return filteredModels
 end
+
 function PANEL:Init()
     self.title = self:addLabel(L("selectModel"))
     self.models = self:Add("DIconLayout")
@@ -20,6 +21,7 @@ function PANEL:Init()
     self.models:SetSpaceY(4)
     self.models:SetPaintBackground(false)
 end
+
 function PANEL:onDisplay()
     self.models:Clear()
     local faction = lia.faction.indices[self:getContext("faction")]
@@ -31,6 +33,7 @@ function PANEL:onDisplay()
         modelCount = modelCount + 1
         if not firstIdx then firstIdx = idx end
     end
+
     local shouldCenter = modelCount <= 1
     if IsValid(self.title) then self.title:SetVisible(not shouldCenter) end
     if IsValid(self.models) then self.models:SetVisible(not shouldCenter) end
@@ -46,6 +49,7 @@ function PANEL:onDisplay()
             modelPanel:SetWide(ScrW() * 0.25)
         end
     end
+
     local paintOver = function(icon, w, h) self:paintIcon(icon, w, h) end
     if modelCount > 1 then
         for idx, data in SortedPairs(modelsToDisplay) do
@@ -60,15 +64,19 @@ function PANEL:onDisplay()
                 for i = 0, 8 do
                     bodyGroups = bodyGroups .. tostring((data[3] or {})[i] or 0)
                 end
+
                 model = data[1]
             end
+
             icon:SetModel(model, skin, bodyGroups)
             icon.model, icon.skin, icon.bodyGroups = model, skin, bodyGroups
             if self:getContext("model") == idx then self:onModelSelected(icon, true) end
         end
     end
+
     self.models:InvalidateLayout(true)
 end
+
 function PANEL:paintIcon(icon, w, h)
     if self:getContext("model") ~= icon.index then return end
     local col = lia.config.get("Color", color_white)
@@ -78,27 +86,34 @@ function PANEL:paintIcon(icon, w, h)
         surface.DrawOutlinedRect(i, i, w - o, h - o)
     end
 end
+
 function PANEL:updateContext()
     if not self:getContext("model") then self:setContext("model", 1) end
 end
+
 function PANEL:onModelSelected(icon, noSound)
     self:setContext("model", icon.index or 1)
     if not noSound then lia.gui.character:clickSound() end
     self:updateModelPanel()
 end
+
 function PANEL:shouldSkip()
     return false
 end
+
 function PANEL:onSkip()
     self:setContext("model", 1)
 end
+
 function PANEL:onHide()
     local modelPanel = self:getModelPanel()
     if IsValid(modelPanel) then
         modelPanel:Dock(LEFT)
         modelPanel:SetWide(ScrW() * 0.25)
     end
+
     if IsValid(self.title) then self.title:SetVisible(true) end
     if IsValid(self.models) then self.models:SetVisible(true) end
 end
+
 vgui.Register("liaCharacterModel", PANEL, "liaCharacterCreateStep")

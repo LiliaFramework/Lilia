@@ -22,10 +22,12 @@ SWEP.StartPos = nil
 function SWEP:Initialize()
     self:SetHoldType("normal")
 end
+
 function SWEP:Deploy()
     self.StartPos = nil
     return true
 end
+
 function SWEP:PrimaryAttack()
     if not IsFirstTimePredicted() then return end
     local owner = self:GetOwner()
@@ -36,10 +38,12 @@ function SWEP:PrimaryAttack()
         self.StartPos = nil
     end
 end
+
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
     self.StartPos = nil
 end
+
 function SWEP:Reload()
     if not IsFirstTimePredicted() then return end
     return true

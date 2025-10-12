@@ -16,19 +16,24 @@ function MODULE:FetchSpawns()
                     ang = angle_zero
                 }
             end
+
             t[i] = spawnData
         end
+
         result[fac] = t
     end
+
     d:resolve(result)
     return d
 end
+
 function MODULE:StoreSpawns(spawns)
     lia.data.set("spawns", {
         factions = spawns
     })
     return deferred.resolve(true)
 end
+
 local function SpawnPlayer(client)
     if not IsValid(client) then return end
     local character = client:getChar()
@@ -40,6 +45,7 @@ local function SpawnPlayer(client)
         character:setLastPos(nil)
         return
     end
+
     local factionID
     for _, info in ipairs(lia.faction.indices) do
         if info.index == client:Team() then
@@ -47,6 +53,7 @@ local function SpawnPlayer(client)
             break
         end
     end
+
     if factionID then
         local factionInfo = lia.faction.get(factionID)
         local curMap = game.GetMap():lower()
@@ -61,12 +68,14 @@ local function SpawnPlayer(client)
                         pos = pos + Vector(0, 0, 16)
                         client:SetPos(pos)
                     end
+
                     if isangle(ang) then client:SetEyeAngles(ang) end
                     hook.Run("PlayerSpawnPointSelected", client, pos or Vector(0, 0, 16), ang or angle_zero)
                     return
                 end
             end
         end
+
         MODULE:FetchSpawns():next(function(spawns)
             local factionSpawns = spawns and spawns[factionID]
             if factionSpawns and #factionSpawns > 0 then
@@ -74,6 +83,7 @@ local function SpawnPlayer(client)
                 for _, v in ipairs(factionSpawns) do
                     if not v.map or v.map:lower() == curMap then valid[#valid + 1] = v end
                 end
+
                 if #valid > 0 then
                     local data = table.Random(valid)
                     local basePos = data.pos or data
@@ -81,6 +91,7 @@ local function SpawnPlayer(client)
                         local parsedPos = lia.data.decodeVector(basePos)
                         basePos = parsedPos
                     end
+
                     if not isvector(basePos) then basePos = Vector(0, 0, 0) end
                     local pos = basePos + Vector(0, 0, 16)
                     local ang = data.ang
@@ -92,6 +103,7 @@ local function SpawnPlayer(client)
                             ang = angle_zero
                         end
                     end
+
                     client:SetPos(pos)
                     client:SetEyeAngles(ang)
                     hook.Run("PlayerSpawnPointSelected", client, pos, ang)
@@ -100,6 +112,7 @@ local function SpawnPlayer(client)
         end)
     end
 end
+
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
@@ -110,9 +123,11 @@ function MODULE:CharPreSave(character)
             ang = client:EyeAngles(),
             map = game.GetMap()
         }
+
         character:setLastPos(lastPosData)
     end
 end
+
 local function RemovedDropOnDeathItems(client)
     local character = client:getChar()
     if not character then return end
@@ -127,12 +142,15 @@ local function RemovedDropOnDeathItems(client)
                 name = item.name,
                 id = item.id
             })
+
             item:remove()
         end
     end
+
     local lostCount = #client.LostItems
     if lostCount > 0 then client:notifyWarningLocalized("itemsLostOnDeath", lostCount) end
 end
+
 function MODULE:PlayerDeath(client, _, attacker)
     local char = client:getChar()
     if not char then return end
@@ -145,6 +163,7 @@ function MODULE:PlayerDeath(client, _, attacker)
             ClientAddText(client, Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), dateStr, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), attackerChar and tostring(attackerChar:getID()) or L("na"), " (", Color(0, 255, 0), steamId, Color(255, 255, 255), ")")
         end
     end
+
     client:setNetVar("IsDeadRestricted", true)
     client:setNetVar("lastDeathTime", os.time())
     timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
@@ -153,10 +172,12 @@ function MODULE:PlayerDeath(client, _, attacker)
     if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or attacker:IsWorld() and lia.config.get("LoseItemsonDeathWorld", false) then RemovedDropOnDeathItems(client) end
     char:setData("deathPos", client:GetPos())
 end
+
 function MODULE:PlayerSpawn(client)
     client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
 end
+
 net.Receive("liaRequestRespawn", function(_, client)
     if not IsValid(client) or not client:getChar() then return end
     local respawnTime = lia.config.get("SpawnTime", 5)
@@ -167,5 +188,6 @@ net.Receive("liaRequestRespawn", function(_, client)
     if timePassed < respawnTime then return end
     if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
 end)
+
 hook.Add("PostPlayerLoadedChar", "liaSpawns", SpawnPlayer)
 hook.Add("PostPlayerLoadout", "liaSpawns", SpawnPlayer)

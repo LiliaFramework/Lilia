@@ -10,6 +10,7 @@ ENT.IsPersistent = true
 function ENT:getInv()
     return lia.inventory.instances[self:getNetVar("id")]
 end
+
 function ENT:getStorageInfo()
     local model = self:GetModel()
     if not model then return end

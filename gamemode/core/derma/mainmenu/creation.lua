@@ -9,8 +9,10 @@ function PANEL:configureSteps()
     for i, k in ipairs(keys) do
         ordered[i] = self.steps[k]
     end
+
     self.steps = ordered
 end
+
 function PANEL:updateModel()
     local faction = lia.faction.indices[self.context.faction]
     if not faction then return end
@@ -29,13 +31,16 @@ function PANEL:updateModel()
             entity:SetBodygroup(id, val)
         end
     end
+
     hook.Run("ModifyCharacterModel", entity)
 end
+
 function PANEL:canCreateCharacter()
     local valid = {}
     for _, team in pairs(lia.faction.teams) do
         if lia.faction.hasWhitelist(team.index) then valid[#valid + 1] = team.index end
     end
+
     if #valid == 0 then return false, L("unableToJoinFactions") end
     self.validFactions = valid
     local maxChars = hook.Run("GetMaxPlayerChar", LocalPlayer()) or lia.config.get("MaxCharacters", 5)
@@ -44,11 +49,13 @@ function PANEL:canCreateCharacter()
     if ok == false then return false, reason end
     return true
 end
+
 function PANEL:onFinish()
     if self.creating then return end
     for _, step in ipairs(self.steps) do
         if IsValid(step) and step.updateContext then step:updateContext() end
     end
+
     self.content:SetVisible(false)
     self.buttons:SetVisible(false)
     self:showMessage("creating")
@@ -61,19 +68,23 @@ function PANEL:onFinish()
         self.buttons:SetVisible(true)
         self:showMessage()
     end
+
     local function fail(err)
         finish()
         self:showError(err)
     end
+
     lia.module.get("mainmenu"):createCharacter(self.context):next(function()
         finish()
         hook.Run("ResetCharacterPanel")
     end, fail)
+
     timer.Create("liaFailedToCreate", 60, 1, function()
         if not IsValid(self) or not self.creating then return end
         fail(L("unknownError"))
     end)
 end
+
 function PANEL:showError(msg, ...)
     if IsValid(self.error) then self.error:Remove() end
     if not msg or msg == "" then return end
@@ -91,16 +102,19 @@ function PANEL:showError(msg, ...)
         surface.SetDrawColor(255, 0, 0, 50)
         surface.DrawRect(0, 0, w, h)
     end
+
     err:SetAlpha(0)
     err:AlphaTo(255, 0.5)
     lia.gui.character:warningSound()
     self.error = err
 end
+
 function PANEL:showMessage(msg, ...)
     if not msg or msg == "" then
         if IsValid(self.message) then self.message:Remove() end
         return
     end
+
     if IsValid(self.message) then self.message:SetText(L(msg, ...):upper()) end
     local lbl = self:Add("DLabel")
     lbl:SetFont("LiliaFont.16")
@@ -110,6 +124,7 @@ function PANEL:showMessage(msg, ...)
     lbl:SetText(L(msg, ...):upper())
     self.message = lbl
 end
+
 function PANEL:addStep(step, priority)
     assert(IsValid(step), L("invalidPanelForStep"))
     assert(step.isCharCreateStep, L("panelMustInherit"))
@@ -118,8 +133,10 @@ function PANEL:addStep(step, priority)
     else
         self.steps[#self.steps + 1] = step
     end
+
     step:SetParent(self.content)
 end
+
 function PANEL:nextStep()
     local prevIdx = self.curStep
     local cur = self.steps[prevIdx]
@@ -127,6 +144,7 @@ function PANEL:nextStep()
         local ok, err = cur:validate()
         if ok == false then return self:showError(err) end
     end
+
     self:showError()
     self.curStep = prevIdx + 1
     local nxt = self.steps[self.curStep]
@@ -135,12 +153,15 @@ function PANEL:nextStep()
         nxt:onSkip()
         nxt = self.steps[self.curStep]
     end
+
     if not IsValid(nxt) then
         self.curStep = prevIdx
         return self:onFinish()
     end
+
     self:onStepChanged(cur, nxt)
 end
+
 function PANEL:previousStep()
     local idx = self.curStep - 1
     local prev = self.steps[idx]
@@ -149,10 +170,12 @@ function PANEL:previousStep()
         idx = idx - 1
         prev = self.steps[idx]
     end
+
     if not IsValid(prev) then return end
     self.curStep = idx
     self:onStepChanged(self.steps[idx + 1], prev)
 end
+
 function PANEL:getPreviousStep()
     local idx = self.curStep - 1
     while IsValid(self.steps[idx]) do
@@ -160,6 +183,7 @@ function PANEL:getPreviousStep()
         idx = idx - 1
     end
 end
+
 function PANEL:onStepChanged(oldStep, newStep)
     local finish = self.curStep == #self.steps
     local key = finish and "finish" or "next"
@@ -168,17 +192,20 @@ function PANEL:onStepChanged(oldStep, newStep)
         local shouldShowModel = panelName == "liaCharacterModel"
         self.model:SetVisible(shouldShowModel)
     end
+
     if IsValid(self:getPreviousStep()) then
         self.prev:AlphaTo(255, 0.5)
     else
         self.prev:AlphaTo(0, 0.5)
     end
+
     local function sizeButton(btn, txt)
         btn:SetText(txt)
         surface.SetFont(btn:GetFont())
         local w = select(1, surface.GetTextSize(txt))
         btn:SetWide(w + 40)
     end
+
     if L(key):upper() ~= self.next:GetText() then self.next:AlphaTo(0, 0.5) end
     local function show()
         newStep:SetVisible(true)
@@ -190,8 +217,10 @@ function PANEL:onStepChanged(oldStep, newStep)
             self.next:SetAlpha(0)
             sizeButton(self.next, L(key):upper())
         end
+
         self.next:AlphaTo(255, 0.5)
     end
+
     if IsValid(oldStep) then
         oldStep:AlphaTo(0, 0.5, 0, function()
             self:showError()
@@ -203,6 +232,7 @@ function PANEL:onStepChanged(oldStep, newStep)
         show()
     end
 end
+
 function PANEL:Init()
     self:Dock(FILL)
     local ok, reason = self:canCreateCharacter()
@@ -231,6 +261,7 @@ function PANEL:Init()
         local padding = 20
         btn:SetWide(textW + padding * 2)
     end
+
     self.prev = self.buttons:Add("liaMediumButton")
     sizeButton(self.prev, L("back"):upper())
     self.prev:Dock(LEFT)
@@ -248,4 +279,5 @@ function PANEL:Init()
     self:nextStep()
     timer.Simple(0.5, function() hook.Run("ModifyCharacterModel", self.model:GetEntity()) end)
 end
+
 vgui.Register("liaCharacterCreation", PANEL, "EditablePanel")

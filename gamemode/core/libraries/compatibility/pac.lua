@@ -2,11 +2,13 @@
 function playerMeta:getParts()
     return self:getNetVar("parts", {})
 end
+
 if SERVER then
     function playerMeta:syncParts()
         net.Start("liaPacSync")
         net.Send(self)
     end
+
     function playerMeta:addPart(partID)
         if self:getParts()[partID] then return end
         net.Start("liaPacPartAdd")
@@ -17,6 +19,7 @@ if SERVER then
         parts[partID] = true
         self:setNetVar("parts", parts)
     end
+
     function playerMeta:removePart(partID)
         net.Start("liaPacPartRemove")
         net.WriteEntity(self)
@@ -26,12 +29,14 @@ if SERVER then
         parts[partID] = nil
         self:setNetVar("parts", parts)
     end
+
     function playerMeta:resetParts()
         net.Start("liaPacPartReset")
         net.WriteEntity(self)
         net.Broadcast()
         self:setNetVar("parts", {})
     end
+
     hook.Add("PostPlayerInitialSpawn", "liaPAC", function(client) timer.Simple(1, function() client:syncParts() end) end)
     hook.Add("PlayerLoadout", "liaPAC", function(client) client:resetParts() end)
     game.ConsoleCommand("sv_pac_webcontent_limit 35840\n")
@@ -44,11 +49,13 @@ else
             if result ~= nil then return result end
         end
     end)
+
     hook.Add("getAdjustedPartData", "liaPAC", function(wearer, id)
         if not partData[id] then return end
         local data = table.Copy(partData[id])
         return hook.Run("AdjustPACPartData", wearer, id, data) or data
     end)
+
     hook.Add("attachPart", "liaPAC", function(client, id)
         if not pac then return end
         local part = hook.Run("getAdjustedPartData", client, id)
@@ -58,6 +65,7 @@ else
         client.liaPACParts = client.liaPACParts or {}
         client.liaPACParts[id] = part
     end)
+
     hook.Add("removePart", "liaPAC", function(client, id)
         if not client.RemovePACPart or not client.liaPACParts then return end
         local part = client.liaPACParts[id]
@@ -66,6 +74,7 @@ else
             client.liaPACParts[id] = nil
         end
     end)
+
     hook.Add("DrawPlayerRagdoll", "liaPAC", function(entity)
         local client = entity.objCache
         if IsValid(client) and not entity.overridePAC3 then
@@ -78,10 +87,12 @@ else
                     end
                 end
             end
+
             client.pac_playerspawn = pac.RealTime
             entity.overridePAC3 = true
         end
     end)
+
     hook.Add("OnEntityCreated", "liaPAC", function(entity)
         local class = entity:GetClass()
         timer.Simple(0, function()
@@ -92,10 +103,12 @@ else
                     hook.Run("DrawPlayerRagdoll", entity)
                 end
             end
+
             if class:find("HL2MPRagdoll") then
                 for _, v in player.Iterator() do
                     if v:GetRagdollEntity() == entity then entity.objCache = v end
                 end
+
                 entity.RenderOverride = function()
                     entity:DrawModel()
                     hook.Run("DrawPlayerRagdoll", entity)
@@ -103,6 +116,7 @@ else
             end
         end)
     end)
+
     hook.Add("OnPlayerObserve", "liaPAC", function(client, state)
         local curParts = client:getParts()
         if curParts then client:resetParts() end
@@ -114,6 +128,7 @@ else
             end
         end
     end)
+
     hook.Add("PAC3RegisterEvents", "liaPAC", function()
         local events = {
             {
@@ -126,15 +141,18 @@ else
                 end
             }
         }
+
         for _, v in ipairs(events) do
             local eventObject = pac.CreateEvent(v.name, v.args)
             eventObject.Think = v.func
             function eventObject:IsAvailable()
                 return v.available()
             end
+
             pac.RegisterEvent(eventObject)
         end
     end)
+
     hook.Add("TryViewModel", "liaPAC", function(entity) return entity == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or entity end)
     hook.Add("InitializedModules", "liaPAC", function()
         hook.Remove("HUDPaint", "pac_in_editor")
@@ -142,6 +160,7 @@ else
         if lia.config.get("BlockPackURLoad") then concommand.Remove("pac_load_url") end
     end)
 end
+
 net.Receive("liaPacSync", function()
     for _, client in player.Iterator() do
         for id in pairs(client:getParts()) do
@@ -149,18 +168,21 @@ net.Receive("liaPacSync", function()
         end
     end
 end)
+
 net.Receive("liaPacPartAdd", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
     hook.Run("attachPart", client, id)
 end)
+
 net.Receive("liaPacPartRemove", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
     hook.Run("removePart", client, id)
 end)
+
 net.Receive("liaPacPartReset", function()
     local client = net.ReadEntity()
     if not IsValid(client) or not client.RemovePACPart then return end
@@ -168,9 +190,11 @@ net.Receive("liaPacPartReset", function()
         for _, part in pairs(client.liaPACParts) do
             client:RemovePACPart(part)
         end
+
         client.liaPACParts = nil
     end
 end)
+
 lia.command.add("fixpac", {
     adminOnly = false,
     desc = "pacFixCommandDesc",
@@ -182,10 +206,12 @@ lia.command.add("fixpac", {
                 client:ConCommand("pac_urltex_clear_cache")
             end
         end)
+
         timer.Simple(1, function() if IsValid(client) then client:ConCommand("pac_restart") end end)
         timer.Simple(1.5, function() if IsValid(client) then client:notifySuccessLocalized("fixpac_success") end end)
     end
 })
+
 lia.command.add("pacenable", {
     adminOnly = false,
     desc = "pacEnableCommandDesc",
@@ -194,6 +220,7 @@ lia.command.add("pacenable", {
         client:notifySuccessLocalized("pacenable_success")
     end
 })
+
 lia.command.add("pacdisable", {
     adminOnly = false,
     desc = "pacDisableCommandDesc",
@@ -202,6 +229,7 @@ lia.command.add("pacdisable", {
         client:notifyInfoLocalized("pacdisable_message")
     end
 })
+
 lia.config.add("BlockPackURLoad", "blockPackUrlLoad", true, nil, {
     desc = "blockPackUrlLoadDesc",
     category = "categoryPAC3",
@@ -209,10 +237,12 @@ lia.config.add("BlockPackURLoad", "blockPackUrlLoad", true, nil, {
     schemaOnly = false,
     type = "Boolean"
 })
+
 lia.administrator.registerPrivilege({
     Name = "canUsePAC3",
     ID = "canUsePAC3",
     MinAccess = "admin",
     Category = "categoryPAC3"
 })
+
 lia.flag.add("P", "flagPac3")

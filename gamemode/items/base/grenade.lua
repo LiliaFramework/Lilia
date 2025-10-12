@@ -15,10 +15,12 @@ ITEM.functions.Use = {
             client:notifyErrorLocalized("noRagdollAction")
             return false
         end
+
         if client:HasWeapon(item.class) then
             client:notifyErrorLocalized("alreadyHaveGrenade")
             return false
         end
+
         client:Give(item.class)
         return true
     end,
