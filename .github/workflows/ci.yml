@@ -35,6 +35,12 @@ jobs:
       - run: |
           luarocks install luafilesystem
           luarocks install argparse
+      - run: |
+          wget -O glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
+          unzip glualint.zip
+          chmod +x glualint
+          sudo mv glualint /usr/local/bin/
+          rm glualint.zip
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/GluaCheck
@@ -64,6 +70,12 @@ jobs:
       - run: |
           luarocks install luafilesystem
           luarocks install argparse
+      - run: |
+          wget -O glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
+          unzip glualint.zip
+          chmod +x glualint
+          sudo mv glualint /usr/local/bin/
+          rm glualint.zip
       - uses: actions/checkout@v3
         with:
           repository: LiliaFramework/GluaCheck
@@ -120,7 +132,13 @@ jobs:
           fetch-depth: 0
       - run: |
           sudo apt-get update -y
-          sudo apt-get install -y rsync
+          sudo apt-get install -y rsync wget
+      - run: |
+          wget -O glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
+          unzip glualint.zip
+          chmod +x glualint
+          sudo mv glualint /usr/local/bin/
+          rm glualint.zip
       - run: |
           python3 - << 'PY'
           import os, re, pathlib, sys
@@ -145,7 +163,7 @@ jobs:
           mkdir -p documentation/docs/versioning
           echo "{\"version\":\"${VERSION}\"}" > documentation/docs/versioning/lilia.json
       - run: |
-          python3 remove_comments.py
+          python3 remove_comments.py gamemode
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
