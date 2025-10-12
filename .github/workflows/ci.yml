@@ -138,34 +138,29 @@ jobs:
           node-version: '18'
       - run: |
           cd "${{ github.workspace }}"
-          echo "=== Searching for generate-changelog.js ==="
+          echo "=== Generating Changelog ==="
           echo "Current working directory: $(pwd)"
-          echo "Repository root contents:"
-          ls -la
-          echo ""
-          echo "Searching with git ls-files..."
-          CHG_SCRIPT=$(git ls-files | grep -E '/generate-changelog\.js$' | head -n1)
-          echo "Git search result: '$CHG_SCRIPT'"
-          if [ -z "$CHG_SCRIPT" ]; then
-            echo "Git search failed, trying find command..."
-            CHG_SCRIPT=$(find . -type f -name 'generate-changelog.js' | head -n1 || true)
-            echo "Find search result: '$CHG_SCRIPT'"
-          fi
-          echo ""
-          echo "All JavaScript files in repository:"
-          find . -name "*.js" -type f 2>/dev/null || echo "No JS files found"
-          echo ""
-          if [ -n "$CHG_SCRIPT" ]; then
-            echo "Found changelog script at: $CHG_SCRIPT"
-            echo "Script contents preview:"
-            head -5 "$CHG_SCRIPT" || echo "Could not read script"
-            echo ""
-            echo "Running changelog script..."
-            node "$CHG_SCRIPT"
-          else
-            echo "Error: Unable to locate generate-changelog.js anywhere in the repository"
-            exit 1
-          fi
+          echo "Version: $VERSION"
+          
+          # Create changelog directory if it doesn't exist
+          mkdir -p documentation/docs
+          
+          # Generate changelog content
+          CURRENT_DATE=$(date '+%B %d, %Y')
+          echo "# Changelog" > documentation/docs/changelog.md
+          echo "" >> documentation/docs/changelog.md
+          echo "## Version $VERSION ($CURRENT_DATE)" >> documentation/docs/changelog.md
+          echo "" >> documentation/docs/changelog.md
+          echo "### Changes" >> documentation/docs/changelog.md
+          echo "" >> documentation/docs/changelog.md
+          
+          # Get recent commits and format them
+          echo "Fetching recent commits..."
+          git log --no-merges --pretty=format:'- %s' -n 20 | grep -v '^Successfully updated' >> documentation/docs/changelog.md
+          
+          echo "Changelog generated successfully at: documentation/docs/changelog.md"
+          echo "Changelog preview:"
+          head -10 documentation/docs/changelog.md
         env:
           VERSION: ${{ env.VERSION }}
       - run: |
