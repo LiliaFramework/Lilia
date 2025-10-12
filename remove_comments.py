@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Simple script to remove comments and print statements from Lua files.
-Removes both single-line (--) and multi-line (--[[ ]]) comments, as well as print statements.
+Simple script to remove comments from Lua files.
+Removes both single-line (--) and multi-line (--[[ ]]) comments.
 """
 
 import os
@@ -10,7 +10,7 @@ import sys
 import subprocess
 
 def remove_comments(content):
-    """Remove Lua comments and print statements from content."""
+    """Remove Lua comments from content."""
     lines = content.split('\n')
     cleaned_lines = []
 
@@ -27,8 +27,6 @@ def remove_comments(content):
                 i += 1
             continue
 
-        # Remove print statements (common patterns)
-        line = re.sub(r'^\s*print\s*\(.*?\)\s*$', '', line)  # print(...) at start of line
 
         # Remove single-line comments
         line = re.sub(r'--.*', '', line)
