@@ -6,6 +6,7 @@ function lia.playerinteract.isWithinRange(client, entity, customRange)
     local range = customRange or 250
     return entity:GetPos():DistToSqr(client:GetPos()) < range * range
 end
+
 function lia.playerinteract.getInteractions(client)
     client = client or LocalPlayer()
     local ent = client:getTracedEntity()
@@ -21,6 +22,7 @@ function lia.playerinteract.getInteractions(client)
     end
     return interactions
 end
+
 function lia.playerinteract.getActions(client)
     client = client or LocalPlayer()
     if not IsValid(client) or not client:getChar() then return {} end
@@ -30,6 +32,7 @@ function lia.playerinteract.getActions(client)
     end
     return actions
 end
+
 function lia.playerinteract.getCategorizedOptions(options)
     local categorized = {}
     for name, entry in pairs(options) do
@@ -39,6 +42,7 @@ function lia.playerinteract.getCategorizedOptions(options)
     end
     return categorized
 end
+
 if SERVER then
     function lia.playerinteract.addInteraction(name, data)
         data.type = "interaction"
@@ -57,6 +61,7 @@ if SERVER then
                 if not data.actionText then originalOnRun(client, target) end
             end
         end
+
         lia.playerinteract.stored[name] = data
         if not lia.playerinteract.categories[data.category] then
             lia.playerinteract.categories[data.category] = {
@@ -65,6 +70,7 @@ if SERVER then
             }
         end
     end
+
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
         data.range = data.range or 250
@@ -81,6 +87,7 @@ if SERVER then
                 if not data.actionText then originalOnRun(client, target) end
             end
         end
+
         lia.playerinteract.stored[name] = data
         if not lia.playerinteract.categories[data.category] then
             lia.playerinteract.categories[data.category] = {
@@ -89,6 +96,7 @@ if SERVER then
             }
         end
     end
+
     function lia.playerinteract.syncToClients(client)
         local filteredData = {}
         for name, data in pairs(lia.playerinteract.stored) do
@@ -104,9 +112,32 @@ if SERVER then
                 targetActionText = data.targetActionText
             }
         end
-        lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
-        lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
+
+        if client then
+            lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
+            lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
+        else
+            local players = player.GetAll()
+            local batchSize = 3
+            local delay = 0
+            for i = 1, #players, batchSize do
+                timer.Simple(delay, function()
+                    local batch = {}
+                    for j = i, math.min(i + batchSize - 1, #players) do
+                        table.insert(batch, players[j])
+                    end
+
+                    for _, ply in ipairs(batch) do
+                        lia.net.writeBigTable(ply, "liaPlayerInteractSync", filteredData)
+                        lia.net.writeBigTable(ply, "liaPlayerInteractCategories", lia.playerinteract.categories)
+                    end
+                end)
+
+                delay = delay + 0.15
+            end
+        end
     end
+
     lia.playerinteract.addInteraction("giveMoney", {
         serverOnly = true,
         shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
@@ -117,21 +148,25 @@ if SERVER then
                     client:notifyErrorLocalized("invalidAmount")
                     return
                 end
+
                 if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
                     lia.log.add(client, "cheaterAction", L("cheaterActionTransferMoney"))
                     client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
                     return
                 end
+
                 if not IsValid(client) or not client:getChar() then return end
                 if client:IsFamilySharedAccount() and not lia.config.get("AltsDisabled", false) then
                     client:notifyErrorLocalized("familySharedMoneyTransferDisabled")
                     return
                 end
+
                 if not IsValid(target) or not target:IsPlayer() or not target:getChar() then return end
                 if not client:getChar():hasMoney(amount) then
                     client:notifyErrorLocalized("notEnoughMoney")
                     return
                 end
+
                 target:getChar():giveMoney(amount)
                 client:getChar():takeMoney(amount)
                 local senderName = client:getChar():getDisplayedName(target)
@@ -141,6 +176,7 @@ if SERVER then
             end, "")
         end
     })
+
     lia.playerinteract.addAction("changeToWhisper", {
         category = L("categoryVoice"),
         shouldShow = function(client) return client:getChar() and client:Alive() end,
@@ -150,6 +186,7 @@ if SERVER then
         end,
         serverOnly = true
     })
+
     lia.playerinteract.addAction("changeToTalk", {
         category = L("categoryVoice"),
         shouldShow = function(client) return client:getChar() and client:Alive() end,
@@ -159,6 +196,7 @@ if SERVER then
         end,
         serverOnly = true
     })
+
     lia.playerinteract.addAction("changeToYell", {
         category = L("categoryVoice"),
         shouldShow = function(client) return client:getChar() and client:Alive() end,
@@ -207,6 +245,7 @@ else
                 end
             end
         end
+
         if #visible == 0 then return end
         local categorized = lia.playerinteract.getCategorizedOptions(visible)
         local categoryCount = table.Count(categorized)
@@ -235,15 +274,18 @@ else
             lia.gui.InteractionMenu = nil
             hook.Run("InteractionMenuClosed")
         end
+
         frame:SetAlpha(0)
         frame:AlphaTo(255, fadeSpeed)
         function frame:Paint(w, h)
             lia.util.drawBlur(self, 4)
             draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
         end
+
         function frame:Think()
             if not input.IsKeyDown(closeKey) then self:Close() end
         end
+
         timer.Remove("InteractionMenu_Frame_Timer")
         timer.Create("InteractionMenu_Frame_Timer", 30, 1, function() if IsValid(frame) then frame:Close() end end)
         local title = frame:Add("DLabel")
@@ -256,6 +298,7 @@ else
         function title:PaintOver()
             surface.SetDrawColor(Color(60, 60, 60))
         end
+
         local scroll = frame:Add("liaScrollPanel")
         scroll:SetPos(0, titleH + titleY + gap)
         scroll:SetSize(frameW, frameH - titleH - titleY - gap)
@@ -267,6 +310,7 @@ else
             f()
             if bar then bar:SetScroll(pos) end
         end
+
         for categoryName, categoryOptions in pairs(categorized) do
             local categoryHeader = vgui.Create("DPanel", layout)
             categoryHeader:SetTall(categoryH)
@@ -281,6 +325,7 @@ else
                 local y = (h - textH) / 2
                 draw.SimpleText(categoryName, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
+
             local collapseBtn = categoryHeader:Add("DButton")
             collapseBtn:SetSize(20, 20)
             collapseBtn:SetPos(10, (categoryH - 20) / 2)
@@ -296,16 +341,19 @@ else
                 local y = (h - textH) / 2
                 draw.SimpleText(icon, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
+
             collapseBtn.DoClick = function()
                 preserveScroll(function()
                     isCollapsed = not isCollapsed
                     for _, p in pairs(categoryContent) do
                         p:SetVisible(not isCollapsed)
                     end
+
                     layout:InvalidateLayout(true)
                     layout:PerformLayout()
                 end)
             end
+
             layout:Add(categoryHeader)
             for _, entry in pairs(categoryOptions) do
                 local btn = vgui.Create("DButton", layout)
@@ -323,6 +371,7 @@ else
                         draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 100))
                     end
                 end
+
                 btn.DoClick = function()
                     frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
                     if not entry.opt.serverOnly and entry.opt.onRun then
@@ -338,6 +387,7 @@ else
                             entry.opt.onRun(client, ent)
                         end
                     end
+
                     if entry.opt.serverOnly then
                         net.Start(netMsg)
                         net.WriteString(entry.name)
@@ -346,20 +396,25 @@ else
                         net.SendToServer()
                     end
                 end
+
                 layout:Add(btn)
                 table.insert(categoryContent, btn)
             end
+
             local spacer = vgui.Create("DPanel", layout)
             spacer:SetTall(10)
             spacer:Dock(TOP)
             spacer:DockMargin(0, 0, 0, 0)
             function spacer:Paint()
             end
+
             layout:Add(spacer)
             table.insert(categoryContent, spacer)
         end
+
         lia.gui.InteractionMenu = frame
     end
+
     lia.net.readBigTable("liaPlayerInteractSync", function(data)
         if not istable(data) then return end
         local newStored = {}
@@ -378,18 +433,26 @@ else
             merged.onRun = localEntry.onRun
             newStored[name] = merged
         end
+
         lia.playerinteract.stored = newStored
     end)
+
     lia.net.readBigTable("liaPlayerInteractCategories", function(data) if istable(data) then lia.playerinteract.categories = data end end)
 end
-lia.keybind.add(KEY_TAB, "interactionMenu", {
+
+lia.keybind.add("interactionMenu", {
+    keyBind = KEY_TAB,
+    desc = "interactionMenuDesc",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("interaction")
         net.SendToServer()
     end,
 })
-lia.keybind.add(KEY_G, "personalActions", {
+
+lia.keybind.add("personalActions", {
+    keyBind = KEY_G,
+    desc = "personalActionsDesc",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("action")

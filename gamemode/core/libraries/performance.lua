@@ -17,6 +17,7 @@ local function ExecuteCommands(isServer)
                         for arg in string.gmatch(args, "%S+") do
                             table.insert(argList, arg)
                         end
+
                         RunConsoleCommand(command, unpack(argList))
                     else
                         RunConsoleCommand(command)
@@ -26,6 +27,7 @@ local function ExecuteCommands(isServer)
         end
     end
 end
+
 local function RemoveHooks(isServer)
     if isServer then
         for _, h in ipairs(serverHooks) do
@@ -37,12 +39,15 @@ local function RemoveHooks(isServer)
         end
     end
 end
+
 function widgets.PlayerTick()
 end
+
 hook.Add("Initialize", "liaPerformanceInitialize", function()
     RemoveHooks(SERVER)
     ExecuteCommands(SERVER)
 end)
+
 if CLIENT then
     hook.Add("InitializedModules", "liaPerformanceInitializedModules", function() scripted_ents.GetStored("base_gmodentity").t.Think = nil end)
 else

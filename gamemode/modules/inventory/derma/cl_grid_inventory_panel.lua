@@ -5,12 +5,14 @@ local function drawSlot(x, y, w, h)
     surface.SetDrawColor(0, 0, 0, 150)
     surface.DrawRect(x + 1, y + 1, w - 2, h - 2)
 end
+
 function PANEL:Init()
     self:SetPaintBackground(false)
     self.icons = {}
     self:setGridSize(1, 1)
     self.occupied = {}
 end
+
 function PANEL:computeOccupied()
     if not self.inventory then return end
     self.occupied = {}
@@ -19,8 +21,10 @@ function PANEL:computeOccupied()
         for x = 0, self.gridW - 1 do
             row[x] = false
         end
+
         self.occupied[y] = row
     end
+
     for _, item in pairs(self.inventory:getItems(true)) do
         local ix, iy = item:getData("x"), item:getData("y")
         if ix and iy then
@@ -35,22 +39,27 @@ function PANEL:computeOccupied()
         end
     end
 end
+
 function PANEL:setInventory(inventory)
     self:liaListenForInventoryChanges(inventory)
     self.inventory = inventory
     self:populateItems()
 end
+
 function PANEL:setGridSize(width, height, iconSize)
     self.size = iconSize or 64
     self.gridW = width
     self.gridH = height
 end
+
 function PANEL:getIcons()
     return self.icons
 end
+
 function PANEL:removeIcon(icon)
     self.content:RemoveItem(icon)
 end
+
 local tempAlreadyTherePos = {}
 local function GetTargetPanel(invOrigin)
     for _, panel in ipairs(vgui.GetAll()) do
@@ -62,6 +71,7 @@ local function GetTargetPanel(invOrigin)
     end
     return nil
 end
+
 local function CustomFindFreePos(inv, item)
     local width, height = inv:getSize()
     for x = 1, width do
@@ -73,6 +83,7 @@ local function CustomFindFreePos(inv, item)
         end
     end
 end
+
 function PANEL:onItemPressed(itemIcon, keyCode)
     if hook.Run("InterceptClickItemIcon", self, itemIcon, keyCode) ~= true then
         if keyCode == MOUSE_LEFT and input.IsShiftDown() then
@@ -89,6 +100,7 @@ function PANEL:onItemPressed(itemIcon, keyCode)
                     timer.Simple(2, function() tempAlreadyTherePos[posKey] = nil end)
                 end
             end
+
             targetInv:requestTransfer(item:getID(), targetInv:getID(), x, y)
         elseif keyCode == MOUSE_RIGHT then
             itemIcon:openActionMenu()
@@ -100,6 +112,7 @@ function PANEL:onItemPressed(itemIcon, keyCode)
         end
     end
 end
+
 function PANEL:onItemReleased(itemIcon)
     local item = itemIcon.itemTable
     if not item then return end
@@ -111,6 +124,7 @@ function PANEL:onItemReleased(itemIcon)
         hook.Run("OnRequestItemTransfer", self, item:getID(), nil, 0, 0)
         return
     end
+
     local size = self.size + 2
     local itemW = item:getWidth() * size - 2
     local itemH = item:getHeight() * size - 2
@@ -124,6 +138,7 @@ function PANEL:onItemReleased(itemIcon)
         hook.Run("OnRequestItemTransfer", self, item:getID(), nil, 0, 0)
         return
     end
+
     if not self.inventory:doesItemFitAtPos(item, x, y) then
         local originalX, originalY = item:getData("x"), item:getData("y")
         if originalX and originalY then
@@ -132,19 +147,24 @@ function PANEL:onItemReleased(itemIcon)
         end
         return
     end
+
     self.inventory:requestTransfer(item:getID(), self.inventory:getID(), x, y)
     hook.Run("OnRequestItemTransfer", self, item:getID(), self.inventory:getID(), x, y)
 end
+
 function PANEL:populateItems()
     for key, icon in pairs(self.icons) do
         if IsValid(icon) then icon:Remove() end
         self.icons[key] = nil
     end
+
     for _, item in pairs(self.inventory:getItems(true)) do
         self:addItem(item)
     end
+
     self:computeOccupied()
 end
+
 function PANEL:addItem(item)
     local id = item:getID()
     local x, y = item:getData("x"), item:getData("y")
@@ -165,9 +185,11 @@ function PANEL:addItem(item)
         lia.item.held = nil
         lia.item.heldPanel = nil
     end
+
     self.icons[id] = icon
     hook.Run("InventoryItemIconCreated", icon, item, self)
 end
+
 function PANEL:drawHeldItemRectangle()
     local held = lia.item.held
     if not IsValid(held) or not held.itemTable then return end
@@ -181,12 +203,14 @@ function PANEL:drawHeldItemRectangle()
     if x < 0 or y < 0 or x + item:getWidth() > self.gridW or y + item:getHeight() > self.gridH then return end
     drawSlot(x * size, y * size, w, h)
 end
+
 function PANEL:computeHeldPanel()
     if not lia.item.held or lia.item.held == self then return end
     local cursorX, cursorY = self:LocalCursorPos()
     if cursorX < 0 or cursorY < 0 or cursorX > self:GetWide() or cursorY > self:GetTall() then return end
     lia.item.heldPanel = self
 end
+
 function PANEL:Paint()
     local size = self.size
     for y = 0, self.gridH - 1 do
@@ -194,22 +218,29 @@ function PANEL:Paint()
             drawSlot(x * (size + 2), y * (size + 2), size, size)
         end
     end
+
     self:drawHeldItemRectangle()
     self:computeHeldPanel()
 end
+
 function PANEL:InventoryItemAdded()
     self:populateItems()
 end
+
 function PANEL:InventoryItemRemoved()
     self:populateItems()
 end
+
 function PANEL:InventoryItemDataChanged(item, key)
     if key == "rotated" then item.forceRender = true end
     self:populateItems()
 end
+
 function PANEL:OnCursorMoved()
 end
+
 function PANEL:OnCursorExited()
     if lia.item.heldPanel == self then lia.item.heldPanel = nil end
 end
+
 vgui.Register("liaGridInventoryPanel", PANEL, "DPanel")

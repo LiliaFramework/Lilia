@@ -15,16 +15,17 @@ function lia.faction.register(uniqueID, data)
         index = index,
         isDefault = true
     }
+
     for k, v in pairs(data) do
         faction[k] = v
     end
+
     faction.index = index
     faction.uniqueID = uniqueID
     faction.name = L(faction.name) or "unknown"
     faction.desc = L(faction.desc) or "noDesc"
     faction.color = faction.color or Color(150, 150, 150)
     faction.models = faction.models or DefaultModels
-    if not faction.isJedi and not faction.isSith then faction.group = "jedi" end
     local overrideName = hook.Run("OverrideFactionName", uniqueID, faction.name)
     if overrideName then faction.name = overrideName end
     local overrideDesc = hook.Run("OverrideFactionDesc", uniqueID, faction.desc)
@@ -38,6 +39,7 @@ function lia.faction.register(uniqueID, data)
     _G[constantName] = faction.index
     return faction.index, faction
 end
+
 function lia.faction.cacheModels(models)
     for _, modelData in pairs(models or {}) do
         if isstring(modelData) then
@@ -47,6 +49,7 @@ function lia.faction.cacheModels(models)
         end
     end
 end
+
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -55,19 +58,23 @@ function lia.faction.loadFromDir(directory)
         else
             niceName = v:sub(1, -5)
         end
+
         FACTION = lia.faction.teams[niceName] or {
             index = table.Count(lia.faction.teams) + 1,
             isDefault = true
         }
+
         lia.loader.include(directory .. "/" .. v, "shared")
         if not FACTION.name then
             FACTION.name = "unknown"
             lia.error(L("factionMissingName", niceName))
         end
+
         if not FACTION.desc then
             FACTION.desc = "noDesc"
             lia.error(L("factionMissingDesc", niceName))
         end
+
         FACTION.name = L(FACTION.name)
         FACTION.desc = L(FACTION.desc)
         local overrideName = hook.Run("OverrideFactionName", niceName, FACTION.name)
@@ -77,7 +84,6 @@ function lia.faction.loadFromDir(directory)
         local overrideModels = hook.Run("OverrideFactionModels", niceName, FACTION.models)
         if overrideModels then FACTION.models = overrideModels end
         if not FACTION.color then FACTION.color = Color(150, 150, 150) end
-        if not FACTION.isJedi and not FACTION.isSith then FACTION.group = "jedi" end
         team.SetUp(FACTION.index, FACTION.name or L("unknown"), FACTION.color or Color(125, 125, 125))
         FACTION.models = FACTION.models or DefaultModels
         FACTION.uniqueID = FACTION.uniqueID or niceName
@@ -88,17 +94,21 @@ function lia.faction.loadFromDir(directory)
                 util.PrecacheModel(modelData[1])
             end
         end
+
         lia.faction.indices[FACTION.index] = FACTION
         lia.faction.teams[niceName] = FACTION
         FACTION = nil
     end
 end
+
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
+
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
+
 function lia.faction.getClasses(faction)
     local classes = {}
     for _, class in pairs(lia.class.list) do
@@ -106,6 +116,7 @@ function lia.faction.getClasses(faction)
     end
     return classes
 end
+
 function lia.faction.getPlayers(faction)
     local players = {}
     for _, v in player.Iterator() do
@@ -114,6 +125,7 @@ function lia.faction.getPlayers(faction)
     end
     return players
 end
+
 function lia.faction.getPlayerCount(faction)
     local count = 0
     for _, v in player.Iterator() do
@@ -122,10 +134,12 @@ function lia.faction.getPlayerCount(faction)
     end
     return count
 end
+
 function lia.faction.isFactionCategory(faction, categoryFactions)
     if table.HasValue(categoryFactions, faction) then return true end
     return false
 end
+
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -142,11 +156,13 @@ function lia.faction.jobGenerate(index, name, color, default, models)
             util.PrecacheModel(v[1])
         end
     end
+
     lia.faction.indices[FACTION.index] = FACTION
     lia.faction.teams[name] = FACTION
     team.SetUp(FACTION.index, FACTION.name, FACTION.color)
     return FACTION
 end
+
 local function formatModelDataEntry(name, faction, modelIndex, modelData, category)
     local newGroups
     if istable(modelData) and modelData[3] then
@@ -159,6 +175,7 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
             else
                 dummy = ClientsideModel(modelData[1])
             end
+
             local groupData = dummy:GetBodyGroups()
             for _, group in ipairs(groupData) do
                 if group.id > 0 then
@@ -169,12 +186,14 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
                     end
                 end
             end
+
             dummy:Remove()
             newGroups = groups
         elseif isstring(modelData[3]) then
             newGroups = string.Explode("", modelData[3])
         end
     end
+
     if newGroups then
         if category then
             lia.faction.teams[name].models[category][modelIndex][3] = newGroups
@@ -185,6 +204,7 @@ local function formatModelDataEntry(name, faction, modelIndex, modelData, catego
         end
     end
 end
+
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
@@ -204,6 +224,7 @@ function lia.faction.formatModelData()
         end
     end
 end
+
 function lia.faction.getCategories(teamName)
     local categories = {}
     local faction = lia.faction.teams[teamName]
@@ -214,6 +235,7 @@ function lia.faction.getCategories(teamName)
     end
     return categories
 end
+
 function lia.faction.getModelsFromCategory(teamName, category)
     local models = {}
     local faction = lia.faction.teams[teamName]
@@ -224,6 +246,7 @@ function lia.faction.getModelsFromCategory(teamName, category)
     end
     return models
 end
+
 function lia.faction.getDefaultClass(id)
     local defaultClass = nil
     for _, class in ipairs(lia.class.list) do
@@ -234,6 +257,7 @@ function lia.faction.getDefaultClass(id)
     end
     return defaultClass
 end
+
 FACTION_STAFF = lia.faction.register("staff", {
     name = "factionStaffName",
     desc = "factionStaffDesc",
@@ -242,6 +266,7 @@ FACTION_STAFF = lia.faction.register("staff", {
     models = {"models/player/police.mdl"},
     weapons = {"weapon_physgun", "gmod_tool", "weapon_physcannon"}
 })
+
 if CLIENT then
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]
@@ -251,6 +276,7 @@ if CLIENT then
                 local hasPriv = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("createStaffCharacter") or false
                 return hasPriv
             end
+
             local liaData = lia.localData and lia.localData.whitelists or {}
             return liaData[SCHEMA.folder] and liaData[SCHEMA.folder][data.uniqueID] or false
         end

@@ -14,10 +14,7 @@ function PANEL:Init()
     self.tabs:SetVisible(false)
     self.commandIndex = 0
     self.commands = lia.command.list
-    self.tabs.Paint = function(_, tabW, tabH)
-        surface.SetDrawColor(0, 0, 0, 100)
-        surface.DrawRect(0, 0, tabW, tabH)
-    end
+    self.tabs.Paint = function(_, tabW, tabH) lia.derma.rect(0, 0, tabW, tabH):Rad(8):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw() end
     self.arguments = {}
     self.scroll = self:Add("liaScrollPanel")
     self.scroll:SetPos(4, 31)
@@ -36,17 +33,16 @@ function PANEL:Init()
         end
     end
 end
+
 function PANEL:Paint(panelW, panelH)
     if self.active then
         lia.util.drawBlur(self, 10)
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.DrawOutlinedRect(0, 0, panelW, panelH)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(1, 1, panelW - 2, panelH - 2)
-        surface.SetDrawColor(0, 0, 0, 200)
-        surface.DrawOutlinedRect(0, 0, panelW, panelH)
+        local radius = 16
+        lia.derma.rect(0, 0, panelW, panelH):Rad(radius):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
+        lia.derma.rect(0, 0, panelW, panelH):Rad(radius):Color(Color(0, 0, 0, 50)):Shape(lia.derma.SHAPE_IOS):Draw()
     end
 end
+
 function PANEL:setActive(state)
     self.active = state
     self.tabs:SetVisible(state)
@@ -73,6 +69,7 @@ function PANEL:setActive(state)
                 self.commandList = nil
                 self.commandListCreateTime = nil
             end
+
             if IsValid(self.entry) then self.entry:Remove() end
             lia.gui.chat = nil
             if input:find("%S") then
@@ -80,19 +77,21 @@ function PANEL:setActive(state)
                     lia.chat.history[#lia.chat.history + 1] = input
                     lia.chat.lastLine = input
                 end
+
                 net.Start("liaMessageData")
                 net.WriteString(input)
                 net.SendToServer()
             end
         end
+
         self.text:SetAllowNonAsciiCharacters(true)
         self.text.Paint = function(entry, txtW, txtH)
-            surface.SetDrawColor(0, 0, 0, 100)
-            surface.DrawRect(0, 0, txtW, txtH)
-            surface.SetDrawColor(0, 0, 0, 200)
-            surface.DrawOutlinedRect(0, 0, txtW, txtH)
+            local radius = 8
+            lia.derma.rect(0, 0, txtW, txtH):Rad(radius):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw()
+            lia.derma.rect(0, 0, txtW, txtH):Rad(radius):Color(Color(0, 0, 0, 50)):Shape(lia.derma.SHAPE_IOS):Draw()
             entry:DrawTextEntryText(Color(255, 255, 255, 200), lia.config.get("Color"), Color(255, 255, 255, 200))
         end
+
         self.text.OnTextChanged = function(entry)
             local input = entry:GetText()
             hook.Run("ChatTextChanged", input)
@@ -102,6 +101,7 @@ function PANEL:setActive(state)
                     self.commandList = nil
                     self.commandListCreateTime = nil
                 end
+
                 self.commandList = vgui.Create("liaScrollPanel")
                 local listHeight = math.min(self:GetTall() - 66, 200)
                 local listWidth = self:GetWide() - 16
@@ -121,10 +121,7 @@ function PANEL:setActive(state)
                     btn:Dock(TOP)
                     btn:DockMargin(0, 0, 0, 2)
                     btn:SetTall(20)
-                    btn.Paint = function(_, bw, bh)
-                        surface.SetDrawColor(ColorAlpha(color_black, 200))
-                        surface.DrawRect(0, 0, bw, bh)
-                    end
+                    btn.Paint = function(_, bw, bh) lia.derma.rect(0, 0, bw, bh):Rad(6):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Shadow(2, 8):Draw() end
                     btn.DoClick = function()
                         local syntax = L(cmdInfo.syntax or "")
                         self.text:SetText("/" .. cmdName .. " " .. syntax)
@@ -134,6 +131,7 @@ function PANEL:setActive(state)
                         self.commandListCreateTime = nil
                     end
                 end
+
                 self.arguments = lia.command.extractArgs(input:sub(2))
             else
                 if IsValid(self.commandList) then
@@ -141,9 +139,11 @@ function PANEL:setActive(state)
                     self.commandList = nil
                     self.commandListCreateTime = nil
                 end
+
                 self.commandIndex = 0
             end
         end
+
         self.entry:MakePopup()
         self.text:RequestFocus()
         self.tabs:SetVisible(true)
@@ -154,6 +154,7 @@ function PANEL:setActive(state)
                 self.commandListCreateTime = nil
                 return true
             end
+
             if entry:GetText():sub(1, 1) == "/" and key == KEY_TAB and IsValid(self.commandList) then
                 local canvas = self.commandList:GetCanvas()
                 if IsValid(canvas) then
@@ -166,13 +167,19 @@ function PANEL:setActive(state)
                             if not listChild.PaintConfigured then
                                 listChild.Paint = function(btn, bw, bh)
                                     local isSel = btn.commandIndex == self.commandIndex
-                                    surface.SetDrawColor(isSel and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_black, 200))
-                                    surface.DrawRect(0, 0, bw, bh)
+                                    if isSel then
+                                        lia.derma.rect(0, 0, bw, bh):Rad(6):Color(ColorAlpha(lia.config.get("Color"), 255)):Shape(lia.derma.SHAPE_IOS):Shadow(2, 8):Draw()
+                                    else
+                                        lia.derma.rect(0, 0, bw, bh):Rad(6):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Shadow(2, 8):Draw()
+                                    end
+
                                     if IsValid(btn.text) then btn.text:SetTextColor(isSel and ColorAlpha(lia.config.get("Color"), 255) or ColorAlpha(color_white, 200)) end
                                 end
+
                                 listChild.PaintConfigured = true
                             end
                         end
+
                         local selected = canvasChildren[self.commandIndex]
                         if IsValid(selected) then
                             local selName = selected:GetText():match("^/([^ ]+)")
@@ -181,6 +188,7 @@ function PANEL:setActive(state)
                                 self.text:SetCaretPos(#self.text:GetText())
                             end
                         end
+
                         self.text:RequestFocus()
                     end
                 end
@@ -188,6 +196,7 @@ function PANEL:setActive(state)
             end
             return DTextEntry.OnKeyCodeTyped(entry, key)
         end
+
         self.text.OnLoseFocus = function(entry)
             if IsValid(self.commandList) then
                 local currentText = entry:GetText()
@@ -199,11 +208,14 @@ function PANEL:setActive(state)
                     self.commandListCreateTime = nil
                 end
             end
+
             entry:RequestFocus()
         end
+
         hook.Run("StartChat")
     end
 end
+
 local function OnDrawText(txt, fontName, xPos, yPos, clr, _, _, alpha)
     alpha = alpha or 255
     surface.SetTextPos(xPos + 1, yPos + 1)
@@ -215,17 +227,18 @@ local function OnDrawText(txt, fontName, xPos, yPos, clr, _, _, alpha)
     surface.SetFont(fontName)
     surface.DrawText(txt)
 end
+
 local function PaintFilterButton(btn, btnW, btnH)
     if btn.active then
-        surface.SetDrawColor(40, 40, 40)
+        lia.derma.rect(0, 0, btnW, btnH):Rad(8):Color(Color(40, 40, 40, 200)):Shape(lia.derma.SHAPE_IOS):Draw()
     else
         local alpha = 120 + math.cos(RealTime() * 5) * 10
-        surface.SetDrawColor(ColorAlpha(lia.config.get("Color"), alpha))
+        lia.derma.rect(0, 0, btnW, btnH):Rad(8):Color(ColorAlpha(lia.config.get("Color"), alpha)):Shape(lia.derma.SHAPE_IOS):Draw()
     end
-    surface.DrawRect(0, 0, btnW, btnH)
-    surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawOutlinedRect(0, 0, btnW, btnH)
+
+    lia.derma.rect(0, 0, btnW, btnH):Rad(8):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Shadow(2, 8):Draw()
 end
+
 function PANEL:addFilterButton(filter)
     local tab = self.tabs:Add("DButton")
     tab:SetFont("LiliaFont.16")
@@ -247,11 +260,14 @@ function PANEL:addFilterButton(filter)
             filters = filters:gsub(filter .. "[,]", "")
             if not filters:find("%S") then filters = "none" end
         end
+
         self:setFilter(filter, selfBtn.active)
         RunConsoleCommand("lia_chatfilter", filters)
     end
+
     if LIA_CVAR_CHATFILTER:GetString():lower():find(filter) then tab.active = true end
 end
+
 function PANEL:addText(...)
     local markup = "<font=LiliaFont.16>"
     if CHAT_CLASS then markup = "<font=" .. (CHAT_CLASS.font or "LiliaFont.16") .. ">" end
@@ -273,6 +289,7 @@ function PANEL:addText(...)
             end)
         end
     end
+
     markup = markup .. "</font>"
     local panel = self.scroll:Add("liaMarkupPanel")
     panel:SetWide(self:GetWide() - 16)
@@ -287,6 +304,7 @@ function PANEL:addText(...)
             p:SetAlpha(math.max(alpha, 0))
         end
     end
+
     self.list[#self.list + 1] = panel
     local cls = CHAT_CLASS and CHAT_CLASS.filter and CHAT_CLASS.filter:lower() or "ic"
     panel.filter = cls
@@ -300,6 +318,7 @@ function PANEL:addText(...)
     end
     return panel:IsVisible()
 end
+
 function PANEL:setFilter(filter, state)
     if state then
         for _, pnl in ipairs(self.list) do
@@ -316,6 +335,7 @@ function PANEL:setFilter(filter, state)
             end
         end
     end
+
     self.lastY = 0
     local lastChild
     for _, pnl in ipairs(self.list) do
@@ -325,8 +345,10 @@ function PANEL:setFilter(filter, state)
             lastChild = pnl
         end
     end
+
     if IsValid(lastChild) then timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(lastChild) then self.scroll:ScrollToChild(lastChild) end end) end
 end
+
 function PANEL:Think()
     if gui.IsGameUIVisible() and self.active then
         self.tabs:SetVisible(false)
@@ -336,8 +358,10 @@ function PANEL:Think()
             self.commandList = nil
             self.commandListCreateTime = nil
         end
+
         if IsValid(self.entry) then self.entry:Remove() end
     end
+
     if not self.active then self.tabs:SetVisible(false) end
     if self.active and IsValid(self.text) and IsValid(self.commandList) then
         local textHasFocus = self.text:HasFocus()
@@ -351,16 +375,19 @@ function PANEL:Think()
         end
     end
 end
+
 function PANEL:Update()
     if IsValid(self) then
         self:Remove()
         vgui.Create("liaChatBox")
     end
 end
+
 function PANEL:OnRemove()
     if IsValid(self.commandList) then
         self.commandList:Remove()
         self.commandList = nil
     end
 end
+
 vgui.Register("liaChatBox", PANEL, "DPanel")

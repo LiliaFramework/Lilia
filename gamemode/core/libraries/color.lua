@@ -5,20 +5,25 @@ if CLIENT then
     function lia.color.register(name, color)
         lia.color.stored[name:lower()] = color
     end
+
     function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
         return Color(math.Clamp(color.r + rOffset, 0, 255), math.Clamp(color.g + gOffset, 0, 255), math.Clamp(color.b + bOffset, 0, 255), math.Clamp((color.a or 255) + (aOffset or 0), 0, 255))
     end
+
     function lia.color.darken(color, factor)
         factor = factor or 0.1
         local darkenFactor = 1 - math.Clamp(factor, 0, 1)
         return Color(math.floor(color.r * darkenFactor), math.floor(color.g * darkenFactor), math.floor(color.b * darkenFactor), color.a or 255)
     end
+
     function lia.color.getCurrentTheme()
         return lia.config.get("Theme", "Teal"):lower()
     end
+
     function lia.color.getCurrentThemeName()
         return lia.config.get("Theme", "Teal")
     end
+
     function lia.color.getMainColor()
         local currentTheme = lia.color.getCurrentTheme()
         local themeData = lia.color.themes[currentTheme]
@@ -26,6 +31,7 @@ if CLIENT then
         local defaultTheme = lia.color.themes["teal"]
         return defaultTheme and defaultTheme.maincolor or Color(80, 180, 180)
     end
+
     function lia.color.applyTheme(themeName, useTransition)
         themeName = themeName or lia.color.getCurrentTheme()
         local themeData = lia.color.themes[themeName]
@@ -39,28 +45,33 @@ if CLIENT then
                     background = Color(24, 32, 32),
                     text = Color(210, 235, 235)
                 }
+
                 hook.Run("OnThemeChanged", themeName, useTransition)
                 return
             else
                 lia.config.set("Theme", themeName)
             end
         end
+
         if themeData then
             if useTransition and CLIENT then
                 lia.color.startThemeTransition(themeName)
             else
                 lia.color.theme = table.Copy(themeData)
             end
+
             hook.Run("OnThemeChanged", themeName, useTransition)
         end
     end
+
     function lia.color.isTransitionActive()
         return lia.color.transition and lia.color.transition.active or false
     end
+
     function lia.color.testThemeTransition(themeName)
         lia.color.applyTheme(themeName, true)
-        print(L("startedThemeTransition", themeName))
     end
+
     lia.color.transition = {
         active = false,
         to = nil,
@@ -68,6 +79,7 @@ if CLIENT then
         speed = 3,
         colorBlend = 8
     }
+
     function lia.color.startThemeTransition(name)
         local targetTheme = lia.color.themes[name:lower()]
         if not targetTheme then
@@ -78,6 +90,7 @@ if CLIENT then
                 return
             end
         end
+
         lia.color.transition.to = table.Copy(targetTheme)
         lia.color.transition.active = true
         lia.color.transition.progress = 0
@@ -92,6 +105,7 @@ if CLIENT then
                     hook.Remove("Think", "LiliaThemeTransition")
                     return
                 end
+
                 for k, v in pairs(to) do
                     if lia.color.isColor(v) then
                         local current = lia.color.stored[k]
@@ -119,10 +133,12 @@ if CLIENT then
                         lia.color.stored[k] = v
                     end
                 end
+
                 if lia.color.transition.progress >= 0.999 then
                     for k, v in pairs(to) do
                         lia.color.stored[k] = v
                     end
+
                     lia.color.transition.active = false
                     hook.Remove("Think", "LiliaThemeTransition")
                     hook.Run("OnThemeChanged", name, false)
@@ -130,9 +146,11 @@ if CLIENT then
             end)
         end
     end
+
     function lia.color.isColor(v)
         return istable(v) and isnumber(v.r) and isnumber(v.g) and isnumber(v.b) and isnumber(v.a)
     end
+
     function lia.color.ReturnMainAdjustedColors()
         local base = lia.color.getMainColor()
         local background = lia.color.Adjust(base, -20, -10, -50, 0)
@@ -148,6 +166,7 @@ if CLIENT then
             highlight = Color(255, 255, 255, 30)
         }
     end
+
     function lia.color.lerp(frac, col1, col2)
         local ft = FrameTime() * frac
         local r1 = col1 and col1.r or 255
@@ -160,6 +179,7 @@ if CLIENT then
         local a2 = col2 and col2.a or 255
         return Color(Lerp(ft, r1, r2), Lerp(ft, g1, g2), Lerp(ft, b1, b2), Lerp(ft, a1, a2))
     end
+
     local oldColor = Color
     function Color(r, g, b, a)
         if isstring(r) then
@@ -169,6 +189,7 @@ if CLIENT then
         end
         return oldColor(r, g, b, a)
     end
+
     lia.color.register("black", {0, 0, 0})
     lia.color.register("white", {255, 255, 255})
     lia.color.register("gray", {128, 128, 128})
@@ -193,18 +214,22 @@ if CLIENT then
     lia.color.register("magenta", {255, 0, 255})
     hook.Add("InitializedConfig", "ApplyTheme", function() lia.color.applyTheme() end)
 end
+
 function lia.color.registerTheme(name, themeData)
     local id = name:lower()
     lia.color.themes[id] = themeData
 end
+
 function lia.color.getAllThemes()
     local themes = {}
     for id, _ in pairs(lia.color.themes) do
         themes[#themes + 1] = id
     end
+
     table.sort(themes)
     return themes
 end
+
 lia.color.registerTheme("Teal", {
     header = Color(36, 54, 54),
     header_text = Color(109, 159, 159),
@@ -225,8 +250,10 @@ lia.color.registerTheme("Teal", {
     window_shadow = Color(18, 32, 32, 90),
     gray = Color(150, 180, 180, 200),
     text = Color(210, 235, 235),
-    text_entry = Color(210, 235, 235)
+    text_entry = Color(210, 235, 235),
+    accent = Color(60, 140, 140)
 })
+
 lia.color.registerTheme("Dark", {
     header = Color(40, 40, 40),
     header_text = Color(100, 100, 100),
@@ -248,8 +275,10 @@ lia.color.registerTheme("Dark", {
     window_shadow = Color(0, 0, 0, 100),
     gray = Color(150, 150, 150, 220),
     text = Color(255, 255, 255),
-    text_entry = Color(255, 255, 255)
+    text_entry = Color(255, 255, 255),
+    accent = Color(106, 108, 197)
 })
+
 lia.color.registerTheme("Dark Mono", {
     header = Color(40, 40, 40),
     header_text = Color(100, 100, 100),
@@ -271,8 +300,10 @@ lia.color.registerTheme("Dark Mono", {
     window_shadow = Color(0, 0, 0, 100),
     gray = Color(150, 150, 150, 220),
     text = Color(255, 255, 255),
-    text_entry = Color(255, 255, 255)
+    text_entry = Color(255, 255, 255),
+    accent = Color(121, 121, 121)
 })
+
 lia.color.registerTheme("Blue", {
     header = Color(36, 48, 66),
     header_text = Color(109, 129, 159),
@@ -294,8 +325,10 @@ lia.color.registerTheme("Blue", {
     window_shadow = Color(18, 22, 32, 100),
     gray = Color(150, 170, 190, 200),
     text = Color(210, 220, 235),
-    text_entry = Color(210, 220, 235)
+    text_entry = Color(210, 220, 235),
+    accent = Color(80, 160, 220)
 })
+
 lia.color.registerTheme("Red", {
     header = Color(54, 36, 36),
     header_text = Color(159, 109, 109),
@@ -317,8 +350,10 @@ lia.color.registerTheme("Red", {
     window_shadow = Color(32, 18, 18, 100),
     gray = Color(180, 150, 150, 200),
     text = Color(235, 210, 210),
-    text_entry = Color(235, 210, 210)
+    text_entry = Color(235, 210, 210),
+    accent = Color(180, 80, 80)
 })
+
 lia.color.registerTheme("Light", {
     header = Color(240, 240, 240),
     header_text = Color(150, 150, 150),
@@ -340,8 +375,10 @@ lia.color.registerTheme("Light", {
     window_shadow = Color(0, 0, 0, 50),
     gray = Color(130, 130, 130, 220),
     text = Color(20, 20, 20),
-    text_entry = Color(20, 20, 20)
+    text_entry = Color(20, 20, 20),
+    accent = Color(106, 108, 197)
 })
+
 lia.color.registerTheme("Green", {
     header = Color(36, 54, 40),
     header_text = Color(109, 159, 109),
@@ -363,8 +400,10 @@ lia.color.registerTheme("Green", {
     window_shadow = Color(18, 32, 22, 100),
     gray = Color(150, 180, 150, 200),
     text = Color(210, 235, 210),
-    text_entry = Color(210, 235, 210)
+    text_entry = Color(210, 235, 210),
+    accent = Color(80, 180, 120)
 })
+
 lia.color.registerTheme("Orange", {
     header = Color(70, 35, 10),
     header_text = Color(250, 230, 210),
@@ -386,8 +425,10 @@ lia.color.registerTheme("Orange", {
     window_shadow = Color(20, 8, 0, 100),
     gray = Color(180, 161, 150, 200),
     text = Color(45, 20, 10),
-    text_entry = Color(45, 20, 10)
+    text_entry = Color(45, 20, 10),
+    accent = Color(245, 130, 50)
 })
+
 lia.color.registerTheme("Purple", {
     header = Color(40, 36, 56),
     header_text = Color(150, 140, 180),
@@ -409,8 +450,10 @@ lia.color.registerTheme("Purple", {
     window_shadow = Color(8, 6, 20, 100),
     gray = Color(140, 128, 148, 220),
     text = Color(245, 240, 255),
-    text_entry = Color(245, 240, 255)
+    text_entry = Color(245, 240, 255),
+    accent = Color(138, 114, 219)
 })
+
 lia.color.registerTheme("Coffee", {
     header = Color(67, 48, 36),
     header_text = Color(210, 190, 170),
@@ -432,8 +475,10 @@ lia.color.registerTheme("Coffee", {
     window_shadow = Color(15, 10, 5, 100),
     gray = Color(180, 150, 130, 200),
     text = Color(235, 225, 210),
-    text_entry = Color(235, 225, 210)
+    text_entry = Color(235, 225, 210),
+    accent = Color(150, 110, 75)
 })
+
 lia.color.registerTheme("Ice", {
     header = Color(190, 225, 250),
     header_text = Color(68, 104, 139),
@@ -455,8 +500,10 @@ lia.color.registerTheme("Ice", {
     window_shadow = Color(60, 100, 140, 100),
     gray = Color(92, 112, 133, 200),
     text = Color(20, 35, 50),
-    text_entry = Color(20, 35, 50)
+    text_entry = Color(20, 35, 50),
+    accent = Color(100, 170, 230)
 })
+
 lia.color.registerTheme("Wine", {
     header = Color(59, 42, 53),
     header_text = Color(246, 242, 246),
@@ -478,8 +525,10 @@ lia.color.registerTheme("Wine", {
     window_shadow = Color(10, 6, 20, 100),
     gray = Color(170, 150, 160, 200),
     text = Color(246, 242, 246),
-    text_entry = Color(246, 242, 246)
+    text_entry = Color(246, 242, 246),
+    accent = Color(148, 61, 91)
 })
+
 lia.color.registerTheme("Violet", {
     header = Color(49, 50, 68),
     header_text = Color(238, 244, 255),
@@ -501,8 +550,10 @@ lia.color.registerTheme("Violet", {
     window_shadow = Color(8, 6, 20, 100),
     gray = Color(147, 147, 184, 200),
     text = Color(238, 244, 255),
-    text_entry = Color(238, 244, 255)
+    text_entry = Color(238, 244, 255),
+    accent = Color(159, 180, 255)
 })
+
 lia.color.registerTheme("Moss", {
     header = Color(42, 50, 36),
     header_text = Color(232, 244, 235),
@@ -524,8 +575,10 @@ lia.color.registerTheme("Moss", {
     window_shadow = Color(0, 0, 0, 100),
     gray = Color(148, 165, 140, 220),
     text = Color(232, 244, 235),
-    text_entry = Color(232, 244, 235)
+    text_entry = Color(232, 244, 235),
+    accent = Color(110, 160, 90)
 })
+
 lia.color.registerTheme("Coral", {
     header = Color(52, 32, 36),
     header_text = Color(255, 243, 242),
@@ -547,8 +600,10 @@ lia.color.registerTheme("Coral", {
     window_shadow = Color(0, 0, 0, 100),
     gray = Color(167, 136, 136, 220),
     text = Color(255, 243, 242),
-    text_entry = Color(255, 243, 242)
+    text_entry = Color(255, 243, 242),
+    accent = Color(255, 120, 90)
 })
+
 lia.config.add("Theme", "theme", "Teal", function(_, newValue)
     if CLIENT then
         if not lia.color.themes[newValue] then
@@ -558,6 +613,7 @@ lia.config.add("Theme", "theme", "Teal", function(_, newValue)
                 return
             end
         end
+
         lia.color.applyTheme(newValue, true)
     end
 end, {

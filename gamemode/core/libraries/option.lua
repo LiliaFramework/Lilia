@@ -10,6 +10,7 @@ function lia.option.add(key, name, desc, default, callback, data)
         data.min = data.min or optionType == "Int" and math.floor(default / 2) or default / 2
         data.max = data.max or optionType == "Int" and math.floor(default * 2) or default * 2
     end
+
     if data.type then optionType = data.type end
     local old = lia.option.stored[key]
     local value = old and old.value or default
@@ -21,6 +22,7 @@ function lia.option.add(key, name, desc, default, callback, data)
         data.optionsFunc = data.options
         data.options = nil
     end
+
     data.category = isstring(data.category) and L(data.category) or data.category
     lia.option.stored[key] = {
         name = isstring(name) and L(name) or name,
@@ -35,6 +37,7 @@ function lia.option.add(key, name, desc, default, callback, data)
         isQuick = data.isQuick
     }
 end
+
 function lia.option.getOptions(key)
     local option = lia.option.stored[key]
     if not option then return {} end
@@ -46,7 +49,6 @@ function lia.option.getOptions(key)
             end
             return result
         else
-            print(L("warningOptionOptionsFunctionFor") .. " \"" .. key .. "\" failed or returned invalid result")
             return {}
         end
     elseif istable(option.data.options) then
@@ -54,6 +56,7 @@ function lia.option.getOptions(key)
     end
     return {}
 end
+
 function lia.option.set(key, value)
     local opt = lia.option.stored[key]
     if not opt then return end
@@ -64,6 +67,7 @@ function lia.option.set(key, value)
     lia.option.save()
     if opt.shouldNetwork and SERVER then hook.Run("liaOptionReceived", nil, key, value) end
 end
+
 function lia.option.get(key, default)
     local opt = lia.option.stored[key]
     if opt then
@@ -72,15 +76,18 @@ function lia.option.get(key, default)
     end
     return default
 end
+
 function lia.option.save()
     local path = "lilia/options.json"
     local out = {}
     for k, v in pairs(lia.option.stored) do
         if v.value ~= nil then out[k] = v.value end
     end
+
     local json = util.TableToJSON(out, true)
     if json then file.Write(path, json) end
 end
+
 function lia.option.load()
     local path = "lilia/options.json"
     local data = file.Read(path, "DATA")
@@ -95,15 +102,19 @@ function lia.option.load()
         for _, option in pairs(lia.option.stored) do
             if option.default ~= nil then option.value = option.default end
         end
+
         local out = {}
         for k, v in pairs(lia.option.stored) do
             if v.value ~= nil then out[k] = v.value end
         end
+
         local json = util.TableToJSON(out, true)
         if json then file.Write(path, json) end
     end
+
     hook.Run("InitializedOptions")
 end
+
 hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
     local OptionFormatting = {
         Int = function(key, name, cfg, parent)
@@ -130,7 +141,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local slider = panel:Add("liaSlideBox")
             slider:Dock(TOP)
-            slider:DockMargin(300, 10, 300, 0)
+            slider:DockMargin(20, 10, 50, 0)
             slider:SetTall(60)
             slider:SetRange(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0), lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1), 0)
             slider:SetValue(lia.option.get(key, cfg.value))
@@ -166,6 +177,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local valueX = math.min(barEnd + handleW / 2 + 15, w - 20)
                 draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
+
             slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(v)) end) end
             return container
         end,
@@ -193,7 +205,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             description.Paint = function(_, w, h) draw.SimpleText(cfg.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
             local slider = panel:Add("liaSlideBox")
             slider:Dock(TOP)
-            slider:DockMargin(300, 10, 300, 0)
+            slider:DockMargin(20, 10, 50, 0)
             slider:SetTall(60)
             slider:SetRange(lia.config.get(key .. "_min", cfg.data and cfg.data.min or 0), lia.config.get(key .. "_max", cfg.data and cfg.data.max or 1), cfg.data and cfg.data.decimals or 2)
             slider:SetValue(lia.option.get(key, cfg.value))
@@ -229,6 +241,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 local valueX = math.min(barEnd + handleW / 2 + 15, w - 20)
                 draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
+
             slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(v, 2)) end) end
             return container
         end,
@@ -334,6 +347,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                     lia.derma.rect(0, 0, w, h):Rad(16):Color(c):Shape(lia.derma.SHAPE_IOS):Draw()
                     draw.RoundedBox(2, 0, 0, w, h, Color(255, 255, 255, 50))
                 end
+
                 button.DoClick = function() lia.derma.colorPicker(function(color) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, color) end) end, lia.option.get(key, cfg.value)) end
             end
             return container
@@ -371,6 +385,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 for _, text in pairs(options) do
                     combo:AddChoice(text, text)
                 end
+
                 combo:FinishAddingOptions()
                 combo:PostInit()
                 combo.OnSelect = function(_, _, v) lia.option.set(key, v) end
@@ -378,12 +393,14 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             return container
         end
     }
+
     local function buildOptions(parent, filter)
         local categories = {}
         local keys = {}
         for k in pairs(lia.option.stored) do
             keys[#keys + 1] = k
         end
+
         table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
         for _, key in ipairs(keys) do
             local opt = lia.option.stored[key]
@@ -404,10 +421,12 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 end
             end
         end
+
         local catNames = {}
         for name in pairs(categories) do
             catNames[#catNames + 1] = name
         end
+
         table.sort(catNames)
         for _, catName in ipairs(catNames) do
             local items = categories[catName]
@@ -423,6 +442,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 cat.Header:SetTextColor(lia.color.theme.text)
                 cat.Header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 120)):Shape(lia.derma.SHAPE_IOS):Draw() end
             end
+
             cat.Paint = function() end
             local body = vgui.Create("DPanel", cat)
             body:SetTall(#items * 240)
@@ -437,6 +457,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             end
         end
     end
+
     pages[#pages + 1] = {
         name = "options",
         drawFunc = function(parent)
@@ -449,27 +470,32 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 buildOptions(sheet.canvas, sheet.search:GetValue():lower())
                 sheet:Refresh()
             end
+
             sheet.search.OnTextChanged = refresh
             refresh()
         end
     }
 end)
+
 lia.option.add("descriptionWidth", "descriptionWidth", "descriptionWidthDesc", 0.5, nil, {
     category = "categoryHUD",
     min = 0.1,
     max = 1,
     decimals = 2
 })
+
 lia.option.add("invertWeaponScroll", "invertWeaponScroll", "invertWeaponScrollDesc", false, nil, {
     category = "categoryWeaponSelector",
     isQuick = true,
 })
+
 lia.option.add("autoDownloadWorkshop", "autoDownloadWorkshop", "autoDownloadWorkshopDesc", nil, nil, {
     category = "categoryWorkshop",
     type = "Boolean",
     isQuick = true,
     shouldNetwork = true
 })
+
 lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
     category = "categoryESP",
     isQuick = true,
@@ -479,6 +505,7 @@ lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
     category = "categoryESP",
     isQuick = true,
@@ -488,6 +515,7 @@ lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
     category = "categoryESP",
     isQuick = true,
@@ -497,6 +525,7 @@ lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
     category = "categoryESP",
     isQuick = true,
@@ -506,6 +535,7 @@ lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredDoorsDesc", false, nil, {
     category = "categoryESP",
     isQuick = true,
@@ -515,6 +545,7 @@ lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredD
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
     r = 0,
     g = 255,
@@ -528,6 +559,7 @@ lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
     r = 255,
     g = 255,
@@ -541,6 +573,7 @@ lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnconfiguredDoorsColorDesc", {
     r = 255,
     g = 0,
@@ -554,6 +587,7 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDesc", false, nil, {
     category = "categoryESP",
     isQuick = true,
@@ -563,6 +597,7 @@ lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDe
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfiguredDoorsColorDesc", {
     r = 0,
     g = 255,
@@ -576,6 +611,7 @@ lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfigu
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
     r = 0,
     g = 0,
@@ -589,51 +625,61 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
         return ply:isStaffOnDuty() or ply:hasPrivilege("noClipOutsideStaff")
     end
 })
+
 lia.option.add("BarsAlwaysVisible", "barsAlwaysVisible", "barsAlwaysVisibleDesc", false, nil, {
     category = "categoryGeneral",
     isQuick = true,
 })
+
 lia.option.add("descriptionWidth", "descriptionWidth", "descriptionWidthDesc", 0.5, nil, {
     category = "categoryHUD",
     min = 0.1,
     max = 1,
     decimals = 2
 })
+
 lia.option.add("thirdPersonEnabled", "thirdPersonEnabled", "thirdPersonEnabledDesc", false, function(_, newValue) hook.Run("thirdPersonToggled", newValue) end, {
     category = "categoryThirdPerson",
     isQuick = true,
 })
+
 lia.option.add("thirdPersonClassicMode", "thirdPersonClassicMode", "thirdPersonClassicModeDesc", false, nil, {
     category = "categoryThirdPerson",
     isQuick = true,
 })
+
 lia.option.add("thirdPersonHeight", "thirdPersonHeight", "thirdPersonHeightDesc", 10, nil, {
     category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHeight", 30),
 })
+
 lia.option.add("thirdPersonHorizontal", "thirdPersonHorizontal", "thirdPersonHorizontalDesc", 10, nil, {
     category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHorizontal", 30),
 })
+
 lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanceDesc", 50, nil, {
     category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonDistance", 100),
 })
+
 lia.option.add("ChatShowTime", "chatShowTime", "chatShowTimeDesc", false, nil, {
     category = "categoryChat",
     type = "Boolean"
 })
+
 lia.option.add("voiceRange", "voiceRange", "voiceRangeDesc", false, nil, {
     category = "categoryHUD",
     isQuick = true,
     type = "Boolean"
 })
+
 lia.option.add("weaponSelectorPosition", "weaponSelectorPosition", "weaponSelectorPositionDesc", "Left", nil, {
     category = "categoryWeaponSelector",
     type = "Table",

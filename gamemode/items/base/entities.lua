@@ -13,6 +13,7 @@ local function restoreEntityData(entity, data)
             if isnumber(i) and i >= 0 then entity:SetBodygroup(i, bodygroup) end
         end
     end
+
     if data.angles then entity:SetAngles(data.angles) end
     if data.health and data.health > 0 then entity:SetHealth(data.health) end
     if data.maxHealth and data.maxHealth > 0 then entity:SetMaxHealth(data.maxHealth) end
@@ -22,6 +23,7 @@ local function restoreEntityData(entity, data)
         end
     end
 end
+
 ITEM.functions.Place = {
     name = "placeDownEntity",
     onRun = function(item)
@@ -38,6 +40,7 @@ ITEM.functions.Place = {
             local itemEntity = item:getEntity()
             entityData = itemEntity and itemEntity:getNetVar("entityData", {})
         end
+
         if entityData and table.Count(entityData) > 0 then
             restoreEntityData(entity, entityData)
         else
@@ -51,16 +54,19 @@ ITEM.functions.Place = {
                     if isnumber(i) and i >= 0 then entity:SetBodygroup(i, bodygroup) end
                 end
             end
+
             if itemData.health and itemData.health > 0 then
                 entity:SetHealth(itemData.health)
                 if itemData.maxHealth and itemData.maxHealth > 0 then entity:SetMaxHealth(itemData.maxHealth) end
             end
+
             local physObj = entity:GetPhysicsObject()
             if IsValid(physObj) then
                 physObj:EnableMotion(true)
                 physObj:Wake()
             end
         end
+
         item:remove()
         return true
     end,

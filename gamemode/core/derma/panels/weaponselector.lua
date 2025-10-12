@@ -19,10 +19,24 @@ local IN_ATTACK = IN_ATTACK
 local function getWeaponFromIndex(i, weapons)
     return weapons[i] or NULL
 end
+
 local function shouldDrawWepSelect(client)
     client = client or LocalPlayer()
     return hook.Run("ShouldDrawWepSelect", client) ~= false
 end
+
+local function hideUIElementsWhenWeaponSelectActive()
+    if alpha > 0 then
+        if IsValid(lia.gui.quick) then lia.gui.quick:SetVisible(false) end
+        if g_ContextMenu and g_ContextMenu:IsVisible() then g_ContextMenu:SetVisible(false) end
+        if liaItemMenuVisible and IsValid(liaItemDermaMenu) then liaItemDermaMenu:SetVisible(false) end
+    else
+        if IsValid(lia.gui.quick) and not lia.gui.quick:IsVisible() then lia.gui.quick:SetVisible(true) end
+        if g_ContextMenu and not g_ContextMenu:IsVisible() then g_ContextMenu:SetVisible(true) end
+        if liaItemMenuVisible and IsValid(liaItemDermaMenu) and not liaItemDermaMenu:IsVisible() then liaItemDermaMenu:SetVisible(true) end
+    end
+end
+
 local infoMarkup
 local function HUDPaint()
     if not shouldDrawWepSelect() then return end
@@ -34,6 +48,8 @@ local function HUDPaint()
     else
         alphaDelta = Lerp(frameTime * 10, alphaDelta, alpha)
     end
+
+    hideUIElementsWhenWeaponSelectActive()
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
     local position = lia.option.get("weaponSelectorPosition", "Left")
@@ -48,6 +64,7 @@ local function HUDPaint()
         shiftX = 0
         x, y = ScrW() * 0.5, ScrH() * 0.5
     end
+
     local spacing = pi * 0.85
     local radius = 240 * alphaDelta
     deltaIndex = Lerp(frameTime * 12, deltaIndex, index)
@@ -69,10 +86,13 @@ local function HUDPaint()
                 elseif position == "Center" then
                     infoX = x + 6 + shiftX
                 end
+
                 infoMarkup:Draw(infoX, y + 30, 0, 0, infoAlpha * fraction)
             end
+
             if index == 1 then lastY = 0 end
         end
+
         surface.SetFont("liaBigFont")
         local name = hook.Run("GetWeaponName", weapon) or language.GetPhrase(weapon:GetPrintName())
         local _, ty = surface.GetTextSize(name)
@@ -86,18 +106,22 @@ local function HUDPaint()
             textX = shiftX + x + math.cos(theta * spacing + pi) * radius + radius
             textY = y + lastY + math.sin(theta * spacing + pi) * radius - ty / 2
         end
+
         matrix:Translate(Vector(textX, textY, 1))
         matrix:Scale(Vector(scale, scale, 1))
         cam.PushModelMatrix(matrix)
         lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaBigFont")
         cam.PopModelMatrix()
     end
+
     if fadeTime < CurTime() and alpha > 0 then alpha = 0 end
 end
+
 local function onIndexChanged()
     if not shouldDrawWepSelect() then return end
     alpha = 1
     fadeTime = CurTime() + 5
+    hideUIElementsWhenWeaponSelectActive()
     local client = LocalPlayer()
     local weapons = client:GetWeapons()
     local weapon = getWeaponFromIndex(index, weapons)
@@ -109,16 +133,19 @@ local function onIndexChanged()
         for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
             if weapon[key] and weapon[key]:find("%S") then table.insert(textParts, string.format("<font=LiliaFont.16b><color=%d,%d,%d>%s</font></color>\n%s\n", activeColor.r, activeColor.g, activeColor.b, L(key:lower()), weapon[key])) end
         end
+
         if #textParts > 0 then
             local text = table.concat(textParts)
             infoMarkup = markup.Parse("<font=LiliaFont.16>" .. text, ScrW() * 0.3)
         end
+
         local source, pitch = hook.Run("WeaponCycleSound")
         source = source or "common/talk.wav"
         pitch = pitch or 180
         client:EmitSound(source, 45, pitch)
     end
 end
+
 local function PlayerBindPress(client, bind, pressed)
     if not shouldDrawWepSelect(client) then return end
     if not pressed then return end
@@ -140,6 +167,7 @@ local function PlayerBindPress(client, bind, pressed)
             index = index + 1
             if index > total then index = 1 end
         end
+
         onIndexChanged()
         return true
     elseif bind:find("slot") then
@@ -154,6 +182,7 @@ local function PlayerBindPress(client, bind, pressed)
             infoAlpha = 0
             return
         end
+
         local source, pitch = hook.Run("WeaponSelectSound")
         source = source or "common/talk.wav"
         pitch = pitch or 180
@@ -164,18 +193,22 @@ local function PlayerBindPress(client, bind, pressed)
         return true
     end
 end
+
 local meta = FindMetaTable("Player")
 function meta:SelectWeapon(class)
     if not shouldDrawWepSelect(self) then return end
     if not self:HasWeapon(class) then return end
     self.doWeaponSwitch = self:GetWeapon(class)
 end
+
 local function StartCommand(client, cmd)
     if not shouldDrawWepSelect(client) then return end
     if not IsValid(client.doWeaponSwitch) then return end
     cmd:SelectWeapon(client.doWeaponSwitch)
     if client:GetActiveWeapon() == client.doWeaponSwitch then client.doWeaponSwitch = nil end
 end
+
 hook.Add("HUDPaint", "liaWeaponSelectHUDPaint", HUDPaint)
 hook.Add("PlayerBindPress", "liaWeaponSelectPlayerBindPress", PlayerBindPress)
 hook.Add("StartCommand", "liaWeaponSelectStartCommand", StartCommand)
+hook.Add("Think", "liaWeaponSelectUIHiding", function() if shouldDrawWepSelect() then hideUIElementsWhenWeaponSelectActive() end end)

@@ -36,8 +36,7 @@ The panel library provides a comprehensive set of custom Derma panels that exten
 | `SemiTransparentDFrame` | `DFrame` | Frame drawn with partial transparency. |
 | `SemiTransparentDPanel` | `DPanel` | Panel drawn with partial transparency. |
 | `liaDoorMenu` | `DFrame` | Door permissions and ownership menu. |
-| `liaRoster` | `EditablePanel` | Lists members of a faction or class. |
-| `liaScoreboard` | `EditablePanel` | Replacement scoreboard. |
+ `liaScoreboard` | `EditablePanel` | Replacement scoreboard. |
 | `liaSheet` | `DPanel` | Filterable sheet used for building lists. |
 | `liaCharacter` | `EditablePanel` | Main screen for character management. |
 | `liaCharBGMusic` | `DPanel` | Handles menu background music playback. |
@@ -741,36 +740,6 @@ Client.
 ```
 
 ---
-
-### `liaRoster`
-
-**Purpose**
-
-Lists players in a faction or class roster and supports context actions such as kicking members.
-
-**Base Panel**
-
-`EditablePanel`
-
-**Realm**
-
-Client.
-
-**Functions**
-
-- `SetRosterType(type)` – chooses which roster to display. Passing `"faction"` requests faction data from the server.
-- `Populate(data, canKick)` – fills the sheet with `data` rows and enables kick options when `canKick` is true.
-- `PerformLayout()` – sizes the panel to its children and refreshes the internal sheet layout.
-
-**Example Usage**
-
-```lua
--- Create a roster panel
-local roster = vgui.Create("liaRoster")
-roster:SetSize(400, 300)
-roster:SetRosterType("faction")
-roster:Populate(rosterData, true) -- true = can kick members
-```
 
 ---
 

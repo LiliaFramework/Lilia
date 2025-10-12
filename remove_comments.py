@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Simple script to remove comments from Lua files.
-Removes both single-line (--) and multi-line (--[[ ]]) comments.
+Simple script to remove comments and print statements from Lua files.
+Removes both single-line (--) and multi-line (--[[ ]]) comments, as well as print statements.
 """
 
 import os
@@ -10,14 +10,14 @@ import sys
 import subprocess
 
 def remove_comments(content):
-    """Remove Lua comments from content."""
+    """Remove Lua comments and print statements from content."""
     lines = content.split('\n')
     cleaned_lines = []
-    
+
     i = 0
     while i < len(lines):
         line = lines[i]
-        
+
         # Skip multi-line comments
         if '--[[' in line and ']]' not in line:
             i += 1
@@ -26,17 +26,20 @@ def remove_comments(content):
             if i < len(lines):
                 i += 1
             continue
-        
+
+        # Remove print statements (common patterns)
+        line = re.sub(r'^\s*print\s*\(.*?\)\s*$', '', line)  # print(...) at start of line
+
         # Remove single-line comments
         line = re.sub(r'--.*', '', line)
-        
+
         # Keep non-empty lines
         line = line.rstrip()
         if line:
             cleaned_lines.append(line)
-        
+
         i += 1
-    
+
     return '\n'.join(cleaned_lines)
 
 def run_glualint_pretty_print(target_dir):
@@ -80,12 +83,12 @@ def main():
         target = sys.argv[1]
     else:
         target = "."
-    
+
     if os.path.isfile(target) and target.endswith('.lua'):
         # Single file
         process_file(target)
     else:
-        # Directory
+        # Directory - first remove comments from all files
         count = 0
         for root, dirs, files in os.walk(target):
             for file in files:
@@ -93,6 +96,9 @@ def main():
                     if process_file(os.path.join(root, file)):
                         count += 1
         print(f"Processed {count} files")
+
+        # Then run glualint pretty-print if available
+        run_glualint_pretty_print(target)
 
 if __name__ == '__main__':
     main()

@@ -2,6 +2,7 @@
 SWEP.Contact = "@liliaplayer"
 SWEP.PrintName = L("adminStick")
 SWEP.Purpose = L("adminStickPurpose")
+SWEP.Category = "Lilia"
 SWEP.ViewModelFOV = 50
 SWEP.ViewModelFlip = false
 SWEP.IsAlwaysRaised = true
@@ -24,9 +25,11 @@ function SWEP:DrawWorldModel()
         self:DrawModel()
         return
     end
+
     if owner:isNoClipping() then return end
     self:DrawModel()
 end
+
 function SWEP:Initialize()
     self:SetHoldType("melee")
 end

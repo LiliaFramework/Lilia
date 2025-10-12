@@ -9,10 +9,12 @@ function lia.discord.relayMessage(embed)
     embed.footer = embed.footer or {
         text = L("discordRelayLiliaDiscordRelay")
     }
+
     local payload = {
         embeds = {embed},
         username = L("discordRelayLiliaLogger")
     }
+
     hook.Run("DiscordRelaySend", embed)
     if util.IsBinaryModuleInstalled("chttp") and not ForceHTTPMode then
         require("chttp")
@@ -30,5 +32,6 @@ function lia.discord.relayMessage(embed)
             payload_json = util.TableToJSON(payload)
         }, function() end, function(err) print(L("discordRelayHTTPFailed") .. " " .. tostring(err)) end)
     end
+
     hook.Run("DiscordRelayed", embed)
 end

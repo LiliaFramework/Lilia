@@ -12,6 +12,7 @@ local lastTrace = {
     start = nil,
     endpos = nil
 }
+
 local hidden = {
     CHUDAutoAim = true,
     CHudHealth = true,
@@ -24,11 +25,13 @@ local hidden = {
     CHudDamageIndicator = true,
     CHudVoiceStatus = true
 }
+
 local VoiceRanges = {
     [L("whispering")] = 120,
     [L("talking")] = 300,
     [L("yelling")] = 600,
 }
+
 local lastEntity
 local nextUpdate = 0
 local healthPercent = {
@@ -58,14 +61,17 @@ local healthPercent = {
         color = Color(46, 204, 113)
     }
 }
+
 local NoDrawCrosshairWeapon = {
     weapon_crowbar = true,
     weapon_stunstick = true,
     weapon_bugbait = true
 }
+
 local function canDrawAmmo(wpn)
     if IsValid(wpn) and wpn.DrawAmmo ~= false and lia.config.get("AmmoDrawEnabled", false) then return true end
 end
+
 local function drawAmmo(wpn)
     local client = LocalPlayer()
     if not IsValid(wpn) then return end
@@ -81,6 +87,7 @@ local function drawAmmo(wpn)
         surface.DrawOutlinedRect(x, y, 64, 64)
         lia.util.drawText(sec, x + 32, y + 32, nil, 1, 1, "liaBigFont")
     end
+
     if wpn:GetClass() ~= "weapon_slam" and (clip > 0 or count > 0) then
         x = x - (sec > 0 and 144 or 64)
         lia.util.drawBlurAt(x, y, 128, 64)
@@ -91,6 +98,7 @@ local function drawAmmo(wpn)
         lia.util.drawText(clip == -1 and count or clip .. "/" .. count, x + 64, y + 32, nil, 1, 1, "liaBigFont")
     end
 end
+
 local function canDrawCrosshair()
     local client = LocalPlayer()
     local rag = client:getRagdoll()
@@ -102,6 +110,7 @@ local function canDrawCrosshair()
         if not NoDrawCrosshairWeapon[cl] and lia.config.get("CrosshairEnabled", true) and client:Alive() and not IsValid(rag) and not (g_ContextMenu:IsVisible() or IsValid(lia.gui.character) and lia.gui.character:IsVisible()) then return true end
     end
 end
+
 local function drawCrosshair()
     local client = LocalPlayer()
     local trace = util.QuickTrace(client:GetShootPos(), client:GetAimVector() * 15000, client)
@@ -115,6 +124,7 @@ local function drawCrosshair()
         end
     end
 end
+
 local function RenderEntities()
     local client = LocalPlayer()
     if client:getChar() then
@@ -134,6 +144,7 @@ local function RenderEntities()
                 if shouldDraw then paintedEntitiesCache[lastEntity] = true end
             end
         end
+
         for ent, drawing in pairs(paintedEntitiesCache) do
             if IsValid(ent) then
                 local goal = drawing and 255 or 0
@@ -150,6 +161,7 @@ local function RenderEntities()
                         hook.Run("DrawEntityInfo", ent, a)
                     end
                 end
+
                 ent.liaAlpha = a
                 if a == 0 and goal == 0 then paintedEntitiesCache[ent] = nil end
             else
@@ -158,6 +170,7 @@ local function RenderEntities()
         end
     end
 end
+
 function GM:PostDrawOpaqueRenderables()
     if not lia.option.get("voiceRange", false) then return end
     local client = LocalPlayer()
@@ -176,22 +189,26 @@ function GM:PostDrawOpaqueRenderables()
         render.DrawLine(startPos, endPos, color, false)
     end
 end
+
 function GM:ShouldDrawEntityInfo(e)
     if IsValid(e) then
         if e:IsPlayer() and e:getChar() then
             if e:isNoClipping() or e:GetNoDraw() then return false end
             return true
         end
+
         if e.getNetVar then
             local ply = e:getNetVar("player")
             if IsValid(ply) then return e == LocalPlayer() and not LocalPlayer():ShouldDrawLocalPlayer() end
         end
+
         if e.DrawEntityInfo then return true end
         if e.onShouldDrawEntityInfo and e:onShouldDrawEntityInfo() then return true end
         return true
     end
     return false
 end
+
 function GM:GetInjuredText(c)
     local h = c:Health()
     local mh = c:GetMaxHealth() or 100
@@ -199,13 +216,16 @@ function GM:GetInjuredText(c)
     for _, entry in ipairs(healthPercent) do
         if p <= entry.threshold then return {entry.text, entry.color} end
     end
+
     local last = healthPercent[#healthPercent]
     return {last.text, last.color}
 end
+
 function GM:DrawCharInfo(c, _, info)
     local injured = hook.Run("GetInjuredText", c)
     if injured then info[#info + 1] = {L(injured[1]), injured[2]} end
 end
+
 function GM:DrawEntityInfo(e, a, pos)
     if not e:IsPlayer() or hook.Run("ShouldDrawPlayerInfo", e) == false then return end
     local ch = e:getChar()
@@ -218,24 +238,29 @@ function GM:DrawEntityInfo(e, a, pos)
         e.liaNameCache = nil
         e.liaDescCache = nil
     end
+
     local name = hook.Run("GetDisplayedName", e) or ch and ch.getName(ch) or e:Name()
     if name ~= e.liaNameCache then
         e.liaNameCache = name
         if #name > 250 then name = name:sub(1, 250) .. "..." end
         e.liaNameLines = lia.util.wrapText(name, ScrW() * width, "liaSmallFont")
     end
+
     for i = 1, #e.liaNameLines do
         charInfo[#charInfo + 1] = {e.liaNameLines[i], color_white}
     end
+
     local desc = hook.Run("GetDisplayedDescription", e, true) or ch and ch.getDesc(ch) or L("noChar")
     if desc ~= e.liaDescCache then
         e.liaDescCache = desc
         if #desc > 250 then desc = desc:sub(1, 250) .. "..." end
         e.liaDescLines = lia.util.wrapText(desc, ScrW() * width, "liaSmallFont")
     end
+
     for i = 1, #e.liaDescLines do
         charInfo[#charInfo + 1] = {e.liaDescLines[i]}
     end
+
     if ch then hook.Run("DrawCharInfo", e, ch, charInfo) end
     for i = 1, #charInfo do
         local info = charInfo[i]
@@ -243,6 +268,7 @@ function GM:DrawEntityInfo(e, a, pos)
         y = y + ty
     end
 end
+
 function GM:HUDPaint()
     local client = LocalPlayer()
     if client:Alive() and client:getChar() then
@@ -251,6 +277,7 @@ function GM:HUDPaint()
         if canDrawCrosshair() then drawCrosshair() end
     end
 end
+
 function GM:TooltipInitialize(var, panel)
     if panel.liaToolTip or panel.itemID then
         var.markupObject = lia.markup.parse(var:GetText(), ScrW() * 0.15)
@@ -262,6 +289,7 @@ function GM:TooltipInitialize(var, panel)
         var.isItemTooltip = true
     end
 end
+
 function GM:TooltipPaint(var, w, h)
     if var.isItemTooltip then
         lia.util.drawBlur(var, 2, 2)
@@ -271,15 +299,19 @@ function GM:TooltipPaint(var, w, h)
         return true
     end
 end
+
 function GM:TooltipLayout(var)
     return var.isItemTooltip
 end
+
 function GM:DrawLiliaModelView(_, entity)
     if IsValid(entity.weapon) then entity.weapon:DrawModel() end
 end
+
 function GM:OnChatReceived()
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
+
 function GM:CreateMove(cmd)
     local client = LocalPlayer()
     if IsValid(client) and client:getLocalVar("bIsHoldingObject", false) and cmd:KeyDown(IN_ATTACK2) then
@@ -289,9 +321,10 @@ function GM:CreateMove(cmd)
         cmd:SetViewAngles(angle)
     end
 end
+
 function GM:CalcView(client, origin, angles, fov)
-    local view = self.BaseClass:CalcView(client, origin, angles, fov)
     if factionViewEnabled and factionViewPosition then
+        local view = self.BaseClass:CalcView(client, origin, angles, fov)
         view.origin = factionViewPosition
         if factionViewAngles then view.angles = factionViewAngles end
         view.znear = 1
@@ -310,10 +343,12 @@ function GM:CalcView(client, origin, angles, fov)
                     if modelPath and modelPath ~= factionViewModel:GetModel() then factionViewModel:SetModel(modelPath) end
                 end
             end
+
             factionViewModel:DrawModel()
         end
         return view
     end
+
     local ragEntity = client:getRagdoll()
     local ragdoll = client:GetRagdollEntity()
     local ent
@@ -324,56 +359,112 @@ function GM:CalcView(client, origin, angles, fov)
             ent = ragdoll
         end
     end
+
     if ent and ent:IsValid() then
         local idx = ent:LookupAttachment("eyes")
         if idx then
             local data = ent:GetAttachment(idx)
             if data then
+                local view = self.BaseClass:CalcView(client, origin, angles, fov)
                 view.origin = data.Pos
                 view.angles = data.Ang
                 view.znear = 1
+                return view
             end
         end
     end
-    return view
 end
-liaUseKeyHeld = false
+
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
     if bind:find("jump") and IsValid(client:getRagdoll()) then lia.command.send("chargetup") end
     if bind:find("use") then
         local entity = client:getTracedEntity()
         local hasValidEntity = IsValid(entity) and (entity:isItem() or entity.hasMenu)
-        if pressed then
-            liaUseKeyHeld = true
-            if hasValidEntity then hook.Run("ItemShowEntityMenu", entity, true) end
-        else
-            liaUseKeyHeld = false
-        end
+        if pressed and hasValidEntity then hook.Run("ItemShowEntityMenu", entity) end
     end
+
     if (bind:find("use") or bind:find("attack")) and pressed then
         local menu, callback = lia.menu.getActiveMenu()
         if menu and lia.menu.onButtonPressed(menu, callback) then return true end
     end
 end
-hook.Add("ShutDown", "liaItemDermaMenuShutdown", function()
+
+local liaItemDermaMenu = nil
+function GM:ItemShowEntityMenu(entity)
+    for k, v in ipairs(lia.menu.list) do
+        if v.entity == entity then table.remove(lia.menu.list, k) end
+    end
+
+    local itemTable = entity:getItemTable()
+    if not itemTable then return end
+    if not useKeyHeld and input.IsShiftDown() then
+        if IsValid(entity) then
+            net.Start("liaInvAct")
+            net.WriteString("take")
+            net.WriteType(entity)
+            net.WriteType(nil)
+            net.SendToServer()
+        end
+        return
+    end
+
     if IsValid(liaItemDermaMenu) then liaItemDermaMenu:Remove() end
-    liaUseKeyHeld = false
-end)
+    liaItemDermaMenu = vgui.Create("liaDermaMenu")
+    local tempItem = table.Copy(itemTable)
+    tempItem.player = LocalPlayer()
+    tempItem.entity = entity
+    for key, fn in SortedPairs(itemTable.functions) do
+        if key == "combine" then continue end
+        if hook.Run("CanRunItemAction", tempItem, key) == false then continue end
+        if isfunction(fn.onCanRun) and not fn.onCanRun(tempItem) then continue end
+        liaItemDermaMenu:AddOption(L(fn.name or key), function()
+            if fn.sound then surface.PlaySound(fn.sound) end
+            if not fn.onClick or fn.onClick(tempItem) ~= false then
+                net.Start("liaInvAct")
+                net.WriteString(key)
+                net.WriteType(entity)
+                net.WriteType(nil)
+                net.SendToServer()
+            end
+
+            liaItemDermaMenu:Remove()
+            liaItemMenuVisible = false
+        end, fn.icon)
+    end
+
+    local pos = entity:GetPos()
+    local screenPos = pos:ToScreen()
+    local menuX = screenPos.x - liaItemDermaMenu:GetWide() / 2
+    local menuY = screenPos.y - liaItemDermaMenu:GetTall() - 20
+    menuX = math.Clamp(menuX, 0, ScrW() - liaItemDermaMenu:GetWide())
+    menuY = math.Clamp(menuY, 0, ScrH() - liaItemDermaMenu:GetTall())
+    liaItemDermaMenu:SetPos(menuX, menuY)
+    liaItemDermaMenu:MakePopup()
+    liaItemDermaMenu:SetVisible(true)
+    liaItemDermaMenu:SetKeyboardInputEnabled(false)
+    liaItemDermaMenu:SetMouseInputEnabled(true)
+    liaItemDermaMenu.OnRemove = function() liaItemMenuVisible = false end
+    liaItemMenuVisible = true
+end
+
 function GM:HUDPaintBackground()
     lia.menu.drawAll()
     RenderEntities()
     self.BaseClass.PaintWorldTips(self.BaseClass)
     if BRANCH ~= "x86-64" then draw.SimpleText(L("switchTo64Bit"), "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
+
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
     vgui.Create("liaQuick")
 end
+
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end
+
 function GM:CharListLoaded()
     timer.Create("liaWaitUntilPlayerValid", 1, 0, function()
         local client = LocalPlayer()
@@ -384,18 +475,23 @@ function GM:CharListLoaded()
         hook.Run("LiliaLoaded")
     end)
 end
+
 function GM:ForceDermaSkin()
     return lia.config.get("DermaSkin", L("liliaSkin"))
 end
+
 function GM:DermaSkinChanged()
     derma.RefreshSkins()
 end
+
 function GM:HUDShouldDraw(element)
     return not hidden[element]
 end
+
 function GM:PrePlayerDraw(client)
     if not client:getChar() then return true end
 end
+
 function GM:PlayerStartVoice(client)
     if not IsValid(g_VoicePanelList) or not lia.config.get("IsVoiceEnabled", true) then return end
     if client:getNetVar("IsDeadRestricted", false) then return false end
@@ -406,14 +502,17 @@ function GM:PlayerStartVoice(client)
             pnl.fadeAnim:Stop()
             pnl.fadeAnim = nil
         end
+
         pnl:SetAlpha(255)
         return
     end
+
     if not IsValid(client) then return end
     pnl = g_VoicePanelList:Add("VoicePanel")
     pnl:Setup(client)
     VoicePanels[client] = pnl
 end
+
 function GM:PlayerEndVoice(client)
     local pnl = VoicePanels[client]
     if IsValid(pnl) and not pnl.fadeAnim then
@@ -421,6 +520,7 @@ function GM:PlayerEndVoice(client)
         pnl.fadeAnim:Start(2)
     end
 end
+
 function GM:VoiceToggled(enabled)
     if not IsValid(g_VoicePanelList) then return end
     if not enabled then
@@ -430,27 +530,34 @@ function GM:VoiceToggled(enabled)
         end
     end
 end
+
 function GM:SpawnMenuOpen()
     local client = LocalPlayer()
     if lia.config.get("SpawnMenuLimit", false) and not (client:hasFlags("pet") or client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps")) then return end
     return true
 end
+
 function GM:InitPostEntity()
     lia.joinTime = RealTime() - 0.9716
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
 end
+
 function GM:HUDDrawTargetID()
     return false
 end
+
 function GM:HUDDrawPickupHistory()
     return false
 end
+
 function GM:HUDAmmoPickedUp()
     return false
 end
+
 function GM:DrawDeathNotice()
     return false
 end
+
 function GM:RefreshFonts()
     local function refreshPanel(panel)
         if not IsValid(panel) then return end
@@ -461,24 +568,30 @@ function GM:RefreshFonts()
             refreshPanel(child)
         end
     end
+
     if IsValid(lia.gui.menu) then
         lia.gui.menu:Update()
         refreshPanel(lia.gui.menu)
     end
+
     if IsValid(lia.gui.character) then
         lia.gui.character:Update()
         refreshPanel(lia.gui.character)
     end
+
     if IsValid(lia.gui.score) then
         lia.gui.score:Update()
         refreshPanel(lia.gui.score)
     end
+
     if IsValid(lia.gui.chat) then
         lia.gui.chat:Update()
         refreshPanel(lia.gui.chat)
     end
+
     hook.Run("OnFontsRefreshed")
 end
+
 function GM:GetMainMenuPosition(character)
     if character and character:getFaction() then
         local faction = lia.faction.get(character:getFaction())
@@ -493,6 +606,7 @@ function GM:GetMainMenuPosition(character)
                     return mapPos, Angle(0, 0, 0)
                 end
             end
+
             if istable(menuPos) then
                 return menuPos.position, menuPos.angles
             elseif isvector(menuPos) then

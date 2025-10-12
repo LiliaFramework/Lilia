@@ -6,6 +6,7 @@
         icon = "all",
         mounted = true
     })
+
     table.insert(games, {
         title = L("spawnmenuGMod"),
         folder = "garrysmod",
@@ -14,12 +15,14 @@
     })
     return games
 end
+
 local currentSound
 local function playSound(path)
     if currentSound then currentSound:Stop() end
     currentSound = CreateSound(LocalPlayer(), path)
     currentSound:Play()
 end
+
 local materialWarningShown
 local function isMaterialUsable(path)
     if string.GetExtensionFromFilename(path) then return false end
@@ -29,11 +32,13 @@ local function isMaterialUsable(path)
     end
     return true
 end
+
 local function showMaterialWarning()
     if materialWarningShown then return end
     materialWarningShown = true
     Derma_Message(L("materialWarning"), L("warning"), L("ok"))
 end
+
 local function registerContentType(typeName, setupIcon, onClick, menuEntries)
     spawnmenu.AddContentType(typeName, function(container, obj)
         if not obj.nicename or not obj.spawnname then return end
@@ -53,12 +58,15 @@ local function registerContentType(typeName, setupIcon, onClick, menuEntries)
                     menu:AddOption(txt, function() e.action(obj.spawnname, icn) end):SetIcon(e.icon)
                 end
             end
+
             menu:Open()
         end
+
         container:Add(icon)
         return icon
     end)
 end
+
 registerContentType("sound", function(icon) icon:SetMaterial("icon16/sound.png") end, playSound, {
     {
         text = "#spawnmenu.menu.copy",
@@ -82,6 +90,7 @@ registerContentType("sound", function(icon) icon:SetMaterial("icon16/sound.png")
         end
     }
 })
+
 registerContentType("material", function(icon, path)
     if path:match("%.png$") then
         icon:SetMaterial(path)
@@ -119,6 +128,7 @@ end, {
         end
     }
 })
+
 local function onFileNodeSelected(self)
     local view, pnl = self.ViewPanel, self.pnlContent
     view:Clear(true)
@@ -127,6 +137,7 @@ local function onFileNodeSelected(self)
     for _, ext in ipairs(self.Extensions) do
         files = table.Add(files, file.Find(path .. "/*" .. ext, pathID))
     end
+
     local offset, limit = self.offset or 0, 512
     if #files > offset + limit and not self.Done then
         self.Done = true
@@ -136,6 +147,7 @@ local function onFileNodeSelected(self)
         page.offset, page.BasePath, page.PathID, page.Extensions, page.SpawnType = newOff, path, pathID, self.Extensions, self.SpawnType
         page.OnNodeSelected = function() onFileNodeSelected(page) end
     end
+
     for i = offset + 1, math.min(#files, offset + limit) do
         local fname = files[i]
         local rel = path .. "/" .. fname
@@ -143,13 +155,16 @@ local function onFileNodeSelected(self)
             local s = rel:find("/sound/") or rel:find("/materials/")
             if s then rel = rel:sub(s + 1) end
         end
+
         spawnmenu.CreateContentIcon(self.SpawnType, view, {
             spawnname = rel,
             nicename = fname
         })
     end
+
     pnl:SwitchPanel(view)
 end
+
 local function addBrowseContent(node, title, icon, folder, pathID, exts, spawnType)
     local view, pnl = node.ViewPanel, node.pnlContent
     local f, d = file.Find(folder, pathID)
@@ -160,6 +175,7 @@ local function addBrowseContent(node, title, icon, folder, pathID, exts, spawnTy
     n.BasePath, n.PathID, n.Extensions, n.SpawnType = folder, pathID, exts, spawnType
     n.OnNodeSelected = onFileNodeSelected
 end
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     timer.Simple(0.5, function()
         if not IsValid(tree) or not IsValid(pnlContent) then return end
@@ -172,11 +188,13 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         for _, a in SortedPairsByMemberValue(engine.GetAddons(), "title") do
             if a.downloaded and a.mounted and table.HasValue(select(2, file.Find("*", a.title)), "sound") then addBrowseContent(addons, a.title, "icon16/bricks.png", a.title .. "/sound", a.title, {".wav", ".mp3", ".ogg"}, "sound") end
         end
+
         local legacy = root:AddNode("#spawnmenu.category.addonslegacy", "icon16/folder_database.png")
         legacy.ViewPanel, legacy.pnlContent = view, pnlContent
         for _, folder in ipairs(file.Find("addons/*", "MOD")) do
             if file.IsDir("addons/" .. folder .. "/sound/", "MOD") then addBrowseContent(legacy, folder, "icon16/bricks.png", "addons/" .. folder .. "/sound", "MOD", {".wav", ".mp3", ".ogg"}, "sound") end
         end
+
         addBrowseContent(root, "#spawnmenu.category.downloads", "icon16/folder_database.png", "download/sound", "MOD", {".wav", ".mp3", ".ogg"}, "sound")
         local gamesNode = root:AddNode("#spawnmenu.category.games", "icon16/folder_database.png")
         gamesNode.ViewPanel, gamesNode.pnlContent = view, pnlContent
@@ -185,6 +203,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         end
     end)
 end)
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     timer.Simple(0.5, function()
         if not IsValid(tree) or not IsValid(pnlContent) then return end
@@ -197,11 +216,13 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         for _, a in SortedPairsByMemberValue(engine.GetAddons(), "title") do
             if a.downloaded and a.mounted and table.HasValue(select(2, file.Find("*", a.title)), "materials") then addBrowseContent(addons, a.title, "icon16/bricks.png", a.title .. "/materials", a.title, {".vmt", ".png"}, "material") end
         end
+
         local legacy = root:AddNode("#spawnmenu.category.addonslegacy", "icon16/folder_database.png")
         legacy.ViewPanel, legacy.pnlContent = view, pnlContent
         for _, folder in ipairs(file.Find("addons/*", "MOD")) do
             if file.IsDir("addons/" .. folder .. "/materials/", "MOD") then addBrowseContent(legacy, folder, "icon16/bricks.png", "addons/" .. folder .. "/materials", "MOD", {".vmt", ".png"}, "material") end
         end
+
         addBrowseContent(root, "#spawnmenu.category.downloads", "icon16/folder_database.png", "download/materials", "MOD", {".vmt", ".png"}, "material")
         local gamesNode = root:AddNode("#spawnmenu.category.games", "icon16/folder_database.png")
         gamesNode.ViewPanel, gamesNode.pnlContent = view, pnlContent
@@ -210,6 +231,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         end
     end)
 end)
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.entities", "icon16/bricks.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
@@ -221,6 +243,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         categorized[cat] = categorized[cat] or {}
         table.insert(categorized[cat], ent)
     end
+
     for catName, ents in SortedPairs(categorized) do
         local sub = node:AddNode(catName, "icon16/bricks.png")
         local panel = vgui.Create("ContentContainer", pnlContent)
@@ -235,12 +258,15 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
                 material = "entities/" .. ent.ClassName .. ".png",
                 admin = ent.AdminOnly
             }
+
             spawnmenu.CreateContentIcon(ent.ScriptedEntityType or "entity", panel, t)
             spawnmenu.CreateContentIcon(ent.ScriptedEntityType or "entity", node.PropPanel, t)
         end
+
         sub.DoClick = function() pnlContent:SwitchPanel(panel) end
     end
 end)
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.postprocess", "icon16/picture.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
@@ -253,6 +279,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         categorized[pp.category] = categorized[pp.category] or {}
         table.insert(categorized[pp.category], pp)
     end
+
     for catName, pps in SortedPairs(categorized) do
         local sub = node:AddNode(catName, "icon16/picture.png")
         local panel = vgui.Create("ContentContainer", pnlContent)
@@ -269,13 +296,16 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
                     name = pp.name,
                     icon = pp.icon
                 }
+
                 spawnmenu.CreateContentIcon("postprocess", panel, t)
                 spawnmenu.CreateContentIcon("postprocess", node.PropPanel, t)
             end
         end
+
         sub.DoClick = function() pnlContent:SwitchPanel(panel) end
     end
 end)
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.npcs", "icon16/monkey.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
@@ -287,6 +317,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         cats[cat] = cats[cat] or {}
         cats[cat][className] = ent
     end
+
     for catName, ents in SortedPairs(cats) do
         local sub = node:AddNode(catName, "icon16/monkey.png")
         local panel = vgui.Create("ContentContainer", pnlContent)
@@ -302,12 +333,15 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
                 weapon = ent.Weapons,
                 admin = ent.AdminOnly
             }
+
             spawnmenu.CreateContentIcon("npc", panel, t)
             spawnmenu.CreateContentIcon("npc", node.PropPanel, t)
         end
+
         sub.DoClick = function() pnlContent:SwitchPanel(panel) end
     end
 end)
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.vehicles", "icon16/car.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
@@ -320,6 +354,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
         cats[v.Category] = cats[v.Category] or {}
         table.insert(cats[v.Category], v)
     end
+
     for catName, vs in SortedPairs(cats) do
         local sub = node:AddNode(catName, "icon16/car.png")
         local panel = vgui.Create("ContentContainer", pnlContent)
@@ -334,12 +369,15 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
                 material = "entities/" .. ent.ClassName .. ".png",
                 admin = ent.AdminOnly
             }
+
             spawnmenu.CreateContentIcon(ent.ScriptedEntityType or "entity", panel, t)
             spawnmenu.CreateContentIcon(ent.ScriptedEntityType or "entity", node.PropPanel, t)
         end
+
         sub.DoClick = function() pnlContent:SwitchPanel(panel) end
     end
 end)
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, tree)
     local node = tree:AddNode("#spawnmenu.category.weapons", "icon16/gun.png")
     node.PropPanel = vgui.Create("ContentContainer", pnlContent)
@@ -353,6 +391,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
             table.insert(cats[cat], w)
         end
     end
+
     for catName, ws in SortedPairs(cats) do
         local sub = node:AddNode(catName, "icon16/gun.png")
         local panel = vgui.Create("ContentContainer", pnlContent)
@@ -367,12 +406,15 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
                 material = "entities/" .. ent.ClassName .. ".png",
                 admin = ent.AdminOnly
             }
+
             spawnmenu.CreateContentIcon(ent.ScriptedEntityType or "weapon", panel, t)
             spawnmenu.CreateContentIcon(ent.ScriptedEntityType or "weapon", node.PropPanel, t)
         end
+
         sub.DoClick = function() pnlContent:SwitchPanel(panel) end
     end
 end)
+
 local function addRecursive(pnl, folder)
     local files, folders = file.Find(folder .. "*", "MOD")
     for _, v in ipairs(files) do
@@ -388,21 +430,25 @@ local function addRecursive(pnl, folder)
             end
         end
     end
+
     for _, d in ipairs(folders) do
         addRecursive(pnl, folder .. d .. "/")
     end
 end
+
 local function countRecursive(folder)
     local files, folders = file.Find(folder .. "*", "MOD")
     local cnt = 0
     for _, v in ipairs(files) do
         if v:match("%.mdl$") then cnt = cnt + 1 end
     end
+
     for _, d in ipairs(folders) do
         cnt = cnt + countRecursive(folder .. d .. "/")
     end
     return cnt
 end
+
 hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlContent, _, node)
     if not IsValid(node) or not IsValid(pnlContent) then return end
     local view = vgui.Create("ContentContainer", pnlContent)
@@ -421,6 +467,7 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
             end
         end
     end
+
     local f, d = file.Find("download/models", "MOD")
     if f and #f > 0 or d and #d > 0 then
         local dn = node:AddFolder(L("downloads"), "download/models", "MOD", false, false, "*.*")
@@ -436,10 +483,12 @@ hook.Add("PopulateContent", "liaExtendedSpawnMenuPopulateContent", function(pnlC
                     })
                 end
             end
+
             pnlContent:SwitchPanel(view)
         end
     end
 end)
+
 hook.Add("PopulatePropMenu", "liaExtendedSpawnMenuPopulatePropMenu", function(pnl, _, node)
     if not IsValid(node) or not IsValid(pnl) then return end
     local view = vgui.Create("ContentContainer", pnl)
@@ -456,9 +505,11 @@ hook.Add("PopulatePropMenu", "liaExtendedSpawnMenuPopulatePropMenu", function(pn
                     model = mdl
                 })
             end
+
             local info = content.information or {
                 name = fn
             }
+
             spawnmenu.AddPropCategory("settings/spawnlist/" .. fn, info.name, items, "icon16/page.png", sid + 1, sid)
             sid = sid + 1
         end

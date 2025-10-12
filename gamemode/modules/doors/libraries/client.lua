@@ -7,6 +7,7 @@
                 lia.util.drawText(L("doorDisabled"), pos.x, pos.y, ColorAlpha(color_white, alpha), 1, 1)
                 return
             end
+
             local pos = entity:LocalToWorld(entity:OBBCenter()):ToScreen()
             local x, y = pos.x, pos.y
             local owner = entity:GetDTEntity(0)
@@ -21,6 +22,7 @@
                 lia.util.drawText(L("price") .. ": " .. lia.currency.get(price), x, y, ColorAlpha(color_white, alpha), 1, 1)
                 y = y + 20
             end
+
             local classData
             if classes and #classes > 0 then
                 classData = {}
@@ -30,10 +32,12 @@
                     if info then table.insert(classData, info) end
                 end
             end
+
             if IsValid(owner) then
                 lia.util.drawText(L("doorOwnedBy", owner:Name()), x, y, ColorAlpha(color_white, alpha), 1, 1)
                 y = y + 20
             end
+
             if factions and #factions > 0 then
                 lia.util.drawText(L("factions") .. ":", x, y, ColorAlpha(color_white, alpha), 1, 1)
                 y = y + 20
@@ -45,6 +49,7 @@
                     end
                 end
             end
+
             if classData and #classData > 0 then
                 lia.util.drawText(L("classes") .. ":", x, y, ColorAlpha(color_white, alpha), 1, 1)
                 y = y + 20
@@ -53,10 +58,12 @@
                     y = y + 20
                 end
             end
+
             if not IsValid(owner) and #factions == 0 and #classes == 0 then lia.util.drawText(ownable and L("doorIsOwnable") or L("doorIsNotOwnable"), x, y, ColorAlpha(color_white, alpha), 1, 1) end
         end
     end
 end
+
 function MODULE:PopulateAdminStick(AdminMenu, target)
     if IsValid(target) and target:isDoor() then
         local doorData = target:getNetVar("doorData", {})
@@ -71,6 +78,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                 end):SetIcon("icon16/group_add.png")
             end
         end
+
         if #factionsAssigned > 0 then
             local removeFactionMenu, removeFactionPanel = AdminMenu:AddSubMenu(L("doorRemoveFactionAdmin"))
             removeFactionPanel:SetIcon("icon16/group_delete.png")
@@ -86,6 +94,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
         else
             AdminMenu:AddOption(L("doorNoFactions")):SetEnabled(false)
         end
+
         local setClassMenu, setClassPanel = AdminMenu:AddSubMenu(L("set") .. " " .. L("door") .. " " .. L("class"))
         setClassPanel:SetIcon("icon16/tag_blue.png")
         local existingClasses = doorData.classes or {}
@@ -97,6 +106,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                     break
                 end
             end
+
             if not isAlreadyAssigned then
                 setClassMenu:AddOption(classData.name, function()
                     LocalPlayer():ConCommand("say /doorsetclass '" .. classID .. "'")
@@ -104,6 +114,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                 end):SetIcon("icon16/tag_blue.png")
             end
         end
+
         if existingClasses and #existingClasses > 0 then
             local removeClassMenu, removeClassPanel = AdminMenu:AddSubMenu(L("remove") .. " " .. L("door") .. " " .. L("class"))
             removeClassPanel:SetIcon("icon16/delete.png")
@@ -117,6 +128,7 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                     end):SetIcon("icon16/delete.png")
                 end
             end
+
             removeClassMenu:AddOption(L("remove") .. " " .. L("all") .. " " .. L("classes"), function()
                 LocalPlayer():ConCommand("say /doorremoveclass ''")
                 AdminStickIsOpen = false

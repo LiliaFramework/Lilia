@@ -1,6 +1,7 @@
 ﻿function ENT:Draw()
     self:DrawModel()
 end
+
 function ENT:onDrawEntityInfo(alpha)
     local amount = self:getAmount()
     if amount <= 0 then return end

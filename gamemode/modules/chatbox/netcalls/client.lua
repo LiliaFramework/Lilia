@@ -14,6 +14,7 @@
             else
                 chat.PlaySound()
             end
+
             CHAT_CLASS = nil
         end
     end
