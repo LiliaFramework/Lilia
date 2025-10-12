@@ -48,6 +48,7 @@ LANGUAGE = {
     icDesc = "Says something in-character.",
     sbOptions = "Scoreboard Options.",
     quickSettings = "Quick Settings",
+    quickMenuDesc = "Toggles the quick settings menu.",
     rank = "Rank",
     meDesc = "Performs an emote action.",
     globalMeDesc = "Performs an globally seen emote action.",
