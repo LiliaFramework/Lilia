@@ -138,15 +138,16 @@ jobs:
           node-version: '18'
       - run: |
           cd "${{ github.workspace }}"
-          if [ -f "documentation/docs/tools/generate-changelog.js" ]; then
-            echo "Found changelog script, running..."
-            node "documentation/docs/tools/generate-changelog.js"
+          CHG_SCRIPT=$(git ls-files | grep -E '/generate-changelog\.js$' | head -n1)
+          if [ -z "$CHG_SCRIPT" ]; then
+            CHG_SCRIPT=$(find . -type f -name 'generate-changelog.js' | head -n1 || true)
+          fi
+          if [ -n "$CHG_SCRIPT" ]; then
+            echo "Found changelog script at: $CHG_SCRIPT"
+            node "$CHG_SCRIPT"
           else
-            echo "Changelog script not found at: documentation/docs/tools/generate-changelog.js"
-            echo "Current directory contents:"
-            ls -la documentation/docs/tools/ || echo "Tools directory not found"
-            echo "Available files:"
-            find documentation -name "*.js" 2>/dev/null || echo "No JS files found"
+            echo "Error: Unable to locate generate-changelog.js anywhere in the repository"
+            exit 1
           fi
         env:
           VERSION: ${{ env.VERSION }}
