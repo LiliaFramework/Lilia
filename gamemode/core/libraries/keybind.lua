@@ -371,7 +371,13 @@ if CLIENT then
         if d then
             local s = util.JSONToTable(d)
             for k, v in pairs(s) do
-                if lia.keybind.stored[k] then lia.keybind.stored[k].value = v end
+                if lia.keybind.stored[k] then
+                    if isstring(v) then
+                        lia.keybind.stored[k].value = KeybindKeys[string.lower(v)] or v
+                    else
+                        lia.keybind.stored[k].value = v
+                    end
+                end
             end
         else
             for _, v in pairs(lia.keybind.stored) do
