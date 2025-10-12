@@ -158,7 +158,7 @@ jobs:
           # Get recent commits and format them
           echo "Fetching recent commits..."
           COMMITS=$(git log --no-merges --pretty=format:'- %s' -n 20 | grep -v '^Successfully updated')
-          NEW_ENTRY+="$COMMITS
+          NEW_ENTRY="${NEW_ENTRY}${COMMITS}
 
 "
           
