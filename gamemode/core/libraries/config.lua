@@ -177,8 +177,6 @@ if SERVER then
 
         local targets = getTargets()
         if not istable(targets) or #targets == 0 then return end
-        -- When sending to many clients, avoid a single large broadcast to reduce reliable overflow.
-        -- Stagger per-client sends in small batches; also keep chunk sizes modest when there are many keys.
         local batchSize = 5
         local baseDelayPerBatch = 0.05
         local function sendTableStaggered(tbl, startDelay)
@@ -217,7 +215,6 @@ if SERVER then
 
             if table.Count(currentChunk) > 0 then table.insert(chunks, currentChunk) end
             for i, chunk in ipairs(chunks) do
-                -- Space out chunk waves; also stagger clients within each wave
                 local startDelay = (i - 1) * 0.15
                 sendTableStaggered(chunk, startDelay)
             end
