@@ -137,10 +137,10 @@ jobs:
         with:
           node-version: '18'
       - run: |
-          node "${{ github.workspace }}/documentation/docs/tools/generate-changelog.js"
+          cd "${{ github.workspace }}"
+          node "documentation/docs/tools/generate-changelog.js"
         env:
           VERSION: ${{ env.VERSION }}
-        working-directory: ${{ github.workspace }}/documentation/docs/tools
       - run: |
           wget -O glualint.zip https://github.com/FPtje/GLuaFixer/releases/download/1.29.0/glualint-1.29.0-x86_64-linux.zip
           unzip glualint.zip
