@@ -1,5 +1,9 @@
 ﻿# Changelog
 
+### Version 1.2
+
+- **Changed**: Updated blur effect to use network variables (`getNetVar`) instead of local variables (`getLocalVar`) for better synchronization
+
 ### Version 1.1
 
 - Created docs
