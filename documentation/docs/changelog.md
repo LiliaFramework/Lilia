@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.791 (October 13, 2025)
+
+### Changes
+
+- Updated Some Public Modules
+- Successfully updated workshop Lilia to 6.789
+- Updated Some Public Modules
+- Successfully updated workshop Lilia to 6.787
+- removed debug commands
+- Successfully updated workshop Lilia to 6.785
+- Update english.lua
+- Successfully updated workshop Lilia to 6.783
+- Fixed Keybind bug
+- Made Spawn Time an Int
+- Successfully updated workshop Lilia to 6.780
+- Update remove_comments.py
+- Successfully updated workshop Lilia to 6.778
+- Update ci.yml
+- Update ci.yml
+- Update ci.yml
+- Successfully updated workshop Lilia to 6.774
+- Update ci.yml
+- Update ci.yml
+- Update ci.yml
+
 ## Version 6.789 (October 13, 2025)
 
 ### Changes
