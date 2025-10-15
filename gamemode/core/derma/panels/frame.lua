@@ -284,4 +284,81 @@ function PANEL:OnSizeChanged(w, h)
     end
 end
 
+function PANEL:Center()
+    self:InvalidateLayout(true)
+    self:SetPos((ScrW() - self:GetWide()) * 0.5, (ScrH() - self:GetTall()) * 0.5)
+end
+
+function PANEL:Close()
+    if self.deleteOnClose then
+        self:AlphaTo(0, 0.1, 0, function() if IsValid(self) then self:Remove() end end)
+    else
+        self:SetVisible(false)
+    end
+end
+
+function PANEL:OnClose()
+    -- Hook for when the frame is closed
+end
+
+function PANEL:GetBackgroundBlur()
+    return self.backgroundBlur
+end
+
+function PANEL:GetDeleteOnClose()
+    return self.deleteOnClose
+end
+
+function PANEL:GetDraggable()
+    return IsValid(self.top_panel) and self.top_panel:IsVisible()
+end
+
+function PANEL:GetIsMenu()
+    return false
+end
+
+function PANEL:SetIsMenu()
+    -- liaFrame doesn't have menu-specific behavior, but this method is provided for compatibility
+end
+
+function PANEL:GetMinHeight()
+    return self.minHeight
+end
+
+function PANEL:GetMinWidth()
+    return self.minWidth
+end
+
+function PANEL:GetSizable()
+    return self.sizable
+end
+
+function PANEL:GetPaintShadow()
+    return true
+end
+
+function PANEL:SetPaintShadow()
+    -- liaFrame always paints shadow, but this method is provided for compatibility
+end
+
+function PANEL:GetScreenLock()
+    return self.screenLock
+end
+
+function PANEL:GetTitle()
+    return self.title
+end
+
+function PANEL:GetIcon()
+    return self.iconMat
+end
+
+function PANEL:GetCloseButtonVisible()
+    return IsValid(self.cls) and self.cls:IsVisible()
+end
+
+function PANEL:IsActive()
+    return self:IsVisible() and (self:HasFocus() or vgui.FocusedHasParent(self))
+end
+
 vgui.Register("liaFrame", PANEL, "EditablePanel")

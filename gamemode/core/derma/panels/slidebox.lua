@@ -119,7 +119,7 @@ function PANEL:Paint(w)
     self._dragAlpha = Lerp(FrameTime() * 10, self._dragAlpha, targetAlpha)
     local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, self._dragAlpha)
     lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-    draw.SimpleText(self.value, valueFont, barEnd + handleW / 2 + 15, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     draw.SimpleText(self.min_value, minmaxFont, barStart, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_LEFT)
     draw.SimpleText(self.max_value, minmaxFont, barEnd, barY + barH + minmaxPadY - 4, lia.color.theme.gray, TEXT_ALIGN_RIGHT)
 end

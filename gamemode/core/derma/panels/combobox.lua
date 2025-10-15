@@ -7,6 +7,7 @@ function PANEL:Init()
     self.font = "LiliaFont.18"
     self.hoverAnim = 0
     self.OnSelect = function() end
+    self.OnMenuOpened = function() end
     self.btn = vgui.Create("DButton", self)
     self.btn:Dock(FILL)
     self.btn:SetText("")
@@ -62,6 +63,22 @@ function PANEL:AddChoice(text, data)
     table.insert(self.choices, {
         text = text,
         data = data
+    })
+
+    if not self.opened then
+        self:AutoSize()
+        self:RefreshDropdown()
+    else
+        self:CloseMenu()
+        self:OpenMenu()
+    end
+end
+
+function PANEL:AddSpacer(text)
+    table.insert(self.choices, {
+        text = text or "",
+        data = nil,
+        spacer = true
     })
 
     if not self.opened then
@@ -157,31 +174,43 @@ function PANEL:OpenMenu()
         if IsValid(canvas) then canvas:DockPadding(menuPadding, menuPadding, menuPadding, menuPadding) end
         surface.SetFont(self.font)
         for i, choice in ipairs(self.choices) do
-            local option = self.menu:Add("DButton")
-            option:SetText("")
-            option:Dock(TOP)
-            option:DockMargin(2, 2, 2, 0)
-            option:SetTall(itemHeight)
-            option:SetCursor("hand")
-            option.Paint = function(s, w, h)
-                if not IsValid(self) then return end
-                local isSelected = self.selected == choice.text
-                local isHovered = s:IsHovered()
-                if isSelected then
-                    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw()
-                elseif isHovered then
-                    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
+            if choice.spacer then
+                local spacer = self.menu:Add("DPanel")
+                spacer:Dock(TOP)
+                spacer:DockMargin(2, 2, 2, 0)
+                spacer:SetTall(8)
+                spacer.Paint = function(_, w, h)
+                    if not IsValid(self) then return end
+                    surface.SetDrawColor(lia.color.theme.text:Unpack())
+                    surface.DrawRect(0, h * 0.5 - 1, w, 2)
+                end
+            else
+                local option = self.menu:Add("DButton")
+                option:SetText("")
+                option:Dock(TOP)
+                option:DockMargin(2, 2, 2, 0)
+                option:SetTall(itemHeight)
+                option:SetCursor("hand")
+                option.Paint = function(s, w, h)
+                    if not IsValid(self) then return end
+                    local isSelected = self.selected == choice.text
+                    local isHovered = s:IsHovered()
+                    if isSelected then
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw()
+                    elseif isHovered then
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
+                    end
+
+                    local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
+                    draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
 
-                local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
-                draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            end
-
-            option.DoClick = function()
-                if not IsValid(self) then return end
-                self:ChooseOption(choice.text, i)
-                self:CloseMenu()
-                surface.PlaySound("button_click.wav")
+                option.DoClick = function()
+                    if not IsValid(self) then return end
+                    self:ChooseOption(choice.text, i)
+                    self:CloseMenu()
+                    surface.PlaySound("button_click.wav")
+                end
             end
         end
     else
@@ -202,31 +231,43 @@ function PANEL:OpenMenu()
 
         surface.SetFont(self.font)
         for i, choice in ipairs(self.choices) do
-            local option = vgui.Create("DButton", self.menu)
-            option:SetText("")
-            option:Dock(TOP)
-            option:DockMargin(2, 2, 2, 0)
-            option:SetTall(itemHeight)
-            option:SetCursor("hand")
-            option.Paint = function(s, w, h)
-                if not IsValid(self) then return end
-                local isSelected = self.selected == choice.text
-                local isHovered = s:IsHovered()
-                if isSelected then
-                    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw()
-                elseif isHovered then
-                    lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
+            if choice.spacer then
+                local spacer = vgui.Create("DPanel", self.menu)
+                spacer:Dock(TOP)
+                spacer:DockMargin(2, 2, 2, 0)
+                spacer:SetTall(8)
+                spacer.Paint = function(_, w, h)
+                    if not IsValid(self) then return end
+                    surface.SetDrawColor(lia.color.theme.text:Unpack())
+                    surface.DrawRect(0, h * 0.5 - 1, w, 2)
+                end
+            else
+                local option = vgui.Create("DButton", self.menu)
+                option:SetText("")
+                option:Dock(TOP)
+                option:DockMargin(2, 2, 2, 0)
+                option:SetTall(itemHeight)
+                option:SetCursor("hand")
+                option.Paint = function(s, w, h)
+                    if not IsValid(self) then return end
+                    local isSelected = self.selected == choice.text
+                    local isHovered = s:IsHovered()
+                    if isSelected then
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw()
+                    elseif isHovered then
+                        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw()
+                    end
+
+                    local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
+                    draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
 
-                local textColor = isSelected and lia.color.theme.text_entry or lia.color.theme.text
-                draw.SimpleText(choice.text, "LiliaFont.18", 14, h * 0.5, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            end
-
-            option.DoClick = function()
-                if not IsValid(self) then return end
-                self:ChooseOption(choice.text, i)
-                self:CloseMenu()
-                surface.PlaySound("button_click.wav")
+                option.DoClick = function()
+                    if not IsValid(self) then return end
+                    self:ChooseOption(choice.text, i)
+                    self:CloseMenu()
+                    surface.PlaySound("button_click.wav")
+                end
             end
         end
     end
@@ -247,6 +288,7 @@ function PANEL:OpenMenu()
         end
 
         self.menu.OnRemove = function() if IsValid(self) then self.opened = false end end
+        if self.OnMenuOpened then self:OnMenuOpened() end
     end
 end
 
@@ -261,6 +303,17 @@ end
 
 function PANEL:GetOptionData(index)
     return self.choices[index] and self.choices[index].data or nil
+end
+
+function PANEL:GetOptionText(index)
+    return self.choices[index] and self.choices[index].text or nil
+end
+
+function PANEL:GetOptionTextByData(data)
+    for _, choice in ipairs(self.choices) do
+        if choice.data == data then return choice.text end
+    end
+    return nil
 end
 
 function PANEL:SetConVar(cvar)
@@ -279,8 +332,55 @@ function PANEL:GetSelectedData()
     return id and self:GetOptionData(id) or nil
 end
 
+function PANEL:CheckConVarChanges()
+    if not self.convar then return end
+    local convar = GetConVar(self.convar)
+    if convar then
+        local convarValue = convar:GetString()
+        if convarValue and convarValue ~= self.selected then
+            self.selected = convarValue
+        end
+    end
+end
+
 function PANEL:GetSelectedText()
     return self.selected
+end
+
+function PANEL:GetSelected()
+    return self.selected
+end
+
+function PANEL:GetSortItems()
+    return self.sortItems or false
+end
+
+function PANEL:SetSortItems(sort)
+    self.sortItems = sort or false
+    if self.sortItems then table.sort(self.choices, function(a, b) return a.text < b.text end) end
+end
+
+function PANEL:RemoveChoice(indexOrValue)
+    if isnumber(indexOrValue) then
+        -- Remove by index
+        if indexOrValue >= 1 and indexOrValue <= #self.choices then table.remove(self.choices, indexOrValue) end
+    else
+        -- Remove by value
+        for i, choice in ipairs(self.choices) do
+            if choice.text == indexOrValue then
+                table.remove(self.choices, i)
+                break
+            end
+        end
+    end
+
+    if not self.opened then
+        self:AutoSize()
+        self:RefreshDropdown()
+    else
+        self:CloseMenu()
+        self:OpenMenu()
+    end
 end
 
 function PANEL:IsMenuOpen()

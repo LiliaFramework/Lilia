@@ -9,6 +9,10 @@ function PANEL:Init()
     self.Font = "liaSmallFont"
 end
 
+function PANEL:GetFraction()
+    return self.Fraction or 0
+end
+
 function PANEL:SetFraction(fraction)
     self.Fraction = fraction or 0
 end

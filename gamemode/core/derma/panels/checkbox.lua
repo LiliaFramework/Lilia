@@ -6,6 +6,7 @@ function PANEL:Init()
     self.value = false
     self.hoverAnim = 0
     self.circleAnim = 0
+    self.isEditing = false
     self:SetText("")
     self:SetCursor("hand")
     self.toggle = vgui.Create("DButton", self)
@@ -39,9 +40,11 @@ function PANEL:Init()
 
     self.toggle.DoClick = function()
         if self.convar ~= "" then LocalPlayer():ConCommand(self.convar .. " " .. (self.value and 0 or 1)) end
+        self.isEditing = true
         self.value = not self.value
         self:OnChange(self.value)
         surface.PlaySound("button_click.wav")
+        self.isEditing = false
     end
 
     self.DoClick = function() self.toggle:DoClick() end
@@ -73,6 +76,10 @@ function PANEL:Toggle()
     self:SetChecked(not self.value)
 end
 
+function PANEL:IsEditing()
+    return self.isEditing or false
+end
+
 function PANEL:GetBool()
     return self.value
 end
@@ -95,7 +102,25 @@ function PANEL:DoClick()
     self.toggle:DoClick()
 end
 
-function PANEL:OnChange()
+function PANEL:OnChange(value)
+    -- Call the user-defined callback if it exists
+    if self.userOnChange then
+        self:userOnChange(self, value)
+    end
+end
+
+-- Override __newindex to capture OnChange assignments
+local originalNewIndex = PANEL.__newindex
+PANEL.__newindex = function(self, key, value)
+    if key == "OnChange" and type(value) == "function" then
+        self.userOnChange = value
+    else
+        if originalNewIndex then
+            originalNewIndex(self, key, value)
+        else
+            rawset(self, key, value)
+        end
+    end
 end
 
 function PANEL:PerformLayout()

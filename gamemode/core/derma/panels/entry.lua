@@ -115,4 +115,176 @@ function PANEL:SetTextColor(color)
     if IsValid(self.textEntry) then self.textEntry:SetTextColor(color) end
 end
 
+-- Getter methods for DTextEntry properties
+function PANEL:GetAutoComplete()
+    if self.textEntry.GetAutoComplete then return self.textEntry:GetAutoComplete() end
+end
+
+function PANEL:GetCursorColor()
+    if self.textEntry.GetCursorColor then return self.textEntry:GetCursorColor() end
+end
+
+function PANEL:GetDisabled()
+    if self.textEntry.GetDisabled then return self.textEntry:GetDisabled() end
+end
+
+function PANEL:GetDrawBackground()
+    if self.textEntry.GetDrawBackground then return self.textEntry:GetDrawBackground() end
+end
+
+function PANEL:GetDrawBorder()
+    if self.textEntry.GetDrawBorder then return self.textEntry:GetDrawBorder() end
+end
+
+function PANEL:GetEnterAllowed()
+    if self.textEntry.GetEnterAllowed then return self.textEntry:GetEnterAllowed() end
+end
+
+function PANEL:GetFloat()
+    if self.textEntry.GetFloat then return self.textEntry:GetFloat() end
+end
+
+function PANEL:GetHighlightColor()
+    if self.textEntry.GetHighlightColor then return self.textEntry:GetHighlightColor() end
+end
+
+function PANEL:GetHistoryEnabled()
+    if self.textEntry.GetHistoryEnabled then return self.textEntry:GetHistoryEnabled() end
+end
+
+function PANEL:GetInt()
+    if self.textEntry.GetInt then return self.textEntry:GetInt() end
+end
+
+function PANEL:GetNumeric()
+    if self.textEntry.GetNumeric then return self.textEntry:GetNumeric() end
+end
+
+function PANEL:GetPaintBackground()
+    if self.textEntry.GetPaintBackgroundEnabled then return self.textEntry:GetPaintBackgroundEnabled() end
+end
+
+function PANEL:GetPlaceholderColor()
+    if self.textEntry.GetPlaceholderColor then return self.textEntry:GetPlaceholderColor() end
+end
+
+function PANEL:GetPlaceholderText()
+    return self.placeholder
+end
+
+function PANEL:GetTabbingDisabled()
+    if self.textEntry.GetTabbingDisabled then return self.textEntry:GetTabbingDisabled() end
+end
+
+function PANEL:GetTextColor()
+    if self.textEntry.GetTextColor then return self.textEntry:GetTextColor() end
+end
+
+function PANEL:GetUpdateOnType()
+    if self.textEntry.GetUpdateOnType then return self.textEntry:GetUpdateOnType() end
+end
+
+function PANEL:IsEditing()
+    if self.textEntry.IsEditing then return self.textEntry:IsEditing() end
+end
+
+-- Setter methods for DTextEntry properties
+function PANEL:SetCursorColor(color)
+    if self.textEntry.SetCursorColor then self.textEntry:SetCursorColor(color) end
+end
+
+function PANEL:SetDisabled(disabled)
+    if self.textEntry.SetDisabled then self.textEntry:SetDisabled(disabled) end
+end
+
+function PANEL:SetDrawBackground(drawBackground)
+    if self.textEntry.SetDrawBackground then self.textEntry:SetDrawBackground(drawBackground) end
+end
+
+function PANEL:SetDrawBorder(drawBorder)
+    if self.textEntry.SetDrawBorder then self.textEntry:SetDrawBorder(drawBorder) end
+end
+
+function PANEL:SetEditable(editable)
+    if self.textEntry.SetEditable then self.textEntry:SetEditable(editable) end
+end
+
+function PANEL:SetEnterAllowed(allowed)
+    if self.textEntry.SetEnterAllowed then self.textEntry:SetEnterAllowed(allowed) end
+end
+
+function PANEL:SetHighlightColor(color)
+    if self.textEntry.SetHighlightColor then self.textEntry:SetHighlightColor(color) end
+end
+
+function PANEL:SetHistoryEnabled(enabled)
+    if self.textEntry.SetHistoryEnabled then self.textEntry:SetHistoryEnabled(enabled) end
+end
+
+function PANEL:SetNumeric(numeric)
+    if self.textEntry.SetNumeric then self.textEntry:SetNumeric(numeric) end
+end
+
+function PANEL:SetPaintBackground(paintBackground)
+    if self.textEntry.SetPaintBackgroundEnabled then self.textEntry:SetPaintBackgroundEnabled(paintBackground) end
+end
+
+function PANEL:SetPlaceholderColor(color)
+    if self.textEntry.SetPlaceholderColor then self.textEntry:SetPlaceholderColor(color) end
+end
+
+function PANEL:SetPlaceholderText(placeholder)
+    self.placeholder = placeholder
+end
+
+function PANEL:SetTabbingDisabled(disabled)
+    if self.textEntry.SetTabbingDisabled then self.textEntry:SetTabbingDisabled(disabled) end
+end
+
+function PANEL:SetTextColor(color)
+    if IsValid(self.textEntry) then self.textEntry:SetTextColor(color) end
+end
+
+function PANEL:SetUpdateOnType(update)
+    if self.textEntry.SetUpdateOnType then self.textEntry:SetUpdateOnType(update) end
+end
+
+-- Callback/Event handler methods
+function PANEL:OnChange()
+    if self.textEntry.OnChange then self.textEntry:OnChange() end
+end
+
+function PANEL:OnGetFocus()
+    if self.textEntry.OnGetFocus then self.textEntry:OnGetFocus() end
+end
+
+function PANEL:OnKeyCode(code)
+    if self.textEntry.OnKeyCode then self.textEntry:OnKeyCode(code) end
+end
+
+-- Utility methods
+function PANEL:AddHistory(value)
+    if self.textEntry.AddHistory then self.textEntry:AddHistory(value) end
+end
+
+function PANEL:CheckNumeric()
+    if self.textEntry.CheckNumeric then return self.textEntry:CheckNumeric() end
+end
+
+function PANEL:OpenAutoComplete()
+    if self.textEntry.OpenAutoComplete then self.textEntry:OpenAutoComplete() end
+end
+
+function PANEL:UpdateConvarValue()
+    if self.textEntry.UpdateConvarValue then self.textEntry:UpdateConvarValue() end
+end
+
+function PANEL:UpdateFromHistory()
+    if self.textEntry.UpdateFromHistory then self.textEntry:UpdateFromHistory() end
+end
+
+function PANEL:UpdateFromMenu()
+    if self.textEntry.UpdateFromMenu then self.textEntry:UpdateFromMenu() end
+end
+
 vgui.Register("liaEntry", PANEL, "EditablePanel")

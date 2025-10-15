@@ -385,6 +385,17 @@ function PANEL:UpdateSize()
     self:SetSize(maxWidth, math.min(height, limit))
 end
 
+function PANEL:Open(x, y, skipanimation, ownerpanel)
+    if x and y then self:SetPos(x, y) end
+    self:Open()
+    if not skipanimation then
+        self:SetAlpha(0)
+        self:AlphaTo(255, 0.1, 0)
+    end
+
+    if IsValid(ownerpanel) then self.ownerPanel = ownerpanel end
+end
+
 function PANEL:Open()
     self:SetVisible(true)
     self:SetMouseInputEnabled(true)
@@ -394,6 +405,13 @@ end
 
 function PANEL:CloseMenu()
     self:Close()
+end
+
+function PANEL:GetOpenSubMenu()
+    for _, item in ipairs(self.Items) do
+        if IsValid(item) and item._submenu and item._submenu_open and IsValid(item._submenu) then return item._submenu end
+    end
+    return nil
 end
 
 function PANEL:GetDeleteSelf()
@@ -407,6 +425,147 @@ end
 function PANEL:SetMaxHeight(height)
     self.maxHeight = tonumber(height)
     self:UpdateSize()
+end
+
+function PANEL:AddCVar(name, convar, on, off, funcFunction)
+    local option = self:AddOption(name, function()
+        local value = GetConVar(convar):GetBool() and on or off
+        RunConsoleCommand(convar, value)
+        if funcFunction then funcFunction(value) end
+    end)
+
+    option.ConVar = convar
+    option.ConVarOn = on
+    option.ConVarOff = off
+    return option
+end
+
+function PANEL:AddPanel(pnl)
+    pnl:Dock(TOP)
+    pnl:DockMargin(2, 2, 2, 0)
+    table.insert(self.Items, pnl)
+    self:UpdateSize()
+    return pnl
+end
+
+function PANEL:GetChild(childIndex)
+    if not childIndex or childIndex < 1 then return nil end
+    return self.Items[childIndex]
+end
+
+function PANEL:ChildCount()
+    return #self.Items
+end
+
+function PANEL:GetDrawBorder()
+    return self.drawBorder or false
+end
+
+function PANEL:GetDrawColumn()
+    return self.drawColumn or false
+end
+
+function PANEL:GetMinimumWidth()
+    return self.minimumWidth or 120
+end
+
+function PANEL:ClearHighlights()
+    for _, item in ipairs(self.Items) do
+        if IsValid(item) and item.SetHovered then item:SetHovered(false) end
+    end
+end
+
+function PANEL:Hide()
+    self:CloseAllSubMenus()
+    self:SetVisible(false)
+end
+
+function PANEL:HighlightItem(item)
+    if not IsValid(item) then return end
+    self:ClearHighlights()
+    item:SetHovered(true)
+end
+
+function PANEL:OptionSelected(option)
+    -- Hook for when an option is selected
+    if option and IsValid(option) and option.Func then option:DoClick() end
+end
+
+function PANEL:OptionSelectedInternal(option)
+    self:OptionSelected(option, option.Text)
+end
+
+function PANEL:SetDrawBorder(bool)
+    self.drawBorder = tobool(bool)
+end
+
+function PANEL:SetDrawColumn(drawColumn)
+    self.drawColumn = tobool(drawColumn)
+end
+
+function PANEL:SetMinimumWidth(minWidth)
+    self.minimumWidth = tonumber(minWidth) or 120
+    self:UpdateSize()
+end
+
+function PANEL:SetOpenSubMenu(item)
+    if IsValid(item) and item._submenu and not item._submenu_open then item:OpenSubMenu() end
+end
+
+-- DScrollPanel methods
+function PANEL:AddItem(pnl)
+    return self:AddPanel(pnl)
+end
+
+function PANEL:GetCanvas()
+    return self.canvas
+end
+
+function PANEL:GetPadding()
+    return self.padding or 0
+end
+
+function PANEL:GetVBar()
+    return self.vbar
+end
+
+function PANEL:InnerWidth()
+    local padding = self:GetPadding()
+    return self:GetWide() - (padding * 2)
+end
+
+function PANEL:PerformLayoutInternal()
+    -- Layout internal elements
+end
+
+function PANEL:Rebuild()
+    self:UpdateSize()
+end
+
+function PANEL:ScrollToChild(panel)
+    -- Scroll to make the child panel visible
+    if not IsValid(panel) then return end
+    local canvas = self:GetCanvas()
+    if not IsValid(canvas) then return end
+    local panelY = panel:GetY()
+    local canvasY = canvas:GetY()
+    local scrollY = panelY - canvasY
+    local vbar = self:GetVBar()
+    if IsValid(vbar) then vbar:AnimateTo(scrollY, 0.5, 0, 0.5) end
+end
+
+function PANEL:SetCanvas(canvas)
+    if IsValid(self.canvas) then self.canvas:Remove() end
+    self.canvas = canvas
+    if IsValid(canvas) then
+        canvas:SetParent(self)
+        canvas:Dock(FILL)
+    end
+end
+
+function PANEL:SetPadding(padding)
+    self.padding = tonumber(padding) or 0
+    self:DockPadding(self.padding, self.padding, self.padding, self.padding)
 end
 
 function PANEL:Clear()

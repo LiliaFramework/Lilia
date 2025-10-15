@@ -174,8 +174,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
                 local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
                 lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20)
-                draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
 
             slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.floor(v)) end) end
@@ -238,8 +237,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
                 local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
                 lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                local valueX = math.min(barEnd + handleW / 2 + 15, w - 20)
-                draw.SimpleText(s.value, valueFont, valueX, barY + barH / 2, colorText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
 
             slider.OnValueChanged = function(_, v) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, math.Round(v, 2)) end) end

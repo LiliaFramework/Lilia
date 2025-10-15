@@ -404,7 +404,6 @@ function PANEL:addPlayer(ply, parent)
         desc = desc:gsub("#", "\226\128\139#")
         local wrapped = wrap(desc, self.desc:GetWide(), "liaSmallFont")
         surface.SetFont("liaSmallFont")
-        local _, lineH = surface.GetTextSize("W")
         local maxLines = 2
         if #wrapped > maxLines then
             wrapped[maxLines] = wrapped[maxLines] .. " (...)"

@@ -336,6 +336,37 @@ concommand.Add("lia_wipewebimages", function()
     end)
 end)
 
+concommand.Add("test_webimage_menu", function()
+    local frame = vgui.Create("DFrame")
+    frame:SetTitle(L("webImageTesterTitle"))
+    frame:SetSize(500, 400)
+    frame:Center()
+    frame:MakePopup()
+    local urlEntry = vgui.Create("DTextEntry", frame)
+    urlEntry:SetPos(10, 30)
+    urlEntry:SetSize(frame:GetWide() - 20, 25)
+    urlEntry:SetText("")
+    urlEntry:SetPlaceholderText(L("imageURLPlaceholder"))
+    local loadBtn = vgui.Create("DButton", frame)
+    loadBtn:SetPos(10, 65)
+    loadBtn:SetSize(frame:GetWide() - 20, 30)
+    loadBtn:SetText(L("loadImage"))
+    local imgPanel = vgui.Create("DPanel", frame)
+    imgPanel:SetPos(10, 105)
+    imgPanel:SetSize(frame:GetWide() - 20, frame:GetTall() - 115)
+    loadBtn.DoClick = function()
+        for _, child in ipairs(imgPanel:GetChildren()) do
+            child:Remove()
+        end
+
+        local src = urlEntry:GetValue()
+        local img = vgui.Create("DImage", imgPanel)
+        img:SetPos(0, 0)
+        img:SetSize(imgPanel:GetWide(), imgPanel:GetTall())
+        img:SetImage(src)
+    end
+end)
+
 function lia.webimage.getStats()
     local totalStored = 0
     for _ in pairs(lia.webimage.stored) do

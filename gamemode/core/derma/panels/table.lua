@@ -399,4 +399,289 @@ function PANEL:Paint(w, h)
     lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
+-- DListView compatibility methods
+function PANEL:DoDoubleClick(lineID, line)
+    -- Default implementation - can be overridden
+    if self.OnRowDoubleClick then self:OnRowDoubleClick(lineID, line) end
+end
+
+function PANEL:OnRowRightClick(_, line)
+    -- Default implementation - can be overridden
+    if self.OnRightClick then self:OnRightClick(line) end
+end
+
+function PANEL:OnRowSelected()
+    -- Default implementation - can be overridden
+end
+
+function PANEL:OnClickLine(line, isSelected)
+    -- Default implementation - can be overridden
+    if self.OnRowClick then self:OnRowClick(line, isSelected) end
+end
+
+function PANEL:OnRequestResize(_, iWidth, iHeight)
+    -- Default implementation - can be overridden
+    return iWidth, iHeight
+end
+
+function PANEL:ColumnWidth(i)
+    if self.columns[i] then return self.columns[i].width end
+    return 0
+end
+
+function PANEL:DataLayout()
+    -- Returns the layout type - for compatibility
+    return self.dataLayout or "default"
+end
+
+function PANEL:DisableScrollbar()
+    if self.scrollPanel and self.scrollPanel.GetVBar then self.scrollPanel:GetVBar():SetEnabled(false) end
+end
+
+function PANEL:FixColumnsLayout()
+    self:CalculateColumnWidths()
+    self:RebuildRows()
+end
+
+function PANEL:GetCanvas()
+    return self.content
+end
+
+function PANEL:GetDataHeight()
+    return self.dataHeight or (#self.rows * (self.rowHeight + 1))
+end
+
+function PANEL:GetDirty()
+    return self.dirty or false
+end
+
+function PANEL:GetHeaderHeight()
+    return self.headerHeight
+end
+
+function PANEL:GetHideHeaders()
+    return self.hideHeaders or false
+end
+
+function PANEL:GetInnerTall()
+    return self:GetTall() - self.headerHeight
+end
+
+function PANEL:GetMultiSelect()
+    return self.multiSelect or false
+end
+
+function PANEL:GetSortable()
+    for _, column in ipairs(self.columns) do
+        if column.sortable then return true end
+    end
+    return false
+end
+
+function PANEL:GetSortedID()
+    return self.sortColumn or 1
+end
+
+function PANEL:RemoveLine(lineID)
+    if lineID and lineID > 0 and lineID <= #self.rows then
+        table.remove(self.rows, lineID)
+        if self.selectedRow == lineID then
+            self.selectedRow = nil
+        elseif self.selectedRow and self.selectedRow > lineID then
+            self.selectedRow = self.selectedRow - 1
+        end
+
+        self:RebuildRows()
+        self.scrollPanel:InvalidateLayout(true)
+    end
+end
+
+function PANEL:SelectItem(lineID)
+    if lineID < 1 or lineID > #self.rows then return end
+    local oldSelected = self.selectedRow
+    self.selectedRow = lineID
+    -- Call selection callback
+    if self.OnRowSelected and oldSelected ~= lineID then self:OnRowSelected(lineID, self.rows[lineID]) end
+    -- Call click callback
+    if self.OnClickLine then self:OnClickLine(self.rows[lineID], true) end
+end
+
+function PANEL:SelectItemByID(id)
+    self:SelectItem(id)
+end
+
+function PANEL:SelectItemByLine(line)
+    for idx, data in ipairs(self.rows) do
+        if data == line then
+            self:SelectItem(idx)
+            break
+        end
+    end
+end
+
+function PANEL:SelectFirstItem()
+    if #self.rows > 0 then self:SelectItem(1) end
+end
+
+function PANEL:GetSelected()
+    if not self.selectedRow then return nil end
+    return self.rows[self.selectedRow]
+end
+
+function PANEL:GetSelectedLine()
+    return self.selectedRow
+end
+
+function PANEL:GetSelectedLines()
+    if self.selectedRow then return {self.selectedRow} end
+    return {}
+end
+
+function PANEL:GetLine(id)
+    if id and id > 0 and id <= #self.rows then return self.rows[id] end
+    return nil
+end
+
+function PANEL:GetLines()
+    return self.rows
+end
+
+function PANEL:SortByColumn(columnIndex, desc)
+    local column = self.columns[columnIndex]
+    if not column or not column.sortable then return end
+    self.sortColumn = columnIndex
+    self.sortDesc = desc or false
+    local function getValueType(value)
+        if value == nil then return "nil" end
+        value = tostring(value)
+        return tonumber(value) and "number" or "string"
+    end
+
+    local function compareValues(a, b)
+        if a == nil and b == nil then return not self.sortDesc end
+        if a == nil then return self.sortDesc end
+        if b == nil then return not self.sortDesc end
+        local typeA = getValueType(a)
+        local typeB = getValueType(b)
+        if typeA ~= typeB then return typeA < typeB end
+        if typeA == "number" then
+            local numA = tonumber(a) or 0
+            local numB = tonumber(b) or 0
+            return self.sortDesc and (numA < numB) or (numA > numB)
+        else
+            local strA = tostring(a)
+            local strB = tostring(b)
+            return self.sortDesc and (strA > strB) or (strA < strB)
+        end
+    end
+
+    table.sort(self.rows, function(a, b) return compareValues(a[columnIndex], b[columnIndex]) end)
+    self:RebuildRows()
+end
+
+function PANEL:SortByColumns(...)
+    local args = {...}
+    if #args == 0 then return end
+    -- Sort by first column provided
+    self:SortByColumn(args[1])
+end
+
+function PANEL:SetDataHeight(height)
+    self.dataHeight = height or (#self.rows * (self.rowHeight + 1))
+    self:RebuildRows()
+end
+
+function PANEL:SetDirty(dirty)
+    self.dirty = dirty or false
+end
+
+function PANEL:SetHeaderHeight(height)
+    self.headerHeight = height or 36
+    if self.header then self.header:SetTall(self.headerHeight) end
+    self:RebuildRows()
+end
+
+function PANEL:SetHideHeaders(hide)
+    self.hideHeaders = hide or false
+    if self.header then self.header:SetVisible(not self.hideHeaders) end
+    self:RebuildRows()
+end
+
+function PANEL:SetMultiSelect(multi)
+    self.multiSelect = multi or false
+    -- For now, single selection only - multi-select would require more complex implementation
+end
+
+function PANEL:SetSortable(sortable)
+    for _, column in ipairs(self.columns) do
+        column.sortable = sortable or false
+    end
+end
+
+-- Enhanced row interaction
+function PANEL:CreateRow(rowIndex, rowData)
+    local row = vgui.Create("DButton", self.content)
+    row:Dock(TOP)
+    row:DockMargin(0, 0, 0, 1)
+    row:SetTall(self.rowHeight)
+    row:SetText("")
+    row.Paint = function(s, w, h)
+        local bgColor = self.selectedRow == rowIndex and lia.color.theme.theme or (s:IsHovered() and lia.color.theme.hover or lia.color.theme.panel[1])
+        lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+    end
+
+    row.DoClick = function()
+        local wasSelected = self.selectedRow == rowIndex
+        if self.multiSelect then
+            -- For multi-select, we'd need to handle multiple selections
+            -- For now, just single selection behavior
+            self.selectedRow = rowIndex
+        else
+            self.selectedRow = rowIndex
+        end
+
+        -- Call selection callback
+        if self.OnRowSelected then self:OnRowSelected(rowIndex, rowData) end
+        -- Call click callback
+        if self.OnClickLine then self:OnClickLine(rowData, not wasSelected) end
+        -- Call action callback
+        if self.OnAction then self:OnAction(rowData) end
+        surface.PlaySound("button_click.wav")
+    end
+
+    row.DoDoubleClick = function() self:DoDoubleClick(rowIndex, rowData) end
+    row.DoRightClick = function()
+        if not self.multiSelect then self.selectedRow = rowIndex end
+        self:OnRowRightClick(rowIndex, rowData)
+        -- Call right click callback
+        if self.OnRightClick then self:OnRightClick(rowData) end
+        local menu = lia.derma.dermaMenu()
+        for _, option in ipairs(self.customMenuOptions) do
+            menu:AddOption(option.text, function() option.callback(rowData, rowIndex) end, option.icon)
+        end
+
+        if #self.customMenuOptions == 0 then menu:AddOption(L("adminStickNoOptions"), function() end) end
+        menu:Open()
+    end
+
+    local xPos = 0
+    for i, column in ipairs(self.columns) do
+        local label = vgui.Create("DLabel", row)
+        label:SetText(tostring(rowData[i]))
+        label:SetFont(self.rowFont)
+        label:SetTextColor(lia.color.theme.text)
+        label:SetContentAlignment(column.align)
+        label:SetSize(column.width, self.rowHeight)
+        label:SetPos(xPos, 0)
+        if column.align == TEXT_ALIGN_LEFT then
+            label:SetTextInset(self.padding, 0)
+        elseif column.align == TEXT_ALIGN_RIGHT then
+            label:SetTextInset(0, 0, self.padding, 0)
+        end
+
+        label:SetContentAlignment(column.align + 4)
+        xPos = xPos + column.width
+    end
+end
+
 vgui.Register("liaTable", PANEL, "Panel")
