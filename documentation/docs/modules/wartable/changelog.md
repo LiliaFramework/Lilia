@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 1.2
+
+- **Changed**: Updated function naming convention from PascalCase to camelCase for consistency
+
 ### Version 1.1
 
 - Created docs
