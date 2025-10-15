@@ -640,4 +640,8 @@ hook.Add("InitializedModules", "liaItems", function()
     for _, item in pairs(lia.item.list) do
         if item.base == "base_entities" then lia.item.itemEntities[item.uniqueID] = {item.entityid, item.data} end
     end
+
+    for _, item in pairs(lia.item.list) do
+        item.CanBeDestroyed = true
+    end
 end)

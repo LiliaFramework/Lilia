@@ -265,7 +265,7 @@ function lia.util.generateRandomName(firstNames, lastNames)
 end
 
 if SERVER then
-    function lia.util.SendTableUI(client, title, columns, data, options, characterID)
+    function lia.util.sendTableUI(client, title, columns, data, options, characterID)
         if not IsValid(client) or not client:IsPlayer() then return end
         local localizedColumns = {}
         for i, colInfo in ipairs(columns or {}) do
@@ -310,13 +310,13 @@ if SERVER then
             end
         end
 
-        table.sort(output, function(a, b) return a:Distance(position) < b:Distance(position) end)
+        table.sort(output, function(a, b) return a:distance(position) < b:distance(position) end)
         return output
     end
 else
-    lia.util.ShadowText = lia.derma.ShadowText
-    lia.util.DrawTextOutlined = lia.derma.DrawTextOutlined
-    lia.util.DrawTip = lia.derma.DrawTip
+    lia.util.ShadowText = lia.derma.shadowText
+    lia.util.DrawTextOutlined = lia.derma.drawTextOutlined
+    lia.util.DrawTip = lia.derma.drawTip
     lia.util.drawText = lia.derma.drawText
     lia.util.drawTexture = lia.derma.drawSurfaceTexture
     lia.util.skinFunc = lia.derma.skinFunc
@@ -431,15 +431,18 @@ else
         return lines, maxW
     end
 
-    function lia.util.drawBlur(panel, amount, passes, alpha)
+    function lia.util.drawBlur(panel, amount, _, alpha)
         amount = amount or 5
         alpha = alpha or 255
+        local maxPasses = 3
         surface.SetMaterial(lia.util.getMaterial("pp/blurscreen"))
         surface.SetDrawColor(255, 255, 255, alpha)
         local x, y = panel:LocalToScreen(0, 0)
-        for i = -(passes or 0.2), 1, 0.2 do
-            lia.util.getMaterial("pp/blurscreen"):SetFloat("$blur", i * amount)
-            lia.util.getMaterial("pp/blurscreen"):Recompute()
+        local blurMat = lia.util.getMaterial("pp/blurscreen")
+        for i = 0, maxPasses do
+            local blurValue = (i / maxPasses) * amount
+            blurMat:SetFloat("$blur", blurValue)
+            blurMat:Recompute()
             render.UpdateScreenEffectTexture()
             surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
         end
@@ -486,7 +489,7 @@ else
     end
 
     lia.util.requestArguments = lia.derma.requestArguments
-    function lia.util.CreateTableUI(title, columns, data, options, charID)
+    function lia.util.createTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("DFrame")
         frame:SetTitle(title and L(title) or L("tableListTitle"))

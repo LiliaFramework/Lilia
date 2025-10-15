@@ -9,7 +9,7 @@ local function PaintFrame(pnl, w, h)
     if not pnl.LaidOut then
         local btn = pnl.btnClose
         if btn and btn:IsValid() then
-            btn:SetPos(w - 16, 4)
+            btn:SetPos(w - 26, 4)
             btn:SetSize(24, 24)
             btn:SetFont("Marlett")
             btn:SetText("✕")
@@ -42,7 +42,7 @@ function BlurredDFrame:Paint(w, h)
     PaintFrame(self, w, h)
 end
 
-vgui.Register("BlurredDFrame", BlurredDFrame, "DFrame")
+vgui.Register("liaBlurredDFrame", BlurredDFrame, "DFrame")
 local TransparentDFrame = {}
 function TransparentDFrame:Init()
     self:SetTitle("")
@@ -60,13 +60,13 @@ function TransparentDFrame:Paint(w, h)
     PaintPanel(self, w, h)
 end
 
-vgui.Register("SemiTransparentDFrame", TransparentDFrame, "DFrame")
+vgui.Register("liaSemiTransparentDFrame", TransparentDFrame, "DFrame")
 local SimplePanel = {}
 function SimplePanel:Paint(w, h)
     PaintPanel(self, w, h)
 end
 
-vgui.Register("SemiTransparentDPanel", SimplePanel, "DPanel")
+vgui.Register("liaSemiTransparentDPanel", SimplePanel, "DPanel")
 timer.Create("derma_convar_fix", 0.5, 0, function()
     if len == 0 then return end
     local name
@@ -126,83 +126,48 @@ function QuickPanel:Init()
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
     lia.gui.quick = self
     self:SetSkin(lia.config.get("DermaSkin", L("liliaSkin")))
-    self:SetSize(400, 36)
-    self:SetPos(ScrW() - 36, -36)
+    self:SetTitle(L("quickSettings"))
+    self:SetAlphaBackground(false)
+    self.scroll = self:Add("liaScrollPanel")
+    self.scroll:Dock(FILL)
+    self.scroll.Paint = function(_, w, h)
+        local theme = lia.color.theme
+        local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
+        draw.RoundedBox(8, 0, 0, w, h, panelColor)
+    end
+
+    self.items = {}
+    self.optionsCache = {}
+    self.lastOptionsUpdate = 0
+    hook.Run("SetupQuickMenu", self)
+    self:populateOptions()
+    local h = 0
+    for _, v in pairs(self.items) do
+        if IsValid(v) then h = h + v:GetTall() + 1 end
+    end
+
+    h = math.min(h, ScrH() * 0.5)
+    local targetHeight = math.max(h, 100)
+    self:SetSize(400, targetHeight)
+    self:SetPos(ScrW() - 400, 30)
     self:MakePopup()
     self:SetKeyboardInputEnabled(false)
     self:SetZPos(999)
     self:SetMouseInputEnabled(true)
-    self.title = self:Add("DLabel")
-    self.title:SetTall(36)
-    self.title:Dock(TOP)
-    self.title:SetFont("liaMediumFont")
-    self.title:SetText(L"quickSettings")
-    self.title:SetContentAlignment(4)
-    self.title:SetTextInset(44, 0)
-    self.title:SetTextColor(lia.color.theme.text or color_white)
-    self.title:SetExpensiveShadow(1, lia.color.theme and ColorAlpha(lia.color.theme.text, 175) or Color(0, 0, 0, 175))
-    self.title.Paint = function(_, w, h)
-        surface.SetDrawColor(lia.color.theme and lia.color.theme.theme or color_white)
-        surface.DrawRect(0, 0, w, h)
-    end
-
-    self.expand = self:Add("DButton")
-    self.expand:SetContentAlignment(5)
-    self.expand:SetText("")
-    self.expand:SetFont("DermaDefaultBold")
-    self.expand:SetPaintBackground(false)
-    self.expand:SetTextColor(lia.color.theme.text or color_white)
-    self.expand:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
-    self.expand:SetSize(36, 36)
-    self.expand:SetPos(0, 0)
-    self.expand.icon = self.expand:Add("DImage")
-    self.expand.icon:SetImage("settings.png")
-    self.expand.icon:SetSize(24, 24)
-    self.expand.icon:Dock(FILL)
-    self.expand.icon:DockMargin(6, 6, 6, 6)
-    self.expand.DoClick = function()
-        if self.expanded then
-            self:SizeTo(self:GetWide(), 36, 0.15, nil, nil, function() self:MoveTo(ScrW() - 36, 30, 0.15) end)
-            self.expanded = false
-        else
-            self:MoveTo(ScrW() - 400, 30, 0.15, nil, nil, function()
-                local h = 0
-                for _, v in pairs(self.items) do
-                    if IsValid(v) then h = h + v:GetTall() + 1 end
-                end
-
-                h = math.min(h, ScrH() * 0.5)
-                local target = 36 + math.max(h, 0)
-                self:SizeTo(self:GetWide(), target, 0.15)
-            end)
-
-            self.expanded = true
-        end
-    end
-
-    self.scroll = self:Add("liaScrollPanel")
-    self.scroll.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme and lia.color.theme.panel[1] or Color(50, 50, 50)):Shape(lia.derma.SHAPE_IOS):Draw() end
-    self.items = {}
-    hook.Run("SetupQuickMenu", self)
-    self:populateOptions()
-    self:MoveTo(self.x, 30, 0.05)
     hook.Add("OnThemeChanged", self, function() if IsValid(self) then self:RefreshTheme() end end)
 end
 
-function QuickPanel:PerformLayout(w, h)
-    self.scroll:SetPos(0, 36)
-    self.scroll:SetSize(w, math.max(h - 36, 0))
+function QuickPanel:Paint(w, h)
+    local theme = lia.color.theme
+    local bgColor = theme and theme.background_alpha or Color(34, 34, 34, 210)
+    local headerColor = theme and theme.header or Color(34, 34, 34, 210)
+    draw.RoundedBox(6, 0, 0, w, h, bgColor)
+    draw.RoundedBox(6, 0, 0, w, 24, headerColor)
+    if self.title and self.title ~= "" then draw.SimpleText(self.title, "LiliaFont.16", 6, 4, theme and theme.header_text or Color(255, 255, 255)) end
 end
 
-local function paintButton(button, w, h)
-    local baseColor = lia.color.theme and lia.color.theme.button or Color(60, 60, 60)
-    local r, g, b = baseColor:Unpack()
-    local a = button.Depressed and 255 or button.m_bSelected and 220 or button.Hovered and 180 or 140
-    surface.SetDrawColor(r, g, b, a)
-    surface.SetMaterial(lia.util.getMaterial("vgui/gradient-r"))
-    surface.DrawTexturedRect(0, 0, w / 2, h)
-    surface.SetMaterial(lia.util.getMaterial("vgui/gradient-l"))
-    surface.DrawTexturedRect(w / 2, 0, w / 2, h)
+function QuickPanel:PerformLayout(w)
+    if IsValid(self.cls) then self.cls:SetPos(w - 22, 2) end
 end
 
 local categoryDoClick = function(this)
@@ -212,7 +177,8 @@ local categoryDoClick = function(this)
     for i = i0 + 1, #items do
         if items[i].categoryLabel then break end
         if not items[i].h then items[i].w, items[i].h = items[i]:GetSize() end
-        items[i]:SizeTo(items[i].w, this.expanded and (items[i].h or 36) or 0, 0.15)
+        local animDuration = this.expanded and 0.1 or 0.08
+        items[i]:SizeTo(items[i].w, this.expanded and (items[i].h or 36) or 0, animDuration)
     end
 end
 
@@ -228,25 +194,24 @@ function QuickPanel:addCategory(text)
     label:SetTextColor(lia.color.theme.text or color_white)
     label:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
     label:SetContentAlignment(5)
-    label.Paint = function(_, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.color.theme and lia.color.theme.panel[1] or Color(50, 50, 50)):Shape(lia.derma.SHAPE_IOS):Draw()
-        surface.SetDrawColor(lia.color.theme and lia.color.theme.panel[3] or Color(80, 80, 80))
-        surface.DrawOutlinedRect(0, 0, w, h, 1)
+    label.Paint = function(panel, w, h)
+        local theme = lia.color.theme
+        local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
+        local borderColor = theme and theme.panel and theme.panel[3] or Color(80, 80, 80)
+        draw.RoundedBox(4, 0, 0, w, h, panelColor)
+        draw.RoundedBox(4, 0, 0, w, h, ColorAlpha(borderColor, 100))
+        local textColor = theme and theme.text or Color(255, 255, 255)
+        draw.SimpleText(panel:GetText(), "liaMediumFont", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 end
 
 function QuickPanel:addButton(text, cb)
-    local btn = self.scroll:Add("DButton")
+    local btn = self.scroll:Add("liaButton")
     btn:SetText(text)
     btn:SetTall(36)
     btn:Dock(TOP)
     btn:DockMargin(0, 1, 0, 0)
     btn:SetFont("LiliaFont.20")
-    btn:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
-    btn:SetContentAlignment(4)
-    btn:SetTextInset(8, 0)
-    btn:SetTextColor(lia.color.theme.text or color_white)
-    btn.Paint = paintButton
     if cb then btn.DoClick = cb end
     self.items[#self.items + 1] = btn
     return btn
@@ -267,22 +232,15 @@ function QuickPanel:addSpacer()
 end
 
 function QuickPanel:addSlider(text, cb, val, min, max, dec)
-    local s = self.scroll:Add("DNumSlider")
+    local s = self.scroll:Add("liaNumSlider")
     s:SetText(text)
-    s:SetTall(36)
+    s:SetTall(60)
     s:Dock(TOP)
     s:DockMargin(0, 1, 0, 0)
-    s:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
     s:SetMin(min or 0)
     s:SetMax(max or 100)
     s:SetDecimals(dec or 0)
     s:SetValue(val or 0)
-    s.Label:SetFont("LiliaFont.20")
-    s.Label:SetTextColor(lia.color.theme.text or color_white)
-    s.Label:DockMargin(8, 0, 0, 0)
-    local te = s:GetTextArea()
-    te:SetFont("LiliaFont.20")
-    te:SetTextColor(lia.color.theme.text or color_white)
     if cb then
         s.OnValueChanged = function(this, newVal)
             local r = math.Round(newVal, dec or 0)
@@ -291,16 +249,6 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
     end
 
     self.items[#self.items + 1] = s
-    s.Paint = function(slider, w, h)
-        local baseColor = lia.color.theme and lia.color.theme.button or Color(60, 60, 60)
-        local r, g, b = baseColor:Unpack()
-        local a = slider.Depressed and 255 or slider.Hovered and 180 or 140
-        surface.SetDrawColor(r, g, b, a)
-        surface.SetMaterial(lia.util.getMaterial("vgui/gradient-r"))
-        surface.DrawTexturedRect(0, 0, w / 2, h)
-        surface.SetMaterial(lia.util.getMaterial("vgui/gradient-l"))
-        surface.DrawTexturedRect(w / 2, 0, w / 2, h)
-    end
     return s
 end
 
@@ -319,39 +267,11 @@ function QuickPanel:setIcon(ch)
     self.icon = ch
 end
 
-function QuickPanel:Paint(w, h)
-    local radius = 16
-    lia.util.drawBlur(self)
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme and lia.color.theme.window_shadow or Color(0, 0, 0, 200)):Shape(lia.derma.SHAPE_IOS):Shadow(5, 20):Draw()
-    lia.derma.rect(0, 0, w, 36):Rad(radius):Color(lia.color.theme and lia.color.theme.theme or color_white):Shape(lia.derma.SHAPE_IOS):Draw()
-end
-
 function QuickPanel:RefreshTheme()
     if not IsValid(self) then return end
-    if IsValid(self.title) then
-        self.title:SetTextColor(lia.color.theme.text or color_white)
-        self.title:SetExpensiveShadow(1, lia.color.theme and ColorAlpha(lia.color.theme.text, 175) or Color(0, 0, 0, 175))
-        self.title.Paint = function(_, w, h)
-            surface.SetDrawColor(lia.color.theme and lia.color.theme.theme or color_white)
-            surface.DrawRect(0, 0, w, h)
-        end
-    end
-
-    if IsValid(self.expand) then
-        self.expand:SetTextColor(lia.color.theme.text or color_white)
-        self.expand:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
-    end
-
     if IsValid(self.scroll) then self.scroll.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme and lia.color.theme.panel[1] or Color(50, 50, 50)):Shape(lia.derma.SHAPE_IOS):Draw() end end
     for _, item in ipairs(self.items or {}) do
-        if IsValid(item) then
-            if item.SetTextColor then item:SetTextColor(lia.color.theme.text or color_white) end
-            if item.Label and item.Label.SetTextColor then item.Label:SetTextColor(lia.color.theme.text or color_white) end
-            if item.GetTextArea then
-                local te = item:GetTextArea()
-                if IsValid(te) and te.SetTextColor then te:SetTextColor(lia.color.theme.text or color_white) end
-            end
-        end
+        if IsValid(item) and item.SetTextColor then item:SetTextColor(lia.color.theme.text or color_white) end
     end
 
     self:InvalidateLayout(true)
@@ -363,6 +283,20 @@ function QuickPanel:OnRemove()
 end
 
 function QuickPanel:populateOptions()
+    local currentTime = CurTime()
+    if self.optionsCache and self.lastOptionsUpdate and (currentTime - self.lastOptionsUpdate) < 1 then
+        for _, item in ipairs(self.optionsCache) do
+            if IsValid(item) then self.items[#self.items + 1] = item end
+        end
+        return
+    end
+
+    for _, item in ipairs(self.items) do
+        if IsValid(item) then item:Remove() end
+    end
+
+    self.items = {}
+    self.optionsCache = {}
     local cats = {}
     for k, v in pairs(lia.option.stored) do
         if v and (v.isQuick or v.data and v.data.isQuick) then
@@ -385,35 +319,74 @@ function QuickPanel:populateOptions()
         names[#names + 1] = n
     end
 
+    local generalCat = L("categoryGeneral")
     table.sort(names, function(a, b)
-        if a == L("categoryGeneral") and b ~= L("categoryGeneral") then return true end
-        if b == L("categoryGeneral") and a ~= L("categoryGeneral") then return false end
+        if a == generalCat and b ~= generalCat then return true end
+        if b == generalCat and a ~= generalCat then return false end
         return a < b
     end)
 
     for i, cat in ipairs(names) do
         self:addCategory(cat)
         local list = cats[cat]
-        table.sort(list, function(a, b) return (a.opt.name or a.key) < (b.opt.name or b.key) end)
-        for j, info in ipairs(list) do
-            local key = info.key
-            local opt = info.opt
-            local data = opt.data or {}
-            local val = lia.option.get(key, opt.default)
-            if opt.type == "Boolean" then
-                self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val)
-            elseif opt.type == "Int" or opt.type == "Float" then
-                self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0)
-            end
+        local groups = {
+            Boolean = {},
+            Int = {},
+            Float = {}
+        }
 
-            if j < #list then self:addSpacer() end
+        for _, info in ipairs(list) do
+            local opt = info.opt
+            if opt.type == "Boolean" then
+                groups.Boolean[#groups.Boolean + 1] = info
+            elseif opt.type == "Int" then
+                groups.Int[#groups.Int + 1] = info
+            elseif opt.type == "Float" then
+                groups.Float[#groups.Float + 1] = info
+            end
+        end
+
+        for _, group in pairs(groups) do
+            table.sort(group, function(a, b)
+                local nameA = a.opt.name or a.key
+                local nameB = b.opt.name or b.key
+                return nameA < nameB
+            end)
+        end
+
+        local groupOrder = {"Boolean", "Int", "Float"}
+        local hasAddedItems = false
+        for _, groupType in ipairs(groupOrder) do
+            local group = groups[groupType]
+            if #group > 0 then
+                if hasAddedItems then self:addSpacer() end
+                for j, info in ipairs(group) do
+                    local key = info.key
+                    local opt = info.opt
+                    local data = opt.data or {}
+                    local val = lia.option.get(key, opt.default)
+                    local item
+                    if opt.type == "Boolean" then
+                        item = self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val)
+                    elseif opt.type == "Int" or opt.type == "Float" then
+                        item = self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0)
+                    end
+
+                    if item then self.optionsCache[#self.optionsCache + 1] = item end
+                    if j < #group then self:addSpacer() end
+                end
+
+                hasAddedItems = true
+            end
         end
 
         if i < #names then self:addSpacer() end
     end
+
+    self.lastOptionsUpdate = currentTime
 end
 
-vgui.Register("liaQuick", QuickPanel, "EditablePanel")
+vgui.Register("liaQuick", QuickPanel, "liaFrame")
 local blur = Material("pp/blurscreen")
 local gradLeft = Material("vgui/gradient-l")
 local gradUp = Material("vgui/gradient-u")

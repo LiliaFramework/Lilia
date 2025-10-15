@@ -127,7 +127,7 @@ function GM:CanPlayerInteractItem(client, action, item)
     action = string.lower(action)
     if client:hasPrivilege("noItemCooldown") then return true end
     if not client:Alive() then return false, L("forbiddenActionStorage") end
-    if IsValid(client:getRagdoll()) then return false, L("forbiddenActionStorage") end
+    if IsValid(client:getNetVar("ragdoll")) then return false, L("forbiddenActionStorage") end
     if action == "drop" then
         if hook.Run("CanPlayerDropItem", client, item) ~= false then
             if not client.dropDelay then
@@ -210,7 +210,7 @@ function GM:CanPlayerTakeItem(client, item)
     elseif inventory and (inventory.isBag or inventory.isExternalInventory) then
         client:notifyErrorLocalized("forbiddenActionStorage")
         return false
-    elseif client:IsFamilySharedAccount() then
+    elseif client:isFamilySharedAccount() then
         client:notifyErrorLocalized("familySharedPickupDisabled")
         return false
     elseif IsValid(item.entity) then
@@ -295,7 +295,7 @@ end
 function GM:EntityTakeDamage(entity, dmgInfo)
     if not entity:IsPlayer() then return end
     if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
-    if entity:isNoClipping() then return true end
+    if entity:GetMoveType() == MOVETYPE_NOCLIP then return true end
     if IsValid(entity:getNetVar("player")) then
         if dmgInfo:IsDamageType(DMG_CRUSH) then
             if (entity.liaFallGrace or 0) < CurTime() then
@@ -378,7 +378,7 @@ end
 
 function GM:DoPlayerDeath(client, attacker)
     client:AddDeaths(1)
-    local existingRagdoll = client:getRagdoll()
+    local existingRagdoll = client:getNetVar("ragdoll")
     if IsValid(existingRagdoll) then
         existingRagdoll.liaIsDeadRagdoll = true
         existingRagdoll.liaNoReset = true
@@ -517,7 +517,7 @@ function GM:PlayerLoadout(client)
     client:SetNoDraw(false)
     client:SetWeaponColor(Vector(0.30, 0.80, 0.10))
     client:StripWeapons()
-    client:setLocalVar("blur", nil)
+    client:setNetVar("blur", nil)
     client:SetModel(character:getModel())
     client:SetWalkSpeed(lia.config.get("WalkSpeed"))
     client:SetRunSpeed(lia.config.get("RunSpeed"))
@@ -584,6 +584,16 @@ function GM:SetupBotPlayer(client)
         table.remove(itemKeys, randomIndex)
     end
 
+    if lia.botSpawnPos and isvector(lia.botSpawnPos) then
+        client:SetPos(lia.botSpawnPos)
+        lia.botSpawnPos = nil
+    end
+
+    if lia.botFaction and character then
+        character:setFaction(lia.botFaction.index)
+        lia.botFaction = nil
+    end
+
     if lia.botCreator and IsValid(lia.botCreator) then
         lia.botCreator:notifySuccessLocalized("botSpawned", character:getName())
         lia.botCreator = nil
@@ -628,7 +638,7 @@ function GM:SaveData()
     local seen = {}
     local data = {}
     for _, ent in ents.Iterator() do
-        if ent:isLiliaPersistent() then
+        if ent.IsPersistent then
             local key = makeKey(ent)
             if key ~= "" and not seen[key] then
                 seen[key] = true
@@ -814,7 +824,7 @@ function GM:LoadData()
 end
 
 function GM:OnEntityCreated(ent)
-    if not IsValid(ent) or not ent:isLiliaPersistent() then return end
+    if not IsValid(ent) or not ent.IsPersistent then return end
     timer.Simple(0, function()
         if not IsValid(ent) then return end
         local saved = lia.data.getPersistence()
@@ -841,7 +851,7 @@ function GM:OnEntityCreated(ent)
 end
 
 function GM:UpdateEntityPersistence(ent)
-    if not IsValid(ent) or not ent:isLiliaPersistent() then return end
+    if not IsValid(ent) or not ent.IsPersistent then return end
     local saved = lia.data.getPersistence()
     local key = makeKey(ent)
     for _, data in ipairs(saved) do
@@ -865,7 +875,7 @@ function GM:UpdateEntityPersistence(ent)
 end
 
 function GM:EntityRemoved(ent)
-    if not IsValid(ent) or not ent:isLiliaPersistent() then return end
+    if not IsValid(ent) or not ent.IsPersistent then return end
     local saved = lia.data.getPersistence()
     local key = makeKey(ent)
     for i, data in ipairs(saved) do
@@ -951,21 +961,13 @@ function GM:CreateSalaryTimers()
                 pay = isnumber(pay) and pay or class and class.pay or faction and faction.pay or 0
                 local adjustedPay = hook.Run("OnSalaryAdjust", client)
                 if isnumber(adjustedPay) then pay = adjustedPay end
-                local limit = hook.Run("GetSalaryLimit", client, faction, class)
-                limit = isnumber(limit) and limit or class and class.payLimit or faction and faction.payLimit or lia.config.get("SalaryThreshold", 0)
                 if pay > 0 then
-                    local money = char:getMoney()
-                    if limit > 0 and money + pay > limit then
-                        client:notifyWarningLocalized("salaryLimitReached")
-                        char:setMoney(limit)
-                    else
-                        local handled = hook.Run("PreSalaryGive", client, char, pay, faction, class)
-                        if handled ~= true then
-                            local finalPay = hook.Run("OnSalaryGiven", client, char, pay, faction, class)
-                            if isnumber(finalPay) then pay = finalPay end
-                            char:giveMoney(pay)
-                            client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
-                        end
+                    local handled = hook.Run("PreSalaryGive", client, char, pay, faction, class)
+                    if handled ~= true then
+                        local finalPay = hook.Run("OnSalaryGiven", client, char, pay, faction, class)
+                        if isnumber(finalPay) then pay = finalPay end
+                        char:giveMoney(pay)
+                        client:notifyMoneyLocalized("salary", lia.currency.get(pay), L("salaryWord"))
                     end
                 end
             end

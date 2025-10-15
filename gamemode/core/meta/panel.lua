@@ -58,10 +58,10 @@ function panelMeta:liaDeleteInventoryHooks(id)
     self.liaToRemoveHooks[id] = nil
 end
 
-function panelMeta:SetScaledPos(x, y)
-    self:SetPos(ScreenScale(x), ScreenScaleH(y))
+function panelMeta:setScaledPos(x, y)
+    self:setPos(ScreenScale(x), ScreenScaleH(y))
 end
 
-function panelMeta:SetScaledSize(w, h)
-    self:SetSize(ScreenScale(w), ScreenScaleH(h))
+function panelMeta:setScaledSize(w, h)
+    self:setSize(ScreenScale(w), ScreenScaleH(h))
 end

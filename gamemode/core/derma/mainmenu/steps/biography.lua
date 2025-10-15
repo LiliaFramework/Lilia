@@ -46,9 +46,22 @@ function PANEL:makeFactionComboBox()
     end
 
     combo.OnSelect = function(_, _, data)
-        if data then
-            local fac = lia.faction.teams[data]
-            if fac then self:onFactionSelected(fac) end
+        local factionID = nil
+        if data and type(data) == "string" then
+            for id, fac in pairs(lia.faction.teams) do
+                if L(fac.name) == data then
+                    factionID = id
+                    break
+                end
+            end
+        end
+
+        if factionID then
+            local fac = lia.faction.teams[factionID]
+            if fac then
+                self:onFactionSelected(fac)
+                return
+            end
         end
     end
 
@@ -116,7 +129,38 @@ function PANEL:onFactionSelected(fac)
     self:setContext("faction", fac.index)
     self:setContext("model", 1)
     self:updateModelPanel()
+    self:updateNameAndDescForFaction(fac.index)
     lia.gui.character:clickSound()
+end
+
+function PANEL:updateNameAndDescForFaction(factionIndex)
+    local client = LocalPlayer()
+    local context = self:getContext()
+    local defaultName, nameOverride = hook.Run("GetDefaultCharName", client, factionIndex, context)
+    local defaultDesc, descOverride = hook.Run("GetDefaultCharDesc", client, factionIndex, context)
+    if isstring(defaultName) and nameOverride and IsValid(self.nameEntry) then
+        local currentName = string.Trim(self.nameEntry:GetValue() or "")
+        if currentName == "" or nameOverride then
+            timer.Simple(0.01, function()
+                if IsValid(self) and IsValid(self.nameEntry) then
+                    self.nameEntry:SetValue(defaultName)
+                    self:setContext("name", defaultName)
+                end
+            end)
+        end
+    end
+
+    if isstring(defaultDesc) and descOverride and IsValid(self.descEntry) then
+        local currentDesc = string.Trim(self.descEntry:GetValue() or "")
+        if currentDesc == "" or descOverride then
+            timer.Simple(0.01, function()
+                if IsValid(self) and IsValid(self.descEntry) then
+                    self.descEntry:SetValue(defaultDesc)
+                    self:setContext("desc", defaultDesc)
+                end
+            end)
+        end
+    end
 end
 
 function PANEL:updateContext()
@@ -142,6 +186,7 @@ function PANEL:onDisplay()
         self.factionCombo:ChooseOptionData(f)
         self:setContext("faction", f)
         self:updateModelPanel()
+        self:updateNameAndDescForFaction(f)
     end
 
     if IsValid(self.attribsPanel) then

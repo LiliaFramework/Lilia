@@ -154,4 +154,4 @@ function PANEL:Paint(w, h)
     surfaceDrawOutlinedRect(0, 0, w, h)
 end
 
-vgui.Register("noticePanel", PANEL, "DPanel")
+vgui.Register("liaNoticePanel", PANEL, "DPanel")

@@ -1,14 +1,18 @@
 ﻿net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
-    LocalPlayer():setWaypoint(name, pos)
+    local logo = net.ReadString()
+    LocalPlayer():setWaypoint(name, pos, logo ~= "" and logo or nil)
 end)
 
 net.Receive("liaSetWaypointWithLogo", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()
-    LocalPlayer():setWaypointWithLogo(name, pos, logo)
+    local hasOnReach = net.ReadBool()
+    local onReach = nil
+    if hasOnReach then onReach = net.ReadString() end
+    LocalPlayer():setWaypoint(name, pos, logo, onReach)
 end)
 
 net.Receive("liaLoadingFailure", function()
@@ -115,7 +119,7 @@ net.Receive("liaInventoryInit", function()
 
     lia.inventory.instances[id] = instance
     hook.Run("InventoryInitialized", instance)
-    for _, character in pairs(lia.char.getAll()) do
+    for _, character in pairs(lia.char.loaded) do
         for idx, inventory in pairs(character.vars.inv) do
             if inventory:getID() == id then character.vars.inv[idx] = instance end
         end
@@ -215,7 +219,7 @@ net.Receive("liaCharVar", function()
         if character then
             local oldVar = character:getVar()[key]
             character:getVar()[key] = value
-            hook.Run("OnCharLocalVarChanged", character, key, oldVar, value)
+            hook.Run("OnCharNetVarChanged", character, key, oldVar, value)
         end
     end)
 end)
@@ -265,6 +269,7 @@ net.Receive("liaDataSync", function()
     lia.lastJoin = last
 end)
 
+net.Receive("liaStorageSync", function() lia.inventory.storage = net.ReadTable() end)
 net.Receive("liaDataSync", function()
     local key = net.ReadString()
     local value = net.ReadType()
@@ -297,7 +302,7 @@ net.Receive("liaNetLocal", function()
     lia.net[idx] = lia.net[idx] or {}
     local oldValue = lia.net[idx][key]
     lia.net[idx][key] = value
-    hook.Run("LocalVarChanged", LocalPlayer(), key, oldValue, value)
+    hook.Run("NetVarChanged", LocalPlayer(), key, oldValue, value)
 end)
 
 net.Receive("liaActBar", function()
@@ -329,7 +334,7 @@ net.Receive("liaOpenInvMenu", function()
     myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
 end)
 
-lia.net.readBigTable("liaSendTableUI", function(data) lia.util.CreateTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
+lia.net.readBigTable("liaSendTableUI", function(data) lia.util.createTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
 net.Receive("liaOptionsRequest", function()
     local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
@@ -508,7 +513,7 @@ end
 
 local function CreateNoticePanel(length, notimer)
     if not notimer then notimer = false end
-    local notice = vgui.Create("noticePanel")
+    local notice = vgui.Create("liaNoticePanel")
     notice.start = CurTime() + 0.25
     notice.endTime = CurTime() + length
     notice.oh = notice:GetTall()
@@ -677,7 +682,7 @@ net.Receive("liaAnimationStatus", function()
     local ply = net.ReadEntity()
     local active = net.ReadBool()
     local boneData = net.ReadTable()
-    if IsValid(ply) then ply:NetworkAnimation(active, boneData) end
+    if IsValid(ply) then ply:networkAnimation(active, boneData) end
 end)
 
 net.Receive("liaCmdArgPrompt", function()
@@ -740,13 +745,13 @@ net.Receive("liaEmitUrlSound", function()
         local name = util.CRC(soundPath) .. "." .. ext
         local cachedPath = lia.websound.get(name)
         if cachedPath then
-            ent:PlayFollowingSound(cachedPath, volume, true, maxDistance, startDelay)
+            ent:playFollowingSound(cachedPath, volume, true, maxDistance, startDelay)
         else
-            lia.websound.register(name, soundPath, function(localPath) if localPath then ent:PlayFollowingSound(localPath, volume, true, maxDistance, startDelay) end end)
+            lia.websound.register(name, soundPath, function(localPath) if localPath then ent:playFollowingSound(localPath, volume, true, maxDistance, startDelay) end end)
         end
     elseif soundPath:find("^lilia/websounds/") or soundPath:find("^websounds/") then
         local maxDistance = soundLevel * 13.33
-        ent:PlayFollowingSound(soundPath, volume, true, maxDistance, startDelay)
+        ent:playFollowingSound(soundPath, volume, true, maxDistance, startDelay)
     else
         ent:EmitSound(soundPath, soundLevel, nil, volume, nil, nil, nil)
     end
@@ -764,7 +769,6 @@ net.Receive("liaNetMessage", function()
 end)
 
 net.Receive("liaAssureClientSideAssets", function()
-    lia.webimage.allowDownloads = true
     local webimages = lia.webimage.stored
     local websounds = lia.websound.stored
     local downloadQueue = {}
@@ -840,7 +844,6 @@ net.Receive("liaAssureClientSideAssets", function()
             timer.Remove("AssetDownloadProgress")
             lia.option.load()
             lia.keybind.load()
-            lia.webimage.allowDownloads = false
             timer.Simple(1.0, function()
                 local imageStats = lia.webimage.getStats()
                 local soundStats = lia.websound.getStats()

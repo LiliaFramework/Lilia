@@ -87,4 +87,4 @@ function PANEL:onCancel(cb)
     return self
 end
 
-vgui.Register("liaCharacterConfirm", PANEL, "SemiTransparentDFrame")
+vgui.Register("liaCharacterConfirm", PANEL, "liaSemiTransparentDFrame")

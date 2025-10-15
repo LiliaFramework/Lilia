@@ -6,10 +6,6 @@ function characterMeta:tostring()
     return L("character") .. "[" .. (self.id or 0) .. "]"
 end
 
-function characterMeta:eq(other)
-    return self:getID() == other:getID()
-end
-
 function characterMeta:getID()
     return self.id
 end
@@ -74,32 +70,9 @@ function characterMeta:getItemWeapon(requireEquip)
     return false
 end
 
-function characterMeta:getMaxStamina()
-    local maxStamina = hook.Run("getCharMaxStamina", self) or lia.config.get("DefaultStamina", 100)
-    return maxStamina
-end
-
-function characterMeta:getStamina()
-    local stamina = self:getPlayer():getLocalVar("stamina", 100) or lia.config.get("DefaultStamina", 100)
-    return stamina
-end
-
-function characterMeta:hasClassWhitelist(class)
-    local wl = self:getClasswhitelists() or {}
-    return wl[class] == true
-end
-
-function characterMeta:isFaction(faction)
-    return self:getFaction() == faction
-end
-
-function characterMeta:isClass(class)
-    return self:getClass() == class
-end
-
 function characterMeta:getAttrib(key, default)
     local att = self:getAttribs()[key] or default or 0
-    local boosts = self:getBoosts()[key]
+    local boosts = self:getVar("boosts", {})[key]
     if boosts then
         for _, v in pairs(boosts) do
             att = att + v
@@ -109,22 +82,18 @@ function characterMeta:getAttrib(key, default)
 end
 
 function characterMeta:getBoost(attribID)
-    local boosts = self:getBoosts()
+    local boosts = self:getVar("boosts", {})
     return boosts[attribID]
-end
-
-function characterMeta:getBoosts()
-    return self:getVar("boosts", {})
 end
 
 function characterMeta:doesRecognize(id)
     if not isnumber(id) and id.getID then id = id:getID() end
-    return hook.Run("isCharRecognized", self, id) ~= false
+    return hook.Run("IsCharRecognized", self, id) ~= false
 end
 
 function characterMeta:doesFakeRecognize(id)
     if not isnumber(id) and id.getID then id = id:getID() end
-    return hook.Run("isCharFakeRecognized", self, id) ~= false
+    return hook.Run("IsCharFakeRecognized", self, id) ~= false
 end
 
 function characterMeta:setData(k, v, noReplication, receiver)
@@ -216,18 +185,6 @@ if SERVER then
             self:setRecognition(recognized .. "," .. id .. ",")
         end
         return true
-    end
-
-    function characterMeta:classWhitelist(class)
-        local wl = self:getClasswhitelists() or {}
-        wl[class] = true
-        self:setClasswhitelists(wl)
-    end
-
-    function characterMeta:classUnWhitelist(class)
-        local wl = self:getClasswhitelists() or {}
-        wl[class] = nil
-        self:setClasswhitelists(wl)
     end
 
     function characterMeta:joinClass(class, isForced)

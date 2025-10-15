@@ -113,10 +113,6 @@ function Inventory:getID()
     return self.id
 end
 
-function Inventory:eq(other)
-    return self:getID() == other:getID()
-end
-
 if SERVER then
     function Inventory:addItem(item, noReplicate)
         self.items[item:getID()] = item

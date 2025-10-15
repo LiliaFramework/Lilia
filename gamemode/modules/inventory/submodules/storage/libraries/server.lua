@@ -5,7 +5,7 @@
         local storage = context.storage or client.liaStorageEntity
         if not IsValid(storage) then return end
         if storage:getInv() ~= inventory then return end
-        local distance = storage:GetPos():Distance(client:GetPos())
+        local distance = storage:GetPos():distance(client:GetPos())
         if distance > 128 then return false end
         if storage.receivers[client] then return true end
     end,
@@ -14,7 +14,7 @@
         if not IsValid(client) then return end
         local storage = context.storage or client.liaStorageEntity
         if not IsValid(storage) then return end
-        local distance = storage:GetPos():Distance(client:GetPos())
+        local distance = storage:GetPos():distance(client:GetPos())
         if distance > 128 then return false end
         if storage.receivers[client] then return true end
     end

@@ -64,7 +64,7 @@ function PANEL:FadeOut(anim, delta)
     self:SetAlpha(255 - 255 * delta * 2)
 end
 
-vgui.Register("VoicePanel", PANEL, "DPanel")
+vgui.Register("liaVoicePanel", PANEL, "DPanel")
 local function CreateVoicePanelList()
     if IsValid(g_VoicePanelList) then g_VoicePanelList:Remove() end
     for _, pnl in pairs(VoicePanels) do

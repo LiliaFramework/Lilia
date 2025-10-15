@@ -1,5 +1,4 @@
-﻿local playerMeta = FindMetaTable("Player")
-local entityMeta = FindMetaTable("Entity")
+﻿local entityMeta = FindMetaTable("Entity")
 local baseEmitSound = entityMeta.EmitSound
 local validClasses = {
     ["lvs_base"] = true,
@@ -21,14 +20,14 @@ function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, chann
             return true
         else
             local maxDistance = soundLevel and soundLevel * 13.33 or 1000
-            self:PlayFollowingSound(soundName, volume or 100, true, maxDistance)
+            self:playFollowingSound(soundName, volume or 100, true, maxDistance)
             return true
         end
     end
 
     if CLIENT and isstring(soundName) and lia.websound.get(soundName) then
         local maxDistance = soundLevel and soundLevel * 13.33 or 1000
-        self:PlayFollowingSound(soundName, volume or 100, true, maxDistance)
+        self:playFollowingSound(soundName, volume or 100, true, maxDistance)
         return true
     end
     return baseEmitSound(self, soundName, soundLevel, pitchPercent, volume, channel, flags, dsp)
@@ -52,12 +51,6 @@ end
 function entityMeta:isSimfphysCar()
     if not IsValid(self) then return false end
     return validClasses[self:GetClass()] or self.IsSimfphyscar or self.LVS or validClasses[self.Base]
-end
-
-function entityMeta:isLiliaPersistent()
-    if not IsValid(self) then return false end
-    if self.GetPersistent and self:GetPersistent() then return true end
-    return self.IsPersistent
 end
 
 function entityMeta:checkDoorAccess(client, access)
@@ -132,17 +125,23 @@ function entityMeta:isNearEntity(radius, otherEntity)
     return false
 end
 
-function entityMeta:GetCreator()
-    if not IsValid(self) then return nil end
-    return self:getNetVar("creator", nil)
+function entityMeta:getDoorPartner()
+    if SERVER then
+        return self.liaPartner
+    else
+        if not IsValid(self) then return nil end
+        local owner = self:GetOwner() or self.liaDoorOwner
+        if IsValid(owner) and owner:isDoor() then return owner end
+        for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
+            if v:GetOwner() == self then
+                self.liaDoorOwner = v
+                return v
+            end
+        end
+    end
 end
 
 if SERVER then
-    function entityMeta:SetCreator(client)
-        if not IsValid(self) then return end
-        self:setNetVar("creator", client)
-    end
-
     function entityMeta:sendNetVar(key, receiver)
         if not IsValid(self) then return end
         net.Start("liaNetVar")
@@ -201,10 +200,6 @@ if SERVER then
         return false
     end
 
-    function entityMeta:getDoorPartner()
-        return self.liaPartner
-    end
-
     function entityMeta:setNetVar(key, value, receiver)
         if not IsValid(self) then return end
         if checkBadType(key, value) then return end
@@ -220,24 +215,10 @@ if SERVER then
         if lia.net[self] and lia.net[self][key] ~= nil then return lia.net[self][key] end
         return default
     end
-
-    playerMeta.getLocalVar = entityMeta.getNetVar
 else
     function entityMeta:isDoor()
         if not IsValid(self) then return false end
         return self:GetClass():find("door")
-    end
-
-    function entityMeta:getDoorPartner()
-        if not IsValid(self) then return nil end
-        local owner = self:GetOwner() or self.liaDoorOwner
-        if IsValid(owner) and owner:isDoor() then return owner end
-        for _, v in ipairs(ents.FindByClass("prop_door_rotating")) do
-            if v:GetOwner() == self then
-                self.liaDoorOwner = v
-                return v
-            end
-        end
     end
 
     function entityMeta:getNetVar(key, default)
@@ -247,7 +228,7 @@ else
         return default
     end
 
-    function entityMeta:PlayFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, _, dsp)
+    function entityMeta:playFollowingSound(soundPath, volume, shouldFollow, maxDistance, startDelay, minDistance, pitch, _, dsp)
         local v = math.Clamp(tonumber(volume) or 1, 0, 1)
         local follow = shouldFollow ~= false
         local fmin, fmax = tonumber(minDistance) or 0, tonumber(maxDistance) or 1200
@@ -262,7 +243,7 @@ else
             local pos = anchor.WorldSpaceCenter and anchor:WorldSpaceCenter() or anchor:GetPos()
             local lp = LocalPlayer and LocalPlayer() or nil
             if not IsValid(lp) then return 0 end
-            return lp:GetPos():Distance(pos)
+            return lp:GetPos():distance(pos)
         end
 
         local function computeFadeFactor(dist)
@@ -320,7 +301,7 @@ else
                     local lp = LocalPlayer and LocalPlayer() or nil
                     if not IsValid(lp) then return end
                     local pos = anchor2.WorldSpaceCenter and anchor2:WorldSpaceCenter() or anchor2:GetPos()
-                    local dist = lp:GetPos():Distance(pos)
+                    local dist = lp:GetPos():distance(pos)
                     local fadeFactor = computeFadeFactor(dist)
                     if IsValid(ch) then
                         if manualAttenuation or fadeFactor < 1 then
@@ -384,6 +365,4 @@ else
             return
         end
     end
-
-    playerMeta.getLocalVar = entityMeta.getNetVar
 end

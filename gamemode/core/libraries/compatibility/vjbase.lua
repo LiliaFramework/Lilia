@@ -17,7 +17,7 @@ hook.Add("OnEntityCreated", "liaVJBase", function(ent)
         if not IsValid(ent) then return end
         if ent:GetClass() == "obj_vj_spawner_base" then
             SafeRemoveEntity(ent)
-        elseif ent:isLiliaPersistent() or ent.noTarget then
+        elseif ent.IsPersistent or ent.noTarget then
             ent:AddFlags(FL_NOTARGET)
         end
     end)

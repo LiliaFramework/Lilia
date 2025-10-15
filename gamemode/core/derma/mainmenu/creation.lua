@@ -74,7 +74,7 @@ function PANEL:onFinish()
         self:showError(err)
     end
 
-    lia.module.get("mainmenu"):createCharacter(self.context):next(function()
+    lia.module.get("mainmenu"):CreateCharacter(self.context):next(function()
         finish()
         hook.Run("ResetCharacterPanel")
     end, fail)

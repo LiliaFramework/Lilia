@@ -72,7 +72,7 @@ lia.playerinteract.addInteraction("recognizeOption", {
         if not canRecog(ply) then return false end
         local a, b = ply:getChar(), tgt:getChar()
         if not a or not b then return false end
-        return not hook.Run("isCharRecognized", a, b:getID())
+        return not hook.Run("IsCharRecognized", a, b:getID())
     end,
     onRun = function(ply, tgt)
         promptName(ply, function(nm)

@@ -30,7 +30,7 @@ function SWEP:DrawHUD()
     local client = LocalPlayer()
     local x, y = ScrW() / 2, ScrH() / 2
     local target = IsValid(client.AdminStickTarget) and client.AdminStickTarget or client:GetEyeTrace().Entity
-    local themeColors = lia.color.ReturnMainAdjustedColors()
+    local themeColors = lia.color.returnMainAdjustedColors()
     local themeAccent = lia.color.theme.theme
     local information = {}
     if IsValid(target) then
@@ -87,9 +87,34 @@ function SWEP:DrawHUD()
         for _, v in pairs(information) do
             local t_w, t_h = surface.GetTextSize(v)
             local centeredX = boxX + (boxWidth - t_w) / 2
-            lia.derma.drawText(v, centeredX, startPosY + buffer, themeColors.text, 0, 0, "LiliaFont.16")
+            lia.derma.drawText(v, centeredX, startPosY + buffer, Color(255, 255, 255), 0, 0, "LiliaFont.16")
             buffer = buffer + t_h + 4
         end
+    end
+
+    local instructions = {L("adminStickInstructions1", "Left Click: Open admin menu for target"), L("adminStickInstructions2", "Right Click: Freeze/unfreeze player"), L("adminStickInstructions3", "Reload + Shift: Open admin menu for yourself")}
+    local instMaxWidth, instTotalHeight = 0, 0
+    surface.SetFont("LiliaFont.14")
+    for _, v in pairs(instructions) do
+        local t_w, t_h = surface.GetTextSize(v)
+        instMaxWidth = math.max(instMaxWidth, t_w)
+        instTotalHeight = instTotalHeight + t_h + 2
+    end
+
+    local instBoxWidth = instMaxWidth + 40
+    local instBoxHeight = instTotalHeight + 20
+    local instBoxX = ScrW() - instBoxWidth - 20
+    local instBoxY = 20
+    lia.util.drawBlurAt(instBoxX, instBoxY, instBoxWidth, instBoxHeight, 2, 2, 0.8)
+    lia.derma.rect(instBoxX, instBoxY, instBoxWidth, instBoxHeight):Color(Color(0, 0, 0, 150)):Rad(6):Draw()
+    local accentColor = themeAccent or Color(255, 255, 255)
+    lia.derma.rect(instBoxX, instBoxY, instBoxWidth, instBoxHeight):Color(accentColor):Rad(6):Outline(1):Draw()
+    local textColor = Color(255, 255, 255)
+    local instStartY, instBuffer = instBoxY + 10, 0
+    for _, v in pairs(instructions) do
+        local _, t_h = surface.GetTextSize(v)
+        lia.derma.drawText(v, instBoxX + 20, instStartY + instBuffer, textColor, 0, 0, "LiliaFont.14", 255)
+        instBuffer = instBuffer + t_h + 2
     end
 end
 

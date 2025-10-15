@@ -1,4 +1,4 @@
-﻿function MODULE:exitStorage()
+﻿function MODULE:ExitStorage()
     net.Start("liaStorageExit")
     net.SendToServer()
 end
@@ -15,7 +15,7 @@ function MODULE:StorageOpen(storage, isCar)
     local client = LocalPlayer()
     if isCar then
         local localInv = client:getChar() and client:getChar():getInv()
-        if not localInv then return self:exitStorage() end
+        if not localInv then return self:ExitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storage:show()
         storageInvPanel:SetTitle(L("carTrunk"))
@@ -32,7 +32,7 @@ function MODULE:StorageOpen(storage, isCar)
         local function exitStorageOnRemove(panel)
             if firstToRemove then
                 firstToRemove = false
-                self:exitStorage()
+                self:ExitStorage()
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end
@@ -47,7 +47,7 @@ function MODULE:StorageOpen(storage, isCar)
         if not IsValid(storage) then return end
         local localInv = client:getChar() and client:getChar():getInv()
         local storageInv = storage:getInv()
-        if not localInv or not storageInv then return self:exitStorage() end
+        if not localInv or not storageInv then return self:ExitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storageInv:show()
         storageInvPanel:SetTitle(L(storage:getStorageInfo().name))
@@ -64,7 +64,7 @@ function MODULE:StorageOpen(storage, isCar)
         local function exitStorageOnRemove(panel)
             if firstToRemove then
                 firstToRemove = false
-                self:exitStorage()
+                self:ExitStorage()
                 local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
                 if IsValid(otherPanel) then otherPanel:Remove() end
             end
@@ -78,7 +78,7 @@ function MODULE:StorageOpen(storage, isCar)
     end
 end
 
-function MODULE:transferItem(itemID)
+function MODULE:TransferItem(itemID)
     if not lia.item.instances[itemID] then return end
     net.Start("liaStorageTransfer")
     net.WriteUInt(itemID, 32)

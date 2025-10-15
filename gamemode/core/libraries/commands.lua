@@ -119,7 +119,7 @@ function lia.command.add(command, data)
         lia.command.list[command:lower()] = data
     end
 
-    hook.Run("liaCommandAdded", command, data)
+    hook.Run("CommandAdded", command, data)
 end
 
 function lia.command.hasAccess(client, command, data)
@@ -220,7 +220,7 @@ if SERVER then
         local commandTbl = lia.command.list[command:lower()]
         if commandTbl then
             local results = {commandTbl.onRun(client, arguments or {})}
-            hook.Run("liaCommandRan", client, command, arguments or {}, results)
+            hook.Run("CommandRan", client, command, arguments or {}, results)
             local result = results[1]
             if isstring(result) then
                 if IsValid(client) then
@@ -742,7 +742,7 @@ if SERVER then
 
     concommand.Add("database_list", function(ply)
         if IsValid(ply) then return end
-        lia.db.GetCharacterTable(function(columns)
+        lia.db.getCharacterTable(function(columns)
             if #columns == 0 then
                 lia.error(L("dbColumnsNone"))
             else
@@ -2380,10 +2380,10 @@ lia.command.add("forcefallover", {
         elseif not target:Alive() then
             target:notifyErrorLocalized("cmdDead")
             return
-        elseif target:hasValidVehicle() then
+        elseif IsValid(target:GetVehicle()) then
             target:notifyWarningLocalized("cmdVehicle")
             return
-        elseif target:isNoClipping() then
+        elseif target:GetMoveType() == MOVETYPE_NOCLIP then
             target:notifyWarningLocalized("cmdNoclip")
             return
         end
@@ -2396,7 +2396,7 @@ lia.command.add("forcefallover", {
         end
 
         target:setNetVar("FallOverCooldown", true)
-        if not IsValid(target:getRagdoll()) then
+        if not IsValid(target:getNetVar("ragdoll")) then
             target:setRagdolled(true, time)
             timer.Simple(10, function() if IsValid(target) then target:setNetVar("FallOverCooldown", false) end end)
         end
@@ -2419,12 +2419,12 @@ lia.command.add("forcegetup", {
             return
         end
 
-        if not IsValid(target:getRagdoll()) then
+        if not IsValid(target:getNetVar("ragdoll")) then
             target:notifyErrorLocalized("noRagdoll")
             return
         end
 
-        local entity = target:getRagdoll()
+        local entity = target:getNetVar("ragdoll")
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
             target:setAction("gettingUp", 5, function()
@@ -2460,12 +2460,12 @@ lia.command.add("chargetup", {
     adminOnly = false,
     desc = "forceSelfGetUpDesc",
     onRun = function(client)
-        if not IsValid(client:getRagdoll()) then
+        if not IsValid(client:getNetVar("ragdoll")) then
             client:notifyErrorLocalized("noRagdoll")
             return
         end
 
-        local entity = client:getRagdoll()
+        local entity = client:getNetVar("ragdoll")
         if IsValid(entity) and entity.liaGrace and entity.liaGrace < CurTime() and entity:GetVelocity():Length2D() < 8 and not entity.liaWakingUp then
             entity.liaWakingUp = true
             client:setAction("gettingUp", 5, function()
@@ -2505,12 +2505,12 @@ lia.command.add("fallover", {
             return
         end
 
-        if client:hasValidVehicle() then
+        if IsValid(client:GetVehicle()) then
             client:notifyWarningLocalized("cmdVehicle")
             return
         end
 
-        if client:isNoClipping() then
+        if client:GetMoveType() == MOVETYPE_NOCLIP then
             client:notifyWarningLocalized("cmdNoclip")
             return
         end
@@ -2523,7 +2523,7 @@ lia.command.add("fallover", {
         end
 
         client:setNetVar("FallOverCooldown", true)
-        if not IsValid(client:getRagdoll()) then
+        if not IsValid(client:getNetVar("ragdoll")) then
             client:setRagdolled(true, t)
             timer.Simple(10, function() if IsValid(client) then client:setNetVar("FallOverCooldown", false) end end)
         end
@@ -2834,14 +2834,14 @@ lia.command.add("charunban", {
         local charFound
         local id = tonumber(queryArg)
         if id then
-            for _, v in pairs(lia.char.getAll()) do
+            for _, v in pairs(lia.char.loaded) do
                 if v:getID() == id then
                     charFound = v
                     break
                 end
             end
         else
-            for _, v in pairs(lia.char.getAll()) do
+            for _, v in pairs(lia.char.loaded) do
                 if lia.util.stringMatches(v:getName(), queryArg) then
                     charFound = v
                     break
@@ -3169,7 +3169,7 @@ lia.command.add("listbodygroups", {
         end
 
         if #bodygroups > 0 then
-            lia.util.SendTableUI(client, L("uiBodygroupsFor", target:Nick()), {
+            lia.util.sendTableUI(client, L("uiBodygroupsFor", target:Nick()), {
                 {
                     name = "groupID",
                     field = "group"
@@ -4137,14 +4137,59 @@ lia.command.add("exportprivileges", {
     end
 })
 
-lia.command.add("bots", {
+local function FindSafeBotSpawnPosition(client, maxDistance)
+    maxDistance = maxDistance or 200
+    for _ = 1, 20 do
+        local randomAngle = math.random(0, 360)
+        local randomDistance = math.random(50, maxDistance)
+        local randomHeight = math.random(-32, 32)
+        local basePos = client:GetPos()
+        local offset = Vector(math.cos(randomAngle) * randomDistance, math.sin(randomAngle) * randomDistance, randomHeight)
+        local spawnPos = basePos + offset
+        if util.IsInWorld(spawnPos) then
+            local trace = util.TraceLine({
+                start = spawnPos + Vector(0, 0, 64),
+                endpos = spawnPos - Vector(0, 0, 256),
+                filter = client,
+                mask = MASK_PLAYERSOLID
+            })
+
+            if trace.Hit and not trace.StartSolid then
+                local groundPos = trace.HitPos + Vector(0, 0, 16)
+                local hullTrace = util.TraceHull({
+                    start = groundPos,
+                    endpos = groundPos,
+                    mins = Vector(-16, -16, 0),
+                    maxs = Vector(16, 16, 64),
+                    filter = client,
+                    mask = MASK_PLAYERSOLID
+                })
+
+                if not hullTrace.StartSolid and not hullTrace.Hit then
+                    if navmesh and navmesh.IsLoaded() then
+                        local navArea = navmesh.GetNearestNavArea(groundPos, false, 100, false)
+                        if navArea then return navArea:GetCenter() end
+                    end
+                    return groundPos
+                end
+            end
+        end
+    end
+    return client:GetPos() + Vector(0, 0, 32)
+end
+
+lia.command.add("fillwithbots", {
     superAdminOnly = true,
     desc = "botsManageDesc",
+    alias = {"bots"},
     onRun = function(client)
         if not SERVER then return end
         if not timer.Exists("Bots_Add_Timer") then
+            local spawnPos = FindSafeBotSpawnPosition(client, 400)
             timer.Create("Bots_Add_Timer", 2, 0, function()
                 if #player.GetAll() < game.MaxPlayers() then
+                    lia.botCreator = client
+                    lia.botSpawnPos = spawnPos + Vector(math.random(-100, 100), math.random(-100, 100), 0)
                     game.ConsoleCommand("bot\n")
                 else
                     timer.Remove("Bots_Add_Timer")
@@ -4161,8 +4206,146 @@ lia.command.add("bot", {
     desc = "botSpawnDesc",
     onRun = function(client)
         if not SERVER then return end
+        local spawnPos = FindSafeBotSpawnPosition(client, 300)
         lia.botCreator = client
+        lia.botSpawnPos = spawnPos
         game.ConsoleCommand("bot\n")
+    end
+})
+
+lia.command.add("spawnbots", {
+    superAdminOnly = true,
+    desc = "spawnBotsDesc",
+    arguments = {
+        {
+            name = "amount",
+            type = "number"
+        }
+    },
+    onRun = function(client, arguments)
+        if not SERVER then return end
+        local requestedAmount = math.max(1, math.floor(arguments.amount or 1))
+        local currentPlayers = #player.GetAll()
+        local maxPlayers = game.MaxPlayers()
+        local availableSlots = maxPlayers - currentPlayers
+        if requestedAmount > availableSlots then
+            client:notifyErrorLocalized("spawnBotsLimit", requestedAmount, availableSlots)
+            return
+        end
+
+        if requestedAmount <= 0 then
+            client:notifyErrorLocalized("spawnBotsInvalidAmount")
+            return
+        end
+
+        local baseSpawnPos = FindSafeBotSpawnPosition(client, 400)
+        local botsSpawned = 0
+        client:notify("Spawning " .. requestedAmount .. " bots...")
+        for i = 1, requestedAmount do
+            timer.Simple((i - 1) * 0.5, function()
+                if not IsValid(client) then return end
+                local spawnPos = baseSpawnPos + Vector(math.random(-150, 150), math.random(-150, 150), math.random(-32, 32))
+                lia.botCreator = client
+                lia.botSpawnPos = spawnPos
+                game.ConsoleCommand("bot\n")
+                botsSpawned = botsSpawned + 1
+            end)
+        end
+
+        timer.Simple(requestedAmount * 0.5 + 2, function() if IsValid(client) then client:notify("Successfully spawned " .. botsSpawned .. " bots!") end end)
+    end
+})
+
+lia.command.add("spawnbotoffaction", {
+    superAdminOnly = true,
+    desc = "spawnBotOfFactionDesc",
+    arguments = {
+        {
+            name = "faction",
+            type = "string"
+        }
+    },
+    onRun = function(client, arguments)
+        if not SERVER then return end
+        local factionName = arguments.faction
+        if not factionName then
+            client:notifyErrorLocalized("invalidArg")
+            return
+        end
+
+        local faction = lia.faction.teams[factionName] or lia.util.findFaction(client, factionName)
+        if not faction then
+            client:notifyErrorLocalized("invalidFaction")
+            return
+        end
+
+        local spawnPos = FindSafeBotSpawnPosition(client, 300)
+        lia.botCreator = client
+        lia.botSpawnPos = spawnPos
+        lia.botFaction = faction
+        client:notify("Spawning bot of faction: " .. faction.name)
+        game.ConsoleCommand("bot\n")
+    end
+})
+
+lia.command.add("botspeak", {
+    superAdminOnly = true,
+    desc = "botsSpeakDesc",
+    arguments = {
+        {
+            name = "phrases",
+            type = "number",
+            optional = true,
+            default = 50
+        }
+    },
+    onRun = function(client, arguments)
+        if not SERVER then return end
+        local phrasesPerBot = math.Clamp(arguments.phrases or 50, 1, 200)
+        local cooldown = 1
+        local bots = {}
+        for _, ent in ipairs(ents.GetAll()) do
+            if ent:IsNPC() or ent:IsNextBot() or (ent:IsPlayer() and ent:IsBot()) then table.insert(bots, ent) end
+        end
+
+        if #bots == 0 then
+            client:notifyErrorLocalized("noBotsFound")
+            return
+        end
+
+        client:notify("Found " .. #bots .. " bots. Starting phrase sequence with " .. phrasesPerBot .. " phrases per bot...")
+        local randomPhrases = {"Hello there!", "What's going on?", "I need help!", "Over here!", "Watch out!", "Come on!", "Let's go!", "This way!", "Behind you!", "Enemy spotted!", "Clear!", "Move up!", "Hold position!", "Cover me!", "Reloading!", "Taking fire!", "Need backup!", "All clear!", "Contact!", "Engaging!", "Fall back!", "Push forward!", "Hold the line!", "Secure the area!", "Enemy down!", "Got one!", "Nice shot!", "Good work!", "Keep moving!", "Stay alert!"}
+        local phraseCount = {}
+        for _, bot in ipairs(bots) do
+            phraseCount[bot] = 0
+        end
+
+        local function makeBotSpeak(bot)
+            if not IsValid(bot) then return end
+            if phraseCount[bot] < phrasesPerBot then
+                local randomPhrase = randomPhrases[math.random(#randomPhrases)]
+                bot:Say(randomPhrase)
+                phraseCount[bot] = phraseCount[bot] + 1
+                if phraseCount[bot] < phrasesPerBot then
+                    timer.Simple(cooldown, function() if IsValid(bot) then makeBotSpeak(bot) end end)
+                else
+                    client:notify("Bot " .. (bot:GetName() or tostring(bot)) .. " finished all " .. phrasesPerBot .. " phrases")
+                end
+            end
+        end
+
+        for _, bot in ipairs(bots) do
+            makeBotSpeak(bot)
+        end
+
+        timer.Simple((phrasesPerBot * cooldown) + 5, function()
+            local totalPhrases = 0
+            for _, count in pairs(phraseCount) do
+                totalPhrases = totalPhrases + count
+            end
+
+            client:notify("All bots finished! Total phrases said: " .. totalPhrases)
+        end)
     end
 })
 
@@ -4266,7 +4449,7 @@ lia.command.add("checkattributes", {
             })
         end
 
-        lia.util.SendTableUI(client, "characterAttributes", {
+        lia.util.sendTableUI(client, "characterAttributes", {
             {
                 name = "attributeName",
                 field = "name"
@@ -4362,14 +4545,14 @@ lia.command.add("trunk", {
             return
         end
 
-        if client:GetPos():Distance(entity:GetPos()) > maxDistance then
+        if client:GetPos():distance(entity:GetPos()) > maxDistance then
             client:notifyErrorLocalized("tooFarToOpenTrunk")
             return
         end
 
         client.liaStorageEntity = entity
         client:setAction(L("openingTrunk"), openTime, function()
-            if client:GetPos():Distance(entity:GetPos()) > maxDistance then
+            if client:GetPos():distance(entity:GetPos()) > maxDistance then
                 client.liaStorageEntity = nil
                 return
             end
@@ -5153,7 +5336,7 @@ lia.command.add("doorinfo", {
                 }
             }
 
-            lia.util.SendTableUI(client, L("door") .. " " .. L("information"), {
+            lia.util.sendTableUI(client, L("door") .. " " .. L("information"), {
                 {
                     name = "doorInfoProperty",
                     field = "property"
@@ -5689,7 +5872,7 @@ lia.command.add("listdoorids", {
             })
         end
 
-        lia.util.SendTableUI(client, L("doorIDsOnMap", game.GetMap()), {
+        lia.util.sendTableUI(client, L("doorIDsOnMap", game.GetMap()), {
             {
                 name = L("doorIDColumn"),
                 field = "property"
@@ -5750,9 +5933,6 @@ lia.command.add("plytransfer", {
         local oldFactionName = lia.faction.indices[oldFaction] and lia.faction.indices[oldFaction].name or oldFaction
         targetChar.vars.faction = faction.uniqueID
         targetChar:setFaction(faction.index)
-        targetChar:kickClass()
-        local defaultClass = lia.faction.getDefaultClass(faction.index)
-        if defaultClass then targetChar:joinClass(defaultClass.index) end
         hook.Run("OnTransferred", targetPlayer)
         if faction.OnTransferred then faction:OnTransferred(targetPlayer, oldFaction) end
         client:notifySuccessLocalized("transferSuccess", targetPlayer:Name(), L(faction.name, client))
@@ -5800,7 +5980,13 @@ lia.command.add("plywhitelist", {
             return
         end
 
-        if target:setWhitelisted(faction.index, true) then
+        local data = lia.faction.indices[faction.index]
+        if data then
+            if data.uniqueID == "staff" then return end
+            local whitelists = target:getLiliaData("whitelists", {})
+            whitelists[SCHEMA.folder] = whitelists[SCHEMA.folder] or {}
+            whitelists[SCHEMA.folder][data.uniqueID] = true
+            target:setLiliaData("whitelists", whitelists)
             for _, v in player.Iterator() do
                 v:notifyInfoLocalized("whitelist", client:Name(), target:Name(), L(faction.name, v))
             end
@@ -5849,12 +6035,20 @@ lia.command.add("plyunwhitelist", {
             return
         end
 
-        if faction and not faction.isDefault and target:setWhitelisted(faction.index, false) then
-            for _, v in player.Iterator() do
-                v:notifyInfoLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
-            end
+        if faction and not faction.isDefault then
+            local data = lia.faction.indices[faction.index]
+            if data then
+                if data.uniqueID == "staff" then return end
+                local whitelists = target:getLiliaData("whitelists", {})
+                whitelists[SCHEMA.folder] = whitelists[SCHEMA.folder] or {}
+                whitelists[SCHEMA.folder][data.uniqueID] = nil
+                target:setLiliaData("whitelists", whitelists)
+                for _, v in player.Iterator() do
+                    v:notifyInfoLocalized("unwhitelist", client:Name(), target:Name(), L(faction.name, v))
+                end
 
-            lia.log.add(client, "plyUnwhitelist", target:Name(), faction.name)
+                lia.log.add(client, "plyUnwhitelist", target:Name(), faction.name)
+            end
         else
             client:notifyErrorLocalized("invalidFaction")
         end
@@ -5915,18 +6109,14 @@ lia.command.add("setclass", {
                 local options = {}
                 local targetName = prefix and prefix[1]
                 local target = targetName and lia.util.findPlayer(client, targetName)
-                if not lia.class.list or table.IsEmpty(lia.class.list) then return options end
-                if target and target:getChar() then
-                    local targetFaction = target:Team()
-                    local factionClasses = lia.faction.getClasses(targetFaction)
-                    if not factionClasses or #factionClasses == 0 then return options end
-                    for _, v in pairs(lia.class.list) do
-                        if v.faction == targetFaction then
-                            local canAccess = true
-                            if lia.class.hasWhitelist(v.index) then canAccess = target:hasClassWhitelist(v.index) end
-                            if canAccess and target:getChar():getClass() ~= v.uniqueID then options[L(v.name)] = v.uniqueID end
-                        end
-                    end
+                if not target or not target:getChar() then return options end
+                local targetFaction = target:Team()
+                local factionClasses = lia.faction.getClasses(targetFaction)
+                if not factionClasses or #factionClasses == 0 then return options end
+                for _, v in pairs(factionClasses) do
+                    local canAccess = true
+                    if lia.class.hasWhitelist(v.index) then canAccess = target:getChar():getClasswhitelists()[v.index] end
+                    if canAccess and target:getChar():getClass() ~= v.uniqueID then options[L(v.name)] = v.uniqueID end
                 end
                 return options
             end
@@ -6009,10 +6199,12 @@ lia.command.add("classwhitelist", {
         local classData = lia.class.list[classID]
         if target:Team() ~= classData.faction then
             client:notifyErrorLocalized("whitelistFactionMismatch")
-        elseif target:hasClassWhitelist(classID) then
+        elseif target:getChar():getClasswhitelists()[classID] then
             client:notifyInfoLocalized("alreadyWhitelisted")
         else
-            target:classWhitelist(classID)
+            local wl = target:getChar():getClasswhitelists()
+            wl[classID] = true
+            target:getChar():setClasswhitelists(wl)
             client:notifySuccessLocalized("whitelistedSuccess")
             target:notifyInfoLocalized("classAssigned", L(classData.name))
             lia.log.add(client, "classWhitelist", target:Name(), classData.name)
@@ -6054,10 +6246,12 @@ lia.command.add("classunwhitelist", {
         local classData = lia.class.list[classID]
         if target:Team() ~= classData.faction then
             client:notifyErrorLocalized("whitelistFactionMismatch")
-        elseif not target:hasClassWhitelist(classID) then
+        elseif not target:getChar():getClasswhitelists()[classID] then
             client:notifyInfoLocalized("notWhitelisted")
         else
-            target:classUnWhitelist(classID)
+            local wl = target:getChar():getClasswhitelists()
+            wl[classID] = nil
+            target:getChar():setClasswhitelists(wl)
             client:notifySuccessLocalized("unwhitelistedSuccess")
             target:notifyInfoLocalized("classUnassigned", L(classData.name))
             lia.log.add(client, "classUnwhitelist", target:Name(), classData.name)
@@ -6174,7 +6368,7 @@ lia.command.add("spawnremoveinradius", {
                     if not (data.map and data.map:lower() ~= curMap) then
                         local spawn = data.pos or data
                         if not isvector(spawn) then spawn = lia.data.decodeVector(spawn) end
-                        if isvector(spawn) and spawn:Distance(position) <= radius then
+                        if isvector(spawn) and spawn:distance(position) <= radius then
                             table.remove(list, i)
                             removedCount = removedCount + 1
                         end
@@ -6336,7 +6530,7 @@ lia.command.add("viewtickets", {
                 }
             end
 
-            lia.util.SendTableUI(client, L("ticketsForTitle", displayName), {
+            lia.util.sendTableUI(client, L("ticketsForTitle", displayName), {
                 {
                     name = "timestamp",
                     field = "timestamp"
@@ -6398,7 +6592,7 @@ lia.command.add("plyviewclaims", {
                     name = claim.name,
                     claims = claim.claims,
                     lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
-                    timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
+                    timeSinceLastClaim = lia.time.timeSince(claim.lastclaim),
                     claimedFor = table.IsEmpty(claim.claimedFor) and L("none") or table.concat((function()
                         local t = {}
                         for sid, name in pairs(claim.claimedFor) do
@@ -6409,7 +6603,7 @@ lia.command.add("plyviewclaims", {
                 }
             }
 
-            lia.util.SendTableUI(client, L("claimsForTitle", target:Nick()), {
+            lia.util.sendTableUI(client, L("claimsForTitle", target:Nick()), {
                 {
                     name = "steamID",
                     field = "steamID"
@@ -6458,7 +6652,7 @@ lia.command.add("viewallclaims", {
                     name = claim.name,
                     claims = claim.claims,
                     lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
-                    timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
+                    timeSinceLastClaim = lia.time.timeSince(claim.lastclaim),
                     claimedFor = table.IsEmpty(claim.claimedFor) and L("none") or table.concat((function()
                         local t = {}
                         for sid, name in pairs(claim.claimedFor) do
@@ -6469,7 +6663,7 @@ lia.command.add("viewallclaims", {
                 })
             end
 
-            lia.util.SendTableUI(client, "adminClaimsTitle", {
+            lia.util.sendTableUI(client, "adminClaimsTitle", {
                 {
                     name = "steamID",
                     field = "steamID"
@@ -6519,7 +6713,7 @@ lia.command.add("viewclaims", {
                     name = claim.name,
                     claims = claim.claims,
                     lastclaim = os.date("%Y-%m-%d %H:%M:%S", claim.lastclaim),
-                    timeSinceLastClaim = lia.time.TimeSince(claim.lastclaim),
+                    timeSinceLastClaim = lia.time.timeSince(claim.lastclaim),
                     claimedFor = table.IsEmpty(claim.claimedFor) and L("none") or table.concat((function()
                         local t = {}
                         for sid, name in pairs(claim.claimedFor) do
@@ -6530,7 +6724,7 @@ lia.command.add("viewclaims", {
                 })
             end
 
-            lia.util.SendTableUI(client, "adminClaimsTitle", {
+            lia.util.sendTableUI(client, "adminClaimsTitle", {
                 {
                     name = "steamID",
                     field = "steamID"
@@ -6644,7 +6838,7 @@ lia.command.add("viewwarns", {
                 })
             end
 
-            lia.util.SendTableUI(client, L("playerWarningsTitle", target:Nick()), {
+            lia.util.sendTableUI(client, L("playerWarningsTitle", target:Nick()), {
                 {
                     name = "id",
                     field = "index"
@@ -6712,7 +6906,7 @@ lia.command.add("viewwarnsissued", {
                 }
             end
 
-            lia.util.SendTableUI(client, L("warningsIssuedTitle", displayName), {
+            lia.util.sendTableUI(client, L("warningsIssuedTitle", displayName), {
                 {
                     name = "id",
                     field = "index"

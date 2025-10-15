@@ -10,7 +10,7 @@ local maxValues = {
 
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
-    if client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
+    if client:canOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
         if client:OnGround() and client:KeyDown(IN_DUCK) or client:Crouching() then
             crouchFactor = Lerp(ft * 5, crouchFactor, 1)
         else
@@ -37,7 +37,7 @@ end)
 
 hook.Add("CreateMove", "liaThirdPersonCreateMove", function(cmd)
     owner = LocalPlayer()
-    if owner:CanOverrideView() and owner:GetMoveType() ~= MOVETYPE_NOCLIP and LocalPlayer():GetViewEntity() == LocalPlayer() then
+    if owner:canOverrideView() and owner:GetMoveType() ~= MOVETYPE_NOCLIP and LocalPlayer():GetViewEntity() == LocalPlayer() then
         fm = cmd:GetForwardMove()
         sm = cmd:GetSideMove()
         diff = (owner:EyeAngles() - (owner.camAng or Angle(0, 0, 0)))[2] or 0
@@ -51,14 +51,14 @@ end)
 hook.Add("InputMouseApply", "liaThirdPersonInputMouseApply", function(_, x, y)
     owner = LocalPlayer()
     if not owner.camAng then owner.camAng = Angle(0, 0, 0) end
-    if owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
+    if owner:canOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
         owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
         owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
         return true
     end
 end)
 
-hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function() if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():CanOverrideView() then return true end end)
+hook.Add("ShouldDrawLocalPlayer", "liaThirdPersonShouldDrawLocalPlayer", function() if LocalPlayer():GetViewEntity() == LocalPlayer() and not IsValid(LocalPlayer():GetVehicle()) and LocalPlayer():canOverrideView() then return true end end)
 hook.Add("EntityEmitSound", "liaThirdPersonEntityEmitSound", function(data)
     local steps = {".stepleft", ".stepright"}
     local thirdPersonIsEnabled = lia.option.get("thirdPersonEnabled", false)

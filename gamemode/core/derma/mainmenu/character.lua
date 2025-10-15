@@ -8,7 +8,7 @@ function PANEL:Init()
     if IsValid(lia.gui.loading) then lia.gui.loading:Remove() end
     if IsValid(lia.gui.character) then lia.gui.character:Remove() end
     lia.gui.character = self
-    hook.Run("CharacterMenuOpened", self)
+    hook.Run("CharMenuOpened", self)
     if not render.oldDrawBeam then
         render.oldDrawBeam = render.DrawBeam
         render.DrawBeam = function(startPos, endPos, width, textureStart, textureEnd, color)
@@ -142,7 +142,7 @@ function PANEL:createStartButton()
 
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
-    local logoPath = lia.config.get("CenterLogo") or ""
+    local logoPath = lia.config.get("ServerLogo") or ""
     local discordURL = lia.config.get("DiscordURL", "")
     local workshopURL = lia.config.get("Workshop", "")
     local buttonsData = {}
@@ -215,7 +215,7 @@ function PANEL:createStartButton()
                     for _, charID in pairs(lia.characters) do
                         local character = lia.char.getCharacter(charID)
                         if character and character:getFaction() == FACTION_STAFF then
-                            lia.module.get("mainmenu"):chooseCharacter(character:getID()):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+                            lia.module.get("mainmenu"):ChooseCharacter(character:getID()):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
                             break
                         end
                     end
@@ -306,19 +306,9 @@ function PANEL:createStartButton()
             timer.Simple(0, function() if IsValid(img) then img:MoveToFront() end end)
         end
 
-        if logoPath:sub(1, 8) == "https://" then
-            http.Fetch(logoPath, function(body)
-                if not IsValid(self) then return end
-                file.Write("temp_logo.png", body)
-                self.logo = self:Add("DImage")
-                self.logo:SetImage("data/temp_logo.png")
-                setLogo(self.logo)
-            end)
-        else
-            self.logo = self:Add("DImage")
-            self.logo:SetImage(logoPath)
-            setLogo(self.logo)
-        end
+        self.logo = self:Add("DImage")
+        self.logo:SetImage(logoPath)
+        setLogo(self.logo)
     end
 end
 
@@ -434,7 +424,7 @@ function PANEL:createStaffCharacter()
         groups = {}
     }
 
-    lia.module.get("mainmenu"):createCharacter(staffData):next(function(charID) lia.module.get("mainmenu"):chooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or L("failedToCreateStaffCharacter")) end)
+    lia.module.get("mainmenu"):CreateCharacter(staffData):next(function(charID) lia.module.get("mainmenu"):ChooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end) end):catch(function(err) LocalPlayer():notifyErrorLocalized(err or L("failedToCreateStaffCharacter")) end)
 end
 
 function PANEL:updateSelectedCharacter()
@@ -493,7 +483,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
 
     table.insert(info, L("money") .. ": " .. lia.currency.get(character:getMoney()))
     hook.Run("LoadMainMenuInformation", info, character)
-    self.infoFrame = self:Add("SemiTransparentDFrame")
+    self.infoFrame = self:Add("liaSemiTransparentDFrame")
     self.infoFrame:SetSize(ScrW() * 0.25, ScrH() * 0.45)
     self.infoFrame:SetPos(ScrW() * 0.75 - 50, ScrH() * 0.25)
     self.infoFrame:SetTitle("")
@@ -562,7 +552,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         label:SetText(entry.attr.name)
         label:SetContentAlignment(5)
         label:SizeToContentsY()
-        local progressBar = scroll:Add("DProgressBar")
+        local progressBar = scroll:Add("liaDProgressBar")
         progressBar:Dock(TOP)
         progressBar:DockMargin(10, 0, 10, 10)
         progressBar:SetBarColor(entry.attr.color or lia.config.get("Color") or Color(255, 255, 255))
@@ -601,7 +591,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             return
         end
 
-        lia.module.get("mainmenu"):chooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
+        lia.module.get("mainmenu"):ChooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end
 
     self.deleteBtn = self:Add("liaSmallButton")
@@ -614,7 +604,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
             return
         end
 
-        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):deleteCharacter(character:getID()) end)
+        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):DeleteCharacter(character:getID()) end)
     end
 end
 
@@ -687,8 +677,8 @@ end
 
 function PANEL:UpdateLogoPosition()
     if not IsValid(self.logo) then return end
-    local pad = ScrH() * 0.01
-    local logoW, logoH = ScrW() * 0.13 * 0.95, ScrW() * 0.13 * 0.95
+    local pad = ScrH() * 0.03
+    local logoW, logoH = ScrW() * 0.20 * 0.95, ScrW() * 0.13 * 0.95
     local left, right, top = math.huge, -math.huge, math.huge
     for _, v in pairs(self.buttons) do
         if IsValid(v) then
@@ -805,7 +795,7 @@ end
 
 function PANEL:OnRemove()
     if lia.gui.character == self then lia.gui.character = nil end
-    hook.Run("CharacterMenuClosed")
+    hook.Run("CharMenuClosed")
     self:restoreExternalEntities()
     hook.Remove("PrePlayerDraw", "liaMainMenuPrePlayerDraw")
     hook.Remove("CalcView", "liaMainMenuCalcView")
@@ -824,17 +814,6 @@ function PANEL:Think()
         self.logo:SetZPos(9999)
         self.logo:MoveToFront()
         self:UpdateLogoPosition()
-    end
-
-    if self.isLoadMode and IsValid(self.modelEntity) then
-        local ang = self.modelEntity:GetAngles()
-        local rotate = 0
-        if input.IsKeyDown(KEY_A) then rotate = rotate + FrameTime() * 120 end
-        if input.IsKeyDown(KEY_D) then rotate = rotate - FrameTime() * 120 end
-        if rotate ~= 0 then
-            ang.y = ang.y + rotate
-            self.modelEntity:SetAngles(ang)
-        end
     end
 end
 

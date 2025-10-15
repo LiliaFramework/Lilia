@@ -6,7 +6,7 @@ if CLIENT then
         lia.color.stored[name:lower()] = color
     end
 
-    function lia.color.Adjust(color, rOffset, gOffset, bOffset, aOffset)
+    function lia.color.adjust(color, rOffset, gOffset, bOffset, aOffset)
         return Color(math.Clamp(color.r + rOffset, 0, 255), math.Clamp(color.g + gOffset, 0, 255), math.Clamp(color.b + bOffset, 0, 255), math.Clamp((color.a or 255) + (aOffset or 0), 0, 255))
     end
 
@@ -151,17 +151,17 @@ if CLIENT then
         return istable(v) and isnumber(v.r) and isnumber(v.g) and isnumber(v.b) and isnumber(v.a)
     end
 
-    function lia.color.ReturnMainAdjustedColors()
+    function lia.color.returnMainAdjustedColors()
         local base = lia.color.getMainColor()
-        local background = lia.color.Adjust(base, -20, -10, -50, 0)
+        local background = lia.color.adjust(base, -20, -10, -50, 0)
         local brightness = background.r * 0.299 + background.g * 0.587 + background.b * 0.114
         local textColor = brightness > 128 and Color(30, 30, 30, 255) or Color(245, 245, 220, 255)
         return {
             background = background,
-            sidebar = lia.color.Adjust(base, -30, -15, -60, -55),
+            sidebar = lia.color.adjust(base, -30, -15, -60, -55),
             accent = base,
             text = textColor,
-            hover = lia.color.Adjust(base, -40, -25, -70, -35),
+            hover = lia.color.adjust(base, -40, -25, -70, -35),
             border = Color(255, 255, 255, 255),
             highlight = Color(255, 255, 255, 30)
         }
@@ -251,7 +251,9 @@ lia.color.registerTheme("Teal", {
     gray = Color(150, 180, 180, 200),
     text = Color(210, 235, 235),
     text_entry = Color(210, 235, 235),
-    accent = Color(60, 140, 140)
+    accent = Color(60, 140, 140),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Dark", {
@@ -276,7 +278,9 @@ lia.color.registerTheme("Dark", {
     gray = Color(150, 150, 150, 220),
     text = Color(255, 255, 255),
     text_entry = Color(255, 255, 255),
-    accent = Color(106, 108, 197)
+    accent = Color(106, 108, 197),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Dark Mono", {
@@ -301,7 +305,9 @@ lia.color.registerTheme("Dark Mono", {
     gray = Color(150, 150, 150, 220),
     text = Color(255, 255, 255),
     text_entry = Color(255, 255, 255),
-    accent = Color(121, 121, 121)
+    accent = Color(121, 121, 121),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Blue", {
@@ -326,7 +332,9 @@ lia.color.registerTheme("Blue", {
     gray = Color(150, 170, 190, 200),
     text = Color(210, 220, 235),
     text_entry = Color(210, 220, 235),
-    accent = Color(80, 160, 220)
+    accent = Color(80, 160, 220),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Red", {
@@ -351,7 +359,9 @@ lia.color.registerTheme("Red", {
     gray = Color(180, 150, 150, 200),
     text = Color(235, 210, 210),
     text_entry = Color(235, 210, 210),
-    accent = Color(180, 80, 80)
+    accent = Color(180, 80, 80),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Light", {
@@ -376,7 +386,9 @@ lia.color.registerTheme("Light", {
     gray = Color(130, 130, 130, 220),
     text = Color(20, 20, 20),
     text_entry = Color(20, 20, 20),
-    accent = Color(106, 108, 197)
+    accent = Color(106, 108, 197),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Green", {
@@ -401,7 +413,9 @@ lia.color.registerTheme("Green", {
     gray = Color(150, 180, 150, 200),
     text = Color(210, 235, 210),
     text_entry = Color(210, 235, 210),
-    accent = Color(80, 180, 120)
+    accent = Color(80, 180, 120),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Orange", {
@@ -426,7 +440,9 @@ lia.color.registerTheme("Orange", {
     gray = Color(180, 161, 150, 200),
     text = Color(45, 20, 10),
     text_entry = Color(45, 20, 10),
-    accent = Color(245, 130, 50)
+    accent = Color(245, 130, 50),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Purple", {
@@ -451,7 +467,9 @@ lia.color.registerTheme("Purple", {
     gray = Color(140, 128, 148, 220),
     text = Color(245, 240, 255),
     text_entry = Color(245, 240, 255),
-    accent = Color(138, 114, 219)
+    accent = Color(138, 114, 219),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Coffee", {
@@ -476,7 +494,9 @@ lia.color.registerTheme("Coffee", {
     gray = Color(180, 150, 130, 200),
     text = Color(235, 225, 210),
     text_entry = Color(235, 225, 210),
-    accent = Color(150, 110, 75)
+    accent = Color(150, 110, 75),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Ice", {
@@ -501,7 +521,9 @@ lia.color.registerTheme("Ice", {
     gray = Color(92, 112, 133, 200),
     text = Color(20, 35, 50),
     text_entry = Color(20, 35, 50),
-    accent = Color(100, 170, 230)
+    accent = Color(100, 170, 230),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Wine", {
@@ -526,7 +548,9 @@ lia.color.registerTheme("Wine", {
     gray = Color(170, 150, 160, 200),
     text = Color(246, 242, 246),
     text_entry = Color(246, 242, 246),
-    accent = Color(148, 61, 91)
+    accent = Color(148, 61, 91),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Violet", {
@@ -551,7 +575,9 @@ lia.color.registerTheme("Violet", {
     gray = Color(147, 147, 184, 200),
     text = Color(238, 244, 255),
     text_entry = Color(238, 244, 255),
-    accent = Color(159, 180, 255)
+    accent = Color(159, 180, 255),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Moss", {
@@ -576,7 +602,9 @@ lia.color.registerTheme("Moss", {
     gray = Color(148, 165, 140, 220),
     text = Color(232, 244, 235),
     text_entry = Color(232, 244, 235),
-    accent = Color(110, 160, 90)
+    accent = Color(110, 160, 90),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.color.registerTheme("Coral", {
@@ -601,7 +629,9 @@ lia.color.registerTheme("Coral", {
     gray = Color(167, 136, 136, 220),
     text = Color(255, 243, 242),
     text_entry = Color(255, 243, 242),
-    accent = Color(255, 120, 90)
+    accent = Color(255, 120, 90),
+    chat = Color(255, 239, 150),
+    chatListen = Color(168, 240, 170)
 })
 
 lia.config.add("Theme", "theme", "Teal", function(_, newValue)

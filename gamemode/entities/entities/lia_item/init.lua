@@ -31,7 +31,7 @@ function ENT:setItem(itemID)
     local itemTable = lia.item.instances[itemID]
     if not itemTable then return SafeRemoveEntity(self) end
     itemTable:sync()
-    local model = hook.Run("getItemDropModel", itemTable, self) or itemTable:getModel() or itemTable.model
+    local model = hook.Run("GetItemDropModel", itemTable, self) or itemTable:getModel() or itemTable.model
     if not model or model == "" then model = "models/props_junk/cardboard_box002b.mdl" end
     self:SetModel(model)
     self:SetSkin(itemTable.skin or 0)

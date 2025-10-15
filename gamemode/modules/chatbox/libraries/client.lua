@@ -1,25 +1,24 @@
 ﻿local MODULE = MODULE
 chat.liaAddText = chat.liaAddText or chat.AddText
-LIA_CVAR_CHATFILTER = CreateClientConVar("lia_chatfilter", "", true, false)
-function MODULE:createChat()
+function MODULE:CreateChat()
     if IsValid(self.panel) then return end
     self.panel = vgui.Create("liaChatBox")
     hook.Run("ChatboxPanelCreated", self.panel)
 end
 
 function MODULE:InitPostEntity()
-    self:createChat()
+    self:CreateChat()
 end
 
 local function RegenChat()
     if IsValid(MODULE.panel) then MODULE.panel:Remove() end
-    MODULE:createChat()
+    MODULE:CreateChat()
 end
 
 function MODULE:PlayerBindPress(_, bind, pressed)
     bind = bind:lower()
     if bind:find("messagemode") and pressed then
-        if not IsValid(self.panel) then self:createChat() end
+        if not IsValid(self.panel) then self:CreateChat() end
         if not self.panel.active then self.panel:setActive(true) end
         return true
     end

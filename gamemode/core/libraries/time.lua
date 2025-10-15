@@ -1,5 +1,5 @@
 ﻿lia.time = lia.time or {}
-function lia.time.TimeSince(strTime)
+function lia.time.timeSince(strTime)
     local timestamp
     if isnumber(strTime) then
         timestamp = strTime
@@ -42,7 +42,7 @@ function lia.time.toNumber(str)
     }
 end
 
-function lia.time.GetDate()
+function lia.time.getDate()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
     local weekdayKeys = {"weekdaySunday", "weekdayMonday", "weekdayTuesday", "weekdayWednesday", "weekdayThursday", "weekdayFriday", "weekdaySaturday"}
@@ -66,7 +66,7 @@ function lia.time.formatDHM(seconds)
     return L("daysHoursMinutes", days, hours, minutes)
 end
 
-function lia.time.GetHour()
+function lia.time.getHour()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
     if american then

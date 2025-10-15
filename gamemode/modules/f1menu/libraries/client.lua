@@ -18,6 +18,11 @@ function MODULE:LoadCharInformation()
         local client = LocalPlayer()
         return client and lia.currency.get(client:getChar():getMoney()) or lia.currency.get(0)
     end)
+
+    hook.Run("AddTextField", L("generalInfo"), "playTime", L("playTime"), function()
+        local client = LocalPlayer()
+        return client and lia.time.formatDHM(client:getPlayTime()) or L("loading")
+    end)
 end
 
 function MODULE:AddSection(sectionName, color, priority, location)
@@ -423,7 +428,7 @@ function MODULE:CreateMenuButtons(tabs)
                         end
                     end
 
-                    hook.Add("liaOnlineStaffDataReceived", "liaF1MenuStaffData", onStaffDataReceived)
+                    hook.Add("OnlineStaffDataReceived", "liaF1MenuStaffData", onStaffDataReceived)
                     net.Start("liaRequestOnlineStaffData")
                     net.SendToServer()
                     panel.refreshTimer = timer.Create("liaAdminStaffTableRefresh", 30, 0, function()
@@ -436,7 +441,7 @@ function MODULE:CreateMenuButtons(tabs)
                     end)
 
                     panel.OnRemove = function()
-                        hook.Remove("liaOnlineStaffDataReceived", "liaF1MenuStaffData")
+                        hook.Remove("OnlineStaffDataReceived", "liaF1MenuStaffData")
                         if timer.Exists("liaAdminStaffTableRefresh") then timer.Remove("liaAdminStaffTableRefresh") end
                         if panel.resizeTimer and timer.Exists(panel.resizeTimer) then timer.Remove(panel.resizeTimer) end
                         panel.staffTable = nil

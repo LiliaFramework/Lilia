@@ -28,7 +28,7 @@ function lia.lang.loadFromDir(directory)
     end
 end
 
-function lia.lang.AddTable(name, tbl)
+function lia.lang.addTable(name, tbl)
     local lowerName = tostring(name):lower()
     lia.lang.stored[lowerName] = lia.lang.stored[lowerName] or {}
     for k, v in pairs(tbl) do

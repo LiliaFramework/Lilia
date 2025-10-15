@@ -9,9 +9,15 @@ function PANEL:Init()
     self.font = "LiliaFont.18"
     self.text = ""
     self:SetTall(60)
+    self.valueLabel = vgui.Create("DLabel", self)
+    self.valueLabel:Dock(TOP)
+    self.valueLabel:DockMargin(10, 5, 10, 0)
+    self.valueLabel:SetTall(20)
+    self.valueLabel:SetContentAlignment(5)
+    self.valueLabel:SetFont("LiliaFont.20")
     self.track = vgui.Create("DPanel", self)
     self.track:Dock(TOP)
-    self.track:DockMargin(10, 20, 10, 10)
+    self.track:DockMargin(10, 10, 10, 10)
     self.track:SetTall(20)
     self.slider = vgui.Create("DButton", self.track)
     self.slider:Dock(TOP)
@@ -70,13 +76,6 @@ function PANEL:Init()
             end
         end
     end
-
-    self.valueLabel = vgui.Create("DLabel", self)
-    self.valueLabel:Dock(TOP)
-    self.valueLabel:DockMargin(10, 5, 10, 0)
-    self.valueLabel:SetTall(20)
-    self.valueLabel:SetContentAlignment(5)
-    self.valueLabel:SetFont("LiliaFont.16")
 end
 
 function PANEL:PerformLayout()
@@ -85,11 +84,10 @@ function PANEL:PerformLayout()
     self.slider:SetTall(20)
 end
 
-function PANEL:Paint(w, h)
-    lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 150)):Shape(lia.derma.SHAPE_IOS):Draw()
+function PANEL:Paint(_, _)
     if IsValid(self.valueLabel) then
         local displayValue = self.decimals == 0 and math.Round(self.value) or math.Round(self.value, self.decimals)
-        self.valueLabel:SetText(self.text .. displayValue)
+        self.valueLabel:SetText(self.text .. " - " .. displayValue)
         self.valueLabel:SetTextColor(lia.color.theme.text)
     end
 end

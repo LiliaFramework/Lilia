@@ -6,7 +6,7 @@
     return panel
 end
 
-function MODULE:getItemStackKey(item)
+function MODULE:GetItemStackKey(item)
     local elements = {}
     for key, value in SortedPairs(item.data) do
         elements[#elements + 1] = key
@@ -15,11 +15,11 @@ function MODULE:getItemStackKey(item)
     return item.uniqueID .. pon.encode(elements)
 end
 
-function MODULE:getItemStacks(inventory)
+function MODULE:GetItemStacks(inventory)
     local stacks = {}
     local stack, key
     for _, item in SortedPairs(inventory:getItems()) do
-        key = self:getItemStackKey(item)
+        key = self:GetItemStackKey(item)
         stack = stacks[key] or {}
         stack[#stack + 1] = item
         stacks[key] = stack

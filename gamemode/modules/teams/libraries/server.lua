@@ -26,7 +26,7 @@ function MODULE:OnTransferred(client)
 end
 
 function MODULE:CanPlayerJoinClass(client, class)
-    if lia.class.hasWhitelist(class) and not client:hasClassWhitelist(class) then return false end
+    if lia.class.hasWhitelist(class) and not client:getChar():getClasswhitelists()[class] then return false end
     return true
 end
 
@@ -138,7 +138,7 @@ end
 
 function MODULE:CanCharBeTransfered(character, faction)
     if faction.oneCharOnly then
-        for _, otherCharacter in next, lia.char.getAll() do
+        for _, otherCharacter in next, lia.char.loaded do
             if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, L("charAlreadyInFaction") end
         end
     end

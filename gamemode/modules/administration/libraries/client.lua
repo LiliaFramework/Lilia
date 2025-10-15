@@ -1,4 +1,5 @@
-﻿function GetIdentifier(ent)
+﻿local MODULE = MODULE
+local function GetIdentifier(ent)
     if not IsValid(ent) or not ent:IsPlayer() then return "" end
     if ent:IsBot() then return ent:Name() end
     return ent:SteamID()
@@ -458,7 +459,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
             local combo = vgui.Create("liaComboBox", popup)
             combo:Dock(TOP)
             combo:PostInit()
-            for _, character in pairs(lia.char.getAll()) do
+            for _, character in pairs(lia.char.loaded) do
                 local ply = character:getPlayer()
                 if IsValid(ply) then
                     local steamID = ply:SteamID() or ""
@@ -566,7 +567,6 @@ spawnmenu.AddCreationTab(L("inventoryItems"), function()
     end
 end, "icon16/briefcase.png")
 
-local MODULE = MODULE
 AdminStickIsOpen = false
 local playerInfoLabel = L("player") .. " " .. L("information")
 MODULE.adminStickCategories = MODULE.adminStickCategories or {
@@ -681,7 +681,7 @@ MODULE.adminStickCategories = MODULE.adminStickCategories or {
 }
 
 MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {"playerInformation", "moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
-function MODULE:addAdminStickCategory(key, data, index)
+function MODULE:AddAdminStickCategory(key, data, index)
     self.adminStickCategories = self.adminStickCategories or {}
     self.adminStickCategories[key] = data
     self.adminStickCategoryOrder = self.adminStickCategoryOrder or {}
@@ -692,7 +692,7 @@ function MODULE:addAdminStickCategory(key, data, index)
     end
 end
 
-function MODULE:addAdminStickSubCategory(catKey, subKey, data)
+function MODULE:AddAdminStickSubCategory(catKey, subKey, data)
     self.adminStickCategories = self.adminStickCategories or {}
     local category = self.adminStickCategories[catKey]
     if not category then return end
@@ -1244,7 +1244,7 @@ local function IncludeCharacterManagement(tgt, menu, stores)
                 if classes and #classes > 0 then
                     local cw, cu = {}, {}
                     for _, c in ipairs(classes) do
-                        if not tgt:hasClassWhitelist(c.index) then
+                        if not tgt:getChar():getClasswhitelists()[c.index] then
                             table.insert(cw, {
                                 name = c.name,
                                 cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
@@ -2387,7 +2387,7 @@ lia.net.readBigTable("liaAllPlayers", function(players)
                 local last = tonumber(v.lastOnline)
                 if last and last > 0 then
                     local lastDiff = os.time() - last
-                    local timeSince = lia.time.TimeSince(last)
+                    local timeSince = lia.time.timeSince(last)
                     local timeStripped = timeSince:match("^(.-)%sago$") or timeSince
                     lastOnlineText = L("agoFormat", timeStripped, lia.time.formatDHM(lastDiff))
                 else
@@ -2420,7 +2420,6 @@ lia.net.readBigTable("liaAllPlayers", function(players)
     function list:OnRowRightClick(_, line)
         if not IsValid(line) or not line.steamID then return end
         local menu = lia.derma.dermaMenu()
-        if lia.command.hasAccess(LocalPlayer(), "charlist") then menu:AddOption(L("viewCharacterList"), function() LocalPlayer():ConCommand("say /charlist " .. line.steamID) end):SetIcon("icon16/page_copy.png") end
         menu:AddOption(L("openSteamProfile"), function() gui.OpenURL("https://steamcommunity.com/profiles/" .. util.SteamIDTo64(line.steamID)) end):SetIcon("icon16/world.png")
         if lia.command.hasAccess(LocalPlayer(), "viewwarns") then menu:AddOption(L("viewWarnings"), function() LocalPlayer():ConCommand("say /viewwarns " .. line.steamID) end):SetIcon("icon16/error.png") end
         if lia.command.hasAccess(LocalPlayer(), "viewtickets") then menu:AddOption(L("viewTicketRequests"), function() LocalPlayer():ConCommand("say /viewtickets " .. line.steamID) end):SetIcon("icon16/help.png") end
@@ -2442,18 +2441,18 @@ end)
 
 net.Receive("liaOnlineStaffData", function()
     local staffData = net.ReadTable() or {}
-    hook.Run("liaOnlineStaffDataReceived", staffData)
+    hook.Run("OnlineStaffDataReceived", staffData)
 end)
 
 function MODULE:PrePlayerDraw(client)
     if not IsValid(client) then return end
-    if client:isNoClipping() then return true end
+    if client:GetMoveType() == MOVETYPE_NOCLIP then return true end
 end
 
 function MODULE:HUDPaint()
     local client = LocalPlayer()
     if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end
-    if not client:isNoClipping() then return end
+    if not (client:GetMoveType() == MOVETYPE_NOCLIP) then return end
     if not (client:hasPrivilege("noClipESPOffsetStaff") or client:isStaffOnDuty()) then return end
     if not lia.option.get("espEnabled", false) then return end
     for _, ent in ents.Iterator() do
@@ -2607,7 +2606,7 @@ net.Receive("liaDisplayCharList", function()
         })
     end
 
-    local _, listView = lia.util.CreateTableUI(L("charlistTitle", targetSteamIDsafe), columns, sendData)
+    local _, listView = lia.util.createTableUI(L("charlistTitle", targetSteamIDsafe), columns, sendData)
     if IsValid(listView) then
         for _, line in ipairs(listView:GetLines()) do
             local dataIndex = line:GetID()

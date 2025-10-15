@@ -93,4 +93,4 @@ function PANEL:LayoutEntity(ent)
     ent:SetAngles(DEFAULT_ANGLE)
 end
 
-vgui.Register("FacingModelPanel", PANEL, "DModelPanel")
+vgui.Register("liaFacingModelPanel", PANEL, "DModelPanel")

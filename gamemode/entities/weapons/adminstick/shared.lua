@@ -26,7 +26,7 @@ function SWEP:DrawWorldModel()
         return
     end
 
-    if owner:isNoClipping() then return end
+    if owner:GetMoveType() == MOVETYPE_NOCLIP then return end
     self:DrawModel()
 end
 

@@ -34,7 +34,7 @@ function MODULE:LoadData()
     lia.db.query(query):next(function(res)
         local rows = res.results or {}
         local loadedCount = 0
-        local presetData = lia.doors.GetPreset(mapName)
+        local presetData = lia.doors.getPreset(mapName)
         local doorsWithData = {}
         for _, row in ipairs(rows) do
             local id = tonumber(row.id)
@@ -356,9 +356,9 @@ function MODULE:SaveData()
     end
 end
 
-function lia.doors.AddPreset(mapName, presetData)
+function lia.doors.addPreset(mapName, presetData)
     if not mapName or not presetData then
-        error("lia.doors.AddPreset: Missing required parameters (mapName, presetData)")
+        error("lia.doors.addPreset: Missing required parameters (mapName, presetData)")
         return
     end
 
@@ -366,11 +366,11 @@ function lia.doors.AddPreset(mapName, presetData)
     lia.information(L("addedDoorPresetForMap") .. ": " .. mapName)
 end
 
-function lia.doors.GetPreset(mapName)
+function lia.doors.getPreset(mapName)
     return lia.doors.presets[mapName]
 end
 
-function lia.doors.VerifyDatabaseSchema()
+function lia.doors.verifyDatabaseSchema()
     if lia.db.module == "sqlite" then
         lia.db.query("PRAGMA table_info(lia_doors)"):next(function(res)
             if not res or not res.results then
@@ -445,7 +445,7 @@ function lia.doors.VerifyDatabaseSchema()
     end
 end
 
-function lia.doors.CleanupCorruptedData()
+function lia.doors.cleanupCorruptedData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
     local condition = buildCondition(gamemode, map)
@@ -501,8 +501,8 @@ function MODULE:InitPostEntity()
         end
     end
 
-    timer.Simple(1, function() lia.doors.CleanupCorruptedData() end)
-    timer.Simple(3, function() lia.doors.VerifyDatabaseSchema() end)
+    timer.Simple(1, function() lia.doors.cleanupCorruptedData() end)
+    timer.Simple(3, function() lia.doors.verifyDatabaseSchema() end)
 end
 
 function MODULE:PlayerUse(client, door)
@@ -601,7 +601,7 @@ function MODULE:KeyLock(client, door, time)
     end
 
     if hook.Run("CanPlayerLock", client, door) == false then return end
-    local distance = client:GetPos():Distance(door:GetPos())
+    local distance = client:GetPos():distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and not door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
         client:setAction(L("locking"), time, function() end)
@@ -618,7 +618,7 @@ function MODULE:KeyUnlock(client, door, time)
     end
 
     if hook.Run("CanPlayerUnlock", client, door) == false then return end
-    local distance = client:GetPos():Distance(door:GetPos())
+    local distance = client:GetPos():distance(door:GetPos())
     local isProperEntity = door:isDoor() or door:IsVehicle() or door:isSimfphysCar()
     if isProperEntity and door:isLocked() and distance <= 256 and (door:checkDoorAccess(client) or door:GetCreator() == client or client:isStaffOnDuty()) then
         client:setAction(L("unlocking"), time, function() end)

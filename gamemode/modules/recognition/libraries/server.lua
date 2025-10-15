@@ -18,5 +18,5 @@ function MODULE:ForceRecognizeRange(ply, range, fakeName)
     net.Start("liaRgnDone")
     net.Send(ply)
     hook.Run("OnCharRecognized", ply)
-    hook.Run("CharacterForceRecognized", ply, range)
+    hook.Run("CharForceRecognized", ply, range)
 end

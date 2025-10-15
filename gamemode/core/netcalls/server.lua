@@ -7,6 +7,12 @@
     end
 end)
 
+net.Receive("liaStorageSyncRequest", function(_, client)
+    net.Start("liaStorageSync")
+    net.WriteTable(lia.inventory.storage)
+    net.Send(client)
+end)
+
 net.Receive("liaStringRequestCancel", function(_, client)
     local id = net.ReadUInt(32)
     if client.liaStrReqs and client.liaStrReqs[id] then client.liaStrReqs[id] = nil end
@@ -199,7 +205,7 @@ net.Receive("liaInvAct", function(_, client)
     local item
     if isentity(rawItem) then
         if not IsValid(rawItem) then return end
-        if rawItem:GetPos():Distance(client:GetPos()) > 96 then return end
+        if rawItem:GetPos():distance(client:GetPos()) > 96 then return end
         if not rawItem.liaItemID then return end
         entity = rawItem
         item = lia.item.instances[rawItem.liaItemID]
@@ -447,5 +453,12 @@ net.Receive("liaNetMessage", function(_, client)
         if not success then lia.error(L("netMessageCallbackError", name, tostring(err))) end
     else
         lia.error(L("unregisteredNetMessage", name))
+    end
+end)
+
+net.Receive("liaWaypointReached", function(_, client)
+    if client.waypointOnReach and isfunction(client.waypointOnReach) then
+        client.waypointOnReach(client)
+        client.waypointOnReach = nil
     end
 end)

@@ -1,5 +1,5 @@
 ﻿local toolGunMeta = lia.meta.tool or {}
-function toolGunMeta:Create()
+function toolGunMeta:create()
     local object = {}
     setmetatable(object, self)
     self.__index = self
@@ -16,8 +16,8 @@ function toolGunMeta:Create()
     return object
 end
 
-function toolGunMeta:CreateConVars()
-    local mode = self:GetMode()
+function toolGunMeta:createConVars()
+    local mode = self:getMode()
     if CLIENT then
         for cvar, default in pairs(self.ClientConVar) do
             CreateClientConVar(mode .. "_" .. cvar, default, true, true)
@@ -28,22 +28,22 @@ function toolGunMeta:CreateConVars()
     end
 end
 
-function toolGunMeta:UpdateData()
+function toolGunMeta:updateData()
 end
 
-function toolGunMeta:FreezeMovement()
+function toolGunMeta:freezeMovement()
 end
 
-function toolGunMeta:DrawHUD()
+function toolGunMeta:drawHUD()
 end
 
-function toolGunMeta:GetServerInfo(property)
-    local mode = self:GetMode()
+function toolGunMeta:getServerInfo(property)
+    local mode = self:getMode()
     return ConVar(mode .. "_" .. property)
 end
 
-function toolGunMeta:BuildConVarList()
-    local mode = self:GetMode()
+function toolGunMeta:buildConVarList()
+    local mode = self:getMode()
     local convars = {}
     for k, v in pairs(self.ClientConVar) do
         convars[mode .. "_" .. k] = v
@@ -51,73 +51,73 @@ function toolGunMeta:BuildConVarList()
     return convars
 end
 
-function toolGunMeta:GetClientInfo(property)
-    return self:GetOwner():GetInfo(self:GetMode() .. "_" .. property)
+function toolGunMeta:getClientInfo(property)
+    return self:getOwner():GetInfo(self:getMode() .. "_" .. property)
 end
 
-function toolGunMeta:GetClientNumber(property, default)
-    return self:GetOwner():GetInfoNum(self:GetMode() .. "_" .. property, tonumber(default) or 0)
+function toolGunMeta:getClientNumber(property, default)
+    return self:getOwner():GetInfoNum(self:getMode() .. "_" .. property, tonumber(default) or 0)
 end
 
-function toolGunMeta:Allowed()
+function toolGunMeta:allowed()
     if CLIENT then return true end
     return self.AllowedCVar:GetBool()
 end
 
-function toolGunMeta:Init()
+function toolGunMeta:init()
 end
 
-function toolGunMeta:GetMode()
+function toolGunMeta:getMode()
     return self.Mode
 end
 
-function toolGunMeta:GetSWEP()
+function toolGunMeta:getSWEP()
     return self.SWEP
 end
 
 function toolGunMeta:GetOwner()
-    return self:GetSWEP().Owner or self:GetOwner()
+    return self:getSWEP().Owner or self.Owner
 end
 
-function toolGunMeta:GetWeapon()
-    return self:GetSWEP().Weapon or self.Weapon
+function toolGunMeta:getWeapon()
+    return self:getSWEP().Weapon or self.Weapon
 end
 
-function toolGunMeta:LeftClick()
+function toolGunMeta:leftClick()
     return false
 end
 
-function toolGunMeta:RightClick()
+function toolGunMeta:rightClick()
     return false
 end
 
-function toolGunMeta:Reload()
-    self:ClearObjects()
+function toolGunMeta:reload()
+    self:clearObjects()
 end
 
-function toolGunMeta:Deploy()
-    self:ReleaseGhostEntity()
+function toolGunMeta:deploy()
+    self:releaseGhostEntity()
 end
 
-function toolGunMeta:Holster()
-    self:ReleaseGhostEntity()
+function toolGunMeta:holster()
+    self:releaseGhostEntity()
 end
 
-function toolGunMeta:Think()
-    self:ReleaseGhostEntity()
+function toolGunMeta:think()
+    self:releaseGhostEntity()
 end
 
-function toolGunMeta:CheckObjects()
+function toolGunMeta:checkObjects()
     for _, v in pairs(self.Objects) do
-        if not v.Ent:IsWorld() and not IsValid(v.Ent) then self:ClearObjects() end
+        if not v.Ent:IsWorld() and not IsValid(v.Ent) then self:clearObjects() end
     end
 end
 
-function toolGunMeta:ClearObjects()
+function toolGunMeta:clearObjects()
     self.Objects = {}
 end
 
-function toolGunMeta:ReleaseGhostEntity()
+function toolGunMeta:releaseGhostEntity()
     if IsValid(self.GhostEntity) then
         SafeRemoveEntity(self.GhostEntity)
         self.GhostEntity = nil

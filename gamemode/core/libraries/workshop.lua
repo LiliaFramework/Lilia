@@ -3,7 +3,7 @@ if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}
     lia.workshop.cache = lia.workshop.cache or {}
-    function lia.workshop.AddWorkshop(id)
+    function lia.workshop.addWorkshop(id)
         id = tostring(id)
         if not lia.workshop.ids[id] then lia.bootstrap(L("workshopDownloader"), L("workshopAdded", id)) end
         lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
@@ -61,8 +61,8 @@ if SERVER then
     end)
 
     net.Receive("liaWorkshopDownloaderRequest", function(_, client) lia.workshop.send(client) end)
-    lia.workshop.AddWorkshop("3527535922")
-    resource.AddWorkshop = lia.workshop.AddWorkshop
+    lia.workshop.addWorkshop("3527535922")
+    resource.AddWorkshop = lia.workshop.addWorkshop
 else
     local FORCE_ID = "3527535922"
     local MOUNT_DELAY = 3
@@ -129,7 +129,7 @@ else
         lbl:SetText(L("downloadingWorkshopAddonsTitle"))
         lbl:SizeToContents()
         lbl:SetPos(pad, pad)
-        panel.bar = vgui.Create("DProgressBar", panel)
+        panel.bar = vgui.Create("liaDProgressBar", panel)
         panel.bar:SetPos(pad, pad + th + pad)
         panel.bar:SetSize(w - pad * 2, bh)
         panel.bar:SetFraction(0)

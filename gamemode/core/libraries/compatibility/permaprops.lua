@@ -7,7 +7,7 @@ hook.Add("CanTool", "liaPermaProps", function(ply, trace, tool)
     if tool ~= "permaprops" then return end
     local entClass = entity:GetClass()
     local canPersist = hook.Run("CanPersistEntity", entity)
-    if canPersist ~= false and (string.StartWith(entClass, "lia_") or entity:isLiliaPersistent() or entity:CreatedByMap()) then
+    if canPersist ~= false and (string.StartWith(entClass, "lia_") or entity.IsPersistent or entity:CreatedByMap()) then
         ply:notifyErrorLocalized("toolCantUseEntity", tool)
         return false
     end

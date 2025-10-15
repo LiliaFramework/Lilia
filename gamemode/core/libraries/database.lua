@@ -756,7 +756,7 @@ function lia.db.removeColumn(tableName, columnName)
     return d
 end
 
-function lia.db.GetCharacterTable(callback)
+function lia.db.getCharacterTable(callback)
     local query = "PRAGMA table_info(lia_characters)"
     lia.db.query(query, function(results)
         if not results or #results == 0 then return callback({}) end

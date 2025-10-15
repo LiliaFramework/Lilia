@@ -50,15 +50,15 @@ else
         end
     end)
 
-    hook.Add("getAdjustedPartData", "liaPAC", function(wearer, id)
+    hook.Add("GetAdjustedPartData", "liaPAC", function(wearer, id)
         if not partData[id] then return end
         local data = table.Copy(partData[id])
         return hook.Run("AdjustPACPartData", wearer, id, data) or data
     end)
 
-    hook.Add("attachPart", "liaPAC", function(client, id)
+    hook.Add("AttachPart", "liaPAC", function(client, id)
         if not pac then return end
-        local part = hook.Run("getAdjustedPartData", client, id)
+        local part = hook.Run("GetAdjustedPartData", client, id)
         if not part then return end
         if not client.AttachPACPart then pac.SetupENT(client) end
         client:AttachPACPart(part, client)
@@ -66,7 +66,7 @@ else
         client.liaPACParts[id] = part
     end)
 
-    hook.Add("removePart", "liaPAC", function(client, id)
+    hook.Add("RemovePart", "liaPAC", function(client, id)
         if not client.RemovePACPart or not client.liaPACParts then return end
         local part = client.liaPACParts[id]
         if part then
@@ -156,7 +156,7 @@ else
     hook.Add("TryViewModel", "liaPAC", function(entity) return entity == pac.LocalPlayer:GetViewModel() and pac.LocalPlayer or entity end)
     hook.Add("InitializedModules", "liaPAC", function()
         hook.Remove("HUDPaint", "pac_in_editor")
-        timer.Simple(1, function() hook.Run("setupPACDataFromItems") end)
+        timer.Simple(1, function() hook.Run("SetupPACDataFromItems") end)
         if lia.config.get("BlockPackURLoad") then concommand.Remove("pac_load_url") end
     end)
 end
@@ -164,7 +164,7 @@ end
 net.Receive("liaPacSync", function()
     for _, client in player.Iterator() do
         for id in pairs(client:getParts()) do
-            hook.Run("attachPart", client, id)
+            hook.Run("AttachPart", client, id)
         end
     end
 end)
@@ -173,14 +173,14 @@ net.Receive("liaPacPartAdd", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
-    hook.Run("attachPart", client, id)
+    hook.Run("AttachPart", client, id)
 end)
 
 net.Receive("liaPacPartRemove", function()
     local client = net.ReadEntity()
     local id = net.ReadString()
     if not IsValid(client) then return end
-    hook.Run("removePart", client, id)
+    hook.Run("RemovePart", client, id)
 end)
 
 net.Receive("liaPacPartReset", function()

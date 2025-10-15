@@ -47,11 +47,7 @@ function PANEL:Init()
 
     self.cls = vgui.Create("Button", self)
     self.cls:SetText("")
-    self.cls.Paint = function(s, w, h)
-        if s:IsHovered() then lia.derma.rect(2, 2, w - 4, h - 4):Color(lia.color.theme.header_text):Draw() end
-        draw.SimpleText("✕", "lia.18", w * 0.5, h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-
+    self.cls.Paint = function(_, w, h) draw.SimpleText("✕", "LiliaFont.18", w * 0.5, h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     self.cls.DoClick = function()
         surface.PlaySound("button_click.wav")
         if self.deleteOnClose then
@@ -215,12 +211,14 @@ end
 
 function PANEL:Paint(w, h)
     if self.backgroundBlur then Derma_DrawBackgroundBlur(self, self.backgroundBlurTime) end
-    lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.window_shadow):Shadow(10, 16):Shape(lia.derma.SHAPE_IOS):Draw()
+    local shadowIntensity = 8
+    local shadowBlur = 12
+    lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
     if not self.bool_lite then lia.derma.rect(0, 0, w, 24):Radii(6, 6, 0, 0):Color(lia.color.theme.header):Draw() end
     local headerTall = self.bool_lite and 0 or 24
     if self.bool_alpha then
-        local blurAmount = self.blurAmount or 6
-        local blurPasses = self.blurPasses or 0
+        local blurAmount = math.min(self.blurAmount or 6, 4)
+        local blurPasses = math.min(self.blurPasses or 0, 2)
         local blurAlpha = self.blurAlpha or 255
         lia.util.drawBlur(self, blurAmount, blurPasses, blurAlpha)
     end

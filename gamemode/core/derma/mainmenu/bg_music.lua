@@ -16,17 +16,7 @@ function PANEL:Init()
         music:Play()
     end
 
-    if src:match("^https://") then
-        http.Fetch(src, function(body)
-            local path = "lia_temp_music.mp3"
-            file.Write(path, body)
-            sound.PlayFile("DATA/" .. path, "noplay", function(m) if m then play(m) end end)
-        end)
-    elseif src:match("^http") then
-        sound.PlayURL(src, "noplay", function(m) if m then play(m) end end)
-    else
-        sound.PlayFile("sound/" .. src, "noplay", function(m) if m then play(m) end end)
-    end
+    sound.PlayFile(src, "noplay", function(m) if m then play(m) end end)
 end
 
 function PANEL:OnRemove()

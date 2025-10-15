@@ -116,7 +116,7 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
-    local InVehicle = client:hasValidVehicle()
+    local InVehicle = IsValid(client:GetVehicle())
     if not InVehicle and client:Alive() then
         local lastPosData = {
             pos = client:GetPos(),
@@ -157,7 +157,7 @@ function MODULE:PlayerDeath(client, _, attacker)
     if attacker:IsPlayer() then
         if lia.config.get("LoseItemsonDeathHuman", false) then RemovedDropOnDeathItems(client) end
         if lia.config.get("DeathPopupEnabled", true) then
-            local dateStr = lia.time.GetDate()
+            local dateStr = lia.time.getDate()
             local attackerChar = attacker:getChar()
             local steamId = tostring(attacker:SteamID())
             ClientAddText(client, Color(255, 0, 0), "[" .. string.upper(L("death")) .. "]: ", Color(255, 255, 255), dateStr, " - ", L("killedBy"), " ", Color(255, 215, 0), L("characterID"), ": ", Color(255, 255, 255), attackerChar and tostring(attackerChar:getID()) or L("na"), " (", Color(0, 255, 0), steamId, Color(255, 255, 255), ")")

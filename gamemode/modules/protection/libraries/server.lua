@@ -75,7 +75,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
         local dir = (entity:GetPos() - dmgPos):GetNormalized()
         entity:SetVelocity(dir * 60 * dmgInfo:GetDamage())
         local dmgAmt = dmgInfo:GetDamage()
-        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:getRagdoll()) and entity:Health() - dmgAmt > 0 and not entity:InVehicle() then entity:setRagdolled(true, 3) end end)
+        timer.Simple(0.05, function() if IsValid(entity) and entity:IsPlayer() and not IsValid(entity:getNetVar("ragdoll")) and entity:Health() - dmgAmt > 0 and not entity:InVehicle() then entity:setRagdolled(true, 3) end end)
     end
 
     if attacker ~= entity then
@@ -89,7 +89,7 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
             local veh = entity.GetVehicle and entity:GetVehicle() or nil
             if not (IsValid(veh) and veh:isSimfphysCar()) then
                 dmgInfo:ScaleDamage(0)
-                if entity:IsPlayer() and not IsValid(entity:getRagdoll()) and entity:Health() > 0 then entity:setRagdolled(true, 5) end
+                if entity:IsPlayer() and not IsValid(entity:getNetVar("ragdoll")) and entity:Health() > 0 then entity:setRagdolled(true, 5) end
             end
         end
     end
@@ -169,7 +169,7 @@ function MODULE:PlayerAuthed(client, steamid)
     end
 
     if punishIfBlacklisted(steamID64) then return end
-    if lia.config.get("AltsDisabled", false) and client:IsFamilySharedAccount() then
+    if lia.config.get("AltsDisabled", false) and client:isFamilySharedAccount() then
         lia.adminstrator.applyPunishment(client, L("familySharingDisabled"), true, false)
         lia.adminstrator.notifyAdmin(L("kickedAltNotify", steamName, steamID))
     else
@@ -350,7 +350,7 @@ end
 
 local function shouldBlock(ply)
     if not IsValid(ply) or not ply:IsPlayer() then return false end
-    if ply:isNoClipping() and not ply:hasPrivilege("bypassNoclipShooting") then return true end
+    if ply:GetMoveType() == MOVETYPE_NOCLIP and not ply:hasPrivilege("bypassNoclipShooting") then return true end
     if ply:getLiliaData("cheater", false) then return true end
     return false
 end

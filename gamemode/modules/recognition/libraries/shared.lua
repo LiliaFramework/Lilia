@@ -5,7 +5,7 @@
     return false
 end
 
-function MODULE:isCharRecognized(character, id)
+function MODULE:IsCharRecognized(character, id)
     if not lia.config.get("RecognitionEnabled", true) then return true end
     if not character or not isfunction(character.getPlayer) then return false end
     local client = character:getPlayer()
@@ -32,7 +32,7 @@ function MODULE:isCharRecognized(character, id)
     return false
 end
 
-function MODULE:isCharFakeRecognized(character, id)
+function MODULE:IsCharFakeRecognized(character, id)
     if not character or not character.getPlayer then return false end
     local other = lia.char.getCharacter(id, character:getPlayer())
     if not other then return false end

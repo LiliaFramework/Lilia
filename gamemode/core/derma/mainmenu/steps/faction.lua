@@ -104,6 +104,7 @@ function PANEL:onFactionSelected(fac)
     self:setContext("faction", fac.index)
     self:setContext("model", 1)
     self:updateModelPanel()
+    self:updateNameAndDescForFaction(fac.index)
     if self.skipFirstSelect then
         self.skipFirstSelect = false
         return
@@ -112,8 +113,17 @@ function PANEL:onFactionSelected(fac)
     lia.gui.character:clickSound()
 end
 
+function PANEL:updateNameAndDescForFaction(factionIndex)
+    local client = LocalPlayer()
+    local context = self:getContext()
+    local defaultName, nameOverride = hook.Run("GetDefaultCharName", client, factionIndex, context)
+    local defaultDesc, descOverride = hook.Run("GetDefaultCharDesc", client, factionIndex, context)
+    if isstring(defaultName) and nameOverride then self:setContext("name", defaultName) end
+    if isstring(defaultDesc) and descOverride then self:setContext("desc", defaultDesc) end
+end
+
 function PANEL:shouldSkip()
-    return true
+    return false
 end
 
 function PANEL:onSkip()

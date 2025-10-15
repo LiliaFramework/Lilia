@@ -6,7 +6,7 @@ function PANEL:filterCharacterModels(faction)
         if isstring(idx) and istable(data) then
             filteredModels[idx] = data
         else
-            local shouldInclude = hook.Run("FilterCharacterModels", LocalPlayer(), faction, data, idx)
+            local shouldInclude = hook.Run("FilterCharModels", LocalPlayer(), faction, data, idx)
             if shouldInclude ~= false then filteredModels[idx] = data end
         end
     end
@@ -17,15 +17,37 @@ function PANEL:Init()
     self.title = self:addLabel(L("selectModel"))
     self.models = self:Add("DIconLayout")
     self.models:Dock(FILL)
+    self.models:DockMargin(0, 8, 0, 12)
     self.models:SetSpaceX(4)
     self.models:SetSpaceY(4)
     self.models:SetPaintBackground(false)
 end
 
+function PANEL:addLabel(text)
+    local lbl = self:Add("DLabel")
+    lbl:SetFont("liaMediumFont")
+    lbl:SetText(L(text):upper())
+    lbl:SizeToContents()
+    lbl:Dock(TOP)
+    lbl:DockMargin(0, 0, 0, 8)
+    return lbl
+end
+
 function PANEL:onDisplay()
+    print("[DEBUG] Model step onDisplay - context:", util.TableToJSON(self:getContext(), true))
     self.models:Clear()
-    local faction = lia.faction.indices[self:getContext("faction")]
-    if not faction then return end
+    local factionIndex = self:getContext("faction")
+    if not factionIndex then
+        print("[DEBUG] No faction context in model step")
+        return
+    end
+
+    local faction = lia.faction.indices[factionIndex]
+    if not faction then
+        print("[DEBUG] No faction found for index:", factionIndex)
+        return
+    end
+
     local modelsToDisplay = self:filterCharacterModels(faction)
     local modelCount = 0
     local firstIdx
@@ -34,6 +56,7 @@ function PANEL:onDisplay()
         if not firstIdx then firstIdx = idx end
     end
 
+    print("[DEBUG] Model count after filtering:", modelCount)
     local shouldCenter = modelCount <= 1
     if IsValid(self.title) then self.title:SetVisible(not shouldCenter) end
     if IsValid(self.models) then self.models:SetVisible(not shouldCenter) end

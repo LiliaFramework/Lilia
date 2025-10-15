@@ -189,4 +189,4 @@ lia.config.add("SAMEnforceStaff", "samEnforceStaff", true, nil, {
 sam.config.set("Restrictions.Tool", false)
 sam.config.set("Restrictions.Spawning", false)
 sam.config.set("Restrictions.Limits", false)
-hook.Add("getPlayTime", "liaSAM", function(client) return client:sam_get_play_time() end)
+hook.Add("GetPlayTime", "liaSAM", function(client) return client:sam_get_play_time() end)

@@ -36,7 +36,19 @@ function PANEL:SetRadius(rad)
 end
 
 function PANEL:SetIcon(icon, icon_size)
-    self.icon = type(icon) == 'IMaterial' and icon or Material(icon)
+    if not icon or icon == "" then
+        self.icon = nil
+    elseif type(icon) == "IMaterial" then
+        self.icon = icon
+    else
+        local mat = Material(icon)
+        if mat and mat:IsValid() then
+            self.icon = mat
+        else
+            self.icon = nil
+        end
+    end
+
     self.icon_size = icon_size or 16
 end
 
@@ -109,14 +121,14 @@ function PANEL:Paint(w, h)
 
     local iconSize = self.icon_size or 16
     if self.text ~= "" then
-        draw.SimpleText(self.text, self.font, w * 0.5 + (self.icon ~= "" and iconSize * 0.5 + 2 or 0), h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        if self.icon ~= "" then
+        draw.SimpleText(self.text, self.font, w * 0.5 + (self.icon and self.icon ~= "" and iconSize * 0.5 + 2 or 0), h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        if self.icon and self.icon ~= "" then
             surface.SetFont(self.font)
             local posX = (w - surface.GetTextSize(self.text) - iconSize) * 0.5 - 2
             local posY = (h - iconSize) * 0.5
             lia.derma.rect(posX, posY, iconSize, iconSize):Material(self.icon):Color(color_white):Shape(btnFlags):Draw()
         end
-    elseif self.icon ~= "" then
+    elseif self.icon and self.icon ~= "" then
         local posX = (w - iconSize) * 0.5
         local posY = (h - iconSize) * 0.5
         lia.derma.rect(posX, posY, iconSize, iconSize):Material(self.icon):Color(color_white):Shape(btnFlags):Draw()

@@ -3,7 +3,7 @@ MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "mainMenuDescription"
 if SERVER then
-    function MODULE:syncCharList(client)
+    function MODULE:SyncCharList(client)
         if not client.liaCharList then return end
         net.Start("liaCharList")
         net.WriteUInt(#client.liaCharList, 32)
@@ -26,7 +26,7 @@ else
         vgui.Create("liaCharacter")
     end
 
-    function MODULE:chooseCharacter(id)
+    function MODULE:ChooseCharacter(id)
         assert(isnumber(id), L("idMustBeNumber"))
         local d = deferred.new()
         net.Receive("liaCharChoose", function()
@@ -45,7 +45,7 @@ else
         return d
     end
 
-    function MODULE:createCharacter(data)
+    function MODULE:CreateCharacter(data)
         local client = LocalPlayer()
         assert(istable(data), L("dataMustBeTable"))
         local d = deferred.new()
@@ -82,7 +82,7 @@ else
         return d
     end
 
-    function MODULE:deleteCharacter(id)
+    function MODULE:DeleteCharacter(id)
         assert(isnumber(id), L("idMustBeNumber"))
         net.Start("liaCharDelete")
         net.WriteUInt(id, 32)
@@ -103,9 +103,9 @@ else
     function MODULE:CreateMenuButtons(tabs)
         tabs["characters"] = function()
             local client = LocalPlayer()
-            if client:IsInThirdPerson() then
+            if client:isInThirdPerson() then
                 lia.option.set("thirdPersonEnabled", false)
-                hook.Run("thirdPersonToggled", false)
+                hook.Run("ThirdPersonToggled", false)
             end
 
             if IsValid(lia.gui.menu) then lia.gui.menu:Remove() end

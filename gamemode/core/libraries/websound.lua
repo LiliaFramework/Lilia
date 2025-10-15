@@ -307,14 +307,94 @@ function sound.PlayURL(url, mode, cb)
 end
 
 local origSurfacePlaySound = surface.PlaySound
-function surface.PlaySound(soundPath)
-    if isstring(soundPath) and lia.websound.stored[soundPath] then
-        local cachedPath = lia.websound.get(soundPath)
-        if cachedPath then return origSurfacePlaySound(cachedPath) end
-        lia.websound.register(soundPath, lia.websound.stored[soundPath], function(localPath) if localPath then return origSurfacePlaySound(localPath) end end)
-        return
+function surface.PlaySound(soundPath, mode, cb)
+    if isstring(soundPath) then
+        soundPath = normalizeName(soundPath)
+        if soundPath:find("^https?://") then
+            local name = urlMap[soundPath]
+            if not name then
+                name = deriveUrlSaveName(soundPath)
+                urlMap[soundPath] = name
+            end
+
+            local cachedPath = lia.websound.get(name)
+            if cachedPath then
+                local surfacePath = cachedPath:gsub("^data/", "")
+                origSurfacePlaySound(surfacePath)
+                if cb then cb(true) end
+                return
+            end
+
+            lia.websound.register(name, soundPath, function(localPath)
+                if localPath then
+                    local surfacePath = localPath:gsub("^data/", "")
+                    origSurfacePlaySound(surfacePath)
+                    if cb then cb(true) end
+                elseif cb then
+                    cb(false, "failed")
+                end
+            end)
+            return
+        else
+            local webPath
+            if soundPath:find("^lilia/websounds/") then
+                webPath = soundPath:gsub("^lilia/websounds/", "")
+            elseif soundPath:find("^websounds/") then
+                webPath = soundPath:gsub("^websounds/", "")
+            else
+                webPath = soundPath
+            end
+
+            local localPath = lia.websound.get(webPath)
+            if localPath then
+                if webPath:match("%.wav$") then
+                    local reqMode = mode or ""
+                    local wants3d = reqMode:find("3d", 1, true) ~= nil
+                    local attempts = {}
+                    local seen = {}
+                    local function add(m)
+                        if m and m ~= "" and not seen[m] then
+                            seen[m] = true
+                            table.insert(attempts, m)
+                        end
+                    end
+
+                    if wants3d then
+                        add(reqMode)
+                        add("mono 3d")
+                        add("3d")
+                    else
+                        add(reqMode)
+                        table.insert(attempts, "")
+                        add("mono")
+                    end
+
+                    local function tryNext(i, lastErrCode, lastErrStr)
+                        local m = attempts[i]
+                        if not m then
+                            if cb then cb(false, lastErrCode, lastErrStr or "failed") end
+                            return
+                        end
+
+                        local surfacePath = localPath:gsub("^data/", "")
+                        origSurfacePlaySound(surfacePath)
+                        if cb then cb(true) end
+                    end
+
+                    tryNext(1)
+                    return
+                else
+                    local surfacePath = localPath:gsub("^data/", "")
+                    origSurfacePlaySound(surfacePath)
+                    if cb then cb(true) end
+                    return
+                end
+            end
+        end
     end
-    return origSurfacePlaySound(soundPath)
+
+    origSurfacePlaySound(soundPath)
+    if cb then cb(true) end
 end
 
 concommand.Add("lia_saved_sounds", function()

@@ -40,9 +40,6 @@
             local oldFaction = tChar:getFaction()
             tChar.vars.faction = faction.uniqueID
             tChar:setFaction(faction.index)
-            tChar:kickClass()
-            local defClass = lia.faction.getDefaultClass(faction.index)
-            if defClass then tChar:joinClass(defClass.index) end
             hook.Run("OnTransferred", target)
             if faction.OnTransferred then faction:OnTransferred(target, oldFaction) end
             hook.Run("PlayerLoadout", target)

@@ -19,7 +19,7 @@ function SKIN:PaintFrame(panel, w, h)
     if not panel.LaidOut then
         if panel.btnClose and panel.btnClose:IsValid() then
             panel.btnClose:SetPos(panel:GetWide() - 16, 4)
-            panel.btnClose:SetScaledSize(24, 24)
+            panel.btnClose:setScaledSize(24, 24)
             panel.btnClose:SetFont("Marlett")
             panel.btnClose:SetText("✕")
             panel.btnClose:SetTextColor(Color(255, 255, 255))

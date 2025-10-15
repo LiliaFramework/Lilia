@@ -156,7 +156,7 @@ if SERVER then
                 end
 
                 if not IsValid(client) or not client:getChar() then return end
-                if client:IsFamilySharedAccount() and not lia.config.get("AltsDisabled", false) then
+                if client:isFamilySharedAccount() and not lia.config.get("AltsDisabled", false) then
                     client:notifyErrorLocalized("familySharedMoneyTransferDisabled")
                     return
                 end

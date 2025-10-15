@@ -632,8 +632,10 @@ lia.derma.baseFuncs = {
         return self
     end,
     Material = function(self, mat)
-        local tex = mat:GetTexture("$basetexture")
-        if tex then TEXTURE = tex end
+        if mat and mat:IsValid() then
+            local tex = mat:GetTexture("$basetexture")
+            if tex then TEXTURE = tex end
+        end
         return self
     end,
     Outline = function(self, thickness)
@@ -812,7 +814,7 @@ function lia.derma.setDefaultShape(shape)
     defaultDrawFlags = defaultShape
 end
 
-function lia.derma.ShadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
+function lia.derma.shadowText(text, font, x, y, colortext, colorshadow, dist, xalign, yalign)
     surface.SetFont(font)
     local _, h = surface.GetTextSize(text)
     if yalign == TEXT_ALIGN_CENTER then
@@ -825,7 +827,7 @@ function lia.derma.ShadowText(text, font, x, y, colortext, colorshadow, dist, xa
     draw.DrawText(text, font, x, y, colortext, xalign)
 end
 
-function lia.derma.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
+function lia.derma.drawTextOutlined(text, font, x, y, colour, xalign, outlinewidth, outlinecolour)
     local steps = (outlinewidth * 2) / 3
     if steps < 1 then steps = 1 end
     for ox = -outlinewidth, outlinewidth, steps do
@@ -836,7 +838,7 @@ function lia.derma.DrawTextOutlined(text, font, x, y, colour, xalign, outlinewid
     return draw.DrawText(text, font, x, y, colour, xalign)
 end
 
-function lia.derma.DrawTip(x, y, w, h, text, font, textCol, outlineCol)
+function lia.derma.drawTip(x, y, w, h, text, font, textCol, outlineCol)
     draw.NoTexture()
     local rectH = 0.85
     local triW = 0.1
@@ -988,10 +990,10 @@ function lia.derma.clampMenuPosition(panel)
     panel:SetPos(x, y)
 end
 
-function lia.derma.drawGradient(_x, _y, _w, _h, direction, color_shadow, radius, flags)
+function lia.derma.drawGradient(x, y, w, h, direction, color_shadow, radius, flags)
     local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
     radius = radius and radius or 0
-    lia.derma.drawMaterial(radius, _x, _y, _w, _h, color_shadow, listGradients[direction], flags)
+    lia.derma.drawMaterial(radius, x, y, w, h, color_shadow, listGradients[direction], flags)
 end
 
 function lia.derma.wrapText(text, width, font)
@@ -1280,7 +1282,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
     frame.OnClose = function() if isfunction(onSubmit) then onSubmit(false) end end
 end
 
-function lia.derma.CreateTableUI(title, columns, data, options, charID)
+function lia.derma.createTableUI(title, columns, data, options, charID)
     local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
     local frame = vgui.Create("liaDListView")
     frame:SetWindowTitle(title and L(title) or L("tableListTitle"))

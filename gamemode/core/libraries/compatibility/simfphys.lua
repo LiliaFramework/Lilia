@@ -9,7 +9,7 @@
                 local hitPos = dmgInfo:GetDamagePosition()
                 local playerPos = player:GetPos()
                 local thresholdDistance = 53
-                if hitPos:Distance(playerPos) <= thresholdDistance then
+                if hitPos:distance(playerPos) <= thresholdDistance then
                     local newHealth = player:Health() - dmgInfo:GetDamage() * 0.3
                     if newHealth > 0 then
                         player:SetHealth(newHealth)

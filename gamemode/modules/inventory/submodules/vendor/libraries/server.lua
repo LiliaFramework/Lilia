@@ -9,7 +9,7 @@ end
 
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local character = client:getChar()
-    if client:CanEditVendor(vendor) then return true end
+    if client:canEditVendor(vendor) then return true end
     if vendor:isClassAllowed(character:getClass()) then return true end
     if vendor:isFactionAllowed(client:Team()) then return true end
 end
@@ -141,7 +141,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Start("liaVendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
-    if client:CanEditVendor(vendor) then
+    if client:canEditVendor(vendor) then
         for factionID in pairs(vendor.factions) do
             net.Start("liaVendorAllowFaction")
             net.WriteUInt(factionID, 8)
@@ -236,7 +236,7 @@ end)
 
 net.Receive("liaVendorEdit", function(_, client)
     local key = net.ReadString()
-    if not client:CanEditVendor() then return end
+    if not client:canEditVendor() then return end
     local vendor = client.liaVendor
     if not IsValid(vendor) or not lia.vendor.editor[key] then return end
     lia.log.add(client, "vendorEdit", vendor, key)
@@ -256,7 +256,7 @@ net.Receive("liaVendorTrade", function(_, client)
     end
 
     local entity = client.liaVendor
-    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192 then return end
+    if not IsValid(entity) or client:GetPos():distance(entity:GetPos()) > 192 then return end
     if not hook.Run("CanPlayerAccessVendor", client, entity) then return end
     hook.Run("VendorTradeEvent", client, entity, uniqueID, isSellingToVendor)
 end)

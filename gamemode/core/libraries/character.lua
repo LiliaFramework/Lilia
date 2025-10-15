@@ -2,8 +2,8 @@
 lia.char.vars = lia.char.vars or {}
 lia.char.loaded = lia.char.loaded or {}
 lia.char.varHooks = lia.char.varHooks or {}
-if SERVER then
-    function lia.char.getCharacter(charID, client, callback)
+function lia.char.getCharacter(charID, client, callback)
+    if SERVER then
         local character = lia.char.loaded[charID]
         if character then
             if callback then callback(character) end
@@ -11,10 +11,8 @@ if SERVER then
         end
 
         lia.char.loadSingleCharacter(charID, client, callback)
-    end
-else
-    lia.char.pendingRequests = lia.char.pendingRequests or {}
-    function lia.char.getCharacter(charID, _, callback)
+    else
+        lia.char.pendingRequests = lia.char.pendingRequests or {}
         if not charID then return end
         local character = lia.char.loaded[charID]
         if character then
@@ -31,10 +29,6 @@ end
 
 function lia.char.isLoaded(charID)
     return lia.char.loaded[charID] ~= nil
-end
-
-function lia.char.getAll()
-    return lia.char.loaded
 end
 
 function lia.char.addCharacter(id, character)
@@ -312,6 +306,13 @@ lia.char.registerVar("faction", {
         local client = character:getPlayer()
         client:SetTeam(value)
         character.vars.faction = faction.uniqueID
+        local defaultClass = lia.faction.getDefaultClass(value)
+        if defaultClass then
+            character:setClass(defaultClass.index)
+        else
+            character:setClass(nil)
+        end
+
         net.Start("liaCharSet")
         net.WriteString("faction")
         net.WriteType(character.vars.faction)
@@ -550,7 +551,7 @@ end
 
 function lia.char.getOwnerByID(ID)
     ID = tonumber(ID)
-    for client, character in pairs(lia.char.getAll()) do
+    for client, character in pairs(lia.char.loaded) do
         if character and character:getID() == ID then return client end
     end
 end
@@ -564,15 +565,7 @@ function lia.char.getBySteamID(steamID)
     end
 end
 
-function lia.char.getAll()
-    local charTable = {}
-    for _, client in player.Iterator() do
-        if client:getChar() then charTable[client] = client:getChar() end
-    end
-    return charTable
-end
-
-function lia.char.GetTeamColor(client)
+function lia.char.getTeamColor(client)
     local char = client:getChar()
     if not char then return team.GetColor(client:Team()) end
     local classIndex = char:getClass()

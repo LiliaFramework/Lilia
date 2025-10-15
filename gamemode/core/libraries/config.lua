@@ -260,14 +260,6 @@ lia.config.add("MoneyModel", "moneyModel", "models/props/cs_office/money.mdl", n
     type = "Generic"
 })
 
-lia.config.add("MoneyLimit", "moneyLimit", 0, nil, {
-    desc = "moneyLimitDesc",
-    category = "money",
-    type = "Int",
-    min = 0,
-    max = 1000000
-})
-
 lia.config.add("MaxMoneyEntities", "maxMoneyEntities", 3, nil, {
     desc = "maxMoneyEntitiesDesc",
     category = "money",
@@ -526,14 +518,6 @@ end, {
     max = 36000
 })
 
-lia.config.add("SalaryThreshold", "salaryThreshold", 0, nil, {
-    desc = "salaryThresholdDesc",
-    category = "categorySalary",
-    type = "Int",
-    min = 0,
-    max = 100000
-})
-
 lia.config.add("ThirdPersonEnabled", "thirdPersonEnabled", true, nil, {
     desc = "thirdPersonEnabledDesc",
     category = "categoryThirdPerson",
@@ -683,6 +667,33 @@ lia.config.add("PunchLethality", "punchLethality", true, nil, {
     type = "Boolean"
 })
 
+lia.config.add("StaminaDrain", "staminaDrain", 1, nil, {
+    desc = "staminaDrainDesc",
+    category = "attributes",
+    type = "Float",
+    min = 0.1,
+    max = 10,
+    decimals = 2
+})
+
+lia.config.add("StaminaRegeneration", "staminaRegeneration", 5, nil, {
+    desc = "staminaRegenerationDesc",
+    category = "attributes",
+    type = "Float",
+    min = 0.1,
+    max = 50,
+    decimals = 2
+})
+
+lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 8, nil, {
+    desc = "staminaCrouchRegenerationDesc",
+    category = "attributes",
+    type = "Float",
+    min = 0.1,
+    max = 50,
+    decimals = 2
+})
+
 lia.config.add("logsPerPage", "logsPerPage", 50, nil, {
     desc = "logsPerPageDesc",
     category = "categoryLogging",
@@ -823,7 +834,7 @@ lia.config.add("BackgroundURL", "mainMenuBackgroundURL", "", nil, {
     type = "Generic"
 })
 
-lia.config.add("CenterLogo", "mainMenuCenterLogo", "", nil, {
+lia.config.add("ServerLogo", "mainMenuCenterLogo", "", nil, {
     desc = "mainMenuCenterLogoDesc",
     category = "mainMenu",
     type = "Generic"

@@ -101,7 +101,7 @@ end
 
 local function canDrawCrosshair()
     local client = LocalPlayer()
-    local rag = client:getRagdoll()
+    local rag = client:getNetVar("ragdoll")
     local wpn = client:GetActiveWeapon()
     if not client:getChar() then return false end
     if IsValid(wpn) then
@@ -193,7 +193,7 @@ end
 function GM:ShouldDrawEntityInfo(e)
     if IsValid(e) then
         if e:IsPlayer() and e:getChar() then
-            if e:isNoClipping() or e:GetNoDraw() then return false end
+            if e:GetMoveType() == MOVETYPE_NOCLIP or e:GetNoDraw() then return false end
             return true
         end
 
@@ -314,7 +314,7 @@ end
 
 function GM:CreateMove(cmd)
     local client = LocalPlayer()
-    if IsValid(client) and client:getLocalVar("bIsHoldingObject", false) and cmd:KeyDown(IN_ATTACK2) then
+    if IsValid(client) and client:getNetVar("bIsHoldingObject", false) and cmd:KeyDown(IN_ATTACK2) then
         cmd:ClearMovement()
         local angle = cmd:GetViewAngles()
         angle.z = 0
@@ -349,10 +349,10 @@ function GM:CalcView(client, origin, angles, fov)
         return view
     end
 
-    local ragEntity = client:getRagdoll()
+    local ragEntity = client:getNetVar("ragdoll")
     local ragdoll = client:GetRagdollEntity()
     local ent
-    if not client:hasValidVehicle() and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() then
+    if not IsValid(client:GetVehicle()) and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() then
         if IsValid(ragEntity) and ragEntity:IsRagdoll() then
             ent = ragEntity
         elseif not client:Alive() and IsValid(ragdoll) then
@@ -377,7 +377,7 @@ end
 
 function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
-    if bind:find("jump") and IsValid(client:getRagdoll()) then lia.command.send("chargetup") end
+    if bind:find("jump") and IsValid(client:getNetVar("ragdoll")) then lia.command.send("chargetup") end
     if bind:find("use") then
         local entity = client:getTracedEntity()
         local hasValidEntity = IsValid(entity) and (entity:isItem() or entity.hasMenu)
@@ -508,7 +508,7 @@ function GM:PlayerStartVoice(client)
     end
 
     if not IsValid(client) then return end
-    pnl = g_VoicePanelList:Add("VoicePanel")
+    pnl = g_VoicePanelList:Add("liaVoicePanel")
     pnl:Setup(client)
     VoicePanels[client] = pnl
 end
@@ -540,6 +540,8 @@ end
 function GM:InitPostEntity()
     lia.joinTime = RealTime() - 0.9716
     if system.IsWindows() and not system.HasFocus() then system.FlashWindow() end
+    net.Start("liaStorageSyncRequest")
+    net.SendToServer()
 end
 
 function GM:HUDDrawTargetID()
