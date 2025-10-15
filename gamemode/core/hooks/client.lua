@@ -23,7 +23,8 @@ local hidden = {
     CHudHistoryResource = true,
     CHudChat = true,
     CHudDamageIndicator = true,
-    CHudVoiceStatus = true
+    CHudVoiceStatus = true,
+    CHudHints = true
 }
 
 local VoiceRanges = {
@@ -229,6 +230,7 @@ end
 function GM:DrawEntityInfo(e, a, pos)
     if not e:IsPlayer() or hook.Run("ShouldDrawPlayerInfo", e) == false then return end
     local ch = e:getChar()
+    if not ch then return end
     pos = pos or toScreen(e:GetPos() + (e:Crouching() and Vector(0, 0, 48) or Vector(0, 0, 80)))
     local x, y = pos.x, pos.y
     local charInfo = {}
@@ -451,7 +453,6 @@ end
 function GM:HUDPaintBackground()
     lia.menu.drawAll()
     RenderEntities()
-    self.BaseClass.PaintWorldTips(self.BaseClass)
     if BRANCH ~= "x86-64" then draw.SimpleText(L("switchTo64Bit"), "liaSmallFont", ScrW() * 0.5, ScrH() * 0.97, Color(255, 255, 255, 10), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
 end
 

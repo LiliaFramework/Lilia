@@ -71,11 +71,11 @@ function PANEL:Init()
     serverName:SizeToContentsY()
     local serverIcon = header:Add("DImage")
     serverIcon:Dock(RIGHT)
-    serverIcon:DockMargin(15, -20, 5, 7)
-    serverIcon:SetWide(87)
+    serverIcon:DockMargin(15, -20, 20, 7)
+    serverIcon:SetWide(60)
     serverIcon:SetTall(32)
     serverIcon.PerformLayout = function(icon)
-        icon:SetWide(87)
+        icon:SetWide(60)
         icon:SetTall(32)
     end
 
@@ -243,12 +243,12 @@ end
 function PANEL:addPlayer(ply, parent)
     local slot = parent:Add("DPanel")
     slot:Dock(TOP)
-    local height = ScrH() * 0.12
+    local height = ScrH() * 0.08
     slot:SetTall(height)
     slot.Paint = function() end
     slot.character = ply:getChar()
     ply.liaScoreSlot = slot
-    local margin, iconSize = 5, height * 0.8
+    local margin, iconSize = 5, height * 0.75
     slot.model = slot:Add("liaSpawnIcon")
     slot.model:SetPos(margin, (height - iconSize) * 0.5)
     slot.model:SetSize(iconSize, iconSize)
@@ -338,7 +338,7 @@ function PANEL:addPlayer(ply, parent)
     slot.ping:SetContentAlignment(6)
     slot.ping:SetTextColor(color_white)
     slot.ping:SetTextInset(16, 0)
-    local logoSize, logoOffset = height * 0.65, 10
+    local logoSize, logoOffset = height * 0.6, 8
     slot.classLogo = vgui.Create("DImage", slot)
     slot.classLogo:SetSize(logoSize, logoSize)
     function slot:layout()
@@ -347,10 +347,10 @@ function PANEL:addPlayer(ply, parent)
         local hasLogo = lia.config.get("ClassLogo", false) and self.classLogo:GetMaterial() and not self.hideLogo
         local extra = hasLogo and logoSize + logoOffset or 0
         local availW = totalW - (iconSize + margin * 2) - extra - pingW - margin
-        self.name:SetPos(iconSize + margin * 2, 10)
+        self.name:SetPos(iconSize + margin * 2, height * 0.08)
         self.name:SetWide(availW)
-        self.name:SetTall(35)
-        self.desc:SetPos(iconSize + margin * 2, 45)
+        self.name:SetTall(height * 0.4)
+        self.desc:SetPos(iconSize + margin * 2, height * 0.52)
         self.desc:SetWide(availW - 5)
         self.desc:SetTall(height * 0.4)
         if hasLogo then

@@ -325,7 +325,7 @@ function PANEL:addTab(name, callback, justClick, height)
         return btn
     end
 
-    btn.DoClick = function(b) b:setSelected(true) end
+    btn.DoClick = function(b) b:SetSelected(true) end
     if isfunction(callback) then btn:onSelected(function() callback(self) end) end
     return btn
 end

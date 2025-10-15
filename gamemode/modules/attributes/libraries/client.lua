@@ -19,7 +19,7 @@ function MODULE:Think()
     if not client:getChar() then return end
     local character = client:getChar()
     local maxStamina = hook.Run("GetCharMaxStamina", character) or lia.config.get("DefaultStamina", 100)
-    local offset = self:CalcStaminaChange(client)
+    local offset = self:calcStaminaChange(client)
     offset = math.Remap(FrameTime(), 0, 0.25, 0, offset)
     if offset ~= 0 then predictedStamina = math.Clamp(predictedStamina + offset, 0, maxStamina) end
 end

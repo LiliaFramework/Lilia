@@ -229,16 +229,6 @@ function sound.PlayFile(path, mode, cb)
                         end
                     end
 
-                    if wants3d then
-                        add(reqMode)
-                        add("mono 3d")
-                        add("3d")
-                    else
-                        add(reqMode)
-                        table.insert(attempts, "")
-                        add("mono")
-                    end
-
                     local function tryNext(i, lastErrCode, lastErrStr)
                         local m = attempts[i]
                         if not m then
@@ -253,6 +243,16 @@ function sound.PlayFile(path, mode, cb)
                                 tryNext(i + 1, errCode, errStr)
                             end
                         end)
+                    end
+
+                    if wants3d then
+                        add(reqMode)
+                        add("mono 3d")
+                        add("3d")
+                    else
+                        add(reqMode)
+                        table.insert(attempts, "")
+                        add("mono")
                     end
 
                     tryNext(1)
@@ -307,7 +307,7 @@ function sound.PlayURL(url, mode, cb)
 end
 
 local origSurfacePlaySound = surface.PlaySound
-function surface.PlaySound(soundPath, mode, cb)
+function surface.PlaySound(soundPath, _, cb)
     if isstring(soundPath) then
         soundPath = normalizeName(soundPath)
         if soundPath:find("^https?://") then
@@ -347,48 +347,10 @@ function surface.PlaySound(soundPath, mode, cb)
 
             local localPath = lia.websound.get(webPath)
             if localPath then
-                if webPath:match("%.wav$") then
-                    local reqMode = mode or ""
-                    local wants3d = reqMode:find("3d", 1, true) ~= nil
-                    local attempts = {}
-                    local seen = {}
-                    local function add(m)
-                        if m and m ~= "" and not seen[m] then
-                            seen[m] = true
-                            table.insert(attempts, m)
-                        end
-                    end
-
-                    if wants3d then
-                        add(reqMode)
-                        add("mono 3d")
-                        add("3d")
-                    else
-                        add(reqMode)
-                        table.insert(attempts, "")
-                        add("mono")
-                    end
-
-                    local function tryNext(i, lastErrCode, lastErrStr)
-                        local m = attempts[i]
-                        if not m then
-                            if cb then cb(false, lastErrCode, lastErrStr or "failed") end
-                            return
-                        end
-
-                        local surfacePath = localPath:gsub("^data/", "")
-                        origSurfacePlaySound(surfacePath)
-                        if cb then cb(true) end
-                    end
-
-                    tryNext(1)
-                    return
-                else
-                    local surfacePath = localPath:gsub("^data/", "")
-                    origSurfacePlaySound(surfacePath)
-                    if cb then cb(true) end
-                    return
-                end
+                local surfacePath = localPath:gsub("^data/", "")
+                origSurfacePlaySound(surfacePath)
+                if cb then cb(true) end
+                return
             end
         end
     end

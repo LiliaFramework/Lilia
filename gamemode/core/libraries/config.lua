@@ -373,7 +373,7 @@ lia.config.add("SaveInterval", "saveInterval", 300, nil, {
     max = 3600
 })
 
-lia.config.add("DefMoney", "defaultMoney", 0, nil, {
+lia.config.add("DefaultMoney", "defaultMoney", 0, nil, {
     desc = "defaultMoneyDesc",
     category = "character",
     type = "Int",

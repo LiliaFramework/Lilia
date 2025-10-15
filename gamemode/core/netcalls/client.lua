@@ -119,7 +119,7 @@ net.Receive("liaInventoryInit", function()
 
     lia.inventory.instances[id] = instance
     hook.Run("InventoryInitialized", instance)
-    for _, character in pairs(lia.char.loaded) do
+    for _, character in pairs(lia.char.getAll()) do
         for idx, inventory in pairs(character.vars.inv) do
             if inventory:getID() == id then character.vars.inv[idx] = instance end
         end

@@ -138,7 +138,7 @@ end
 
 function MODULE:CanCharBeTransfered(character, faction)
     if faction.oneCharOnly then
-        for _, otherCharacter in next, lia.char.loaded do
+        for _, otherCharacter in next, lia.char.getAll() do
             if otherCharacter.steamID == character.steamID and faction.index == otherCharacter:getFaction() then return false, L("charAlreadyInFaction") end
         end
     end

@@ -6,6 +6,10 @@ function characterMeta:tostring()
     return L("character") .. "[" .. (self.id or 0) .. "]"
 end
 
+function characterMeta:eq(other)
+    return self:getID() == other:getID()
+end
+
 function characterMeta:getID()
     return self.id
 end
@@ -398,6 +402,19 @@ if SERVER then
             net.WriteUInt(self:getID(), 32)
             net.WriteEntity(self:getPlayer())
             net.Send(receiver)
+            local ply = self:getPlayer()
+            if IsValid(ply) then
+                lia.net[ply] = lia.net[ply] or {}
+                local oldVal = lia.net[ply]["char"]
+                lia.net[ply]["char"] = self:getID()
+                net.Start("liaNetVar")
+                net.WriteUInt(ply:EntIndex(), 16)
+                net.WriteString("char")
+                net.WriteType(self:getID())
+                net.Send(receiver)
+                hook.Run("NetVarChanged", ply, "char", oldVal, self:getID())
+            end
+
             for _, v in pairs(lia.char.vars) do
                 if isfunction(v.onSync) then v.onSync(self, receiver) end
             end

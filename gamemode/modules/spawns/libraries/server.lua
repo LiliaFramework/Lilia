@@ -154,6 +154,12 @@ end
 function MODULE:PlayerDeath(client, _, attacker)
     local char = client:getChar()
     if not char then return end
+    if not client:IsBot() then
+        client:setNetVar("IsDeadRestricted", true)
+        client:setNetVar("lastDeathTime", os.time())
+        timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
+    end
+
     if attacker:IsPlayer() then
         if lia.config.get("LoseItemsonDeathHuman", false) then RemovedDropOnDeathItems(client) end
         if lia.config.get("DeathPopupEnabled", true) then
@@ -164,9 +170,6 @@ function MODULE:PlayerDeath(client, _, attacker)
         end
     end
 
-    client:setNetVar("IsDeadRestricted", true)
-    client:setNetVar("lastDeathTime", os.time())
-    timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     client:SetDSP(30, false)
     char:setLastPos(nil)
     if not attacker:IsPlayer() and lia.config.get("LoseItemsonDeathNPC", false) or attacker:IsWorld() and lia.config.get("LoseItemsonDeathWorld", false) then RemovedDropOnDeathItems(client) end
@@ -180,6 +183,11 @@ end
 
 net.Receive("liaRequestRespawn", function(_, client)
     if not IsValid(client) or not client:getChar() then return end
+    if client:IsBot() then
+        if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
+        return
+    end
+
     local respawnTime = math.floor(lia.config.get("SpawnTime", 5))
     local spawnTimeOverride = hook.Run("OverrideSpawnTime", client, respawnTime)
     if spawnTimeOverride then respawnTime = math.floor(spawnTimeOverride) end

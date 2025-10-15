@@ -122,13 +122,23 @@ net.Receive("liaCharCreate", function(_, client)
 end)
 
 net.Receive("liaCharDelete", function(_, client)
+    print("[TEST] liaCharDelete received from client:", IsValid(client) and client:Nick() or "nil")
     local id = net.ReadUInt(32)
+    print("[TEST] Character ID to delete:", id)
     local character = lia.char.getCharacter(id)
+    print("[TEST] Fetched character:", character)
     local steamID = client:SteamID()
+    print("[TEST] Client SteamID:", steamID)
     if character and character.steamID == steamID then
+        print("[TEST] Character valid and owned by client; proceeding with delete.")
         hook.Run("CharDeleted", client, character)
         character:delete()
-        timer.Simple(.5, function() lia.module.get("mainmenu"):SyncCharList(client) end)
+        timer.Simple(.5, function()
+            print("[TEST] SyncCharList timer fired, syncing list for client.")
+            lia.module.get("mainmenu"):SyncCharList(client)
+        end)
+    else
+        print("[TEST] Delete denied: character invalid or not owned by client.")
     end
 end)
 

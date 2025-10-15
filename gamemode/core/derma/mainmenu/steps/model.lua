@@ -34,20 +34,11 @@ function PANEL:addLabel(text)
 end
 
 function PANEL:onDisplay()
-    print("[DEBUG] Model step onDisplay - context:", util.TableToJSON(self:getContext(), true))
     self.models:Clear()
     local factionIndex = self:getContext("faction")
-    if not factionIndex then
-        print("[DEBUG] No faction context in model step")
-        return
-    end
-
+    if not factionIndex then return end
     local faction = lia.faction.indices[factionIndex]
-    if not faction then
-        print("[DEBUG] No faction found for index:", factionIndex)
-        return
-    end
-
+    if not faction then return end
     local modelsToDisplay = self:filterCharacterModels(faction)
     local modelCount = 0
     local firstIdx
@@ -56,7 +47,6 @@ function PANEL:onDisplay()
         if not firstIdx then firstIdx = idx end
     end
 
-    print("[DEBUG] Model count after filtering:", modelCount)
     local shouldCenter = modelCount <= 1
     if IsValid(self.title) then self.title:SetVisible(not shouldCenter) end
     if IsValid(self.models) then self.models:SetVisible(not shouldCenter) end

@@ -459,7 +459,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
             local combo = vgui.Create("liaComboBox", popup)
             combo:Dock(TOP)
             combo:PostInit()
-            for _, character in pairs(lia.char.loaded) do
+            for _, character in pairs(lia.char.getAll()) do
                 local ply = character:getPlayer()
                 if IsValid(ply) then
                     local steamID = ply:SteamID() or ""
