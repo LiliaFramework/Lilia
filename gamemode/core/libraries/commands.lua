@@ -785,9 +785,9 @@ if SERVER then
 
         for _, notification in ipairs(notificationTypes) do
             if notification.method == "notify" then
-                lia.notifier.notify(notification.message, notification.type)
+                lia.notices.notify(notification.message, notification.type)
             else
-                lia.notifier[notification.method](notification.message)
+                lia.notices.notify(notification.message, notification.type)
             end
         end
     end)
@@ -808,11 +808,11 @@ if SERVER then
             return
         end
 
-        lia.notifier.notify(L("testNotification"))
-        lia.notifier.notifyInfo(L("testNotificationInfo"))
-        lia.notifier.notifyWarning(L("testNotificationWarning"))
-        lia.notifier.notifyError(L("testNotificationError"))
-        lia.notifier.notifySuccess(L("testNotificationSuccess"))
+        lia.notices.notify(L("testNotification"))
+        lia.notices.notify(L("testNotificationInfo"), "info")
+        lia.notices.notify(L("testNotificationWarning"), "warning")
+        lia.notices.notify(L("testNotificationError"), "error")
+        lia.notices.notify(L("testNotificationSuccess"), "success")
     end)
 
     concommand.Add("print_vector", function(client)

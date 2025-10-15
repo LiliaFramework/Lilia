@@ -23,28 +23,41 @@ function PANEL:Init()
         if not s._shadowLerp then s._shadowLerp = 5 end
         local target = s:IsEditing() and 10 or 5
         s._shadowLerp = Lerp(FrameTime() * 10, s._shadowLerp, target)
+
+        -- background and base panel fill
         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(s._shadowLerp, 20):Draw()
         lia.derma.rect(0, 0, w, h):Rad(16):Color(self.panelColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        local value = self:GetValue()
-        surface.SetFont(font)
-        local padding = 6
-        local available_w = w - padding * 2
-        local caret = #value
-        local before_caret = string.sub(value, 1, caret)
-        local caret_x = surface.GetTextSize(before_caret)
-        local text_w = surface.GetTextSize(value)
-        local desired_offset = 0
-        if caret_x > available_w then desired_offset = caret_x - available_w end
-        if text_w - desired_offset < available_w then desired_offset = math.max(0, text_w - available_w) end
-        self._text_offset = Lerp(FrameTime() * 15, self._text_offset or 0, desired_offset)
-        local text = self.placeholder
-        local col = lia.color.theme.gray
-        if value ~= "" then
-            text = value
-            col = lia.color.theme.text_entry or lia.color.theme.text
+
+        -- hover/focus feedback
+        s._hoverFrac = Lerp(FrameTime() * 10, s._hoverFrac or 0, s:IsHovered() and 1 or 0)
+        s._focusFrac = Lerp(FrameTime() * 10, s._focusFrac or 0, (s:IsEditing() or s:HasFocus()) and 1 or 0)
+
+        if s._hoverFrac > 0 then
+            local hov = lia.color.theme.button_hovered or Color(255, 255, 255)
+            lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(hov.r, hov.g, hov.b, math.floor(s._hoverFrac * 90))):Shape(lia.derma.SHAPE_IOS):Draw()
         end
 
-        draw.SimpleText(text, font, padding - self._text_offset, h * 0.5, col, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        if s._focusFrac > 0 then
+            local ac = lia.color.theme.theme or lia.color.theme.accent or color_white
+            lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(ac.r, ac.g, ac.b, math.floor(s._focusFrac * 255))):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw()
+        end
+
+        -- text / placeholder
+        local value = self:GetValue()
+        local padding = 6
+
+        if value == "" then
+            surface.SetFont(font)
+            local phColor = lia.color.theme.gray
+            draw.SimpleText(self.placeholder or "", font, padding, h * 0.5, phColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        end
+
+        -- draw actual text, selection highlight and caret on top
+        local textCol = lia.color.theme.text_entry or lia.color.theme.text or color_white
+        local selBase = lia.color.theme.theme or lia.color.theme.accent or Color(100, 100, 255)
+        local selCol = Color(selBase.r, selBase.g, selBase.b, 60)
+        local caretCol = lia.color.theme.theme or lia.color.theme.accent or textCol
+        s:DrawTextEntryText(textCol, selCol, caretCol)
     end
 end
 
