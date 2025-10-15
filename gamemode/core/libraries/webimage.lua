@@ -58,7 +58,6 @@ end
 
 function lia.webimage.download(n, u, cb, flags)
     if not isstring(n) then return end
-
     local url = u or lia.webimage.stored[n] and lia.webimage.stored[n].url
     local flg = flags or lia.webimage.stored[n] and lia.webimage.stored[n].flags
     if not url or url == "" then
