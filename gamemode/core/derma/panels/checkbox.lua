@@ -103,13 +103,9 @@ function PANEL:DoClick()
 end
 
 function PANEL:OnChange(value)
-    -- Call the user-defined callback if it exists
-    if self.userOnChange then
-        self:userOnChange(self, value)
-    end
+    if self.userOnChange then self:userOnChange(self, value) end
 end
 
--- Override __newindex to capture OnChange assignments
 local originalNewIndex = PANEL.__newindex
 PANEL.__newindex = function(self, key, value)
     if key == "OnChange" and type(value) == "function" then

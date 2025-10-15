@@ -399,28 +399,22 @@ function PANEL:Paint(w, h)
     lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
 end
 
--- DListView compatibility methods
 function PANEL:DoDoubleClick(lineID, line)
-    -- Default implementation - can be overridden
     if self.OnRowDoubleClick then self:OnRowDoubleClick(lineID, line) end
 end
 
 function PANEL:OnRowRightClick(_, line)
-    -- Default implementation - can be overridden
     if self.OnRightClick then self:OnRightClick(line) end
 end
 
 function PANEL:OnRowSelected()
-    -- Default implementation - can be overridden
 end
 
 function PANEL:OnClickLine(line, isSelected)
-    -- Default implementation - can be overridden
     if self.OnRowClick then self:OnRowClick(line, isSelected) end
 end
 
 function PANEL:OnRequestResize(_, iWidth, iHeight)
-    -- Default implementation - can be overridden
     return iWidth, iHeight
 end
 
@@ -430,7 +424,6 @@ function PANEL:ColumnWidth(i)
 end
 
 function PANEL:DataLayout()
-    -- Returns the layout type - for compatibility
     return self.dataLayout or "default"
 end
 
@@ -500,9 +493,7 @@ function PANEL:SelectItem(lineID)
     if lineID < 1 or lineID > #self.rows then return end
     local oldSelected = self.selectedRow
     self.selectedRow = lineID
-    -- Call selection callback
     if self.OnRowSelected and oldSelected ~= lineID then self:OnRowSelected(lineID, self.rows[lineID]) end
-    -- Call click callback
     if self.OnClickLine then self:OnClickLine(self.rows[lineID], true) end
 end
 
@@ -582,7 +573,6 @@ end
 function PANEL:SortByColumns(...)
     local args = {...}
     if #args == 0 then return end
-    -- Sort by first column provided
     self:SortByColumn(args[1])
 end
 
@@ -609,7 +599,6 @@ end
 
 function PANEL:SetMultiSelect(multi)
     self.multiSelect = multi or false
-    -- For now, single selection only - multi-select would require more complex implementation
 end
 
 function PANEL:SetSortable(sortable)
@@ -618,7 +607,6 @@ function PANEL:SetSortable(sortable)
     end
 end
 
--- Enhanced row interaction
 function PANEL:CreateRow(rowIndex, rowData)
     local row = vgui.Create("DButton", self.content)
     row:Dock(TOP)
@@ -633,18 +621,13 @@ function PANEL:CreateRow(rowIndex, rowData)
     row.DoClick = function()
         local wasSelected = self.selectedRow == rowIndex
         if self.multiSelect then
-            -- For multi-select, we'd need to handle multiple selections
-            -- For now, just single selection behavior
             self.selectedRow = rowIndex
         else
             self.selectedRow = rowIndex
         end
 
-        -- Call selection callback
         if self.OnRowSelected then self:OnRowSelected(rowIndex, rowData) end
-        -- Call click callback
         if self.OnClickLine then self:OnClickLine(rowData, not wasSelected) end
-        -- Call action callback
         if self.OnAction then self:OnAction(rowData) end
         surface.PlaySound("button_click.wav")
     end
@@ -653,7 +636,6 @@ function PANEL:CreateRow(rowIndex, rowData)
     row.DoRightClick = function()
         if not self.multiSelect then self.selectedRow = rowIndex end
         self:OnRowRightClick(rowIndex, rowData)
-        -- Call right click callback
         if self.OnRightClick then self:OnRightClick(rowData) end
         local menu = lia.derma.dermaMenu()
         for _, option in ipairs(self.customMenuOptions) do

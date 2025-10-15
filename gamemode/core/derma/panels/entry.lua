@@ -23,15 +23,10 @@ function PANEL:Init()
         if not s._shadowLerp then s._shadowLerp = 5 end
         local target = s:IsEditing() and 10 or 5
         s._shadowLerp = Lerp(FrameTime() * 10, s._shadowLerp, target)
-
-        -- background and base panel fill
         lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(s._shadowLerp, 20):Draw()
         lia.derma.rect(0, 0, w, h):Rad(16):Color(self.panelColor):Shape(lia.derma.SHAPE_IOS):Draw()
-
-        -- hover/focus feedback
         s._hoverFrac = Lerp(FrameTime() * 10, s._hoverFrac or 0, s:IsHovered() and 1 or 0)
         s._focusFrac = Lerp(FrameTime() * 10, s._focusFrac or 0, (s:IsEditing() or s:HasFocus()) and 1 or 0)
-
         if s._hoverFrac > 0 then
             local hov = lia.color.theme.button_hovered or Color(255, 255, 255)
             lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(hov.r, hov.g, hov.b, math.floor(s._hoverFrac * 90))):Shape(lia.derma.SHAPE_IOS):Draw()
@@ -42,17 +37,14 @@ function PANEL:Init()
             lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(ac.r, ac.g, ac.b, math.floor(s._focusFrac * 255))):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw()
         end
 
-        -- text / placeholder
         local value = self:GetValue()
         local padding = 6
-
         if value == "" then
             surface.SetFont(font)
             local phColor = lia.color.theme.gray
             draw.SimpleText(self.placeholder or "", font, padding, h * 0.5, phColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
 
-        -- draw actual text, selection highlight and caret on top
         local textCol = lia.color.theme.text_entry or lia.color.theme.text or color_white
         local selBase = lia.color.theme.theme or lia.color.theme.accent or Color(100, 100, 255)
         local selCol = Color(selBase.r, selBase.g, selBase.b, 60)
@@ -115,7 +107,6 @@ function PANEL:SetTextColor(color)
     if IsValid(self.textEntry) then self.textEntry:SetTextColor(color) end
 end
 
--- Getter methods for DTextEntry properties
 function PANEL:GetAutoComplete()
     if self.textEntry.GetAutoComplete then return self.textEntry:GetAutoComplete() end
 end
@@ -188,7 +179,6 @@ function PANEL:IsEditing()
     if self.textEntry.IsEditing then return self.textEntry:IsEditing() end
 end
 
--- Setter methods for DTextEntry properties
 function PANEL:SetCursorColor(color)
     if self.textEntry.SetCursorColor then self.textEntry:SetCursorColor(color) end
 end
@@ -249,7 +239,6 @@ function PANEL:SetUpdateOnType(update)
     if self.textEntry.SetUpdateOnType then self.textEntry:SetUpdateOnType(update) end
 end
 
--- Callback/Event handler methods
 function PANEL:OnChange()
     if self.textEntry.OnChange then self.textEntry:OnChange() end
 end
@@ -262,7 +251,6 @@ function PANEL:OnKeyCode(code)
     if self.textEntry.OnKeyCode then self.textEntry:OnKeyCode(code) end
 end
 
--- Utility methods
 function PANEL:AddHistory(value)
     if self.textEntry.AddHistory then self.textEntry:AddHistory(value) end
 end

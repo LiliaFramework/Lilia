@@ -337,9 +337,7 @@ function PANEL:CheckConVarChanges()
     local convar = GetConVar(self.convar)
     if convar then
         local convarValue = convar:GetString()
-        if convarValue and convarValue ~= self.selected then
-            self.selected = convarValue
-        end
+        if convarValue and convarValue ~= self.selected then self.selected = convarValue end
     end
 end
 
@@ -362,10 +360,8 @@ end
 
 function PANEL:RemoveChoice(indexOrValue)
     if isnumber(indexOrValue) then
-        -- Remove by index
         if indexOrValue >= 1 and indexOrValue <= #self.choices then table.remove(self.choices, indexOrValue) end
     else
-        -- Remove by value
         for i, choice in ipairs(self.choices) do
             if choice.text == indexOrValue then
                 table.remove(self.choices, i)

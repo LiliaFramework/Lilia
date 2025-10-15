@@ -487,7 +487,6 @@ function PANEL:HighlightItem(item)
 end
 
 function PANEL:OptionSelected(option)
-    -- Hook for when an option is selected
     if option and IsValid(option) and option.Func then option:DoClick() end
 end
 
@@ -512,7 +511,6 @@ function PANEL:SetOpenSubMenu(item)
     if IsValid(item) and item._submenu and not item._submenu_open then item:OpenSubMenu() end
 end
 
--- DScrollPanel methods
 function PANEL:AddItem(pnl)
     return self:AddPanel(pnl)
 end
@@ -535,7 +533,6 @@ function PANEL:InnerWidth()
 end
 
 function PANEL:PerformLayoutInternal()
-    -- Layout internal elements
 end
 
 function PANEL:Rebuild()
@@ -543,7 +540,6 @@ function PANEL:Rebuild()
 end
 
 function PANEL:ScrollToChild(panel)
-    -- Scroll to make the child panel visible
     if not IsValid(panel) then return end
     local canvas = self:GetCanvas()
     if not IsValid(canvas) then return end

@@ -298,7 +298,6 @@ function PANEL:Close()
 end
 
 function PANEL:OnClose()
-    -- Hook for when the frame is closed
 end
 
 function PANEL:GetBackgroundBlur()
@@ -318,7 +317,6 @@ function PANEL:GetIsMenu()
 end
 
 function PANEL:SetIsMenu()
-    -- liaFrame doesn't have menu-specific behavior, but this method is provided for compatibility
 end
 
 function PANEL:GetMinHeight()
@@ -338,7 +336,6 @@ function PANEL:GetPaintShadow()
 end
 
 function PANEL:SetPaintShadow()
-    -- liaFrame always paints shadow, but this method is provided for compatibility
 end
 
 function PANEL:GetScreenLock()

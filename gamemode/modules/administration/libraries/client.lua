@@ -920,37 +920,23 @@ local function OpenReasonUI(tgt, cmd)
         ts:SetMin(0)
         ts:SetMax(365)
         ts:SetDecimals(0)
-
-        -- Override Paint to position value above bar
         ts.Paint = function(s, w)
             if not IsValid(s.Label) then return end
-
-            -- Draw label above the slider
             s.Label:Dock(TOP)
             s.Label:DockMargin(0, 0, 0, 5)
             s.Label:SetTall(20)
             s.Label:SetTextColor(lia.color.theme.text or color_white)
-
-            -- Draw the slider track and handle
             local trackY = 25
             local trackHeight = 6
             local handleWidth = 20
             local progress = (s:GetValue() - s:GetMin()) / (s:GetMax() - s:GetMin())
             local activeWidth = math.Clamp(w * progress, 0, w)
-
-            -- Track background
             lia.derma.rect(0, trackY, w, trackHeight):Rad(3):Color(lia.color.theme.window_shadow or Color(60, 60, 60)):Draw()
             lia.derma.rect(0, trackY, w, trackHeight):Rad(3):Color(lia.color.theme.focus_panel or Color(80, 80, 80)):Draw()
-
-            -- Active progress
             lia.derma.rect(0, trackY, activeWidth, trackHeight):Rad(3):Color(lia.color.theme.theme or Color(100, 150, 200)):Draw()
-
-            -- Handle
             local handleX = activeWidth - handleWidth / 2
             handleX = math.Clamp(handleX, 0, w - handleWidth)
             lia.derma.rect(handleX, trackY - 2, handleWidth, trackHeight + 4):Rad(3):Color(lia.color.theme.theme or Color(100, 150, 200)):Shadow(2, 8):Draw()
-
-            -- Value text above everything
             draw.SimpleText(s:GetValue(), "LiliaFont.16", w / 2, 8, lia.color.theme.text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
