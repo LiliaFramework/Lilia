@@ -80,7 +80,8 @@ function PANEL:Init()
     end
     serverIcon:SetVisible(false)
     local serverIconPath = lia.config.get("ServerLogo", "")
-    if serverIconPath and serverIconPath ~= "" then
+    local scoreboardLogoEnabled = lia.config.get("ScoreboardLogoEnabled", true)
+    if scoreboardLogoEnabled and serverIconPath and serverIconPath ~= "" then
         local material = Material(serverIconPath)
         if material then
             serverIcon:SetMaterial(material)

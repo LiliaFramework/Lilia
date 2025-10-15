@@ -143,6 +143,7 @@ function PANEL:createStartButton()
     local clientChar = client.getChar and client:getChar()
     local w, h, s = ScrW() * 0.2, ScrH() * 0.04, ScrH() * 0.01
     local logoPath = lia.config.get("ServerLogo") or ""
+    local mainMenuLogoEnabled = lia.config.get("MainMenuLogoEnabled", true)
     local discordURL = lia.config.get("DiscordURL", "")
     local workshopURL = lia.config.get("Workshop", "")
     local buttonsData = {}
@@ -298,7 +299,7 @@ function PANEL:createStartButton()
         self.buttons[data.id] = btn
     end
 
-    if logoPath ~= "" then
+    if mainMenuLogoEnabled and logoPath ~= "" then
         local function setLogo(img)
             if not IsValid(self) then return end
             img:SetZPos(9999)

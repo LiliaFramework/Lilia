@@ -840,6 +840,18 @@ lia.config.add("ServerLogo", "mainMenuCenterLogo", "", nil, {
     type = "Generic"
 })
 
+lia.config.add("ScoreboardLogoEnabled", "scoreboardLogoEnabled", true, nil, {
+    desc = "scoreboardLogoEnabledDesc",
+    category = "mainMenu",
+    type = "Boolean"
+})
+
+lia.config.add("MainMenuLogoEnabled", "mainMenuLogoEnabled", true, nil, {
+    desc = "mainMenuLogoEnabledDesc",
+    category = "mainMenu",
+    type = "Boolean"
+})
+
 lia.config.add("DiscordURL", "mainMenuDiscordURL", "", nil, {
     desc = "mainMenuDiscordURLDesc",
     category = "mainMenu",
