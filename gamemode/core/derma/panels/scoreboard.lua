@@ -78,6 +78,7 @@ function PANEL:Init()
         icon:SetWide(87)
         icon:SetTall(32)
     end
+
     serverIcon:SetVisible(false)
     local serverIconPath = lia.config.get("ServerLogo", "")
     local scoreboardLogoEnabled = lia.config.get("ScoreboardLogoEnabled", true)
