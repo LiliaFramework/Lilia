@@ -8,11 +8,8 @@ function PANEL:Init()
     self.access:Dock(FILL)
     local headerColor = lia.color.theme.header_text or Color(255, 255, 255)
     local headerBgColor = lia.color.theme.header or Color(45, 45, 45)
-
     self.access:AddColumn(L("name")).Header:SetTextColor(headerColor)
     self.access:AddColumn(L("doorAccess")).Header:SetTextColor(headerColor)
-
-    -- Style the header background
     for _, column in pairs(self.access.Columns) do
         if column.Header then
             column.Header.Paint = function(_, w, h)
@@ -22,13 +19,11 @@ function PANEL:Init()
         end
     end
 
-    -- Style the list view background and rows
     self.access.Paint = function(_, w, h)
         surface.SetDrawColor(lia.color.theme.panel[1] or Color(35, 35, 35))
         surface.DrawRect(0, 0, w, h)
     end
 
-    -- Style alternating row colors
     local rowIndex = 0
     self.access.PaintOver = function()
         for _, line in pairs(self.access:GetLines()) do
@@ -39,8 +34,10 @@ function PANEL:Init()
                 rowIndex = rowIndex + 1
             end
         end
+
         rowIndex = 0
     end
+
     self.access.OnClickLine = function(_, line)
         if not IsValid(line.player) then return end
         local menu = lia.derma.dermaMenu()

@@ -242,7 +242,6 @@ else
         end
     end
 
-
     hook.Add("CreateInformationButtons", "liaWorkshopInfo", function(pages)
         table.insert(pages, {
             name = "workshopAddons",

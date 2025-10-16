@@ -133,13 +133,10 @@ end)
 
 function MODULE:AddToAdminStickHUD(_, target, information)
     if not IsValid(target) or not target.IsVendor then return end
-    -- Add vendor name
     local name = target:getName()
     if name and name ~= "" then table.insert(information, L("vendor") .. " " .. L("name") .. ": " .. name) end
-    -- Add vendor animation
     local animation = target:getNetVar("animation", "")
     if animation and animation ~= "" then table.insert(information, L("animation") .. ": " .. animation) end
-    -- Add item count
     local itemCount = 0
     if target.items then
         for _, itemData in pairs(target.items) do
@@ -148,7 +145,6 @@ function MODULE:AddToAdminStickHUD(_, target, information)
     end
 
     table.insert(information, L("vendorItemCount") .. ": " .. itemCount)
-    -- Add faction access
     local factionNames = {}
     if target.factions then
         for factionID, _ in pairs(target.factions) do
@@ -162,12 +158,12 @@ function MODULE:AddToAdminStickHUD(_, target, information)
         for _, factionName in ipairs(factionNames) do
             table.insert(information, "- " .. factionName)
         end
-        table.insert(information, "") -- Add line break between factions and classes
+
+        table.insert(information, "")
     else
         table.insert(information, L("factions") .. ": " .. L("all"))
     end
 
-    -- Add class access
     local classNames = {}
     if target.classes then
         for classID, _ in pairs(target.classes) do
