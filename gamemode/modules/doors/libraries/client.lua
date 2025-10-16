@@ -25,14 +25,14 @@
 
     if factions and #factions > 0 then
         table.insert(doorInfo, {
-            text = L("factions") .. ":"
+            text = "Allowed Factions:"
         })
 
         for _, id in ipairs(factions) do
             local info = lia.faction.get(id)
             if info then
                 table.insert(doorInfo, {
-                    text = info.name,
+                    text = "- " .. info.name,
                     color = info.color or color_white
                 })
             end
@@ -49,12 +49,12 @@
 
         if #classData > 0 then
             table.insert(doorInfo, {
-                text = L("classes") .. ":"
+                text = "Allowed Classes:"
             })
 
             for _, data in ipairs(classData) do
                 table.insert(doorInfo, {
-                    text = data.name,
+                    text = "- " .. data.name,
                     color = data.color or color_white
                 })
             end
@@ -157,5 +157,132 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
                 AdminStickIsOpen = false
             end):SetIcon("icon16/delete.png")
         end
+    end
+end
+
+-- Add door information to admin stick HUD
+function MODULE:AddToAdminStickHUD(_, target, information)
+    if IsValid(target) and target:isDoor() then
+        -- Allow other modules to add custom door information
+        local extraInfo = {}
+        hook.Run("GetDoorInfoForAdminStick", target, extraInfo)
+        -- Add extra information from sub-hook
+        for _, info in ipairs(extraInfo) do
+            table.insert(information, info)
+        end
+
+        -- Basic door data from netvars with defaults
+        local doorData = target:getNetVar("doorData", {})
+        -- Define all possible door variables with their default values
+        local defaultDoorData = {
+            name = "",
+            price = 0,
+            locked = false,
+            disabled = false,
+            hidden = false,
+            noSell = false,
+            ownable = true,
+            factions = {},
+            classes = {}
+        }
+
+        -- Create user-friendly labels and formatters for door variables
+        local doorLabels = {
+            name = "Name",
+            price = "Price",
+            locked = "Locked",
+            disabled = "Disabled",
+            hidden = "Hidden",
+            noSell = "Can Be Sold",
+            ownable = "Can Be Owned",
+            factions = "Allowed Factions",
+            classes = "Allowed Classes"
+        }
+
+        -- Show all door variables (defined values override defaults)
+        for key, defaultValue in pairs(defaultDoorData) do
+            -- Skip factions and classes here as they're handled separately below
+            if key ~= "factions" and key ~= "classes" then
+                local value = doorData[key]
+                local label = doorLabels[key] or key
+                local displayValue = value
+                -- Use defined value if it exists, otherwise use default
+                if value == nil then displayValue = defaultValue end
+                -- Handle different value types with custom formatting
+                if type(displayValue) == "boolean" then
+                    -- Format boolean values with appropriate labels
+                    local booleanLabels = {
+                        locked = function(val) return val and "Locked" or "Unlocked" end,
+                        disabled = function(val) return val and "Disabled" or "Enabled" end,
+                        hidden = function(val) return val and "Hidden" or "Visible" end,
+                        noSell = function(val) return val and "Cannot Be Sold" or "Can Be Sold" end,
+                        ownable = function(val) return val and "Can Be Owned" or "Cannot Be Owned" end
+                    }
+
+                    if booleanLabels[key] then
+                        displayValue = booleanLabels[key](displayValue)
+                    else
+                        displayValue = displayValue and "Yes" or "No"
+                    end
+                elseif type(displayValue) == "number" and key == "price" then
+                    displayValue = lia.currency.get(displayValue)
+                elseif type(displayValue) == "table" then
+                    displayValue = util.TableToJSON(displayValue)
+                elseif type(displayValue) == "string" and displayValue == "" then
+                    displayValue = "(none)"
+                end
+
+                table.insert(information, label .. ": " .. displayValue)
+            end
+        end
+
+        -- Faction access
+        local factions = target:getNetVar("factions")
+        if factions and factions ~= "[]" then
+            local factionData = util.JSONToTable(factions)
+            if factionData and #factionData > 0 then
+                local factionNames = {}
+                for _, factionId in ipairs(factionData) do
+                    local faction = lia.faction.indices[factionId]
+                    if faction then table.insert(factionNames, faction.name) end
+                end
+
+                if #factionNames > 0 then
+                    table.insert(information, "Allowed Factions:")
+                    for _, factionName in ipairs(factionNames) do
+                        table.insert(information, "- " .. factionName)
+                    end
+                end
+            end
+        end
+
+        -- Class access
+        local classes = target:getNetVar("classes")
+        if classes and classes ~= "[]" then
+            local classData = util.JSONToTable(classes)
+            if classData and #classData > 0 then
+                local classNames = {}
+                for _, classId in ipairs(classData) do
+                    local classIndex = lia.class.retrieveClass(classId)
+                    local classInfo = lia.class.list[classIndex]
+                    if classInfo then table.insert(classNames, classInfo.name) end
+                end
+
+                if #classNames > 0 then
+                    table.insert(information, "Allowed Classes:")
+                    for _, className in ipairs(classNames) do
+                        table.insert(information, "- " .. className)
+                    end
+                end
+            end
+        end
+
+        -- Door access data
+        if target.liaAccess then table.insert(information, "Access Data: " .. util.TableToJSON(target.liaAccess)) end
+        -- Door partner
+        if target.liaPartner and IsValid(target.liaPartner) then table.insert(information, "Partner Door: " .. tostring(target.liaPartner)) end
+        -- Entity properties
+        table.insert(information, "Is Locked: " .. (target:isLocked() and "Yes" or "No"))
+        table.insert(information, "ID: " .. tostring(target:MapCreationID()))
     end
 end

@@ -99,13 +99,13 @@ function lia.char.registerVar(key, data)
                 if curChar and curChar == self then sendID = false end
                 local oldVar = self.vars[key]
                 self.vars[key] = value
-                local player = self:getPlayer()
-                if player and IsValid(player) and player:IsPlayer() then
+                local ply = self:getPlayer()
+                if ply and IsValid(ply) and ply:IsPlayer() then
                     net.Start("liaCharSet")
                     net.WriteString(key)
                     net.WriteType(value)
                     net.WriteType(sendID and self:getID() or nil)
-                    net.Send(player)
+                    net.Send(ply)
                 end
 
                 hook.Run("OnCharVarChanged", self, key, oldVar, value)
@@ -783,6 +783,7 @@ if SERVER then
             if IsValid(ply) then
                 net.Start("liaCharDeleted")
                 net.Send(ply)
+                if ply.liaCharList then lia.module.get("mainmenu"):SyncCharList(ply) end
             end
         end
     end

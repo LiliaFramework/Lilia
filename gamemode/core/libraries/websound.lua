@@ -359,100 +359,10 @@ function surface.PlaySound(soundPath, _, cb)
     if cb then cb(true) end
 end
 
-concommand.Add("lia_saved_sounds", function()
-    local files = file.Find(baseDir .. "*", "DATA")
-    if not files or #files == 0 then return end
-    local f = vgui.Create("DFrame")
-    f:SetTitle(L("webSoundsTitle"))
-    f:SetSize(ScrW() * 0.6, ScrH() * 0.6)
-    f:Center()
-    f:MakePopup()
-    local scroll = vgui.Create("liaScrollPanel", f)
-    scroll:Dock(FILL)
-    local layout = vgui.Create("DIconLayout", scroll)
-    layout:Dock(FILL)
-    layout:SetSpaceX(4)
-    layout:SetSpaceY(4)
-    for _, fn in ipairs(files) do
-        local btn = layout:Add("DButton")
-        btn:SetText(fn)
-        btn:SetSize(200, 20)
-        btn.DoClick = function() sound.PlayFile(buildPath(baseDir .. fn), "", function(chan) if chan then chan:Play() end end) end
-    end
-end)
 
-concommand.Add("lia_wipe_sounds", function()
-    local files = file.Find(baseDir .. "*", "DATA")
-    for _, fn in ipairs(files) do
-        file.Delete(baseDir .. fn)
-    end
 
-    cache = {}
-    urlMap = {}
-    MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " " .. L("webSoundCacheCleared") .. "\n")
-    timer.Simple(0.1, function()
-        for name, url in pairs(lia.websound.stored) do
-            lia.websound.download(name, url)
-        end
 
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(0, 255, 0), "[WebSound]", Color(255, 255, 255), " Started re-downloading stored sounds...\n")
-    end)
-end)
 
-concommand.Add("lia_validate_sounds", function()
-    local files = file.Find(baseDir .. "**", "DATA")
-    local validCount = 0
-    local invalidCount = 0
-    local corruptedFiles = {}
-    for _, fileName in ipairs(files) do
-        local filePath = baseDir .. fileName
-        local fileData = file.Read(filePath, "DATA")
-        if fileData then
-            local isValid, _ = validateSoundFile(fileName, fileData)
-            if isValid then
-                validCount = validCount + 1
-            else
-                invalidCount = invalidCount + 1
-                table.insert(corruptedFiles, fileName)
-            end
-        else
-            invalidCount = invalidCount + 1
-            table.insert(corruptedFiles, fileName)
-        end
-    end
-end)
-
-concommand.Add("lia_cleanup_sounds", function()
-    local files = file.Find(baseDir .. "**", "DATA")
-    local removedCount = 0
-    for _, fileName in ipairs(files) do
-        local filePath = baseDir .. fileName
-        local fileData = file.Read(filePath, "DATA")
-        if fileData then
-            local isValid, _ = validateSoundFile(fileName, fileData)
-            if not isValid then
-                file.Delete(filePath)
-                removedCount = removedCount + 1
-            end
-        else
-            file.Delete(filePath)
-            removedCount = removedCount + 1
-        end
-    end
-
-    for fileName, _ in pairs(cache) do
-        local savePath = baseDir .. fileName
-        if not file.Exists(savePath, "DATA") then cache[fileName] = nil end
-    end
-end)
-
-concommand.Add("lia_list_sounds", function()
-    local files = file.Find(baseDir .. "**", "DATA")
-    if #files == 0 then return end
-    for _, fileName in ipairs(files) do
-        file.Size(baseDir .. fileName, "DATA")
-    end
-end)
 
 function lia.websound.getStats()
     local totalStored = 0

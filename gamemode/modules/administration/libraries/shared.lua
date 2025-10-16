@@ -28,6 +28,36 @@ properties.Add("TogglePropBlacklist", {
     end
 })
 
+lia.command.add("sayall", {
+    description = "Sends a phrase to all registered chat types",
+    privilege = "adminChat",
+    adminOnly = true,
+    arguments = {
+        {
+            name = "phrase",
+            type = "string"
+        }
+    },
+    onRun = function(client, arguments)
+        local phrase = table.concat(arguments, " ")
+        if not phrase or phrase == "" then
+            client:notifyErrorLocalized("invalidPhrase")
+            return
+        end
+
+        local chatCount = 0
+        for chatType, chatData in pairs(lia.chat.classes) do
+            -- Skip chat types that don't have proper message handling
+            if chatData.onCanSay and chatType ~= "adminchat" then
+                lia.chat.send(client, chatType, phrase, false)
+                chatCount = chatCount + 1
+            end
+        end
+
+        client:notifySuccessLocalized("sentToAllChats", chatCount, phrase)
+    end
+})
+
 properties.Add("ToggleCarBlacklist", {
     MenuLabel = L("toggleCarBlacklist"),
     Order = 901,

@@ -130,3 +130,56 @@ net.Receive("liaVendorAllowClass", function()
 
     hook.Run("VendorClassUpdated", vendor, id, allowed)
 end)
+
+function MODULE:AddToAdminStickHUD(_, target, information)
+    if not IsValid(target) or not target.IsVendor then return end
+    -- Add vendor name
+    local name = target:getName()
+    if name and name ~= "" then table.insert(information, L("vendor") .. " " .. L("name") .. ": " .. name) end
+    -- Add vendor animation
+    local animation = target:getNetVar("animation", "")
+    if animation and animation ~= "" then table.insert(information, L("animation") .. ": " .. animation) end
+    -- Add item count
+    local itemCount = 0
+    if target.items then
+        for _, itemData in pairs(target.items) do
+            if itemData[VENDOR_STOCK] and itemData[VENDOR_STOCK] > 0 then itemCount = itemCount + 1 end
+        end
+    end
+
+    table.insert(information, L("vendorItemCount") .. ": " .. itemCount)
+    -- Add faction access
+    local factionNames = {}
+    if target.factions then
+        for factionID, _ in pairs(target.factions) do
+            local faction = lia.faction.indices[factionID]
+            if faction then table.insert(factionNames, faction.name) end
+        end
+    end
+
+    if #factionNames > 0 then
+        table.insert(information, "Allowed Factions:")
+        for _, factionName in ipairs(factionNames) do
+            table.insert(information, "- " .. factionName)
+        end
+        table.insert(information, "") -- Add line break between factions and classes
+    else
+        table.insert(information, L("factions") .. ": " .. L("all"))
+    end
+
+    -- Add class access
+    local classNames = {}
+    if target.classes then
+        for classID, _ in pairs(target.classes) do
+            local class = lia.class.list[classID]
+            if class then table.insert(classNames, class.name) end
+        end
+    end
+
+    if #classNames > 0 then
+        table.insert(information, "Allowed Classes:")
+        for _, className in ipairs(classNames) do
+            table.insert(information, "- " .. className)
+        end
+    end
+end

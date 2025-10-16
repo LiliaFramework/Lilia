@@ -119,8 +119,8 @@ function PANEL:GetDisabled()
     if self.textEntry.GetDisabled then return self.textEntry:GetDisabled() end
 end
 
-function PANEL:GetDrawBackground()
-    if self.textEntry.GetDrawBackground then return self.textEntry:GetDrawBackground() end
+function PANEL:GetPaintBackground()
+    if self.textEntry.GetPaintBackground then return self.textEntry:GetPaintBackground() end
 end
 
 function PANEL:GetDrawBorder()
@@ -187,8 +187,8 @@ function PANEL:SetDisabled(disabled)
     if self.textEntry.SetDisabled then self.textEntry:SetDisabled(disabled) end
 end
 
-function PANEL:SetDrawBackground(drawBackground)
-    if self.textEntry.SetDrawBackground then self.textEntry:SetDrawBackground(drawBackground) end
+function PANEL:SetPaintBackground(drawBackground)
+    if self.textEntry.SetPaintBackground then self.textEntry:SetPaintBackground(drawBackground) end
 end
 
 function PANEL:SetDrawBorder(drawBorder)

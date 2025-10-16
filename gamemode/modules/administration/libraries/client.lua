@@ -1,4 +1,38 @@
 ﻿local MODULE = MODULE
+AdminStickIsOpen = false
+local playerInfoLabel = L("player") .. " " .. L("information")
+local subMenuIcons = {
+    moderationTools = "icon16/wrench.png",
+    warnings = "icon16/error.png",
+    misc = "icon16/application_view_tile.png",
+    [playerInfoLabel] = "icon16/information.png",
+    characterManagement = "icon16/user_gray.png",
+    flagManagement = "icon16/flag_blue.png",
+    attributes = "icon16/chart_line.png",
+    charFlagsTitle = "icon16/flag_green.png",
+    giveFlagsLabel = "icon16/flag_blue.png",
+    takeFlagsLabel = "icon16/flag_red.png",
+    doorManagement = "icon16/door.png",
+    doorActions = "icon16/arrow_switch.png",
+    doorSettings = "icon16/cog.png",
+    doorMaintenance = "icon16/wrench.png",
+    doorInformation = "icon16/information.png",
+    administration = "icon16/lock.png",
+    items = "icon16/box.png",
+    ooc = "icon16/comment.png",
+    adminStickSubCategoryBans = "icon16/lock.png",
+    adminStickSubCategoryGetInfos = "icon16/magnifier.png",
+    adminStickSubCategorySetInfos = "icon16/pencil.png",
+    setFactionTitle = "icon16/group.png",
+    adminStickSetClassName = "icon16/user.png",
+    adminStickFactionWhitelistName = "icon16/group_add.png",
+    adminStickUnwhitelistName = "icon16/group_delete.png",
+    adminStickClassWhitelistName = "icon16/user_add.png",
+    adminStickClassUnwhitelistName = "icon16/user_delete.png",
+    server = "icon16/cog.png",
+    permissions = "icon16/key.png",
+}
+
 local function GetIdentifier(ent)
     if not IsValid(ent) or not ent:IsPlayer() then return "" end
     if ent:IsBot() then return ent:Name() end
@@ -567,120 +601,381 @@ spawnmenu.AddCreationTab(L("inventoryItems"), function()
     end
 end, "icon16/briefcase.png")
 
-AdminStickIsOpen = false
-local playerInfoLabel = L("player") .. " " .. L("information")
-MODULE.adminStickCategories = MODULE.adminStickCategories or {
-    moderation = {
-        name = L("adminStickCategoryModeration"),
-        icon = "icon16/shield.png",
-        subcategories = {
-            moderationTools = {
-                name = L("adminStickSubCategoryModerationTools"),
-                icon = "icon16/wrench.png"
-            },
-            warnings = {
-                name = L("adminStickCategoryWarnings"),
-                icon = "icon16/error.png"
-            },
-            misc = {
-                name = L("adminStickCategoryMiscellaneous"),
-                icon = "icon16/application_view_tile.png"
-            }
-        }
-    },
-    characterManagement = {
-        name = L("adminStickCategoryCharacterManagement"),
-        icon = "icon16/user_gray.png",
-        subcategories = {
-            attributes = {
-                name = L("adminStickSubCategoryAttributes"),
-                icon = "icon16/chart_line.png"
-            },
-            factions = {
-                name = L("adminStickSubCategoryFactions"),
-                icon = "icon16/group.png"
-            },
-            classes = {
-                name = L("adminStickSubCategoryClasses"),
-                icon = "icon16/user.png"
-            },
-            whitelists = {
-                name = L("adminStickSubCategoryWhitelists"),
-                icon = "icon16/group_add.png"
-            },
-            items = {
-                name = L("items"),
-                icon = "icon16/box.png"
-            },
-            adminStickSubCategoryBans = {
-                name = L("adminStickSubCategoryBans"),
-                icon = "icon16/lock.png"
-            },
-            adminStickSubCategorySetInfos = {
-                name = L("adminStickSubCategorySetInfos"),
-                icon = "icon16/pencil.png"
-            },
-            adminStickSubCategoryGetInfos = {
-                name = L("adminStickSubCategoryGetInfos"),
-                icon = "icon16/magnifier.png"
-            },
-            flags = {
-                name = L("adminStickSubCategoryCharacterFlags"),
-                icon = "icon16/flag_green.png"
-            }
-        }
-    },
-    doorManagement = {
-        name = L("adminStickCategoryDoorManagement"),
-        icon = "icon16/door.png",
-        subcategories = {
-            doorActions = {
-                name = L("adminStickSubCategoryDoorActions"),
-                icon = "icon16/arrow_switch.png"
-            },
-            doorSettings = {
-                name = L("adminStickSubCategoryDoorSettings"),
-                icon = "icon16/cog.png"
-            },
-            doorMaintenance = {
-                name = L("adminStickSubCategoryDoorMaintenance"),
-                icon = "icon16/wrench.png"
-            },
-            doorInformation = {
-                name = L("adminStickSubCategoryDoorInformation"),
-                icon = "icon16/information.png"
-            }
-        }
-    },
-    playerInformation = {
-        name = L("adminStickCategoryPlayerInformation"),
-        icon = "icon16/information.png"
-    },
-    teleportation = {
-        name = L("adminStickCategoryTeleportation"),
-        icon = "icon16/arrow_right.png"
-    },
-    utility = {
-        name = L("adminStickCategoryUtility"),
-        icon = "icon16/application_view_tile.png",
-        subcategories = {
-            commands = {
-                name = L("adminStickSubCategoryCommands"),
-                icon = "icon16/page.png"
-            },
-            items = {
-                name = L("adminStickCategoryItems"),
-                icon = "icon16/box.png"
-            },
-            ooc = {
-                name = L("adminStickCategoryOutOfCharacter"),
-                icon = "icon16/comment.png"
-            }
-        }
-    },
-}
+-- Dynamic category generation function
+local function GetIconForCategory(name)
+    -- Check for direct icon mappings first
+    if subMenuIcons[name] then return subMenuIcons[name] end
+    -- Try localized version
+    if subMenuIcons[L(name)] then return subMenuIcons[L(name)] end
+    -- Try to match against known patterns
+    local baseKey = name:match("^([^%(]+)") or name
+    baseKey = baseKey:gsub("^%s*(.-)%s*$", "%1")
+    if subMenuIcons[baseKey] then return subMenuIcons[baseKey] end
+    -- Dynamic icon generation based on keywords and patterns
+    local nameLower = name:lower()
+    local localizedName = L(name):lower()
+    -- Define keyword-to-icon mappings for dynamic generation
+    local iconMappings = {
+        -- Security/Moderation icons
+        ["moderation"] = "icon16/shield.png",
+        ["admin"] = "icon16/shield.png",
+        ["security"] = "icon16/shield.png",
+        -- Character/People icons
+        ["character"] = "icon16/user_gray.png",
+        ["player"] = "icon16/user_gray.png",
+        ["user"] = "icon16/user_gray.png",
+        ["person"] = "icon16/user_gray.png",
+        -- Door/Building icons
+        ["door"] = "icon16/door.png",
+        ["building"] = "icon16/door.png",
+        ["property"] = "icon16/door.png",
+        ["house"] = "icon16/door.png",
+        -- Information/Knowledge icons
+        ["information"] = "icon16/information.png",
+        ["info"] = "icon16/information.png",
+        ["data"] = "icon16/information.png",
+        ["knowledge"] = "icon16/information.png",
+        ["details"] = "icon16/information.png",
+        -- Movement/Teleport icons
+        ["teleport"] = "icon16/arrow_right.png",
+        ["move"] = "icon16/arrow_right.png",
+        ["travel"] = "icon16/arrow_right.png",
+        ["transport"] = "icon16/arrow_right.png",
+        -- Utility/Tools icons
+        ["utility"] = "icon16/application_view_tile.png",
+        ["tool"] = "icon16/application_view_tile.png",
+        ["misc"] = "icon16/application_view_tile.png",
+        ["miscellaneous"] = "icon16/application_view_tile.png",
+        ["other"] = "icon16/application_view_tile.png",
+        -- Flag/Permission icons
+        ["flag"] = "icon16/flag_green.png",
+        ["permission"] = "icon16/flag_green.png",
+        ["access"] = "icon16/flag_green.png",
+        ["privilege"] = "icon16/flag_green.png",
+        -- Item/Container icons
+        ["item"] = "icon16/box.png",
+        ["inventory"] = "icon16/box.png",
+        ["container"] = "icon16/box.png",
+        ["storage"] = "icon16/box.png",
+        -- Communication icons
+        ["ooc"] = "icon16/comment.png",
+        ["chat"] = "icon16/comment.png",
+        ["message"] = "icon16/comment.png",
+        ["talk"] = "icon16/comment.png",
+        ["communication"] = "icon16/comment.png",
+        -- Warning/Error icons
+        ["warning"] = "icon16/error.png",
+        ["alert"] = "icon16/error.png",
+        ["error"] = "icon16/error.png",
+        ["caution"] = "icon16/error.png",
+        -- Command/Control icons
+        ["command"] = "icon16/page.png",
+        ["control"] = "icon16/page.png",
+        ["manage"] = "icon16/page.png",
+        ["setting"] = "icon16/page.png",
+        -- Attribute/Stats icons
+        ["attribute"] = "icon16/chart_line.png",
+        ["stat"] = "icon16/chart_line.png",
+        ["skill"] = "icon16/chart_line.png",
+        ["level"] = "icon16/chart_line.png",
+        -- Group/Organization icons
+        ["faction"] = "icon16/group.png",
+        ["guild"] = "icon16/group.png",
+        ["team"] = "icon16/group.png",
+        ["organization"] = "icon16/group.png",
+        -- Class/Role icons
+        ["class"] = "icon16/user.png",
+        ["role"] = "icon16/user.png",
+        ["job"] = "icon16/user.png",
+        ["profession"] = "icon16/user.png",
+        -- Whitelist/Approval icons
+        ["whitelist"] = "icon16/group_add.png",
+        ["approve"] = "icon16/group_add.png",
+        ["accept"] = "icon16/group_add.png",
+        ["allow"] = "icon16/group_add.png",
+        -- Ban/Restriction icons
+        ["ban"] = "icon16/lock.png",
+        ["block"] = "icon16/lock.png",
+        ["restrict"] = "icon16/lock.png",
+        ["deny"] = "icon16/lock.png",
+    }
 
-MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {"playerInformation", "moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
+    -- Check for keyword matches in both original and localized names
+    for keyword, icon in pairs(iconMappings) do
+        if nameLower:find(keyword) or localizedName:find(keyword) then return icon end
+    end
+
+    -- Special handling for exact matches with localized versions
+    local localizedExactMatches = {
+        [L("adminStickCategoryModeration"):lower()] = "icon16/shield.png",
+        [L("adminStickCategoryCharacterManagement"):lower()] = "icon16/user_gray.png",
+        [L("adminStickCategoryDoorManagement"):lower()] = "icon16/door.png",
+        [L("adminStickCategoryPlayerInformation"):lower()] = "icon16/information.png",
+        [L("adminStickCategoryTeleportation"):lower()] = "icon16/arrow_right.png",
+        [L("adminStickCategoryUtility"):lower()] = "icon16/application_view_tile.png",
+        [L("adminStickCategoryMiscellaneous"):lower()] = "icon16/application_view_tile.png",
+        [L("adminStickCategoryItems"):lower()] = "icon16/box.png",
+        [L("adminStickCategoryOutOfCharacter"):lower()] = "icon16/comment.png",
+        [L("adminStickCategoryWarnings"):lower()] = "icon16/error.png",
+    }
+
+    if localizedExactMatches[localizedName] then return localizedExactMatches[localizedName] end
+    -- Try to generate icon based on category structure
+    -- If it contains "Management" or "Admin", use a management icon
+    if nameLower:find("management") or nameLower:find("admin") then return "icon16/cog.png" end
+    -- If it contains numbers or stats, use chart icon
+    if nameLower:find("stat") or nameLower:find("number") or nameLower:find("count") then return "icon16/chart_bar.png" end
+    -- If it contains "set" or "config", use settings icon
+    if nameLower:find("set") or nameLower:find("config") then return "icon16/cog.png" end
+    -- If it contains "get" or "view", use information icon
+    if nameLower:find("get") or nameLower:find("view") or nameLower:find("show") then return "icon16/information.png" end
+    -- Default fallback with some intelligence
+    if nameLower:find("list") or nameLower:find("all") then
+        return "icon16/table.png"
+    elseif nameLower:find("create") or nameLower:find("new") or nameLower:find("add") then
+        return "icon16/add.png"
+    elseif nameLower:find("delete") or nameLower:find("remove") then
+        return "icon16/delete.png"
+    elseif nameLower:find("edit") or nameLower:find("modify") then
+        return "icon16/pencil.png"
+    else
+        return "icon16/page.png"
+    end
+end
+
+local function GenerateDynamicCategories()
+    local categories = {}
+    local categoryNames = {}
+    -- Scan all commands to find categories and subcategories
+    local adminStickCount = 0
+    for _, v in pairs(lia.command.list) do
+        if v.AdminStick and istable(v.AdminStick) then
+            adminStickCount = adminStickCount + 1
+            local category = v.AdminStick.Category
+            local subcategory = v.AdminStick.SubCategory
+            -- Special handling for Character Flags - treat as subcategory of characterManagement
+            if category == "adminsticksubcategorycharacterflags" then
+                category = "characterManagement"
+                if not subcategory then subcategory = "adminsticksubcategorycharacterflags" end
+            end
+
+            if category then
+                -- Initialize category if it doesn't exist
+                if not categories[category] then
+                    categories[category] = {
+                        name = category, -- Use raw category name for now, will be localized later
+                        icon = GetIconForCategory(category),
+                        subcategories = {}
+                    }
+
+                    table.insert(categoryNames, category)
+                end
+
+                -- Add subcategory if specified
+                if subcategory then
+                    if not categories[category].subcategories[subcategory] then
+                        categories[category].subcategories[subcategory] = {
+                            name = subcategory, -- Use raw subcategory name for now, will be localized later
+                            icon = GetIconForCategory(subcategory)
+                        }
+                    end
+                end
+            end
+        end
+    end
+
+    -- Merge categories with the same display name
+    local mergedCategories = {}
+    local mergedCategoryNames = {}
+    for _, categoryKey in ipairs(categoryNames) do
+        local category = categories[categoryKey]
+        local displayName = L(category.name) -- Get localized name
+        -- Check if we already have a category with this display name
+        local existingKey = nil
+        for existingKeyCheck, existingCategory in pairs(mergedCategories) do
+            if L(existingCategory.name) == displayName then
+                existingKey = existingKeyCheck
+                break
+            end
+        end
+
+        if existingKey then
+            -- Merge subcategories into existing category
+            for subKey, subCategory in pairs(category.subcategories) do
+                if not mergedCategories[existingKey].subcategories[subKey] then mergedCategories[existingKey].subcategories[subKey] = subCategory end
+            end
+        else
+            -- Create new category
+            mergedCategories[categoryKey] = category
+            table.insert(mergedCategoryNames, categoryKey)
+        end
+    end
+
+    -- Localize category and subcategory names
+    for _, category in pairs(mergedCategories) do
+        -- Try to get localized name for the category
+        local localizedName = L(category.name)
+        if localizedName ~= category.name then
+            category.name = localizedName
+        else
+            -- If no localization exists, format the name nicely and intelligently
+            local formattedName = category.name
+            -- Handle special cases for better formatting
+            if formattedName:lower() == "flagmanagement" then
+                formattedName = "Flag Management"
+            elseif formattedName:lower() == "doormanagement" then
+                formattedName = "Door Management"
+            elseif formattedName:lower() == "charactermanagement" then
+                formattedName = "Character Management"
+            elseif formattedName:lower() == "playerinformation" then
+                formattedName = "Player Information"
+            elseif formattedName:lower() == "adminsticksubcategorybans" then
+                formattedName = "Bans"
+            elseif formattedName:lower() == "adminsticksubcategorysetinfos" then
+                formattedName = "Set Information"
+            elseif formattedName:lower() == "adminsticksubcategorygetinfos" then
+                formattedName = "Get Information"
+            elseif formattedName:lower() == "adminsticksubcategorycharacterflags" then
+                formattedName = "Character Flags"
+            else
+                formattedName = formattedName:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
+                formattedName = formattedName:gsub("_", " ")
+            end
+
+            category.name = formattedName
+        end
+
+        -- Localize subcategory names
+        for _, subCategory in pairs(category.subcategories) do
+            local localizedSubName = L(subCategory.name)
+            if localizedSubName ~= subCategory.name then
+                subCategory.name = localizedSubName
+            else
+                -- If no localization exists, format the name nicely and intelligently
+                local formattedSubName = subCategory.name
+                -- Handle special cases for better formatting
+                if formattedSubName:lower() == "adminsticksubcategorybans" then
+                    formattedSubName = "Bans"
+                elseif formattedSubName:lower() == "adminsticksubcategorysetinfos" then
+                    formattedSubName = "Set Information"
+                elseif formattedSubName:lower() == "adminsticksubcategorygetinfos" then
+                    formattedSubName = "Get Information"
+                elseif formattedSubName:lower() == "adminsticksubcategorycharacterflags" then
+                    formattedSubName = "Flags"
+                elseif formattedSubName:lower() == "moderationtools" then
+                    formattedSubName = "Moderation Tools"
+                elseif formattedSubName:lower() == "doorinformation" then
+                    formattedSubName = "Door Information"
+                else
+                    -- General formatting for camelCase and snake_case
+                    formattedSubName = formattedSubName:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
+                    formattedSubName = formattedSubName:gsub("_", " ")
+                end
+
+                subCategory.name = formattedSubName
+            end
+        end
+    end
+
+    -- Generate category order with preferred categories first
+    local preferredOrder = {"playerInformation", "moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
+    local orderedCategories = {}
+    -- Add preferred categories first (in preferred order)
+    for _, preferredCategory in ipairs(preferredOrder) do
+        if mergedCategories[preferredCategory] then table.insert(orderedCategories, preferredCategory) end
+    end
+
+    -- Add remaining categories
+    for _, categoryName in ipairs(mergedCategoryNames) do
+        if not table.HasValue(orderedCategories, categoryName) then table.insert(orderedCategories, categoryName) end
+    end
+
+    -- Add hardcoded categories that might not be in commands but are used by the system
+    local hardcodedCategories = {
+        doorManagement = {
+            name = L("adminStickCategoryDoorManagement") or "Door Management",
+            icon = "icon16/door.png",
+            subcategories = {
+                doorActions = {
+                    name = L("adminStickSubCategoryDoorActions") or "Actions",
+                    icon = "icon16/lightning.png"
+                },
+                doorSettings = {
+                    name = L("adminStickSubCategoryDoorSettings") or "Settings",
+                    icon = "icon16/cog.png"
+                },
+                doorMaintenance = {
+                    name = L("adminStickSubCategoryDoorMaintenance") or "Maintenance",
+                    icon = "icon16/wrench.png"
+                },
+                doorInformation = {
+                    name = L("adminStickSubCategoryDoorInformation") or "Information",
+                    icon = "icon16/information.png"
+                }
+            }
+        },
+        playerInformation = {
+            name = L("adminStickCategoryPlayerInformation") or "Player Information",
+            icon = "icon16/user.png",
+            subcategories = {}
+        },
+        teleportation = {
+            name = L("adminStickCategoryTeleportation") or "Teleportation",
+            icon = "icon16/world.png",
+            subcategories = {}
+        }
+    }
+
+    -- Add missing subcategories to existing categories
+    if mergedCategories.characterManagement then
+        mergedCategories.characterManagement.subcategories = mergedCategories.characterManagement.subcategories or {}
+        mergedCategories.characterManagement.subcategories.factions = {
+            name = L("adminStickSubCategoryFactions") or "Factions",
+            icon = "icon16/group.png"
+        }
+
+        mergedCategories.characterManagement.subcategories.classes = {
+            name = L("adminStickSubCategoryClasses") or "Classes",
+            icon = "icon16/group_edit.png"
+        }
+
+        mergedCategories.characterManagement.subcategories.whitelists = {
+            name = L("adminStickSubCategoryWhitelists") or "Whitelists",
+            icon = "icon16/group_key.png"
+        }
+
+        mergedCategories.characterManagement.subcategories.flags = {
+            name = L("adminStickSubCategoryFlags") or "Flags",
+            icon = "icon16/flag_red.png"
+        }
+    end
+
+    if mergedCategories.utility then
+        mergedCategories.utility.subcategories = mergedCategories.utility.subcategories or {}
+        mergedCategories.utility.subcategories.commands = {
+            name = L("adminStickSubCategoryCommands") or "Commands",
+            icon = "icon16/script.png"
+        }
+    end
+
+    -- Merge hardcoded categories with dynamic ones
+    for key, data in pairs(hardcodedCategories) do
+        if not mergedCategories[key] then
+            mergedCategories[key] = data
+            if not table.HasValue(orderedCategories, key) then table.insert(orderedCategories, key) end
+        end
+    end
+    return mergedCategories, orderedCategories
+end
+
+MODULE.adminStickCategories = MODULE.adminStickCategories or {}
+MODULE.adminStickCategoryOrder = MODULE.adminStickCategoryOrder or {}
+function MODULE:LiliaLoaded()
+    local categories, categoryOrder = GenerateDynamicCategories()
+    MODULE.adminStickCategories = categories
+    MODULE.adminStickCategoryOrder = categoryOrder
+end
+
 function MODULE:AddAdminStickCategory(key, data, index)
     self.adminStickCategories = self.adminStickCategories or {}
     self.adminStickCategories[key] = data
@@ -699,38 +994,6 @@ function MODULE:AddAdminStickSubCategory(catKey, subKey, data)
     category.subcategories = category.subcategories or {}
     category.subcategories[subKey] = data
 end
-
-local subMenuIcons = {
-    moderationTools = "icon16/wrench.png",
-    warnings = "icon16/error.png",
-    misc = "icon16/application_view_tile.png",
-    [playerInfoLabel] = "icon16/information.png",
-    characterManagement = "icon16/user_gray.png",
-    flagManagement = "icon16/flag_blue.png",
-    attributes = "icon16/chart_line.png",
-    charFlagsTitle = "icon16/flag_green.png",
-    giveFlagsLabel = "icon16/flag_blue.png",
-    takeFlagsLabel = "icon16/flag_red.png",
-    doorManagement = "icon16/door.png",
-    doorActions = "icon16/arrow_switch.png",
-    doorSettings = "icon16/cog.png",
-    doorMaintenance = "icon16/wrench.png",
-    doorInformation = "icon16/information.png",
-    administration = "icon16/lock.png",
-    items = "icon16/box.png",
-    ooc = "icon16/comment.png",
-    adminStickSubCategoryBans = "icon16/lock.png",
-    adminStickSubCategoryGetInfos = "icon16/magnifier.png",
-    adminStickSubCategorySetInfos = "icon16/pencil.png",
-    setFactionTitle = "icon16/group.png",
-    adminStickSetClassName = "icon16/user.png",
-    adminStickFactionWhitelistName = "icon16/group_add.png",
-    adminStickUnwhitelistName = "icon16/group_delete.png",
-    adminStickClassWhitelistName = "icon16/user_add.png",
-    adminStickClassUnwhitelistName = "icon16/user_delete.png",
-    server = "icon16/cog.png",
-    permissions = "icon16/key.png",
-}
 
 local function GetSubMenuIcon(name)
     if subMenuIcons[name] then return subMenuIcons[name] end
@@ -775,7 +1038,7 @@ end
 local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     if not parent or not IsValid(parent) then return end
     local category = MODULE.adminStickCategories[categoryKey]
-    if not category then return end
+    if not category then return parent end
     if not store[categoryKey] then
         local menu, option = parent:AddSubMenu(category.name, function() end)
         if category.icon and option then option:SetIcon(category.icon) end
@@ -791,7 +1054,7 @@ end
 local function GetOrCreateSubCategoryMenu(parent, categoryKey, subcategoryKey, store)
     if not parent or not IsValid(parent) then return end
     local category = MODULE.adminStickCategories[categoryKey]
-    if not category or not category.subcategories or not category.subcategories[subcategoryKey] then return end
+    if not category or not category.subcategories or not category.subcategories[subcategoryKey] then return parent end
     local subcategory = category.subcategories[subcategoryKey]
     local fullKey = categoryKey .. "_" .. subcategoryKey
     if not store[fullKey] then
@@ -810,16 +1073,29 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
     local menu = lia.derma.dermaMenu()
     if not IsValid(menu) then return end
     local cl = LocalPlayer()
-    local categoryOrder = MODULE.adminStickCategoryOrder or {}
+    -- Generate dynamic categories and order only if not already generated
+    local categories, categoryOrder
+    if not MODULE.adminStickCategories or table.Count(MODULE.adminStickCategories) == 0 then
+        categories, categoryOrder = GenerateDynamicCategories()
+        MODULE.adminStickCategories = categories
+        MODULE.adminStickCategoryOrder = categoryOrder
+    else
+        categories = MODULE.adminStickCategories
+        categoryOrder = MODULE.adminStickCategoryOrder
+    end
+
     for _, categoryKey in ipairs(categoryOrder) do
-        local category = MODULE.adminStickCategories[categoryKey]
+        local category = categories[categoryKey]
         if category then
-            local hasContent = false
+            local hasContent
+            -- Check if category has content based on target type and permissions
             if categoryKey == "playerInformation" and tgt:IsPlayer() then
                 hasContent = true
             elseif categoryKey == "moderation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
                 hasContent = true
             elseif categoryKey == "characterManagement" and tgt:IsPlayer() and (cl:hasPrivilege("manageTransfers") or cl:hasPrivilege("manageClasses") or cl:hasPrivilege("manageWhitelists") or cl:hasPrivilege("manageCharacterInformation") or cl:hasPrivilege("manageFlags")) then
+                hasContent = true
+            elseif categoryKey == "flagManagement" and tgt:IsPlayer() and cl:hasPrivilege("manageFlags") then
                 hasContent = true
             elseif categoryKey == "doorManagement" and tgt:isDoor() then
                 hasContent = true
@@ -827,6 +1103,9 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
                 hasContent = true
             elseif categoryKey == "utility" and tgt:IsPlayer() then
                 hasContent = true
+            else
+                -- For other categories, check if they have commands that match the target type
+                hasContent = false
             end
 
             if hasContent then GetOrCreateCategoryMenu(menu, categoryKey, stores) end
@@ -845,7 +1124,7 @@ end
 
 local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
-    local fr = vgui.Create("DFrame")
+    local fr = vgui.Create("liaFrame")
     fr:SetTitle(L("changePlayerModel"))
     fr:SetSize(450, 300)
     fr:Center()
@@ -859,10 +1138,10 @@ local function OpenPlayerModelUI(tgt)
     sc:Dock(FILL)
     local wr = vgui.Create("DIconLayout", sc)
     wr:Dock(FILL)
-    local ed = vgui.Create("DTextEntry", fr)
+    local ed = vgui.Create("liaEntry", fr)
     ed:Dock(BOTTOM)
     ed:SetText(tgt:GetModel())
-    local bt = vgui.Create("DButton", fr)
+    local bt = vgui.Create("liaButton", fr)
     bt:SetText(L("change"))
     bt:Dock(TOP)
     function bt:DoClick()
@@ -897,71 +1176,39 @@ end
 
 local function OpenReasonUI(tgt, cmd)
     AdminStickIsOpen = true
-    local fr = vgui.Create("DFrame")
-    fr:SetTitle(L("reasonFor", cmd))
-    fr:SetSize(300, 150)
-    fr:Center()
-    function fr:OnClose()
-        fr:Remove()
-        LocalPlayer().AdminStickTarget = nil
-        AdminStickIsOpen = false
-    end
-
-    local ed = vgui.Create("DTextEntry", fr)
-    ed:Dock(FILL)
-    ed:SetMultiline(true)
-    ed:SetPlaceholderText(L("reason"))
-    local ts
+    local argTypes = {}
+    local defaults = {}
+    -- Always request a reason
+    argTypes[L("reason")] = "string"
+    defaults[L("reason")] = ""
+    -- For ban command, also request duration
     if cmd == "banid" then
-        ts = vgui.Create("DNumSlider", fr)
-        ts:Dock(TOP)
-        ts:DockMargin(0, 0, 0, 10)
-        ts:SetText(L("lengthInDays"))
-        ts:SetMin(0)
-        ts:SetMax(365)
-        ts:SetDecimals(0)
-        ts.Paint = function(s, w)
-            if not IsValid(s.Label) then return end
-            s.Label:Dock(TOP)
-            s.Label:DockMargin(0, 0, 0, 5)
-            s.Label:SetTall(20)
-            s.Label:SetTextColor(lia.color.theme.text or color_white)
-            local trackY = 25
-            local trackHeight = 6
-            local handleWidth = 20
-            local progress = (s:GetValue() - s:GetMin()) / (s:GetMax() - s:GetMin())
-            local activeWidth = math.Clamp(w * progress, 0, w)
-            lia.derma.rect(0, trackY, w, trackHeight):Rad(3):Color(lia.color.theme.window_shadow or Color(60, 60, 60)):Draw()
-            lia.derma.rect(0, trackY, w, trackHeight):Rad(3):Color(lia.color.theme.focus_panel or Color(80, 80, 80)):Draw()
-            lia.derma.rect(0, trackY, activeWidth, trackHeight):Rad(3):Color(lia.color.theme.theme or Color(100, 150, 200)):Draw()
-            local handleX = activeWidth - handleWidth / 2
-            handleX = math.Clamp(handleX, 0, w - handleWidth)
-            lia.derma.rect(handleX, trackY - 2, handleWidth, trackHeight + 4):Rad(3):Color(lia.color.theme.theme or Color(100, 150, 200)):Shadow(2, 8):Draw()
-            draw.SimpleText(s:GetValue(), "LiliaFont.16", w / 2, 8, lia.color.theme.text or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
+        argTypes[L("lengthInDays")] = "number"
+        defaults[L("lengthInDays")] = 0
     end
 
-    local bt = vgui.Create("DButton", fr)
-    bt:Dock(BOTTOM)
-    bt:SetText(L("change"))
-    function bt:DoClick()
-        local txt = ed:GetValue()
+    lia.derma.requestArguments(L("reasonFor", cmd), argTypes, function(success, data)
+        if not success or not data then
+            AdminStickIsOpen = false
+            LocalPlayer().AdminStickTarget = nil
+            return
+        end
+
+        local txt = data[L("reason")] or ""
         local id = GetIdentifier(tgt)
         if cmd == "banid" then
             if id ~= "" then
-                local len = ts and ts:GetValue() * 60 * 24 or 0
+                local duration = tonumber(data[L("lengthInDays")]) or 0
+                local len = duration * 60 * 24
                 RunAdminCommand("ban", tgt, len, txt)
             end
         elseif cmd == "kick" then
             if id ~= "" then RunAdminCommand("kick", tgt, nil, txt) end
         end
 
-        fr:Remove()
-        LocalPlayer().AdminStickTarget = nil
         AdminStickIsOpen = false
-    end
-
-    fr:MakePopup()
+        LocalPlayer().AdminStickTarget = nil
+    end, defaults)
 end
 
 local function HandleModerationOption(opt, tgt)
@@ -1423,7 +1670,11 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     local m = menu
     local categoryKey = nil
     local subcategoryKey = nil
-    if cat == "characterManagement" then
+    -- Check if this category exists in our dynamic categories first
+    if MODULE.adminStickCategories and MODULE.adminStickCategories[cat] then
+        categoryKey = cat
+        if sub and MODULE.adminStickCategories[cat].subcategories and MODULE.adminStickCategories[cat].subcategories[sub] then subcategoryKey = sub end
+    elseif cat == "characterManagement" then
         categoryKey = "characterManagement"
         if sub == "attributes" then
             subcategoryKey = "attributes"
@@ -1481,6 +1732,17 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         elseif sub == "permissions" then
             subcategoryKey = "permissions"
         end
+    elseif cat == "doorManagement" then
+        categoryKey = "doorManagement"
+        if sub == "doorActions" then
+            subcategoryKey = "doorActions"
+        elseif sub == "doorSettings" then
+            subcategoryKey = "doorSettings"
+        elseif sub == "doorMaintenance" then
+            subcategoryKey = "doorMaintenance"
+        elseif sub == "doorInformation" then
+            subcategoryKey = "doorInformation"
+        end
     end
 
     if categoryKey then
@@ -1491,14 +1753,16 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         if sub then m = GetOrCreateSubMenu(m, sub, stores) end
     end
 
-    local ic = data.AdminStick.Icon or "icon16/page.png"
-    m:AddOption(L(name), function()
-        local id = GetIdentifier(tgt)
-        local cmd = "say /" .. key
-        if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
-        cl:ConCommand(cmd)
-        timer.Simple(0.1, function() AdminStickIsOpen = false end)
-    end):SetIcon(ic)
+    if IsValid(m) then
+        local ic = data.AdminStick.Icon or "icon16/page.png"
+        m:AddOption(L(name), function()
+            local id = GetIdentifier(tgt)
+            local cmd = "say /" .. key
+            if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
+            cl:ConCommand(cmd)
+            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+        end):SetIcon(ic)
+    end
 end
 
 local function hasAdminStickTargetClass(class)
@@ -1629,8 +1893,9 @@ function MODULE:OpenAdminStickUI(tgt)
     local uncategorizedCommands = {}
     for _, c in ipairs(cmds) do
         if c.data.AdminStick and c.data.AdminStick.Category then
-            if not categorizedCommands[c.data.AdminStick.Category] then categorizedCommands[c.data.AdminStick.Category] = {} end
-            table.insert(categorizedCommands[c.data.AdminStick.Category], c)
+            local cat = c.data.AdminStick.Category
+            if not categorizedCommands[cat] then categorizedCommands[cat] = {} end
+            table.insert(categorizedCommands[cat], c)
         else
             table.insert(uncategorizedCommands, c)
         end
@@ -1666,11 +1931,13 @@ function MODULE:OpenAdminStickUI(tgt)
     function menu:OnRemove()
         cl.AdminStickTarget = nil
         AdminStickIsOpen = false
+        hook.Run("OnAdminStickMenuClosed")
     end
 
     function menu:OnClose()
         cl.AdminStickTarget = nil
         AdminStickIsOpen = false
+        hook.Run("OnAdminStickMenuClosed")
     end
 
     menu:Open()
@@ -1944,7 +2211,7 @@ end)
 
 net.Receive("liaManageSitRooms", function()
     local rooms = net.ReadTable()
-    local frame = vgui.Create("DFrame")
+    local frame = vgui.Create("liaFrame")
     frame:SetTitle(L("manageSitrooms"))
     frame:SetSize(600, 400)
     frame:Center()
@@ -1964,7 +2231,7 @@ net.Receive("liaManageSitRooms", function()
         lbl:SetTall(40)
         lbl:SetContentAlignment(4)
         local function makeButton(key, action)
-            local btn = vgui.Create("DButton", entry)
+            local btn = vgui.Create("liaButton", entry)
             btn:Dock(RIGHT)
             btn:SetWide(80)
             btn:SetText(L(key))
@@ -1973,14 +2240,14 @@ net.Receive("liaManageSitRooms", function()
                 net.WriteUInt(action, 2)
                 net.WriteString(name)
                 if action == 2 then
-                    local prompt = vgui.Create("DFrame")
+                    local prompt = vgui.Create("liaFrame")
                     prompt:SetTitle(L("renameSitroomTitle"))
                     prompt:SetSize(300, 100)
                     prompt:Center()
                     prompt:MakePopup()
-                    local txt = vgui.Create("DTextEntry", prompt)
+                    local txt = vgui.Create("liaEntry", prompt)
                     txt:Dock(FILL)
-                    local ok = vgui.Create("DButton", prompt)
+                    local ok = vgui.Create("liaButton", prompt)
                     ok:Dock(BOTTOM)
                     ok:SetText(string.upper(L("ok")))
                     ok.DoClick = function()
@@ -2723,7 +2990,7 @@ function MODULE:TicketFrame(requester, message, claimed)
         frm:SetTitle(requester:Nick())
     end
 
-    local msg = vgui.Create("DTextEntry", frm)
+    local msg = vgui.Create("liaEntry", frm)
     msg:SetPos(10, 30)
     msg:SetSize(280, frameHeight - 35)
     msg:SetText(message)
@@ -3082,3 +3349,8 @@ hook.Add("PopulateAdminTabs", "liaWarningsTab", function(pages)
         })
     end
 end)
+
+function MODULE:OnAdminStickMenuClosed()
+    local client = LocalPlayer()
+    if IsValid(client) and client.AdminStickTarget == client then client.AdminStickTarget = nil end
+end

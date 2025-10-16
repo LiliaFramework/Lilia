@@ -78,6 +78,8 @@ function PANEL:setActive(state)
     self:SetDraggable(state)
     self:SetMouseInputEnabled(state)
     self:SetKeyboardInputEnabled(state)
+    -- Ensure scrollbar is hidden when chatbox becomes inactive
+    if not state then self:setScrollbarVisible(false) end
     if state then
         self.entry = self:Add("liaEntry")
         self.entry:Dock(BOTTOM)
@@ -276,8 +278,7 @@ function PANEL:setActive(state)
 end
 
 function PANEL:addText(...)
-    local markup = "<font=LiliaFont.16>"
-    if CHAT_CLASS then markup = "<font=" .. (CHAT_CLASS.font or "LiliaFont.16") .. ">" end
+    local markup = "<font=LiliaFont.20>"
     markup = hook.Run("ChatAddText", markup, ...) or markup
     for _, item in ipairs({...}) do
         if item and istable(item) and item.GetName and item.Width and item.Height then
@@ -292,7 +293,7 @@ function PANEL:addText(...)
             local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
             markup = markup .. str:gsub("%b**", function(val)
                 local inner = val:sub(2, -2)
-                if inner:find("%S") then return "<font=LiliaFont.16Italics>" .. inner .. "</font>" end
+                if inner:find("%S") then return "<font=LiliaFont.20Italics>" .. inner .. "</font>" end
             end)
         end
     end
@@ -306,8 +307,8 @@ function PANEL:addText(...)
         markup = markup,
         arguments = {...},
         themeState = {
-            chatColor = lia.config.get("ChatColor", lia.color.theme.chat),
-            chatListenColor = lia.config.get("ChatListenColor", lia.color.theme.chatListen)
+            chatColor = lia.color.theme.chat,
+            chatListenColor = lia.color.theme.chatListen
         }
     }
 
@@ -325,7 +326,7 @@ function PANEL:addText(...)
     self.list[#self.list + 1] = panel
     panel:SetPos(0, self.lastY)
     self.lastY = self.lastY + panel:GetTall() + 2
-    timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(panel) then self.scroll:ScrollToChild(panel) end end)
+    timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(panel) and self.active then self.scroll:ScrollToChild(panel) end end)
     return panel:IsVisible()
 end
 
@@ -349,6 +350,11 @@ function PANEL:Think()
         self.entry = nil
         if IsValid(self.text) then self.text:KillFocus() end
         self.text = nil
+    end
+
+    -- Ensure scrollbar is hidden when chatbox is not active
+    if not self.active then
+        self:setScrollbarVisible(false)
     end
 
     if self.active and IsValid(self.text) and IsValid(self.commandList) then
@@ -389,10 +395,9 @@ end
 
 function PANEL:rebuildPanelMarkup(panel)
     if not panel.markupArgs or not panel.markupArgs.themeState then return end
-    local currentChatColor = lia.config.get("ChatColor", lia.color.theme.chat)
-    local currentChatListenColor = lia.config.get("ChatListenColor", lia.color.theme.chatListen)
-    local markup = "<font=LiliaFont.16>"
-    if CHAT_CLASS then markup = "<font=" .. (CHAT_CLASS.font or "LiliaFont.16") .. ">" end
+    local currentChatColor = lia.color.theme.chat
+    local currentChatListenColor = lia.color.theme.chatListen
+    local markup = "<font=LiliaFont.20>"
     markup = hook.Run("ChatAddText", markup, unpack(panel.markupArgs.arguments)) or markup
     for _, item in ipairs(panel.markupArgs.arguments) do
         if item and istable(item) and item.GetName and item.Width and item.Height then
@@ -414,7 +419,7 @@ function PANEL:rebuildPanelMarkup(panel)
             local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
             markup = markup .. str:gsub("%b**", function(val)
                 local inner = val:sub(2, -2)
-                if inner:find("%S") then return "<font=LiliaFont.16Italics>" .. inner .. "</font>" end
+                if inner:find("%S") then return "<font=LiliaFont.20Italics>" .. inner .. "</font>" end
             end)
         end
     end

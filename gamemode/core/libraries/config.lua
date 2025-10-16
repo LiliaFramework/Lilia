@@ -748,17 +748,6 @@ lia.config.add("CustomChatSound", "customChatSound", "", nil, {
     type = "Generic",
 })
 
-lia.config.add("ChatColor", "chatColor", {
-    r = 255,
-    g = 239,
-    b = 150,
-    a = 255
-}, nil, {
-    desc = "chatColorDesc",
-    category = "categoryChat",
-    type = "Color",
-})
-
 lia.config.add("ChatRange", "chatRange", 280, nil, {
     desc = "chatRangeDesc",
     category = "categoryChat",
@@ -773,17 +762,6 @@ lia.config.add("OOCLimit", "oocCharacterLimit", 150, nil, {
     type = "Int",
     min = 25,
     max = 1000
-})
-
-lia.config.add("ChatListenColor", "chatListenColor", {
-    r = 168,
-    g = 240,
-    b = 170,
-    a = 255
-}, nil, {
-    desc = "chatListenColorDesc",
-    category = "categoryChat",
-    type = "Color",
 })
 
 lia.config.add("OOCDelay", "oocDelayTitle", 10, nil, {

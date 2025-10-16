@@ -886,14 +886,15 @@ else
     end)
 
     concommand.Add("lia_saved_sounds", function()
+        local baseDir = "lilia/sounds/"
         local files = file.Find(baseDir .. "*", "DATA")
         if not files or #files == 0 then return end
-        local f = vgui.Create("DFrame")
+        local f = vgui.Create("liaFrame")
         f:SetTitle(L("savedSounds"))
         f:SetSize(500, 400)
         f:Center()
         f:MakePopup()
-        local list = vgui.Create("DListView", f)
+        local list = vgui.Create("liaDListView", f)
         list:Dock(FILL)
         list:DockMargin(5, 5, 5, 5)
         list:AddColumn(L("soundName"))
@@ -903,6 +904,7 @@ else
     end)
 
     concommand.Add("lia_wipe_sounds", function()
+        local baseDir = "lilia/sounds/"
         local files = file.Find(baseDir .. "*", "DATA")
         for _, fn in ipairs(files) do
             file.Delete(baseDir .. fn)
@@ -912,6 +914,7 @@ else
     end)
 
     concommand.Add("lia_validate_sounds", function()
+        local baseDir = "lilia/sounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         local validCount = 0
         local invalidCount = 0
@@ -933,6 +936,7 @@ else
     end)
 
     concommand.Add("lia_cleanup_sounds", function()
+        local baseDir = "lilia/sounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         local removedCount = 0
         for _, fileName in ipairs(files) do
@@ -955,6 +959,7 @@ else
     end)
 
     concommand.Add("lia_list_sounds", function()
+        local baseDir = "lilia/sounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         if #files == 0 then return end
         LocalPlayer():ChatPrint(L("savedSounds"))
@@ -963,15 +968,49 @@ else
         end
     end)
 
+    local function findImagesRecursive(dir, result)
+        result = result or {}
+        local files, dirs = file.Find(dir .. "*", "DATA")
+        if files then
+            for _, fn in ipairs(files) do
+                table.insert(result, dir .. fn)
+            end
+        end
+
+        if dirs then
+            for _, subdir in ipairs(dirs) do
+                findImagesRecursive(dir .. subdir .. "/", result)
+            end
+        end
+        return result
+    end
+
+    local function deleteDirectoryRecursive(dir)
+        local files, dirs = file.Find(dir .. "*", "DATA")
+        if files then
+            for _, fn in ipairs(files) do
+                file.Delete(dir .. fn)
+            end
+        end
+
+        if dirs then
+            for _, subdir in ipairs(dirs) do
+                deleteDirectoryRecursive(dir .. subdir .. "/")
+                file.Delete(dir .. subdir)
+            end
+        end
+    end
+
     concommand.Add("lia_saved_images", function()
+        local baseDir = "lilia/images/"
         local files = findImagesRecursive(baseDir)
         if not files or #files == 0 then return end
-        local f = vgui.Create("DFrame")
+        local f = vgui.Create("liaFrame")
         f:SetTitle(L("savedImages"))
         f:SetSize(500, 400)
         f:Center()
         f:MakePopup()
-        local list = vgui.Create("DListView", f)
+        local list = vgui.Create("liaDListView", f)
         list:Dock(FILL)
         list:DockMargin(5, 5, 5, 5)
         list:AddColumn(L("imageName"))
@@ -981,6 +1020,7 @@ else
     end)
 
     concommand.Add("lia_cleanup_images", function()
+        local baseDir = "lilia/images/"
         local files = findImagesRecursive(baseDir)
         local removedCount = 0
         for _, filePath in ipairs(files) do
@@ -991,6 +1031,7 @@ else
     end)
 
     concommand.Add("lia_wipewebimages", function()
+        local baseDir = "lilia/webimages/"
         deleteDirectoryRecursive(baseDir)
         cache = {}
         urlMap = {}
@@ -998,16 +1039,16 @@ else
     end)
 
     concommand.Add("test_webimage_menu", function()
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetTitle(L("webImageTesterTitle"))
         frame:SetSize(500, 400)
         frame:Center()
         frame:MakePopup()
-        local textEntry = vgui.Create("DTextEntry", frame)
+        local textEntry = vgui.Create("liaEntry", frame)
         textEntry:Dock(TOP)
         textEntry:DockMargin(5, 5, 5, 5)
         textEntry:SetPlaceholderText(L("webImageTesterURL"))
-        local button = vgui.Create("DButton", frame)
+        local button = vgui.Create("liaButton", frame)
         button:Dock(TOP)
         button:DockMargin(5, 0, 5, 5)
         button:SetText(L("webImageTesterLoad"))
@@ -1555,12 +1596,6 @@ lia.command.add("charlist", {
             name = "playerOrSteamId",
             type = "string"
         },
-    },
-    AdminStick = {
-        Name = "adminStickOpenCharListName",
-        Category = "characterManagement",
-        SubCategory = "adminStickSubCategoryGetInfos",
-        Icon = "icon16/user_gray.png"
     },
     onRun = function(client, arguments)
         local identifier = arguments[1]
@@ -2647,12 +2682,6 @@ lia.command.add("flagtakeall", {
             name = "name",
             type = "player"
         },
-    },
-    AdminStick = {
-        Name = "adminStickTakeAllFlagsName",
-        Category = "flagManagement",
-        SubCategory = "characterFlags",
-        Icon = "icon16/flag_green.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])

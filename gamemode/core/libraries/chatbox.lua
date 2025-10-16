@@ -49,9 +49,9 @@ function lia.chat.register(chatType, data)
         return true
     end
 
-    data.color = data.color or Color(242, 230, 160)
+    data.color = data.color or (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150)
     data.format = data.format or "chatFormat"
-    data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous) chat.AddText(lia.chat.timestamp(false), data.color, L(data.format, anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"), text)) end
+    data.onChatAdd = data.onChatAdd or function(speaker, text, anonymous) chat.AddText(lia.chat.timestamp(false), (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), L(data.format, anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, chatType) or IsValid(speaker) and speaker:Name() or L("console"), text)) end
     if CLIENT and data.prefix then
         local rawPrefixes = istable(data.prefix) and data.prefix or {data.prefix}
         local aliases, lookup = {}, {}

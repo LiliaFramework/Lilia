@@ -117,12 +117,12 @@ local function onIndexChanged()
         local textParts = {}
         local activeColor = lia.config.get("Color")
         for _, key in ipairs({"Author", "Contact", "Purpose", "Instructions"}) do
-            if weapon[key] and weapon[key]:find("%S") then table.insert(textParts, string.format("<font=liaItemBoldFont><color=%d,%d,%d>%s</font></color>\n%s\n", activeColor.r, activeColor.g, activeColor.b, L(key:lower()), weapon[key])) end
+            if weapon[key] and weapon[key]:find("%S") then table.insert(textParts, string.format("<font=LiliaFont.17b><color=%d,%d,%d>%s</font></color>\n%s\n", activeColor.r, activeColor.g, activeColor.b, L(key:lower()), weapon[key])) end
         end
 
         if #textParts > 0 then
             local text = table.concat(textParts)
-            infoMarkup = markup.Parse("<font=liaItemDescFont>" .. text, ScrW() * 0.3)
+            infoMarkup = markup.Parse("<font=liaSmallFont>" .. text, ScrW() * 0.3)
         end
 
         local source, pitch = hook.Run("WeaponCycleSound")

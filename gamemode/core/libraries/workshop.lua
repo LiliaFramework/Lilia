@@ -242,12 +242,6 @@ else
         end
     end
 
-    concommand.Add("workshop_force_redownload", function()
-        table.Empty(queue)
-        buildQueue(true)
-        start()
-        lia.bootstrap(L("workshopDownloader"), L("workshopForcedRedownload"))
-    end)
 
     hook.Add("CreateInformationButtons", "liaWorkshopInfo", function(pages)
         table.insert(pages, {

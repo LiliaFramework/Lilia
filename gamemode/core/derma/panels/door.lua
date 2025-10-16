@@ -1,14 +1,46 @@
 ﻿local PANEL = {}
 function PANEL:Init()
-    self:SetSize(280, 240)
+    self:SetSize(700, 600)
     self:SetTitle(L("door") .. " " .. L("settings"))
     self:Center()
     self:MakePopup()
     self.access = self:Add("DListView")
     self.access:Dock(FILL)
-    local headerColor = Color(25, 25, 25)
+    local headerColor = lia.color.theme.header_text or Color(255, 255, 255)
+    local headerBgColor = lia.color.theme.header or Color(45, 45, 45)
+
     self.access:AddColumn(L("name")).Header:SetTextColor(headerColor)
     self.access:AddColumn(L("doorAccess")).Header:SetTextColor(headerColor)
+
+    -- Style the header background
+    for _, column in pairs(self.access.Columns) do
+        if column.Header then
+            column.Header.Paint = function(_, w, h)
+                surface.SetDrawColor(headerBgColor)
+                surface.DrawRect(0, 0, w, h)
+            end
+        end
+    end
+
+    -- Style the list view background and rows
+    self.access.Paint = function(_, w, h)
+        surface.SetDrawColor(lia.color.theme.panel[1] or Color(35, 35, 35))
+        surface.DrawRect(0, 0, w, h)
+    end
+
+    -- Style alternating row colors
+    local rowIndex = 0
+    self.access.PaintOver = function()
+        for _, line in pairs(self.access:GetLines()) do
+            if line:IsVisible() then
+                local color = rowIndex % 2 == 0 and Color(0, 0, 0, 50) or Color(0, 0, 0, 25)
+                surface.SetDrawColor(color)
+                surface.DrawRect(0, line:GetY(), self.access:GetWide(), line:GetTall())
+                rowIndex = rowIndex + 1
+            end
+        end
+        rowIndex = 0
+    end
     self.access.OnClickLine = function(_, line)
         if not IsValid(line.player) then return end
         local menu = lia.derma.dermaMenu()
@@ -81,4 +113,4 @@ function PANEL:Think()
     if self.accessData and not IsValid(self.door) and self:CheckAccess() then self:Remove() end
 end
 
-vgui.Register("liaDoorMenu", PANEL, "DFrame")
+vgui.Register("liaDoorMenu", PANEL, "liaFrame")
