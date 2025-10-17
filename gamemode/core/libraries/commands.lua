@@ -252,10 +252,14 @@ if SERVER then
                     local tokens = combineBracketArgs(arguments)
                     local missing = {}
                     local prefix = {}
+                    local firstMissingIndex
                     for i, field in ipairs(fields) do
                         local arg = tokens[i]
-                        if not arg or isPlaceholder(arg) then
-                            if not field.optional then missing[#missing + 1] = field.name end
+                        local isMissing = not arg or isPlaceholder(arg)
+                        if isMissing then
+                            if not firstMissingIndex then firstMissingIndex = i end
+                            -- Request all args from the first missing onward, including optional ones
+                            if (not field.optional) or (i >= firstMissingIndex) then missing[#missing + 1] = field.name end
                         else
                             prefix[#prefix + 1] = arg
                         end
@@ -4231,7 +4235,7 @@ lia.command.add("botspeak", {
         local phrasesPerBot = math.Clamp(arguments.phrases or 50, 1, 200)
         local cooldown = 1
         local bots = {}
-        for _, ent in ipairs(ents.GetAll()) do
+        for _, ent in ents.Iterator() do
             if ent:IsNPC() or ent:IsNextBot() or (ent:IsPlayer() and ent:IsBot()) then table.insert(bots, ent) end
         end
 

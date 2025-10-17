@@ -303,7 +303,7 @@ do
     end
 end
 
-local type, pcall, pairs, _player = type, pcall, pairs, player
+local type, pcall, pairs, player = type, pcall, pairs, player
 netstream = netstream or {}
 netstream.stored = netstream.stored or {}
 function netstream.Split(data)
@@ -334,7 +334,7 @@ if SERVER then
         local bSendPVS = false
         if not istable(player) then
             if not player then
-                player = _player.GetAll()
+                player = player.GetAll()
             elseif type(player) == "Vector" then
                 bSendPVS = true
             else

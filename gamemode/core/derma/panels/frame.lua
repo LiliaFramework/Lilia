@@ -232,7 +232,7 @@ function PANEL:Paint(w, h)
             surface.DrawTexturedRect(6, 4, 16, 16)
         end
 
-        if self.center_title ~= "" then draw.SimpleText(self.center_title, "LiliaFont.20b", w * 0.5, 12, lia.color.theme.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
+        if self.center_title ~= "" then draw.SimpleText(self.center_title, "LiliaFont.16", w * 0.5, 12, lia.color.theme.header_text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
         local titleOffset = self.iconMat and 26 or 6
         draw.SimpleText(self.title, "LiliaFont.16", titleOffset, 4, lia.color.theme.header_text)
     end

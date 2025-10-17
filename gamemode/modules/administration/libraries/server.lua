@@ -1310,3 +1310,4 @@ net.Receive("liaRequestWarningsCount", function(_, client)
         net.Send(client)
     end)
 end)
+-- Console command to send a phrase to all registered chat types

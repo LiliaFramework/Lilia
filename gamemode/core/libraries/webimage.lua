@@ -237,6 +237,7 @@ function dimage:SetImage(src, backup)
     origSetImage(self, src, backup)
 end
 
+
 function lia.webimage.getStats()
     local totalStored = 0
     for _ in pairs(lia.webimage.stored) do

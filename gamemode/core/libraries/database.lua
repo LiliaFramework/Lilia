@@ -880,6 +880,9 @@ function lia.db.loadSnapshot(fileName)
     return d
 end
 
+
+
+
 function GM:RegisterPreparedStatements()
     lia.bootstrap(L("database"), L("preparedStatementsAdded"))
 end

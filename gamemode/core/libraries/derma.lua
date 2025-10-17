@@ -1081,7 +1081,7 @@ end
 function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
     defaults = defaults or {}
     local count = table.Count(argTypes)
-    local frameW, frameH = 600, 450 + count * 120
+    local frameW, frameH = 600, 450 + count * 135
     local frame = vgui.Create("liaFrame")
     frame:SetSize(frameW, frameH)
     frame:Center()
@@ -1103,36 +1103,64 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
         rest = {}
     }
 
-    for name, typeInfo in pairs(argTypes) do
-        local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
-        if istable(typeInfo) then
-            fieldType, dataTbl = typeInfo[1], typeInfo[2]
-            if typeInfo[3] ~= nil then defaultVal = typeInfo[3] end
+    -- Check if argTypes is an ordered array or key-value table
+    local isOrdered = istable(argTypes) and #argTypes > 0 and istable(argTypes[1])
+    if isOrdered then
+        -- Handle ordered array format: {{name, type}, {name, type}, ...}
+        for _, argInfo in ipairs(argTypes) do
+            local name, typeInfo = argInfo[1], argInfo[2]
+            local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
+            if istable(typeInfo) then
+                fieldType, dataTbl = typeInfo[1], typeInfo[2]
+                if typeInfo[3] ~= nil then defaultVal = typeInfo[3] end
+            end
+
+            fieldType = string.lower(tostring(fieldType))
+            if defaultVal == nil and defaults[name] ~= nil then defaultVal = defaults[name] end
+            local info = {
+                name = name,
+                fieldType = fieldType,
+                dataTbl = dataTbl,
+                defaultVal = defaultVal
+            }
+
+            -- For ordered arrays, maintain the original order
+            table.insert(ordered, info)
+        end
+    else
+        -- Handle key-value table format: {name = type, name = type, ...}
+        for name, typeInfo in pairs(argTypes) do
+            local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
+            if istable(typeInfo) then
+                fieldType, dataTbl = typeInfo[1], typeInfo[2]
+                if typeInfo[3] ~= nil then defaultVal = typeInfo[3] end
+            end
+
+            fieldType = string.lower(tostring(fieldType))
+            if defaultVal == nil and defaults[name] ~= nil then defaultVal = defaults[name] end
+            local info = {
+                name = name,
+                fieldType = fieldType,
+                dataTbl = dataTbl,
+                defaultVal = defaultVal
+            }
+
+            if fieldType == "string" then
+                table.insert(grouped.strings, info)
+            elseif fieldType == "table" then
+                table.insert(grouped.dropdowns, info)
+            elseif fieldType == "boolean" then
+                table.insert(grouped.bools, info)
+            else
+                table.insert(grouped.rest, info)
+            end
         end
 
-        fieldType = string.lower(tostring(fieldType))
-        if defaultVal == nil and defaults[name] ~= nil then defaultVal = defaults[name] end
-        local info = {
-            name = name,
-            fieldType = fieldType,
-            dataTbl = dataTbl,
-            defaultVal = defaultVal
-        }
-
-        if fieldType == "string" then
-            table.insert(grouped.strings, info)
-        elseif fieldType == "table" then
-            table.insert(grouped.dropdowns, info)
-        elseif fieldType == "boolean" then
-            table.insert(grouped.bools, info)
-        else
-            table.insert(grouped.rest, info)
-        end
-    end
-
-    for _, group in ipairs({grouped.strings, grouped.dropdowns, grouped.bools, grouped.rest}) do
-        for _, v in ipairs(group) do
-            table.insert(ordered, v)
+        -- For key-value tables, use grouped order
+        for _, group in ipairs({grouped.strings, grouped.dropdowns, grouped.bools, grouped.rest}) do
+            for _, v in ipairs(group) do
+                table.insert(ordered, v)
+            end
         end
     end
 
@@ -1140,11 +1168,11 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
         local name, fieldType, dataTbl, defaultVal = info.name, info.fieldType, info.dataTbl, info.defaultVal
         local panel = vgui.Create("DPanel", scroll)
         panel:Dock(TOP)
-        panel:DockMargin(0, 0, 0, 5)
-        panel:SetTall(100)
+        panel:DockMargin(0, 0, 0, 15)
+        panel:SetTall(120)
         panel.Paint = nil
         local label = vgui.Create("DLabel", panel)
-        label:SetFont("liaSmallFont")
+        label:SetFont("LiliaFont.20")
         label:SetText(name)
         label:SizeToContents()
         local textW = select(1, surface.GetTextSize(name))
@@ -1177,6 +1205,27 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
             ctrl:SetTitle("")
             if ctrl.SetNumeric then ctrl:SetNumeric(true) end
             if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
+        elseif fieldType == "player" then
+            ctrl = vgui.Create("liaComboBox", panel)
+            ctrl:SetFont("liaSmallFont")
+            ctrl:SetPlaceholder(L("select"))
+            ctrl:AddChoice(L("select"), "")
+            for _, pl in player.Iterator() do
+                if IsValid(pl) then
+                    ctrl:AddChoice(pl:Name(), pl:SteamID())
+                end
+            end
+            ctrl:FinishAddingOptions()
+            ctrl:PostInit()
+            if defaultVal ~= nil then
+                for i = 1, ctrl:GetOptionCount() do
+                    local choiceText, choiceData = ctrl:GetOptionText(i), ctrl:GetOptionData(i)
+                    if choiceData == defaultVal or choiceText == defaultVal then
+                        ctrl:ChooseOptionID(i)
+                        break
+                    end
+                end
+            end
         else
             ctrl = vgui.Create("liaEntry", panel)
             ctrl:SetFont("liaSmallFont")
@@ -1192,11 +1241,13 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
                 ctrlH, ctrlW = 60, w * 0.85
             end
 
-            local totalW = textW + 10 + ctrlW
-            local xOff = (w - totalW) / 2
-            label:SetPos(xOff, (h - label:GetTall()) / 2)
-            ctrl:SetPos(xOff + textW + 10, (h - ctrlH) / 2 - 6)
+            -- Center the control horizontally
+            local ctrlX = (w - ctrlW) / 2
+            ctrl:SetPos(ctrlX, (h - ctrlH) / 2 + 6)
             ctrl:SetSize(ctrlW, ctrlH)
+
+            -- Center the label above the control
+            label:SetPos((w - textW) / 2, (h - ctrlH) / 2 - 25)
         end
 
         controls[name] = {
