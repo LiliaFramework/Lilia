@@ -18,7 +18,6 @@ end
 
 function SWEP:GetTarget()
     local client = LocalPlayer()
-    -- Clear target if weapon is not active
     if not IsValid(self) or self ~= client:GetActiveWeapon() then
         client.AdminStickTarget = nil
         return client:GetEyeTrace().Entity
@@ -30,7 +29,6 @@ end
 
 function SWEP:DrawHUD()
     local client = LocalPlayer()
-    -- Don't draw HUD if we're in self-targeting mode and the admin menu isn't open
     if client.AdminStickTarget == client and not AdminStickIsOpen then return end
     local x, y = ScrW() / 2, ScrH() / 2
     local target = IsValid(client.AdminStickTarget) and client.AdminStickTarget or client:GetEyeTrace().Entity
@@ -54,17 +52,12 @@ function SWEP:DrawHUD()
 
             if target:IsVehicle() and IsValid(target:GetDriver()) then target = target:GetDriver() end
         else
-            -- Generic entity information for entities that don't match specific cases
             table.insert(information, L("entity") .. " " .. L("class") .. ": " .. target:GetClass())
             table.insert(information, L("model") .. ": " .. target:GetModel())
-            -- Basic position information
             local pos = target:GetPos()
             table.insert(information, L("position") .. ": " .. string.format("%.1f, %.1f, %.1f", pos.x, pos.y, pos.z))
-            -- Health if the entity has it
             if target.Health and target:Health() > 0 then table.insert(information, L("health") .. ": " .. target:Health()) end
-            -- Owner if available
             if target.GetOwner and IsValid(target:GetOwner()) then table.insert(information, L("owner") .. ": " .. tostring(target:GetOwner())) end
-            -- Entity ID for identification
             table.insert(information, L("entity") .. " " .. L("id") .. ": " .. target:EntIndex())
         end
 
@@ -143,7 +136,6 @@ function SWEP:Reload()
         client.AdminStickTarget = client
         lia.module.get("administration"):OpenAdminStickUI(client)
     else
-        -- Clear target selection when R is pressed without Shift
         client.AdminStickTarget = nil
     end
 end

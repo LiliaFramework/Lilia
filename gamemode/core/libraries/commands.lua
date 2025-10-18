@@ -258,7 +258,6 @@ if SERVER then
                         local isMissing = not arg or isPlaceholder(arg)
                         if isMissing then
                             if not firstMissingIndex then firstMissingIndex = i end
-                            -- Request all args from the first missing onward, including optional ones
                             if (not field.optional) or (i >= firstMissingIndex) then missing[#missing + 1] = field.name end
                         else
                             prefix[#prefix + 1] = arg

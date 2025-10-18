@@ -78,7 +78,6 @@ function PANEL:setActive(state)
     self:SetDraggable(state)
     self:SetMouseInputEnabled(state)
     self:SetKeyboardInputEnabled(state)
-    -- Ensure scrollbar is hidden when chatbox becomes inactive
     if not state then self:setScrollbarVisible(false) end
     if state then
         self.entry = self:Add("liaEntry")
@@ -352,11 +351,7 @@ function PANEL:Think()
         self.text = nil
     end
 
-    -- Ensure scrollbar is hidden when chatbox is not active
-    if not self.active then
-        self:setScrollbarVisible(false)
-    end
-
+    if not self.active then self:setScrollbarVisible(false) end
     if self.active and IsValid(self.text) and IsValid(self.commandList) then
         local textHasFocus = self.text:HasFocus()
         local currentText = self.text:GetText()

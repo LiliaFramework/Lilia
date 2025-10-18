@@ -47,7 +47,6 @@ lia.command.add("sayall", {
 
         local chatCount = 0
         for chatType, chatData in pairs(lia.chat.classes) do
-            -- Skip chat types that don't have proper message handling
             if chatData.onCanSay and chatType ~= "adminchat" then
                 lia.chat.send(client, chatType, phrase, false)
                 chatCount = chatCount + 1

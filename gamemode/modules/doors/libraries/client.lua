@@ -77,7 +77,7 @@ function MODULE:DrawEntityInfo(entity, alpha)
             for _, info in ipairs(doorInfo) do
                 if info.text and info.text ~= "" then
                     lia.util.drawEntText(entity, info.text, yOffset, alpha)
-                    yOffset = yOffset + 80 -- Increased spacing between entries
+                    yOffset = yOffset + 80
                 end
             end
         end
@@ -157,20 +157,15 @@ function MODULE:PopulateAdminStick(AdminMenu, target)
     end
 end
 
--- Add door information to admin stick HUD
 function MODULE:AddToAdminStickHUD(_, target, information)
     if IsValid(target) and target:isDoor() then
-        -- Allow other modules to add custom door information
         local extraInfo = {}
         hook.Run("GetDoorInfoForAdminStick", target, extraInfo)
-        -- Add extra information from sub-hook
         for _, info in ipairs(extraInfo) do
             table.insert(information, info)
         end
 
-        -- Basic door data from netvars with defaults
         local doorData = target:getNetVar("doorData", {})
-        -- Define all possible door variables with their default values
         local defaultDoorData = {
             name = "",
             price = 0,
@@ -183,7 +178,6 @@ function MODULE:AddToAdminStickHUD(_, target, information)
             classes = {}
         }
 
-        -- Create user-friendly labels and formatters for door variables
         local doorLabels = {
             name = "Name",
             price = "Price",
@@ -196,18 +190,13 @@ function MODULE:AddToAdminStickHUD(_, target, information)
             classes = "Allowed Classes"
         }
 
-        -- Show all door variables (defined values override defaults)
         for key, defaultValue in pairs(defaultDoorData) do
-            -- Skip factions and classes here as they're handled separately below
             if key ~= "factions" and key ~= "classes" then
                 local value = doorData[key]
                 local label = doorLabels[key] or key
                 local displayValue = value
-                -- Use defined value if it exists, otherwise use default
                 if value == nil then displayValue = defaultValue end
-                -- Handle different value types with custom formatting
                 if type(displayValue) == "boolean" then
-                    -- Format boolean values with appropriate labels
                     local booleanLabels = {
                         locked = function(val) return val and "Locked" or "Unlocked" end,
                         disabled = function(val) return val and "Disabled" or "Enabled" end,
@@ -233,7 +222,6 @@ function MODULE:AddToAdminStickHUD(_, target, information)
             end
         end
 
-        -- Faction access
         local factions = target:getNetVar("factions")
         if factions and factions ~= "[]" then
             local factionData = util.JSONToTable(factions)
@@ -253,7 +241,6 @@ function MODULE:AddToAdminStickHUD(_, target, information)
             end
         end
 
-        -- Class access
         local classes = target:getNetVar("classes")
         if classes and classes ~= "[]" then
             local classData = util.JSONToTable(classes)
@@ -274,11 +261,8 @@ function MODULE:AddToAdminStickHUD(_, target, information)
             end
         end
 
-        -- Door access data
         if target.liaAccess then table.insert(information, "Access Data: " .. util.TableToJSON(target.liaAccess)) end
-        -- Door partner
         if target.liaPartner and IsValid(target.liaPartner) then table.insert(information, "Partner Door: " .. tostring(target.liaPartner)) end
-        -- Entity properties
         table.insert(information, "Is Locked: " .. (target:isLocked() and "Yes" or "No"))
         table.insert(information, "ID: " .. tostring(target:MapCreationID()))
     end

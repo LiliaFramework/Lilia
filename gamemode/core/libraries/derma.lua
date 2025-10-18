@@ -1103,10 +1103,8 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
         rest = {}
     }
 
-    -- Check if argTypes is an ordered array or key-value table
     local isOrdered = istable(argTypes) and #argTypes > 0 and istable(argTypes[1])
     if isOrdered then
-        -- Handle ordered array format: {{name, type}, {name, type}, ...}
         for _, argInfo in ipairs(argTypes) do
             local name, typeInfo = argInfo[1], argInfo[2]
             local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
@@ -1124,11 +1122,9 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
                 defaultVal = defaultVal
             }
 
-            -- For ordered arrays, maintain the original order
             table.insert(ordered, info)
         end
     else
-        -- Handle key-value table format: {name = type, name = type, ...}
         for name, typeInfo in pairs(argTypes) do
             local fieldType, dataTbl, defaultVal = typeInfo, nil, nil
             if istable(typeInfo) then
@@ -1156,7 +1152,6 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
             end
         end
 
-        -- For key-value tables, use grouped order
         for _, group in ipairs({grouped.strings, grouped.dropdowns, grouped.bools, grouped.rest}) do
             for _, v in ipairs(group) do
                 table.insert(ordered, v)
@@ -1211,10 +1206,9 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
             ctrl:SetPlaceholder(L("select"))
             ctrl:AddChoice(L("select"), "")
             for _, pl in player.Iterator() do
-                if IsValid(pl) then
-                    ctrl:AddChoice(pl:Name(), pl:SteamID())
-                end
+                if IsValid(pl) then ctrl:AddChoice(pl:Name(), pl:SteamID()) end
             end
+
             ctrl:FinishAddingOptions()
             ctrl:PostInit()
             if defaultVal ~= nil then
@@ -1241,12 +1235,9 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
                 ctrlH, ctrlW = 60, w * 0.85
             end
 
-            -- Center the control horizontally
             local ctrlX = (w - ctrlW) / 2
             ctrl:SetPos(ctrlX, (h - ctrlH) / 2 + 6)
             ctrl:SetSize(ctrlW, ctrlH)
-
-            -- Center the label above the control
             label:SetPos((w - textW) / 2, (h - ctrlH) / 2 - 25)
         end
 

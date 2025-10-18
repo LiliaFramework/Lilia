@@ -601,111 +601,87 @@ spawnmenu.AddCreationTab(L("inventoryItems"), function()
     end
 end, "icon16/briefcase.png")
 
--- Dynamic category generation function
 local function GetIconForCategory(name)
-    -- Check for direct icon mappings first
     if subMenuIcons[name] then return subMenuIcons[name] end
-    -- Try localized version
     if subMenuIcons[L(name)] then return subMenuIcons[L(name)] end
-    -- Try to match against known patterns
     local baseKey = name:match("^([^%(]+)") or name
     baseKey = baseKey:gsub("^%s*(.-)%s*$", "%1")
     if subMenuIcons[baseKey] then return subMenuIcons[baseKey] end
-    -- Dynamic icon generation based on keywords and patterns
     local nameLower = name:lower()
     local localizedName = L(name):lower()
-    -- Define keyword-to-icon mappings for dynamic generation
     local iconMappings = {
-        -- Security/Moderation icons
         ["moderation"] = "icon16/shield.png",
         ["admin"] = "icon16/shield.png",
         ["security"] = "icon16/shield.png",
-        -- Character/People icons
         ["character"] = "icon16/user_gray.png",
         ["player"] = "icon16/user_gray.png",
         ["user"] = "icon16/user_gray.png",
         ["person"] = "icon16/user_gray.png",
-        -- Door/Building icons
         ["door"] = "icon16/door.png",
         ["building"] = "icon16/door.png",
         ["property"] = "icon16/door.png",
         ["house"] = "icon16/door.png",
-        -- Information/Knowledge icons
         ["information"] = "icon16/information.png",
         ["info"] = "icon16/information.png",
         ["data"] = "icon16/information.png",
         ["knowledge"] = "icon16/information.png",
         ["details"] = "icon16/information.png",
-        -- Movement/Teleport icons
         ["teleport"] = "icon16/arrow_right.png",
         ["move"] = "icon16/arrow_right.png",
         ["travel"] = "icon16/arrow_right.png",
         ["transport"] = "icon16/arrow_right.png",
-        -- Utility/Tools icons
         ["utility"] = "icon16/application_view_tile.png",
         ["tool"] = "icon16/application_view_tile.png",
         ["misc"] = "icon16/application_view_tile.png",
         ["miscellaneous"] = "icon16/application_view_tile.png",
         ["other"] = "icon16/application_view_tile.png",
-        -- Flag/Permission icons
         ["flag"] = "icon16/flag_green.png",
         ["permission"] = "icon16/flag_green.png",
         ["access"] = "icon16/flag_green.png",
         ["privilege"] = "icon16/flag_green.png",
-        -- Item/Container icons
         ["item"] = "icon16/box.png",
         ["inventory"] = "icon16/box.png",
         ["container"] = "icon16/box.png",
         ["storage"] = "icon16/box.png",
-        -- Communication icons
         ["ooc"] = "icon16/comment.png",
         ["chat"] = "icon16/comment.png",
         ["message"] = "icon16/comment.png",
         ["talk"] = "icon16/comment.png",
         ["communication"] = "icon16/comment.png",
-        -- Warning/Error icons
         ["warning"] = "icon16/error.png",
         ["alert"] = "icon16/error.png",
         ["error"] = "icon16/error.png",
         ["caution"] = "icon16/error.png",
-        -- Command/Control icons
         ["command"] = "icon16/page.png",
         ["control"] = "icon16/page.png",
         ["manage"] = "icon16/page.png",
         ["setting"] = "icon16/page.png",
-        -- Attribute/Stats icons
         ["attribute"] = "icon16/chart_line.png",
         ["stat"] = "icon16/chart_line.png",
         ["skill"] = "icon16/chart_line.png",
         ["level"] = "icon16/chart_line.png",
-        -- Group/Organization icons
         ["faction"] = "icon16/group.png",
         ["guild"] = "icon16/group.png",
         ["team"] = "icon16/group.png",
         ["organization"] = "icon16/group.png",
-        -- Class/Role icons
         ["class"] = "icon16/user.png",
         ["role"] = "icon16/user.png",
         ["job"] = "icon16/user.png",
         ["profession"] = "icon16/user.png",
-        -- Whitelist/Approval icons
         ["whitelist"] = "icon16/group_add.png",
         ["approve"] = "icon16/group_add.png",
         ["accept"] = "icon16/group_add.png",
         ["allow"] = "icon16/group_add.png",
-        -- Ban/Restriction icons
         ["ban"] = "icon16/lock.png",
         ["block"] = "icon16/lock.png",
         ["restrict"] = "icon16/lock.png",
         ["deny"] = "icon16/lock.png",
     }
 
-    -- Check for keyword matches in both original and localized names
     for keyword, icon in pairs(iconMappings) do
         if nameLower:find(keyword) or localizedName:find(keyword) then return icon end
     end
 
-    -- Special handling for exact matches with localized versions
     local localizedExactMatches = {
         [L("adminStickCategoryModeration"):lower()] = "icon16/shield.png",
         [L("adminStickCategoryCharacterManagement"):lower()] = "icon16/user_gray.png",
@@ -720,16 +696,10 @@ local function GetIconForCategory(name)
     }
 
     if localizedExactMatches[localizedName] then return localizedExactMatches[localizedName] end
-    -- Try to generate icon based on category structure
-    -- If it contains "Management" or "Admin", use a management icon
     if nameLower:find("management") or nameLower:find("admin") then return "icon16/cog.png" end
-    -- If it contains numbers or stats, use chart icon
     if nameLower:find("stat") or nameLower:find("number") or nameLower:find("count") then return "icon16/chart_bar.png" end
-    -- If it contains "set" or "config", use settings icon
     if nameLower:find("set") or nameLower:find("config") then return "icon16/cog.png" end
-    -- If it contains "get" or "view", use information icon
     if nameLower:find("get") or nameLower:find("view") or nameLower:find("show") then return "icon16/information.png" end
-    -- Default fallback with some intelligence
     if nameLower:find("list") or nameLower:find("all") then
         return "icon16/table.png"
     elseif nameLower:find("create") or nameLower:find("new") or nameLower:find("add") then
@@ -746,24 +716,21 @@ end
 local function GenerateDynamicCategories()
     local categories = {}
     local categoryNames = {}
-    -- Scan all commands to find categories and subcategories
     local adminStickCount = 0
     for _, v in pairs(lia.command.list) do
         if v.AdminStick and istable(v.AdminStick) then
             adminStickCount = adminStickCount + 1
             local category = v.AdminStick.Category
             local subcategory = v.AdminStick.SubCategory
-            -- Special handling for Character Flags - treat as subcategory of characterManagement
             if category == "adminsticksubcategorycharacterflags" then
                 category = "characterManagement"
                 if not subcategory then subcategory = "adminsticksubcategorycharacterflags" end
             end
 
             if category then
-                -- Initialize category if it doesn't exist
                 if not categories[category] then
                     categories[category] = {
-                        name = category, -- Use raw category name for now, will be localized later
+                        name = category,
                         icon = GetIconForCategory(category),
                         subcategories = {}
                     }
@@ -771,11 +738,10 @@ local function GenerateDynamicCategories()
                     table.insert(categoryNames, category)
                 end
 
-                -- Add subcategory if specified
                 if subcategory then
                     if not categories[category].subcategories[subcategory] then
                         categories[category].subcategories[subcategory] = {
-                            name = subcategory, -- Use raw subcategory name for now, will be localized later
+                            name = subcategory,
                             icon = GetIconForCategory(subcategory)
                         }
                     end
@@ -784,13 +750,11 @@ local function GenerateDynamicCategories()
         end
     end
 
-    -- Merge categories with the same display name
     local mergedCategories = {}
     local mergedCategoryNames = {}
     for _, categoryKey in ipairs(categoryNames) do
         local category = categories[categoryKey]
-        local displayName = L(category.name) -- Get localized name
-        -- Check if we already have a category with this display name
+        local displayName = L(category.name)
         local existingKey = nil
         for existingKeyCheck, existingCategory in pairs(mergedCategories) do
             if L(existingCategory.name) == displayName then
@@ -800,27 +764,21 @@ local function GenerateDynamicCategories()
         end
 
         if existingKey then
-            -- Merge subcategories into existing category
             for subKey, subCategory in pairs(category.subcategories) do
                 if not mergedCategories[existingKey].subcategories[subKey] then mergedCategories[existingKey].subcategories[subKey] = subCategory end
             end
         else
-            -- Create new category
             mergedCategories[categoryKey] = category
             table.insert(mergedCategoryNames, categoryKey)
         end
     end
 
-    -- Localize category and subcategory names
     for _, category in pairs(mergedCategories) do
-        -- Try to get localized name for the category
         local localizedName = L(category.name)
         if localizedName ~= category.name then
             category.name = localizedName
         else
-            -- If no localization exists, format the name nicely and intelligently
             local formattedName = category.name
-            -- Handle special cases for better formatting
             if formattedName:lower() == "flagmanagement" then
                 formattedName = "Flag Management"
             elseif formattedName:lower() == "doormanagement" then
@@ -845,15 +803,12 @@ local function GenerateDynamicCategories()
             category.name = formattedName
         end
 
-        -- Localize subcategory names
         for _, subCategory in pairs(category.subcategories) do
             local localizedSubName = L(subCategory.name)
             if localizedSubName ~= subCategory.name then
                 subCategory.name = localizedSubName
             else
-                -- If no localization exists, format the name nicely and intelligently
                 local formattedSubName = subCategory.name
-                -- Handle special cases for better formatting
                 if formattedSubName:lower() == "adminsticksubcategorybans" then
                     formattedSubName = "Bans"
                 elseif formattedSubName:lower() == "adminsticksubcategorysetinfos" then
@@ -867,7 +822,6 @@ local function GenerateDynamicCategories()
                 elseif formattedSubName:lower() == "doorinformation" then
                     formattedSubName = "Door Information"
                 else
-                    -- General formatting for camelCase and snake_case
                     formattedSubName = formattedSubName:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end)
                     formattedSubName = formattedSubName:gsub("_", " ")
                 end
@@ -877,20 +831,16 @@ local function GenerateDynamicCategories()
         end
     end
 
-    -- Generate category order with preferred categories first
     local preferredOrder = {"playerInformation", "moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
     local orderedCategories = {}
-    -- Add preferred categories first (in preferred order)
     for _, preferredCategory in ipairs(preferredOrder) do
         if mergedCategories[preferredCategory] then table.insert(orderedCategories, preferredCategory) end
     end
 
-    -- Add remaining categories
     for _, categoryName in ipairs(mergedCategoryNames) do
         if not table.HasValue(orderedCategories, categoryName) then table.insert(orderedCategories, categoryName) end
     end
 
-    -- Add hardcoded categories that might not be in commands but are used by the system
     local hardcodedCategories = {
         doorManagement = {
             name = L("adminStickCategoryDoorManagement") or "Door Management",
@@ -926,7 +876,6 @@ local function GenerateDynamicCategories()
         }
     }
 
-    -- Add missing subcategories to existing categories
     if mergedCategories.characterManagement then
         mergedCategories.characterManagement.subcategories = mergedCategories.characterManagement.subcategories or {}
         mergedCategories.characterManagement.subcategories.factions = {
@@ -958,7 +907,6 @@ local function GenerateDynamicCategories()
         }
     end
 
-    -- Merge hardcoded categories with dynamic ones
     for key, data in pairs(hardcodedCategories) do
         if not mergedCategories[key] then
             mergedCategories[key] = data
@@ -1073,7 +1021,6 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
     local menu = lia.derma.dermaMenu()
     if not IsValid(menu) then return end
     local cl = LocalPlayer()
-    -- Generate dynamic categories and order only if not already generated
     local categories, categoryOrder
     if not MODULE.adminStickCategories or table.Count(MODULE.adminStickCategories) == 0 then
         categories, categoryOrder = GenerateDynamicCategories()
@@ -1088,7 +1035,6 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
         local category = categories[categoryKey]
         if category then
             local hasContent
-            -- Check if category has content based on target type and permissions
             if categoryKey == "playerInformation" and tgt:IsPlayer() then
                 hasContent = true
             elseif categoryKey == "moderation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
@@ -1104,7 +1050,6 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
             elseif categoryKey == "utility" and tgt:IsPlayer() then
                 hasContent = true
             else
-                -- For other categories, check if they have commands that match the target type
                 hasContent = false
             end
 
@@ -1178,10 +1123,8 @@ local function OpenReasonUI(tgt, cmd)
     AdminStickIsOpen = true
     local argTypes = {}
     local defaults = {}
-    -- Always request a reason
     argTypes[L("reason")] = "string"
     defaults[L("reason")] = ""
-    -- For ban command, also request duration
     if cmd == "banid" then
         argTypes[L("lengthInDays")] = "number"
         defaults[L("lengthInDays")] = 0
@@ -1670,7 +1613,6 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     local m = menu
     local categoryKey = nil
     local subcategoryKey = nil
-    -- Check if this category exists in our dynamic categories first
     if MODULE.adminStickCategories and MODULE.adminStickCategories[cat] then
         categoryKey = cat
         if sub and MODULE.adminStickCategories[cat].subcategories and MODULE.adminStickCategories[cat].subcategories[sub] then subcategoryKey = sub end
@@ -1756,11 +1698,9 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     if IsValid(m) then
         local ic = data.AdminStick.Icon or "icon16/page.png"
         m:AddOption(L(name), function()
-            -- Check if the command has arguments defined
             if data.arguments and #data.arguments > 0 then
                 local argTypes = {}
                 local defaults = {}
-                -- Build ordered argument types table
                 for _, arg in ipairs(data.arguments) do
                     table.insert(argTypes, {arg.name, arg.type})
                     if arg.optional then defaults[arg.name] = "" end
@@ -1775,15 +1715,11 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
 
                     local id = GetIdentifier(tgt)
                     local cmd = "say /" .. key
-                    -- Check if the first argument is a target/player type
                     local hasTargetArg = data.arguments[1] and (data.arguments[1].type == "player" or data.arguments[1].type == "target")
-                    -- Add target identifier if needed (only if command doesn't have a target argument)
                     if id ~= "" and not hasTargetArg then cmd = cmd .. " " .. QuoteArgs(id) end
-                    -- Add command arguments in the order they appear in the command definition
                     for _, arg in ipairs(data.arguments) do
                         local value = argData[arg.name]
                         if value and value ~= "" then
-                            -- If this is a target argument, use the target identifier instead
                             if (arg.type == "player" or arg.type == "target") and id ~= "" then
                                 cmd = cmd .. " " .. QuoteArgs(id)
                             else
@@ -1792,7 +1728,6 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
                         end
                     end
 
-                    -- Test print to see the final command
                     cl:ConCommand(cmd)
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end, defaults)
