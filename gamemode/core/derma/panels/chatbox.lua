@@ -292,7 +292,7 @@ function PANEL:addText(...)
             local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
             markup = markup .. str:gsub("%b**", function(val)
                 local inner = val:sub(2, -2)
-                if inner:find("%S") then return "<font=LiliaFont.20Italics>" .. inner .. "</font>" end
+                if inner:find("%S") then return "<font=LiliaFont.20i>" .. inner .. "</font>" end
             end)
         end
     end
@@ -414,7 +414,7 @@ function PANEL:rebuildPanelMarkup(panel)
             local str = tostring(item):gsub("<", "&lt;"):gsub(">", "&gt;")
             markup = markup .. str:gsub("%b**", function(val)
                 local inner = val:sub(2, -2)
-                if inner:find("%S") then return "<font=LiliaFont.20Italics>" .. inner .. "</font>" end
+                if inner:find("%S") then return "<font=LiliaFont.20i>" .. inner .. "</font>" end
             end)
         end
     end
