@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.811 (October 19, 2025)
+
+### Changes
+
+- Updated Some Public Modules
+- Successfully updated workshop Lilia to 6.89
+- Update sh_net.lua
+- Better UIs
+- Successfully updated workshop Lilia to 6.86
+- More UI Changes & Bug Fixing
+- Successfully updated workshop Lilia to 6.84
+- GMOD UI Compatibility Layer
+- Entry Notification
+- Successfully updated workshop Lilia to 6.81
+- Urgent Bug Fix
+- Successfully updated workshop Lilia to 6.799
+- Update webimage.lua
+- Successfully updated workshop Lilia to 6.797
+- Updated Some Public Modules
+- Successfully updated workshop Lilia to 6.795
+- Added Scoreboard Logo Enabled & Main Menu Logo Enabled
+- Successfully updated workshop Lilia to 6.793
+- Chatbox UI Overhaul + Bug Fixes + Standardization of Methods
+- Successfully updated workshop Lilia to 6.791
+
 ## Version 6.89 (October 18, 2025)
 
 ### Changes
