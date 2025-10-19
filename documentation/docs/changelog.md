@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.817 (October 19, 2025)
+
+### Changes
+
+- Network Registration
+- Bad Font
+- Specific Check For Outrageous Situations
+- Fixed Bug W/ NPC Weapon Change
+- Remove Unused Fonts
+- Successfully updated workshop Lilia to 6.811
+- Updated Some Public Modules
+- Successfully updated workshop Lilia to 6.89
+- Update sh_net.lua
+- Better UIs
+- Successfully updated workshop Lilia to 6.86
+- More UI Changes & Bug Fixing
+- Successfully updated workshop Lilia to 6.84
+- GMOD UI Compatibility Layer
+- Entry Notification
+- Successfully updated workshop Lilia to 6.81
+- Urgent Bug Fix
+- Successfully updated workshop Lilia to 6.799
+- Update webimage.lua
+- Successfully updated workshop Lilia to 6.797
+
 ## Version 6.811 (October 19, 2025)
 
 ### Changes
