@@ -225,7 +225,7 @@ function PANEL:updateItem(id, which, qty)
 
     local pnl = container[id]
     if not IsValid(pnl) then
-        pnl = vgui.Create("VendorItem", parent.items)
+        pnl = vgui.Create("liaVendorItem", parent.items)
         pnl:setItemType(id)
         pnl:setIsSelling(which == "me")
         container[id] = pnl
@@ -601,7 +601,7 @@ function PANEL:Init()
             self.bodygroups:DockMargin(0, 4, 0, 0)
             self.bodygroups:SetText(L("bodygroups"))
             self.bodygroups:SetTextColor(lia.color.theme.text or color_white)
-            self.bodygroups.DoClick = function() vgui.Create("VendorBodygroupEditor", self):MoveLeftOf(self, 4) end
+            self.bodygroups.DoClick = function() vgui.Create("liaVendorBodygroupEditor", self):MoveLeftOf(self, 4) end
         end
 
         if entity:SkinCount() > 1 then
