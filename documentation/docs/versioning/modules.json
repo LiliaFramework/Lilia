@@ -144,20 +144,6 @@
     "workshop": []
   },
   {
-    "name": "Compass",
-    "versionID": "public_compass",
-    "author": "Samael",
-    "discord": "@liliaplayer",
-    "description": "Adds a rotating HUD compass display, spot markers showing enemy bearings, support that requires workshop icons, pinging of points of interest, and compass size configuration.",
-    "version": "1",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/compass.zip",
-    "source": "https://liliaframework.github.io/Modules/compass.html",
-    "features": [],
-    "workshop": [
-      "3527540414"
-    ]
-  },
-  {
     "name": "Corpse ID",
     "versionID": "public_corpseid",
     "author": "Samael",
