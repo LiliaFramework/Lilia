@@ -133,11 +133,11 @@ local function GiveWeapon(ply, ent, args)
 end
 
 duplicator.RegisterEntityModifier("npc_weapon", GiveWeapon)
-local function changeWep(it, ent, wep)
-    it:MsgStart()
+local function changeWep(ent, wep)
+    net.Start("liaNPCWeaponChange")
     net.WriteEntity(ent)
     net.WriteString(wep)
-    it:MsgEnd()
+    net.SendToServer()
 end
 
 local nowep = {"cycler", "npc_furniture", "monster_generic", "npc_seagull", "npc_crow", "npc_piegon", "npc_rollermine", "npc_turret_floor", "npc_stalker", "npc_turret_ground", "npc_combine_camera", "npc_turret_ceiling", "npc_cscanner", "npc_clawscanner", "npc_manhack", "npc_sniper", "npc_combinegunship", "npc_combinedropship", "npc_helicopter", "npc_antlion_worker", "npc_headcrab_black", "npc_hunter", "npc_vortigaunt", "npc_antlion", "npc_antlionguard", "npc_barnacle", "npc_headcrab", "npc_dog", "npc_gman", "npc_antlion_grub", "npc_strider", "npc_fastzombie", "npc_fastzombie_torso", "npc_headcrab_poison", "npc_headcrab_fast", "npc_poisonzombie", "npc_zombie", "npc_zombie_torso", "npc_zombine", "monster_scientist", "monster_zombie", "monster_headcrab", "class C_AI_BaseNPC", "monster_tentacle", "monster_alien_grunt", "monster_alien_slave", "monster_human_assassin", "monster_babycrab", "monster_bullchicken", "monster_cockroach", "monster_alien_controller", "monster_gargantua", "monster_bigmomma", "monster_human_grunt", "monster_houndeye", "monster_nihilanth", "monster_barney", "monster_snark", "monster_turret", "monster_miniturret", "monster_sentry"}
@@ -203,7 +203,7 @@ properties.Add("npc_weapon", {
                 icon:SetName(WeaponTable.PrintName and language.GetPhrase(WeaponTable.PrintName) or "#" .. WeaponTable.ClassName)
                 icon:SetAdminOnly(WeaponTable.AdminOnly or false)
                 icon.DoClick = function()
-                    changeWep(properties.Get("npc_weapon"), ent, WeaponTable.ClassName)
+                    changeWep(ent, WeaponTable.ClassName)
                     frame:Close()
                 end
 

@@ -18,6 +18,16 @@ net.Receive("liaStringRequestCancel", function(_, client)
     if client.liaStrReqs and client.liaStrReqs[id] then client.liaStrReqs[id] = nil end
 end)
 
+net.Receive("liaNPCWeaponChange", function(_, ply)
+    local ent = net.ReadEntity()
+    local wep = net.ReadString()
+    if not IsValid(ent) or not ent:IsNPC() then return end
+    if not IsValid(ply) or not ply:hasPrivilege("canSpawnSWEPs") then return end
+    -- Remove current weapon if it exists
+    if IsValid(ent:GetActiveWeapon()) then ent:GetActiveWeapon():Remove() end
+    ent:Give(wep)
+end)
+
 net.Receive("liaCharRequest", function(_, client)
     local charID = net.ReadUInt(32)
     lia.char.getCharacter(charID, client, function(character) if character then character:sync(client) end end)
