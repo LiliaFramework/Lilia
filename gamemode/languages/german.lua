@@ -2976,8 +2976,6 @@ Nachladen: Fallenlassen]],
     adminStickInstructions4 = "Nachladen: Zielauswahl löschen",
     invalidPhrase = "Sie müssen eine Phrase angeben, die gesendet werden soll.",
     sentToAllChats = "Phrase '%s' an %d Chat-Typen gesendet.",
-
-    -- Hardcoded notification strings that should be localized
     requiredFieldsMissing = "Bitte füllen Sie alle erforderlichen Felder aus.",
     factionNotFound = "Fraktion nicht gefunden.",
     factionNoMainMenuPosition = "Fraktion '%s' hat keine mainMenuPosition definiert.",
@@ -2990,8 +2988,6 @@ Nachladen: Fallenlassen]],
     allBotsFinished = "Alle Bots fertig! Gesamt gesagt Phrasen: %d",
     vendorEntityInvalid = "Verkäufer-Entität ist nicht gültig!",
     keybindChanged = "Tastenbelegung '%s' zu %s geändert",
-
-    -- Console and debug messages
     debugFactionMapsUsage = "Verwendung: debugFactionMaps <fraktion_name>",
     debugFactionInfo = "Debug-Info für Fraktion '%s':",
     factionViewNotActive = "Fraktionsansicht ist derzeit nicht aktiv.",
@@ -3000,8 +2996,6 @@ Nachladen: Fallenlassen]],
     factionViewPosition = "ViewAsFaction: Position = %s",
     factionViewAngles = "ViewAsFaction: Winkel = %s",
     noMainMenuPosition = "Kein mainMenuPosition für diese Fraktion definiert.",
-
-    -- Error messages
     failedParseAddonJSON = "Fehler beim Parsen der addon.json-Datei",
     failedParseJSONData = "Fehler beim Parsen der JSON-Daten: %s",
     missingArgumentOutputFile = "Fehlendes Argument #1 (Ausgabedatei)",

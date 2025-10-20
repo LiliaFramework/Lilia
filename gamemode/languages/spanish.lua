@@ -2975,8 +2975,6 @@ Recargar: Soltar]],
     adminStickInstructions4 = "Recargar: Limpiar selección de objetivo",
     invalidPhrase = "Debes proporcionar una frase para enviar.",
     sentToAllChats = "Frase '%s' enviada a %d tipos de chat.",
-
-    -- Hardcoded notification strings that should be localized
     requiredFieldsMissing = "Por favor complete todos los campos requeridos.",
     factionNotFound = "Facción no encontrada.",
     factionNoMainMenuPosition = "La facción '%s' no tiene mainMenuPosition definida.",
@@ -2989,8 +2987,6 @@ Recargar: Soltar]],
     allBotsFinished = "¡Todos los bots terminaron! Total de frases dichas: %d",
     vendorEntityInvalid = "¡La entidad del vendedor no es válida!",
     keybindChanged = "Atajo '%s' cambiado a %s",
-
-    -- Console and debug messages
     debugFactionMapsUsage = "Uso: debugFactionMaps <nombre_facción>",
     debugFactionInfo = "Información de depuración para la facción '%s':",
     factionViewNotActive = "La vista de facción no está activa actualmente.",
@@ -2999,8 +2995,6 @@ Recargar: Soltar]],
     factionViewPosition = "ViewAsFaction: Posición = %s",
     factionViewAngles = "ViewAsFaction: Ángulos = %s",
     noMainMenuPosition = "No se ha definido mainMenuPosition para esta facción.",
-
-    -- Error messages
     failedParseAddonJSON = "Error al analizar el archivo addon.json",
     failedParseJSONData = "Error al analizar los datos JSON: %s",
     missingArgumentOutputFile = "Falta argumento #1 (archivo de salida)",

@@ -108,7 +108,12 @@ function SWEP:DrawHUD()
         textAlignX = TEXT_ALIGN_RIGHT,
         textAlignY = TEXT_ALIGN_TOP,
         lineSpacing = 2,
-        blur = {enabled = true, amount = 2, passes = 2, alpha = 0.8}
+        blur = {
+            enabled = true,
+            amount = 2,
+            passes = 2,
+            alpha = 0.8
+        }
     })
 end
 

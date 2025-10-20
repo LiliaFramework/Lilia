@@ -17,7 +17,6 @@ function PANEL:Init()
     self:MakePopup()
     self:SetAlpha(0)
     self:AlphaTo(255, 0.2, 0)
-    -- Allow request dialogs to appear above this panel
     self:SetZPos(50)
     self.buttons = self:Add("DPanel")
     self.buttons:DockMargin(0, 32, 0, 0)

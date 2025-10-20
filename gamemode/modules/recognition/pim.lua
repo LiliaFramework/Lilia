@@ -4,17 +4,12 @@ end
 
 local function hasPlayersInRange(ply, lvl)
     if not canRecog(ply) then return false end
-
     local clsKey = lvl == 3 and "ic" or lvl == 4 and "y" or "w"
     local cls = lia.chat.classes[clsKey]
     if not cls then return false end
-
     for _, v in player.Iterator() do
-        if ply ~= v and v:getChar() and cls.onCanHear(ply, v) then
-            return true
-        end
+        if ply ~= v and v:getChar() and cls.onCanHear(ply, v) then return true end
     end
-
     return false
 end
 

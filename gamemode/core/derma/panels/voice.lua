@@ -38,14 +38,11 @@ end
 function PANEL:Paint(w, h)
     if not IsValid(self.client) then return end
     local themeAccent = lia.color.theme.theme
-    -- Exact replication of adminstick drawBoxWithText styling
     local backgroundColor = Color(0, 0, 0, 150)
     local borderColor = themeAccent
     local borderRadius = 8
     local borderThickness = 2
-    -- Draw background box like adminstick
     lia.derma.rect(0, 0, w, h):Color(backgroundColor):Rad(borderRadius):Draw()
-    -- Draw border like adminstick
     if borderThickness > 0 then lia.derma.rect(0, 0, w, h):Color(borderColor):Rad(borderRadius):Outline(borderThickness):Draw() end
 end
 

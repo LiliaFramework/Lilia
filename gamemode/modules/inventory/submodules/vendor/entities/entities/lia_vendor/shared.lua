@@ -64,25 +64,19 @@ function ENT:getWelcomeMessage()
 end
 
 function ENT:getStock(uniqueID)
-    if not self.items then
-        self:setupVars()
-    end
+    if not self.items then self:setupVars() end
     if self.items[uniqueID] and self.items[uniqueID][VENDOR_MAXSTOCK] then return self.items[uniqueID][VENDOR_STOCK] or 0, self.items[uniqueID][VENDOR_MAXSTOCK] end
 end
 
 function ENT:getMaxStock(itemType)
-    if not self.items then
-        self:setupVars()
-    end
+    if not self.items then self:setupVars() end
     if self.items[itemType] then return self.items[itemType][VENDOR_MAXSTOCK] end
 end
 
 function ENT:isItemInStock(itemType, amount)
     amount = amount or 1
     assert(isnumber(amount), L("vendorAmountNumber"))
-    if not self.items then
-        self:setupVars()
-    end
+    if not self.items then self:setupVars() end
     local info = self.items[itemType]
     if not info then return false end
     if not info[VENDOR_MAXSTOCK] then return true end
@@ -90,10 +84,7 @@ function ENT:isItemInStock(itemType, amount)
 end
 
 function ENT:getPrice(uniqueID, isSellingToVendor)
-    if not self.items then
-        self:setupVars()
-    end
-
+    if not self.items then self:setupVars() end
     local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or (lia.item.list[uniqueID] and lia.item.list[uniqueID]:getPrice() or 0)
     local overridePrice = hook.Run("GetPriceOverride", self, uniqueID, price, isSellingToVendor)
     if overridePrice then
@@ -105,9 +96,7 @@ function ENT:getPrice(uniqueID, isSellingToVendor)
 end
 
 function ENT:getTradeMode(itemType)
-    if not self.items then
-        self:setupVars()
-    end
+    if not self.items then self:setupVars() end
     if self.items[itemType] then return self.items[itemType][VENDOR_MODE] end
 end
 

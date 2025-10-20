@@ -290,7 +290,6 @@ else
         title:SetFont("liaSmallFont")
         title:SetColor(color_white)
         title:SetContentAlignment(5)
-
         local scroll = frame:Add("liaScrollPanel")
         scroll:SetPos(0, titleH + titleY + gap)
         scroll:SetSize(frameW, frameH - titleH - titleY - gap)
@@ -319,6 +318,7 @@ else
                     self._cachedTextW, self._cachedTextH = surface.GetTextSize(categoryName)
                     self._cachedName = categoryName
                 end
+
                 local x = (w - self._cachedTextW) / 2
                 local y = (h - self._cachedTextH) / 2
                 draw.SimpleText(categoryName, "liaSmallFont", x, y, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
@@ -341,6 +341,7 @@ else
                     self._textW, self._textH = surface.GetTextSize(icon)
                     self._icon = icon
                 end
+
                 local x = (w - self._textW) / 2
                 local y = (h - self._textH) / 2
                 draw.SimpleText(icon, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)

@@ -772,7 +772,6 @@ lia.config.add("YellRange", "yellRange", 840, nil, {
     max = 2000
 })
 
-
 lia.config.add("OOCLimit", "oocCharacterLimit", 150, nil, {
     desc = "oocCharacterLimitDesc",
     category = "categoryChat",
