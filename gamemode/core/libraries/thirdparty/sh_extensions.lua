@@ -157,7 +157,7 @@ properties.Add("npc_weapon", {
     end,
     Action = function(_, ent)
         if not IsValid(ent) then return false end
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetSize(ScrW() / 1.2, ScrH() / 1.1)
         frame:SetTitle(L("changeWeaponOf", language.GetPhrase("#" .. ent:GetClass())))
         frame:Center()

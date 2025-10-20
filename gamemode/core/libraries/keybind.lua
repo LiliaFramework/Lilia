@@ -508,7 +508,7 @@ if CLIENT then
                         combo:SetValue(newKeyName)
                         lia.keybind.save()
                         local client = LocalPlayer()
-                        if IsValid(client) then client:notifySuccess("Keybind '" .. action .. "' changed to " .. newKeyName) end
+                        if IsValid(client) then client:notifySuccess(L("keybindChanged", action, newKeyName)) end
                     end
 
                     combo:PostInit()

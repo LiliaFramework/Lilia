@@ -2,6 +2,22 @@
     return lia.config.get("RecognitionEnabled", true) and ply:getChar() and ply:Alive()
 end
 
+local function hasPlayersInRange(ply, lvl)
+    if not canRecog(ply) then return false end
+
+    local clsKey = lvl == 3 and "ic" or lvl == 4 and "y" or "w"
+    local cls = lia.chat.classes[clsKey]
+    if not cls then return false end
+
+    for _, v in player.Iterator() do
+        if ply ~= v and v:getChar() and cls.onCanHear(ply, v) then
+            return true
+        end
+    end
+
+    return false
+end
+
 local function promptName(ply, cb)
     if lia.config.get("FakeNamesEnabled", false) then
         ply:requestString(L("recogFakeNamePrompt"), "", function(nm)
@@ -47,21 +63,21 @@ end
 
 lia.playerinteract.addAction("recognizeInWhisperRange", {
     category = L("categoryRecognition"),
-    shouldShow = function(ply) return canRecog(ply) end,
+    shouldShow = function(ply) return hasPlayersInRange(ply, 1) end,
     onRun = function(ply) doRange(ply, 1) end,
     serverOnly = true
 })
 
 lia.playerinteract.addAction("recognizeInTalkRange", {
     category = L("categoryRecognition"),
-    shouldShow = function(ply) return canRecog(ply) end,
+    shouldShow = function(ply) return hasPlayersInRange(ply, 3) end,
     onRun = function(ply) doRange(ply, 3) end,
     serverOnly = true
 })
 
 lia.playerinteract.addAction("recognizeInYellRange", {
     category = L("categoryRecognition"),
-    shouldShow = function(ply) return canRecog(ply) end,
+    shouldShow = function(ply) return hasPlayersInRange(ply, 4) end,
     onRun = function(ply) doRange(ply, 4) end,
     serverOnly = true
 })

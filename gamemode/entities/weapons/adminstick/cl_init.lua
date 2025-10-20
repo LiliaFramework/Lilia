@@ -78,54 +78,38 @@ function SWEP:DrawHUD()
     lia.derma.rect(x - length / 2, y - thickness / 2, length, thickness):Color(themeColors.text):Draw()
     lia.derma.rect(x - thickness / 2, y - length / 2, thickness, length):Color(themeColors.text):Draw()
     if #information > 0 then
-        local maxWidth, totalHeight = 0, 0
-        surface.SetFont("LiliaFont.16")
-        for _, v in pairs(information) do
-            local t_w, t_h = surface.GetTextSize(v)
-            maxWidth = math.max(maxWidth, t_w)
-            totalHeight = totalHeight + t_h + 4
-        end
-
-        local boxWidth = maxWidth + 80
-        local boxHeight = totalHeight + 20
-        local boxX = (ScrW() - boxWidth) / 2
-        local boxY = ScrH() - boxHeight - 20
-        lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, 3, 3, 0.9)
-        lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(Color(0, 0, 0, 150)):Rad(8):Draw()
-        lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(themeAccent):Rad(8):Outline(2):Draw()
-        local startPosY, buffer = boxY + 10, 0
-        for _, v in pairs(information) do
-            local t_w, t_h = surface.GetTextSize(v)
-            local centeredX = boxX + (boxWidth - t_w) / 2
-            lia.derma.drawText(v, centeredX, startPosY + buffer, Color(255, 255, 255), 0, 0, "LiliaFont.16")
-            buffer = buffer + t_h + 4
-        end
+        local boxX = ScrW() / 2
+        local boxY = ScrH() - 20
+        lia.derma.drawBoxWithText(information, boxX, boxY, {
+            font = "LiliaFont.16",
+            textColor = Color(255, 255, 255),
+            backgroundColor = Color(0, 0, 0, 150),
+            borderColor = themeAccent,
+            borderRadius = 8,
+            borderThickness = 2,
+            padding = 40,
+            textAlignX = TEXT_ALIGN_CENTER,
+            textAlignY = TEXT_ALIGN_BOTTOM,
+            lineSpacing = 4
+        })
     end
 
     local instructions = {L("adminStickInstructions1", "Left Click: Open admin menu for target"), L("adminStickInstructions2", "Right Click: Freeze/unfreeze player"), L("adminStickInstructions3", "Reload + Shift: Open admin menu for yourself"), L("adminStickInstructions4", "Reload: Clear target selection")}
-    local instMaxWidth, instTotalHeight = 0, 0
-    surface.SetFont("LiliaFont.14")
-    for _, v in pairs(instructions) do
-        local t_w, t_h = surface.GetTextSize(v)
-        instMaxWidth = math.max(instMaxWidth, t_w)
-        instTotalHeight = instTotalHeight + t_h + 2
-    end
-
-    local instBoxWidth = instMaxWidth + 40
-    local instBoxHeight = instTotalHeight + 20
-    local instBoxX = ScrW() - instBoxWidth - 20
+    local instBoxX = ScrW() - 20
     local instBoxY = 20
-    lia.util.drawBlurAt(instBoxX, instBoxY, instBoxWidth, instBoxHeight, 2, 2, 0.8)
-    lia.derma.rect(instBoxX, instBoxY, instBoxWidth, instBoxHeight):Color(Color(0, 0, 0, 150)):Rad(6):Draw()
-    local accentColor = themeAccent or Color(255, 255, 255)
-    lia.derma.rect(instBoxX, instBoxY, instBoxWidth, instBoxHeight):Color(accentColor):Rad(6):Outline(1):Draw()
-    local textColor = Color(255, 255, 255)
-    local instStartY, instBuffer = instBoxY + 10, 0
-    for _, v in pairs(instructions) do
-        local _, t_h = surface.GetTextSize(v)
-        lia.derma.drawText(v, instBoxX + 20, instStartY + instBuffer, textColor, 0, 0, "LiliaFont.14", 255)
-        instBuffer = instBuffer + t_h + 2
-    end
+    lia.derma.drawBoxWithText(instructions, instBoxX, instBoxY, {
+        font = "LiliaFont.14",
+        textColor = Color(255, 255, 255),
+        backgroundColor = Color(0, 0, 0, 150),
+        borderColor = themeAccent or Color(255, 255, 255),
+        borderRadius = 6,
+        borderThickness = 1,
+        padding = 20,
+        textAlignX = TEXT_ALIGN_RIGHT,
+        textAlignY = TEXT_ALIGN_TOP,
+        lineSpacing = 2,
+        blur = {enabled = true, amount = 2, passes = 2, alpha = 0.8}
+    })
 end
 
 function SWEP:Reload()

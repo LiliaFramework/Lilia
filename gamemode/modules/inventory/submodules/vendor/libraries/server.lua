@@ -100,7 +100,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
 
             local canTransfer, transferReason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
             if not canTransfer then
-                client:notifyErrorLocalized(transferReason or L("vendorError"))
+                client:notifyErrorLocalized(transferReason or "vendorError")
                 client.vendorTransaction = nil
                 return
             end

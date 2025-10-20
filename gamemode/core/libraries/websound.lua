@@ -126,7 +126,7 @@ function lia.websound.download(name, url, cb)
     http.Fetch(u, function(body)
         local isValid, downloadValidationError = validateSoundFile(name, body)
         if not isValid then
-            if cb then cb(nil, false, "File validation failed: " .. downloadValidationError) end
+            if cb then cb(nil, false, L("fileValidationFailed", downloadValidationError)) end
             return
         end
 

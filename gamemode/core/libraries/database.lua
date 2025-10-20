@@ -821,7 +821,7 @@ function lia.db.loadSnapshot(fileName)
 
     local success, snapshot = pcall(util.JSONToTable, jsonData)
     if not success then
-        d:reject("Failed to parse JSON data: " .. tostring(snapshot))
+        d:reject(L("failedParseJSONData", tostring(snapshot)))
         return d
     end
 

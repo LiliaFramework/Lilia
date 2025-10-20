@@ -6,7 +6,7 @@ ITEM.contents = ""
 ITEM.functions.Read = {
     name = "read",
     onClick = function(item)
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetSize(540, 680)
         frame:SetTitle(item.name)
         frame:MakePopup()

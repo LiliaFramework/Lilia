@@ -131,4 +131,4 @@ function PANEL:Populate()
     if self.sortColumn then self.listView:SortByColumn(self.sortColumn, self.sortDesc) end
 end
 
-vgui.Register("liaDListView", PANEL, "DFrame")
+vgui.Register("liaDListView", PANEL, "liaFrame")

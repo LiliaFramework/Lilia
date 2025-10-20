@@ -249,8 +249,12 @@ function PANEL:OnKeyCodePressed(key)
 end
 
 function PANEL:Update()
-    self:Remove()
-    vgui.Create("liaMenu")
+    -- Only recreate the menu if it should be visible
+    -- Don't recreate if the menu is being refreshed for font updates
+    if self:IsVisible() then
+        self:Remove()
+        vgui.Create("liaMenu")
+    end
 end
 
 function PANEL:Think()

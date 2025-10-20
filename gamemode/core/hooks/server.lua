@@ -42,6 +42,23 @@ function GM:PlayerLoadedChar(client, character)
     hook.Run("PlayerLoadout", client)
     if not timer.Exists("liaSalaryGlobal") then self:CreateSalaryTimers() end
     local ammoTable = character:getAmmo()
+    if character:getFaction() == FACTION_STAFF then
+        local storedDiscord = client:getLiliaData("staffDiscord")
+        if storedDiscord and storedDiscord ~= "" then
+            local description = L("staffCharacterDiscordSteamID", storedDiscord, client:SteamID())
+            character:setDesc(description)
+        else
+            if character:getDesc() == "" or character:getDesc():find(L("staffCharacter")) then
+                timer.Simple(2, function()
+                    if IsValid(client) and client:getChar() == character then
+                        net.Start("liaStaffDiscordPrompt")
+                        net.Send(client)
+                    end
+                end)
+            end
+        end
+    end
+
     if not table.IsEmpty(ammoTable) then
         timer.Simple(0.25, function()
             if not IsValid(ammoTable) then return end
@@ -495,7 +512,6 @@ function GM:PlayerInitialSpawn(client)
         end
 
         timer.Simple(1, function() lia.playerinteract.syncToClients(client) end)
-        print("[CHAR-DEBUG] Calling PlayerLiliaDataLoaded for", client:Name())
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
@@ -721,7 +737,7 @@ function GM:LoadData()
                             lia.error(debug.traceback())
                         end
                     else
-                        lia.error(string.format("Invalid angle for entity '%s' at %s: %s (%s)", tostring(cls), tostring(decodedPos), tostring(decodedAng), type(decodedAng)))
+                        lia.error(L("invalidAngleEntity", tostring(cls), tostring(decodedPos), tostring(decodedAng), type(decodedAng)))
                         lia.error(debug.traceback())
                     end
                 end
@@ -895,12 +911,6 @@ function ClientAddText(client, ...)
     net.Send(client)
 end
 
-local TalkRanges = {
-    [L("whispering")] = 120,
-    [L("talking")] = 300,
-    [L("yelling")] = 600,
-}
-
 local function IsLineOfSightClear(listener, speaker)
     local tr = util.TraceLine{
         start = listener:GetShootPos(),
@@ -919,17 +929,23 @@ local function IsLineOfSightClear(listener, speaker)
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
+    -- Early validation checks
     if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end
-    if speaker:getNetVar("IsDeadRestricted", false) then return false, false end
-    if speaker:getNetVar("liaGagged", false) then return false, false end
-    if not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
+    -- Check speaker restrictions
+    if speaker:getNetVar("IsDeadRestricted", false) or speaker:getNetVar("liaGagged", false) or not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
+    -- Check if voice is enabled globally
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
+    -- Get voice type and corresponding range (cache config lookups)
     local voiceType = speaker:getNetVar("VoiceType", L("talking"))
-    local baseRange = TalkRanges[voiceType] or TalkRanges.Talking
+    local baseRange = voiceType == L("whispering") and lia.config.get("WhisperRange", 70) or voiceType == L("talking") and lia.config.get("TalkRange", 280) or voiceType == L("yelling") and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
+    -- fallback
+    -- Calculate distance once
+    local distance = listener:GetPos():Distance(speaker:GetPos())
+    -- Line of sight check (more expensive, so do it last)
     local clearLOS = IsLineOfSightClear(listener, speaker)
     local effectiveRange = clearLOS and baseRange or baseRange * 0.16
-    local distSqr = listener:GetPos():DistToSqr(speaker:GetPos())
-    local canHear = distSqr <= effectiveRange * effectiveRange
+    -- Single distance comparison
+    local canHear = distance <= effectiveRange
     return canHear, canHear
 end
 

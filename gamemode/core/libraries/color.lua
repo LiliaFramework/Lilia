@@ -39,7 +39,7 @@ if CLIENT then
             themeName = "Teal"
             themeData = lia.color.themes[themeName]
             if not themeData then
-                ErrorNoHalt("[Lilia] Warning: No valid themes found! Using emergency fallback colors.\n")
+                ErrorNoHalt("[Lilia] " .. L("themeNoValidThemesFallback") .. "\n")
                 lia.color.theme = {
                     maincolor = Color(80, 180, 180),
                     background = Color(24, 32, 32),

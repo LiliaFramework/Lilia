@@ -154,7 +154,7 @@ function MODULE:AddToAdminStickHUD(_, target, information)
     end
 
     if #factionNames > 0 then
-        table.insert(information, "Allowed Factions:")
+        table.insert(information, L("doorAllowedFactions") .. ":")
         for _, factionName in ipairs(factionNames) do
             table.insert(information, "- " .. factionName)
         end
@@ -173,7 +173,7 @@ function MODULE:AddToAdminStickHUD(_, target, information)
     end
 
     if #classNames > 0 then
-        table.insert(information, "Allowed Classes:")
+        table.insert(information, L("doorAllowedClasses") .. ":")
         for _, className in ipairs(classNames) do
             table.insert(information, "- " .. className)
         end

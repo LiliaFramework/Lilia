@@ -34,19 +34,24 @@ function SWEP:DrawHUD()
     local owner = self:GetOwner()
     local scrW = ScrW()
     local instructionsText = self.StartPos and L("distanceMeasureInstructionsMeasuring") or L("distanceMeasureInstructions")
-    local instructionsWidth = 250
-    local instructionsHeight = 80
-    local instructionsX = scrW - instructionsWidth - 50
-    local instructionsY = 10
-    lia.util.drawBlurAt(instructionsX, instructionsY, instructionsWidth, instructionsHeight, 3, 3, 0.9)
-    lia.derma.rect(instructionsX, instructionsY, instructionsWidth, instructionsHeight):Color(Color(0, 0, 0, 150)):Rad(8):Draw()
-    lia.derma.rect(instructionsX, instructionsY, instructionsWidth, instructionsHeight):Color(lia.color.theme.theme):Rad(8):Outline(2):Draw()
-    local centerX = scrW - instructionsWidth / 2 - 50
-    local startY = 25
     local lines = string.Split(instructionsText, "\n")
-    for i, line in ipairs(lines) do
-        draw.SimpleText(line, "liaSmallFont", centerX, startY + (i - 1) * 15, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-    end
+    local instructionsX = scrW - 50
+    local instructionsY = 10
+    lia.derma.drawBoxWithText(lines, instructionsX, instructionsY, {
+        font = "liaSmallFont",
+        textColor = Color(255, 255, 255),
+        backgroundColor = Color(0, 0, 0, 150),
+        borderColor = lia.color.theme.theme,
+        borderRadius = 8,
+        borderThickness = 2,
+        padding = 20,
+        textAlignX = TEXT_ALIGN_RIGHT,
+        textAlignY = TEXT_ALIGN_TOP,
+        lineSpacing = 4,
+        width = 250,
+        height = 80,
+        autoSize = false
+    })
 
     if not self.StartPos then return end
     local tr = owner:GetEyeTrace()

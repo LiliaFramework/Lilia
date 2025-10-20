@@ -179,7 +179,7 @@ if SERVER then
 
     lia.playerinteract.addAction("changeToWhisper", {
         category = L("categoryVoice"),
-        shouldShow = function(client) return client:getChar() and client:Alive() end,
+        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("whispering") end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("whispering"))
             client:notifyInfoLocalized("voiceModeSet", L("whispering"))
@@ -189,7 +189,7 @@ if SERVER then
 
     lia.playerinteract.addAction("changeToTalk", {
         category = L("categoryVoice"),
-        shouldShow = function(client) return client:getChar() and client:Alive() end,
+        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("talking") end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("talking"))
             client:notifyInfoLocalized("voiceModeSet", L("talking"))
@@ -199,7 +199,7 @@ if SERVER then
 
     lia.playerinteract.addAction("changeToYell", {
         category = L("categoryVoice"),
-        shouldShow = function(client) return client:getChar() and client:Alive() end,
+        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("yelling") end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("yelling"))
             client:notifyInfoLocalized("voiceModeSet", L("yelling"))
@@ -256,12 +256,12 @@ else
         local baseH = entryH * #visible + categoryH * categoryCount + 140
         local frameH = isInteraction and baseH or math.min(baseH, ScrH() * 0.6)
         local titleH = isInteraction and 36 or 16
-        local titleY = 12
+        local titleY = 2
         local gap = 24
         local padding = ScrW() * 0.15
         local xPos = ScrW() - frameW - padding
         local yPos = (ScrH() - frameH) / 2
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetSize(frameW, frameH)
         frame:SetPos(xPos, yPos)
         frame:MakePopup()
@@ -277,11 +277,6 @@ else
 
         frame:SetAlpha(0)
         frame:AlphaTo(255, fadeSpeed)
-        function frame:Paint(w, h)
-            lia.util.drawBlur(self, 4)
-            draw.RoundedBox(0, 0, 0, w, h, Color(20, 20, 20, 120))
-        end
-
         function frame:Think()
             if not input.IsKeyDown(closeKey) then self:Close() end
         end
@@ -295,9 +290,6 @@ else
         title:SetFont("liaSmallFont")
         title:SetColor(color_white)
         title:SetContentAlignment(5)
-        function title:PaintOver()
-            surface.SetDrawColor(Color(60, 60, 60))
-        end
 
         local scroll = frame:Add("liaScrollPanel")
         scroll:SetPos(0, titleH + titleY + gap)
@@ -316,14 +308,20 @@ else
             categoryHeader:SetTall(categoryH)
             categoryHeader:Dock(TOP)
             categoryHeader:DockMargin(15, 0, 15, 0)
+            categoryHeader._cachedName = nil
+            categoryHeader._cachedTextW = 0
+            categoryHeader._cachedTextH = 0
             function categoryHeader:Paint(w, h)
-                draw.RoundedBox(4, 0, 0, w, h, Color(40, 40, 40, 180))
-                draw.RoundedBox(4, 2, 2, w - 4, h - 4, Color(60, 60, 60, 120))
-                surface.SetFont("liaSmallFont")
-                local textW, textH = surface.GetTextSize(categoryName)
-                local x = (w - textW) / 2
-                local y = (h - textH) / 2
-                draw.SimpleText(categoryName, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel):Shape(lia.derma.SHAPE_IOS):Draw()
+                lia.derma.rect(2, 2, w - 4, h - 4):Rad(6):Color(lia.color.theme.button):Shape(lia.derma.SHAPE_IOS):Draw()
+                if self._cachedName ~= categoryName then
+                    surface.SetFont("liaSmallFont")
+                    self._cachedTextW, self._cachedTextH = surface.GetTextSize(categoryName)
+                    self._cachedName = categoryName
+                end
+                local x = (w - self._cachedTextW) / 2
+                local y = (h - self._cachedTextH) / 2
+                draw.SimpleText(categoryName, "liaSmallFont", x, y, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
 
             local collapseBtn = categoryHeader:Add("DButton")
@@ -333,12 +331,18 @@ else
             collapseBtn:SetTextColor(color_white)
             local isCollapsed = false
             local categoryContent = {}
+            collapseBtn._icon = nil
+            collapseBtn._textW = 0
+            collapseBtn._textH = 0
             function collapseBtn:Paint(w, h)
                 local icon = isCollapsed and "▶" or "▼"
-                surface.SetFont("liaSmallFont")
-                local textW, textH = surface.GetTextSize(icon)
-                local x = (w - textW) / 2
-                local y = (h - textH) / 2
+                if self._icon ~= icon then
+                    surface.SetFont("liaSmallFont")
+                    self._textW, self._textH = surface.GetTextSize(icon)
+                    self._icon = icon
+                end
+                local x = (w - self._textW) / 2
+                local y = (h - self._textH) / 2
                 draw.SimpleText(icon, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
 
@@ -356,7 +360,7 @@ else
 
             layout:Add(categoryHeader)
             for _, entry in pairs(categoryOptions) do
-                local btn = vgui.Create("DButton", layout)
+                local btn = vgui.Create("liaButton", layout)
                 btn:SetTall(entryH)
                 btn:Dock(TOP)
                 btn:DockMargin(15, 8, 15, 0)
@@ -364,14 +368,6 @@ else
                 btn:SetFont("liaSmallFont")
                 btn:SetTextColor(color_white)
                 btn:SetContentAlignment(5)
-                function btn:Paint(w, h)
-                    if self:IsHovered() then
-                        draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 160))
-                    else
-                        draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 30, 100))
-                    end
-                end
-
                 btn.DoClick = function()
                     frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
                     if not entry.opt.serverOnly and entry.opt.onRun then

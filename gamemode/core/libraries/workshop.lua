@@ -1,4 +1,28 @@
-﻿lia.workshop = lia.workshop or {}
+﻿--[[
+    Lilia Workshop Management Library
+    
+    The lia.workshop library provides comprehensive workshop content management for the Lilia framework.
+    This library handles automatic detection, downloading, mounting, and management of Steam Workshop addons
+    required by the gamemode and its modules. It ensures that clients have all necessary workshop content
+    before joining the server, providing a seamless experience for both server administrators and players.
+    
+    Key Features:
+    - Automatic workshop ID detection from modules and mounted addons
+    - Client-side workshop content downloading with progress tracking
+    - Local caching of downloaded workshop content for faster subsequent loads
+    - Integration with Lilia's bootstrap system for user notifications
+    - Server-client communication for workshop content synchronization
+    - UI components for displaying download progress and addon information
+    
+    The library operates differently on server and client sides:
+    - Server: Manages workshop ID collection, caching, and client synchronization
+    - Client: Handles workshop content downloading, mounting, and user interface
+    
+    This system is essential for ensuring all players have the required workshop content
+    to properly experience the gamemode and its modules.
+]]
+
+lia.workshop = lia.workshop or {}
 if SERVER then
     lia.workshop.ids = lia.workshop.ids or {}
     lia.workshop.known = lia.workshop.known or {}

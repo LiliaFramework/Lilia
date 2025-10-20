@@ -239,6 +239,10 @@ function PANEL:SetUpdateOnType(update)
     if self.textEntry.SetUpdateOnType then self.textEntry:SetUpdateOnType(update) end
 end
 
+function PANEL:SetMultiline(multiline)
+    if self.textEntry.SetMultiline then self.textEntry:SetMultiline(multiline) end
+end
+
 function PANEL:OnChange()
     if self.textEntry.OnChange then self.textEntry:OnChange() end
 end

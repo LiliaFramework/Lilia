@@ -17,7 +17,7 @@ function PANEL:Init()
     self.Icon:SetSize(32, 32)
     self.LabelName = vgui.Create("DLabel", self)
     self.LabelName:Dock(FILL)
-    self.LabelName:SetFont("liaMediumFont")
+    self.LabelName:SetFont("LiliaFont.20")
     self.LabelName:SetTextColor(color_white)
 end
 
@@ -37,12 +37,16 @@ end
 
 function PANEL:Paint(w, h)
     if not IsValid(self.client) then return end
-    lia.util.drawBlur(self, 1, 2)
-    local vol = self.client:VoiceVolume()
-    surface.SetDrawColor(0, 0, 0, 50 + vol * 50)
-    surface.DrawRect(0, 0, w, h)
-    surface.SetDrawColor(255, 255, 255, 50 + vol * 120)
-    surface.DrawOutlinedRect(0, 0, w, h)
+    local themeAccent = lia.color.theme.theme
+    -- Exact replication of adminstick drawBoxWithText styling
+    local backgroundColor = Color(0, 0, 0, 150)
+    local borderColor = themeAccent
+    local borderRadius = 8
+    local borderThickness = 2
+    -- Draw background box like adminstick
+    lia.derma.rect(0, 0, w, h):Color(backgroundColor):Rad(borderRadius):Draw()
+    -- Draw border like adminstick
+    if borderThickness > 0 then lia.derma.rect(0, 0, w, h):Color(borderColor):Rad(borderRadius):Outline(borderThickness):Draw() end
 end
 
 function PANEL:Think()

@@ -491,7 +491,7 @@ else
     lia.util.requestArguments = lia.derma.requestArguments
     function lia.util.createTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetTitle(title and L(title) or L("tableListTitle"))
         frame:SetSize(frameWidth, frameHeight)
         frame:Center()
@@ -535,7 +535,7 @@ else
             listView:AddMenuOption(option.name and L(option.name) or option.name, function()
                 if not option.net then return end
                 if option.ExtraFields then
-                    local inputPanel = vgui.Create("DFrame")
+                    local inputPanel = vgui.Create("liaFrame")
                     inputPanel:SetTitle(L("optionsTitle", option.name))
                     inputPanel:SetSize(300, 300 + #table.GetKeys(option.ExtraFields) * 35)
                     inputPanel:Center()
@@ -663,7 +663,7 @@ else
         if #entries == 0 then return end
         local frameW, entryH = 300, 30
         local frameH = entryH * #entries + 50
-        local frame = vgui.Create("DFrame")
+        local frame = vgui.Create("liaFrame")
         frame:SetSize(frameW, frameH)
         frame:Center()
         frame:MakePopup()

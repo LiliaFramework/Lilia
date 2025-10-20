@@ -44,6 +44,8 @@ function PANEL:Init()
     self.scroll:GetVBar():SetWide(8)
     self.scrollbarShouldBeVisible = false
     self:setScrollbarVisible(false)
+    -- Ensure scroll panel is always visible
+    self.scroll:SetVisible(true)
     local vbar = self.scroll:GetVBar()
     if IsValid(vbar) then
         local originalPaint = vbar.Paint
@@ -311,21 +313,31 @@ function PANEL:addText(...)
         }
     }
 
-    panel.start = CurTime() + 5
-    panel.finish = panel.start + 5
+    panel.start = CurTime() + 8 -- Show messages for 8 seconds before starting fade
+    panel.finish = panel.start + 12 -- Total display time of 20 seconds
     panel.Think = function(p)
         if self.active then
             p:SetAlpha(255)
         else
+            -- Show messages for a longer time and with better visibility
             local alpha = (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255
-            p:SetAlpha(math.max(alpha, 0))
+            p:SetAlpha(math.max(alpha, 50)) -- Minimum alpha of 50 so messages are always somewhat visible
         end
     end
 
     self.list[#self.list + 1] = panel
     panel:SetPos(0, self.lastY)
     self.lastY = self.lastY + panel:GetTall() + 2
-    timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(panel) and self.active then self.scroll:ScrollToChild(panel) end end)
+    -- Always auto-scroll to new messages, regardless of active state
+    timer.Simple(0.01, function() if IsValid(self.scroll) and IsValid(panel) then self.scroll:ScrollToChild(panel) end end)
+    -- Ensure the chat panel is visible when new messages arrive
+    if not self.active then
+        self:SetVisible(true)
+        if IsValid(self.scroll) then self.scroll:SetVisible(true) end
+        -- Briefly flash the chat to draw attention to new messages
+        self:SetAlpha(255)
+        timer.Simple(0.1, function() if IsValid(self) and not self.active then self:SetAlpha(200) end end)
+    end
     return panel:IsVisible()
 end
 

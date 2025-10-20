@@ -271,6 +271,32 @@ function GM:DrawEntityInfo(e, a, pos)
     end
 end
 
+local function drawVoiceIndicator()
+    local client = LocalPlayer()
+    if not IsValid(client) or not client:IsSpeaking() then return end
+
+    local voiceType = client:getNetVar("VoiceType", L("talking"))
+    local voiceText = L("youAre") .. " " .. voiceType
+
+    -- Calculate position (top center)
+    local boxX = ScrW() / 2
+    local boxY = 50
+
+    -- Draw box with text using the new function
+    lia.derma.drawBoxWithText(voiceText, boxX, boxY, {
+        font = "LiliaFont.18",
+        textColor = Color(255, 255, 255),
+        backgroundColor = Color(0, 0, 0, 150),
+        borderColor = lia.color.theme.theme,
+        borderRadius = 8,
+        borderThickness = 2,
+        padding = 20,
+        textAlignX = TEXT_ALIGN_CENTER,
+        textAlignY = TEXT_ALIGN_CENTER,
+        autoSize = true
+    })
+end
+
 function GM:HUDPaint()
     local client = LocalPlayer()
     if client:Alive() and client:getChar() then
@@ -278,6 +304,9 @@ function GM:HUDPaint()
         if canDrawAmmo(wpn) then drawAmmo(wpn) end
         if canDrawCrosshair() then drawCrosshair() end
     end
+
+    -- Draw voice chat indicator
+    drawVoiceIndicator()
 end
 
 function GM:TooltipInitialize(var, panel)
@@ -572,22 +601,22 @@ function GM:RefreshFonts()
         end
     end
 
-    if IsValid(lia.gui.menu) then
+    if lia.gui.menu and IsValid(lia.gui.menu) then
         lia.gui.menu:Update()
         refreshPanel(lia.gui.menu)
     end
 
-    if IsValid(lia.gui.character) then
+    if lia.gui.character and IsValid(lia.gui.character) then
         lia.gui.character:Update()
         refreshPanel(lia.gui.character)
     end
 
-    if IsValid(lia.gui.score) then
+    if lia.gui.score and IsValid(lia.gui.score) then
         lia.gui.score:Update()
         refreshPanel(lia.gui.score)
     end
 
-    if IsValid(lia.gui.chat) then
+    if lia.gui.chat and IsValid(lia.gui.chat) then
         lia.gui.chat:Update()
         refreshPanel(lia.gui.chat)
     end

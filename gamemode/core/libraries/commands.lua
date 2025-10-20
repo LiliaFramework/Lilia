@@ -612,7 +612,7 @@ if SERVER then
                     ply:notifyInfoLocalized("userGroupSetBy", target:getName(), usergroup)
                     lia.log.add(ply, "usergroup", target, usergroup)
                 else
-                    ply:notifyErrorLocalized(L("invalidUsergroup") .. " \"" .. usergroup .. "\"")
+                    ply:notifyErrorLocalized("invalidUsergroup" .. " \"" .. usergroup .. "\"")
                 end
             else
                 ply:notifyErrorLocalized("plyNoExist")
@@ -811,11 +811,11 @@ if SERVER then
             return
         end
 
-        lia.notices.notify(L("testNotification"))
-        lia.notices.notify(L("testNotificationInfo"), "info")
-        lia.notices.notify(L("testNotificationWarning"), "warning")
-        lia.notices.notify(L("testNotificationError"), "error")
-        lia.notices.notify(L("testNotificationSuccess"), "success")
+        lia.notices.notifylocalized("testNotification")
+        lia.notices.notifyInfoLocalized("testNotificationInfo")
+        lia.notices.notifyWarningLocalized("testNotificationWarning")
+        lia.notices.notifyErrorLocalized("testNotificationError")
+        lia.notices.notifySuccessLocalized("testNotificationSuccess")
     end)
 
     concommand.Add("print_vector", function(client)
@@ -826,7 +826,7 @@ if SERVER then
 
         local pos = client:GetPos()
         local vec = Vector(pos.x, pos.y, pos.z)
-        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "Vector: " .. tostring(vec) .. "\n")
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("vector") .. ": " .. tostring(vec) .. "\n")
     end)
 
     concommand.Add("print_angle", function(client)
@@ -1096,7 +1096,7 @@ else
         end
 
         if table.IsEmpty(factionOptions) then
-            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. "No factions found.\n")
+            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("noFactionsFound") .. "\n")
             return
         end
 
@@ -1107,13 +1107,13 @@ else
             local factionUniqueID = data.Faction
             local faction = lia.faction.teams[factionUniqueID]
             if not faction then
-                client:notify("Faction not found.")
+                client:notifyErrorLocalized("factionNotFound")
                 return
             end
 
             local menuPos = faction.mainMenuPosition
             if not menuPos then
-                client:notify("Faction '" .. faction.name .. "' has no mainMenuPosition defined.")
+                client:notifyErrorLocalized("factionNoMainMenuPosition", faction.name)
                 return
             end
 
@@ -1150,7 +1150,7 @@ else
             end
 
             if not position then
-                client:notify("Could not determine position for faction '" .. faction.name .. "' on map '" .. currentMap .. "'. Make sure the faction has a mainMenuPosition defined for this map.")
+                client:notifyErrorLocalized("factionPositionNotDetermined", faction.name, currentMap)
                 return
             end
 
@@ -1158,13 +1158,13 @@ else
             factionViewPosition = position
             factionViewAngles = angles or Angle(0, 180, 0)
             factionViewFaction = factionUniqueID
-            MsgC(Color(0, 255, 0), "[Lilia] ViewAsFaction: Using map '" .. currentMap .. "' for faction '" .. faction.name .. "'\n")
-            MsgC(Color(0, 255, 0), "[Lilia] ViewAsFaction: Position = " .. tostring(position) .. "\n")
-            if angles then MsgC(Color(0, 255, 0), "[Lilia] ViewAsFaction: Angles = " .. tostring(angles) .. "\n") end
-            client:notify("Now viewing as faction: " .. faction.name)
-            client:notify("Position: " .. tostring(position))
-            if angles then client:notify("Angles: " .. tostring(angles)) end
-            client:notify("Use 'stopFactionView' to return to normal view.")
+            MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewUsingMap", currentMap, faction.name) .. "\n")
+            MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewPosition", tostring(position)) .. "\n")
+            if angles then MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewAngles", tostring(angles)) .. "\n") end
+            client:notifylocalized("viewingAsFaction", faction.name)
+            client:notifylocalized("factionViewPosition", tostring(position))
+            if angles then client:notifylocalized("factionViewAngles", tostring(angles)) end
+            client:notifylocalized("stopFactionView")
         end)
     end)
 
@@ -1176,7 +1176,7 @@ else
 
         local factionName = args[1]
         if not factionName then
-            MsgC(Color(255, 193, 7), "[Lilia] Usage: debugFactionMaps <faction_name>\n")
+            MsgC(Color(255, 193, 7), "[Lilia] " .. L("debugFactionMapsUsage") .. "\n")
             return
         end
 
@@ -1189,30 +1189,30 @@ else
         end
 
         if not faction then
-            MsgC(Color(255, 0, 0), "[Lilia] Faction '" .. factionName .. "' not found.\n")
+            MsgC(Color(255, 0, 0), "[Lilia] " .. L("factionNotFound") .. "\n")
             return
         end
 
-        MsgC(Color(0, 255, 0), "[Lilia] Debug info for faction '" .. faction.name .. "':\n")
+        MsgC(Color(0, 255, 0), "[Lilia] " .. L("debugFactionInfo", faction.name) .. "\n")
         MsgC(Color(255, 255, 0), "Current map: " .. game.GetMap() .. "\n")
         if not faction.mainMenuPosition then
-            MsgC(Color(255, 0, 0), "No mainMenuPosition defined for this faction.\n")
+            MsgC(Color(255, 0, 0), L("noMainMenuPosition") .. "\n")
             return
         end
 
         if isvector(faction.mainMenuPosition) then
             MsgC(Color(0, 255, 0), "Simple vector position: " .. tostring(faction.mainMenuPosition) .. "\n")
         elseif istable(faction.mainMenuPosition) then
-            MsgC(Color(0, 255, 0), "Map-specific positions:\n")
+            MsgC(Color(0, 255, 0), L("mapSpecificPositions") .. "\n")
             for mapName, posData in pairs(faction.mainMenuPosition) do
                 local isCurrentMap = mapName == game.GetMap()
                 local mapColor = isCurrentMap and Color(0, 255, 0) or Color(255, 255, 255)
                 MsgC(mapColor, "  " .. (isCurrentMap and ">>> " or "    ") .. mapName .. ":\n")
                 if istable(posData) then
-                    MsgC(mapColor, "    Position: " .. tostring(posData.position or posData) .. "\n")
-                    if posData.angles then MsgC(mapColor, "    Angles: " .. tostring(posData.angles) .. "\n") end
+                    MsgC(mapColor, "    " .. L("position") .. ": " .. tostring(posData.position or posData) .. "\n")
+                    if posData.angles then MsgC(mapColor, "    " .. L("angles") .. ": " .. tostring(posData.angles) .. "\n") end
                 elseif isvector(posData) then
-                    MsgC(mapColor, "    Position: " .. tostring(posData) .. "\n")
+                    MsgC(mapColor, "    " .. L("position") .. ": " .. tostring(posData) .. "\n")
                 end
             end
         end
@@ -1225,7 +1225,7 @@ else
         end
 
         if not factionViewEnabled then
-            MsgC(Color(255, 193, 7), "[Lilia] Faction view is not currently active.\n")
+            MsgC(Color(255, 193, 7), "[Lilia] " .. L("factionViewNotActive") .. "\n")
             return
         end
 
@@ -1238,39 +1238,8 @@ else
             factionViewModel = nil
         end
 
-        MsgC(Color(0, 255, 0), "[Lilia] Faction view disabled. Returning to normal view.\n")
+        MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewDisabled") .. "\n")
     end)
-
-    lia.command.add("testargs", {
-        desc = "testArgsDesc",
-        arguments = {
-            {
-                name = "player",
-                type = "player",
-                description = "Target player"
-            },
-            {
-                name = "message",
-                type = "string",
-                description = "Message to send"
-            },
-            {
-                name = "amount",
-                type = "number",
-                description = "Amount (optional)",
-                optional = true
-            }
-        },
-        onRun = function(client, arguments)
-            local target = arguments[1]
-            local message = arguments[2]
-            local amount = arguments[3] or 1
-            client:notify("Test command executed!")
-            client:notify("Target: " .. tostring(target))
-            client:notify("Message: " .. tostring(message))
-            client:notify("Amount: " .. tostring(amount))
-        end
-    })
 end
 
 lia.command.add("demorequests", {
@@ -1278,16 +1247,16 @@ lia.command.add("demorequests", {
     privilege = "Staff",
     onRun = function(client)
         if SERVER then
-            client:notify("Opening request UI demo...")
-            client:binaryQuestion("Would you like to see all the request UI demos?", "Yes, show me!", "No, thanks", false, function(confirmed)
+            client:notifylocalized("openingDemo")
+            client:binaryQuestion(L("demoQuestion"), L("yesShowMe"), L("noThanks"), false, function(confirmed)
                 if confirmed then
-                    client:requestDropdown("Demo: Dropdown Selection", "Choose your favorite color:", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected)
+                    client:requestDropdown(L("demoDropdownTitle"), L("chooseColor"), {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected)
                         if selected ~= nil then
-                            client:requestOptions("Demo: Multi-Select Options", "Select your favorite activities (max 3):", {{"Gaming", "gaming"}, {"Reading", "reading"}, {"Sports", "sports"}, {"Music", "music"}, {"Cooking", "cooking"}, {"Travel", "travel"}}, 3, function(selectedOptions)
+                            client:requestOptions(L("demoOptionsTitle"), L("selectFavoriteActivities"), {{"Gaming", "gaming"}, {"Reading", "reading"}, {"Sports", "sports"}, {"Music", "music"}, {"Cooking", "cooking"}, {"Travel", "travel"}}, 3, function(selectedOptions)
                                 if selectedOptions and #selectedOptions > 0 then
-                                    client:requestString("Demo: Text Input", "Enter a fun message (max 50 characters):", function(message)
+                                    client:requestString(L("demoTextInputTitle"), L("enterFunMessage"), function(message)
                                         if message then
-                                            client:requestArguments("Demo: Structured Input", {
+                                            client:requestArguments(L("demoStructuredTitle"), {
                                                 {"Name", "string"},
                                                 {
                                                     "Age",
@@ -1299,51 +1268,51 @@ lia.command.add("demorequests", {
                                                         }
                                                     }
                                                 },
-                                                {"Favorite Color", {"table", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}}}},
-                                                {"Agree to Terms", "boolean"}
+                                                {L("favoriteColor"), {"table", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}}}},
+                                                {L("agreeToTerms"), "boolean"}
                                             }, function(success, argumentsData)
                                                 if success and argumentsData then
-                                                    client:requestButtons("Demo: Button Selection", {
+                                                    client:requestButtons(L("demoButtonSelection"), {
                                                         {
-                                                            text = "Save Progress",
+                                                            text = L("saveProgress"),
                                                             icon = "icon16/disk.png"
                                                         },
                                                         {
-                                                            text = "Load Previous",
+                                                            text = L("loadPrevious"),
                                                             icon = "icon16/folder.png"
                                                         },
                                                         {
-                                                            text = "Start Over",
+                                                            text = L("startOver"),
                                                             icon = "icon16/arrow_refresh.png"
                                                         },
                                                         {
-                                                            text = "Exit Demo",
+                                                            text = L("exitDemo"),
                                                             icon = "icon16/door.png"
                                                         }
-                                                    }, function(_, buttonText) client:notify("Demo completed! You selected: " .. buttonText) end, "Choose what to do next:")
+                                                    }, function(_, buttonText) client:notifylocalized("demoCompleted", buttonText) end, L("chooseNextAction"))
                                                 else
-                                                    client:notify("Arguments demo cancelled")
+                                                    client:notifyWarningLocalized("argumentsDemoCancelled")
                                                 end
                                             end, {
-                                                Name = "Demo User",
+                                                Name = L("demoUser"),
                                                 Age = 25,
-                                                ["Favorite Color"] = {"Blue", "blue"},
-                                                ["Agree to Terms"] = true
+                                                [L("favoriteColor")] = {"Blue", "blue"},
+                                                [L("agreeToTerms")] = true
                                             })
                                         else
-                                            client:notify("String input demo cancelled")
+                                            client:notifyWarningLocalized("stringInputDemoCancelled")
                                         end
                                     end, "", 50)
                                 else
-                                    client:notify("Options demo cancelled")
+                                    client:notifyWarningLocalized("optionsDemoCancelled")
                                 end
                             end)
                         else
-                            client:notify("Dropdown demo cancelled")
+                            client:notifyWarningLocalized("dropdownDemoCancelled")
                         end
                     end)
                 else
-                    client:notify("Demo cancelled - no problem!")
+                    client:notifyInfoLocalized("demoCancelledNoProblem")
                 end
             end)
         end
@@ -4205,7 +4174,7 @@ lia.command.add("spawnbots", {
         end
 
         local botsSpawned = 0
-        client:notify("Spawning " .. requestedAmount .. " bots...")
+        client:notifylocalized("spawningBots", requestedAmount)
         for i = 1, requestedAmount do
             timer.Simple((i - 1) * 0.5, function()
                 if not IsValid(client) then return end
@@ -4214,7 +4183,7 @@ lia.command.add("spawnbots", {
             end)
         end
 
-        timer.Simple(requestedAmount * 0.5 + 2, function() if IsValid(client) then client:notify("Successfully spawned " .. botsSpawned .. " bots!") end end)
+        timer.Simple(requestedAmount * 0.5 + 2, function() if IsValid(client) then client:notifylocalized("botsSpawnedSimple", botsSpawned) end end)
     end
 })
 
@@ -4243,8 +4212,8 @@ lia.command.add("botspeak", {
             return
         end
 
-        client:notify("Found " .. #bots .. " bots. Starting phrase sequence with " .. phrasesPerBot .. " phrases per bot...")
-        local randomPhrases = {"Hello there!", "What's going on?", "I need help!", "Over here!", "Watch out!", "Come on!", "Let's go!", "This way!", "Behind you!", "Enemy spotted!", "Clear!", "Move up!", "Hold position!", "Cover me!", "Reloading!", "Taking fire!", "Need backup!", "All clear!", "Contact!", "Engaging!", "Fall back!", "Push forward!", "Hold the line!", "Secure the area!", "Enemy down!", "Got one!", "Nice shot!", "Good work!", "Keep moving!", "Stay alert!"}
+        client:notifylocalized("foundBotsStarting", #bots, phrasesPerBot)
+        local randomPhrases = {L("chatHelloThere"), L("chatWhatsGoingOn"), L("chatNeedHelp"), L("chatOverHere"), L("chatWatchOut"), L("chatComeOn"), L("chatLetsGo"), L("chatThisWay"), L("chatBehindYou"), L("chatEnemySpotted"), L("chatClear"), L("chatMoveUp"), L("chatHoldPosition"), L("chatCoverMe"), L("chatReloading"), L("chatTakingFire"), L("chatNeedBackup"), L("chatAllClear"), L("chatContact"), L("chatEngaging"), L("chatFallBack"), L("chatPushForward"), L("chatHoldTheLine"), L("chatSecureArea"), L("chatEnemyDown"), L("chatGotOne"), L("chatNiceShot"), L("chatGoodWork"), L("chatKeepMoving"), L("chatStayAlert")}
         local phraseCount = {}
         for _, bot in ipairs(bots) do
             phraseCount[bot] = 0
@@ -4259,7 +4228,7 @@ lia.command.add("botspeak", {
                 if phraseCount[bot] < phrasesPerBot then
                     timer.Simple(cooldown, function() if IsValid(bot) then makeBotSpeak(bot) end end)
                 else
-                    client:notify("Bot " .. (bot:GetName() or tostring(bot)) .. " finished all " .. phrasesPerBot .. " phrases")
+                    client:notifylocalized("botFinishedPhrases", bot:GetName() or tostring(bot), phrasesPerBot)
                 end
             end
         end
@@ -4274,7 +4243,7 @@ lia.command.add("botspeak", {
                 totalPhrases = totalPhrases + count
             end
 
-            client:notify("All bots finished! Total phrases said: " .. totalPhrases)
+            client:notifylocalized("allBotsFinished", totalPhrases)
         end)
     end
 })
@@ -5597,7 +5566,7 @@ lia.command.add("doorid", {
             local mapID = door:MapCreationID()
             if mapID and mapID > 0 then
                 local pos = door:GetPos()
-                client:notifyInfoLocalized(L("doorID") .. " " .. mapID .. " | Position: " .. string.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z))
+                client:notifyInfoLocalized("doorID" .. " " .. mapID .. " | " .. L("position") .. ": " .. string.format("%.0f, %.0f, %.0f", pos.x, pos.y, pos.z))
                 lia.log.add(client, "doorID", door, mapID)
             else
                 client:notifyErrorLocalized("doorNoValidMapID")
@@ -6933,7 +6902,7 @@ lia.command.add("recogbots", {
 })
 
 lia.command.add("kickbots", {
-    privilege = "Manage Bots",
+    privilege = "manageBots",
     desc = "kickAllBotsDesc",
     onRun = function(client)
         local kickedCount = 0

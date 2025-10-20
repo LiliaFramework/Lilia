@@ -15,7 +15,7 @@
     onChatAdd = function(speaker, text, anonymous) chat.AddText(lia.chat.timestamp(false), (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), L("icFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or L("console"), text)) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
         return false
     end
 })
@@ -30,7 +30,7 @@ lia.chat.register("meclose", {
     desc = "mecloseDesc",
     format = "emoteFormat",
     onGetColor = lia.chat.classes.ic.onGetColor,
-    onCanHear = lia.config.get("ChatRange", 280) * 0.25,
+    onCanHear = lia.config.get("WhisperRange", 70),
     prefix = {"/meclose", "/actionclose"},
     filter = "actions",
     deadCanChat = true
@@ -50,7 +50,7 @@ lia.chat.register("actions", {
         if client:getTracedEntity() == speaker then return (lia.color.theme and lia.color.theme.chatListen) or Color(168, 240, 170) end
         return (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150)
     end,
-    onCanHear = lia.config.get("ChatRange", 280),
+    onCanHear = lia.config.get("TalkRange", 280),
     deadCanChat = true
 })
 
@@ -64,7 +64,7 @@ lia.chat.register("mefar", {
     desc = "mefarDesc",
     format = "emoteFormat",
     onGetColor = lia.chat.classes.ic.onGetColor,
-    onCanHear = lia.config.get("ChatRange", 280) * 2,
+    onCanHear = lia.config.get("YellRange", 840),
     prefix = {"/mefar", "/actionfar"},
     filter = "actions",
     deadCanChat = true
@@ -79,7 +79,7 @@ lia.chat.register("itclose", {
     },
     desc = "itcloseDesc",
     onChatAdd = function(_, text) chat.AddText((lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), "**" .. text) end,
-    onCanHear = lia.config.get("ChatRange", 280) * 0.25,
+    onCanHear = lia.config.get("WhisperRange", 70),
     prefix = {"/itclose"},
     filter = "actions",
     deadCanChat = true
@@ -94,7 +94,7 @@ lia.chat.register("itfar", {
     },
     desc = "itfarDesc",
     onChatAdd = function(_, text) chat.AddText((lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), "**" .. text) end,
-    onCanHear = lia.config.get("ChatRange", 280) * 2,
+    onCanHear = lia.config.get("YellRange", 840),
     prefix = {"/itfar"},
     filter = "actions",
     deadCanChat = true
@@ -103,7 +103,7 @@ lia.chat.register("itfar", {
 lia.chat.register("coinflip", {
     desc = "coinflipDesc",
     format = "coinflipFormat",
-    onCanHear = lia.config.get("ChatRange", 280),
+    onCanHear = lia.config.get("TalkRange", 280),
     prefix = {"/coinflip"},
     onGetColor = function(speaker)
         local client = LocalPlayer()
@@ -126,7 +126,7 @@ lia.chat.register("me", {
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
         return false
     end,
     prefix = {"/me", "/action"},
@@ -161,7 +161,7 @@ lia.chat.register("it", {
     onChatAdd = function(_, text) chat.AddText(lia.chat.timestamp(false), (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), "**" .. text) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
         return false
     end,
     prefix = {"/it"},
@@ -181,7 +181,7 @@ lia.chat.register("w", {
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) * 0.25 then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("WhisperRange", 70) then return true end
         return false
     end,
     prefix = {"/w", "/whisper"}
@@ -199,7 +199,7 @@ lia.chat.register("y", {
     onGetColor = lia.chat.classes.ic.onGetColor,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) * 2 then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("YellRange", 840) then return true end
         return false
     end,
     prefix = {"/y", "/yell"}
@@ -228,7 +228,7 @@ lia.chat.register("looc", {
     onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("looc") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:Name(), ": " .. text) end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
         return false
     end,
     prefix = {"looc"},
@@ -269,7 +269,7 @@ lia.chat.register("roll", {
     deadCanChat = true,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("TalkRange", 280) then return true end
         return false
     end
 })
@@ -308,7 +308,7 @@ lia.chat.register("eventlocal", {
     onCanSay = function(speaker) return speaker:hasPrivilege("localEventChat") end,
     onCanHear = function(speaker, listener)
         if speaker == listener then return true end
-        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("ChatRange", 280) * 6 then return true end
+        if speaker:EyePos():distance(listener:EyePos()) <= lia.config.get("YellRange", 840) * 2 then return true end
         return false
     end,
     onChatAdd = function(_, text) chat.AddText((lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), text) end,
@@ -381,7 +381,7 @@ lia.chat.register("me's", {
     },
     desc = "mesDesc",
     format = "mePossessiveFormat",
-    onCanHear = lia.config.get("ChatRange", 280),
+    onCanHear = lia.config.get("TalkRange", 280),
     onChatAdd = function(speaker, text, anonymous)
         local texCol = (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150)
         if LocalPlayer():getTracedEntity() == speaker then texCol = (lia.color.theme and lia.color.theme.chatListen) or Color(168, 240, 170) end
@@ -406,7 +406,7 @@ lia.chat.register("mefarfar", {
         if LocalPlayer():getTracedEntity() == speaker then texCol = (lia.color.theme and lia.color.theme.chatListen) or Color(168, 240, 170) end
         chat.AddText(texCol, L("emoteFormat", anonymous and L("someone") or hook.Run("GetDisplayedName", speaker, "ic") or IsValid(speaker) and speaker:Name() or language.GetPhrase("#Console"), ""), texCol, text)
     end,
-    onCanHear = lia.config.get("ChatRange", 280) * 4,
+    onCanHear = lia.config.get("YellRange", 840) * 2,
     prefix = {"/mefarfar", "/actionyy", "/meyy"},
     filter = "actions",
     deadCanChat = true

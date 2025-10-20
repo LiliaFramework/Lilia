@@ -748,13 +748,30 @@ lia.config.add("CustomChatSound", "customChatSound", "", nil, {
     type = "Generic",
 })
 
-lia.config.add("ChatRange", "chatRange", 280, nil, {
-    desc = "chatRangeDesc",
+lia.config.add("TalkRange", "talkRange", 280, nil, {
+    desc = "talkRangeDesc",
     category = "categoryChat",
     type = "Int",
     min = 50,
     max = 10000
 })
+
+lia.config.add("WhisperRange", "whisperRange", 70, nil, {
+    desc = "whisperRangeDesc",
+    category = "categoryChat",
+    type = "Int",
+    min = 10,
+    max = 500
+})
+
+lia.config.add("YellRange", "yellRange", 840, nil, {
+    desc = "yellRangeDesc",
+    category = "categoryChat",
+    type = "Int",
+    min = 100,
+    max = 2000
+})
+
 
 lia.config.add("OOCLimit", "oocCharacterLimit", 150, nil, {
     desc = "oocCharacterLimitDesc",
