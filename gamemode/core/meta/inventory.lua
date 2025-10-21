@@ -1357,6 +1357,8 @@ if SERVER then
             loadInventoryWithValidation(playerInventory)
             ```
     ]]
+    local ITEM_TABLE = "items"
+    local ITEM_FIELDS = {"itemID", "uniqueID", "data", "x", "y", "quantity"}
     function Inventory:loadItems()
         return lia.db.select(ITEM_FIELDS, ITEM_TABLE, "invID = " .. self.id):next(function(res)
             local items = {}

@@ -328,7 +328,7 @@ end
     -- Medium: Format player's money for display
     local playerMoney = player:getMoney()
     local formattedMoney = lia.darkrp.formatMoney(playerMoney)
-    player:notifyInfoLocalized("your_money", formattedMoney)
+    player:notifyInfoLocalized("your_money")
     ```
 
     High Complexity:

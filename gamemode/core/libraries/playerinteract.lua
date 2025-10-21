@@ -1,6 +1,11 @@
 ﻿--[[
     Player Interaction Library
 
+    Player-to-player and entity interaction management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The player interaction library provides comprehensive functionality for managing player interactions
     and actions within the Lilia framework. It handles the creation, registration, and execution of
     various interaction types including player-to-player interactions, entity interactions, and

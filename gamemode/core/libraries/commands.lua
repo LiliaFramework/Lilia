@@ -1,6 +1,11 @@
 ﻿--[[
     Commands Library
 
+    Comprehensive command registration, parsing, and execution system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The commands library provides comprehensive functionality for managing and executing commands
     in the Lilia framework. It handles command registration, argument parsing, access control,
     privilege management, and command execution across both server and client sides. The library
@@ -1329,11 +1334,9 @@ else
                 -- Don't call the original DoClick to avoid button sound interference
                 if file.Exists(soundPath, "DATA") then
                     local fullPath = "data/" .. soundPath
-                    print("[DEBUG] Attempting to play sound: " .. fullPath)
                     -- Add a small delay to ensure the sound system is ready
                     timer.Simple(0.1, function()
-                        sound.PlayFile(fullPath, "", function(channel, errorCode, errorString)
-                            print("[DEBUG] Sound callback - channel valid:", IsValid(channel), "errorCode:", errorCode, "errorString:", errorString)
+                        sound.PlayFile(fullPath, "", function(channel, _, errorString)
                             if IsValid(channel) then
                                 LocalPlayer():ChatPrint("Playing: " .. soundName)
                             else
@@ -1610,9 +1613,7 @@ else
         if #soundFiles > 0 then
             local testFile = soundFiles[1]
             local fullPath = "data/" .. baseDir .. testFile
-            print("[DEBUG] Testing direct sound playback: " .. fullPath)
-            sound.PlayFile(fullPath, "", function(channel, errorCode, errorString)
-                print("[DEBUG] Direct test callback - channel valid:", IsValid(channel), "errorCode:", errorCode, "errorString:", errorString)
+            sound.PlayFile(fullPath, "", function(channel, _, errorString)
                 if IsValid(channel) then
                     LocalPlayer():ChatPrint("Direct test successful: " .. testFile)
                 else
@@ -1625,7 +1626,6 @@ else
     end)
 
     concommand.Add("test_saved_commands", function()
-        print("Testing lia_saved_sounds command...")
         local baseDir = "lilia/websounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         local soundFiles = {}
@@ -1635,12 +1635,10 @@ else
             end
         end
 
-        print("Found " .. #soundFiles .. " sound files in " .. baseDir)
         for i, fileName in ipairs(soundFiles) do
-            print("  " .. i .. ": " .. fileName)
+            LocalPlayer():ChatPrint("  " .. i .. ": " .. fileName)
         end
 
-        print("Testing lia_saved_images command...")
         local baseDir2 = "lilia/webimages/"
         local files2 = file.Find(baseDir2 .. "**", "DATA")
         local imageFiles = {}
@@ -1650,9 +1648,8 @@ else
             end
         end
 
-        print("Found " .. #imageFiles .. " image files in " .. baseDir2)
         for i, fileName in ipairs(imageFiles) do
-            print("  " .. i .. ": " .. fileName)
+            LocalPlayer():ChatPrint("  " .. i .. ": " .. fileName)
         end
     end)
 
@@ -4752,7 +4749,7 @@ lia.command.add("spawnbots", {
         local maxPlayers = game.MaxPlayers()
         local availableSlots = maxPlayers - currentPlayers
         if requestedAmount > availableSlots then
-            client:notifyErrorLocalized("spawnBotsLimit", requestedAmount, availableSlots)
+            client:notifyErrorLocalized("spawnBotsLimit", requestedAmount, availableSlots, maxPlayers)
             return
         end
 

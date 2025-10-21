@@ -1,6 +1,11 @@
 ﻿--[[
     Languages Library
 
+    Internationalization (i18n) and localization system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The languages library provides comprehensive internationalization (i18n) functionality for the Lilia framework.
     It handles loading, storing, and retrieving localized strings from language files, supporting multiple languages
     with fallback mechanisms. The library automatically loads language files from directories, processes them into
@@ -219,9 +224,11 @@ end
     ```lua
     -- High: Complex localized string with multiple parameters and error handling
     local function displayItemInfo(itemName, quantity, price)
-        local template = lia.lang.getLocalizedString("itemInfo")
+        local lang = lia.config and lia.config.get("Language", "english") or "english"
+        local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
+        local template = langTable and langTable["itemInfo"] or "itemInfo"
         if template then
-            local message = lia.lang.getLocalizedString("itemInfo", itemName, quantity, price)
+            local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
             lia.notice.add(message, NOTIFY_GENERIC)
         else
             lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)

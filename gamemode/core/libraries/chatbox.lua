@@ -1,6 +1,11 @@
 ﻿--[[
     Chatbox Library
 
+    Comprehensive chat system management with message routing and formatting for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The chatbox library provides comprehensive functionality for managing chat systems in the Lilia framework.
     It handles registration of different chat types (IC, OOC, whisper, etc.), message parsing and routing,
     distance-based hearing mechanics, and chat formatting. The library operates on both server and client
@@ -224,7 +229,7 @@ end
 
         -- Log message for moderation
         if options.logMessages then
-            lia.logger.add("chat", player:Name() .. " [" .. chatType .. "]: " .. cleanMessage)
+            lia.log.add("chat", player:Name() .. " [" .. chatType .. "]: " .. cleanMessage)
         end
 
         return chatType, cleanMessage, anonymous
@@ -316,7 +321,7 @@ end
         lia.chat.send(speaker, "admin", "[ADMIN] " .. message, false, receivers)
 
         -- Log the message
-        lia.logger.add("admin_chat", speaker:Name() .. ": " .. message)
+        lia.log.add("admin_chat", speaker:Name() .. ": " .. message)
     end
     ```
 ]]

@@ -1,6 +1,11 @@
 ﻿--[[
     Derma Library
 
+    Advanced UI rendering and interaction system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The derma library provides comprehensive UI rendering and interaction functionality for the Lilia framework.
     It handles advanced drawing operations including rounded rectangles, circles, shadows, blur effects, and
     gradients using custom shaders. The library offers a fluent API for creating complex UI elements with

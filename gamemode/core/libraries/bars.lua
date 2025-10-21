@@ -1,6 +1,11 @@
 ﻿--[[
     Bars Library
 
+    Dynamic progress bar creation and management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The bars library provides a comprehensive system for creating and managing dynamic progress bars
     in the Lilia framework. It handles the creation, rendering, and lifecycle management of various
     types of bars including health, armor, and custom progress indicators. The library operates

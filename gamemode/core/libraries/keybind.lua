@@ -1,6 +1,11 @@
 ﻿--[[
     Keybind Library
 
+    Keyboard binding registration, storage, and execution system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The keybind library provides comprehensive functionality for managing keyboard bindings
     in the Lilia framework. It handles registration, storage, and execution of custom keybinds
     that can be triggered by players. The library supports both client-side and server-side

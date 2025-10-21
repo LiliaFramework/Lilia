@@ -14,6 +14,7 @@ function PANEL:configureSteps()
 end
 
 function PANEL:updateModel()
+    if not IsValid(self.model) then return end
     local faction = lia.faction.indices[self.context.faction]
     if not faction then return end
     local info = faction.models[self.context.model or 1]
@@ -190,7 +191,9 @@ function PANEL:onStepChanged(oldStep, newStep)
     if IsValid(newStep) then
         local panelName = newStep:GetName()
         local shouldShowModel = panelName == "liaCharacterModel"
-        self.model:SetVisible(shouldShowModel)
+        if IsValid(self.model) then
+            self.model:SetVisible(shouldShowModel)
+        end
     end
 
     if IsValid(self:getPreviousStep()) then
@@ -244,6 +247,9 @@ function PANEL:Init()
     self.content:DockMargin(margin, 64, margin, 0)
     self.content:SetPaintBackground(false)
     self.model = self.content:Add("liaModelPanel")
+    if not IsValid(self.model) then
+        return self:showError("Failed to create model panel")
+    end
     self.model:SetWide(ScrW() * 0.25)
     self.model:Dock(LEFT)
     self.model:SetModel("models/error.mdl")
@@ -277,7 +283,11 @@ function PANEL:Init()
     self:configureSteps()
     if #self.steps == 0 then return self:showError("noCharacterSteps") end
     self:nextStep()
-    timer.Simple(0.5, function() hook.Run("ModifyCharacterModel", self.model:GetEntity()) end)
+    timer.Simple(0.5, function()
+        if IsValid(self) and IsValid(self.model) then
+            hook.Run("ModifyCharacterModel", self.model:GetEntity())
+        end
+    end)
 end
 
 vgui.Register("liaCharacterCreation", PANEL, "EditablePanel")

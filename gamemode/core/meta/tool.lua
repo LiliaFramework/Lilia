@@ -19,7 +19,7 @@ local toolGunMeta = lia.meta.tool or {}
     When Called: When initializing a new tool gun instance for a specific tool mode
     Parameters: None
     Returns: table - The newly created tool gun object
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -551,7 +551,7 @@ end
     When Called: When other methods need to know which tool mode is active
     Parameters: None
     Returns: string - The current tool mode name
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -600,7 +600,7 @@ end
     When Called: When the tool needs to access the underlying weapon entity
     Parameters: None
     Returns: Weapon - The SWEP entity instance
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -653,7 +653,7 @@ end
     When Called: When the tool needs to access the owning player for permissions, communication, or data
     Parameters: None
     Returns: Player - The player entity that owns this tool
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -714,7 +714,7 @@ end
     When Called: When the tool needs to access the weapon entity for physics or rendering operations
     Parameters: None
     Returns: Weapon - The weapon entity instance
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1280,7 +1280,7 @@ end
     When Called: Periodically during tool operation to maintain object integrity
     Parameters: None
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1390,7 +1390,7 @@ end
     When Called: When explicitly clearing all tool objects or during error recovery
     Parameters: None
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1470,7 +1470,7 @@ end
     When Called: When switching tools, holstering, or when the ghost entity is no longer needed
     Parameters: None
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua

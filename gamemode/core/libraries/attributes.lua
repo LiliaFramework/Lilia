@@ -1,6 +1,11 @@
 ﻿--[[
     Attributes Library
 
+    Character attribute management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The attributes library provides functionality for managing character attributes
     in the Lilia framework. It handles loading attribute definitions from files,
     registering attributes in the system, and setting up attributes for characters

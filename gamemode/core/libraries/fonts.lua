@@ -1,6 +1,11 @@
 ﻿--[[
     Font Library
 
+    Comprehensive font management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The font library provides comprehensive functionality for managing custom fonts in the Lilia framework.
     It handles font registration, loading, and automatic font creation for UI elements throughout the
     gamemode. The library operates on both server and client sides, with the server storing font

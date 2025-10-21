@@ -1,299 +1,283 @@
-# Button Panels Library
+# Button Panel Library
 
-A comprehensive collection of styled button components for consistent UI design across the Lilia framework.
+This page documents the button panel components for creating interactive UI elements in the Lilia framework.
 
 ---
 
 ## Overview
 
-The button panel library provides various button components with different sizes, styling options, and selection states. All button panels extend Garry's Mod's native `DButton` with enhanced visual effects, including underline animations on hover and persistent selection indicators. These panels integrate seamlessly with Lilia's theming system to provide consistent styling throughout the interface.
+The button panel library provides a comprehensive set of customizable button components with modern styling, animations, and interactive features. These panels are designed to create consistent, responsive user interfaces with visual feedback, hover effects, and ripple animations.
 
 ---
 
-### liaHugeButton
+### liaFrame
 
 **Purpose**
 
-Large button styled with `liaHugeFont` and an underline effect on hover. Supports selection state with persistent underline when `SetSelected(true)` is called.
+Creates a draggable window frame with customizable appearance, background blur, and interactive features.
 
 **When Called**
 
-This button is called when:
-- Creating large, prominent action buttons in interfaces
-- Building main navigation elements in menus
-- Displaying primary call-to-action buttons
-- Implementing large-scale UI controls
+This panel is called when:
+- Creating modal dialogs or popup windows
+- Building main application windows
+- Developing settings or configuration panels
+- Creating floating UI elements that require dragging
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `title` (*string*): The title text displayed in the window header.
+* `centerTitle` (*string*): Optional center-aligned title text.
+* `iconPath` (*string|IMaterial*): Icon material or path for the window icon.
+* `isAlpha` (*boolean*): Whether to enable background transparency.
+* `isSizable` (*boolean*): Whether the window can be resized.
+* `isDraggable` (*boolean*): Whether the window can be dragged.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created frame panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
-
-- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
-- `IsSelected()` – returns whether the button is currently selected.
-
 **Example Usage**
 
 ```lua
--- Create a huge button
-local button = vgui.Create("liaHugeButton")
-button:SetText("Primary Action")
-button:SetSize(200, 50)
-button.DoClick = function()
-    print("Primary action clicked!")
-end
+-- Create a basic draggable window
+local frame = vgui.Create("liaFrame")
+frame:SetSize(400, 300)
+frame:SetTitle("My Application")
+frame:Center()
 
--- Set as selected to show persistent underline
-button:SetSelected(true)
+-- Create a settings window with transparency
+local settingsFrame = vgui.Create("liaFrame")
+settingsFrame:SetSize(500, 400)
+settingsFrame:SetTitle("Settings")
+settingsFrame:SetAlphaBackground(true)
+settingsFrame:Center()
+
+-- Create a modal dialog
+local dialog = vgui.Create("liaFrame")
+dialog:SetSize(300, 150)
+dialog:SetTitle("Confirm Action")
+dialog:SetScreenLock(true)
+dialog:Center()
 ```
 
 ---
 
-### liaBigButton
+### liaButton
 
 **Purpose**
 
-Big-font button with the same underline hover animation and selection state support.
+Creates a modern styled button with hover effects, ripple animations, and customizable appearance.
 
 **When Called**
 
-This button is called when:
-- Creating medium-large action buttons
-- Building secondary navigation elements
-- Displaying prominent UI controls
-- Implementing standard-sized call-to-action buttons
+This panel is called when:
+- Creating interactive UI buttons
+- Building form controls and actions
+- Developing navigation elements
+- Creating custom UI components
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `text` (*string*): The button text to display.
+* `icon` (*string|IMaterial*): Optional icon material or path.
+* `iconSize` (*number*): Size of the icon in pixels.
+* `radius` (*number*): Corner radius for button styling.
+* `color` (*Color*): Base button color.
+* `hoverColor` (*Color*): Color when hovered.
+* `enableRipple` (*boolean*): Whether to show ripple effect on click.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created button panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
-
-- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
-- `IsSelected()` – returns whether the button is currently selected.
-
 **Example Usage**
 
 ```lua
--- Create a big button
-local button = vgui.Create("liaBigButton")
-button:SetText("Secondary Action")
-button:SetSize(150, 40)
+-- Create a basic button
+local button = vgui.Create("liaButton")
+button:SetText("Click Me!")
+button:SetSize(120, 40)
 button.DoClick = function()
-    print("Secondary action clicked!")
+    print("Button clicked!")
 end
 
--- Set as selected to show persistent underline
-button:SetSelected(true)
+-- Create a button with icon
+local iconButton = vgui.Create("liaButton")
+iconButton:SetText("Save")
+iconButton:SetIcon("icon16/disk.png")
+iconButton:SetSize(100, 35)
+
+-- Create a button without ripple effect
+local simpleButton = vgui.Create("liaButton")
+simpleButton:SetText("Simple Button")
+simpleButton:SetRipple(false)
 ```
 
 ---
 
-### liaMediumButton
+### liaEntry
 
 **Purpose**
 
-Medium-size button using `liaMediumFont` with underline hover animation and selection state support.
+Creates a modern text entry field with placeholder text, focus effects, and customizable styling.
 
 **When Called**
 
-This button is called when:
-- Creating standard-sized action buttons
-- Building regular UI controls
-- Displaying default button elements
-- Implementing medium-scale interface components
+This panel is called when:
+- Creating form input fields
+- Building search boxes
+- Developing text input interfaces
+- Creating configuration panels
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `placeholder` (*string*): Placeholder text shown when field is empty.
+* `title` (*string*): Optional title label above the input.
+* `defaultValue` (*string*): Initial text value.
+* `numeric` (*boolean*): Whether to restrict input to numbers only.
+* `multiline` (*boolean*): Whether to allow multiple lines of text.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created entry panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
-
-- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
-- `IsSelected()` – returns whether the button is currently selected.
-
 **Example Usage**
 
 ```lua
--- Create a medium button
-local button = vgui.Create("liaMediumButton")
-button:SetText("Standard Action")
-button:SetSize(120, 35)
-button.DoClick = function()
-    print("Standard action clicked!")
+-- Create a basic text input
+local textEntry = vgui.Create("liaEntry")
+textEntry:SetPlaceholder("Enter your name...")
+textEntry:SetSize(200, 30)
+textEntry.OnValueChange = function(value)
+    print("Text changed to: " .. value)
 end
 
--- Set as selected to show persistent underline
-button:SetSelected(true)
+-- Create a titled input field
+local nameEntry = vgui.Create("liaEntry")
+nameEntry:SetTitle("Player Name")
+nameEntry:SetPlaceholder("Enter player name...")
+nameEntry.OnEnter = function(value)
+    print("Entered name: " .. value)
+end
+
+-- Create a numeric input
+local numberEntry = vgui.Create("liaEntry")
+numberEntry:SetPlaceholder("Enter number...")
+numberEntry:SetNumeric(true)
 ```
 
 ---
 
-### liaSmallButton
+### liaCheckbox
 
 **Purpose**
 
-Small button sized for compact layouts with underline hover animation and selection state support.
+Creates a toggleable checkbox with smooth animations and customizable styling.
 
 **When Called**
 
-This button is called when:
-- Creating compact UI elements
-- Building dense interface layouts
-- Displaying secondary controls
-- Implementing space-efficient button designs
+This panel is called when:
+- Creating boolean settings or options
+- Building configuration interfaces
+- Developing form controls
+- Creating toggle switches
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `text` (*string*): Text label for the checkbox.
+* `defaultValue` (*boolean*): Initial checked state.
+* `convar` (*string*): Console variable to bind to.
+* `description` (*string*): Tooltip text for the checkbox.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created checkbox panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
-
-- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
-- `IsSelected()` – returns whether the button is currently selected.
-
 **Example Usage**
 
 ```lua
--- Create a small button
-local button = vgui.Create("liaSmallButton")
-button:SetText("Compact")
-button:SetSize(80, 25)
-button.DoClick = function()
-    print("Compact action clicked!")
+-- Create a basic checkbox
+local checkbox = vgui.Create("liaCheckbox")
+checkbox:SetText("Enable feature")
+checkbox:SetChecked(true)
+checkbox.OnChange = function(checked)
+    print("Checkbox state: " .. tostring(checked))
 end
 
--- Set as selected to show persistent underline
-button:SetSelected(true)
-```
+-- Create a checkbox bound to a convar
+local settingCheckbox = vgui.Create("liaCheckbox")
+settingCheckbox:SetText("Show notifications")
+settingCheckbox:SetConvar("lia_show_notifications")
+settingCheckbox:SetDescription("Toggle notification display")
+
+-- Create a simple checkbox without text
+local simpleCheckbox = vgui.Create("liaSimpleCheckbox")
+simpleCheckbox:SetSize(24, 24)
+simpleCheckbox.OnChange = function(checked)
+    print("Simple checkbox: " .. tostring(checked))
+end
 
 ---
 
-### liaMiniButton
+### liaSimpleCheckbox
 
 **Purpose**
 
-Tiny button using `liaMiniFont` for dense interfaces with underline hover animation and selection state support.
+Simplified checkbox component with icon-based visual representation and basic toggle functionality.
 
 **When Called**
 
-This button is called when:
-- Creating very compact UI elements
-- Building high-density interfaces
-- Displaying minimal control buttons
-- Implementing space-critical button layouts
+This panel is called when:
+- Simple checkbox controls are needed
+- Icon-based checkbox representation is preferred
+- Basic toggle functionality is sufficient
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `text` (*string*): Optional text label for the checkbox.
+* `defaultState` (*boolean*): Initial checked state.
+* `iconChecked` (*string*): Icon path for checked state.
+* `iconUnchecked` (*string*): Icon path for unchecked state.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created simple checkbox panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
-
-- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
-- `IsSelected()` – returns whether the button is currently selected.
-
 **Example Usage**
 
 ```lua
--- Create a mini button
-local button = vgui.Create("liaMiniButton")
-button:SetText("Mini")
-button:SetSize(60, 20)
-button.DoClick = function()
-    print("Mini action clicked!")
+-- Create simple checkbox with text
+local simpleCheck = vgui.Create("liaSimpleCheckbox")
+simpleCheck:setText("Enable feature")
+simpleCheck:setChecked(true)
+simpleCheck.onChange = function(checked)
+    print("Feature " .. (checked and "enabled" or "disabled"))
 end
 
--- Set as selected to show persistent underline
-button:SetSelected(true)
+-- Create icon-only checkbox
+local iconCheck = vgui.Create("liaSimpleCheckbox")
+iconCheck:setSize(24, 24)
+iconCheck:setText("") -- No text label
+iconCheck:setChecked(false)
 ```
-
----
-
-### liaNoBGButton
-
-**Purpose**
-
-Text-only button with no background that still shows the underline animation and supports selection state.
-
-**When Called**
-
-This button is called when:
-- Creating text-only interface elements
-- Building subtle navigation controls
-- Displaying minimalistic button designs
-- Implementing background-free UI elements
-
-**Parameters**
-
-*This panel does not require parameters during creation.*
-
-**Returns**
-
-*This panel does not return values.*
-
-**Realm**
-
-Client.
-
-**Custom Functions**
-
-- `SetSelected(state)` – sets the button's selected state, showing persistent underline when true.
-- `IsSelected()` – returns whether the button is currently selected.
-
-**Example Usage**
-
-```lua
--- Create a no-background button
-local button = vgui.Create("liaNoBGButton")
-button:SetText("Text Only")
-button:SetSize(100, 30)
-button.DoClick = function()
-    print("Text-only action clicked!")
-end
-
--- Set as selected to show persistent underline
-button:SetSelected(true)
-```
-
----

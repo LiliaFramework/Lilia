@@ -1,6 +1,10 @@
 ﻿--[[
     Database Library
 
+    Comprehensive database management system with SQLite support for the Lilia framework.
+]]
+--[[
+    Overview:
     The database library provides comprehensive database management functionality for the Lilia framework.
     It handles all database operations including connection management, table creation and modification,
     data insertion, updates, queries, and schema management. The library supports SQLite as the primary
@@ -62,7 +66,7 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
     Parameters:
         - callback (function, optional): Function to call after successful connection
         - reconnect (boolean, optional): Force reconnection even if already connected
-    Returns: None (void function)
+    Returns: None
     Realm: Server
     Example Usage:
         Low Complexity:
@@ -77,7 +81,7 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
         ```lua
         -- Medium: Connect with error handling and reconnection
         lia.db.connect(function()
-            lia.logger.info("Database connection established")
+            lia.log.add("Database connection established")
             lia.db.loadTables()
         end, true)
         ```
@@ -122,7 +126,7 @@ end
     When Called: During database reset operations, development testing, or administrative cleanup
     Parameters:
         - callback (function, optional): Function to call after all tables are wiped
-    Returns: None (void function)
+    Returns: None
     Realm: Server
     Example Usage:
         Low Complexity:
@@ -136,9 +140,9 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Wipe tables with logging and backup
-        lia.logger.warn("Starting database wipe operation")
+        lia.log.add("Starting database wipe operation")
         lia.db.wipeTables(function()
-            lia.logger.info("Database wipe completed successfully")
+            lia.log.add("Database wipe completed successfully")
             hook.Run("OnDatabaseWiped")
         end)
         ```
@@ -157,7 +161,7 @@ end
         if lia.config.get("allowDatabaseWipe", false) then
             confirmWipe()
         else
-            lia.logger.error("Database wipe not allowed by configuration")
+            lia.error("Database wipe not allowed by configuration")
         end
         ```
 ]]
@@ -192,7 +196,7 @@ end
     Purpose: Creates all core Lilia database tables if they don't exist and initializes the database schema
     When Called: During server startup after database connection, or when initializing a new database
     Parameters: None
-    Returns: None (void function)
+    Returns: None
     Realm: Server
     Example Usage:
         Low Complexity:
@@ -208,7 +212,7 @@ end
         -- Medium: Load tables with hook integration
         lia.db.connect(function()
             lia.db.loadTables()
-            lia.logger.info("Database tables loaded successfully")
+            lia.log.add("Database tables loaded successfully")
         end)
         ```
 
@@ -424,10 +428,10 @@ end
         ```lua
         -- Medium: Wait for tables with error handling
         lia.db.waitForTablesToLoad():next(function()
-            lia.logger.info("Database tables loaded, proceeding with initialization")
+            lia.log.add("Database tables loaded, proceeding with initialization")
             hook.Run("OnTablesReady")
         end):catch(function(err)
-            lia.logger.error("Failed to load database tables: " .. tostring(err))
+            lia.error("Failed to load database tables: " .. tostring(err))
         end)
         ```
 
@@ -552,7 +556,7 @@ end
                 if success then
                     return "'" .. lia.db.escape(json) .. "'"
                 else
-                    lia.logger.warn("Failed to convert table for field: " .. fieldName)
+                    lia.log.add("Failed to convert table for field: " .. fieldName)
                     return "NULL"
                 end
             else
@@ -619,7 +623,7 @@ end
 
         lia.db.insertTable(characterData, function(results, lastID)
             if lastID then
-                lia.logger.info("Character created for " .. player:Name())
+                lia.log.add("Character created for " .. player:Name())
                 hook.Run("OnCharacterCreated", player, lastID)
             end
         end, "characters")
@@ -687,7 +691,7 @@ end
 
         lia.db.updateTable(updateData, function(results, lastID)
             if results then
-                lia.logger.info("Character " .. character:getName() .. " updated")
+                lia.log.add("Character " .. character:getName() .. " updated")
                 hook.Run("OnCharacterUpdated", character)
             end
         end, "characters", {id = character:getID()})
@@ -709,7 +713,7 @@ end
                 lia.char.cache[charID] = lia.util.merge(lia.char.cache[charID] or {}, updateData)
                 hook.Run("OnCharacterUpdated", charID, updateData)
             end):catch(function(err)
-                lia.logger.error("Failed to update character " .. charID .. ": " .. tostring(err))
+                lia.error("Failed to update character " .. charID .. ": " .. tostring(err))
             end)
         end
         ```
@@ -773,7 +777,7 @@ end
                 end
                 return characters
             end):catch(function(err)
-                lia.logger.error("Failed to load characters: " .. tostring(err))
+                lia.error("Failed to load characters: " .. tostring(err))
                 return {}
             end)
         end
@@ -781,6 +785,12 @@ end
 ]]
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
+    -- Validate fields parameter and provide default
+    if fields == nil then
+        lia.error("lia.db.select called with nil fields parameter - using default '*'")
+        fields = "*"
+    end
+
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
     local tableName = "lia_" .. (dbTable or "characters")
     local query = "SELECT " .. from .. " FROM " .. tableName
@@ -853,7 +863,7 @@ end
                 end
                 return characters
             end):catch(function(err)
-                lia.logger.error("Character search failed: " .. tostring(err))
+                lia.error("Character search failed: " .. tostring(err))
                 return {}
             end)
         end
@@ -861,6 +871,12 @@ end
 ]]
 function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     local d = deferred.new()
+    -- Validate fields parameter and provide default
+    if fields == nil then
+        lia.error("lia.db.selectWithCondition called with nil fields parameter - using default '*'")
+        fields = "*"
+    end
+
     local from = istable(fields) and table.concat(fields, ", ") or tostring(fields)
     local tableName = "lia_" .. (dbTable or "characters")
     local query = "SELECT " .. from .. " FROM " .. tableName
@@ -938,7 +954,7 @@ end
                     }
                 end)
             end):catch(function(err)
-                lia.logger.error("Failed to get player stats: " .. tostring(err))
+                lia.error("Failed to get player stats: " .. tostring(err))
                 return {characters = 0, playerRecords = 0, isNewPlayer = true}
             end)
         end
@@ -962,7 +978,7 @@ end
     Purpose: Dynamically adds new columns to the lia_characters table based on character variables
     When Called: During database initialization to ensure character table has all required fields
     Parameters: None
-    Returns: None (void function)
+    Returns: None
     Realm: Server
     Example Usage:
         Low Complexity:
@@ -975,7 +991,7 @@ end
         ```lua
         -- Medium: Add fields with logging
         lia.db.addDatabaseFields()
-        lia.logger.info("Database fields updated for character variables")
+        lia.log.add("Database fields updated for character variables")
         ```
 
         High Complexity:
@@ -983,12 +999,12 @@ end
         -- High: Add fields with validation and error handling
         local function ensureCharacterFields()
             if not istable(lia.char.vars) then
-                lia.logger.warn("Character variables not defined, skipping field addition")
+                lia.log.add("Character variables not defined, skipping field addition")
                 return
             end
 
             lia.db.addDatabaseFields()
-            lia.logger.info("Character database fields synchronized")
+            lia.log.add("Character database fields synchronized")
             hook.Run("OnCharacterFieldsUpdated")
         end
 
@@ -1050,7 +1066,7 @@ end
             money = {operator = ">", value = "1000"}
         }):next(function(exists)
             if exists then
-                lia.logger.info("Player has wealthy citizen character")
+                lia.log.add("Player has wealthy citizen character")
             end
         end)
         ```
@@ -1070,7 +1086,7 @@ end
                 end
                 return playerExists
             end):catch(function(err)
-                lia.logger.error("Failed to validate player data: " .. tostring(err))
+                lia.error("Failed to validate player data: " .. tostring(err))
                 return false
             end)
         end
@@ -1108,7 +1124,7 @@ end
         }):next(function(playerData)
             if playerData then
                 player:SetUserGroup(playerData.userGroup)
-                lia.logger.info("Loaded player: " .. playerData.steamName)
+                lia.log.add("Loaded player: " .. playerData.steamName)
             end
         end)
         ```
@@ -1127,7 +1143,7 @@ end
                 hook.Run("OnCharacterLoaded", character)
                 return character
             end):catch(function(err)
-                lia.logger.error("Failed to load character " .. charID .. ": " .. tostring(err))
+                lia.error("Failed to load character " .. charID .. ": " .. tostring(err))
                 return nil
             end)
         end
@@ -1135,8 +1151,14 @@ end
 ]]
 function lia.db.selectOne(fields, dbTable, condition)
     local c = deferred.new()
+    -- Validate fields parameter and provide default
+    if fields == nil then
+        lia.error("lia.db.selectOne called with nil fields parameter - using default '*'")
+        fields = "*"
+    end
+
     local tbl = "`lia_" .. dbTable .. "`"
-    local f = istable(fields) and table.concat(fields, ", ") or fields
+    local f = istable(fields) and table.concat(fields, ", ") or tostring(fields)
     local q = "SELECT " .. f .. " FROM " .. tbl
     q = q .. buildWhereClause(condition)
     q = q .. " LIMIT 1"
@@ -1188,9 +1210,9 @@ end
             end
 
             return lia.db.bulkInsert("items", rows):next(function()
-                lia.logger.info("Inserted " .. #rows .. " items into inventory " .. invID)
+                lia.log.add("Inserted " .. #rows .. " items into inventory " .. invID)
             end):catch(function(err)
-                lia.logger.error("Failed to insert items: " .. tostring(err))
+                lia.error("Failed to insert items: " .. tostring(err))
             end)
         end
         ```
@@ -1217,7 +1239,7 @@ end
                 end
 
                 return lia.db.bulkInsert(dbTable, batches[currentBatch]):next(function()
-                    lia.logger.info("Batch " .. currentBatch .. "/" .. #batches .. " completed")
+                    lia.log.add("Batch " .. currentBatch .. "/" .. #batches .. " completed")
                     currentBatch = currentBatch + 1
                     return insertNextBatch()
                 end)
@@ -1289,9 +1311,9 @@ end
             end
 
             return lia.db.bulkUpsert("players", rows):next(function()
-                lia.logger.info("Synchronized " .. #rows .. " player records")
+                lia.log.add("Synchronized " .. #rows .. " player records")
             end):catch(function(err)
-                lia.logger.error("Failed to sync player data: " .. tostring(err))
+                lia.error("Failed to sync player data: " .. tostring(err))
             end)
         end
         ```
@@ -1323,7 +1345,7 @@ end
 
                 return lia.db.bulkUpsert(dbTable, batches[completed + 1]):next(function()
                     completed = completed + 1
-                    lia.logger.info("Batch " .. completed .. "/" .. #batches .. " synced")
+                    lia.log.add("Batch " .. completed .. "/" .. #batches .. " synced")
                     return processNextBatch()
                 end)
             end
@@ -1389,7 +1411,7 @@ end
                     value = config.value
                 }, "config"):next(function(results, lastID)
                     if lastID then
-                        lia.logger.info("Added new config: " .. config.key)
+                        lia.log.add("Added new config: " .. config.key)
                     end
                 end)
             end
@@ -1413,7 +1435,7 @@ end
                     end)
                 end
             end):catch(function(err)
-                lia.logger.error("Insert or ignore failed: " .. tostring(err))
+                lia.error("Insert or ignore failed: " .. tostring(err))
                 return {success = false, error = err}
             end)
         end
@@ -1464,7 +1486,7 @@ end
         -- Medium: Check with conditional logic
         lia.db.tableExists("lia_custom_table"):next(function(exists)
             if not exists then
-                lia.logger.warn("Custom table missing, creating...")
+                lia.log.add("Custom table missing, creating...")
                 lia.db.createTable("custom_table", "id", {
                     {name = "id", type = "INTEGER", not_null = true},
                     {name = "data", type = "TEXT"}
@@ -1483,10 +1505,10 @@ end
             local function checkNextTable(index)
                 if index > #requiredTables then
                     if #missingTables > 0 then
-                        lia.logger.error("Missing tables: " .. table.concat(missingTables, ", "))
+                        lia.error("Missing tables: " .. table.concat(missingTables, ", "))
                         return lia.db.loadTables()
                     else
-                        lia.logger.info("All required tables exist")
+                        lia.log.add("All required tables exist")
                         return deferred.new():resolve()
                     end
                 end
@@ -1537,7 +1559,7 @@ end
         -- Medium: Check with conditional field creation
         lia.db.fieldExists("lia_characters", "newField"):next(function(exists)
             if not exists then
-                lia.logger.info("Adding new field to characters table")
+                lia.log.add("Adding new field to characters table")
                 lia.db.createColumn("characters", "newField", "VARCHAR(255)", "default_value")
             end
         end)
@@ -1553,10 +1575,10 @@ end
             local function checkNextField(index)
                 if index > #requiredFields then
                     if #missingFields > 0 then
-                        lia.logger.error("Missing character fields: " .. table.concat(missingFields, ", "))
+                        lia.error("Missing character fields: " .. table.concat(missingFields, ", "))
                         return lia.db.addDatabaseFields()
                     else
-                        lia.logger.info("All required character fields exist")
+                        lia.log.add("All required character fields exist")
                         return deferred.new():resolve()
                     end
                 end
@@ -1617,9 +1639,9 @@ end
             end
 
             if #missingTables > 0 then
-                lia.logger.warn("Missing core tables: " .. table.concat(missingTables, ", "))
+                lia.log.add("Missing core tables: " .. table.concat(missingTables, ", "))
             else
-                lia.logger.info("All core tables present")
+                lia.log.add("All core tables present")
             end
         end)
         ```
@@ -1632,9 +1654,9 @@ end
                 local tableStats = {}
                 local function analyzeNextTable(index)
                     if index > #tables then
-                        lia.logger.info("Database audit complete:")
+                        lia.log.add("Database audit complete:")
                         for tableName, stats in pairs(tableStats) do
-                            lia.logger.info(tableName .. ": " .. stats.count .. " records")
+                            lia.log.add(tableName .. ": " .. stats.count .. " records")
                         end
                         return tableStats
                     end
@@ -1648,7 +1670,7 @@ end
 
                 return analyzeNextTable(1)
             end):catch(function(err)
-                lia.logger.error("Database audit failed: " .. tostring(err))
+                lia.error("Database audit failed: " .. tostring(err))
                 return {}
             end)
         end
@@ -1699,10 +1721,10 @@ end
             }
 
             return lia.db.transaction(queries):next(function()
-                lia.logger.info("Character and inventory created successfully")
+                lia.log.add("Character and inventory created successfully")
                 hook.Run("OnCharacterCreated", charData)
             end):catch(function(err)
-                lia.logger.error("Failed to create character: " .. tostring(err))
+                lia.error("Failed to create character: " .. tostring(err))
             end)
         end
         ```
@@ -1732,10 +1754,10 @@ end
             end
 
             return lia.db.transaction(queries):next(function()
-                lia.logger.info("Items transferred successfully")
+                lia.log.add("Items transferred successfully")
                 hook.Run("OnItemsTransferred", fromChar, toChar, items)
             end):catch(function(err)
-                lia.logger.error("Item transfer failed: " .. tostring(err))
+                lia.error("Item transfer failed: " .. tostring(err))
                 hook.Run("OnTransferFailed", fromChar, toChar, items, err)
             end)
         end
@@ -1800,7 +1822,7 @@ end
                 if type(id) == "string" and id:match("^[a-zA-Z_][a-zA-Z0-9_]*$") then
                     table.insert(escaped, lia.db.escapeIdentifier(id))
                 else
-                    lia.logger.warn("Invalid identifier: " .. tostring(id))
+                    lia.log.add("Invalid identifier: " .. tostring(id))
                     return nil
                 end
             end
@@ -1845,10 +1867,10 @@ end
             }
 
             return lia.db.upsert(playerData, "players"):next(function(results, lastID)
-                lia.logger.info("Player data synchronized: " .. player:Name())
+                lia.log.add("Player data synchronized: " .. player:Name())
                 hook.Run("OnPlayerDataSynced", player, lastID)
             end):catch(function(err)
-                lia.logger.error("Failed to sync player data: " .. tostring(err))
+                lia.error("Failed to sync player data: " .. tostring(err))
             end)
         end
         ```
@@ -1864,7 +1886,7 @@ end
 
             return lia.db.upsert(data, dbTable):next(function(results, lastID)
                 local action = lastID and "inserted" or "updated"
-                lia.logger.info("Record " .. action .. " in " .. dbTable)
+                lia.log.add("Record " .. action .. " in " .. dbTable)
 
                 -- Update cache if applicable
                 if lia.char.cache and dbTable == "characters" then
@@ -1874,7 +1896,7 @@ end
                 hook.Run("OnRecordUpserted", dbTable, data, action)
                 return {success = true, action = action, id = lastID}
             end):catch(function(err)
-                lia.logger.error("Upsert failed: " .. tostring(err))
+                lia.error("Upsert failed: " .. tostring(err))
                 return {success = false, error = err}
             end)
         end
@@ -1914,14 +1936,14 @@ end
         -- Medium: Delete with validation and logging
         local function deleteCharacter(charID)
             return lia.db.delete("characters", {id = charID}):next(function(results, lastID)
-                lia.logger.info("Character " .. charID .. " deleted")
+                lia.log.add("Character " .. charID .. " deleted")
                 hook.Run("OnCharacterDeleted", charID)
 
                 -- Clean up related data
                 lia.db.delete("items", {invID = charID})
                 lia.db.delete("inventories", {charID = charID})
             end):catch(function(err)
-                lia.logger.error("Failed to delete character: " .. tostring(err))
+                lia.error("Failed to delete character: " .. tostring(err))
             end)
         end
         ```
@@ -1936,7 +1958,7 @@ end
                 "DELETE FROM lia_chardata WHERE charID = " .. charID,
                 "DELETE FROM lia_characters WHERE id = " .. charID
             }):next(function()
-                lia.logger.info("Character " .. charID .. " and all related data deleted")
+                lia.log.add("Character " .. charID .. " and all related data deleted")
 
                 -- Update cache
                 if lia.char.cache then
@@ -1946,7 +1968,7 @@ end
                 hook.Run("OnCharacterDeleted", charID)
                 return {success = true, charID = charID}
             end):catch(function(err)
-                lia.logger.error("Failed to delete character with cascade: " .. tostring(err))
+                lia.error("Failed to delete character with cascade: " .. tostring(err))
                 return {success = false, error = err}
             end)
         end
@@ -2001,11 +2023,11 @@ end
 
             return lia.db.createTable("player_stats", "id", schema):next(function(success)
                 if success then
-                    lia.logger.info("Player stats table created")
+                    lia.log.add("Player stats table created")
                     hook.Run("OnPlayerStatsTableCreated")
                 end
             end):catch(function(err)
-                lia.logger.error("Failed to create player stats table: " .. tostring(err))
+                lia.error("Failed to create player stats table: " .. tostring(err))
             end)
         end
         ```
@@ -2030,14 +2052,14 @@ end
 
             return lia.db.tableExists("lia_" .. moduleName .. "_" .. tableConfig.name):next(function(exists)
                 if exists then
-                    lia.logger.info("Table already exists: " .. moduleName .. "_" .. tableConfig.name)
+                    lia.log.add("Table already exists: " .. moduleName .. "_" .. tableConfig.name)
                     return true
                 end
 
                 return lia.db.createTable(moduleName .. "_" .. tableConfig.name,
                     tableConfig.primaryKey, tableConfig.schema):next(function(success)
                     if success then
-                        lia.logger.info("Module table created: " .. moduleName .. "_" .. tableConfig.name)
+                        lia.log.add("Module table created: " .. moduleName .. "_" .. tableConfig.name)
                         hook.Run("OnModuleTableCreated", moduleName, tableConfig.name)
                     end
                     return success
@@ -2102,13 +2124,13 @@ end
         local function addPlayerStatsColumn()
             return lia.db.createColumn("players", "totalPlayTime", "FLOAT", 0):next(function(success)
                 if success then
-                    lia.logger.info("Added totalPlayTime column to players table")
+                    lia.log.add("Added totalPlayTime column to players table")
                     hook.Run("OnColumnAdded", "players", "totalPlayTime")
                 else
-                    lia.logger.info("totalPlayTime column already exists")
+                    lia.log.add("totalPlayTime column already exists")
                 end
             end):catch(function(err)
-                lia.logger.error("Failed to add column: " .. tostring(err))
+                lia.error("Failed to add column: " .. tostring(err))
             end)
         end
         ```
@@ -2125,18 +2147,18 @@ end
 
             local function addNextColumn(index)
                 if index > #newColumns then
-                    lia.logger.info("Character table migration completed")
+                    lia.log.add("Character table migration completed")
                     return deferred.new():resolve()
                 end
 
                 local column = newColumns[index]
                 return lia.db.createColumn("characters", column.name, column.type, column.default):next(function(success)
                     if success then
-                        lia.logger.info("Added column: " .. column.name)
+                        lia.log.add("Added column: " .. column.name)
                     end
                     return addNextColumn(index + 1)
                 end):catch(function(err)
-                    lia.logger.error("Failed to add column " .. column.name .. ": " .. tostring(err))
+                    lia.error("Failed to add column " .. column.name .. ": " .. tostring(err))
                     return addNextColumn(index + 1)
                 end)
             end
@@ -2198,13 +2220,13 @@ end
         local function cleanupOldModule(moduleName)
             return lia.db.removeTable(moduleName .. "_data"):next(function(success)
                 if success then
-                    lia.logger.info("Removed table for module: " .. moduleName)
+                    lia.log.add("Removed table for module: " .. moduleName)
                     hook.Run("OnModuleTableRemoved", moduleName)
                 else
-                    lia.logger.info("Table for module " .. moduleName .. " doesn't exist")
+                    lia.log.add("Table for module " .. moduleName .. " doesn't exist")
                 end
             end):catch(function(err)
-                lia.logger.error("Failed to remove table: " .. tostring(err))
+                lia.error("Failed to remove table: " .. tostring(err))
             end)
         end
         ```
@@ -2215,23 +2237,23 @@ end
         local function removeTableWithBackup(tableName)
             return lia.db.tableExists("lia_" .. tableName):next(function(exists)
                 if not exists then
-                    lia.logger.info("Table " .. tableName .. " doesn't exist")
+                    lia.log.add("Table " .. tableName .. " doesn't exist")
                     return false
                 end
 
                 -- Create backup before removal
                 return lia.db.createSnapshot(tableName):next(function(snapshot)
-                    lia.logger.info("Created backup: " .. snapshot.file)
+                    lia.log.add("Created backup: " .. snapshot.file)
 
                     return lia.db.removeTable(tableName):next(function(success)
                         if success then
-                            lia.logger.info("Table " .. tableName .. " removed successfully")
+                            lia.log.add("Table " .. tableName .. " removed successfully")
                             hook.Run("OnTableRemoved", tableName, snapshot)
                         end
                         return success
                     end)
                 end):catch(function(err)
-                    lia.logger.error("Failed to backup table " .. tableName .. ": " .. tostring(err))
+                    lia.error("Failed to backup table " .. tableName .. ": " .. tostring(err))
                     return false
                 end)
             end)
@@ -2280,13 +2302,13 @@ end
         local function cleanupOldColumn(tableName, columnName)
             return lia.db.removeColumn(tableName, columnName):next(function(success)
                 if success then
-                    lia.logger.info("Removed column " .. columnName .. " from " .. tableName)
+                    lia.log.add("Removed column " .. columnName .. " from " .. tableName)
                     hook.Run("OnColumnRemoved", tableName, columnName)
                 else
-                    lia.logger.info("Column " .. columnName .. " doesn't exist in " .. tableName)
+                    lia.log.add("Column " .. columnName .. " doesn't exist in " .. tableName)
                 end
             end):catch(function(err)
-                lia.logger.error("Failed to remove column: " .. tostring(err))
+                lia.error("Failed to remove column: " .. tostring(err))
             end)
         end
         ```
@@ -2297,29 +2319,29 @@ end
         local function removeColumnWithBackup(tableName, columnName)
             return lia.db.tableExists("lia_" .. tableName):next(function(tableExists)
                 if not tableExists then
-                    lia.logger.error("Table " .. tableName .. " doesn't exist")
+                    lia.error("Table " .. tableName .. " doesn't exist")
                     return false
                 end
 
                 return lia.db.fieldExists("lia_" .. tableName, columnName):next(function(columnExists)
                     if not columnExists then
-                        lia.logger.info("Column " .. columnName .. " doesn't exist")
+                        lia.log.add("Column " .. columnName .. " doesn't exist")
                         return false
                     end
 
                     -- Create backup before removal
                     return lia.db.createSnapshot(tableName):next(function(snapshot)
-                        lia.logger.info("Created backup before column removal: " .. snapshot.file)
+                        lia.log.add("Created backup before column removal: " .. snapshot.file)
 
                         return lia.db.removeColumn(tableName, columnName):next(function(success)
                             if success then
-                                lia.logger.info("Column " .. columnName .. " removed from " .. tableName)
+                                lia.log.add("Column " .. columnName .. " removed from " .. tableName)
                                 hook.Run("OnColumnRemoved", tableName, columnName, snapshot)
                             end
                             return success
                         end)
                     end):catch(function(err)
-                        lia.logger.error("Failed to backup table before column removal: " .. tostring(err))
+                        lia.error("Failed to backup table before column removal: " .. tostring(err))
                         return false
                     end)
                 end)
@@ -2381,7 +2403,7 @@ end
     When Called: When analyzing character table structure, generating reports, or during schema validation
     Parameters:
         - callback (function): Function to call with the column information array
-    Returns: None (void function)
+    Returns: None
     Realm: Server
     Example Usage:
         Low Complexity:
@@ -2410,9 +2432,9 @@ end
                 end
 
                 if #missingColumns > 0 then
-                    lia.logger.warn("Missing character columns: " .. table.concat(missingColumns, ", "))
+                    lia.log.add("Missing character columns: " .. table.concat(missingColumns, ", "))
                 else
-                    lia.logger.info("All required character columns present")
+                    lia.log.add("All required character columns present")
                 end
             end)
         end
@@ -2425,7 +2447,7 @@ end
             return lia.db.waitForTablesToLoad():next(function()
                 lia.db.getCharacterTable(function(columns)
                     if not columns or #columns == 0 then
-                        lia.logger.error("Failed to get character table columns")
+                        lia.error("Failed to get character table columns")
                         return
                     end
 
@@ -2457,21 +2479,21 @@ end
                     end
 
                     if validationResults.valid then
-                        lia.logger.info("Character table schema validation passed")
+                        lia.log.add("Character table schema validation passed")
                     else
-                        lia.logger.warn("Character table schema issues found")
+                        lia.log.add("Character table schema issues found")
                         if #validationResults.missing > 0 then
-                            lia.logger.warn("Missing columns: " .. table.concat(validationResults.missing, ", "))
+                            lia.log.add("Missing columns: " .. table.concat(validationResults.missing, ", "))
                         end
                         if #validationResults.extra > 0 then
-                            lia.logger.warn("Extra columns: " .. table.concat(validationResults.extra, ", "))
+                            lia.log.add("Extra columns: " .. table.concat(validationResults.extra, ", "))
                         end
                     end
 
                     hook.Run("OnCharacterSchemaValidated", validationResults)
                 end)
             end):catch(function(err)
-                lia.logger.error("Character schema validation failed: " .. tostring(err))
+                lia.error("Character schema validation failed: " .. tostring(err))
             end)
         end
         ```
@@ -2511,11 +2533,11 @@ end
         -- Medium: Create snapshot with validation
         local function backupTable(tableName)
             return lia.db.createSnapshot(tableName):next(function(snapshot)
-                lia.logger.info("Backup created: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
+                lia.log.add("Backup created: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
                 hook.Run("OnTableBackedUp", tableName, snapshot)
                 return snapshot
             end):catch(function(err)
-                lia.logger.error("Failed to backup table " .. tableName .. ": " .. tostring(err))
+                lia.error("Failed to backup table " .. tableName .. ": " .. tostring(err))
             end)
         end
         ```
@@ -2532,7 +2554,7 @@ end
                 return lia.db.createSnapshot(tableName):next(function(snapshot)
                     -- Validate snapshot data
                     if snapshot.records == 0 then
-                        lia.logger.warn("Snapshot created but table is empty")
+                        lia.log.add("Snapshot created but table is empty")
                     end
 
                     -- Create backup metadata
@@ -2550,11 +2572,11 @@ end
                     local metadataFile = "lilia/snapshots/" .. snapshot.file .. ".meta"
                     file.Write(metadataFile, util.TableToJSON(metadata, true))
 
-                    lia.logger.info("Backup completed: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
+                    lia.log.add("Backup completed: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
                     hook.Run("OnBackupCreated", metadata)
                     return metadata
                 end):catch(function(err)
-                    lia.logger.error("Backup failed for " .. tableName .. ": " .. tostring(err))
+                    lia.error("Backup failed for " .. tableName .. ": " .. tostring(err))
                     return {success = false, error = err}
                 end)
             end)
@@ -2618,11 +2640,11 @@ end
         -- Medium: Load snapshot with validation
         local function restoreTable(fileName)
             return lia.db.loadSnapshot(fileName):next(function(result)
-                lia.logger.info("Restored " .. result.records .. " records to " .. result.table)
+                lia.log.add("Restored " .. result.records .. " records to " .. result.table)
                 hook.Run("OnTableRestored", result.table, result.records)
                 return result
             end):catch(function(err)
-                lia.logger.error("Failed to restore from " .. fileName .. ": " .. tostring(err))
+                lia.error("Failed to restore from " .. fileName .. ": " .. tostring(err))
             end)
         end
         ```
@@ -2634,13 +2656,13 @@ end
             return lia.db.loadSnapshot(fileName):next(function(result)
                 -- Validate restore results
                 if result.records == 0 then
-                    lia.logger.warn("Restore completed but no records were loaded")
+                    lia.log.add("Restore completed but no records were loaded")
                 end
 
                 -- Verify table exists and has data
                 return lia.db.count(result.table):next(function(count)
                     if count ~= result.records then
-                        lia.logger.warn("Record count mismatch: expected " .. result.records .. ", got " .. count)
+                        lia.log.add("Record count mismatch: expected " .. result.records .. ", got " .. count)
                     end
 
                     -- Create restore log entry
@@ -2653,12 +2675,12 @@ end
                         success = true
                     }
 
-                    lia.logger.info("Restore completed successfully: " .. fileName)
+                    lia.log.add("Restore completed successfully: " .. fileName)
                     hook.Run("OnRestoreCompleted", restoreLog)
                     return restoreLog
                 end)
             end):catch(function(err)
-                lia.logger.error("Restore failed: " .. tostring(err))
+                lia.error("Restore failed: " .. tostring(err))
 
                 -- Log failed restore attempt
                 local failedLog = {

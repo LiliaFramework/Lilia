@@ -1,6 +1,11 @@
 ﻿--[[
     Flags Library
 
+    Character permission and access control system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The flags library provides a comprehensive permission system for managing character abilities
     and access rights in the Lilia framework. It allows administrators to assign specific flags
     to characters that grant or restrict various gameplay features and tools. The library operates

@@ -1,54 +1,12 @@
-# Character Creation Panels Library
+# Character Creation Panel Library
 
-A comprehensive suite of panels for managing character creation, selection, and management within the Lilia framework.
+This page documents the character creation and management panel components for the Lilia framework.
 
 ---
 
 ## Overview
 
-The character creation panel library provides all the necessary components for character management, from initial creation to ongoing character administration. These panels work together to create a seamless character creation flow, including biography input, faction selection, model selection, attribute distribution, and character management. All panels integrate with Lilia's character system and theming framework.
-
----
-
-### liaCharacter
-
-**Purpose**
-
-Main panel of the character selection menu. Lists the player's characters with options to create, delete or load them.
-
-**When Called**
-
-This panel is called when:
-- Displaying the character selection menu
-- Managing existing characters
-- Providing character overview and selection
-- Handling character loading and deletion
-
-**Parameters**
-
-*This panel does not require parameters during creation.*
-
-**Returns**
-
-*This panel does not return values.*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Character panel is automatically created by the framework
--- No manual creation needed - it's part of the character system
-
--- Access programmatically if needed
-local charPanel = lia.gui.character
-if IsValid(charPanel) then
-    -- Refresh character list
-    charPanel:RefreshCharacters()
-end
-```
+The character creation panel library provides a comprehensive set of UI components for creating and managing character creation workflows. These panels handle the step-by-step process of character creation, including model selection, faction choice, attribute allocation, and biography input.
 
 ---
 
@@ -56,23 +14,24 @@ end
 
 **Purpose**
 
-Parent panel that hosts each character creation step such as biography, faction and model. It provides navigation buttons and validates input before advancing.
+Manages the complete character creation workflow with multiple steps and validation.
 
 **When Called**
 
 This panel is called when:
-- Starting the character creation process
-- Managing multi-step character creation flow
-- Providing guided character setup experience
-- Handling complex character creation workflows
+- Players need to create new characters
+- Character creation menu is opened
+- Multi-step character setup is required
+- Character validation and confirmation is needed
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `context` (*table*): Character creation context data.
+* `steps` (*table*): Array of creation step panels.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created character creation panel object.
 
 **Realm**
 
@@ -81,15 +40,18 @@ Client.
 **Example Usage**
 
 ```lua
--- Usually created by the framework during character creation
--- No manual creation needed - it's part of the character system
+-- Open character creation menu
+local creation = vgui.Create("liaCharacterCreation")
+creation:configureSteps()
+creation:displayStep(1)
 
--- Programmatic access for custom workflows
-local creationPanel = lia.gui.characterCreation
-if IsValid(creationPanel) then
-    -- Navigate to specific step
-    creationPanel:GoToStep("faction")
-end
+-- Create character creation with custom context
+local customCreation = vgui.Create("liaCharacterCreation")
+customCreation.context = {
+    faction = 1,
+    model = 1
+}
+customCreation:configureSteps()
 ```
 
 ---
@@ -98,23 +60,23 @@ end
 
 **Purpose**
 
-Scroll panel used as the foundation for each creation step. Provides helpers for saving user input and moving forward in the flow.
+Base panel class for individual character creation steps with navigation and validation.
 
 **When Called**
 
 This panel is called when:
 - Creating individual steps in character creation
-- Building modular character creation interfaces
-- Implementing reusable creation step components
-- Managing step-by-step user input processes
+- Building custom character creation workflows
+- Implementing step-based interfaces
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `title` (*string*): Step title.
+* `description` (*string*): Step description.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created step panel object.
 
 **Realm**
 
@@ -123,153 +85,18 @@ Client.
 **Example Usage**
 
 ```lua
--- Usually created by the framework as part of character creation
--- No manual creation needed - it's part of the character system
-
--- Create custom step for advanced workflows
-local customStep = vgui.Create("liaCharacterCreateStep")
-customStep:SetSize(400, 300)
-customStep:SetupStep("Custom Step", function()
-    -- Custom step validation logic
-    return true
-end)
-```
-
----
-
-### liaCharacterConfirm
-
-**Purpose**
-
-Confirmation dialog used for dangerous actions like deleting a character. Inherits from `SemiTransparentDFrame` for a consistent overlay look.
-
-**When Called**
-
-This panel is called when:
-- Confirming character deletion
-- Validating destructive character operations
-- Displaying confirmation dialogs for character actions
-- Providing safety checks for character management
-
-**Parameters**
-
-*This panel does not require parameters during creation.*
-
-**Returns**
-
-*This panel does not return values.*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Usually created by the framework for confirmation dialogs
--- No manual creation needed - it's part of the character system
-
--- Custom confirmation for advanced use cases
-local confirmDialog = vgui.Create("liaCharacterConfirm")
-confirmDialog:SetTitle("Delete Character")
-confirmDialog:SetMessage("Are you sure you want to delete this character?")
-confirmDialog:SetupButtons(function()
-    print("Character deleted")
-end, function()
-    print("Deletion cancelled")
-end)
-```
-
----
-
-### liaCharacterBiography
-
-**Purpose**
-
-Step where players input their character's name and optional backstory. These values are validated and stored for later steps.
-
-**When Called**
-
-This panel is called when:
-- Collecting character name and description
-- Gathering character backstory information
-- Validating character naming requirements
-- Managing character identity input
-
-**Parameters**
-
-*This panel does not require parameters during creation.*
-
-**Returns**
-
-*This panel does not return values.*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Usually created as part of character creation flow
--- No manual creation needed - it's part of the character system
-
--- Custom biography step for advanced character creation
-local bioStep = vgui.Create("liaCharacterBiography")
-bioStep:SetupFields({
-    name = {
-        label = "Character Name",
-        maxLength = 32,
-        required = true
-    },
-    description = {
-        label = "Character Description",
-        maxLength = 500,
-        required = false
-    }
-})
-```
-
----
-
-### liaCharacterFaction
-
-**Purpose**
-
-Allows the player to choose from available factions. The selected faction updates the model panel and determines accessible classes.
-
-**When Called**
-
-This panel is called when:
-- Selecting character faction during creation
-- Displaying available faction options
-- Managing faction selection interface
-- Updating faction-dependent character options
-
-**Parameters**
-
-*This panel does not require parameters during creation.*
-
-**Returns**
-
-*This panel does not return values.*
-
-**Realm**
-
-Client.
-
-**Example Usage**
-
-```lua
--- Usually created as part of character creation flow
--- No manual creation needed - it's part of the character system
-
--- Custom faction selection for advanced workflows
-local factionStep = vgui.Create("liaCharacterFaction")
-factionStep:LoadFactions()
-factionStep.OnFactionSelected = function(faction)
-    print("Selected faction:", faction.name)
+-- Create a custom character creation step
+local PANEL = {}
+function PANEL:Init()
+    self:addLabel("Custom Step")
+    self:addDescription("This is a custom step")
 end
+
+function PANEL:onDisplay()
+    -- Step display logic
+end
+
+vgui.Register("liaCustomStep", PANEL, "liaCharacterCreateStep")
 ```
 
 ---
@@ -278,23 +105,23 @@ end
 
 **Purpose**
 
-Lets the player browse and select a player model appropriate for the chosen faction. Clicking an icon saves the choice and refreshes the preview.
+Displays and manages character model selection with visual preview and filtering.
 
 **When Called**
 
 This panel is called when:
-- Selecting character model during creation
-- Displaying model selection interface
-- Managing faction-appropriate model choices
-- Providing visual character customization
+- Players need to select character models
+- Model preview and selection is required
+- Faction-based model filtering is needed
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `faction` (*number*): Faction index to filter models.
+* `selectedModel` (*number*): Currently selected model index.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created model selection panel object.
 
 **Realm**
 
@@ -303,40 +130,38 @@ Client.
 **Example Usage**
 
 ```lua
--- Usually created as part of character creation flow
--- No manual creation needed - it's part of the character system
-
--- Custom model selection for advanced character creation
+-- Create model selection step
 local modelStep = vgui.Create("liaCharacterModel")
-modelStep:LoadModelsForFaction(selectedFaction)
-modelStep.OnModelSelected = function(model)
-    print("Selected model:", model)
-end
+modelStep:setContext("faction", 1)
+modelStep:onDisplay()
+
+-- Get selected model
+local selectedModel = modelStep:getContext("model")
 ```
 
 ---
 
-### liaCharBGMusic
+### liaCharacterFaction
 
 **Purpose**
 
-Small panel that plays ambient music when the main menu is open. It fades the track in and out as the menu is shown or closed.
+Displays and manages faction selection for character creation.
 
 **When Called**
 
 This panel is called when:
-- Playing background music in menus
-- Managing audio ambiance for character screens
-- Providing atmospheric sound design
-- Creating immersive menu experiences
+- Players need to select a faction for their character
+- Faction-based gameplay restrictions are in place
+- Character faction assignment is required
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `factions` (*table*): Available factions to display.
+* `selectedFaction` (*number*): Currently selected faction index.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created faction selection panel object.
 
 **Realm**
 
@@ -345,13 +170,134 @@ Client.
 **Example Usage**
 
 ```lua
--- Background music panel is automatically created by the framework
--- No manual creation needed - it's part of the menu system
+-- Create faction selection step
+local factionStep = vgui.Create("liaCharacterFaction")
+factionStep:onDisplay()
 
--- Custom music management for advanced audio control
-local musicPanel = vgui.Create("liaCharBGMusic")
-musicPanel:PlayTrack("character_creation_theme")
-musicPanel:SetVolume(0.5)
+-- Set available factions
+factionStep:setFactions(availableFactions)
+```
+
+---
+
+### liaCharacterBiography
+
+**Purpose**
+
+Provides text input for character biography and background information.
+
+**When Called**
+
+This panel is called when:
+- Players need to enter character backstory
+- Biography validation is required
+- Character description input is needed
+
+**Parameters**
+
+* `maxLength` (*number*): Maximum biography length.
+* `placeholder` (*string*): Placeholder text for the input.
+
+**Returns**
+
+* `panel` (*Panel*): The created biography panel object.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Create biography input step
+local bioStep = vgui.Create("liaCharacterBiography")
+bioStep:setMaxLength(500)
+bioStep:setPlaceholder("Enter your character's backstory...")
+
+-- Get entered biography
+local biography = bioStep:getBiography()
+```
+
+---
+
+### liaCharacterConfirm
+
+**Purpose**
+
+Displays character summary and confirmation before final creation.
+
+**When Called**
+
+This panel is called when:
+- Character creation needs final confirmation
+- Character summary display is required
+- Final validation before character creation
+
+**Parameters**
+
+* `characterData` (*table*): Complete character data to display.
+* `onConfirm` (*function*): Callback function when confirmed.
+
+**Returns**
+
+* `panel` (*Panel*): The created confirmation panel object.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Create confirmation dialog
+local confirm = vgui.Create("liaCharacterConfirm")
+confirm:setCharacterData(characterData)
+confirm:setConfirmCallback(function()
+    -- Character creation logic
+    print("Character confirmed!")
+end)
+```
+
+---
+
+### liaCharacter
+
+**Purpose**
+
+Main character panel for displaying character information and management.
+
+**When Called**
+
+This panel is called when:
+- Character selection interface is needed
+- Character information display is required
+- Character switching functionality is needed
+
+**Parameters**
+
+* `characters` (*table*): Array of available characters.
+* `selectedCharacter` (*number*): Currently selected character index.
+
+**Returns**
+
+* `panel` (*Panel*): The created character panel object.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Create character selection interface
+local charPanel = vgui.Create("liaCharacter")
+charPanel:populateCharacters(playerCharacters)
+charPanel:selectCharacter(1)
+
+-- Handle character selection
+charPanel.onCharacterSelected = function(charIndex, character)
+    print("Selected character: " .. character.name)
+end
 ```
 
 ---
@@ -360,50 +306,39 @@ musicPanel:SetVolume(0.5)
 
 **Purpose**
 
-Character creation step panel for distributing attribute points across stats.
+Manages character attribute allocation with visual progress bars and point distribution.
 
 **When Called**
 
 This panel is called when:
-- Distributing character attribute points
-- Managing character stat allocation
-- Providing attribute customization interface
-- Handling point-based character development
+- Character attribute point allocation is needed
+- Attribute modification during character creation
+- Attribute display and management is required
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `attributes` (*table*): Character attributes configuration.
+* `maxPoints` (*number*): Maximum attribute points available.
+* `currentPoints` (*number*): Currently allocated points.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created attributes panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
-
-- `updatePointsLeft()` – refreshes the remaining points label.
-- `onDisplay()` – loads saved attribute values into the rows.
-- `addAttribute(key, info)` – creates a `liaCharacterAttribsRow` for the attribute.
-- `onPointChange(key, delta)` – validates and applies a point change request.
-
 **Example Usage**
 
 ```lua
--- Usually created as part of character creation flow
--- No manual creation needed - it's part of the character system
-
--- Custom attribute distribution for advanced character creation
+-- Create attribute allocation panel
 local attribPanel = vgui.Create("liaCharacterAttribs")
-attribPanel:AddAttribute("strength", {
-    name = "Strength",
-    description = "Physical power and combat ability",
-    max = 10,
-    default = 5
-})
-attribPanel:UpdatePointsLeft()
+attribPanel:setMaxPoints(30)
+attribPanel:onDisplay()
+
+-- Get allocated attributes
+local allocated = attribPanel:getAllocatedAttributes()
 ```
 
 ---
@@ -412,49 +347,163 @@ attribPanel:UpdatePointsLeft()
 
 **Purpose**
 
-Represents a single attribute with its description and current points, including buttons for adjustment.
+Individual row component for attribute display and modification within the attributes panel.
 
 **When Called**
 
 This panel is called when:
-- Displaying individual character attributes
-- Managing single attribute point allocation
-- Providing detailed attribute controls
-- Creating granular attribute management
+- Individual attribute rows need to be created
+- Attribute modification controls are needed
+- Attribute display within a larger panel
 
 **Parameters**
 
-*This panel does not require parameters during creation.*
+* `attribute` (*table*): Attribute configuration data.
+* `currentValue` (*number*): Current attribute value.
 
 **Returns**
 
-*This panel does not return values.*
+* `panel` (*Panel*): The created attribute row panel object.
 
 **Realm**
 
 Client.
 
-**Custom Functions**
+**Example Usage**
 
-- `setAttribute(key, info)` – sets which attribute the row represents and updates its tooltip.
-- `delta(amount)` – requests a point change of `amount` from the parent panel.
-- `addButton(symbol, delta)` – internal helper that creates the increment/decrement buttons.
-- `updateQuantity()` – refreshes the displayed point total.
+```lua
+-- Create individual attribute row
+local attribRow = vgui.Create("liaCharacterAttribsRow")
+attribRow:setAttribute("strength", {
+    name = "Strength",
+    desc = "Physical strength attribute",
+    max = 10
+})
+attribRow:setValue(5)
+```
+
+---
+
+### liaCharInfo
+
+**Purpose**
+
+Displays character information including name, faction, and basic stats.
+
+**When Called**
+
+This panel is called when:
+- Character information needs to be displayed
+- Character summary cards are needed
+- Character selection interfaces require info display
+
+**Parameters**
+
+* `character` (*table*): Character data to display.
+* `showStats` (*boolean*): Whether to show character statistics.
+
+**Returns**
+
+* `panel` (*Panel*): The created character info panel object.
+
+**Realm**
+
+Client.
 
 **Example Usage**
 
 ```lua
--- Usually created by liaCharacterAttribs panel
--- No manual creation needed - it's part of the attribute system
+-- Create character info display
+local charInfo = vgui.Create("liaCharInfo")
+charInfo:setCharacter(characterData)
+charInfo:showStats(true)
 
--- Custom attribute row for advanced attribute management
-local attribRow = vgui.Create("liaCharacterAttribsRow")
-attribRow:SetAttribute("strength", {
-    name = "Strength",
-    description = "Physical power and combat ability",
-    max = 10,
-    min = 1
-})
+-- Update character information
+charInfo:updateInfo(newCharacterData)
 ```
 
 ---
+
+### liaCharBGMusic
+
+**Purpose**
+
+Manages background music selection for character creation and gameplay.
+
+**When Called**
+
+This panel is called when:
+- Background music selection is needed
+- Character-specific music preferences are set
+- Audio customization during character creation
+
+**Parameters**
+
+* `musicOptions` (*table*): Available music tracks.
+* `currentMusic` (*string*): Currently selected music.
+
+**Returns**
+
+* `panel` (*Panel*): The created music selection panel object.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Create music selection panel
+local musicPanel = vgui.Create("liaCharBGMusic")
+musicPanel:setMusicOptions(availableTracks)
+musicPanel:setSelectedMusic("ambient1")
+
+-- Get selected music
+local selectedMusic = musicPanel:getSelectedMusic()
+```
+
+---
+
+### liaClasses
+
+**Purpose**
+
+Displays and manages character classes with selection interface for character creation.
+
+**When Called**
+
+This panel is called when:
+- Character class selection is required
+- Class-based character creation is needed
+- Class information and selection interface is required
+
+**Parameters**
+
+* `availableClasses` (*table*): Array of available character classes.
+* `selectedClass` (*number*): Currently selected class index.
+* `factionFilter` (*number*): Optional faction filter for class availability.
+
+**Returns**
+
+* `panel` (*Panel*): The created classes panel object.
+
+**Realm**
+
+Client.
+
+**Example Usage**
+
+```lua
+-- Create class selection interface
+local classesPanel = vgui.Create("liaClasses")
+classesPanel:setAvailableClasses(lia.class.list)
+classesPanel:setFactionFilter(playerFaction)
+
+-- Handle class selection
+classesPanel.onClassSelected = function(classIndex, classData)
+    print("Selected class: " .. classData.name)
+end
+
+-- Refresh available classes
+classesPanel:refreshClasses()
+```

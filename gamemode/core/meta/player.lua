@@ -8,7 +8,7 @@ do
     When Called: When accessing the player's character data or performing character-related operations
     Parameters: None
     Returns: table|nil - The character object if player has a character, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -51,7 +51,7 @@ do
     When Called: When accessing the player's character data or performing character-related operations
     Parameters: None
     Returns: table|nil - The character object if player has a character, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -99,7 +99,7 @@ do
     When Called: When converting player to string for display, logging, or comparison purposes
     Parameters: None
     Returns: string - The player's character name if available, otherwise their Steam name
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -112,7 +112,7 @@ do
         ```lua
         -- Medium: Use in logging with fallback
         local playerName = player:tostring()
-        lia.logger.add("Player " .. playerName .. " performed action")
+        lia.log.add("Player " .. playerName .. " performed action")
         ```
 
         High Complexity:
@@ -142,7 +142,7 @@ end
         b (number) - Gesture weight (0-255)
         c (boolean) - Whether to restart the gesture
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -187,7 +187,7 @@ end
     Parameters:
         privilegeName (string) - The name of the privilege to check
     Returns: boolean - True if player has the privilege, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -273,7 +273,7 @@ end
     When Called: When detecting collision issues, implementing anti-stuck systems, or validating player position
     Parameters: None
     Returns: boolean - True if player is stuck, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -299,7 +299,7 @@ end
             player:SetPos(player:GetPos() + Vector(0, 0, 50))
             if player:isStuck() then
                 player:SetPos(Vector(0, 0, 0))
-                lia.logger.add("Player " .. player:Name() .. " was stuck and teleported")
+                lia.log.add("Player " .. player:Name() .. " was stuck and teleported")
             end
         end
         ```
@@ -319,7 +319,7 @@ end
         radius (number) - The maximum distance to check
         entity (Entity) - The entity to check distance against
     Returns: boolean - True if player is within radius, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -362,7 +362,7 @@ end
         radius (number) - The radius to search within
         playerOnly (boolean, optional) - If true, only returns player entities
     Returns: table - Array of entities within the radius
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -405,7 +405,7 @@ end
     When Called: When accessing weapon properties, validating equipped items, or implementing weapon systems
     Parameters: None
     Returns: weapon (Entity|nil), item (table|nil) - The weapon entity and item data if found
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -464,7 +464,7 @@ end
     When Called: When implementing movement-based features, stamina systems, or speed validation
     Parameters: None
     Returns: boolean - True if player is running, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -505,7 +505,7 @@ end
     When Called: When implementing account validation, anti-cheat systems, or account restrictions
     Parameters: None
     Returns: boolean - True if player is using family shared account, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -529,7 +529,7 @@ end
         -- High: Complex account validation with logging
         if player:isFamilySharedAccount() then
             local ownerID = util.SteamIDFrom64(player:OwnerSteamID64())
-            lia.logger.add("Family shared account detected: " .. player:SteamID() .. " (Owner: " .. ownerID .. ")")
+            lia.log.add("Family shared account detected: " .. player:SteamID() .. " (Owner: " .. ownerID .. ")")
             player:setData("isFamilyShared", true)
         end
         ```
@@ -543,7 +543,7 @@ end
     When Called: When implementing item dropping, inventory management, or item placement systems
     Parameters: None
     Returns: Vector - The calculated drop position
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -593,7 +593,7 @@ end
     When Called: When accessing player inventory, implementing item systems, or inventory management
     Parameters: None
     Returns: table|nil - Array of items in the player's inventory, nil if no character
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -648,7 +648,7 @@ end
     Parameters:
         distance (number, optional) - Maximum trace distance (default: 96)
     Returns: Entity|nil - The traced entity if found, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -699,7 +699,7 @@ end
     Parameters:
         distance (number, optional) - Maximum trace distance (default: 200)
     Returns: table - Trace result containing hit information, position, and entity data
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -756,7 +756,7 @@ end
     Parameters:
         distance (number, optional) - Maximum distance to check (default: 150)
     Returns: Entity|nil - The entity if within distance, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -804,7 +804,7 @@ end
         message (string) - The message to display
         notifType (string, optional) - The type of notification (default: "default")
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -848,7 +848,7 @@ end
         notifType (string, optional) - The type of notification (default: "default")
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -859,8 +859,8 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized notification with formatting
-        player:notifyLocalized("item_found", "success", "weapon_pistol")
-        player:notifyLocalized("health_low", "warning", player:Health())
+        player:notifySuccessLocalized("item_found")
+        player:notifyWarningLocalized("health_low")
         ```
 
         High Complexity:
@@ -869,7 +869,7 @@ end
         local itemName = item:getName()
         local itemValue = item:getData("value", 0)
         local currency = lia.currency.get("money")
-        player:notifyLocalized("item_sold", "success", itemName, currency:format(itemValue))
+        player:notifySuccessLocalized("item_sold")
         ```
 ]]
 function playerMeta:notifyLocalized(message, notifType, ...)
@@ -886,7 +886,7 @@ end
     Parameters:
         message (string) - The error message to display
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -911,7 +911,7 @@ end
         end)
         if not success then
             player:notifyError("Failed to heal player: " .. tostring(err))
-            lia.logger.add("Heal error for " .. player:Name() .. ": " .. tostring(err))
+            lia.log.add("Heal error for " .. player:Name() .. ": " .. tostring(err))
         end
         ```
 ]]
@@ -929,7 +929,7 @@ end
     Parameters:
         message (string) - The warning message to display
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -971,7 +971,7 @@ end
     Parameters:
         message (string) - The informational message to display
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1010,7 +1010,7 @@ end
     Parameters:
         message (string) - The success message to display
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1050,7 +1050,7 @@ end
     Parameters:
         message (string) - The money-related message to display
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1091,7 +1091,7 @@ end
     Parameters:
         message (string) - The admin message to display
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1112,7 +1112,7 @@ end
         local targetName = target:Name()
         local reason = "Cheating"
         player:notifyAdmin("Banned " .. targetName .. " for: " .. reason)
-        lia.logger.add("Admin " .. adminName .. " banned " .. targetName .. " for: " .. reason)
+        lia.log.add("Admin " .. adminName .. " banned " .. targetName .. " for: " .. reason)
         ```
 ]]
 function playerMeta:notifyAdmin(message)
@@ -1130,7 +1130,7 @@ end
         key (string) - The localization key for the error message
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1141,7 +1141,7 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized error with formatting
-        player:notifyErrorLocalized("error_permission_denied", "admin")
+        player:notifyErrorLocalized("error_permission_denied")
         ```
 
         High Complexity:
@@ -1154,7 +1154,7 @@ end
             local money = char:getData("money", 0)
             local required = 1000
             if money < required then
-                player:notifyErrorLocalized("error_insufficient_funds", required, money)
+                player:notifyErrorLocalized("error_insufficient_funds")
             end
         end
         ```
@@ -1174,7 +1174,7 @@ end
         key (string) - The localization key for the warning message
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1185,7 +1185,7 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized warning with formatting
-        player:notifyWarningLocalized("warning_health_low", player:Health())
+        player:notifyWarningLocalized("warning_health_low")
         ```
 
         High Complexity:
@@ -1196,9 +1196,9 @@ end
             local health = player:Health()
             local armor = player:Armor()
             if health < 25 then
-                player:notifyWarningLocalized("warning_critical_health", health)
+                player:notifyWarningLocalized("warning_critical_health")
             elseif health < 50 and armor < 25 then
-                player:notifyWarningLocalized("warning_vulnerable", health, armor)
+                player:notifyWarningLocalized("warning_vulnerable")
             end
         end
         ```
@@ -1218,7 +1218,7 @@ end
         key (string) - The localization key for the informational message
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1229,7 +1229,7 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized info with formatting
-        player:notifyInfoLocalized("info_ammo_count", player:GetAmmoCount("Pistol"))
+        player:notifyInfoLocalized("info_ammo_count")
         ```
 
         High Complexity:
@@ -1239,7 +1239,7 @@ end
         if char then
             local money = char:getData("money", 0)
             local level = char:getData("level", 1)
-            player:notifyInfoLocalized("info_character_stats", level, money)
+            player:notifyInfoLocalized("info_character_stats")
         end
         ```
 ]]
@@ -1258,7 +1258,7 @@ end
         key (string) - The localization key for the success message
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1269,7 +1269,7 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized success with formatting
-        player:notifySuccessLocalized("success_money_earned", amount)
+        player:notifySuccessLocalized("success_money_earned")
         ```
 
         High Complexity:
@@ -1280,7 +1280,7 @@ end
             local exp = char:getData("experience", 0)
             local newExp = exp + 100
             char:setData("experience", newExp)
-            player:notifySuccessLocalized("success_experience_gained", 100, newExp)
+            player:notifySuccessLocalized("success_experience_gained")
         end
         ```
 ]]
@@ -1299,7 +1299,7 @@ end
         key (string) - The localization key for the money-related message
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1310,7 +1310,7 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized money notification with formatting
-        player:notifyMoneyLocalized("money_payment_received", amount)
+        player:notifyMoneyLocalized("money_payment_received")
         ```
 
         High Complexity:
@@ -1321,7 +1321,7 @@ end
             local oldMoney = char:getData("money", 0)
             local newMoney = oldMoney + amount
             char:setData("money", newMoney)
-            player:notifyMoneyLocalized("money_balance_updated", oldMoney, newMoney)
+            player:notifyMoneyLocalized("money_balance_updated")
         end
         ```
 ]]
@@ -1340,7 +1340,7 @@ end
         key (string) - The localization key for the admin message
         ... (vararg) - Arguments to format into the localized string
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1351,7 +1351,7 @@ end
         Medium Complexity:
         ```lua
         -- Medium: Send localized admin notification with formatting
-        player:notifyAdminLocalized("admin_player_banned", target:Name())
+        player:notifyAdminLocalized("admin_player_banned")
         ```
 
         High Complexity:
@@ -1360,8 +1360,8 @@ end
         local adminName = player:Name()
         local targetName = target:Name()
         local reason = "Cheating"
-        player:notifyAdminLocalized("admin_ban_executed", targetName, reason)
-        lia.logger.add("Admin " .. adminName .. " banned " .. targetName .. " for: " .. reason)
+        player:notifyAdminLocalized("admin_ban_executed")
+        lia.log.add("Admin " .. adminName .. " banned " .. targetName .. " for: " .. reason)
         ```
 ]]
 function playerMeta:notifyAdminLocalized(key, ...)
@@ -1378,7 +1378,7 @@ end
     Parameters:
         vendor (Entity) - The vendor entity to check edit permissions for
     Returns: boolean - True if player can edit the vendor, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1441,7 +1441,7 @@ end
     When Called: When validating staff permissions, implementing staff-only features, or access control systems
     Parameters: None
     Returns: boolean - True if player is staff, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1485,7 +1485,7 @@ end
     When Called: When validating VIP permissions, implementing VIP-only features, or access control systems
     Parameters: None
     Returns: boolean - True if player is VIP, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1528,7 +1528,7 @@ end
     When Called: When validating active staff status, implementing duty-based features, or staff management systems
     Parameters: None
     Returns: boolean - True if player is on duty as staff, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1571,7 +1571,7 @@ end
     Parameters:
         faction (string) - The faction unique ID to check whitelist for
     Returns: boolean - True if player has whitelist access, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1621,7 +1621,7 @@ end
     When Called: When accessing character class information, implementing class-based features, or character management
     Parameters: None
     Returns: table|nil - The class data table if character has a class, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1672,7 +1672,7 @@ end
     Parameters:
         var (string) - The variable name to get (currently only "money" is supported)
     Returns: number|nil - The money amount if var is "money", nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1719,7 +1719,7 @@ end
     When Called: When accessing player money, implementing economic systems, or financial transactions
     Parameters: None
     Returns: number - The player's money amount (0 if no character)
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1763,7 +1763,7 @@ end
     Parameters:
         amount (number) - The amount of money to check if player can afford
     Returns: boolean - True if player can afford the amount, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1812,7 +1812,7 @@ end
         skill (string) - The skill name to check
         level (number) - The minimum skill level required
     Returns: boolean - True if player has the required skill level, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1862,7 +1862,7 @@ end
     Parameters:
         requiredSkillLevels (table) - Table of skill names and required levels {skill = level, ...}
     Returns: boolean - True if player meets all requirements, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1918,7 +1918,7 @@ end
         time (number, optional) - Duration of the sequence (default: sequence duration)
         noFreeze (boolean, optional) - Whether to freeze the player during sequence
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -1983,7 +1983,7 @@ end
     When Called: When ending cutscenes, animations, or scripted sequences for the player
     Parameters: None
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2025,7 +2025,7 @@ end
     When Called: When accessing character flags, implementing flag-based features, or character management
     Parameters: None
     Returns: string - The character flags string (empty if no character)
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2066,7 +2066,7 @@ end
     Parameters:
         flags (string) - The flags to give to the character
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2093,7 +2093,7 @@ end
             char:giveFlags(flags)
             local newFlags = char:getFlags()
             player:notifySuccess("Flags updated: " .. oldFlags .. " → " .. newFlags)
-            lia.logger.add("Player " .. player:Name() .. " received flags: " .. flags)
+            lia.log.add("Player " .. player:Name() .. " received flags: " .. flags)
         end
         ```
 ]]
@@ -2108,7 +2108,7 @@ end
     Parameters:
         flags (string) - The flags to take from the character
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2135,7 +2135,7 @@ end
             char:takeFlags(flags)
             local newFlags = char:getFlags()
             player:notifyWarning("Flags updated: " .. oldFlags .. " → " .. newFlags)
-            lia.logger.add("Player " .. player:Name() .. " lost flags: " .. flags)
+            lia.log.add("Player " .. player:Name() .. " lost flags: " .. flags)
         end
         ```
 ]]
@@ -2151,7 +2151,7 @@ end
         active (boolean) - Whether the animation is active
         boneData (table) - Table of bone names and angles {boneName = angle, ...}
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2206,7 +2206,7 @@ end
     When Called: When accessing player data storage, implementing data management, or debugging systems
     Parameters: None
     Returns: table - The player's Lilia data table
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2233,7 +2233,7 @@ end
             dataSize = dataSize + 1
         end
         player:notifyInfo("Data entries: " .. dataSize)
-        lia.logger.add("Player " .. player:Name() .. " data accessed")
+        lia.log.add("Player " .. player:Name() .. " data accessed")
         ```
 ]]
 function playerMeta:getAllLiliaData()
@@ -2255,7 +2255,7 @@ end
         logo (string, optional) - The material path for the waypoint icon
         onReach (function, optional) - Function to call when waypoint is reached
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2369,7 +2369,7 @@ end
         key (string) - The data key to retrieve
         default (any, optional) - The default value to return if key doesn't exist
     Returns: any - The data value or default if not found
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2421,7 +2421,7 @@ end
     Parameters:
         flags (string) - The flags to check for (any one flag will return true)
     Returns: boolean - True if player has any of the specified flags, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2470,7 +2470,7 @@ end
     Parameters:
         time (number) - The minimum play time required in seconds
     Returns: boolean - True if player's play time is greater than the specified time, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2518,7 +2518,7 @@ end
         limit (number, optional) - Maximum number of options that can be selected (default: 1)
         callback (function, optional) - Function to call when player makes a selection
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2585,7 +2585,7 @@ end
         callback (function) - Function to call when player submits the string
         default (string, optional) - Default value to pre-fill in the input field
     Returns: deferred|nil - A deferred object if no callback provided, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2654,7 +2654,7 @@ end
         argTypes (table) - Array of argument type specifications
         callback (function) - Function to call when player submits the arguments
     Returns: deferred|nil - A deferred object if no callback provided, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2735,7 +2735,7 @@ end
         manualDismiss (boolean, optional) - Whether the player can manually dismiss the dialog
         callback (function, optional) - Function to call when player makes a choice
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2798,7 +2798,7 @@ end
         title (string) - The title of the button dialog
         buttons (table) - Array of button data {text = "Button Text", callback = function() end} or {text, callback}
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -2879,7 +2879,7 @@ end
         options (table) - Array of option strings to choose from
         callback (function, optional) - Function to call when player makes a selection
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -3076,7 +3076,7 @@ if SERVER then
             if player:addMoney(amount) then
                 local newMoney = char:getMoney()
                 player:notifySuccess("Money added: $" .. amount .. " (Total: $" .. newMoney .. ")")
-                lia.logger.add("Player " .. player:Name() .. " received $" .. amount)
+                lia.log.add("Player " .. player:Name() .. " received $" .. amount)
             end
         end
         ```
@@ -3128,7 +3128,7 @@ if SERVER then
                 player:takeMoney(amount)
                 local newMoney = char:getMoney()
                 player:notifyWarning("Money taken: $" .. amount .. " (Remaining: $" .. newMoney .. ")")
-                lia.logger.add("Player " .. player:Name() .. " lost $" .. amount)
+                lia.log.add("Player " .. player:Name() .. " lost $" .. amount)
             else
                 player:notifyError("Insufficient funds!")
             end
@@ -3245,7 +3245,7 @@ if SERVER then
         if player:IsValid() and not player:IsBot() then
             local dataSize = table.Count(player.liaData or {})
             player:saveLiliaData()
-            lia.logger.add("Player " .. player:Name() .. " data saved (" .. dataSize .. " entries)")
+            lia.log.add("Player " .. player:Name() .. " data saved (" .. dataSize .. " entries)")
             player:notifyInfo("Data saved with " .. dataSize .. " entries")
         end
         ```
@@ -3346,7 +3346,7 @@ if SERVER then
         local duration = 604800 -- 7 days
         local banner = admin
         player:banPlayer(reason, duration, banner)
-        lia.logger.add("Player " .. player:Name() .. " banned by " .. banner:Name() .. " for: " .. reason)
+        lia.log.add("Player " .. player:Name() .. " banned by " .. banner:Name() .. " for: " .. reason)
         ```
 ]]
     function playerMeta:banPlayer(reason, duration, banner)
@@ -3533,7 +3533,7 @@ if SERVER then
     When Called: When calculating play time, implementing time-based features, or displaying player statistics
     Parameters: None
     Returns: number - The player's total play time in seconds
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -3582,7 +3582,7 @@ if SERVER then
     When Called: When calculating session duration, implementing session-based features, or displaying current session statistics
     Parameters: None
     Returns: number - The player's current session time in seconds
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -3861,7 +3861,7 @@ if SERVER then
             end
         end
         player:syncVars()
-        lia.logger.add("Synced " .. varCount .. " variables to " .. player:Name())
+        lia.log.add("Synced " .. varCount .. " variables to " .. player:Name())
         ```
 ]]
     function playerMeta:syncVars()

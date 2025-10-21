@@ -90,7 +90,6 @@ function PANEL:OnMousePressed(mousecode)
 end
 
 function PANEL:DoClick()
-    print("[Button] liaButton DoClick called")
     lia.websound.playButtonSound()
     self.BaseClass.DoClick(self)
 end
@@ -201,7 +200,6 @@ local function RegisterButton(name, defaultFont, useBase)
     end
 
     function BUTTON_PANEL:DoClick()
-        print("[Button] " .. name .. " DoClick called")
         lia.websound.playButtonSound()
         self.BaseClass.DoClick(self)
     end

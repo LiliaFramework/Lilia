@@ -1,6 +1,11 @@
 ﻿--[[
     Classes Library
 
+    Character class management and validation system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The classes library provides comprehensive functionality for managing character classes
     in the Lilia framework. It handles registration, validation, and management of player
     classes within factions. The library operates on both server and client sides, allowing

@@ -19,7 +19,7 @@ local validClasses = {
         - flags (number, optional): Sound flags
         - dsp (number, optional): DSP effect
     Returns: boolean - True if sound was played successfully
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -70,7 +70,7 @@ end
     When Called: When you need to determine if an entity is a prop_physics object
     Parameters: None
     Returns: boolean - True if the entity is a prop_physics, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -107,7 +107,7 @@ end
     When Called: When you need to determine if an entity is a lia_item object
     Parameters: None
     Returns: boolean - True if the entity is a lia_item, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -148,7 +148,7 @@ end
     When Called: When you need to determine if an entity is a lia_money object
     Parameters: None
     Returns: boolean - True if the entity is a lia_money, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -192,7 +192,7 @@ end
     When Called: When you need to determine if an entity is a vehicle from Simfphys or LVS
     Parameters: None
     Returns: boolean - True if the entity is a supported vehicle, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -236,7 +236,7 @@ end
         - client (Player): The player to check access for
         - access (number, optional): The required access level (default: DOOR_GUEST)
     Returns: boolean - True if the client has access, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -328,7 +328,7 @@ end
     When Called: When a player wants to lock their vehicle
     Parameters: None
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -368,7 +368,7 @@ end
     When Called: When a player wants to unlock their vehicle
     Parameters: None
     Returns: None
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -408,7 +408,7 @@ end
     When Called: When you need to retrieve the owner of a door
     Parameters: None
     Returns: Player or nil - The door owner if it's a vehicle with CPPI, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -451,7 +451,7 @@ end
     When Called: When you need to check if an entity is in a locked state
     Parameters: None
     Returns: boolean - True if the entity is locked, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -492,7 +492,7 @@ end
     When Called: When you need to check if a door is in a locked state
     Parameters: None
     Returns: boolean - True if the door is locked, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -534,7 +534,7 @@ end
     Parameters:
         - offset (number, optional): Distance to trace forward from entity (default: 64)
     Returns: Vector, Angle - The drop position and angle
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -586,7 +586,7 @@ end
     When Called: When you need to determine the gender of a character entity
     Parameters: None
     Returns: boolean - True if the entity is female, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -630,7 +630,7 @@ end
         - radius (number, optional): Search radius in units (default: 96)
         - otherEntity (Entity, optional): Specific entity to check for proximity
     Returns: boolean - True if near another entity, false otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua
@@ -676,7 +676,7 @@ end
     When Called: When you need to find the paired door in a double door setup
     Parameters: None
     Returns: Entity or nil - The partner door if found, nil otherwise
-    Realm: Shared (can be called on both server and client)
+    Realm: Shared
     Example Usage:
         Low Complexity:
         ```lua

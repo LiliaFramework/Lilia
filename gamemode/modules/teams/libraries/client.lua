@@ -11,7 +11,7 @@
     local classID = character:getClass()
     if not lia.class or not lia.class.list then return end
     local classData = lia.class.list[classID]
-    if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("faction"), function() return L("classMember", classData.name) end) end
+    if classID and classData and classData.name then hook.Run("AddTextField", L("generalInfo"), "class", L("class"), function() return L("classMember", classData.name) end) end
 end
 
 function MODULE:DrawCharInfo(client, _, info)

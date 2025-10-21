@@ -1,6 +1,11 @@
 ﻿--[[
     Time Library
 
+    Time manipulation, formatting, and calculation system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The time library provides comprehensive functionality for time manipulation, formatting,
     and calculation within the Lilia framework. It handles time parsing, formatting,
     relative time calculations, and date/time display with support for both 24-hour

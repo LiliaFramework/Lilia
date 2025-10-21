@@ -1,6 +1,11 @@
 ﻿--[[
     Network Library
 
+    Network communication and data streaming system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The network library provides comprehensive functionality for managing network communication
     in the Lilia framework. It handles both simple message passing and complex data streaming
     between server and client. The library includes support for registering network message
@@ -191,7 +196,7 @@ end
                 if itemData.uniqueID and itemData.id then
                     local success = inventory:Add(itemData.uniqueID, itemData.id)
                     if not success then
-                        print("Failed to add item:", itemData.uniqueID)
+                        lia.log.add("Failed to add item: " .. tostring(itemData.uniqueID))
                     end
                 end
             end

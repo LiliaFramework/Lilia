@@ -1,6 +1,10 @@
 ﻿--[[
     Item Library
 
+    Comprehensive item registration, instantiation, and management system for the Lilia framework.
+]]
+--[[
+    Overview:
     The item library provides comprehensive functionality for managing items in the Lilia framework.
     It handles item registration, instantiation, inventory management, and item operations such as
     dropping, taking, rotating, and transferring items between players. The library operates on both

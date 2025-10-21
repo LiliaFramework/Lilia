@@ -1,6 +1,11 @@
 ﻿--[[
     Logger Library
 
+    Comprehensive logging and audit trail system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The logger library provides comprehensive logging functionality for the Lilia framework,
     enabling detailed tracking and recording of player actions, administrative activities,
     and system events. It operates on the server side and automatically categorizes log

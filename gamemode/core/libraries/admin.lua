@@ -1,6 +1,11 @@
 ﻿--[[
     Administrator Library
 
+    Comprehensive user group and privilege management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The administrator library provides comprehensive functionality for managing user groups, privileges,
     and administrative permissions in the Lilia framework. It handles the creation, modification,
     and deletion of user groups with inheritance-based privilege systems. The library operates on

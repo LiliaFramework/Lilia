@@ -1,6 +1,11 @@
 ﻿--[[
     Inventory Library
 
+    Comprehensive inventory system management with multiple storage types for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The inventory library provides comprehensive functionality for managing inventory systems
     in the Lilia framework. It handles inventory type registration, instance creation, storage
     management, and database persistence. The library operates on both server and client sides,

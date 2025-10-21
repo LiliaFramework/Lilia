@@ -94,7 +94,7 @@ function SWEP:DrawHUD()
         })
     end
 
-    local instructions = {L("adminStickInstructions1", "Left Click: Open admin menu for target"), L("adminStickInstructions2", "Right Click: Freeze/unfreeze player"), L("adminStickInstructions3", "Reload + Shift: Open admin menu for yourself"), L("adminStickInstructions4", "Reload: Clear target selection")}
+    local instructions = {L"adminStickInstructions1", L"adminStickInstructions2", L"adminStickInstructions3", L"adminStickInstructions4"}
     local instBoxX = ScrW() - 20
     local instBoxY = 20
     lia.derma.drawBoxWithText(instructions, instBoxX, instBoxY, {

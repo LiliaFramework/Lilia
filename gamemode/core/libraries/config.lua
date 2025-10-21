@@ -1,6 +1,11 @@
 ﻿--[[
     Configuration Library
 
+    Comprehensive user-configurable settings management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The configuration library provides comprehensive functionality for managing user-configurable settings
     in the Lilia framework. It handles the creation, storage, retrieval, and persistence of various
     types of options including boolean toggles, numeric sliders, color pickers, text inputs, and

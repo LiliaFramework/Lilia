@@ -1,6 +1,11 @@
 ﻿--[[
     Utility Library
 
+    Common operations and helper functions for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The utility library provides comprehensive functionality for common operations and helper
     functions used throughout the Lilia framework. It contains a wide range of utilities for
     player management, string processing, entity handling, UI operations, and general purpose

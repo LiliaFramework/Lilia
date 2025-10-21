@@ -218,6 +218,9 @@ jobs:
       - run: |
           python3 remove_comments.py gamemode
       - run: |
+          python3 generate_docs.py meta
+          python3 generate_docs.py library
+      - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add gamemode documentation

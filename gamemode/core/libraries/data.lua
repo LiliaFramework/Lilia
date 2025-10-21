@@ -1,6 +1,11 @@
 ﻿--[[
     Data Library
 
+    Data persistence, serialization, and management system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The data library provides comprehensive functionality for data persistence, serialization,
     and management within the Lilia framework. It handles encoding and decoding of complex
     data types including vectors, angles, colors, and nested tables for database storage.

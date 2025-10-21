@@ -1,6 +1,11 @@
 ﻿--[[
     Notice Library
 
+    Player notification and messaging system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The notice library provides comprehensive functionality for displaying notifications
     and messages to players in the Lilia framework. It handles both server-side and
     client-side notification systems, supporting both direct text messages and localized

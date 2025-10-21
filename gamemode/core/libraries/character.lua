@@ -1,6 +1,11 @@
 ﻿--[[
     Character Library
 
+    Comprehensive character creation, management, and persistence system for the Lilia framework.
+]]
+
+--[[
+    Overview:
     The character library provides comprehensive functionality for managing player characters
     in the Lilia framework. It handles character creation, loading, saving, and management
     across both server and client sides. The library operates character data persistence,
@@ -441,7 +446,7 @@ end
                 client:notify("Faction changed to: " .. newValue)
 
                 -- Log the change
-                lia.logger.log("Faction change", client:Name() .. " changed faction from " .. oldValue .. " to " .. newValue)
+                lia.log.add("Faction change: " .. client:Name() .. " changed faction from " .. oldValue .. " to " .. newValue)
             end
         end)
         ```
@@ -1549,7 +1554,7 @@ if SERVER then
             end
 
             -- Log statistics
-            lia.logger.log("Character restoration",
+            lia.log.add("Character restoration: " ..
                 client:Name() .. " - Total: " .. stats.total ..
                 ", Loaded: " .. stats.loaded ..
                 ", Banned: " .. stats.banned ..
@@ -1682,7 +1687,7 @@ if SERVER then
 
         local charCount = table.Count(client.liaCharList or {})
         if charCount > 0 then
-            lia.logger.log("Player disconnect",
+            lia.log.add("Player disconnect: " ..
                 client:Name() .. " disconnected with " .. charCount .. " characters loaded"
             )
         end
@@ -1717,7 +1722,7 @@ if SERVER then
             lia.char.cleanUpForPlayer(client)
 
             -- Log statistics
-            lia.logger.log("Player cleanup",
+            lia.log.add("Player cleanup: " ..
                 client:Name() .. " - Characters: " .. stats.total ..
                 ", Saved: " .. stats.saved ..
                 ", Errors: " .. stats.errors
@@ -1791,7 +1796,7 @@ if SERVER then
             local charName = character:getName()
 
             -- Log deletion
-            lia.logger.log("Character deletion",
+            lia.log.add("Character deletion: " ..
                 "Character '" .. charName .. "' (ID: " .. charID .. ") deleted by " ..
                 (IsValid(admin) and admin:Name() or "System")
             )
@@ -2260,7 +2265,7 @@ if SERVER then
             stats.unloaded = lia.char.unloadUnusedCharacters(client, activeCharID)
 
             -- Log statistics
-            lia.logger.log("Character unloading",
+            lia.log.add("Character unloading: " ..
                 client:Name() .. " - Total: " .. stats.total ..
                 ", Active: " .. stats.active ..
                 ", Unloaded: " .. stats.unloaded
@@ -2367,7 +2372,7 @@ if SERVER then
                     end
 
                     -- Log successful load
-                    lia.logger.log("Character loaded",
+                    lia.log.add("Character loaded: " ..
                         "Character '" .. character:getName() .. "' (ID: " .. charID .. ") loaded for " ..
                         (client and client:Name() or "System")
                     )
