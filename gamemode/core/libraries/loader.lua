@@ -1,4 +1,17 @@
-﻿lia = lia or {
+﻿--[[
+    Loader Library
+
+    The loader library is the core initialization system for the Lilia framework, responsible for
+    managing the loading sequence of all framework components, modules, and dependencies. It handles
+    file inclusion with proper realm detection (client, server, shared), manages module loading order,
+    provides compatibility layer support for third-party addons, and includes update checking
+    functionality. The library ensures that all framework components are loaded in the correct order
+    and context, handles hot-reloading during development, and provides comprehensive logging and
+    error handling throughout the initialization process. It also manages entity registration for
+    weapons, tools, effects, and custom entities, and provides Discord webhook integration for
+    logging and notifications.
+]]
+lia = lia or {
     util = {},
     gui = {},
     meta = {},
@@ -275,6 +288,43 @@ local ConditionalFiles = {
     }
 }
 
+--[[
+    Purpose: Includes a Lua file with automatic realm detection and proper client/server handling
+    When Called: During framework initialization, module loading, or when manually including files
+    Parameters:
+        - path (string): The file path to include (e.g., "lilia/gamemode/core/libraries/util.lua")
+        - realm (string, optional): The realm to load the file in ("client", "server", "shared")
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Include a shared library file
+        lia.loader.include("lilia/gamemode/core/libraries/util.lua")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Include a file with explicit realm specification
+        lia.loader.include("lilia/gamemode/core/libraries/logger.lua", "server")
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Include files based on conditions with error handling
+        local filesToLoad = {
+            "lilia/gamemode/core/libraries/net.lua",
+            "lilia/gamemode/core/libraries/commands.lua"
+        }
+        for _, filePath in ipairs(filesToLoad) do
+            if file.Exists(filePath, "LUA") then
+                lia.loader.include(filePath)
+            else
+                lia.warning("File not found: " .. filePath)
+            end
+        end
+        ```
+]]
 function lia.loader.include(path, realm)
     if not path then lia.error(L("missingFilePath")) end
     local resolved = realm
@@ -308,6 +358,42 @@ function lia.loader.include(path, realm)
     end
 end
 
+--[[
+    Purpose: Recursively includes all Lua files in a directory with optional deep traversal
+    When Called: During framework initialization to load entire directories of files
+    Parameters:
+        - dir (string): The directory path to scan for Lua files
+        - raw (boolean, optional): If true, uses the exact path; if false, resolves relative to gamemode/schema
+        - deep (boolean, optional): If true, recursively searches subdirectories
+        - realm (string, optional): The realm to load files in ("client", "server", "shared")
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Include all files in a directory
+        lia.loader.includeDir("lilia/gamemode/core/libraries")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Include files with specific realm and deep search
+        lia.loader.includeDir("lilia/gamemode/modules", false, true, "shared")
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Include multiple directories with different settings
+        local dirsToLoad = {
+            {path = "lilia/gamemode/core/libraries", raw = false, deep = false, realm = "shared"},
+            {path = "lilia/gamemode/modules", raw = false, deep = true, realm = "shared"},
+            {path = "custom/scripts", raw = true, deep = true, realm = "client"}
+        }
+        for _, dir in ipairs(dirsToLoad) do
+            lia.loader.includeDir(dir.path, dir.raw, dir.deep, dir.realm)
+        end
+        ```
+]]
 function lia.loader.includeDir(dir, raw, deep, realm)
     local root = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local function loadDir(folder)
@@ -325,6 +411,46 @@ function lia.loader.includeDir(dir, raw, deep, realm)
     loadDir(root)
 end
 
+--[[
+    Purpose: Includes files from a directory with automatic realm detection based on filename prefixes
+    When Called: During framework initialization to load files with automatic realm detection
+    Parameters:
+        - dir (string): The directory path to scan for Lua files
+        - raw (boolean, optional): If true, uses the exact path; if false, resolves relative to gamemode/schema
+        - recursive (boolean, optional): If true, recursively searches subdirectories
+        - forceRealm (string, optional): Forces all files to be loaded in this realm instead of auto-detection
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Include files with automatic realm detection
+        lia.loader.includeGroupedDir("lilia/gamemode/core/libraries")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Include files recursively with forced realm
+        lia.loader.includeGroupedDir("lilia/gamemode/modules", false, true, "shared")
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Include multiple directories with different settings and error handling
+        local dirsToLoad = {
+            {path = "lilia/gamemode/core/libraries", raw = false, recursive = false, forceRealm = nil},
+            {path = "lilia/gamemode/modules", raw = false, recursive = true, forceRealm = "shared"},
+            {path = "custom/scripts", raw = true, recursive = true, forceRealm = "client"}
+        }
+        for _, dir in ipairs(dirsToLoad) do
+            if file.Exists(dir.path, "LUA") then
+                lia.loader.includeGroupedDir(dir.path, dir.raw, dir.recursive, dir.forceRealm)
+            else
+                lia.warning("Directory not found: " .. dir.path)
+            end
+        end
+        ```
+]]
 function lia.loader.includeGroupedDir(dir, raw, recursive, forceRealm)
     local baseDir = raw and dir or (SCHEMA and SCHEMA.folder and SCHEMA.loading and SCHEMA.folder .. "/schema" or "lilia/gamemode") .. "/" .. dir
     local stack = {baseDir}
@@ -392,6 +518,44 @@ end
 local publicURL = "https://liliaframework.github.io/versioning/modules.json"
 local privateURL = "https://bleonheart.github.io/modules.json"
 local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
+--[[
+    Purpose: Checks for updates to both the Lilia framework and installed modules by querying remote version data
+    When Called: During server startup or when manually triggered to check for available updates
+    Parameters: None
+    Returns: None
+    Realm: Server
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Check for updates during server startup
+        lia.loader.checkForUpdates()
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Check for updates with custom error handling
+        local function safeUpdateCheck()
+            local success, err = pcall(lia.loader.checkForUpdates)
+            if not success then
+                lia.error("Update check failed: " .. tostring(err))
+            end
+        end
+        safeUpdateCheck()
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Check for updates with custom timing and logging
+        local function scheduledUpdateCheck()
+            timer.Create("update_checker", 3600, 0, function() -- Check every hour
+                lia.information("Checking for updates...")
+                lia.loader.checkForUpdates()
+                lia.information("Update check completed")
+            end)
+        end
+        scheduledUpdateCheck()
+        ```
+]]
 function lia.loader.checkForUpdates()
     local publicModules = {}
     local privateModules = {}
@@ -514,27 +678,268 @@ lia.loader.includeDir("lilia/gamemode/core/derma", true, true, "client")
 lia.loader.include("lilia/gamemode/core/libraries/database.lua", "server")
 lia.loader.include("lilia/gamemode/core/libraries/config.lua", "shared")
 lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
+--[[
+    Purpose: Outputs error messages to the console with Lilia branding and red color formatting
+    When Called: When critical errors occur during framework operation or module loading
+    Parameters:
+        - msg (string): The error message to display
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Display a basic error message
+        lia.error("Failed to load module")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Display error with context information
+        local function loadConfig()
+            local success, err = pcall(function()
+                -- Config loading code here
+            end)
+            if not success then
+                lia.error("Config loading failed: " .. tostring(err))
+            end
+        end
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Display detailed error with stack trace and context
+        local function safeModuleLoad(moduleName)
+            local success, err = pcall(function()
+                -- Module loading code here
+            end)
+            if not success then
+                local errorMsg = string.format(
+                    "Module '%s' failed to load: %s\nStack trace: %s",
+                    moduleName,
+                    tostring(err),
+                    debug.traceback()
+                )
+                lia.error(errorMsg)
+            end
+        end
+        ```
+]]
 function lia.error(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logError") .. "] ")
     MsgC(Color(255, 0, 0), tostring(msg), "\n")
 end
 
+--[[
+    Purpose: Outputs warning messages to the console with Lilia branding and yellow color formatting
+    When Called: When non-critical issues occur that should be brought to attention
+    Parameters:
+        - msg (string): The warning message to display
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Display a basic warning message
+        lia.warning("Module version mismatch detected")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Display warning with context information
+        local function checkModuleCompatibility(module)
+            if module.version < "1.0.0" then
+                lia.warning("Module '" .. module.name .. "' is using an outdated version")
+            end
+        end
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Display warning with detailed information and conditional logic
+        local function validateModuleDependencies(module)
+            local missingDeps = {}
+            for _, dep in ipairs(module.dependencies or {}) do
+                if not lia.module.list[dep] then
+                    table.insert(missingDeps, dep)
+                end
+            end
+
+            if #missingDeps > 0 then
+                local warningMsg = string.format(
+                    "Module '%s' is missing dependencies: %s",
+                    module.name,
+                    table.concat(missingDeps, ", ")
+                )
+                lia.warning(warningMsg)
+            end
+        end
+        ```
+]]
 function lia.warning(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logWarning") .. "] ")
     MsgC(Color(255, 255, 0), tostring(msg), "\n")
 end
 
+--[[
+    Purpose: Outputs informational messages to the console with Lilia branding and blue color formatting
+    When Called: When providing general information about framework operations or status updates
+    Parameters:
+        - msg (string): The informational message to display
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Display a basic information message
+        lia.information("Framework initialized successfully")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Display information with context
+        local function reportModuleStatus(module)
+            lia.information("Module '" .. module.name .. "' loaded successfully")
+        end
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Display detailed information with statistics
+        local function reportFrameworkStatus()
+            local moduleCount = table.Count(lia.module.list)
+            local loadedModules = 0
+            for _, module in pairs(lia.module.list) do
+                if module.loaded then loadedModules = loadedModules + 1 end
+            end
+
+            local statusMsg = string.format(
+                "Framework Status: %d/%d modules loaded, %d entities registered",
+                loadedModules,
+                moduleCount,
+                table.Count(scripted_ents.GetList())
+            )
+            lia.information(statusMsg)
+        end
+        ```
+]]
 function lia.information(msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logInformation") .. "] ")
     MsgC(Color(83, 143, 239), tostring(msg), "\n")
 end
 
+--[[
+    Purpose: Outputs bootstrap progress messages to the console with Lilia branding and section-specific formatting
+    When Called: During framework initialization to report progress of different bootstrap phases
+    Parameters:
+        - section (string): The bootstrap section name (e.g., "Database", "Modules", "HotReload")
+        - msg (string): The bootstrap message to display
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Display a basic bootstrap message
+        lia.bootstrap("Database", "Connection established")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Display bootstrap progress with context
+        local function reportModuleLoading(moduleName, status)
+            lia.bootstrap("Modules", "Loading " .. moduleName .. ": " .. status)
+        end
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Display detailed bootstrap progress with timing and statistics
+        local function reportBootstrapProgress(section, current, total, startTime)
+            local elapsed = CurTime() - startTime
+            local progress = math.floor((current / total) * 100)
+            local msg = string.format(
+                "Progress: %d/%d (%d%%) - Elapsed: %.2fs",
+                current,
+                total,
+                progress,
+                elapsed
+            )
+            lia.bootstrap(section, msg)
+        end
+        ```
+]]
 function lia.bootstrap(section, msg)
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
     MsgC(Color(255, 255, 255), tostring(msg), "\n")
 end
 
+--[[
+    Purpose: Sends formatted messages to Discord webhook with embed support and automatic fallback handling
+    When Called: When logging important events or sending notifications to Discord channels
+    Parameters:
+        - embed (table): Discord embed object containing message data (title, description, color, fields, etc.)
+    Returns: None
+    Realm: Server
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Send a basic Discord message
+        lia.relaydiscordMessage({
+            title = "Server Started",
+            description = "The server has been initialized successfully"
+        })
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Send a detailed Discord message with custom formatting
+        local function notifyPlayerJoin(player)
+            lia.relaydiscordMessage({
+                title = "Player Joined",
+                description = player:Name() .. " has joined the server",
+                color = 0x00ff00,
+                fields = {
+                    {name = "Steam ID", value = player:SteamID(), inline = true},
+                    {name = "IP Address", value = player:IPAddress(), inline = true}
+                }
+            })
+        end
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Send complex Discord message with error handling and custom logic
+        local function sendServerStatus()
+            local players = player.GetAll()
+            local embed = {
+                title = "Server Status Report",
+                description = "Current server statistics and health",
+                color = 0x0099ff,
+                timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+                fields = {
+                    {name = "Players Online", value = #players, inline = true},
+                    {name = "Server Uptime", value = string.format("%.1f hours", CurTime() / 3600), inline = true},
+                    {name = "Map", value = game.GetMap(), inline = true}
+                },
+                footer = {text = "Lilia Framework Status Bot"}
+            }
+
+            if #players > 0 then
+                local playerList = {}
+                for _, ply in ipairs(players) do
+                    table.insert(playerList, ply:Name())
+                end
+                embed.fields[#embed.fields + 1] = {
+                    name = "Player List",
+                    value = table.concat(playerList, "\n"),
+                    inline = false
+                }
+            end
+
+            lia.relaydiscordMessage(embed)
+        end
+        ```
+]]
 function lia.relaydiscordMessage(embed)
     if not lia.discordWebhook or not istable(embed) then return end
     local ForceHTTPMode = not util.IsBinaryModuleInstalled("chttp")
@@ -575,6 +980,52 @@ for _, files in ipairs(FilesToLoad) do
     lia.loader.include(files.path, files.realm)
 end
 
+--[[
+    Purpose: Registers and includes all entity types (entities, weapons, tools, effects) from a specified path
+    When Called: During framework initialization to register all custom entities, weapons, and tools
+    Parameters:
+        - path (string): The base path containing entity folders (e.g., "lilia/gamemode/entities")
+    Returns: None
+    Realm: Shared
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Include entities from the default gamemode path
+        lia.loader.includeEntities("lilia/gamemode/entities")
+        ```
+
+        Medium Complexity Example:
+        ```lua
+        -- Medium: Include entities from multiple paths with error handling
+        local entityPaths = {
+            "lilia/gamemode/entities",
+            "custom/entities"
+        }
+        for _, path in ipairs(entityPaths) do
+            if file.Exists(path, "LUA") then
+                lia.loader.includeEntities(path)
+            else
+                lia.warning("Entity path not found: " .. path)
+            end
+        end
+        ```
+
+        High Complexity Example:
+        ```lua
+        -- High: Include entities with custom registration and validation
+        local function safeEntityInclusion(path)
+            local success, err = pcall(function()
+                lia.loader.includeEntities(path)
+            end)
+            if not success then
+                lia.error("Failed to include entities from " .. path .. ": " .. tostring(err))
+            else
+                lia.information("Successfully loaded entities from " .. path)
+            end
+        end
+        safeEntityInclusion("lilia/gamemode/entities")
+        ```
+]]
 function lia.loader.includeEntities(path)
     local function IncludeFiles(path2)
         if file.Exists(path2 .. "init.lua", "LUA") then lia.loader.include(path2 .. "init.lua", "server") end

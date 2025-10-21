@@ -133,7 +133,7 @@ function PANEL:AddOption(text, func, icon, optData)
 
         if option.Func then
             option.Func()
-            surface.PlaySound("button_click.wav")
+            lia.websound.playButtonSound()
         end
 
         timer.Simple(0.01, function()

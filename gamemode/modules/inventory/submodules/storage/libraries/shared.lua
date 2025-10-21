@@ -30,8 +30,8 @@ function MODULE:InitializeStorage(entity)
             end
         end
 
-        local def = lia.inventory.storage[key]
-        if not def and entity:IsVehicle() then def = lia.inventory.storage["vehicle"] end
+        local def = lia.inventory.storage and lia.inventory.storage[key]
+        if not def and entity:IsVehicle() and lia.inventory.storage then def = lia.inventory.storage["vehicle"] end
         if not def then
             def = {
                 name = L("storageContainer"),

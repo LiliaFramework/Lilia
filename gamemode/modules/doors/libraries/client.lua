@@ -69,6 +69,7 @@
 end
 
 function MODULE:DrawEntityInfo(entity, alpha)
+    -- Don't show door UI if admin stick is out
     local client = LocalPlayer()
     if IsValid(client) and client:GetActiveWeapon():GetClass() == "adminstick" then return end
     if entity:isDoor() then
@@ -81,12 +82,32 @@ function MODULE:DrawEntityInfo(entity, alpha)
 
             local doorInfo = {}
             hook.Run("GetDoorInfo", entity, doorData, doorInfo)
+            -- Allow filtering/modifying door information before display
+            -- Hook: FilterDoorInfo(entity, doorData, doorInfo)
+            -- Parameters:
+            --   entity: The door entity
+            --   doorData: The door's configuration data
+            --   doorInfo: Table of door information entries (can be modified)
+            -- Each entry in doorInfo has: {text = "display text", color = Color(255,255,255)}
+            -- You can remove entries by setting them to nil or remove them from the table
+            -- Example: Remove price information for non-admins
+            -- hook.Add("FilterDoorInfo", "HidePriceForNonAdmins", function(entity, doorData, doorInfo)
+            --     if not LocalPlayer():isStaffOnDuty() then
+            --         for i = #doorInfo, 1, -1 do
+            --             if doorInfo[i].text and doorInfo[i].text:find("Price:") then
+            --                 table.remove(doorInfo, i)
+            --             end
+            --         end
+            --     end
+            -- end)
             hook.Run("FilterDoorInfo", entity, doorData, doorInfo)
+            -- Collect all door info text into a single array
             local infoTexts = {}
             for _, info in ipairs(doorInfo) do
                 if info.text and info.text ~= "" then table.insert(infoTexts, info.text) end
             end
 
+            -- Draw all door info in a single box if there's any info
             if #infoTexts > 0 then self:DrawDoorInfoBox(entity, infoTexts, alpha) end
         end
     end
@@ -94,6 +115,7 @@ end
 
 function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
     if not (IsValid(entity) and infoTexts and #infoTexts > 0) then return end
+    -- Use the same distance and fade logic as drawEntText
     local distSqr = EyePos():DistToSqr(entity:GetPos())
     local maxDist = 380
     if distSqr > maxDist * maxDist then return end
@@ -137,9 +159,12 @@ function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
     end
 
     if fade <= 0 then return end
+    -- Apply fade to colors
     local fadeAlpha = math.Clamp(fade, 0, 1)
+    -- Draw at bottom center of screen
     local screenX = ScrW() / 2
     local screenY = ScrH() - 50
+    -- Draw the door info box using drawBoxWithText
     lia.derma.drawBoxWithText(infoTexts, screenX, screenY, {
         font = "LiliaFont.18",
         textColor = Color(255, 255, 255, math.floor(255 * fadeAlpha)),

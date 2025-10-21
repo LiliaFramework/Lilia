@@ -591,7 +591,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
         net.Start("liaSpawnMenuSpawnItem")
         net.WriteString(data.id)
         net.SendToServer()
-        surface.PlaySound("outlands-rp/ui/ui_return.wav")
+        lia.websound.playButtonSound("outlands-rp/ui/ui_return.wav")
     end
 
     icon.OpenMenu = function()
@@ -2949,7 +2949,7 @@ function MODULE:TicketFrame(requester, message, claimed)
             txt:GotoTextEnd()
             timer.Remove("ticketsystem-" .. requester:SteamID())
             timer.Create("ticketsystem-" .. requester:SteamID(), 60, 1, function() if IsValid(v) then v:Remove() end end)
-            surface.PlaySound("ui/hint.wav")
+            lia.websound.playButtonSound("ui/hint.wav")
             return
         end
     end

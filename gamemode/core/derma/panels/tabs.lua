@@ -99,17 +99,21 @@ function PANEL:ScrollTabs(direction)
     local max_scroll = math.max(0, #self.tabs - self.max_visible_tabs)
     self.scroll_offset = math.Clamp(self.scroll_offset + direction, 0, max_scroll)
     if direction < 0 and self.scroll_offset == 0 then
-        surface.PlaySound("buttons/button10.wav")
+        lia.websound.playButtonSound("buttons/button10.wav")
     elseif direction > 0 and self.scroll_offset >= max_scroll then
-        surface.PlaySound("buttons/button10.wav")
+        lia.websound.playButtonSound("buttons/button10.wav")
     else
-        surface.PlaySound("buttons/button14.wav")
+        lia.websound.playButtonSound("buttons/button14.wav")
     end
 
     self:UpdateTabVisibility()
 end
 
 function PANEL:UpdateTabVisibility()
+    self:InvalidateLayout()
+end
+
+function PANEL:OnSizeChanged()
     self:InvalidateLayout()
 end
 
@@ -145,7 +149,7 @@ function PANEL:Rebuild()
                 self.tabs[self.active_id].pan:SetVisible(false)
                 tab.pan:SetVisible(true)
                 self.active_id = id
-                surface.PlaySound("button_click.wav")
+                lia.websound.playButtonSound()
                 self:UpdateActiveTabVisual()
             end
 
@@ -192,63 +196,64 @@ function PANEL:Rebuild()
         end
     end
 
-    function PANEL:PerformLayout()
-        if self.tab_style == "modern" then
-            self.panel_tabs:Dock(TOP)
-            self.panel_tabs:DockMargin(0, 0, 0, 4)
-            self.panel_tabs:SetTall(self.tab_height)
-            if #self.tabs > 0 then
-                local navButtonWidth = (self.needs_navigation and self.nav_button_size * 2) or 0
-                local availableWidth = self:GetWide() - navButtonWidth
-                local visibleTabs = self.needs_navigation and self.max_visible_tabs or #self.tabs
-                visibleTabs = math.min(visibleTabs, math.max(#self.tabs - self.scroll_offset, 0))
-                if visibleTabs > 0 then
-                    local totalMargins = self._baseMargin * (visibleTabs - 1)
-                    local widthPool = math.max(availableWidth - totalMargins, 0)
-                    local widthPerTab = math.floor(widthPool / visibleTabs)
-                    local remainder = widthPool % visibleTabs
-                    local children = self.panel_tabs:GetChildren()
-                    local tab_children = {}
-                    for _, child in ipairs(children) do
-                        if child ~= self.btn_left and child ~= self.btn_right then table.insert(tab_children, child) end
-                    end
+    self.content:Dock(FILL)
+    self:UpdateTabVisibility()
+    self:InvalidateLayout()
+end
 
-                    local startIndex = self.scroll_offset + 1
-                    local endIndex = self.scroll_offset + visibleTabs
-                    for i, child in ipairs(tab_children) do
-                        if i >= startIndex and i <= endIndex then
-                            child:SetVisible(true)
-                            local slotIndex = i - self.scroll_offset
-                            local finalWidth = widthPerTab + ((slotIndex <= remainder) and 1 or 0)
-                            child:SetWide(finalWidth)
-                            child:DockMargin(0, 0, (slotIndex < visibleTabs) and self._baseMargin or 0, 0)
-                        else
-                            child:SetVisible(false)
-                        end
+function PANEL:PerformLayout()
+    if self.tab_style == "modern" then
+        self.panel_tabs:Dock(TOP)
+        self.panel_tabs:DockMargin(0, 0, 0, 4)
+        self.panel_tabs:SetTall(self.tab_height)
+        if #self.tabs > 0 then
+            local navButtonWidth = (self.needs_navigation and self.nav_button_size * 2) or 0
+            local availableWidth = math.max(self:GetWide() - navButtonWidth, 0)
+            local visibleTabs = self.needs_navigation and self.max_visible_tabs or #self.tabs
+            visibleTabs = math.min(visibleTabs, math.max(#self.tabs - self.scroll_offset, 0))
+            if visibleTabs > 0 then
+                local totalMargins = self._baseMargin * (visibleTabs - 1)
+                local widthPool = math.max(availableWidth - totalMargins, 0)
+                local widthPerTab = math.floor(widthPool / visibleTabs)
+                local remainder = widthPool % visibleTabs
+                local children = self.panel_tabs:GetChildren()
+                local tab_children = {}
+                for _, child in ipairs(children) do
+                    if child ~= self.btn_left and child ~= self.btn_right then table.insert(tab_children, child) end
+                end
+
+                local startIndex = self.scroll_offset + 1
+                local endIndex = self.scroll_offset + visibleTabs
+                for i, child in ipairs(tab_children) do
+                    if i >= startIndex and i <= endIndex then
+                        child:SetVisible(true)
+                        local slotIndex = i - self.scroll_offset
+                        local finalWidth = math.max(widthPerTab + ((slotIndex <= remainder) and 1 or 0), 50)
+                        child:SetWide(finalWidth)
+                        child:DockMargin(0, 0, (slotIndex < visibleTabs) and self._baseMargin or 0, 0)
+                    else
+                        child:SetVisible(false)
                     end
                 end
             end
-        else
-            self.panel_tabs:Dock(LEFT)
-            self.panel_tabs:DockMargin(0, 0, 4, 0)
-            local maxWidth = 0
-            for _, classicTab in ipairs(self.tabs) do
-                surface.SetFont("LiliaFont.18")
-                local textW = surface.GetTextSize(classicTab.name)
-                local iconW = classicTab.icon and 16 or 0
-                local iconTextGap = classicTab.icon and 8 or 0
-                local padding = 16
-                local minWidth = 120
-                local btnWidth = math.max(minWidth, padding + iconW + iconTextGap + textW + padding)
-                maxWidth = math.max(maxWidth, btnWidth)
-            end
-
-            self.panel_tabs:SetWide(math.max(190, maxWidth))
         end
-    end
+    else
+        self.panel_tabs:Dock(LEFT)
+        self.panel_tabs:DockMargin(0, 0, 4, 0)
+        local maxWidth = 0
+        for _, classicTab in ipairs(self.tabs) do
+            surface.SetFont("LiliaFont.18")
+            local textW = surface.GetTextSize(classicTab.name)
+            local iconW = classicTab.icon and 16 or 0
+            local iconTextGap = classicTab.icon and 8 or 0
+            local padding = 16
+            local minWidth = 120
+            local btnWidth = math.max(minWidth, padding + iconW + iconTextGap + textW + padding)
+            maxWidth = math.max(maxWidth, btnWidth)
+        end
 
-    self.content:Dock(FILL)
-    self:UpdateTabVisibility()
+        self.panel_tabs:SetWide(math.max(190, maxWidth))
+    end
 end
 
 function PANEL:UpdateActiveTabVisual()

@@ -43,7 +43,7 @@ function PANEL:Init()
         self.isEditing = true
         self.value = not self.value
         self:OnChange(self.value)
-        surface.PlaySound("button_click.wav")
+        lia.websound.playButtonSound()
         self.isEditing = false
     end
 
@@ -160,6 +160,7 @@ function SIMPLE_CHECKBOX_PANEL:GetChecked()
 end
 
 function SIMPLE_CHECKBOX_PANEL:DoClick()
+    lia.websound.playButtonSound()
     self:SetChecked(not self.checked)
 end
 

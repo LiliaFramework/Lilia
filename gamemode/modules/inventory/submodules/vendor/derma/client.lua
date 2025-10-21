@@ -17,6 +17,7 @@ function PANEL:Init()
     self:MakePopup()
     self:SetAlpha(0)
     self:AlphaTo(255, 0.2, 0)
+    -- Allow request dialogs to appear above this panel
     self:SetZPos(50)
     self.buttons = self:Add("DPanel")
     self.buttons:DockMargin(0, 32, 0, 0)
@@ -108,7 +109,10 @@ function PANEL:Init()
         btn:SetText(L("vendorEditorButton"))
         btn:SetFont("liaMediumFont")
         btn:SetTextColor(lia.color.theme.text or color_white)
-        btn.DoClick = function() vgui.Create("liaVendorEditor"):SetZPos(99) end
+        btn.DoClick = function()
+            btn.BaseClass.DoClick(btn)
+            vgui.Create("liaVendorEditor"):SetZPos(99)
+        end
     end
 
     local leave = self:Add("liaSmallButton")
@@ -117,7 +121,10 @@ function PANEL:Init()
     leave:SetText(L("leave"))
     leave:SetFont("liaMediumFont")
     leave:SetTextColor(lia.color.theme.text or color_white)
-    leave.DoClick = function() self:Remove() end
+    leave.DoClick = function()
+        leave.BaseClass.DoClick(leave)
+        self:Remove()
+    end
 end
 
 function PANEL:createCategoryDropdown()

@@ -1,5 +1,60 @@
-﻿lia.command = lia.command or {}
+﻿--[[
+    Commands Library
+
+    The commands library provides comprehensive functionality for managing and executing commands
+    in the Lilia framework. It handles command registration, argument parsing, access control,
+    privilege management, and command execution across both server and client sides. The library
+    supports complex argument types including players, booleans, strings, and tables, with
+    automatic syntax generation and validation. It integrates with the administrator system
+    for privilege-based access control and provides user interface elements for command
+    discovery and argument prompting. The library ensures secure command execution with
+    proper permission checks and logging capabilities.
+]]
+lia.command = lia.command or {}
 lia.command.list = lia.command.list or {}
+--[[
+    Purpose: Generates a human-readable syntax string from command argument definitions
+    When Called: Automatically called by lia.command.add when registering commands
+    Parameters: args (table) - Array of argument definition tables with type, name, and optional properties
+    Returns: string - Formatted syntax string showing argument types and names
+    Realm: Shared
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Generate syntax for basic arguments
+    local args = {
+        {type = "string", name = "target"},
+        {type = "player", name = "player"}
+    }
+    local syntax = lia.command.buildSyntaxFromArguments(args)
+    -- Returns: "[string target] [player player]"
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Generate syntax with optional arguments
+    local args = {
+        {type = "string", name = "message"},
+        {type = "bool", name = "silent", optional = true}
+    }
+    local syntax = lia.command.buildSyntaxFromArguments(args)
+    -- Returns: "[string message] [bool silent optional]"
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Generate syntax for complex command with multiple argument types
+    local args = {
+        {type = "player", name = "target"},
+        {type = "string", name = "reason"},
+        {type = "number", name = "duration", optional = true},
+        {type = "bool", name = "notify", optional = true}
+    }
+    local syntax = lia.command.buildSyntaxFromArguments(args)
+    -- Returns: "[player target] [string reason] [number duration optional] [bool notify optional]"
+    ```
+]]
 function lia.command.buildSyntaxFromArguments(args)
     local tokens = {}
     for _, arg in ipairs(args) do
@@ -21,6 +76,68 @@ function lia.command.buildSyntaxFromArguments(args)
     return table.concat(tokens, " ")
 end
 
+--[[
+    Purpose: Registers a new command with the command system, handling privileges, aliases, and access control
+    When Called: When registering commands during gamemode initialization or module loading
+    Parameters: command (string) - The command name, data (table) - Command configuration including onRun, arguments, privilege, etc.
+    Returns: void
+    Realm: Shared
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Register a basic command
+    lia.command.add("hello", {
+        onRun = function(client, arguments)
+            client:notify("Hello, " .. client:Name() .. "!")
+        end,
+        desc = "Say hello"
+    })
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Register command with arguments and admin privilege
+    lia.command.add("kick", {
+        arguments = {
+            {type = "player", name = "target"},
+            {type = "string", name = "reason", optional = true}
+        },
+        onRun = function(client, arguments)
+            local target = arguments[1]
+            local reason = arguments[2] or "No reason provided"
+            target:Kick(reason)
+            client:notify("Kicked " .. target:Name())
+        end,
+        adminOnly = true,
+        desc = "Kick a player from the server"
+    })
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Register complex command with aliases, custom access check, and privilege
+    lia.command.add("ban", {
+        arguments = {
+            {type = "player", name = "target"},
+            {type = "string", name = "reason"},
+            {type = "number", name = "duration", optional = true}
+        },
+        alias = {"tempban", "tban"},
+        onRun = function(client, arguments)
+            local target = arguments[1]
+            local reason = arguments[2]
+            local duration = arguments[3] or 0
+            -- Ban logic here
+        end,
+        onCheckAccess = function(client, command, data)
+            return client:IsSuperAdmin() or client:hasPrivilege("moderation")
+        end,
+        privilege = "moderation",
+        desc = "Ban a player temporarily or permanently"
+    })
+    ```
+]]
 function lia.command.add(command, data)
     data.arguments = data.arguments or {}
     data.syntax = lia.command.buildSyntaxFromArguments(data.arguments)
@@ -122,6 +239,51 @@ function lia.command.add(command, data)
     hook.Run("CommandAdded", command, data)
 end
 
+--[[
+    Purpose: Checks if a client has access to execute a specific command based on privileges, faction, and class permissions
+    When Called: Before command execution to verify player permissions
+    Parameters: client (Player) - The player attempting to use the command, command (string) - Command name, data (table, optional) - Command data table
+    Returns: boolean, string - Access granted status and privilege name
+    Realm: Shared
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Check basic command access
+    local hasAccess, privilege = lia.command.hasAccess(client, "hello")
+    if hasAccess then
+        client:notify("You can use the hello command!")
+    end
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Check admin command access with custom privilege
+    local hasAccess, privilege = lia.command.hasAccess(client, "kick")
+    if not hasAccess then
+        client:notifyError("You need " .. privilege .. " to use this command!")
+        return
+    end
+    -- Execute kick command
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Check access with faction/class specific permissions
+    local hasAccess, privilege = lia.command.hasAccess(client, "arrest")
+    if hasAccess then
+        local char = client:getChar()
+        local faction = lia.faction.indices[char:getFaction()]
+        if faction and faction.commands and faction.commands["arrest"] then
+            client:notify("Faction command access granted!")
+        elseif client:hasPrivilege(privilege) then
+            client:notify("Privilege-based access granted!")
+        end
+    else
+        client:notifyError("Access denied: " .. privilege)
+    end
+    ```
+]]
 function lia.command.hasAccess(client, command, data)
     if not data then data = lia.command.list[command] end
     if not data then return false, "unknown" end
@@ -157,6 +319,41 @@ function lia.command.hasAccess(client, command, data)
     return hasAccess, privilegeName
 end
 
+--[[
+    Purpose: Parses command text and extracts individual arguments, handling quoted strings and spaces
+    When Called: When parsing command input to separate arguments for command execution
+    Parameters: text (string) - The command text to parse (excluding the command name)
+    Returns: table - Array of extracted argument strings
+    Realm: Shared
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Extract basic arguments
+    local args = lia.command.extractArgs("player1 Hello World")
+    -- Returns: {"player1", "Hello", "World"}
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Extract arguments with quoted strings
+    local args = lia.command.extractArgs('player1 "Hello World" true')
+    -- Returns: {"player1", "Hello World", "true"}
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Extract complex arguments with mixed quotes and spaces
+    local args = lia.command.extractArgs('"John Doe" "This is a long message with spaces" 123 true')
+    -- Returns: {"John Doe", "This is a long message with spaces", "123", "true"}
+
+    -- Process arguments for command
+    local target = args[1]
+    local message = args[2]
+    local duration = tonumber(args[3])
+    local silent = args[4] == "true"
+    ```
+]]
 function lia.command.extractArgs(text)
     local skip = 0
     local arguments = {}
@@ -216,6 +413,45 @@ local function isPlaceholder(arg)
 end
 
 if SERVER then
+    --[[
+    Purpose: Executes a registered command for a client with proper error handling and result processing
+    When Called: When a command needs to be executed after parsing and access validation
+    Parameters: client (Player) - The player executing the command, command (string) - Command name, arguments (table) - Command arguments
+    Returns: void
+    Realm: Server
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Execute a basic command
+    lia.command.run(client, "hello", {})
+    -- Executes the hello command for the client
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Execute command with arguments
+    local args = {"player1", "Hello World"}
+    lia.command.run(client, "pm", args)
+    -- Executes PM command with target and message
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Execute command with error handling and logging
+    local command = "kick"
+    local args = {target:Name(), "Rule violation"}
+
+    -- Check access first
+    local hasAccess = lia.command.hasAccess(client, command)
+    if hasAccess then
+        lia.command.run(client, command, args)
+        lia.log.add(client, "command", "/" .. command .. " " .. table.concat(args, " "))
+    else
+        client:notifyError("Access denied!")
+    end
+    ```
+]]
     function lia.command.run(client, command, arguments)
         local commandTbl = lia.command.list[command:lower()]
         if commandTbl then
@@ -234,6 +470,46 @@ if SERVER then
         end
     end
 
+    --[[
+    Purpose: Parses command text input, validates arguments, and executes commands with proper error handling
+    When Called: When processing player chat input or console commands that start with "/"
+    Parameters: client (Player) - The player executing the command, text (string) - Full command text, realCommand (string, optional) - Pre-parsed command name, arguments (table, optional) - Pre-parsed arguments
+    Returns: boolean - True if command was processed, false if not a command
+    Realm: Server
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Parse basic command from chat
+    local success = lia.command.parse(client, "/hello")
+    if success then
+        -- Command was processed
+    end
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Parse command with arguments
+    local success = lia.command.parse(client, "/kick player1 Rule violation")
+    if success then
+        -- Kick command was executed
+    end
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Parse command with argument validation and prompting
+    local text = "/pm"
+    local success = lia.command.parse(client, text)
+    if success then
+        -- If arguments are missing, client will be prompted
+        -- If arguments are valid, PM command will execute
+    else
+        -- Not a command, treat as regular chat
+        lia.chatbox.add(client, text)
+    end
+    ```
+]]
     function lia.command.parse(client, text, realCommand, arguments)
         if realCommand or utf8.sub(text, 1, 1) == "/" then
             local match = realCommand or text:lower():match("/" .. "([_%w]+)")
@@ -288,6 +564,39 @@ if SERVER then
         return false
     end
 else
+    --[[
+    Purpose: Creates a GUI prompt for users to input missing command arguments with validation
+    When Called: When a command is executed with missing required arguments
+    Parameters: cmdKey (string) - Command name, missing (table) - Array of missing argument names, prefix (table) - Already provided arguments
+    Returns: void
+    Realm: Client
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Open prompt for single missing argument
+    lia.command.openArgumentPrompt("pm", {"target"}, {})
+    -- Shows GUI to select target player for PM command
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Open prompt with partial arguments
+    lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
+    -- Shows GUI to enter reason, player1 already provided
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Open prompt for complex command with multiple argument types
+    lia.command.openArgumentPrompt("ban", {"reason", "duration"}, {"player1"})
+    -- Shows GUI with:
+    -- - Reason text field
+    -- - Duration number field
+    -- - Submit button (enabled when all required fields filled)
+    -- - Cancel button
+    ```
+]]
     function lia.command.openArgumentPrompt(cmdKey, missing, prefix)
         local command = lia.command.list[cmdKey]
         if not command then return end
@@ -505,6 +814,38 @@ else
         end
     end
 
+    --[[
+    Purpose: Sends a command execution request from client to server via network
+    When Called: When client needs to execute a command on the server
+    Parameters: command (string) - Command name, ... (vararg) - Command arguments
+    Returns: void
+    Realm: Client
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Send basic command
+    lia.command.send("hello")
+    -- Sends hello command to server
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Send command with arguments
+    lia.command.send("pm", "player1", "Hello there!")
+    -- Sends PM command with target and message
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Send complex command with multiple arguments
+    local target = "player1"
+    local reason = "Rule violation"
+    local duration = 300
+    lia.command.send("ban", target, reason, duration)
+    -- Sends ban command with all parameters
+    ```
+]]
     function lia.command.send(command, ...)
         net.Start("liaCommandData")
         net.WriteString(command)
@@ -571,6 +912,52 @@ hook.Add("CreateInformationButtons", "liaInformationCommandsUnified", function(p
     })
 end)
 
+--[[
+    Purpose: Alias for lia.util.findPlayer - finds a player by name, SteamID, or partial match
+    When Called: When commands need to resolve player names to player entities
+    Parameters: client (Player) - The player executing the command, name (string) - Player name or identifier to find
+    Returns: Player or nil - Found player entity or nil if not found
+    Realm: Shared
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Find player by exact name
+    local target = lia.command.findPlayer(client, "John")
+    if IsValid(target) then
+        client:notify("Found player: " .. target:Name())
+    end
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Find player with error handling
+    local target = lia.command.findPlayer(client, "John")
+    if not IsValid(target) then
+        client:notifyError("Player not found!")
+        return
+    end
+    -- Use target player
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Find player with multiple fallback methods
+    local identifier = arguments[1] -- Could be name, SteamID, or partial match
+    local target = lia.command.findPlayer(client, identifier)
+
+    if not IsValid(target) then
+        client:notifyError("Player '" .. identifier .. "' not found!")
+        return
+    elseif target == client then
+        client:notifyError("You cannot target yourself!")
+        return
+    end
+
+    -- Execute command on target
+    target:Kick("Banned by " .. client:Name())
+    ```
+]]
 lia.command.findPlayer = lia.util.findPlayer
 if SERVER then
     concommand.Add("kickbots", function()
@@ -889,40 +1276,120 @@ else
     end)
 
     concommand.Add("lia_saved_sounds", function()
-        local baseDir = "lilia/sounds/"
-        local files = file.Find(baseDir .. "*", "DATA")
-        if not files or #files == 0 then return end
+        local baseDir = "lilia/websounds/"
+        local files = file.Find(baseDir .. "**", "DATA")
+        local soundFiles = {}
+        if files then
+            for _, fileName in ipairs(files) do
+                if string.EndsWith(fileName, ".mp3") or string.EndsWith(fileName, ".wav") or string.EndsWith(fileName, ".ogg") then table.insert(soundFiles, fileName) end
+            end
+        end
+
+        if #soundFiles == 0 then
+            LocalPlayer():ChatPrint("No saved sounds found!")
+            return
+        end
+
         local f = vgui.Create("liaFrame")
         f:SetTitle(L("savedSounds"))
-        f:SetSize(500, 400)
+        f:SetSize(600, 500)
         f:Center()
         f:MakePopup()
-        local list = vgui.Create("liaDListView", f)
-        list:Dock(FILL)
-        list:DockMargin(5, 5, 5, 5)
-        list:AddColumn(L("soundName"))
-        for _, fileName in ipairs(files) do
-            if string.EndsWith(fileName, ".dat") then list:AddLine(string.StripExtension(fileName)) end
+        local scroll = vgui.Create("liaScrollPanel", f)
+        scroll:Dock(FILL)
+        scroll:DockMargin(5, 5, 5, 5)
+        for _, fileName in ipairs(soundFiles) do
+            local soundName = string.StripExtension(fileName)
+            local soundPath = baseDir .. fileName
+            local panel = vgui.Create("DPanel", scroll)
+            panel:Dock(TOP)
+            panel:SetTall(40)
+            panel:DockMargin(2, 2, 2, 2)
+            panel.Paint = function(_, w, h)
+                surface.SetDrawColor(60, 60, 60, 200)
+                surface.DrawRect(0, 0, w, h)
+                surface.SetDrawColor(100, 100, 100, 100)
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+
+            local nameLabel = vgui.Create("DLabel", panel)
+            nameLabel:SetText(soundName)
+            nameLabel:SetFont("liaSmallFont")
+            nameLabel:SetTextColor(Color(255, 255, 255))
+            nameLabel:Dock(LEFT)
+            nameLabel:DockMargin(10, 0, 0, 0)
+            nameLabel:SetWide(300)
+            local playButton = vgui.Create("liaButton", panel)
+            playButton:SetText("▶ Play")
+            playButton:SetWide(80)
+            playButton:Dock(RIGHT)
+            playButton:DockMargin(5, 5, 5, 5)
+            -- Override the button's click behavior to prevent the default sound
+            playButton.DoClick = function()
+                -- Don't call the original DoClick to avoid button sound interference
+                if file.Exists(soundPath, "DATA") then
+                    local fullPath = "data/" .. soundPath
+                    print("[DEBUG] Attempting to play sound: " .. fullPath)
+                    -- Add a small delay to ensure the sound system is ready
+                    timer.Simple(0.1, function()
+                        sound.PlayFile(fullPath, "", function(channel, errorCode, errorString)
+                            print("[DEBUG] Sound callback - channel valid:", IsValid(channel), "errorCode:", errorCode, "errorString:", errorString)
+                            if IsValid(channel) then
+                                LocalPlayer():ChatPrint("Playing: " .. soundName)
+                            else
+                                LocalPlayer():ChatPrint("Failed to play: " .. soundName .. " (" .. (errorString or "unknown error") .. ")")
+                            end
+                        end)
+                    end)
+                else
+                    LocalPlayer():ChatPrint("Sound file not found: " .. soundName)
+                end
+            end
+
+            local stopButton = vgui.Create("liaButton", panel)
+            stopButton:SetText("⏹ Stop")
+            stopButton:SetWide(80)
+            stopButton:Dock(RIGHT)
+            stopButton:DockMargin(5, 5, 5, 5)
+            -- Override the button's click behavior to prevent the default sound
+            stopButton.DoClick = function()
+                -- Don't call the original DoClick to avoid button sound interference
+                timer.Simple(0.1, function()
+                    sound.PlayFile("", "", function() end)
+                    LocalPlayer():ChatPrint("Stopped all sounds")
+                end)
+            end
         end
     end)
 
     concommand.Add("lia_wipe_sounds", function()
-        local baseDir = "lilia/sounds/"
-        local files = file.Find(baseDir .. "*", "DATA")
+        local baseDir = "lilia/websounds/"
+        local files = file.Find(baseDir .. "**", "DATA")
+        local deletedCount = 0
         for _, fn in ipairs(files) do
-            file.Delete(baseDir .. fn)
+            if string.EndsWith(fn, ".mp3") or string.EndsWith(fn, ".wav") or string.EndsWith(fn, ".ogg") or string.EndsWith(fn, ".dat") then
+                file.Delete(baseDir .. fn)
+                deletedCount = deletedCount + 1
+            end
         end
 
-        LocalPlayer():ChatPrint(L("soundsWiped"))
+        LocalPlayer():ChatPrint(L("soundsWiped") .. " (" .. deletedCount .. " files)")
     end)
 
     concommand.Add("lia_validate_sounds", function()
-        local baseDir = "lilia/sounds/"
+        local baseDir = "lilia/websounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         local validCount = 0
         local invalidCount = 0
         for _, fileName in ipairs(files) do
-            if string.EndsWith(fileName, ".dat") then
+            if string.EndsWith(fileName, ".mp3") or string.EndsWith(fileName, ".wav") or string.EndsWith(fileName, ".ogg") then
+                local data = file.Read(baseDir .. fileName, "DATA")
+                if data and #data > 0 then
+                    validCount = validCount + 1
+                else
+                    invalidCount = invalidCount + 1
+                end
+            elseif string.EndsWith(fileName, ".dat") then
                 local data = file.Read(baseDir .. fileName, "DATA")
                 if data then
                     local success, soundData = pcall(pon.decode, data)
@@ -939,11 +1406,17 @@ else
     end)
 
     concommand.Add("lia_cleanup_sounds", function()
-        local baseDir = "lilia/sounds/"
+        local baseDir = "lilia/websounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         local removedCount = 0
         for _, fileName in ipairs(files) do
-            if string.EndsWith(fileName, ".dat") then
+            if string.EndsWith(fileName, ".mp3") or string.EndsWith(fileName, ".wav") or string.EndsWith(fileName, ".ogg") then
+                local data = file.Read(baseDir .. fileName, "DATA")
+                if not data or #data == 0 then
+                    file.Delete(baseDir .. fileName)
+                    removedCount = removedCount + 1
+                end
+            elseif string.EndsWith(fileName, ".dat") then
                 local data = file.Read(baseDir .. fileName, "DATA")
                 if not data then
                     file.Delete(baseDir .. fileName)
@@ -962,12 +1435,12 @@ else
     end)
 
     concommand.Add("lia_list_sounds", function()
-        local baseDir = "lilia/sounds/"
+        local baseDir = "lilia/websounds/"
         local files = file.Find(baseDir .. "**", "DATA")
         if #files == 0 then return end
         LocalPlayer():ChatPrint(L("savedSounds"))
         for _, fileName in ipairs(files) do
-            if string.EndsWith(fileName, ".dat") then LocalPlayer():ChatPrint(L("soundFileList", string.StripExtension(fileName))) end
+            if string.EndsWith(fileName, ".mp3") or string.EndsWith(fileName, ".wav") or string.EndsWith(fileName, ".ogg") or string.EndsWith(fileName, ".dat") then LocalPlayer():ChatPrint(L("soundFileList", string.StripExtension(fileName))) end
         end
     end)
 
@@ -1005,25 +1478,81 @@ else
     end
 
     concommand.Add("lia_saved_images", function()
-        local baseDir = "lilia/images/"
+        local baseDir = "lilia/webimages/"
         local files = findImagesRecursive(baseDir)
-        if not files or #files == 0 then return end
+        local imageFiles = {}
+        if files then
+            for _, fileName in ipairs(files) do
+                if string.EndsWith(fileName, ".png") or string.EndsWith(fileName, ".jpg") or string.EndsWith(fileName, ".jpeg") then table.insert(imageFiles, fileName) end
+            end
+        end
+
+        if #imageFiles == 0 then
+            LocalPlayer():ChatPrint("No saved images found!")
+            return
+        end
+
         local f = vgui.Create("liaFrame")
         f:SetTitle(L("savedImages"))
-        f:SetSize(500, 400)
+        f:SetSize(700, 600)
         f:Center()
         f:MakePopup()
-        local list = vgui.Create("liaDListView", f)
-        list:Dock(FILL)
-        list:DockMargin(5, 5, 5, 5)
-        list:AddColumn(L("imageName"))
-        for _, fileName in ipairs(files) do
-            if string.EndsWith(fileName, ".png") or string.EndsWith(fileName, ".jpg") or string.EndsWith(fileName, ".jpeg") then list:AddLine(string.StripExtension(fileName)) end
+        local scroll = vgui.Create("liaScrollPanel", f)
+        scroll:Dock(FILL)
+        scroll:DockMargin(5, 5, 5, 5)
+        for _, fileName in ipairs(imageFiles) do
+            local imageName = string.StripExtension(fileName)
+            local imagePath = baseDir .. fileName
+            local panel = vgui.Create("DPanel", scroll)
+            panel:Dock(TOP)
+            panel:SetTall(120)
+            panel:DockMargin(2, 2, 2, 2)
+            panel.Paint = function(_, w, h)
+                surface.SetDrawColor(60, 60, 60, 200)
+                surface.DrawRect(0, 0, w, h)
+                surface.SetDrawColor(100, 100, 100, 100)
+                surface.DrawOutlinedRect(0, 0, w, h)
+            end
+
+            local imagePreview = vgui.Create("DImage", panel)
+            imagePreview:SetPos(10, 10)
+            imagePreview:SetSize(100, 100)
+            imagePreview:SetImage("data/" .. imagePath)
+            local nameLabel = vgui.Create("DLabel", panel)
+            nameLabel:SetText(imageName)
+            nameLabel:SetFont("liaSmallFont")
+            nameLabel:SetTextColor(Color(255, 255, 255))
+            nameLabel:SetPos(120, 10)
+            nameLabel:SetWide(300)
+            local viewButton = vgui.Create("liaButton", panel)
+            viewButton:SetText("👁 View")
+            viewButton:SetWide(80)
+            viewButton:SetPos(120, 40)
+            viewButton.DoClick = function()
+                local viewFrame = vgui.Create("liaFrame")
+                viewFrame:SetTitle("Image Viewer - " .. imageName)
+                viewFrame:SetSize(800, 600)
+                viewFrame:Center()
+                viewFrame:MakePopup()
+                local fullImage = vgui.Create("DImage", viewFrame)
+                fullImage:Dock(FILL)
+                fullImage:DockMargin(10, 10, 10, 10)
+                fullImage:SetImage("data/" .. imagePath)
+            end
+
+            local copyButton = vgui.Create("liaButton", panel)
+            copyButton:SetText("📋 Copy Path")
+            copyButton:SetWide(100)
+            copyButton:SetPos(210, 40)
+            copyButton.DoClick = function()
+                SetClipboardText("data/" .. imagePath)
+                LocalPlayer():ChatPrint("Image path copied to clipboard: data/" .. imagePath)
+            end
         end
     end)
 
     concommand.Add("lia_cleanup_images", function()
-        local baseDir = "lilia/images/"
+        local baseDir = "lilia/webimages/"
         local files = findImagesRecursive(baseDir)
         local removedCount = 0
         for _, filePath in ipairs(files) do
@@ -1065,6 +1594,65 @@ else
                 img:Dock(FILL)
                 img:SetImage(url)
             end
+        end
+    end)
+
+    concommand.Add("test_sound_playback", function()
+        local baseDir = "lilia/websounds/"
+        local files = file.Find(baseDir .. "**", "DATA")
+        local soundFiles = {}
+        if files then
+            for _, fileName in ipairs(files) do
+                if string.EndsWith(fileName, ".mp3") or string.EndsWith(fileName, ".wav") or string.EndsWith(fileName, ".ogg") then table.insert(soundFiles, fileName) end
+            end
+        end
+
+        if #soundFiles > 0 then
+            local testFile = soundFiles[1]
+            local fullPath = "data/" .. baseDir .. testFile
+            print("[DEBUG] Testing direct sound playback: " .. fullPath)
+            sound.PlayFile(fullPath, "", function(channel, errorCode, errorString)
+                print("[DEBUG] Direct test callback - channel valid:", IsValid(channel), "errorCode:", errorCode, "errorString:", errorString)
+                if IsValid(channel) then
+                    LocalPlayer():ChatPrint("Direct test successful: " .. testFile)
+                else
+                    LocalPlayer():ChatPrint("Direct test failed: " .. testFile .. " (" .. (errorString or "unknown error") .. ")")
+                end
+            end)
+        else
+            LocalPlayer():ChatPrint("No sound files found for testing")
+        end
+    end)
+
+    concommand.Add("test_saved_commands", function()
+        print("Testing lia_saved_sounds command...")
+        local baseDir = "lilia/websounds/"
+        local files = file.Find(baseDir .. "**", "DATA")
+        local soundFiles = {}
+        if files then
+            for _, fileName in ipairs(files) do
+                if string.EndsWith(fileName, ".mp3") or string.EndsWith(fileName, ".wav") or string.EndsWith(fileName, ".ogg") or string.EndsWith(fileName, ".dat") then table.insert(soundFiles, fileName) end
+            end
+        end
+
+        print("Found " .. #soundFiles .. " sound files in " .. baseDir)
+        for i, fileName in ipairs(soundFiles) do
+            print("  " .. i .. ": " .. fileName)
+        end
+
+        print("Testing lia_saved_images command...")
+        local baseDir2 = "lilia/webimages/"
+        local files2 = file.Find(baseDir2 .. "**", "DATA")
+        local imageFiles = {}
+        if files2 then
+            for _, fileName in ipairs(files2) do
+                if string.EndsWith(fileName, ".png") or string.EndsWith(fileName, ".jpg") or string.EndsWith(fileName, ".jpeg") then table.insert(imageFiles, fileName) end
+            end
+        end
+
+        print("Found " .. #imageFiles .. " image files in " .. baseDir2)
+        for i, fileName in ipairs(imageFiles) do
+            print("  " .. i .. ": " .. fileName)
         end
     end)
 

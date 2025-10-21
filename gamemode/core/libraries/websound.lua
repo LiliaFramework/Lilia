@@ -1,4 +1,16 @@
-﻿lia.websound = lia.websound or {}
+﻿--[[
+    WebSound Library
+
+    The websound library provides comprehensive functionality for managing web-based audio content
+    in the Lilia framework. It handles downloading, caching, validation, and playback of sound files
+    from HTTP/HTTPS URLs, with automatic local storage and retrieval. The library operates on both
+    server and client sides, providing seamless integration with Garry's Mod's sound system through
+    enhanced versions of sound.PlayFile, sound.PlayURL, and surface.PlaySound functions. It includes
+    robust URL validation, file format verification, caching mechanisms, and statistics tracking.
+    The library ensures optimal performance by avoiding redundant downloads and providing fallback
+    mechanisms for failed downloads while maintaining compatibility with existing sound APIs.
+]]
+lia.websound = lia.websound or {}
 lia.websound.stored = lia.websound.stored or {}
 local baseDir = "lilia/websounds/"
 local cache = {}
@@ -81,6 +93,65 @@ local function validateURL(url)
     return true
 end
 
+--[[
+    Purpose: Downloads a sound file from a URL and caches it locally for future use
+    When Called: When a sound needs to be downloaded from a web URL, either directly or through other websound functions
+    Parameters:
+        - name (string): The name/path for the sound file (will be normalized)
+        - url (string, optional): The HTTP/HTTPS URL to download from (uses stored URL if not provided)
+        - cb (function, optional): Callback function called with (path, fromCache, error) parameters
+    Returns: None (uses callback for results)
+    Realm: Client and Server
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Download a sound file
+        lia.websound.download("notification.wav", "https://example.com/sound.wav")
+        ```
+
+        Medium Complexity:
+        ```lua
+        -- Medium: Download with callback handling
+        lia.websound.download("alert.mp3", "https://example.com/alert.mp3", function(path, fromCache, error)
+            if path then
+                -- Sound downloaded successfully
+                if fromCache then
+                    -- Loaded from cache
+                end
+            else
+                -- Download failed
+            end
+        end)
+        ```
+
+        High Complexity:
+        ```lua
+        -- High: Batch download with validation and error handling
+        local sounds = {
+            {name = "ui/click.wav", url = "https://cdn.example.com/ui/click.wav"},
+            {name = "ui/hover.wav", url = "https://cdn.example.com/ui/hover.wav"},
+            {name = "ui/error.wav", url = "https://cdn.example.com/ui/error.wav"}
+        }
+
+        local downloadCount = 0
+        local totalSounds = #sounds
+
+        for _, soundData in ipairs(sounds) do
+            lia.websound.download(soundData.name, soundData.url, function(path, fromCache, error)
+                downloadCount = downloadCount + 1
+                if path then
+                    -- Downloaded sound
+                else
+                    -- Failed to download sound
+                end
+
+                if downloadCount == totalSounds then
+                    -- All sounds processed
+                end
+            end)
+        end
+        ```
+]]
 function lia.websound.download(name, url, cb)
     if not isstring(name) then return end
     name = normalizeName(name)
@@ -161,12 +232,155 @@ function lia.websound.download(name, url, cb)
     end)
 end
 
+--[[
+    Purpose: Registers a sound file URL for future use and immediately downloads it
+    When Called: When registering a new sound file that should be available for playback
+    Parameters:
+        - name (string): The name/path for the sound file (will be normalized)
+        - url (string): The HTTP/HTTPS URL to download from
+        - cb (function, optional): Callback function called with (path, fromCache, error) parameters
+    Returns: None (uses callback for results)
+    Realm: Client and Server
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Register a sound file
+        lia.websound.register("button_click.wav", "https://example.com/click.wav")
+        ```
+
+        Medium Complexity:
+        ```lua
+        -- Medium: Register with callback and error handling
+        lia.websound.register("notification.mp3", "https://cdn.example.com/notify.mp3", function(path, fromCache, error)
+            if path then
+                -- Sound registered and downloaded
+                -- Sound is now available for playback
+            else
+                -- Failed to register sound
+            end
+        end)
+        ```
+
+        High Complexity:
+        ```lua
+        -- High: Register multiple sounds with validation and progress tracking
+        local soundRegistry = {
+            ui = {
+                {name = "ui/click.wav", url = "https://cdn.example.com/ui/click.wav"},
+                {name = "ui/hover.wav", url = "https://cdn.example.com/ui/hover.wav"},
+                {name = "ui/error.wav", url = "https://cdn.example.com/ui/error.wav"}
+            },
+            ambient = {
+                {name = "ambient/rain.mp3", url = "https://cdn.example.com/ambient/rain.mp3"},
+                {name = "ambient/wind.mp3", url = "https://cdn.example.com/ambient/wind.mp3"}
+            }
+        }
+
+        local registeredCount = 0
+        local totalSounds = 0
+        for category, sounds in pairs(soundRegistry) do
+            totalSounds = totalSounds + #sounds
+        end
+
+        for category, sounds in pairs(soundRegistry) do
+            for _, soundData in ipairs(sounds) do
+                lia.websound.register(soundData.name, soundData.url, function(path, fromCache, error)
+                    registeredCount = registeredCount + 1
+                    if path then
+                        -- Registered sound
+                    else
+                        -- Failed to register sound
+                    end
+
+                    if registeredCount == totalSounds then
+                        -- All sounds registered successfully
+                    end
+                end)
+            end
+        end
+        ```
+]]
 function lia.websound.register(name, url, cb)
     name = normalizeName(name)
     lia.websound.stored[name] = url
     return lia.websound.download(name, url, cb)
 end
 
+--[[
+    Purpose: Retrieves the local file path of a cached sound file
+    When Called: When checking if a sound file is available locally or getting its path for playback
+    Parameters:
+        - name (string): The name/path of the sound file to retrieve (will be normalized)
+    Returns: string or nil - The local file path if found, nil if not cached
+    Realm: Client and Server
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Check if a sound is cached
+        local soundPath = lia.websound.get("button_click.wav")
+        if soundPath then
+            -- Sound is available
+        else
+            -- Sound not cached yet
+        end
+        ```
+
+        Medium Complexity:
+        ```lua
+        -- Medium: Get sound path with fallback handling
+        local function playSoundIfAvailable(soundName)
+            local soundPath = lia.websound.get(soundName)
+            if soundPath then
+                sound.PlayFile(soundPath)
+                return true
+            else
+                -- Sound not available locally
+                return false
+            end
+        end
+
+        -- Usage
+        if not playSoundIfAvailable("notification.wav") then
+            -- Fallback to default sound or download
+            lia.websound.register("notification.wav", "https://example.com/notify.wav")
+        end
+        ```
+
+        High Complexity:
+        ```lua
+        -- High: Batch check multiple sounds with availability tracking
+        local requiredSounds = {
+            "ui/click.wav",
+            "ui/hover.wav",
+            "ui/error.wav",
+            "ambient/rain.mp3",
+            "ambient/wind.mp3"
+        }
+
+        local availableSounds = {}
+        local missingSounds = {}
+
+        for _, soundName in ipairs(requiredSounds) do
+            local soundPath = lia.websound.get(soundName)
+            if soundPath then
+                availableSounds[soundName] = soundPath
+                -- Sound available
+            else
+                table.insert(missingSounds, soundName)
+                -- Sound not cached
+            end
+        end
+
+        if #missingSounds > 0 then
+            -- Missing sounds, downloading...
+            for _, soundName in ipairs(missingSounds) do
+                lia.websound.register(soundName, "https://cdn.example.com/" .. soundName)
+            end
+        else
+            -- All required sounds are available!
+        end
+        ```
+]]
 function lia.websound.get(name)
     name = normalizeName(name)
     local key = urlMap[name] or name
@@ -359,6 +573,78 @@ function surface.PlaySound(soundPath, _, cb)
     if cb then cb(true) end
 end
 
+--[[
+    Purpose: Retrieves statistics about downloaded and stored sound files
+    When Called: When monitoring websound library performance or displaying usage statistics
+    Parameters: None
+    Returns: table - Contains downloaded count, stored count, and last reset timestamp
+    Realm: Client and Server
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Get basic statistics
+        local stats = lia.websound.getStats()
+        -- Downloaded sounds: stats.downloaded
+        -- Stored sounds: stats.stored
+        ```
+
+        Medium Complexity:
+        ```lua
+        -- Medium: Display formatted statistics with timestamp
+        local function displayWebSoundStats()
+            local stats = lia.websound.getStats()
+            local resetTime = os.date("%Y-%m-%d %H:%M:%S", stats.lastReset)
+
+            -- WebSound Statistics
+            -- Downloaded sounds: stats.downloaded
+            -- Stored sounds: stats.stored
+            -- Last reset: resetTime
+        end
+
+        displayWebSoundStats()
+        ```
+
+        High Complexity:
+        ```lua
+        -- High: Monitor statistics with logging and performance tracking
+        local function monitorWebSoundPerformance()
+            local stats = lia.websound.getStats()
+            local currentTime = os.time()
+            local timeSinceReset = currentTime - stats.lastReset
+
+            -- Log statistics to file
+            local logData = {
+                timestamp = os.date("%Y-%m-%d %H:%M:%S", currentTime),
+                downloaded = stats.downloaded,
+                stored = stats.stored,
+                timeSinceReset = timeSinceReset,
+                downloadRate = timeSinceReset > 0 and (stats.downloaded / timeSinceReset) or 0
+            }
+
+            -- Save to file
+            file.Write("websound_stats.json", util.TableToJSON(logData, true))
+
+            -- Display performance metrics
+            -- WebSound Performance Report
+            -- Downloads: stats.downloaded sounds
+            -- Storage: stats.stored registered sounds
+            -- Uptime: timeSinceReset seconds
+            -- Download rate: logData.downloadRate sounds/second
+
+            -- Performance warnings
+            if stats.downloaded > 100 then
+                -- WARNING: High download count detected!
+            end
+
+            if timeSinceReset > 3600 and stats.downloaded == 0 then
+                -- INFO: No downloads in the last hour
+            end
+        end
+
+        -- Run monitoring every 5 minutes
+        timer.Create("WebSoundMonitor", 300, 0, monitorWebSoundPerformance)
+        ```
+]]
 function lia.websound.getStats()
     local totalStored = 0
     for _ in pairs(lia.websound.stored) do
@@ -369,6 +655,134 @@ function lia.websound.getStats()
         stored = totalStored,
         lastReset = stats.lastReset
     }
+end
+
+--[[
+    Purpose: Plays a button click sound with automatic fallback to default button_click.wav
+    When Called: When a button is clicked and needs to play a sound
+    Parameters:
+        - customSound (string, optional): Custom sound to play instead of default
+        - callback (function, optional): Callback function called with (success) parameter
+    Returns: None (uses callback for results)
+    Realm: Client only
+    Example Usage:
+        Low Complexity:
+        ```lua
+        -- Simple: Play default button sound
+        lia.websound.playButtonSound()
+        ```
+
+        Medium Complexity:
+        ```lua
+        -- Medium: Play custom sound with fallback
+        lia.websound.playButtonSound("custom_click.wav", function(success)
+            if success then
+                -- Button sound played successfully
+            else
+                -- Failed to play button sound
+            end
+        end)
+        ```
+
+        High Complexity:
+        ```lua
+        -- High: Conditional button sounds with error handling
+        local function handleButtonClick(buttonType, customSound)
+            local soundToPlay = customSound or "button_click.wav"
+
+            lia.websound.playButtonSound(soundToPlay, function(success)
+                if success then
+                    -- Played sound for button
+                else
+                    -- Failed to play sound, using default
+                    -- Fallback to default
+                    lia.websound.playButtonSound()
+                end
+            end)
+        end
+
+        -- Usage
+        handleButtonClick("primary", "primary_click.wav")
+        handleButtonClick("secondary") -- Will use default
+        ```
+]]
+function lia.websound.playButtonSound(customSound, callback)
+    -- playButtonSound called with customSound
+    -- If it's a custom sound and not the default, try to play it first
+    if customSound and customSound ~= "button_click.wav" then
+        -- Check if it's a websound
+        if customSound:find("^lilia/websounds/") or customSound:find("^websounds/") then
+            -- Playing custom websound
+            surface.PlaySound(customSound)
+            if callback then callback(true) end
+            return
+        end
+
+        -- Check if it's a URL
+        if customSound:find("^https?://") then
+            -- Registering custom sound from URL
+            lia.websound.register(customSound, customSound, function(localPath)
+                if localPath then
+                    local surfacePath = localPath:gsub("^data/", "")
+                    -- Playing downloaded custom sound
+                    surface.PlaySound(surfacePath)
+                    if callback then callback(true) end
+                else
+                    -- Custom sound download failed, falling back to default
+                    -- Fallback to default if custom fails
+                    lia.websound.playButtonSound(nil, callback)
+                end
+            end)
+            return
+        end
+
+        -- Try as regular sound
+        -- Playing custom sound as regular sound
+        surface.PlaySound(customSound)
+        if callback then callback(true) end
+        return
+    end
+
+    -- Play default button sound using websound system
+    -- Playing default button sound using websound system
+    -- Check if the sound is already available
+    local cachedPath = lia.websound.get("button_click.wav")
+    if cachedPath then
+        -- Button sound found in cache, playing immediately
+        -- Cached path: cachedPath
+        -- Use sound.PlayFile directly with the full path (like lia_saved_sounds does)
+        sound.PlayFile(cachedPath, "", function()
+            -- Button sound played or failed to play
+        end)
+
+        if callback then callback(true) end
+        return
+    end
+
+    -- If not cached, ensure it's registered and wait for it
+    -- Button sound not cached, ensuring registration...
+    if not lia.websound.stored["button_click.wav"] then
+        -- Button sound not registered, registering now...
+        lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav")
+    end
+
+    -- Try to download and play
+    lia.websound.download("button_click.wav", nil, function(localPath)
+        if localPath then
+            -- Button sound downloaded successfully, playing
+            -- Use sound.PlayFile directly with the full path (like lia_saved_sounds does)
+            sound.PlayFile(localPath, "", function()
+                -- Button sound played or failed to play
+            end)
+
+            if callback then callback(true) end
+        else
+            -- Button sound download failed
+            -- Fallback to regular surface.PlaySound
+            surface.PlaySound("lilia/websounds/button_click.wav")
+            if callback then callback(false) end
+        end
+    end)
 end
 
 lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav")

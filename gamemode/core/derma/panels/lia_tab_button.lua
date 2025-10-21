@@ -38,6 +38,8 @@ function PANEL:OnCursorExited()
 end
 
 function PANEL:DoClick()
+    print("[Button] liaTabButton DoClick called")
+    lia.websound.playButtonSound()
     if self.DoClickCallback then self:DoClickCallback() end
 end
 

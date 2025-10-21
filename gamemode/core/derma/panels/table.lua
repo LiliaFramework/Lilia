@@ -112,7 +112,7 @@ function PANEL:CreateHeader()
         if column.sortable then
             label.DoClick = function()
                 self:SortByColumn(i)
-                surface.PlaySound("button_click.wav")
+                lia.websound.playButtonSound()
             end
         end
 
@@ -134,7 +134,7 @@ function PANEL:CreateRow(rowIndex, rowData)
     row.DoClick = function()
         self.selectedRow = rowIndex
         self.OnAction(rowData)
-        surface.PlaySound("button_click.wav")
+        lia.websound.playButtonSound()
     end
 
     row.DoRightClick = function()
@@ -629,7 +629,7 @@ function PANEL:CreateRow(rowIndex, rowData)
         if self.OnRowSelected then self:OnRowSelected(rowIndex, rowData) end
         if self.OnClickLine then self:OnClickLine(rowData, not wasSelected) end
         if self.OnAction then self:OnAction(rowData) end
-        surface.PlaySound("button_click.wav")
+        lia.websound.playButtonSound()
     end
 
     row.DoDoubleClick = function() self:DoDoubleClick(rowIndex, rowData) end

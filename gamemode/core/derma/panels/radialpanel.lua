@@ -69,13 +69,13 @@ function PANEL:Init(options)
                     local selectedIndex = math.floor(angle / sectorSize) + 1
                     if selectedIndex <= optionCount then
                         self:SelectOption(selectedIndex)
-                        surface.PlaySound("button_click.wav")
+                        lia.websound.playButtonSound()
                     end
                 end
             elseif dist <= self.innerRadius then
                 if #self.menuStack > 0 then
                     self:GoBack()
-                    surface.PlaySound("button_click.wav")
+                    lia.websound.playButtonSound()
                 else
                     self:Remove()
                 end

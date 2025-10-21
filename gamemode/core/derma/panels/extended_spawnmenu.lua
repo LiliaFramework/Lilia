@@ -101,7 +101,7 @@ end, function(path)
     if not isMaterialUsable(path) then showMaterialWarning() end
     RunConsoleCommand("material_override", path)
     spawnmenu.ActivateTool("material")
-    surface.PlaySound("garrysmod/ui_click.wav")
+    lia.websound.playButtonSound("garrysmod/ui_click.wav")
 end, {
     {
         text = "#spawnmenu.menu.copy",

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Simple script to remove comments from Lua files.
-Removes both single-line (--) and multi-line (--[[ ]]) comments.
+Preserves comment blocks (--[[ ]]) and pure comment lines (starting with --).
+Only removes inline comments (-- at end of code lines).
 """
 
 import os
@@ -10,7 +11,7 @@ import sys
 import subprocess
 
 def remove_comments(content):
-    """Remove Lua comments from content."""
+    """Remove Lua comments from content, but preserve comment blocks."""
     lines = content.split('\n')
     cleaned_lines = []
 
@@ -18,23 +19,44 @@ def remove_comments(content):
     while i < len(lines):
         line = lines[i]
 
-        # Skip multi-line comments
-        if '--[[' in line and ']]' not in line:
+        # Preserve multi-line comment blocks (--[[ ]])
+        if '--[[' in line:
+            # Check if it's a complete block on one line
+            if ']]' in line:
+                # Complete block on one line - clean whitespace and preserve it
+                cleaned_line = line.rstrip()
+                cleaned_lines.append(cleaned_line)
+            else:
+                # Multi-line block - clean whitespace and preserve all lines until closing ]]
+                cleaned_line = line.rstrip()
+                cleaned_lines.append(cleaned_line)
+                i += 1
+                while i < len(lines) and ']]' not in lines[i]:
+                    cleaned_line = lines[i].rstrip()
+                    cleaned_lines.append(cleaned_line)
+                    i += 1
+                if i < len(lines):
+                    cleaned_line = lines[i].rstrip()
+                    cleaned_lines.append(cleaned_line)
             i += 1
-            while i < len(lines) and ']]' not in lines[i]:
-                i += 1
-            if i < len(lines):
-                i += 1
             continue
 
-
-        # Remove single-line comments
-        line = re.sub(r'--.*', '', line)
-
-        # Keep non-empty lines
-        line = line.rstrip()
-        if line:
-            cleaned_lines.append(line)
+        # Remove only inline single-line comments (-- at end of code lines)
+        # But preserve lines that are purely comments
+        stripped_line = line.strip()
+        
+        # If line starts with --, it's a pure comment line - clean whitespace and preserve it
+        if stripped_line.startswith('--'):
+            cleaned_line = line.rstrip()
+            cleaned_lines.append(cleaned_line)
+        else:
+            # Remove inline comments (-- followed by text)
+            line = re.sub(r'--.*', '', line)
+            
+            # Keep non-empty lines
+            line = line.rstrip()
+            if line:
+                cleaned_lines.append(line)
 
         i += 1
 

@@ -54,7 +54,7 @@ function PANEL:Init()
             self:CloseMenu()
         else
             self:OpenMenu()
-            surface.PlaySound("button_click.wav")
+            lia.websound.playButtonSound()
         end
     end
 end
@@ -209,7 +209,7 @@ function PANEL:OpenMenu()
                     if not IsValid(self) then return end
                     self:ChooseOption(choice.text, i)
                     self:CloseMenu()
-                    surface.PlaySound("button_click.wav")
+                    lia.websound.playButtonSound()
                 end
             end
         end
@@ -266,7 +266,7 @@ function PANEL:OpenMenu()
                     if not IsValid(self) then return end
                     self:ChooseOption(choice.text, i)
                     self:CloseMenu()
-                    surface.PlaySound("button_click.wav")
+                    lia.websound.playButtonSound()
                 end
             end
         end

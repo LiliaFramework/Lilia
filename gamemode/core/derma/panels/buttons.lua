@@ -89,6 +89,12 @@ function PANEL:OnMousePressed(mousecode)
     end
 end
 
+function PANEL:DoClick()
+    print("[Button] liaButton DoClick called")
+    lia.websound.playButtonSound()
+    self.BaseClass.DoClick(self)
+end
+
 local math_clamp = math.Clamp
 local btnFlags = lia.derma.SHAPE_IOS
 function PANEL:Paint(w, h)
@@ -192,6 +198,12 @@ local function RegisterButton(name, defaultFont, useBase)
 
     function BUTTON_PANEL:Paint(w, h)
         return PaintButton(self, w, h)
+    end
+
+    function BUTTON_PANEL:DoClick()
+        print("[Button] " .. name .. " DoClick called")
+        lia.websound.playButtonSound()
+        self.BaseClass.DoClick(self)
     end
 
     vgui.Register(name, BUTTON_PANEL, "DButton")

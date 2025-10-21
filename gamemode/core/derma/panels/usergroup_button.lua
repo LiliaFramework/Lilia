@@ -33,6 +33,11 @@ function PANEL:OnCursorExited()
     self.hovered = false
 end
 
+function PANEL:DoClick()
+    lia.websound.playButtonSound()
+    self.BaseClass.DoClick(self)
+end
+
 function PANEL:Paint(w, h)
     local bgColor = self.panelColor
     local textColor = lia.color.theme.text

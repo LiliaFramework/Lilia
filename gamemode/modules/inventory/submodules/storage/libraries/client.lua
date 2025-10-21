@@ -50,7 +50,13 @@ function MODULE:StorageOpen(storage, isCar)
         if not localInv or not storageInv then return self:ExitStorage() end
         local localInvPanel = localInv:show()
         local storageInvPanel = storageInv:show()
-        storageInvPanel:SetTitle(L(storage:getStorageInfo().name))
+        local storageInfo = storage:getStorageInfo()
+        if storageInfo and storageInfo.name then
+            storageInvPanel:SetTitle(L(storageInfo.name))
+        else
+            storageInvPanel:SetTitle(L("storageContainer"))
+        end
+
         localInvPanel:ShowCloseButton(true)
         storageInvPanel:ShowCloseButton(true)
         local extraWidth = (storageInvPanel:GetWide() + 4) / 2

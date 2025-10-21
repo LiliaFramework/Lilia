@@ -151,6 +151,7 @@ function MODULE:CreateMenuButtons(tabs)
             tabButton:SetWide(baseTabWidths[i] or 80)
             tabButton:SetDoClick(function()
                 if activeTab == i then return end
+                lia.websound.playButtonSound()
                 if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
                 activeTab = i
                 tabPanels[i]:SetVisible(true)
@@ -158,7 +159,6 @@ function MODULE:CreateMenuButtons(tabs)
                     if IsValid(btn) then btn:SetActive(j == i) end
                 end
 
-                surface.PlaySound("buttons/button14.wav")
                 if page.drawFunc then page.drawFunc(tabPanels[i]) end
             end)
 
@@ -257,6 +257,7 @@ function MODULE:CreateMenuButtons(tabs)
             tabButton:SetWide(baseTabWidths[i] or 80)
             tabButton:SetDoClick(function()
                 if activeTab == i then return end
+                lia.websound.playButtonSound()
                 if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
                 activeTab = i
                 tabPanels[i]:SetVisible(true)
@@ -264,7 +265,6 @@ function MODULE:CreateMenuButtons(tabs)
                     if IsValid(btn) then btn:SetActive(j == i) end
                 end
 
-                surface.PlaySound("buttons/button14.wav")
                 if page.drawFunc then page.drawFunc(tabPanels[i]) end
             end)
 
@@ -480,6 +480,7 @@ function MODULE:CreateMenuButtons(tabs)
                 tabButton:SetWide(baseTabWidths[i] or 80)
                 tabButton:SetDoClick(function()
                     if activeTab == i then return end
+                    lia.websound.playButtonSound()
                     if tabPanels[activeTab] then tabPanels[activeTab]:SetVisible(false) end
                     activeTab = i
                     tabPanels[i]:SetVisible(true)
@@ -487,7 +488,6 @@ function MODULE:CreateMenuButtons(tabs)
                         if IsValid(btn) then btn:SetActive(j == i) end
                     end
 
-                    surface.PlaySound("buttons/button14.wav")
                     if page.drawFunc then page.drawFunc(tabPanels[i]) end
                 end)
 
@@ -543,9 +543,10 @@ function MODULE:CreateMenuButtons(tabs)
     local hasPrivilege = IsValid(LocalPlayer()) and LocalPlayer():hasPrivilege("accessEditConfigurationMenu") or false
     if hasPrivilege then
         tabs["themes"] = function(themesPanel)
-            local sheet = themesPanel:Add("DPropertySheet")
+            local sheet = themesPanel:Add("liaTabs")
             sheet:Dock(FILL)
             sheet:DockMargin(10, 10, 10, 10)
+            sheet.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background):Draw() end
             local function getLocalizedThemeName(themeID)
                 local properCaseName = themeID:gsub("(%a)([%w]*)", function(first, rest) return first:upper() .. rest:lower() end)
                 local localizationKey = "theme" .. properCaseName:gsub(" ", ""):gsub("-", "")
@@ -561,8 +562,8 @@ function MODULE:CreateMenuButtons(tabs)
             table.sort(themeIDs, function(a, b) return getLocalizedThemeName(a) < getLocalizedThemeName(b) end)
             local currentTheme = lia.color.getCurrentTheme()
             local statusUpdaters = {}
-            local activeTab
-            for _, themeID in ipairs(themeIDs) do
+            local activeTabIndex
+            for i, themeID in ipairs(themeIDs) do
                 local themeData = lia.color.themes[themeID]
                 if istable(themeData) then
                     local displayName = getLocalizedThemeName(themeID)
@@ -627,7 +628,7 @@ function MODULE:CreateMenuButtons(tabs)
                         end
                     end
 
-                    local sheetInfo = sheet:AddSheet(displayName, page)
+                    sheet:AddTab(displayName, page)
                     local function updateStatus()
                         local isActive = currentTheme == themeID
                         if IsValid(applyButton) then
@@ -640,7 +641,7 @@ function MODULE:CreateMenuButtons(tabs)
                     updateStatus()
                     applyButton.DoClick = function()
                         if currentTheme == themeID then return end
-                        surface.PlaySound("buttons/button14.wav")
+                        lia.websound.playButtonSound()
                         net.Start("liaCfgSet")
                         net.WriteString("Theme")
                         net.WriteString(L("theme"))
@@ -648,11 +649,11 @@ function MODULE:CreateMenuButtons(tabs)
                         net.SendToServer()
                     end
 
-                    if themeID == currentTheme and not activeTab and sheetInfo and sheetInfo.Tab then activeTab = sheetInfo.Tab end
+                    if themeID == currentTheme and not activeTabIndex then activeTabIndex = i end
                 end
             end
 
-            if activeTab then sheet:SetActiveTab(activeTab) end
+            if activeTabIndex then sheet:SetActiveTab(activeTabIndex) end
         end
     end
 end

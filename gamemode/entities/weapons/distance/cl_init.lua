@@ -4,18 +4,18 @@
     local tr = owner:GetEyeTrace()
     if not self.StartPos then
         self.StartPos = tr.HitPos
-        surface.PlaySound("buttons/button17.wav")
+        lia.websound.playButtonSound("buttons/button17.wav")
         owner:ChatPrint(L("distanceMeasureStartPoint"))
     else
         local distance = self.StartPos:distance(tr.HitPos)
-        surface.PlaySound("buttons/button17.wav")
+        lia.websound.playButtonSound("buttons/button17.wav")
         owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
     end
 end
 
 function SWEP:SecondaryAttack()
     if not IsFirstTimePredicted() then return end
-    surface.PlaySound("buttons/button16.wav")
+    lia.websound.playButtonSound("buttons/button16.wav")
     self.StartPos = nil
     self:GetOwner():ChatPrint(L("distanceMeasureCancelled"))
 end
@@ -26,7 +26,7 @@ function SWEP:Reload()
     local owner = self:GetOwner()
     local tr = owner:GetEyeTrace()
     local distance = self.StartPos:distance(tr.HitPos)
-    surface.PlaySound("buttons/button17.wav")
+    lia.websound.playButtonSound("buttons/button17.wav")
     owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
 end
 
