@@ -3,6 +3,7 @@
 
     User-configurable settings management system for the Lilia framework.
 ]]
+
 --[[
     Overview:
     The option library provides comprehensive functionality for managing user-configurable settings

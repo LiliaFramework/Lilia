@@ -70,7 +70,7 @@ local NoDrawCrosshairWeapon = {
 }
 
 local function canDrawAmmo(wpn)
-    if IsValid(wpn) and wpn.DrawAmmo ~= false and lia.config.get("AmmoDrawEnabled", false) then return true end
+    if IsValid(wpn) and wpn.DrawAmmo ~= false and lia.config.get("AmmoDrawEnabled", false) then return hook.Run("ShouldDrawAmmo", wpn) ~= false end
 end
 
 local function drawAmmo(wpn)

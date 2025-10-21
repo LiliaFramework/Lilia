@@ -3123,6 +3123,7 @@ Reload: Drop]],
     mainMenuDiscordURLDesc = "Discord server URL for the main menu",
     mainMenuWorkshopURLDesc = "Workshop collection URL for the main menu",
     notFoundInStoredConfigs = " not found in stored configs",
+
     -- Missing localization keys
     position = "Position",
     your_money = "Your Money",
