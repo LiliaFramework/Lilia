@@ -3,7 +3,6 @@
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The commands library provides comprehensive functionality for managing and executing commands

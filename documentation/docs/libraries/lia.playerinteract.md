@@ -1,0 +1,1116 @@
+# Player Interaction Library
+
+Player-to-player and entity interaction management system for the Lilia framework.
+
+---
+
+## Overview
+
+The player interaction library provides comprehensive functionality for managing player interactions and actions within the Lilia framework. It handles the creation, registration, and execution of various interaction types including player-to-player interactions, entity interactions, and personal actions. The library operates on both server and client sides, with the server managing interaction registration and validation, while the client handles UI display and user input. It includes automatic categorization, range checking, timed actions, and network synchronization to ensure consistent interaction behavior across all clients. The library supports both immediate and delayed actions with progress indicators, making it suitable for complex interaction systems like money transfers, voice changes, and other gameplay mechanics.
+
+---
+
+### lia.playerinteract.isWithinRange
+
+**Purpose**
+
+Checks if a client is within interaction range of an entity
+
+**When Called**
+
+Called when determining if an interaction should be available to a player
+
+**Returns**
+
+* boolean - true if within range, false otherwise
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Check if player is within default range of an entity
+if lia.playerinteract.isWithinRange(client, targetEntity) then
+-- Player is within 250 units
+end
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Check with custom range for specific interaction
+local customRange = 100
+if lia.playerinteract.isWithinRange(client, targetEntity, customRange) then
+-- Player is within 100 units for close-range interaction
+end
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Dynamic range checking with validation
+local interactionRange = interactionData.range or 250
+if IsValid(client) and IsValid(targetEntity) and
+lia.playerinteract.isWithinRange(client, targetEntity, interactionRange) then
+-- Player is within specified range for this interaction type
+return true
+end
+```
+```
+
+---
+
+### lia.playerinteract.getInteractions
+
+**Purpose**
+
+Retrieves all available interactions for a client based on their traced entity
+
+**When Called**
+
+Called when opening interaction menu or checking available interactions
+
+**Returns**
+
+* table - Dictionary of available interactions indexed by interaction name
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Get all available interactions for local player
+local interactions = lia.playerinteract.getInteractions()
+for name, interaction in pairs(interactions) do
+print("Available interaction:", name)
+end
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Get interactions for specific player with validation
+local client = LocalPlayer()
+if IsValid(client) then
+local interactions = lia.playerinteract.getInteractions(client)
+local interactionCount = table.Count(interactions)
+if interactionCount > 0 then
+-- Player has interactions available
+end
+end
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Filter interactions by category and validate conditions
+local interactions = lia.playerinteract.getInteractions()
+local filteredInteractions = {}
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(LocalPlayer())) then
+filteredInteractions[name] = interaction
+end
+end
+```
+```
+
+---
+
+### lia.playerinteract.getActions
+
+**Purpose**
+
+Retrieves all available personal actions for a client
+
+**When Called**
+
+Called when opening personal actions menu or checking available actions
+
+**Returns**
+
+* table - Dictionary of available actions indexed by action name
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Get all available personal actions
+local actions = lia.playerinteract.getActions()
+for name, action in pairs(actions) do
+print("Available action:", name)
+end
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Get actions with character validation
+local client = LocalPlayer()
+if IsValid(client) and client:getChar() then
+local actions = lia.playerinteract.getActions(client)
+local actionCount = table.Count(actions)
+if actionCount > 0 then
+-- Player has actions available
+end
+end
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Filter actions by category and execute specific ones
+local actions = lia.playerinteract.getActions()
+local voiceActions = {}
+for name, action in pairs(actions) do
+if action.category == L("categoryVoice") and
+(not action.shouldShow or action.shouldShow(LocalPlayer())) then
+voiceActions[name] = action
+end
+end
+```
+```
+
+---
+
+### lia.playerinteract.getCategorizedOptions
+
+**Purpose**
+
+Organizes interaction/action options into categories for UI display
+
+**When Called**
+
+Called when preparing options for display in categorized menus
+
+**Returns**
+
+* table - Dictionary with categories as keys and option tables as values
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Categorize available interactions
+local interactions = lia.playerinteract.getInteractions()
+local categorized = lia.playerinteract.getCategorizedOptions(interactions)
+for category, options in pairs(categorized) do
+print("Category:", category, "Options:", table.Count(options))
+end
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Categorize with custom category handling
+local actions = lia.playerinteract.getActions()
+local categorized = lia.playerinteract.getCategorizedOptions(actions)
+local sortedCategories = {}
+for category in pairs(categorized) do
+table.insert(sortedCategories, category)
+end
+table.sort(sortedCategories)
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Advanced categorization with filtering and sorting
+local interactions = lia.playerinteract.getInteractions()
+local categorized = lia.playerinteract.getCategorizedOptions(interactions)
+local priorityCategories = {"Voice", "Social", "Combat"}
+local sortedCategorized = {}
+-- Add priority categories first
+for _, category in ipairs(priorityCategories) do
+if categorized[category] then
+sortedCategorized[category] = categorized[category]
+end
+end
+-- Add remaining categories
+for category, options in pairs(categorized) do
+if not sortedCategorized[category] then
+sortedCategorized[category] = options
+end
+end
+```
+```
+
+---
+
+### lia.playerinteract.addInteraction
+
+**Purpose**
+
+Registers a new player-to-player or player-to-entity interaction
+
+**When Called**
+
+Called during module initialization or when registering custom interactions
+
+**Returns**
+
+* void
+
+**Realm**
+
+Server
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Add basic player interaction
+lia.playerinteract.addInteraction("giveMoney", {
+shouldShow = function(client, target)
+return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0
+end,
+onRun = function(client, target)
+-- Give money logic here
+end
+})
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Add timed interaction with progress indicators
+lia.playerinteract.addInteraction("healPlayer", {
+category = "Medical",
+range = 100,
+timeToComplete = 5,
+actionText = "Healing player...",
+targetActionText = "Being healed...",
+shouldShow = function(client, target)
+return IsValid(target) and target:IsPlayer() and target:Health() < target:GetMaxHealth()
+end,
+onRun = function(client, target)
+target:SetHealth(target:GetMaxHealth())
+client:notify("Player healed successfully!")
+end
+})
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Complex interaction with validation and server-side processing
+lia.playerinteract.addInteraction("arrestPlayer", {
+serverOnly = true,
+category = "Law Enforcement",
+range = 150,
+timeToComplete = 3,
+actionText = "Arresting suspect...",
+targetActionText = "Being arrested...",
+shouldShow = function(client, target)
+if not IsValid(target) or not target:IsPlayer() then return false end
+if not client:getChar() or not target:getChar() then return false end
+return client:getChar():getFaction() == FACTION_POLICE and
+target:getChar():getFaction() ~= FACTION_POLICE
+end,
+onRun = function(client, target)
+-- Complex arrest logic with validation
+if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
+lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
+client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
+return
+end
+target:getChar():setData("arrested", true)
+target:StripWeapons()
+client:notify("Suspect arrested!")
+target:notify("You have been arrested!")
+end
+})
+```
+```
+
+---
+
+### lia.playerinteract.addAction
+
+**Purpose**
+
+Registers a new personal action that doesn't require a target entity
+
+**When Called**
+
+Called during module initialization or when registering custom personal actions
+
+**Returns**
+
+* void
+
+**Realm**
+
+Server
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Add basic personal action
+lia.playerinteract.addAction("changeToWhisper", {
+category = L("categoryVoice"),
+shouldShow = function(client)
+return client:getChar() and client:Alive() and
+client:getNetVar("VoiceType") ~= L("whispering")
+end,
+onRun = function(client)
+client:setNetVar("VoiceType", L("whispering"))
+client:notifyInfoLocalized("voiceModeSet", L("whispering"))
+end
+})
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Add timed personal action with progress indicator
+lia.playerinteract.addAction("meditate", {
+category = "Personal",
+timeToComplete = 10,
+actionText = "Meditating...",
+shouldShow = function(client)
+return client:getChar() and client:Alive() and
+not client:getNetVar("meditating", false)
+end,
+onRun = function(client)
+client:setNetVar("meditating", true)
+client:SetHealth(math.min(client:Health() + 25, client:GetMaxHealth()))
+client:notify("Meditation complete! Health restored.")
+timer.Simple(1, function()
+if IsValid(client) then
+client:setNetVar("meditating", false)
+end
+end)
+end
+})
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Complex personal action with multiple conditions and effects
+lia.playerinteract.addAction("emergencyCall", {
+serverOnly = true,
+category = "Emergency",
+timeToComplete = 5,
+actionText = "Calling emergency services...",
+shouldShow = function(client)
+if not client:getChar() or not client:Alive() then return false end
+local char = client:getChar()
+if char:getFaction() == FACTION_POLICE or char:getFaction() == FACTION_MEDIC then
+return false -- Emergency services don't need to call themselves
+end
+return not client:getNetVar("emergencyCooldown", false)
+end,
+onRun = function(client)
+-- Set cooldown to prevent spam
+client:setNetVar("emergencyCooldown", true)
+timer.Simple(300, function() -- 5 minute cooldown
+if IsValid(client) then
+client:setNetVar("emergencyCooldown", false)
+end
+end)
+-- Notify emergency services
+local emergencyMsg = string.format(
+"Emergency call from %s at %s",
+client:getChar():getDisplayedName(),
+client:GetPos()
+)
+for _, ply in ipairs(player.GetAll()) do
+if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
+ply:notify(emergencyMsg)
+end
+end
+client:notify("Emergency services have been notified!")
+end
+})
+```
+```
+
+---
+
+### lia.syncInteractionsToClient
+
+**Purpose**
+
+Synchronizes interaction and action data from server to clients
+
+**When Called**
+
+Called when interactions/actions are added or when clients connect
+
+**Returns**
+
+* void
+
+**Realm**
+
+Server
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Sync all interactions to all clients
+lia.playerinteract.syncToClients()
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Sync to specific client after they connect
+hook.Add("PlayerInitialSpawn", "SyncInteractions", function(client)
+timer.Simple(2, function() -- Wait for client to fully load
+if IsValid(client) then
+lia.playerinteract.syncToClients(client)
+end
+end)
+end)
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Conditional sync with validation and error handling
+function syncInteractionsToClient(client)
+if not IsValid(client) then return end
+-- Check if client is ready
+if not client:IsConnected() or not client:getChar() then
+timer.Simple(1, function()
+syncInteractionsToClient(client)
+end)
+return
+end
+-- Sync with custom filtering
+local filteredData = {}
+for name, data in pairs(lia.playerinteract.stored) do
+-- Only sync non-admin interactions to regular players
+if not data.adminOnly or client:IsAdmin() then
+filteredData[name] = {
+type = data.type,
+serverOnly = data.serverOnly and true or false,
+name = name,
+range = data.range,
+category = data.category or L("categoryUnsorted"),
+target = data.target,
+timeToComplete = data.timeToComplete,
+actionText = data.actionText,
+targetActionText = data.targetActionText
+}
+end
+end
+lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
+lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
+end
+```
+```
+
+---
+
+### lia.playerinteract.syncToClients
+
+**Purpose**
+
+Synchronizes interaction and action data from server to clients
+
+**When Called**
+
+Called when interactions/actions are added or when clients connect
+
+**Returns**
+
+* void
+
+**Realm**
+
+Server
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Sync all interactions to all clients
+lia.playerinteract.syncToClients()
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Sync to specific client after they connect
+hook.Add("PlayerInitialSpawn", "SyncInteractions", function(client)
+timer.Simple(2, function() -- Wait for client to fully load
+if IsValid(client) then
+lia.playerinteract.syncToClients(client)
+end
+end)
+end)
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Conditional sync with validation and error handling
+function syncInteractionsToClient(client)
+if not IsValid(client) then return end
+-- Check if client is ready
+if not client:IsConnected() or not client:getChar() then
+timer.Simple(1, function()
+syncInteractionsToClient(client)
+end)
+return
+end
+-- Sync with custom filtering
+local filteredData = {}
+for name, data in pairs(lia.playerinteract.stored) do
+-- Only sync non-admin interactions to regular players
+if not data.adminOnly or client:IsAdmin() then
+filteredData[name] = {
+type = data.type,
+serverOnly = data.serverOnly and true or false,
+name = name,
+range = data.range,
+category = data.category or L("categoryUnsorted"),
+target = data.target,
+timeToComplete = data.timeToComplete,
+actionText = data.actionText,
+targetActionText = data.targetActionText
+}
+end
+end
+lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
+lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
+end
+```
+```
+
+---
+
+### lia.playerinteract.openMenu
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+
+### lia.frame:OnRemove
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+
+### lia.frame:Think
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+
+### lia.preserveScroll
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+
+### lia.categoryHeader:Paint
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+
+### lia.collapseBtn:Paint
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+
+### lia.spacer:Paint
+
+**Purpose**
+
+Opens the interaction/action menu UI with categorized options
+
+**When Called**
+
+Called when player presses interaction keybind or requests menu
+
+**Returns**
+
+* void
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+```lua
+-- Simple: Open basic interaction menu
+local interactions = lia.playerinteract.getInteractions()
+lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+```
+```
+
+**Medium Complexity:**
+```lua
+```lua
+-- Medium: Open action menu with custom title and key
+local actions = lia.playerinteract.getActions()
+lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+```
+```
+
+**High Complexity:**
+```lua
+```lua
+-- High: Custom menu with pre-filtered options and validation
+local client = LocalPlayer()
+if not IsValid(client) then return end
+local interactions = lia.playerinteract.getInteractions(client)
+local filteredInteractions = {}
+-- Filter interactions based on custom criteria
+for name, interaction in pairs(interactions) do
+if interaction.category == "Voice" and
+(not interaction.shouldShow or interaction.shouldShow(client)) then
+filteredInteractions[name] = interaction
+end
+end
+if table.Count(filteredInteractions) > 0 then
+lia.playerinteract.openMenu(
+filteredInteractions,
+true,
+"Voice Interactions",
+KEY_TAB,
+"liaRequestInteractOptions",
+true -- preFiltered
+)
+else
+client:notify("No voice interactions available!")
+end
+```
+```
+
+---
+

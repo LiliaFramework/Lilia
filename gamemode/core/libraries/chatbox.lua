@@ -3,7 +3,6 @@
 
     Comprehensive chat system management with message routing and formatting for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The chatbox library provides comprehensive functionality for managing chat systems in the Lilia framework.

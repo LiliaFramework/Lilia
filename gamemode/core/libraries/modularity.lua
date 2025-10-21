@@ -3,7 +3,6 @@
 
     Module loading, initialization, and lifecycle management system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The modularity library provides comprehensive functionality for managing modules in the Lilia framework.

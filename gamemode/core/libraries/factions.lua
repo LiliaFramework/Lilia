@@ -3,7 +3,6 @@
 
     Comprehensive faction (team) management and registration system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The faction library provides comprehensive functionality for managing factions (teams) in the Lilia framework.
