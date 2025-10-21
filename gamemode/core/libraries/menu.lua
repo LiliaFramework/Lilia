@@ -3,7 +3,6 @@
 
     Interactive 3D context menu system for world and entity interactions in the Lilia framework.
 ]]
-
 --[[
     Overview:
     The menu library provides a comprehensive context menu system for the Lilia framework.

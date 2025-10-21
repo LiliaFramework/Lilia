@@ -3,7 +3,6 @@
 
     In-game currency formatting, display, and management system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The currency library provides comprehensive functionality for managing in-game currency

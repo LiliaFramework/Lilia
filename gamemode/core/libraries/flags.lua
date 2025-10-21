@@ -3,7 +3,6 @@
 
     Character permission and access control system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The flags library provides a comprehensive permission system for managing character abilities

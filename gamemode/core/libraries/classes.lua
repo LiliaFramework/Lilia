@@ -3,7 +3,6 @@
 
     Character class management and validation system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The classes library provides comprehensive functionality for managing character classes
