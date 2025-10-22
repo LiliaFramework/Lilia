@@ -581,7 +581,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.selectBtn:SetPos(cx, fy + fh + pad)
     self.selectBtn:SetText(selectText)
     if clientChar and character:getID() == clientChar:getID() then
-        self.selectBtn:SetEnabled(false)
+        self.selectBtn:SetEnabled(true)
         self.selectBtn:SetTextColor(Color(255, 255, 255))
     end
 
@@ -589,6 +589,12 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         if character:isBanned() then
             local characterName = character:getName()
             Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
+            return
+        end
+
+        -- If player is already using this character, act like return button
+        if clientChar and character:getID() == clientChar:getID() then
+            self:Remove()
             return
         end
 
