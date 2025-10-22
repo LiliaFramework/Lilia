@@ -3,7 +3,6 @@
 
     Comprehensive user-configurable settings management system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The configuration library provides comprehensive functionality for managing user-configurable settings

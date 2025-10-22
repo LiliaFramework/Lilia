@@ -3122,7 +3122,6 @@ Recarregar: Largar]],
     mainMenuDiscordURLDesc = "URL do servidor Discord para o menu principal",
     mainMenuWorkshopURLDesc = "URL da coleção Workshop para o menu principal",
     notFoundInStoredConfigs = " não encontrado nas configurações armazenadas",
-
     -- Chaves de localização ausentes
     position = "Posição",
     your_money = "Seu Dinheiro",

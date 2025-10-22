@@ -3,7 +3,6 @@
 
     Network communication and data streaming system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The network library provides comprehensive functionality for managing network communication

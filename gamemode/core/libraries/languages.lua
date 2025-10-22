@@ -3,7 +3,6 @@
 
     Internationalization (i18n) and localization system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The languages library provides comprehensive internationalization (i18n) functionality for the Lilia framework.

@@ -3122,7 +3122,6 @@ Nachladen: Fallenlassen]],
     mainMenuDiscordURLDesc = "Discord-Server-URL für das Hauptmenü",
     mainMenuWorkshopURLDesc = "Workshop-Sammlung-URL für das Hauptmenü",
     notFoundInStoredConfigs = " nicht in gespeicherten Konfigurationen gefunden",
-
     -- Fehlende Lokalisierungsschlüssel
     position = "Position",
     your_money = "Ihr Geld",

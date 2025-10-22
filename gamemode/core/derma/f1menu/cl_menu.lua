@@ -258,9 +258,7 @@ function PANEL:Update()
         -- Just refresh the layout instead of recreating the entire menu
         self:InvalidateLayout(true)
         for _, child in pairs(self:GetChildren()) do
-            if IsValid(child) then
-                child:InvalidateLayout(true)
-            end
+            if IsValid(child) then child:InvalidateLayout(true) end
         end
     end
 end

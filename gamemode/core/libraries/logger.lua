@@ -3,7 +3,6 @@
 
     Comprehensive logging and audit trail system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The logger library provides comprehensive logging functionality for the Lilia framework,

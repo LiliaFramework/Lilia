@@ -3,7 +3,6 @@
 
     Core initialization and module loading system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The loader library is the core initialization system for the Lilia framework, responsible for
