@@ -3,7 +3,7 @@
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetCollisionGroup(COLLISION_GROUP_WEAPON)
-    self.health = 250
+    self.health = 100
     local physObj = self:GetPhysicsObject()
     if IsValid(physObj) then physObj:EnableMotion(false) end
     timer.Simple(3, function()
