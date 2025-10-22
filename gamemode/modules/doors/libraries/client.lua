@@ -71,7 +71,8 @@ end
 function MODULE:DrawEntityInfo(entity, alpha)
     -- Don't show door UI if admin stick is out
     local client = LocalPlayer()
-    if IsValid(client) and client:GetActiveWeapon():GetClass() == "adminstick" then return end
+    local activeWeapon = client:GetActiveWeapon()
+    if IsValid(client) and IsValid(activeWeapon) and activeWeapon:GetClass() == "adminstick" then return end
     if entity:isDoor() then
         local doorData = entity:getNetVar("doorData", {})
         if not (doorData.hidden or false) then

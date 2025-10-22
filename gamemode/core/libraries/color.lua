@@ -3,6 +3,7 @@
 
     Comprehensive color and theme management system for the Lilia framework.
 ]]
+
 --[[
     Overview:
     The color library provides comprehensive functionality for managing colors and themes

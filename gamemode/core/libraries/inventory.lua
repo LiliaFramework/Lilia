@@ -3,6 +3,7 @@
 
     Comprehensive inventory system management with multiple storage types for the Lilia framework.
 ]]
+
 --[[
     Overview:
     The inventory library provides comprehensive functionality for managing inventory systems

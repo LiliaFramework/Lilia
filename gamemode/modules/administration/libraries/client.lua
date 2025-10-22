@@ -2221,7 +2221,7 @@ net.Receive("liaCfgSet", function()
     if config then
         if key == "Theme" then
             lia.color.applyTheme(value, true)
-            if IsValid(lia.gui.menu) and lia.gui.menu.currentTab == "themes" then
+            if IsValid(lia.gui.menu) and lia.gui.menu.currentTab == "themes" and lia.gui.menu:IsVisible() and lia.gui.menu:GetAlpha() > 0 then
                 lia.gui.menu:Remove()
                 vgui.Create("liaMenu")
             end

@@ -3,6 +3,7 @@
 
     Character attribute management system for the Lilia framework.
 ]]
+
 --[[
     Overview:
     The attributes library provides functionality for managing character attributes

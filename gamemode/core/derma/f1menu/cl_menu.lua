@@ -252,11 +252,16 @@ function PANEL:OnKeyCodePressed(key)
 end
 
 function PANEL:Update()
-    -- Only recreate the menu if it should be visible
-    -- Don't recreate if the menu is being refreshed for font updates
-    if self:IsVisible() then
-        self:Remove()
-        vgui.Create("liaMenu")
+    -- Don't recreate the menu during font updates - just refresh the layout
+    -- The menu should only be recreated when explicitly opened by the user
+    if self:IsVisible() and not self.closing then
+        -- Just refresh the layout instead of recreating the entire menu
+        self:InvalidateLayout(true)
+        for _, child in pairs(self:GetChildren()) do
+            if IsValid(child) then
+                child:InvalidateLayout(true)
+            end
+        end
     end
 end
 
