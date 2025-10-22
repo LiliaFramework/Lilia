@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.857 (October 22, 2025)
+
+### Changes
+
+- Auto Spawn
+- Update panel.lua
+- Reapply "Update character.lua"
+- Successfully updated workshop Lilia to 6.853
+- Update ci.yml
+- Successfully updated workshop Lilia to 6.851
+- Revert "Update character.lua"
+- Successfully updated workshop Lilia to 6.849
+- Update character.lua
+- Update character.lua
+- Successfully updated workshop Lilia to 6.846
+- Death Minor Issue
+- Successfully updated workshop Lilia to 6.844
+- Remove Modules Doc Section
+- Successfully updated workshop Lilia to 6.842
+- Removed Empty WhiteSpace
+- Missing Documentation
+- Missing Documentation
+- Successfully updated workshop Lilia to 6.838
+- Update chatbox.lua
+
 ## Version 6.853 (October 22, 2025)
 
 ### Changes
