@@ -1863,10 +1863,20 @@ if SERVER then
         end
 
         for _, ply in player.Iterator() do
-            if IsValid(ply) then
-                net.Start("liaCharDeleted")
-                net.Send(ply)
-                if ply.liaCharList then lia.module.get("mainmenu"):SyncCharList(ply) end
+            if IsValid(ply) and ply.liaCharList then
+                local hasCharacter = false
+                for _, charID in pairs(ply.liaCharList) do
+                    if charID == id then
+                        hasCharacter = true
+                        break
+                    end
+                end
+
+                if hasCharacter then
+                    net.Start("liaCharDeleted")
+                    net.Send(ply)
+                    lia.module.get("mainmenu"):SyncCharList(ply)
+                end
             end
         end
     end
