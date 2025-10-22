@@ -196,7 +196,7 @@ function PANEL:setActive(state)
                 end
 
                 -- Add chat commands that aren't already in command list
-                for chatType, chatInfo in SortedPairs(lia.chat.classes) do
+                for _, chatInfo in SortedPairs(lia.chat.classes) do
                     if not chatInfo.prefix then continue end
                     for _, prefix in ipairs(chatInfo.prefix) do
                         if prefix:sub(1, 1) == "/" then
