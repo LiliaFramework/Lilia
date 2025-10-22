@@ -168,6 +168,7 @@ function PANEL:setActive(state)
                 self.commandList:MakePopup()
                 self.commandList:SetKeyboardInputEnabled(false)
                 self.commandListCreateTime = CurTime()
+                -- Add regular commands
                 for cmdName, cmdInfo in SortedPairs(self.commands) do
                     if not tobool(string.find(cmdName, input:sub(2), 1, true)) then continue end
                     local btn = self.commandList:Add("liaButton")
@@ -191,6 +192,40 @@ function PANEL:setActive(state)
                         if originalPaint then originalPaint(s, w, h) end
                         local highlightColor = lia.color.theme.hover or Color(255, 255, 255, 30)
                         if s.isSelected then draw.RoundedBox(4, 0, 0, w, h, highlightColor) end
+                    end
+                end
+
+                -- Add chat commands that aren't already in command list
+                for chatType, chatInfo in SortedPairs(lia.chat.classes) do
+                    if not chatInfo.prefix then continue end
+                    for _, prefix in ipairs(chatInfo.prefix) do
+                        if prefix:sub(1, 1) == "/" then
+                            local cmd = prefix:gsub("^/", ""):lower()
+                            if cmd ~= "" and not self.commands[cmd] and tobool(string.find(cmd, input:sub(2), 1, true)) then
+                                local btn = self.commandList:Add("liaButton")
+                                btn:SetText(prefix .. " - " .. (chatInfo.desc ~= "" and L(chatInfo.desc) or L("noDesc")))
+                                btn:Dock(TOP)
+                                btn:DockMargin(0, 0, 0, 2)
+                                btn:SetTall(20)
+                                btn.isSelected = false
+                                btn.DoClick = function()
+                                    local syntax = L(chatInfo.syntax or "")
+                                    self.text:SetText(prefix .. " " .. syntax)
+                                    self.text:RequestFocus()
+                                    self.commandList:Remove()
+                                    self.commandList = nil
+                                    self.commandListCreateTime = nil
+                                end
+
+                                btn:SetTextColor(lia.color.theme.text or Color(255, 255, 255))
+                                local originalPaint = btn.Paint
+                                btn.Paint = function(s, w, h)
+                                    if originalPaint then originalPaint(s, w, h) end
+                                    local highlightColor = lia.color.theme.hover or Color(255, 255, 255, 30)
+                                    if s.isSelected then draw.RoundedBox(4, 0, 0, w, h, highlightColor) end
+                                end
+                            end
+                        end
                     end
                 end
 
