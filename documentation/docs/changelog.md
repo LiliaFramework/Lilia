@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.831 (October 22, 2025)
+
+### Changes
+
+- Updated Some Public Modules
+- Successfully updated workshop Lilia to 6.829
+- Update cl_init.lua
+- docs
+- Successfully updated workshop Lilia to 6.826
+- Several Minor Updates
+- Successfully updated workshop Lilia to 6.824
+- Bug Fixing, UI Consistency & localization
+- Successfully updated workshop Lilia to 6.822
+- Update workshop.lua
+- Localization & Bug Fixing
+- Successfully updated workshop Lilia to 6.819
+- Update client.lua
+- Successfully updated workshop Lilia to 6.817
+- Network Registration
+- Bad Font
+- Specific Check For Outrageous Situations
+- Fixed Bug W/ NPC Weapon Change
+- Remove Unused Fonts
+- Successfully updated workshop Lilia to 6.811
+
 ## Version 6.829 (October 21, 2025)
 
 ### Changes
