@@ -586,6 +586,83 @@ if SERVER then
     end
 
     --[[
+    Purpose: Checks for and handles inventory overflow when inventory size changes
+    When Called: When an inventory's dimensions are reduced and items may no longer fit
+    Parameters:
+        - inv (table): The inventory instance to check for overflow
+        - character (table): The character object to store overflow items with
+        - oldW (number): The previous width of the inventory
+        - oldH (number): The previous height of the inventory
+    Returns: Boolean indicating whether overflow items were found and stored
+    Realm: Server
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Check for overflow after inventory resize
+    local hadOverflow = lia.inventory.checkOverflow(inventory, character, 10, 8)
+    if hadOverflow then
+        lia.notify.add("Some items were moved to overflow storage", NOTIFY_GENERIC)
+    end
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Comprehensive overflow handling with validation
+    local function handleInventoryResize(inventory, character, oldWidth, oldHeight)
+        if not inventory or not character then
+            lia.error("Invalid parameters for inventory overflow check")
+            return false
+        end
+
+        local overflowDetected = lia.inventory.checkOverflow(inventory, character, oldWidth, oldHeight)
+        
+        if overflowDetected then
+            local overflowData = character:getData("overflowItems")
+            lia.log("Overflow detected: " .. #overflowData.items .. " items stored for character " .. character:getName())
+            
+            -- Notify player about overflow
+            lia.notify.add("Inventory resized - some items moved to overflow storage", NOTIFY_WARNING)
+            
+            return true
+        end
+        
+        return false
+    end
+    ```
+    ]]--
+    function lia.inventory.checkOverflow(inv, character, oldW, oldH)
+        local overflow, toRemove = {}, {}
+        for _, item in pairs(inv:getItems()) do
+            local x, y = item:getData("x"), item:getData("y")
+            if x and y and not inv:canItemFitInInventory(item, x, y) then
+                local data = item:getAllData()
+                data.x, data.y = nil, nil
+                overflow[#overflow + 1] = {
+                    uniqueID = item.uniqueID,
+                    quantity = item:getQuantity(),
+                    data = data
+                }
+
+                toRemove[#toRemove + 1] = item
+            end
+        end
+
+        for _, item in ipairs(toRemove) do
+            item:remove()
+        end
+
+        if #overflow > 0 then
+            character:setData("overflowItems", {
+                size = {oldW, oldH},
+                items = overflow
+            })
+            return true
+        end
+        return false
+    end
+
+    --[[
     Purpose: Registers a storage container model with inventory configuration
     When Called: During module initialization to register storage containers like crates, lockers, etc.
     Parameters:

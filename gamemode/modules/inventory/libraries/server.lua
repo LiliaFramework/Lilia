@@ -48,40 +48,6 @@ function MODULE:ItemDraggedOutOfInventory(client, item)
     item:interact("drop", client)
 end
 
-local function storeOverflowItems(inv, character, oldW, oldH)
-    local overflow, toRemove = {}, {}
-    for _, item in pairs(inv:getItems()) do
-        local x, y = item:getData("x"), item:getData("y")
-        if x and y and not inv:canItemFitInInventory(item, x, y) then
-            local data = item:getAllData()
-            data.x, data.y = nil, nil
-            overflow[#overflow + 1] = {
-                uniqueID = item.uniqueID,
-                quantity = item:getQuantity(),
-                data = data
-            }
-
-            toRemove[#toRemove + 1] = item
-        end
-    end
-
-    for _, item in ipairs(toRemove) do
-        item:remove()
-    end
-
-    if #overflow > 0 then
-        character:setData("overflowItems", {
-            size = {oldW, oldH},
-            items = overflow
-        })
-        return true
-    end
-end
-
-function lia.inventory.checkOverflow(inv, character, oldW, oldH)
-    return storeOverflowItems(inv, character, oldW, oldH) and true or false
-end
-
 local function applyInventorySize(client, character)
     local inv = character:getInv()
     if not inv then return end
