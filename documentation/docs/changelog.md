@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.849 (October 22, 2025)
+
+### Changes
+
+- Update character.lua
+- Update character.lua
+- Successfully updated workshop Lilia to 6.846
+- Death Minor Issue
+- Successfully updated workshop Lilia to 6.844
+- Remove Modules Doc Section
+- Successfully updated workshop Lilia to 6.842
+- Removed Empty WhiteSpace
+- Missing Documentation
+- Missing Documentation
+- Successfully updated workshop Lilia to 6.838
+- Update chatbox.lua
+- Successfully updated workshop Lilia to 6.831
+- Spacing
+- notification when you give an item on q menu
+- Reduced Item Health
+- Updated Some Public Modules
+- weaponCategory removed by default
+- Added Missing / on looc
+- Successfully updated workshop Lilia to 6.829
+
 ## Version 6.846 (October 22, 2025)
 
 ### Changes
