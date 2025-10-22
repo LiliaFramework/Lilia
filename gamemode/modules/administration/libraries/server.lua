@@ -73,6 +73,8 @@ net.Receive("liaSpawnMenuSpawnItem", function(_, client)
         undo.SetCustomUndoText(L("spawnUndoText", name))
         undo.Finish(L("spawnUndoName", name))
         lia.log.add(client, "spawnItem", name, "SpawnMenuSpawnItem")
+        -- Send notification to player about successful item spawn
+        client:notifySuccessLocalized("logItemSpawned", name)
     end, angle_zero, {})
 end)
 
