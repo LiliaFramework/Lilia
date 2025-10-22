@@ -181,7 +181,13 @@ end
         ```
 ]]
 function panelMeta:setScaledPos(x, y)
-    self:setPos(ScreenScale(x), ScreenScaleH(y))
+    if not IsValid(self) then return end
+    if not self.SetPos then
+        ErrorNoHalt("[Lilia] setScaledPos: Panel does not have SetPos method. Panel type: " .. tostring(self.ClassName or "Unknown") .. "\n")
+        return
+    end
+
+    self:SetPos(ScreenScale(x), ScreenScaleH(y))
 end
 
 --[[
@@ -225,5 +231,11 @@ end
         ```
 ]]
 function panelMeta:setScaledSize(w, h)
-    self:setSize(ScreenScale(w), ScreenScaleH(h))
+    if not IsValid(self) then return end
+    if not self.SetSize then
+        lia.error("[Lilia] setScaledSize: Panel does not have SetSize method. Panel type: " .. tostring(self.ClassName or "Unknown") .. "\n")
+        return
+    end
+
+    self:SetSize(ScreenScale(w), ScreenScaleH(h))
 end
