@@ -1453,6 +1453,8 @@ if SERVER then
             return true
         elseif cmd == "slay" then
             target:Kill()
+            -- Ensure death countdown appears by triggering a delayed death event
+            timer.Simple(0.05, function() if IsValid(target) and not target:Alive() then hook.Run("PlayerDeath", target, nil, admin) end end)
             admin:notifySuccessLocalized("plyKilled")
             lia.log.add(admin, "plySlay", target:Name())
             return true

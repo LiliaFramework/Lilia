@@ -2629,7 +2629,11 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
                 ok = txt and txt ~= "" and txt ~= L("select") and txt ~= L("choose")
             elseif ctl.GetValue then
                 local val = ctl:GetValue()
-                ok = val ~= nil and val ~= "" and val ~= "0"
+                if ftype == "int" or ftype == "number" then
+                    ok = val ~= nil and val ~= "" and tonumber(val) ~= nil
+                else
+                    ok = val ~= nil and val ~= "" and val ~= "0"
+                end
             end
 
             if not ok then

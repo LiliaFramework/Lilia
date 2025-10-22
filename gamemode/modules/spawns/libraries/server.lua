@@ -155,8 +155,11 @@ function MODULE:PlayerDeath(client, _, attacker)
     local char = client:getChar()
     if not char then return end
     if not client:IsBot() then
+        local deathTime = os.time()
         client:setNetVar("IsDeadRestricted", true)
-        client:setNetVar("lastDeathTime", os.time())
+        client:setNetVar("lastDeathTime", deathTime)
+        -- Ensure countdown appears by sending a delayed update if needed
+        timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setNetVar("lastDeathTime", deathTime) end end)
         timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     end
 
