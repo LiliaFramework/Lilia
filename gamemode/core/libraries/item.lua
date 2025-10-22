@@ -1118,7 +1118,7 @@ function lia.item.generateWeapons()
 
         ITEM.width = override.width or size.width
         ITEM.height = override.height or size.height
-        ITEM.weaponCategory = override.weaponCategory
+        if override.weaponCategory then ITEM.weaponCategory = override.weaponCategory end
     end
 end
 
