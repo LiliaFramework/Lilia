@@ -221,6 +221,25 @@ jobs:
           python3 generate_docs.py meta
           python3 generate_docs.py library
       - run: |
+          echo "=== Fetching Modules Documentation ==="
+          # Create modules directory if it doesn't exist
+          mkdir -p documentation/docs/modules
+          
+          # Fetch modules documentation from LiliaFramework/Modules repository
+          echo "Fetching modules documentation from LiliaFramework/Modules..."
+          curl -L -o modules_docs.zip https://github.com/LiliaFramework/Modules/archive/refs/heads/module-markdown.zip
+          
+          # Extract the zip file
+          unzip -q modules_docs.zip
+          
+          # Copy the modules documentation to the correct location
+          cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
+          
+          # Clean up temporary files
+          rm -rf modules_docs.zip Modules-module-markdown
+          
+          echo "Modules documentation successfully placed in documentation/docs/modules/"
+      - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add gamemode documentation
