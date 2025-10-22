@@ -3648,7 +3648,6 @@ lia.command.add("charwipe", {
             local charName = character:getName()
             character:kick()
             lia.char.delete(charID, target)
-
             if IsValid(target) and target.liaCharList then
                 for i, charId in ipairs(target.liaCharList) do
                     if charId == charID then
@@ -3659,6 +3658,7 @@ lia.command.add("charwipe", {
 
                 lia.module.get("mainmenu"):SyncCharList(target)
             end
+
             client:notifySuccessLocalized("charWipe", client:Name(), charName)
             lia.log.add(client, "charWipe", charName, charID)
         else
