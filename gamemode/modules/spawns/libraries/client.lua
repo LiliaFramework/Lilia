@@ -1,6 +1,6 @@
 ﻿local ceil, clamp = math.ceil, math.Clamp
 local fade, shadowFade = 0, 0
-local respawnReq, hideKey = false, false
+local hideKey = false
 function MODULE:HUDPaint()
     local ply, ft = LocalPlayer(), FrameTime()
     if not ply:getChar() then return end
@@ -36,19 +36,9 @@ function MODULE:HUDPaint()
     lia.util.drawText(L(txtKey), x, y, Color(255, 255, 255, ceil(shadowFade * 255)), 0, 0, "liaHugeFont")
     if not hideKey then
         surface.SetFont("liaMediumFont")
-        local dw = select(1, surface.GetTextSize(left > 0 and L("respawnIn", left) or L("respawnKey", input.GetKeyName(KEY_SPACE))))
+        local dw = select(1, surface.GetTextSize(L("respawnIn", left)))
         local dx, dy = (ScrW() - dw) / 2, y + h + 10
-        lia.util.drawText(left > 0 and L("respawnIn", left) or L("respawnKey", input.GetKeyName(KEY_SPACE)), dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, "liaMediumFont")
-        lia.util.drawText(left > 0 and L("respawnIn", left) or L("respawnKey", input.GetKeyName(KEY_SPACE)), dx, dy, Color(255, 255, 255, 255), 0, 0, "liaMediumFont")
-    end
-
-    if left <= 0 and input.IsKeyDown(KEY_SPACE) then
-        if not respawnReq then
-            respawnReq = true
-            net.Start("liaRequestRespawn")
-            net.SendToServer()
-        end
-    else
-        respawnReq = false
+        lia.util.drawText(L("respawnIn", left), dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, "liaMediumFont")
+        lia.util.drawText(L("respawnIn", left), dx, dy, Color(255, 255, 255, 255), 0, 0, "liaMediumFont")
     end
 end

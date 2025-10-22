@@ -160,7 +160,12 @@ function MODULE:PlayerDeath(client, _, attacker)
         client:setNetVar("lastDeathTime", deathTime)
         -- Ensure countdown appears by sending a delayed update if needed
         timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setNetVar("lastDeathTime", deathTime) end end)
-        timer.Simple(lia.config.get("SpawnTime"), function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
+        -- Auto-respawn timer
+        local respawnTime = lia.config.get("SpawnTime", 5)
+        local spawnTimeOverride = hook.Run("OverrideSpawnTime", client, respawnTime)
+        if spawnTimeOverride then respawnTime = math.floor(spawnTimeOverride) end
+        timer.Simple(respawnTime, function() if IsValid(client) and client:getChar() and not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end end)
+        timer.Simple(respawnTime, function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     end
 
     if attacker:IsPlayer() then
@@ -184,21 +189,6 @@ function MODULE:PlayerSpawn(client)
     client:SetDSP(0, false)
 end
 
-net.Receive("liaRequestRespawn", function(_, client)
-    if not IsValid(client) or not client:getChar() then return end
-    if client:IsBot() then
-        if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
-        return
-    end
-
-    local respawnTime = math.floor(lia.config.get("SpawnTime", 5))
-    local spawnTimeOverride = hook.Run("OverrideSpawnTime", client, respawnTime)
-    if spawnTimeOverride then respawnTime = math.floor(spawnTimeOverride) end
-    local lastDeathTime = client:getNetVar("lastDeathTime", os.time())
-    local timePassed = os.time() - lastDeathTime
-    if timePassed < respawnTime then return end
-    if not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end
-end)
-
+-- Manual respawn request removed - using auto-respawn instead
 hook.Add("PostPlayerLoadedChar", "liaSpawns", SpawnPlayer)
 hook.Add("PostPlayerLoadout", "liaSpawns", SpawnPlayer)

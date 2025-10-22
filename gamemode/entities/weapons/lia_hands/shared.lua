@@ -104,8 +104,8 @@ function SWEP:Think()
                 local client = self:GetOwner()
                 if client:KeyDown(IN_ATTACK2) then
                     local cmd = client:GetCurrentCommand()
-                    self.heldObjectAngle:rotateAroundAxis(currentPlayerAngles:Forward(), cmd:GetMouseX() / 15)
-                    self.heldObjectAngle:rotateAroundAxis(currentPlayerAngles:right(), cmd:GetMouseY() / 15)
+                    self.heldObjectAngle:RotateAroundAxis(currentPlayerAngles:Forward(), cmd:GetMouseX() / 15)
+                    self.heldObjectAngle:RotateAroundAxis(currentPlayerAngles:Right(), cmd:GetMouseY() / 15)
                 end
 
                 self.lastPlayerAngles = self.lastPlayerAngles or currentPlayerAngles
