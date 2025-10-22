@@ -356,7 +356,21 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False):
 
     # Extract filename for the output file
     filename = Path(file_path).stem
-    if is_library:
+    
+    # For module libraries, use the module name instead of the filename
+    if is_library and 'modules' in str(file_path):
+        # Extract module name from path like gamemode/modules/doors/libraries/server.lua
+        path_parts = Path(file_path).parts
+        if 'modules' in path_parts:
+            module_index = path_parts.index('modules')
+            if module_index + 1 < len(path_parts):
+                module_name = path_parts[module_index + 1]
+                output_filename = f"lia.{module_name}.md"
+            else:
+                output_filename = f"lia.{filename}.md"
+        else:
+            output_filename = f"lia.{filename}.md"
+    elif is_library:
         output_filename = f"lia.{filename}.md"
     else:
         output_filename = f"{filename}.md"
@@ -426,6 +440,7 @@ def main():
     # Set up paths
     script_dir = Path(__file__).parent
     base_dir = script_dir / 'gamemode' / 'core'
+    modules_dir = script_dir / 'gamemode' / 'modules'
 
     if args.type == 'meta':
         input_dir = base_dir / 'meta'
@@ -438,8 +453,9 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Get list of files to process
+    files_to_process = []
+    
     if args.files:
-        files_to_process = []
         for file_pattern in args.files:
             # Support wildcards
             import glob
@@ -451,7 +467,16 @@ def main():
                 matches = glob.glob(file_pattern)
                 files_to_process.extend(matches)
     else:
-        files_to_process = list(input_dir.glob('*.lua'))
+        # Process core library files
+        files_to_process.extend(list(input_dir.glob('*.lua')))
+        
+        # Process module library files (for library type only)
+        if args.type == 'library':
+            for module_dir in modules_dir.iterdir():
+                if module_dir.is_dir():
+                    module_lib_dir = module_dir / 'libraries'
+                    if module_lib_dir.exists():
+                        files_to_process.extend(list(module_lib_dir.glob('*.lua')))
 
     if not files_to_process:
         print(f"No files found in {input_dir}")

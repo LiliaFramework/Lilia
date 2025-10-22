@@ -238,15 +238,6 @@ function PANEL:OnRemove()
     if lia.derma.menu_radial == self then lia.derma.menu_radial = nil end
 end
 
-vgui.Register("liaRadialPanel", PANEL, "DPanel")
-function lia.derma.radial_menu(options)
-    if IsValid(lia.derma.menu_radial) then lia.derma.menu_radial:Remove() end
-    local m = vgui.Create("liaRadialPanel")
-    m:Init(options)
-    lia.derma.menu_radial = m
-    return m
-end
-
 function PANEL:GetCurrentOptions()
     if self.currentMenu then return self.currentMenu.options or {} end
     return self.options
@@ -291,3 +282,5 @@ end
 function PANEL:AddSubMenuOption(text, submenu, icon, desc)
     return self:AddOption(text, nil, icon, desc, submenu)
 end
+
+vgui.Register("liaRadialPanel", PANEL, "DPanel")

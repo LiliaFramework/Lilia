@@ -3,7 +3,6 @@
 
     Advanced UI rendering and interaction system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The derma library provides comprehensive UI rendering and interaction functionality for the Lilia framework.
@@ -270,6 +269,75 @@ function lia.derma.colorPicker(func, color_standart)
     end)
 
     timer.Simple(0.1, function() lia.derma.menuColorPicker:SetAlpha(255) end)
+end
+
+--[[
+    Purpose: Creates a radial menu interface with circular option selection
+    When Called: When user needs to select from multiple options in a circular menu format
+    Parameters:
+        options (table, optional) - Configuration table with the following optional fields:
+            radius (number) - Outer radius of the radial menu (default: 280)
+            inner_radius (number) - Inner radius of the radial menu (default: 96)
+            disable_background (boolean) - Whether to disable the background overlay (default: false)
+            hover_sound (string) - Sound file to play on hover (default: "ratio_button.wav")
+            scale_animation (boolean) - Whether to enable scale animation on open (default: true)
+    Returns: Panel - The created radial menu panel with methods for adding options
+    Realm: Client
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Create a basic radial menu
+    local menu = lia.derma.radialMenu()
+    menu:AddOption("Option 1", function() print("Option 1 selected") end)
+    menu:AddOption("Option 2", function() print("Option 2 selected") end)
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Create radial menu with icons and descriptions
+    local menu = lia.derma.radialMenu()
+    menu:AddOption("Edit", function() editItem() end, "icon16/pencil.png", "Edit this item")
+    menu:AddOption("Delete", function() deleteItem() end, "icon16/delete.png", "Delete this item")
+    menu:AddOption("Copy", function() copyItem() end, "icon16/copy.png", "Copy this item")
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Create radial menu with custom options and submenus
+    local options = {
+        radius = 320,
+        inner_radius = 120,
+        hover_sound = "ui/buttonclick.wav",
+        scale_animation = true
+    }
+    local menu = lia.derma.radialMenu(options)
+    
+    -- Add main options
+    menu:AddOption("Actions", nil, "icon16/gear.png", "Perform actions", nil)
+    
+    -- Create submenu
+    local submenu = menu:CreateSubMenu("Actions", "Choose an action")
+    submenu:AddOption("Attack", function() attackTarget() end, "icon16/sword.png", "Attack target")
+    submenu:AddOption("Defend", function() defendPosition() end, "icon16/shield.png", "Defend position")
+    
+    -- Add submenu option
+    menu:AddSubMenuOption("Actions", submenu, "icon16/gear.png", "Access action menu")
+    ```
+
+    Panel Methods:
+    - AddOption(text, func, icon, desc, submenu) - Adds an option to the menu
+    - CreateSubMenu(title, desc) - Creates a submenu for nested options
+    - AddSubMenuOption(text, submenu, icon, desc) - Adds a submenu option
+    - SetCenterText(title, desc) - Sets the center text and description
+    - Remove() - Closes and removes the menu
+]]
+function lia.derma.radialMenu(options)
+    if IsValid(lia.derma.menu_radial) then lia.derma.menu_radial:Remove() end
+    local m = vgui.Create("liaRadialPanel")
+    m:Init(options)
+    lia.derma.menu_radial = m
+    return m
 end
 
 --[[
