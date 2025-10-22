@@ -765,6 +765,10 @@ else
                         filled = txt ~= nil and txt ~= "" and txt ~= "nil"
                     elseif ftype == "bool" then
                         filled = true
+                    elseif ftype == "number" then
+                        local val = ctl:GetValue()
+                        local numVal = tonumber(val)
+                        filled = val ~= nil and val ~= "" and val ~= "nil" and numVal ~= nil
                     else
                         local val = ctl:GetValue()
                         filled = val ~= nil and val ~= "" and val ~= "nil"
@@ -805,6 +809,9 @@ else
                         val = dataVal or ctl:GetValue()
                     elseif typ == "bool" then
                         val = ctl:GetChecked()
+                    elseif typ == "number" then
+                        local strVal = ctl:GetValue()
+                        val = strVal ~= nil and strVal ~= "" and strVal ~= "nil" and tonumber(strVal) or nil
                     else
                         val = ctl:GetValue()
                     end
@@ -3648,7 +3655,6 @@ lia.command.add("charwipe", {
             local charName = character:getName()
             character:kick()
             lia.char.delete(charID, target)
-
             if IsValid(target) and target.liaCharList then
                 for i, charId in ipairs(target.liaCharList) do
                     if charId == charID then
@@ -3659,6 +3665,7 @@ lia.command.add("charwipe", {
 
                 lia.module.get("mainmenu"):SyncCharList(target)
             end
+
             client:notifySuccessLocalized("charWipe", client:Name(), charName)
             lia.log.add(client, "charWipe", charName, charID)
         else

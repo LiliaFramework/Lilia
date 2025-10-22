@@ -2632,7 +2632,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
                 if ftype == "int" or ftype == "number" then
                     ok = val ~= nil and val ~= "" and tonumber(val) ~= nil
                 else
-                    ok = val ~= nil and val ~= "" and val ~= "0"
+                    ok = val ~= nil and val ~= "" and val ~= "nil"
                 end
             end
 

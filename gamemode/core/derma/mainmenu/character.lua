@@ -568,33 +568,16 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local bw, bh = fw * 0.85, 40
     local pad = 10
     local cx = fx + (fw - bw) * 0.5
-    local clientChar = LocalPlayer().getChar and LocalPlayer():getChar()
     local selectText = L("select") .. " " .. L("character")
-    if clientChar and character:getID() == clientChar:getID() then
-        selectText = L("alreadyUsingCharacter")
-    elseif character:isBanned() then
-        selectText = L("permaKilledCharacter")
-    end
-
+    if character:isBanned() then selectText = L("permaKilledCharacter") end
     self.selectBtn = self:Add("liaSmallButton")
     self.selectBtn:SetSize(bw, bh)
     self.selectBtn:SetPos(cx, fy + fh + pad)
     self.selectBtn:SetText(selectText)
-    if clientChar and character:getID() == clientChar:getID() then
-        self.selectBtn:SetEnabled(true)
-        self.selectBtn:SetTextColor(Color(255, 255, 255))
-    end
-
     self.selectBtn.DoClick = function()
         if character:isBanned() then
             local characterName = character:getName()
             Derma_Query(L("pkDialogMessage", characterName), L("permaKillTitle"), L("iAcknowledge"), function() end)
-            return
-        end
-
-        -- If player is already using this character, act like return button
-        if clientChar and character:getID() == clientChar:getID() then
-            self:Remove()
             return
         end
 

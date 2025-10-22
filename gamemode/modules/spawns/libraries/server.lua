@@ -158,14 +158,7 @@ function MODULE:PlayerDeath(client, _, attacker)
         local deathTime = os.time()
         client:setNetVar("IsDeadRestricted", true)
         client:setNetVar("lastDeathTime", deathTime)
-        -- Ensure countdown appears by sending a delayed update if needed
         timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setNetVar("lastDeathTime", deathTime) end end)
-        -- Auto-respawn timer
-        local respawnTime = lia.config.get("SpawnTime", 5)
-        local spawnTimeOverride = hook.Run("OverrideSpawnTime", client, respawnTime)
-        if spawnTimeOverride then respawnTime = math.floor(spawnTimeOverride) end
-        timer.Simple(respawnTime, function() if IsValid(client) and client:getChar() and not client:Alive() and not client:getNetVar("IsDeadRestricted", false) then client:Spawn() end end)
-        timer.Simple(respawnTime, function() if IsValid(client) then client:setNetVar("IsDeadRestricted", false) end end)
     end
 
     if attacker:IsPlayer() then
