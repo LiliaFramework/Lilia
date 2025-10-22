@@ -3,7 +3,6 @@
 
     Dynamic progress bar creation and management system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The bars library provides a comprehensive system for creating and managing dynamic progress bars

@@ -3,7 +3,6 @@
 
     Comprehensive font management system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The font library provides comprehensive functionality for managing custom fonts in the Lilia framework.

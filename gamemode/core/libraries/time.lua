@@ -3,7 +3,6 @@
 
     Time manipulation, formatting, and calculation system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The time library provides comprehensive functionality for time manipulation, formatting,

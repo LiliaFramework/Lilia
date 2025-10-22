@@ -3,7 +3,6 @@
 
     Web-based image downloading, caching, and management system for the Lilia framework.
 ]]
-
 --[[
     Overview:
     The web image library provides comprehensive functionality for downloading, caching, and managing
