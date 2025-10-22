@@ -312,15 +312,15 @@ end
         scale_animation = true
     }
     local menu = lia.derma.radialMenu(options)
-    
+
     -- Add main options
     menu:AddOption("Actions", nil, "icon16/gear.png", "Perform actions", nil)
-    
+
     -- Create submenu
     local submenu = menu:CreateSubMenu("Actions", "Choose an action")
     submenu:AddOption("Attack", function() attackTarget() end, "icon16/sword.png", "Attack target")
     submenu:AddOption("Defend", function() defendPosition() end, "icon16/shield.png", "Defend position")
-    
+
     -- Add submenu option
     menu:AddSubMenuOption("Actions", submenu, "icon16/gear.png", "Access action menu")
     ```

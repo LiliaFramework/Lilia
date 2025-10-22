@@ -500,7 +500,7 @@ end
             lia.warning("No door preset found for map: " .. mapName)
             return false
         end
-        
+
         local validDoors = 0
         for doorID, doorData in pairs(preset) do
             local ent = ents.GetMapCreatedEntity(doorID)
@@ -510,7 +510,7 @@ end
                 ent:setNetVar("doorData", doorData)
             end
         end
-        
+
         lia.information("Loaded " .. validDoors .. " doors from preset for " .. mapName)
         return true
     end
@@ -549,12 +549,12 @@ end
     -- High: Custom schema verification with migration
     function customSchemaCheck()
         lia.doors.verifyDatabaseSchema()
-        
+
         -- Check for missing columns and add them
         local missingColumns = {
             door_group = "text"
         }
-        
+
         for column, type in pairs(missingColumns) do
             lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. column .. " " .. type)
         end
@@ -665,14 +665,14 @@ end
     -- High: Custom cleanup with logging and validation
     function advancedDoorCleanup()
         lia.information("Starting door data cleanup...")
-        
+
         lia.doors.cleanupCorruptedData()
-        
+
         -- Additional validation
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
         local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
-        
+
         lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
             local count = res.results[1].count
             lia.information("Door cleanup completed. Total doors in database: " .. count)

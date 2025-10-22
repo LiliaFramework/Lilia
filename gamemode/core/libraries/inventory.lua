@@ -616,21 +616,22 @@ if SERVER then
         end
 
         local overflowDetected = lia.inventory.checkOverflow(inventory, character, oldWidth, oldHeight)
-        
+
         if overflowDetected then
             local overflowData = character:getData("overflowItems")
             lia.log("Overflow detected: " .. #overflowData.items .. " items stored for character " .. character:getName())
-            
+
             -- Notify player about overflow
             lia.notify.add("Inventory resized - some items moved to overflow storage", NOTIFY_WARNING)
-            
+
             return true
         end
-        
+
         return false
     end
     ```
-    ]]--
+    ]]
+    --
     function lia.inventory.checkOverflow(inv, character, oldW, oldH)
         local overflow, toRemove = {}, {}
         for _, item in pairs(inv:getItems()) do
