@@ -10,7 +10,7 @@
     various interaction types including player-to-player interactions, entity interactions, and
     personal actions. The library operates on both server and client sides, with the server managing
     interaction registration and validation, while the client handles UI display and user input.
-    It includes automatic categorization, range checking, timed actions, and network synchronization
+    It includes range checking, timed actions, and network synchronization
     to ensure consistent interaction behavior across all clients. The library supports both immediate
     and delayed actions with progress indicators, making it suitable for complex interaction systems
     like money transfers, voice changes, and other gameplay mechanics.
@@ -181,68 +181,55 @@ function lia.playerinteract.getActions(client)
 end
 
 --[[
-    Purpose: Organizes interaction/action options into categories for UI display
-    When Called: Called when preparing options for display in categorized menus
+    Purpose: Prepares interaction/action options for UI display in a flat list
+    When Called: Called when preparing options for display in the interaction menu
     Parameters:
-        - options (table): Dictionary of options to categorize
-    Returns: table - Dictionary with categories as keys and option tables as values
+        - options (table): Dictionary of options to prepare
+    Returns: table - Array of options for flat display
     Realm: Shared
     Example Usage:
 
     Low Complexity:
     ```lua
-    -- Simple: Categorize available interactions
+    -- Simple: Get options for display
     local interactions = lia.playerinteract.getInteractions()
-    local categorized = lia.playerinteract.getCategorizedOptions(interactions)
-    for category, options in pairs(categorized) do
-        print("Category:", category, "Options:", table.Count(options))
+    local optionsList = lia.playerinteract.getCategorizedOptions(interactions)
+    for _, option in pairs(optionsList) do
+        print("Option:", option.name)
     end
     ```
 
     Medium Complexity:
     ```lua
-    -- Medium: Categorize with custom category handling
+    -- Medium: Process options for custom display
     local actions = lia.playerinteract.getActions()
-    local categorized = lia.playerinteract.getCategorizedOptions(actions)
-    local sortedCategories = {}
-    for category in pairs(categorized) do
-        table.insert(sortedCategories, category)
+    local optionsList = lia.playerinteract.getCategorizedOptions(actions)
+    local count = #optionsList
+    if count > 0 then
+        -- Options are ready for display
     end
-    table.sort(sortedCategories)
     ```
 
     High Complexity:
     ```lua
-    -- High: Advanced categorization with filtering and sorting
+    -- High: Filter and process options
     local interactions = lia.playerinteract.getInteractions()
-    local categorized = lia.playerinteract.getCategorizedOptions(interactions)
-    local priorityCategories = {"Voice", "Social", "Combat"}
-    local sortedCategorized = {}
-
-    -- Add priority categories first
-    for _, category in ipairs(priorityCategories) do
-        if categorized[category] then
-            sortedCategorized[category] = categorized[category]
-        end
-    end
-
-    -- Add remaining categories
-    for category, options in pairs(categorized) do
-        if not sortedCategorized[category] then
-            sortedCategorized[category] = options
+    local optionsList = lia.playerinteract.getCategorizedOptions(interactions)
+    local filteredOptions = {}
+    for _, option in pairs(optionsList) do
+        if option.opt.category == "Voice" then
+            table.insert(filteredOptions, option)
         end
     end
     ```
 ]]
 --
 function lia.playerinteract.getCategorizedOptions(options)
-    local categorized = {}
-    for name, entry in pairs(options) do
-        local category = entry.opt and entry.opt.category or L("categoryUnsorted")
-        if not categorized[category] then categorized[category] = {} end
-        categorized[category][name] = entry
+    local flatList = {}
+    for _, entry in pairs(options) do
+        flatList[#flatList + 1] = entry
     end
-    return categorized
+    return flatList
 end
 
 if SERVER then
@@ -664,7 +651,7 @@ if SERVER then
     })
 else
     --[[
-        Purpose: Opens the interaction/action menu UI with categorized options
+        Purpose: Opens the interaction/action menu UI with options in a flat list
         When Called: Called when player presses interaction keybind or requests menu
         Parameters:
             - options (table): Dictionary of available options to display
@@ -763,13 +750,11 @@ else
         end
 
         if #visible == 0 then return end
-        local categorized = lia.playerinteract.getCategorizedOptions(visible)
-        local categoryCount = table.Count(categorized)
+        local optionsList = lia.playerinteract.getCategorizedOptions(visible)
         local fadeSpeed = 0.05
         local frameW = 450
         local entryH = 30
-        local categoryH = 35
-        local baseH = entryH * #visible + categoryH * categoryCount + 140
+        local baseH = entryH * #visible + 80
         local frameH = isInteraction and baseH or math.min(baseH, ScrH() * 0.6)
         local titleH = isInteraction and 36 or 16
         local titleY = 2
@@ -811,118 +796,42 @@ else
         scroll:SetSize(frameW, frameH - titleH - titleY - gap)
         local layout = vgui.Create("DListLayout", scroll)
         layout:Dock(FILL)
-        local function preserveScroll(f)
-            local bar = scroll:GetVBar()
-            local pos = bar and bar:GetScroll() or 0
-            f()
-            if bar then bar:SetScroll(pos) end
-        end
 
-        for categoryName, categoryOptions in pairs(categorized) do
-            local categoryHeader = vgui.Create("DPanel", layout)
-            categoryHeader:SetTall(categoryH)
-            categoryHeader:Dock(TOP)
-            categoryHeader:DockMargin(15, 0, 15, 0)
-            categoryHeader._cachedName = nil
-            categoryHeader._cachedTextW = 0
-            categoryHeader._cachedTextH = 0
-            function categoryHeader:Paint(w, h)
-                lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel):Shape(lia.derma.SHAPE_IOS):Draw()
-                lia.derma.rect(2, 2, w - 4, h - 4):Rad(6):Color(lia.color.theme.button):Shape(lia.derma.SHAPE_IOS):Draw()
-                if self._cachedName ~= categoryName then
-                    surface.SetFont("liaSmallFont")
-                    self._cachedTextW, self._cachedTextH = surface.GetTextSize(categoryName)
-                    self._cachedName = categoryName
-                end
-
-                local x = (w - self._cachedTextW) / 2
-                local y = (h - self._cachedTextH) / 2
-                draw.SimpleText(categoryName, "liaSmallFont", x, y, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            end
-
-            local collapseBtn = categoryHeader:Add("DButton")
-            collapseBtn:SetSize(20, 20)
-            collapseBtn:SetPos(10, (categoryH - 20) / 2)
-            collapseBtn:SetText("")
-            collapseBtn:SetTextColor(color_white)
-            local isCollapsed = false
-            local categoryContent = {}
-            collapseBtn._icon = nil
-            collapseBtn._textW = 0
-            collapseBtn._textH = 0
-            function collapseBtn:Paint(w, h)
-                local icon = isCollapsed and "▶" or "▼"
-                if self._icon ~= icon then
-                    surface.SetFont("liaSmallFont")
-                    self._textW, self._textH = surface.GetTextSize(icon)
-                    self._icon = icon
-                end
-
-                local x = (w - self._textW) / 2
-                local y = (h - self._textH) / 2
-                draw.SimpleText(icon, "liaSmallFont", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            end
-
-            collapseBtn.DoClick = function()
-                preserveScroll(function()
-                    isCollapsed = not isCollapsed
-                    for _, p in pairs(categoryContent) do
-                        p:SetVisible(not isCollapsed)
-                    end
-
-                    layout:InvalidateLayout(true)
-                    layout:PerformLayout()
-                end)
-            end
-
-            layout:Add(categoryHeader)
-            for _, entry in pairs(categoryOptions) do
-                local btn = vgui.Create("liaButton", layout)
-                btn:SetTall(entryH)
-                btn:Dock(TOP)
-                btn:DockMargin(15, 8, 15, 0)
-                btn:SetText(L(entry.name))
-                btn:SetFont("liaSmallFont")
-                btn:SetTextColor(color_white)
-                btn:SetContentAlignment(5)
-                btn.DoClick = function()
-                    frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
-                    if not entry.opt.serverOnly and entry.opt.onRun then
-                        if isInteraction then
-                            if ent:IsPlayer() then
-                                local target = ent
-                                if ent:IsBot() then if client:Team() == FACTION_STAFF then target = client end end
-                                entry.opt.onRun(client, target)
-                            else
-                                entry.opt.onRun(client, ent)
-                            end
+        for _, entry in pairs(optionsList) do
+            local btn = vgui.Create("liaButton", layout)
+            btn:SetTall(entryH)
+            btn:Dock(TOP)
+            btn:DockMargin(15, 8, 15, 0)
+            btn:SetText(L(entry.name))
+            btn:SetFont("liaSmallFont")
+            btn:SetTextColor(color_white)
+            btn:SetContentAlignment(5)
+            btn.DoClick = function()
+                frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
+                if not entry.opt.serverOnly and entry.opt.onRun then
+                    if isInteraction then
+                        if ent:IsPlayer() then
+                            local target = ent
+                            if ent:IsBot() then if client:Team() == FACTION_STAFF then target = client end end
+                            entry.opt.onRun(client, target)
                         else
                             entry.opt.onRun(client, ent)
                         end
-                    end
-
-                    if entry.opt.serverOnly then
-                        net.Start(netMsg)
-                        net.WriteString(entry.name)
-                        net.WriteBool(isInteraction)
-                        net.WriteEntity(ent)
-                        net.SendToServer()
+                    else
+                        entry.opt.onRun(client, ent)
                     end
                 end
 
-                layout:Add(btn)
-                table.insert(categoryContent, btn)
+                if entry.opt.serverOnly then
+                    net.Start(netMsg)
+                    net.WriteString(entry.name)
+                    net.WriteBool(isInteraction)
+                    net.WriteEntity(ent)
+                    net.SendToServer()
+                end
             end
 
-            local spacer = vgui.Create("DPanel", layout)
-            spacer:SetTall(10)
-            spacer:Dock(TOP)
-            spacer:DockMargin(0, 0, 0, 0)
-            function spacer:Paint()
-            end
-
-            layout:Add(spacer)
-            table.insert(categoryContent, spacer)
+            layout:Add(btn)
         end
 
         lia.gui.InteractionMenu = frame
@@ -955,7 +864,7 @@ end
 
 lia.keybind.add("interactionMenu", {
     keyBind = KEY_TAB,
-    desc = "interactionMenuDesc",
+    desc = L("interactionMenuDesc"),
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("interaction")
@@ -965,7 +874,7 @@ lia.keybind.add("interactionMenu", {
 
 lia.keybind.add("personalActions", {
     keyBind = KEY_G,
-    desc = "personalActionsDesc",
+    desc = L("personalActionsDesc"),
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("action")

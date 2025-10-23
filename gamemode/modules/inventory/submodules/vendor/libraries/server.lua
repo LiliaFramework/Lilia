@@ -256,7 +256,7 @@ net.Receive("liaVendorTrade", function(_, client)
     end
 
     local entity = client.liaVendor
-    if not IsValid(entity) or client:GetPos():distance(entity:GetPos()) > 192 then return end
+    if not IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192 then return end
     if not hook.Run("CanPlayerAccessVendor", client, entity) then return end
     hook.Run("VendorTradeEvent", client, entity, uniqueID, isSellingToVendor)
 end)

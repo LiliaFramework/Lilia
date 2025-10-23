@@ -56,75 +56,39 @@ if SERVER then
     hook.Add("serverguard.RanksLoaded", "serverguard.RanksLoaded", RegisterPrivileges)
 else
     RegisterPrivileges()
+    local sgCommands = {
+        kick = function(id, _, reason) RunConsoleCommand("serverguard", "kick", id, reason or "") end,
+        ban = function(id, dur, reason) RunConsoleCommand("serverguard", "ban", id, tostring(dur or 0), reason or "") end,
+        unban = function(id) RunConsoleCommand("serverguard", "unban", id) end,
+        mute = function(id, dur) RunConsoleCommand("serverguard", "mute", id, tostring(dur or 0)) end,
+        unmute = function(id) RunConsoleCommand("serverguard", "unmute", id) end,
+        gag = function(id, dur) RunConsoleCommand("serverguard", "gag", id, tostring(dur or 0)) end,
+        ungag = function(id) RunConsoleCommand("serverguard", "ungag", id) end,
+        freeze = function(id, dur) RunConsoleCommand("serverguard", "freeze", id, tostring(dur or 0)) end,
+        unfreeze = function(id) RunConsoleCommand("serverguard", "unfreeze", id) end,
+        slay = function(id) RunConsoleCommand("serverguard", "slay", id) end,
+        bring = function(id) RunConsoleCommand("serverguard", "bring", id) end,
+        ["goto"] = function(id) RunConsoleCommand("serverguard", "goto", id) end,
+        ["return"] = function(id) RunConsoleCommand("serverguard", "return", id) end,
+        jail = function(id, dur) RunConsoleCommand("serverguard", "jail", id, tostring(dur or 0)) end,
+        unjail = function(id) RunConsoleCommand("serverguard", "unjail", id) end,
+        cloak = function(id) RunConsoleCommand("serverguard", "cloak", id) end,
+        uncloak = function(id) RunConsoleCommand("serverguard", "uncloak", id) end,
+        god = function(id) RunConsoleCommand("serverguard", "god", id) end,
+        ungod = function(id) RunConsoleCommand("serverguard", "ungod", id) end,
+        ignite = function(id, dur) RunConsoleCommand("serverguard", "ignite", id, tostring(dur or 0)) end,
+        extinguish = function(id) RunConsoleCommand("serverguard", "extinguish", id) end,
+        unignite = function(id) RunConsoleCommand("serverguard", "extinguish", id) end,
+        strip = function(id) RunConsoleCommand("serverguard", "strip", id) end
+    }
+
     hook.Add("RunAdminSystemCommand", "liaServerGuard", function(cmd, _, target, dur, reason)
         local id = isstring(target) and target or IsValid(target) and target:SteamID()
         if not id then return end
-        if cmd == "kick" then
-            RunConsoleCommand("serverguard", "kick", id, reason or "")
-            return true
-        elseif cmd == "ban" then
-            RunConsoleCommand("serverguard", "ban", id, tostring(dur or 0), reason or "")
-            return true
-        elseif cmd == "unban" then
-            RunConsoleCommand("serverguard", "unban", id)
-            return true
-        elseif cmd == "mute" then
-            RunConsoleCommand("serverguard", "mute", id, tostring(dur or 0))
-            return true
-        elseif cmd == "unmute" then
-            RunConsoleCommand("serverguard", "unmute", id)
-            return true
-        elseif cmd == "gag" then
-            RunConsoleCommand("serverguard", "gag", id, tostring(dur or 0))
-            return true
-        elseif cmd == "ungag" then
-            RunConsoleCommand("serverguard", "ungag", id)
-            return true
-        elseif cmd == "freeze" then
-            RunConsoleCommand("serverguard", "freeze", id, tostring(dur or 0))
-            return true
-        elseif cmd == "unfreeze" then
-            RunConsoleCommand("serverguard", "unfreeze", id)
-            return true
-        elseif cmd == "slay" then
-            RunConsoleCommand("serverguard", "slay", id)
-            return true
-        elseif cmd == "bring" then
-            RunConsoleCommand("serverguard", "bring", id)
-            return true
-        elseif cmd == "goto" then
-            RunConsoleCommand("serverguard", "goto", id)
-            return true
-        elseif cmd == "return" then
-            RunConsoleCommand("serverguard", "return", id)
-            return true
-        elseif cmd == "jail" then
-            RunConsoleCommand("serverguard", "jail", id, tostring(dur or 0))
-            return true
-        elseif cmd == "unjail" then
-            RunConsoleCommand("serverguard", "unjail", id)
-            return true
-        elseif cmd == "cloak" then
-            RunConsoleCommand("serverguard", "cloak", id)
-            return true
-        elseif cmd == "uncloak" then
-            RunConsoleCommand("serverguard", "uncloak", id)
-            return true
-        elseif cmd == "god" then
-            RunConsoleCommand("serverguard", "god", id)
-            return true
-        elseif cmd == "ungod" then
-            RunConsoleCommand("serverguard", "ungod", id)
-            return true
-        elseif cmd == "ignite" then
-            RunConsoleCommand("serverguard", "ignite", id, tostring(dur or 0))
-            return true
-        elseif cmd == "extinguish" or cmd == "unignite" then
-            RunConsoleCommand("serverguard", "extinguish", id)
-            return true
-        elseif cmd == "strip" then
-            RunConsoleCommand("serverguard", "strip", id)
-            return true
+        local commandFunc = sgCommands[cmd]
+        if commandFunc then
+            commandFunc(id, dur, reason)
+            return true, function() end
         end
     end)
 end

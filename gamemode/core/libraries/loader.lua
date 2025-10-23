@@ -162,10 +162,6 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/meta/vector.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/meta/entity.lua",
         realm = "shared"
     },

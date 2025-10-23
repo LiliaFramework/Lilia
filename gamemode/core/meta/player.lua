@@ -794,7 +794,7 @@ end
 function playerMeta:getEyeEnt(distance)
     distance = distance or 150
     local e = self:GetEyeTrace().Entity
-    return e:GetPos():distance(self:GetPos()) <= distance and e or nil
+    return e:GetPos():Distance(self:GetPos()) <= distance and e or nil
 end
 
 --[[
@@ -2305,26 +2305,26 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
                 return
             end
 
-            local dist = self:GetPos():distance(vector)
+            local dist = self:GetPos():Distance(vector)
             local spos = vector:ToScreen()
             local howClose = math.Round(dist / 40)
             if spos.visible then
                 if logoMaterial then
-                    local logoSize = 32
+                    local logoSize = 24
                     surface.SetDrawColor(255, 255, 255, 255)
                     surface.SetMaterial(logoMaterial)
-                    surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 40, logoSize, logoSize)
+                    surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 25, logoSize, logoSize)
                 end
 
-                surface.SetFont("liaMediumFont")
+                surface.SetFont("liaSmallFont")
                 local nameText = name
                 local metersText = L("meters", howClose)
                 local nameTw, nameTh = surface.GetTextSize(nameText)
                 local metersTw, metersTh = surface.GetTextSize(metersText)
                 local containerTw = math.max(nameTw, metersTw)
-                local containerTh = nameTh + metersTh + 10
-                local bx, by = math.Round(spos.x - containerTw * 0.5 - 18), math.Round(spos.y - 12)
-                local bw, bh = containerTw + 36, containerTh + 24
+                local containerTh = nameTh + metersTh + 6
+                local bx, by = math.Round(spos.x - containerTw * 0.5 - 8), math.Round(spos.y - 8)
+                local bw, bh = containerTw + 16, containerTh + 12
                 local theme = lia.color.theme or {
                     background_panelpopup = Color(30, 30, 30, 180),
                     theme = Color(255, 255, 255),
@@ -2338,8 +2338,8 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
                 lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
                 lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
                 lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
-                draw.SimpleText(nameText, "liaMediumFont", math.Round(spos.x), math.Round(spos.y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-                draw.SimpleText(metersText, "liaMediumFont", math.Round(spos.x), math.Round(spos.y - 2 + nameTh + 5), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                draw.SimpleText(nameText, "liaSmallFont", math.Round(spos.x), math.Round(spos.y - 1), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                draw.SimpleText(metersText, "liaSmallFont", math.Round(spos.x), math.Round(spos.y - 1 + nameTh + 3), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             end
 
             if howClose <= 3 then RunConsoleCommand("waypoint_stop_" .. waypointID) end

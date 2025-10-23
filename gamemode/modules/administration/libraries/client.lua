@@ -78,85 +78,159 @@ function MODULE:ShowPlayerOptions(target, options)
                 SetClipboardText(target:SteamID())
             end
         },
-        {
-            name = L("blind"),
-            image = "icon16/eye.png",
-            func = function() RunConsoleCommand("say", "!blind " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("freeze"),
-            image = "icon16/lock.png",
-            func = function() RunConsoleCommand("say", "!freeze " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("gag"),
-            image = "icon16/sound_mute.png",
-            func = function() RunConsoleCommand("say", "!gag " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("ignite"),
-            image = "icon16/fire.png",
-            func = function() RunConsoleCommand("say", "!ignite " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("jail"),
-            image = "icon16/lock.png",
-            func = function() RunConsoleCommand("say", "!jail " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("mute"),
-            image = "icon16/sound_delete.png",
-            func = function() RunConsoleCommand("say", "!mute " .. GetIdentifier(target)) end
-        },
+        -- Only show blind option if player is not currently blinded
+        (function()
+            local isBlinded = timer.Exists("liaBlind" .. target:SteamID())
+            if not isBlinded then
+                return {
+                    name = L("blind"),
+                    image = "icon16/eye.png",
+                    func = function() lia.administrator.execCommand("blind", target) end
+                }
+            end
+        end)(),
+        -- Only show freeze option if player is not currently frozen
+        (function()
+            if not target:IsFrozen() then
+                return {
+                    name = L("freeze"),
+                    image = "icon16/lock.png",
+                    func = function() lia.administrator.execCommand("freeze", target) end
+                }
+            end
+        end)(),
+        -- Only show gag option if player is not currently gagged
+        (function()
+            if not target:getNetVar("liaGagged", false) then
+                return {
+                    name = L("gag"),
+                    image = "icon16/sound_mute.png",
+                    func = function() lia.administrator.execCommand("gag", target) end
+                }
+            end
+        end)(),
+        -- Only show ignite option if player is not currently on fire
+        (function()
+            if not target:IsOnFire() then
+                return {
+                    name = L("ignite"),
+                    image = "icon16/fire.png",
+                    func = function() lia.administrator.execCommand("ignite", target) end
+                }
+            end
+        end)(),
+        -- Only show jail option if player is not currently jailed
+        (function()
+            if not target:isLocked() then
+                return {
+                    name = L("jail"),
+                    image = "icon16/lock.png",
+                    func = function() lia.administrator.execCommand("jail", target) end
+                }
+            end
+        end)(),
+        -- Only show mute option if player is not currently muted
+        (function()
+            if not (target:getChar() and target:getLiliaData("VoiceBan", false)) then
+                return {
+                    name = L("mute"),
+                    image = "icon16/sound_delete.png",
+                    func = function() lia.administrator.execCommand("mute", target) end
+                }
+            end
+        end)(),
         {
             name = L("slay"),
             image = "icon16/bomb.png",
-            func = function() RunConsoleCommand("say", "!slay " .. GetIdentifier(target)) end
+            func = function() lia.administrator.execCommand("slay", target) end
         },
-        {
-            name = L("unblind"),
-            image = "icon16/eye.png",
-            func = function() RunConsoleCommand("say", "!unblind " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("ungag"),
-            image = "icon16/sound_low.png",
-            func = function() RunConsoleCommand("say", "!ungag " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("unfreeze"),
-            image = "icon16/accept.png",
-            func = function() RunConsoleCommand("say", "!unfreeze " .. GetIdentifier(target)) end
-        },
-        {
-            name = L("unmute"),
-            image = "icon16/sound_add.png",
-            func = function() RunConsoleCommand("say", "!unmute " .. GetIdentifier(target)) end
-        },
+        -- Only show unblind option if player is currently blinded
+        (function()
+            local isBlinded = timer.Exists("liaBlind" .. target:SteamID())
+            if isBlinded then
+                return {
+                    name = L("unblind"),
+                    image = "icon16/eye.png",
+                    func = function() lia.administrator.execCommand("unblind", target) end
+                }
+            end
+        end)(),
+        -- Only show ungag option if player is currently gagged
+        (function()
+            if target:getNetVar("liaGagged", false) then
+                return {
+                    name = L("ungag"),
+                    image = "icon16/sound_low.png",
+                    func = function() lia.administrator.execCommand("ungag", target) end
+                }
+            end
+        end)(),
+        -- Only show unfreeze option if player is currently frozen
+        (function()
+            if target:IsFrozen() then
+                return {
+                    name = L("unfreeze"),
+                    image = "icon16/accept.png",
+                    func = function() lia.administrator.execCommand("unfreeze", target) end
+                }
+            end
+        end)(),
+        -- Only show unmute option if player is currently muted
+        (function()
+            if target:getChar() and target:getLiliaData("VoiceBan", false) then
+                return {
+                    name = L("unmute"),
+                    image = "icon16/sound_add.png",
+                    func = function() lia.administrator.execCommand("unmute", target) end
+                }
+            end
+        end)(),
         {
             name = L("bring"),
             image = "icon16/arrow_down.png",
-            func = function() RunConsoleCommand("say", "!bring " .. GetIdentifier(target)) end
+            func = function() lia.administrator.execCommand("bring", target) end
         },
         {
             name = L("goTo"),
             image = "icon16/arrow_right.png",
-            func = function() RunConsoleCommand("say", "!goto " .. GetIdentifier(target)) end
+            func = function() lia.administrator.execCommand("goto", target) end
         },
         {
             name = L("respawn"),
             image = "icon16/arrow_refresh.png",
-            func = function() RunConsoleCommand("say", "!respawn " .. GetIdentifier(target)) end
+            func = function() lia.administrator.execCommand("respawn", target) end
         },
         {
             name = L("returnText"),
             image = "icon16/arrow_redo.png",
-            func = function() RunConsoleCommand("say", "!return " .. GetIdentifier(target)) end
-        }
+            func = function() lia.administrator.execCommand("return", target) end
+        },
+        -- Only show extinguish option if player is currently on fire
+        (function()
+            if target:IsOnFire() then
+                return {
+                    name = L("extinguish"),
+                    image = "icon16/fire_delete.png",
+                    func = function() lia.administrator.execCommand("extinguish", target) end
+                }
+            end
+        end)(),
+        -- Only show unjail option if player is currently jailed
+        (function()
+            if target:isLocked() then
+                return {
+                    name = L("unjail"),
+                    image = "icon16/lock_open.png",
+                    func = function() lia.administrator.execCommand("unjail", target) end
+                }
+            end
+        end)()
     }
 
     for _, v in ipairs(orderedOptions) do
-        options[#options + 1] = v
+        if v then -- Filter out nil values from conditional functions
+            options[#options + 1] = v
+        end
     end
 end
 
@@ -1041,25 +1115,6 @@ function MODULE:InitializedModules()
     self.adminStickCategoryOrder = categoryOrder
 end
 
-function MODULE:AddAdminStickCategory(key, data, index)
-    self.adminStickCategories = self.adminStickCategories or {}
-    self.adminStickCategories[key] = data
-    self.adminStickCategoryOrder = self.adminStickCategoryOrder or {}
-    if index then
-        table.insert(self.adminStickCategoryOrder, index, key)
-    else
-        table.insert(self.adminStickCategoryOrder, key)
-    end
-end
-
-function MODULE:AddAdminStickSubCategory(catKey, subKey, data)
-    self.adminStickCategories = self.adminStickCategories or {}
-    local category = self.adminStickCategories[catKey]
-    if not category then return end
-    category.subcategories = category.subcategories or {}
-    category.subcategories[subKey] = data
-end
-
 local function GetSubMenuIcon(name)
     if subMenuIcons[name] then return subMenuIcons[name] end
     local baseKey = name:match("^([^%(]+)") or name
@@ -1179,9 +1234,8 @@ local function CreateOrganizedAdminStickMenu(tgt, stores)
 end
 
 local function RunAdminCommand(cmd, tgt, dur, reason)
-    local cl = LocalPlayer()
     local victim = IsValid(tgt) and tgt:IsPlayer() and (tgt:IsBot() and tgt:Name() or tgt:SteamID()) or tgt
-    hook.Run("RunAdminSystemCommand", cmd, cl, victim, dur, reason)
+    lia.administrator.execCommand(cmd, victim, dur, reason)
 end
 
 local function OpenPlayerModelUI(tgt)
@@ -1293,71 +1347,111 @@ local function IncludeAdminMenu(tgt, menu, stores)
     if not modCategory then return end
     local modSubCategory = GetOrCreateSubCategoryMenu(modCategory, "moderation", "moderationTools", stores)
     if not modSubCategory then return end
-    local mods = {
-        {
-            action = {
-                name = L("blind"),
-                cmd = "blind",
-                icon = "icon16/eye.png"
-            },
-            inverse = {
-                name = L("unblind"),
-                cmd = "unblind",
-                icon = "icon16/eye.png"
-            }
-        },
-        {
-            action = {
-                name = L("freeze"),
-                cmd = "freeze",
-                icon = "icon16/lock.png"
-            },
-            inverse = {
-                name = L("unfreeze"),
-                cmd = "unfreeze",
-                icon = "icon16/accept.png"
-            }
-        },
-        {
-            action = {
-                name = L("gag"),
-                cmd = "gag",
-                icon = "icon16/sound_mute.png"
-            },
-            inverse = {
-                name = L("ungag"),
-                cmd = "ungag",
-                icon = "icon16/sound_low.png"
-            }
-        },
-        {
-            action = {
-                name = L("mute"),
-                cmd = "mute",
-                icon = "icon16/sound_delete.png"
-            },
-            inverse = {
-                name = L("unmute"),
-                cmd = "unmute",
-                icon = "icon16/sound_add.png"
-            }
-        },
-        {
+    local mods = {}
+    -- Add blind/unblind options conditionally based on player state
+    local isBlinded = timer.Exists("liaBlind" .. tgt:SteamID())
+    if isBlinded then
+        mods[#mods + 1] = {
+            name = L("unblind"),
+            cmd = "unblind",
+            icon = "icon16/eye.png"
+        }
+    else
+        mods[#mods + 1] = {
+            name = L("blind"),
+            cmd = "blind",
+            icon = "icon16/eye.png"
+        }
+    end
+
+    -- Add freeze/unfreeze options conditionally
+    if tgt:IsFrozen() then
+        mods[#mods + 1] = {
+            name = L("unfreeze"),
+            cmd = "unfreeze",
+            icon = "icon16/accept.png"
+        }
+    else
+        mods[#mods + 1] = {
+            name = L("freeze"),
+            cmd = "freeze",
+            icon = "icon16/lock.png"
+        }
+    end
+
+    -- Add gag/ungag options conditionally
+    if tgt:getNetVar("liaGagged", false) then
+        mods[#mods + 1] = {
+            name = L("ungag"),
+            cmd = "ungag",
+            icon = "icon16/sound_low.png"
+        }
+    else
+        mods[#mods + 1] = {
+            name = L("gag"),
+            cmd = "gag",
+            icon = "icon16/sound_mute.png"
+        }
+    end
+
+    -- Add mute/unmute options conditionally
+    if tgt:getChar() and tgt:getLiliaData("VoiceBan", false) then
+        mods[#mods + 1] = {
+            name = L("unmute"),
+            cmd = "unmute",
+            icon = "icon16/sound_add.png"
+        }
+    else
+        mods[#mods + 1] = {
+            name = L("mute"),
+            cmd = "mute",
+            icon = "icon16/sound_delete.png"
+        }
+    end
+
+    -- Add ignite/extinguish options conditionally
+    if tgt:IsOnFire() then
+        mods[#mods + 1] = {
+            name = L("extinguish"),
+            cmd = "extinguish",
+            icon = "icon16/fire_delete.png"
+        }
+    else
+        mods[#mods + 1] = {
             name = L("ignite"),
             cmd = "ignite",
             icon = "icon16/fire.png"
-        },
-        {
+        }
+    end
+
+    -- Add jail/unjail options conditionally
+    if tgt:isLocked() then
+        mods[#mods + 1] = {
+            name = L("unjail"),
+            cmd = "unjail",
+            icon = "icon16/lock_open.png"
+        }
+    else
+        mods[#mods + 1] = {
             name = L("jail"),
             cmd = "jail",
             icon = "icon16/lock.png"
-        },
+        }
+    end
+
+    -- Add other single-action options
+    local otherMods = {
         {
             name = L("slay"),
             cmd = "slay",
             icon = "icon16/bomb.png"
         }
     }
+
+    -- Add other moderation options to the main mods array
+    for _, mod in ipairs(otherMods) do
+        mods[#mods + 1] = mod
+    end
 
     table.sort(mods, function(a, b)
         local na = a.action and a.action.name or a.name

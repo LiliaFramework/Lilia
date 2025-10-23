@@ -311,6 +311,14 @@ function MODULE:PlayerInitialSpawn(client)
             local override = hook.Run("PlayerCheatDetected", client)
             client:setNetVar("cheater", true)
             client:setLiliaData("cheater", true)
+            if IsValid(client) then
+                lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
+                client:notifyErrorLocalized("caughtCheating")
+                for _, p in player.Iterator() do
+                    if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
+                end
+            end
+
             hook.Run("OnCheaterCaught", client)
             if override ~= true then lia.adminstrator.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
         end
@@ -321,16 +329,6 @@ function MODULE:PlayerDisconnected(client)
     if client.VerifyCheatsTimer then
         timer.Remove(client.VerifyCheatsTimer)
         client.VerifyCheatsTimer = nil
-    end
-end
-
-function MODULE:OnCheaterCaught(client)
-    if IsValid(client) then
-        lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
-        client:notifyErrorLocalized("caughtCheating")
-        for _, p in player.Iterator() do
-            if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
-        end
     end
 end
 

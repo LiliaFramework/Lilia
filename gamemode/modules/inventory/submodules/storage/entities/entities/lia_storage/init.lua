@@ -42,7 +42,7 @@ function ENT:openInv(activator)
     local inventory = self:getInv()
     local storage = self:getStorageInfo()
     if storage and isfunction(storage.onOpen) then storage.onOpen(self, activator) end
-    if activator:GetPos():distance(self:GetPos()) > 128 then
+    if activator:GetPos():Distance(self:GetPos()) > 128 then
         activator.liaStorageEntity = nil
         return
     end

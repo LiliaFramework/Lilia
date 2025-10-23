@@ -1601,7 +1601,7 @@ if SERVER then
     end
 else
     --[[
-    Purpose: Executes administrative commands on the client by sending console commands to server
+    Purpose: Executes administrative commands on the client with hook system integration and callback support
     When Called: When administrative commands need to be executed from the client side
     Parameters:
         - cmd (string): The command to execute
@@ -1644,87 +1644,62 @@ else
             end
         end
         ```
+
+        Hook Implementation Example:
+        ```lua
+        -- Custom admin system hook
+        hook.Add("RunAdminSystemCommand", "MyAdminSystem", function(cmd, victim, dur, reason)
+            if cmd == "kick" then
+                MyAdminSystem:KickPlayer(victim, reason)
+                return true, function()
+                    print("Player kicked via MyAdminSystem")
+                end
+            end
+            return false -- Don't handle other commands
+        end)
+        ```
 ]]
+    local liaCommands = {
+        kick = function(id, _, reason) RunConsoleCommand("say", "/plykick " .. string.format("'%s'", tostring(id)) .. (reason and " " .. string.format("'%s'", tostring(reason)) or "")) end,
+        ban = function(id, dur, reason) RunConsoleCommand("say", "/plyban " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0) .. (reason and " " .. string.format("'%s'", tostring(reason)) or "")) end,
+        unban = function(id) RunConsoleCommand("say", "/plyunban " .. string.format("'%s'", tostring(id))) end,
+        mute = function(id, dur, reason) RunConsoleCommand("say", "/plymute " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0) .. (reason and " " .. string.format("'%s'", tostring(reason)) or "")) end,
+        unmute = function(id) RunConsoleCommand("say", "/plyunmute " .. string.format("'%s'", tostring(id))) end,
+        gag = function(id, dur, reason) RunConsoleCommand("say", "/plygag " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0) .. (reason and " " .. string.format("'%s'", tostring(reason)) or "")) end,
+        ungag = function(id) RunConsoleCommand("say", "/plyungag " .. string.format("'%s'", tostring(id))) end,
+        freeze = function(id, dur) RunConsoleCommand("say", "/plyfreeze " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0)) end,
+        unfreeze = function(id) RunConsoleCommand("say", "/plyunfreeze " .. string.format("'%s'", tostring(id))) end,
+        slay = function(id) RunConsoleCommand("say", "/plyslay " .. string.format("'%s'", tostring(id))) end,
+        bring = function(id) RunConsoleCommand("say", "/plybring " .. string.format("'%s'", tostring(id))) end,
+        ["goto"] = function(id) RunConsoleCommand("say", "/plygoto " .. string.format("'%s'", tostring(id))) end,
+        ["return"] = function(id) RunConsoleCommand("say", "/plyreturn " .. string.format("'%s'", tostring(id))) end,
+        jail = function(id, dur) RunConsoleCommand("say", "/plyjail " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0)) end,
+        unjail = function(id) RunConsoleCommand("say", "/plyunjail " .. string.format("'%s'", tostring(id))) end,
+        cloak = function(id) RunConsoleCommand("say", "/plycloak " .. string.format("'%s'", tostring(id))) end,
+        uncloak = function(id) RunConsoleCommand("say", "/plyuncloak " .. string.format("'%s'", tostring(id))) end,
+        god = function(id) RunConsoleCommand("say", "/plygod " .. string.format("'%s'", tostring(id))) end,
+        ungod = function(id) RunConsoleCommand("say", "/plyungod " .. string.format("'%s'", tostring(id))) end,
+        ignite = function(id, dur) RunConsoleCommand("say", "/plyignite " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0)) end,
+        extinguish = function(id) RunConsoleCommand("say", "/plyextinguish " .. string.format("'%s'", tostring(id))) end,
+        unignite = function(id) RunConsoleCommand("say", "/plyextinguish " .. string.format("'%s'", tostring(id))) end,
+        strip = function(id) RunConsoleCommand("say", "/plystrip " .. string.format("'%s'", tostring(id))) end,
+        respawn = function(id) RunConsoleCommand("say", "/plyrespawn " .. string.format("'%s'", tostring(id))) end,
+        blind = function(id) RunConsoleCommand("say", "/plyblind " .. string.format("'%s'", tostring(id))) end,
+        unblind = function(id) RunConsoleCommand("say", "/plyunblind " .. string.format("'%s'", tostring(id))) end,
+        spectate = function(id) RunConsoleCommand("say", "/plyspectate " .. string.format("'%s'", tostring(id))) end
+    }
+
     function lia.administrator.execCommand(cmd, victim, dur, reason)
-        if hook.Run("RunAdminSystemCommand") == true then return end
+        local hookResult, callback = hook.Run("RunAdminSystemCommand", cmd, victim, dur, reason)
+        if hookResult == true then
+            callback()
+            return true
+        end
+
         local id = IsValid(victim) and victim:SteamID() or tostring(victim)
-        if cmd == "kick" then
-            RunConsoleCommand("say", "/plykick " .. string.format("'%s'", tostring(id)) .. (reason and " " .. string.format("'%s'", tostring(reason)) or ""))
-            return true
-        elseif cmd == "ban" then
-            RunConsoleCommand("say", "/plyban " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0) .. (reason and " " .. string.format("'%s'", tostring(reason)) or ""))
-            return true
-        elseif cmd == "unban" then
-            RunConsoleCommand("say", "/plyunban " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "mute" then
-            RunConsoleCommand("say", "/plymute " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0) .. (reason and " " .. string.format("'%s'", tostring(reason)) or ""))
-            return true
-        elseif cmd == "unmute" then
-            RunConsoleCommand("say", "/plyunmute " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "gag" then
-            RunConsoleCommand("say", "/plygag " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0) .. (reason and " " .. string.format("'%s'", tostring(reason)) or ""))
-            return true
-        elseif cmd == "ungag" then
-            RunConsoleCommand("say", "/plyungag " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "freeze" then
-            RunConsoleCommand("say", "/plyfreeze " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0))
-            return true
-        elseif cmd == "unfreeze" then
-            RunConsoleCommand("say", "/plyunfreeze " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "slay" then
-            RunConsoleCommand("say", "/plyslay " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "bring" then
-            RunConsoleCommand("say", "/plybring " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "goto" then
-            RunConsoleCommand("say", "/plygoto " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "return" then
-            RunConsoleCommand("say", "/plyreturn " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "jail" then
-            RunConsoleCommand("say", "/plyjail " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0))
-            return true
-        elseif cmd == "unjail" then
-            RunConsoleCommand("say", "/plyunjail " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "cloak" then
-            RunConsoleCommand("say", "/plycloak " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "uncloak" then
-            RunConsoleCommand("say", "/plyuncloak " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "god" then
-            RunConsoleCommand("say", "/plygod " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "ungod" then
-            RunConsoleCommand("say", "/plyungod " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "ignite" then
-            RunConsoleCommand("say", "/plyignite " .. string.format("'%s'", tostring(id)) .. " " .. tostring(dur or 0))
-            return true
-        elseif cmd == "extinguish" or cmd == "unignite" then
-            RunConsoleCommand("say", "/plyextinguish " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "strip" then
-            RunConsoleCommand("say", "/plystrip " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "respawn" then
-            RunConsoleCommand("say", "/plyrespawn " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "blind" then
-            RunConsoleCommand("say", "/plyblind " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "unblind" then
-            RunConsoleCommand("say", "/plyunblind " .. string.format("'%s'", tostring(id)))
-            return true
-        elseif cmd == "spectate" then
-            RunConsoleCommand("say", "/plyspectate " .. string.format("'%s'", tostring(id)))
+        local commandFunc = liaCommands[cmd]
+        if commandFunc then
+            commandFunc(id, dur, reason)
             return true
         end
     end
@@ -2205,6 +2180,7 @@ else
         groupsList:Dock(LEFT)
         groupsList:SetWide(200)
         groupsList:DockMargin(10, 5, 5, 10)
+        groupsList.buttonType = "liaButton" -- Use modern button style
         local groupDetails = container:Add("DPanel")
         groupDetails:Dock(FILL)
         groupDetails:DockMargin(5, 5, 10, 10)

@@ -8,7 +8,7 @@ net.Receive("liaStorageUnlock", function(_, client)
     local password = net.ReadString()
     local storageFunc = function()
         if not IsValid(client.liaStorageEntity) then return end
-        if client:GetPos():distance(client.liaStorageEntity:GetPos()) > 128 then return end
+        if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
         return client.liaStorageEntity
     end
 
@@ -36,7 +36,7 @@ net.Receive("liaStorageTransfer", function(_, client)
     if not client:getChar() then return end
     local storageFunc = function()
         if not IsValid(client.liaStorageEntity) then return end
-        if client:GetPos():distance(client.liaStorageEntity:GetPos()) > 128 then return end
+        if client:GetPos():Distance(client.liaStorageEntity:GetPos()) > 128 then return end
         return client.liaStorageEntity
     end
 

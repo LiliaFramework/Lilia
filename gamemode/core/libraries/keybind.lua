@@ -317,7 +317,7 @@ lia.keybind.add("quickTakeItem", {
         if not client:getChar() then return end
         local entity = client:getTracedEntity()
         if IsValid(entity) and entity:isItem() then
-            if entity:GetPos():distance(client:GetPos()) > 96 then return end
+            if entity:GetPos():Distance(client:GetPos()) > 96 then return end
             local item = entity:getItemTable()
             if item and item.functions and item.functions.take then item:interact("take", client, entity) end
         end
@@ -332,7 +332,7 @@ lia.keybind.add("convertEntity", {
         local trace = client:GetEyeTrace()
         local targetEntity = trace.Entity
         if not IsValid(targetEntity) or targetEntity == client then return end
-        if trace.HitPos:distance(client:GetPos()) > 200 then
+        if trace.HitPos:Distance(client:GetPos()) > 200 then
             client:notifyErrorLocalized("entityTooFar")
             return
         end

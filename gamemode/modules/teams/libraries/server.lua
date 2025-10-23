@@ -79,6 +79,16 @@ end
 
 local function applyAttributes(client, attr)
     if not attr then return end
+    if attr.NPCRelations then
+        for _, entity in ents.Iterator() do
+            if entity:IsNPC() and relations[entity:GetClass()] then entity:AddEntityRelationship(client, relations[entity:GetClass()], 0) end
+        end
+    else
+        for _, entity in ents.Iterator() do
+            if entity:IsNPC() then entity:AddEntityRelationship(client, D_HT, 0) end
+        end
+    end
+
     if attr.scale then
         local offset = Vector(0, 0, 64)
         local offsetDuck = Vector(0, 0, 28)
@@ -130,12 +140,6 @@ local function applyAttributes(client, attr)
     end
 end
 
-function MODULE:FactionOnLoadout(client)
-    local faction = lia.faction.indices[client:Team()]
-    if not faction then return end
-    applyAttributes(client, faction)
-end
-
 function MODULE:CanCharBeTransfered(character, faction)
     if faction.oneCharOnly then
         for _, otherCharacter in next, lia.char.getAll() do
@@ -155,34 +159,22 @@ function MODULE:OnEntityCreated(entity)
     end
 end
 
-function MODULE:PlayerSpawn(client)
+function MODULE:PlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
     local faction = lia.faction.indices[character:getFaction()]
-    local relations = faction and faction.NPCRelations
-    if relations then
-        for _, entity in ents.Iterator() do
-            if entity:IsNPC() and relations[entity:GetClass()] then entity:AddEntityRelationship(client, relations[entity:GetClass()], 0) end
-        end
-    else
-        for _, entity in ents.Iterator() do
-            if entity:IsNPC() then entity:AddEntityRelationship(client, D_HT, 0) end
-        end
-    end
-end
-
-function MODULE:ClassOnLoadout(client)
-    local character = client:getChar()
-    local class = lia.class.list[character:getClass()]
-    if not class then return end
-    applyAttributes(client, class)
-    if class.model then client:SetModel(class.model) end
-end
-
-function MODULE:ClassPostLoadout(client)
-    local character = client:getChar()
-    local class = lia.class.list[character:getClass()]
-    if not class then return end
+    timer.Simple(0.2, function()
+        if IsValid(client) then applyAttributes(client, faction) end
+        timer.Simple(0.1, function()
+            if IsValid(client) then
+                local class = lia.class.list[character:getClass()]
+                if class then
+                    applyAttributes(client, class)
+                    if class.model and isstring(class.model) then client:SetModel(class.model) end
+                end
+            end
+        end)
+    end)
 end
 
 function MODULE:CanPlayerUseChar(client, character)
@@ -194,62 +186,3 @@ function MODULE:CanPlayerSwitchChar(client, _, newCharacter)
     local faction = lia.faction.indices[newCharacter:getFaction()]
     if self:CheckFactionLimitReached(faction, newCharacter, client) then return false, L("limitFaction") end
 end
-
-net.Receive("liaKickCharacter", function(_, client)
-    local char = client:getChar()
-    local canManageAny = client:hasPrivilege("canManageFactions")
-    local canKick = char and char:hasFlags("K")
-    if not canKick and not canManageAny then return end
-    local defaultFaction
-    for _, fac in pairs(lia.faction.teams) do
-        if fac.isDefault and fac.uniqueID ~= "staff" then
-            defaultFaction = fac
-            break
-        end
-    end
-
-    if not defaultFaction then
-        for _, fac in pairs(lia.faction.teams) do
-            if fac.uniqueID ~= "staff" then
-                defaultFaction = fac
-                break
-            end
-        end
-    end
-
-    if not defaultFaction then
-        local _, fac = next(lia.faction.teams)
-        defaultFaction = fac
-    end
-
-    local characterID = net.ReadUInt(32)
-    local isOnline = false
-    for _, target in player.Iterator() do
-        local targetChar = target:getChar()
-        if targetChar and targetChar:getID() == characterID and (canManageAny or canKick and char and targetChar:getFaction() == char:getFaction()) then
-            isOnline = true
-            local oldFaction = targetChar:getFaction()
-            local oldFactionData = lia.faction.indices[oldFaction]
-            if oldFactionData and oldFactionData.isDefault then return end
-            target:notifyWarningLocalized("kickedFromFaction")
-            targetChar.vars.faction = defaultFaction.uniqueID
-            targetChar:setFaction(defaultFaction.index)
-            hook.Run("OnTransferred", target)
-            if defaultFaction.OnTransferred then defaultFaction:OnTransferred(target, oldFaction) end
-            hook.Run("PlayerLoadout", target)
-            targetChar:save()
-        end
-    end
-
-    if not isOnline then
-        lia.db.query("SELECT faction FROM lia_characters WHERE id = " .. characterID):next(function(data)
-            if not data or not data[1] then return end
-            local oldFactionID = data[1].faction
-            local oldFactionData = lia.faction.teams[oldFactionID]
-            if oldFactionData and oldFactionData.isDefault then return end
-            lia.db.updateTable({
-                faction = defaultFaction.uniqueID
-            }, nil, "characters", "id = " .. characterID):next(function() lia.char.setCharDatabase(characterID, "factionKickWarn", true) end):catch(function(err) lia.error(L("failedToUpdateCharacterFaction") .. " " .. tostring(err)) end)
-        end):catch(function(err) lia.error(L("failedToQueryCharacterFaction") .. " " .. tostring(err)) end)
-    end
-end)

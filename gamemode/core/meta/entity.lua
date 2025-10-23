@@ -1174,7 +1174,7 @@ else
             local pos = anchor.WorldSpaceCenter and anchor:WorldSpaceCenter() or anchor:GetPos()
             local lp = LocalPlayer and LocalPlayer() or nil
             if not IsValid(lp) then return 0 end
-            return lp:GetPos():distance(pos)
+            return lp:GetPos():Distance(pos)
         end
 
         local function computeFadeFactor(dist)
@@ -1232,7 +1232,7 @@ else
                     local lp = LocalPlayer and LocalPlayer() or nil
                     if not IsValid(lp) then return end
                     local pos = anchor2.WorldSpaceCenter and anchor2:WorldSpaceCenter() or anchor2:GetPos()
-                    local dist = lp:GetPos():distance(pos)
+                    local dist = lp:GetPos():Distance(pos)
                     local fadeFactor = computeFadeFactor(dist)
                     if IsValid(ch) then
                         if manualAttenuation or fadeFactor < 1 then

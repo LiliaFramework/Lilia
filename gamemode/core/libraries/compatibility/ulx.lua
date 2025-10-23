@@ -14,74 +14,38 @@
     end
 end)
 
+local ulxCommands = {
+    kick = function(id, _, reason) RunConsoleCommand("ulx", "kick", id, reason or "") end,
+    ban = function(id, dur, reason) RunConsoleCommand("ulx", "banid", id, tostring(dur or 0), reason or "") end,
+    unban = function(id) RunConsoleCommand("ulx", "unban", id) end,
+    mute = function(id) RunConsoleCommand("ulx", "mute", id) end,
+    unmute = function(id) RunConsoleCommand("ulx", "unmute", id) end,
+    gag = function(id) RunConsoleCommand("ulx", "gag", id) end,
+    ungag = function(id) RunConsoleCommand("ulx", "ungag", id) end,
+    freeze = function(id) RunConsoleCommand("ulx", "freeze", id) end,
+    unfreeze = function(id) RunConsoleCommand("ulx", "unfreeze", id) end,
+    slay = function(id) RunConsoleCommand("ulx", "slay", id) end,
+    bring = function(id) RunConsoleCommand("ulx", "bring", id) end,
+    ["goto"] = function(id) RunConsoleCommand("ulx", "goto", id) end,
+    ["return"] = function(id) RunConsoleCommand("ulx", "return", id) end,
+    jail = function(id, dur) RunConsoleCommand("ulx", "jail", id, tostring(dur or 0)) end,
+    unjail = function(id) RunConsoleCommand("ulx", "unjail", id) end,
+    cloak = function(id) RunConsoleCommand("ulx", "cloak", id) end,
+    uncloak = function(id) RunConsoleCommand("ulx", "uncloak", id) end,
+    god = function(id) RunConsoleCommand("ulx", "god", id) end,
+    ungod = function(id) RunConsoleCommand("ulx", "ungod", id) end,
+    ignite = function(id) RunConsoleCommand("ulx", "ignite", id) end,
+    extinguish = function(id) RunConsoleCommand("ulx", "unignite", id) end,
+    unignite = function(id) RunConsoleCommand("ulx", "unignite", id) end,
+    strip = function(id) RunConsoleCommand("ulx", "strip", id) end
+}
+
 hook.Add("RunAdminSystemCommand", "liaULX", function(cmd, _, target, dur, reason)
     local id = isstring(target) and target or IsValid(target) and target:SteamID()
     if not id then return end
-    if cmd == "kick" then
-        RunConsoleCommand("ulx", "kick", id, reason or "")
-        return true
-    elseif cmd == "ban" then
-        RunConsoleCommand("ulx", "banid", id, tostring(dur or 0), reason or "")
-        return true
-    elseif cmd == "unban" then
-        RunConsoleCommand("ulx", "unban", id)
-        return true
-    elseif cmd == "mute" then
-        RunConsoleCommand("ulx", "mute", id)
-        return true
-    elseif cmd == "unmute" then
-        RunConsoleCommand("ulx", "unmute", id)
-        return true
-    elseif cmd == "gag" then
-        RunConsoleCommand("ulx", "gag", id)
-        return true
-    elseif cmd == "ungag" then
-        RunConsoleCommand("ulx", "ungag", id)
-        return true
-    elseif cmd == "freeze" then
-        RunConsoleCommand("ulx", "freeze", id)
-        return true
-    elseif cmd == "unfreeze" then
-        RunConsoleCommand("ulx", "unfreeze", id)
-        return true
-    elseif cmd == "slay" then
-        RunConsoleCommand("ulx", "slay", id)
-        return true
-    elseif cmd == "bring" then
-        RunConsoleCommand("ulx", "bring", id)
-        return true
-    elseif cmd == "goto" then
-        RunConsoleCommand("ulx", "goto", id)
-        return true
-    elseif cmd == "return" then
-        RunConsoleCommand("ulx", "return", id)
-        return true
-    elseif cmd == "jail" then
-        RunConsoleCommand("ulx", "jail", id, tostring(dur or 0))
-        return true
-    elseif cmd == "unjail" then
-        RunConsoleCommand("ulx", "unjail", id)
-        return true
-    elseif cmd == "cloak" then
-        RunConsoleCommand("ulx", "cloak", id)
-        return true
-    elseif cmd == "uncloak" then
-        RunConsoleCommand("ulx", "uncloak", id)
-        return true
-    elseif cmd == "god" then
-        RunConsoleCommand("ulx", "god", id)
-        return true
-    elseif cmd == "ungod" then
-        RunConsoleCommand("ulx", "ungod", id)
-        return true
-    elseif cmd == "ignite" then
-        RunConsoleCommand("ulx", "ignite", id)
-        return true
-    elseif cmd == "extinguish" or cmd == "unignite" then
-        RunConsoleCommand("ulx", "unignite", id)
-        return true
-    elseif cmd == "strip" then
-        RunConsoleCommand("ulx", "strip", id)
-        return true
+    local commandFunc = ulxCommands[cmd]
+    if commandFunc then
+        commandFunc(id, dur, reason)
+        return true, function() end
     end
 end)

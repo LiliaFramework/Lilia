@@ -5046,14 +5046,14 @@ lia.command.add("trunk", {
             return
         end
 
-        if client:GetPos():distance(entity:GetPos()) > maxDistance then
+        if client:GetPos():Distance(entity:GetPos()) > maxDistance then
             client:notifyErrorLocalized("tooFarToOpenTrunk")
             return
         end
 
         client.liaStorageEntity = entity
         client:setAction(L("openingTrunk"), openTime, function()
-            if client:GetPos():distance(entity:GetPos()) > maxDistance then
+            if client:GetPos():Distance(entity:GetPos()) > maxDistance then
                 client.liaStorageEntity = nil
                 return
             end
@@ -6869,7 +6869,7 @@ lia.command.add("spawnremoveinradius", {
                     if not (data.map and data.map:lower() ~= curMap) then
                         local spawn = data.pos or data
                         if not isvector(spawn) then spawn = lia.data.decodeVector(spawn) end
-                        if isvector(spawn) and spawn:distance(position) <= radius then
+                        if isvector(spawn) and spawn:Distance(position) <= radius then
                             table.remove(list, i)
                             removedCount = removedCount + 1
                         end

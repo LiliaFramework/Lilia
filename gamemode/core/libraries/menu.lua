@@ -301,7 +301,7 @@ function lia.menu.getActiveMenu()
         local x = math_Clamp(sp.x - w * 0.5, 8, sw - w - 8)
         local y = math_Clamp(sp.y, 8, sh - h - 8)
         if mx < x or mx > x + w or my < y or my > y + h then continue end
-        if pPos:distance(IsValid(d.entity) and d.entity:GetPos() or d.position) > clickDist then continue end
+        if pPos:Distance(IsValid(d.entity) and d.entity:GetPos() or d.position) > clickDist then continue end
         local idx = math.floor((my - y) / rowH) + 1
         local item = d.items[idx]
         if item then return i, item[2] end

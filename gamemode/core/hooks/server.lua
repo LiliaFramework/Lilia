@@ -89,6 +89,8 @@ function GM:PlayerDeath(client, inflictor, attacker)
     local selfKill = attacker == client
     local worldKill = not IsValid(attacker) or attacker:GetClass() == "worldspawn"
     if (playerKill or pkWorld and selfKill or pkWorld and worldKill) and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
+    net.Start("liaRemoveFOne")
+    net.Send(client)
 end
 
 function GM:PlayerShouldPermaKill(client)
@@ -536,12 +538,8 @@ function GM:PlayerLoadout(client)
     client:SetWalkSpeed(lia.config.get("WalkSpeed"))
     client:SetRunSpeed(lia.config.get("RunSpeed"))
     client:SetJumpPower(160)
-    hook.Run("FactionOnLoadout", client)
-    hook.Run("ClassOnLoadout", client)
     lia.flag.onSpawn(client)
     hook.Run("PostPlayerLoadout", client)
-    hook.Run("FactionPostLoadout", client)
-    hook.Run("ClassPostLoadout", client)
     client:SelectWeapon("lia_hands")
 end
 
@@ -988,6 +986,10 @@ function GM:CreateSalaryTimers()
     else
         timer.Create("liaSalaryGlobal", salaryInterval, 0, salaryTimer)
     end
+end
+
+function GM:ShowHelp()
+    return false
 end
 
 function GM:PlayerSpray()

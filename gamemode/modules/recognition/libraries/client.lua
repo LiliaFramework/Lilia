@@ -5,10 +5,6 @@
     me = true,
 }
 
-function MODULE:IsRecognizedChatType(chatType)
-    return ChatIsRecognized[chatType] or false
-end
-
 function MODULE:GetDisplayedDescription(client, isHUD)
     local lp = LocalPlayer()
     if not IsValid(client) or not IsValid(lp) then return L("unknown") end
@@ -28,7 +24,7 @@ function MODULE:GetDisplayedName(client, chatType)
     local characterID = character:getID()
     if not ourCharacter:doesRecognize(characterID) then
         if ourCharacter:doesFakeRecognize(characterID) and myReg[characterID] then return myReg[characterID] end
-        if chatType and hook.Run("IsRecognizedChatType", chatType) then return "[" .. L("unknown") .. "]" end
+        if chatType and (ChatIsRecognized[chatType] or hook.Run("IsRecognizedChatType", chatType)) then return "[" .. L("unknown") .. "]" end
         return L("unknown")
     end
 end

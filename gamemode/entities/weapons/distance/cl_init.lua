@@ -7,7 +7,7 @@
         lia.websound.playButtonSound("buttons/button17.wav")
         owner:ChatPrint(L("distanceMeasureStartPoint"))
     else
-        local distance = self.StartPos:distance(tr.HitPos)
+        local distance = self.StartPos:Distance(tr.HitPos)
         lia.websound.playButtonSound("buttons/button17.wav")
         owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
     end
@@ -25,7 +25,7 @@ function SWEP:Reload()
     if not self.StartPos then return end
     local owner = self:GetOwner()
     local tr = owner:GetEyeTrace()
-    local distance = self.StartPos:distance(tr.HitPos)
+    local distance = self.StartPos:Distance(tr.HitPos)
     lia.websound.playButtonSound("buttons/button17.wav")
     owner:ChatPrint(L("distanceMeasureDistance", math.Round(distance)))
 end
@@ -60,7 +60,7 @@ function SWEP:DrawHUD()
     surface.SetDrawColor(lia.color.theme.theme)
     surface.DrawLine(start.x, start.y, endpos.x, endpos.y)
     surface.DrawCircle(start.x, start.y, 5, lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, lia.color.theme.theme.a)
-    local distance = self.StartPos:distance(tr.HitPos)
+    local distance = self.StartPos:Distance(tr.HitPos)
     local distanceText = L("distanceMeasureDistance", math.Round(distance))
     local distanceBoxWidth = 200
     local distanceBoxHeight = 40

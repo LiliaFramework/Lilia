@@ -19,8 +19,8 @@ function MODULE:HUDPaint()
         end
     else
         if shadowFade < 1 then
-            fade = clamp(fade + ft * 0.8 / baseTime, 0, 1)
-            if fade >= 0.6 then shadowFade = clamp(shadowFade + ft * 0.6 / baseTime, 0, 1) end
+            fade = clamp(fade + ft * 4.0 / baseTime, 0, 1)
+            if fade >= 0.1 then shadowFade = clamp(shadowFade + ft * 2.0 / baseTime, 0, 1) end
         end
     end
 

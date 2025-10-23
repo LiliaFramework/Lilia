@@ -1,73 +1,37 @@
 ﻿hook.Remove("PostGamemodeLoaded", "SAM.DarkRP")
+local samCommands = {
+    kick = function(id, _, reason) RunConsoleCommand("sam", "kick", id, reason or "") end,
+    ban = function(id, dur, reason) RunConsoleCommand("sam", "ban", id, tostring(dur or 0), reason or "") end,
+    unban = function(id) RunConsoleCommand("sam", "unban", id) end,
+    mute = function(id, dur, reason) RunConsoleCommand("sam", "mute", id, tostring(dur or 0), reason or "") end,
+    unmute = function(id) RunConsoleCommand("sam", "unmute", id) end,
+    gag = function(id, dur, reason) RunConsoleCommand("sam", "gag", id, tostring(dur or 0), reason or "") end,
+    ungag = function(id) RunConsoleCommand("sam", "ungag", id) end,
+    freeze = function(id, dur) RunConsoleCommand("sam", "freeze", id, tostring(dur or 0)) end,
+    unfreeze = function(id) RunConsoleCommand("sam", "unfreeze", id) end,
+    slay = function(id) RunConsoleCommand("sam", "slay", id) end,
+    bring = function(id) RunConsoleCommand("sam", "bring", id) end,
+    ["goto"] = function(id) RunConsoleCommand("sam", "goto", id) end,
+    ["return"] = function(id) RunConsoleCommand("sam", "return", id) end,
+    jail = function(id, dur) RunConsoleCommand("sam", "jail", id, tostring(dur or 0)) end,
+    unjail = function(id) RunConsoleCommand("sam", "unjail", id) end,
+    cloak = function(id) RunConsoleCommand("sam", "cloak", id) end,
+    uncloak = function(id) RunConsoleCommand("sam", "uncloak", id) end,
+    god = function(id) RunConsoleCommand("sam", "god", id) end,
+    ungod = function(id) RunConsoleCommand("sam", "ungod", id) end,
+    ignite = function(id, dur) RunConsoleCommand("sam", "ignite", id, tostring(dur or 0)) end,
+    extinguish = function(id) RunConsoleCommand("sam", "extinguish", id) end,
+    unignite = function(id) RunConsoleCommand("sam", "extinguish", id) end,
+    strip = function(id) RunConsoleCommand("sam", "strip", id) end
+}
+
 hook.Add("RunAdminSystemCommand", "liaSam", function(cmd, _, victim, dur, reason)
     local id = isstring(victim) and victim or IsValid(victim) and victim:SteamID()
     if not id then return end
-    if cmd == "kick" then
-        RunConsoleCommand("sam", "kick", id, reason or "")
-        return true
-    elseif cmd == "ban" then
-        RunConsoleCommand("sam", "ban", id, tostring(dur or 0), reason or "")
-        return true
-    elseif cmd == "unban" then
-        RunConsoleCommand("sam", "unban", id)
-        return true
-    elseif cmd == "mute" then
-        RunConsoleCommand("sam", "mute", id, tostring(dur or 0), reason or "")
-        return true
-    elseif cmd == "unmute" then
-        RunConsoleCommand("sam", "unmute", id)
-        return true
-    elseif cmd == "gag" then
-        RunConsoleCommand("sam", "gag", id, tostring(dur or 0), reason or "")
-        return true
-    elseif cmd == "ungag" then
-        RunConsoleCommand("sam", "ungag", id)
-        return true
-    elseif cmd == "freeze" then
-        RunConsoleCommand("sam", "freeze", id, tostring(dur or 0))
-        return true
-    elseif cmd == "unfreeze" then
-        RunConsoleCommand("sam", "unfreeze", id)
-        return true
-    elseif cmd == "slay" then
-        RunConsoleCommand("sam", "slay", id)
-        return true
-    elseif cmd == "bring" then
-        RunConsoleCommand("sam", "bring", id)
-        return true
-    elseif cmd == "goto" then
-        RunConsoleCommand("sam", "goto", id)
-        return true
-    elseif cmd == "return" then
-        RunConsoleCommand("sam", "return", id)
-        return true
-    elseif cmd == "jail" then
-        RunConsoleCommand("sam", "jail", id, tostring(dur or 0))
-        return true
-    elseif cmd == "unjail" then
-        RunConsoleCommand("sam", "unjail", id)
-        return true
-    elseif cmd == "cloak" then
-        RunConsoleCommand("sam", "cloak", id)
-        return true
-    elseif cmd == "uncloak" then
-        RunConsoleCommand("sam", "uncloak", id)
-        return true
-    elseif cmd == "god" then
-        RunConsoleCommand("sam", "god", id)
-        return true
-    elseif cmd == "ungod" then
-        RunConsoleCommand("sam", "ungod", id)
-        return true
-    elseif cmd == "ignite" then
-        RunConsoleCommand("sam", "ignite", id, tostring(dur or 0))
-        return true
-    elseif cmd == "extinguish" or cmd == "unignite" then
-        RunConsoleCommand("sam", "extinguish", id)
-        return true
-    elseif cmd == "strip" then
-        RunConsoleCommand("sam", "strip", id)
-        return true
+    local commandFunc = samCommands[cmd]
+    if commandFunc then
+        commandFunc(id, dur, reason)
+        return true, function() end
     end
 end)
 

@@ -110,7 +110,6 @@ end
     Parameters:
         - uniqueID (string): Unique identifier for the module
         - path (string): File system path to the module directory
-        - isSingleFile (boolean): Whether the module is a single file or directory-based
         - variable (string, optional): Global variable name to use (defaults to "MODULE")
         - skipSubmodules (boolean, optional): Whether to skip loading submodules
     Returns: None
@@ -120,23 +119,23 @@ end
     Low Complexity:
     ```lua
     -- Simple: Load a basic module
-    lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule", false)
+    lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
     ```
 
     Medium Complexity:
     ```lua
     -- Medium: Load module with custom variable name
-    lia.module.load("custommodule", "gamemodes/lilia/modules/custom", false, "CUSTOM_MODULE")
+    lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
     ```
 
     High Complexity:
     ```lua
-    -- High: Load single file module with submodule skipping
-    lia.module.load("singlemode", "gamemodes/lilia/modules/single.lua", true, "SINGLE_MODULE", true)
+    -- High: Load module with submodule skipping
+    lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
     ```
 ]]
 --
-function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
+function lia.module.load(uniqueID, path, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
     local coreFile = path .. "/" .. lowerVar .. ".lua"
@@ -168,21 +167,16 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     _G[variable] = MODULE
     MODULE.loading = true
     MODULE.path = path
-    MODULE.isSingleFile = isSingleFile
     MODULE.variable = variable
     MODULE.name = L(MODULE.name)
     MODULE.desc = L(MODULE.desc)
-    if isSingleFile then
-        lia.loader.include(path, "shared")
-    else
-        if not file.Exists(coreFile, "LUA") then
-            lia.bootstrap(L("moduleSkipped"), L("moduleSkipMissing", uniqueID, lowerVar))
-            _G[variable] = prev
-            return
-        end
-
-        lia.loader.include(coreFile, "shared")
+    if not file.Exists(coreFile, "LUA") then
+        lia.bootstrap(L("moduleSkipped"), L("moduleSkipMissing", uniqueID, lowerVar))
+        _G[variable] = prev
+        return
     end
+
+    lia.loader.include(coreFile, "shared")
 
     local enabled, disableReason
     if isfunction(MODULE.enabled) then
@@ -203,10 +197,8 @@ function lia.module.load(uniqueID, path, isSingleFile, variable, skipSubmodules)
     end
 
     loadPermissions(MODULE.Privileges)
-    if not isSingleFile then
-        loadDependencies(MODULE.Dependencies)
-        loadExtras(path)
-    end
+    loadDependencies(MODULE.Dependencies)
+    loadExtras(path)
 
     MODULE.loading = false
     for k, f in pairs(MODULE) do
@@ -271,7 +263,7 @@ end
 --
 function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode()
-    lia.module.load("schema", schemaPath .. "/schema", false, "schema")
+    lia.module.load("schema", schemaPath .. "/schema", "schema")
     hook.Run("InitializedSchema")
     local preloadPath = schemaPath .. "/preload"
     local preloadIDs = collectModuleIDs(preloadPath)
@@ -339,7 +331,7 @@ function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local _, folders = file.Find(directory .. "/*", "LUA")
     for _, folderName in ipairs(folders) do
-        if not skip or not skip[folderName] then lia.module.load(folderName, directory .. "/" .. folderName, false, locationVar) end
+        if not skip or not skip[folderName] then lia.module.load(folderName, directory .. "/" .. folderName, locationVar) end
     end
 end
 

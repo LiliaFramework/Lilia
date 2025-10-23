@@ -15,6 +15,38 @@ net.Receive("liaSetWaypointWithLogo", function()
     LocalPlayer():setWaypoint(name, pos, logo, onReach)
 end)
 
+net.Receive("liaClassUpdate", function()
+    local joinedClient = net.ReadEntity()
+    if lia.gui.classes and lia.gui.classes:IsVisible() then
+        if joinedClient == LocalPlayer() then
+            lia.gui.classes:loadClasses()
+        else
+            for _, v in ipairs(lia.gui.classes.classPanels) do
+                local data = v.data
+                v:setNumber(#lia.class.getPlayers(data.index))
+            end
+        end
+    end
+end)
+
+net.Receive("liaCharList", function()
+    local newCharList = {}
+    local length = net.ReadUInt(32)
+    for i = 1, length do
+        newCharList[i] = net.ReadUInt(32)
+    end
+
+    local oldCharList = lia.characters
+    lia.characters = newCharList
+    if oldCharList then
+        hook.Run("CharListUpdated", oldCharList, newCharList)
+    else
+        hook.Run("CharListLoaded", newCharList)
+    end
+
+    hook.Run("ResetCharacterPanel")
+end)
+
 net.Receive("liaLoadingFailure", function()
     local reason = net.ReadString()
     local details = net.ReadString()
@@ -403,7 +435,7 @@ net.Receive("liaProvideInteractOptions", function()
 
     local isInteraction = kind == "interaction"
     if optionCount == 0 then return end
-    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and "playerInteractions" or "actionsMenu", isInteraction and lia.keybind.get(L("interactionMenu"), KEY_TAB) or lia.keybind.get(L("personalActions"), KEY_G), "liaRunInteraction", true)
+    lia.playerinteract.openMenu(optionsMap, isInteraction, isInteraction and L("playerInteractions") or L("actionsMenu"), isInteraction and lia.keybind.get(L("interactionMenu"), KEY_TAB) or lia.keybind.get(L("personalActions"), KEY_G), "liaRunInteraction", true)
 end)
 
 net.Receive("liaRequestDropdown", function()
@@ -868,3 +900,65 @@ net.Receive("liaAssureClientSideAssets", function()
         end
     end)
 end)
+
+net.Receive("liaChatMsg", function()
+    local client = net.ReadEntity()
+    local chatType = net.ReadString()
+    local text = net.ReadString()
+    local anonymous = net.ReadBool()
+    if IsValid(client) then
+        local class = lia.chat.classes[chatType]
+        text = hook.Run("OnChatReceived", client, chatType, text, anonymous) or text
+        if class then
+            CHAT_CLASS = class
+            class.onChatAdd(client, text, anonymous)
+            if lia.config.get("CustomChatSound", "") and lia.config.get("CustomChatSound", "") ~= "" then
+                surface.PlaySound(lia.config.get("CustomChatSound", ""))
+            else
+                chat.PlaySound()
+            end
+
+            CHAT_CLASS = nil
+        end
+    end
+end)
+
+net.Receive("liaDoorMenu", function()
+    if net.BytesLeft() > 0 then
+        local entity = net.ReadEntity()
+        local count = net.ReadUInt(8)
+        local access = {}
+        for _ = 1, count do
+            local ply = net.ReadEntity()
+            local perm = net.ReadUInt(2)
+            access[ply] = perm
+        end
+
+        local door2 = net.ReadEntity()
+        if IsValid(lia.gui.door) then return lia.gui.door:Remove() end
+        if IsValid(entity) then
+            lia.gui.door = vgui.Create("liaDoorMenu")
+            lia.gui.door:setDoor(entity, access, door2)
+        end
+    elseif IsValid(lia.gui.door) then
+        lia.gui.door:Remove()
+    end
+end)
+
+net.Receive("liaDoorPerm", function()
+    local door = net.ReadEntity()
+    local client = net.ReadEntity()
+    local access = net.ReadUInt(2)
+    local panel = door.liaPanel
+    if IsValid(panel) and IsValid(client) then
+        panel.access[client] = access
+        for _, v in ipairs(panel.access:GetLines()) do
+            if v.player == client then
+                v:SetColumnText(2, L(lia.doors.AccessLabels[access or 0]))
+                return
+            end
+        end
+    end
+end)
+
+net.Receive("liaRemoveFOne", function() if IsValid(lia.gui.menu) then lia.gui.menu:remove() end end)

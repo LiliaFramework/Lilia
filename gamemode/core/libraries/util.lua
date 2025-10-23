@@ -1292,7 +1292,7 @@ if SERVER then
             end
         end
 
-        table.sort(output, function(a, b) return a:distance(position) < b:distance(position) end)
+        table.sort(output, function(a, b) return a:Distance(position) < b:Distance(position) end)
         return output
     end
 else
