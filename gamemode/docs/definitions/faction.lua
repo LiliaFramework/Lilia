@@ -100,7 +100,7 @@ FACTION.isDefault = true
             name = "Police Department",
             -- uniqueID will be "police"
         })
-        
+
         -- For faction files, uniqueID is set to the filename
         -- File: factions/police.lua -> uniqueID = "police"
         -- File: factions/sh_police.lua -> uniqueID = "police" (sh_ prefix removed)

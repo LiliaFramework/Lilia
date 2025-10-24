@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.871 (October 24, 2025)
+
+### Changes
+
+- Revert "Merge branch 'main' of https://github.com/LiliaFramework/Lilia"
+- Update client.lua
+- Successfully updated workshop Lilia to 6.868
+- Spacing
+- Temp New Docs
+- Successfully updated workshop Lilia to 6.865
+- Fixes
+- Many Optimizations
+- Successfully updated workshop Lilia to 6.862
+- Mini Bug Fix
+- Successfully updated workshop Lilia to 6.860
+- Wipes
+- Update module.lua
+- Successfully updated workshop Lilia to 6.857
+- Auto Spawn
+- Update panel.lua
+- Reapply "Update character.lua"
+- Successfully updated workshop Lilia to 6.853
+- Update ci.yml
+- Successfully updated workshop Lilia to 6.851
+
 ## Version 6.865 (October 24, 2025)
 
 ### Changes
