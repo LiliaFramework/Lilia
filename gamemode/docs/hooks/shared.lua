@@ -1,6 +1,5 @@
 ﻿--[[
     Shared Hooks
-
     Shared hook system for the Lilia framework.
     These hooks run on both client and server and are used for shared functionality and data synchronization.
 ]]
@@ -17,7 +16,6 @@
     Returns: number - The modified stamina offset, or nil to use original offset
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Increase stamina regeneration
@@ -27,14 +25,12 @@
     end
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Modify stamina based on character attributes
     hook.Add("AdjustStaminaOffset", "AttributeStamina", function(client, offset)
     local char = client:getChar()
     if not char then return end
-    
     local con = char:getAttrib("con", 0) -- Constitution attribute
     if offset > 0 then -- Regeneration
     return offset * (1 + con * 0.1) -- 10% bonus per constitution point
@@ -43,24 +39,20 @@
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex stamina system with multiple factors
     hook.Add("AdjustStaminaOffset", "AdvancedStamina", function(client, offset)
     local char = client:getChar()
     if not char then return end
-    
     local modifiers = {
     regeneration = 1.0,
     drain = 1.0
     }
-    
     -- Constitution bonus
     local con = char:getAttrib("con", 0)
     modifiers.regeneration = modifiers.regeneration + (con * 0.1)
     modifiers.drain = modifiers.drain - (con * 0.05)
-    
     -- Faction bonuses
     local faction = char:getFaction()
     if faction == "athlete" then
@@ -70,7 +62,6 @@
     modifiers.regeneration = modifiers.regeneration - 0.2
     modifiers.drain = modifiers.drain + 0.3
     end
-    
     -- Equipment bonuses
     local items = char:getInv()
     for _, item in pairs(items) do
@@ -80,7 +71,6 @@
     modifiers.drain = modifiers.drain + 0.3
     end
     end
-    
     -- Apply modifiers
     if offset > 0 then
     return offset * modifiers.regeneration
@@ -101,7 +91,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Always allow
@@ -109,36 +98,29 @@ end
     return true
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check faction restrictions
     hook.Add("CanOutfitChangeModel", "OutfitModelCheck", function(self)
     local client = self.player
     if not client then return false end
-    
     local char = client:getChar()
     if not char then return false end
-    
     local allowedFactions = self.allowedFactions
     if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
     return false
     end
-    
     return true
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex outfit model system
     hook.Add("CanOutfitChangeModel", "AdvancedOutfitModel", function(self)
     local client = self.player
     if not client then return false end
-    
     local char = client:getChar()
     if not char then return false end
-    
     -- Check faction restrictions
     local allowedFactions = self.allowedFactions
     if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
@@ -147,7 +129,6 @@ end
     end
     return false
     end
-    
     -- Check level requirements
     local requiredLevel = self.requiredLevel or 0
     local charLevel = char:getData("level", 1)
@@ -157,7 +138,6 @@ end
     end
     return false
     end
-    
     return true
     end)
     ```
@@ -174,7 +154,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log command additions
@@ -182,7 +161,6 @@ end
     print("Command added: " .. command)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track registered commands
@@ -192,7 +170,6 @@ end
     print("Command " .. command .. " registered")
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex command registration tracking
@@ -204,7 +181,6 @@ end
     data = data,
     registeredAt = os.time()
     })
-    
     -- Log command details
     print(string.format("Command registered: %s (Admin: %s, Syntax: %s)",
     command,
@@ -225,7 +201,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module includes
@@ -233,40 +208,33 @@ end
     print("Including: " .. path)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track module load times
     hook.Add("DoModuleIncludes", "ModuleLoadTime", function(path, MODULE)
     local startTime = SysTime()
-    
     timer.Simple(0, function()
     local loadTime = SysTime() - startTime
     print("Loaded " .. path .. " in " .. loadTime .. "s")
     end)
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex module loading system
     hook.Add("DoModuleIncludes", "AdvancedModuleLoading", function(path, MODULE)
     local startTime = SysTime()
-    
     -- Log module loading
     print("Loading module: " .. (MODULE.name or "Unknown") .. " from " .. path)
-    
     -- Track dependencies
     local dependencies = MODULE.dependencies or {}
     for _, dep in ipairs(dependencies) do
     print("  Dependency: " .. dep)
     end
-    
     -- Measure load time
     timer.Simple(0, function()
     local loadTime = SysTime() - startTime
     print("Loaded " .. (MODULE.name or "Unknown") .. " in " .. loadTime .. "s")
-    
     -- Store load statistics
     lia.moduleLoadTimes = lia.moduleLoadTimes or {}
     lia.moduleLoadTimes[MODULE.name or path] = loadTime
@@ -286,7 +254,6 @@ end
     Returns: string - The modified description
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return unchanged
@@ -294,7 +261,6 @@ end
     return description
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Add faction prefix
@@ -304,34 +270,27 @@ end
     local faction = char:getFaction()
     return "[" .. faction .. "] " .. description
     end
-    
     return description
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex description formatting
     hook.Add("GetDisplayedDescription", "AdvancedDescDisplay", function(ply, description)
     local char = ply:getChar()
     if not char then return description end
-    
     -- Add faction and rank
     local faction = char:getFaction()
     local rank = char:getData("rank", 0)
     local rankName = char:getData("rankName", "Recruit")
-    
     local prefix = string.format("[%s - %s] ", faction, rankName)
-    
     -- Add status indicators
     if char:getData("injured", false) then
     prefix = prefix .. "[INJURED] "
     end
-    
     if char:getData("wanted", false) then
     prefix = prefix .. "[WANTED] "
     end
-    
     return prefix .. description
     end)
     ```
@@ -348,7 +307,6 @@ end
     Returns: string - The displayed name
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return character name
@@ -357,14 +315,12 @@ end
     return char and char:getName() or speaker:Name()
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Chat type-specific names
     hook.Add("GetDisplayedName", "ChatTypeNames", function(speaker, chatType)
     local char = speaker:getChar()
     if not char then return speaker:Name() end
-    
     if chatType == "ooc" then
     return speaker:Name()
     else
@@ -372,23 +328,19 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex name display system
     hook.Add("GetDisplayedName", "AdvancedNameDisplay", function(speaker, chatType)
     local char = speaker:getChar()
     if not char then return speaker:Name() end
-    
     -- OOC shows Steam name
     if chatType == "ooc" then
     return speaker:Name()
     end
-    
     -- IC shows character name with title
     local name = char:getName()
     local faction = char:getFaction()
-    
     -- Add faction title
     if faction == "police" then
     local rank = char:getData("rankName", "Officer")
@@ -396,12 +348,10 @@ end
     elseif faction == "medic" then
     name = "Dr. " .. name
     end
-    
     -- Add status indicators
     if speaker:IsAdmin() then
     name = "[ADMIN] " .. name
     end
-    
     return name
     end)
     ```
@@ -419,7 +369,6 @@ end
     Returns: table - The modified door info
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return unchanged
@@ -427,18 +376,15 @@ end
     return doorInfo
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Add custom door info
     hook.Add("GetDoorInfo", "CustomDoorInfo", function(entity, doorData, doorInfo)
     doorInfo.customField = "Custom Value"
     doorInfo.price = entity:getNetVar("price", 0)
-    
     return doorInfo
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex door info system
@@ -448,7 +394,6 @@ end
     doorInfo.title = entity:getNetVar("title", "Door")
     doorInfo.owner = entity:getNetVar("owner")
     doorInfo.locked = entity:getNetVar("locked", false)
-    
     -- Add owner name
     if doorInfo.owner then
     local ownerChar = lia.char.loaded[doorInfo.owner]
@@ -456,14 +401,12 @@ end
     doorInfo.ownerName = ownerChar:getName()
     end
     end
-    
     -- Add faction restrictions
     local allowedFactions = entity:getNetVar("allowedFactions", {})
     if #allowedFactions > 0 then
     doorInfo.factionRestricted = true
     doorInfo.allowedFactions = allowedFactions
     end
-    
     return doorInfo
     end)
     ```
@@ -479,7 +422,6 @@ end
     Returns: string - "male" or "female"
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return default gender
@@ -487,7 +429,6 @@ end
     return "male"
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check model path
@@ -495,11 +436,9 @@ end
     if string.find(model, "female") then
     return "female"
     end
-    
     return "male"
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex gender detection
@@ -511,17 +450,14 @@ end
     return "female"
     end
     end
-    
     -- Check specific models
     local femaleModels = {
     ["models/player/alyx.mdl"] = true,
     ["models/player/mossman.mdl"] = true
     }
-    
     if femaleModels[model] then
     return "female"
     end
-    
     return "male"
     end)
     ```
@@ -536,7 +472,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log config initialization
@@ -544,7 +479,6 @@ end
     print("Configuration initialized")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Set up custom config values
@@ -553,7 +487,6 @@ end
     lia.config.add("myAddonValue", 100, "My Addon Value")
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex configuration initialization
@@ -565,22 +498,18 @@ end
     {key = "myAddonString", default = "default", description = "My Addon String", type = "string"},
     {key = "myAddonColor", default = Color(255, 255, 255), description = "My Addon Color", type = "color"}
     }
-    
     for _, option in ipairs(configOptions) do
     lia.config.add(option.key, option.default, option.description)
     end
-    
     -- Load saved configuration
     local savedConfig = lia.data.get("myAddonConfig", {})
     for key, value in pairs(savedConfig) do
     lia.config.set(key, value)
     end
-    
     -- Set up configuration callbacks
     lia.config.addCallback("myAddonEnabled", function(value)
     print("My Addon enabled: " .. tostring(value))
     end)
-    
     print("Configuration system initialized with " .. #configOptions .. " options")
     end)
     ```
@@ -595,7 +524,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item initialization
@@ -603,7 +531,6 @@ end
     print("Items initialized")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Register custom items
@@ -615,7 +542,6 @@ end
     })
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex item initialization system
@@ -628,11 +554,9 @@ end
     "tools",
     "misc"
     }
-    
     for _, category in ipairs(categories) do
     lia.item.addCategory(category)
     end
-    
     -- Register custom items
     local customItems = {
     {
@@ -654,16 +578,13 @@ end
     price = 50
     }
     }
-    
     for _, itemData in ipairs(customItems) do
     lia.item.register(itemData.uniqueID, itemData)
     end
-    
     -- Set up item callbacks
     lia.item.addCallback("my_weapon", "onUse", function(item, client)
     client:ChatPrint("Used custom weapon!")
     end)
-    
     print("Item system initialized with " .. #customItems .. " custom items")
     end)
     ```
@@ -678,7 +599,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module initialization
@@ -686,7 +606,6 @@ end
     print("Modules initialized")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Register custom modules
@@ -699,7 +618,6 @@ end
     })
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex module initialization system
@@ -723,26 +641,21 @@ end
     dependencies = {"my_module"}
     }
     }
-    
     for _, moduleData in ipairs(modules) do
     lia.module.register(moduleData.uniqueID, moduleData)
     end
-    
     -- Set up module callbacks
     lia.module.addCallback("my_module", "onLoad", function()
     print("My module loaded!")
     end)
-    
     lia.module.addCallback("my_module", "onUnload", function()
     print("My module unloaded!")
     end)
-    
     -- Load module configurations
     local moduleConfigs = lia.data.get("moduleConfigs", {})
     for moduleID, config in pairs(moduleConfigs) do
     lia.module.setConfig(moduleID, config)
     end
-    
     print("Module system initialized with " .. #modules .. " custom modules")
     end)
     ```
@@ -757,7 +670,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log schema initialization
@@ -765,7 +677,6 @@ end
     print("Schema initialized")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Set up custom schema data
@@ -774,7 +685,6 @@ end
     lia.schema.set("myAddonEnabled", true)
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex schema initialization system
@@ -792,26 +702,21 @@ end
     roundTime = 600
     }
     }
-    
     for key, value in pairs(schemaData) do
     lia.schema.set(key, value)
     end
-    
     -- Set up schema callbacks
     lia.schema.addCallback("onLoad", function()
     print("Schema loaded!")
     end)
-    
     lia.schema.addCallback("onUnload", function()
     print("Schema unloaded!")
     end)
-    
     -- Load saved schema settings
     local savedSettings = lia.data.get("schemaSettings", {})
     for key, value in pairs(savedSettings) do
     lia.schema.set(key, value)
     end
-    
     print("Schema system initialized with custom data")
     end)
     ```
@@ -830,7 +735,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log data changes
@@ -838,7 +742,6 @@ end
     print("Inventory data changed: " .. key .. " = " .. tostring(value))
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track specific data changes
@@ -850,7 +753,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex inventory data tracking
@@ -860,19 +762,16 @@ end
     lia.db.query("INSERT INTO inventory_logs (timestamp, invid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
     os.time(), instance:getID(), key, tostring(oldValue), tostring(value))
     end
-    
     -- Track weight changes
     if key == "weight" then
     local maxWeight = instance:getData("maxWeight", 100)
     local weightPercent = (value / maxWeight) * 100
-    
     if weightPercent >= 90 then
     if CLIENT then
     LocalPlayer():ChatPrint("Warning: Inventory is almost full!")
     end
     end
     end
-    
     -- Notify owner of changes
     if SERVER then
     local owner = instance:getOwner()
@@ -894,7 +793,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log inventory initialization
@@ -902,7 +800,6 @@ end
     print("Inventory initialized: " .. instance:getID())
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Set default inventory data
@@ -912,7 +809,6 @@ end
     instance:setData("created", os.time())
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex inventory initialization
@@ -922,12 +818,10 @@ end
     instance:setData("maxWeight", 100)
     instance:setData("created", os.time())
     instance:setData("lastAccessed", os.time())
-    
     if SERVER then
     -- Log to database
     lia.db.query("INSERT INTO inventory_logs (timestamp, invid, action) VALUES (?, ?, ?)",
     os.time(), instance:getID(), "initialized")
-    
     -- Set up owner-specific settings
     local owner = instance:getOwner()
     if IsValid(owner) then
@@ -940,7 +834,6 @@ end
     elseif faction == "medic" then
     instance:setData("maxWeight", 120)
     end
-    
     -- Add starting items
     if instance:getData("isNew", true) then
     local startingItems = {"item_bandage", "item_water"}
@@ -973,7 +866,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item data changes
@@ -981,7 +873,6 @@ end
     print("Item data changed: " .. key .. " = " .. tostring(newValue))
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track durability changes
@@ -995,7 +886,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex item data tracking
@@ -1004,7 +894,6 @@ end
     -- Log to database
     lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
     os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
-    
     -- Handle durability changes
     if key == "durability" then
     if newValue <= 0 then
@@ -1013,7 +902,6 @@ end
     if IsValid(owner) then
     owner:ChatPrint(item.name .. " is broken!")
     end
-    
     -- Remove item if it's broken
     timer.Simple(1, function()
     if IsValid(item) then
@@ -1028,7 +916,6 @@ end
     end
     end
     end
-    
     -- Handle quality changes
     if key == "quality" then
     local owner = inventory:getOwner()
@@ -1052,7 +939,6 @@ end
     Returns: boolean - True if fake recognized, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Always return false
@@ -1060,7 +946,6 @@ end
     return false
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check fake recognition list
@@ -1069,13 +954,11 @@ end
     return table.HasValue(fakeRecognized, id)
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex fake recognition system
     hook.Add("IsCharFakeRecognized", "AdvancedFakeRecognition", function(self, id)
     local fakeRecognized = self:getData("fakeRecognized", {})
-    
     -- Check if in fake recognition list
     if table.HasValue(fakeRecognized, id) then
     -- Check if fake recognition has expired
@@ -1088,7 +971,6 @@ end
     self:setData("fakeRecognized", fakeRecognized)
     end
     end
-    
     return false
     end)
     ```
@@ -1105,7 +987,6 @@ end
     Returns: boolean - True if recognized, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check recognition list
@@ -1114,7 +995,6 @@ end
     return table.HasValue(recognized, id)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check recognition with faction bonus
@@ -1123,17 +1003,14 @@ end
     if table.HasValue(recognized, id) then
     return true
     end
-    
     -- Same faction members recognize each other
     local targetChar = lia.char.loaded[id]
     if targetChar and targetChar:getFaction() == self:getFaction() then
     return true
     end
-    
     return false
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex recognition system
@@ -1142,22 +1019,18 @@ end
     if table.HasValue(recognized, id) then
     return true
     end
-    
     local targetChar = lia.char.loaded[id]
     if not targetChar then return false end
-    
     -- Same faction members recognize each other
     if targetChar:getFaction() == self:getFaction() then
     return true
     end
-    
     -- Check if in same group/party
     local myGroup = self:getData("group")
     local targetGroup = targetChar:getData("group")
     if myGroup and targetGroup and myGroup == targetGroup then
     return true
     end
-    
     -- Check proximity-based recognition
     local myPlayer = self:getPlayer()
     local targetPlayer = targetChar:getPlayer()
@@ -1167,7 +1040,6 @@ end
     return true
     end
     end
-    
     return false
     end)
     ```
@@ -1183,7 +1055,6 @@ end
     Returns: boolean - True if recognition is required, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Only IC chat requires recognition
@@ -1191,7 +1062,6 @@ end
     return chatType == "ic"
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Multiple chat types require recognition
@@ -1200,7 +1070,6 @@ end
     return table.HasValue(recognizedTypes, chatType)
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex recognition requirements
@@ -1210,18 +1079,15 @@ end
     if table.HasValue(noRecognitionTypes, chatType) then
     return false
     end
-    
     -- IC and whisper chats require recognition
     local recognitionTypes = {"ic", "w", "y", "me", "it"}
     if table.HasValue(recognitionTypes, chatType) then
     return true
     end
-    
     -- Radio and faction chats don't require recognition
     if chatType == "radio" or chatType == "faction" then
     return false
     end
-    
     -- Default to requiring recognition
     return true
     end)
@@ -1237,7 +1103,6 @@ end
     Returns: boolean - True if valid, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Basic validation
@@ -1245,7 +1110,6 @@ end
     return true
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check entity state
@@ -1255,7 +1119,6 @@ end
     return true
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex validation
@@ -1281,7 +1144,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item data changes
@@ -1289,7 +1151,6 @@ end
     print("Item data changed: " .. key .. " = " .. tostring(newValue))
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track durability changes
@@ -1303,7 +1164,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex item data tracking
@@ -1312,7 +1172,6 @@ end
     -- Log to database
     lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
     os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
-    
     -- Handle durability changes
     if key == "durability" then
     if newValue <= 0 then
@@ -1321,7 +1180,6 @@ end
     if IsValid(owner) then
     owner:ChatPrint(item.name .. " is broken!")
     end
-    
     -- Remove item
     timer.Simple(1, function()
     if IsValid(item) then
@@ -1336,7 +1194,6 @@ end
     end
     end
     end
-    
     -- Handle quality changes
     if key == "quality" then
     local owner = item:getOwner()
@@ -1344,7 +1201,6 @@ end
     owner:ChatPrint(item.name .. " quality changed to " .. newValue)
     end
     end
-    
     -- Handle quantity changes
     if key == "quantity" then
     if newValue <= 0 then
@@ -1366,7 +1222,6 @@ end
     Returns: table - Table of default functions
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return basic functions
@@ -1377,7 +1232,6 @@ end
     }
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Conditional functions
@@ -1386,31 +1240,25 @@ end
     use = {name = "Use", icon = "icon16/accept.png"},
     drop = {name = "Drop", icon = "icon16/bin.png"}
     }
-    
     if not item:getData("equipped", false) then
     functions.equip = {name = "Equip", icon = "icon16/add.png"}
     else
     functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
     end
-    
     return functions
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex function system
     hook.Add("ItemDefaultFunctions", "AdvancedItemFunctions", function(item)
     local functions = {}
-    
     -- Always add use function
     functions.use = {name = "Use", icon = "icon16/accept.png"}
-    
     -- Add drop if not equipped
     if not item:getData("equipped", false) then
     functions.drop = {name = "Drop", icon = "icon16/bin.png"}
     end
-    
     -- Add equip/unequip
     if item.equipable then
     if item:getData("equipped", false) then
@@ -1419,16 +1267,13 @@ end
     functions.equip = {name = "Equip", icon = "icon16/add.png"}
     end
     end
-    
     -- Add examine
     functions.examine = {name = "Examine", icon = "icon16/magnifier.png"}
-    
     -- Add repair if damaged
     local durability = item:getData("durability")
     if durability and durability < 100 then
     functions.repair = {name = "Repair", icon = "icon16/wrench.png"}
     end
-    
     return functions
     end)
     ```
@@ -1444,7 +1289,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item initialization
@@ -1452,7 +1296,6 @@ end
     print("Item initialized: " .. item.name)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Set default item data
@@ -1465,7 +1308,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex item initialization
@@ -1480,19 +1322,16 @@ end
     if not item:getData("created") then
     item:setData("created", os.time())
     end
-    
     if SERVER then
     -- Log to database
     lia.db.query("INSERT INTO item_logs (timestamp, itemid, action) VALUES (?, ?, ?)",
     os.time(), item:getID(), "initialized")
-    
     -- Set up item-specific data
     if item.category == "weapon" then
     item:setData("ammo", item.maxAmmo or 30)
     elseif item.category == "armor" then
     item:setData("defense", item.baseDefense or 10)
     end
-    
     -- Add to item registry
     lia.itemRegistry = lia.itemRegistry or {}
     lia.itemRegistry[item:getID()] = item
@@ -1513,7 +1352,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log quantity changes
@@ -1521,7 +1359,6 @@ end
     print(item.name .. " quantity changed from " .. oldValue .. " to " .. quantity)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Remove item if quantity is zero
@@ -1531,7 +1368,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex quantity management
@@ -1540,7 +1376,6 @@ end
     -- Log to database
     lia.db.query("INSERT INTO item_quantity_logs (timestamp, itemid, oldquantity, newquantity) VALUES (?, ?, ?, ?)",
     os.time(), item:getID(), oldValue, quantity)
-    
     -- Remove item if quantity is zero or negative
     if quantity <= 0 then
     local owner = item:getOwner()
@@ -1550,7 +1385,6 @@ end
     item:remove()
     return
     end
-    
     -- Notify owner of quantity change
     local owner = item:getOwner()
     if IsValid(owner) then
@@ -1561,7 +1395,6 @@ end
     owner:ChatPrint(change .. " " .. item.name)
     end
     end
-    
     -- Check for achievements
     if quantity >= 100 then
     local owner = item:getOwner()
@@ -1587,7 +1420,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log framework load
@@ -1595,7 +1427,6 @@ end
     print("Lilia framework loaded")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Initialize addon systems
@@ -1604,14 +1435,12 @@ end
     print("MyAddon initialized")
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex framework initialization
     hook.Add("LiliaLoaded", "AdvancedFrameworkInit", function()
     -- Initialize custom systems
     MyAddon.Initialize()
-    
     -- Register custom chat commands
     lia.command.add("mycmd", {
     description = "My custom command",
@@ -1619,14 +1448,12 @@ end
     client:ChatPrint("Command executed!")
     end
     })
-    
     -- Register custom items
     lia.item.register("my_item", {
     name = "My Item",
     desc = "A custom item",
     model = "models/props_lab/box01a.mdl"
     })
-    
     print("MyAddon fully initialized with Lilia")
     end)
     ```
@@ -1645,7 +1472,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log netvar changes
@@ -1653,7 +1479,6 @@ end
     print("NetVar changed: " .. key .. " = " .. tostring(value))
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track specific netvars
@@ -1665,17 +1490,14 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex netvar tracking system
     hook.Add("NetVarChanged", "AdvancedNetvarTracking", function(entity, key, oldValue, value)
     if not IsValid(entity) then return end
-    
     -- Log to console
     print(string.format("NetVar changed on %s: %s = %s (was %s)",
     tostring(entity), key, tostring(value), tostring(oldValue)))
-    
     -- Handle specific netvars
     if key == "health" and entity:IsPlayer() then
     if value < oldValue then
@@ -1688,7 +1510,6 @@ end
     print(entity:Name() .. " healed " .. healing .. " HP")
     end
     end
-    
     -- Trigger custom events
     hook.Run("CustomNetVarChanged_" .. key, entity, oldValue, value)
     end)
@@ -1705,7 +1526,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item registration
@@ -1713,7 +1533,6 @@ end
     print("Item registered: " .. ITEM.name)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track registered items
@@ -1726,7 +1545,6 @@ end
     }
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex item registration handling
@@ -1738,18 +1556,14 @@ end
     model = ITEM.model,
     timestamp = os.time()
     })
-    
     -- Validate item data
     if not ITEM.uniqueID or not ITEM.name then
     print("Warning: Invalid item data for " .. tostring(ITEM.uniqueID))
     end
-    
     -- Add custom properties
     ITEM.customProperty = "MyAddonValue"
-    
     -- Register item in custom system
     MyAddon.itemSystem:RegisterItem(ITEM)
-    
     -- Notify clients if server
     if SERVER then
     net.Start("liaItemRegistered")
@@ -1769,7 +1583,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log framework loaded
@@ -1777,7 +1590,6 @@ end
     print("Lilia framework has finished loading")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Initialize addon after framework loads
@@ -1791,7 +1603,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex post-load initialization
@@ -1802,7 +1613,6 @@ end
     MyAddon.data = data
     print("Addon data loaded")
     end)
-    
     -- Register custom network strings
     util.AddNetworkString("MyAddonSync")
     else
@@ -1826,7 +1636,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module creation
@@ -1834,7 +1643,6 @@ end
     print("Module created: " .. moduleName)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track module creation
@@ -1847,7 +1655,6 @@ end
     }
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex module management
@@ -1860,7 +1667,6 @@ end
     end
     end
     end
-    
     -- Initialize module data
     if SERVER then
     lia.data.get("module_" .. moduleName, {}, function(data)
@@ -1881,7 +1687,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module removal
@@ -1889,7 +1694,6 @@ end
     print("Module removed: " .. moduleName)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Clean up module data
@@ -1900,7 +1704,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex module cleanup
@@ -1911,12 +1714,10 @@ end
     hook.Remove(hookName, moduleName)
     end
     end
-    
     -- Clean up module data
     if SERVER then
     lia.data.delete("module_" .. moduleName)
     end
-    
     -- Notify admins
     for _, ply in ipairs(player.GetAll()) do
     if ply:IsAdmin() then
@@ -1940,7 +1741,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log privilege registration
@@ -1948,7 +1748,6 @@ end
     print("Privilege registered: " .. name)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track privileges
@@ -1961,7 +1760,6 @@ end
     }
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex privilege management
@@ -1978,7 +1776,6 @@ end
     lia.data.set("privileges", data)
     end)
     end
-    
     -- Notify admins
     for _, ply in ipairs(player.GetAll()) do
     if ply:IsAdmin() then
@@ -2000,7 +1797,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log privilege removal
@@ -2008,7 +1804,6 @@ end
     print("Privilege unregistered: " .. name)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Clean up privilege data
@@ -2018,7 +1813,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex privilege cleanup
@@ -2030,7 +1824,6 @@ end
     lia.data.set("privileges", data)
     end)
     end
-    
     -- Revoke privilege from all players
     for _, ply in ipairs(player.GetAll()) do
     local char = ply:getChar()
@@ -2052,7 +1845,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log quest item loading
@@ -2060,7 +1852,6 @@ end
     print("Quest item loaded: " .. item.name)
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track quest items
@@ -2073,7 +1864,6 @@ end
     })
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex quest item management
@@ -2084,7 +1874,6 @@ end
     MyAddon.quests[item.questID] = MyAddon.quests[item.questID] or {items = {}}
     table.insert(MyAddon.quests[item.questID].items, item.uniqueID)
     end
-    
     -- Setup quest item tracking
     if SERVER then
     lia.data.get("questItems", {}, function(data)
@@ -2112,7 +1901,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log option changes
@@ -2120,7 +1908,6 @@ end
     print("Option " .. key .. " changed from " .. tostring(old) .. " to " .. tostring(value))
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track option changes
@@ -2134,7 +1921,6 @@ end
     })
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex option change handling
@@ -2146,14 +1932,12 @@ end
     new = tostring(value),
     timestamp = os.time()
     })
-    
     -- Handle specific option changes
     if key == "serverName" then
     SetHostName(value)
     elseif key == "maxPlayers" then
     game.SetMaxPlayers(value)
     end
-    
     -- Notify clients of important changes
     if SERVER then
     net.Start("liaOptionChanged")
@@ -2176,7 +1960,6 @@ end
     Returns: string - The overridden description (or nil to use default)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add prefix to description
@@ -2184,7 +1967,6 @@ end
     return "[FACTION] " .. description
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Customize specific faction descriptions
@@ -2194,14 +1976,12 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Dynamic faction description
     hook.Add("OverrideFactionDesc", "DynamicFactionDesc", function(uniqueID, description)
     local faction = lia.faction.indices[uniqueID]
     if not faction then return end
-    
     -- Add player count to description
     local count = 0
     for _, ply in ipairs(player.GetAll()) do
@@ -2210,7 +1990,6 @@ end
     count = count + 1
     end
     end
-    
     return description .. "\n\nCurrent Members: " .. count
     end)
     ```
@@ -2227,7 +2006,6 @@ end
     Returns: table - The overridden models table (or nil to use default)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a model to faction
@@ -2238,7 +2016,6 @@ end
     end
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Replace faction models
@@ -2251,20 +2028,17 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Dynamic faction models based on rank
     hook.Add("OverrideFactionModels", "DynamicFactionModels", function(uniqueID, models)
     local faction = lia.faction.indices[uniqueID]
     if not faction then return end
-    
     -- Load models from configuration
     local customModels = lia.config.get("faction_models_" .. uniqueID, {})
     if table.Count(customModels) > 0 then
     return customModels
     end
-    
     -- Filter models based on gender setting
     if lia.config.get("faction_gender_filter", false) then
     local filtered = {}
@@ -2290,7 +2064,6 @@ end
     Returns: string - The overridden name (or nil to use default)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add prefix to name
@@ -2298,7 +2071,6 @@ end
     return "[" .. uniqueID:upper() .. "] " .. name
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Localize faction names
@@ -2308,18 +2080,15 @@ end
     police = "Police",
     medic = "Médecin"
     }
-    
     return localizedNames[uniqueID] or name
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Dynamic faction naming
     hook.Add("OverrideFactionName", "DynamicFactionName", function(uniqueID, name)
     local faction = lia.faction.indices[uniqueID]
     if not faction then return end
-    
     -- Add member count to name
     local count = 0
     for _, ply in ipairs(player.GetAll()) do
@@ -2328,13 +2097,11 @@ end
     count = count + 1
     end
     end
-    
     -- Add status indicator
     local status = ""
     if lia.config.get("faction_recruiting_" .. uniqueID, false) then
     status = " [RECRUITING]"
     end
-    
     return name .. " (" .. count .. ")" .. status
     end)
     ```
@@ -2350,7 +2117,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log stamina depletion
@@ -2358,7 +2124,6 @@ end
     print(player:Name() .. " ran out of stamina")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Apply exhaustion effect
@@ -2369,7 +2134,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex stamina depletion system
@@ -2377,21 +2141,17 @@ end
     if SERVER then
     local char = player:getChar()
     if not char then return end
-    
     -- Apply exhaustion effect
     player:SetRunSpeed(150)
     player:SetWalkSpeed(75)
-    
     -- Track depletion count
     local depletionCount = char:getData("staminaDepletions", 0)
     char:setData("staminaDepletions", depletionCount + 1)
-    
     -- Apply damage if depleted too many times
     if depletionCount >= 5 then
     player:TakeDamage(5)
     player:ChatPrint("You are exhausted!")
     end
-    
     -- Restore speed after cooldown
     timer.Simple(5, function()
     if IsValid(player) then
@@ -2414,7 +2174,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log stamina gain
@@ -2422,7 +2181,6 @@ end
     print(self:Name() .. " gained stamina")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track stamina gains
@@ -2436,7 +2194,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex stamina gain tracking
@@ -2444,11 +2201,9 @@ end
     if SERVER then
     local char = self:getChar()
     if not char then return end
-    
     -- Track stamina gains
     local staminaGains = char:getData("staminaGains", 0)
     char:setData("staminaGains", staminaGains + 1)
-    
     -- Check for achievements
     if staminaGains + 1 >= 1000 then
     if not char:getData("achievement_marathonRunner", false) then
@@ -2471,7 +2226,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log stamina loss
@@ -2479,7 +2233,6 @@ end
     print(self:Name() .. " lost stamina")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Track stamina loss
@@ -2493,7 +2246,6 @@ end
     end
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex stamina loss tracking
@@ -2501,11 +2253,9 @@ end
     if SERVER then
     local char = self:getChar()
     if not char then return end
-    
     -- Track stamina loss
     local staminaLoss = char:getData("staminaLoss", 0)
     char:setData("staminaLoss", staminaLoss + 1)
-    
     -- Check if stamina is critically low
     local stamina = self:getNetVar("stamina", 100)
     if stamina <= 10 then
@@ -2525,7 +2275,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log pre-load
@@ -2533,7 +2282,6 @@ end
     print("Lilia is about to load")
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Initialize addon systems
@@ -2542,22 +2290,18 @@ end
     print("Addon pre-initialized")
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex pre-load initialization
     hook.Add("PreLiliaLoaded", "AdvancedPreLoadInit", function()
     -- Initialize custom systems
     MyAddon.PreInitialize()
-    
     -- Set up configuration
     MyAddon.config = MyAddon.config or {}
     MyAddon.config.enabled = true
     MyAddon.config.debug = false
-    
     -- Register custom hooks
     hook.Add("PlayerInitialSpawn", "MyAddonSpawn", MyAddon.OnPlayerSpawn)
-    
     print("Advanced pre-load initialization completed")
     end)
     ```
@@ -2573,7 +2317,6 @@ end
     Returns: number - The stamina change amount
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return default stamina change
@@ -2581,34 +2324,28 @@ end
     return 1
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Calculate based on character attributes
     hook.Add("calcStaminaChange", "AttributeStamina", function(client)
     local char = client:getChar()
     if not char then return 1 end
-    
     local endurance = char:getAttrib("end", 0)
     return 1 + (endurance * 0.1)
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex stamina calculation system
     hook.Add("calcStaminaChange", "AdvancedStaminaCalc", function(client)
     local char = client:getChar()
     if not char then return 1 end
-    
     -- Base stamina change
     local baseChange = 1
-    
     -- Attribute bonus
     local endurance = char:getAttrib("end", 0)
     local strength = char:getAttrib("str", 0)
     local attrBonus = (endurance * 0.1) + (strength * 0.05)
-    
     -- Faction bonus
     local faction = char:getFaction()
     local factionBonuses = {
@@ -2617,7 +2354,6 @@ end
     ["citizen"] = 0.0
     }
     local factionBonus = factionBonuses[faction] or 0.0
-    
     -- Item bonuses
     local itemBonus = 0
     local inv = char:getInv()
@@ -2628,7 +2364,6 @@ end
     end
     end
     end
-    
     -- Status effects
     local statusPenalty = 0
     if char:getData("injured", false) then
@@ -2637,7 +2372,6 @@ end
     if char:getData("exhausted", false) then
     statusPenalty = statusPenalty - 0.3
     end
-    
     -- Calculate final change
     local finalChange = baseChange + attrBonus + factionBonus + itemBonus + statusPenalty
     return math.max(0.1, finalChange)
@@ -2655,7 +2389,6 @@ end
     Returns: any - The retrieved data or default value
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get data with default
@@ -2663,7 +2396,6 @@ end
     return default
     end)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Get data with validation
@@ -2675,7 +2407,6 @@ end
     return data
     end)
     ```
-
     High Complexity:
     ```lua
     -- High: Complex data retrieval system
@@ -2683,27 +2414,22 @@ end
     -- Try to get from cache first
     local cache = lia.data.cache or {}
     local key = "someKey"
-    
     if cache[key] and cache[key].expiry > CurTime() then
     return cache[key].value
     end
-    
     -- Get from storage
     local data = lia.data.get(key, default)
-    
     -- Validate data type
     if type(data) ~= type(default) then
     print("Warning: Data type mismatch, using default")
     data = default
     end
-    
     -- Cache the result
     cache[key] = {
     value = data,
     expiry = CurTime() + 60
     }
     lia.data.cache = cache
-    
     return data
     end)
     ```

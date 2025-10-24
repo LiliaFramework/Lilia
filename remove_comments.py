@@ -33,7 +33,9 @@ def remove_comments(content):
                 i += 1
                 while i < len(lines) and ']]' not in lines[i]:
                     cleaned_line = lines[i].rstrip()
-                    cleaned_lines.append(cleaned_line)
+                    # Skip empty lines within comment blocks to satisfy linter
+                    if cleaned_line:
+                        cleaned_lines.append(cleaned_line)
                     i += 1
                 if i < len(lines):
                     cleaned_line = lines[i].rstrip()
@@ -45,18 +47,16 @@ def remove_comments(content):
         # But preserve lines that are purely comments
         stripped_line = line.strip()
         
-        # If line starts with --, it's a pure comment line - clean whitespace and preserve it
+        # If line starts with --, it's a pure comment line - preserve it
         if stripped_line.startswith('--'):
             cleaned_line = line.rstrip()
             cleaned_lines.append(cleaned_line)
         else:
             # Remove inline comments (-- followed by text)
             line = re.sub(r'--.*', '', line)
-            
-            # Keep non-empty lines
+            # Remove trailing whitespace but preserve the line (even if empty)
             line = line.rstrip()
-            if line:
-                cleaned_lines.append(line)
+            cleaned_lines.append(line)
 
         i += 1
 

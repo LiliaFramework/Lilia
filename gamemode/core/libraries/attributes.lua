@@ -1,6 +1,5 @@
 ﻿--[[
     Attributes Library
-
     Character attribute management system for the Lilia framework.
 ]]
 --[[
@@ -16,13 +15,11 @@ lia.attribs.list = lia.attribs.list or {}
     Returns: None (modifies lia.attribs.list)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Load attributes from a single directory
     lia.attribs.loadFromDir("gamemode/attributes")
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Load attributes with conditional directory checking
@@ -31,7 +28,6 @@ lia.attribs.list = lia.attribs.list or {}
     lia.attribs.loadFromDir(attrDir)
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Load attributes from multiple directories with error handling
@@ -66,13 +62,11 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
-
         Low Complexity:
     ```lua
     -- Simple: Setup attributes for a client
     lia.attribs.setup(client)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Setup attributes with validation
@@ -80,13 +74,11 @@ if SERVER then
     lia.attribs.setup(client)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Setup attributes with custom logic and error handling
     hook.Add("PlayerSpawn", "SetupAttributes", function(client)
     if not client:getChar() then return end
-    
     timer.Simple(0.1, function()
     if IsValid(client) then
     lia.attribs.setup(client)

@@ -1,6 +1,5 @@
 ﻿--[[
     Commands Library
-
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
 ]]
 --[[
@@ -16,7 +15,6 @@ lia.command.list = lia.command.list or {}
     Returns: string - Formatted syntax string showing argument types and names
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Generate syntax for basic arguments
@@ -27,7 +25,6 @@ lia.command.list = lia.command.list or {}
     local syntax = lia.command.buildSyntaxFromArguments(args)
     -- Returns: "[string target] [player player]"
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Generate syntax with optional arguments
@@ -38,7 +35,6 @@ lia.command.list = lia.command.list or {}
     local syntax = lia.command.buildSyntaxFromArguments(args)
     -- Returns: "[string message] [bool silent optional]"
     ```
-
     High Complexity:
     ```lua
     -- High: Generate syntax for complex command with multiple argument types
@@ -80,7 +76,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic command
@@ -91,7 +86,6 @@ end
     desc = "Say hello"
     })
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Register command with arguments and admin privilege
@@ -110,7 +104,6 @@ end
     desc = "Kick a player from the server"
     })
     ```
-
     High Complexity:
     ```lua
     -- High: Register complex command with aliases, custom access check, and privilege
@@ -243,7 +236,6 @@ end
     Returns: boolean, string - Access granted status and privilege name
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check basic command access
@@ -252,7 +244,6 @@ end
     client:notify("You can use the hello command!")
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check admin command access with custom privilege
@@ -263,7 +254,6 @@ end
     end
     -- Execute kick command
     ```
-
     High Complexity:
     ```lua
     -- High: Check access with faction/class specific permissions
@@ -323,27 +313,23 @@ end
     Returns: table - Array of extracted argument strings
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Extract basic arguments
     local args = lia.command.extractArgs("player1 Hello World")
     -- Returns: {"player1", "Hello", "World"}
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Extract arguments with quoted strings
     local args = lia.command.extractArgs('player1 "Hello World" true')
     -- Returns: {"player1", "Hello World", "true"}
     ```
-
     High Complexity:
     ```lua
     -- High: Extract complex arguments with mixed quotes and spaces
     local args = lia.command.extractArgs('"John Doe" "This is a long message with spaces" 123 true')
     -- Returns: {"John Doe", "This is a long message with spaces", "123", "true"}
-    
     -- Process arguments for command
     local target = args[1]
     local message = args[2]
@@ -417,14 +403,12 @@ if SERVER then
     Returns: void
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Execute a basic command
     lia.command.run(client, "hello", {})
     -- Executes the hello command for the client
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Execute command with arguments
@@ -432,13 +416,11 @@ if SERVER then
     lia.command.run(client, "pm", args)
     -- Executes PM command with target and message
     ```
-
     High Complexity:
     ```lua
     -- High: Execute command with error handling and logging
     local command = "kick"
     local args = {target:Name(), "Rule violation"}
-    
     -- Check access first
     local hasAccess = lia.command.hasAccess(client, command)
     if hasAccess then
@@ -474,7 +456,6 @@ if SERVER then
     Returns: boolean - True if command was processed, false if not a command
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Parse basic command from chat
@@ -483,7 +464,6 @@ if SERVER then
     -- Command was processed
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Parse command with arguments
@@ -492,7 +472,6 @@ if SERVER then
     -- Kick command was executed
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Parse command with argument validation and prompting
@@ -568,21 +547,18 @@ else
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Open prompt for single missing argument
     lia.command.openArgumentPrompt("pm", {"target"}, {})
     -- Shows GUI to select target player for PM command
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Open prompt with partial arguments
     lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
     -- Shows GUI to enter reason, player1 already provided
     ```
-
     High Complexity:
     ```lua
     -- High: Open prompt for complex command with multiple argument types
@@ -825,21 +801,18 @@ else
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Send basic command
     lia.command.send("hello")
     -- Sends hello command to server
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Send command with arguments
     lia.command.send("pm", "player1", "Hello there!")
     -- Sends PM command with target and message
     ```
-
     High Complexity:
     ```lua
     -- High: Send complex command with multiple arguments
@@ -923,7 +896,6 @@ end)
     Returns: Player or nil - Found player entity or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find player by exact name
@@ -932,7 +904,6 @@ end)
     client:notify("Found player: " .. target:Name())
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Find player with error handling
@@ -943,13 +914,11 @@ end)
     end
     -- Use target player
     ```
-
     High Complexity:
     ```lua
     -- High: Find player with multiple fallback methods
     local identifier = arguments[1] -- Could be name, SteamID, or partial match
     local target = lia.command.findPlayer(client, identifier)
-    
     if not IsValid(target) then
     client:notifyError("Player '" .. identifier .. "' not found!")
     return
@@ -957,7 +926,6 @@ end)
     client:notifyError("You cannot target yourself!")
     return
     end
-    
     -- Execute command on target
     target:Kick("Banned by " .. client:Name())
     ```

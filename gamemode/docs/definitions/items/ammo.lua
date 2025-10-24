@@ -1,15 +1,11 @@
 ﻿--[[
     Ammo Item Definition
-
     Ammunition item system for the Lilia framework.
-
     Ammo items are stackable consumables that provide ammunition for weapons.
     They can be loaded in different quantities and have visual quantity indicators.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/ammo/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/ammo/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Ammo items are consumed when used
     - They give ammunition based on the ITEM.ammo type
@@ -87,7 +83,6 @@ ITEM.ammo = "pistol"
 ITEM.category = "itemCatAmmunition"
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Pistol Ammo"                    -- Display name shown to players

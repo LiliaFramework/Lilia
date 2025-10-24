@@ -1,6 +1,5 @@
 ﻿--[[
     Loader Library
-
     Core initialization and module loading system for the Lilia framework.
 ]]
 --[[
@@ -294,13 +293,11 @@ local ConditionalFiles = {
     -- Simple: Include a shared library file
     lia.loader.include("lilia/gamemode/core/libraries/util.lua")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Include a file with explicit realm specification
     lia.loader.include("lilia/gamemode/core/libraries/logger.lua", "server")
     ```
-
         High Complexity Example:
     ```lua
     -- High: Include files based on conditions with error handling
@@ -366,13 +363,11 @@ end
     -- Simple: Include all files in a directory
     lia.loader.includeDir("lilia/gamemode/core/libraries")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Include files with specific realm and deep search
     lia.loader.includeDir("lilia/gamemode/modules", false, true, "shared")
     ```
-
         High Complexity Example:
     ```lua
     -- High: Include multiple directories with different settings
@@ -419,13 +414,11 @@ end
     -- Simple: Include files with automatic realm detection
     lia.loader.includeGroupedDir("lilia/gamemode/core/libraries")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Include files recursively with forced realm
     lia.loader.includeGroupedDir("lilia/gamemode/modules", false, true, "shared")
     ```
-
         High Complexity Example:
     ```lua
     -- High: Include multiple directories with different settings and error handling
@@ -522,7 +515,6 @@ local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
     -- Simple: Check for updates during server startup
     lia.loader.checkForUpdates()
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Check for updates with custom error handling
@@ -534,7 +526,6 @@ local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
     end
     safeUpdateCheck()
     ```
-
         High Complexity Example:
     ```lua
     -- High: Check for updates with custom timing and logging
@@ -683,7 +674,6 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
     -- Simple: Display a basic error message
     lia.error("Failed to load module")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Display error with context information
@@ -696,7 +686,6 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
     end
     end
     ```
-
         High Complexity Example:
     ```lua
     -- High: Display detailed error with stack trace and context
@@ -734,7 +723,6 @@ end
     -- Simple: Display a basic warning message
     lia.warning("Module version mismatch detected")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Display warning with context information
@@ -744,7 +732,6 @@ end
     end
     end
     ```
-
         High Complexity Example:
     ```lua
     -- High: Display warning with detailed information and conditional logic
@@ -755,7 +742,6 @@ end
     table.insert(missingDeps, dep)
     end
     end
-    
     if #missingDeps > 0 then
     local warningMsg = string.format(
     "Module '%s' is missing dependencies: %s",
@@ -785,7 +771,6 @@ end
     -- Simple: Display a basic information message
     lia.information("Framework initialized successfully")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Display information with context
@@ -793,7 +778,6 @@ end
     lia.information("Module '" .. module.name .. "' loaded successfully")
     end
     ```
-
         High Complexity Example:
     ```lua
     -- High: Display detailed information with statistics
@@ -803,7 +787,6 @@ end
     for _, module in pairs(lia.module.list) do
     if module.loaded then loadedModules = loadedModules + 1 end
     end
-    
     local statusMsg = string.format(
     "Framework Status: %d/%d modules loaded, %d entities registered",
     loadedModules,
@@ -833,7 +816,6 @@ end
     -- Simple: Display a basic bootstrap message
     lia.bootstrap("Database", "Connection established")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Display bootstrap progress with context
@@ -841,7 +823,6 @@ end
     lia.bootstrap("Modules", "Loading " .. moduleName .. ": " .. status)
     end
     ```
-
         High Complexity Example:
     ```lua
     -- High: Display detailed bootstrap progress with timing and statistics
@@ -881,7 +862,6 @@ end
     description = "The server has been initialized successfully"
     })
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Send a detailed Discord message with custom formatting
@@ -897,7 +877,6 @@ end
     })
     end
     ```
-
         High Complexity Example:
     ```lua
     -- High: Send complex Discord message with error handling and custom logic
@@ -915,7 +894,6 @@ end
     },
     footer = {text = "Lilia Framework Status Bot"}
     }
-    
     if #players > 0 then
     local playerList = {}
     for _, ply in ipairs(players) do
@@ -927,7 +905,6 @@ end
     inline = false
     }
     end
-    
     lia.relaydiscordMessage(embed)
     end
     ```
@@ -985,7 +962,6 @@ end
     -- Simple: Include entities from the default gamemode path
     lia.loader.includeEntities("lilia/gamemode/entities")
     ```
-
         Medium Complexity Example:
     ```lua
     -- Medium: Include entities from multiple paths with error handling
@@ -1001,7 +977,6 @@ end
     end
     end
     ```
-
         High Complexity Example:
     ```lua
     -- High: Include entities with custom registration and validation

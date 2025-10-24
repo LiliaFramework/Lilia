@@ -1,6 +1,5 @@
 ﻿--[[
     Flags Library
-
     Character permission and access control system for the Lilia framework.
 ]]
 --[[
@@ -24,7 +23,6 @@ lia.flag.list = lia.flag.list or {}
     -- Simple: Add a basic flag with description
     lia.flag.add("A", "flagAdmin")
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Add flag with callback for weapon management
@@ -36,7 +34,6 @@ lia.flag.list = lia.flag.list or {}
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Add flag with complex callback and validation
@@ -75,7 +72,6 @@ if SERVER then
     -- Simple: Called automatically when player spawns
     -- No direct usage needed - handled by framework
     ```
-
             Medium Complexity:
     ```lua
     -- Medium: Manual flag processing for specific cases
@@ -84,7 +80,6 @@ if SERVER then
     lia.flag.onSpawn(client)
     end
     ```
-
             High Complexity:
     ```lua
     -- High: Custom spawn handling with flag validation

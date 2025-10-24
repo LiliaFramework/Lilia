@@ -1,15 +1,11 @@
 ﻿--[[
     PAC Outfit Item Definition
-
     PAC outfit item system for the Lilia framework.
-
     PAC outfit items are wearable items that use PAC (Player Accessory Creator) for visual effects.
     They require the PAC addon and provide visual indicators when equipped.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/pacoutfit/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/pacoutfit/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - PAC outfit items are equipped by using them
     - They add PAC3 parts to the player
@@ -201,7 +197,6 @@ ITEM.pacData = {}
 --
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Hat"                               -- Display name shown to players

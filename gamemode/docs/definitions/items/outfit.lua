@@ -1,15 +1,11 @@
 ﻿--[[
     Outfit Item Definition
-
     Outfit item system for the Lilia framework.
-
     Outfit items are wearable items that can change player appearance, models, skins, bodygroups,
     and provide attribute boosts. They support PAC integration and visual indicators.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/outfit/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/outfit/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Outfit items are equipped by using them
     - They change the player's model and appearance
@@ -205,7 +201,6 @@ ITEM.isOutfit = true
 --
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Police Uniform"                        -- Display name shown to players

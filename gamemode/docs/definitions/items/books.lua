@@ -1,15 +1,11 @@
 ﻿--[[
     Books Item Definition
-
     Literature item system for the Lilia framework.
-
     Books are readable items that display content in a formatted HTML window.
     They are categorized as literature and can contain rich text content.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/books/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/books/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Books are read by using the item
     - They display HTML content in a popup window
@@ -75,7 +71,6 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 ITEM.contents = ""
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Medical Journal"                                    -- Display name shown to players

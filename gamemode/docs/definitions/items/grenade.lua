@@ -1,15 +1,11 @@
 ﻿--[[
     Grenade Item Definition
-
     Grenade item system for the Lilia framework.
-
     Grenade items are weapons that can be equipped and used by players.
     They drop on death and prevent duplicate grenades.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/grenade/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/grenade/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Grenades are used by equipping them
     - They give the weapon specified in ITEM.class
@@ -108,7 +104,6 @@ ITEM.height = 1
 ITEM.DropOnDeath = true
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players

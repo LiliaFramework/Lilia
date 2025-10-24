@@ -1,15 +1,11 @@
 ﻿--[[
     Stackable Item Definition
-
     Stackable item system for the Lilia framework.
-
     Stackable items can be combined together and have quantity limits.
     They display quantity visually and support splitting functionality.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/stackable/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/stackable/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Stackable items can be combined with other stacks
     - They can be split into smaller quantities
@@ -143,7 +139,6 @@ ITEM.canSplit = true
 --
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Ammo Box"                                    -- Display name shown to players

@@ -1,6 +1,5 @@
 ﻿--[[
     Configuration Library
-
     Comprehensive user-configurable settings management system for the Lilia framework.
 ]]
 --[[
@@ -31,7 +30,6 @@ lia.config.stored = lia.config.stored or {}
     type = "Boolean"
     })
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Add configuration with callback and constraints
@@ -47,7 +45,6 @@ lia.config.stored = lia.config.stored or {}
     max = 300
     })
     ```
-
         High Complexity:
     ```lua
     -- High: Add configuration with dynamic options and complex validation
@@ -121,7 +118,6 @@ end
     print("Available skin:", option)
     end
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Use options in UI creation
@@ -131,7 +127,6 @@ end
     combo:AddChoice(text, text)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Dynamic options with validation and filtering
@@ -180,14 +175,12 @@ end
     -- Simple: Update default value for a configuration
     lia.config.setDefault("MaxCharacters", 10)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Update default based on server conditions
     local maxChars = SERVER and 5 or 3
     lia.config.setDefault("MaxCharacters", maxChars)
     ```
-
         High Complexity:
     ```lua
     -- High: Update multiple defaults based on module availability
@@ -223,7 +216,6 @@ end
     -- Simple: Force set a configuration value
     lia.config.forceSet("WalkSpeed", 150)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Force set without saving for temporary changes
@@ -231,7 +223,6 @@ end
     -- Do some debug operations
     lia.config.forceSet("DebugMode", false, true)
     ```
-
         High Complexity:
     ```lua
     -- High: Bulk force set with conditional saving
@@ -270,7 +261,6 @@ end
     -- Simple: Set a configuration value
     lia.config.set("WalkSpeed", 150)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Set configuration with validation
@@ -282,7 +272,6 @@ end
     end
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Batch configuration updates with rollback
@@ -292,7 +281,6 @@ end
     originalValues[key] = lia.config.get(key)
     lia.config.set(key, value)
     end
-    
     return function()
     for key, value in pairs(originalValues) do
     lia.config.set(key, value)
@@ -336,7 +324,6 @@ end
     local walkSpeed = lia.config.get("WalkSpeed")
     player:SetWalkSpeed(walkSpeed)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Get configuration with validation and fallback
@@ -349,7 +336,6 @@ end
     end
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Get multiple configurations with type checking and validation
@@ -360,13 +346,11 @@ end
     runSpeed = {"RunSpeed", "number", 275},
     maxChars = {"MaxCharacters", "number", 5}
     }
-    
     for setting, data in pairs(configs) do
     local key, expectedType, fallback = data[1], data[2], data[3]
     local value = lia.config.get(key, fallback)
     settings[setting] = type(value) == expectedType and value or fallback
     end
-    
     return settings
     end
     ```
@@ -398,7 +382,6 @@ end
     -- Simple: Load configurations during initialization
     lia.config.load()
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Load configurations with callback
@@ -408,7 +391,6 @@ end
     -- Initialize module with loaded configs
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Load configurations with error handling and fallback
@@ -486,7 +468,6 @@ if SERVER then
     local changed = lia.config.getChangedValues()
     print("Changed configurations:", table.Count(changed))
     ```
-
             Medium Complexity:
     ```lua
     -- Medium: Send only changed configurations to specific client
@@ -499,14 +480,12 @@ if SERVER then
     end
     end
     ```
-
             High Complexity:
     ```lua
     -- High: Export changed configurations with filtering and validation
     local function exportChangedConfigs(filterFunc)
     local changed = lia.config.getChangedValues()
     local filtered = {}
-    
     for key, value in pairs(changed) do
     local config = lia.config.stored[key]
     if config and (not filterFunc or filterFunc(key, value, config)) then
@@ -518,7 +497,6 @@ if SERVER then
     }
     end
     end
-    
     return filtered
     end
     ```
@@ -544,7 +522,6 @@ if SERVER then
     -- Simple: Send configurations to all clients
     lia.config.send()
     ```
-
             Medium Complexity:
     ```lua
     -- Medium: Send configurations to specific client on connect
@@ -556,14 +533,12 @@ if SERVER then
     end)
     end)
     ```
-
             High Complexity:
     ```lua
     -- High: Send configurations with priority and filtering
     local function sendConfigsWithPriority(priority, filterFunc)
     local changed = lia.config.getChangedValues()
     local filtered = {}
-    
     for key, value in pairs(changed) do
     local config = lia.config.stored[key]
     if config and (not filterFunc or filterFunc(key, value, config)) then
@@ -572,7 +547,6 @@ if SERVER then
     end
     end
     end
-    
     if table.Count(filtered) > 0 then
     net.Start("liaCfgList")
     net.WriteTable(filtered)
@@ -648,7 +622,6 @@ if SERVER then
     -- Simple: Save all configurations
     lia.config.save()
     ```
-
             Medium Complexity:
     ```lua
     -- Medium: Save configurations with error handling
@@ -660,18 +633,15 @@ if SERVER then
     end
     end
     ```
-
             High Complexity:
     ```lua
     -- High: Save configurations with backup and validation
     local function saveConfigsWithBackup()
     local changed = lia.config.getChangedValues()
     if table.Count(changed) == 0 then return end
-    
     -- Create backup
     local backup = util.TableToJSON(changed)
     file.Write("config_backup_" .. os.time() .. ".json", backup)
-    
     -- Save with validation
     local success, err = pcall(lia.config.save)
     if not success then
@@ -712,7 +682,6 @@ if SERVER then
     -- Simple: Reset all configurations to defaults
     lia.config.reset()
     ```
-
             Medium Complexity:
     ```lua
     -- Medium: Reset configurations with confirmation
@@ -722,26 +691,21 @@ if SERVER then
     print("Configuration reset complete")
     end
     ```
-
             High Complexity:
     ```lua
     -- High: Reset configurations with selective restoration and logging
     local function resetConfigsSelectively(keepConfigs)
     local originalValues = {}
-    
     -- Store current values for configs to keep
     for _, key in ipairs(keepConfigs) do
     originalValues[key] = lia.config.get(key)
     end
-    
     -- Reset all configurations
     lia.config.reset()
-    
     -- Restore selected configurations
     for key, value in pairs(originalValues) do
     lia.config.set(key, value)
     end
-    
     print("Reset complete, restored " .. table.Count(originalValues) .. " configurations")
     end
     ```

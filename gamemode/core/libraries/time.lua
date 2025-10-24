@@ -1,6 +1,5 @@
 ﻿--[[
     Time Library
-
     Time manipulation, formatting, and calculation system for the Lilia framework.
 ]]
 --[[
@@ -15,13 +14,11 @@ lia.time = lia.time or {}
     Returns: string - Localized string indicating time elapsed (e.g., "5 minutes ago", "2 hours ago", "3 days ago")
     Realm: Shared (works on both client and server)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get time since a timestamp
     local lastSeen = lia.time.timeSince(1640995200) -- Returns "2 hours ago"
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Get time since a date string with validation
@@ -31,7 +28,6 @@ lia.time = lia.time or {}
     print("Player last seen: " .. timeAgo)
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Batch process multiple timestamps with error handling
@@ -83,14 +79,12 @@ end
     Returns: table - Table containing year, month, day, hour, min, sec as numbers
     Realm: Shared (works on both client and server)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Parse current time
     local timeData = lia.time.toNumber() -- Returns current time components
     print(timeData.year) -- Prints current year
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Parse specific date with validation
@@ -100,7 +94,6 @@ end
     print("Year: " .. timeData.year .. ", Month: " .. timeData.month)
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Batch parse multiple dates and validate ranges
@@ -133,14 +126,12 @@ end
     Returns: string - Formatted date string with localized weekday and month names
     Realm: Shared (works on both client and server)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Display current date
     local currentDate = lia.time.getDate()
     print("Current time: " .. currentDate)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Use in UI with conditional formatting
@@ -148,22 +139,18 @@ end
     local isAmerican = lia.config.get("AmericanTimeStamps", false)
     local displayText = isAmerican and "US Time: " .. dateStr or "Time: " .. dateStr
     ```
-
     High Complexity:
     ```lua
     -- High: Log system with date formatting and multiple outputs
     local function logWithTimestamp(message)
     local timestamp = lia.time.getDate()
     local logEntry = "[" .. timestamp .. "] " .. message
-    
     -- Log to console
     print(logEntry)
-    
     -- Log to file (if file logging exists)
     if file.Exists("logs/server.log", "DATA") then
     file.Append("logs/server.log", logEntry .. "\n")
     end
-    
     -- Send to admin chat
     for _, admin in ipairs(player.GetAll()) do
     if admin:IsAdmin() then
@@ -195,14 +182,12 @@ end
     Returns: string - Localized string showing days, hours, and minutes (e.g., "2 days, 5 hours, 30 minutes")
     Realm: Shared (works on both client and server)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Format a duration
     local duration = lia.time.formatDHM(90000) -- Returns "1 day, 1 hour, 0 minutes"
     print("Time remaining: " .. duration)
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Format cooldown with validation
@@ -212,7 +197,6 @@ end
     player:ChatPrint("Cooldown remaining: " .. formatted)
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Multiple duration formatting with conditional display
@@ -226,7 +210,6 @@ end
     end
     return table.concat(results, ", ")
     end
-    
     local durations = {
     cooldown = 3600,
     banTime = 86400,
@@ -253,20 +236,17 @@ end
     Returns: string|number - Current hour as string with AM/PM suffix (American format) or number (24-hour format)
     Realm: Shared (works on both client and server)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get current hour
     local currentHour = lia.time.getHour()
     print("Current hour: " .. tostring(currentHour))
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Time-based greeting system
     local hour = lia.time.getHour()
     local greeting = ""
-    
     if lia.config.get("AmericanTimeStamps", false) then
     -- American format returns string like "2pm"
     local hourNum = tonumber(hour:match("%d+"))
@@ -288,14 +268,12 @@ end
     end
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Dynamic server events based on time with multiple time zones
     local function getServerEvents()
     local hour = lia.time.getHour()
     local events = {}
-    
     -- Parse hour for both formats
     local hourNum
     if type(hour) == "string" then
@@ -309,7 +287,6 @@ end
     else
     hourNum = hour
     end
-    
     -- Schedule events based on hour
     if hourNum >= 0 and hourNum < 6 then
     table.insert(events, "Night shift bonus active")
@@ -320,7 +297,6 @@ end
     else
     table.insert(events, "Evening events")
     end
-    
     return events
     end
     ```

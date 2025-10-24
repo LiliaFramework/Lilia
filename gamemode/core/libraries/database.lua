@@ -1,6 +1,5 @@
 ﻿--[[
     Database Library
-
     Comprehensive database management system with SQLite support for the Lilia framework.
 ]]
 --[[
@@ -68,7 +67,6 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
     print("Database connected successfully!")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Connect with error handling and reconnection
@@ -77,7 +75,6 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
     lia.db.loadTables()
     end, true)
     ```
-
         High Complexity:
     ```lua
     -- High: Connect with conditional logic and module validation
@@ -128,7 +125,6 @@ end
     print("All database tables have been wiped!")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Wipe tables with logging and backup
@@ -138,7 +134,6 @@ end
     hook.Run("OnDatabaseWiped")
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Wipe tables with confirmation and error handling
@@ -149,7 +144,6 @@ end
     hook.Run("OnDatabaseReset")
     end)
     end
-    
     if lia.config.get("allowDatabaseWipe", false) then
     confirmWipe()
     else
@@ -198,7 +192,6 @@ end
     lia.db.loadTables()
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Load tables with hook integration
@@ -207,7 +200,6 @@ end
     lia.log.add("Database tables loaded successfully")
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Load tables with conditional logic and error handling
@@ -218,7 +210,6 @@ end
     lia.bootstrap("Database", "Schema loaded and ready")
     end, true)
     end
-    
     if lia.db.module and lia.db.modules[lia.db.module] then
     initializeDatabase()
     else
@@ -415,7 +406,6 @@ end
     print("Tables are ready!")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Wait for tables with error handling
@@ -426,7 +416,6 @@ end
     lia.error("Failed to load database tables: " .. tostring(err))
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Wait for tables with timeout and fallback
@@ -443,7 +432,6 @@ end
     end, true)
     end)
     end
-    
     initializeAfterTables()
     ```
 ]]
@@ -520,7 +508,6 @@ end
     local sqlNumber = lia.db.convertDataType(42)
     local sqlBool = lia.db.convertDataType(true)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Convert complex data with escaping
@@ -530,13 +517,11 @@ end
     isActive = true,
     inventory = {weapon = "pistol", ammo = 100}
     }
-    
     local sqlData = {}
     for key, value in pairs(playerData) do
     sqlData[key] = lia.db.convertDataType(value)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Convert with conditional logic and error handling
@@ -601,7 +586,6 @@ end
     print("Character created with ID:", lastID)
     end, "characters")
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Insert with error handling and validation
@@ -612,7 +596,6 @@ end
     faction = "citizen",
     money = "0"
     }
-    
     lia.db.insertTable(characterData, function(results, lastID)
     if lastID then
     lia.log.add("Character created for " .. player:Name())
@@ -620,7 +603,6 @@ end
     end
     end, "characters")
     ```
-
         High Complexity:
     ```lua
     -- High: Insert with validation, error handling, and rollback
@@ -629,7 +611,6 @@ end
     if not validation.valid then
     return deferred.new():reject("Validation failed: " .. validation.error)
     end
-    
     return lia.db.insertTable(playerData, function(results, lastID)
     if lastID then
     lia.char.cache[lastID] = playerData
@@ -672,7 +653,6 @@ end
     print("Character updated successfully!")
     end, "characters", {id = 1})
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Update with complex conditions and logging
@@ -680,7 +660,6 @@ end
     lastJoinTime = os.date("%Y-%m-%d %H:%M:%S"),
     money = tostring(character:getMoney())
     }
-    
     lia.db.updateTable(updateData, function(results, lastID)
     if results then
     lia.log.add("Character " .. character:getName() .. " updated")
@@ -688,7 +667,6 @@ end
     end
     end, "characters", {id = character:getID()})
     ```
-
         High Complexity:
     ```lua
     -- High: Update with validation, transaction, and rollback
@@ -741,7 +719,6 @@ end
     print("Found " .. #results .. " characters")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Select with conditions and specific fields
@@ -753,7 +730,6 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Select with complex conditions, pagination, and error handling
@@ -818,7 +794,6 @@ end
     print("Found " .. #results .. " citizens")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Select with operators and ordering
@@ -831,7 +806,6 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Select with complex conditions, pagination, and error handling
@@ -846,7 +820,6 @@ end
     if minMoney then
     conditions.money = {operator = ">=", value = tostring(minMoney)}
     end
-    
     return lia.db.selectWithCondition("*", "characters", conditions,
     maxResults, "lastJoinTime DESC"):next(function(results)
     local characters = {}
@@ -921,7 +894,6 @@ end
     print("Total characters: " .. count)
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Count with conditions
@@ -932,7 +904,6 @@ end
     print("Rich citizens: " .. count)
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Count with validation and error handling
@@ -978,14 +949,12 @@ end
     -- Simple: Add fields after table creation
     lia.db.loadTables() -- This automatically calls addDatabaseFields()
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Add fields with logging
     lia.db.addDatabaseFields()
     lia.log.add("Database fields updated for character variables")
     ```
-
         High Complexity:
     ```lua
     -- High: Add fields with validation and error handling
@@ -994,12 +963,10 @@ end
     lia.log.add("Character variables not defined, skipping field addition")
     return
     end
-    
     lia.db.addDatabaseFields()
     lia.log.add("Character database fields synchronized")
     hook.Run("OnCharacterFieldsUpdated")
     end
-    
     ensureCharacterFields()
     ```
 ]]
@@ -1048,7 +1015,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Check with complex conditions
@@ -1062,7 +1028,6 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Check with validation and error handling
@@ -1107,7 +1072,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Get player data with specific fields
@@ -1120,7 +1084,6 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Get with validation and error handling
@@ -1129,7 +1092,6 @@ end
     if not charData then
     return deferred.new():reject("Character not found")
     end
-    
     local character = lia.char.new(charData)
     lia.char.cache[charID] = character
     hook.Run("OnCharacterLoaded", character)
@@ -1184,7 +1146,6 @@ end
     print("Items inserted successfully")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Insert with validation and error handling
@@ -1200,7 +1161,6 @@ end
     y = item.y or 1
     })
     end
-    
     return lia.db.bulkInsert("items", rows):next(function()
     lia.log.add("Inserted " .. #rows .. " items into inventory " .. invID)
     end):catch(function(err)
@@ -1208,14 +1168,12 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Insert with batching, validation, and progress tracking
     local function bulkInsertWithBatching(dbTable, data, batchSize)
     batchSize = batchSize or 100
     local batches = {}
-    
     for i = 1, #data, batchSize do
     local batch = {}
     for j = i, math.min(i + batchSize - 1, #data) do
@@ -1223,20 +1181,17 @@ end
     end
     table.insert(batches, batch)
     end
-    
     local currentBatch = 1
     local function insertNextBatch()
     if currentBatch > #batches then
     return deferred.new():resolve()
     end
-    
     return lia.db.bulkInsert(dbTable, batches[currentBatch]):next(function()
     lia.log.add("Batch " .. currentBatch .. "/" .. #batches .. " completed")
     currentBatch = currentBatch + 1
     return insertNextBatch()
     end)
     end
-    
     return insertNextBatch()
     end
     ```
@@ -1286,7 +1241,6 @@ end
     print("Configuration updated")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Upsert with validation and error handling
@@ -1301,7 +1255,6 @@ end
     userGroup = player:GetUserGroup()
     })
     end
-    
     return lia.db.bulkUpsert("players", rows):next(function()
     lia.log.add("Synchronized " .. #rows .. " player records")
     end):catch(function(err)
@@ -1309,14 +1262,12 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Upsert with conflict resolution and progress tracking
     local function bulkSyncWithConflictResolution(dbTable, data, conflictFields)
     local batches = {}
     local batchSize = 50
-    
     for i = 1, #data, batchSize do
     local batch = {}
     for j = i, math.min(i + batchSize - 1, #data) do
@@ -1328,20 +1279,17 @@ end
     end
     table.insert(batches, batch)
     end
-    
     local completed = 0
     local function processNextBatch()
     if completed >= #batches then
     return deferred.new():resolve()
     end
-    
     return lia.db.bulkUpsert(dbTable, batches[completed + 1]):next(function()
     completed = completed + 1
     lia.log.add("Batch " .. completed .. "/" .. #batches .. " synced")
     return processNextBatch()
     end)
     end
-    
     return processNextBatch()
     end
     ```
@@ -1391,7 +1339,6 @@ end
     print("Configuration inserted or ignored")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Insert with validation and logging
@@ -1409,7 +1356,6 @@ end
     end
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Insert with conflict detection and fallback
@@ -1472,7 +1418,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Check with conditional logic
@@ -1486,14 +1431,12 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Check with validation and error handling
     local function validateDatabaseSchema()
     local requiredTables = {"characters", "players", "items", "inventories"}
     local missingTables = {}
-    
     local function checkNextTable(index)
     if index > #requiredTables then
     if #missingTables > 0 then
@@ -1504,7 +1447,6 @@ end
     return deferred.new():resolve()
     end
     end
-    
     local tableName = "lia_" .. requiredTables[index]
     return lia.db.tableExists(tableName):next(function(exists)
     if not exists then
@@ -1513,7 +1455,6 @@ end
     return checkNextTable(index + 1)
     end)
     end
-    
     return checkNextTable(1)
     end
     ```
@@ -1545,7 +1486,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Check with conditional field creation
@@ -1556,14 +1496,12 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Check with validation and error handling
     local function validateCharacterFields()
     local requiredFields = {"name", "steamID", "money", "faction", "model"}
     local missingFields = {}
-    
     local function checkNextField(index)
     if index > #requiredFields then
     if #missingFields > 0 then
@@ -1574,7 +1512,6 @@ end
     return deferred.new():resolve()
     end
     end
-    
     return lia.db.fieldExists("lia_characters", requiredFields[index]):next(function(exists)
     if not exists then
     table.insert(missingFields, requiredFields[index])
@@ -1582,7 +1519,6 @@ end
     return checkNextField(index + 1)
     end)
     end
-    
     return checkNextField(1)
     end
     ```
@@ -1616,20 +1552,17 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Get tables with analysis
     lia.db.getTables():next(function(tables)
     local coreTables = {"lia_characters", "lia_players", "lia_items"}
     local missingTables = {}
-    
     for _, coreTable in ipairs(coreTables) do
     if not table.HasValue(tables, coreTable) then
     table.insert(missingTables, coreTable)
     end
     end
-    
     if #missingTables > 0 then
     lia.log.add("Missing core tables: " .. table.concat(missingTables, ", "))
     else
@@ -1637,7 +1570,6 @@ end
     end
     end)
     ```
-
         High Complexity:
     ```lua
     -- High: Get tables with validation and management
@@ -1652,14 +1584,12 @@ end
     end
     return tableStats
     end
-    
     local tableName = tables[index]
     return lia.db.count(tableName:sub(5)):next(function(count)
     tableStats[tableName] = {count = count}
     return analyzeNextTable(index + 1)
     end)
     end
-    
     return analyzeNextTable(1)
     end):catch(function(err)
     lia.error("Database audit failed: " .. tostring(err))
@@ -1701,7 +1631,6 @@ end
     print("Transfer failed: " .. tostring(err))
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Create character with inventory
@@ -1711,7 +1640,6 @@ end
     charData.steamID .. "', '" .. charData.name .. "', '" .. charData.faction .. "')",
     "INSERT INTO lia_inventories (charID, invType) VALUES (last_insert_rowid(), 'pocket')"
     }
-    
     return lia.db.transaction(queries):next(function()
     lia.log.add("Character and inventory created successfully")
     hook.Run("OnCharacterCreated", charData)
@@ -1720,21 +1648,18 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Complex transaction with validation and rollback
     local function transferItemsWithValidation(fromChar, toChar, items)
     local queries = {}
     local validationQueries = {}
-    
     -- Build validation queries
     for _, item in ipairs(items) do
     table.insert(validationQueries,
     "SELECT COUNT(*) FROM lia_items WHERE invID = " .. fromChar.invID ..
     " AND uniqueID = '" .. item.uniqueID .. "' AND quantity >= " .. item.quantity)
     end
-    
     -- Build transfer queries
     for _, item in ipairs(items) do
     table.insert(queries,
@@ -1744,7 +1669,6 @@ end
     "INSERT OR REPLACE INTO lia_items (invID, uniqueID, quantity) VALUES (" ..
     toChar.invID .. ", '" .. item.uniqueID .. "', " .. item.quantity .. ")")
     end
-    
     return lia.db.transaction(queries):next(function()
     lia.log.add("Items transferred successfully")
     hook.Run("OnItemsTransferred", fromChar, toChar, items)
@@ -1789,22 +1713,18 @@ end
     local escapedColumn = lia.db.escapeIdentifier("user_name")
     -- Returns: `user_name`
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Escape multiple identifiers
     local function buildSelectQuery(tableName, columns)
     local escapedTable = lia.db.escapeIdentifier(tableName)
     local escapedColumns = {}
-    
     for _, column in ipairs(columns) do
     table.insert(escapedColumns, lia.db.escapeIdentifier(column))
     end
-    
     return "SELECT " .. table.concat(escapedColumns, ", ") .. " FROM " .. escapedTable
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Escape with validation and error handling
@@ -1846,7 +1766,6 @@ end
     print("Configuration upserted")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Upsert with validation and logging
@@ -1857,7 +1776,6 @@ end
     lastJoin = os.date("%Y-%m-%d %H:%M:%S"),
     userGroup = player:GetUserGroup()
     }
-    
     return lia.db.upsert(playerData, "players"):next(function(results, lastID)
     lia.log.add("Player data synchronized: " .. player:Name())
     hook.Run("OnPlayerDataSynced", player, lastID)
@@ -1866,7 +1784,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Upsert with conflict resolution and validation
@@ -1875,16 +1792,13 @@ end
     if not validation.valid then
     return deferred.new():reject("Validation failed: " .. validation.error)
     end
-    
     return lia.db.upsert(data, dbTable):next(function(results, lastID)
     local action = lastID and "inserted" or "updated"
     lia.log.add("Record " .. action .. " in " .. dbTable)
-    
     -- Update cache if applicable
     if lia.char.cache and dbTable == "characters" then
     lia.char.cache[data.id or lastID] = data
     end
-    
     hook.Run("OnRecordUpserted", dbTable, data, action)
     return {success = true, action = action, id = lastID}
     end):catch(function(err)
@@ -1922,7 +1836,6 @@ end
     print("Character deleted")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Delete with validation and logging
@@ -1930,7 +1843,6 @@ end
     return lia.db.delete("characters", {id = charID}):next(function(results, lastID)
     lia.log.add("Character " .. charID .. " deleted")
     hook.Run("OnCharacterDeleted", charID)
-    
     -- Clean up related data
     lia.db.delete("items", {invID = charID})
     lia.db.delete("inventories", {charID = charID})
@@ -1939,7 +1851,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Delete with cascade and transaction safety
@@ -1951,12 +1862,10 @@ end
     "DELETE FROM lia_characters WHERE id = " .. charID
     }):next(function()
     lia.log.add("Character " .. charID .. " and all related data deleted")
-    
     -- Update cache
     if lia.char.cache then
     lia.char.cache[charID] = nil
     end
-    
     hook.Run("OnCharacterDeleted", charID)
     return {success = true, charID = charID}
     end):catch(function(err)
@@ -1999,7 +1908,6 @@ end
     print("Table created successfully")
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Create table with validation
@@ -2012,7 +1920,6 @@ end
     {name = "score", type = "INTEGER", default = 0},
     {name = "lastUpdated", type = "DATETIME", default = "CURRENT_TIMESTAMP"}
     }
-    
     return lia.db.createTable("player_stats", "id", schema):next(function(success)
     if success then
     lia.log.add("Player stats table created")
@@ -2023,7 +1930,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Create table with validation and error handling
@@ -2036,18 +1942,15 @@ end
     end
     return true
     end
-    
     local valid, error = validateSchema(tableConfig.schema)
     if not valid then
     return deferred.new():reject("Schema validation failed: " .. error)
     end
-    
     return lia.db.tableExists("lia_" .. moduleName .. "_" .. tableConfig.name):next(function(exists)
     if exists then
     lia.log.add("Table already exists: " .. moduleName .. "_" .. tableConfig.name)
     return true
     end
-    
     return lia.db.createTable(moduleName .. "_" .. tableConfig.name,
     tableConfig.primaryKey, tableConfig.schema):next(function(success)
     if success then
@@ -2109,7 +2012,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Add column with validation
@@ -2126,7 +2028,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Add column with validation and error handling
@@ -2136,13 +2037,11 @@ end
     {name = "experience", type = "INTEGER", default = 0},
     {name = "lastLevelUp", type = "DATETIME", default = "CURRENT_TIMESTAMP"}
     }
-    
     local function addNextColumn(index)
     if index > #newColumns then
     lia.log.add("Character table migration completed")
     return deferred.new():resolve()
     end
-    
     local column = newColumns[index]
     return lia.db.createColumn("characters", column.name, column.type, column.default):next(function(success)
     if success then
@@ -2154,7 +2053,6 @@ end
     return addNextColumn(index + 1)
     end)
     end
-    
     return addNextColumn(1)
     end
     ```
@@ -2205,7 +2103,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Remove table with validation
@@ -2222,7 +2119,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Remove table with backup and validation
@@ -2232,11 +2128,9 @@ end
     lia.log.add("Table " .. tableName .. " doesn't exist")
     return false
     end
-    
     -- Create backup before removal
     return lia.db.createSnapshot(tableName):next(function(snapshot)
     lia.log.add("Created backup: " .. snapshot.file)
-    
     return lia.db.removeTable(tableName):next(function(success)
     if success then
     lia.log.add("Table " .. tableName .. " removed successfully")
@@ -2287,7 +2181,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Remove column with validation
@@ -2304,7 +2197,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Remove column with backup and validation
@@ -2314,17 +2206,14 @@ end
     lia.error("Table " .. tableName .. " doesn't exist")
     return false
     end
-    
     return lia.db.fieldExists("lia_" .. tableName, columnName):next(function(columnExists)
     if not columnExists then
     lia.log.add("Column " .. columnName .. " doesn't exist")
     return false
     end
-    
     -- Create backup before removal
     return lia.db.createSnapshot(tableName):next(function(snapshot)
     lia.log.add("Created backup before column removal: " .. snapshot.file)
-    
     return lia.db.removeColumn(tableName, columnName):next(function(success)
     if success then
     lia.log.add("Column " .. columnName .. " removed from " .. tableName)
@@ -2408,7 +2297,6 @@ end
     end
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Get columns with analysis
@@ -2416,13 +2304,11 @@ end
     lia.db.getCharacterTable(function(columns)
     local requiredColumns = {"id", "steamID", "name", "model", "faction", "money"}
     local missingColumns = {}
-    
     for _, required in ipairs(requiredColumns) do
     if not table.HasValue(columns, required) then
     table.insert(missingColumns, required)
     end
     end
-    
     if #missingColumns > 0 then
     lia.log.add("Missing character columns: " .. table.concat(missingColumns, ", "))
     else
@@ -2431,7 +2317,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Get columns with validation and error handling
@@ -2442,18 +2327,15 @@ end
     lia.error("Failed to get character table columns")
     return
     end
-    
     local schemaValidation = {
     required = {"id", "steamID", "name", "model", "faction", "money"},
     optional = {"desc", "attribs", "schema", "createTime", "lastJoinTime", "recognition", "fakenames"}
     }
-    
     local validationResults = {
     valid = true,
     missing = {},
     extra = {}
     }
-    
     -- Check for missing required columns
     for _, required in ipairs(schemaValidation.required) do
     if not table.HasValue(columns, required) then
@@ -2461,7 +2343,6 @@ end
     validationResults.valid = false
     end
     end
-    
     -- Check for extra columns
     for _, column in ipairs(columns) do
     if not table.HasValue(schemaValidation.required, column) and
@@ -2469,7 +2350,6 @@ end
     table.insert(validationResults.extra, column)
     end
     end
-    
     if validationResults.valid then
     lia.log.add("Character table schema validation passed")
     else
@@ -2481,7 +2361,6 @@ end
     lia.log.add("Extra columns: " .. table.concat(validationResults.extra, ", "))
     end
     end
-    
     hook.Run("OnCharacterSchemaValidated", validationResults)
     end)
     end):catch(function(err)
@@ -2519,7 +2398,6 @@ end
     print("Records backed up: " .. snapshot.records)
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Create snapshot with validation
@@ -2533,7 +2411,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Create snapshot with validation and error handling
@@ -2542,13 +2419,11 @@ end
     if not exists then
     return deferred.new():reject("Table " .. tableName .. " doesn't exist")
     end
-    
     return lia.db.createSnapshot(tableName):next(function(snapshot)
     -- Validate snapshot data
     if snapshot.records == 0 then
     lia.log.add("Snapshot created but table is empty")
     end
-    
     -- Create backup metadata
     local metadata = {
     table = tableName,
@@ -2559,11 +2434,9 @@ end
     server = GetHostName(),
     version = lia.version or "unknown"
     }
-    
     -- Save metadata
     local metadataFile = "lilia/snapshots/" .. snapshot.file .. ".meta"
     file.Write(metadataFile, util.TableToJSON(metadata, true))
-    
     lia.log.add("Backup completed: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
     hook.Run("OnBackupCreated", metadata)
     return metadata
@@ -2626,7 +2499,6 @@ end
     print("Restored " .. result.records .. " records to " .. result.table)
     end)
     ```
-
         Medium Complexity:
     ```lua
     -- Medium: Load snapshot with validation
@@ -2640,7 +2512,6 @@ end
     end)
     end
     ```
-
         High Complexity:
     ```lua
     -- High: Load snapshot with validation and error handling
@@ -2650,13 +2521,11 @@ end
     if result.records == 0 then
     lia.log.add("Restore completed but no records were loaded")
     end
-    
     -- Verify table exists and has data
     return lia.db.count(result.table):next(function(count)
     if count ~= result.records then
     lia.log.add("Record count mismatch: expected " .. result.records .. ", got " .. count)
     end
-    
     -- Create restore log entry
     local restoreLog = {
     fileName = fileName,
@@ -2666,14 +2535,12 @@ end
     restoredAt = os.time(),
     success = true
     }
-    
     lia.log.add("Restore completed successfully: " .. fileName)
     hook.Run("OnRestoreCompleted", restoreLog)
     return restoreLog
     end)
     end):catch(function(err)
     lia.error("Restore failed: " .. tostring(err))
-    
     -- Log failed restore attempt
     local failedLog = {
     fileName = fileName,
@@ -2681,7 +2548,6 @@ end
     failedAt = os.time(),
     success = false
     }
-    
     hook.Run("OnRestoreFailed", failedLog)
     return failedLog
     end)

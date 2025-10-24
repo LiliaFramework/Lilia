@@ -301,10 +301,7 @@ local function drawVoiceIndicator()
 
     -- Allow modification of the voice text via hook
     local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
-    if modifiedText then
-        voiceText = modifiedText
-    end
-
+    if modifiedText then voiceText = modifiedText end
     -- Calculate position (top center)
     local boxX = ScrW() / 2
     local boxY = 50
