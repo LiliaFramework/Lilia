@@ -9,14 +9,12 @@ Character faction definition system for the Lilia framework.
 The faction system provides comprehensive functionality for defining character factions within the Lilia framework.
 Factions represent the main organizational units that characters belong to, serving as parent containers for classes.
 Each character belongs to exactly ONE faction and can have multiple classes within that faction.
-
 **Faction-Class Relationship:**
 - **Factions** are the main organizational units (Citizens, Police, Medical, Staff)
 - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
 - Each character belongs to exactly ONE faction but can switch between classes within that faction
 - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
 over the same property in the parent faction.
-
 **Example Hierarchy:**
 ```
 Faction: Police Department
@@ -25,26 +23,21 @@ Faction: Police Department
 ├── Class: Police Captain (inherits police properties, overrides with command-specific permissions)
 └── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
 ```
-
 Factions are defined using the FACTION table structure, which includes properties for identification,
 visual representation, gameplay mechanics, and access control. The system includes callback methods
 that are automatically invoked during key character lifecycle events, enabling dynamic behavior and
 customization.
-
 Factions can have player limits, whitelist requirements, specialized loadouts, and attribute
 modifications that affect gameplay. The system supports modifying player health, armor, movement
 speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based
 gameplay systems.
-
 **Player Management:**
 Factions support player limits (absolute or percentage-based), character restrictions (one character
 per player), custom name generation templates, and custom limit checking logic for advanced access
 control scenarios.
-
 **Access Control:**
 Factions use the `isDefault` property to determine if they are accessible to all players, and can
 implement custom permission logic through whitelist systems and the framework's permission system.
-
 In addition to the FACTION table properties, factions can also modify character variables such as
 classwhitelists to control which classes a character has access to within the faction.
 
@@ -64,6 +57,7 @@ During faction definition
 
 ```lua
 FACTION.name = "Police Department"
+
 ```
 
 ---
@@ -82,6 +76,7 @@ During faction definition
 
 ```lua
 FACTION.desc = "Law enforcement officers responsible for maintaining order and protecting citizens"
+
 ```
 
 ---
@@ -100,6 +95,7 @@ During faction definition
 
 ```lua
 FACTION.color = Color(0, 100, 255)  -- Blue color for police
+
 ```
 
 ---
@@ -129,6 +125,7 @@ FACTION.models = {
 {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
 }
 }
+
 ```
 
 ---
@@ -148,6 +145,7 @@ During faction definition (applied when player spawns)
 ```lua
 FACTION.weapons = {"weapon_pistol", "weapon_stunstick"}  -- Table of weapons
 FACTION.weapons = "weapon_crowbar"  -- Single weapon string
+
 ```
 
 ---
@@ -167,6 +165,7 @@ During faction definition
 ```lua
 FACTION.isDefault = true  -- Players can create characters in this faction
 FACTION.isDefault = false  -- Requires special permission or whitelist
+
 ```
 
 ---
@@ -193,6 +192,7 @@ name = "Police Department",
 -- File: factions/police.lua -> uniqueID = "police"
 -- File: factions/sh_police.lua -> uniqueID = "police" (sh_ prefix removed)
 -- File: factions/citizen.lua -> uniqueID = "citizen"
+
 ```
 
 ---
@@ -217,6 +217,7 @@ name = "Police Department",
 })
 -- Or manually specify the team index
 FACTION.index = 2  -- Will use team index 2
+
 ```
 
 ---
@@ -235,6 +236,7 @@ During faction definition (applied when player joins faction)
 
 ```lua
 FACTION.health = 120  -- Police officers have 120 max health
+
 ```
 
 ---
@@ -253,6 +255,7 @@ During faction definition (applied when player joins faction)
 
 ```lua
 FACTION.armor = 50  -- Standard police armor
+
 ```
 
 ---
@@ -271,6 +274,7 @@ During faction definition (applied when player joins faction)
 
 ```lua
 FACTION.scale = 1.1  -- Slightly larger model
+
 ```
 
 ---
@@ -291,6 +295,7 @@ During faction definition (applied when player joins faction)
 FACTION.runSpeed = 300  -- Absolute run speed
 FACTION.runSpeedMultiplier = true
 FACTION.runSpeed = 1.2  -- 20% faster than default
+
 ```
 
 ---
@@ -311,6 +316,7 @@ During faction definition (applied when player joins faction)
 FACTION.walkSpeed = 150  -- Absolute walk speed
 FACTION.walkSpeedMultiplier = true
 FACTION.walkSpeed = 1.1  -- 10% faster than default
+
 ```
 
 ---
@@ -331,6 +337,7 @@ During faction definition (applied when player joins faction)
 FACTION.jumpPower = 200  -- Absolute jump power
 FACTION.jumpPowerMultiplier = true
 FACTION.jumpPower = 1.3  -- 30% higher jump
+
 ```
 
 ---
@@ -352,6 +359,7 @@ FACTION.NPCRelations = {
 ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
 ["npc_citizen"] = D_NU       -- Neutral to citizens
 }
+
 ```
 
 ---
@@ -371,6 +379,7 @@ During faction definition (applied when player joins faction)
 ```lua
 FACTION.bloodcolor = BLOOD_COLOR_RED  -- Red blood
 FACTION.bloodcolor = BLOOD_COLOR_YELLOW  -- Yellow blood for aliens
+
 ```
 
 ---
@@ -390,6 +399,7 @@ During faction definition (used with runSpeed property)
 ```lua
 FACTION.runSpeedMultiplier = true
 FACTION.runSpeed = 1.2  -- 20% faster than default
+
 ```
 
 ---
@@ -409,6 +419,7 @@ During faction definition (used with walkSpeed property)
 ```lua
 FACTION.walkSpeedMultiplier = true
 FACTION.walkSpeed = 1.1  -- 10% faster than default
+
 ```
 
 ---
@@ -428,6 +439,7 @@ During faction definition (used with jumpPower property)
 ```lua
 FACTION.jumpPowerMultiplier = true
 FACTION.jumpPower = 1.3  -- 30% higher jump
+
 ```
 
 ---
@@ -446,6 +458,7 @@ During faction definition (applied when character is created)
 
 ```lua
 FACTION.items = {"item_police_badge", "item_handcuffs"}  -- Starting items for police
+
 ```
 
 ---
@@ -465,6 +478,7 @@ During faction definition
 ```lua
 FACTION.oneCharOnly = true  -- Players can only have one character in this faction
 FACTION.oneCharOnly = false  -- Players can have multiple characters in this faction
+
 ```
 
 ---
@@ -485,6 +499,7 @@ During faction definition
 FACTION.limit = 8  -- Maximum 8 players in this faction
 FACTION.limit = 0  -- Unlimited players
 FACTION.limit = 0.1  -- 10% of total server players
+
 ```
 
 ---
@@ -506,6 +521,7 @@ function FACTION:NameTemplate(info, client)
 local index = math.random(1000, 9999)
 return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
 end
+
 ```
 
 ---
@@ -526,6 +542,7 @@ During faction definition
 function FACTION:GetDefaultName(client)
 return "Citizen " .. math.random(1000, 9999)
 end
+
 ```
 
 ---
@@ -546,6 +563,7 @@ During faction definition
 function FACTION:GetDefaultDesc(client)
 return "A citizen of the city"
 end
+
 ```
 
 ---
@@ -582,6 +600,7 @@ end
 -- Use default limit checking
 return self:CheckFactionLimitReached(character, client)
 end
+
 ```
 
 ---
@@ -612,6 +631,7 @@ client:notify("Welcome to the " .. self.name)
 -- Set up faction-specific data
 -- Could trigger department assignment or training
 end
+
 ```
 
 ---
@@ -643,6 +663,7 @@ client:Give("weapon_stunstick")
 client:SetHealth(self.health or 100)
 client:SetArmor(self.armor or 0)
 end
+
 ```
 
 ---

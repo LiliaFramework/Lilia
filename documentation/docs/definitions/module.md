@@ -21,6 +21,7 @@ Sets the display name of the module
 ```lua
 -- Set the display name for the module
 MODULE.name = "Inventory System"
+
 ```
 
 ---
@@ -36,6 +37,7 @@ Sets the author of the module
 ```lua
 -- Set the module author
 MODULE.author = "Samael"
+
 ```
 
 ---
@@ -51,6 +53,7 @@ Sets the Discord contact for the module author
 ```lua
 -- Set the Discord contact for support
 MODULE.discord = "@liliaplayer"
+
 ```
 
 ---
@@ -66,6 +69,7 @@ Sets the description of the module
 ```lua
 -- Set a detailed description of what the module does
 MODULE.desc = "A comprehensive inventory management system"
+
 ```
 
 ---
@@ -81,6 +85,7 @@ Sets the version number of the module
 ```lua
 -- Set the module version number
 MODULE.version = 1.0
+
 ```
 
 ---
@@ -96,6 +101,7 @@ Sets the unique version identifier for the module
 ```lua
 -- Set a unique identifier for version tracking
 MODULE.versionID = "private_inventory"
+
 ```
 
 ---
@@ -115,6 +121,7 @@ Set automatically during module loading
 ```lua
 -- This is set automatically when the module is loaded from its folder name
 -- Module in folder "inventory" will have uniqueID = "inventory"
+
 ```
 
 ---
@@ -135,6 +142,7 @@ Name = "canManageInventory",
 Min = 1
 }
 }
+
 ```
 
 ---
@@ -155,6 +163,7 @@ File = "gridinv.lua",
 Type = "shared"
 }
 }
+
 ```
 
 ---
@@ -170,6 +179,7 @@ Sets the network strings used by this module
 ```lua
 -- Define network strings for client-server communication
 MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
+
 ```
 
 ---
@@ -186,6 +196,7 @@ Sets the Workshop content IDs required by this module
 -- Set required Workshop content (single ID or table of IDs)
 MODULE.WorkshopContent = "1234567890"
 MODULE.WorkshopContent = {"1234567890", "0987654321"}
+
 ```
 
 ---
@@ -203,6 +214,7 @@ Sets the web-hosted sound files used by this module
 MODULE.WebSounds = {
 ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
 }
+
 ```
 
 ---
@@ -220,6 +232,7 @@ Sets the web-hosted image files used by this module
 MODULE.WebImages = {
 ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
 }
+
 ```
 
 ---
@@ -235,6 +248,7 @@ Sets whether the module is enabled by default
 ```lua
 -- Enable or disable the module by default
 MODULE.enabled = true
+
 ```
 
 ---
@@ -284,6 +298,7 @@ Called when the module is fully loaded
 function MODULE:OnLoaded()
 print("Module loaded successfully!")
 end
+
 ```
 
 ---

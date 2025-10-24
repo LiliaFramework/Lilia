@@ -188,6 +188,8 @@ def parse_comment_block(comment_text):
             parsed['explanation'] = line[len('Explanation of Panel:'):].strip()
         elif line.startswith('Example Usage:'):
             current_section = 'examples'
+        elif line.startswith('Example Item:'):
+            current_section = 'examples'
         elif current_section == 'examples':
             # Handle example sections - but only if we're not inside a code block
             complexity_match = None
@@ -490,10 +492,10 @@ def find_comment_blocks_in_file(file_path):
     for match in re.finditer(comment_pattern, content, re.DOTALL):
         comment_text = match.group(0)
         # Check if this comment block has the structured format we expect (function comments)
-        if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
+        if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:', 'Example Item:']):
             comment_blocks.append(comment_text)
         # Check if this is a file header (first comment block that doesn't have function structure or overview)
-        elif file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:']):
+        elif file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:', 'Example Item:']):
             file_header = comment_text
         # Check if this is an overview section (contains "Overview:")
         elif 'Overview:' in comment_text and overview_section is None:
