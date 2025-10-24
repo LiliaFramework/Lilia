@@ -8,44 +8,8 @@
 ]]
 --[[
     Overview:
-    The class system provides comprehensive functionality for defining character classes
-    within the Lilia framework. Classes represent specific roles or professions that
-    characters can assume within factions, creating a hierarchical structure where
-    factions serve as parent containers for classes.
-
-    **Faction-Class Relationship:**
-    - **Factions** are the main organizational units (Citizens, Police, Medical, etc.)
-    - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
-    - Each character belongs to exactly ONE faction and ONE class within that faction
-    - Classes inherit all properties from their parent faction by default
-    - **CLASS settings overpower FACTION settings** - any property defined in a class
-      takes precedence over the same property in the parent faction
-
-    **Example Hierarchy:**
-    ```
-    Faction: Police Department
-    ├── Class: Police Officer (inherits police models, weapons, color)
-    ├── Class: Police Detective (inherits police properties, overrides with detective-specific items)
-    ├── Class: Police Captain (inherits police properties, overrides with command-specific permissions)
-    └── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
-    ```
-
-    Classes are defined using the CLASS table structure, which includes properties for
-    identification, visual representation, gameplay mechanics, and access control. The
-    system includes callback methods that are automatically invoked during key character
-    lifecycle events, enabling dynamic behavior and customization.
-
-    Classes can have player limits, whitelist requirements, specialized loadouts, and
-    attribute modifications that affect gameplay. The system supports modifying player
-    health, armor, movement speeds, model scale, weapons, and NPC relationships,
-    providing a flexible foundation for role-based gameplay systems.
-
-    **Access Control:** Classes use the `isWhitelisted` property to require whitelist access,
-    and the `OnCanBe` callback method to implement custom permission logic. The `OnCanBe`
-    callback is called when a player attempts to join a class and can check attributes,
-    permissions, or any other conditions before allowing access.
-
-    In addition to the CLASS table properties, classes can also modify character variables
+    The class system provides comprehensive functionality for defining character classes within the Lilia framework. Classes represent specific roles or professions that characters can assume within factions, creating a hierarchical structure where factions serve as parent containers for classes. **Faction-Class Relationship:** - **Factions** are the main organizational units (Citizens, Police, Medical, etc.) - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police) - Each character belongs to exactly ONE faction and ONE class within that faction - Classes inherit all properties from their parent faction by default
+    - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence over the same property in the parent faction. **Example Hierarchy:** ``` Faction: Police Department ├── Class: Police Officer (inherits police models, weapons, color) ├── Class: Police Detective (inherits police properties, overrides with detective-specific items) ├── Class: Police Captain (inherits police properties, overrides with command-specific permissions) └── Class: SWAT Officer (inherits police properties, overrides with tactical gear) ``` Classes are defined using the CLASS table structure, which includes properties for identification, visual representation, gameplay mechanics, and access control. The system includes callback methods that are automatically invoked during key character lifecycle events, enabling dynamic behavior and customization. Classes can have player limits, whitelist requirements, specialized loadouts, and attribute modifications that affect gameplay. The system supports modifying player health, armor, movement speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based gameplay systems. **Access Control:** Classes use the `isWhitelisted` property to require whitelist access, and the `OnCanBe` callback method to implement custom permission logic. The `OnCanBe` callback is called when a player attempts to join a class and can check attributes, permissions, or any other conditions before allowing access. In addition to the CLASS table properties, classes can also modify character variables
     such as classwhitelists to control which classes a character has access to.
 ]]
 --[[

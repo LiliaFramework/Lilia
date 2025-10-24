@@ -1,16 +1,11 @@
 ﻿--[[
-    Panel Meta Table
+    Panel Meta
 
-    This file extends the base Panel metatable in Garry's Mod with additional functionality
-    for the Lilia framework's user interface system. It provides enhanced capabilities for
-    inventory management integration, automatic screen scaling, and dynamic UI behavior.
-    The Panel meta table is essential for creating responsive and interactive UI components
-    that integrate seamlessly with Lilia's inventory system, character management, and
-    cross-platform compatibility features. These meta methods operate primarily on the
-    client side for UI rendering and interaction, with some server-side validation and
-    data synchronization capabilities. The meta table enables developers to create
-    sophisticated UI panels that automatically adapt to different screen resolutions and
-    maintain consistent behavior across the Lilia gamemode ecosystem.
+    Panel management system for the Lilia framework.
+]]
+--[[
+    Overview:
+    The panel meta table provides comprehensive functionality for managing VGUI panels, UI interactions, and panel operations in the Lilia framework. It handles panel event listening, inventory synchronization, UI updates, and panel-specific operations. The meta table operates primarily on the client side, with the server providing data that panels can listen to and display. It includes integration with the inventory system for inventory change notifications, character system for character data display, network system for data synchronization, and UI system for panel management. The meta table ensures proper panel event handling, inventory synchronization, UI updates, and comprehensive panel lifecycle management from creation to destruction.
 ]]
 local panelMeta = FindMetaTable("Panel")
 --[[

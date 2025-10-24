@@ -1,20 +1,11 @@
 ﻿--[[
-    Inventory Meta Table
+    Inventory Meta
 
-    This file extends the base Inventory metatable in the Lilia framework with comprehensive
-    inventory management functionality for Garry's Mod servers and clients. The Inventory
-    metatable provides essential methods for item storage, data persistence, access control,
-    and synchronization between server and client realms. It supports multiple inventory types,
-    each with configurable data structures, access rules, and lifecycle management. The metatable
-    handles complex operations including item lifecycle management (adding, removing, tracking),
-    inventory queries, data persistence integration, and network synchronization across connected
-    clients. Key features include advanced data proxy systems for reactive programming, flexible
-    access control mechanisms, and robust database integration for persistent storage. This
-    metatable forms the foundation of the Lilia framework's item and inventory system, enabling
-    sophisticated gameplay mechanics such as inventory management, item trading, secure storage
-    systems, and character progression with full persistence and real-time synchronization.
-    The metatable operates on both server and client sides, providing consistent inventory
-    operations across the entire gamemode with proper access control and data validation.
+    Inventory management system for the Lilia framework.
+]]
+--[[
+    Overview:
+    The inventory meta table provides comprehensive functionality for managing inventory data, item storage, and inventory operations in the Lilia framework. It handles inventory creation, item management, data persistence, capacity management, and inventory-specific operations. The meta table operates on both server and client sides, with the server managing inventory storage and validation while the client provides inventory data access and display. It includes integration with the item system for item storage, database system for inventory persistence, character system for character inventories, and network system for inventory synchronization. The meta table ensures proper inventory data synchronization, item capacity management, item validation, and comprehensive inventory lifecycle management from creation to deletion.
 ]]
 local Inventory = lia.Inventory or {}
 Inventory.__index = Inventory

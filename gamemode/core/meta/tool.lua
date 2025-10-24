@@ -1,17 +1,11 @@
 ﻿--[[
-    Tool Gun Meta Table
+    Tool Gun Meta
 
-    This file defines the Tool Gun metatable for the Lilia gamemode framework, providing a
-    comprehensive system for implementing custom tool gun functionality in Garry's Mod. The
-    metatable extends the base tool gun behavior with enhanced object management, console
-    variable handling, ghost entity management, and interaction systems. It serves as the
-    foundation for creating custom tools that can interact with the game world, manage
-    persistent objects, handle user input, and provide visual feedback through HUD elements.
-    The tool gun meta table operates on both server and client realms, ensuring consistent
-    behavior across networked gameplay while providing realm-specific optimizations for
-    performance and security. This system is essential for administrative tools, building
-    systems, interactive world objects, and any gameplay mechanic that requires precise
-    user interaction with the game environment.
+    Tool gun management system for the Lilia framework.
+]]
+--[[
+    Overview:
+    The tool gun meta table provides comprehensive functionality for managing tool gun instances, tool operations, and tool-specific functionality in the Lilia framework. It handles tool creation, configuration, object management, and tool-specific operations. The meta table operates on both server and client sides, with the server managing tool validation and data while the client provides tool interaction and display. It includes integration with the Garry's Mod tool system for tool functionality, object system for tool objects, network system for tool synchronization, and permission system for tool access control. The meta table ensures proper tool instance management, object handling, tool synchronization, and comprehensive tool lifecycle management from creation to destruction.
 ]]
 local toolGunMeta = lia.meta.tool or {}
 --[[

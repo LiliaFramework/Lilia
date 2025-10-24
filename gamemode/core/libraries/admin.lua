@@ -5,16 +5,7 @@
 ]]
 --[[
     Overview:
-    The administrator library provides comprehensive functionality for managing user groups, privileges,
-    and administrative permissions in the Lilia framework. It handles the creation, modification,
-    and deletion of user groups with inheritance-based privilege systems. The library operates on
-    both server and client sides, with the server managing privilege storage and validation while
-    the client provides user interface elements for administrative management. It includes integration
-    with CAMI (Comprehensive Administration Management Interface) for compatibility with other
-    administrative systems. The library ensures proper privilege inheritance, automatic privilege
-    registration for tools and properties, and comprehensive logging of administrative actions.
-    It supports both console-based and GUI-based administrative command execution with proper
-    permission checking and validation.
+    The administrator library provides comprehensive functionality for managing user groups, privileges, and administrative permissions in the Lilia framework. It handles the creation, modification, and deletion of user groups with inheritance-based privilege systems. The library operates on both server and client sides, with the server managing privilege storage and validation while the client provides user interface elements for administrative management. It includes integration with CAMI (Comprehensive Administration Management Interface) for compatibility with other administrative systems. The library ensures proper privilege inheritance, automatic privilege registration for tools and properties, and comprehensive logging of administrative actions. It supports both console-based and GUI-based administrative command execution with proper permission checking and validation.
 ]]
 lia.administrator = lia.administrator or {}
 lia.administrator.groups = lia.administrator.groups or {}
