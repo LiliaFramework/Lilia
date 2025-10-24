@@ -14,6 +14,26 @@ The compatibility system provides a comprehensive integration framework for popu
 
 The following sections detail the specific compatibility features provided for each supported addon.
 
+### DarkRP
+
+**Purpose**
+
+Provides comprehensive compatibility for DarkRP and most DarkRP addons, ensuring they work out of the box with Lilia.
+
+**Features**
+
+* Provides helper functions like `isEmpty`, `findEmptyPos`, and text wrapping
+* Implements `formatMoney`, `createEntity`, and `createCategory` shims
+* Recreates widely used DarkRP globals and utilities
+* **Most DarkRP addons work out of the box** without any modifications required
+* Seamless integration with DarkRP's job system, money system, and core mechanics
+
+**Technical Details**
+
+Recreates widely used DarkRP globals and utilities so community & GMODStore addons can run under Lilia without modification. The compatibility layer is designed to be comprehensive, covering the vast majority of DarkRP addons and ensuring they function identically to how they would on a standard DarkRP server.
+
+---
+
 ### Advanced Duplicator
 
 **Purpose**
@@ -82,24 +102,6 @@ Provides integration between CAMI permission system and Lilia's administrator fr
 **Technical Details**
 
 Bridges CAMI's permission system with Lilia's built-in administrator system, allowing addons that depend on CAMI to function properly while maintaining Lilia's permission structure.
-
----
-
-### DarkRP
-
-**Purpose**
-
-Provides utility shims and compatibility functions for addons designed for DarkRP.
-
-**Features**
-
-* Provides helper functions like `isEmpty`, `findEmptyPos`, and text wrapping
-* Implements `formatMoney`, `createEntity`, and `createCategory` shims
-* Recreates widely used DarkRP globals and utilities
-
-**Technical Details**
-
-Recreates widely used DarkRP globals and utilities so community & GMODStore addons can run under Lilia without modification.
 
 ---
 
@@ -175,19 +177,21 @@ Listens for death and character-switch events, automatically exiting prone to av
 
 **Purpose**
 
-Provides comprehensive integration with the SAM admin suite.
+Provides comprehensive integration with the SAM admin suite, combining SAM's powerful admin tools with Lilia's admin system for full compatibility.
 
 **Features**
 
 * Recreates SAM chat commands via Lilia's command system
+* **Full integration with Lilia's admin system** - SAM and Lilia work together seamlessly
 * Includes utilities such as playtime tracking and blind/unblind commands
 * Checks staff privileges before executing sensitive commands
 * Provides configuration options for admin-only notifications and staff enforcement
 * Adds cleardecals command for server maintenance
+* **Combines the best of both systems** - SAM's advanced admin features with Lilia's modern framework
 
 **Technical Details**
 
-Mirrors SAM commands and enforces Lilia's permission checks so admins can use familiar tools seamlessly. Includes additional configuration options and utility commands for enhanced server management.
+Mirrors SAM commands and enforces Lilia's permission checks so admins can use familiar tools seamlessly. The integration layer ensures that SAM's powerful admin capabilities work perfectly with Lilia's permission system, character management, and modern architecture. This provides administrators with the full feature set of both systems working in harmony.
 
 ---
 
@@ -252,20 +256,19 @@ Bridges ServerGuard's admin system with Lilia's built-in administrator framework
 
 **Purpose**
 
-Provides limited integration with the ULX admin suite.
-
-**Warning**
-
-ULX has limited compatibility with Lilia. While basic command integration is provided, ULX's version of CAMI is extremely old and may cause permission check issues.
+Provides integration with the ULX admin suite, combining ULX's admin tools with Lilia's admin system for enhanced functionality.
 
 **Features**
 
-* Provides basic command bridging for admin functions
-* Integrates with Lilia's permission system where possible
+* **Full integration with Lilia's admin system** - ULX and Lilia work together seamlessly
+* Provides comprehensive command bridging for admin functions
+* Integrates with Lilia's permission system for unified admin management
+* **Combines ULX's proven admin tools with Lilia's modern framework**
+* Maintains ULX's familiar command structure while leveraging Lilia's advanced features
 
 **Technical Details**
 
-Limited integration is provided for ULX commands, but due to compatibility issues with ULX's outdated CAMI version, it's recommended to use Lilia's built-in admin menu or another modern admin suite like SAM instead.
+The integration layer ensures that ULX's admin capabilities work perfectly with Lilia's permission system, character management, and modern architecture. While ULX's CAMI version may be older, the compatibility layer bridges these differences to provide a seamless experience. This allows administrators to use ULX's familiar interface while benefiting from Lilia's enhanced admin system and modern framework features.
 
 ---
 

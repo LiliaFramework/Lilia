@@ -79,6 +79,7 @@ def parse_comment_block(comment_text):
     example_complexity = None
 
     for line in lines:
+        original_line = line
         line = line.strip()
 
         # Skip comment markers and empty lines
@@ -115,30 +116,64 @@ def parse_comment_block(comment_text):
         elif current_section == 'parameters':
             # Parse parameter lines (various formats)
             if line.strip() and not line.startswith('--'):
-                # Bullet: - name (Type): Description
-                m = re.match(r'-\s*([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', line)
-                if m:
-                    parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
-                else:
-                    # Bullet without type: - name: Description
-                    m = re.match(r'-\s*([A-Za-z_][\w]*)\s*:\s*(.+)', line)
+                # First check if this is a new section header (even if indented)
+                if line.startswith('Returns:'):
+                    current_section = 'returns'
+                    parsed['returns'] = line[8:].strip()
+                elif line.startswith('Realm:'):
+                    current_section = 'realm'
+                    parsed['realm'] = line[6:].strip()
+                elif line.startswith('Example Usage:'):
+                    current_section = 'examples'
+                # Check if this line is indented (parameter) or a new section header
+                elif original_line.startswith('    ') or original_line.startswith('\t'):
+                    # Indented format: name (Type) - Description (common in hooks)
+                    m = re.match(r'^\s+([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*-\s*(.+)', original_line)
                     if m:
-                        parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
+                        parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
                     else:
-                        # Inline no bullet: name (Type): Description
-                        m = re.match(r'([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', line)
+                        # Fallback for indented lines without parentheses
+                        m = re.match(r'^\s+([A-Za-z_][\w]*)\s*-\s*(.+)', original_line)
                         if m:
-                            parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
+                            parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
+                else:
+                    # Not indented, might be a new section - reset current_section
+                    current_section = None
+                    # Continue processing this line as a potential new section
+                    if line.startswith('Returns:'):
+                        current_section = 'returns'
+                        parsed['returns'] = line[8:].strip()
+                    elif line.startswith('Realm:'):
+                        current_section = 'realm'
+                        parsed['realm'] = line[6:].strip()
+                    elif line.startswith('Example Usage:'):
+                        current_section = 'examples'
+                # If still in parameters section, try other formats
+                if current_section == 'parameters':
+                    # Bullet: - name (Type): Description
+                    m = re.match(r'-\s*([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', line)
+                    if m:
+                        parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
+                    else:
+                        # Bullet without type: - name: Description
+                        m = re.match(r'-\s*([A-Za-z_][\w]*)\s*:\s*(.+)', line)
+                        if m:
+                            parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
                         else:
-                            # Simple: name - type: Description
-                            m = re.match(r'\s*([^\-\s]+)\s*-\s*([^:]+):\s*(.+)', line)
+                            # Inline no bullet: name (Type): Description
+                            m = re.match(r'([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', line)
                             if m:
                                 parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
                             else:
-                                # Fallback: name - Description
-                                m = re.match(r'\s*([^\-\s]+)\s*-\s*(.+)', line)
+                                # Simple: name - type: Description
+                                m = re.match(r'\s*([^\-\s]+)\s*-\s*([^:]+):\s*(.+)', line)
                                 if m:
-                                    parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
+                                    parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
+                                else:
+                                    # Fallback: name - Description
+                                    m = re.match(r'\s*([^\-\s]+)\s*-\s*(.+)', line)
+                                    if m:
+                                        parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
         elif line.startswith('Returns:'):
             current_section = 'returns'
             # Extract returns info (format varies)
