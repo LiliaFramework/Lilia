@@ -6,11 +6,7 @@
 ]]
 --[[
     Overview:
-    Client-side hooks in the Lilia framework handle user interface elements, rendering, 
-    input processing, and other client-specific functionality. These hooks are executed 
-    on the client and can be used to customize the user experience, modify UI elements, 
-    and handle client-side events. All client hooks follow the standard Garry's Mod 
-    hook system and can be overridden or extended by addons and modules.
+    Client-side hooks in the Lilia framework handle UI, rendering, input, and other client-specific functionality; they can be used to customize the user experience and can be overridden or extended by addons and modules.
 ]]
 --[[
     Purpose: Adds a bar field to a character information section in the F1 menu
