@@ -42,7 +42,7 @@ function PANEL:SetIcon(icon, icon_size)
         self.icon = icon
     else
         local mat = Material(icon)
-        if mat and mat:IsValid() then
+        if mat then
             self.icon = mat
         else
             self.icon = nil
