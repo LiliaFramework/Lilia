@@ -156,21 +156,3 @@ ITEM.DropOnDeath = true  -- Drops on death
 
 ---
 
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players
-ITEM.desc = "A deadly fragmentation grenade"           -- Description text
-ITEM.category = "itemCatGrenades"                      -- Category for inventory sorting
-ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"     -- 3D model for the grenade
-ITEM.class = "weapon_frag"                             -- Weapon class to give when used
-ITEM.width = 1                                         -- Inventory width (1 slot)
-ITEM.height = 1                                        -- Inventory height (1 slot)
-
-```
-
----
-
