@@ -25,9 +25,9 @@
     Low Complexity:
     ```lua
     -- Simple: Add a health bar field
-    hook.Run("AddBarField", "character", "health", "Health",
-        function() return 0 end,
-        function() return 100 end,
+    hook.Run("AddBarField", "character", "health", "Health", 
+        function() return 0 end, 
+        function() return 100 end, 
         function() return LocalPlayer():Health() end)
     ```
 
@@ -37,7 +37,7 @@
     hook.Run("AddBarField", "character", "stamina", "Stamina",
         function() return 0 end,
         function() return 100 end,
-        function()
+        function() 
             local char = LocalPlayer():getChar()
             return char and char:getAttrib("stm") or 0
         end)
@@ -53,7 +53,7 @@
             hook.Run("AddBarField", "attributes", attrId, attr.name,
                 function() return attr.min or 0 end,
                 function() return hook.Run("GetAttributeMax", LocalPlayer(), attrId) or attr.max or 100 end,
-                function()
+                function() 
                     local char = LocalPlayer():getChar()
                     return char and char:getAttrib(attrId) or 0
                 end)
@@ -96,7 +96,7 @@ end
         {name = "Attributes", color = Color(100, 200, 100), priority = 2},
         {name = "Skills", color = Color(200, 100, 100), priority = 3}
     }
-
+    
     for _, section in ipairs(sections) do
         hook.Run("AddSection", section.name, section.color, section.priority, 1)
     end
@@ -120,7 +120,7 @@ end
     Low Complexity:
     ```lua
     -- Simple: Add a character name field
-    hook.Run("AddTextField", "General Info", "name", "Name",
+    hook.Run("AddTextField", "General Info", "name", "Name", 
         function() return LocalPlayer():Name() end)
     ```
 
@@ -128,7 +128,7 @@ end
     ```lua
     -- Medium: Add a faction field with character data
     hook.Run("AddTextField", "General Info", "faction", "Faction",
-        function()
+        function() 
             local char = LocalPlayer():getChar()
             return char and char:getFaction() and char:getFaction().name or "Unknown"
         end)
@@ -139,7 +139,7 @@ end
     -- High: Add multiple character info fields dynamically
     local infoFields = {
         {name = "name", label = "Name", func = function() return LocalPlayer():Name() end},
-        {name = "desc", label = "Description", func = function()
+        {name = "desc", label = "Description", func = function() 
             local char = LocalPlayer():getChar()
             return char and char:getDesc() or "No description"
         end},
@@ -148,7 +148,7 @@ end
             return char and lia.currency.format(char:getMoney()) or "$0"
         end}
     }
-
+    
     for _, field in ipairs(infoFields) do
         hook.Run("AddTextField", "General Info", field.name, field.label, field.func)
     end
@@ -200,15 +200,15 @@ end
     -- High: Add comprehensive entity information with validation
     hook.Add("AddToAdminStickHUD", "DetailedInfo", function(client, target, information)
         if not IsValid(target) then return end
-
+        
         -- Basic entity info
         table.insert(information, "Class: " .. target:GetClass())
         table.insert(information, "Model: " .. target:GetModel())
-
+        
         -- Position info
         local pos = target:GetPos()
         table.insert(information, string.format("Position: %.1f, %.1f, %.1f", pos.x, pos.y, pos.z))
-
+        
         -- Custom entity data
         if target.IsVendor then
             local name = target:getName()
@@ -254,7 +254,7 @@ end
     -- Medium: Add warning with custom message
     local reason = "Excessive RDM - 3 kills in 5 minutes"
     local timestamp = os.time()
-    hook.Run("AddWarning", target:getChar():getID(), target:Nick(), target:SteamID(),
+    hook.Run("AddWarning", target:getChar():getID(), target:Nick(), target:SteamID(), 
         timestamp, reason, client:Nick(), client:SteamID())
     ```
 
@@ -264,14 +264,14 @@ end
     hook.Add("AddWarning", "MyAddon", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
         -- Log the warning to a custom system
         print(string.format("Warning issued: %s warned %s for: %s", warner, warned, message))
-
+        
         -- Send notification to other admins
         for _, admin in ipairs(player.GetAll()) do
             if admin:IsAdmin() then
                 admin:ChatPrint(string.format("[WARNING] %s warned %s: %s", warner, warned, message))
             end
         end
-
+        
         -- Check for warning limits
         local warnings = hook.Run("GetWarnings", charID)
         if #warnings >= 3 then
@@ -328,14 +328,14 @@ end
         if string.len(data.name) < 3 then
             data.name = data.name .. " Jr."
         end
-
+        
         -- Add faction-specific bonuses
         local factionBonuses = {
             ["police"] = {money = 1000, items = {"weapon_pistol"}},
             ["medic"] = {money = 800, items = {"medkit"}},
             ["citizen"] = {money = 200, items = {}}
         }
-
+        
         local bonus = factionBonuses[data.faction]
         if bonus then
             data.money = data.money + bonus.money
@@ -344,7 +344,7 @@ end
                 table.insert(data.startingItems, item)
             end
         end
-
+        
         -- Add creation timestamp
         data.creationTime = os.time()
         data.creationIP = client:IPAddress()
@@ -382,7 +382,7 @@ end
     hook.Add("AdjustPACPartData", "FactionPAC", function(wearer, id, data)
         local char = wearer:getChar()
         if not char then return end
-
+        
         if id == "uniform" then
             local faction = char:getFaction()
             if faction == "police" then
@@ -401,14 +401,14 @@ end
     hook.Add("AdjustPACPartData", "AdvancedPAC", function(wearer, id, data)
         local char = wearer:getChar()
         if not char then return end
-
+        
         -- Check if this is an item-based part
         local item = lia.item.list[id]
         if item and isfunction(item.pacAdjust) then
             local result = item:pacAdjust(data, wearer)
             if result ~= nil then return result end
         end
-
+        
         -- Apply faction-specific modifications
         local faction = char:getFaction()
         local modifications = {
@@ -421,7 +421,7 @@ end
                 ["cross"] = {scale = 1.5, color = Color(255, 0, 0)}
             }
         }
-
+        
         local factionMods = modifications[faction]
         if factionMods and factionMods[id] then
             local mod = factionMods[id]
@@ -429,13 +429,13 @@ end
                 data[key] = value
             end
         end
-
+        
         -- Apply character-specific modifications
         local charData = char:getData()
         if charData.rank and charData.rank == "officer" then
             data.scale = (data.scale or 1) * 1.1 -- Officers get slightly larger parts
         end
-
+        
         return data
     end)
     ```
@@ -469,7 +469,7 @@ end
     hook.Add("AdjustStaminaOffset", "AttributeStamina", function(client, offset)
         local char = client:getChar()
         if not char then return end
-
+        
         local con = char:getAttrib("con", 0) -- Constitution attribute
         if offset > 0 then -- Regeneration
             return offset * (1 + con * 0.1) -- 10% bonus per constitution point
@@ -485,17 +485,17 @@ end
     hook.Add("AdjustStaminaOffset", "AdvancedStamina", function(client, offset)
         local char = client:getChar()
         if not char then return end
-
+        
         local modifiers = {
             regeneration = 1.0,
             drain = 1.0
         }
-
+        
         -- Constitution bonus
         local con = char:getAttrib("con", 0)
         modifiers.regeneration = modifiers.regeneration + (con * 0.1)
         modifiers.drain = modifiers.drain - (con * 0.05)
-
+        
         -- Faction bonuses
         local faction = char:getFaction()
         if faction == "athlete" then
@@ -505,7 +505,7 @@ end
             modifiers.regeneration = modifiers.regeneration - 0.2
             modifiers.drain = modifiers.drain + 0.3
         end
-
+        
         -- Equipment bonuses
         local items = char:getInv()
         for _, item in pairs(items) do
@@ -515,7 +515,7 @@ end
                 modifiers.drain = modifiers.drain + 0.3
             end
         end
-
+        
         -- Apply modifiers
         if offset > 0 then
             return offset * modifiers.regeneration
@@ -564,14 +564,14 @@ end
     hook.Add("AttachPart", "AdvancedPAC", function(client, id)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player has permission for this part
         local partPermissions = {
             ["police_badge"] = {"police", "sheriff"},
             ["medic_cross"] = {"medic", "doctor"},
             ["crown"] = {"mayor", "king"}
         }
-
+        
         local allowedFactions = partPermissions[id]
         if allowedFactions then
             local faction = char:getFaction()
@@ -580,13 +580,13 @@ end
                 return
             end
         end
-
+        
         -- Check character level requirements
         local levelRequirements = {
             ["epic_armor"] = 10,
             ["legendary_weapon"] = 20
         }
-
+        
         local requiredLevel = levelRequirements[id]
         if requiredLevel then
             local charLevel = char:getData("level", 1)
@@ -595,10 +595,10 @@ end
                 return
             end
         end
-
+        
         -- Attach the part
         hook.Run("AttachPart", client, id)
-
+        
         -- Log the attachment
         print(client:Name() .. " attached PAC part: " .. id)
     end)
@@ -645,7 +645,7 @@ end
     hook.Add("BagInventoryReady", "AdvancedBags", function(self, inventory)
         local char = self:getOwner()
         if not char then return end
-
+        
         -- Set up faction-specific bag contents
         local faction = char:getFaction()
         local bagContents = {
@@ -664,7 +664,7 @@ end
                 {item = "phone", quantity = 1}
             }
         }
-
+        
         local contents = bagContents[faction]
         if contents then
             for _, content in ipairs(contents) do
@@ -675,16 +675,16 @@ end
                 end
             end
         end
-
+        
         -- Set up access rules based on character data
         local charLevel = char:getData("level", 1)
         if charLevel >= 10 then
             -- High level characters get extra space
             inventory:setData("maxWeight", inventory:getData("maxWeight", 100) * 1.5)
         end
-
+        
         -- Log the bag creation
-        print(string.format("Bag inventory created for %s (Level %d, Faction: %s)",
+        print(string.format("Bag inventory created for %s (Level %d, Faction: %s)", 
             char:getName(), charLevel, faction))
     end)
     ```
@@ -727,7 +727,7 @@ end
     hook.Add("BagInventoryRemoved", "AdvancedCleanup", function(self, inv)
         local char = self:getOwner()
         if not char then return end
-
+        
         -- Check if bag had valuable items
         local valuableItems = {}
         for _, item in pairs(inv:getItems()) do
@@ -735,7 +735,7 @@ end
                 table.insert(valuableItems, item)
             end
         end
-
+        
         -- Transfer valuable items to character inventory
         if #valuableItems > 0 then
             local charInv = char:getInv()
@@ -787,34 +787,34 @@ end
     hook.Add("CanBeTransfered", "AdvancedTransfers", function(targetChar, faction, client)
         local charLevel = targetChar:getData("level", 1)
         local charMoney = targetChar:getMoney()
-
+        
         -- Check level requirements
         local factionRequirements = {
             ["police"] = 5,
             ["medic"] = 3,
             ["mayor"] = 10
         }
-
+        
         local requiredLevel = factionRequirements[faction]
         if requiredLevel and charLevel < requiredLevel then
             client:ChatPrint("You need to be level " .. requiredLevel .. " to join " .. faction)
             return false
         end
-
+        
         -- Check money requirements
         local transferCost = 1000
         if charMoney < transferCost then
             client:ChatPrint("You need $" .. transferCost .. " to transfer factions")
             return false
         end
-
+        
         -- Check cooldown
         local lastTransfer = targetChar:getData("lastFactionTransfer", 0)
         if os.time() - lastTransfer < 3600 then -- 1 hour cooldown
             client:ChatPrint("You must wait before transferring factions again")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -849,13 +849,13 @@ end
         if targetChar:isBanned() then
             return false
         end
-
+        
         -- Check character age
         local charAge = targetChar:getData("age", 18)
         if faction == "police" and charAge < 21 then
             return false -- Must be 21+ to be police
         end
-
+        
         return hook.Run("CanBeTransfered", targetChar, faction, client)
     end)
     ```
@@ -865,20 +865,20 @@ end
     -- High: Advanced character transfer system
     hook.Add("CanCharBeTransfered", "AdvancedCharTransfers", function(targetChar, faction, client)
         local charData = targetChar:getData()
-
+        
         -- Check character reputation
         local reputation = charData.reputation or 0
         if faction == "police" and reputation < 50 then
             client:ChatPrint("You need a good reputation to join the police")
             return false
         end
-
+        
         -- Check for outstanding warrants
         if charData.warrants and #charData.warrants > 0 then
             client:ChatPrint("You have outstanding warrants and cannot transfer")
             return false
         end
-
+        
         -- Check faction capacity
         local factionCount = 0
         for _, char in pairs(lia.char.getCharacters()) do
@@ -886,19 +886,19 @@ end
                 factionCount = factionCount + 1
             end
         end
-
+        
         local maxFactionMembers = {
             ["police"] = 10,
             ["medic"] = 5,
             ["mayor"] = 1
         }
-
+        
         local maxMembers = maxFactionMembers[faction]
         if maxMembers and factionCount >= maxMembers then
             client:ChatPrint("That faction is full")
             return false
         end
-
+        
         return hook.Run("CanBeTransfered", targetChar, faction, client)
     end)
     ```
@@ -943,7 +943,7 @@ end
     hook.Add("CanDeleteChar", "AdvancedDeletion", function(client, character)
         local charMoney = character:getMoney()
         local charLevel = character:getData("level", 1)
-
+        
         -- Check if character has valuable items
         local hasValuables = false
         local charInv = character:getInv()
@@ -953,26 +953,26 @@ end
                 break
             end
         end
-
+        
         if hasValuables then
             client:ChatPrint("You must remove all valuable items before deleting this character")
             return false
         end
-
+        
         -- Check if character is in a faction
         local faction = character:getFaction()
         if faction ~= "citizen" then
             client:ChatPrint("You must leave your faction before deleting this character")
             return false
         end
-
+        
         -- Check cooldown
         local lastDeletion = client:getData("lastCharDeletion", 0)
         if os.time() - lastDeletion < 86400 then -- 24 hour cooldown
             client:ChatPrint("You must wait 24 hours before deleting another character")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1017,12 +1017,12 @@ end
     hook.Add("CanDisplayCharInfo", "AdvancedPrivacy", function(name)
         local char = LocalPlayer():getChar()
         if not char then return true end
-
+        
         -- Check if player has privacy mode enabled
         if char:getData("privacyMode", false) then
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "police" then
@@ -1035,7 +1035,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -1067,14 +1067,14 @@ end
     hook.Add("CanInviteToClass", "FactionRestrictions", function(client, target)
         local clientChar = client:getChar()
         local targetChar = target:getChar()
-
+        
         if not clientChar or not targetChar then return false end
-
+        
         if clientChar:getFaction() ~= targetChar:getFaction() then
             client:ChatPrint("You can only invite players from your faction")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1085,28 +1085,28 @@ end
     hook.Add("CanInviteToClass", "AdvancedInvitations", function(client, target)
         local clientChar = client:getChar()
         local targetChar = target:getChar()
-
+        
         if not clientChar or not targetChar then return false end
-
+        
         -- Check if client has permission to invite
         if not clientChar:hasFlags("C") then
             client:ChatPrint("You don't have permission to invite players to classes")
             return false
         end
-
+        
         -- Check if target is already in a class
         local targetClass = targetChar:getClass()
         if targetClass and targetClass ~= "" then
             client:ChatPrint("That player is already in a class")
             return false
         end
-
+        
         -- Check faction compatibility
         if clientChar:getFaction() ~= targetChar:getFaction() then
             client:ChatPrint("You can only invite players from your faction")
             return false
         end
-
+        
         -- Check level requirements
         local clientLevel = clientChar:getData("level", 1)
         local targetLevel = targetChar:getData("level", 1)
@@ -1114,7 +1114,7 @@ end
             client:ChatPrint("That player is too low level to join your class")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1143,7 +1143,7 @@ end
     hook.Add("CanInviteToClass", "ClassInviteCheck", function(client, target)
         local char = client:getChar()
         if not char then return false end
-
+        
         local rank = char:getData("rank", 0)
         return rank >= 3
     end)
@@ -1156,27 +1156,27 @@ end
         local char = client:getChar()
         local targetChar = target:getChar()
         if not char or not targetChar then return false end
-
+        
         -- Check if client has permission
         local rank = char:getData("rank", 0)
         if rank < 3 then
             client:ChatPrint("You need rank 3 or higher to invite players")
             return false
         end
-
+        
         -- Check if target is in same faction
         if char:getFaction() ~= targetChar:getFaction() then
             client:ChatPrint("Target must be in your faction")
             return false
         end
-
+        
         -- Check cooldown
         local lastInvite = char:getData("lastClassInvite", 0)
         if os.time() - lastInvite < 60 then
             client:ChatPrint("Please wait before inviting again")
             return false
         end
-
+        
         char:setData("lastClassInvite", os.time())
         return true
     end)
@@ -1209,7 +1209,7 @@ end
     hook.Add("CanInviteToFaction", "FactionInviteCheck", function(client, target)
         local char = client:getChar()
         if not char then return false end
-
+        
         return char:getData("factionLeader", false)
     end)
     ```
@@ -1221,13 +1221,13 @@ end
         local char = client:getChar()
         local targetChar = target:getChar()
         if not char or not targetChar then return false end
-
+        
         -- Check if client is faction leader
         if not char:getData("factionLeader", false) then
             client:ChatPrint("Only faction leaders can invite players")
             return false
         end
-
+        
         -- Check faction member limit
         local faction = char:getFaction()
         local memberCount = 0
@@ -1237,20 +1237,20 @@ end
                 memberCount = memberCount + 1
             end
         end
-
+        
         local maxMembers = 20
         if memberCount >= maxMembers then
             client:ChatPrint("Faction is at maximum capacity")
             return false
         end
-
+        
         -- Check cooldown
         local lastInvite = char:getData("lastFactionInvite", 0)
         if os.time() - lastInvite < 120 then
             client:ChatPrint("Please wait before inviting again")
             return false
         end
-
+        
         char:setData("lastFactionInvite", os.time())
         return true
     end)
@@ -1298,13 +1298,13 @@ end
     hook.Add("CanItemBeTransfered", "AdvancedTransfers", function(item, fromInventory, toInventory, client)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is bound to character
         if item:getData("boundTo", "") == char:getID() then
             client:ChatPrint("This item is bound to you and cannot be transferred")
             return false
         end
-
+        
         -- Check faction restrictions
         local itemFaction = item:getData("factionRestriction")
         if itemFaction then
@@ -1314,7 +1314,7 @@ end
                 return false
             end
         end
-
+        
         -- Check weight limits
         local itemWeight = item:getData("weight", 1)
         local targetWeight = toInventory:getData("weight", 0)
@@ -1323,13 +1323,13 @@ end
             client:ChatPrint("The destination inventory is too heavy")
             return false
         end
-
+        
         -- Check if target inventory is locked
         if toInventory:getData("locked", false) then
             client:ChatPrint("The destination inventory is locked")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1362,12 +1362,12 @@ end
         if toInventory.isVendor then
             return false
         end
-
+        
         -- Check if item is transferable
         if item:getData("noTransfer", false) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1378,29 +1378,29 @@ end
     hook.Add("CanItemBeTransfered", "AdvancedTransferValidation", function(item, fromInventory, toInventory, client)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is transferable
         if item:getData("noTransfer", false) then
             client:ChatPrint("This item cannot be transferred")
             return false
         end
-
+        
         -- Check inventory types
         if toInventory.isVendor then
             client:ChatPrint("Cannot transfer items to vendor inventories")
             return false
         end
-
+        
         -- Check weight limits
         local itemWeight = item:getWeight()
         local currentWeight = toInventory:getWeight()
         local maxWeight = toInventory:getMaxWeight()
-
+        
         if currentWeight + itemWeight > maxWeight then
             client:ChatPrint("Not enough space in destination inventory")
             return false
         end
-
+        
         -- Check faction restrictions
         local itemFaction = item:getData("faction")
         if itemFaction then
@@ -1410,7 +1410,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
@@ -1418,13 +1418,13 @@ end
             client:ChatPrint("You need to be level " .. requiredLevel .. " to transfer this item")
             return false
         end
-
+        
         -- Check if item is equipped
         if item:getData("equipped", false) then
             client:ChatPrint("Cannot transfer equipped items")
             return false
         end
-
+        
         -- Check for special item restrictions
         if item.uniqueID == "weapon_pistol" then
             -- Special handling for weapons
@@ -1433,7 +1433,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -1476,7 +1476,7 @@ end
     hook.Add("CanOpenBagPanel", "AdvancedBags", function(item)
         local char = LocalPlayer():getChar()
         if not char then return false end
-
+        
         -- Check if bag requires key
         local requiredKey = item:getData("requiredKey")
         if requiredKey then
@@ -1493,7 +1493,7 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local allowedFactions = item:getData("allowedFactions")
         if allowedFactions then
@@ -1503,7 +1503,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
@@ -1511,7 +1511,7 @@ end
             LocalPlayer():ChatPrint("You need to be level " .. requiredLevel .. " to open this bag")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1551,7 +1551,7 @@ end
     hook.Add("CanOpenBagPanel", "AdvancedBagAccess", function(item)
         local char = LocalPlayer():getChar()
         if not char then return false end
-
+        
         -- Check if bag is locked
         if item:getData("locked", false) then
             local hasKey = char:getInv():hasItem("bag_key_" .. item:getID())
@@ -1560,14 +1560,14 @@ end
                 return false
             end
         end
-
+        
         -- Check bag ownership
         local owner = item:getData("owner")
         if owner and owner ~= char:getID() then
             LocalPlayer():ChatPrint("This bag belongs to someone else")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1598,15 +1598,15 @@ end
     hook.Add("CanOutfitChangeModel", "OutfitModelCheck", function(self)
         local client = self.player
         if not client then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         local allowedFactions = self.allowedFactions
         if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1617,10 +1617,10 @@ end
     hook.Add("CanOutfitChangeModel", "AdvancedOutfitModel", function(self)
         local client = self.player
         if not client then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check faction restrictions
         local allowedFactions = self.allowedFactions
         if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
@@ -1629,7 +1629,7 @@ end
             end
             return false
         end
-
+        
         -- Check level requirements
         local requiredLevel = self.requiredLevel or 0
         local charLevel = char:getData("level", 1)
@@ -1639,7 +1639,7 @@ end
             end
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1672,10 +1672,10 @@ end
     hook.Add("CanPerformVendorEdit", "VendorEditCheck", function(self, vendor)
         local client = self.activator
         if not client then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         local owner = vendor.owner
         return owner == char:getID() or client:IsAdmin()
     end)
@@ -1687,27 +1687,27 @@ end
     hook.Add("CanPerformVendorEdit", "AdvancedVendorEdit", function(self, vendor)
         local client = self.activator
         if not client then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Admins can always edit
         if client:IsAdmin() then return true end
-
+        
         -- Check vendor ownership
         local owner = vendor.owner
         if owner ~= char:getID() then
             client:ChatPrint("You don't own this vendor")
             return false
         end
-
+        
         -- Check edit cooldown
         local lastEdit = char:getData("lastVendorEdit", 0)
         if os.time() - lastEdit < 30 then
             client:ChatPrint("Please wait before editing again")
             return false
         end
-
+        
         char:setData("lastVendorEdit", os.time())
         return true
     end)
@@ -1742,7 +1742,7 @@ end
             ["prop_dynamic"] = true,
             ["lia_item"] = true
         }
-
+        
         return persistClasses[entity:GetClass()] or false
     end)
     ```
@@ -1752,7 +1752,7 @@ end
     -- High: Complex entity persistence system
     hook.Add("CanPersistEntity", "AdvancedEntityPersist", function(entity)
         if not IsValid(entity) then return false end
-
+        
         -- Check entity class
         local persistClasses = {
             ["prop_physics"] = true,
@@ -1760,22 +1760,22 @@ end
             ["lia_item"] = true,
             ["lia_vendor"] = true
         }
-
+        
         if not persistClasses[entity:GetClass()] then
             return false
         end
-
+        
         -- Check if entity is marked as temporary
         if entity:getNetVar("temporary", false) then
             return false
         end
-
+        
         -- Check entity age
         local spawnTime = entity:getNetVar("spawnTime", 0)
         if os.time() - spawnTime < 60 then
             return false
         end
-
+        
         -- Check entity owner
         local owner = entity:getNetVar("owner")
         if owner then
@@ -1784,7 +1784,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -1818,12 +1818,12 @@ end
         if distance > 100 then
             return false
         end
-
+        
         local amount = self:getNetVar("amount", 0)
         if amount <= 0 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1833,23 +1833,23 @@ end
     -- High: Complex money pickup system
     hook.Add("CanPickupMoney", "AdvancedMoneyPickup", function(activator, self)
         if not IsValid(activator) or not IsValid(self) then return false end
-
+        
         local char = activator:getChar()
         if not char then return false end
-
+        
         -- Check distance
         local distance = activator:GetPos():Distance(self:GetPos())
         if distance > 100 then
             activator:ChatPrint("You are too far away to pick up the money")
             return false
         end
-
+        
         -- Check amount
         local amount = self:getNetVar("amount", 0)
         if amount <= 0 then
             return false
         end
-
+        
         -- Check if money is owned
         local owner = self:getNetVar("owner")
         if owner and owner ~= char:getID() then
@@ -1859,19 +1859,19 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check if player is tied
         if char:getData("tied", false) then
             activator:ChatPrint("You cannot pick up money while tied")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1904,7 +1904,7 @@ end
     hook.Add("CanPlayerAccessDoor", "KeySystem", function(client, self, access)
         local char = client:getChar()
         if not char then return false end
-
+        
         local doorData = self:getNetVar("doorData")
         if doorData and doorData.key then
             local charInv = char:getInv()
@@ -1916,7 +1916,7 @@ end
             client:ChatPrint("You need a key to access this door")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -1927,10 +1927,10 @@ end
     hook.Add("CanPlayerAccessDoor", "AdvancedDoors", function(client, self, access)
         local char = client:getChar()
         if not char then return false end
-
+        
         local doorData = self:getNetVar("doorData")
         if not doorData then return true end
-
+        
         -- Check faction restrictions
         local allowedFactions = doorData.allowedFactions
         if allowedFactions then
@@ -1940,7 +1940,7 @@ end
                 return false
             end
         end
-
+        
         -- Check time restrictions
         local timeRestriction = doorData.timeRestriction
         if timeRestriction then
@@ -1950,7 +1950,7 @@ end
                 return false
             end
         end
-
+        
         -- Check key requirements
         if doorData.key then
             local charInv = char:getInv()
@@ -1966,7 +1966,7 @@ end
                 return false
             end
         end
-
+        
         -- Check access level
         local requiredAccess = doorData.accessLevel or 1
         local charAccess = char:getData("accessLevel", 1)
@@ -1974,7 +1974,7 @@ end
             client:ChatPrint("You don't have sufficient access level for this door")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2004,7 +2004,7 @@ end
     hook.Add("CanPlayerAccessDoor", "DoorAccessCheck", function(client, self, access)
         local char = client:getChar()
         if not char then return false end
-
+        
         local owner = self:getNetVar("owner")
         return owner == char:getID()
     end)
@@ -2016,26 +2016,26 @@ end
     hook.Add("CanPlayerAccessDoor", "AdvancedDoorAccess", function(client, self, access)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Admins can access all doors
         if client:IsAdmin() then return true end
-
+        
         -- Check door ownership
         local owner = self:getNetVar("owner")
         if owner == char:getID() then return true end
-
+        
         -- Check faction access
         local allowedFactions = self:getNetVar("allowedFactions", {})
         if table.HasValue(allowedFactions, char:getFaction()) then
             return true
         end
-
+        
         -- Check if player has key
         local doorID = self:getNetVar("doorID")
         if doorID and char:getInv():hasItem("door_key_" .. doorID) then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -2067,12 +2067,12 @@ end
     hook.Add("CanPlayerAccessVendor", "VendorAccessCheck", function(activator, self)
         local char = activator:getChar()
         if not char then return false end
-
+        
         local allowedFactions = self:getNetVar("allowedFactions", {})
         if #allowedFactions > 0 and not table.HasValue(allowedFactions, char:getFaction()) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2083,14 +2083,14 @@ end
     hook.Add("CanPlayerAccessVendor", "AdvancedVendorAccess", function(activator, self)
         local char = activator:getChar()
         if not char then return false end
-
+        
         -- Check faction restrictions
         local allowedFactions = self:getNetVar("allowedFactions", {})
         if #allowedFactions > 0 and not table.HasValue(allowedFactions, char:getFaction()) then
             activator:ChatPrint("Your faction cannot access this vendor")
             return false
         end
-
+        
         -- Check level requirements
         local requiredLevel = self:getNetVar("requiredLevel", 0)
         local charLevel = char:getData("level", 1)
@@ -2098,7 +2098,7 @@ end
             activator:ChatPrint("You need to be level " .. requiredLevel .. " to access this vendor")
             return false
         end
-
+        
         -- Check reputation
         local requiredRep = self:getNetVar("requiredReputation", 0)
         local charRep = char:getData("reputation", 0)
@@ -2106,7 +2106,7 @@ end
             activator:ChatPrint("You need " .. requiredRep .. " reputation to access this vendor")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2146,14 +2146,14 @@ end
     hook.Add("CanPlayerChooseWeapon", "AdvancedWeaponSelection", function(weapon)
         local client = weapon:GetOwner()
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         local weaponClass = weapon:GetClass()
-
+        
         if faction == "police" then
             local policeWeapons = {"weapon_pistol", "weapon_stunstick"}
             return table.HasValue(policeWeapons, weaponClass)
@@ -2161,20 +2161,20 @@ end
             local medicWeapons = {"weapon_medkit", "weapon_stunstick"}
             return table.HasValue(medicWeapons, weaponClass)
         end
-
+        
         -- Check level requirements
         local requiredLevel = weapon:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
         if charLevel < requiredLevel then
             return false
         end
-
+        
         -- Check if weapon is broken
         local durability = weapon:getData("durability", 100)
         if durability <= 0 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2206,12 +2206,12 @@ end
     hook.Add("CanPlayerCreateChar", "CharLimit", function(client, data)
         local charCount = #client.liaCharList or 0
         local maxChars = hook.Run("GetMaxPlayerChar", client) or 5
-
+        
         if charCount >= maxChars then
             client:ChatPrint("You have reached the maximum number of characters")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2225,19 +2225,19 @@ end
             client:ChatPrint("You are banned and cannot create characters")
             return false
         end
-
+        
         -- Check character name validity
         local name = data.name or ""
         if string.len(name) < 3 then
             client:ChatPrint("Character name must be at least 3 characters long")
             return false
         end
-
+        
         if string.len(name) > 32 then
             client:ChatPrint("Character name must be less than 32 characters")
             return false
         end
-
+        
         -- Check for inappropriate names
         local bannedWords = {"admin", "moderator", "staff", "test"}
         for _, word in ipairs(bannedWords) do
@@ -2246,7 +2246,7 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local faction = data.faction
         local playerLevel = client:getData("level", 1)
@@ -2255,13 +2255,13 @@ end
             ["medic"] = 3,
             ["mayor"] = 10
         }
-
+        
         local requiredLevel = factionRequirements[faction]
         if requiredLevel and playerLevel < requiredLevel then
             client:ChatPrint("You need to be level " .. requiredLevel .. " to create a " .. faction .. " character")
             return false
         end
-
+        
         -- Check character count
         local charCount = #client.liaCharList or 0
         local maxChars = hook.Run("GetMaxPlayerChar", client) or 5
@@ -2269,7 +2269,7 @@ end
             client:ChatPrint("You have reached the maximum number of characters")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2314,27 +2314,27 @@ end
     hook.Add("CanPlayerDropItem", "AdvancedDrops", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is bound
         if item:getData("bound", false) then
             client:ChatPrint("This item is bound to you and cannot be dropped")
             return false
         end
-
+        
         -- Check if player is in a safe zone
         local pos = client:GetPos()
         local safeZones = {
             {pos = Vector(0, 0, 0), radius = 500}, -- Spawn area
             {pos = Vector(1000, 1000, 0), radius = 200} -- Bank area
         }
-
+        
         for _, zone in ipairs(safeZones) do
             if pos:Distance(zone.pos) < zone.radius then
                 client:ChatPrint("You cannot drop items in safe zones")
                 return false
             end
         end
-
+        
         -- Check item value
         local itemValue = item:getData("value", 0)
         if itemValue > 1000 then
@@ -2344,14 +2344,14 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "police" and item.uniqueID == "illegal_item" then
             client:ChatPrint("Police cannot drop illegal items")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2383,13 +2383,13 @@ end
             client:ChatPrint("This item cannot be dropped")
             return false
         end
-
+        
         -- Check if item is equipped
         if item:getData("equipped", false) then
             client:ChatPrint("Cannot drop equipped items")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2400,19 +2400,19 @@ end
     hook.Add("CanPlayerDropItem", "AdvancedDropValidation", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is droppable
         if item:getData("noDrop", false) then
             client:ChatPrint("This item cannot be dropped")
             return false
         end
-
+        
         -- Check if item is equipped
         if item:getData("equipped", false) then
             client:ChatPrint("Cannot drop equipped items")
             return false
         end
-
+        
         -- Check faction restrictions
         local itemFaction = item:getData("faction")
         if itemFaction then
@@ -2422,7 +2422,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
@@ -2430,7 +2430,7 @@ end
             client:ChatPrint("You need to be level " .. requiredLevel .. " to drop this item")
             return false
         end
-
+        
         -- Check for special item restrictions
         if item.uniqueID == "weapon_pistol" then
             -- Special handling for weapons
@@ -2446,26 +2446,26 @@ end
                 return false
             end
         end
-
+        
         -- Check location restrictions
         local pos = client:GetPos()
         local restrictedAreas = {
             {pos = Vector(0, 0, 0), radius = 100}, -- Example restricted area
         }
-
+        
         for _, area in ipairs(restrictedAreas) do
             if pos:Distance(area.pos) < area.radius then
                 client:ChatPrint("Cannot drop items in this area")
                 return false
             end
         end
-
+        
         -- Check for admin restrictions
         if char:getData("adminRestricted", false) then
             client:ChatPrint("You are restricted from dropping items")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2508,19 +2508,19 @@ end
     hook.Add("CanPlayerEarnSalary", "AdvancedSalaryCheck", function(client)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if player is AFK
         local isAFK = client:getNetVar("afk", false)
         if isAFK then
             return false
         end
-
+        
         -- Check minimum playtime
         local playTime = client:GetUTimeTotalTime()
         if playTime < 3600 then
             return false
         end
-
+        
         -- Check faction requirements
         local faction = char:getFaction()
         if faction == "citizen" then
@@ -2529,7 +2529,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -2561,15 +2561,15 @@ end
     hook.Add("CanPlayerEquipItem", "LevelRequirements", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
-
+        
         if charLevel < requiredLevel then
             client:ChatPrint("You need to be level " .. requiredLevel .. " to equip this item")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2580,7 +2580,7 @@ end
     hook.Add("CanPlayerEquipItem", "AdvancedEquipment", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check faction restrictions
         local allowedFactions = item:getData("allowedFactions")
         if allowedFactions then
@@ -2590,7 +2590,7 @@ end
                 return false
             end
         end
-
+        
         -- Check attribute requirements
         local requiredAttribs = item:getData("requiredAttributes")
         if requiredAttribs then
@@ -2602,7 +2602,7 @@ end
                 end
             end
         end
-
+        
         -- Check if item slot is already occupied
         local itemSlot = item:getData("slot")
         if itemSlot then
@@ -2612,7 +2612,7 @@ end
                 return false
             end
         end
-
+        
         -- Check weight limits
         local itemWeight = item:getData("weight", 1)
         local currentWeight = char:getData("currentWeight", 0)
@@ -2621,13 +2621,13 @@ end
             client:ChatPrint("Equipping this item would exceed your weight limit")
             return false
         end
-
+        
         -- Check if item is broken
         if item:getData("broken", false) then
             client:ChatPrint("This item is broken and cannot be equipped")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2659,13 +2659,13 @@ end
             client:ChatPrint("This item cannot be equipped")
             return false
         end
-
+        
         -- Check if already equipped
         if item:getData("equipped", false) then
             client:ChatPrint("This item is already equipped")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2676,19 +2676,19 @@ end
     hook.Add("CanPlayerEquipItem", "AdvancedEquipValidation", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is equippable
         if not item:getData("equippable", false) then
             client:ChatPrint("This item cannot be equipped")
             return false
         end
-
+        
         -- Check if already equipped
         if item:getData("equipped", false) then
             client:ChatPrint("This item is already equipped")
             return false
         end
-
+        
         -- Check faction restrictions
         local itemFaction = item:getData("faction")
         if itemFaction then
@@ -2698,7 +2698,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
@@ -2706,7 +2706,7 @@ end
             client:ChatPrint("You need to be level " .. requiredLevel .. " to equip this item")
             return false
         end
-
+        
         -- Check attribute requirements
         local requiredAttribs = item:getData("requiredAttribs", {})
         for attr, value in pairs(requiredAttribs) do
@@ -2716,7 +2716,7 @@ end
                 return false
             end
         end
-
+        
         -- Check for conflicting items
         local itemType = item:getData("itemType")
         if itemType then
@@ -2728,7 +2728,7 @@ end
                 end
             end
         end
-
+        
         -- Check for special item restrictions
         if item.uniqueID == "weapon_pistol" then
             -- Special handling for weapons
@@ -2744,13 +2744,13 @@ end
                 return false
             end
         end
-
+        
         -- Check for admin restrictions
         if char:getData("adminRestricted", false) then
             client:ChatPrint("You are restricted from equipping items")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2794,30 +2794,30 @@ end
     hook.Add("CanPlayerHoldObject", "AdvancedHoldValidation", function(client, entity)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check entity validity
         if not IsValid(entity) then return false end
-
+        
         -- Check entity class
         local allowedClasses = {"prop_physics", "prop_physics_multiplayer"}
         if not table.HasValue(allowedClasses, entity:GetClass()) then
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "prisoner" then
             client:ChatPrint("Prisoners cannot hold objects")
             return false
         end
-
+        
         -- Check level requirements
         local charLevel = char:getData("level", 1)
         if charLevel < 5 then
             client:ChatPrint("You need to be level 5 to hold objects")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2868,7 +2868,7 @@ end
     hook.Add("CanPlayerInteractItem", "AdvancedInteractionValidation", function(client, action, self, data)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check action restrictions
         if action == "use" then
             -- Check if item is usable
@@ -2889,7 +2889,7 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local itemFaction = self:getData("faction")
         if itemFaction then
@@ -2899,7 +2899,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -2932,7 +2932,7 @@ end
     hook.Add("CanPlayerJoinClass", "ClassJoinCheck", function(client, class, info)
         local char = client:getChar()
         if not char then return false end
-
+        
         local faction = char:getFaction()
         if faction == info.faction then
             return true
@@ -2947,25 +2947,25 @@ end
     hook.Add("CanPlayerJoinClass", "AdvancedClassJoin", function(client, class, info)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check faction requirements
         if info.faction and char:getFaction() ~= info.faction then
             client:ChatPrint("You must be in the " .. info.faction .. " faction to join this class")
             return false
         end
-
+        
         -- Check level requirements
         if info.level and char:getData("level", 1) < info.level then
             client:ChatPrint("You need to be level " .. info.level .. " to join this class")
             return false
         end
-
+        
         -- Check flag requirements
         if info.flags and not char:hasFlags(info.flags) then
             client:ChatPrint("You don't have the required flags to join this class")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -2996,7 +2996,7 @@ end
     hook.Add("CanPlayerKnock", "KnockCheck", function(client)
         local char = client:getChar()
         if not char then return false end
-
+        
         if char:getData("unconscious", false) then
             return false
         end
@@ -3010,26 +3010,26 @@ end
     hook.Add("CanPlayerKnock", "AdvancedKnockValidation", function(client)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if player is unconscious
         if char:getData("unconscious", false) then
             client:ChatPrint("You cannot knock while unconscious")
             return false
         end
-
+        
         -- Check if player is gagged
         if char:getData("gagged", false) then
             client:ChatPrint("You cannot knock while gagged")
             return false
         end
-
+        
         -- Check knock cooldown
         local lastKnock = char:getData("lastKnock", 0)
         if os.time() - lastKnock < 2 then
             client:ChatPrint("Please wait before knocking again")
             return false
         end
-
+        
         char:setData("lastKnock", os.time())
         return true
     end)
@@ -3074,27 +3074,27 @@ end
     hook.Add("CanPlayerLock", "AdvancedDoorLock", function(client, door)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check door ownership
         local owner = door:getNetVar("owner")
         if owner and owner ~= client:SteamID() then
             client:ChatPrint("You don't own this door")
             return false
         end
-
+        
         -- Check if door is lockable
         if door:getNetVar("noLock", false) then
             client:ChatPrint("This door cannot be locked")
             return false
         end
-
+        
         -- Check faction permissions
         local doorFaction = door:getNetVar("faction")
         if doorFaction and char:getFaction() ~= doorFaction then
             client:ChatPrint("You don't have permission to lock this door")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3141,7 +3141,7 @@ end
         if client:IsSuperAdmin() then
             return true
         end
-
+        
         -- Regular admins have limited access
         if client:IsAdmin() then
             local restrictedKeys = {"serverPassword", "rconPassword", "adminFlags"}
@@ -3151,13 +3151,13 @@ end
             end
             return true
         end
-
+        
         -- Check custom permissions
         local char = client:getChar()
         if char and char:hasFlags("c") then
             return true
         end
-
+        
         client:ChatPrint("You don't have permission to modify config")
         return false
     end)
@@ -3189,7 +3189,7 @@ end
     hook.Add("CanPlayerOpenScoreboard", "ScoreboardCheck", function(client)
         local char = client:getChar()
         if not char then return false end
-
+        
         if char:getData("unconscious", false) then
             return false
         end
@@ -3203,23 +3203,23 @@ end
     hook.Add("CanPlayerOpenScoreboard", "AdvancedScoreboardAccess", function(client)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if player is unconscious
         if char:getData("unconscious", false) then
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "prisoner" then
             return false
         end
-
+        
         -- Check level requirements
         if char:getData("level", 1) < 1 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3263,19 +3263,19 @@ end
     hook.Add("CanPlayerRotateItem", "AdvancedRotation", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is rotatable
         if item:getData("noRotate", false) then
             client:ChatPrint("This item cannot be rotated")
             return false
         end
-
+        
         -- Check if item is equipped
         if item:getData("equipped", false) then
             client:ChatPrint("Cannot rotate equipped items")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3322,7 +3322,7 @@ end
         if client:IsSuperAdmin() then
             return true
         end
-
+        
         -- Regular admins have limited access
         if client:IsAdmin() then
             local restrictedCategories = {"admin", "system", "security"}
@@ -3331,13 +3331,13 @@ end
             end
             return true
         end
-
+        
         -- Check custom permissions
         local char = client:getChar()
         if char and char:hasFlags("l") then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -3370,7 +3370,7 @@ end
     hook.Add("CanPlayerSpawnStorage", "StorageSpawnCheck", function(client, entity, info)
         local char = client:getChar()
         if not char then return false end
-
+        
         if char:hasFlags("s") then
             return true
         end
@@ -3384,32 +3384,32 @@ end
     hook.Add("CanPlayerSpawnStorage", "AdvancedStorageSpawn", function(client, entity, info)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check storage flags
         if not char:hasFlags("s") then
             client:ChatPrint("You need storage flags to spawn storage")
             return false
         end
-
+        
         -- Check faction restrictions
         if info.faction and char:getFaction() ~= info.faction then
             client:ChatPrint("You cannot spawn this faction's storage")
             return false
         end
-
+        
         -- Check level requirements
         if info.level and char:getData("level", 1) < info.level then
             client:ChatPrint("You need to be level " .. info.level .. " to spawn this storage")
             return false
         end
-
+        
         -- Check storage limit
         local storageCount = char:getData("storageCount", 0)
         if storageCount >= 5 then
             client:ChatPrint("You have reached the maximum storage limit")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3459,19 +3459,19 @@ end
             client:ChatPrint("Please wait " .. (300 - (os.time() - lastSwitch)) .. " seconds before switching")
             return false
         end
-
+        
         -- Check if current character is in combat
         if currentChar:getData("inCombat", false) then
             client:ChatPrint("You cannot switch characters while in combat")
             return false
         end
-
+        
         -- Check if current character is unconscious
         if currentChar:getData("unconscious", false) then
             client:ChatPrint("You cannot switch characters while unconscious")
             return false
         end
-
+        
         -- Check faction switch limits
         if currentChar:getFaction() ~= character:getFaction() then
             local factionSwitches = currentChar:getData("factionSwitches", 0)
@@ -3481,7 +3481,7 @@ end
             end
             currentChar:setData("factionSwitches", factionSwitches + 1)
         end
-
+        
         -- Update last switch time
         currentChar:setData("lastSwitch", os.time())
         return true
@@ -3518,14 +3518,14 @@ end
             client:ChatPrint("This item cannot be taken")
             return false
         end
-
+        
         -- Check if item is owned by someone else
         local owner = item:getData("owner")
         if owner and owner ~= client:SteamID() then
             client:ChatPrint("This item belongs to someone else")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3536,20 +3536,20 @@ end
     hook.Add("CanPlayerTakeItem", "AdvancedTakeValidation", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is takeable
         if item:getData("noTake", false) then
             client:ChatPrint("This item cannot be taken")
             return false
         end
-
+        
         -- Check if item is owned by someone else
         local owner = item:getData("owner")
         if owner and owner ~= client:SteamID() then
             client:ChatPrint("This item belongs to someone else")
             return false
         end
-
+        
         -- Check faction restrictions
         local itemFaction = item:getData("faction")
         if itemFaction then
@@ -3559,7 +3559,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
@@ -3567,18 +3567,18 @@ end
             client:ChatPrint("You need to be level " .. requiredLevel .. " to take this item")
             return false
         end
-
+        
         -- Check weight limits
         local itemWeight = item:getWeight()
         local inventory = char:getInv()
         local currentWeight = inventory:getWeight()
         local maxWeight = inventory:getMaxWeight()
-
+        
         if currentWeight + itemWeight > maxWeight then
             client:ChatPrint("Not enough space in your inventory")
             return false
         end
-
+        
         -- Check for special item restrictions
         if item.uniqueID == "weapon_pistol" then
             -- Special handling for weapons
@@ -3594,7 +3594,7 @@ end
                 return false
             end
         end
-
+        
         -- Check location restrictions
         local pos = client:GetPos()
         local itemPos = item:getData("position")
@@ -3602,13 +3602,13 @@ end
             client:ChatPrint("Item is too far away")
             return false
         end
-
+        
         -- Check for admin restrictions
         if char:getData("adminRestricted", false) then
             client:ChatPrint("You are restricted from taking items")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3652,25 +3652,25 @@ end
     hook.Add("CanPlayerThrowPunch", "AdvancedPunchSystem", function(client)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check stamina
         local stamina = client:getNetVar("stamina", 100)
         if stamina < 10 then
             client:ChatPrint("Not enough stamina to punch")
             return false
         end
-
+        
         -- Check cooldown
         local lastPunch = char:getData("lastPunch", 0)
         if CurTime() - lastPunch < 1 then
             return false
         end
-
+        
         -- Check if player is tied
         if char:getData("tied", false) then
             return false
         end
-
+        
         char:setData("lastPunch", CurTime())
         return true
     end)
@@ -3705,13 +3705,13 @@ end
     hook.Add("CanPlayerTradeWithVendor", "VendorTradeCheck", function(client, vendor, itemType, isSellingToVendor)
         local char = client:getChar()
         if not char then return false end
-
+        
         local allowedFactions = vendor.allowedFactions
         if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
             client:ChatPrint("Your faction cannot trade with this vendor")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3722,14 +3722,14 @@ end
     hook.Add("CanPlayerTradeWithVendor", "AdvancedVendorTrade", function(client, vendor, itemType, isSellingToVendor)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check faction restrictions
         local allowedFactions = vendor.allowedFactions
         if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
             client:ChatPrint("Your faction cannot trade with this vendor")
             return false
         end
-
+        
         -- Check level requirements
         local requiredLevel = vendor.requiredLevel or 0
         local charLevel = char:getData("level", 1)
@@ -3737,7 +3737,7 @@ end
             client:ChatPrint("You need to be level " .. requiredLevel .. " to trade with this vendor")
             return false
         end
-
+        
         -- Check reputation
         local requiredRep = vendor.requiredReputation or 0
         local charRep = char:getData("reputation", 0)
@@ -3745,14 +3745,14 @@ end
             client:ChatPrint("You need " .. requiredRep .. " reputation to trade with this vendor")
             return false
         end
-
+        
         -- Check trade cooldown
         local lastTrade = char:getData("lastVendorTrade", 0)
         if os.time() - lastTrade < 5 then
             client:ChatPrint("Please wait before trading again")
             return false
         end
-
+        
         char:setData("lastVendorTrade", os.time())
         return true
     end)
@@ -3788,13 +3788,13 @@ end
             client:ChatPrint("This item is not equipped")
             return false
         end
-
+        
         -- Check if item is unequippable
         if item:getData("noUnequip", false) then
             client:ChatPrint("This item cannot be unequipped")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3805,19 +3805,19 @@ end
     hook.Add("CanPlayerUnequipItem", "AdvancedUnequipValidation", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if item is equipped
         if not item:getData("equipped", false) then
             client:ChatPrint("This item is not equipped")
             return false
         end
-
+        
         -- Check if item is unequippable
         if item:getData("noUnequip", false) then
             client:ChatPrint("This item cannot be unequipped")
             return false
         end
-
+        
         -- Check faction restrictions
         local itemFaction = item:getData("faction")
         if itemFaction then
@@ -3827,7 +3827,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = item:getData("requiredLevel", 1)
         local charLevel = char:getData("level", 1)
@@ -3835,7 +3835,7 @@ end
             client:ChatPrint("You need to be level " .. requiredLevel .. " to unequip this item")
             return false
         end
-
+        
         -- Check for special item restrictions
         if item.uniqueID == "weapon_pistol" then
             -- Special handling for weapons
@@ -3851,20 +3851,20 @@ end
                 return false
             end
         end
-
+        
         -- Check for admin restrictions
         if char:getData("adminRestricted", false) then
             client:ChatPrint("You are restricted from unequipping items")
             return false
         end
-
+        
         -- Check inventory space
         local inventory = char:getInv()
         if inventory:getWeight() + item:getWeight() > inventory:getMaxWeight() then
             client:ChatPrint("Not enough space in your inventory")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3908,21 +3908,21 @@ end
     hook.Add("CanPlayerUnlock", "AdvancedDoorUnlock", function(client, door)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check door ownership
         local owner = door:getNetVar("owner")
         if owner and owner ~= client:SteamID() then
             client:ChatPrint("You don't own this door")
             return false
         end
-
+        
         -- Check faction permissions
         local doorFaction = door:getNetVar("faction")
         if doorFaction and char:getFaction() ~= doorFaction then
             client:ChatPrint("You don't have permission to unlock this door")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -3968,19 +3968,19 @@ end
             client:ChatPrint("This character doesn't belong to you")
             return false
         end
-
+        
         -- Check if character is banned
         if character:getData("banned", false) then
             client:ChatPrint("This character is banned")
             return false
         end
-
+        
         -- Check if character is deleted
         if character:getData("deleted", false) then
             client:ChatPrint("This character has been deleted")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -4024,7 +4024,7 @@ end
     hook.Add("CanPlayerUseCommand", "AdvancedCommandPerms", function(client, command)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check admin commands
         local adminCommands = {"kick", "ban", "slay", "bring", "goto"}
         if table.HasValue(adminCommands, command) then
@@ -4033,13 +4033,13 @@ end
                 return false
             end
         end
-
+        
         -- Check faction-specific commands
         local factionCommands = {
             ["police"] = {"arrest", "warrant", "unarrest"},
             ["medic"] = {"heal", "revive"}
         }
-
+        
         local faction = char:getFaction()
         for fac, commands in pairs(factionCommands) do
             if table.HasValue(commands, command) then
@@ -4049,7 +4049,7 @@ end
                 end
             end
         end
-
+        
         -- Check command cooldowns
         local lastCommand = char:getData("lastCommand_" .. command, 0)
         if os.time() - lastCommand < 5 then
@@ -4057,7 +4057,7 @@ end
             return false
         end
         char:setData("lastCommand_" .. command, os.time())
-
+        
         return true
     end)
     ```
@@ -4101,7 +4101,7 @@ end
     hook.Add("CanPlayerUseDoor", "AdvancedDoorUse", function(client, door)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check door ownership
         local owner = door:getNetVar("owner")
         if owner and owner ~= client:SteamID() then
@@ -4112,20 +4112,20 @@ end
                 return false
             end
         end
-
+        
         -- Check faction permissions
         local doorFaction = door:getNetVar("faction")
         if doorFaction and char:getFaction() ~= doorFaction then
             client:ChatPrint("You don't have permission to use this faction's door")
             return false
         end
-
+        
         -- Check if door is locked
         if door:getNetVar("locked", false) then
             client:ChatPrint("This door is locked")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -4155,16 +4155,16 @@ end
     hook.Add("CanPlayerViewInventory", "InventoryViewCheck", function()
         local client = LocalPlayer()
         if not client then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if player is unconscious
         if char:getData("unconscious", false) then
             client:ChatPrint("You cannot view inventories while unconscious")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -4175,67 +4175,67 @@ end
     hook.Add("CanPlayerViewInventory", "AdvancedInventoryView", function()
         local client = LocalPlayer()
         if not client then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if player is unconscious
         if char:getData("unconscious", false) then
             client:ChatPrint("You cannot view inventories while unconscious")
             return false
         end
-
+        
         -- Check if player is dead
         if client:Health() <= 0 then
             client:ChatPrint("You cannot view inventories while dead")
             return false
         end
-
+        
         -- Check if player is gagged
         if char:getData("gagged", false) then
             client:ChatPrint("You cannot view inventories while gagged")
             return false
         end
-
+        
         -- Check if player is muted
         if char:getData("muted", false) then
             client:ChatPrint("You cannot view inventories while muted")
             return false
         end
-
+        
         -- Check for admin restrictions
         if char:getData("adminRestricted", false) then
             client:ChatPrint("You are restricted from viewing inventories")
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "prisoner" then
             client:ChatPrint("Prisoners cannot view inventories")
             return false
         end
-
+        
         -- Check level requirements
         local charLevel = char:getData("level", 1)
         if charLevel < 1 then
             client:ChatPrint("You need to be level 1 to view inventories")
             return false
         end
-
+        
         -- Check for special conditions
         local pos = client:GetPos()
         local restrictedAreas = {
             {pos = Vector(0, 0, 0), radius = 100}, -- Example restricted area
         }
-
+        
         for _, area in ipairs(restrictedAreas) do
             if pos:Distance(area.pos) < area.radius then
                 client:ChatPrint("Cannot view inventories in this area")
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -4269,12 +4269,12 @@ end
         if not itemTable[k] then
             return false
         end
-
+        
         -- Check if action is disabled
         if itemTable:getData("actionDisabled", false) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -4287,12 +4287,12 @@ end
         if not itemTable[k] then
             return false
         end
-
+        
         -- Check if action is disabled
         if itemTable:getData("actionDisabled", false) then
             return false
         end
-
+        
         -- Check faction restrictions
         local actionFaction = itemTable:getData("actionFaction")
         if actionFaction then
@@ -4301,7 +4301,7 @@ end
                 return false
             end
         end
-
+        
         -- Check level requirements
         local requiredLevel = itemTable:getData("requiredLevel", 1)
         local char = LocalPlayer():getChar()
@@ -4311,7 +4311,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -4345,12 +4345,12 @@ end
         if not IsValid(ent) then
             return false
         end
-
+        
         -- Check if entity is persistent
         if not ent:getNetVar("persistent", false) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -4363,30 +4363,30 @@ end
         if not IsValid(ent) then
             return false
         end
-
+        
         -- Check if entity is persistent
         if not ent:getNetVar("persistent", false) then
             return false
         end
-
+        
         -- Check if entity has owner
         local owner = ent:getNetVar("owner")
         if not owner then
             return false
         end
-
+        
         -- Check if owner is online
         local ownerPlayer = player.GetBySteamID(owner)
         if not IsValid(ownerPlayer) then
             return false
         end
-
+        
         -- Check if entity is in valid location
         local pos = ent:GetPos()
         if pos.z < -1000 or pos.z > 1000 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -4417,11 +4417,11 @@ end
     hook.Add("CharCleanUp", "CharDataCleanup", function(character)
         -- Clear character data
         character:setData("lastCleanup", os.time())
-
+        
         -- Clear temporary data
         character:setData("tempData", nil)
         character:setData("cachedData", nil)
-
+        
         print("Character data cleaned up: " .. character:getName())
     end)
     ```
@@ -4432,32 +4432,32 @@ end
     hook.Add("CharCleanUp", "AdvancedCharCleanup", function(character)
         -- Clear character data
         character:setData("lastCleanup", os.time())
-
+        
         -- Clear temporary data
         character:setData("tempData", nil)
         character:setData("cachedData", nil)
-
+        
         -- Clear active effects
         character:setData("activeEffects", {})
-
+        
         -- Clear active quests
         character:setData("activeQuests", {})
-
+        
         -- Clear recognition data
         character:setData("recognitions", {})
-
+        
         -- Clear inventory cache
         local inventory = character:getInv()
         if inventory then
             inventory:setData("cachedItems", nil)
         end
-
+        
         -- Clear position data
         character:setData("lastPos", nil)
         character:setData("lastAng", nil)
-
+        
         -- Log cleanup
-        print(string.format("Character %s (ID: %d) cleaned up",
+        print(string.format("Character %s (ID: %d) cleaned up", 
             character:getName(), character:getID()))
     end)
     ```
@@ -4490,7 +4490,7 @@ end
         -- Clear character data
         character:setData("deleted", true)
         character:setData("deletionTime", os.time())
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
@@ -4507,7 +4507,7 @@ end
         -- Set deletion data
         character:setData("deleted", true)
         character:setData("deletionTime", os.time())
-
+        
         -- Clear character inventory
         local inventory = character:getInv()
         if inventory then
@@ -4516,22 +4516,22 @@ end
                 inventory:remove(item)
             end
         end
-
+        
         -- Clear character money
         character:setMoney(0)
-
+        
         -- Clear character attributes
         local attributes = character:getAttribs()
         for attr, _ in pairs(attributes) do
             character:setAttrib(attr, 0)
         end
-
+        
         -- Clear character data
         character:setData("level", 1)
         character:setData("experience", 0)
         character:setData("activeQuests", {})
         character:setData("activeEffects", {})
-
+        
         -- Check for faction-specific effects
         local faction = character:getFaction()
         if faction == "police" then
@@ -4551,16 +4551,16 @@ end
                 end
             end
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(character:getName() .. " was deleted")
             end
         end
-
+        
         -- Log deletion
-        print(string.format("%s deleted character %s (Faction: %s)",
+        print(string.format("%s deleted character %s (Faction: %s)", 
             client:Name(), character:getName(), faction))
     end)
     ```
@@ -4595,7 +4595,7 @@ end
             -- Set recognition data
             char:setData("forceRecognized", true)
             char:setData("recognitionTime", os.time())
-
+            
             -- Notify player
             ply:ChatPrint("You have been force recognized")
         end
@@ -4608,12 +4608,12 @@ end
     hook.Add("CharForceRecognized", "AdvancedForceRecognition", function(ply, range)
         local char = ply:getChar()
         if not char then return end
-
+        
         -- Set recognition data
         char:setData("forceRecognized", true)
         char:setData("recognitionTime", os.time())
         char:setData("recognitionRange", range)
-
+        
         -- Check for faction-specific effects
         local faction = char:getFaction()
         if faction == "police" then
@@ -4637,12 +4637,12 @@ end
                 end
             end
         end
-
+        
         -- Notify player
         ply:ChatPrint("You have been force recognized")
-
+        
         -- Log force recognition
-        print(string.format("%s was force recognized (Faction: %s, Range: %d)",
+        print(string.format("%s was force recognized (Faction: %s, Range: %d)", 
             ply:Name(), faction, range))
     end)
     ```
@@ -4678,7 +4678,7 @@ end
             ["medic"] = "m",
             ["citizen"] = ""
         }
-
+        
         local hasFactionFlags = factionFlags[faction] or ""
         return hasFactionFlags:find(flags) ~= nil
     end)
@@ -4693,7 +4693,7 @@ end
         if charFlags:find(flags) then
             return true
         end
-
+        
         -- Check faction-based flags
         local faction = self:getFaction()
         local factionFlags = {
@@ -4701,24 +4701,24 @@ end
             ["medic"] = "m",
             ["citizen"] = ""
         }
-
+        
         local hasFactionFlags = factionFlags[faction] or ""
         if hasFactionFlags:find(flags) then
             return true
         end
-
+        
         -- Check level-based flags
         local charLevel = self:getData("level", 1)
         if charLevel >= 10 and flags == "v" then
             return true
         end
-
+        
         -- Check admin flags
         local client = self:getPlayer()
         if client and client:IsAdmin() and flags == "a" then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -4750,7 +4750,7 @@ end
         -- Add custom columns
         table.insert(columns, "Level")
         table.insert(columns, "Faction")
-
+        
         -- Remove default columns
         for i = #columns, 1, -1 do
             if columns[i] == "Unwanted Column" then
@@ -4766,14 +4766,14 @@ end
     hook.Add("CharListColumns", "AdvancedColumns", function(columns)
         -- Clear existing columns
         columns = {}
-
+        
         -- Add custom columns
         table.insert(columns, "Name")
         table.insert(columns, "Level")
         table.insert(columns, "Faction")
         table.insert(columns, "Money")
         table.insert(columns, "Last Seen")
-
+        
         -- Add faction-specific columns
         local char = LocalPlayer():getChar()
         if char then
@@ -4786,7 +4786,7 @@ end
                 table.insert(columns, "Revives")
             end
         end
-
+        
         -- Add admin columns
         if LocalPlayer():IsAdmin() then
             table.insert(columns, "SteamID")
@@ -4822,10 +4822,10 @@ end
     hook.Add("CharListEntry", "EntryModification", function(entry, row)
         -- Add level data
         entry.level = entry.level or 1
-
+        
         -- Add faction data
         entry.faction = entry.faction or "citizen"
-
+        
         -- Add money data
         entry.money = entry.money or 0
     end)
@@ -4837,16 +4837,16 @@ end
     hook.Add("CharListEntry", "AdvancedEntry", function(entry, row)
         -- Add level data
         entry.level = entry.level or 1
-
+        
         -- Add faction data
         entry.faction = entry.faction or "citizen"
-
+        
         -- Add money data
         entry.money = entry.money or 0
-
+        
         -- Add last seen data
         entry.lastSeen = entry.lastSeen or "Never"
-
+        
         -- Add faction-specific data
         if entry.faction == "police" then
             entry.warnings = entry.warnings or 0
@@ -4855,18 +4855,18 @@ end
             entry.heals = entry.heals or 0
             entry.revives = entry.revives or 0
         end
-
+        
         -- Add admin data
         if LocalPlayer():IsAdmin() then
             entry.steamID = entry.steamID or "Unknown"
             entry.ipAddress = entry.ipAddress or "Unknown"
         end
-
+        
         -- Add custom styling
         if entry.level >= 10 then
             entry.isHighLevel = true
         end
-
+        
         if entry.money >= 10000 then
             entry.isRich = true
         end
@@ -4900,7 +4900,7 @@ end
     -- Medium: Add faction-specific details
     hook.Add("CharListExtraDetails", "FactionDetails", function(client, entry, stored)
         local faction = entry.faction or "citizen"
-
+        
         if faction == "police" then
             entry.extraInfo = "Police Officer"
         elseif faction == "medic" then
@@ -4917,7 +4917,7 @@ end
     hook.Add("CharListExtraDetails", "AdvancedExtraDetails", function(client, entry, stored)
         -- Add basic extra details
         entry.extraInfo = "Additional Information"
-
+        
         -- Add faction-specific details
         local faction = entry.faction or "citizen"
         if faction == "police" then
@@ -4932,19 +4932,19 @@ end
             entry.extraInfo = "Civilian"
             entry.occupation = entry.occupation or "Unemployed"
         end
-
+        
         -- Add level-based details
         local level = entry.level or 1
         if level >= 10 then
             entry.extraInfo = entry.extraInfo .. " (High Level)"
         end
-
+        
         -- Add money-based details
         local money = entry.money or 0
         if money >= 10000 then
             entry.extraInfo = entry.extraInfo .. " (Rich)"
         end
-
+        
         -- Add admin details
         if client:IsAdmin() then
             entry.adminInfo = "Admin View"
@@ -4984,7 +4984,7 @@ end
             local faction = char.faction or "citizen"
             factionCount[faction] = (factionCount[faction] or 0) + 1
         end
-
+        
         -- Display faction counts
         for faction, count in pairs(factionCount) do
             print(faction .. ": " .. count .. " characters")
@@ -5002,26 +5002,26 @@ end
             local faction = char.faction or "citizen"
             factionCount[faction] = (factionCount[faction] or 0) + 1
         end
-
+        
         -- Display faction counts
         for faction, count in pairs(factionCount) do
             print(faction .. ": " .. count .. " characters")
         end
-
+        
         -- Process character data
         for _, char in ipairs(newCharList) do
             -- Add level data
             char.level = char.level or 1
-
+            
             -- Add faction data
             char.faction = char.faction or "citizen"
-
+            
             -- Add money data
             char.money = char.money or 0
-
+            
             -- Add last seen data
             char.lastSeen = char.lastSeen or "Never"
-
+            
             -- Add faction-specific data
             if char.faction == "police" then
                 char.warnings = char.warnings or 0
@@ -5031,12 +5031,12 @@ end
                 char.revives = char.revives or 0
             end
         end
-
+        
         -- Sort characters by level
         table.sort(newCharList, function(a, b)
             return (a.level or 1) > (b.level or 1)
         end)
-
+        
         print("Character list loaded and processed with " .. #newCharList .. " characters")
     end)
     ```
@@ -5079,7 +5079,7 @@ end
                 print("New character: " .. newChar.name)
             end
         end
-
+        
         -- Find removed characters
         for _, oldChar in ipairs(oldCharList) do
             local found = false
@@ -5105,26 +5105,26 @@ end
         for _, char in ipairs(oldCharList) do
             oldChars[char.id] = char
         end
-
+        
         local newChars = {}
         for _, char in ipairs(newCharList) do
             newChars[char.id] = char
         end
-
+        
         -- Find new characters
         for _, newChar in ipairs(newCharList) do
             if not oldChars[newChar.id] then
                 print("New character: " .. newChar.name .. " (ID: " .. newChar.id .. ")")
             end
         end
-
+        
         -- Find removed characters
         for _, oldChar in ipairs(oldCharList) do
             if not newChars[oldChar.id] then
                 print("Removed character: " .. oldChar.name .. " (ID: " .. oldChar.id .. ")")
             end
         end
-
+        
         -- Find modified characters
         for _, newChar in ipairs(newCharList) do
             local oldChar = oldChars[newChar.id]
@@ -5141,7 +5141,7 @@ end
                 end
             end
         end
-
+        
         -- Update character counts
         local oldCount = #oldCharList
         local newCount = #newCharList
@@ -5187,10 +5187,10 @@ end
     hook.Add("CharLoaded", "AdvancedCharLoading", function(id)
         local char = lia.char.getByID(id)
         if not char then return end
-
+        
         local client = char:getPlayer()
         if not IsValid(client) then return end
-
+        
         -- Set up faction-specific bonuses
         local faction = char:getFaction()
         if faction == "police" then
@@ -5200,7 +5200,7 @@ end
             char:setData("salary", 800)
             char:setData("healingBonus", 1.2)
         end
-
+        
         -- Check for returning player bonuses
         local lastLogin = char:getData("lastLogin", 0)
         local timeSinceLogin = os.time() - lastLogin
@@ -5208,14 +5208,14 @@ end
             char:setData("returningPlayerBonus", true)
             client:ChatPrint("Welcome back! You have a returning player bonus.")
         end
-
+        
         -- Set up character statistics
         local loginCount = char:getData("loginCount", 0)
         char:setData("totalPlayTime", char:getData("totalPlayTime", 0) + 1)
-
+        
         -- Update character appearance
         hook.Run("SetupPlayerModel", client, char)
-
+        
         -- Sync character data
         char:sync()
     end)
@@ -5247,7 +5247,7 @@ end
             -- Set loading data
             character:setData("loaded", true)
             character:setData("loadTime", os.time())
-
+            
             print("Character " .. character:getName() .. " loaded successfully")
         end
     end)
@@ -5259,16 +5259,16 @@ end
     hook.Add("CharLoaded", "AdvancedCharLoading", function(id)
         local character = lia.char.getByID(id)
         if not character then return end
-
+        
         -- Set loading data
         character:setData("loaded", true)
         character:setData("loadTime", os.time())
-
+        
         -- Get character data
         local name = character:getName()
         local faction = character:getFaction()
         local level = character:getData("level", 1)
-
+        
         -- Check for faction-specific loading effects
         if faction == "police" then
             -- Police character loaded
@@ -5287,14 +5287,14 @@ end
                 end
             end
         end
-
+        
         -- Check for level-based effects
         if level >= 10 then
             print("High level character loaded: " .. name .. " (Level " .. level .. ")")
         end
-
+        
         -- Log character loading
-        print(string.format("Character %s (ID: %d, Faction: %s, Level: %d) loaded successfully",
+        print(string.format("Character %s (ID: %d, Faction: %s, Level: %d) loaded successfully", 
             name, id, faction, level))
     end)
     ```
@@ -5334,14 +5334,14 @@ end
     hook.Add("CharMenuClosed", "AdvancedMenuClose", function()
         -- Clear cached character data
         lia.charCache = nil
-
+        
         -- Reset menu state
         lia.menuState = nil
-
+        
         -- Log menu close time
         local closeTime = os.time()
         lia.lastMenuClose = closeTime
-
+        
         print("Character menu closed at " .. os.date("%H:%M:%S", closeTime))
     end)
     ```
@@ -5382,19 +5382,19 @@ end
     hook.Add("CharMenuOpened", "AdvancedMenuOpen", function(self)
         -- Load character list
         lia.charList = lia.char.getAll()
-
+        
         -- Set menu state
         lia.menuState = "open"
-
+        
         -- Log menu open time
         local openTime = os.time()
         lia.lastMenuOpen = openTime
-
+        
         -- Apply custom styling
         if self then
             self:SetBackgroundColor(Color(0, 0, 0, 200))
         end
-
+        
         print("Character menu opened at " .. os.date("%H:%M:%S", openTime))
     end)
     ```
@@ -5434,17 +5434,17 @@ end
     hook.Add("CharPostSave", "AdvancedPostSave", function(self)
         -- Update save timestamp
         self:setData("lastSave", os.time())
-
+        
         -- Increment save count
         local saveCount = self:getData("saveCount", 0) + 1
         self:setData("saveCount", saveCount)
-
+        
         -- Create backup every 10 saves
         if saveCount % 10 == 0 then
             lia.char.createBackup(self:getID())
             print("Backup created for character " .. self:getName())
         end
-
+        
         print(string.format("Character %s saved (Save #%d)", self:getName(), saveCount))
     end)
     ```
@@ -5493,7 +5493,7 @@ end
         elseif money > 1000000 then
             character:setMoney(1000000)
         end
-
+        
         -- Validate attributes
         local attributes = character:getAttribs()
         for attr, value in pairs(attributes) do
@@ -5503,10 +5503,10 @@ end
                 character:setAttrib(attr, 100)
             end
         end
-
+        
         -- Update save preparation timestamp
         character:setData("preSaveTime", os.time())
-
+        
         print("Character " .. character:getName() .. " validated and ready for save")
     end)
     ```
@@ -5548,18 +5548,18 @@ end
         -- Set restoration data
         character:setData("restored", true)
         character:setData("restoreTime", os.time())
-
+        
         -- Restore health and stamina
         local client = character:getPlayer()
         if client then
             client:SetHealth(100)
             client:setNetVar("stamina", 100)
         end
-
+        
         -- Clear negative effects
         character:setData("unconscious", false)
         character:setData("bleeding", false)
-
+        
         print("Character " .. character:getName() .. " fully restored")
     end)
     ```
@@ -5604,7 +5604,7 @@ end
     -- High: Complex chat text processing
     hook.Add("ChatAddText", "AdvancedChatText", function(markup, ...)
         local args = {...}
-
+        
         -- Process each argument
         for i, arg in ipairs(args) do
             if isstring(arg) then
@@ -5612,7 +5612,7 @@ end
                 if string.find(arg, LocalPlayer():Name()) then
                     markup.color = Color(255, 255, 0)
                 end
-
+                
                 -- Filter inappropriate content
                 local bannedWords = {"spam", "hack"}
                 for _, word in ipairs(bannedWords) do
@@ -5666,7 +5666,7 @@ end
     hook.Add("ChatParsed", "AdvancedChatParse", function(client, chatType, message, anonymous)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check for spam
         local lastMessage = char:getData("lastMessage", "")
         if lastMessage == message then
@@ -5674,13 +5674,13 @@ end
             return false
         end
         char:setData("lastMessage", message)
-
+        
         -- Check message length
         if string.len(message) > 500 then
             client:ChatPrint("Message too long (max 500 characters)")
             return false
         end
-
+        
         -- Log chat
         lia.log.add(client, "chat", chatType, message)
     end)
@@ -5721,11 +5721,11 @@ end
     -- High: Complex chatbox customization
     hook.Add("ChatboxPanelCreated", "AdvancedChatbox", function(panel)
         if not panel then return end
-
+        
         -- Customize appearance
         panel:SetBackgroundColor(Color(0, 0, 0, 200))
         panel:SetSize(500, 300)
-
+        
         -- Add custom buttons
         local closeBtn = panel:Add("DButton")
         closeBtn:SetText("X")
@@ -5733,7 +5733,7 @@ end
         closeBtn.DoClick = function()
             panel:SetVisible(false)
         end
-
+        
         print("Chatbox panel created and customized")
     end)
     ```
@@ -5776,7 +5776,7 @@ end
     -- High: Complex chatbox text handling
     hook.Add("ChatboxTextAdded", "AdvancedChatboxText", function(...)
         local args = {...}
-
+        
         -- Process each argument
         for i, arg in ipairs(args) do
             if isstring(arg) then
@@ -5784,7 +5784,7 @@ end
                 if string.find(arg, "@" .. LocalPlayer():Name()) then
                     surface.PlaySound("buttons/button15.wav")
                 end
-
+                
                 -- Log important messages
                 if string.find(arg, "[ADMIN]") or string.find(arg, "[SYSTEM]") then
                     lia.chatLog = lia.chatLog or {}
@@ -5842,7 +5842,7 @@ end
     hook.Add("CheckFactionLimitReached", "AdvancedFactionLimits", function(faction, character, client)
         local factionData = lia.faction.indices[faction]
         if not factionData then return false end
-
+        
         -- Count current faction members
         local count = 0
         for _, ply in ipairs(player.GetAll()) do
@@ -5851,10 +5851,10 @@ end
                 count = count + 1
             end
         end
-
+        
         -- Check base limit
         local limit = factionData.limit or math.huge
-
+        
         -- Adjust limit based on server population
         local playerCount = #player.GetAll()
         if playerCount < 10 then
@@ -5862,13 +5862,13 @@ end
         elseif playerCount > 50 then
             limit = math.floor(limit * 1.5)
         end
-
+        
         -- Check if limit is reached
         if count >= limit then
             client:ChatPrint("Faction limit reached (" .. count .. "/" .. limit .. ")")
             return true
         end
-
+        
         return false
     end)
     ```
@@ -5908,18 +5908,18 @@ end
     hook.Add("ChooseCharacter", "AdvancedCharSelect", function(id)
         -- Cache character ID
         lia.selectedCharID = id
-
+        
         -- Log selection time
         lia.charSelectTime = os.time()
-
+        
         -- Play selection sound
         surface.PlaySound("buttons/button14.wav")
-
+        
         -- Notify server
         net.Start("CharacterSelected")
         net.WriteUInt(id, 32)
         net.SendToServer()
-
+        
         print("Selected character ID: " .. id .. " at " .. os.date("%H:%M:%S"))
     end)
     ```
@@ -5966,11 +5966,11 @@ end
             data = data,
             registeredAt = os.time()
         })
-
+        
         -- Log command details
-        print(string.format("Command registered: %s (Admin: %s, Syntax: %s)",
-            command,
-            tostring(data.adminOnly or false),
+        print(string.format("Command registered: %s (Admin: %s, Syntax: %s)", 
+            command, 
+            tostring(data.adminOnly or false), 
             data.syntax or "N/A"))
     end)
     ```
@@ -6016,11 +6016,11 @@ end
     hook.Add("CommandRan", "AdvancedCommandTracking", function(client, command, arguments, results)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track command usage
         local commandCount = char:getData("commandCount", 0) + 1
         char:setData("commandCount", commandCount)
-
+        
         -- Track command history
         local commandHistory = char:getData("commandHistory", {})
         table.insert(commandHistory, {
@@ -6029,18 +6029,18 @@ end
             timestamp = os.time(),
             results = results
         })
-
+        
         -- Keep only last 50 commands
         if #commandHistory > 50 then
             table.remove(commandHistory, 1)
         end
-
+        
         char:setData("commandHistory", commandHistory)
-
+        
         -- Log command execution
         lia.log.add(client, "command", command, table.concat(arguments, " "))
-
-        print(string.format("%s ran command: %s (Args: %d, Success: %s)",
+        
+        print(string.format("%s ran command: %s (Args: %d, Success: %s)", 
             client:Name(), command, #arguments, tostring(results ~= false)))
     end)
     ```
@@ -6088,7 +6088,7 @@ end
         if client then
             lia.log.add(client, "config", key, tostring(oldValue) .. " -> " .. tostring(value))
         end
-
+        
         -- Handle specific config changes
         if key == "maxPlayers" then
             game.MaxPlayers = value
@@ -6105,7 +6105,7 @@ end
                 print("Server password removed")
             end
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -6158,11 +6158,11 @@ end
         elseif key == "hud" then
             lia.hud.refresh()
         end
-
+        
         -- Cache updated config
         lia.configCache = lia.configCache or {}
         lia.configCache[key] = lia.config.get(key)
-
+        
         print("Config " .. key .. " updated and cached")
     end)
     ```
@@ -6206,33 +6206,33 @@ end
     -- High: Complex creation step configuration
     hook.Add("ConfigureCharacterCreationSteps", "AdvancedCreationSteps", function(self)
         if not self then return end
-
+        
         -- Add custom background step
         self:AddStep("Background", function(panel)
             local label = panel:Add("DLabel")
             label:SetText("Select Background")
             label:Dock(TOP)
-
+            
             local combo = panel:Add("DComboBox")
             combo:Dock(TOP)
             combo:AddChoice("Soldier")
             combo:AddChoice("Merchant")
             combo:AddChoice("Scholar")
         end)
-
+        
         -- Add custom traits step
         self:AddStep("Traits", function(panel)
             local label = panel:Add("DLabel")
             label:SetText("Select Traits")
             label:Dock(TOP)
-
+            
             for i = 1, 3 do
                 local checkbox = panel:Add("DCheckBoxLabel")
                 checkbox:SetText("Trait " .. i)
                 checkbox:Dock(TOP)
             end
         end)
-
+        
         print("Character creation steps configured")
     end)
     ```
@@ -6275,23 +6275,23 @@ end
         data.items = data.items or {}
         table.insert(data.items, "wallet")
         table.insert(data.items, "phone")
-
+        
         -- Add faction-specific items
         local factionItems = {
             ["police"] = {"handcuffs", "radio"},
             ["medic"] = {"medkit", "bandage"}
         }
-
+        
         local items = factionItems[data.faction]
         if items then
             for _, item in ipairs(items) do
                 table.insert(data.items, item)
             end
         end
-
+        
         -- Set creation timestamp
         data.createdAt = os.time()
-
+        
         print("Character " .. data.name .. " created with " .. #data.items .. " items")
     end)
     ```
@@ -6330,16 +6330,16 @@ end
     -- High: Complex chat customization
     hook.Add("CreateChat", "AdvancedChatSetup", function()
         if not lia.chat then return end
-
+        
         -- Customize appearance
         lia.chat:SetBackgroundColor(Color(0, 0, 0, 200))
         lia.chat:SetSize(500, 300)
-
+        
         -- Add custom chat tabs
         lia.chat:AddTab("Global", Color(255, 255, 255))
         lia.chat:AddTab("Local", Color(100, 200, 100))
         lia.chat:AddTab("Admin", Color(255, 0, 0))
-
+        
         print("Chat interface created and customized")
     end)
     ```
@@ -6374,7 +6374,7 @@ end
             ["medic"] = {w = 7, h = 5},
             ["citizen"] = {w = 6, h = 4}
         }
-
+        
         local size = sizes[faction] or {w = 6, h = 4}
         character:getInv():setSize(size.w, size.h)
     end)
@@ -6385,34 +6385,34 @@ end
     -- High: Complex inventory setup
     hook.Add("CreateDefaultInventory", "AdvancedInventorySetup", function(character)
         local faction = character:getFaction()
-
+        
         -- Set inventory size based on faction
         local sizes = {
             ["police"] = {w = 8, h = 6},
             ["medic"] = {w = 7, h = 5},
             ["citizen"] = {w = 6, h = 4}
         }
-
+        
         local size = sizes[faction] or {w = 6, h = 4}
         local inv = character:getInv()
         inv:setSize(size.w, size.h)
-
+        
         -- Set weight limits
         local weights = {
             ["police"] = 50,
             ["medic"] = 40,
             ["citizen"] = 30
         }
-
+        
         inv:setData("maxWeight", weights[faction] or 30)
-
+        
         -- Add starting items
         local startingItems = {
             ["police"] = {"handcuffs", "radio"},
             ["medic"] = {"medkit"},
             ["citizen"] = {"wallet"}
         }
-
+        
         local items = startingItems[faction] or {}
         for _, itemID in ipairs(items) do
             local item = lia.item.instance(itemID)
@@ -6420,7 +6420,7 @@ end
                 inv:add(item)
             end
         end
-
+        
         print("Inventory created for " .. character:getName() .. " (" .. size.w .. "x" .. size.h .. ")")
     end)
     ```
@@ -6456,7 +6456,7 @@ end
             label:SetText("Server Rules")
             label:Dock(TOP)
         end
-
+        
         pages["Commands"] = function(panel)
             local label = panel:Add("DLabel")
             label:SetText("Available Commands")
@@ -6472,24 +6472,24 @@ end
         pages["Rules"] = function(panel)
             local scroll = panel:Add("DScrollPanel")
             scroll:Dock(FILL)
-
+            
             local rules = {
                 "1. No RDM",
                 "2. No prop spam",
                 "3. Respect staff"
             }
-
+            
             for i, rule in ipairs(rules) do
                 local label = scroll:Add("DLabel")
                 label:SetText(rule)
                 label:Dock(TOP)
             end
         end
-
+        
         pages["Commands"] = function(panel)
             local scroll = panel:Add("DScrollPanel")
             scroll:Dock(FILL)
-
+            
             for cmd, data in pairs(lia.command.list) do
                 local label = scroll:Add("DLabel")
                 label:SetText("/" .. cmd .. " - " .. (data.description or "No description"))
@@ -6535,15 +6535,15 @@ end
     -- High: Complex inventory panel customization
     hook.Add("CreateInventoryPanel", "AdvancedInventoryPanel", function(inventory, parent)
         if not parent then return end
-
+        
         -- Customize appearance
         parent:SetBackgroundColor(Color(50, 50, 50, 200))
-
+        
         -- Add weight display
         local weightLabel = parent:Add("DLabel")
         weightLabel:SetText("Weight: " .. inventory:getWeight() .. "/" .. inventory:getMaxWeight())
         weightLabel:Dock(BOTTOM)
-
+        
         -- Add money display
         local char = LocalPlayer():getChar()
         if char then
@@ -6551,7 +6551,7 @@ end
             moneyLabel:SetText("Money: $" .. char:getMoney())
             moneyLabel:Dock(BOTTOM)
         end
-
+        
         print("Inventory panel created and customized")
     end)
     ```
@@ -6587,7 +6587,7 @@ end
             label:SetText("Settings")
             label:Dock(TOP)
         end
-
+        
         tabs["Help"] = function(panel)
             local label = panel:Add("DLabel")
             label:SetText("Help & Support")
@@ -6603,23 +6603,23 @@ end
         tabs["Settings"] = function(panel)
             local scroll = panel:Add("DScrollPanel")
             scroll:Dock(FILL)
-
+            
             -- Add settings options
             local options = {
                 {name = "Volume", type = "slider"},
                 {name = "FOV", type = "slider"},
                 {name = "HUD Scale", type = "slider"}
             }
-
+            
             for _, option in ipairs(options) do
                 local container = scroll:Add("DPanel")
                 container:Dock(TOP)
                 container:SetHeight(50)
-
+                
                 local label = container:Add("DLabel")
                 label:SetText(option.name)
                 label:Dock(LEFT)
-
+                
                 if option.type == "slider" then
                     local slider = container:Add("DNumSlider")
                     slider:Dock(FILL)
@@ -6671,7 +6671,7 @@ end
             for _, ply in ipairs(player.GetAll()) do
                 local char = ply:getChar()
                 if not char then continue end
-
+                
                 -- Calculate salary based on faction
                 local faction = char:getFaction()
                 local salaries = {
@@ -6679,13 +6679,13 @@ end
                     ["medic"] = 150,
                     ["citizen"] = 50
                 }
-
+                
                 local salary = salaries[faction] or 50
-
+                
                 -- Apply bonuses
                 local level = char:getData("level", 1)
                 salary = salary + (level * 5)
-
+                
                 -- Give salary
                 char:giveMoney(salary)
                 ply:ChatPrint("You received your salary: $" .. salary)
@@ -6727,13 +6727,13 @@ end
                 if char then
                     local faction = char:getFaction()
                     local salary = 100
-
+                    
                     if faction == "police" then
                         salary = 200
                     elseif faction == "medic" then
                         salary = 150
                     end
-
+                    
                     char:giveMoney(salary)
                     ply:ChatPrint("You received $" .. salary .. " salary")
                 end
@@ -6750,31 +6750,31 @@ end
             for _, ply in ipairs(player.GetAll()) do
                 local char = ply:getChar()
                 if not char then continue end
-
+                
                 -- Check if player can earn salary
                 if not hook.Run("CanPlayerEarnSalary", ply) then
                     continue
                 end
-
+                
                 -- Calculate base salary
                 local faction = char:getFaction()
                 local baseSalary = hook.Run("GetSalaryAmount", ply, faction) or 100
-
+                
                 -- Apply level bonus
                 local level = char:getData("level", 1)
                 local levelBonus = math.floor(level * 5)
-
+                
                 -- Apply rank bonus
                 local rank = char:getData("rank", 0)
                 local rankBonus = rank * 25
-
+                
                 -- Calculate total salary
                 local totalSalary = baseSalary + levelBonus + rankBonus
-
+                
                 -- Give salary
                 char:giveMoney(totalSalary)
                 ply:ChatPrint("You received $" .. totalSalary .. " salary")
-
+                
                 -- Update statistics
                 local totalEarned = char:getData("totalSalaryEarned", 0)
                 char:setData("totalSalaryEarned", totalEarned + totalSalary)
@@ -6810,21 +6810,21 @@ end
     hook.Add("CustomClassValidation", "ClassLevelCheck", function(client, newClass)
         local char = client:getChar()
         if not char then return false end
-
+        
         local classLevels = {
             ["warrior"] = 1,
             ["mage"] = 5,
             ["rogue"] = 10
         }
-
+        
         local requiredLevel = classLevels[newClass] or 1
         local charLevel = char:getData("level", 1)
-
+        
         if charLevel < requiredLevel then
             client:ChatPrint("You need to be level " .. requiredLevel .. " to become a " .. newClass)
             return false
         end
-
+        
         return true
     end)
     ```
@@ -6835,7 +6835,7 @@ end
     hook.Add("CustomClassValidation", "AdvancedClassValidation", function(client, newClass)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check level requirements
         local classLevels = {
             ["warrior"] = 1,
@@ -6843,34 +6843,34 @@ end
             ["rogue"] = 10,
             ["paladin"] = 15
         }
-
+        
         local requiredLevel = classLevels[newClass] or 1
         local charLevel = char:getData("level", 1)
-
+        
         if charLevel < requiredLevel then
             client:ChatPrint("You need to be level " .. requiredLevel .. " to become a " .. newClass)
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         local classFactions = {
             ["paladin"] = {"police", "medic"},
             ["rogue"] = {"citizen"}
         }
-
+        
         local allowedFactions = classFactions[newClass]
         if allowedFactions and not table.HasValue(allowedFactions, faction) then
             client:ChatPrint("Your faction cannot become a " .. newClass)
             return false
         end
-
+        
         -- Check prerequisites
         local classPrereqs = {
             ["paladin"] = {"warrior"},
             ["mage"] = {"apprentice"}
         }
-
+        
         local prereqs = classPrereqs[newClass]
         if prereqs then
             local completedClasses = char:getData("completedClasses", {})
@@ -6881,7 +6881,7 @@ end
                 end
             end
         end
-
+        
         return true
     end)
     ```
@@ -6912,7 +6912,7 @@ end
     -- Medium: Filter logs by category
     hook.Add("CustomLogHandler", "LogFilter", function(message, category)
         local importantCategories = {"admin", "error", "warning"}
-
+        
         if table.HasValue(importantCategories, category) then
             print("[IMPORTANT][" .. category .. "] " .. message)
         end
@@ -6925,10 +6925,10 @@ end
     hook.Add("CustomLogHandler", "AdvancedLogHandler", function(message, category)
         -- Print to console
         print("[" .. category .. "] " .. message)
-
+        
         -- Save to database
         lia.db.query("INSERT INTO logs (timestamp, category, message) VALUES (?, ?, ?)", os.time(), category, message)
-
+        
         -- Notify admins of important logs
         local importantCategories = {"admin", "error", "warning", "exploit"}
         if table.HasValue(importantCategories, category) then
@@ -6938,7 +6938,7 @@ end
                 end
             end
         end
-
+        
         -- Send to Discord webhook for critical logs
         if category == "error" or category == "exploit" then
             local embed = {
@@ -6990,14 +6990,14 @@ end
             "CREATE TABLE IF NOT EXISTS player_stats (steamid TEXT PRIMARY KEY, kills INTEGER, deaths INTEGER)",
             "CREATE TABLE IF NOT EXISTS achievements (id INTEGER PRIMARY KEY, name TEXT, description TEXT)"
         }
-
+        
         for _, query in ipairs(tables) do
             lia.db.query(query)
         end
-
+        
         -- Create indexes
         lia.db.query("CREATE INDEX IF NOT EXISTS idx_player_stats_steamid ON player_stats(steamid)")
-
+        
         print("Database connected and fully initialized")
     end)
     ```
@@ -7040,17 +7040,17 @@ end
         lia.db.query("DELETE FROM character_items WHERE charid = ?", id)
         lia.db.query("DELETE FROM character_stats WHERE charid = ?", id)
         lia.db.query("DELETE FROM character_achievements WHERE charid = ?", id)
-
+        
         -- Archive character data
         lia.db.query("INSERT INTO character_archive SELECT * FROM characters WHERE id = ?", id)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("Character " .. id .. " has been deleted")
             end
         end
-
+        
         print("Character " .. id .. " deleted and archived")
     end)
     ```
@@ -7095,17 +7095,17 @@ end
         if char then
             char:setData("preferredSkin", newSkin)
         end
-
+        
         -- Update UI elements
         for _, panel in ipairs(vgui.GetWorldPanel():GetChildren()) do
             if IsValid(panel) and panel.UpdateSkin then
                 panel:UpdateSkin(newSkin)
             end
         end
-
+        
         -- Save to file
         file.Write("lilia_skin.txt", newSkin)
-
+        
         print("Skin changed to: " .. newSkin .. " and saved")
     end)
     ```
@@ -7149,12 +7149,12 @@ end
         embed.footer = {
             text = "Server: " .. GetHostName() .. " | Players: " .. #player.GetAll()
         }
-
+        
         -- Add timestamp if not present
         if not embed.timestamp then
             embed.timestamp = os.date("!%Y-%m-%dT%H:%M:%S")
         end
-
+        
         -- Add color based on type
         if not embed.color then
             if string.find(embed.title or "", "Error") then
@@ -7165,7 +7165,7 @@ end
                 embed.color = 65280 -- Green
             end
         end
-
+        
         print("Sending Discord message: " .. (embed.title or "No title"))
     end)
     ```
@@ -7207,14 +7207,14 @@ end
     hook.Add("DiscordRelayUnavailable", "AdvancedDiscordFailover", function()
         -- Log to file
         file.Append("discord_errors.txt", os.date() .. ": Discord relay unavailable\n")
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ERROR] Discord relay is unavailable")
             end
         end
-
+        
         -- Attempt reconnection
         timer.Simple(60, function()
             print("Attempting to reconnect Discord relay...")
@@ -7260,17 +7260,17 @@ end
         -- Update statistics
         local relayCount = lia.data.get("discordRelayCount", 0)
         lia.data.set("discordRelayCount", relayCount + 1)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO discord_logs (timestamp, title, description) VALUES (?, ?, ?)",
             os.time(), embed.title or "No title", embed.description or "No description")
-
+        
         -- Track relay types
         local relayTypes = lia.data.get("discordRelayTypes", {})
         local msgType = embed.title or "unknown"
         relayTypes[msgType] = (relayTypes[msgType] or 0) + 1
         lia.data.set("discordRelayTypes", relayTypes)
-
+        
         print("Message relayed to Discord: " .. msgType)
     end)
     ```
@@ -7301,7 +7301,7 @@ end
     -- Medium: Track module load times
     hook.Add("DoModuleIncludes", "ModuleLoadTime", function(path, MODULE)
         local startTime = SysTime()
-
+        
         timer.Simple(0, function()
             local loadTime = SysTime() - startTime
             print("Loaded " .. path .. " in " .. loadTime .. "s")
@@ -7314,21 +7314,21 @@ end
     -- High: Complex module loading system
     hook.Add("DoModuleIncludes", "AdvancedModuleLoading", function(path, MODULE)
         local startTime = SysTime()
-
+        
         -- Log module loading
         print("Loading module: " .. (MODULE.name or "Unknown") .. " from " .. path)
-
+        
         -- Track dependencies
         local dependencies = MODULE.dependencies or {}
         for _, dep in ipairs(dependencies) do
             print("  Dependency: " .. dep)
         end
-
+        
         -- Measure load time
         timer.Simple(0, function()
             local loadTime = SysTime() - startTime
             print("Loaded " .. (MODULE.name or "Unknown") .. " in " .. loadTime .. "s")
-
+            
             -- Store load statistics
             lia.moduleLoadTimes = lia.moduleLoadTimes or {}
             lia.moduleLoadTimes[MODULE.name or path] = loadTime
@@ -7377,12 +7377,12 @@ end
     hook.Add("DoorEnabledToggled", "AdvancedDoorState", function(client, door, newState)
         -- Log the change
         print(client:Name() .. " set door to " .. (newState and "enabled" or "disabled"))
-
+        
         -- Update door data
         door:setNetVar("enabled", newState)
         door:setNetVar("lastToggled", os.time())
         door:setNetVar("lastToggledBy", client:SteamID())
-
+        
         -- Notify nearby players
         local doorPos = door:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -7390,7 +7390,7 @@ end
                 ply:ChatPrint(client:Name() .. " " .. (newState and "enabled" or "disabled") .. " a door")
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO door_logs (timestamp, steamid, doorid, action) VALUES (?, ?, ?, ?)",
             os.time(), client:SteamID(), door:MapCreationID(), newState and "enabled" or "disabled")
@@ -7440,11 +7440,11 @@ end
         entity:setNetVar("hidden", newState)
         entity:setNetVar("lastToggled", os.time())
         entity:setNetVar("lastToggledBy", client:SteamID())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO door_logs (timestamp, steamid, doorid, action) VALUES (?, ?, ?, ?)",
             os.time(), client:SteamID(), entity:MapCreationID(), newState and "hidden" or "unhidden")
-
+        
         -- Notify nearby players
         local doorPos = entity:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -7452,7 +7452,7 @@ end
                 ply:ChatPrint(client:Name() .. " " .. (newState and "hid" or "unhid") .. " a door")
             end
         end
-
+        
         -- Update door physics
         if newState then
             entity:SetNoDraw(true)
@@ -7495,7 +7495,7 @@ end
         doorData.lockCount = (doorData.lockCount or 0) + 1
         doorData.lastLocked = os.time()
         door:setNetVar("doorData", doorData)
-
+        
         local char = client:getChar()
         if char then
             char:setData("doorsLocked", (char:getData("doorsLocked", 0) + 1))
@@ -7509,20 +7509,20 @@ end
     hook.Add("DoorLockToggled", "AdvancedDoorLocking", function(client, door, state)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player has permission to lock doors
         if not char:hasFlags("D") then
             client:ChatPrint("You don't have permission to lock doors")
             return false
         end
-
+        
         -- Check if door is owned by player
         local doorOwner = door:getNetVar("owner")
         if doorOwner and doorOwner ~= char:getID() then
             client:ChatPrint("You don't own this door")
             return false
         end
-
+        
         -- Check for lock cooldown
         local lastLock = char:getData("lastDoorLock", 0)
         local lockCooldown = 5 -- 5 seconds
@@ -7530,25 +7530,25 @@ end
             client:ChatPrint("Please wait before locking another door")
             return false
         end
-
+        
         -- Update door data
         local doorData = door:getNetVar("doorData", {})
         doorData.lockCount = (doorData.lockCount or 0) + 1
         doorData.lastLocked = os.time()
         doorData.lockedBy = char:getID()
         door:setNetVar("doorData", doorData)
-
+        
         -- Update character statistics
         char:setData("doorsLocked", (char:getData("doorsLocked", 0) + 1))
         char:setData("lastDoorLock", os.time())
-
+        
         -- Check for achievement
         local doorsLocked = char:getData("doorsLocked", 0)
         if doorsLocked >= 100 and not char:getData("achievement_locksmith", false) then
             char:setData("achievement_locksmith", true)
             client:ChatPrint("Achievement unlocked: Locksmith!")
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(door:GetPos()) < 500 then
@@ -7556,9 +7556,9 @@ end
                 ply:ChatPrint(client:Name() .. " " .. status .. " a door")
             end
         end
-
+        
         -- Log door lock
-        print(string.format("%s %s door %s at %s",
+        print(string.format("%s %s door %s at %s", 
             client:Name(), state and "locked" or "unlocked", door:EntIndex(), os.date("%Y-%m-%d %H:%M:%S")))
     end)
     ```
@@ -7592,7 +7592,7 @@ end
         local doorData = door:getNetVar("doorData", {})
         doorData.ownable = newState
         door:setNetVar("doorData", doorData)
-
+        
         if not newState then
             -- Clear owner when door becomes non-ownable
             door:setNetVar("owner", nil)
@@ -7606,14 +7606,14 @@ end
     hook.Add("DoorOwnableToggled", "AdvancedOwnableToggle", function(client, door, newState)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Update door data
         local doorData = door:getNetVar("doorData", {})
         doorData.ownable = newState
         doorData.ownableChangedBy = char:getID()
         doorData.ownableChangedAt = os.time()
         door:setNetVar("doorData", doorData)
-
+        
         if not newState then
             -- Clear owner and related data
             local owner = door:getNetVar("owner")
@@ -7621,7 +7621,7 @@ end
                 door:setNetVar("owner", nil)
                 door:setNetVar("locked", false)
                 door:setNetVar("sharedWith", {})
-
+                
                 -- Notify previous owner
                 for _, ply in ipairs(player.GetAll()) do
                     if ply:SteamID() == owner then
@@ -7630,16 +7630,16 @@ end
                 end
             end
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(door:GetPos()) < 500 then
                 ply:ChatPrint("Door " .. door:EntIndex() .. " is now " .. (newState and "ownable" or "not ownable"))
             end
         end
-
+        
         -- Log ownable toggle
-        print(string.format("%s set door %s ownable to: %s",
+        print(string.format("%s set door %s ownable to: %s", 
             client:Name(), door:EntIndex(), tostring(newState)))
     end)
     ```
@@ -7674,7 +7674,7 @@ end
             client:ChatPrint("Door price cannot be negative")
             return false
         end
-
+        
         if price > 100000 then
             client:ChatPrint("Door price cannot exceed $100,000")
             return false
@@ -7688,26 +7688,26 @@ end
     hook.Add("DoorPriceSet", "AdvancedDoorPricing", function(client, door, price)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player has permission to set door prices
         if not char:hasFlags("D") then
             client:ChatPrint("You don't have permission to set door prices")
             return false
         end
-
+        
         -- Check if door is owned by player
         local doorOwner = door:getNetVar("owner")
         if doorOwner and doorOwner ~= char:getID() then
             client:ChatPrint("You don't own this door")
             return false
         end
-
+        
         -- Validate price range
         if price < 0 then
             client:ChatPrint("Door price cannot be negative")
             return false
         end
-
+        
         -- Check faction-based price limits
         local faction = char:getFaction()
         local maxPrices = {
@@ -7716,50 +7716,50 @@ end
             ["citizen"] = 25000,
             ["criminal"] = 15000
         }
-
+        
         local maxPrice = maxPrices[faction] or 25000
         if price > maxPrice then
             client:ChatPrint("Door price exceeds your faction limit of $" .. maxPrice)
             return false
         end
-
+        
         -- Check for price changes
         local oldPrice = door:getNetVar("price", 0)
         if oldPrice > 0 and price ~= oldPrice then
             local priceChange = price - oldPrice
             local changePercent = (priceChange / oldPrice) * 100
-
+            
             if math.abs(changePercent) > 50 then
                 client:ChatPrint("Warning: Price change is over 50%")
             end
         end
-
+        
         -- Update door data
         local doorData = door:getNetVar("doorData", {})
         doorData.price = price
         doorData.priceSetBy = char:getID()
         doorData.priceSetTime = os.time()
         door:setNetVar("doorData", doorData)
-
+        
         -- Update character statistics
         char:setData("doorsPriced", (char:getData("doorsPriced", 0) + 1))
-
+        
         -- Check for achievement
         local doorsPriced = char:getData("doorsPriced", 0)
         if doorsPriced >= 50 and not char:getData("achievement_realtor", false) then
             char:setData("achievement_realtor", true)
             client:ChatPrint("Achievement unlocked: Realtor!")
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(door:GetPos()) < 500 then
                 ply:ChatPrint(client:Name() .. " set door price to $" .. price)
             end
         end
-
+        
         -- Log door price change
-        print(string.format("%s set door %s price to $%d (was $%d)",
+        print(string.format("%s set door %s price to $%d (was $%d)", 
             client:Name(), door:EntIndex(), price, oldPrice))
     end)
     ```
@@ -7791,7 +7791,7 @@ end
             client:ChatPrint("Price must be between $0 and $10000")
             return false
         end
-
+        
         door:setNetVar("price", price)
         client:ChatPrint("Door price set to $" .. price)
     end)
@@ -7806,12 +7806,12 @@ end
             client:ChatPrint("Price must be between $0 and $10000")
             return false
         end
-
+        
         -- Check admin override
         if not client:IsAdmin() then
             local char = client:getChar()
             if not char then return false end
-
+            
             -- Check door ownership
             local owner = door:getNetVar("owner")
             if owner ~= char:getID() then
@@ -7819,12 +7819,12 @@ end
                 return false
             end
         end
-
+        
         -- Set price
         door:setNetVar("price", price)
         door:setNetVar("priceSetBy", client:SteamID())
         door:setNetVar("priceSetTime", os.time())
-
+        
         -- Notify nearby players
         local doorPos = door:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -7832,9 +7832,9 @@ end
                 ply:ChatPrint("A door's price was set to $" .. price)
             end
         end
-
+        
         client:ChatPrint("Door price set to $" .. price)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO door_logs (timestamp, steamid, doorid, action, value) VALUES (?, ?, ?, ?, ?)",
             os.time(), client:SteamID(), door:MapCreationID(), "price_set", price)
@@ -7871,7 +7871,7 @@ end
             client:ChatPrint("Door title must be 50 characters or less")
             return false
         end
-
+        
         door:setNetVar("title", name)
         client:ChatPrint("Door title set to: " .. name)
     end)
@@ -7886,7 +7886,7 @@ end
             client:ChatPrint("Door title must be 50 characters or less")
             return false
         end
-
+        
         -- Filter inappropriate content
         local bannedWords = {"spam", "hack", "cheat"}
         for _, word in ipairs(bannedWords) do
@@ -7895,12 +7895,12 @@ end
                 return false
             end
         end
-
+        
         -- Check admin override
         if not client:IsAdmin() then
             local char = client:getChar()
             if not char then return false end
-
+            
             -- Check door ownership
             local owner = door:getNetVar("owner")
             if owner ~= char:getID() then
@@ -7908,12 +7908,12 @@ end
                 return false
             end
         end
-
+        
         -- Set title
         door:setNetVar("title", name)
         door:setNetVar("titleSetBy", client:SteamID())
         door:setNetVar("titleSetTime", os.time())
-
+        
         -- Notify nearby players
         local doorPos = door:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -7921,9 +7921,9 @@ end
                 ply:ChatPrint("A door's title was changed to: " .. name)
             end
         end
-
+        
         client:ChatPrint("Door title set to: " .. name)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO door_logs (timestamp, steamid, doorid, action, value) VALUES (?, ?, ?, ?, ?)",
             os.time(), client:SteamID(), door:MapCreationID(), "title_set", name)
@@ -7970,18 +7970,18 @@ end
         info["Name"] = character:getName()
         info["Faction"] = character:getFaction()
         info["Money"] = "$" .. character:getMoney()
-
+        
         -- Level and experience
         local level = character:getData("level", 1)
         local exp = character:getData("experience", 0)
         info["Level"] = level .. " (" .. exp .. " XP)"
-
+        
         -- Attributes
         local attributes = character:getAttribs()
         for attr, value in pairs(attributes) do
             info["Attribute: " .. attr] = value
         end
-
+        
         -- Play time
         local playTime = character:getData("playTime", 0)
         local hours = math.floor(playTime / 3600)
@@ -8032,7 +8032,7 @@ end
         -- Door title
         local title = entity:getNetVar("title", "Door")
         table.insert(infoTexts, "Title: " .. title)
-
+        
         -- Owner info
         local owner = entity:getNetVar("owner")
         if owner then
@@ -8040,17 +8040,17 @@ end
         else
             table.insert(infoTexts, "Unowned")
         end
-
+        
         -- Price info
         local price = entity:getNetVar("price", 0)
         if price > 0 then
             table.insert(infoTexts, "Price: $" .. price)
         end
-
+        
         -- Lock status
         local locked = entity:getNetVar("locked", false)
         table.insert(infoTexts, "Status: " .. (locked and "Locked" or "Unlocked"))
-
+        
         -- Faction restriction
         local faction = entity:getNetVar("faction")
         if faction then
@@ -8098,23 +8098,23 @@ end
     -- High: Complex entity information display
     hook.Add("DrawEntityInfo", "AdvancedEntityInfo", function(entity, alpha, position)
         local y = position.y
-
+        
         -- Entity class
         draw.SimpleText("Class: " .. entity:GetClass(), "Default", position.x, y, Color(255, 255, 255, alpha))
         y = y + 15
-
+        
         -- Entity model
         if entity:GetModel() then
             draw.SimpleText("Model: " .. entity:GetModel(), "Default", position.x, y, Color(200, 200, 200, alpha))
             y = y + 15
         end
-
+        
         -- Entity health
         if entity:Health() > 0 then
             draw.SimpleText("Health: " .. entity:Health(), "Default", position.x, y, Color(100, 255, 100, alpha))
             y = y + 15
         end
-
+        
         -- Custom entity data
         if entity.getName then
             local name = entity:getName()
@@ -8161,16 +8161,16 @@ end
     -- High: Complex model view customization
     hook.Add("DrawLiliaModelView", "AdvancedModelView", function(self, ent)
         if not ent then return end
-
+        
         -- Rotate model
         local ang = ent:GetAngles()
         ang.y = ang.y + FrameTime() * 30
         ent:SetAngles(ang)
-
+        
         -- Apply lighting
         local lightPos = ent:GetPos() + Vector(0, 0, 50)
         render.SetLightingOrigin(lightPos)
-
+        
         -- Draw model with custom material
         if ent.customMaterial then
             ent:SetMaterial(ent.customMaterial)
@@ -8213,7 +8213,7 @@ end
     -- High: Complex ragdoll rendering
     hook.Add("DrawPlayerRagdoll", "AdvancedRagdoll", function(entity)
         if not IsValid(entity) then return end
-
+        
         -- Apply custom material
         local owner = entity:getNetVar("owner")
         if owner then
@@ -8228,13 +8228,13 @@ end
                         ["medic"] = Color(255, 255, 255),
                         ["citizen"] = Color(200, 200, 200)
                     }
-
+                    
                     local color = colors[faction] or Color(255, 255, 255)
                     entity:SetColor(color)
                 end
             end
         end
-
+        
         -- Draw death time
         local deathTime = entity:getNetVar("deathTime", 0)
         if deathTime > 0 then
@@ -8243,7 +8243,7 @@ end
             local ang = LocalPlayer():EyeAngles()
             ang:RotateAroundAxis(ang:Forward(), 90)
             ang:RotateAroundAxis(ang:Right(), 90)
-
+            
             cam.Start3D2D(pos, ang, 0.1)
                 draw.SimpleText("Dead for: " .. math.floor(timeSinceDeath) .. "s", "Default", 0, 0, Color(255, 255, 255), TEXT_ALIGN_CENTER)
             cam.End3D2D()
@@ -8290,21 +8290,21 @@ end
             lia.storagePanel:Remove()
             lia.storagePanel = nil
         end
-
+        
         -- Clear storage cache
         lia.currentStorage = nil
-
+        
         -- Log storage exit time
         local exitTime = os.time()
         lia.lastStorageExit = exitTime
-
+        
         -- Calculate storage session duration
         if lia.storageEnterTime then
             local duration = exitTime - lia.storageEnterTime
             print("Storage session duration: " .. duration .. " seconds")
             lia.storageEnterTime = nil
         end
-
+        
         -- Notify server
         net.Start("StorageExited")
         net.SendToServer()
@@ -8345,21 +8345,21 @@ end
     hook.Add("F1MenuClosed", "AdvancedF1Close", function()
         -- Update menu state
         lia.f1MenuOpen = false
-
+        
         -- Log menu close time
         local closeTime = os.time()
         lia.lastF1Close = closeTime
-
+        
         -- Calculate menu session duration
         if lia.f1OpenTime then
             local duration = closeTime - lia.f1OpenTime
             print("F1 menu session duration: " .. duration .. " seconds")
             lia.f1OpenTime = nil
         end
-
+        
         -- Clear cached character data
         lia.f1CharCache = nil
-
+        
         print("F1 menu closed at " .. os.date("%H:%M:%S", closeTime))
     end)
     ```
@@ -8400,11 +8400,11 @@ end
     hook.Add("F1MenuOpened", "AdvancedF1Open", function(self)
         -- Update menu state
         lia.f1MenuOpen = true
-
+        
         -- Log menu open time
         local openTime = os.time()
         lia.f1OpenTime = openTime
-
+        
         -- Cache character data
         local char = LocalPlayer():getChar()
         if char then
@@ -8415,12 +8415,12 @@ end
                 level = char:getData("level", 1)
             }
         end
-
+        
         -- Customize panel appearance
         if self then
             self:SetBackgroundColor(Color(0, 0, 0, 200))
         end
-
+        
         print("F1 menu opened at " .. os.date("%H:%M:%S", openTime))
     end)
     ```
@@ -8460,7 +8460,7 @@ end
     hook.Add("FetchSpawns", "AdvancedSpawnSystem", function()
         -- Load spawns from database
         local spawns = lia.db.query("SELECT * FROM spawns WHERE active = 1")
-
+        
         -- Categorize spawns by faction
         lia.spawns = {
             police = {},
@@ -8468,7 +8468,7 @@ end
             citizen = {},
             criminal = {}
         }
-
+        
         for _, spawn in ipairs(spawns) do
             local faction = spawn.faction or "citizen"
             if lia.spawns[faction] then
@@ -8479,7 +8479,7 @@ end
                 })
             end
         end
-
+        
         -- Log spawn counts
         for faction, factionSpawns in pairs(lia.spawns) do
             print(faction .. " spawns: " .. #factionSpawns)
@@ -8515,7 +8515,7 @@ end
             "models/player/combine_soldier.mdl",
             "models/player/combine_super_soldier.mdl"
         }
-
+        
         for i = #models, 1, -1 do
             if table.HasValue(bannedModels, models[i]) then
                 table.remove(models, i)
@@ -8530,9 +8530,9 @@ end
     hook.Add("FilterCharModels", "AdvancedModelFilter", function(models)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         local faction = char:getFaction()
-
+        
         -- Faction-specific model restrictions
         local factionModels = {
             ["police"] = {
@@ -8544,16 +8544,16 @@ end
                 banned = {"models/player/police.mdl"}
             }
         }
-
+        
         local restrictions = factionModels[faction]
         if restrictions then
             for i = #models, 1, -1 do
                 local model = models[i]
-
+                
                 -- Check if model is banned
                 if table.HasValue(restrictions.banned, model) then
                     table.remove(models, i)
-
+                
                 -- Check if only specific models are allowed
                 elseif restrictions.allowed and #restrictions.allowed > 0 then
                     if not table.HasValue(restrictions.allowed, model) then
@@ -8562,7 +8562,7 @@ end
                 end
             end
         end
-
+        
         print("Filtered models for " .. faction .. ": " .. #models .. " remaining")
     end)
     ```
@@ -8595,7 +8595,7 @@ end
     hook.Add("FilterDoorInfo", "DoorInfoSecurity", function(entity, doorData, doorInfo)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Hide owner info for non-owners
         local owner = entity:getNetVar("owner")
         if owner and owner ~= char:getID() then
@@ -8610,11 +8610,11 @@ end
     hook.Add("FilterDoorInfo", "AdvancedDoorInfoFilter", function(entity, doorData, doorInfo)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         local faction = char:getFaction()
         local owner = entity:getNetVar("owner")
         local isOwner = owner and owner == char:getID()
-
+        
         -- Filter based on ownership
         if not isOwner then
             -- Hide sensitive information from non-owners
@@ -8622,7 +8622,7 @@ end
             doorInfo.price = "Hidden"
             doorInfo.sharedWith = nil
         end
-
+        
         -- Filter based on faction
         if faction == "police" then
             -- Police can see more information
@@ -8633,7 +8633,7 @@ end
             doorInfo.owner = "Unknown"
             doorInfo.price = "Unknown"
         end
-
+        
         -- Add faction-specific warnings
         local doorFaction = entity:getNetVar("faction")
         if doorFaction and doorFaction ~= faction then
@@ -8684,11 +8684,11 @@ end
     hook.Add("ForceRecognizeRange", "AdvancedRecognitionRange", function(ply, range, fakeName)
         local char = ply:getChar()
         if not char then return end
-
+        
         -- Set recognition range
         char:setData("recognitionRange", range)
         char:setData("recognitionRangeSet", os.time())
-
+        
         -- Set fake name if provided
         if fakeName and fakeName ~= "" then
             char:setData("fakeName", fakeName)
@@ -8697,15 +8697,15 @@ end
             char:setData("fakeName", nil)
             char:setData("usingFakeName", false)
         end
-
+        
         -- Notify player
         ply:ChatPrint("Recognition range set to " .. range .. " units")
         if fakeName then
             ply:ChatPrint("Fake name set to: " .. fakeName)
         end
-
+        
         -- Log recognition range change
-        print(string.format("Recognition range set for %s: %d units (Fake name: %s)",
+        print(string.format("Recognition range set for %s: %d units (Fake name: %s)", 
             ply:Name(), range, fakeName or "None"))
     end)
     ```
@@ -8737,9 +8737,9 @@ end
     hook.Add("GetAdjustedPartData", "PartAdjustments", function(wearer, id)
         local char = wearer:getChar()
         if not char then return {} end
-
+        
         local data = {scale = 1, color = Color(255, 255, 255)}
-
+        
         -- Apply faction-based adjustments
         local faction = char:getFaction()
         if faction == "police" then
@@ -8747,7 +8747,7 @@ end
         elseif faction == "medic" then
             data.color = Color(255, 255, 255)
         end
-
+        
         return data
     end)
     ```
@@ -8758,9 +8758,9 @@ end
     hook.Add("GetAdjustedPartData", "AdvancedPartData", function(wearer, id)
         local char = wearer:getChar()
         if not char then return {} end
-
+        
         local data = {scale = 1, color = Color(255, 255, 255)}
-
+        
         -- Apply faction-based adjustments
         local faction = char:getFaction()
         local factionMods = {
@@ -8768,19 +8768,19 @@ end
             ["medic"] = {color = Color(255, 255, 255), scale = 1.0},
             ["criminal"] = {color = Color(255, 0, 0), scale = 0.9}
         }
-
+        
         local mod = factionMods[faction]
         if mod then
             data.color = mod.color
             data.scale = mod.scale
         end
-
+        
         -- Apply level-based adjustments
         local level = char:getData("level", 1)
         if level >= 10 then
             data.scale = data.scale * 1.2
         end
-
+        
         -- Apply character-specific data
         local charData = char:getData("partMods", {})
         if charData[id] then
@@ -8788,7 +8788,7 @@ end
                 data[key] = value
             end
         end
-
+        
         return data
     end)
     ```
@@ -8827,7 +8827,7 @@ end
     hook.Add("GetAllCaseClaims", "AdvancedCaseClaims", function()
         -- Load claims from database
         local claims = lia.db.query("SELECT * FROM case_claims WHERE active = 1")
-
+        
         -- Process and format claims
         local processedClaims = {}
         for _, claim in ipairs(claims or {}) do
@@ -8840,22 +8840,22 @@ end
                 createdAt = claim.created_at,
                 description = claim.description
             }
-
+            
             -- Add claimant character info
             local char = lia.char.getByID(claim.claimant)
             if char then
                 processedClaim.claimantName = char:getName()
                 processedClaim.claimantFaction = char:getFaction()
             end
-
+            
             table.insert(processedClaims, processedClaim)
         end
-
+        
         -- Sort by creation date
         table.sort(processedClaims, function(a, b)
             return a.createdAt > b.createdAt
         end)
-
+        
         return processedClaims
     end)
     ```
@@ -8903,9 +8903,9 @@ end
     hook.Add("GetAttributeMax", "AdvancedAttributeMax", function(target, attrKey)
         local char = target:getChar()
         if not char then return 100 end
-
+        
         local baseMax = 100
-
+        
         -- Faction bonuses
         local faction = char:getFaction()
         local factionBonuses = {
@@ -8913,17 +8913,17 @@ end
             ["medic"] = {int = 10, wis = 5},
             ["engineer"] = {int = 15, dex = 5}
         }
-
+        
         local factionBonus = factionBonuses[faction]
         if factionBonus and factionBonus[attrKey] then
             baseMax = baseMax + factionBonus[attrKey]
         end
-
+        
         -- Level bonuses
         local charLevel = char:getData("level", 1)
         local levelBonus = math.floor(charLevel / 10) * 5
         baseMax = baseMax + levelBonus
-
+        
         -- Equipment bonuses
         local inventory = char:getInv()
         for _, item in pairs(inventory:getItems()) do
@@ -8932,7 +8932,7 @@ end
                 baseMax = baseMax + attrBonus[attrKey]
             end
         end
-
+        
         -- Perk bonuses
         local perks = char:getData("perks", {})
         for _, perk in ipairs(perks) do
@@ -8940,7 +8940,7 @@ end
                 baseMax = baseMax + perk.value
             end
         end
-
+        
         return math.max(baseMax, 1) -- Minimum of 1
     end)
     ```
@@ -8972,7 +8972,7 @@ end
             ["dex"] = 80,
             ["int"] = 120
         }
-
+        
         return maxes[attrKey] or 100
     end)
     ```
@@ -8983,10 +8983,10 @@ end
     hook.Add("GetAttributeMax", "AdvancedAttributeMax", function(target, attrKey)
         local char = target:getChar()
         if not char then return 100 end
-
+        
         -- Base max
         local baseMax = 100
-
+        
         -- Faction bonuses
         local faction = char:getFaction()
         if faction == "warrior" and attrKey == "str" then
@@ -8994,11 +8994,11 @@ end
         elseif faction == "mage" and attrKey == "int" then
             baseMax = baseMax + 30
         end
-
+        
         -- Level bonuses
         local level = char:getData("level", 1)
         baseMax = baseMax + (level * 2)
-
+        
         -- Item bonuses
         local inventory = char:getInv()
         if inventory then
@@ -9011,7 +9011,7 @@ end
                 end
             end
         end
-
+        
         return baseMax
     end)
     ```
@@ -9046,7 +9046,7 @@ end
             ["dex"] = 40,
             ["int"] = 60
         }
-
+        
         return startingMaxes[k] or 50
     end)
     ```
@@ -9057,27 +9057,27 @@ end
     hook.Add("GetAttributeStartingMax", "AdvancedStartingAttributes", function(client, k)
         -- Base starting max
         local baseMax = 50
-
+        
         -- Check if player has played before
         local playTime = client:GetUTimeTotalTime()
         if playTime > 36000 then -- 10 hours
             baseMax = baseMax + 10
         end
-
+        
         -- Check for donator status
         if client:getNetVar("donator", false) then
             baseMax = baseMax + 5
         end
-
+        
         -- Attribute-specific bonuses
         local attrBonuses = {
             ["str"] = 0,
             ["dex"] = -10,
             ["int"] = 10
         }
-
+        
         baseMax = baseMax + (attrBonuses[k] or 0)
-
+        
         return baseMax
     end)
     ```
@@ -9116,15 +9116,15 @@ end
     -- High: Complex stamina system
     hook.Add("GetCharMaxStamina", "AdvancedStamina", function(char)
         local baseStamina = 100
-
+        
         -- Constitution bonus
         local con = char:getAttrib("con", 0)
         local conBonus = con * 5
-
+        
         -- Level bonus
         local charLevel = char:getData("level", 1)
         local levelBonus = charLevel * 2
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -9134,7 +9134,7 @@ end
             ["citizen"] = 0
         }
         local factionBonus = factionBonuses[faction] or 0
-
+        
         -- Equipment bonuses
         local inventory = char:getInv()
         local equipmentBonus = 0
@@ -9144,7 +9144,7 @@ end
                 equipmentBonus = equipmentBonus + staminaBonus
             end
         end
-
+        
         -- Perk bonuses
         local perks = char:getData("perks", {})
         local perkBonus = 0
@@ -9153,10 +9153,10 @@ end
                 perkBonus = perkBonus + perk.value
             end
         end
-
+        
         -- Calculate final stamina
         local finalStamina = baseStamina + conBonus + levelBonus + factionBonus + equipmentBonus + perkBonus
-
+        
         -- Apply debuffs
         local debuffs = char:getData("debuffs", {})
         for _, debuff in ipairs(debuffs) do
@@ -9164,7 +9164,7 @@ end
                 finalStamina = finalStamina * (1 - debuff.value)
             end
         end
-
+        
         return math.max(math.floor(finalStamina), 10) -- Minimum of 10
     end)
     ```
@@ -9214,20 +9214,20 @@ end
     hook.Add("GetDamageScale", "AdvancedDamage", function(hitgroup, dmgInfo, damageScale)
         local target = dmgInfo:GetAttacker()
         local attacker = dmgInfo:GetAttacker()
-
+        
         if not IsValid(target) or not IsValid(attacker) then
             return damageScale
         end
-
+        
         local targetChar = target:getChar()
         local attackerChar = attacker:getChar()
-
+        
         if not targetChar or not attackerChar then
             return damageScale
         end
-
+        
         local finalScale = damageScale
-
+        
         -- Base hitgroup scales
         local hitgroupScales = {
             [HITGROUP_HEAD] = 2.0,
@@ -9238,26 +9238,26 @@ end
             [HITGROUP_LEFTLEG] = 0.9,
             [HITGROUP_RIGHTLEG] = 0.9
         }
-
+        
         finalScale = finalScale * (hitgroupScales[hitgroup] or 1.0)
-
+        
         -- Armor protection
         local armor = target:getData("armor", 0)
         if armor > 0 then
             local protection = math.min(armor / 100, 0.8) -- Max 80% protection
             finalScale = finalScale * (1 - protection)
         end
-
+        
         -- Faction damage modifiers
         local targetFaction = targetChar:getFaction()
         local attackerFaction = attackerChar:getFaction()
-
+        
         if targetFaction == "police" and attackerFaction == "criminal" then
             finalScale = finalScale * 1.2 -- 20% more damage to police from criminals
         elseif targetFaction == "criminal" and attackerFaction == "police" then
             finalScale = finalScale * 0.8 -- 20% less damage to criminals from police
         end
-
+        
         -- Weapon type modifiers
         local weapon = attacker:GetActiveWeapon()
         if IsValid(weapon) then
@@ -9268,13 +9268,13 @@ end
                 finalScale = finalScale * 1.3 -- Shotguns do more damage
             end
         end
-
+        
         -- Critical hit chance
         local critChance = attackerChar:getData("critChance", 0.05)
         if math.random() < critChance then
             finalScale = finalScale * 2.0 -- Double damage on crit
         end
-
+        
         return math.max(finalScale, 0.1) -- Minimum 10% damage
     end)
     ```
@@ -9307,7 +9307,7 @@ end
         elseif hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG then
             return damageScale * 0.5
         end
-
+        
         return damageScale
     end)
     ```
@@ -9318,7 +9318,7 @@ end
     hook.Add("GetDamageScale", "AdvancedDamageScale", function(hitgroup, dmgInfo, damageScale)
         local attacker = dmgInfo:GetAttacker()
         local victim = dmgInfo:GetInflictor()
-
+        
         -- Hitgroup scaling
         if hitgroup == HITGROUP_HEAD then
             damageScale = damageScale * 2
@@ -9327,7 +9327,7 @@ end
         elseif hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG then
             damageScale = damageScale * 0.5
         end
-
+        
         -- Armor scaling
         if IsValid(victim) and victim:IsPlayer() then
             local char = victim:getChar()
@@ -9338,7 +9338,7 @@ end
                 end
             end
         end
-
+        
         return damageScale
     end)
     ```
@@ -9374,7 +9374,7 @@ end
             [2] = "A police officer",
             [3] = "A medical professional"
         }
-
+        
         return factionDescs[factionIndex] or "A new character"
     end)
     ```
@@ -9385,15 +9385,15 @@ end
     hook.Add("GetDefaultCharDesc", "AdvancedCharDesc", function(client, factionIndex, context)
         local faction = lia.faction.indices[factionIndex]
         if not faction then return "A new character" end
-
+        
         -- Generate description based on faction and context
         local desc = "A " .. (faction.name or "character")
-
+        
         if context and context.model then
             local gender = hook.Run("GetModelGender", context.model) or "person"
             desc = "A " .. gender .. " working as a " .. (faction.name or "character")
         end
-
+        
         return desc
     end)
     ```
@@ -9429,7 +9429,7 @@ end
             [2] = "Officer " .. client:Name(),
             [3] = "Dr. " .. client:Name()
         }
-
+        
         return factionNames[factionIndex] or "John Doe"
     end)
     ```
@@ -9440,11 +9440,11 @@ end
     hook.Add("GetDefaultCharName", "AdvancedCharName", function(client, factionIndex, context)
         local faction = lia.faction.indices[factionIndex]
         if not faction then return "John Doe" end
-
+        
         -- Generate name based on faction
         local firstName = client:Name()
         local lastName = "Doe"
-
+        
         if faction.uniqueID == "police" then
             return "Officer " .. firstName .. " " .. lastName
         elseif faction.uniqueID == "medic" then
@@ -9452,7 +9452,7 @@ end
         elseif faction.uniqueID == "citizen" then
             return firstName .. " " .. lastName
         end
-
+        
         return firstName .. " " .. lastName
     end)
     ```
@@ -9483,13 +9483,13 @@ end
     -- Medium: Faction-based sizes
     hook.Add("GetDefaultInventorySize", "FactionInventorySize", function(client, char)
         local faction = char:getFaction()
-
+        
         if faction == "police" then
             return {8, 6}
         elseif faction == "medic" then
             return {7, 5}
         end
-
+        
         return {6, 4}
     end)
     ```
@@ -9499,7 +9499,7 @@ end
     -- High: Complex inventory sizing
     hook.Add("GetDefaultInventorySize", "AdvancedInventorySize", function(client, char)
         local baseSize = {6, 4}
-
+        
         -- Faction bonuses
         local faction = char:getFaction()
         if faction == "police" then
@@ -9507,13 +9507,13 @@ end
         elseif faction == "medic" then
             baseSize = {7, 5}
         end
-
+        
         -- Donator bonus
         if client:getNetVar("donator", false) then
             baseSize[1] = baseSize[1] + 2
             baseSize[2] = baseSize[2] + 1
         end
-
+        
         -- Level bonus
         local level = char:getData("level", 1)
         if level >= 10 then
@@ -9522,7 +9522,7 @@ end
         if level >= 20 then
             baseSize[2] = baseSize[2] + 1
         end
-
+        
         return baseSize
     end)
     ```
@@ -9552,13 +9552,13 @@ end
     -- Medium: Faction-based types
     hook.Add("GetDefaultInventoryType", "FactionInventoryType", function(character)
         local faction = character:getFaction()
-
+        
         if faction == "police" then
             return "police_grid"
         elseif faction == "medic" then
             return "medical_grid"
         end
-
+        
         return "grid"
     end)
     ```
@@ -9569,7 +9569,7 @@ end
     hook.Add("GetDefaultInventoryType", "AdvancedInventoryType", function(character)
         local faction = character:getFaction()
         local level = character:getData("level", 1)
-
+        
         -- Faction-specific types
         if faction == "police" then
             if level >= 10 then
@@ -9582,12 +9582,12 @@ end
             end
             return "medical_grid"
         end
-
+        
         -- Default type with level progression
         if level >= 20 then
             return "advanced_grid"
         end
-
+        
         return "grid"
     end)
     ```
@@ -9622,7 +9622,7 @@ end
             local faction = char:getFaction()
             return "[" .. faction .. "] " .. description
         end
-
+        
         return description
     end)
     ```
@@ -9633,23 +9633,23 @@ end
     hook.Add("GetDisplayedDescription", "AdvancedDescDisplay", function(ply, description)
         local char = ply:getChar()
         if not char then return description end
-
+        
         -- Add faction and rank
         local faction = char:getFaction()
         local rank = char:getData("rank", 0)
         local rankName = char:getData("rankName", "Recruit")
-
+        
         local prefix = string.format("[%s - %s] ", faction, rankName)
-
+        
         -- Add status indicators
         if char:getData("injured", false) then
             prefix = prefix .. "[INJURED] "
         end
-
+        
         if char:getData("wanted", false) then
             prefix = prefix .. "[WANTED] "
         end
-
+        
         return prefix .. description
     end)
     ```
@@ -9682,7 +9682,7 @@ end
     hook.Add("GetDisplayedName", "ChatTypeNames", function(speaker, chatType)
         local char = speaker:getChar()
         if not char then return speaker:Name() end
-
+        
         if chatType == "ooc" then
             return speaker:Name()
         else
@@ -9697,16 +9697,16 @@ end
     hook.Add("GetDisplayedName", "AdvancedNameDisplay", function(speaker, chatType)
         local char = speaker:getChar()
         if not char then return speaker:Name() end
-
+        
         -- OOC shows Steam name
         if chatType == "ooc" then
             return speaker:Name()
         end
-
+        
         -- IC shows character name with title
         local name = char:getName()
         local faction = char:getFaction()
-
+        
         -- Add faction title
         if faction == "police" then
             local rank = char:getData("rankName", "Officer")
@@ -9714,12 +9714,12 @@ end
         elseif faction == "medic" then
             name = "Dr. " .. name
         end
-
+        
         -- Add status indicators
         if speaker:IsAdmin() then
             name = "[ADMIN] " .. name
         end
-
+        
         return name
     end)
     ```
@@ -9752,7 +9752,7 @@ end
     hook.Add("GetDoorInfo", "CustomDoorInfo", function(entity, doorData, doorInfo)
         doorInfo.customField = "Custom Value"
         doorInfo.price = entity:getNetVar("price", 0)
-
+        
         return doorInfo
     end)
     ```
@@ -9766,7 +9766,7 @@ end
         doorInfo.title = entity:getNetVar("title", "Door")
         doorInfo.owner = entity:getNetVar("owner")
         doorInfo.locked = entity:getNetVar("locked", false)
-
+        
         -- Add owner name
         if doorInfo.owner then
             local ownerChar = lia.char.loaded[doorInfo.owner]
@@ -9774,14 +9774,14 @@ end
                 doorInfo.ownerName = ownerChar:getName()
             end
         end
-
+        
         -- Add faction restrictions
         local allowedFactions = entity:getNetVar("allowedFactions", {})
         if #allowedFactions > 0 then
             doorInfo.factionRestricted = true
             doorInfo.allowedFactions = allowedFactions
         end
-
+        
         return doorInfo
     end)
     ```
@@ -9817,7 +9817,7 @@ end
         else
             table.insert(extraInfo, "Unowned")
         end
-
+        
         local locked = target:getNetVar("locked", false)
         table.insert(extraInfo, "Status: " .. (locked and "Locked" or "Unlocked"))
     end)
@@ -9830,7 +9830,7 @@ end
         -- Door title
         local title = target:getNetVar("title", "Door")
         table.insert(extraInfo, "Title: " .. title)
-
+        
         -- Owner information
         local owner = target:getNetVar("owner")
         if owner then
@@ -9843,23 +9843,23 @@ end
         else
             table.insert(extraInfo, "Unowned")
         end
-
+        
         -- Price information
         local price = target:getNetVar("price", 0)
         if price > 0 then
             table.insert(extraInfo, "Price: $" .. price)
         end
-
+        
         -- Lock status
         local locked = target:getNetVar("locked", false)
         table.insert(extraInfo, "Status: " .. (locked and "Locked" or "Unlocked"))
-
+        
         -- Faction restriction
         local faction = target:getNetVar("faction")
         if faction then
             table.insert(extraInfo, "Faction: " .. faction)
         end
-
+        
         -- Shared with information
         local sharedWith = target:getNetVar("sharedWith", {})
         if #sharedWith > 0 then
@@ -9902,12 +9902,12 @@ end
             model = ent:GetModel(),
             class = ent:GetClass()
         }
-
+        
         -- Add custom data
         if ent.customData then
             data.customData = ent.customData
         end
-
+        
         return data
     end)
     ```
@@ -9924,27 +9924,27 @@ end
             health = ent:Health(),
             maxHealth = ent:GetMaxHealth()
         }
-
+        
         -- Add networked variables
         local netVars = ent:getNetVar("saveData", {})
         for key, value in pairs(netVars) do
             data[key] = value
         end
-
+        
         -- Add custom entity data
         if ent.customData then
             data.customData = ent.customData
         end
-
+        
         -- Add owner information
         local owner = ent:getNetVar("owner")
         if owner then
             data.owner = owner
         end
-
+        
         -- Add creation timestamp
         data.createdAt = ent:getNetVar("createdAt", os.time())
-
+        
         return data
     end)
     ```
@@ -9975,7 +9975,7 @@ end
     hook.Add("GetHandsAttackSpeed", "DexteritySpeed", function(client)
         local char = client:getChar()
         if not char then return 1.0 end
-
+        
         local dex = char:getAttrib("dex", 0)
         return 1.0 + (dex * 0.1)
     end)
@@ -9987,17 +9987,17 @@ end
     hook.Add("GetHandsAttackSpeed", "AdvancedAttackSpeed", function(client)
         local char = client:getChar()
         if not char then return 1.0 end
-
+        
         local baseSpeed = 1.0
-
+        
         -- Dexterity bonus
         local dex = char:getAttrib("dex", 0)
         local dexBonus = dex * 0.1
-
+        
         -- Level bonus
         local level = char:getData("level", 1)
         local levelBonus = level * 0.05
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -10005,9 +10005,9 @@ end
             ["police"] = 0.1,
             ["citizen"] = 0.0
         }
-
+        
         local factionBonus = factionBonuses[faction] or 0.0
-
+        
         -- Equipment bonus
         local equipmentBonus = 0.0
         local inventory = char:getInv()
@@ -10018,7 +10018,7 @@ end
                 end
             end
         end
-
+        
         return baseSpeed + dexBonus + levelBonus + factionBonus + equipmentBonus
     end)
     ```
@@ -10069,9 +10069,9 @@ end
         local health = c:getData("health", 100)
         local maxHealth = c:getData("maxHealth", 100)
         local healthPercent = (health / maxHealth) * 100
-
+        
         local injuryText = ""
-
+        
         -- Health status
         if health <= 0 then
             injuryText = "Dead"
@@ -10086,23 +10086,23 @@ end
         else
             injuryText = "Healthy"
         end
-
+        
         -- Add specific injury types
         local injuries = c:getData("injuries", {})
         if #injuries > 0 then
             injuryText = injuryText .. " (" .. table.concat(injuries, ", ") .. ")"
         end
-
+        
         -- Add bleeding status
         if c:getData("bleeding", false) then
             injuryText = injuryText .. " [BLEEDING]"
         end
-
+        
         -- Add unconscious status
         if c:getData("unconscious", false) then
             injuryText = "Unconscious"
         end
-
+        
         return injuryText
     end)
     ```
@@ -10137,7 +10137,7 @@ end
             ["medkit"] = "models/items/medkit.mdl",
             ["money"] = "models/props/cs_assault/money.mdl"
         }
-
+        
         return models[itemTable.uniqueID] or itemTable.model or "models/props_junk/cardboard_box004a.mdl"
     end)
     ```
@@ -10151,7 +10151,7 @@ end
         if customModel then
             return customModel
         end
-
+        
         -- Check for faction-specific models
         local char = self:getOwner()
         if char then
@@ -10164,13 +10164,13 @@ end
                     ["medkit"] = "models/items/medkit_advanced.mdl"
                 }
             }
-
+            
             local factionModel = factionModels[faction] and factionModels[faction][itemTable.uniqueID]
             if factionModel then
                 return factionModel
             end
         end
-
+        
         -- Check for quality-based models
         local quality = self:getData("quality", "common")
         local qualityModels = {
@@ -10178,12 +10178,12 @@ end
             ["epic"] = itemTable.epicModel,
             ["legendary"] = itemTable.legendaryModel
         }
-
+        
         local qualityModel = qualityModels[quality]
         if qualityModel then
             return qualityModel
         end
-
+        
         -- Return default model
         return itemTable.model or "models/props_junk/cardboard_box004a.mdl"
     end)
@@ -10214,13 +10214,13 @@ end
     -- Medium: Include item data in stack key
     hook.Add("GetItemStackKey", "ItemDataStacking", function(item)
         local key = item.uniqueID
-
+        
         -- Include quality in stack key
         local quality = item:getData("quality", "common")
         if quality ~= "common" then
             key = key .. "_" .. quality
         end
-
+        
         return key
     end)
     ```
@@ -10230,33 +10230,33 @@ end
     -- High: Complex item stacking system
     hook.Add("GetItemStackKey", "AdvancedItemStacking", function(item)
         local key = item.uniqueID
-
+        
         -- Include quality in stack key
         local quality = item:getData("quality", "common")
         if quality ~= "common" then
             key = key .. "_" .. quality
         end
-
+        
         -- Include durability for stackable items
         local durability = item:getData("durability")
         if durability then
             local durabilityTier = math.floor(durability / 20) * 20
             key = key .. "_dur" .. durabilityTier
         end
-
+        
         -- Include enchantments
         local enchantments = item:getData("enchantments", {})
         if #enchantments > 0 then
             table.sort(enchantments)
             key = key .. "_ench" .. table.concat(enchantments, "_")
         end
-
+        
         -- Include custom data
         local customData = item:getData("stackData")
         if customData then
             key = key .. "_" .. customData
         end
-
+        
         return key
     end)
     ```
@@ -10287,7 +10287,7 @@ end
     hook.Add("GetItemStacks", "BasicStacking", function(inventory)
         local stacks = {}
         local items = inventory:getItems()
-
+        
         for _, item in pairs(items) do
             local key = item.uniqueID
             if not stacks[key] then
@@ -10295,7 +10295,7 @@ end
             end
             table.insert(stacks[key], item)
         end
-
+        
         return stacks
     end)
     ```
@@ -10306,11 +10306,11 @@ end
     hook.Add("GetItemStacks", "AdvancedStacking", function(inventory)
         local stacks = {}
         local items = inventory:getItems()
-
+        
         for _, item in pairs(items) do
             -- Get stack key using the hook
             local key = hook.Run("GetItemStackKey", item) or item.uniqueID
-
+            
             if not stacks[key] then
                 stacks[key] = {
                     items = {},
@@ -10323,22 +10323,22 @@ end
                     }
                 }
             end
-
+            
             table.insert(stacks[key].items, item)
             stacks[key].count = stacks[key].count + 1
             stacks[key].totalWeight = stacks[key].totalWeight + item:getWeight()
         end
-
+        
         -- Sort stacks by count
         local sortedStacks = {}
         for key, stack in pairs(stacks) do
             table.insert(sortedStacks, {key = key, data = stack})
         end
-
+        
         table.sort(sortedStacks, function(a, b)
             return a.data.count > b.data.count
         end)
-
+        
         return sortedStacks
     end)
     ```
@@ -10382,11 +10382,11 @@ end
     -- High: Complex menu positioning system
     hook.Add("GetMainMenuPosition", "AdvancedMenuPosition", function(character)
         local w, h = ScrW(), ScrH()
-
+        
         -- Get character-specific settings
         local charData = character:getData("menuSettings", {})
         local savedPos = charData.position
-
+        
         if savedPos then
             -- Use saved position
             return {
@@ -10396,7 +10396,7 @@ end
                 h = savedPos.h or h * 0.8
             }
         end
-
+        
         -- Default positioning based on faction
         local faction = character:getFaction()
         local positions = {
@@ -10404,9 +10404,9 @@ end
             ["medic"] = {x = w * 0.1, y = h * 0.1},
             ["citizen"] = {x = w * 0.15, y = h * 0.15}
         }
-
+        
         local pos = positions[faction] or {x = w * 0.1, y = h * 0.1}
-
+        
         return {
             x = pos.x,
             y = pos.y,
@@ -10453,21 +10453,21 @@ end
     -- High: Complex character limit system
     hook.Add("GetMaxPlayerChar", "AdvancedCharLimits", function(client)
         local baseLimit = 3
-
+        
         -- Admin bonus
         if client:IsSuperAdmin() then
             baseLimit = baseLimit + 5
         elseif client:IsAdmin() then
             baseLimit = baseLimit + 2
         end
-
+        
         -- Donator bonus
         local char = client:getChar()
         if char then
             local donatorLevel = char:getData("donatorLevel", 0)
             baseLimit = baseLimit + donatorLevel
         end
-
+        
         -- Play time bonus
         local playTime = client:GetTotalPlayTime()
         local hours = playTime / 3600
@@ -10478,7 +10478,7 @@ end
         elseif hours >= 1000 then
             baseLimit = baseLimit + 3
         end
-
+        
         -- Faction bonus
         if char then
             local faction = char:getFaction()
@@ -10489,7 +10489,7 @@ end
             }
             baseLimit = baseLimit + (factionBonuses[faction] or 0)
         end
-
+        
         return math.max(1, baseLimit)
     end)
     ```
@@ -10520,7 +10520,7 @@ end
     hook.Add("GetMaxSkillPoints", "LevelBasedPoints", function(client)
         local char = client:getChar()
         if not char then return 0 end
-
+        
         local level = char:getData("level", 1)
         return level * 10
     end)
@@ -10532,13 +10532,13 @@ end
     hook.Add("GetMaxSkillPoints", "AdvancedSkillPoints", function(client)
         local char = client:getChar()
         if not char then return 0 end
-
+        
         local basePoints = 50
-
+        
         -- Level bonus
         local level = char:getData("level", 1)
         local levelBonus = level * 5
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -10547,22 +10547,22 @@ end
             ["citizen"] = 10,
             ["criminal"] = 25
         }
-
+        
         local factionBonus = factionBonuses[faction] or 10
-
+        
         -- Donator bonus
         local donatorLevel = char:getData("donatorLevel", 0)
         local donatorBonus = donatorLevel * 5
-
+        
         -- Achievement bonus
         local achievements = char:getData("achievements", {})
         local achievementBonus = #achievements * 2
-
+        
         -- Play time bonus
         local playTime = client:GetTotalPlayTime()
         local hours = playTime / 3600
         local playTimeBonus = math.floor(hours / 100) * 5
-
+        
         return basePoints + levelBonus + factionBonus + donatorBonus + achievementBonus + playTimeBonus
     end)
     ```
@@ -10590,7 +10590,7 @@ end
     hook.Add("GetMaxSkillPoints", "LevelSkillPoints", function(client)
         local char = client:getChar()
         if not char then return 100 end
-
+        
         local level = char:getData("level", 1)
         return 50 + (level * 5)
     end)
@@ -10602,14 +10602,14 @@ end
     hook.Add("GetMaxSkillPoints", "AdvancedSkillPoints", function(client)
         local char = client:getChar()
         if not char then return 100 end
-
+        
         -- Base points
         local basePoints = 50
-
+        
         -- Level bonus
         local level = char:getData("level", 1)
         basePoints = basePoints + (level * 5)
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         if faction == "warrior" then
@@ -10617,12 +10617,12 @@ end
         elseif faction == "mage" then
             basePoints = basePoints + 30
         end
-
+        
         -- Donator bonus
         if client:getNetVar("donator", false) then
             basePoints = basePoints + 25
         end
-
+        
         return basePoints
     end)
     ```
@@ -10653,11 +10653,11 @@ end
     -- Medium: Playtime-based points
     hook.Add("GetMaxStartingAttributePoints", "PlaytimePoints", function(client, count)
         local playTime = client:GetUTimeTotalTime()
-
+        
         if playTime > 36000 then -- 10 hours
             return 15
         end
-
+        
         return 10
     end)
     ```
@@ -10667,24 +10667,24 @@ end
     -- High: Complex starting points system
     hook.Add("GetMaxStartingAttributePoints", "AdvancedStartingPoints", function(client, count)
         local basePoints = 10
-
+        
         -- Playtime bonus
         local playTime = client:GetUTimeTotalTime()
         if playTime > 36000 then
             basePoints = basePoints + 5
         end
-
+        
         -- Donator bonus
         if client:getNetVar("donator", false) then
             basePoints = basePoints + 3
         end
-
+        
         -- Achievement bonus
         local achievements = client:getNetVar("achievements", {})
         if #achievements >= 10 then
             basePoints = basePoints + 2
         end
-
+        
         return basePoints
     end)
     ```
@@ -10716,7 +10716,7 @@ end
         if string.find(model, "female") then
             return "female"
         end
-
+        
         return "male"
     end)
     ```
@@ -10732,17 +10732,17 @@ end
                 return "female"
             end
         end
-
+        
         -- Check specific models
         local femaleModels = {
             ["models/player/alyx.mdl"] = true,
             ["models/player/mossman.mdl"] = true
         }
-
+        
         if femaleModels[model] then
             return "female"
         end
-
+        
         return "male"
     end)
     ```
@@ -10776,7 +10776,7 @@ end
         elseif amount >= 100 then
             return "models/props_lab/box01a.mdl"
         end
-
+        
         return "models/props_junk/cardboard_box001a.mdl"
     end)
     ```
@@ -10827,7 +10827,7 @@ end
         if speaker:IsAdmin() then
             return 0
         end
-
+        
         return 3
     end)
     ```
@@ -10840,18 +10840,18 @@ end
         if speaker:IsAdmin() then
             return 0
         end
-
+        
         -- Donators have reduced delay
         if speaker:getNetVar("donator", false) then
             return 1
         end
-
+        
         -- New players have longer delay
         local playTime = speaker:GetUTimeTotalTime()
         if playTime < 3600 then -- Less than 1 hour
             return 5
         end
-
+        
         return 3
     end)
     ```
@@ -10882,7 +10882,7 @@ end
     hook.Add("GetPlayTime", "PlayTimeWithSession", function(client)
         local totalTime = client:GetUTimeTotalTime()
         local sessionTime = client:GetUTimeSessionTime()
-
+        
         return totalTime + sessionTime
     end)
     ```
@@ -10895,14 +10895,14 @@ end
         if not char then
             return client:GetUTimeTotalTime()
         end
-
+        
         -- Get character-specific playtime
         local charPlayTime = char:getData("playTime", 0)
-
+        
         -- Add current session time
         local sessionStart = char:getData("sessionStart", os.time())
         local sessionTime = os.time() - sessionStart
-
+        
         return charPlayTime + sessionTime
     end)
     ```
@@ -10935,7 +10935,7 @@ end
         if isFemale then
             return "vo/npc/female01/pain09.wav"
         end
-
+        
         return "vo/npc/male01/pain09.wav"
     end)
     ```
@@ -10948,7 +10948,7 @@ end
         if not char then
             return isFemale and "vo/npc/female01/pain09.wav" or "vo/npc/male01/pain09.wav"
         end
-
+        
         -- Faction-specific sounds
         local faction = char:getFaction()
         if faction == "combine" then
@@ -10956,12 +10956,12 @@ end
         elseif faction == "zombie" then
             return "npc/zombie/zombie_die" .. math.random(1, 3) .. ".wav"
         end
-
+        
         -- Gender-based sounds
         if isFemale then
             return "vo/npc/female01/pain0" .. math.random(7, 9) .. ".wav"
         end
-
+        
         return "vo/npc/male01/pain0" .. math.random(7, 9) .. ".wav"
     end)
     ```
@@ -10995,7 +10995,7 @@ end
         if isFemale then
             return "vo/npc/female01/pain0" .. math.random(1, 6) .. ".wav"
         end
-
+        
         return "vo/npc/male01/pain0" .. math.random(1, 6) .. ".wav"
     end)
     ```
@@ -11008,7 +11008,7 @@ end
         if not char then
             return isFemale and "vo/npc/female01/pain01.wav" or "vo/npc/male01/pain01.wav"
         end
-
+        
         -- Faction-specific sounds
         local faction = char:getFaction()
         if faction == "combine" then
@@ -11016,7 +11016,7 @@ end
         elseif faction == "zombie" then
             return "npc/zombie/zombie_pain" .. math.random(1, 6) .. ".wav"
         end
-
+        
         -- Pain type-based sounds
         local soundNum = 1
         if paintype == 1 then -- Light damage
@@ -11026,12 +11026,12 @@ end
         else -- Heavy damage
             soundNum = math.random(7, 9)
         end
-
+        
         -- Gender-based sounds
         if isFemale then
             return "vo/npc/female01/pain0" .. soundNum .. ".wav"
         end
-
+        
         return "vo/npc/male01/pain0" .. soundNum .. ".wav"
     end)
     ```
@@ -11062,7 +11062,7 @@ end
     hook.Add("GetPlayerPunchDamage", "StrengthDamage", function(client)
         local char = client:getChar()
         if not char then return 10 end
-
+        
         local str = char:getAttrib("str", 0)
         return 10 + (str * 2)
     end)
@@ -11074,17 +11074,17 @@ end
     hook.Add("GetPlayerPunchDamage", "AdvancedPunchDamage", function(client)
         local char = client:getChar()
         if not char then return 10 end
-
+        
         local baseDamage = 10
-
+        
         -- Strength bonus
         local str = char:getAttrib("str", 0)
         local strBonus = str * 2
-
+        
         -- Level bonus
         local level = char:getData("level", 1)
         local levelBonus = level * 0.5
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -11092,9 +11092,9 @@ end
             ["police"] = 2,
             ["citizen"] = 0
         }
-
+        
         local factionBonus = factionBonuses[faction] or 0
-
+        
         -- Equipment bonus
         local equipmentBonus = 0
         local inventory = char:getInv()
@@ -11109,7 +11109,7 @@ end
                 end
             end
         end
-
+        
         return baseDamage + strBonus + levelBonus + factionBonus + equipmentBonus
     end)
     ```
@@ -11140,7 +11140,7 @@ end
     hook.Add("GetPlayerPunchRagdollTime", "ConstitutionRagdoll", function(client)
         local char = client:getChar()
         if not char then return 3 end
-
+        
         local con = char:getAttrib("con", 0)
         return math.max(1, 3 - (con * 0.1))
     end)
@@ -11152,17 +11152,17 @@ end
     hook.Add("GetPlayerPunchRagdollTime", "AdvancedRagdollTime", function(client)
         local char = client:getChar()
         if not char then return 3 end
-
+        
         local baseTime = 3
-
+        
         -- Constitution reduces ragdoll time
         local con = char:getAttrib("con", 0)
         local conReduction = con * 0.1
-
+        
         -- Level reduces ragdoll time
         local level = char:getData("level", 1)
         local levelReduction = level * 0.05
-
+        
         -- Faction affects ragdoll time
         local faction = char:getFaction()
         local factionModifiers = {
@@ -11171,9 +11171,9 @@ end
             ["citizen"] = 0,
             ["elderly"] = 0.5
         }
-
+        
         local factionModifier = factionModifiers[faction] or 0
-
+        
         -- Equipment affects ragdoll time
         local equipmentModifier = 0
         local inventory = char:getInv()
@@ -11188,7 +11188,7 @@ end
                 end
             end
         end
-
+        
         return math.max(0.5, baseTime - conReduction - levelReduction + factionModifier + equipmentModifier)
     end)
     ```
@@ -11222,15 +11222,15 @@ end
     hook.Add("GetPriceOverride", "FactionDiscounts", function(self, uniqueID, price, isSellingToVendor)
         local client = self:getNetVar("client")
         if not client then return price end
-
+        
         local char = client:getChar()
         if not char then return price end
-
+        
         local faction = char:getFaction()
         if faction == "police" and uniqueID == "weapon_pistol" then
             return price * 0.8 -- 20% discount
         end
-
+        
         return price
     end)
     ```
@@ -11241,12 +11241,12 @@ end
     hook.Add("GetPriceOverride", "AdvancedPriceOverride", function(self, uniqueID, price, isSellingToVendor)
         local client = self:getNetVar("client")
         if not client then return price end
-
+        
         local char = client:getChar()
         if not char then return price end
-
+        
         local finalPrice = price
-
+        
         -- Faction discounts
         local faction = char:getFaction()
         local factionDiscounts = {
@@ -11259,12 +11259,12 @@ end
                 ["bandage"] = 0.6
             }
         }
-
+        
         local discounts = factionDiscounts[faction]
         if discounts and discounts[uniqueID] then
             finalPrice = finalPrice * discounts[uniqueID]
         end
-
+        
         -- Level discounts
         local level = char:getData("level", 1)
         if level >= 10 then
@@ -11272,18 +11272,18 @@ end
         elseif level >= 20 then
             finalPrice = finalPrice * 0.9 -- 10% discount
         end
-
+        
         -- Donator discounts
         local donatorLevel = char:getData("donatorLevel", 0)
         if donatorLevel > 0 then
             finalPrice = finalPrice * (1 - (donatorLevel * 0.1))
         end
-
+        
         -- Selling to vendor penalty
         if isSellingToVendor then
             finalPrice = finalPrice * 0.5 -- 50% of original price when selling
         end
-
+        
         return math.max(1, finalPrice)
     end)
     ```
@@ -11325,7 +11325,7 @@ end
     -- High: Complex ragdoll time system
     hook.Add("GetRagdollTime", "AdvancedRagdollTime", function(self, time)
         local finalTime = time
-
+        
         -- Check if it's a player ragdoll
         local owner = self:getNetVar("owner")
         if owner then
@@ -11336,11 +11336,11 @@ end
                     -- Constitution affects ragdoll time
                     local con = char:getAttrib("con", 0)
                     finalTime = finalTime - (con * 0.1)
-
+                    
                     -- Level affects ragdoll time
                     local level = char:getData("level", 1)
                     finalTime = finalTime - (level * 0.05)
-
+                    
                     -- Faction affects ragdoll time
                     local faction = char:getFaction()
                     local factionModifiers = {
@@ -11349,18 +11349,18 @@ end
                         ["citizen"] = 0,
                         ["elderly"] = 0.5
                     }
-
+                    
                     local factionModifier = factionModifiers[faction] or 0
                     finalTime = finalTime + factionModifier
                 end
             end
         end
-
+        
         -- Weather affects ragdoll time
         if GetConVar("sv_weather"):GetBool() then
             finalTime = finalTime * 1.2
         end
-
+        
         return math.max(0.5, finalTime)
     end)
     ```
@@ -11406,9 +11406,9 @@ end
     hook.Add("GetSalaryAmount", "AdvancedSalary", function(client, faction, class)
         local char = client:getChar()
         if not char then return 0 end
-
+        
         local baseSalary = 50
-
+        
         -- Faction base salaries
         local factionSalaries = {
             ["police"] = 200,
@@ -11416,9 +11416,9 @@ end
             ["citizen"] = 50,
             ["criminal"] = 0
         }
-
+        
         baseSalary = factionSalaries[faction] or 50
-
+        
         -- Class bonuses
         local classBonuses = {
             ["officer"] = 50,
@@ -11427,21 +11427,21 @@ end
             ["nurse"] = 25,
             ["doctor"] = 75
         }
-
+        
         local classBonus = classBonuses[class] or 0
-
+        
         -- Level bonus
         local level = char:getData("level", 1)
         local levelBonus = level * 10
-
+        
         -- Performance bonus
         local performance = char:getData("performance", 0)
         local performanceBonus = performance * 5
-
+        
         -- Donator bonus
         local donatorLevel = char:getData("donatorLevel", 0)
         local donatorBonus = donatorLevel * 25
-
+        
         return baseSalary + classBonus + levelBonus + performanceBonus + donatorBonus
     end)
     ```
@@ -11481,9 +11481,9 @@ end
     hook.Add("GetTicketsByRequester", "AdvancedTicketRetrieval", function(steamID)
         -- Load tickets from database
         local tickets = lia.db.query("SELECT * FROM tickets WHERE requester = ? ORDER BY created_at DESC", steamID)
-
+        
         if not tickets then return {} end
-
+        
         -- Process tickets
         local processedTickets = {}
         for _, ticket in ipairs(tickets) do
@@ -11497,14 +11497,14 @@ end
                 updatedAt = ticket.updated_at,
                 assignedTo = ticket.assigned_to
             }
-
+            
             -- Add requester character info
             local requesterChar = lia.char.getByID(ticket.requester)
             if requesterChar then
                 processedTicket.requesterName = requesterChar:getName()
                 processedTicket.requesterFaction = requesterChar:getFaction()
             end
-
+            
             -- Add assignee character info
             if ticket.assigned_to then
                 local assigneeChar = lia.char.getByID(ticket.assigned_to)
@@ -11512,10 +11512,10 @@ end
                     processedTicket.assigneeName = assigneeChar:getName()
                 end
             end
-
+            
             table.insert(processedTickets, processedTicket)
         end
-
+        
         return processedTickets
     end)
     ```
@@ -11559,7 +11559,7 @@ end
     -- High: Complex vendor sale scale system
     hook.Add("GetVendorSaleScale", "AdvancedVendorScale", function(self)
         local baseScale = 1.0
-
+        
         -- Vendor type affects scale
         local vendorType = self:getNetVar("vendorType", "general")
         local typeScales = {
@@ -11568,17 +11568,17 @@ end
             ["food"] = 1.1,
             ["general"] = 1.0
         }
-
+        
         baseScale = typeScales[vendorType] or 1.0
-
+        
         -- Vendor level affects scale
         local vendorLevel = self:getNetVar("level", 1)
         local levelModifier = 1 + (vendorLevel * 0.1)
-
+        
         -- Vendor reputation affects scale
         local reputation = self:getNetVar("reputation", 0)
         local reputationModifier = 1 + (reputation * 0.05)
-
+        
         -- Time of day affects scale
         local hour = tonumber(os.date("%H"))
         local timeModifier = 1.0
@@ -11587,11 +11587,11 @@ end
         else
             timeModifier = 0.9 -- Nighttime penalty
         end
-
+        
         -- Server population affects scale
         local playerCount = #player.GetAll()
         local populationModifier = 1 + (playerCount * 0.01)
-
+        
         return baseScale * levelModifier * reputationModifier * timeModifier * populationModifier
     end)
     ```
@@ -11631,9 +11631,9 @@ end
     hook.Add("GetWarnings", "AdvancedWarningRetrieval", function(charID)
         -- Load warnings from database
         local warnings = lia.db.query("SELECT * FROM warnings WHERE char_id = ? ORDER BY created_at DESC", charID)
-
+        
         if not warnings then return {} end
-
+        
         -- Process warnings
         local processedWarnings = {}
         for _, warning in ipairs(warnings) do
@@ -11648,21 +11648,21 @@ end
                 timestamp = warning.created_at,
                 severity = warning.severity or "medium"
             }
-
+            
             -- Add character names
             local warnedChar = lia.char.getByID(warning.char_id)
             if warnedChar then
                 processedWarning.warnedName = warnedChar:getName()
             end
-
+            
             local warnerChar = lia.char.getByID(warning.warner)
             if warnerChar then
                 processedWarning.warnerName = warnerChar:getName()
             end
-
+            
             table.insert(processedWarnings, processedWarning)
         end
-
+        
         return processedWarnings
     end)
     ```
@@ -11702,9 +11702,9 @@ end
     hook.Add("GetWarningsByIssuer", "AdvancedIssuerWarnings", function(steamID)
         -- Load warnings from database
         local warnings = lia.db.query("SELECT * FROM warnings WHERE warner_steamid = ? ORDER BY created_at DESC", steamID)
-
+        
         if not warnings then return {} end
-
+        
         -- Process warnings
         local processedWarnings = {}
         for _, warning in ipairs(warnings) do
@@ -11719,40 +11719,40 @@ end
                 timestamp = warning.created_at,
                 severity = warning.severity or "medium"
             }
-
+            
             -- Add character names
             local warnedChar = lia.char.getByID(warning.char_id)
             if warnedChar then
                 processedWarning.warnedName = warnedChar:getName()
                 processedWarning.warnedFaction = warnedChar:getFaction()
             end
-
+            
             -- Add issuer character info
             local issuerChar = lia.char.getByID(warning.warner)
             if issuerChar then
                 processedWarning.issuerName = issuerChar:getName()
                 processedWarning.issuerFaction = issuerChar:getFaction()
             end
-
+            
             table.insert(processedWarnings, processedWarning)
         end
-
+        
         -- Calculate issuer statistics
         local stats = {
             totalWarnings = #processedWarnings,
             recentWarnings = 0,
             severityCounts = {}
         }
-
+        
         local oneWeekAgo = os.time() - (7 * 24 * 60 * 60)
         for _, warning in ipairs(processedWarnings) do
             if warning.timestamp > oneWeekAgo then
                 stats.recentWarnings = stats.recentWarnings + 1
             end
-
+            
             stats.severityCounts[warning.severity] = (stats.severityCounts[warning.severity] or 0) + 1
         end
-
+        
         return processedWarnings, stats
     end)
     ```
@@ -11790,13 +11790,13 @@ end
     -- High: Complex weapon naming system
     hook.Add("GetWeaponName", "AdvancedWeaponNaming", function(weapon)
         local baseName = weapon:GetPrintName() or weapon:GetClass()
-
+        
         -- Check for custom weapon data
         local weaponData = weapon:getNetVar("weaponData", {})
         if weaponData.customName then
             baseName = weaponData.customName
         end
-
+        
         -- Add quality prefix
         local quality = weaponData.quality or "common"
         local qualityPrefixes = {
@@ -11806,16 +11806,16 @@ end
             ["epic"] = "[Epic] ",
             ["legendary"] = "[Legendary] "
         }
-
+        
         local qualityPrefix = qualityPrefixes[quality] or ""
-
+        
         -- Add enchantment suffix
         local enchantments = weaponData.enchantments or {}
         local enchantmentSuffix = ""
         if #enchantments > 0 then
             enchantmentSuffix = " of " .. table.concat(enchantments, ", ")
         end
-
+        
         -- Add durability suffix
         local durability = weaponData.durability
         local maxDurability = weaponData.maxDurability
@@ -11827,7 +11827,7 @@ end
                 enchantmentSuffix = enchantmentSuffix .. " (Worn)"
             end
         end
-
+        
         return qualityPrefix .. baseName .. enchantmentSuffix
     end)
     ```
@@ -11868,20 +11868,20 @@ end
     hook.Add("HUDVisibilityChanged", "AdvancedHUDManagement", function(visible)
         -- Toggle all custom UI elements
         local customPanels = {"MyCustomPanel", "MyInventoryPanel", "MyStatsPanel"}
-
+        
         for _, panelName in ipairs(customPanels) do
             local panel = _G[panelName]
             if IsValid(panel) then
                 panel:SetVisible(visible)
             end
         end
-
+        
         -- Save visibility state
         local char = LocalPlayer():getChar()
         if char then
             char:setData("hudVisible", visible)
         end
-
+        
         -- Trigger custom events
         if visible then
             hook.Run("CustomHUDShown")
@@ -11921,13 +11921,13 @@ end
     hook.Add("HandleItemTransferRequest", "TransferValidation", function(client, itemID, x, y, invID)
         local char = client:getChar()
         if not char then return end
-
+        
         local item = lia.item.instance(itemID)
         if not item then
             client:ChatPrint("Invalid item")
             return
         end
-
+        
         -- Check if player owns the item
         local inventory = char:getInv()
         if not inventory:hasItem(item) then
@@ -11943,49 +11943,49 @@ end
     hook.Add("HandleItemTransferRequest", "AdvancedItemTransfer", function(client, itemID, x, y, invID)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Get source inventory
         local sourceInventory = char:getInv()
         if not sourceInventory then return end
-
+        
         -- Get destination inventory
         local destInventory = lia.inventory.getByID(invID)
         if not destInventory then
             client:ChatPrint("Invalid destination inventory")
             return
         end
-
+        
         -- Get item
         local item = lia.item.instance(itemID)
         if not item then
             client:ChatPrint("Invalid item")
             return
         end
-
+        
         -- Check if player owns the item
         if not sourceInventory:hasItem(item) then
             client:ChatPrint("You don't own this item")
             return
         end
-
+        
         -- Check transfer permissions
         if not hook.Run("CanItemBeTransfered", item, sourceInventory, destInventory, client) then
             return
         end
-
+        
         -- Check destination space
         if not destInventory:canFit(item, x, y) then
             client:ChatPrint("Not enough space in destination inventory")
             return
         end
-
+        
         -- Perform transfer
         sourceInventory:remove(item)
         destInventory:add(item, x, y)
-
+        
         -- Log transfer
         lia.log.add(client, "item_transfer", itemID, "Transferred to inventory " .. invID)
-
+        
         client:ChatPrint("Item transferred successfully")
     end)
     ```
@@ -12026,7 +12026,7 @@ end
     hook.Add("InitializeStorage", "AdvancedStorageInit", function(entity)
         -- Set storage type
         local storageType = entity:getNetVar("storageType", "general")
-
+        
         -- Configure based on storage type
         local configs = {
             ["general"] = {maxWeight = 100, maxItems = 50, size = {w = 6, h = 4}},
@@ -12034,20 +12034,20 @@ end
             ["medical"] = {maxWeight = 50, maxItems = 30, size = {w = 5, h = 6}},
             ["food"] = {maxWeight = 30, maxItems = 40, size = {w = 8, h = 5}}
         }
-
+        
         local config = configs[storageType] or configs["general"]
-
+        
         -- Set storage properties
         entity:setNetVar("maxWeight", config.maxWeight)
         entity:setNetVar("maxItems", config.maxItems)
         entity:setNetVar("inventorySize", config.size)
-
+        
         -- Set access permissions
         local owner = entity:getNetVar("owner")
         if owner then
             entity:setNetVar("accessList", {owner})
         end
-
+        
         -- Initialize inventory
         local inventory = lia.inventory.new(entity:EntIndex(), "storage")
         if inventory then
@@ -12056,10 +12056,10 @@ end
             inventory:setData("storageType", storageType)
             entity:setNetVar("inventoryID", inventory:getID())
         end
-
+        
         -- Set creation timestamp
         entity:setNetVar("createdAt", os.time())
-
+        
         print("Storage initialized: " .. entity:EntIndex() .. " (Type: " .. storageType .. ")")
     end)
     ```
@@ -12103,22 +12103,22 @@ end
             {key = "myAddonString", default = "default", description = "My Addon String", type = "string"},
             {key = "myAddonColor", default = Color(255, 255, 255), description = "My Addon Color", type = "color"}
         }
-
+        
         for _, option in ipairs(configOptions) do
             lia.config.add(option.key, option.default, option.description)
         end
-
+        
         -- Load saved configuration
         local savedConfig = lia.data.get("myAddonConfig", {})
         for key, value in pairs(savedConfig) do
             lia.config.set(key, value)
         end
-
+        
         -- Set up configuration callbacks
         lia.config.addCallback("myAddonEnabled", function(value)
             print("My Addon enabled: " .. tostring(value))
         end)
-
+        
         print("Configuration system initialized with " .. #configOptions .. " options")
     end)
     ```
@@ -12166,11 +12166,11 @@ end
             "tools",
             "misc"
         }
-
+        
         for _, category in ipairs(categories) do
             lia.item.addCategory(category)
         end
-
+        
         -- Register custom items
         local customItems = {
             {
@@ -12192,16 +12192,16 @@ end
                 price = 50
             }
         }
-
+        
         for _, itemData in ipairs(customItems) do
             lia.item.register(itemData.uniqueID, itemData)
         end
-
+        
         -- Set up item callbacks
         lia.item.addCallback("my_weapon", "onUse", function(item, client)
             client:ChatPrint("Used custom weapon!")
         end)
-
+        
         print("Item system initialized with " .. #customItems .. " custom items")
     end)
     ```
@@ -12258,20 +12258,20 @@ end
                 end
             }
         }
-
+        
         for _, keybind in ipairs(keybinds) do
             lia.keybind.add(keybind.key, keybind.name, keybind.keyCode, keybind.callback)
         end
-
+        
         -- Set up keybind categories
         lia.keybind.addCategory("My Addon", "Custom keybinds for my addon")
-
+        
         -- Load saved keybind settings
         local savedKeybinds = lia.data.get("myAddonKeybinds", {})
         for key, keyCode in pairs(savedKeybinds) do
             lia.keybind.setKey(key, keyCode)
         end
-
+        
         print("Keybind system initialized with " .. #keybinds .. " custom keybinds")
     end)
     ```
@@ -12331,26 +12331,26 @@ end
                 dependencies = {"my_module"}
             }
         }
-
+        
         for _, moduleData in ipairs(modules) do
             lia.module.register(moduleData.uniqueID, moduleData)
         end
-
+        
         -- Set up module callbacks
         lia.module.addCallback("my_module", "onLoad", function()
             print("My module loaded!")
         end)
-
+        
         lia.module.addCallback("my_module", "onUnload", function()
             print("My module unloaded!")
         end)
-
+        
         -- Load module configurations
         local moduleConfigs = lia.data.get("moduleConfigs", {})
         for moduleID, config in pairs(moduleConfigs) do
             lia.module.setConfig(moduleID, config)
         end
-
+        
         print("Module system initialized with " .. #modules .. " custom modules")
     end)
     ```
@@ -12412,22 +12412,22 @@ end
                 type = "string"
             }
         }
-
+        
         for _, option in ipairs(options) do
             lia.option.add(option.key, option.name, option.description, option.default)
         end
-
+        
         -- Set up option callbacks
         lia.option.addCallback("myOption", function(value)
             print("My option changed: " .. tostring(value))
         end)
-
+        
         -- Load saved options
         local savedOptions = lia.data.get("myAddonOptions", {})
         for key, value in pairs(savedOptions) do
             lia.option.set(key, value)
         end
-
+        
         print("Option system initialized with " .. #options .. " custom options")
     end)
     ```
@@ -12477,26 +12477,26 @@ end
                 roundTime = 600
             }
         }
-
+        
         for key, value in pairs(schemaData) do
             lia.schema.set(key, value)
         end
-
+        
         -- Set up schema callbacks
         lia.schema.addCallback("onLoad", function()
             print("Schema loaded!")
         end)
-
+        
         lia.schema.addCallback("onUnload", function()
             print("Schema unloaded!")
         end)
-
+        
         -- Load saved schema settings
         local savedSettings = lia.data.get("schemaSettings", {})
         for key, value in pairs(savedSettings) do
             lia.schema.set(key, value)
         end
-
+        
         print("Schema system initialized with custom data")
     end)
     ```
@@ -12535,24 +12535,24 @@ end
     hook.Add("InteractionMenuClosed", "AdvancedMenuClose", function()
         -- Update menu state
         lia.interactionMenuOpen = false
-
+        
         -- Clear interaction target
         lia.currentInteractionTarget = nil
-
+        
         -- Log menu close time
         local closeTime = os.time()
         lia.lastInteractionMenuClose = closeTime
-
+        
         -- Calculate menu session duration
         if lia.interactionMenuOpenTime then
             local duration = closeTime - lia.interactionMenuOpenTime
             print("Interaction menu session duration: " .. duration .. " seconds")
             lia.interactionMenuOpenTime = nil
         end
-
+        
         -- Clear cached interaction data
         lia.interactionCache = nil
-
+        
         print("Interaction menu closed at " .. os.date("%H:%M:%S", closeTime))
     end)
     ```
@@ -12592,16 +12592,16 @@ end
     hook.Add("InteractionMenuOpened", "AdvancedMenuOpen", function(frame)
         -- Update menu state
         lia.interactionMenuOpen = true
-
+        
         -- Log menu open time
         local openTime = os.time()
         lia.interactionMenuOpenTime = openTime
-
+        
         -- Cache interaction target
         local target = lia.util.getEntityInDirection(LocalPlayer())
         if IsValid(target) then
             lia.currentInteractionTarget = target
-
+            
             -- Cache interaction data
             lia.interactionCache = {
                 entity = target,
@@ -12610,13 +12610,13 @@ end
                 position = target:GetPos()
             }
         end
-
+        
         -- Customize frame appearance
         if frame then
             frame:SetBackgroundColor(Color(0, 0, 0, 200))
             frame:SetSize(300, 400)
         end
-
+        
         print("Interaction menu opened at " .. os.date("%H:%M:%S", openTime))
     end)
     ```
@@ -12666,27 +12666,27 @@ end
     -- High: Complex item interaction system
     hook.Add("InterceptClickItemIcon", "AdvancedItemInteraction", function(self, itemIcon, keyCode)
         if not itemIcon.item then return end
-
+        
         local item = itemIcon.item
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Right-click for context menu
         if keyCode == MOUSE_RIGHT then
             local menu = DermaMenu()
-
+            
             -- Add use option
             menu:AddOption("Use", function()
                 item:use()
             end)
-
+            
             -- Add drop option if not equipped
             if not item:getData("equipped", false) then
                 menu:AddOption("Drop", function()
                     item:drop()
                 end)
             end
-
+            
             -- Add equip/unequip option
             if item:getData("equipped", false) then
                 menu:AddOption("Unequip", function()
@@ -12697,16 +12697,16 @@ end
                     item:equip()
                 end)
             end
-
+            
             -- Add examine option
             menu:AddOption("Examine", function()
                 item:examine()
             end)
-
+            
             menu:Open()
             return true
         end
-
+        
         -- Middle-click for quick use
         if keyCode == MOUSE_MIDDLE then
             item:use()
@@ -12753,10 +12753,10 @@ end
     hook.Add("InventoryClosed", "AdvancedInventoryClose", function(self, inventory)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Save inventory state
         char:setData("lastInventoryClose", os.time())
-
+        
         -- Check for unsaved changes
         if inventory:hasUnsavedChanges() then
             Derma_Query(
@@ -12772,10 +12772,10 @@ end
                 end
             )
         end
-
+        
         -- Clear selection
         inventory:clearSelection()
-
+        
         -- Trigger custom event
         hook.Run("CustomInventoryClosed", inventory)
     end)
@@ -12825,19 +12825,19 @@ end
             lia.db.query("INSERT INTO inventory_logs (timestamp, invid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
                 os.time(), instance:getID(), key, tostring(oldValue), tostring(value))
         end
-
+        
         -- Track weight changes
         if key == "weight" then
             local maxWeight = instance:getData("maxWeight", 100)
             local weightPercent = (value / maxWeight) * 100
-
+            
             if weightPercent >= 90 then
                 if CLIENT then
                     LocalPlayer():ChatPrint("Warning: Inventory is almost full!")
                 end
             end
         end
-
+        
         -- Notify owner of changes
         if SERVER then
             local owner = instance:getOwner()
@@ -12874,7 +12874,7 @@ end
     hook.Add("InventoryDeleted", "CleanupInventory", function(instance)
         -- Remove from cache
         lia.inventoryCache[instance:getID()] = nil
-
+        
         print("Inventory deleted and cleaned up: " .. instance:getID())
     end)
     ```
@@ -12884,23 +12884,23 @@ end
     -- High: Complex inventory deletion handling
     hook.Add("InventoryDeleted", "AdvancedInventoryDeletion", function(instance)
         local invID = instance:getID()
-
+        
         -- Archive inventory data
         lia.db.query("INSERT INTO inventory_archive SELECT * FROM inventories WHERE id = ?", invID)
-
+        
         -- Clean up related data
         lia.db.query("DELETE FROM inventory_items WHERE invid = ?", invID)
         lia.db.query("DELETE FROM inventory_logs WHERE invid = ?", invID)
-
+        
         -- Remove from cache
         lia.inventoryCache[invID] = nil
-
+        
         -- Notify owner
         local owner = instance:getOwner()
         if IsValid(owner) then
             owner:ChatPrint("Your inventory has been deleted")
         end
-
+        
         -- Log deletion
         print("Inventory deleted: " .. invID)
         lia.log.add("Inventory " .. invID .. " was deleted", "inventory")
@@ -12946,12 +12946,12 @@ end
         instance:setData("maxWeight", 100)
         instance:setData("created", os.time())
         instance:setData("lastAccessed", os.time())
-
+        
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO inventory_logs (timestamp, invid, action) VALUES (?, ?, ?)",
                 os.time(), instance:getID(), "initialized")
-
+            
             -- Set up owner-specific settings
             local owner = instance:getOwner()
             if IsValid(owner) then
@@ -12964,7 +12964,7 @@ end
                     elseif faction == "medic" then
                         instance:setData("maxWeight", 120)
                     end
-
+                    
                     -- Add starting items
                     if instance:getData("isNew", true) then
                         local startingItems = {"item_bandage", "item_water"}
@@ -13020,44 +13020,44 @@ end
     hook.Add("InventoryItemAdded", "AdvancedInventory", function(inventory, item)
         local owner = inventory:getOwner()
         if not owner then return end
-
+        
         local char = owner:getChar()
         if not char then return end
-
+        
         -- Update inventory statistics
         local invData = inventory:getData()
         invData.itemCount = (invData.itemCount or 0) + 1
         invData.lastItemAdded = os.time()
         invData.totalValue = (invData.totalValue or 0) + (item:getData("value", 0))
         inventory:setData(invData)
-
+        
         -- Check for inventory capacity
         local maxItems = inventory:getData("maxItems", 100)
         if invData.itemCount > maxItems then
             owner:ChatPrint("Inventory is full!")
             return false
         end
-
+        
         -- Check for weight limits
         local itemWeight = item:getData("weight", 1)
         local currentWeight = inventory:getData("currentWeight", 0)
         local maxWeight = inventory:getData("maxWeight", 1000)
-
+        
         if currentWeight + itemWeight > maxWeight then
             owner:ChatPrint("Item too heavy for inventory!")
             return false
         end
-
+        
         -- Update weight
         inventory:setData("currentWeight", currentWeight + itemWeight)
-
+        
         -- Check for special item effects
         if item.uniqueID == "health_potion" then
             char:setData("healthBonus", (char:getData("healthBonus", 0) + 10))
         elseif item.uniqueID == "stamina_boost" then
             char:setData("staminaBonus", (char:getData("staminaBonus", 0) + 5))
         end
-
+        
         -- Check for set bonuses
         local items = inventory:getItems()
         local setItems = {}
@@ -13067,7 +13067,7 @@ end
                 setItems[itemSet] = (setItems[itemSet] or 0) + 1
             end
         end
-
+        
         -- Apply set bonuses
         for set, count in pairs(setItems) do
             if count >= 3 then
@@ -13075,9 +13075,9 @@ end
                 owner:ChatPrint("Set bonus activated: " .. set)
             end
         end
-
+        
         -- Log item addition
-        print(string.format("Item %s added to inventory %s (Owner: %s)",
+        print(string.format("Item %s added to inventory %s (Owner: %s)", 
             item.uniqueID, inventory:getID(), char:getName()))
     end)
     ```
@@ -13119,17 +13119,17 @@ end
             local currentWeight = inventory:getData("weight", 0)
             local itemWeight = item.weight or 1
             inventory:setData("weight", currentWeight + itemWeight)
-
+            
             -- Log to database
             lia.db.query("INSERT INTO inventory_logs (timestamp, invid, itemid, action) VALUES (?, ?, ?, ?)",
                 os.time(), inventory:getID(), item:getID(), "added")
-
+            
             -- Notify owner
             local owner = inventory:getOwner()
             if IsValid(owner) then
                 owner:ChatPrint("Added " .. item.name .. " to inventory")
             end
-
+            
             -- Check for set bonuses
             local items = inventory:getItems()
             local armorPieces = 0
@@ -13138,7 +13138,7 @@ end
                     armorPieces = armorPieces + 1
                 end
             end
-
+            
             if armorPieces >= 3 and IsValid(owner) then
                 local char = owner:getChar()
                 if char then
@@ -13196,7 +13196,7 @@ end
             -- Log to database
             lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
                 os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
-
+            
             -- Handle durability changes
             if key == "durability" then
                 if newValue <= 0 then
@@ -13205,7 +13205,7 @@ end
                     if IsValid(owner) then
                         owner:ChatPrint(item.name .. " is broken!")
                     end
-
+                    
                     -- Remove item if it's broken
                     timer.Simple(1, function()
                         if IsValid(item) then
@@ -13220,7 +13220,7 @@ end
                     end
                 end
             end
-
+            
             -- Handle quality changes
             if key == "quality" then
                 local owner = inventory:getOwner()
@@ -13260,7 +13260,7 @@ end
     hook.Add("InventoryItemIconCreated", "CustomizeItemIcon", function(icon, item, self)
         -- Set icon size
         icon:SetSize(64, 64)
-
+        
         -- Add quality border
         local quality = item:getData("quality", "common")
         if quality == "rare" then
@@ -13277,7 +13277,7 @@ end
     hook.Add("InventoryItemIconCreated", "AdvancedItemIcon", function(icon, item, self)
         -- Set icon size
         icon:SetSize(64, 64)
-
+        
         -- Add quality border
         local quality = item:getData("quality", "common")
         local borderColors = {
@@ -13288,19 +13288,19 @@ end
             ["legendary"] = Color(255, 200, 0)
         }
         icon:SetBorderColor(borderColors[quality] or Color(150, 150, 150))
-
+        
         -- Add durability bar
         local durability = item:getData("durability")
         if durability then
             local durabilityBar = icon:Add("DPanel")
             durabilityBar:SetSize(icon:GetWide(), 5)
             durabilityBar:SetPos(0, icon:GetTall() - 5)
-
+            
             local durabilityPercent = durability / 100
             local barColor = Color(255 * (1 - durabilityPercent), 255 * durabilityPercent, 0)
             durabilityBar:SetBackgroundColor(barColor)
         end
-
+        
         -- Add quantity label
         local quantity = item:getData("quantity", 1)
         if quantity > 1 then
@@ -13311,7 +13311,7 @@ end
             quantityLabel:SizeToContents()
             quantityLabel:SetPos(icon:GetWide() - quantityLabel:GetWide() - 5, 5)
         end
-
+        
         -- Add equipped indicator
         if item:getData("equipped", false) then
             local equippedIcon = icon:Add("DLabel")
@@ -13363,29 +13363,29 @@ end
     hook.Add("InventoryItemRemoved", "AdvancedInventory", function(self, instance, preserveItem)
         local owner = self:getOwner()
         if not owner then return end
-
+        
         local char = owner:getChar()
         if not char then return end
-
+        
         -- Update inventory statistics
         local invData = self:getData()
         invData.itemCount = math.max((invData.itemCount or 1) - 1, 0)
         invData.lastItemRemoved = os.time()
         invData.totalValue = math.max((invData.totalValue or 0) - (instance:getData("value", 0)), 0)
         self:setData(invData)
-
+        
         -- Update weight
         local itemWeight = instance:getData("weight", 1)
         local currentWeight = self:getData("currentWeight", 0)
         self:setData("currentWeight", math.max(currentWeight - itemWeight, 0))
-
+        
         -- Remove special item effects
         if instance.uniqueID == "health_potion" then
             char:setData("healthBonus", math.max((char:getData("healthBonus", 0) - 10), 0))
         elseif instance.uniqueID == "stamina_boost" then
             char:setData("staminaBonus", math.max((char:getData("staminaBonus", 0) - 5), 0))
         end
-
+        
         -- Check for set bonuses
         local items = self:getItems()
         local setItems = {}
@@ -13395,7 +13395,7 @@ end
                 setItems[itemSet] = (setItems[itemSet] or 0) + 1
             end
         end
-
+        
         -- Remove set bonuses if not enough items
         for set, count in pairs(setItems) do
             if count < 3 then
@@ -13403,7 +13403,7 @@ end
                 owner:ChatPrint("Set bonus deactivated: " .. set)
             end
         end
-
+        
         -- Check if item should be preserved
         if preserveItem then
             -- Create dropped item entity
@@ -13415,9 +13415,9 @@ end
                 ent:Spawn()
             end
         end
-
+        
         -- Log item removal
-        print(string.format("Item %s removed from inventory %s (Owner: %s, Preserved: %s)",
+        print(string.format("Item %s removed from inventory %s (Owner: %s, Preserved: %s)", 
             instance.uniqueID, self:getID(), char:getName(), tostring(preserveItem)))
     end)
     ```
@@ -13460,17 +13460,17 @@ end
             local currentWeight = instance:getData("weight", 0)
             local itemWeight = self.weight or 1
             instance:setData("weight", math.max(0, currentWeight - itemWeight))
-
+            
             -- Log to database
             lia.db.query("INSERT INTO inventory_logs (timestamp, invid, itemid, action) VALUES (?, ?, ?, ?)",
                 os.time(), instance:getID(), self:getID(), "removed")
-
+            
             -- Notify owner
             local owner = instance:getOwner()
             if IsValid(owner) then
                 owner:ChatPrint("Removed " .. self.name .. " from inventory")
             end
-
+            
             -- Check for set bonus removal
             if string.find(self.uniqueID, "armor_") then
                 local items = instance:getItems()
@@ -13480,7 +13480,7 @@ end
                         armorPieces = armorPieces + 1
                     end
                 end
-
+                
                 if armorPieces < 3 and IsValid(owner) then
                     local char = owner:getChar()
                     if char and char:getData("armorSetBonus", false) then
@@ -13531,22 +13531,22 @@ end
     hook.Add("InventoryOpened", "AdvancedInventoryOpen", function(panel, inventory)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Save open state
         char:setData("lastInventoryOpen", os.time())
-
+        
         -- Customize panel appearance
         panel:SetBackgroundColor(Color(50, 50, 50, 200))
         panel:SetSize(600, 400)
         panel:Center()
-
+        
         -- Add custom title
         local title = panel:Add("DLabel")
         title:SetText("Inventory - " .. char:getName())
         title:SetFont("DermaLarge")
         title:Dock(TOP)
         title:SetHeight(30)
-
+        
         -- Add weight display
         local weight = inventory:getData("weight", 0)
         local maxWeight = inventory:getData("maxWeight", 100)
@@ -13554,7 +13554,7 @@ end
         weightLabel:SetText(string.format("Weight: %d / %d", weight, maxWeight))
         weightLabel:Dock(BOTTOM)
         weightLabel:SetHeight(20)
-
+        
         -- Trigger custom event
         hook.Run("CustomInventoryOpened", inventory)
     end)
@@ -13598,19 +13598,19 @@ end
         -- Customize appearance
         panel:SetBackgroundColor(Color(50, 50, 50, 200))
         panel:SetSize(600, 400)
-
+        
         -- Add title bar
         local titleBar = panel:Add("DPanel")
         titleBar:Dock(TOP)
         titleBar:SetHeight(30)
         titleBar:SetBackgroundColor(Color(30, 30, 30, 255))
-
+        
         local title = titleBar:Add("DLabel")
         title:SetText("Inventory")
         title:SetFont("DermaLarge")
         title:Dock(FILL)
         title:SetContentAlignment(5)
-
+        
         -- Add close button
         local closeBtn = titleBar:Add("DButton")
         closeBtn:SetText("X")
@@ -13619,27 +13619,27 @@ end
         closeBtn.DoClick = function()
             panel:Close()
         end
-
+        
         -- Add weight bar
         local weight = inventory:getData("weight", 0)
         local maxWeight = inventory:getData("maxWeight", 100)
-
+        
         local weightBar = panel:Add("DPanel")
         weightBar:Dock(BOTTOM)
         weightBar:SetHeight(25)
         weightBar:SetBackgroundColor(Color(30, 30, 30, 255))
-
+        
         local weightLabel = weightBar:Add("DLabel")
         weightLabel:SetText(string.format("Weight: %d / %d (%.1f%%)", weight, maxWeight, (weight / maxWeight) * 100))
         weightLabel:Dock(FILL)
         weightLabel:SetContentAlignment(5)
-
+        
         -- Add filter buttons
         local filterPanel = panel:Add("DPanel")
         filterPanel:Dock(TOP)
         filterPanel:SetHeight(30)
         filterPanel:SetBackgroundColor(Color(40, 40, 40, 255))
-
+        
         local filterAll = filterPanel:Add("DButton")
         filterAll:SetText("All")
         filterAll:Dock(LEFT)
@@ -13647,7 +13647,7 @@ end
         filterAll.DoClick = function()
             inventory:setFilter(nil)
         end
-
+        
         local filterWeapons = filterPanel:Add("DButton")
         filterWeapons:SetText("Weapons")
         filterWeapons:Dock(LEFT)
@@ -13655,7 +13655,7 @@ end
         filterWeapons.DoClick = function()
             inventory:setFilter("weapon")
         end
-
+        
         local filterArmor = filterPanel:Add("DButton")
         filterArmor:SetText("Armor")
         filterArmor:Dock(LEFT)
@@ -13701,7 +13701,7 @@ end
     -- High: Complex fake recognition system
     hook.Add("IsCharFakeRecognized", "AdvancedFakeRecognition", function(self, id)
         local fakeRecognized = self:getData("fakeRecognized", {})
-
+        
         -- Check if in fake recognition list
         if table.HasValue(fakeRecognized, id) then
             -- Check if fake recognition has expired
@@ -13714,7 +13714,7 @@ end
                 self:setData("fakeRecognized", fakeRecognized)
             end
         end
-
+        
         return false
     end)
     ```
@@ -13749,13 +13749,13 @@ end
         if table.HasValue(recognized, id) then
             return true
         end
-
+        
         -- Same faction members recognize each other
         local targetChar = lia.char.loaded[id]
         if targetChar and targetChar:getFaction() == self:getFaction() then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -13768,22 +13768,22 @@ end
         if table.HasValue(recognized, id) then
             return true
         end
-
+        
         local targetChar = lia.char.loaded[id]
         if not targetChar then return false end
-
+        
         -- Same faction members recognize each other
         if targetChar:getFaction() == self:getFaction() then
             return true
         end
-
+        
         -- Check if in same group/party
         local myGroup = self:getData("group")
         local targetGroup = targetChar:getData("group")
         if myGroup and targetGroup and myGroup == targetGroup then
             return true
         end
-
+        
         -- Check proximity-based recognition
         local myPlayer = self:getPlayer()
         local targetPlayer = targetChar:getPlayer()
@@ -13793,7 +13793,7 @@ end
                 return true
             end
         end
-
+        
         return false
     end)
     ```
@@ -13836,18 +13836,18 @@ end
         if table.HasValue(noRecognitionTypes, chatType) then
             return false
         end
-
+        
         -- IC and whisper chats require recognition
         local recognitionTypes = {"ic", "w", "y", "me", "it"}
         if table.HasValue(recognitionTypes, chatType) then
             return true
         end
-
+        
         -- Radio and faction chats don't require recognition
         if chatType == "radio" or chatType == "faction" then
             return false
         end
-
+        
         -- Default to requiring recognition
         return true
     end)
@@ -13882,7 +13882,7 @@ end
             ["prop_vehicle_airboat"] = true,
             ["prop_physics"] = true
         }
-
+        
         return suitableClasses[entity:GetClass()] or false
     end)
     ```
@@ -13892,38 +13892,38 @@ end
     -- High: Complex trunk suitability system
     hook.Add("IsSuitableForTrunk", "AdvancedTrunkCheck", function(entity)
         if not IsValid(entity) then return false end
-
+        
         -- Check entity class
         local suitableClasses = {
             ["prop_vehicle_jeep"] = true,
             ["prop_vehicle_airboat"] = true,
             ["prop_physics"] = true
         }
-
+        
         if not suitableClasses[entity:GetClass()] then
             return false
         end
-
+        
         -- Check if entity has trunk flag
         if entity:getNetVar("hasTrunk", false) == false then
             return false
         end
-
+        
         -- Check entity size for props
         if entity:GetClass() == "prop_physics" then
             local mins, maxs = entity:GetCollisionBounds()
             local volume = (maxs.x - mins.x) * (maxs.y - mins.y) * (maxs.z - mins.z)
-
+            
             if volume < 1000 then -- Too small
                 return false
             end
         end
-
+        
         -- Check if entity is locked
         if entity:getNetVar("locked", false) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -14009,7 +14009,7 @@ end
                 end
             end
         end
-
+        
         return false
     end)
     ```
@@ -14020,18 +14020,18 @@ end
     hook.Add("ItemCombine", "AdvancedItemCombine", function(client, item, target)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Define combination recipes
         local recipes = {
             {items = {"weapon_part_a", "weapon_part_b"}, result = "weapon_combined", skill = 5},
             {items = {"metal_ore", "metal_ore"}, result = "metal_bar", skill = 3},
             {items = {"herb_a", "herb_b"}, result = "potion_health", skill = 7}
         }
-
+        
         -- Check each recipe
         for _, recipe in ipairs(recipes) do
             local hasItems = (table.HasValue(recipe.items, item.uniqueID) and table.HasValue(recipe.items, target.uniqueID))
-
+            
             if hasItems then
                 -- Check skill requirement
                 local craftingSkill = char:getData("craftingSkill", 0)
@@ -14039,24 +14039,24 @@ end
                     client:ChatPrint("You need crafting skill level " .. recipe.skill .. " to combine these items")
                     return false
                 end
-
+                
                 -- Create result item
                 local newItem = lia.item.instance(recipe.result)
                 if newItem then
                     char:getInv():add(newItem)
                     item:remove()
                     target:remove()
-
+                    
                     -- Grant experience
                     local currentSkill = char:getData("craftingSkill", 0)
                     char:setData("craftingSkill", currentSkill + 1)
-
+                    
                     client:ChatPrint("Items combined successfully! Crafting skill increased.")
                     return true
                 end
             end
         end
-
+        
         client:ChatPrint("These items cannot be combined")
         return false
     end)
@@ -14107,7 +14107,7 @@ end
             -- Log to database
             lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
                 os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
-
+            
             -- Handle durability changes
             if key == "durability" then
                 if newValue <= 0 then
@@ -14116,7 +14116,7 @@ end
                     if IsValid(owner) then
                         owner:ChatPrint(item.name .. " is broken!")
                     end
-
+                    
                     -- Remove item
                     timer.Simple(1, function()
                         if IsValid(item) then
@@ -14131,7 +14131,7 @@ end
                     end
                 end
             end
-
+            
             -- Handle quality changes
             if key == "quality" then
                 local owner = item:getOwner()
@@ -14139,7 +14139,7 @@ end
                     owner:ChatPrint(item.name .. " quality changed to " .. newValue)
                 end
             end
-
+            
             -- Handle quantity changes
             if key == "quantity" then
                 if newValue <= 0 then
@@ -14181,13 +14181,13 @@ end
             use = {name = "Use", icon = "icon16/accept.png"},
             drop = {name = "Drop", icon = "icon16/bin.png"}
         }
-
+        
         if not item:getData("equipped", false) then
             functions.equip = {name = "Equip", icon = "icon16/add.png"}
         else
             functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
         end
-
+        
         return functions
     end)
     ```
@@ -14197,15 +14197,15 @@ end
     -- High: Complex function system
     hook.Add("ItemDefaultFunctions", "AdvancedItemFunctions", function(item)
         local functions = {}
-
+        
         -- Always add use function
         functions.use = {name = "Use", icon = "icon16/accept.png"}
-
+        
         -- Add drop if not equipped
         if not item:getData("equipped", false) then
             functions.drop = {name = "Drop", icon = "icon16/bin.png"}
         end
-
+        
         -- Add equip/unequip
         if item.equipable then
             if item:getData("equipped", false) then
@@ -14214,16 +14214,16 @@ end
                 functions.equip = {name = "Equip", icon = "icon16/add.png"}
             end
         end
-
+        
         -- Add examine
         functions.examine = {name = "Examine", icon = "icon16/magnifier.png"}
-
+        
         -- Add repair if damaged
         local durability = item:getData("durability")
         if durability and durability < 100 then
             functions.repair = {name = "Repair", icon = "icon16/wrench.png"}
         end
-
+        
         return functions
     end)
     ```
@@ -14254,7 +14254,7 @@ end
     hook.Add("ItemDeleted", "CleanupItemData", function(instance)
         -- Remove from cache
         lia.itemCache[instance:getID()] = nil
-
+        
         print("Item deleted and cleaned up: " .. instance.name)
     end)
     ```
@@ -14264,23 +14264,23 @@ end
     -- High: Complex item deletion handling
     hook.Add("ItemDeleted", "AdvancedItemDeletion", function(instance)
         local itemID = instance:getID()
-
+        
         -- Archive item data
         lia.db.query("INSERT INTO item_archive SELECT * FROM items WHERE id = ?", itemID)
-
+        
         -- Clean up related data
         lia.db.query("DELETE FROM item_data WHERE itemid = ?", itemID)
         lia.db.query("DELETE FROM item_logs WHERE itemid = ?", itemID)
-
+        
         -- Remove from cache
         lia.itemCache[itemID] = nil
-
+        
         -- Notify owner
         local owner = instance:getOwner()
         if IsValid(owner) then
             owner:ChatPrint(instance.name .. " has been deleted")
         end
-
+        
         -- Log deletion
         print("Item deleted: " .. instance.name .. " (ID: " .. itemID .. ")")
         lia.log.add("Item " .. instance.name .. " (" .. itemID .. ") was deleted", "item")
@@ -14326,13 +14326,13 @@ end
     hook.Add("ItemDraggedOutOfInventory", "AdvancedDragValidation", function(client, item)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Prevent dragging equipped items
         if item:getData("equipped", false) then
             client:ChatPrint("Cannot drag equipped items")
             return false
         end
-
+        
         -- Prevent dragging bound items
         if item:getData("bound", false) then
             local boundTo = item:getData("boundTo")
@@ -14341,19 +14341,19 @@ end
                 return false
             end
         end
-
+        
         -- Prevent dragging quest items
         if item:getData("questItem", false) then
             client:ChatPrint("Quest items cannot be dropped")
             return false
         end
-
+        
         -- Check cooldown
         local lastDrag = char:getData("lastItemDrag", 0)
         if CurTime() - lastDrag < 1 then
             return false
         end
-
+        
         char:setData("lastItemDrag", CurTime())
         return true
     end)
@@ -14401,15 +14401,15 @@ end
     hook.Add("ItemFunctionCalled", "AdvancedFunctionTracking", function(self, method, client, entity, results)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO item_function_logs (timestamp, itemid, method, charid, steamid) VALUES (?, ?, ?, ?, ?)",
             os.time(), self:getID(), method, char:getID(), client:SteamID())
-
+        
         -- Track usage statistics
         local usageCount = char:getData("itemUsage_" .. self.uniqueID, 0)
         char:setData("itemUsage_" .. self.uniqueID, usageCount + 1)
-
+        
         -- Check for achievements
         if usageCount + 1 >= 100 then
             if not char:getData("achievement_itemMaster_" .. self.uniqueID, false) then
@@ -14417,14 +14417,14 @@ end
                 client:ChatPrint("Achievement unlocked: Master of " .. self.name)
             end
         end
-
+        
         -- Handle specific methods
         if method == "use" then
             -- Decrease durability
             local durability = self:getData("durability", 100)
             self:setData("durability", math.max(0, durability - 1))
         end
-
+        
         -- Notify nearby players
         if method == "use" or method == "equip" then
             for _, ply in ipairs(player.GetAll()) do
@@ -14483,19 +14483,19 @@ end
         if not item:getData("created") then
             item:setData("created", os.time())
         end
-
+        
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO item_logs (timestamp, itemid, action) VALUES (?, ?, ?)",
                 os.time(), item:getID(), "initialized")
-
+            
             -- Set up item-specific data
             if item.category == "weapon" then
                 item:setData("ammo", item.maxAmmo or 30)
             elseif item.category == "armor" then
                 item:setData("defense", item.baseDefense or 10)
             end
-
+            
             -- Add to item registry
             lia.itemRegistry = lia.itemRegistry or {}
             lia.itemRegistry[item:getID()] = item
@@ -14532,13 +14532,13 @@ end
     hook.Add("ItemPaintOver", "DrawDurabilityBar", function(self, itemTable, w, h)
         local item = self.item
         if not item then return end
-
+        
         local durability = item:getData("durability", 100)
         local barWidth = (w - 4) * (durability / 100)
-
+        
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(2, h - 8, w - 4, 6)
-
+        
         local barColor = Color(255 * (1 - durability / 100), 255 * (durability / 100), 0)
         surface.SetDrawColor(barColor)
         surface.DrawRect(2, h - 8, barWidth, 6)
@@ -14551,31 +14551,31 @@ end
     hook.Add("ItemPaintOver", "AdvancedItemOverlay", function(self, itemTable, w, h)
         local item = self.item
         if not item then return end
-
+        
         -- Draw durability bar
         local durability = item:getData("durability", 100)
         if durability < 100 then
             local barWidth = (w - 4) * (durability / 100)
-
+            
             surface.SetDrawColor(0, 0, 0, 200)
             surface.DrawRect(2, h - 8, w - 4, 6)
-
+            
             local barColor = Color(255 * (1 - durability / 100), 255 * (durability / 100), 0)
             surface.SetDrawColor(barColor)
             surface.DrawRect(2, h - 8, barWidth, 6)
         end
-
+        
         -- Draw quantity
         local quantity = item:getData("quantity", 1)
         if quantity > 1 then
             draw.SimpleText("x" .. quantity, "DermaDefaultBold", w - 5, 5, Color(255, 255, 255), TEXT_ALIGN_RIGHT)
         end
-
+        
         -- Draw equipped indicator
         if item:getData("equipped", false) then
             draw.SimpleText("E", "DermaDefaultBold", 5, 5, Color(0, 255, 0))
         end
-
+        
         -- Draw quality border
         local quality = item:getData("quality", "common")
         local borderColors = {
@@ -14585,7 +14585,7 @@ end
             ["epic"] = Color(150, 0, 255),
             ["legendary"] = Color(255, 200, 0)
         }
-
+        
         local borderColor = borderColors[quality] or Color(150, 150, 150)
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
@@ -14632,7 +14632,7 @@ end
             -- Log to database
             lia.db.query("INSERT INTO item_quantity_logs (timestamp, itemid, oldquantity, newquantity) VALUES (?, ?, ?, ?)",
                 os.time(), item:getID(), oldValue, quantity)
-
+            
             -- Remove item if quantity is zero or negative
             if quantity <= 0 then
                 local owner = item:getOwner()
@@ -14642,7 +14642,7 @@ end
                 item:remove()
                 return
             end
-
+            
             -- Notify owner of quantity change
             local owner = item:getOwner()
             if IsValid(owner) then
@@ -14653,7 +14653,7 @@ end
                     owner:ChatPrint(change .. " " .. item.name)
                 end
             end
-
+            
             -- Check for achievements
             if quantity >= 100 then
                 local owner = item:getOwner()
@@ -14695,7 +14695,7 @@ end
     hook.Add("ItemShowEntityMenu", "CustomEntityMenu", function(entity)
         local item = entity:getNetVar("item")
         if not item then return end
-
+        
         local menu = DermaMenu()
         menu:AddOption("Examine", function()
             chat.AddText("You examine the " .. item.name)
@@ -14709,23 +14709,23 @@ end
     -- High: Complex entity menu system
     hook.Add("ItemShowEntityMenu", "AdvancedEntityMenu", function(entity)
         if not IsValid(entity) then return end
-
+        
         local item = entity:getNetVar("item")
         if not item then return end
-
+        
         local client = LocalPlayer()
         local char = client:getChar()
         if not char then return end
-
+        
         -- Create menu
         local menu = DermaMenu()
-
+        
         -- Add examine option
         menu:AddOption("Examine", function()
             local desc = item.desc or "No description"
             chat.AddText(Color(255, 255, 255), "You examine the ", Color(100, 200, 255), item.name, Color(255, 255, 255), ": " .. desc)
         end)
-
+        
         -- Add pickup option if close enough
         local distance = client:GetPos():Distance(entity:GetPos())
         if distance < 100 then
@@ -14738,14 +14738,14 @@ end
             local option = menu:AddOption("Pick Up (Too Far)")
             option:SetEnabled(false)
         end
-
+        
         -- Add custom options based on item type
         if item.category == "weapons" then
             menu:AddOption("Inspect Weapon", function()
                 chat.AddText("This weapon has " .. (item:getData("ammo", 0)) .. " rounds")
             end)
         end
-
+        
         menu:Open()
     end)
     ```
@@ -14776,11 +14776,11 @@ end
     hook.Add("ItemTransfered", "TransferTracking", function(context)
         local fromChar = context.fromChar
         local toChar = context.toChar
-
+        
         if fromChar then
             fromChar:setData("itemsTransferredOut", (fromChar:getData("itemsTransferredOut", 0) + 1))
         end
-
+        
         if toChar then
             toChar:setData("itemsTransferredIn", (toChar:getData("itemsTransferredIn", 0) + 1))
         end
@@ -14796,18 +14796,18 @@ end
         local item = context.item
         local fromInv = context.fromInventory
         local toInv = context.toInventory
-
+        
         -- Update transfer statistics
         if fromChar then
             fromChar:setData("itemsTransferredOut", (fromChar:getData("itemsTransferredOut", 0) + 1))
             fromChar:setData("lastTransferOut", os.time())
         end
-
+        
         if toChar then
             toChar:setData("itemsTransferredIn", (toChar:getData("itemsTransferredIn", 0) + 1))
             toChar:setData("lastTransferIn", os.time())
         end
-
+        
         -- Check for transfer limits
         local transferLimit = 100 -- Max transfers per hour
         if fromChar then
@@ -14818,28 +14818,28 @@ end
             end
             fromChar:setData("transfersThisHour", transfersThisHour + 1)
         end
-
+        
         -- Check for valuable item transfers
         local itemValue = item:getData("value", 0)
         if itemValue > 1000 then
             -- Log valuable transfers
-            print(string.format("Valuable item %s transferred from %s to %s (Value: $%d)",
-                item.uniqueID, fromChar and fromChar:getName() or "Unknown",
+            print(string.format("Valuable item %s transferred from %s to %s (Value: $%d)", 
+                item.uniqueID, fromChar and fromChar:getName() or "Unknown", 
                 toChar and toChar:getName() or "Unknown", itemValue))
         end
-
+        
         -- Check for faction restrictions
         if fromChar and toChar then
             local fromFaction = fromChar:getFaction()
             local toFaction = toChar:getFaction()
-
+            
             if fromFaction == "police" and toFaction == "criminal" then
                 -- Police transferring to criminals - log this
-                print(string.format("Suspicious transfer: %s (Police) to %s (Criminal)",
+                print(string.format("Suspicious transfer: %s (Police) to %s (Criminal)", 
                     fromChar:getName(), toChar:getName()))
             end
         end
-
+        
         -- Check for quest items
         if item:getData("questItem", false) then
             local questID = item:getData("questID")
@@ -14848,7 +14848,7 @@ end
                 toChar:getPlayer():ChatPrint("Quest progress updated!")
             end
         end
-
+        
         -- Check for bound items
         if item:getData("bound", false) then
             local boundTo = item:getData("boundTo")
@@ -14857,10 +14857,10 @@ end
                 return false
             end
         end
-
+        
         -- Log transfer
-        print(string.format("Item %s transferred from %s to %s",
-            item.uniqueID, fromChar and fromChar:getName() or "Unknown",
+        print(string.format("Item %s transferred from %s to %s", 
+            item.uniqueID, fromChar and fromChar:getName() or "Unknown", 
             toChar and toChar:getName() or "Unknown"))
     end)
     ```
@@ -14893,7 +14893,7 @@ end
     hook.Add("KeyLock", "TrackLocks", function(owner, entity, time)
         local char = owner:getChar()
         if not char then return end
-
+        
         local locks = char:getData("locksUsed", 0)
         char:setData("locksUsed", locks + 1)
     end)
@@ -14905,21 +14905,21 @@ end
     hook.Add("KeyLock", "AdvancedKeyLock", function(owner, entity, time)
         local char = owner:getChar()
         if not char then return end
-
+        
         -- Update entity data
         entity:setNetVar("locked", true)
         entity:setNetVar("lockedBy", char:getID())
         entity:setNetVar("lockedAt", os.time())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO lock_logs (timestamp, steamid, entityid, action) VALUES (?, ?, ?, ?)",
             os.time(), owner:SteamID(), entity:EntIndex(), "locked")
-
+        
         -- Update character stats
         local locks = char:getData("locksUsed", 0)
         char:setData("locksUsed", locks + 1)
         char:setData("lastLockTime", os.time())
-
+        
         -- Notify nearby players
         local pos = entity:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -14958,7 +14958,7 @@ end
     hook.Add("KeyUnlock", "TrackUnlocks", function(owner, entity, time)
         local char = owner:getChar()
         if not char then return end
-
+        
         local unlocks = char:getData("unlocksUsed", 0)
         char:setData("unlocksUsed", unlocks + 1)
     end)
@@ -14970,21 +14970,21 @@ end
     hook.Add("KeyUnlock", "AdvancedKeyUnlock", function(owner, entity, time)
         local char = owner:getChar()
         if not char then return end
-
+        
         -- Update entity data
         entity:setNetVar("locked", false)
         entity:setNetVar("unlockedBy", char:getID())
         entity:setNetVar("unlockedAt", os.time())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO lock_logs (timestamp, steamid, entityid, action) VALUES (?, ?, ?, ?)",
             os.time(), owner:SteamID(), entity:EntIndex(), "unlocked")
-
+        
         -- Update character stats
         local unlocks = char:getData("unlocksUsed", 0)
         char:setData("unlocksUsed", unlocks + 1)
         char:setData("lastUnlockTime", os.time())
-
+        
         -- Notify nearby players
         local pos = entity:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -15031,7 +15031,7 @@ end
     hook.Add("KeybindsLoaded", "AdvancedKeybinds", function()
         -- Load saved keybinds from data
         local savedBinds = lia.data.get("customKeybinds", {})
-
+        
         -- Register custom keybinds
         for action, key in pairs(savedBinds) do
             lia.keybind.register(action, key, function()
@@ -15040,14 +15040,14 @@ end
                 net.SendToServer()
             end, action)
         end
-
+        
         -- Setup keybind categories
         local categories = {
             ["Movement"] = {"forward", "backward", "left", "right"},
             ["Actions"] = {"use", "attack", "reload"},
             ["Menu"] = {"inventory", "character", "scoreboard"}
         }
-
+        
         -- Create keybind menu
         concommand.Add("lia_keybinds", function()
             local frame = vgui.Create("DFrame")
@@ -15055,10 +15055,10 @@ end
             frame:Center()
             frame:MakePopup()
             frame:SetTitle("Keybind Settings")
-
+            
             local list = vgui.Create("DScrollPanel", frame)
             list:Dock(FILL)
-
+            
             for category, binds in pairs(categories) do
                 local label = list:Add("DLabel")
                 label:SetText(category)
@@ -15106,27 +15106,27 @@ end
         -- Show notification
         if isCurrentChar then
             lia.util.notify("You have been kicked from your character", 4)
-
+            
             -- Clear character-specific UI
             if IsValid(lia.gui.charInfo) then
                 lia.gui.charInfo:Remove()
             end
-
+            
             if IsValid(lia.gui.inventory) then
                 lia.gui.inventory:Remove()
             end
-
+            
             -- Log the kick
             lia.log.write("client_char_kick", {
                 charID = id,
                 timestamp = os.time()
             })
-
+            
             -- Save any pending data
             net.Start("liaSaveCharData")
                 net.WriteUInt(id, 32)
             net.SendToServer()
-
+            
             -- Return to character selection
             timer.Simple(1, function()
                 vgui.Create("liaCharacterMenu")
@@ -15172,7 +15172,7 @@ end
     hook.Add("LiliaLoaded", "AdvancedFrameworkInit", function()
         -- Initialize custom systems
         MyAddon.Initialize()
-
+        
         -- Register custom chat commands
         lia.command.add("mycmd", {
             description = "My custom command",
@@ -15180,14 +15180,14 @@ end
                 client:ChatPrint("Command executed!")
             end
         })
-
+        
         -- Register custom items
         lia.item.register("my_item", {
             name = "My Item",
             desc = "A custom item",
             model = "models/props_lab/box01a.mdl"
         })
-
+        
         print("MyAddon fully initialized with Lilia")
     end)
     ```
@@ -15230,14 +15230,14 @@ end
             "CREATE TABLE IF NOT EXISTS my_stats (charid INTEGER, stat TEXT, value INTEGER)",
             "CREATE TABLE IF NOT EXISTS my_logs (timestamp INTEGER, message TEXT)"
         }
-
+        
         for _, query in ipairs(tables) do
             lia.db.query(query)
         end
-
+        
         -- Create indexes
         lia.db.query("CREATE INDEX IF NOT EXISTS idx_my_stats_charid ON my_stats(charid)")
-
+        
         print("Custom database tables and indexes created")
     end)
     ```
@@ -15279,19 +15279,19 @@ end
     hook.Add("LoadCharInformation", "AdvancedCharDataLoad", function()
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Request custom data from server
         netstream.Start("RequestCustomCharData", char:getID())
-
+        
         -- Initialize client-side character systems
         MyAddon.InitializeCharacter(char)
-
+        
         -- Load character preferences
         local prefs = char:getData("preferences", {})
         for key, value in pairs(prefs) do
             MyAddon.SetPreference(key, value)
         end
-
+        
         print("Character information loaded for " .. char:getName())
     end)
     ```
@@ -15332,7 +15332,7 @@ end
         -- Load custom data
         local data = lia.data.get("myAddonData", {})
         MyAddon.data = data
-
+        
         -- Load from database
         lia.db.query("SELECT * FROM my_table", function(results)
             if results then
@@ -15341,11 +15341,11 @@ end
                 end
             end
         end)
-
+        
         -- Initialize data structures
         MyAddon.playerData = MyAddon.playerData or {}
         MyAddon.sessionData = {}
-
+        
         print("All data loaded successfully")
     end)
     ```
@@ -15389,18 +15389,18 @@ end
         info["Level"] = character:getData("level", 1)
         info["Experience"] = character:getData("exp", 0) .. " / " .. character:getData("expNeeded", 100)
         info["Money"] = lia.currency.get(character:getMoney())
-
+        
         -- Faction info
         local faction = lia.faction.indices[character:getFaction()]
         if faction then
             info["Faction"] = faction.name
             info["Rank"] = character:getData("rankName", "Recruit")
         end
-
+        
         -- Stats
         info["Health"] = character:getData("health", 100)
         info["Armor"] = character:getData("armor", 0)
-
+        
         -- Playtime
         local playTime = character:getData("playTime", 0)
         local hours = math.floor(playTime / 3600)
@@ -15435,13 +15435,13 @@ end
     -- Medium: Faction-based models
     hook.Add("ModifyCharacterModel", "FactionModels", function(client, character)
         local faction = character:getFaction()
-
+        
         if faction == "police" then
             return "models/player/police.mdl"
         elseif faction == "medic" then
             return "models/player/medic.mdl"
         end
-
+        
         return character:getModel()
     end)
     ```
@@ -15451,7 +15451,7 @@ end
     -- High: Complex model modification system
     hook.Add("ModifyCharacterModel", "AdvancedModelModification", function(client, character)
         local baseModel = character:getModel()
-
+        
         -- Check for outfit override
         local outfit = character:getData("outfit")
         if outfit then
@@ -15460,7 +15460,7 @@ end
                 return outfitItem.model
             end
         end
-
+        
         -- Check faction models
         local faction = lia.faction.indices[character:getFaction()]
         if faction and faction.models then
@@ -15469,7 +15469,7 @@ end
                 return faction.models[modelIndex]
             end
         end
-
+        
         -- Check for transformation effects
         if character:getData("transformed", false) then
             local transformModel = character:getData("transformModel")
@@ -15477,7 +15477,7 @@ end
                 return transformModel
             end
         end
-
+        
         return baseModel
     end)
     ```
@@ -15521,7 +15521,7 @@ end
     hook.Add("ModifyScoreboardModel", "AdvancedScoreboardModel", function(client, ply)
         local char = ply:getChar()
         if not char then return ply:GetModel() end
-
+        
         -- Show outfit model if equipped
         local outfit = char:getData("outfit")
         if outfit then
@@ -15530,7 +15530,7 @@ end
                 return outfitItem.model
             end
         end
-
+        
         -- Show character model
         return char:getModel()
     end)
@@ -15576,11 +15576,11 @@ end
     -- High: Complex netvar tracking system
     hook.Add("NetVarChanged", "AdvancedNetvarTracking", function(entity, key, oldValue, value)
         if not IsValid(entity) then return end
-
+        
         -- Log to console
-        print(string.format("NetVar changed on %s: %s = %s (was %s)",
+        print(string.format("NetVar changed on %s: %s = %s (was %s)", 
             tostring(entity), key, tostring(value), tostring(oldValue)))
-
+        
         -- Handle specific netvars
         if key == "health" and entity:IsPlayer() then
             if value < oldValue then
@@ -15593,7 +15593,7 @@ end
                 print(entity:Name() .. " healed " .. healing .. " HP")
             end
         end
-
+        
         -- Trigger custom events
         hook.Run("CustomNetVarChanged_" .. key, entity, oldValue, value)
     end)
@@ -15634,16 +15634,16 @@ end
         -- Clear selection
         MyAddon.selectedEntity = nil
         MyAddon.menuOpen = false
-
+        
         -- Save menu state
         local char = LocalPlayer():getChar()
         if char then
             char:setData("lastAdminMenuClose", os.time())
         end
-
+        
         -- Clean up temporary data
         MyAddon.tempData = {}
-
+        
         print("Admin stick menu closed and cleaned up")
     end)
     ```
@@ -15691,24 +15691,24 @@ end
             immunity = 50,
             color = Color(0, 200, 0)
         }
-
+        
         groups["headAdmin"] = {
             name = "Head Admin",
             immunity = 90,
             color = Color(255, 0, 0)
         }
-
+        
         -- Add custom privileges
         privileges["canManageEvents"] = {
             name = "Can Manage Events",
             description = "Allows managing server events"
         }
-
+        
         privileges["canEditVendors"] = {
             name = "Can Edit Vendors",
             description = "Allows editing vendor inventories"
         }
-
+        
         print("Admin system customized with new groups and privileges")
     end)
     ```
@@ -15750,18 +15750,18 @@ end
         print("Backup created: " .. metadata.filename)
         print("Size: " .. metadata.size .. " bytes")
         print("Timestamp: " .. os.date("%Y-%m-%d %H:%M:%S", metadata.timestamp))
-
+        
         -- Store backup metadata
         lia.db.query("INSERT INTO backups (timestamp, filename, size) VALUES (?, ?, ?)",
             metadata.timestamp, metadata.filename, metadata.size)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[BACKUP] New backup created: " .. metadata.filename)
             end
         end
-
+        
         -- Clean up old backups
         local maxBackups = 10
         lia.db.query("SELECT COUNT(*) as count FROM backups", function(results)
@@ -15808,17 +15808,17 @@ end
     hook.Add("OnCharAttribBoosted", "AdvancedAttributeBoost", function(character)
         local boosts = character:getData("attributeBoosts", 0)
         character:setData("attributeBoosts", boosts + 1)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO attribute_logs (timestamp, charid, action) VALUES (?, ?, ?)",
             os.time(), character:getID(), "boosted")
-
+        
         -- Notify player
         local client = character:getPlayer()
         if IsValid(client) then
             client:ChatPrint("Attribute boosted! Total boosts: " .. (boosts + 1))
         end
-
+        
         -- Check for achievements
         if boosts + 1 >= 50 then
             if not character:getData("achievement_attributeMaster", false) then
@@ -15871,15 +15871,15 @@ end
         -- Log to database
         lia.db.query("INSERT INTO attribute_logs (timestamp, charid, attribute, value) VALUES (?, ?, ?, ?)",
             os.time(), character:getID(), key, newValue)
-
+        
         -- Track changes
         local changes = character:getData("attributeChanges", {})
         changes[key] = (changes[key] or 0) + 1
         character:setData("attributeChanges", changes)
-
+        
         -- Notify player
         client:ChatPrint(key .. " updated to " .. newValue)
-
+        
         -- Apply attribute effects
         if key == "str" then
             -- Strength affects melee damage
@@ -15927,7 +15927,7 @@ end
         -- Give starting money bonus
         local bonusMoney = 500
         character:setMoney(character:getMoney() + bonusMoney)
-
+        
         -- Give starting items
         local startingItems = {"wallet", "phone", "id_card"}
         for _, itemID in ipairs(startingItems) do
@@ -15936,7 +15936,7 @@ end
                 character:getInv():add(item)
             end
         end
-
+        
         client:ChatPrint("Welcome! You received starting bonuses.")
     end)
     ```
@@ -15946,7 +15946,7 @@ end
     -- High: Complex character creation system
     hook.Add("OnCharCreated", "AdvancedCreation", function(client, character, originalData)
         local faction = character:getFaction()
-
+        
         -- Set up faction-specific starting equipment
         local factionEquipment = {
             ["police"] = {
@@ -15965,12 +15965,12 @@ end
                 attributes = {str = 3, con = 3, dex = 3}
             }
         }
-
+        
         local equipment = factionEquipment[faction]
         if equipment then
             -- Give faction-specific money
             character:setMoney(character:getMoney() + equipment.money)
-
+            
             -- Give faction-specific items
             for _, itemID in ipairs(equipment.items) do
                 local item = lia.item.instance(itemID)
@@ -15978,24 +15978,24 @@ end
                     character:getInv():add(item)
                 end
             end
-
+            
             -- Set faction-specific attributes
             for attr, value in pairs(equipment.attributes) do
                 character:setAttrib(attr, value)
             end
         end
-
+        
         -- Set up character data
         character:setData("creationTime", os.time())
         character:setData("creationIP", client:IPAddress())
         character:setData("level", 1)
         character:setData("experience", 0)
-
+        
         -- Send welcome message
         client:ChatPrint("Character created successfully! Welcome to the server.")
-
+        
         -- Log creation
-        print(string.format("%s created %s character: %s",
+        print(string.format("%s created %s character: %s", 
             client:Name(), faction, character:getName()))
     end)
     ```
@@ -16039,11 +16039,11 @@ end
     hook.Add("OnCharDelete", "AdvancedDeletion", function(client, id)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Update deletion statistics
         char:setData("charactersDeleted", (char:getData("charactersDeleted", 0) + 1))
         char:setData("lastCharDelete", os.time())
-
+        
         -- Check for deletion cooldown
         local lastDelete = char:getData("lastCharDelete", 0)
         local deleteCooldown = 3600 -- 1 hour
@@ -16051,7 +16051,7 @@ end
             client:ChatPrint("You must wait before deleting another character")
             return false
         end
-
+        
         -- Check for valuable items
         local charInv = char:getInv()
         local valuableItems = {}
@@ -16060,30 +16060,30 @@ end
                 table.insert(valuableItems, item)
             end
         end
-
+        
         if #valuableItems > 0 then
             client:ChatPrint("Warning: You have valuable items. Are you sure you want to delete this character?")
             return false
         end
-
+        
         -- Check for faction restrictions
         local faction = char:getFaction()
         if faction ~= "citizen" then
             client:ChatPrint("You must leave your faction before deleting this character")
             return false
         end
-
+        
         -- Check for active quests
         local activeQuests = char:getData("activeQuests", {})
         if #activeQuests > 0 then
             client:ChatPrint("You have active quests. Complete them before deleting this character")
             return false
         end
-
+        
         -- Log deletion
-        print(string.format("%s deleted character ID %d (Faction: %s)",
+        print(string.format("%s deleted character ID %d (Faction: %s)", 
             client:Name(), id, faction))
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= client then
@@ -16121,11 +16121,11 @@ end
         -- Save character position
         character:setData("lastPos", client:GetPos())
         character:setData("lastAng", client:GetAngles())
-
+        
         -- Save character health and armor
         character:setData("lastHealth", client:Health())
         character:setData("lastArmor", client:Armor())
-
+        
         -- Save disconnect time
         character:setData("lastDisconnect", os.time())
     end)
@@ -16141,24 +16141,24 @@ end
         character:setData("lastHealth", client:Health())
         character:setData("lastArmor", client:Armor())
         character:setData("lastDisconnect", os.time())
-
+        
         -- Save inventory state
         local inventory = character:getInv()
         if inventory then
             character:setData("inventoryState", inventory:getData())
         end
-
+        
         -- Save character money
         character:setData("lastMoney", character:getMoney())
-
+        
         -- Save character attributes
         local attributes = character:getAttribs()
         character:setData("lastAttributes", attributes)
-
+        
         -- Save character data
         local charData = character:getData()
         character:setData("lastCharData", charData)
-
+        
         -- Check for active effects
         local activeEffects = character:getData("activeEffects", {})
         if #activeEffects > 0 then
@@ -16169,7 +16169,7 @@ end
             end
             character:setData("activeEffects", activeEffects)
         end
-
+        
         -- Check for active quests
         local activeQuests = character:getData("activeQuests", {})
         if #activeQuests > 0 then
@@ -16180,16 +16180,16 @@ end
             end
             character:setData("activeQuests", activeQuests)
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(character:getName() .. " has disconnected")
             end
         end
-
+        
         -- Log disconnect
-        print(string.format("%s disconnected with character %s (Faction: %s)",
+        print(string.format("%s disconnected with character %s (Faction: %s)", 
             client:Name(), character:getName(), character:getFaction()))
     end)
     ```
@@ -16223,7 +16223,7 @@ end
         -- Set character as unconscious
         character:setData("unconscious", true)
         character:setData("falloverTime", os.time())
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(client:GetPos()) < 500 then
@@ -16240,7 +16240,7 @@ end
         -- Set character as unconscious
         character:setData("unconscious", true)
         character:setData("falloverTime", os.time())
-
+        
         -- Set ragdoll data
         if IsValid(ragdoll) then
             ragdoll:setNetVar("charID", character:getID())
@@ -16248,7 +16248,7 @@ end
             ragdoll:setNetVar("faction", character:getFaction())
             ragdoll:setNetVar("falloverTime", os.time())
         end
-
+        
         -- Check for faction-specific effects
         local faction = character:getFaction()
         if faction == "police" then
@@ -16268,7 +16268,7 @@ end
                 end
             end
         end
-
+        
         -- Check for active quests
         local activeQuests = character:getData("activeQuests", {})
         for _, quest in ipairs(activeQuests) do
@@ -16277,7 +16277,7 @@ end
                 quest.failTime = os.time()
             end
         end
-
+        
         -- Check for active effects
         local activeEffects = character:getData("activeEffects", {})
         for _, effect in ipairs(activeEffects) do
@@ -16286,11 +16286,11 @@ end
                 effect.pauseTime = os.time()
             end
         end
-
+        
         -- Set up revival timer
         local revivalTime = 300 -- 5 minutes
         character:setData("revivalTime", os.time() + revivalTime)
-
+        
         -- Start revival timer
         timer.Simple(revivalTime, function()
             if IsValid(client) and character:getData("unconscious", false) then
@@ -16299,16 +16299,16 @@ end
                 client:ChatPrint("You have regained consciousness")
             end
         end)
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(client:GetPos()) < 500 then
                 ply:ChatPrint(character:getName() .. " has fallen unconscious")
             end
         end
-
+        
         -- Log fallover
-        print(string.format("%s fell over (Faction: %s, Health: %d)",
+        print(string.format("%s fell over (Faction: %s, Health: %d)", 
             character:getName(), faction, client:Health()))
     end)
     ```
@@ -16349,11 +16349,11 @@ end
         ragdoll:setNetVar("charID", character:getID())
         ragdoll:setNetVar("fallTime", os.time())
         ragdoll:setNetVar("charName", character:getName())
-
+        
         -- Track fallover count
         local fallCount = character:getData("fallCount", 0)
         character:setData("fallCount", fallCount + 1)
-
+        
         -- Apply faction-specific effects
         local faction = character:getFaction()
         if faction == "police" then
@@ -16364,7 +16364,7 @@ end
                 end
             end)
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client and ply:GetPos():Distance(client:GetPos()) < 500 then
@@ -16413,19 +16413,19 @@ end
         -- Log to database
         lia.db.query("INSERT INTO flag_logs (timestamp, charid, action, flags) VALUES (?, ?, ?, ?)",
             os.time(), self:getID(), "given", addedFlags)
-
+        
         -- Track flag history
         local flagHistory = self:getData("flagHistory", {})
         table.insert(flagHistory, {action = "given", flags = addedFlags, time = os.time()})
         self:setData("flagHistory", flagHistory)
-
+        
         -- Notify player
         ply:ChatPrint("You received flags: " .. addedFlags)
-
+        
         -- Apply flag-specific effects
         for i = 1, #addedFlags do
             local flag = addedFlags:sub(i, i)
-
+            
             if flag == "v" then
                 -- VIP flag
                 ply:ChatPrint("You are now a VIP!")
@@ -16434,7 +16434,7 @@ end
                 ply:ChatPrint("You now have admin privileges!")
             end
         end
-
+        
         -- Notify admins
         for _, admin in ipairs(player.GetAll()) do
             if admin:IsAdmin() and admin ~= ply then
@@ -16483,19 +16483,19 @@ end
         -- Log to database
         lia.db.query("INSERT INTO flag_logs (timestamp, charid, action, flags) VALUES (?, ?, ?, ?)",
             os.time(), self:getID(), "taken", removedFlags)
-
+        
         -- Track flag history
         local flagHistory = self:getData("flagHistory", {})
         table.insert(flagHistory, {action = "taken", flags = removedFlags, time = os.time()})
         self:setData("flagHistory", flagHistory)
-
+        
         -- Notify player
         ply:ChatPrint("You lost flags: " .. removedFlags)
-
+        
         -- Remove flag-specific effects
         for i = 1, #removedFlags do
             local flag = removedFlags:sub(i, i)
-
+            
             if flag == "v" then
                 -- VIP flag removed
                 ply:ChatPrint("Your VIP status has been revoked")
@@ -16504,7 +16504,7 @@ end
                 ply:ChatPrint("Your admin privileges have been revoked")
             end
         end
-
+        
         -- Notify admins
         for _, admin in ipairs(player.GetAll()) do
             if admin:IsAdmin() and admin ~= ply then
@@ -16544,12 +16544,12 @@ end
             -- Clear unconscious status
             char:setData("unconscious", false)
             char:setData("getupTime", os.time())
-
+            
             -- Restore some health
             local currentHealth = target:Health()
             local maxHealth = target:GetMaxHealth()
             target:SetHealth(math.min(currentHealth + 25, maxHealth))
-
+            
             target:ChatPrint("You have regained consciousness")
         end
     end)
@@ -16561,12 +16561,12 @@ end
     hook.Add("OnCharGetup", "AdvancedGetup", function(target, entity)
         local char = target:getChar()
         if not char then return end
-
+        
         -- Clear unconscious status
         char:setData("unconscious", false)
         char:setData("getupTime", os.time())
         char:setData("revivalTime", nil)
-
+        
         -- Restore health based on faction
         local faction = char:getFaction()
         local healthRestore = {
@@ -16574,16 +16574,16 @@ end
             ["medic"] = 75,
             ["citizen"] = 25
         }
-
+        
         local restoreAmount = healthRestore[faction] or 25
         local currentHealth = target:Health()
         local maxHealth = target:GetMaxHealth()
         target:SetHealth(math.min(currentHealth + restoreAmount, maxHealth))
-
+        
         -- Restore stamina
         local currentStamina = target:getNetVar("stamina", 100)
         target:setNetVar("stamina", math.min(currentStamina + 50, 100))
-
+        
         -- Resume active effects
         local activeEffects = char:getData("activeEffects", {})
         for _, effect in ipairs(activeEffects) do
@@ -16593,7 +16593,7 @@ end
             end
         end
         char:setData("activeEffects", activeEffects)
-
+        
         -- Resume active quests
         local activeQuests = char:getData("activeQuests", {})
         for _, quest in ipairs(activeQuests) do
@@ -16603,25 +16603,25 @@ end
             end
         end
         char:setData("activeQuests", activeQuests)
-
+        
         -- Check for revival achievements
         local revivals = char:getData("revivals", 0) + 1
         char:setData("revivals", revivals)
-
+        
         if revivals >= 10 and not char:getData("achievement_survivor", false) then
             char:setData("achievement_survivor", true)
             target:ChatPrint("Achievement unlocked: Survivor!")
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(target:GetPos()) < 500 then
                 ply:ChatPrint(char:getName() .. " has regained consciousness")
             end
         end
-
+        
         -- Log getup
-        print(string.format("%s got up (Faction: %s, Health: %d)",
+        print(string.format("%s got up (Faction: %s, Health: %d)", 
             char:getName(), faction, target:Health()))
     end)
     ```
@@ -16654,7 +16654,7 @@ end
         -- Save character data
         self:setData("lastKick", os.time())
         self:setData("kickCount", (self:getData("kickCount", 0) + 1))
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
@@ -16671,23 +16671,23 @@ end
         -- Save character data
         self:setData("lastKick", os.time())
         self:setData("kickCount", (self:getData("kickCount", 0) + 1))
-
+        
         -- Save character state
         self:setData("lastPos", client:GetPos())
         self:setData("lastAng", client:GetAngles())
         self:setData("lastHealth", client:Health())
         self:setData("lastArmor", client:Armor())
-
+        
         -- Save inventory state
         local inventory = self:getInv()
         if inventory then
             self:setData("inventoryState", inventory:getData())
         end
-
+        
         -- Check for kick reasons
         local kickReason = client:getData("kickReason", "Unknown")
         self:setData("lastKickReason", kickReason)
-
+        
         -- Check for faction-specific effects
         local faction = self:getFaction()
         if faction == "police" then
@@ -16707,7 +16707,7 @@ end
                 end
             end
         end
-
+        
         -- Check for active quests
         local activeQuests = self:getData("activeQuests", {})
         for _, quest in ipairs(activeQuests) do
@@ -16716,23 +16716,23 @@ end
                 quest.failTime = os.time()
             end
         end
-
+        
         -- Check for active effects
         local activeEffects = self:getData("activeEffects", {})
         for _, effect in ipairs(activeEffects) do
             effect.paused = true
             effect.pauseTime = os.time()
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(self:getName() .. " was kicked from the server")
             end
         end
-
+        
         -- Log kick
-        print(string.format("%s was kicked (Faction: %s, Reason: %s)",
+        print(string.format("%s was kicked (Faction: %s, Reason: %s)", 
             self:getName(), faction, kickReason))
     end)
     ```
@@ -16784,7 +16784,7 @@ end
     hook.Add("OnCharNetVarChanged", "AdvancedNetVar", function(character, key, oldVar, value)
         local client = character:getPlayer()
         if not client then return end
-
+        
         -- Track variable change history
         local changeHistory = character:getData("netVarHistory", {})
         changeHistory[key] = changeHistory[key] or {}
@@ -16793,14 +16793,14 @@ end
             newValue = value,
             timestamp = os.time()
         })
-
+        
         -- Keep only last 10 changes per variable
         if #changeHistory[key] > 10 then
             table.remove(changeHistory[key], 1)
         end
-
+        
         character:setData("netVarHistory", changeHistory)
-
+        
         -- Handle specific variable changes
         if key == "health" then
             -- Health change effects
@@ -16811,14 +16811,14 @@ end
                 -- Character revived
                 hook.Run("OnCharacterRevive", character)
             end
-
+            
             -- Notify nearby players of health change
             for _, ply in ipairs(player.GetAll()) do
                 if ply:GetPos():Distance(client:GetPos()) < 500 then
                     ply:ChatPrint(character:getName() .. "'s health: " .. value .. "/" .. client:GetMaxHealth())
                 end
             end
-
+        
         elseif key == "money" then
             -- Money change effects
             local difference = value - oldVar
@@ -16827,25 +16827,25 @@ end
             elseif difference < 0 then
                 client:ChatPrint("You lost $" .. math.abs(difference))
             end
-
+            
             -- Check for money milestones
             if value >= 10000 and oldVar < 10000 then
                 client:ChatPrint("Congratulations! You've reached $10,000!")
             elseif value >= 100000 and oldVar < 100000 then
                 client:ChatPrint("Congratulations! You've reached $100,000!")
             end
-
+        
         elseif key == "level" then
             -- Level change effects
             if value > oldVar then
                 hook.Run("OnPlayerLevelUp", client, oldVar, value)
             end
-
+        
         elseif key == "faction" then
             -- Faction change effects
             client:SetTeam(value)
             client:ChatPrint("Faction changed to: " .. value)
-
+            
             -- Notify other players
             for _, ply in ipairs(player.GetAll()) do
                 if ply ~= client then
@@ -16853,10 +16853,10 @@ end
                 end
             end
         end
-
+        
         -- Log significant changes
         if math.abs(value - oldVar) > 100 or key == "faction" then
-            print(string.format("%s netvar changed: %s from %s to %s",
+            print(string.format("%s netvar changed: %s from %s to %s", 
                 character:getName(), key, tostring(oldVar), tostring(value)))
         end
     end)
@@ -16890,7 +16890,7 @@ end
         -- Clear character data
         character:setData("permaKilled", true)
         character:setData("permaKillTime", os.time())
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
@@ -16908,7 +16908,7 @@ end
         character:setData("permaKilled", true)
         character:setData("permaKillTime", os.time())
         character:setData("permaKillReason", "Unknown")
-
+        
         -- Clear character inventory
         local inventory = character:getInv()
         if inventory then
@@ -16917,22 +16917,22 @@ end
                 inventory:remove(item)
             end
         end
-
+        
         -- Clear character money
         character:setMoney(0)
-
+        
         -- Clear character attributes
         local attributes = character:getAttribs()
         for attr, _ in pairs(attributes) do
             character:setAttrib(attr, 0)
         end
-
+        
         -- Clear character data
         character:setData("level", 1)
         character:setData("experience", 0)
         character:setData("activeQuests", {})
         character:setData("activeEffects", {})
-
+        
         -- Check for faction-specific effects
         local faction = character:getFaction()
         if faction == "police" then
@@ -16952,7 +16952,7 @@ end
                 end
             end
         end
-
+        
         -- Check for active quests
         local activeQuests = character:getData("activeQuests", {})
         for _, quest in ipairs(activeQuests) do
@@ -16960,23 +16960,23 @@ end
             quest.failTime = os.time()
             quest.failReason = "Character permanently killed"
         end
-
+        
         -- Check for active effects
         local activeEffects = character:getData("activeEffects", {})
         for _, effect in ipairs(activeEffects) do
             effect.paused = true
             effect.pauseTime = os.time()
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(character:getName() .. " was permanently killed")
             end
         end
-
+        
         -- Log permanent death
-        print(string.format("%s was permanently killed (Faction: %s, Level: %d)",
+        print(string.format("%s was permanently killed (Faction: %s, Level: %d)", 
             character:getName(), faction, character:getData("level", 1)))
     end)
     ```
@@ -17008,13 +17008,13 @@ end
     hook.Add("OnCharRecognized", "RecognitionEffects", function(client, target)
         local clientChar = client:getChar()
         local targetChar = target:getChar()
-
+        
         if clientChar and targetChar then
             -- Add recognition data
             local recognitions = clientChar:getData("recognitions", {})
             recognitions[targetChar:getID()] = os.time()
             clientChar:setData("recognitions", recognitions)
-
+            
             client:ChatPrint("You recognized " .. targetChar:getName())
         end
     end)
@@ -17026,9 +17026,9 @@ end
     hook.Add("OnCharRecognized", "AdvancedRecognition", function(client, target)
         local clientChar = client:getChar()
         local targetChar = target:getChar()
-
+        
         if not clientChar or not targetChar then return end
-
+        
         -- Add recognition data
         local recognitions = clientChar:getData("recognitions", {})
         recognitions[targetChar:getID()] = {
@@ -17037,15 +17037,15 @@ end
             faction = targetChar:getFaction()
         }
         clientChar:setData("recognitions", recognitions)
-
+        
         -- Check for faction-specific recognition
         local clientFaction = clientChar:getFaction()
         local targetFaction = targetChar:getFaction()
-
+        
         if clientFaction == "police" and targetFaction == "criminal" then
             -- Police recognizing criminal
             client:ChatPrint("You recognized criminal: " .. targetChar:getName())
-
+            
             -- Notify other police
             for _, ply in ipairs(player.GetAll()) do
                 local plyChar = ply:getChar()
@@ -17056,7 +17056,7 @@ end
         elseif clientFaction == "criminal" and targetFaction == "police" then
             -- Criminal recognizing police
             client:ChatPrint("You recognized police officer: " .. targetChar:getName())
-
+            
             -- Notify other criminals
             for _, ply in ipairs(player.GetAll()) do
                 local plyChar = ply:getChar()
@@ -17068,28 +17068,28 @@ end
             -- General recognition
             client:ChatPrint("You recognized " .. targetChar:getName())
         end
-
+        
         -- Check for recognition achievements
         local recognitionCount = clientChar:getData("recognitionCount", 0) + 1
         clientChar:setData("recognitionCount", recognitionCount)
-
+        
         if recognitionCount >= 50 and not clientChar:getData("achievement_recognizer", false) then
             clientChar:setData("achievement_recognizer", true)
             client:ChatPrint("Achievement unlocked: Recognizer!")
         end
-
+        
         -- Check for faction recognition achievements
         local factionRecognitions = clientChar:getData("factionRecognitions", {})
         factionRecognitions[targetFaction] = (factionRecognitions[targetFaction] or 0) + 1
         clientChar:setData("factionRecognitions", factionRecognitions)
-
+        
         if factionRecognitions[targetFaction] >= 10 and not clientChar:getData("achievement_faction_recognizer", false) then
             clientChar:setData("achievement_faction_recognizer", true)
             client:ChatPrint("Achievement unlocked: Faction Recognizer!")
         end
-
+        
         -- Log recognition
-        print(string.format("%s recognized %s (Factions: %s -> %s)",
+        print(string.format("%s recognized %s (Factions: %s -> %s)", 
             clientChar:getName(), targetChar:getName(), clientFaction, targetFaction))
     end)
     ```
@@ -17128,7 +17128,7 @@ end
         if not isFailed then
             local trades = character:getData("vendorTrades", 0) + 1
             character:setData("vendorTrades", trades)
-
+            
             local action = isSellingToVendor and "sold" or "bought"
             client:ChatPrint("You " .. action .. " " .. item.uniqueID .. " from vendor")
         end
@@ -17143,30 +17143,30 @@ end
             client:ChatPrint("Trade failed!")
             return
         end
-
+        
         -- Update trade statistics
         local trades = character:getData("vendorTrades", 0) + 1
         character:setData("vendorTrades", trades)
-
+        
         -- Update vendor statistics
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.tradeCount = (vendorData.tradeCount or 0) + 1
         vendorData.lastTrade = os.time()
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Check for trade achievements
         if trades >= 100 and not character:getData("achievement_trader", false) then
             character:setData("achievement_trader", true)
             client:ChatPrint("Achievement unlocked: Trader!")
         end
-
+        
         -- Check for faction-specific trading
         local faction = character:getFaction()
         if faction == "police" and isSellingToVendor then
             -- Police selling items - check for contraband
             if itemType == "weapon" or itemType == "drug" then
                 client:ChatPrint("Warning: Selling contraband as police officer!")
-
+                
                 -- Notify other police
                 for _, ply in ipairs(player.GetAll()) do
                     local plyChar = ply:getChar()
@@ -17179,7 +17179,7 @@ end
             -- Criminal buying items - check for weapons
             if itemType == "weapon" then
                 client:ChatPrint("You purchased a weapon from the vendor")
-
+                
                 -- Notify other criminals
                 for _, ply in ipairs(player.GetAll()) do
                     local plyChar = ply:getChar()
@@ -17189,11 +17189,11 @@ end
                 end
             end
         end
-
+        
         -- Check for bulk trading
         local recentTrades = character:getData("recentTrades", {})
         table.insert(recentTrades, os.time())
-
+        
         -- Remove trades older than 1 hour
         local cutoff = os.time() - 3600
         for i = #recentTrades, 1, -1 do
@@ -17201,18 +17201,18 @@ end
                 table.remove(recentTrades, i)
             end
         end
-
+        
         character:setData("recentTrades", recentTrades)
-
+        
         -- Check for bulk trading achievement
         if #recentTrades >= 20 and not character:getData("achievement_bulk_trader", false) then
             character:setData("achievement_bulk_trader", true)
             client:ChatPrint("Achievement unlocked: Bulk Trader!")
         end
-
+        
         -- Log trade
         local action = isSellingToVendor and "sold" or "bought"
-        print(string.format("%s %s %s from vendor %s (Faction: %s)",
+        print(string.format("%s %s %s from vendor %s (Faction: %s)", 
             character:getName(), action, item.uniqueID, vendor:EntIndex(), faction))
     end)
     ```
@@ -17269,7 +17269,7 @@ end
     hook.Add("OnCharVarChanged", "AdvancedVarChange", function(character, varName, oldVar, newVar)
         local client = character:getPlayer()
         if not client then return end
-
+        
         -- Track variable change history
         local changeHistory = character:getData("varHistory", {})
         changeHistory[varName] = changeHistory[varName] or {}
@@ -17278,21 +17278,21 @@ end
             newValue = newVar,
             timestamp = os.time()
         })
-
+        
         -- Keep only last 20 changes per variable
         if #changeHistory[varName] > 20 then
             table.remove(changeHistory[varName], 1)
         end
-
+        
         character:setData("varHistory", changeHistory)
-
+        
         -- Handle specific variable changes
         if varName == "level" then
             -- Level change effects
             if newVar > oldVar then
                 hook.Run("OnPlayerLevelUp", client, oldVar, newVar)
             end
-
+        
         elseif varName == "money" then
             -- Money change effects
             local difference = newVar - oldVar
@@ -17301,26 +17301,26 @@ end
             elseif difference < 0 then
                 client:ChatPrint("You lost $" .. math.abs(difference))
             end
-
+            
             -- Check for money milestones
             if newVar >= 10000 and oldVar < 10000 then
                 client:ChatPrint("Congratulations! You've reached $10,000!")
             elseif newVar >= 100000 and oldVar < 100000 then
                 client:ChatPrint("Congratulations! You've reached $100,000!")
             end
-
+        
         elseif varName == "faction" then
             -- Faction change effects
             client:SetTeam(newVar)
             client:ChatPrint("Faction changed to: " .. newVar)
-
+            
             -- Notify other players
             for _, ply in ipairs(player.GetAll()) do
                 if ply ~= client then
                     ply:ChatPrint(character:getName() .. " joined faction: " .. newVar)
                 end
             end
-
+        
         elseif varName == "health" then
             -- Health change effects
             if newVar <= 0 and oldVar > 0 then
@@ -17330,7 +17330,7 @@ end
                 -- Character revived
                 hook.Run("OnCharacterRevive", character)
             end
-
+        
         elseif varName == "stamina" then
             -- Stamina change effects
             if newVar <= 0 and oldVar > 0 then
@@ -17341,10 +17341,10 @@ end
                 hook.Run("PlayerStaminaGained", client)
             end
         end
-
+        
         -- Log significant changes
         if math.abs(newVar - oldVar) > 100 or varName == "faction" or varName == "level" then
-            print(string.format("%s var changed: %s from %s to %s",
+            print(string.format("%s var changed: %s from %s to %s", 
                 character:getName(), varName, tostring(oldVar), tostring(newVar)))
         end
     end)
@@ -17378,7 +17378,7 @@ end
         -- Give starting money bonus
         local bonusMoney = 500
         character:setMoney(character:getMoney() + bonusMoney)
-
+        
         -- Give starting items
         local startingItems = {"wallet", "phone", "id_card"}
         for _, itemID in ipairs(startingItems) do
@@ -17387,7 +17387,7 @@ end
                 character:getInv():add(item)
             end
         end
-
+        
         client:ChatPrint("Welcome! You received starting bonuses.")
     end)
     ```
@@ -17397,7 +17397,7 @@ end
     -- High: Complex character creation system
     hook.Add("OnCharacterCreated", "AdvancedCreation", function(character, client)
         local faction = character:getFaction()
-
+        
         -- Set up faction-specific starting equipment
         local factionEquipment = {
             ["police"] = {
@@ -17416,12 +17416,12 @@ end
                 attributes = {str = 3, con = 3, dex = 3}
             }
         }
-
+        
         local equipment = factionEquipment[faction]
         if equipment then
             -- Give faction-specific money
             character:setMoney(character:getMoney() + equipment.money)
-
+            
             -- Give faction-specific items
             for _, itemID in ipairs(equipment.items) do
                 local item = lia.item.instance(itemID)
@@ -17429,24 +17429,24 @@ end
                     character:getInv():add(item)
                 end
             end
-
+            
             -- Set faction-specific attributes
             for attr, value in pairs(equipment.attributes) do
                 character:setAttrib(attr, value)
             end
         end
-
+        
         -- Set up character data
         character:setData("creationTime", os.time())
         character:setData("creationIP", client:IPAddress())
         character:setData("level", 1)
         character:setData("experience", 0)
-
+        
         -- Send welcome message
         client:ChatPrint("Character created successfully! Welcome to the server.")
-
+        
         -- Log creation
-        print(string.format("%s created %s character: %s",
+        print(string.format("%s created %s character: %s", 
             client:Name(), faction, character:getName()))
     end)
     ```
@@ -17476,7 +17476,7 @@ end
         -- Give starting money bonus
         local bonusMoney = 500
         character:setMoney(character:getMoney() + bonusMoney)
-
+        
         -- Give starting items
         local startingItems = {"wallet", "phone", "id_card"}
         for _, itemID in ipairs(startingItems) do
@@ -17485,7 +17485,7 @@ end
                 character:getInv():add(item)
             end
         end
-
+        
         client:ChatPrint("Welcome! You received starting bonuses.")
     end)
     ```
@@ -17495,7 +17495,7 @@ end
     -- High: Complex character creation system
     hook.Add("OnCharacterCreated", "AdvancedCreation", function(character, client)
         local faction = character:getFaction()
-
+        
         -- Set up faction-specific starting equipment
         local factionEquipment = {
             ["police"] = {
@@ -17514,12 +17514,12 @@ end
                 attributes = {str = 3, con = 3, dex = 3}
             }
         }
-
+        
         local equipment = factionEquipment[faction]
         if equipment then
             -- Give faction-specific money
             character:setMoney(character:getMoney() + equipment.money)
-
+            
             -- Give faction-specific items
             for _, itemID in ipairs(equipment.items) do
                 local item = lia.item.instance(itemID)
@@ -17527,24 +17527,24 @@ end
                     character:getInv():add(item)
                 end
             end
-
+            
             -- Set faction-specific attributes
             for attr, value in pairs(equipment.attributes) do
                 character:setAttrib(attr, value)
             end
         end
-
+        
         -- Set up character data
         character:setData("creationTime", os.time())
         character:setData("creationIP", client:IPAddress())
         character:setData("level", 1)
         character:setData("experience", 0)
-
+        
         -- Send welcome message
         client:ChatPrint("Character created successfully! Welcome to the server.")
-
+        
         -- Log creation
-        print(string.format("%s created %s character: %s",
+        print(string.format("%s created %s character: %s", 
             client:Name(), faction, character:getName()))
     end)
     ```
@@ -17575,15 +17575,15 @@ end
     hook.Add("OnCharacterDeath", "DeathPenalties", function(character)
         local client = character:getPlayer()
         if not IsValid(client) then return end
-
+        
         -- Lose some money
         local moneyLoss = math.min(character:getMoney() * 0.1, 1000)
         character:setMoney(character:getMoney() - moneyLoss)
-
+        
         -- Lose some experience
         local expLoss = math.min(character:getData("experience", 0) * 0.05, 100)
         character:setData("experience", character:getData("experience", 0) - expLoss)
-
+        
         client:ChatPrint("You lost $" .. moneyLoss .. " and " .. expLoss .. " experience")
     end)
     ```
@@ -17594,10 +17594,10 @@ end
     hook.Add("OnCharacterDeath", "AdvancedDeath", function(character)
         local client = character:getPlayer()
         if not IsValid(client) then return end
-
+        
         local faction = character:getFaction()
         local deathTime = os.time()
-
+        
         -- Set up respawn timer
         local respawnTime = 300 -- 5 minutes
         if faction == "police" then
@@ -17605,14 +17605,14 @@ end
         elseif faction == "medic" then
             respawnTime = 240 -- 4 minutes for medics
         end
-
+        
         character:setData("deathTime", deathTime)
         character:setData("respawnTime", deathTime + respawnTime)
-
+        
         -- Handle inventory
         local charInv = character:getInv()
         local items = charInv:getItems()
-
+        
         -- Drop some items
         local dropChance = 0.3
         for _, item in pairs(items) do
@@ -17628,20 +17628,20 @@ end
                 end
             end
         end
-
+        
         -- Handle money loss
         local moneyLoss = math.min(character:getMoney() * 0.15, 2000)
         character:setMoney(character:getMoney() - moneyLoss)
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(character:getName() .. " has died")
             end
         end
-
+        
         -- Log death
-        print(string.format("%s (%s) died at %s",
+        print(string.format("%s (%s) died at %s", 
             character:getName(), faction, os.date("%Y-%m-%d %H:%M:%S")))
     end)
     ```
@@ -17680,7 +17680,7 @@ end
                 char:setData("lastCharDelete", os.time())
             end
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= owner then
@@ -17700,7 +17700,7 @@ end
             if char then
                 char:setData("charactersDeleted", (char:getData("charactersDeleted", 0) + 1))
                 char:setData("lastCharDelete", os.time())
-
+                
                 -- Check for deletion achievement
                 local deletions = char:getData("charactersDeleted", 0)
                 if deletions >= 5 and not char:getData("achievement_character_cleaner", false) then
@@ -17709,13 +17709,13 @@ end
                 end
             end
         end
-
+        
         -- Check for admin deletion
         if admin then
             -- Log admin deletion
-            print(string.format("Admin %s deleted character %s (ID: %d) owned by %s",
+            print(string.format("Admin %s deleted character %s (ID: %d) owned by %s", 
                 admin:Name(), charName, charID, owner and owner:Name() or "Unknown"))
-
+            
             -- Notify other admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() and ply ~= admin then
@@ -17724,10 +17724,10 @@ end
             end
         else
             -- Player self-deletion
-            print(string.format("Player %s deleted character %s (ID: %d)",
+            print(string.format("Player %s deleted character %s (ID: %d)", 
                 owner and owner:Name() or "Unknown", charName, charID))
         end
-
+        
         -- Check for faction-specific effects
         if owner then
             local char = owner:getChar()
@@ -17752,16 +17752,16 @@ end
                 end
             end
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= owner then
                 ply:ChatPrint("Character " .. charName .. " was deleted")
             end
         end
-
+        
         -- Log deletion
-        print(string.format("Character %s (ID: %d) was deleted by %s",
+        print(string.format("Character %s (ID: %d) was deleted by %s", 
             charName, charID, admin and admin:Name() or (owner and owner:Name() or "Unknown")))
     end)
     ```
@@ -17796,7 +17796,7 @@ end
                 char:sync()
             end
         end
-
+        
         print("Character fields updated and synced to all players")
     end)
     ```
@@ -17812,7 +17812,7 @@ end
                 char:sync()
             end
         end
-
+        
         -- Update character field definitions
         local fieldDefinitions = lia.char.getFieldDefinitions()
         for fieldName, fieldData in pairs(fieldDefinitions) do
@@ -17820,19 +17820,19 @@ end
             if not fieldData.type then
                 print("Warning: Field " .. fieldName .. " missing type definition")
             end
-
+            
             if not fieldData.default then
                 print("Warning: Field " .. fieldName .. " missing default value")
             end
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ADMIN] Character fields have been updated")
             end
         end
-
+        
         -- Log field update
         print("Character fields updated successfully")
     end)
@@ -17866,13 +17866,13 @@ end
         -- Set up character data
         character:setData("lastLoad", os.time())
         character:setData("loadCount", (character:getData("loadCount", 0) + 1))
-
+        
         -- Set up player model
         local model = character:getModel()
         if model then
             client:SetModel(model)
         end
-
+        
         client:ChatPrint("Character loaded: " .. character:getName())
     end)
     ```
@@ -17884,17 +17884,17 @@ end
         -- Set up character data
         character:setData("lastLoad", os.time())
         character:setData("loadCount", (character:getData("loadCount", 0) + 1))
-
+        
         -- Set up player model
         local model = character:getModel()
         if model then
             client:SetModel(model)
         end
-
+        
         -- Set up player skin
         local skin = character:getSkin()
         client:SetSkin(skin)
-
+        
         -- Set up player bodygroups
         local bodygroups = character:getBodygroups()
         for group, value in pairs(bodygroups) do
@@ -17903,39 +17903,39 @@ end
                 client:SetBodygroup(index, value)
             end
         end
-
+        
         -- Set up player team
         local faction = character:getFaction()
         client:SetTeam(faction)
-
+        
         -- Set up player health and armor
         local health = character:getData("health", 100)
         local armor = character:getData("armor", 0)
         client:SetHealth(health)
         client:SetArmor(armor)
-
+        
         -- Set up player stamina
         local stamina = character:getData("stamina", 100)
         client:setNetVar("stamina", stamina)
-
+        
         -- Set up player money
         local money = character:getMoney()
         client:setNetVar("money", money)
-
+        
         -- Set up player level
         local level = character:getData("level", 1)
         client:setNetVar("level", level)
-
+        
         -- Set up player experience
         local experience = character:getData("experience", 0)
         client:setNetVar("experience", experience)
-
+        
         -- Set up player attributes
         local attributes = character:getAttribs()
         for attr, value in pairs(attributes) do
             client:setNetVar("attr_" .. attr, value)
         end
-
+        
         -- Check for returning player bonuses
         local lastLoad = character:getData("lastLoad", 0)
         local timeSinceLoad = os.time() - lastLoad
@@ -17943,16 +17943,16 @@ end
             character:setData("returningPlayerBonus", true)
             client:ChatPrint("Welcome back! You have a returning player bonus.")
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(character:getName() .. " has joined the server")
             end
         end
-
+        
         -- Log character load
-        print(string.format("%s loaded character %s (Faction: %s, Level: %d)",
+        print(string.format("%s loaded character %s (Faction: %s, Level: %d)", 
             client:Name(), character:getName(), faction, level))
     end)
     ```
@@ -17986,12 +17986,12 @@ end
             -- Clear unconscious status
             character:setData("unconscious", false)
             character:setData("revivalTime", os.time())
-
+            
             -- Restore some health
             local currentHealth = client:Health()
             local maxHealth = client:GetMaxHealth()
             client:SetHealth(math.min(currentHealth + 50, maxHealth))
-
+            
             client:ChatPrint("You have been revived!")
         end
     end)
@@ -18003,11 +18003,11 @@ end
     hook.Add("OnCharacterRevive", "AdvancedRevival", function(character)
         local client = character:getPlayer()
         if not client then return end
-
+        
         -- Clear unconscious status
         character:setData("unconscious", false)
         character:setData("revivalTime", os.time())
-
+        
         -- Restore health based on faction
         local faction = character:getFaction()
         local healthRestore = {
@@ -18015,16 +18015,16 @@ end
             ["medic"] = 100,
             ["citizen"] = 50
         }
-
+        
         local restoreAmount = healthRestore[faction] or 50
         local currentHealth = client:Health()
         local maxHealth = client:GetMaxHealth()
         client:SetHealth(math.min(currentHealth + restoreAmount, maxHealth))
-
+        
         -- Restore stamina
         local currentStamina = client:getNetVar("stamina", 100)
         client:setNetVar("stamina", math.min(currentStamina + 75, 100))
-
+        
         -- Resume active effects
         local activeEffects = character:getData("activeEffects", {})
         for _, effect in ipairs(activeEffects) do
@@ -18034,7 +18034,7 @@ end
             end
         end
         character:setData("activeEffects", activeEffects)
-
+        
         -- Resume active quests
         local activeQuests = character:getData("activeQuests", {})
         for _, quest in ipairs(activeQuests) do
@@ -18044,16 +18044,16 @@ end
             end
         end
         character:setData("activeQuests", activeQuests)
-
+        
         -- Check for revival achievements
         local revivals = character:getData("revivals", 0) + 1
         character:setData("revivals", revivals)
-
+        
         if revivals >= 5 and not character:getData("achievement_survivor", false) then
             character:setData("achievement_survivor", true)
             client:ChatPrint("Achievement unlocked: Survivor!")
         end
-
+        
         -- Check for faction-specific revival effects
         if faction == "police" then
             -- Police get backup call
@@ -18072,16 +18072,16 @@ end
                 end
             end
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(client:GetPos()) < 500 then
                 ply:ChatPrint(character:getName() .. " has been revived!")
             end
         end
-
+        
         -- Log revival
-        print(string.format("%s was revived (Faction: %s, Health: %d)",
+        print(string.format("%s was revived (Faction: %s, Health: %d)", 
             character:getName(), faction, client:Health()))
     end)
     ```
@@ -18124,7 +18124,7 @@ end
     hook.Add("OnCharacterSchemaValidated", "AdvancedSchemaValidation", function(validationResults)
         if validationResults.valid then
             print("Character schema validation passed")
-
+            
             -- Update character field definitions
             local fieldDefinitions = validationResults.fieldDefinitions
             for fieldName, fieldData in pairs(fieldDefinitions) do
@@ -18132,12 +18132,12 @@ end
                 if not fieldData.type then
                     print("Warning: Field " .. fieldName .. " missing type definition")
                 end
-
+                
                 if not fieldData.default then
                     print("Warning: Field " .. fieldName .. " missing default value")
                 end
             end
-
+            
             -- Notify admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() then
@@ -18146,7 +18146,7 @@ end
             end
         else
             print("Character schema validation failed: " .. validationResults.error)
-
+            
             -- Notify admins of validation failure
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() then
@@ -18154,9 +18154,9 @@ end
                 end
             end
         end
-
+        
         -- Log validation results
-        print(string.format("Character schema validation completed: %s",
+        print(string.format("Character schema validation completed: %s", 
             validationResults.valid and "PASSED" or "FAILED"))
     end)
     ```
@@ -18189,7 +18189,7 @@ end
         -- Track update count
         local updateCount = lia.char.getData("updateCount", 0) + 1
         lia.char.setData("updateCount", updateCount)
-
+        
         -- Track last update time
         lia.char.setData("lastUpdate", os.time())
     end)
@@ -18202,28 +18202,28 @@ end
         -- Get character
         local character = lia.char.getByID(charID)
         if not character then return end
-
+        
         -- Track update count
         local updateCount = character:getData("updateCount", 0) + 1
         character:setData("updateCount", updateCount)
-
+        
         -- Track last update time
         character:setData("lastUpdate", os.time())
-
+        
         -- Track update history
         local updateHistory = character:getData("updateHistory", {})
         table.insert(updateHistory, {
             data = updateData,
             timestamp = os.time()
         })
-
+        
         -- Keep only last 50 updates
         if #updateHistory > 50 then
             table.remove(updateHistory, 1)
         end
-
+        
         character:setData("updateHistory", updateHistory)
-
+        
         -- Check for specific updates
         if updateData.level then
             -- Level update
@@ -18233,7 +18233,7 @@ end
             end
             character:setData("oldLevel", updateData.level)
         end
-
+        
         if updateData.money then
             -- Money update
             local oldMoney = character:getData("oldMoney", 0)
@@ -18245,7 +18245,7 @@ end
             end
             character:setData("oldMoney", updateData.money)
         end
-
+        
         if updateData.faction then
             -- Faction update
             local oldFaction = character:getData("oldFaction", "citizen")
@@ -18255,15 +18255,15 @@ end
             end
             character:setData("oldFaction", updateData.faction)
         end
-
+        
         -- Check for update achievements
         if updateCount >= 100 and not character:getData("achievement_updater", false) then
             character:setData("achievement_updater", true)
             character:getPlayer():ChatPrint("Achievement unlocked: Updater!")
         end
-
+        
         -- Log update
-        print(string.format("Character %s (ID: %d) was updated",
+        print(string.format("Character %s (ID: %d) was updated", 
             character:getName(), charID))
     end)
     ```
@@ -18296,10 +18296,10 @@ end
     hook.Add("OnCharactersRestored", "RestorationEffects", function(client, characters, stats)
         -- Notify player
         client:ChatPrint("Your characters have been restored from backup")
-
+        
         -- Update character list
         client.liaCharList = characters
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
@@ -18315,7 +18315,7 @@ end
     hook.Add("OnCharactersRestored", "AdvancedCharacterRestoration", function(client, characters, stats)
         -- Update character list
         client.liaCharList = characters
-
+        
         -- Update character statistics
         for charID, charStats in pairs(stats) do
             local character = lia.char.getByID(charID)
@@ -18324,19 +18324,19 @@ end
                 character:setData("restorationTime", os.time())
             end
         end
-
+        
         -- Check for restoration achievements
         local char = client:getChar()
         if char then
             local restorations = char:getData("restorations", 0) + 1
             char:setData("restorations", restorations)
-
+            
             if restorations >= 5 and not char:getData("achievement_restorer", false) then
                 char:setData("achievement_restorer", true)
                 client:ChatPrint("Achievement unlocked: Restorer!")
             end
         end
-
+        
         -- Check for faction-specific restoration
         local faction = char and char:getFaction()
         if faction == "police" then
@@ -18356,19 +18356,19 @@ end
                 end
             end
         end
-
+        
         -- Notify player
         client:ChatPrint("Your characters have been restored from backup")
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(client:Name() .. " had characters restored")
             end
         end
-
+        
         -- Log restoration
-        print(string.format("%s had %d characters restored",
+        print(string.format("%s had %d characters restored", 
             client:Name(), #characters))
     end)
     ```
@@ -18418,26 +18418,26 @@ end
     hook.Add("OnChatReceived", "AdvancedChat", function(client, chatType, text, anonymous)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player is muted
         if char:getData("muted", false) then
             client:ChatPrint("You are muted and cannot receive messages")
             return false
         end
-
+        
         -- Check if player is gagged
         if char:getData("gagged", false) then
             client:ChatPrint("You are gagged and cannot receive messages")
             return false
         end
-
+        
         -- Check message type restrictions
         local faction = char:getFaction()
         if chatType == "ooc" and faction == "police" then
             client:ChatPrint("Police officers cannot use OOC chat")
             return false
         end
-
+        
         -- Check for spam protection
         local lastMessage = char:getData("lastMessage", 0)
         local messageCooldown = 1 -- 1 second cooldown
@@ -18445,7 +18445,7 @@ end
             client:ChatPrint("Please wait before sending another message")
             return false
         end
-
+        
         -- Check for inappropriate content
         local bannedWords = {"spam", "hack", "cheat", "exploit"}
         for _, word in ipairs(bannedWords) do
@@ -18454,10 +18454,10 @@ end
                 return false
             end
         end
-
+        
         -- Update last message time
         char:setData("lastMessage", os.time())
-
+        
         -- Check for admin commands
         if string.sub(text, 1, 1) == "!" then
             local command = string.sub(text, 2)
@@ -18467,7 +18467,7 @@ end
                 return false
             end
         end
-
+        
         -- Log message
         print(string.format("[%s] %s: %s", chatType, client:Name(), text))
     end)
@@ -18515,26 +18515,26 @@ end
     hook.Add("OnChatReceived", "AdvancedChat", function(client, chatType, text, anonymous)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player is muted
         if char:getData("muted", false) then
             client:ChatPrint("You are muted and cannot receive messages")
             return false
         end
-
+        
         -- Check if player is gagged
         if char:getData("gagged", false) then
             client:ChatPrint("You are gagged and cannot receive messages")
             return false
         end
-
+        
         -- Check message type restrictions
         local faction = char:getFaction()
         if chatType == "ooc" and faction == "police" then
             client:ChatPrint("Police officers cannot use OOC chat")
             return false
         end
-
+        
         -- Check for spam protection
         local lastMessage = char:getData("lastMessage", 0)
         local messageCooldown = 1 -- 1 second cooldown
@@ -18542,7 +18542,7 @@ end
             client:ChatPrint("Please wait before sending another message")
             return false
         end
-
+        
         -- Check for inappropriate content
         local bannedWords = {"spam", "hack", "cheat", "exploit"}
         for _, word in ipairs(bannedWords) do
@@ -18551,10 +18551,10 @@ end
                 return false
             end
         end
-
+        
         -- Update last message time
         char:setData("lastMessage", os.time())
-
+        
         -- Check for admin commands
         if string.sub(text, 1, 1) == "!" then
             local command = string.sub(text, 2)
@@ -18564,7 +18564,7 @@ end
                 return false
             end
         end
-
+        
         -- Log message
         print(string.format("[%s] %s: %s", chatType, client:Name(), text))
     end)
@@ -18596,7 +18596,7 @@ end
     hook.Add("OnCheaterCaught", "CheaterPunishment", function(client)
         -- Kick the cheater
         client:Kick("Cheating detected")
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -18614,11 +18614,11 @@ end
         local char = client:getChar()
         local steamID = client:SteamID()
         local ip = client:IPAddress()
-
+        
         -- Log cheater information
-        print(string.format("Cheater caught: %s (SteamID: %s, IP: %s)",
+        print(string.format("Cheater caught: %s (SteamID: %s, IP: %s)", 
             client:Name(), steamID, ip))
-
+        
         -- Add to cheater database
         local cheaterData = {
             name = client:Name(),
@@ -18627,13 +18627,13 @@ end
             timestamp = os.time(),
             charID = char and char:getID() or 0
         }
-
+        
         -- Store cheater data
         lia.data.set("cheaters", steamID, cheaterData)
-
+        
         -- Kick the cheater
         client:Kick("Cheating detected - You have been banned")
-
+        
         -- Notify all admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -18642,23 +18642,23 @@ end
                 ply:ChatPrint("[ADMIN] IP: " .. ip)
             end
         end
-
+        
         -- Log to file
         local logFile = "cheaters.txt"
-        local logData = string.format("[%s] %s (SteamID: %s, IP: %s)\n",
+        local logData = string.format("[%s] %s (SteamID: %s, IP: %s)\n", 
             os.date("%Y-%m-%d %H:%M:%S"), client:Name(), steamID, ip)
-
+        
         -- Write to log file
         file.Append(logFile, logData)
-
+        
         -- Check for repeat offenders
         local cheaterHistory = lia.data.get("cheaterHistory", {})
         cheaterHistory[steamID] = (cheaterHistory[steamID] or 0) + 1
         lia.data.set("cheaterHistory", cheaterHistory)
-
+        
         if cheaterHistory[steamID] >= 3 then
             -- Repeat offender
-            print(string.format("Repeat cheater: %s (SteamID: %s) - %d offenses",
+            print(string.format("Repeat cheater: %s (SteamID: %s) - %d offenses", 
                 client:Name(), steamID, cheaterHistory[steamID]))
         end
     end)
@@ -18706,16 +18706,16 @@ end
     hook.Add("OnCheaterStatusChanged", "AdvancedCheaterStatus", function(client, target, status)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Update cheater status
         char:setData("cheaterStatus", status)
         char:setData("statusChangeTime", os.time())
-
+        
         -- Handle status-specific effects
         if status == "banned" then
             -- Ban the player
             client:Kick("You have been banned for cheating")
-
+            
             -- Add to ban database
             local banData = {
                 steamID = client:SteamID(),
@@ -18724,43 +18724,43 @@ end
                 timestamp = os.time(),
                 admin = target and target:Name() or "System"
             }
-
+            
             lia.data.set("bans", client:SteamID(), banData)
-
+            
             -- Notify admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() then
                     ply:ChatPrint("[ADMIN] " .. client:Name() .. " has been banned for cheating")
                 end
             end
-
+        
         elseif status == "warned" then
             -- Warn the player
             client:ChatPrint("Warning: Cheating behavior detected")
-
+            
             -- Add warning to character
             local warnings = char:getData("warnings", 0) + 1
             char:setData("warnings", warnings)
-
+            
             -- Check for warning limits
             if warnings >= 3 then
                 client:Kick("You have received too many warnings")
             end
-
+            
             -- Notify admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() then
                     ply:ChatPrint("[ADMIN] " .. client:Name() .. " has been warned for cheating")
                 end
             end
-
+        
         elseif status == "cleared" then
             -- Clear cheater status
             client:ChatPrint("Your cheater status has been cleared")
-
+            
             -- Clear warnings
             char:setData("warnings", 0)
-
+            
             -- Notify admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() then
@@ -18768,9 +18768,9 @@ end
                 end
             end
         end
-
+        
         -- Log status change
-        print(string.format("Cheater status changed: %s -> %s (Admin: %s)",
+        print(string.format("Cheater status changed: %s -> %s (Admin: %s)", 
             client:Name(), status, target and target:Name() or "System"))
     end)
     ```
@@ -18813,9 +18813,9 @@ end
     -- High: Complex column addition system
     hook.Add("OnColumnAdded", "AdvancedColumnAddition", function(column, data)
         -- Log column addition
-        print(string.format("Column added: %s (Type: %s, Default: %s)",
+        print(string.format("Column added: %s (Type: %s, Default: %s)", 
             column, data.type or "unknown", tostring(data.default or "none")))
-
+        
         -- Handle specific column types
         if data.type == "INTEGER" then
             -- Integer column
@@ -18827,18 +18827,18 @@ end
             -- Boolean column
             print("Boolean column added: " .. column)
         end
-
+        
         -- Check for required columns
         local requiredColumns = {"id", "name", "steamid", "faction"}
         if table.HasValue(requiredColumns, column) then
             print("Required column added: " .. column)
         end
-
+        
         -- Update column definitions
         local columnDefinitions = lia.data.get("columnDefinitions", {})
         columnDefinitions[column] = data
         lia.data.set("columnDefinitions", columnDefinitions)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -18879,7 +18879,7 @@ end
         elseif tableName == "players" then
             print("Player column removed: " .. columnName)
         end
-
+        
         -- Log snapshot data
         if snapshot then
             print("Snapshot contains " .. #snapshot .. " records")
@@ -18892,13 +18892,13 @@ end
     -- High: Complex column removal system
     hook.Add("OnColumnRemoved", "AdvancedColumnRemoval", function(tableName, columnName, snapshot)
         -- Log column removal
-        print(string.format("Column removed: %s from %s (Snapshot: %s)",
+        print(string.format("Column removed: %s from %s (Snapshot: %s)", 
             columnName, tableName, snapshot and "Yes" or "No"))
-
+        
         -- Handle specific table removals
         if tableName == "characters" then
             print("Character table column removed: " .. columnName)
-
+            
             -- Check if it's a critical column
             local criticalColumns = {"id", "name", "steamid"}
             if table.HasValue(criticalColumns, columnName) then
@@ -18907,14 +18907,14 @@ end
         elseif tableName == "players" then
             print("Player table column removed: " .. columnName)
         end
-
+        
         -- Update column definitions
         local columnDefinitions = lia.data.get("columnDefinitions", {})
         if columnDefinitions[columnName] then
             columnDefinitions[columnName] = nil
             lia.data.set("columnDefinitions", columnDefinitions)
         end
-
+        
         -- Handle snapshot data
         if snapshot then
             -- Store snapshot for potential restoration
@@ -18924,11 +18924,11 @@ end
                 data = snapshot,
                 timestamp = os.time()
             }
-
+            
             lia.data.set("columnSnapshots", columnName, snapshotData)
             print("Snapshot stored for potential restoration")
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -18977,9 +18977,9 @@ end
     -- High: Complex config update system
     hook.Add("OnConfigUpdated", "AdvancedConfigUpdate", function(key, oldValue, value)
         -- Log config change
-        print(string.format("Config updated: %s from %s to %s",
+        print(string.format("Config updated: %s from %s to %s", 
             key, tostring(oldValue), tostring(value)))
-
+        
         -- Handle specific config changes
         if key == "maxPlayers" then
             game.MaxPlayers = value
@@ -18996,7 +18996,7 @@ end
                 print("Server password removed")
             end
         end
-
+        
         -- Update config cache
         lia.configCache = lia.configCache or {}
         lia.configCache[key] = {
@@ -19004,7 +19004,7 @@ end
             oldValue = oldValue,
             timestamp = os.time()
         }
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -19046,14 +19046,14 @@ end
         menu:AddOption("Use", function()
             self:use()
         end)
-
+        
         -- Add drop option if not equipped
         if not self:getData("equipped", false) then
             menu:AddOption("Drop", function()
                 self:drop()
             end)
         end
-
+        
         -- Add examine option
         menu:AddOption("Examine", function()
             self:examine()
@@ -19067,18 +19067,18 @@ end
     hook.Add("OnCreateItemInteractionMenu", "AdvancedItemMenu", function(self, menu, itemTable)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Basic options
         menu:AddOption("Use", function()
             self:use()
         end)
-
+        
         -- Conditional options based on item state
         if not self:getData("equipped", false) then
             menu:AddOption("Equip", function()
                 self:equip()
             end)
-
+            
             menu:AddOption("Drop", function()
                 self:drop()
             end)
@@ -19087,19 +19087,19 @@ end
                 self:unequip()
             end)
         end
-
+        
         -- Examine option
         menu:AddOption("Examine", function()
             self:examine()
         end)
-
+        
         -- Admin options
         if LocalPlayer():IsAdmin() then
             menu:AddSpacer()
             menu:AddOption("Admin: Delete", function()
                 self:remove()
             end)
-
+            
             menu:AddOption("Admin: Duplicate", function()
                 local newItem = lia.item.instance(itemTable.uniqueID)
                 if newItem then
@@ -19107,7 +19107,7 @@ end
                 end
             end)
         end
-
+        
         -- Faction-specific options
         local faction = char:getFaction()
         if faction == "police" and itemTable.uniqueID == "weapon_pistol" then
@@ -19157,7 +19157,7 @@ end
     hook.Add("OnCreatePlayerRagdoll", "AdvancedRagdollCreation", function(self, entity, isDead)
         local char = self:getChar()
         if not char then return end
-
+        
         -- Set up ragdoll data
         entity:setNetVar("owner", self:SteamID())
         entity:setNetVar("isDead", isDead)
@@ -19165,20 +19165,20 @@ end
         entity:setNetVar("charID", char:getID())
         entity:setNetVar("charName", char:getName())
         entity:setNetVar("faction", char:getFaction())
-
+        
         -- Set up ragdoll appearance
         entity:SetModel(self:GetModel())
         entity:SetSkin(self:GetSkin())
-
+        
         -- Set up bodygroups
         for i = 0, self:GetNumBodyGroups() - 1 do
             entity:SetBodygroup(i, self:GetBodygroup(i))
         end
-
+        
         -- Set up ragdoll position and angles
         entity:SetPos(self:GetPos())
         entity:SetAngles(self:GetAngles())
-
+        
         -- Apply faction-specific effects
         local faction = char:getFaction()
         if faction == "police" then
@@ -19186,15 +19186,15 @@ end
         elseif faction == "medic" then
             entity:SetColor(Color(255, 255, 255, 200))
         end
-
+        
         -- Set up ragdoll physics
         local phys = entity:GetPhysicsObject()
         if IsValid(phys) then
             phys:SetVelocity(self:GetVelocity())
         end
-
+        
         -- Log ragdoll creation
-        print(string.format("Ragdoll created for %s (Faction: %s, Dead: %s)",
+        print(string.format("Ragdoll created for %s (Faction: %s, Dead: %s)", 
             self:Name(), faction, tostring(isDead)))
     end)
     ```
@@ -19228,7 +19228,7 @@ end
         if localInvPanel then
             localInvPanel:SetBackgroundColor(Color(50, 50, 50, 200))
         end
-
+        
         if storageInvPanel then
             storageInvPanel:SetBackgroundColor(Color(100, 50, 50, 200))
         end
@@ -19240,12 +19240,12 @@ end
     -- High: Complex storage panel system
     hook.Add("OnCreateStoragePanel", "AdvancedStoragePanel", function(localInvPanel, storageInvPanel, storage)
         if not IsValid(storage) then return end
-
+        
         -- Customize local inventory panel
         if localInvPanel then
             localInvPanel:SetBackgroundColor(Color(50, 50, 50, 200))
             localInvPanel:SetSize(400, 300)
-
+            
             -- Add title
             local title = localInvPanel:Add("DLabel")
             title:SetText("Your Inventory")
@@ -19253,12 +19253,12 @@ end
             title:Dock(TOP)
             title:SetHeight(25)
         end
-
+        
         -- Customize storage inventory panel
         if storageInvPanel then
             storageInvPanel:SetBackgroundColor(Color(100, 50, 50, 200))
             storageInvPanel:SetSize(400, 300)
-
+            
             -- Add title
             local title = storageInvPanel:Add("DLabel")
             title:SetText("Storage")
@@ -19266,22 +19266,22 @@ end
             title:Dock(TOP)
             title:SetHeight(25)
         end
-
+        
         -- Add storage info
         local storageType = storage:getNetVar("storageType", "general")
         local maxWeight = storage:getNetVar("maxWeight", 100)
         local maxItems = storage:getNetVar("maxItems", 50)
-
+        
         -- Add info labels
         if storageInvPanel then
             local infoLabel = storageInvPanel:Add("DLabel")
-            infoLabel:SetText(string.format("Type: %s | Weight: %d | Items: %d",
+            infoLabel:SetText(string.format("Type: %s | Weight: %d | Items: %d", 
                 storageType, maxWeight, maxItems))
             infoLabel:SetFont("DermaDefault")
             infoLabel:Dock(TOP)
             infoLabel:SetHeight(20)
         end
-
+        
         print("Storage panel created for " .. storageType .. " storage")
     end)
     ```
@@ -19317,7 +19317,7 @@ end
             print("Invalid money value: " .. tostring(value))
             return false
         end
-
+        
         if key == "playerLevel" and (value < 1 or value > 100) then
             print("Invalid level value: " .. tostring(value))
             return false
@@ -19330,9 +19330,9 @@ end
     -- High: Complex data management system
     hook.Add("OnDataSet", "AdvancedDataManagement", function(key, value, gamemode, map)
         -- Log data changes
-        print(string.format("Data set: %s = %s (Gamemode: %s, Map: %s)",
+        print(string.format("Data set: %s = %s (Gamemode: %s, Map: %s)", 
             key, tostring(value), gamemode, map))
-
+        
         -- Validate data types
         local dataTypes = {
             ["playerMoney"] = "number",
@@ -19340,24 +19340,24 @@ end
             ["playerName"] = "string",
             ["playerFaction"] = "string"
         }
-
+        
         local expectedType = dataTypes[key]
         if expectedType and type(value) ~= expectedType then
             print("Type mismatch for " .. key .. ": expected " .. expectedType .. ", got " .. type(value))
             return false
         end
-
+        
         -- Validate value ranges
         if key == "playerMoney" and (value < 0 or value > 1000000) then
             print("Money value out of range: " .. value)
             return false
         end
-
+        
         if key == "playerLevel" and (value < 1 or value > 100) then
             print("Level value out of range: " .. value)
             return false
         end
-
+        
         -- Update data cache
         lia.dataCache = lia.dataCache or {}
         lia.dataCache[key] = {
@@ -19366,7 +19366,7 @@ end
             gamemode = gamemode,
             map = map
         }
-
+        
         -- Notify admins of important changes
         local importantKeys = {"playerMoney", "playerLevel", "playerFaction"}
         if table.HasValue(importantKeys, key) then
@@ -19405,7 +19405,7 @@ end
         -- Create necessary tables
         lia.db.query("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY, steamid TEXT, name TEXT)")
         lia.db.query("CREATE TABLE IF NOT EXISTS characters (id INTEGER PRIMARY KEY, playerid INTEGER, name TEXT)")
-
+        
         print("Database connected and tables initialized")
     end)
     ```
@@ -19416,7 +19416,7 @@ end
     hook.Add("OnDatabaseConnected", "AdvancedDatabaseInit", function()
         -- Log connection
         print("Database connected successfully")
-
+        
         -- Create core tables
         local tables = {
             players = "CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY, steamid TEXT UNIQUE, name TEXT, lastseen INTEGER)"
@@ -19424,12 +19424,12 @@ end
             items = "CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, charid INTEGER, itemid TEXT, data TEXT)"
             logs = "CREATE TABLE IF NOT EXISTS logs (id INTEGER PRIMARY KEY, timestamp INTEGER, type TEXT, message TEXT)"
         }
-
+        
         for tableName, query in pairs(tables) do
             lia.db.query(query)
             print("Created table: " .. tableName)
         end
-
+        
         -- Create indexes for performance
         local indexes = {
             "CREATE INDEX IF NOT EXISTS idx_players_steamid ON players(steamid)"
@@ -19437,11 +19437,11 @@ end
             "CREATE INDEX IF NOT EXISTS idx_items_charid ON items(charid)"
             "CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON logs(timestamp)"
         }
-
+        
         for _, indexQuery in ipairs(indexes) do
             lia.db.query(indexQuery)
         end
-
+        
         -- Initialize database statistics
         lia.data.set("dbStats", {
             connected = true,
@@ -19449,12 +19449,12 @@ end
             tablesCreated = #tables,
             indexesCreated = #indexes
         })
-
+        
         -- Notify all players
         for _, ply in ipairs(player.GetAll()) do
             ply:ChatPrint("Database connected successfully")
         end
-
+        
         print("Database initialization completed")
     end)
     ```
@@ -19494,17 +19494,17 @@ end
         -- Create custom tables
         lia.db.query("CREATE TABLE IF NOT EXISTS player_stats (steamid VARCHAR(255) PRIMARY KEY, kills INT, deaths INT, playtime INT)")
         lia.db.query("CREATE TABLE IF NOT EXISTS server_logs (id INT PRIMARY KEY, player VARCHAR(255), action TEXT, timestamp INT)")
-
+        
         -- Load initial data
         lia.data.get("serverConfig", {}, function(config)
             MyAddon.config = config
         end)
-
+        
         -- Setup periodic cleanup
         timer.Create("DatabaseCleanup", 3600, 0, function()
             lia.db.query("DELETE FROM server_logs WHERE timestamp < ?", os.time() - 604800)
         end)
-
+        
         print("Advanced database initialization complete")
     end)
     ```
@@ -19545,7 +19545,7 @@ end
         lia.data.get("allData", {}, function(data)
             MyAddon.cache = data
         end)
-
+        
         -- Initialize player statistics
         for _, ply in ipairs(player.GetAll()) do
             local char = ply:getChar()
@@ -19553,12 +19553,12 @@ end
                 char:loadStats()
             end
         end
-
+        
         -- Start background processes
         timer.Create("DataSync", 300, 0, function()
             MyAddon:SyncData()
         end)
-
+        
         print("All systems initialized after database load")
     end)
     ```
@@ -19601,11 +19601,11 @@ end
             timestamp = os.time(),
             admin = "System"
         })
-
+        
         -- Clear all addon data
         lia.data.delete("addonData")
         lia.data.delete("playerStats")
-
+        
         -- Reset all player data
         for _, ply in ipairs(player.GetAll()) do
             local char = ply:getChar()
@@ -19614,12 +19614,12 @@ end
                 char:setData("achievements", {})
             end
         end
-
+        
         -- Notify all players
         for _, ply in ipairs(player.GetAll()) do
             ply:ChatPrint("Server data has been reset")
         end
-
+        
         print("Complete database reset performed")
     end)
     ```
@@ -19661,20 +19661,20 @@ end
             timestamp = os.time(),
             admin = "System"
         })
-
+        
         -- Clear all addon data
         MyAddon.data = {}
         MyAddon.cache = {}
         MyAddon.playerStats = {}
-
+        
         -- Reset all player characters
         for _, ply in ipairs(player.GetAll()) do
             ply:Kick("Server data has been wiped")
         end
-
+        
         -- Recreate essential tables
         lia.db.query("CREATE TABLE IF NOT EXISTS lia_characters (id INTEGER PRIMARY KEY, steamid VARCHAR(255), name VARCHAR(255))")
-
+        
         print("Complete database wipe performed")
     end)
     ```
@@ -19723,7 +19723,7 @@ end
             sound = deathSound,
             timestamp = os.time()
         })
-
+        
         -- Check for custom death sounds
         local char = client:getChar()
         if char then
@@ -19732,7 +19732,7 @@ end
                 client:EmitSound(customSound)
             end
         end
-
+        
         -- Add death sound to statistics
         local stats = client:getData("deathStats", {sounds = {}})
         stats.sounds[deathSound] = (stats.sounds[deathSound] or 0) + 1
@@ -19784,17 +19784,17 @@ end
             position = createdEnt:GetPos(),
             timestamp = os.time()
         })
-
+        
         -- Restore custom data
         if data.customData then
             createdEnt:SetCustomData(data.customData)
         end
-
+        
         -- Setup entity-specific behavior
         if createdEnt:GetClass() == "lia_item" then
             createdEnt:SetupItemData(data.itemData)
         end
-
+        
         -- Notify entity of loading
         if createdEnt.OnLoaded then
             createdEnt:OnLoaded(data)
@@ -19847,17 +19847,17 @@ end
             data = util.TableToJSON(data),
             timestamp = os.time()
         })
-
+        
         -- Validate data integrity
         if data.position and not data.position.x then
             print("Warning: Invalid position data for entity " .. tostring(ent))
         end
-
+        
         -- Update entity-specific data
         if ent.OnPersistDataUpdated then
             ent:OnPersistDataUpdated(data)
         end
-
+        
         -- Sync to clients if needed
         if data.syncToClients then
             net.Start("liaEntityDataUpdate")
@@ -19913,17 +19913,17 @@ end
             data = util.TableToJSON(entData),
             timestamp = os.time()
         })
-
+        
         -- Validate data before saving
         if not entData.position or not entData.angles then
             print("Warning: Incomplete entity data for " .. tostring(ent))
         end
-
+        
         -- Add custom persistence data
         if ent.GetCustomPersistenceData then
             entData.customData = ent:GetCustomPersistenceData()
         end
-
+        
         -- Update entity statistics
         local stats = lia.data.get("entityStats", {})
         stats[ent:GetClass()] = (stats[ent:GetClass()] or 0) + 1
@@ -19969,7 +19969,7 @@ end
     hook.Add("OnFontsRefreshed", "AdvancedFontRefresh", function()
         -- Clear existing fonts
         MyAddon.fonts = {}
-
+        
         -- Create custom font set
         local fontSizes = {12, 16, 20, 24, 32, 48}
         for _, size in ipairs(fontSizes) do
@@ -19980,12 +19980,12 @@ end
                 antialias = true
             })
         end
-
+        
         -- Update UI elements
         if IsValid(MyAddon.mainPanel) then
             MyAddon.mainPanel:UpdateFonts()
         end
-
+        
         print("Advanced font system refreshed")
     end)
     ```
@@ -20017,7 +20017,7 @@ end
     hook.Add("OnItemAdded", "ItemEffects", function(owner, item)
         local char = owner:getChar()
         if not char then return end
-
+        
         if item.uniqueID == "health_potion" then
             char:setData("healthBonus", (char:getData("healthBonus", 0) + 10))
         elseif item.uniqueID == "stamina_boost" then
@@ -20032,14 +20032,14 @@ end
     hook.Add("OnItemAdded", "AdvancedItems", function(owner, item)
         local char = owner:getChar()
         if not char then return end
-
+        
         local client = char:getPlayer()
         if not IsValid(client) then return end
-
+        
         -- Check for set bonuses
         local inventory = char:getInv()
         local items = inventory:getItems()
-
+        
         -- Check for armor set
         local armorPieces = 0
         for _, invItem in pairs(items) do
@@ -20047,12 +20047,12 @@ end
                 armorPieces = armorPieces + 1
             end
         end
-
+        
         if armorPieces >= 3 then
             char:setData("armorSetBonus", true)
             client:ChatPrint("Armor set bonus activated!")
         end
-
+        
         -- Check for weapon upgrades
         if item.uniqueID == "weapon_upgrade" then
             local weapon = inventory:hasItem("weapon_pistol")
@@ -20061,7 +20061,7 @@ end
                 client:ChatPrint("Weapon upgraded!")
             end
         end
-
+        
         -- Check for quest items
         if item:getData("questItem", false) then
             local questID = item:getData("questID")
@@ -20070,7 +20070,7 @@ end
                 client:ChatPrint("Quest progress updated!")
             end
         end
-
+        
         -- Update inventory weight
         local itemWeight = item:getData("weight", 1)
         local currentWeight = char:getData("currentWeight", 0)
@@ -20119,7 +20119,7 @@ end
     hook.Add("OnItemCreated", "AdvancedItemCreation", function(itemTable, self)
         local char = self:getOwner()
         if not char then return end
-
+        
         -- Set up item quality
         local quality = self:getData("quality", "common")
         local qualityMultipliers = {
@@ -20129,9 +20129,9 @@ end
             ["epic"] = 2.0,
             ["legendary"] = 3.0
         }
-
+        
         local multiplier = qualityMultipliers[quality] or 1.0
-
+        
         -- Apply quality bonuses
         if itemTable.uniqueID == "weapon_pistol" then
             local baseDamage = 25
@@ -20142,7 +20142,7 @@ end
             self:setData("protection", math.floor(baseProtection * multiplier))
             self:setData("durability", math.floor(200 * multiplier))
         end
-
+        
         -- Set up item level
         local itemLevel = self:getData("level", 1)
         if itemLevel > 1 then
@@ -20150,7 +20150,7 @@ end
             local currentValue = self:getData("value", 100)
             self:setData("value", math.floor(currentValue * (1 + levelBonus)))
         end
-
+        
         -- Set up item enchantments
         local enchantments = self:getData("enchantments", {})
         if #enchantments > 0 then
@@ -20162,7 +20162,7 @@ end
                 end
             end
         end
-
+        
         -- Set up item binding
         if self:getData("bindOnPickup", false) then
             self:setData("boundTo", char:getID())
@@ -20214,18 +20214,18 @@ end
             model = ITEM.model,
             timestamp = os.time()
         })
-
+        
         -- Validate item data
         if not ITEM.uniqueID or not ITEM.name then
             print("Warning: Invalid item data for " .. tostring(ITEM.uniqueID))
         end
-
+        
         -- Add custom properties
         ITEM.customProperty = "MyAddonValue"
-
+        
         -- Register item in custom system
         MyAddon.itemSystem:RegisterItem(ITEM)
-
+        
         -- Notify clients if server
         if SERVER then
             net.Start("liaItemRegistered")
@@ -20276,30 +20276,30 @@ end
     hook.Add("OnItemSpawned", "AdvancedItemSpawning", function(self)
         local item = self:GetItem()
         if not item then return end
-
+        
         -- Set up item glow effects
         if item:getData("glow", false) then
             self:SetMaterial("models/effects/comball_tape")
             self:SetColor(Color(255, 255, 0, 255))
         end
-
+        
         -- Set up item size
         local scale = item:getData("scale", 1.0)
         if scale ~= 1.0 then
             self:SetModelScale(scale)
         end
-
+        
         -- Set up item physics
         local physics = self:GetPhysicsObject()
         if IsValid(physics) then
             local weight = item:getData("weight", 1)
             physics:SetMass(weight * 10)
-
+            
             -- Set up friction
             local friction = item:getData("friction", 0.5)
             physics:SetMaterial("friction_" .. friction)
         end
-
+        
         -- Set up item lifetime
         local lifetime = item:getData("lifetime", 0)
         if lifetime > 0 then
@@ -20309,13 +20309,13 @@ end
                 end
             end)
         end
-
+        
         -- Set up item protection
         if item:getData("protected", false) then
             self:SetCollisionGroup(COLLISION_GROUP_WORLD)
             self:SetSolid(SOLID_VPHYSICS)
         end
-
+        
         -- Set up item sound
         local sound = item:getData("dropSound")
         if sound then
@@ -20357,7 +20357,7 @@ end
             count = count,
             time = os.time()
         }
-
+        
         fromChar:setData("lastTransferOut", log)
         toChar:setData("lastTransferIn", log)
     end)
@@ -20377,12 +20377,12 @@ end
                 timestamp = os.time()
             })
         end
-
+        
         -- Update transfer statistics
         local fromStats = fromChar:getData("transferStats", {sent = 0, received = 0})
         fromStats.sent = fromStats.sent + table.Count(items)
         fromChar:setData("transferStats", fromStats)
-
+        
         local toStats = toChar:getData("transferStats", {sent = 0, received = 0})
         toStats.received = toStats.received + table.Count(items)
         toChar:setData("transferStats", toStats)
@@ -20423,7 +20423,7 @@ end
     hook.Add("OnLoadTables", "AdvancedTableSetup", function()
         -- Create custom tables
         lia.db.query("CREATE TABLE IF NOT EXISTS player_stats (steamid VARCHAR(255) PRIMARY KEY, kills INT, deaths INT, playtime INT)")
-
+        
         -- Check for table migrations
         lia.db.query("SELECT * FROM information_schema.columns WHERE table_name = 'player_stats' AND column_name = 'score'", function(data)
             if not data or #data == 0 then
@@ -20477,7 +20477,7 @@ end
                 MyAddon.data = data
                 print("Addon data loaded")
             end)
-
+            
             -- Register custom network strings
             util.AddNetworkString("MyAddonSync")
         else
@@ -20535,7 +20535,7 @@ end
                 end
             end
         end
-
+        
         -- Initialize module data
         if SERVER then
             lia.data.get("module_" .. moduleName, {}, function(data)
@@ -20586,12 +20586,12 @@ end
                 hook.Remove(hookName, moduleName)
             end
         end
-
+        
         -- Clean up module data
         if SERVER then
             lia.data.delete("module_" .. moduleName)
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -20631,7 +20631,7 @@ end
             client:ChatPrint("You need a character to use OOC chat")
             return false
         end
-
+        
         -- Check if player is muted
         if char:getData("muted", false) then
             client:ChatPrint("You are muted and cannot send OOC messages")
@@ -20649,26 +20649,26 @@ end
             client:ChatPrint("You need a character to use OOC chat")
             return false
         end
-
+        
         -- Check if player is muted
         if char:getData("muted", false) then
             client:ChatPrint("You are muted and cannot send OOC messages")
             return false
         end
-
+        
         -- Check if player is gagged
         if char:getData("gagged", false) then
             client:ChatPrint("You are gagged and cannot send OOC messages")
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "police" then
             client:ChatPrint("Police officers cannot use OOC chat")
             return false
         end
-
+        
         -- Check for spam protection
         local lastOOC = char:getData("lastOOC", 0)
         local oocCooldown = 5 -- 5 second cooldown for OOC
@@ -20676,13 +20676,13 @@ end
             client:ChatPrint("Please wait before sending another OOC message")
             return false
         end
-
+        
         -- Check message length
         if string.len(message) > 200 then
             client:ChatPrint("OOC message too long (max 200 characters)")
             return false
         end
-
+        
         -- Check for inappropriate content
         local bannedWords = {"spam", "hack", "cheat", "exploit"}
         for _, word in ipairs(bannedWords) do
@@ -20691,10 +20691,10 @@ end
                 return false
             end
         end
-
+        
         -- Update last OOC time
         char:setData("lastOOC", os.time())
-
+        
         -- Check for admin commands
         if string.sub(message, 1, 1) == "!" then
             local command = string.sub(message, 2)
@@ -20704,10 +20704,10 @@ end
                 return false
             end
         end
-
+        
         -- Log OOC message
         print(string.format("[OOC] %s: %s", client:Name(), message))
-
+        
         -- Notify admins of OOC usage
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= client then
@@ -20758,14 +20758,14 @@ end
     hook.Add("OnOpenVendorMenu", "AdvancedVendorMenu", function(self, vendor)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Check faction restrictions
         local allowedFactions = vendor.allowedFactions
         if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
             LocalPlayer():ChatPrint("Your faction cannot access this vendor")
             return false
         end
-
+        
         -- Check level requirements
         local requiredLevel = vendor.requiredLevel
         if requiredLevel then
@@ -20775,7 +20775,7 @@ end
                 return false
             end
         end
-
+        
         -- Check time restrictions
         local timeRestriction = vendor.timeRestriction
         if timeRestriction then
@@ -20785,7 +20785,7 @@ end
                 return false
             end
         end
-
+        
         -- Apply faction-specific discounts
         local faction = char:getFaction()
         local discounts = {
@@ -20793,10 +20793,10 @@ end
             ["medic"] = 0.05, -- 5% discount
             ["citizen"] = 0.0  -- No discount
         }
-
+        
         local discount = discounts[faction] or 0
         vendor.discount = discount
-
+        
         -- Update vendor appearance based on faction
         if faction == "police" then
             self:SetColor(Color(0, 0, 255, 255))
@@ -20805,9 +20805,9 @@ end
         else
             self:SetColor(Color(255, 255, 255, 255))
         end
-
+        
         -- Log vendor access
-        print(string.format("%s accessed vendor %s (Faction: %s)",
+        print(string.format("%s accessed vendor %s (Faction: %s)", 
             LocalPlayer():Name(), vendor.name, faction))
     end)
     ```
@@ -20854,18 +20854,18 @@ end
             partID = part.id,
             timestamp = os.time()
         })
-
+        
         -- Validate part data
         if not part.id or not part.name then
             print("Warning: Invalid PAC3 part data")
             return
         end
-
+        
         -- Update part statistics
         local stats = lia.data.get("pac3Stats", {transfers = 0})
         stats.transfers = stats.transfers + 1
         lia.data.set("pac3Stats", stats)
-
+        
         -- Notify relevant players
         for _, ply in ipairs(player.GetAll()) do
             if ply:HasPAC3Part(part.id) then
@@ -20919,7 +20919,7 @@ end
             sound = painSound,
             timestamp = os.time()
         })
-
+        
         -- Check for custom pain sounds
         local char = client:getChar()
         if char then
@@ -20928,7 +20928,7 @@ end
                 client:EmitSound(customSound)
             end
         end
-
+        
         -- Add pain sound to statistics
         local stats = client:getData("painStats", {sounds = {}})
         stats.sounds[painSound] = (stats.sounds[painSound] or 0) + 1
@@ -20976,9 +20976,9 @@ end
     hook.Add("OnPickupMoney", "AdvancedMoneyPickup", function(client, moneyEntity)
         local char = client:getChar()
         if not char then return end
-
+        
         local amount = moneyEntity:GetMoneyAmount()
-
+        
         -- Log money pickup
         lia.log.write("money_pickup", {
             player = client:SteamID(),
@@ -20986,18 +20986,18 @@ end
             position = moneyEntity:GetPos(),
             timestamp = os.time()
         })
-
+        
         -- Update player statistics
         local stats = char:getData("moneyStats", {pickedUp = 0, totalAmount = 0})
         stats.pickedUp = stats.pickedUp + 1
         stats.totalAmount = stats.totalAmount + amount
         char:setData("moneyStats", stats)
-
+        
         -- Check for achievement
         if stats.totalAmount >= 10000 then
             hook.Run("PlayerEarnedAchievement", client, "money_collector")
         end
-
+        
         -- Notify player
         client:ChatPrint("You picked up " .. lia.currency.get(amount))
     end)
@@ -21046,65 +21046,65 @@ end
         if player == LocalPlayer() then
             local char = player:getChar()
             if not char then return end
-
+            
             -- Update character information
             local charData = char:getData()
-
+            
             -- Update UI elements
             if IsValid(lia.gui.info) then
                 lia.gui.info:updateCharacterInfo()
             end
-
+            
             -- Update inventory display
             if IsValid(lia.gui.inv1) then
                 lia.gui.inv1:updateInventory()
             end
-
+            
             -- Update faction display
             local faction = char:getFaction()
             if faction then
                 player:SetTeam(faction)
             end
-
+            
             -- Update character model
             local model = char:getModel()
             if model then
                 player:SetModel(model)
             end
-
+            
             -- Update character attributes
             local attributes = char:getAttribs()
             for attr, value in pairs(attributes) do
                 player:setNetVar("attr_" .. attr, value)
             end
-
+            
             -- Update character money
             local money = char:getMoney()
             player:setNetVar("money", money)
-
+            
             -- Update character level
             local level = char:getData("level", 1)
             player:setNetVar("level", level)
-
+            
             -- Update character experience
             local experience = char:getData("experience", 0)
             player:setNetVar("experience", experience)
-
+            
             -- Update character health
             local health = char:getData("health", 100)
             player:SetHealth(health)
-
+            
             -- Update character armor
             local armor = char:getData("armor", 0)
             player:SetArmor(armor)
-
+            
             -- Update character stamina
             local stamina = char:getData("stamina", 100)
             player:setNetVar("stamina", stamina)
-
+            
             -- Notify other systems
             hook.Run("CharLoaded", char:getID())
-
+            
             -- Log sync
             print("Player data synced for " .. player:Name() .. " (Char ID: " .. lastID .. ")")
         end
@@ -21151,7 +21151,7 @@ end
     hook.Add("OnPlayerDropWeapon", "AdvancedWeaponDrop", function(client, weapon, entity)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if weapon is bound
         if weapon:getData("bound", false) then
             local boundTo = weapon:getData("boundTo")
@@ -21160,57 +21160,57 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "police" and weapon:GetClass() == "weapon_pistol" then
             client:ChatPrint("Police officers cannot drop their service weapon")
             return false
         end
-
+        
         -- Check if weapon is valuable
         local weaponValue = weapon:getData("value", 0)
         if weaponValue > 1000 then
             -- Valuable weapon - require confirmation
             client:ChatPrint("Warning: This is a valuable weapon. Are you sure you want to drop it?")
         end
-
+        
         -- Update weapon drop statistics
         char:setData("weaponsDropped", (char:getData("weaponsDropped", 0) + 1))
         char:setData("lastWeaponDrop", os.time())
-
+        
         -- Set weapon entity data
         entity:setNetVar("droppedBy", char:getID())
         entity:setNetVar("droppedTime", os.time())
         entity:setNetVar("weaponClass", weapon:GetClass())
-
+        
         -- Set weapon entity lifetime
         local lifetime = 600 -- 10 minutes
         entity:setNetVar("lifetime", lifetime)
-
+        
         -- Start weapon cleanup timer
         timer.Simple(lifetime, function()
             if IsValid(entity) then
                 entity:Remove()
             end
         end)
-
+        
         -- Check for achievement
         local weaponsDropped = char:getData("weaponsDropped", 0)
         if weaponsDropped >= 50 and not char:getData("achievement_weapon_dropper", false) then
             char:setData("achievement_weapon_dropper", true)
             client:ChatPrint("Achievement unlocked: Weapon Dropper!")
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(client:GetPos()) < 500 then
                 ply:ChatPrint(client:Name() .. " dropped a weapon")
             end
         end
-
+        
         -- Log weapon drop
-        print(string.format("%s dropped weapon %s (Value: $%d)",
+        print(string.format("%s dropped weapon %s (Value: $%d)", 
             client:Name(), weapon:GetClass(), weaponValue))
     end)
     ```
@@ -21257,13 +21257,13 @@ end
     hook.Add("OnPlayerEnterSequence", "AdvancedSequence", function(self, sequenceName, callback, time, noFreeze)
         local char = self:getChar()
         if not char then return end
-
+        
         -- Check if player is already in a sequence
         if char:getData("inSequence", false) then
             self:ChatPrint("You are already performing an action")
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         local restrictedSequences = {
@@ -21271,20 +21271,20 @@ end
             ["medic"] = {"dance"},
             ["citizen"] = {}
         }
-
+        
         local restricted = restrictedSequences[faction] or {}
         if table.HasValue(restricted, sequenceName) then
             self:ChatPrint("Your faction cannot perform this action")
             return false
         end
-
+        
         -- Check level requirements
         local sequenceRequirements = {
             ["dance"] = 5,
             ["sit"] = 1,
             ["wave"] = 1
         }
-
+        
         local requiredLevel = sequenceRequirements[sequenceName]
         if requiredLevel then
             local charLevel = char:getData("level", 1)
@@ -21293,44 +21293,44 @@ end
                 return false
             end
         end
-
+        
         -- Set sequence data
         char:setData("inSequence", true)
         char:setData("currentSequence", sequenceName)
         char:setData("sequenceStartTime", os.time())
-
+        
         -- Update sequence statistics
         char:setData("sequencesUsed", (char:getData("sequencesUsed", 0) + 1))
         char:setData("lastSequence", os.time())
-
+        
         -- Check for achievement
         local sequencesUsed = char:getData("sequencesUsed", 0)
         if sequencesUsed >= 100 and not char:getData("achievement_performer", false) then
             char:setData("achievement_performer", true)
             self:ChatPrint("Achievement unlocked: Performer!")
         end
-
+        
         -- Set up sequence end callback
         timer.Simple(time, function()
             if IsValid(self) and char:getData("inSequence", false) then
                 char:setData("inSequence", false)
                 char:setData("currentSequence", nil)
-
+                
                 if callback then
                     callback()
                 end
             end
         end)
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(self:GetPos()) < 500 then
                 ply:ChatPrint(self:Name() .. " is performing: " .. sequenceName)
             end
         end
-
+        
         -- Log sequence entry
-        print(string.format("%s entered sequence %s (Duration: %d seconds)",
+        print(string.format("%s entered sequence %s (Duration: %d seconds)", 
             self:Name(), sequenceName, time))
     end)
     ```
@@ -21384,17 +21384,17 @@ end
     hook.Add("OnPlayerInteractItem", "AdvancedItemInteractions", function(client, action, self, result, data)
         local char = client:getChar()
         if not char then return end
-
+        
         if action == "use" then
             -- Handle consumable items
             if self.uniqueID == "health_potion" then
                 local healAmount = self:getData("healAmount", 50)
                 local charLevel = char:getData("level", 1)
                 healAmount = healAmount * (1 + charLevel * 0.1) -- 10% bonus per level
-
+                
                 client:SetHealth(math.min(client:Health() + healAmount, client:GetMaxHealth()))
                 client:ChatPrint("You healed for " .. math.floor(healAmount) .. " HP")
-
+                
                 -- Consume the item
                 local uses = self:getData("uses", 1) - 1
                 if uses <= 0 then
@@ -21402,7 +21402,7 @@ end
                 else
                     self:setData("uses", uses)
                 end
-
+            
             elseif self.uniqueID == "weapon_upgrade" then
                 -- Upgrade weapon
                 local weapon = char:getInv():hasItem("weapon_pistol")
@@ -21414,7 +21414,7 @@ end
                 else
                     client:ChatPrint("You need a weapon to upgrade")
                 end
-
+            
             elseif self.uniqueID == "teleport_scroll" then
                 -- Teleport to spawn
                 local spawns = lia.util.getSpawns()
@@ -21426,7 +21426,7 @@ end
                     char:getInv():remove(self)
                 end
             end
-
+        
         elseif action == "examine" then
             -- Show item details
             local itemData = {
@@ -21436,13 +21436,13 @@ end
                 weight = self:getData("weight", 1),
                 durability = self:getData("durability", 100)
             }
-
+            
             client:ChatPrint("Item: " .. itemData.name)
             client:ChatPrint("Description: " .. itemData.description)
             client:ChatPrint("Value: $" .. itemData.value)
             client:ChatPrint("Weight: " .. itemData.weight .. "kg")
             client:ChatPrint("Durability: " .. itemData.durability .. "%")
-
+        
         elseif action == "repair" then
             -- Repair item
             local currentDurability = self:getData("durability", 100)
@@ -21485,7 +21485,7 @@ end
     hook.Add("OnPlayerJoinClass", "ClassBonuses", function(client, class, oldClass)
         local char = client:getChar()
         if not char then return end
-
+        
         if class == "police_officer" then
             char:setData("authority", 5)
             char:setData("salary", 1000)
@@ -21496,7 +21496,7 @@ end
             char:setData("authority", 0)
             char:setData("salary", 500)
         end
-
+        
         client:ChatPrint("Class bonuses applied!")
     end)
     ```
@@ -21507,7 +21507,7 @@ end
     hook.Add("OnPlayerJoinClass", "AdvancedClasses", function(client, class, oldClass)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Remove old class bonuses
         if oldClass then
             local oldBonuses = {
@@ -21515,7 +21515,7 @@ end
                 ["medic"] = {"healingBonus", "medicalKnowledge"},
                 ["engineer"] = {"repairBonus", "technicalSkill"}
             }
-
+            
             local bonuses = oldBonuses[oldClass]
             if bonuses then
                 for _, bonus in ipairs(bonuses) do
@@ -21523,7 +21523,7 @@ end
                 end
             end
         end
-
+        
         -- Apply new class bonuses
         local classBonuses = {
             ["police_officer"] = {
@@ -21544,7 +21544,7 @@ end
                 items = {"wrench", "screwdriver", "multitool"}
             }
         }
-
+        
         local bonuses = classBonuses[class]
         if bonuses then
             -- Apply stat bonuses
@@ -21553,7 +21553,7 @@ end
                     char:setData(stat, value)
                 end
             end
-
+            
             -- Give class items
             if bonuses.items then
                 local inventory = char:getInv()
@@ -21565,19 +21565,19 @@ end
                 end
             end
         end
-
+        
         -- Update character appearance
         hook.Run("SetupPlayerModel", client, char)
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(client:Name() .. " joined the " .. class .. " class")
             end
         end
-
+        
         -- Log class change
-        print(string.format("%s joined class %s (was %s)",
+        print(string.format("%s joined class %s (was %s)", 
             client:Name(), class, oldClass or "none"))
     end)
     ```
@@ -21620,34 +21620,34 @@ end
     hook.Add("OnPlayerLeaveSequence", "AdvancedSequenceExit", function(self)
         local char = self:getChar()
         if not char then return end
-
+        
         -- Get sequence data
         local currentSequence = char:getData("currentSequence")
         local sequenceStartTime = char:getData("sequenceStartTime", 0)
         local sequenceDuration = os.time() - sequenceStartTime
-
+        
         -- Update sequence statistics
         char:setData("sequencesCompleted", (char:getData("sequencesCompleted", 0) + 1))
         char:setData("lastSequenceEnd", os.time())
         char:setData("totalSequenceTime", (char:getData("totalSequenceTime", 0) + sequenceDuration))
-
+        
         -- Clear sequence data
         char:setData("inSequence", false)
         char:setData("currentSequence", nil)
         char:setData("sequenceStartTime", nil)
-
+        
         -- Check for achievement
         local sequencesCompleted = char:getData("sequencesCompleted", 0)
         if sequencesCompleted >= 50 and not char:getData("achievement_sequence_master", false) then
             char:setData("achievement_sequence_master", true)
             self:ChatPrint("Achievement unlocked: Sequence Master!")
         end
-
+        
         -- Check for sequence-specific achievements
         if currentSequence == "dance" then
             local danceCount = char:getData("danceCount", 0) + 1
             char:setData("danceCount", danceCount)
-
+            
             if danceCount >= 20 and not char:getData("achievement_dancer", false) then
                 char:setData("achievement_dancer", true)
                 self:ChatPrint("Achievement unlocked: Dancer!")
@@ -21655,33 +21655,33 @@ end
         elseif currentSequence == "sit" then
             local sitCount = char:getData("sitCount", 0) + 1
             char:setData("sitCount", sitCount)
-
+            
             if sitCount >= 10 and not char:getData("achievement_sitter", false) then
                 char:setData("achievement_sitter", true)
                 self:ChatPrint("Achievement unlocked: Sitter!")
             end
         end
-
+        
         -- Check for sequence duration achievements
         if sequenceDuration >= 60 then -- 1 minute
             local longSequences = char:getData("longSequences", 0) + 1
             char:setData("longSequences", longSequences)
-
+            
             if longSequences >= 10 and not char:getData("achievement_patient", false) then
                 char:setData("achievement_patient", true)
                 self:ChatPrint("Achievement unlocked: Patient!")
             end
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(self:GetPos()) < 500 then
                 ply:ChatPrint(self:Name() .. " finished performing: " .. (currentSequence or "action"))
             end
         end
-
+        
         -- Log sequence exit
-        print(string.format("%s left sequence %s (Duration: %d seconds)",
+        print(string.format("%s left sequence %s (Duration: %d seconds)", 
             self:Name(), currentSequence or "unknown", sequenceDuration))
     end)
     ```
@@ -21714,15 +21714,15 @@ end
     hook.Add("OnPlayerLevelUp", "LevelBonuses", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Give skill points
         local skillPoints = newValue - oldValue
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 100
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         player:ChatPrint("Level up! You gained " .. skillPoints .. " skill points and $" .. moneyBonus)
     end)
     ```
@@ -21733,21 +21733,21 @@ end
     hook.Add("OnPlayerLevelUp", "AdvancedLeveling", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         local levelDiff = newValue - oldValue
-
+        
         -- Give skill points based on level
         local skillPoints = levelDiff * 2
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give attribute points
         local attrPoints = levelDiff
         char:setData("attributePoints", char:getData("attributePoints", 0) + attrPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 150
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         -- Check for milestone bonuses
         if newValue % 10 == 0 then
             -- Every 10 levels
@@ -21755,14 +21755,14 @@ end
             char:setMoney(char:getMoney() + 1000)
             player:ChatPrint("Milestone reached! Bonus reward: $1000")
         end
-
+        
         -- Check for level cap
         local maxLevel = 100
         if newValue >= maxLevel then
             char:setData("maxLevelReached", true)
             player:ChatPrint("Congratulations! You have reached the maximum level!")
         end
-
+        
         -- Update character stats
         local faction = char:getFaction()
         if faction == "police" then
@@ -21770,16 +21770,16 @@ end
         elseif faction == "medic" then
             char:setData("healingBonus", char:getData("healingBonus", 1.0) + (levelDiff * 0.1))
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= player then
                 ply:ChatPrint(player:Name() .. " reached level " .. newValue .. "!")
             end
         end
-
+        
         -- Log level up
-        print(string.format("%s leveled up from %d to %d",
+        print(string.format("%s leveled up from %d to %d", 
             player:Name(), oldValue, newValue))
     end)
     ```
@@ -21809,15 +21809,15 @@ end
     hook.Add("OnPlayerLevelUp", "LevelBonuses", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Give skill points
         local skillPoints = newValue - oldValue
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 100
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         player:ChatPrint("Level up! You gained " .. skillPoints .. " skill points and $" .. moneyBonus)
     end)
     ```
@@ -21828,21 +21828,21 @@ end
     hook.Add("OnPlayerLevelUp", "AdvancedLeveling", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         local levelDiff = newValue - oldValue
-
+        
         -- Give skill points based on level
         local skillPoints = levelDiff * 2
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give attribute points
         local attrPoints = levelDiff
         char:setData("attributePoints", char:getData("attributePoints", 0) + attrPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 150
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         -- Check for milestone bonuses
         if newValue % 10 == 0 then
             -- Every 10 levels
@@ -21850,14 +21850,14 @@ end
             char:setMoney(char:getMoney() + 1000)
             player:ChatPrint("Milestone reached! Bonus reward: $1000")
         end
-
+        
         -- Check for level cap
         local maxLevel = 100
         if newValue >= maxLevel then
             char:setData("maxLevelReached", true)
             player:ChatPrint("Congratulations! You have reached the maximum level!")
         end
-
+        
         -- Update character stats
         local faction = char:getFaction()
         if faction == "police" then
@@ -21865,16 +21865,16 @@ end
         elseif faction == "medic" then
             char:setData("healingBonus", char:getData("healingBonus", 1.0) + (levelDiff * 0.1))
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= player then
                 ply:ChatPrint(player:Name() .. " reached level " .. newValue .. "!")
             end
         end
-
+        
         -- Log level up
-        print(string.format("%s leveled up from %d to %d",
+        print(string.format("%s leveled up from %d to %d", 
             player:Name(), oldValue, newValue))
     end)
     ```
@@ -21904,15 +21904,15 @@ end
     hook.Add("OnPlayerLevelUp", "LevelBonuses", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Give skill points
         local skillPoints = newValue - oldValue
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 100
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         player:ChatPrint("Level up! You gained " .. skillPoints .. " skill points and $" .. moneyBonus)
     end)
     ```
@@ -21923,21 +21923,21 @@ end
     hook.Add("OnPlayerLevelUp", "AdvancedLeveling", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         local levelDiff = newValue - oldValue
-
+        
         -- Give skill points based on level
         local skillPoints = levelDiff * 2
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give attribute points
         local attrPoints = levelDiff
         char:setData("attributePoints", char:getData("attributePoints", 0) + attrPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 150
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         -- Check for milestone bonuses
         if newValue % 10 == 0 then
             -- Every 10 levels
@@ -21945,14 +21945,14 @@ end
             char:setMoney(char:getMoney() + 1000)
             player:ChatPrint("Milestone reached! Bonus reward: $1000")
         end
-
+        
         -- Check for level cap
         local maxLevel = 100
         if newValue >= maxLevel then
             char:setData("maxLevelReached", true)
             player:ChatPrint("Congratulations! You have reached the maximum level!")
         end
-
+        
         -- Update character stats
         local faction = char:getFaction()
         if faction == "police" then
@@ -21960,16 +21960,16 @@ end
         elseif faction == "medic" then
             char:setData("healingBonus", char:getData("healingBonus", 1.0) + (levelDiff * 0.1))
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= player then
                 ply:ChatPrint(player:Name() .. " reached level " .. newValue .. "!")
             end
         end
-
+        
         -- Log level up
-        print(string.format("%s leveled up from %d to %d",
+        print(string.format("%s leveled up from %d to %d", 
             player:Name(), oldValue, newValue))
     end)
     ```
@@ -21999,15 +21999,15 @@ end
     hook.Add("OnPlayerLevelUp", "LevelBonuses", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Give skill points
         local skillPoints = newValue - oldValue
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 100
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         player:ChatPrint("Level up! You gained " .. skillPoints .. " skill points and $" .. moneyBonus)
     end)
     ```
@@ -22018,21 +22018,21 @@ end
     hook.Add("OnPlayerLevelUp", "AdvancedLeveling", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         local levelDiff = newValue - oldValue
-
+        
         -- Give skill points based on level
         local skillPoints = levelDiff * 2
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give attribute points
         local attrPoints = levelDiff
         char:setData("attributePoints", char:getData("attributePoints", 0) + attrPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 150
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         -- Check for milestone bonuses
         if newValue % 10 == 0 then
             -- Every 10 levels
@@ -22040,14 +22040,14 @@ end
             char:setMoney(char:getMoney() + 1000)
             player:ChatPrint("Milestone reached! Bonus reward: $1000")
         end
-
+        
         -- Check for level cap
         local maxLevel = 100
         if newValue >= maxLevel then
             char:setData("maxLevelReached", true)
             player:ChatPrint("Congratulations! You have reached the maximum level!")
         end
-
+        
         -- Update character stats
         local faction = char:getFaction()
         if faction == "police" then
@@ -22055,16 +22055,16 @@ end
         elseif faction == "medic" then
             char:setData("healingBonus", char:getData("healingBonus", 1.0) + (levelDiff * 0.1))
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= player then
                 ply:ChatPrint(player:Name() .. " reached level " .. newValue .. "!")
             end
         end
-
+        
         -- Log level up
-        print(string.format("%s leveled up from %d to %d",
+        print(string.format("%s leveled up from %d to %d", 
             player:Name(), oldValue, newValue))
     end)
     ```
@@ -22094,15 +22094,15 @@ end
     hook.Add("OnPlayerLevelUp", "LevelBonuses", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Give skill points
         local skillPoints = newValue - oldValue
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 100
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         player:ChatPrint("Level up! You gained " .. skillPoints .. " skill points and $" .. moneyBonus)
     end)
     ```
@@ -22113,21 +22113,21 @@ end
     hook.Add("OnPlayerLevelUp", "AdvancedLeveling", function(player, oldValue, newValue)
         local char = player:getChar()
         if not char then return end
-
+        
         local levelDiff = newValue - oldValue
-
+        
         -- Give skill points based on level
         local skillPoints = levelDiff * 2
         char:setData("skillPoints", char:getData("skillPoints", 0) + skillPoints)
-
+        
         -- Give attribute points
         local attrPoints = levelDiff
         char:setData("attributePoints", char:getData("attributePoints", 0) + attrPoints)
-
+        
         -- Give money bonus
         local moneyBonus = newValue * 150
         char:setMoney(char:getMoney() + moneyBonus)
-
+        
         -- Check for milestone bonuses
         if newValue % 10 == 0 then
             -- Every 10 levels
@@ -22135,14 +22135,14 @@ end
             char:setMoney(char:getMoney() + 1000)
             player:ChatPrint("Milestone reached! Bonus reward: $1000")
         end
-
+        
         -- Check for level cap
         local maxLevel = 100
         if newValue >= maxLevel then
             char:setData("maxLevelReached", true)
             player:ChatPrint("Congratulations! You have reached the maximum level!")
         end
-
+        
         -- Update character stats
         local faction = char:getFaction()
         if faction == "police" then
@@ -22150,16 +22150,16 @@ end
         elseif faction == "medic" then
             char:setData("healingBonus", char:getData("healingBonus", 1.0) + (levelDiff * 0.1))
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= player then
                 ply:ChatPrint(player:Name() .. " reached level " .. newValue .. "!")
             end
         end
-
+        
         -- Log level up
-        print(string.format("%s leveled up from %d to %d",
+        print(string.format("%s leveled up from %d to %d", 
             player:Name(), oldValue, newValue))
     end)
     ```
@@ -22199,13 +22199,13 @@ end
     -- High: Complex stack item loss handling
     hook.Add("OnPlayerLostStackItem", "AdvancedStackLoss", function(itemTypeOrItem)
         local itemType = type(itemTypeOrItem) == "string" and itemTypeOrItem or itemTypeOrItem.uniqueID
-
+        
         -- Log stack item loss
         lia.log.write("stack_item_lost", {
             itemType = itemType,
             timestamp = os.time()
         })
-
+        
         -- Find all players who had this item
         for _, ply in ipairs(player.GetAll()) do
             local char = ply:getChar()
@@ -22221,7 +22221,7 @@ end
                 end
             end
         end
-
+        
         -- Update global statistics
         local stats = lia.data.get("stackStats", {lost = 0})
         stats.lost = stats.lost + 1
@@ -22263,7 +22263,7 @@ end
             client:SetNoDraw(true)
             client:SetNotSolid(true)
             client:SetMoveType(MOVETYPE_NOCLIP)
-
+            
             -- Notify other players
             for _, ply in ipairs(player.GetAll()) do
                 if ply ~= client then
@@ -22275,7 +22275,7 @@ end
             client:SetNoDraw(false)
             client:SetNotSolid(false)
             client:SetMoveType(MOVETYPE_WALK)
-
+            
             -- Notify other players
             for _, ply in ipairs(player.GetAll()) do
                 if ply ~= client then
@@ -22292,40 +22292,40 @@ end
     hook.Add("OnPlayerObserve", "AdvancedObserver", function(client, state)
         local char = client:getChar()
         if not char then return end
-
+        
         if state then
             -- Check if player has permission to observe
             if not client:IsAdmin() and not char:hasFlags("O") then
                 client:ChatPrint("You don't have permission to observe")
                 return
             end
-
+            
             -- Store original position
             char:setData("observePos", client:GetPos())
             char:setData("observeAng", client:GetAngles())
-
+            
             -- Set up observer mode
             client:SetNoDraw(true)
             client:SetNotSolid(true)
             client:SetMoveType(MOVETYPE_NOCLIP)
             client:SetHealth(1)
             client:SetMaxHealth(1)
-
+            
             -- Set observer target
             local target = char:getData("observeTarget")
             if target and IsValid(target) then
                 client:SetObserverTarget(target)
             end
-
+            
             -- Notify admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() and ply ~= client then
                     ply:ChatPrint("[ADMIN] " .. client:Name() .. " entered observer mode")
                 end
             end
-
+            
             -- Log observer mode
-            print(string.format("%s entered observer mode at %s",
+            print(string.format("%s entered observer mode at %s", 
                 client:Name(), os.date("%Y-%m-%d %H:%M:%S")))
         else
             -- Restore player
@@ -22334,7 +22334,7 @@ end
             client:SetMoveType(MOVETYPE_WALK)
             client:SetHealth(100)
             client:SetMaxHealth(100)
-
+            
             -- Restore position if available
             local observePos = char:getData("observePos")
             local observeAng = char:getData("observeAng")
@@ -22342,21 +22342,21 @@ end
                 client:SetPos(observePos)
                 client:SetAngles(observeAng)
             end
-
+            
             -- Clear observer data
             char:setData("observePos", nil)
             char:setData("observeAng", nil)
             char:setData("observeTarget", nil)
-
+            
             -- Notify admins
             for _, ply in ipairs(player.GetAll()) do
                 if ply:IsAdmin() and ply ~= client then
                     ply:ChatPrint("[ADMIN] " .. client:Name() .. " exited observer mode")
                 end
             end
-
+            
             -- Log observer mode exit
-            print(string.format("%s exited observer mode at %s",
+            print(string.format("%s exited observer mode at %s", 
                 client:Name(), os.date("%Y-%m-%d %H:%M:%S")))
         end
     end)
@@ -22390,15 +22390,15 @@ end
     hook.Add("OnPlayerPurchaseDoor", "DoorBonuses", function(client, door, price)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Give purchase bonus
         local bonus = math.floor(price * 0.1) -- 10% bonus
         char:setMoney(char:getMoney() + bonus)
-
+        
         -- Set door ownership
         door:setNetVar("owner", char:getID())
         door:setNetVar("purchaseTime", os.time())
-
+        
         client:ChatPrint("Door purchased! You received a $" .. bonus .. " bonus")
     end)
     ```
@@ -22409,12 +22409,12 @@ end
     hook.Add("OnPlayerPurchaseDoor", "AdvancedDoorPurchases", function(client, door, price)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Set up door ownership
         door:setNetVar("owner", char:getID())
         door:setNetVar("purchaseTime", os.time())
         door:setNetVar("purchasePrice", price)
-
+        
         -- Give door key
         local key = lia.item.instance("door_key")
         if key then
@@ -22422,7 +22422,7 @@ end
             key:setData("doorName", door:getNetVar("doorData", {}).title or "Door")
             char:getInv():add(key)
         end
-
+        
         -- Check for bulk purchase discount
         local ownedDoors = 0
         for _, ent in ipairs(ents.GetAll()) do
@@ -22430,32 +22430,32 @@ end
                 ownedDoors = ownedDoors + 1
             end
         end
-
+        
         if ownedDoors >= 5 then
             local discount = math.floor(price * 0.2) -- 20% discount
             char:setMoney(char:getMoney() + discount)
             client:ChatPrint("Bulk purchase discount: $" .. discount)
         end
-
+        
         -- Update character statistics
         char:setData("doorsOwned", (char:getData("doorsOwned", 0) + 1))
         char:setData("totalSpent", (char:getData("totalSpent", 0) + price))
-
+        
         -- Check for achievement
         if char:getData("doorsOwned", 0) >= 10 then
             char:setData("achievement_landlord", true)
             client:ChatPrint("Achievement unlocked: Landlord!")
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(door:GetPos()) < 500 then
                 ply:ChatPrint(client:Name() .. " purchased a door for $" .. price)
             end
         end
-
+        
         -- Log purchase
-        print(string.format("%s purchased door %s for $%d",
+        print(string.format("%s purchased door %s for $%d", 
             client:Name(), door:EntIndex(), price))
     end)
     ```
@@ -22492,7 +22492,7 @@ end
             if model then
                 ragdoll:SetModel(model)
             end
-
+            
             -- Set ragdoll skin
             local skin = char:getSkin()
             ragdoll:SetSkin(skin)
@@ -22506,17 +22506,17 @@ end
     hook.Add("OnPlayerRagdollCreated", "AdvancedRagdoll", function(player, ragdoll)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Set ragdoll model to character model
         local model = char:getModel()
         if model then
             ragdoll:SetModel(model)
         end
-
+        
         -- Set ragdoll skin
         local skin = char:getSkin()
         ragdoll:SetSkin(skin)
-
+        
         -- Set ragdoll bodygroups
         local bodygroups = char:getBodygroups()
         for group, value in pairs(bodygroups) do
@@ -22525,42 +22525,42 @@ end
                 ragdoll:SetBodygroup(index, value)
             end
         end
-
+        
         -- Set ragdoll position and angles
         ragdoll:SetPos(player:GetPos())
         ragdoll:SetAngles(player:GetAngles())
-
+        
         -- Set ragdoll velocity
         ragdoll:SetVelocity(player:GetVelocity())
-
+        
         -- Set ragdoll health
         ragdoll:SetHealth(player:Health())
-
+        
         -- Set ragdoll armor
         ragdoll:SetArmor(player:Armor())
-
+        
         -- Set ragdoll data
         ragdoll:setNetVar("playerID", player:UserID())
         ragdoll:setNetVar("charID", char:getID())
         ragdoll:setNetVar("charName", char:getName())
         ragdoll:setNetVar("faction", char:getFaction())
-
+        
         -- Set ragdoll creation time
         ragdoll:setNetVar("creationTime", os.time())
-
+        
         -- Set ragdoll lifetime
         local lifetime = 300 -- 5 minutes
         ragdoll:setNetVar("lifetime", lifetime)
-
+        
         -- Start ragdoll cleanup timer
         timer.Simple(lifetime, function()
             if IsValid(ragdoll) then
                 ragdoll:Remove()
             end
         end)
-
+        
         -- Log ragdoll creation
-        print(string.format("Ragdoll created for %s (Char: %s, Faction: %s)",
+        print(string.format("Ragdoll created for %s (Char: %s, Faction: %s)", 
             player:Name(), char:getName(), char:getFaction()))
     end)
     ```
@@ -22618,19 +22618,19 @@ end
             "warnings_received INTEGER DEFAULT 0",
             "last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         }
-
+        
         for _, column in ipairs(statsColumns) do
             lia.db.query("ALTER TABLE player_stats ADD COLUMN IF NOT EXISTS " .. column)
         end
-
+        
         -- Create indexes for better performance
         lia.db.query("CREATE INDEX IF NOT EXISTS idx_player_stats_steamid ON player_stats(steamid)")
         lia.db.query("CREATE INDEX IF NOT EXISTS idx_player_stats_playtime ON player_stats(playtime)")
         lia.db.query("CREATE INDEX IF NOT EXISTS idx_player_stats_kills ON player_stats(kills)")
-
+        
         -- Initialize default stats for existing players
         lia.db.query("INSERT OR IGNORE INTO player_stats (steamid, playtime, last_activity) SELECT steamid, 0, CURRENT_TIMESTAMP FROM characters WHERE steamid NOT IN (SELECT steamid FROM player_stats)")
-
+        
         print("Advanced player stats system initialized")
     end)
     ```
@@ -22663,11 +22663,11 @@ end
     hook.Add("OnPlayerSwitchClass", "ClassSwitchBonuses", function(client, class, oldClass)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Give switch bonus
         local switchBonus = 100
         char:setMoney(char:getMoney() + switchBonus)
-
+        
         client:ChatPrint("Class switch bonus: $" .. switchBonus)
     end)
     ```
@@ -22678,7 +22678,7 @@ end
     hook.Add("OnPlayerSwitchClass", "AdvancedClassSwitching", function(client, class, oldClass)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Remove old class bonuses
         if oldClass then
             local oldBonuses = {
@@ -22686,7 +22686,7 @@ end
                 ["medic"] = {"healingBonus", "medicalKnowledge"},
                 ["engineer"] = {"repairBonus", "technicalSkill"}
             }
-
+            
             local bonuses = oldBonuses[oldClass]
             if bonuses then
                 for _, bonus in ipairs(bonuses) do
@@ -22694,7 +22694,7 @@ end
                 end
             end
         end
-
+        
         -- Apply new class bonuses
         local classBonuses = {
             ["police_officer"] = {
@@ -22715,7 +22715,7 @@ end
                 items = {"wrench", "screwdriver", "multitool"}
             }
         }
-
+        
         local bonuses = classBonuses[class]
         if bonuses then
             -- Apply stat bonuses
@@ -22724,7 +22724,7 @@ end
                     char:setData(stat, value)
                 end
             end
-
+            
             -- Give class items
             if bonuses.items then
                 local inventory = char:getInv()
@@ -22736,10 +22736,10 @@ end
                 end
             end
         end
-
+        
         -- Update character appearance
         hook.Run("SetupPlayerModel", client, char)
-
+        
         -- Check for class switch cooldown
         local lastSwitch = char:getData("lastClassSwitch", 0)
         local switchCooldown = 3600 -- 1 hour
@@ -22747,28 +22747,28 @@ end
             client:ChatPrint("You must wait before switching classes again")
             return false
         end
-
+        
         -- Update switch time
         char:setData("lastClassSwitch", os.time())
-
+        
         -- Check for achievement
         local classSwitches = char:getData("classSwitches", 0) + 1
         char:setData("classSwitches", classSwitches)
-
+        
         if classSwitches >= 10 and not char:getData("achievement_class_hopper", false) then
             char:setData("achievement_class_hopper", true)
             client:ChatPrint("Achievement unlocked: Class Hopper!")
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(client:Name() .. " switched to " .. class .. " class")
             end
         end
-
+        
         -- Log class switch
-        print(string.format("%s switched from %s to %s class",
+        print(string.format("%s switched from %s to %s class", 
             client:Name(), oldClass or "none", class))
     end)
     ```
@@ -22801,7 +22801,7 @@ end
     hook.Add("OnPlayerXPGain", "XPBonuses", function(player, gained, reason)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Apply faction bonus
         local faction = char:getFaction()
         local factionMultiplier = 1.0
@@ -22810,10 +22810,10 @@ end
         elseif faction == "medic" then
             factionMultiplier = 1.1
         end
-
+        
         local bonusXP = math.floor(gained * factionMultiplier)
         char:setData("experience", char:getData("experience", 0) + bonusXP)
-
+        
         player:ChatPrint("You gained " .. bonusXP .. " XP (with faction bonus)")
     end)
     ```
@@ -22824,13 +22824,13 @@ end
     hook.Add("OnPlayerXPGain", "AdvancedXP", function(player, gained, reason)
         local char = player:getChar()
         if not char then return end
-
+        
         local totalXP = char:getData("experience", 0)
         local currentLevel = char:getData("level", 1)
-
+        
         -- Apply various bonuses
         local finalXP = gained
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -22840,7 +22840,7 @@ end
             ["citizen"] = 1.0
         }
         finalXP = finalXP * (factionBonuses[faction] or 1.0)
-
+        
         -- Activity bonus
         local activityBonuses = {
             ["combat"] = 1.5,
@@ -22849,17 +22849,17 @@ end
             ["crafting"] = 1.2
         }
         finalXP = finalXP * (activityBonuses[reason] or 1.0)
-
+        
         -- Time bonus (more XP during peak hours)
         local currentHour = tonumber(os.date("%H"))
         if currentHour >= 18 and currentHour <= 22 then
             finalXP = finalXP * 1.2 -- 20% bonus during peak hours
         end
-
+        
         -- Apply final XP
         local newTotalXP = totalXP + math.floor(finalXP)
         char:setData("experience", newTotalXP)
-
+        
         -- Check for level up
         local requiredXP = currentLevel * 1000
         if newTotalXP >= requiredXP then
@@ -22867,17 +22867,17 @@ end
             char:setData("level", newLevel)
             hook.Run("OnPlayerLevelUp", player, currentLevel, newLevel)
         end
-
+        
         -- Track XP sources
         local xpSources = char:getData("xpSources", {})
         xpSources[reason] = (xpSources[reason] or 0) + math.floor(finalXP)
         char:setData("xpSources", xpSources)
-
+        
         -- Notify player
         player:ChatPrint("You gained " .. math.floor(finalXP) .. " XP for " .. reason)
-
+        
         -- Log XP gain
-        print(string.format("%s gained %d XP for %s (Level %d)",
+        print(string.format("%s gained %d XP for %s (Level %d)", 
             player:Name(), math.floor(finalXP), reason, currentLevel))
     end)
     ```
@@ -22907,7 +22907,7 @@ end
     hook.Add("OnPlayerXPGain", "XPBonuses", function(player, gained, reason)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Apply faction bonus
         local faction = char:getFaction()
         local factionMultiplier = 1.0
@@ -22916,10 +22916,10 @@ end
         elseif faction == "medic" then
             factionMultiplier = 1.1
         end
-
+        
         local bonusXP = math.floor(gained * factionMultiplier)
         char:setData("experience", char:getData("experience", 0) + bonusXP)
-
+        
         player:ChatPrint("You gained " .. bonusXP .. " XP (with faction bonus)")
     end)
     ```
@@ -22930,13 +22930,13 @@ end
     hook.Add("OnPlayerXPGain", "AdvancedXP", function(player, gained, reason)
         local char = player:getChar()
         if not char then return end
-
+        
         local totalXP = char:getData("experience", 0)
         local currentLevel = char:getData("level", 1)
-
+        
         -- Apply various bonuses
         local finalXP = gained
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -22946,7 +22946,7 @@ end
             ["citizen"] = 1.0
         }
         finalXP = finalXP * (factionBonuses[faction] or 1.0)
-
+        
         -- Activity bonus
         local activityBonuses = {
             ["combat"] = 1.5,
@@ -22955,17 +22955,17 @@ end
             ["crafting"] = 1.2
         }
         finalXP = finalXP * (activityBonuses[reason] or 1.0)
-
+        
         -- Time bonus (more XP during peak hours)
         local currentHour = tonumber(os.date("%H"))
         if currentHour >= 18 and currentHour <= 22 then
             finalXP = finalXP * 1.2 -- 20% bonus during peak hours
         end
-
+        
         -- Apply final XP
         local newTotalXP = totalXP + math.floor(finalXP)
         char:setData("experience", newTotalXP)
-
+        
         -- Check for level up
         local requiredXP = currentLevel * 1000
         if newTotalXP >= requiredXP then
@@ -22973,17 +22973,17 @@ end
             char:setData("level", newLevel)
             hook.Run("OnPlayerLevelUp", player, currentLevel, newLevel)
         end
-
+        
         -- Track XP sources
         local xpSources = char:getData("xpSources", {})
         xpSources[reason] = (xpSources[reason] or 0) + math.floor(finalXP)
         char:setData("xpSources", xpSources)
-
+        
         -- Notify player
         player:ChatPrint("You gained " .. math.floor(finalXP) .. " XP for " .. reason)
-
+        
         -- Log XP gain
-        print(string.format("%s gained %d XP for %s (Level %d)",
+        print(string.format("%s gained %d XP for %s (Level %d)", 
             player:Name(), math.floor(finalXP), reason, currentLevel))
     end)
     ```
@@ -23013,7 +23013,7 @@ end
     hook.Add("OnPlayerXPGain", "XPBonuses", function(player, gained, reason)
         local char = player:getChar()
         if not char then return end
-
+        
         -- Apply faction bonus
         local faction = char:getFaction()
         local factionMultiplier = 1.0
@@ -23022,10 +23022,10 @@ end
         elseif faction == "medic" then
             factionMultiplier = 1.1
         end
-
+        
         local bonusXP = math.floor(gained * factionMultiplier)
         char:setData("experience", char:getData("experience", 0) + bonusXP)
-
+        
         player:ChatPrint("You gained " .. bonusXP .. " XP (with faction bonus)")
     end)
     ```
@@ -23036,13 +23036,13 @@ end
     hook.Add("OnPlayerXPGain", "AdvancedXP", function(player, gained, reason)
         local char = player:getChar()
         if not char then return end
-
+        
         local totalXP = char:getData("experience", 0)
         local currentLevel = char:getData("level", 1)
-
+        
         -- Apply various bonuses
         local finalXP = gained
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -23052,7 +23052,7 @@ end
             ["citizen"] = 1.0
         }
         finalXP = finalXP * (factionBonuses[faction] or 1.0)
-
+        
         -- Activity bonus
         local activityBonuses = {
             ["combat"] = 1.5,
@@ -23061,17 +23061,17 @@ end
             ["crafting"] = 1.2
         }
         finalXP = finalXP * (activityBonuses[reason] or 1.0)
-
+        
         -- Time bonus (more XP during peak hours)
         local currentHour = tonumber(os.date("%H"))
         if currentHour >= 18 and currentHour <= 22 then
             finalXP = finalXP * 1.2 -- 20% bonus during peak hours
         end
-
+        
         -- Apply final XP
         local newTotalXP = totalXP + math.floor(finalXP)
         char:setData("experience", newTotalXP)
-
+        
         -- Check for level up
         local requiredXP = currentLevel * 1000
         if newTotalXP >= requiredXP then
@@ -23079,17 +23079,17 @@ end
             char:setData("level", newLevel)
             hook.Run("OnPlayerLevelUp", player, currentLevel, newLevel)
         end
-
+        
         -- Track XP sources
         local xpSources = char:getData("xpSources", {})
         xpSources[reason] = (xpSources[reason] or 0) + math.floor(finalXP)
         char:setData("xpSources", xpSources)
-
+        
         -- Notify player
         player:ChatPrint("You gained " .. math.floor(finalXP) .. " XP for " .. reason)
-
+        
         -- Log XP gain
-        print(string.format("%s gained %d XP for %s (Level %d)",
+        print(string.format("%s gained %d XP for %s (Level %d)", 
             player:Name(), math.floor(finalXP), reason, currentLevel))
     end)
     ```
@@ -23146,7 +23146,7 @@ end
                 lia.data.set("privileges", data)
             end)
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -23198,7 +23198,7 @@ end
                 lia.data.set("privileges", data)
             end)
         end
-
+        
         -- Revoke privilege from all players
         for _, ply in ipairs(player.GetAll()) do
             local char = ply:getChar()
@@ -23252,7 +23252,7 @@ end
             MyAddon.quests[item.questID] = MyAddon.quests[item.questID] or {items = {}}
             table.insert(MyAddon.quests[item.questID].items, item.uniqueID)
         end
-
+        
         -- Setup quest item tracking
         if SERVER then
             lia.data.get("questItems", {}, function(data)
@@ -23313,14 +23313,14 @@ end
             data = util.TableToJSON(data),
             timestamp = os.time()
         })
-
+        
         -- Trigger table-specific hooks
         if dbTable == "lia_characters" then
             hook.Run("OnCharacterRecordUpserted", data, action)
         elseif dbTable == "lia_inventories" then
             hook.Run("OnInventoryRecordUpserted", data, action)
         end
-
+        
         -- Notify admins of critical changes
         if action == "update" and dbTable == "lia_characters" then
             for _, ply in ipairs(player.GetAll()) do
@@ -23377,7 +23377,7 @@ end
             to = targetInventory:getID(),
             timestamp = os.time()
         })
-
+        
         -- Check transfer restrictions
         local owner = item:getOwner()
         if owner then
@@ -23432,12 +23432,12 @@ end
             records = restoreLog.records or 0,
             timestamp = os.time()
         })
-
+        
         -- Notify all players
         for _, ply in ipairs(player.GetAll()) do
             ply:ChatPrint("Server data has been restored")
         end
-
+        
         -- Reload characters
         for _, ply in ipairs(player.GetAll()) do
             local char = ply:getChar()
@@ -23490,7 +23490,7 @@ end
             tables = failedLog.tables or {},
             timestamp = os.time()
         })
-
+        
         -- Notify admins with detailed error
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -23500,7 +23500,7 @@ end
                 end
             end
         end
-
+        
         -- Attempt rollback
         if failedLog.backup then
             lia.db.restore(failedLog.backup)
@@ -23550,7 +23550,7 @@ end
     hook.Add("OnSalaryAdjust", "AdvancedSalaryAdjustment", function(client)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Log salary adjustment
         lia.log.write("salary_adjust", {
             player = client:SteamID(),
@@ -23559,7 +23559,7 @@ end
             class = char:getClass(),
             timestamp = os.time()
         })
-
+        
         -- Update salary statistics
         local stats = char:getData("salaryStats", {adjustments = 0})
         stats.adjustments = stats.adjustments + 1
@@ -23620,14 +23620,14 @@ end
             class = class,
             timestamp = os.time()
         })
-
+        
         -- Update salary statistics
         local stats = char:getData("salaryStats", {total = 0, count = 0})
         stats.total = stats.total + pay
         stats.count = stats.count + 1
         stats.lastPayment = os.time()
         char:setData("salaryStats", stats)
-
+        
         -- Notify player
         client:ChatPrint("You received your salary: " .. lia.currency.get(pay))
     end)
@@ -23676,14 +23676,14 @@ end
             count = table.Count(loadedItems),
             timestamp = os.time()
         })
-
+        
         -- Validate loaded items
         for _, item in pairs(loadedItems) do
             if not item:isValid() then
                 print("Warning: Invalid item loaded: " .. (item.uniqueID or "Unknown"))
             end
         end
-
+        
         -- Update item statistics
         MyAddon.itemStats = MyAddon.itemStats or {}
         for _, item in pairs(loadedItems) do
@@ -23743,7 +23743,7 @@ end
             category,
             os.time()
         )
-
+        
         -- Send to external logging service
         if category == "critical" then
             http.Post("https://logging-service.com/api/log", {
@@ -23752,7 +23752,7 @@ end
                 server = game.GetIPAddress()
             })
         end
-
+        
         -- Notify admins of important logs
         if category == "admin" or category == "critical" then
             for _, ply in ipairs(player.GetAll()) do
@@ -23817,7 +23817,7 @@ end
                 })
             end
         end
-
+        
         -- Check for skill milestones
         for skillName, newVal in pairs(value) do
             if newVal >= 100 and (oldValue[skillName] or 0) < 100 then
@@ -23873,7 +23873,7 @@ end
             records = #snapshot,
             timestamp = os.time()
         })
-
+        
         -- Store backup metadata
         lia.data.get("backups", {}, function(data)
             data[tableName] = data[tableName] or {}
@@ -23884,7 +23884,7 @@ end
             })
             lia.data.set("backups", data)
         end)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -23937,17 +23937,17 @@ end
             records = #snapshot,
             timestamp = os.time()
         })
-
+        
         -- Create final backup
         file.Write("lilia/backups/" .. tableName .. "_" .. os.time() .. ".json", util.TableToJSON(snapshot))
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("Table " .. tableName .. " was removed (" .. #snapshot .. " records archived)")
             end
         end
-
+        
         -- Clean up related data
         lia.data.delete("table_" .. tableName)
     end)
@@ -23997,14 +23997,14 @@ end
             records = #data,
             timestamp = os.time()
         })
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("Table " .. tableName .. " restored (" .. #data .. " records)")
             end
         end
-
+        
         -- Reload affected systems
         if tableName == "lia_characters" then
             for _, ply in ipairs(player.GetAll()) do
@@ -24059,17 +24059,17 @@ end
                 end
             end
         end)
-
+        
         -- Initialize caching
         MyAddon.cache = {}
-
+        
         -- Setup periodic data sync
         timer.Create("MyAddonDataSync", 300, 0, function()
             lia.data.get("addonData", {}, function(data)
                 MyAddon.data = data
             end)
         end)
-
+        
         print("Advanced addon initialization complete")
     end)
     ```
@@ -24114,17 +24114,17 @@ end
         if IsValid(MyAddon.mainPanel) then
             MyAddon.mainPanel:SetBackgroundColor(themeData.colors.background)
         end
-
+        
         -- Reload custom fonts
         if themeData.fonts then
             for fontName, fontData in pairs(themeData.fonts) do
                 surface.CreateFont(fontName, fontData)
             end
         end
-
+        
         -- Save theme preference
         lia.data.set("preferredTheme", themeName)
-
+        
         -- Notify user
         lia.util.notify("Theme changed to " .. themeName)
     end)
@@ -24175,11 +24175,11 @@ end
             message = ticketMessage,
             timestamp = os.time()
         })
-
+        
         -- Notify both parties
         client:ChatPrint("You claimed the ticket from " .. requester:Name())
         requester:ChatPrint(client:Name() .. " is handling your ticket")
-
+        
         -- Update ticket statistics
         local char = client:getChar()
         if char then
@@ -24235,11 +24235,11 @@ end
             message = ticketMessage,
             timestamp = os.time()
         })
-
+        
         -- Notify both parties
         client:ChatPrint("You closed the ticket from " .. requester:Name())
         requester:ChatPrint("Your ticket has been resolved by " .. client:Name())
-
+        
         -- Update ticket statistics
         local char = client:getChar()
         if char then
@@ -24293,7 +24293,7 @@ end
             message = message,
             timestamp = os.time()
         })
-
+        
         -- Store ticket in database
         lia.db.query("INSERT INTO tickets (player, message, status, created) VALUES (?, ?, ?, ?)",
             noob:SteamID(),
@@ -24301,7 +24301,7 @@ end
             "open",
             os.time()
         )
-
+        
         -- Notify all admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -24309,7 +24309,7 @@ end
                 surface.PlaySound("buttons/button15.wav")
             end
         end
-
+        
         -- Confirm to player
         noob:ChatPrint("Your ticket has been submitted. An admin will assist you shortly.")
     end)
@@ -24344,7 +24344,7 @@ end
     hook.Add("OnTransferFailed", "NotifyTransferFailure", function(fromChar, toChar, items, err)
         local fromPlayer = fromChar:getPlayer()
         local toPlayer = toChar:getPlayer()
-
+        
         if IsValid(fromPlayer) then
             fromPlayer:ChatPrint("Transfer failed: " .. err)
         end
@@ -24366,18 +24366,18 @@ end
             error = err,
             timestamp = os.time()
         })
-
+        
         -- Notify players
         local fromPlayer = fromChar:getPlayer()
         local toPlayer = toChar:getPlayer()
-
+        
         if IsValid(fromPlayer) then
             fromPlayer:ChatPrint("Failed to transfer items: " .. err)
         end
         if IsValid(toPlayer) then
             toPlayer:ChatPrint("Failed to receive items: " .. err)
         end
-
+        
         -- Track failure statistics
         local stats = fromChar:getData("transferStats", {failed = 0})
         stats.failed = (stats.failed or 0) + 1
@@ -24423,23 +24423,23 @@ end
     hook.Add("OnTransferred", "AdvancedTransfer", function(targetPlayer)
         local char = targetPlayer:getChar()
         if not char then return end
-
+        
         -- Log transfer
         lia.log.write("player_transferred", {
             player = targetPlayer:SteamID(),
             character = char:getID(),
             timestamp = os.time()
         })
-
+        
         -- Update transfer statistics
         local stats = char:getData("transferStats", {count = 0})
         stats.count = stats.count + 1
         stats.lastTransfer = os.time()
         char:setData("transferStats", stats)
-
+        
         -- Notify player
         targetPlayer:ChatPrint("You have been transferred")
-
+        
         -- Sync character data
         char:sync()
     end)
@@ -24488,14 +24488,14 @@ end
             permissions = groupData.permissions or {},
             timestamp = os.time()
         })
-
+        
         -- Store usergroup in database
         lia.db.query("INSERT INTO usergroups (name, data, created) VALUES (?, ?, ?)",
             groupName,
             util.TableToJSON(groupData),
             os.time()
         )
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -24549,20 +24549,20 @@ end
             permissions = util.TableToJSON(permissions),
             timestamp = os.time()
         })
-
+        
         -- Update database
         lia.db.query("UPDATE usergroups SET permissions = ? WHERE name = ?",
             util.TableToJSON(permissions),
             groupName
         )
-
+        
         -- Notify affected players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetUserGroup() == groupName then
                 ply:ChatPrint("Your usergroup permissions have been updated")
             end
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -24611,10 +24611,10 @@ end
             name = groupName,
             timestamp = os.time()
         })
-
+        
         -- Remove from database
         lia.db.query("DELETE FROM usergroups WHERE name = ?", groupName)
-
+        
         -- Reassign affected players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetUserGroup() == groupName then
@@ -24622,7 +24622,7 @@ end
                 ply:ChatPrint("Your usergroup has been removed. You have been reassigned to 'user'.")
             end
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -24674,10 +24674,10 @@ end
             newName = newName,
             timestamp = os.time()
         })
-
+        
         -- Update database
         lia.db.query("UPDATE usergroups SET name = ? WHERE name = ?", newName, oldName)
-
+        
         -- Update all players in this usergroup
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetUserGroup() == oldName then
@@ -24685,7 +24685,7 @@ end
                 ply:ChatPrint("Your usergroup has been renamed to: " .. newName)
             end
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -24743,13 +24743,13 @@ end
     hook.Add("OnVendorEdited", "AdvancedVendorEditing", function(client, vendor, key)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player has permission to edit vendors
         if not char:hasFlags("V") then
             client:ChatPrint("You don't have permission to edit vendors")
             return false
         end
-
+        
         -- Validate specific properties
         if key == "price" then
             local newPrice = vendor:getNetVar("price", 0)
@@ -24757,7 +24757,7 @@ end
                 client:ChatPrint("Price cannot be negative")
                 return false
             end
-
+            
             -- Check for price limits based on faction
             local faction = char:getFaction()
             local maxPrice = {
@@ -24765,27 +24765,27 @@ end
                 ["medic"] = 8000,
                 ["citizen"] = 5000
             }
-
+            
             local limit = maxPrice[faction] or 5000
             if newPrice > limit then
                 client:ChatPrint("Price exceeds your faction limit of $" .. limit)
                 return false
             end
-
+        
         elseif key == "stock" then
             local newStock = vendor:getNetVar("stock", 0)
             if newStock < 0 then
                 client:ChatPrint("Stock cannot be negative")
                 return false
             end
-
+            
             -- Check for stock limits
             local maxStock = 1000
             if newStock > maxStock then
                 client:ChatPrint("Stock cannot exceed " .. maxStock)
                 return false
             end
-
+        
         elseif key == "faction" then
             local newFaction = vendor:getNetVar("faction", "citizen")
             local allowedFactions = {"police", "medic", "citizen", "criminal"}
@@ -24794,11 +24794,11 @@ end
                 return false
             end
         end
-
+        
         -- Log the edit
-        print(string.format("%s edited vendor %s property %s to %s",
+        print(string.format("%s edited vendor %s property %s to %s", 
             client:Name(), vendor:EntIndex(), key, tostring(vendor:getNetVar(key))))
-
+        
         -- Notify other admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= client then
@@ -24852,7 +24852,7 @@ end
             count = table.Count(staffData),
             timestamp = os.time()
         })
-
+        
         -- Update staff database
         for steamID, data in pairs(staffData) do
             lia.db.query("INSERT OR REPLACE INTO staff_data (steamid, name, rank, last_seen) VALUES (?, ?, ?, ?)",
@@ -24862,7 +24862,7 @@ end
                 os.time()
             )
         end
-
+        
         -- Notify players of staff changes
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -24910,10 +24910,10 @@ end
     -- High: Complex admin stick functionality
     hook.Add("OpenAdminStickUI", "AdvancedAdminStick", function(tgt)
         if not IsValid(tgt) then return end
-
+        
         -- Store target for later use
         MyAddon.currentTarget = tgt
-
+        
         -- Add custom information to admin stick
         if tgt:IsPlayer() then
             local char = tgt:getChar()
@@ -24925,7 +24925,7 @@ end
                 })
             end
         end
-
+        
         -- Log admin stick usage
         lia.log.write("admin_stick_opened", {
             admin = LocalPlayer():SteamID(),
@@ -24982,14 +24982,14 @@ end
             new = tostring(value),
             timestamp = os.time()
         })
-
+        
         -- Handle specific option changes
         if key == "serverName" then
             SetHostName(value)
         elseif key == "maxPlayers" then
             game.SetMaxPlayers(value)
         end
-
+        
         -- Notify clients of important changes
         if SERVER then
             net.Start("liaOptionChanged")
@@ -25046,13 +25046,13 @@ end
             value = tostring(value),
             timestamp = os.time()
         })
-
+        
         -- Validate option value
         if key == "volume" and (value < 0 or value > 1) then
             client:ChatPrint("Invalid volume value")
             return
         end
-
+        
         -- Store option in character data
         local char = client:getChar()
         if char then
@@ -25100,7 +25100,7 @@ end
     hook.Add("OverrideFactionDesc", "DynamicFactionDesc", function(uniqueID, description)
         local faction = lia.faction.indices[uniqueID]
         if not faction then return end
-
+        
         -- Add player count to description
         local count = 0
         for _, ply in ipairs(player.GetAll()) do
@@ -25109,7 +25109,7 @@ end
                 count = count + 1
             end
         end
-
+        
         return description .. "\n\nCurrent Members: " .. count
     end)
     ```
@@ -25157,13 +25157,13 @@ end
     hook.Add("OverrideFactionModels", "DynamicFactionModels", function(uniqueID, models)
         local faction = lia.faction.indices[uniqueID]
         if not faction then return end
-
+        
         -- Load models from configuration
         local customModels = lia.config.get("faction_models_" .. uniqueID, {})
         if table.Count(customModels) > 0 then
             return customModels
         end
-
+        
         -- Filter models based on gender setting
         if lia.config.get("faction_gender_filter", false) then
             local filtered = {}
@@ -25207,7 +25207,7 @@ end
             police = "Police",
             medic = "Médecin"
         }
-
+        
         return localizedNames[uniqueID] or name
     end)
     ```
@@ -25218,7 +25218,7 @@ end
     hook.Add("OverrideFactionName", "DynamicFactionName", function(uniqueID, name)
         local faction = lia.faction.indices[uniqueID]
         if not faction then return end
-
+        
         -- Add member count to name
         local count = 0
         for _, ply in ipairs(player.GetAll()) do
@@ -25227,13 +25227,13 @@ end
                 count = count + 1
             end
         end
-
+        
         -- Add status indicator
         local status = ""
         if lia.config.get("faction_recruiting_" .. uniqueID, false) then
             status = " [RECRUITING]"
         end
-
+        
         return name .. " (" .. count .. ")" .. status
     end)
     ```
@@ -25265,7 +25265,7 @@ end
     hook.Add("OverrideSpawnTime", "FactionRespawnTime", function(client, respawnTime)
         local char = client:getChar()
         if not char then return end
-
+        
         local faction = char:getFaction()
         if faction == FACTION_POLICE then
             return 30
@@ -25281,7 +25281,7 @@ end
     hook.Add("OverrideSpawnTime", "DynamicRespawnTime", function(client, respawnTime)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check for respawn time reduction items
         local inventory = char:getInv()
         if inventory then
@@ -25291,18 +25291,18 @@ end
                 end
             end
         end
-
+        
         -- Check for VIP status
         if client:IsUserGroup("vip") then
             respawnTime = respawnTime * 0.5
         end
-
+        
         -- Check death count
         local deaths = char:getData("deaths", 0)
         if deaths > 5 then
             respawnTime = respawnTime + (deaths * 2)
         end
-
+        
         return math.max(respawnTime, 5)
     end)
     ```
@@ -25333,13 +25333,13 @@ end
     hook.Add("PaintItem", "PaintItemQuality", function(item)
         local quality = item:getData("quality", "common")
         local color = Color(255, 255, 255)
-
+        
         if quality == "rare" then
             color = Color(0, 100, 255)
         elseif quality == "epic" then
             color = Color(150, 0, 255)
         end
-
+        
         draw.SimpleText(item.name, "DermaDefault", 10, 10, color)
     end)
     ```
@@ -25349,7 +25349,7 @@ end
     -- High: Complex item rendering
     hook.Add("PaintItem", "AdvancedItemPaint", function(item)
         local x, y = 10, 10
-
+        
         -- Draw item name with quality color
         local quality = item:getData("quality", "common")
         local qualityColors = {
@@ -25359,15 +25359,15 @@ end
             ["epic"] = Color(150, 0, 255),
             ["legendary"] = Color(255, 200, 0)
         }
-
+        
         local color = qualityColors[quality] or Color(255, 255, 255)
         draw.SimpleText(item.name, "DermaDefaultBold", x, y, color)
-
+        
         -- Draw durability
         local durability = item:getData("durability", 100)
         y = y + 20
         draw.SimpleText("Durability: " .. durability .. "%", "DermaDefault", x, y, Color(255, 255, 255))
-
+        
         -- Draw quantity
         local quantity = item:getData("quantity", 1)
         if quantity > 1 then
@@ -25416,22 +25416,22 @@ end
     hook.Add("PlayerAccessVendor", "AdvancedVendorAccess", function(activator, self)
         local char = activator:getChar()
         if not char then return end
-
+        
         -- Track vendor usage
         local vendorUses = char:getData("vendorUses", 0)
         char:setData("vendorUses", vendorUses + 1)
-
+        
         -- Log to database
         local vendorID = self:getNetVar("vendorID", "unknown")
         lia.db.query("INSERT INTO vendor_logs (timestamp, charid, vendorid) VALUES (?, ?, ?)",
             os.time(), char:getID(), vendorID)
-
+        
         -- Apply first-time bonus
         if vendorUses == 0 then
             activator:ChatPrint("First time using a vendor! Here's a discount.")
             self:setNetVar("discount_" .. char:getID(), 10)
         end
-
+        
         -- Check for achievements
         if vendorUses + 1 >= 100 then
             if not char:getData("achievement_shopaholic", false) then
@@ -25467,7 +25467,7 @@ end
     -- Medium: Handle cheat detection
     hook.Add("PlayerCheatDetected", "HandleCheating", function(client)
         client:Kick("Cheating detected")
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -25488,7 +25488,7 @@ end
             ip = client:IPAddress(),
             timestamp = os.time()
         })
-
+        
         -- Record cheat attempt
         lia.db.query("INSERT INTO cheat_logs (steamid, name, ip, timestamp) VALUES (?, ?, ?, ?)",
             client:SteamID(),
@@ -25496,20 +25496,20 @@ end
             client:IPAddress(),
             os.time()
         )
-
+        
         -- Apply punishment based on history
         local char = client:getChar()
         if char then
             local cheatCount = char:getData("cheatCount", 0) + 1
             char:setData("cheatCount", cheatCount)
-
+            
             if cheatCount >= 3 then
                 client:Ban(0, "Multiple cheat violations")
             else
                 client:Kick("Cheating detected (Warning " .. cheatCount .. "/3)")
             end
         end
-
+        
         -- Notify all admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -25548,10 +25548,10 @@ end
             -- Save character data
             char:setData("lastDisconnect", os.time())
             char:setData("disconnectPos", client:GetPos())
-
+            
             -- Clean up temporary data
             char:setData("tempData", nil)
-
+            
             -- Notify other players
             for _, ply in ipairs(player.GetAll()) do
                 ply:ChatPrint(client:Name() .. " has left the server")
@@ -25566,24 +25566,24 @@ end
     hook.Add("PlayerDisconnect", "AdvancedDisconnect", function(client)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Save character state
         char:setData("lastDisconnect", os.time())
         char:setData("disconnectPos", client:GetPos())
         char:setData("disconnectAng", client:GetAngles())
         char:setData("disconnectHealth", client:Health())
         char:setData("disconnectArmor", client:Armor())
-
+        
         -- Save inventory state
         local inventory = char:getInv()
         if inventory then
             char:setData("inventoryState", inventory:getData())
         end
-
+        
         -- Clean up temporary data
         char:setData("tempData", nil)
         char:setData("activeEffects", nil)
-
+        
         -- Handle faction-specific cleanup
         local faction = char:getFaction()
         if faction == "police" then
@@ -25599,21 +25599,21 @@ end
                 end
             end
         end
-
+        
         -- Update player statistics
         local playTime = client:getData("playTime", 0)
         local sessionTime = os.time() - (client:getData("joinTime", os.time()))
         char:setData("totalPlayTime", char:getData("totalPlayTime", 0) + sessionTime)
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(client:Name() .. " has left the server")
             end
         end
-
+        
         -- Log disconnect
-        print(string.format("%s disconnected at %s (Play time: %d minutes)",
+        print(string.format("%s disconnected at %s (Play time: %d minutes)", 
             client:Name(), os.date("%Y-%m-%d %H:%M:%S"), math.floor(sessionTime / 60)))
     end)
     ```
@@ -25654,18 +25654,18 @@ end
         if char then
             -- Save character data
             char:save()
-
+            
             -- Update playtime
             local sessionStart = char:getData("sessionStart", os.time())
             local sessionTime = os.time() - sessionStart
             local totalPlaytime = char:getData("playTime", 0)
             char:setData("playTime", totalPlaytime + sessionTime)
-
+            
             -- Log disconnect
             lia.db.query("INSERT INTO disconnect_logs (timestamp, steamid, charid, playtime) VALUES (?, ?, ?, ?)",
                 os.time(), client:SteamID(), char:getID(), sessionTime)
         end
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
@@ -25715,7 +25715,7 @@ end
     hook.Add("PlayerGagged", "AdvancedGagManagement", function(target, admin)
         local char = target:getChar()
         if not char then return end
-
+        
         -- Track gag history
         local gagHistory = char:getData("gagHistory", {})
         table.insert(gagHistory, {
@@ -25724,14 +25724,14 @@ end
             time = os.time()
         })
         char:setData("gagHistory", gagHistory)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO gag_logs (timestamp, target_steamid, admin_steamid) VALUES (?, ?, ?)",
             os.time(), target:SteamID(), admin:SteamID())
-
+        
         -- Notify player
         target:ChatPrint("You have been gagged by " .. admin:Name())
-
+        
         -- Notify other admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= admin and ply ~= target then
@@ -25778,24 +25778,24 @@ end
     hook.Add("PlayerLiliaDataLoaded", "AdvancedDataLoading", function(client)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Log data loading
         lia.log.write("player_data_loaded", {
             player = client:SteamID(),
             character = char:getID(),
             timestamp = os.time()
         })
-
+        
         -- Load custom player data
         lia.data.get("player_" .. client:SteamID(), {}, function(data)
             client.customData = data
         end)
-
+        
         -- Initialize player systems
         if MyAddon.playerSystems then
             MyAddon.playerSystems:InitializePlayer(client)
         end
-
+        
         -- Sync data to client
         net.Start("liaPlayerDataSync")
             net.WriteTable(client.customData or {})
@@ -25834,11 +25834,11 @@ end
             currentChar:setData("lastSwitch", os.time())
             currentChar:setData("switchPos", client:GetPos())
         end
-
+        
         -- Set up new character
         character:setData("lastLoad", os.time())
         character:setData("loadCount", (character:getData("loadCount", 0) + 1))
-
+        
         client:ChatPrint("Character loaded: " .. character:getName())
     end)
     ```
@@ -25854,11 +25854,11 @@ end
             currentChar:setData("switchHealth", client:Health())
             currentChar:setData("switchArmor", client:Armor())
         end
-
+        
         -- Set up new character
         character:setData("lastLoad", os.time())
         character:setData("loadCount", (character:getData("loadCount", 0) + 1))
-
+        
         -- Apply faction bonuses
         local faction = character:getFaction()
         local factionBonuses = {
@@ -25879,7 +25879,7 @@ end
                 items = {"wallet", "phone"}
             }
         }
-
+        
         local bonuses = factionBonuses[faction]
         if bonuses then
             -- Apply stat bonuses
@@ -25888,7 +25888,7 @@ end
                     character:setData(stat, value)
                 end
             end
-
+            
             -- Give faction items
             if bonuses.items then
                 local inventory = character:getInv()
@@ -25900,7 +25900,7 @@ end
                 end
             end
         end
-
+        
         -- Check for returning player bonuses
         local lastLoad = character:getData("lastLoad", 0)
         local timeSinceLoad = os.time() - lastLoad
@@ -25908,19 +25908,19 @@ end
             character:setData("returningPlayerBonus", true)
             client:ChatPrint("Welcome back! You have a returning player bonus.")
         end
-
+        
         -- Update character appearance
         hook.Run("SetupPlayerModel", client, character)
-
+        
         -- Notify other players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client then
                 ply:ChatPrint(client:Name() .. " is now playing as " .. character:getName())
             end
         end
-
+        
         -- Log character load
-        print(string.format("%s loaded character %s (Faction: %s)",
+        print(string.format("%s loaded character %s (Faction: %s)", 
             client:Name(), character:getName(), faction))
     end)
     ```
@@ -25969,25 +25969,25 @@ end
     hook.Add("PlayerMessageSend", "AdvancedMessages", function(speaker, chatType, text, anonymous, receivers)
         local char = speaker:getChar()
         if not char then return end
-
+        
         -- Check if player is muted
         if char:getData("muted", false) then
             speaker:ChatPrint("You are muted and cannot send messages")
             return false
         end
-
+        
         -- Check if player is gagged
         if char:getData("gagged", false) then
             speaker:ChatPrint("You are gagged and cannot send messages")
             return false
         end
-
+        
         -- Check message length
         if string.len(text) > 200 then
             speaker:ChatPrint("Message too long (max 200 characters)")
             return false
         end
-
+        
         -- Check for spam
         local lastMessage = char:getData("lastMessage", 0)
         local messageCooldown = 1 -- 1 second cooldown
@@ -25995,7 +25995,7 @@ end
             speaker:ChatPrint("Please wait before sending another message")
             return false
         end
-
+        
         -- Check for inappropriate content
         local bannedWords = {"spam", "hack", "cheat", "exploit"}
         for _, word in ipairs(bannedWords) do
@@ -26004,10 +26004,10 @@ end
                 return false
             end
         end
-
+        
         -- Update last message time
         char:setData("lastMessage", os.time())
-
+        
         -- Check for faction-specific restrictions
         local faction = char:getFaction()
         if faction == "police" and chatType == "ooc" then
@@ -26015,7 +26015,7 @@ end
             speaker:ChatPrint("Police officers cannot use OOC chat")
             return false
         end
-
+        
         -- Check for admin commands
         if string.sub(text, 1, 1) == "!" then
             local command = string.sub(text, 2)
@@ -26025,7 +26025,7 @@ end
                 return false
             end
         end
-
+        
         -- Log message
         print(string.format("[%s] %s: %s", chatType, speaker:Name(), text))
     end)
@@ -26072,7 +26072,7 @@ end
     hook.Add("PlayerMessageSend", "AdvancedMessageHandling", function(speaker, chatType, text, anonymous, receivers)
         local char = speaker:getChar()
         if not char then return false end
-
+        
         -- Filter inappropriate content
         local bannedWords = {"spam", "hack", "cheat"}
         for _, word in ipairs(bannedWords) do
@@ -26081,7 +26081,7 @@ end
                 return false
             end
         end
-
+        
         -- Check spam protection
         local lastMessage = char:getData("lastMessage", 0)
         if os.time() - lastMessage < 1 then
@@ -26089,11 +26089,11 @@ end
             return false
         end
         char:setData("lastMessage", os.time())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO chat_logs (timestamp, steamid, chattype, message) VALUES (?, ?, ?, ?)",
             os.time(), speaker:SteamID(), chatType, text)
-
+        
         -- Track message count
         local messageCount = char:getData("messageCount", 0)
         char:setData("messageCount", messageCount + 1)
@@ -26140,20 +26140,20 @@ end
     hook.Add("PlayerModelChanged", "AdvancedModelTracking", function(client, value)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track model history
         local modelHistory = char:getData("modelHistory", {})
         table.insert(modelHistory, {model = value, time = os.time()})
         char:setData("modelHistory", modelHistory)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO model_logs (timestamp, charid, model) VALUES (?, ?, ?)",
             os.time(), char:getID(), value)
-
+        
         -- Apply model-specific effects
         local gender = hook.Run("GetModelGender", value) or "male"
         char:setData("gender", gender)
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client and ply:GetPos():Distance(client:GetPos()) < 500 then
@@ -26203,7 +26203,7 @@ end
     hook.Add("PlayerMuted", "AdvancedMuteManagement", function(target, admin)
         local char = target:getChar()
         if not char then return end
-
+        
         -- Track mute history
         local muteHistory = char:getData("muteHistory", {})
         table.insert(muteHistory, {
@@ -26212,14 +26212,14 @@ end
             time = os.time()
         })
         char:setData("muteHistory", muteHistory)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO mute_logs (timestamp, target_steamid, admin_steamid) VALUES (?, ?, ?)",
             os.time(), target:SteamID(), admin:SteamID())
-
+        
         -- Notify player
         target:ChatPrint("You have been muted by " .. admin:Name())
-
+        
         -- Notify other admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= admin and ply ~= target then
@@ -26254,7 +26254,7 @@ end
     hook.Add("PlayerShouldAct", "CheckPlayerState", function()
         local client = LocalPlayer()
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         return char ~= nil
     end)
@@ -26266,25 +26266,25 @@ end
     hook.Add("PlayerShouldAct", "AdvancedActionValidation", function()
         local client = LocalPlayer()
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if player is tied
         if char:getData("tied", false) then
             return false
         end
-
+        
         -- Check if player is stunned
         if char:getData("stunned", false) then
             return false
         end
-
+        
         -- Check if player is in cutscene
         if char:getData("inCutscene", false) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -26329,12 +26329,12 @@ end
     hook.Add("PlayerShouldPermaKill", "AdvancedPermakill", function(client, inflictor, attacker)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if marked for PK
         if char:getData("markedForPK", false) then
             return true
         end
-
+        
         -- Check faction-specific rules
         local faction = char:getFaction()
         if faction == "police" then
@@ -26344,14 +26344,14 @@ end
             end
             return false
         end
-
+        
         -- Check death count
         local deathCount = char:getData("deathCount", 0)
         if deathCount >= 5 then
             -- Too many deaths, permakill
             return true
         end
-
+        
         return false
     end)
     ```
@@ -26396,20 +26396,20 @@ end
     hook.Add("PlayerSpawnPointSelected", "AdvancedSpawnTracking", function(client, pos, ang)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track spawn location
         char:setData("lastSpawnPos", pos)
         char:setData("lastSpawnAng", ang)
         char:setData("lastSpawnTime", os.time())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO spawn_logs (timestamp, charid, x, y, z) VALUES (?, ?, ?, ?, ?)",
             os.time(), char:getID(), pos.x, pos.y, pos.z)
-
+        
         -- Track spawn count
         local spawnCount = char:getData("spawnCount", 0)
         char:setData("spawnCount", spawnCount + 1)
-
+        
         -- Apply spawn effects
         client:SetHealth(100)
         client:SetArmor(0)
@@ -26454,21 +26454,21 @@ end
         if SERVER then
             local char = player:getChar()
             if not char then return end
-
+            
             -- Apply exhaustion effect
             player:SetRunSpeed(150)
             player:SetWalkSpeed(75)
-
+            
             -- Track depletion count
             local depletionCount = char:getData("staminaDepletions", 0)
             char:setData("staminaDepletions", depletionCount + 1)
-
+            
             -- Apply damage if depleted too many times
             if depletionCount >= 5 then
                 player:TakeDamage(5)
                 player:ChatPrint("You are exhausted!")
             end
-
+            
             -- Restore speed after cooldown
             timer.Simple(5, function()
                 if IsValid(player) then
@@ -26521,11 +26521,11 @@ end
         if SERVER then
             local char = self:getChar()
             if not char then return end
-
+            
             -- Track stamina gains
             local staminaGains = char:getData("staminaGains", 0)
             char:setData("staminaGains", staminaGains + 1)
-
+            
             -- Check for achievements
             if staminaGains + 1 >= 1000 then
                 if not char:getData("achievement_marathonRunner", false) then
@@ -26578,11 +26578,11 @@ end
         if SERVER then
             local char = self:getChar()
             if not char then return end
-
+            
             -- Track stamina loss
             local staminaLoss = char:getData("staminaLoss", 0)
             char:setData("staminaLoss", staminaLoss + 1)
-
+            
             -- Check if stamina is critically low
             local stamina = self:getNetVar("stamina", 100)
             if stamina <= 10 then
@@ -26630,15 +26630,15 @@ end
     hook.Add("PlayerThrowPunch", "AdvancedPunchTracking", function(client)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track punch count
         local punchCount = char:getData("punchCount", 0)
         char:setData("punchCount", punchCount + 1)
-
+        
         -- Drain stamina
         local stamina = client:getNetVar("stamina", 100)
         client:setNetVar("stamina", math.max(0, stamina - 5))
-
+        
         -- Check for achievements
         if punchCount + 1 >= 500 then
             if not char:getData("achievement_brawler", false) then
@@ -26685,10 +26685,10 @@ end
         -- Log to database
         lia.db.query("INSERT INTO ungag_logs (timestamp, target_steamid, admin_steamid) VALUES (?, ?, ?)",
             os.time(), target:SteamID(), admin:SteamID())
-
+        
         -- Notify player
         target:ChatPrint("You have been ungagged by " .. admin:Name())
-
+        
         -- Notify other admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= admin and ply ~= target then
@@ -26734,10 +26734,10 @@ end
         -- Log to database
         lia.db.query("INSERT INTO unmute_logs (timestamp, target_steamid, admin_steamid) VALUES (?, ?, ?)",
             os.time(), target:SteamID(), admin:SteamID())
-
+        
         -- Notify player
         target:ChatPrint("You have been unmuted by " .. admin:Name())
-
+        
         -- Notify other admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= admin and ply ~= target then
@@ -26776,7 +26776,7 @@ end
         doorData.useCount = (doorData.useCount or 0) + 1
         doorData.lastUsed = os.time()
         door:setNetVar("doorData", doorData)
-
+        
         local char = client:getChar()
         if char then
             char:setData("doorsUsed", (char:getData("doorsUsed", 0) + 1))
@@ -26790,7 +26790,7 @@ end
     hook.Add("PlayerUseDoor", "AdvancedDoorUsage", function(client, door)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if door is locked
         local doorData = door:getNetVar("doorData", {})
         if doorData.locked then
@@ -26800,7 +26800,7 @@ end
                 return false
             end
         end
-
+        
         -- Check faction restrictions
         local allowedFactions = doorData.allowedFactions
         if allowedFactions then
@@ -26810,7 +26810,7 @@ end
                 return false
             end
         end
-
+        
         -- Check time restrictions
         local timeRestriction = doorData.timeRestriction
         if timeRestriction then
@@ -26820,7 +26820,7 @@ end
                 return false
             end
         end
-
+        
         -- Check key requirements
         if doorData.requiredKey then
             local charInv = char:getInv()
@@ -26836,25 +26836,25 @@ end
                 return false
             end
         end
-
+        
         -- Update door statistics
         doorData.useCount = (doorData.useCount or 0) + 1
         doorData.lastUsed = os.time()
         doorData.lastUsedBy = char:getID()
         door:setNetVar("doorData", doorData)
-
+        
         -- Update character statistics
         char:setData("doorsUsed", (char:getData("doorsUsed", 0) + 1))
-
+        
         -- Check for achievement
         local doorsUsed = char:getData("doorsUsed", 0)
         if doorsUsed >= 1000 and not char:getData("achievement_doorman", false) then
             char:setData("achievement_doorman", true)
             client:ChatPrint("Achievement unlocked: Doorman!")
         end
-
+        
         -- Log door usage
-        print(string.format("%s used door %s at %s",
+        print(string.format("%s used door %s at %s", 
             client:Name(), door:EntIndex(), os.date("%Y-%m-%d %H:%M:%S")))
     end)
     ```
@@ -26895,16 +26895,16 @@ end
     hook.Add("PlayerUseDoor", "AdvancedDoorUsage", function(client, door)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track door usage
         local doorUses = char:getData("doorUses", 0)
         char:setData("doorUses", doorUses + 1)
-
+        
         -- Log to database
         local doorID = door:MapCreationID()
         lia.db.query("INSERT INTO door_usage_logs (timestamp, charid, doorid) VALUES (?, ?, ?)",
             os.time(), char:getID(), doorID)
-
+        
         -- Check for achievements
         if doorUses + 1 >= 1000 then
             if not char:getData("achievement_doorman", false) then
@@ -26955,27 +26955,27 @@ end
     -- High: Complex admin stick menu
     hook.Add("PopulateAdminStick", "AdvancedAdminStick", function(tempMenu, tgt)
         if not IsValid(tgt) then return end
-
+        
         -- Player options
         if tgt:IsPlayer() then
             tempMenu:AddOption("Teleport To", function()
                 RunConsoleCommand("lia_plyteleporttome", tgt:SteamID())
             end)
-
+            
             tempMenu:AddOption("Kick", function()
                 RunConsoleCommand("lia_kick", tgt:SteamID())
             end)
-
+            
             tempMenu:AddOption("Ban", function()
                 RunConsoleCommand("lia_ban", tgt:SteamID())
             end)
         end
-
+        
         -- Entity options
         tempMenu:AddOption("Remove", function()
             RunConsoleCommand("lia_removeentity", tgt:EntIndex())
         end)
-
+        
         tempMenu:AddOption("Copy Model", function()
             SetClipboardText(tgt:GetModel())
         end)
@@ -27013,14 +27013,14 @@ end
         adminPages["Custom Tools"] = function(parent)
             local panel = parent:Add("DPanel")
             panel:Dock(FILL)
-
+            
             local button = panel:Add("DButton")
             button:SetText("Custom Action")
             button:Dock(TOP)
             button.DoClick = function()
                 RunConsoleCommand("lia_customaction")
             end
-
+            
             return panel
         end
     end)
@@ -27034,19 +27034,19 @@ end
             local panel = parent:Add("DPanel")
             panel:Dock(FILL)
             panel:SetBackgroundColor(Color(50, 50, 50))
-
+            
             -- Add title
             local title = panel:Add("DLabel")
             title:SetText("Custom Management Tools")
             title:SetFont("DermaLarge")
             title:Dock(TOP)
             title:SetHeight(30)
-
+            
             -- Add buttons
             local btnPanel = panel:Add("DPanel")
             btnPanel:Dock(TOP)
             btnPanel:SetHeight(200)
-
+            
             local teleportBtn = btnPanel:Add("DButton")
             teleportBtn:SetText("Teleport All Players")
             teleportBtn:Dock(TOP)
@@ -27054,7 +27054,7 @@ end
             teleportBtn.DoClick = function()
                 RunConsoleCommand("lia_teleportall")
             end
-
+            
             local healBtn = btnPanel:Add("DButton")
             healBtn:SetText("Heal All Players")
             healBtn:Dock(TOP)
@@ -27062,7 +27062,7 @@ end
             healBtn.DoClick = function()
                 RunConsoleCommand("lia_healall")
             end
-
+            
             return panel
         end
     end)
@@ -27099,7 +27099,7 @@ end
         pages["My Settings"] = function(parent)
             local panel = parent:Add("DPanel")
             panel:Dock(FILL)
-
+            
             local checkbox = panel:Add("DCheckBoxLabel")
             checkbox:SetText("Enable Feature")
             checkbox:Dock(TOP)
@@ -27107,7 +27107,7 @@ end
             checkbox.OnChange = function(self, val)
                 RunConsoleCommand("myfeature_enabled", val and "1" or "0")
             end
-
+            
             return panel
         end
     end)
@@ -27121,18 +27121,18 @@ end
             local panel = parent:Add("DPanel")
             panel:Dock(FILL)
             panel:SetBackgroundColor(Color(50, 50, 50))
-
+            
             -- Add title
             local title = panel:Add("DLabel")
             title:SetText("Advanced Configuration")
             title:SetFont("DermaLarge")
             title:Dock(TOP)
             title:SetHeight(30)
-
+            
             -- Add settings
             local settingsPanel = panel:Add("DPanel")
             settingsPanel:Dock(FILL)
-
+            
             -- Enable feature checkbox
             local enableCheckbox = settingsPanel:Add("DCheckBoxLabel")
             enableCheckbox:SetText("Enable Advanced Features")
@@ -27141,7 +27141,7 @@ end
             enableCheckbox.OnChange = function(self, val)
                 RunConsoleCommand("advanced_enabled", val and "1" or "0")
             end
-
+            
             -- Slider for value
             local slider = settingsPanel:Add("DNumSlider")
             slider:SetText("Feature Intensity")
@@ -27152,7 +27152,7 @@ end
             slider.OnValueChanged = function(self, val)
                 RunConsoleCommand("advanced_intensity", tostring(math.floor(val)))
             end
-
+            
             return panel
         end
     end)
@@ -27184,7 +27184,7 @@ end
     -- Medium: Add category with items
     hook.Add("PopulateInventoryItems", "CustomInventoryItems", function(pnlContent, tree)
         local node = tree:AddNode("Custom Items")
-
+        
         for _, item in pairs(lia.item.list) do
             if item.category == "custom" then
                 local itemNode = node:AddNode(item.name)
@@ -27207,12 +27207,12 @@ end
             categories[category] = categories[category] or {}
             table.insert(categories[category], item)
         end
-
+        
         -- Create nodes for each category
         for category, items in pairs(categories) do
             local categoryNode = tree:AddNode(category)
             categoryNode:SetIcon("icon16/folder.png")
-
+            
             -- Add items to category
             for _, item in ipairs(items) do
                 local itemNode = categoryNode:AddNode(item.name)
@@ -27220,15 +27220,15 @@ end
                 itemNode.DoClick = function()
                     -- Show item details in content panel
                     pnlContent:Clear()
-
+                    
                     local itemPanel = pnlContent:Add("DPanel")
                     itemPanel:Dock(FILL)
-
+                    
                     local nameLabel = itemPanel:Add("DLabel")
                     nameLabel:SetText(item.name)
                     nameLabel:SetFont("DermaLarge")
                     nameLabel:Dock(TOP)
-
+                    
                     local descLabel = itemPanel:Add("DLabel")
                     descLabel:SetText(item.desc or "No description")
                     descLabel:Dock(TOP)
@@ -27274,34 +27274,34 @@ end
     -- High: Complex door data processing
     hook.Add("PostDoorDataLoad", "AdvancedDoorDataProcessing", function(ent, doorData)
         if not IsValid(ent) or not doorData then return end
-
+        
         -- Apply door settings
         if doorData.locked then
             ent:Fire("Lock")
         else
             ent:Fire("Unlock")
         end
-
+        
         -- Set door title
         if doorData.title then
             ent:setNetVar("title", doorData.title)
         end
-
+        
         -- Set door price
         if doorData.price then
             ent:setNetVar("price", doorData.price)
         end
-
+        
         -- Set door owner
         if doorData.owner then
             ent:setNetVar("owner", doorData.owner)
         end
-
+        
         -- Apply faction restrictions
         if doorData.allowedFactions then
             ent:setNetVar("allowedFactions", doorData.allowedFactions)
         end
-
+        
         -- Log door data load
         print(string.format("Door data loaded for entity %d: Title=%s, Price=%s, Owner=%s",
             ent:EntIndex(),
@@ -27349,16 +27349,16 @@ end
     -- High: Complex inventory UI customization
     hook.Add("PostDrawInventory", "AdvancedInventoryUI", function(mainPanel, parentPanel)
         if not IsValid(mainPanel) then return end
-
+        
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Add weight display
         local inventory = char:getInv()
         if inventory then
             local weight = inventory:getData("weight", 0)
             local maxWeight = inventory:getData("maxWeight", 100)
-
+            
             local weightLabel = mainPanel:Add("DLabel")
             weightLabel:SetText(string.format("Weight: %d / %d", weight, maxWeight))
             weightLabel:Dock(BOTTOM)
@@ -27401,7 +27401,7 @@ end
     hook.Add("PostLoadData", "AdvancedPostLoadInit", function()
         -- Initialize custom systems
         MyAddon.Initialize()
-
+        
         -- Validate loaded data
         local data = lia.data.get("myAddonData", {})
         if not data or table.IsEmpty(data) then
@@ -27409,12 +27409,12 @@ end
             data = MyAddon.GetDefaultData()
             lia.data.set("myAddonData", data)
         end
-
+        
         -- Set up timers
         timer.Create("MyAddonDataSave", 300, 0, function()
             MyAddon.SaveData()
         end)
-
+        
         print("Post-load initialization completed")
     end)
     ```
@@ -27466,7 +27466,7 @@ end
                 antialias = true
             })
         end
-
+        
         -- Create bold variants
         for _, size in ipairs(fontSizes) do
             surface.CreateFont("MyCustomFontBold_" .. size, {
@@ -27476,7 +27476,7 @@ end
                 antialias = true
             })
         end
-
+        
         print("Custom fonts created")
     end)
     ```
@@ -27528,10 +27528,10 @@ end
     hook.Add("PostPlayerInitialSpawn", "AdvancedSpawnInit", function(client)
         timer.Simple(1, function()
             if not IsValid(client) then return end
-
+            
             local char = client:getChar()
             if not char then return end
-
+            
             -- Give starting items
             local inv = char:getInv()
             if inv then
@@ -27543,13 +27543,13 @@ end
                     end
                 end
             end
-
+            
             -- Set starting money
             if char:getMoney() == 0 then
                 char:giveMoney(500)
                 client:ChatPrint("You received $500 starting money")
             end
-
+            
             -- Apply first-time bonuses
             local playTime = client:GetUTimeTotalTime()
             if playTime == 0 then
@@ -27588,7 +27588,7 @@ end
     hook.Add("PostPlayerLoadedChar", "RestoreCharState", function(client, character, currentChar)
         local health = character:getData("savedHealth", 100)
         client:SetHealth(health)
-
+        
         local armor = character:getData("savedArmor", 0)
         client:SetArmor(armor)
     end)
@@ -27601,20 +27601,20 @@ end
         -- Restore character state
         local health = character:getData("savedHealth", 100)
         client:SetHealth(health)
-
+        
         local armor = character:getData("savedArmor", 0)
         client:SetArmor(armor)
-
+        
         -- Restore position if saved
         local savedPos = character:getData("savedPosition")
         if savedPos then
             client:SetPos(savedPos)
         end
-
+        
         -- Update session data
         character:setData("sessionStart", os.time())
         character:setData("lastLogin", os.time())
-
+        
         -- Notify faction members
         local faction = character:getFaction()
         for _, ply in ipairs(player.GetAll()) do
@@ -27665,7 +27665,7 @@ end
     hook.Add("PostPlayerLoadout", "AdvancedLoadout", function(client)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Give faction-specific weapons
         local faction = char:getFaction()
         if faction == "police" then
@@ -27674,14 +27674,14 @@ end
         elseif faction == "medic" then
             client:Give("weapon_medkit")
         end
-
+        
         -- Give VIP bonuses
         if char:getData("vip", false) then
             client:SetMaxHealth(150)
             client:SetHealth(150)
             client:SetArmor(50)
         end
-
+        
         -- Apply class bonuses
         local class = char:getData("class")
         if class == "warrior" then
@@ -27735,38 +27735,38 @@ end
     hook.Add("PostPlayerSay", "AdvancedSpeech", function(client, message, chatType, anonymous)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Update speech statistics
         char:setData("messagesSent", (char:getData("messagesSent", 0) + 1))
         char:setData("lastMessage", os.time())
-
+        
         -- Track chat type usage
         local chatTypes = char:getData("chatTypes", {})
         chatTypes[chatType] = (chatTypes[chatType] or 0) + 1
         char:setData("chatTypes", chatTypes)
-
+        
         -- Check for achievement
         local messagesSent = char:getData("messagesSent", 0)
         if messagesSent >= 1000 and not char:getData("achievement_chatty", false) then
             char:setData("achievement_chatty", true)
             client:ChatPrint("Achievement unlocked: Chatty!")
         end
-
+        
         -- Check for roleplay quality
         if chatType == "ic" then
             local roleplayScore = char:getData("roleplayScore", 0)
             local messageLength = string.len(message)
-
+            
             -- Longer messages get higher roleplay scores
             if messageLength > 50 then
                 roleplayScore = roleplayScore + 1
             elseif messageLength > 100 then
                 roleplayScore = roleplayScore + 2
             end
-
+            
             char:setData("roleplayScore", roleplayScore)
         end
-
+        
         -- Check for profanity
         local profanityWords = {"damn", "hell", "crap"}
         local hasProfanity = false
@@ -27776,19 +27776,19 @@ end
                 break
             end
         end
-
+        
         if hasProfanity then
             char:setData("profanityCount", (char:getData("profanityCount", 0) + 1))
-
+            
             -- Warn player about profanity
             if char:getData("profanityCount", 0) >= 5 then
                 client:ChatPrint("Please keep your language appropriate")
             end
         end
-
+        
         -- Log speech
         print(string.format("[%s] %s: %s", chatType, client:Name(), message))
-
+        
         -- Notify admins of inappropriate speech
         if hasProfanity then
             for _, ply in ipairs(player.GetAll()) do
@@ -27838,15 +27838,15 @@ end
     hook.Add("PostPlayerSay", "AdvancedChatTracking", function(client, message, chatType, anonymous)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track message count
         local messageCount = char:getData("messageCount", 0)
         char:setData("messageCount", messageCount + 1)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO chat_logs (timestamp, charid, chattype, message, anonymous) VALUES (?, ?, ?, ?, ?)",
             os.time(), char:getID(), chatType, message, anonymous and 1 or 0)
-
+        
         -- Check for achievements
         if messageCount + 1 >= 1000 then
             if not char:getData("achievement_chatty", false) then
@@ -27900,24 +27900,24 @@ end
     hook.Add("PostScaleDamage", "AdvancedDamageTracking", function(hitgroup, dmgInfo, damageScale)
         local target = dmgInfo:GetAttacker()
         local attacker = dmgInfo:GetAttacker()
-
+        
         if not IsValid(target) or not IsValid(attacker) then return end
-
+        
         local targetChar = target:getChar()
         local attackerChar = attacker:getChar()
-
+        
         if not targetChar or not attackerChar then return end
-
+        
         local damage = dmgInfo:GetDamage() * damageScale
-
+        
         -- Log damage to database
         lia.db.query("INSERT INTO damage_logs (timestamp, target_charid, attacker_charid, damage, hitgroup) VALUES (?, ?, ?, ?, ?)",
             os.time(), targetChar:getID(), attackerChar:getID(), damage, hitgroup)
-
+        
         -- Track damage statistics
         local damageDealt = attackerChar:getData("damageDealt", 0)
         attackerChar:setData("damageDealt", damageDealt + damage)
-
+        
         local damageTaken = targetChar:getData("damageTaken", 0)
         targetChar:setData("damageTaken", damageTaken + damage)
     end)
@@ -27961,19 +27961,19 @@ end
     hook.Add("PreCharDelete", "AdvancedCharDeletePrep", function(id)
         local char = lia.char.loaded[id]
         if not char then return end
-
+        
         -- Create comprehensive backup
         lia.db.query("INSERT INTO char_backups SELECT * FROM characters WHERE id = ?", id)
         lia.db.query("INSERT INTO char_items_backup SELECT * FROM char_items WHERE charid = ?", id)
         lia.db.query("INSERT INTO char_data_backup SELECT * FROM char_data WHERE charid = ?", id)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("Character " .. char:getName() .. " (" .. id .. ") is being deleted")
             end
         end
-
+        
         -- Log deletion
         lia.log.add("Character " .. char:getName() .. " (" .. id .. ") is being deleted", "character")
     end)
@@ -28015,23 +28015,23 @@ end
     -- High: Complex door data validation
     hook.Add("PreDoorDataSave", "AdvancedDoorDataValidation", function(door, doorData)
         if not IsValid(door) then return end
-
+        
         -- Validate price
         if doorData.price and doorData.price < 0 then
             doorData.price = 0
         elseif doorData.price and doorData.price > 100000 then
             doorData.price = 100000
         end
-
+        
         -- Validate title length
         if doorData.title and #doorData.title > 50 then
             doorData.title = string.sub(doorData.title, 1, 50)
         end
-
+        
         -- Add metadata
         doorData.lastSaved = os.time()
         doorData.map = game.GetMap()
-
+        
         -- Log save
         print(string.format("Saving door data: Entity=%d, Title=%s, Price=%s",
             door:EntIndex(),
@@ -28078,16 +28078,16 @@ end
     hook.Add("PreDrawPhysgunBeam", "AdvancedPhysgunBeam", function()
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
+        
         local weapon = client:GetActiveWeapon()
         if not IsValid(weapon) or weapon:GetClass() ~= "weapon_physgun" then return end
-
+        
         local trace = client:GetEyeTrace()
         if not trace.Hit then return end
-
+        
         local target = trace.Entity
         if not IsValid(target) then return end
-
+        
         -- Different colors for different entities
         local color = Color(255, 255, 255, 255)
         if target:IsPlayer() then
@@ -28097,7 +28097,7 @@ end
         elseif target:GetClass():find("prop_") then
             color = Color(0, 0, 255, 255)
         end
-
+        
         -- Draw custom beam
         render.SetColorMaterial()
         render.DrawBeam(client:GetShootPos(), trace.HitPos, 8, 0, 1, color)
@@ -28138,15 +28138,15 @@ end
     hook.Add("PreLiliaLoaded", "AdvancedPreLoadInit", function()
         -- Initialize custom systems
         MyAddon.PreInitialize()
-
+        
         -- Set up configuration
         MyAddon.config = MyAddon.config or {}
         MyAddon.config.enabled = true
         MyAddon.config.debug = false
-
+        
         -- Register custom hooks
         hook.Add("PlayerInitialSpawn", "MyAddonSpawn", MyAddon.OnPlayerSpawn)
-
+        
         print("Advanced pre-load initialization completed")
     end)
     ```
@@ -28179,12 +28179,12 @@ end
     hook.Add("PrePlayerInteractItem", "CheckCooldown", function(client, action, self)
         local char = client:getChar()
         if not char then return false end
-
+        
         local lastUse = char:getData("lastItemUse", 0)
         if CurTime() - lastUse < 1 then
             return false
         end
-
+        
         char:setData("lastItemUse", CurTime())
         return true
     end)
@@ -28196,28 +28196,28 @@ end
     hook.Add("PrePlayerInteractItem", "AdvancedItemInteraction", function(client, action, self)
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check cooldown
         local lastUse = char:getData("lastItemUse", 0)
         if CurTime() - lastUse < 1 then
             client:ChatPrint("Please wait before using another item")
             return false
         end
-
+        
         -- Check if item is broken
         local durability = self:getData("durability", 100)
         if durability <= 0 then
             client:ChatPrint("This item is broken and cannot be used")
             return false
         end
-
+        
         -- Check faction restrictions
         local requiredFaction = self.requiredFaction
         if requiredFaction and char:getFaction() ~= requiredFaction then
             client:ChatPrint("Your faction cannot use this item")
             return false
         end
-
+        
         char:setData("lastItemUse", CurTime())
         return true
     end)
@@ -28268,13 +28268,13 @@ end
             currentChar:setData("lastAngles", client:GetAngles())
             currentChar:save()
         end
-
+        
         -- Validate character data
         if not character:getData("validated", false) then
             character:setData("validated", true)
             character:setData("loadCount", (character:getData("loadCount", 0) + 1))
         end
-
+        
         -- Log character load
         lia.db.query("INSERT INTO char_load_logs (timestamp, charid, steamid) VALUES (?, ?, ?)",
             os.time(), character:getID(), client:SteamID())
@@ -28323,30 +28323,30 @@ end
     hook.Add("PreSalaryGive", "AdvancedSalaryCalculation", function(client, char, pay, faction, class)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Base salary modifications
         local level = char:getData("level", 1)
         pay = pay + (level * 10)
-
+        
         -- Faction bonuses
         if faction == "police" then
             pay = pay * 1.2
         elseif faction == "medic" then
             pay = pay * 1.1
         end
-
+        
         -- Class bonuses
         if class == "officer" then
             pay = pay + 50
         elseif class == "doctor" then
             pay = pay + 75
         end
-
+        
         -- VIP bonus
         if char:getData("vip", false) then
             pay = pay * 1.5
         end
-
+        
         -- Log salary calculation
         lia.db.query("INSERT INTO salary_logs (timestamp, charid, amount, faction, class) VALUES (?, ?, ?, ?, ?)",
             os.time(), char:getID(), pay, faction, class)
@@ -28391,24 +28391,24 @@ end
     hook.Add("PreScaleDamage", "AdvancedDamageScaling", function(hitgroup, dmgInfo, damageScale)
         local target = dmgInfo:GetAttacker()
         local attacker = dmgInfo:GetAttacker()
-
+        
         if not IsValid(target) or not IsValid(attacker) then return end
-
+        
         local targetChar = target:getChar()
         local attackerChar = attacker:getChar()
-
+        
         if not targetChar or not attackerChar then return end
-
+        
         -- Faction damage modifiers
         local targetFaction = targetChar:getFaction()
         local attackerFaction = attackerChar:getFaction()
-
+        
         if targetFaction == "police" and attackerFaction == "criminal" then
             damageScale = damageScale * 1.2
         elseif targetFaction == "criminal" and attackerFaction == "police" then
             damageScale = damageScale * 0.8
         end
-
+        
         -- Armor protection
         local armor = target:getData("armor", 0)
         if armor > 0 then
@@ -28462,7 +28462,7 @@ end
                 })
             end
         end
-
+        
         -- Create new fonts with current settings
         local mainFont = GetConVar("lia_font"):GetString()
         for i = 16, 32, 4 do
@@ -28512,15 +28512,15 @@ end
         lia.db.prepare("get_player_stats", "SELECT * FROM player_stats WHERE steamid = ?")
         lia.db.prepare("update_player_stats", "UPDATE player_stats SET kills = ?, deaths = ? WHERE steamid = ?")
         lia.db.prepare("insert_player_stats", "INSERT INTO player_stats (steamid, kills, deaths) VALUES (?, ?, ?)")
-
+        
         -- Register character queries
         lia.db.prepare("get_char_data", "SELECT * FROM char_data WHERE charid = ?")
         lia.db.prepare("update_char_data", "UPDATE char_data SET value = ? WHERE charid = ? AND key = ?")
-
+        
         -- Register item queries
         lia.db.prepare("get_item_data", "SELECT * FROM item_data WHERE itemid = ?")
         lia.db.prepare("update_item_data", "UPDATE item_data SET value = ? WHERE itemid = ? AND key = ?")
-
+        
         print("All prepared statements registered")
     end)
     ```
@@ -28565,16 +28565,16 @@ end
     hook.Add("RemovePart", "AdvancedPartRemoval", function(client, id)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Track part usage
         local partsUsed = char:getData("partsUsed", {})
         partsUsed[id] = (partsUsed[id] or 0) + 1
         char:setData("partsUsed", partsUsed)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO part_logs (timestamp, charid, partid, action) VALUES (?, ?, ?, ?)",
             os.time(), char:getID(), id, "removed")
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply ~= client and ply:GetPos():Distance(client:GetPos()) < 500 then
@@ -28623,21 +28623,21 @@ end
     hook.Add("RemoveWarning", "AdvancedWarningRemoval", function(charID, index)
         local char = lia.char.loaded[charID]
         if not char then return end
-
+        
         -- Track warning removals
         local warningRemovals = char:getData("warningRemovals", 0)
         char:setData("warningRemovals", warningRemovals + 1)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO warning_logs (timestamp, charid, action, warning_index) VALUES (?, ?, ?, ?)",
             os.time(), charID, "removed", index)
-
+        
         -- Notify character owner
         local client = char:getPlayer()
         if IsValid(client) then
             client:ChatPrint("Warning " .. index .. " has been removed")
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -28683,13 +28683,13 @@ end
         MyAddon.selectedCharacter = nil
         MyAddon.panelData = {}
         MyAddon.customButtons = {}
-
+        
         -- Reset UI state
         if IsValid(MyAddon.customPanel) then
             MyAddon.customPanel:Remove()
             MyAddon.customPanel = nil
         end
-
+        
         -- Rebuild panel
         timer.Simple(0.1, function()
             MyAddon.RebuildPanel()
@@ -28740,16 +28740,16 @@ end
     hook.Add("RunAdminSystemCommand", "AdvancedCommandTracking", function(cmd, admin, victim, dur, reason)
         local char = admin:getChar()
         if not char then return end
-
+        
         -- Track command usage
         local commands = char:getData("commandsUsed", {})
         commands[cmd] = (commands[cmd] or 0) + 1
         char:setData("commandsUsed", commands)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO admin_logs (timestamp, admin_steamid, command, target_steamid, duration, reason) VALUES (?, ?, ?, ?, ?, ?)",
             os.time(), admin:SteamID(), cmd, victim and victim:SteamID() or "", dur or 0, reason or "")
-
+        
         -- Notify other admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() and ply ~= admin then
@@ -28796,7 +28796,7 @@ end
     hook.Add("SaveData", "AdvancedDataSaving", function()
         -- Save custom data
         lia.data.set("myAddonData", MyAddon.data)
-
+        
         -- Save player statistics
         for _, ply in ipairs(player.GetAll()) do
             local char = ply:getChar()
@@ -28805,11 +28805,11 @@ end
                 lia.data.set("playerStats_" .. ply:SteamID(), stats)
             end
         end
-
+        
         -- Save to database
         lia.db.query("INSERT INTO data_saves (timestamp, data) VALUES (?, ?)",
             os.time(), util.TableToJSON(MyAddon.data))
-
+        
         print("All data saved successfully")
     end)
     ```
@@ -28851,13 +28851,13 @@ end
         MyAddon.scoreboardData = {}
         MyAddon.selectedPlayer = nil
         MyAddon.customPanels = {}
-
+        
         -- Save scoreboard state
         local char = LocalPlayer():getChar()
         if char then
             char:setData("lastScoreboardClose", os.time())
         end
-
+        
         -- Notify other systems
         hook.Run("CustomScoreboardClosed", self)
     end)
@@ -28904,10 +28904,10 @@ end
             lastUpdate = os.time(),
             customData = {}
         }
-
+        
         -- Load custom panels
         MyAddon.customPanels = {}
-
+        
         -- Add custom buttons
         local customBtn = self:Add("DButton")
         customBtn:SetText("Custom Action")
@@ -28915,7 +28915,7 @@ end
         customBtn.DoClick = function()
             hook.Run("CustomScoreboardAction")
         end
-
+        
         -- Notify other systems
         hook.Run("CustomScoreboardOpened", self)
     end)
@@ -28962,7 +28962,7 @@ end
     hook.Add("ScoreboardRowCreated", "AdvancedRowCustomization", function(slot, ply)
         local char = ply:getChar()
         if not char then return end
-
+        
         -- Faction-based coloring
         local faction = char:getFaction()
         local factionColors = {
@@ -28970,10 +28970,10 @@ end
             ["medic"] = Color(0, 255, 0, 50),
             ["criminal"] = Color(255, 0, 0, 50)
         }
-
+        
         local color = factionColors[faction] or Color(255, 255, 255, 50)
         slot:SetBackgroundColor(color)
-
+        
         -- Add custom elements
         local customLabel = slot:Add("DLabel")
         customLabel:SetText("[" .. faction .. "]")
@@ -29017,13 +29017,13 @@ end
     hook.Add("ScoreboardRowRemoved", "AdvancedRowCleanup", function(self, ply)
         -- Clean up player data
         MyAddon.playerData[ply:SteamID()] = nil
-
+        
         -- Remove custom elements
         if IsValid(MyAddon.customElements[ply:SteamID()]) then
             MyAddon.customElements[ply:SteamID()]:Remove()
             MyAddon.customElements[ply:SteamID()] = nil
         end
-
+        
         -- Update scoreboard statistics
         MyAddon.UpdateStats()
     end)
@@ -29068,7 +29068,7 @@ end
     hook.Add("SendPopup", "AdvancedPopupSystem", function(noob, message)
         local char = noob:getChar()
         if not char then return end
-
+        
         -- Customize message based on faction
         local faction = char:getFaction()
         local factionPrefix = {
@@ -29076,13 +29076,13 @@ end
             ["medic"] = "[MEDICAL]",
             ["criminal"] = "[CRIMINAL]"
         }
-
+        
         local prefix = factionPrefix[faction] or "[SYSTEM]"
         local customMessage = prefix .. " " .. message
-
+        
         -- Send popup
         noob:ChatPrint(customMessage)
-
+        
         -- Log popup
         lia.db.query("INSERT INTO popup_logs (timestamp, steamid, message) VALUES (?, ?, ?)",
             os.time(), noob:SteamID(), message)
@@ -29126,7 +29126,7 @@ end
         inventory:setData("accessLevel", "owner")
         inventory:setData("allowTransfer", true)
         inventory:setData("allowView", true)
-
+        
         -- Set faction restrictions
         local owner = inventory:getOwner()
         if IsValid(owner) then
@@ -29136,7 +29136,7 @@ end
                 inventory:setData("allowedFactions", {faction})
             end
         end
-
+        
         -- Set time restrictions
         inventory:setData("accessTime", os.time())
         inventory:setData("accessDuration", 3600) -- 1 hour
@@ -29179,15 +29179,15 @@ end
         -- Mark as bot
         client:SetNetVar("isBot", true)
         client:SetNetVar("botType", "guard")
-
+        
         -- Set up bot AI
         client:SetNetVar("botState", "patrol")
         client:SetNetVar("botTarget", nil)
-
+        
         -- Give bot equipment
         client:Give("weapon_pistol")
         client:SetArmor(100)
-
+        
         -- Set up bot behavior
         timer.Create("BotAI_" .. client:EntIndex(), 1, 0, function()
             if IsValid(client) then
@@ -29234,14 +29234,14 @@ end
             "CREATE TABLE IF NOT EXISTS player_stats (steamid TEXT PRIMARY KEY, kills INTEGER, deaths INTEGER)",
             "CREATE TABLE IF NOT EXISTS achievements (id INTEGER PRIMARY KEY, name TEXT, description TEXT)"
         }
-
+        
         for _, query in ipairs(tables) do
             lia.db.query(query)
         end
-
+        
         -- Create indexes
         lia.db.query("CREATE INDEX IF NOT EXISTS idx_player_stats_steamid ON player_stats(steamid)")
-
+        
         -- Set up prepared statements
         lia.db.prepare("get_player_stats", "SELECT * FROM player_stats WHERE steamid = ?")
         lia.db.prepare("update_player_stats", "UPDATE player_stats SET kills = ?, deaths = ? WHERE steamid = ?")
@@ -29291,13 +29291,13 @@ end
     hook.Add("SetupPACDataFromItems", "AdvancedPAC3Items", function()
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         local inv = char:getInv()
         if not inv then return end
-
+        
         -- Clear existing PAC3 data
         hook.Run("RemoveAllParts", LocalPlayer())
-
+        
         -- Apply item-based PAC3 data
         for _, item in pairs(inv:getItems()) do
             if item:getData("equipped", false) then
@@ -29305,7 +29305,7 @@ end
                 if pacData then
                     hook.Run("AttachPart", LocalPlayer(), pacData)
                 end
-
+                
                 -- Apply item-specific PAC3 effects
                 if item.pacEffects then
                     for _, effect in ipairs(item.pacEffects) do
@@ -29314,7 +29314,7 @@ end
                 end
             end
         end
-
+        
         -- Apply faction-specific PAC3 data
         local faction = char:getFaction()
         local factionPAC = lia.faction.indices[faction] and lia.faction.indices[faction].pacData
@@ -29354,7 +29354,7 @@ end
             ["police"] = "models/player/police.mdl",
             ["medic"] = "models/player/medic.mdl"
         }
-
+        
         local model = factionModels[faction]
         if model then
             client:SetModel(model)
@@ -29368,16 +29368,16 @@ end
     hook.Add("SetupPlayerModel", "AdvancedModelSetup", function(client, character)
         local faction = character:getFaction()
         local class = character:getData("class")
-
+        
         -- Get model based on faction and class
         local model = character:getModel()
-
+        
         -- Apply faction-specific model overrides
         local factionModels = lia.faction.indices[faction] and lia.faction.indices[faction].models
         if factionModels and factionModels[class] then
             model = factionModels[class]
         end
-
+        
         -- Apply outfit model override
         local outfit = character:getData("outfit")
         if outfit then
@@ -29386,14 +29386,14 @@ end
                 model = outfitItem.model
             end
         end
-
+        
         -- Set model
         client:SetModel(model)
-
+        
         -- Apply skin and bodygroups
         local skin = character:getData("skin", 0)
         client:SetSkin(skin)
-
+        
         local bodygroups = character:getData("bodygroups", {})
         for i, group in ipairs(bodygroups) do
             client:SetBodygroup(i, group)
@@ -29440,7 +29440,7 @@ end
     hook.Add("SetupQuickMenu", "AdvancedQuickMenu", function(self)
         local char = LocalPlayer():getChar()
         if not char then return end
-
+        
         -- Add faction-specific buttons
         local faction = char:getFaction()
         if faction == "police" then
@@ -29458,7 +29458,7 @@ end
                 RunConsoleCommand("lia_heal")
             end
         end
-
+        
         -- Add universal buttons
         local inventoryBtn = self:Add("DButton")
         inventoryBtn:SetText("Inventory")
@@ -29504,14 +29504,14 @@ end
     hook.Add("ShouldAllowScoreboardOverride", "AdvancedOverride", function(ply, override)
         -- Admins can always override
         if ply:IsAdmin() then return true end
-
+        
         -- Check specific override types
         if override == "customization" then
             return ply:getNetVar("canCustomizeScoreboard", false)
         elseif override == "sorting" then
             return ply:getNetVar("canSortScoreboard", false)
         end
-
+        
         return false
     end)
     ```
@@ -29556,12 +29556,12 @@ end
     hook.Add("ShouldBarDraw", "AdvancedBarVisibility", function(bar)
         local char = LocalPlayer():getChar()
         if not char then return false end
-
+        
         -- Check if HUD is hidden
         if hook.Run("ShouldHideBars") then
             return false
         end
-
+        
         -- Check bar-specific conditions
         if bar.identifier == "health" then
             -- Only show health if below 90%
@@ -29576,19 +29576,19 @@ end
             local stamina = LocalPlayer():getNetVar("stamina", 100)
             return stamina < 100
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         local restrictedBars = {
             ["police"] = {"stamina"}, -- Police don't see stamina bar
             ["medic"] = {"armor"} -- Medics don't see armor bar
         }
-
+        
         local restricted = restrictedBars[faction]
         if restricted and table.HasValue(restricted, bar.identifier) then
             return false
         end
-
+        
         -- Check level requirements
         local requiredLevel = bar.requiredLevel
         if requiredLevel then
@@ -29597,7 +29597,7 @@ end
                 return false
             end
         end
-
+        
         -- Check time restrictions
         local timeRestriction = bar.timeRestriction
         if timeRestriction then
@@ -29606,7 +29606,7 @@ end
                 return false
             end
         end
-
+        
         return true
     end)
     ```
@@ -29645,23 +29645,23 @@ end
     hook.Add("ShouldBarDraw", "AdvancedBarVisibility", function(bar)
         local char = LocalPlayer():getChar()
         if not char then return false end
-
+        
         -- Hide bars for specific factions
         local faction = char:getFaction()
         if faction == "ghost" and bar.name ~= "stamina" then
             return false
         end
-
+        
         -- Hide bars when in cutscene
         if char:getData("inCutscene", false) then
             return false
         end
-
+        
         -- Hide bars when dead
         if LocalPlayer():Health() <= 0 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -29703,18 +29703,18 @@ end
         if #players == 0 then
             return false
         end
-
+        
         -- Don't save if server is shutting down
         if game.IsDedicated() and GetConVar("sv_shutdown"):GetBool() then
             return false
         end
-
+        
         -- Don't save if too frequent
         local lastSave = lia.data.get("lastSave", 0)
         if os.time() - lastSave < 60 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -29753,24 +29753,24 @@ end
     hook.Add("ShouldDeleteSavedItems", "AdvancedItemCleanup", function()
         local lastCleanup = lia.data.get("lastItemCleanup", 0)
         local cleanupInterval = 86400 -- 24 hours
-
+        
         -- Don't cleanup too frequently
         if os.time() - lastCleanup < cleanupInterval then
             return false
         end
-
+        
         -- Check server load
         local serverLoad = GetConVar("sv_stats"):GetFloat()
         if serverLoad > 0.8 then
             return false
         end
-
+        
         -- Check player count
         local players = player.GetAll()
         if #players > 20 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -29803,13 +29803,13 @@ end
         local restrictedAreas = {
             Vector(0, 0, 0), -- Example restricted area
         }
-
+        
         for _, area in ipairs(restrictedAreas) do
             if pos:Distance(area) < 500 then
                 return true
             end
         end
-
+        
         return false
     end)
     ```
@@ -29820,23 +29820,23 @@ end
     hook.Add("ShouldDisableThirdperson", "AdvancedThirdpersonRestrictions", function(self)
         local char = self:getChar()
         if not char then return false end
-
+        
         -- Disable for specific factions
         local faction = char:getFaction()
         if faction == "ghost" then
             return true
         end
-
+        
         -- Disable in vehicles
         if self:InVehicle() then
             return true
         end
-
+        
         -- Disable when tied
         if char:getData("tied", false) then
             return true
         end
-
+        
         -- Disable in restricted areas
         local pos = self:GetPos()
         local restrictedAreas = lia.data.get("restrictedAreas", {})
@@ -29845,7 +29845,7 @@ end
                 return true
             end
         end
-
+        
         return false
     end)
     ```
@@ -29876,7 +29876,7 @@ end
     hook.Add("ShouldDrawAmmo", "HideSpecificAmmo", function(wpn)
         local weaponClass = wpn:GetClass()
         local hideAmmoWeapons = {"weapon_crowbar", "weapon_stunstick"}
-
+        
         return not table.HasValue(hideAmmoWeapons, weaponClass)
     end)
     ```
@@ -29887,31 +29887,31 @@ end
     hook.Add("ShouldDrawAmmo", "AdvancedAmmoDisplay", function(wpn)
         local char = LocalPlayer():getChar()
         if not char then return false end
-
+        
         -- Hide ammo for melee weapons
         local weaponClass = wpn:GetClass()
         local meleeWeapons = {"weapon_crowbar", "weapon_stunstick", "weapon_knife"}
         if table.HasValue(meleeWeapons, weaponClass) then
             return false
         end
-
+        
         -- Hide ammo when in cutscene
         if char:getData("inCutscene", false) then
             return false
         end
-
+        
         -- Hide ammo for specific factions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check weapon ammo type
         local ammoType = wpn:GetPrimaryAmmoType()
         if ammoType == -1 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -29942,7 +29942,7 @@ end
     hook.Add("ShouldDrawEntityInfo", "HideSpecificInfo", function(e)
         local class = e:GetClass()
         local hideClasses = {"prop_physics", "prop_dynamic"}
-
+        
         return not table.HasValue(hideClasses, class)
     end)
     ```
@@ -29952,15 +29952,15 @@ end
     -- High: Complex entity info system
     hook.Add("ShouldDrawEntityInfo", "AdvancedEntityInfo", function(e)
         if not IsValid(e) then return false end
-
+        
         local char = LocalPlayer():getChar()
         if not char then return false end
-
+        
         -- Hide info when in cutscene
         if char:getData("inCutscene", false) then
             return false
         end
-
+        
         -- Hide info for specific entity types
         local class = e:GetClass()
         local hideClasses = {
@@ -29969,26 +29969,26 @@ end
             "func_door",
             "func_button"
         }
-
+        
         if table.HasValue(hideClasses, class) then
             return false
         end
-
+        
         -- Show info for players
         if e:IsPlayer() then
             return true
         end
-
+        
         -- Show info for vehicles
         if e:IsVehicle() then
             return true
         end
-
+        
         -- Show info for NPCs
         if e:IsNPC() then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -30018,15 +30018,15 @@ end
     -- Medium: Hide info for certain players
     hook.Add("ShouldDrawPlayerInfo", "PlayerInfoVisibility", function(e)
         if not e:IsPlayer() then return false end
-
+        
         local char = e:getChar()
         if not char then return false end
-
+        
         -- Hide info for hidden players
         if char:getData("hidden", false) then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -30036,35 +30036,35 @@ end
     -- High: Complex player info visibility system
     hook.Add("ShouldDrawPlayerInfo", "AdvancedPlayerInfo", function(e)
         if not e:IsPlayer() then return false end
-
+        
         local ply = LocalPlayer()
         local char = ply:getChar()
         if not char then return false end
-
+        
         local targetChar = e:getChar()
         if not targetChar then return false end
-
+        
         -- Don't draw info for self
         if e == ply then return false end
-
+        
         -- Check distance
         local distance = ply:GetPos():Distance(e:GetPos())
         if distance > 500 then return false end
-
+        
         -- Check if target is hidden
         if targetChar:getData("hidden", false) then
             return false
         end
-
+        
         -- Check if target is in stealth mode
         if targetChar:getData("stealth", false) then
             return false
         end
-
+        
         -- Check faction visibility
         local plyFaction = char:getFaction()
         local targetFaction = targetChar:getFaction()
-
+        
         if plyFaction == "police" and targetFaction == "criminal" then
             -- Police can always see criminals
             return true
@@ -30075,24 +30075,24 @@ end
             -- Same faction can see each other
             return true
         end
-
+        
         -- Check if player has recognition
         if targetChar:isRecognized(ply) then
             return true
         end
-
+        
         -- Check if target is in same group
         local plyGroup = char:getData("group")
         local targetGroup = targetChar:getData("group")
         if plyGroup and plyGroup == targetGroup then
             return true
         end
-
+        
         -- Check if target is in same team
         if ply:Team() == e:Team() then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -30137,12 +30137,12 @@ end
         if client:InVehicle() then
             return false
         end
-
+        
         -- Check if player is typing
         if client:IsTyping() then
             return false
         end
-
+        
         -- Check custom conditions
         local char = client:getChar()
         if char then
@@ -30153,12 +30153,12 @@ end
                 return char:getData("showWeaponSelect", true)
             end
         end
-
+        
         -- Check admin status
         if client:IsAdmin() then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -30187,17 +30187,17 @@ end
     -- Medium: Hide bars in certain situations
     hook.Add("ShouldHideBars", "BarHiding", function()
         local ply = LocalPlayer()
-
+        
         -- Hide bars when dead
         if not ply:Alive() then
             return true
         end
-
+        
         -- Hide bars when in vehicle
         if ply:InVehicle() then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -30208,59 +30208,59 @@ end
     hook.Add("ShouldHideBars", "AdvancedBarHiding", function()
         local ply = LocalPlayer()
         local char = ply:getChar()
-
+        
         if not char then return true end
-
+        
         -- Hide bars when dead
         if not ply:Alive() then
             return true
         end
-
+        
         -- Hide bars when in vehicle
         if ply:InVehicle() then
             return true
         end
-
+        
         -- Hide bars when in menu
         if IsValid(lia.gui.menu) and lia.gui.menu:IsVisible() then
             return true
         end
-
+        
         -- Hide bars when in character creation
         if IsValid(lia.gui.charCreate) and lia.gui.charCreate:IsVisible() then
             return true
         end
-
+        
         -- Hide bars when in inventory
         if IsValid(lia.gui.inv1) and lia.gui.inv1:IsVisible() then
             return true
         end
-
+        
         -- Hide bars when in third person
         if ply:GetViewEntity() ~= ply then
             return true
         end
-
+        
         -- Hide bars when in cinematic mode
         if char:getData("cinematicMode", false) then
             return true
         end
-
+        
         -- Hide bars when in spectator mode
         if ply:GetObserverMode() ~= OBS_MODE_NONE then
             return true
         end
-
+        
         -- Hide bars when HUD is disabled
         if not ply:ShouldDrawLocalPlayer() then
             return true
         end
-
+        
         -- Hide bars when in admin mode
         if ply:IsAdmin() and ply:getData("adminMode", false) then
             return true
         end
-
+        
         return false
     end)
     ```
@@ -30300,10 +30300,10 @@ end
     hook.Add("ShouldMenuButtonShow", "AdvancedButtonVisibility", function(button)
         local client = LocalPlayer()
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check permissions
         local permissions = {
             ["admin"] = client:IsAdmin(),
@@ -30312,19 +30312,19 @@ end
             ["inventory"] = true,
             ["settings"] = true
         }
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if button == "faction" and faction == "ghost" then
             return false
         end
-
+        
         -- Check character level
         local level = char:getData("level", 1)
         if button == "advanced" and level < 10 then
             return false
         end
-
+        
         return permissions[button] or false
     end)
     ```
@@ -30364,26 +30364,26 @@ end
     -- High: Complex death sound system
     hook.Add("ShouldPlayDeathSound", "AdvancedDeathSound", function(client, deathSound)
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return true end
-
+        
         -- Check if sounds are enabled
         local soundEnabled = lia.config.get("deathSounds", true)
         if not soundEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check death type
         local deathType = char:getData("deathType", "normal")
         if deathType == "silent" then
             return false
         end
-
+        
         -- Check distance to other players
         local pos = client:GetPos()
         local nearbyPlayers = 0
@@ -30392,7 +30392,7 @@ end
                 nearbyPlayers = nearbyPlayers + 1
             end
         end
-
+        
         -- Only play if other players are nearby
         return nearbyPlayers > 0
     end)
@@ -30433,35 +30433,35 @@ end
     -- High: Complex pain sound system
     hook.Add("ShouldPlayPainSound", "AdvancedPainSound", function(client, painSound)
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return true end
-
+        
         -- Check if sounds are enabled
         local soundEnabled = lia.config.get("painSounds", true)
         if not soundEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check pain threshold
         local health = client:Health()
         local maxHealth = client:GetMaxHealth()
         local healthPercent = health / maxHealth
-
+        
         if healthPercent > 0.8 then
             return false
         end
-
+        
         -- Check damage type
         local damageType = char:getData("lastDamageType", "generic")
         if damageType == "silent" then
             return false
         end
-
+        
         -- Check distance to other players
         local pos = client:GetPos()
         local nearbyPlayers = 0
@@ -30470,7 +30470,7 @@ end
                 nearbyPlayers = nearbyPlayers + 1
             end
         end
-
+        
         -- Only play if other players are nearby
         return nearbyPlayers > 0
     end)
@@ -30501,7 +30501,7 @@ end
     hook.Add("ShouldRespawnScreenAppear", "HideForFactions", function()
         local char = LocalPlayer():getChar()
         if not char then return true end
-
+        
         local faction = char:getFaction()
         local hiddenFactions = {"ghost", "spectator"}
         return not table.HasValue(hiddenFactions, faction)
@@ -30514,39 +30514,39 @@ end
     hook.Add("ShouldRespawnScreenAppear", "AdvancedRespawnScreen", function()
         local client = LocalPlayer()
         if not IsValid(client) then return true end
-
+        
         local char = client:getChar()
         if not char then return true end
-
+        
         -- Check if respawn screen is enabled
         local respawnEnabled = lia.config.get("respawnScreen", true)
         if not respawnEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check death type
         local deathType = char:getData("deathType", "normal")
         if deathType == "instant" then
             return false
         end
-
+        
         -- Check if player has respawn tokens
         local respawnTokens = char:getData("respawnTokens", 0)
         if respawnTokens <= 0 then
             return false
         end
-
+        
         -- Check time restrictions
         local lastDeath = char:getData("lastDeath", 0)
         local timeSinceDeath = CurTime() - lastDeath
         if timeSinceDeath < 5 then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -30586,36 +30586,36 @@ end
     hook.Add("ShouldShowClassOnScoreboard", "AdvancedClassVisibility", function(clsData)
         local client = LocalPlayer()
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check if scoreboard is enabled
         local scoreboardEnabled = lia.config.get("scoreboard", true)
         if not scoreboardEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if clsData.faction and clsData.faction ~= faction then
             return false
         end
-
+        
         -- Check level requirements
         local level = char:getData("level", 1)
         if clsData.minLevel and level < clsData.minLevel then
             return false
         end
-
+        
         -- Check permissions
         if clsData.adminOnly and not client:IsAdmin() then
             return false
         end
-
+        
         -- Check if class is active
         if clsData.disabled then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -30646,7 +30646,7 @@ end
     hook.Add("ShouldShowFactionOnScoreboard", "HideFactions", function(ply)
         local char = ply:getChar()
         if not char then return false end
-
+        
         local faction = char:getFaction()
         local hiddenFactions = {"ghost", "spectator"}
         return not table.HasValue(hiddenFactions, faction)
@@ -30658,23 +30658,23 @@ end
     -- High: Complex faction visibility system
     hook.Add("ShouldShowFactionOnScoreboard", "AdvancedFactionVisibility", function(ply)
         if not IsValid(ply) then return false end
-
+        
         local char = ply:getChar()
         if not char then return false end
-
+        
         local client = LocalPlayer()
         if not IsValid(client) then return false end
-
+        
         -- Check if scoreboard is enabled
         local scoreboardEnabled = lia.config.get("scoreboard", true)
         if not scoreboardEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check if player is recognized
         local clientChar = client:getChar()
         if clientChar then
@@ -30683,19 +30683,19 @@ end
                 return false
             end
         end
-
+        
         -- Check distance
         local distance = client:GetPos():Distance(ply:GetPos())
         if distance > 1000 then
             return false
         end
-
+        
         -- Check if faction is public
         local factionData = lia.faction.list[faction]
         if factionData and factionData.hidden then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -30726,7 +30726,7 @@ end
     hook.Add("ShouldShowPlayerOnScoreboard", "HidePlayers", function(ply)
         local char = ply:getChar()
         if not char then return false end
-
+        
         local faction = char:getFaction()
         local hiddenFactions = {"ghost", "spectator"}
         return not table.HasValue(hiddenFactions, faction)
@@ -30738,23 +30738,23 @@ end
     -- High: Complex player visibility system
     hook.Add("ShouldShowPlayerOnScoreboard", "AdvancedPlayerVisibility", function(ply)
         if not IsValid(ply) then return false end
-
+        
         local char = ply:getChar()
         if not char then return false end
-
+        
         local client = LocalPlayer()
         if not IsValid(client) then return false end
-
+        
         -- Check if scoreboard is enabled
         local scoreboardEnabled = lia.config.get("scoreboard", true)
         if not scoreboardEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check if player is recognized
         local clientChar = client:getChar()
         if clientChar then
@@ -30763,25 +30763,25 @@ end
                 return false
             end
         end
-
+        
         -- Check distance
         local distance = client:GetPos():Distance(ply:GetPos())
         if distance > 1000 then
             return false
         end
-
+        
         -- Check if player is online
         if not ply:IsValid() or not ply:IsConnected() then
             return false
         end
-
+        
         -- Check if player is in same area
         local area = char:getData("area", "unknown")
         local clientArea = clientChar and clientChar:getData("area", "unknown") or "unknown"
         if area ~= clientArea then
             return false
         end
-
+        
         return true
     end)
     ```
@@ -30812,7 +30812,7 @@ end
     hook.Add("ShouldSpawnClientRagdoll", "SuppressRagdolls", function(client)
         local char = client:getChar()
         if not char then return true end
-
+        
         local faction = char:getFaction()
         local suppressedFactions = {"ghost", "spectator"}
         return not table.HasValue(suppressedFactions, faction)
@@ -30824,42 +30824,42 @@ end
     -- High: Complex ragdoll spawning system
     hook.Add("ShouldSpawnClientRagdoll", "AdvancedRagdollSpawning", function(client)
         if not IsValid(client) then return false end
-
+        
         local char = client:getChar()
         if not char then return true end
-
+        
         -- Check if ragdolls are enabled
         local ragdollsEnabled = lia.config.get("ragdolls", true)
         if not ragdollsEnabled then return false end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         if faction == "ghost" then
             return false
         end
-
+        
         -- Check death type
         local deathType = char:getData("deathType", "normal")
         if deathType == "disintegrate" then
             return false
         end
-
+        
         -- Check if player has ragdoll tokens
         local ragdollTokens = char:getData("ragdollTokens", 0)
         if ragdollTokens <= 0 then
             return false
         end
-
+        
         -- Check performance
         local ragdollCount = 0
         for _, ent in ipairs(ents.FindByClass("prop_ragdoll")) do
             ragdollCount = ragdollCount + 1
         end
-
+        
         if ragdollCount > 10 then
             return false
         end
-
+        
         -- Check distance to other players
         local pos = client:GetPos()
         local nearbyPlayers = 0
@@ -30868,7 +30868,7 @@ end
                 nearbyPlayers = nearbyPlayers + 1
             end
         end
-
+        
         -- Only spawn if other players are nearby
         return nearbyPlayers > 0
     end)
@@ -30902,12 +30902,12 @@ end
     hook.Add("ShowPlayerOptions", "FactionOptions", function(ply, initialOpts)
         local char = ply:getChar()
         if not char then return initialOpts end
-
+        
         local faction = char:getFaction()
         if faction == "police" then
             table.insert(initialOpts, {"Arrest", function() print("Arresting " .. ply:Name()) end})
         end
-
+        
         return initialOpts
     end)
     ```
@@ -30917,62 +30917,62 @@ end
     -- High: Complex player options system
     hook.Add("ShowPlayerOptions", "AdvancedPlayerOptions", function(ply, initialOpts)
         if not IsValid(ply) then return initialOpts end
-
+        
         local char = ply:getChar()
         if not char then return initialOpts end
-
+        
         local client = LocalPlayer()
         if not IsValid(client) then return initialOpts end
-
+        
         local clientChar = client:getChar()
         if not clientChar then return initialOpts end
-
+        
         -- Check if player is recognized
         local isRecognized = clientChar:isRecognized(ply)
         if not isRecognized then
-            table.insert(initialOpts, {"Recognize", function()
+            table.insert(initialOpts, {"Recognize", function() 
                 net.Start("liaRecognizePlayer")
                     net.WriteEntity(ply)
                 net.SendToServer()
             end})
         end
-
+        
         -- Check faction permissions
         local faction = char:getFaction()
         local clientFaction = clientChar:getFaction()
-
+        
         if clientFaction == "police" then
-            table.insert(initialOpts, {"Arrest", function()
+            table.insert(initialOpts, {"Arrest", function() 
                 net.Start("liaArrestPlayer")
                     net.WriteEntity(ply)
                 net.SendToServer()
             end})
-
-            table.insert(initialOpts, {"Search", function()
+            
+            table.insert(initialOpts, {"Search", function() 
                 net.Start("liaSearchPlayer")
                     net.WriteEntity(ply)
                 net.SendToServer()
             end})
         end
-
+        
         if clientFaction == "medic" then
-            table.insert(initialOpts, {"Heal", function()
+            table.insert(initialOpts, {"Heal", function() 
                 net.Start("liaHealPlayer")
                     net.WriteEntity(ply)
                 net.SendToServer()
             end})
         end
-
+        
         -- Check admin permissions
         if client:IsAdmin() then
-            table.insert(initialOpts, {"Admin Options", function()
+            table.insert(initialOpts, {"Admin Options", function() 
                 local menu = DermaMenu()
                 menu:AddOption("Kick", function() ply:Kick("Kicked by admin") end)
                 menu:AddOption("Ban", function() ply:Ban(0, "Banned by admin") end)
                 menu:Open()
             end})
         end
-
+        
         return initialOpts
     end)
     ```
@@ -31015,34 +31015,34 @@ end
         if not IsValid(client) or not IsValid(storage) or not item then
             return false
         end
-
+        
         local char = client:getChar()
         if not char then return false end
-
+        
         -- Check storage capacity
         local storageInv = storage:getInv()
         if not storageInv then return false end
-
+        
         local maxWeight = storageInv:getMaxWeight()
         local currentWeight = storageInv:getWeight()
         local itemWeight = item:getWeight()
-
+        
         if currentWeight + itemWeight > maxWeight then
             client:ChatPrint("Storage is full")
             return false
         end
-
+        
         -- Check item restrictions
         local restrictedItems = {
             ["weapon_crowbar"] = "Weapons not allowed in storage",
             ["weapon_stunstick"] = "Weapons not allowed in storage"
         }
-
+        
         if restrictedItems[item.uniqueID] then
             client:ChatPrint(restrictedItems[item.uniqueID])
             return false
         end
-
+        
         -- Check faction restrictions
         local faction = char:getFaction()
         local storageFaction = storage:getNetVar("faction")
@@ -31050,20 +31050,20 @@ end
             client:ChatPrint("You cannot access this storage")
             return false
         end
-
+        
         -- Check distance
         local distance = client:GetPos():Distance(storage:GetPos())
         if distance > 200 then
             client:ChatPrint("You are too far away from the storage")
             return false
         end
-
+        
         -- Check if storage is locked
         if storage:getNetVar("locked", false) then
             client:ChatPrint("Storage is locked")
             return false
         end
-
+        
         return true
     end)
     ```
@@ -31096,7 +31096,7 @@ end
         if inventory then
             inventory:save()
         end
-
+        
         -- Remove from storage list
         lia.storage.list[self] = nil
     end)
@@ -31107,24 +31107,24 @@ end
     -- High: Complex storage cleanup system
     hook.Add("StorageEntityRemoved", "AdvancedStorageCleanup", function(self, inventory)
         if not IsValid(self) then return end
-
+        
         -- Save inventory data
         if inventory then
             inventory:save()
-
+            
             -- Log inventory contents
             local items = inventory:getItems()
             local itemCount = 0
             for _, item in pairs(items) do
                 itemCount = itemCount + 1
             end
-
+            
             print(string.format("Storage %s removed with %d items", self:EntIndex(), itemCount))
         end
-
+        
         -- Remove from storage list
         lia.storage.list[self] = nil
-
+        
         -- Notify nearby players
         local pos = self:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -31132,11 +31132,11 @@ end
                 ply:ChatPrint("Storage has been removed")
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO storage_logs (timestamp, entityid, action) VALUES (?, ?, ?)",
             os.time(), self:EntIndex(), "removed")
-
+        
         -- Clean up any associated data
         local storageData = self:getNetVar("storageData", {})
         if storageData.owner then
@@ -31186,7 +31186,7 @@ end
     -- High: Complex storage inventory system
     hook.Add("StorageInventorySet", "AdvancedStorageInventory", function(entity, inventory, isCar)
         if not IsValid(entity) or not inventory then return end
-
+        
         -- Set storage properties based on type
         if isCar then
             inventory:setMaxWeight(1000)
@@ -31197,7 +31197,7 @@ end
             inventory:setMaxItems(25)
             inventory:setData("storageType", "storage")
         end
-
+        
         -- Set storage data
         entity:setNetVar("storageData", {
             inventory = inventory:getID(),
@@ -31205,18 +31205,18 @@ end
             maxWeight = inventory:getMaxWeight(),
             maxItems = inventory:getMaxItems()
         })
-
+        
         -- Add to storage list
         lia.storage.list[entity] = {
             inventory = inventory,
             isCar = isCar,
             created = os.time()
         }
-
+        
         -- Log to database
         lia.db.query("INSERT INTO storage_logs (timestamp, entityid, action, isCar) VALUES (?, ?, ?, ?)",
             os.time(), entity:EntIndex(), "inventory_set", isCar and 1 or 0)
-
+        
         -- Notify nearby players
         local pos = entity:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -31256,7 +31256,7 @@ end
                 storageCount = storageCount + 1
             end
         end
-
+        
         print("Active storages: " .. storageCount)
     end)
     ```
@@ -31268,7 +31268,7 @@ end
         -- Update storage statistics
         local totalItems = 0
         local totalWeight = 0
-
+        
         for _, storage in pairs(lia.storage.list) do
             if storage.inventory then
                 local items = storage.inventory:getItems()
@@ -31278,10 +31278,10 @@ end
                 end
             end
         end
-
+        
         -- Log statistics
         print(string.format("Storage statistics: %d items, %.2f weight", totalItems, totalWeight))
-
+        
         -- Update storage data
         for entity, storage in pairs(lia.storage.list) do
             if IsValid(entity) and storage.inventory then
@@ -31290,11 +31290,11 @@ end
                 for _, item in pairs(items) do
                     itemCount = itemCount + 1
                 end
-
+                
                 entity:setNetVar("itemCount", itemCount)
             end
         end
-
+        
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if IsValid(ply) then
@@ -31349,13 +31349,13 @@ end
     -- High: Complex storage opening system
     hook.Add("StorageOpen", "AdvancedStorageOpening", function(storage, isCar)
         if not IsValid(storage) then return end
-
+        
         -- Update storage statistics
         local storageData = storage:getNetVar("storageData", {})
         storageData.openCount = (storageData.openCount or 0) + 1
         storageData.lastOpened = os.time()
         storage:setNetVar("storageData", storageData)
-
+        
         -- Check storage capacity
         local inventory = storage:getInv()
         if inventory then
@@ -31364,14 +31364,14 @@ end
             for _, item in pairs(items) do
                 itemCount = itemCount + 1
             end
-
+            
             storage:setNetVar("itemCount", itemCount)
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO storage_logs (timestamp, entityid, action, isCar) VALUES (?, ?, ?, ?)",
             os.time(), storage:EntIndex(), "opened", isCar and 1 or 0)
-
+        
         -- Notify nearby players
         local pos = storage:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -31379,13 +31379,13 @@ end
                 ply:ChatPrint("Storage has been opened")
             end
         end
-
+        
         -- Check for storage upgrades
         local openCount = storageData.openCount
         if openCount >= 100 and not storageData.upgraded then
             storageData.upgraded = true
             storage:setNetVar("storageData", storageData)
-
+            
             -- Increase storage capacity
             if inventory then
                 inventory:setMaxWeight(inventory:getMaxWeight() * 1.5)
@@ -31432,34 +31432,34 @@ end
     -- High: Complex storage restoration system
     hook.Add("StorageRestored", "AdvancedStorageRestoration", function(ent, inventory)
         if not IsValid(ent) or not inventory then return end
-
+        
         -- Validate inventory data
         if inventory:getMaxWeight() <= 0 then
             inventory:setMaxWeight(500)
         end
-
+        
         if inventory:getMaxItems() <= 0 then
             inventory:setMaxItems(25)
         end
-
+        
         -- Set storage data
         ent:setNetVar("storageData", {
             inventory = inventory:getID(),
             restored = true,
             restoredAt = os.time()
         })
-
+        
         -- Add to storage list
         lia.storage.list[ent] = {
             inventory = inventory,
             restored = true,
             restoredAt = os.time()
         }
-
+        
         -- Log to database
         lia.db.query("INSERT INTO storage_logs (timestamp, entityid, action) VALUES (?, ?, ?)",
             os.time(), ent:EntIndex(), "restored")
-
+        
         -- Notify nearby players
         local pos = ent:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -31467,7 +31467,7 @@ end
                 ply:ChatPrint("Storage has been restored")
             end
         end
-
+        
         -- Check for corrupted items
         local items = inventory:getItems()
         local corruptedItems = 0
@@ -31476,7 +31476,7 @@ end
                 corruptedItems = corruptedItems + 1
             end
         end
-
+        
         if corruptedItems > 0 then
             print(string.format("Storage %s restored with %d corrupted items", ent:EntIndex(), corruptedItems))
         end
@@ -31516,13 +31516,13 @@ end
     -- High: Complex storage unlock system
     hook.Add("StorageUnlockPrompt", "AdvancedStorageUnlock", function(entity)
         if not IsValid(entity) then return end
-
+        
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
+        
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check if player has key
         local inventory = char:getInv()
         if inventory then
@@ -31533,14 +31533,14 @@ end
                     break
                 end
             end
-
+            
             if hasKey then
                 lia.util.notify("You have a key for this storage. Press E to unlock.")
             else
                 lia.util.notify("This storage is locked. You need a storage key to open it.")
             end
         end
-
+        
         -- Check storage type
         local storageType = entity:getNetVar("storageType", "normal")
         if storageType == "vault" then
@@ -31548,13 +31548,13 @@ end
         elseif storageType == "safe" then
             lia.util.notify("This is a safe. You need a safe key to open it.")
         end
-
+        
         -- Check if storage is owned
         local owner = entity:getNetVar("owner")
         if owner and owner ~= char:getID() then
             lia.util.notify("This storage belongs to someone else.")
         end
-
+        
         -- Show unlock options
         local menu = DermaMenu()
         menu:AddOption("Try to unlock", function()
@@ -31607,7 +31607,7 @@ end
             print("No spawn points to store")
             return
         end
-
+        
         -- Validate spawn points
         local validSpawns = {}
         for i, spawn in ipairs(spawns) do
@@ -31618,7 +31618,7 @@ end
                     endpos = spawn.pos + Vector(0, 0, -100),
                     mask = MASK_SOLID
                 })
-
+                
                 if trace.Hit then
                     table.insert(validSpawns, spawn)
                 else
@@ -31628,10 +31628,10 @@ end
                 print("Invalid spawn point at index " .. i)
             end
         end
-
+        
         -- Store valid spawns
         lia.spawns = validSpawns
-
+        
         -- Log to database
         lia.db.query("DELETE FROM spawns")
         for _, spawn in ipairs(validSpawns) do
@@ -31639,7 +31639,7 @@ end
                 spawn.pos.x, spawn.pos.y, spawn.pos.z,
                 spawn.ang.p, spawn.ang.y, spawn.ang.r)
         end
-
+        
         print(string.format("Stored %d valid spawn points", #validSpawns))
     end)
     ```
@@ -31682,13 +31682,13 @@ end
     -- High: Complex character list sync system
     hook.Add("SyncCharList", "AdvancedCharSync", function(client)
         if not IsValid(client) then return end
-
+        
         local charList = client:getCharList()
         if not charList then
             print("No character list for " .. client:Name())
             return
         end
-
+        
         -- Validate character data
         local validChars = {}
         for _, char in ipairs(charList) do
@@ -31704,19 +31704,19 @@ end
                 print("Invalid character data for " .. client:Name())
             end
         end
-
+        
         -- Update client character list
         client:setCharList(validChars)
-
+        
         -- Log to database
         lia.db.query("UPDATE players SET char_list = ? WHERE steamid = ?",
             util.TableToJSON(validChars), client:SteamID())
-
+        
         -- Notify client
         net.Start("liaCharListUpdated")
             net.WriteTable(validChars)
         net.Send(client)
-
+        
         print(string.format("Synced %d characters for %s", #validChars, client:Name()))
     end)
     ```
@@ -31755,31 +31755,31 @@ end
     hook.Add("ThirdPersonToggled", "AdvancedThirdPerson", function(newValue)
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
+        
         -- Update UI
         if IsValid(lia.gui.thirdPersonSettings) then
             lia.gui.thirdPersonSettings:SetEnabled(newValue)
         end
-
+        
         -- Save setting
         lia.data.set("thirdPerson", newValue)
-
+        
         -- Notify player
         lia.util.notify("Third person " .. (newValue and "enabled" or "disabled"), 3)
-
+        
         -- Update camera
         if newValue then
             client:SetViewEntity(client)
         else
             client:SetViewEntity(client)
         end
-
+        
         -- Log the change
         lia.log.write("third_person_toggle", {
             enabled = newValue,
             timestamp = os.time()
         })
-
+        
         -- Update character model visibility
         local char = client:getChar()
         if char then
@@ -31824,16 +31824,16 @@ end
         frame:Center()
         frame:SetTitle("Support Ticket - " .. (claimed and "Claimed" or "Open"))
         frame:MakePopup()
-
+        
         local label = vgui.Create("DLabel", frame)
         label:SetText("Requester: " .. requester:Name())
         label:Dock(TOP)
-
+        
         local text = vgui.Create("DTextEntry", frame)
         text:SetText(message)
         text:SetMultiline(true)
         text:Dock(FILL)
-
+        
         return frame
     end)
     ```
@@ -31847,32 +31847,32 @@ end
         frame:Center()
         frame:SetTitle("Support Ticket - " .. (claimed and "Claimed" or "Open"))
         frame:MakePopup()
-
+        
         -- Header
         local header = vgui.Create("DPanel", frame)
         header:Dock(TOP)
         header:SetHeight(50)
-
+        
         local requesterLabel = vgui.Create("DLabel", header)
         requesterLabel:SetText("Requester: " .. requester:Name())
         requesterLabel:Dock(LEFT)
-
+        
         local statusLabel = vgui.Create("DLabel", header)
         statusLabel:SetText("Status: " .. (claimed and "Claimed" or "Open"))
         statusLabel:Dock(RIGHT)
-
+        
         -- Message area
         local messageArea = vgui.Create("DTextEntry", frame)
         messageArea:SetText(message)
         messageArea:SetMultiline(true)
         messageArea:SetEditable(false)
         messageArea:Dock(FILL)
-
+        
         -- Buttons
         local buttonPanel = vgui.Create("DPanel", frame)
         buttonPanel:Dock(BOTTOM)
         buttonPanel:SetHeight(40)
-
+        
         local claimButton = vgui.Create("DButton", buttonPanel)
         claimButton:SetText("Claim Ticket")
         claimButton:Dock(LEFT)
@@ -31882,7 +31882,7 @@ end
                 net.WriteEntity(requester)
             net.SendToServer()
         end
-
+        
         local closeButton = vgui.Create("DButton", buttonPanel)
         closeButton:SetText("Close")
         closeButton:Dock(RIGHT)
@@ -31890,7 +31890,7 @@ end
         closeButton.DoClick = function()
             frame:Close()
         end
-
+        
         return frame
     end)
     ```
@@ -31922,7 +31922,7 @@ end
     -- Medium: Notify players
     hook.Add("TicketSystemClaim", "NotifyClaim", function(client, requester, ticketMessage)
         requester:ChatPrint("Your ticket has been claimed by " .. client:Name())
-
+        
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ADMIN] " .. client:Name() .. " claimed ticket from " .. requester:Name())
@@ -31936,13 +31936,13 @@ end
     -- High: Complex ticket claim system
     hook.Add("TicketSystemClaim", "AdvancedTicketClaim", function(client, requester, ticketMessage)
         if not IsValid(client) or not IsValid(requester) then return end
-
+        
         -- Check if client is admin
         if not client:IsAdmin() then
             client:ChatPrint("You do not have permission to claim tickets")
             return
         end
-
+        
         -- Update ticket status
         local ticketData = {
             claimed = true,
@@ -31950,23 +31950,23 @@ end
             claimedAt = os.time(),
             message = ticketMessage
         }
-
+        
         requester:setData("ticketData", ticketData)
-
+        
         -- Notify requester
         requester:ChatPrint("Your ticket has been claimed by " .. client:Name())
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ADMIN] " .. client:Name() .. " claimed ticket from " .. requester:Name())
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO ticket_logs (timestamp, requester_steamid, claimer_steamid, message) VALUES (?, ?, ?, ?)",
             os.time(), requester:SteamID(), client:SteamID(), ticketMessage)
-
+        
         -- Update client data
         local clientData = client:getData("ticketStats", {})
         clientData.claimed = (clientData.claimed or 0) + 1
@@ -32001,7 +32001,7 @@ end
     -- Medium: Notify players
     hook.Add("TicketSystemClose", "NotifyClose", function(client, requester, ticketMessage)
         requester:ChatPrint("Your ticket has been closed by " .. client:Name())
-
+        
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ADMIN] " .. client:Name() .. " closed ticket from " .. requester:Name())
@@ -32015,44 +32015,44 @@ end
     -- High: Complex ticket close system
     hook.Add("TicketSystemClose", "AdvancedTicketClose", function(client, requester, ticketMessage)
         if not IsValid(client) or not IsValid(requester) then return end
-
+        
         -- Check if client is admin
         if not client:IsAdmin() then
             client:ChatPrint("You do not have permission to close tickets")
             return
         end
-
+        
         -- Update ticket status
         local ticketData = requester:getData("ticketData", {})
         ticketData.closed = true
         ticketData.closedBy = client:SteamID()
         ticketData.closedAt = os.time()
         ticketData.closeMessage = ticketMessage
-
+        
         requester:setData("ticketData", ticketData)
-
+        
         -- Notify requester
         requester:ChatPrint("Your ticket has been closed by " .. client:Name())
         if ticketMessage and ticketMessage ~= "" then
             requester:ChatPrint("Reason: " .. ticketMessage)
         end
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ADMIN] " .. client:Name() .. " closed ticket from " .. requester:Name())
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO ticket_logs (timestamp, requester_steamid, closer_steamid, message, action) VALUES (?, ?, ?, ?, ?)",
             os.time(), requester:SteamID(), client:SteamID(), ticketMessage, "closed")
-
+        
         -- Update client data
         local clientData = client:getData("ticketStats", {})
         clientData.closed = (clientData.closed or 0) + 1
         client:setData("ticketStats", clientData)
-
+        
         -- Clear ticket data after delay
         timer.Simple(60, function()
             if IsValid(requester) then
@@ -32100,20 +32100,20 @@ end
     -- High: Complex ticket creation system
     hook.Add("TicketSystemCreated", "AdvancedTicketCreation", function(noob, message)
         if not IsValid(noob) then return end
-
+        
         -- Check if player already has an open ticket
         local ticketData = noob:getData("ticketData", {})
         if ticketData.open and not ticketData.closed then
             noob:ChatPrint("You already have an open ticket. Please wait for it to be resolved.")
             return
         end
-
+        
         -- Validate message
         if not message or #message < 10 then
             noob:ChatPrint("Please provide a more detailed description of your issue.")
             return
         end
-
+        
         -- Create ticket data
         local newTicketData = {
             open = true,
@@ -32122,9 +32122,9 @@ end
             createdAt = os.time(),
             requester = noob:SteamID()
         }
-
+        
         noob:setData("ticketData", newTicketData)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -32132,16 +32132,16 @@ end
                 ply:ChatPrint("[TICKET] Message: " .. message)
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO ticket_logs (timestamp, requester_steamid, message, action) VALUES (?, ?, ?, ?)",
             os.time(), noob:SteamID(), message, "created")
-
+        
         -- Update player data
         local playerData = noob:getData("ticketStats", {})
         playerData.created = (playerData.created or 0) + 1
         noob:setData("ticketStats", playerData)
-
+        
         -- Notify player
         noob:ChatPrint("Your ticket has been created. An admin will respond soon.")
     end)
@@ -32187,10 +32187,10 @@ end
     -- High: Complex door lock system
     hook.Add("ToggleLock", "AdvancedDoorLock", function(client, door, state)
         if not IsValid(client) or not IsValid(door) then return end
-
+        
         local char = client:getChar()
         if not char then return end
-
+        
         -- Check permissions
         if not client:IsAdmin() then
             local doorOwner = door:getNetVar("owner")
@@ -32199,16 +32199,16 @@ end
                 return
             end
         end
-
+        
         -- Update door data
         door:setNetVar("locked", state)
         door:setNetVar("lastLocked", os.time())
         door:setNetVar("lastLockedBy", client:SteamID())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO door_logs (timestamp, steamid, doorid, action) VALUES (?, ?, ?, ?)",
             os.time(), client:SteamID(), door:EntIndex(), state and "locked" or "unlocked")
-
+        
         -- Notify nearby players
         local pos = door:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -32216,11 +32216,11 @@ end
                 ply:ChatPrint("A door has been " .. (state and "locked" or "unlocked"))
             end
         end
-
+        
         -- Update character stats
         local locks = char:getData("doorsLocked", 0)
         char:setData("doorsLocked", locks + 1)
-
+        
         -- Check for door upgrades
         local lockCount = char:getData("doorsLocked", 0)
         if lockCount >= 10 and not char:getData("doorMaster", false) then
@@ -32268,16 +32268,16 @@ end
     -- High: Complex tooltip system
     hook.Add("TooltipInitialize", "AdvancedTooltip", function(self, panel)
         if not IsValid(self) or not IsValid(panel) then return end
-
+        
         -- Set tooltip properties
         self:SetText("")
         self:SetFont("DermaDefault")
         self:SetTextColor(Color(255, 255, 255))
-
+        
         -- Get panel information
         local panelClass = panel:GetClassName()
         local panelText = panel:GetText() or ""
-
+        
         -- Set tooltip based on panel type
         if panelClass == "DButton" then
             if panelText == "Close" then
@@ -32294,11 +32294,11 @@ end
         elseif panelClass == "DComboBox" then
             self:SetText("Select an option from the dropdown")
         end
-
+        
         -- Set tooltip position
         self:SetPos(panel:GetPos())
         self:SetSize(200, 20)
-
+        
         -- Set tooltip delay
         self:SetDelay(0.5)
     end)
@@ -32329,7 +32329,7 @@ end
     -- Medium: Set layout with constraints
     hook.Add("TooltipLayout", "ConstrainedLayout", function(self)
         self:SizeToContents()
-
+        
         local w, h = self:GetSize()
         if w > 300 then
             self:SetWide(300)
@@ -32345,30 +32345,30 @@ end
     -- High: Complex tooltip layout system
     hook.Add("TooltipLayout", "AdvancedTooltipLayout", function(self)
         if not IsValid(self) then return end
-
+        
         -- Get text size
         self:SizeToContents()
-
+        
         local w, h = self:GetSize()
         local maxWidth = 400
         local maxHeight = 200
-
+        
         -- Constrain width
         if w > maxWidth then
             self:SetWide(maxWidth)
             self:SetWrap(true)
         end
-
+        
         -- Constrain height
         if h > maxHeight then
             self:SetTall(maxHeight)
             self:SetScrollable(true)
         end
-
+        
         -- Position tooltip
         local x, y = gui.MousePos()
         local screenW, screenH = ScrW(), ScrH()
-
+        
         -- Adjust position if tooltip goes off screen
         if x + w > screenW then
             x = screenW - w - 10
@@ -32376,12 +32376,12 @@ end
         if y + h > screenH then
             y = screenH - h - 10
         end
-
+        
         self:SetPos(x + 10, y + 10)
-
+        
         -- Set z position
         self:SetZPos(1000)
-
+        
         -- Set background
         self:SetBackgroundColor(Color(0, 0, 0, 200))
         self:SetBorderColor(Color(100, 100, 100))
@@ -32416,10 +32416,10 @@ end
     hook.Add("TooltipPaint", "StyledTooltip", function(self, w, h)
         -- Background
         draw.RoundedBox(4, 0, 0, w, h, Color(0, 0, 0, 200))
-
+        
         -- Border
         draw.RoundedBox(4, 0, 0, w, h, Color(100, 100, 100, 255))
-
+        
         -- Text
         draw.SimpleText(self:GetText(), "DermaDefault", w/2, h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end)
@@ -32430,34 +32430,34 @@ end
     -- High: Complex tooltip painting system
     hook.Add("TooltipPaint", "AdvancedTooltipPaint", function(self, w, h)
         if not IsValid(self) then return end
-
+        
         -- Get tooltip data
         local text = self:GetText() or ""
         local textColor = self:GetTextColor() or Color(255, 255, 255)
         local bgColor = self:GetBackgroundColor() or Color(0, 0, 0, 200)
         local borderColor = self:GetBorderColor() or Color(100, 100, 100)
-
+        
         -- Draw background with gradient
         local gradient = Material("gui/gradient_up")
         surface.SetMaterial(gradient)
         surface.SetDrawColor(bgColor)
         surface.DrawTexturedRect(0, 0, w, h)
-
+        
         -- Draw border
         draw.RoundedBox(4, 0, 0, w, h, borderColor)
-
+        
         -- Draw inner background
         draw.RoundedBox(4, 1, 1, w-2, h-2, Color(bgColor.r, bgColor.g, bgColor.b, bgColor.a * 0.8))
-
+        
         -- Draw text with shadow
         local textX, textY = w/2, h/2
-
+        
         -- Shadow
         draw.SimpleText(text, "DermaDefault", textX+1, textY+1, Color(0, 0, 0, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
+        
         -- Main text
         draw.SimpleText(text, "DermaDefault", textX, textY, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
+        
         -- Draw icon if available
         local icon = self:GetIcon()
         if icon then
@@ -32505,21 +32505,21 @@ end
     -- High: Complex item transfer system
     hook.Add("TransferItem", "AdvancedItemTransfer", function(itemID)
         if not itemID then return end
-
+        
         local item = lia.item.instances[itemID]
         if not item then return end
-
+        
         -- Get item data
         local itemData = item:getData()
         local fromInventory = item:getInventory()
         local toInventory = item:getData("targetInventory")
-
+        
         if not fromInventory or not toInventory then return end
-
+        
         -- Check transfer permissions
         local fromOwner = fromInventory:getOwner()
         local toOwner = toInventory:getOwner()
-
+        
         if fromOwner and toOwner and fromOwner ~= toOwner then
             -- Check if transfer is allowed between different owners
             local transferAllowed = item:getData("transferable", true)
@@ -32528,34 +32528,34 @@ end
                 return
             end
         end
-
+        
         -- Update item data
         local transferCount = item:getData("transferCount", 0)
         item:setData("transferCount", transferCount + 1)
         item:setData("lastTransfer", os.time())
-
+        
         -- Log to database
         lia.db.query("INSERT INTO item_transfer_logs (timestamp, itemid, from_inventory, to_inventory) VALUES (?, ?, ?, ?)",
             os.time(), itemID, fromInventory:getID(), toInventory:getID())
-
+        
         -- Notify players
         local fromChar = lia.char.loaded[fromOwner]
         local toChar = lia.char.loaded[toOwner]
-
+        
         if fromChar and fromChar:getPlayer() then
             fromChar:getPlayer():ChatPrint("Item transferred: " .. item:getName())
         end
-
+        
         if toChar and toChar:getPlayer() and toChar:getPlayer() ~= fromChar:getPlayer() then
             toChar:getPlayer():ChatPrint("Item received: " .. item:getName())
         end
-
+        
         -- Check for item degradation
         local durability = item:getData("durability", 100)
         if durability > 0 then
             local newDurability = math.max(0, durability - 1)
             item:setData("durability", newDurability)
-
+            
             if newDurability <= 0 then
                 item:setData("broken", true)
             end
@@ -32601,24 +32601,24 @@ end
     -- High: Complex model viewing system
     hook.Add("TryViewModel", "AdvancedModelView", function(entity)
         if not IsValid(entity) then return end
-
+        
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
+        
         -- Check if entity is viewable
         local model = entity:GetModel()
         if not model or model == "" then
             client:ChatPrint("This entity has no model")
             return
         end
-
+        
         -- Check distance
         local distance = client:GetPos():Distance(entity:GetPos())
         if distance > 200 then
             client:ChatPrint("You are too far away to view this model")
             return
         end
-
+        
         -- Check if entity is owned
         local owner = entity:getNetVar("owner")
         if owner then
@@ -32628,30 +32628,30 @@ end
                 return
             end
         end
-
+        
         -- Create model view panel
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
         frame:Center()
         frame:SetTitle("Model Viewer - " .. entity:GetClass())
         frame:MakePopup()
-
+        
         local modelPanel = vgui.Create("DModelPanel", frame)
         modelPanel:Dock(FILL)
         modelPanel:SetModel(model)
-
+        
         -- Set up model panel
         local ent = modelPanel:GetEntity()
         if ent then
             ent:SetPos(Vector(0, 0, 0))
             ent:SetAngles(Angle(0, 0, 0))
         end
-
+        
         -- Add controls
         local controlPanel = vgui.Create("DPanel", frame)
         controlPanel:Dock(BOTTOM)
         controlPanel:SetHeight(50)
-
+        
         local rotateButton = vgui.Create("DButton", controlPanel)
         rotateButton:SetText("Rotate")
         rotateButton:Dock(LEFT)
@@ -32661,7 +32661,7 @@ end
                 ent:SetAngles(ent:GetAngles() + Angle(0, 45, 0))
             end
         end
-
+        
         local closeButton = vgui.Create("DButton", controlPanel)
         closeButton:SetText("Close")
         closeButton:Dock(RIGHT)
@@ -32708,14 +32708,14 @@ end
     -- High: Complex entity persistence system
     hook.Add("UpdateEntityPersistence", "AdvancedPersistence", function(ent)
         if not IsValid(ent) then return end
-
+        
         -- Check if entity should be persistent
         local shouldPersist = hook.Run("CanPersistEntity", ent)
         if not shouldPersist then
             ent:setData("persistent", false)
             return
         end
-
+        
         -- Update entity data
         local entityData = {
             class = ent:GetClass(),
@@ -32725,22 +32725,22 @@ end
             lastUpdate = os.time(),
             persistent = true
         }
-
+        
         -- Save custom data
         local customData = ent:getData("customData", {})
         if customData and next(customData) then
             entityData.customData = customData
         end
-
+        
         -- Save to database
         local entityID = ent:EntIndex()
         lia.db.query("INSERT OR REPLACE INTO persistent_entities (entityid, data, lastupdate) VALUES (?, ?, ?)",
             entityID, util.TableToJSON(entityData), os.time())
-
+        
         -- Update entity
         ent:setData("persistent", true)
         ent:setData("lastUpdate", os.time())
-
+        
         -- Notify nearby players
         local pos = ent:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -32748,7 +32748,7 @@ end
                 ply:ChatPrint("Entity persistence updated")
             end
         end
-
+        
         -- Log to file
         lia.log.write("entity_persistence", {
             entityID = entityID,
@@ -32793,13 +32793,13 @@ end
     -- High: Complex scoreboard color system
     hook.Add("UpdateScoreboardColors", "AdvancedScoreboardColors", function(teamColors)
         if not teamColors then return end
-
+        
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
+        
         local char = client:getChar()
         if not char then return end
-
+        
         -- Get faction colors
         local faction = char:getFaction()
         local factionColors = {
@@ -32808,15 +32808,15 @@ end
             ["citizen"] = Color(255, 255, 255),
             ["criminal"] = Color(255, 100, 100)
         }
-
+        
         -- Set faction color
         local factionColor = factionColors[faction] or Color(255, 255, 255)
         teamColors[1] = factionColor
-
+        
         -- Set other team colors
         teamColors[2] = Color(100, 100, 100) -- Spectators
         teamColors[3] = Color(200, 200, 200) -- Admins
-
+        
         -- Apply color scheme
         local colorScheme = lia.config.get("scoreboardColorScheme", "default")
         if colorScheme == "dark" then
@@ -32828,7 +32828,7 @@ end
                 teamColors[i] = Color(math.min(255, color.r * 1.5), math.min(255, color.g * 1.5), math.min(255, color.b * 1.5))
             end
         end
-
+        
         -- Update scoreboard panel if it exists
         if IsValid(lia.gui.scoreboard) then
             lia.gui.scoreboard:UpdateColors(teamColors)
@@ -32876,13 +32876,13 @@ end
     -- High: Complex vendor class system
     hook.Add("VendorClassUpdated", "AdvancedVendorClass", function(vendor, id, allowed)
         if not IsValid(vendor) then return end
-
+        
         -- Update vendor data
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.allowedClasses = vendorData.allowedClasses or {}
         vendorData.allowedClasses[id] = allowed
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Update vendor inventory
         local inventory = vendor:getInv()
         if inventory then
@@ -32893,11 +32893,11 @@ end
                 end
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_class_logs (timestamp, vendorid, classid, allowed) VALUES (?, ?, ?, ?)",
             os.time(), vendor:EntIndex(), id, allowed and 1 or 0)
-
+        
         -- Notify nearby players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -32908,7 +32908,7 @@ end
                 end
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
@@ -32952,13 +32952,13 @@ end
     -- High: Complex vendor editing system
     hook.Add("VendorEdited", "AdvancedVendorEdit", function(liaVendorEnt, key)
         if not IsValid(liaVendorEnt) then return end
-
+        
         -- Update vendor data
         local vendorData = liaVendorEnt:getNetVar("vendorData", {})
         vendorData.lastEdit = os.time()
         vendorData.editedBy = key
         liaVendorEnt:setNetVar("vendorData", vendorData)
-
+        
         -- Validate specific properties
         if key == "name" then
             local name = liaVendorEnt:getNetVar("name", "")
@@ -32975,11 +32975,11 @@ end
                 liaVendorEnt:setNetVar("money", 1000000)
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_edit_logs (timestamp, vendorid, property, value) VALUES (?, ?, ?, ?)",
             os.time(), liaVendorEnt:EntIndex(), key, tostring(liaVendorEnt:getNetVar(key, "")))
-
+        
         -- Notify nearby players
         local pos = liaVendorEnt:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -32987,7 +32987,7 @@ end
                 ply:ChatPrint("Vendor " .. key .. " has been updated")
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == liaVendorEnt then
             lia.gui.vendor:Populate()
@@ -33029,34 +33029,34 @@ end
     hook.Add("VendorExited", "AdvancedVendorExit", function()
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
+        
         local char = client:getChar()
         if not char then return end
-
+        
         -- Clean up vendor data
         lia.vendor.current = nil
         lia.vendor.cache = {}
-
+        
         -- Save vendor interaction data
         local vendorData = char:getData("vendorData", {})
         vendorData.lastInteraction = os.time()
         vendorData.totalInteractions = (vendorData.totalInteractions or 0) + 1
         char:setData("vendorData", vendorData)
-
+        
         -- Close vendor UI
         if IsValid(lia.gui.vendor) then
             lia.gui.vendor:Close()
         end
-
+        
         -- Notify player
         lia.util.notify("Vendor closed", 2)
-
+        
         -- Log to database
         lia.log.write("vendor_exit", {
             steamid = client:SteamID(),
             timestamp = os.time()
         })
-
+        
         -- Update character stats
         local vendorStats = char:getData("vendorStats", {})
         vendorStats.exits = (vendorStats.exits or 0) + 1
@@ -33107,13 +33107,13 @@ end
     -- High: Complex vendor faction system
     hook.Add("VendorFactionUpdated", "AdvancedVendorFaction", function(vendor, id, allowed)
         if not IsValid(vendor) then return end
-
+        
         -- Update vendor data
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.allowedFactions = vendorData.allowedFactions or {}
         vendorData.allowedFactions[id] = allowed
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Update vendor inventory
         local inventory = vendor:getInv()
         if inventory then
@@ -33124,11 +33124,11 @@ end
                 end
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_faction_logs (timestamp, vendorid, factionid, allowed) VALUES (?, ?, ?, ?)",
             os.time(), vendor:EntIndex(), id, allowed and 1 or 0)
-
+        
         -- Notify affected players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -33139,12 +33139,12 @@ end
                 end
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
         end
-
+        
         -- Check for faction-specific items
         local factionItems = lia.item.getByFaction(id)
         for _, item in ipairs(factionItems) do
@@ -33188,7 +33188,7 @@ end
         elseif value > 1000 then
             value = 1000
         end
-
+        
         vendor:setNetVar("itemMaxStock_" .. itemType, value)
     end)
     ```
@@ -33198,20 +33198,20 @@ end
     -- High: Complex vendor max stock system
     hook.Add("VendorItemMaxStockUpdated", "AdvancedVendorMaxStock", function(vendor, itemType, value)
         if not IsValid(vendor) then return end
-
+        
         -- Validate value
         if value < 0 then
             value = 0
         elseif value > 10000 then
             value = 10000
         end
-
+        
         -- Update vendor data
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.itemMaxStock = vendorData.itemMaxStock or {}
         vendorData.itemMaxStock[itemType] = value
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Update item in inventory
         local inventory = vendor:getInv()
         if inventory then
@@ -33219,7 +33219,7 @@ end
             for _, item in pairs(items) do
                 if item.uniqueID == itemType then
                     item:setData("maxStock", value)
-
+                    
                     -- Adjust current stock if it exceeds max
                     local currentStock = item:getData("stock", 0)
                     if currentStock > value then
@@ -33228,11 +33228,11 @@ end
                 end
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_item_logs (timestamp, vendorid, itemtype, property, value) VALUES (?, ?, ?, ?, ?)",
             os.time(), vendor:EntIndex(), itemType, "maxStock", value)
-
+        
         -- Notify nearby players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -33240,7 +33240,7 @@ end
                 ply:ChatPrint("Vendor item " .. itemType .. " max stock updated to " .. value)
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
@@ -33278,7 +33278,7 @@ end
         if not table.HasValue(validModes, value) then
             value = "both"
         end
-
+        
         vendor:setNetVar("itemMode_" .. itemType, value)
     end)
     ```
@@ -33288,19 +33288,19 @@ end
     -- High: Complex vendor item mode system
     hook.Add("VendorItemModeUpdated", "AdvancedVendorItemMode", function(vendor, itemType, value)
         if not IsValid(vendor) then return end
-
+        
         -- Validate mode
         local validModes = {"buy", "sell", "both"}
         if not table.HasValue(validModes, value) then
             value = "both"
         end
-
+        
         -- Update vendor data
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.itemModes = vendorData.itemModes or {}
         vendorData.itemModes[itemType] = value
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Update item in inventory
         local inventory = vendor:getInv()
         if inventory then
@@ -33308,7 +33308,7 @@ end
             for _, item in pairs(items) do
                 if item.uniqueID == itemType then
                     item:setData("mode", value)
-
+                    
                     -- Update item display based on mode
                     if value == "buy" then
                         item:setData("sellable", false)
@@ -33323,11 +33323,11 @@ end
                 end
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_item_logs (timestamp, vendorid, itemtype, property, value) VALUES (?, ?, ?, ?, ?)",
             os.time(), vendor:EntIndex(), itemType, "mode", value)
-
+        
         -- Notify nearby players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -33335,7 +33335,7 @@ end
                 ply:ChatPrint("Vendor item " .. itemType .. " mode updated to " .. value)
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
@@ -33374,7 +33374,7 @@ end
         elseif value > 1000000 then
             value = 1000000
         end
-
+        
         vendor:setNetVar("itemPrice_" .. itemType, value)
     end)
     ```
@@ -33384,20 +33384,20 @@ end
     -- High: Complex vendor price system
     hook.Add("VendorItemPriceUpdated", "AdvancedVendorPrice", function(vendor, itemType, value)
         if not IsValid(vendor) then return end
-
+        
         -- Validate price
         if value < 0 then
             value = 0
         elseif value > 10000000 then
             value = 10000000
         end
-
+        
         -- Update vendor data
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.itemPrices = vendorData.itemPrices or {}
         vendorData.itemPrices[itemType] = value
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Update item in inventory
         local inventory = vendor:getInv()
         if inventory then
@@ -33405,7 +33405,7 @@ end
             for _, item in pairs(items) do
                 if item.uniqueID == itemType then
                     item:setData("price", value)
-
+                    
                     -- Calculate profit margin
                     local basePrice = item:getData("basePrice", value)
                     local profitMargin = ((value - basePrice) / basePrice) * 100
@@ -33413,11 +33413,11 @@ end
                 end
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_item_logs (timestamp, vendorid, itemtype, property, value) VALUES (?, ?, ?, ?, ?)",
             os.time(), vendor:EntIndex(), itemType, "price", value)
-
+        
         -- Notify nearby players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -33425,12 +33425,12 @@ end
                 ply:ChatPrint("Vendor item " .. itemType .. " price updated to $" .. value)
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
         end
-
+        
         -- Check for price alerts
         local priceAlerts = lia.config.get("priceAlerts", {})
         for _, alert in ipairs(priceAlerts) do
@@ -33472,7 +33472,7 @@ end
         if value < 0 then
             value = 0
         end
-
+        
         vendor:setNetVar("itemStock_" .. itemType, value)
     end)
     ```
@@ -33482,24 +33482,24 @@ end
     -- High: Complex vendor stock system
     hook.Add("VendorItemStockUpdated", "AdvancedVendorStock", function(vendor, itemType, value)
         if not IsValid(vendor) then return end
-
+        
         -- Validate stock
         if value < 0 then
             value = 0
         end
-
+        
         -- Get max stock
         local maxStock = vendor:getNetVar("itemMaxStock_" .. itemType, 100)
         if value > maxStock then
             value = maxStock
         end
-
+        
         -- Update vendor data
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.itemStocks = vendorData.itemStocks or {}
         vendorData.itemStocks[itemType] = value
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Update item in inventory
         local inventory = vendor:getInv()
         if inventory then
@@ -33507,7 +33507,7 @@ end
             for _, item in pairs(items) do
                 if item.uniqueID == itemType then
                     item:setData("stock", value)
-
+                    
                     -- Check if item is out of stock
                     if value <= 0 then
                         item:setData("outOfStock", true)
@@ -33517,11 +33517,11 @@ end
                 end
             end
         end
-
+        
         -- Log to database
         lia.db.query("INSERT INTO vendor_item_logs (timestamp, vendorid, itemtype, property, value) VALUES (?, ?, ?, ?, ?)",
             os.time(), vendor:EntIndex(), itemType, "stock", value)
-
+        
         -- Notify nearby players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -33529,12 +33529,12 @@ end
                 ply:ChatPrint("Vendor item " .. itemType .. " stock updated to " .. value)
             end
         end
-
+        
         -- Update vendor UI if open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
         end
-
+        
         -- Check for low stock alerts
         local lowStockThreshold = lia.config.get("lowStockThreshold", 10)
         if value <= lowStockThreshold then
@@ -33584,14 +33584,14 @@ end
     hook.Add("VendorOpened", "AdvancedVendorOpening", function(vendor)
         local char = vendor:getChar()
         if not char then return end
-
+        
         -- Update vendor statistics
         local vendorData = vendor:getNetVar("vendorData", {})
         vendorData.openCount = (vendorData.openCount or 0) + 1
         vendorData.lastOpened = os.time()
         vendorData.totalRevenue = vendorData.totalRevenue or 0
         vendor:setNetVar("vendorData", vendorData)
-
+        
         -- Check for vendor upgrades
         local openCount = vendorData.openCount
         if openCount >= 100 and not vendorData.upgraded then
@@ -33599,7 +33599,7 @@ end
             vendor:setNetVar("vendorData", vendorData)
             char:getPlayer():ChatPrint("Vendor upgraded! Increased stock capacity.")
         end
-
+        
         -- Apply faction bonuses
         local faction = char:getFaction()
         local bonuses = {
@@ -33607,11 +33607,11 @@ end
             ["medic"] = {discount = 0.05, bonusStock = 25},
             ["citizen"] = {discount = 0.0, bonusStock = 0}
         }
-
+        
         local bonus = bonuses[faction] or {discount = 0.0, bonusStock = 0}
         vendor:setNetVar("factionDiscount", bonus.discount)
         vendor:setNetVar("bonusStock", bonus.bonusStock)
-
+        
         -- Check for time-based events
         local currentHour = tonumber(os.date("%H"))
         if currentHour >= 18 and currentHour <= 22 then
@@ -33620,9 +33620,9 @@ end
         else
             vendor:setNetVar("peakHoursBonus", 0.0)
         end
-
+        
         -- Log vendor opening
-        print(string.format("Vendor %s opened by %s (Faction: %s, Opens: %d)",
+        print(string.format("Vendor %s opened by %s (Faction: %s, Opens: %d)", 
             vendor:EntIndex(), char:getName(), faction, openCount))
     end)
     ```
@@ -33662,7 +33662,7 @@ end
     -- High: Complex vendor sync system
     hook.Add("VendorSynchronized", "AdvancedVendorSync", function(vendor)
         if not IsValid(vendor) then return end
-
+        
         -- Update local vendor cache
         local vendorID = vendor:EntIndex()
         lia.vendor.cache = lia.vendor.cache or {}
@@ -33672,13 +33672,13 @@ end
             money = vendor:getNetVar("money", 0),
             lastSync = CurTime()
         }
-
+        
         -- Update UI if vendor panel is open
         if IsValid(lia.gui.vendor) and lia.gui.vendor.vendor == vendor then
             lia.gui.vendor:Populate()
             lia.gui.vendor:UpdateMoney()
         end
-
+        
         -- Notify player
         local client = LocalPlayer()
         if client:GetPos():Distance(vendor:GetPos()) < 200 then
@@ -33716,7 +33716,7 @@ end
     hook.Add("VendorTradeEvent", "TrackTrades", function(client, vendor, itemType, isSellingToVendor)
         local char = client:getChar()
         if not char then return end
-
+        
         local trades = char:getData("vendorTrades", 0)
         char:setData("vendorTrades", trades + 1)
     end)
@@ -33728,25 +33728,25 @@ end
     hook.Add("VendorTradeEvent", "AdvancedVendorTrade", function(client, vendor, itemType, isSellingToVendor)
         local char = client:getChar()
         if not char then return end
-
+        
         -- Update trade statistics
         local trades = char:getData("vendorTrades", 0)
         char:setData("vendorTrades", trades + 1)
-
+        
         -- Track trade value
         local tradeValue = char:getData("tradeValue", 0)
         local itemPrice = lia.item.list[itemType] and lia.item.list[itemType].price or 0
         char:setData("tradeValue", tradeValue + itemPrice)
-
+        
         -- Log to database
         lia.db.query("INSERT INTO trade_logs (timestamp, steamid, vendorid, itemtype, selling) VALUES (?, ?, ?, ?, ?)",
             os.time(), client:SteamID(), vendor:EntIndex(), itemType, isSellingToVendor and 1 or 0)
-
+        
         -- Update vendor reputation
         local vendorID = vendor:EntIndex()
         local reputation = char:getData("vendorRep_" .. vendorID, 0)
         char:setData("vendorRep_" .. vendorID, reputation + 1)
-
+        
         -- Notify nearby players
         local pos = vendor:GetPos()
         for _, ply in ipairs(player.GetAll()) do
@@ -33793,18 +33793,18 @@ end
         if IsValid(lia.gui.voiceSettings) then
             lia.gui.voiceSettings:SetEnabled(enabled)
         end
-
+        
         -- Save setting
         lia.data.set("voiceEnabled", enabled)
-
+        
         -- Notify player
         lia.util.notify("Voice chat " .. (enabled and "enabled" or "disabled"), 3)
-
+        
         -- Update voice icon
         if IsValid(lia.gui.voiceIcon) then
             lia.gui.voiceIcon:SetVisible(enabled)
         end
-
+        
         -- Log the change
         lia.log.write("voice_toggle", {
             enabled = enabled,
@@ -33857,23 +33857,23 @@ end
         -- Log to database
         lia.db.query("INSERT INTO warning_logs (timestamp, warner_steamid, target_steamid, reason, count) VALUES (?, ?, ?, ?, ?)",
             os.time(), warnerSteamID, target:SteamID(), reason, count)
-
+        
         -- Notify target
         target:ChatPrint("You have been warned by " .. warnerName .. " for: " .. reason)
         target:ChatPrint("Total warnings: " .. count)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
                 ply:ChatPrint("[ADMIN] " .. target:Name() .. " was warned by " .. warnerName .. " for: " .. reason)
             end
         end
-
+        
         -- Auto-kick if too many warnings
         if count >= 3 then
             target:Kick("Too many warnings (" .. count .. ")")
         end
-
+        
         -- Update character data
         local char = target:getChar()
         if char then
@@ -33927,11 +33927,11 @@ end
         -- Log to database
         lia.db.query("INSERT INTO warning_removal_logs (timestamp, remover_steamid, target_steamid, reason, remaining_count) VALUES (?, ?, ?, ?, ?)",
             os.time(), client:SteamID(), targetClient:SteamID(), reason, count)
-
+        
         -- Notify target
         targetClient:ChatPrint("One of your warnings has been removed by " .. client:Name())
         targetClient:ChatPrint("Remaining warnings: " .. count)
-
+        
         -- Notify admins
         for _, ply in ipairs(player.GetAll()) do
             if ply:IsAdmin() then
@@ -33939,7 +33939,7 @@ end
                 ply:ChatPrint("[ADMIN] Reason: " .. reason .. " | Remaining: " .. count)
             end
         end
-
+        
         -- Update character data
         local char = targetClient:getChar()
         if char then
@@ -33984,11 +33984,11 @@ end
     hook.Add("WeaponCycleSound", "AdvancedCycleSound", function()
         local client = LocalPlayer()
         if not IsValid(client) then return "common/wpn_select.wav" end
-
+        
         -- Check if sounds are enabled
         local soundEnabled = lia.config.get("weaponSounds", true)
         if not soundEnabled then return "" end
-
+        
         -- Get character-specific sound
         local char = client:getChar()
         if char then
@@ -34000,7 +34000,7 @@ end
             }
             return factionSounds[faction] or "common/wpn_select.wav"
         end
-
+        
         return "common/wpn_select.wav"
     end)
     ```
@@ -34040,11 +34040,11 @@ end
     hook.Add("WeaponSelectSound", "AdvancedSelectSound", function()
         local client = LocalPlayer()
         if not IsValid(client) then return "common/wpn_hudoff.wav" end
-
+        
         -- Check if sounds are enabled
         local soundEnabled = lia.config.get("weaponSounds", true)
         if not soundEnabled then return "" end
-
+        
         -- Get character-specific sound
         local char = client:getChar()
         if char then
@@ -34056,7 +34056,7 @@ end
             }
             return factionSounds[faction] or "common/wpn_hudoff.wav"
         end
-
+        
         return "common/wpn_hudoff.wav"
     end)
     ```
@@ -34098,7 +34098,7 @@ end
         -- Cache the material
         lia.webImage.cache = lia.webImage.cache or {}
         lia.webImage.cache[url] = material
-
+        
         -- Update any panels waiting for this image
         for _, panel in ipairs(lia.webImage.waiting[url] or {}) do
             if IsValid(panel) then
@@ -34106,16 +34106,16 @@ end
                 panel:InvalidateLayout()
             end
         end
-
+        
         -- Clear waiting list
         lia.webImage.waiting[url] = nil
-
+        
         -- Log download
         lia.log.write("web_image_download", {
             url = url,
             timestamp = os.time()
         })
-
+        
         -- Notify completion
         hook.Run("OnWebImageReady", url, material)
     end)
@@ -34158,24 +34158,24 @@ end
         -- Cache the sound
         lia.webSound.cache = lia.webSound.cache or {}
         lia.webSound.cache[name] = path
-
+        
         -- Update any sounds waiting for this file
         for _, soundData in ipairs(lia.webSound.waiting[name] or {}) do
             if soundData.callback then
                 soundData.callback(path)
             end
         end
-
+        
         -- Clear waiting list
         lia.webSound.waiting[name] = nil
-
+        
         -- Log download
         lia.log.write("web_sound_download", {
             name = name,
             path = path,
             timestamp = os.time()
         })
-
+        
         -- Notify completion
         hook.Run("OnWebSoundReady", name, path)
     end)
@@ -34207,7 +34207,7 @@ end
     hook.Add("calcStaminaChange", "AttributeStamina", function(client)
         local char = client:getChar()
         if not char then return 1 end
-
+        
         local endurance = char:getAttrib("end", 0)
         return 1 + (endurance * 0.1)
     end)
@@ -34219,15 +34219,15 @@ end
     hook.Add("calcStaminaChange", "AdvancedStaminaCalc", function(client)
         local char = client:getChar()
         if not char then return 1 end
-
+        
         -- Base stamina change
         local baseChange = 1
-
+        
         -- Attribute bonus
         local endurance = char:getAttrib("end", 0)
         local strength = char:getAttrib("str", 0)
         local attrBonus = (endurance * 0.1) + (strength * 0.05)
-
+        
         -- Faction bonus
         local faction = char:getFaction()
         local factionBonuses = {
@@ -34236,7 +34236,7 @@ end
             ["citizen"] = 0.0
         }
         local factionBonus = factionBonuses[faction] or 0.0
-
+        
         -- Item bonuses
         local itemBonus = 0
         local inv = char:getInv()
@@ -34247,7 +34247,7 @@ end
                 end
             end
         end
-
+        
         -- Status effects
         local statusPenalty = 0
         if char:getData("injured", false) then
@@ -34256,7 +34256,7 @@ end
         if char:getData("exhausted", false) then
             statusPenalty = statusPenalty - 0.3
         end
-
+        
         -- Calculate final change
         local finalChange = baseChange + attrBonus + factionBonus + itemBonus + statusPenalty
         return math.max(0.1, finalChange)
@@ -34302,27 +34302,27 @@ end
         -- Try to get from cache first
         local cache = lia.data.cache or {}
         local key = "someKey"
-
+        
         if cache[key] and cache[key].expiry > CurTime() then
             return cache[key].value
         end
-
+        
         -- Get from storage
         local data = lia.data.get(key, default)
-
+        
         -- Validate data type
         if type(data) ~= type(default) then
             print("Warning: Data type mismatch, using default")
             data = default
         end
-
+        
         -- Cache the result
         cache[key] = {
             value = data,
             expiry = CurTime() + 60
         }
         lia.data.cache = cache
-
+        
         return data
     end)
     ```
@@ -34370,7 +34370,7 @@ end
             print("Warning: Data value too long, truncating")
             value = string.sub(value, 1, 1000)
         end
-
+        
         -- Validate global data
         if global and type(value) == "table" then
             -- Check for circular references
@@ -34384,17 +34384,17 @@ end
                 end
                 return false
             end
-
+            
             if hasCircularRef(value) then
                 print("Error: Circular reference detected in global data")
                 return false
             end
         end
-
+        
         -- Log data changes
         lia.db.query("INSERT INTO data_logs (timestamp, global, value_type) VALUES (?, ?, ?)",
             os.time(), global and 1 or 0, type(value))
-
+        
         return true
     end)
     ```

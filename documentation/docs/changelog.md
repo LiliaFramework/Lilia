@@ -1,30 +1,5 @@
 # Changelog
 
-## Version 6.868 (October 24, 2025)
-
-### Changes
-
-- Spacing
-- Temp New Docs
-- Successfully updated workshop Lilia to 6.865
-- Fixes
-- Many Optimizations
-- Successfully updated workshop Lilia to 6.862
-- Mini Bug Fix
-- Successfully updated workshop Lilia to 6.860
-- Wipes
-- Update module.lua
-- Successfully updated workshop Lilia to 6.857
-- Auto Spawn
-- Update panel.lua
-- Reapply "Update character.lua"
-- Successfully updated workshop Lilia to 6.853
-- Update ci.yml
-- Successfully updated workshop Lilia to 6.851
-- Revert "Update character.lua"
-- Successfully updated workshop Lilia to 6.849
-- Update character.lua
-
 ## Version 6.865 (October 24, 2025)
 
 ### Changes
