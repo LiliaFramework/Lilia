@@ -220,6 +220,8 @@ jobs:
       - run: |
           python3 generate_docs.py meta
           python3 generate_docs.py library
+          python3 generate_docs.py definitions
+          python3 generate_docs.py hooks
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist

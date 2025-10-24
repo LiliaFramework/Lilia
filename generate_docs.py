@@ -2,18 +2,30 @@
 """
 Documentation Generator for Lilia Framework
 
-This script parses Lua comment blocks in meta and library files and generates
-markdown documentation in the specified format.
+Parses Lua comment blocks and generates Markdown documentation.
 
 Usage:
-    python generate_docs.py [meta|library] [file1.lua] [file2.lua] ...
+    python generate_docs.py [meta|library|definitions|hooks] [files...]
 
-The script will generate documentation files in the appropriate directories:
-- Meta files: documentation/docs/meta/
-- Library files: documentation/docs/libraries/
+Path equivalencies (inputs → outputs):
+    gamemode/core/meta                     → documentation/docs/meta
+    gamemode/core/libraries                → documentation/docs/libraries
+    gamemode/docs/definitions/*.lua        → documentation/docs/definitions/*.md
+    gamemode/docs/hooks/*.lua              → documentation/docs/hooks/*.md
 
-For meta files, the output format is: [filename].md
-For library files, the output format is: lia.[filename].md
+Notes:
+- Meta outputs: [filename].md
+- Library outputs: lia.[filename or module].md
+- Definitions outputs:
+    panels.lua → panels.md
+    faction.lua → faction.md
+    module.lua → module.md
+    items.lua → items.md
+    class.lua → class.md
+- Hooks outputs: client.lua → client.md, server.lua → server.md, shared.lua → shared.md
+
+The parser is flexible and supports additional fields beyond the standard
+function comment headers, e.g. "Explanation of Panel" and "When Used".
 """
 
 import os
@@ -21,6 +33,7 @@ import re
 import sys
 import argparse
 from pathlib import Path
+from typing import List, Dict, Tuple, Optional
 
 
 def parse_comment_block(comment_text):
@@ -55,7 +68,10 @@ def parse_comment_block(comment_text):
         'parameters': [],
         'returns': '',
         'realm': '',
-        'examples': []
+        'examples': [],
+        # Extended/alternative fields for non-standard docs
+        'explanation': '',       # e.g., Explanation of Panel
+        'when_used': ''          # e.g., When Used
     }
 
     current_section = None
@@ -76,8 +92,53 @@ def parse_comment_block(comment_text):
         elif line.startswith('When Called:'):
             current_section = 'when_called'
             parsed['when_called'] = line[12:].strip()
+        elif line.startswith('When Used:'):
+            # Alias used in panels/definitions
+            current_section = 'when_used'
+            parsed['when_used'] = line[10:].strip()
         elif line.startswith('Parameters:'):
             current_section = 'parameters'
+            # Handle inline parameter on same line (e.g., "Parameters: name (Type): Description")
+            inline = line[len('Parameters:'):].strip()
+            if inline:
+                m = re.match(r'-\s*([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', inline)
+                if m:
+                    parsed['parameters'].append({'name': m.group(1), 'type': m.group(2), 'description': m.group(3)})
+                else:
+                    m = re.match(r'([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', inline)
+                    if m:
+                        parsed['parameters'].append({'name': m.group(1), 'type': m.group(2), 'description': m.group(3)})
+                    else:
+                        m = re.match(r'([A-Za-z_][\w]*)\s*-\s*([^:]+):\s*(.+)', inline)
+                        if m:
+                            parsed['parameters'].append({'name': m.group(1), 'type': m.group(2).strip(), 'description': m.group(3)})
+        elif current_section == 'parameters':
+            # Parse parameter lines (various formats)
+            if line.strip() and not line.startswith('--'):
+                # Bullet: - name (Type): Description
+                m = re.match(r'-\s*([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', line)
+                if m:
+                    parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
+                else:
+                    # Bullet without type: - name: Description
+                    m = re.match(r'-\s*([A-Za-z_][\w]*)\s*:\s*(.+)', line)
+                    if m:
+                        parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
+                    else:
+                        # Inline no bullet: name (Type): Description
+                        m = re.match(r'([A-Za-z_][\w]*)\s*\(([^)]+)\)\s*:\s*(.+)', line)
+                        if m:
+                            parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
+                        else:
+                            # Simple: name - type: Description
+                            m = re.match(r'\s*([^\-\s]+)\s*-\s*([^:]+):\s*(.+)', line)
+                            if m:
+                                parsed['parameters'].append({'name': m.group(1).strip(), 'type': m.group(2).strip(), 'description': m.group(3).strip()})
+                            else:
+                                # Fallback: name - Description
+                                m = re.match(r'\s*([^\-\s]+)\s*-\s*(.+)', line)
+                                if m:
+                                    parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
         elif line.startswith('Returns:'):
             current_section = 'returns'
             # Extract returns info (format varies)
@@ -87,28 +148,11 @@ def parse_comment_block(comment_text):
         elif line.startswith('Realm:'):
             current_section = 'realm'
             parsed['realm'] = line[6:].strip()
+        elif line.startswith('Explanation of Panel:'):
+            current_section = 'explanation'
+            parsed['explanation'] = line[len('Explanation of Panel:'):].strip()
         elif line.startswith('Example Usage:'):
             current_section = 'examples'
-        elif current_section == 'parameters':
-            # Parse parameter lines (various formats)
-            if line.strip() and not line.startswith('*') and not line.startswith('--'):
-                # Simple format: param - type: Description
-                param_match = re.match(r'\s*([^-\s]+)\s*-\s*([^:]+):\s*(.+)', line)
-                if param_match:
-                    parsed['parameters'].append({
-                        'name': param_match.group(1).strip(),
-                        'type': param_match.group(2).strip(),
-                        'description': param_match.group(3).strip()
-                    })
-                else:
-                    # Alternative format or continuation
-                    param_match = re.match(r'\s*([^-\s]+)\s*-\s*(.+)', line)
-                    if param_match:
-                        parsed['parameters'].append({
-                            'name': param_match.group(1).strip(),
-                            'type': 'unknown',
-                            'description': param_match.group(2).strip()
-                        })
         elif current_section == 'examples':
             # Handle example sections
             complexity_match = re.match(r'(\w+)\s+Complexity:', line)
@@ -124,14 +168,13 @@ def parse_comment_block(comment_text):
             elif current_example and line.strip().startswith('```'):
                 # Start or end of code block
                 if not current_example['code']:
-                    # Start of code block
-                    current_example['code'].append(line)
+                    # Start of code block - skip the ```lua line
+                    current_example['in_code_block'] = True
                 else:
                     # End of code block
-                    current_example['code'].append(line)
                     parsed['examples'].append(current_example)
                     current_example = None
-            elif current_example and current_example['code']:
+            elif current_example and current_example.get('in_code_block', False):
                 # Inside code block - add the line
                 current_example['code'].append(line)
 
@@ -189,25 +232,32 @@ def parse_overview_section(overview_text):
     # Remove "Overview:" prefix if present
     content = re.sub(r'^\s*Overview:\s*', '', content, flags=re.MULTILINE)
 
-    lines = content.split('\n')
+    raw_lines = content.split('\n')
     formatted_lines = []
 
-    for line in lines:
-        line = line.strip()
-        # Skip empty lines
-        if not line:
+    for raw in raw_lines:
+        # Remove leading per-line comment markers
+        line = re.sub(r'^\s*--\s*', '', raw.rstrip())
+        # Preserve blank lines as paragraph breaks
+        if not line.strip():
+            formatted_lines.append('')
             continue
-        # Remove leading comment dashes and whitespace
-        line = re.sub(r'^--\s*', '', line)
-        if line:
-            formatted_lines.append(line)
+        line = re.sub(r'[ \t]+', ' ', line.strip())
+        formatted_lines.append(line)
 
-    # Join the lines and clean up extra whitespace
-    content = '\n'.join(formatted_lines)
-    content = re.sub(r'\s+', ' ', content)
-    content = content.strip()
+    # Collapse multiple blank lines to a single blank line
+    out_lines = []
+    blank = False
+    for ln in formatted_lines:
+        if ln == '':
+            if not blank:
+                out_lines.append('')
+                blank = True
+        else:
+            out_lines.append(ln)
+            blank = False
 
-    return content
+    return '\n\n'.join(out_lines).strip()
 
 
 def extract_function_name_from_comment(comment_text, file_path):
@@ -238,8 +288,8 @@ def find_functions_in_file(file_path):
     for match in re.finditer(comment_pattern, content, re.DOTALL):
         comments.append((match.start(), match.end(), match.group(0)))
 
-    # Find all function definitions (including meta methods and namespaced functions)
-    func_pattern = r'function\s+([\w\.:]+)\s*\('
+    # Find all function definitions (excluding local functions)
+    func_pattern = r'(?<!local\s)function\s+([\w\.:]+)\s*\('
     for match in re.finditer(func_pattern, content):
         func_name = match.group(1)
         func_line = content[:match.start()].count('\n') + 1
@@ -250,7 +300,7 @@ def find_functions_in_file(file_path):
             comment_line = content[:comment_start].count('\n') + 1
             if comment_line < func_line and (preceding_comment is None or comment_line > preceding_comment[0]):
                 # Check if this comment has structured format (function comments only)
-                if any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:']):
+                if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
                     preceding_comment = (comment_line, comment_text)
 
         if preceding_comment:
@@ -270,6 +320,13 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
     display_name = function_name
     if is_library and not function_name.startswith('lia.'):
         display_name = f'lia.{function_name}'
+    elif not is_library and ':' in function_name:
+        # For meta functions, remove the prefix (e.g., "panelMeta:liaListenForInventoryChanges" -> "liaListenForInventoryChanges")
+        display_name = function_name.split(':', 1)[1]
+    elif is_library and function_name.startswith('lia.'):
+        # For library functions, remove the lia. prefix and intermediate parts (e.g., "lia.abc123.aaaaa" -> "aaaaa")
+        parts = function_name.split('.')
+        display_name = parts[-1]  # Take only the last part
 
     md = f'### {display_name}\n\n'
 
@@ -277,9 +334,11 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
     if parsed_comment['purpose']:
         md += f'**Purpose**\n\n{parsed_comment["purpose"]}\n\n'
 
-    # When Called
+    # When Called / When Used
     if parsed_comment['when_called']:
         md += f'**When Called**\n\n{parsed_comment["when_called"]}\n\n'
+    elif parsed_comment.get('when_used'):
+        md += f'**When Used**\n\n{parsed_comment["when_used"]}\n\n'
 
     # Parameters
     if parsed_comment['parameters']:
@@ -295,6 +354,10 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
     # Realm
     if parsed_comment['realm']:
         md += f'**Realm**\n\n{parsed_comment["realm"]}\n\n'
+
+    # Explanation (for panels)
+    if parsed_comment.get('explanation'):
+        md += f'**Explanation**\n\n{parsed_comment["explanation"]}\n\n'
 
     # Example Usage
     if parsed_comment['examples']:
@@ -329,7 +392,7 @@ def find_comment_blocks_in_file(file_path):
     for match in re.finditer(comment_pattern, content, re.DOTALL):
         comment_text = match.group(0)
         # Check if this comment block has the structured format we expect (function comments)
-        if any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:']):
+        if any(header in comment_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:']):
             comment_blocks.append(comment_text)
         # Check if this is a file header (first comment block that doesn't have function structure or overview)
         elif file_header is None and not any(header in comment_text for header in ['Purpose:', 'When Called:', 'Parameters:', 'Returns:', 'Realm:', 'Example Usage:', 'Overview:']):
@@ -430,10 +493,242 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False):
     print(f"  Generated {output_filename}")
 
 
+def _read_file_text(file_path: Path) -> str:
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    except UnicodeDecodeError:
+        print(f"Warning: Could not read {file_path} due to encoding issues")
+        return ''
+
+
+def parse_definition_property_blocks(file_path: Path, entity_prefixes: Tuple[str, ...]) -> List[Dict[str, object]]:
+    """
+    Parse comment blocks that document properties or callbacks for definition files (CLASS/FACTION/MODULE).
+
+    Returns list of entries with keys: name, parsed_comment
+    """
+    comment_blocks, _, overview_section = find_comment_blocks_in_file(file_path)
+    entries: List[Dict[str, object]] = []
+
+    for block in comment_blocks:
+        # Clean block markers and pull first meaningful line
+        inner = re.sub(r'^\s*--\[\[', '', block.strip())
+        inner = re.sub(r'\]\]\s*$', '', inner)
+        first_line = ''
+        for raw in inner.split('\n'):
+            s = re.sub(r'^\s*--\s*', '', raw).strip()
+            if s:
+                first_line = s
+                break
+
+        prop_name = ''
+        for prefix in entity_prefixes:
+            m = re.match(rf'{prefix}\.([A-Za-z_][\w]*)', first_line)
+            if m:
+                prop_name = m.group(1)  # Only the property name (suffix)
+                break
+
+        parsed = parse_comment_block(block)
+        if not prop_name:
+            prop_name = first_line or 'Unnamed'
+
+        entries.append({'name': prop_name, 'parsed': parsed})
+
+    return entries
+
+
+def generate_markdown_for_definition_entries(title: str, subtitle: str, overview_section: Optional[str], entries: List[Dict[str, object]]) -> str:
+    md_parts: List[str] = []
+    md_parts.append(f'# {title}\n\n')
+    if subtitle:
+        md_parts.append(subtitle + '\n\n')
+    md_parts.append('---\n\n')
+
+    if overview_section:
+        md_parts.append('## Overview\n\n')
+        md_parts.append(parse_overview_section(overview_section) + '\n\n')
+        md_parts.append('---\n\n')
+
+    for entry in entries:
+        name = entry['name']
+        parsed = entry['parsed']
+        # Use existing function section generator for consistent field rendering
+        md_parts.append(f'### {name}\n\n')
+        if parsed.get('purpose'):
+            md_parts.append(f'**Purpose**\n\n{parsed["purpose"]}\n\n')
+        # When Called / When Used
+        if parsed.get('when_called'):
+            md_parts.append(f'**When Called**\n\n{parsed["when_called"]}\n\n')
+        elif parsed.get('when_used'):
+            md_parts.append(f'**When Used**\n\n{parsed["when_used"]}\n\n')
+        if parsed.get('realm'):
+            md_parts.append(f'**Realm**\n\n{parsed["realm"]}\n\n')
+        if parsed.get('explanation'):
+            md_parts.append(f'**Explanation**\n\n{parsed["explanation"]}\n\n')
+        if parsed.get('parameters'):
+            md_parts.append('**Parameters**\n\n')
+            for p in parsed['parameters']:
+                md_parts.append(f'* `{p["name"]}` (*{p["type"]}*): {p["description"]}\n')
+            md_parts.append('\n')
+        if parsed.get('returns'):
+            md_parts.append(f'**Returns**\n\n* {parsed["returns"]}\n\n')
+        if parsed.get('examples'):
+            md_parts.append('**Example Usage**\n\n')
+            for example in parsed['examples']:
+                complexity = (example.get('complexity') or 'Example').title()
+                md_parts.append(f'**{complexity} Complexity:**\n')
+                md_parts.append('```lua\n')
+                md_parts.append('\n'.join(example.get('code', [])))
+                md_parts.append('\n```\n\n')
+        md_parts.append('---\n\n')
+
+    return ''.join(md_parts)
+
+
+def generate_documentation_for_panels(file_path: Path, output_path: Path) -> None:
+    """
+    Panels file pattern:
+      [header]
+      [overview]
+      Repeat: [comment block with Purpose/Explanation/When Used] + [next line: PanelName]
+    """
+    print(f"Processing {file_path}")
+    text = _read_file_text(file_path)
+    if not text:
+        return
+
+    # Identify blocks
+    # Reuse comment block finder to obtain header/overview separation
+    comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
+
+    # Extract panel names that follow each block by scanning the file
+    lines = text.splitlines()
+    block_positions: List[Tuple[int, int, str]] = []  # (start_idx, end_idx, block_text)
+    for match in re.finditer(r'--\[\[.*?\]\]', text, re.DOTALL):
+        block_positions.append((match.start(), match.end(), match.group(0)))
+
+    entries: List[Dict[str, object]] = []
+    for start, end, block_text in block_positions:
+        # Associate only structured blocks (contain our fields)
+        if not any(k in block_text for k in ['Purpose:', 'Explanation of Panel:', 'When Used:']):
+            continue
+
+        # Find the next non-empty, non-comment line after this block for the panel name
+        tail = text[end:]
+        panel_name = None
+        for ln in tail.splitlines():
+            s = ln.strip()
+            if not s:
+                continue
+            if s.startswith('--'):
+                continue
+            # The first identifier line is the panel name (e.g., liaCharacterBiography)
+            panel_name = s
+            break
+
+        parsed = parse_comment_block(block_text)
+        if panel_name:
+            entries.append({'name': panel_name, 'parsed': parsed})
+
+    # Title/subtitle
+    filename = file_path.stem
+    title = filename.title()
+    subtitle = 'This page documents available VGUI panels.'
+    if file_header:
+        parsed_header = parse_file_header(file_header)
+        if '\n\n' in parsed_header:
+            parts = parsed_header.split('\n\n', 1)
+            title = parts[0].replace('**', '').replace('*', '').strip()
+            if len(parts) > 1 and parts[1].strip():
+                subtitle = parts[1].strip()
+
+    md = generate_markdown_for_definition_entries(title, subtitle, overview_section, entries)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(md)
+    print(f"  Generated {output_path.name}")
+
+
+def generate_documentation_for_definitions_file(file_path: Path, output_dir: Path) -> None:
+    name = file_path.stem.lower()
+    output_filename = f'{name}.md'
+    output_path = output_dir / output_filename
+
+    if name == 'panels':
+        generate_documentation_for_panels(file_path, output_path)
+        return
+
+    # Generic CLASS/FACTION/MODULE definitions
+    entity_prefixes: Tuple[str, ...] = ('CLASS', 'FACTION', 'MODULE')
+    comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
+    entries = parse_definition_property_blocks(file_path, entity_prefixes)
+
+    # Title/subtitle
+    title = name.title()
+    subtitle = f'This page documents the {name} definitions.'
+    if file_header:
+        parsed_header = parse_file_header(file_header)
+        if '\n\n' in parsed_header:
+            parts = parsed_header.split('\n\n', 1)
+            title = parts[0].replace('**', '').replace('*', '').strip()
+            if len(parts) > 1 and parts[1].strip():
+                subtitle = parts[1].strip()
+
+    md = generate_markdown_for_definition_entries(title, subtitle, overview_section, entries)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(md)
+    print(f"  Generated {output_path.name}")
+
+
+def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path) -> None:
+    print(f"Processing {file_path}")
+    filename = file_path.stem
+    output_filename = f'{filename}.md'
+    output_path = output_dir / output_filename
+
+    comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
+    functions = find_functions_in_file(file_path)
+    if not functions:
+        print(f"  No hooks found in {file_path}")
+        return
+
+    sections: List[str] = []
+    for func in functions:
+        parsed = parse_comment_block(func['comment'])
+        # For hooks we do not prefix with lia.
+        sections.append(generate_markdown_for_function(func['name'], parsed, is_library=False))
+
+    title = filename.title()
+    subtitle = f'This page documents the {filename} hooks.'
+    if file_header:
+        parsed_header = parse_file_header(file_header)
+        if '\n\n' in parsed_header:
+            parts = parsed_header.split('\n\n', 1)
+            title = parts[0].replace('**', '').replace('*', '').strip()
+            if len(parts) > 1 and parts[1].strip():
+                subtitle = parts[1].strip()
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(f'# {title}\n\n')
+        f.write(subtitle + '\n\n')
+        f.write('---\n\n')
+        if overview_section:
+            f.write('## Overview\n\n')
+            f.write(parse_overview_section(overview_section) + '\n\n')
+            f.write('---\n\n')
+        for section in sections:
+            f.write(section)
+            f.write('---\n\n')
+    print(f"  Generated {output_filename}")
+
+
 def main():
     parser = argparse.ArgumentParser(description='Generate documentation from Lua comment blocks')
-    parser.add_argument('type', choices=['meta', 'library'], help='Type of files to process')
-    parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes all)')
+    parser.add_argument('type', choices=['meta', 'library', 'definitions', 'hooks'], help='Type of files to process')
+    parser.add_argument('files', nargs='*', help='Specific files to process (if empty, processes defaults per type)')
 
     args = parser.parse_args()
 
@@ -441,13 +736,21 @@ def main():
     script_dir = Path(__file__).parent
     base_dir = script_dir / 'gamemode' / 'core'
     modules_dir = script_dir / 'gamemode' / 'modules'
+    docs_definitions_dir = script_dir / 'gamemode' / 'docs' / 'definitions'
+    docs_hooks_dir = script_dir / 'gamemode' / 'docs' / 'hooks'
 
     if args.type == 'meta':
         input_dir = base_dir / 'meta'
         output_dir = script_dir / 'documentation' / 'docs' / 'meta'
-    else:
+    elif args.type == 'library':
         input_dir = base_dir / 'libraries'
         output_dir = script_dir / 'documentation' / 'docs' / 'libraries'
+    elif args.type == 'definitions':
+        input_dir = docs_definitions_dir
+        output_dir = script_dir / 'documentation' / 'docs' / 'definitions'
+    elif args.type == 'hooks':
+        input_dir = docs_hooks_dir
+        output_dir = script_dir / 'documentation' / 'docs' / 'hooks'
 
     # Create output directory if it doesn't exist
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -467,16 +770,28 @@ def main():
                 matches = glob.glob(file_pattern)
                 files_to_process.extend(matches)
     else:
-        # Process core library files
-        files_to_process.extend(list(input_dir.glob('*.lua')))
-        
-        # Process module library files (for library type only)
-        if args.type == 'library':
-            for module_dir in modules_dir.iterdir():
-                if module_dir.is_dir():
-                    module_lib_dir = module_dir / 'libraries'
-                    if module_lib_dir.exists():
-                        files_to_process.extend(list(module_lib_dir.glob('*.lua')))
+        if args.type in ('meta', 'library'):
+            # Process core files
+            files_to_process.extend(list(input_dir.glob('*.lua')))
+
+            # Process module library files (for library type only)
+            if args.type == 'library':
+                for module_dir in modules_dir.iterdir():
+                    if module_dir.is_dir():
+                        module_lib_dir = module_dir / 'libraries'
+                        if module_lib_dir.exists():
+                            files_to_process.extend(list(module_lib_dir.glob('*.lua')))
+        elif args.type == 'definitions':
+            # Specific known definition files
+            for name in ('panels.lua', 'faction.lua', 'module.lua', 'items.lua', 'class.lua'):
+                p = input_dir / name
+                if p.exists():
+                    files_to_process.append(str(p))
+        elif args.type == 'hooks':
+            for name in ('client.lua', 'server.lua', 'shared.lua'):
+                p = input_dir / name
+                if p.exists():
+                    files_to_process.append(str(p))
 
     if not files_to_process:
         print(f"No files found in {input_dir}")
@@ -486,8 +801,12 @@ def main():
 
     # Process each file
     for file_path in files_to_process:
-        if str(file_path).endswith('.lua'):
+        if args.type in ('meta', 'library') and str(file_path).endswith('.lua'):
             generate_documentation_for_file(file_path, output_dir, args.type == 'library')
+        elif args.type == 'definitions' and str(file_path).endswith('.lua'):
+            generate_documentation_for_definitions_file(Path(file_path), output_dir)
+        elif args.type == 'hooks' and str(file_path).endswith('.lua'):
+            generate_documentation_for_hooks_file(Path(file_path), output_dir)
 
     print("Documentation generation complete!")
 

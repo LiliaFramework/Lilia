@@ -1,9 +1,0 @@
-arrange:
-  - character.md
-  - entity.md
-  - inventory.md
-  - item.md
-  - panel.md
-  - player.md
-  - tool.md
-  - vector.md
