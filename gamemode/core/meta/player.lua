@@ -2948,6 +2948,22 @@ function playerMeta:requestDropdown(title, subTitle, options, callback)
     end
 end
 
+--[[
+    playerMeta:getParts()
+    Purpose: Retrieves the player's current PAC (Player Accessory Control) parts
+    When Called: When accessing player's PAC parts data
+    Parameters: None
+    Returns: table - Table of active PAC part IDs
+    Realm: Shared
+    Example Usage:
+        ```lua
+        -- Low: Basic part checking
+        local parts = player:getParts()
+        if parts["hat_001"] then
+            player:notify("You have a hat equipped")
+        end
+        ```
+
         Medium Complexity:
         ```lua
         -- Medium: Part validation and management
