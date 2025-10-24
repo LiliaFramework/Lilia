@@ -27,9 +27,9 @@ local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group
     ```lua
     -- Simple: Register a basic faction
     lia.faction.register("citizen", {
-        name = "Citizen",
-        desc = "A regular citizen",
-        color = Color(150, 150, 150)
+    name = "Citizen",
+    desc = "A regular citizen",
+    color = Color(150, 150, 150)
     })
     ```
 
@@ -37,12 +37,12 @@ local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group
     ```lua
     -- Medium: Register faction with custom models and weapons
     lia.faction.register("police", {
-        name = "Police Officer",
-        desc = "Law enforcement officer",
-        color = Color(0, 0, 255),
-        models = {"models/player/police.mdl"},
-        weapons = {"weapon_pistol", "weapon_stunstick"},
-        isDefault = false
+    name = "Police Officer",
+    desc = "Law enforcement officer",
+    color = Color(0, 0, 255),
+    models = {"models/player/police.mdl"},
+    weapons = {"weapon_pistol", "weapon_stunstick"},
+    isDefault = false
     })
     ```
 
@@ -50,22 +50,22 @@ local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group
     ```lua
     -- High: Register faction with complex model data and bodygroups
     lia.faction.register("medic", {
-        name = "Medical Staff",
-        desc = "Emergency medical personnel",
-        color = Color(255, 0, 0),
-        models = {
-            "male" = {
-                {"models/player/medic_male.mdl", "Male Medic", {1, 2, 3}},
-                {"models/player/doctor_male.mdl", "Male Doctor", {0, 1, 2}}
-            },
-            "female" = {
-                {"models/player/medic_female.mdl", "Female Medic", {1, 2}},
-                {"models/player/doctor_female.mdl", "Female Doctor", {0, 1}}
-            }
-        },
-        weapons = {"weapon_medkit", "weapon_defibrillator"},
-        isDefault = false,
-        index = 5
+    name = "Medical Staff",
+    desc = "Emergency medical personnel",
+    color = Color(255, 0, 0),
+    models = {
+    "male" = {
+    {"models/player/medic_male.mdl", "Male Medic", {1, 2, 3}},
+    {"models/player/doctor_male.mdl", "Male Doctor", {0, 1, 2}}
+    },
+    "female" = {
+    {"models/player/medic_female.mdl", "Female Medic", {1, 2}},
+    {"models/player/doctor_female.mdl", "Female Doctor", {0, 1}}
+    }
+    },
+    weapons = {"weapon_medkit", "weapon_defibrillator"},
+    isDefault = false,
+    index = 5
     })
     ```
 ]]
@@ -127,9 +127,9 @@ end
     ```lua
     -- Medium: Cache mixed model data types
     local models = {
-        "models/player/police.mdl",
-        {"models/player/swat.mdl", "SWAT Officer"},
-        {"models/player/fbi.mdl", "FBI Agent", {1, 2, 3}}
+    "models/player/police.mdl",
+    {"models/player/swat.mdl", "SWAT Officer"},
+    {"models/player/fbi.mdl", "FBI Agent", {1, 2, 3}}
     }
     lia.faction.cacheModels(models)
     ```
@@ -138,14 +138,14 @@ end
     ```lua
     -- High: Cache categorized models with bodygroup data
     local models = {
-        "male" = {
-            {"models/player/police_male.mdl", "Male Officer", {1, 2}},
-            {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-        },
-        "female" = {
-            {"models/player/police_female.mdl", "Female Officer", {1}},
-            {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
-        }
+    "male" = {
+    {"models/player/police_male.mdl", "Male Officer", {1, 2}},
+    {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+    },
+    "female" = {
+    {"models/player/police_female.mdl", "Female Officer", {1}},
+    {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+    }
     }
     lia.faction.cacheModels(models)
     ```
@@ -181,7 +181,7 @@ end
     -- Medium: Load factions from module directory with error handling
     local factionDir = "gamemode/modules/customfactions/factions"
     if file.Exists(factionDir, "LUA") then
-        lia.faction.loadFromDir(factionDir)
+    lia.faction.loadFromDir(factionDir)
     end
     ```
 
@@ -189,16 +189,16 @@ end
     ```lua
     -- High: Load factions from multiple directories with validation
     local factionDirs = {
-        "gamemode/factions",
-        "gamemode/modules/customfactions/factions",
-        "gamemode/schema/factions"
+    "gamemode/factions",
+    "gamemode/modules/customfactions/factions",
+    "gamemode/schema/factions"
     }
-
+    
     for _, dir in ipairs(factionDirs) do
-        if file.Exists(dir, "LUA") then
-            print("Loading factions from: " .. dir)
-            lia.faction.loadFromDir(dir)
-        end
+    if file.Exists(dir, "LUA") then
+    print("Loading factions from: " .. dir)
+    lia.faction.loadFromDir(dir)
+    end
     end
     ```
 ]]
@@ -269,7 +269,7 @@ end
     -- Simple: Get faction by unique ID
     local faction = lia.faction.get("citizen")
     if faction then
-        print("Faction name: " .. faction.name)
+    print("Faction name: " .. faction.name)
     end
     ```
 
@@ -279,9 +279,9 @@ end
     local factionIndex = 1
     local faction = lia.faction.get(factionIndex)
     if faction then
-        print("Faction: " .. faction.name .. " (Index: " .. faction.index .. ")")
+    print("Faction: " .. faction.name .. " (Index: " .. faction.index .. ")")
     else
-        print("Faction not found")
+    print("Faction not found")
     end
     ```
 
@@ -289,17 +289,17 @@ end
     ```lua
     -- High: Get faction with fallback and error handling
     local function getFactionSafely(identifier)
-        local faction = lia.faction.get(identifier)
-        if not faction then
-            if isnumber(identifier) then
-                error("Faction with index " .. identifier .. " not found")
-            else
-                error("Faction with ID '" .. identifier .. "' not found")
-            end
-        end
-        return faction
+    local faction = lia.faction.get(identifier)
+    if not faction then
+    if isnumber(identifier) then
+    error("Faction with index " .. identifier .. " not found")
+    else
+    error("Faction with ID '" .. identifier .. "' not found")
     end
-
+    end
+    return faction
+    end
+    
     local faction = getFactionSafely("police")
     ```
 ]]
@@ -323,7 +323,7 @@ end
     -- Simple: Get faction index
     local index = lia.faction.getIndex("citizen")
     if index then
-        print("Citizen faction index: " .. index)
+    print("Citizen faction index: " .. index)
     end
     ```
 
@@ -333,9 +333,9 @@ end
     local factionID = "police"
     local index = lia.faction.getIndex(factionID)
     if index then
-        print("Faction '" .. factionID .. "' has index: " .. index)
+    print("Faction '" .. factionID .. "' has index: " .. index)
     else
-        print("Faction '" .. factionID .. "' not found")
+    print("Faction '" .. factionID .. "' not found")
     end
     ```
 
@@ -344,16 +344,16 @@ end
     -- High: Get multiple faction indices with error handling
     local factionIDs = {"citizen", "police", "medic", "staff"}
     local indices = {}
-
+    
     for _, id in ipairs(factionIDs) do
-        local index = lia.faction.getIndex(id)
-        if index then
-            indices[id] = index
-        else
-            print("Warning: Faction '" .. id .. "' not found")
-        end
+    local index = lia.faction.getIndex(id)
+    if index then
+    indices[id] = index
+    else
+    print("Warning: Faction '" .. id .. "' not found")
     end
-
+    end
+    
     return indices
     ```
 ]]
@@ -385,12 +385,12 @@ end
     local factionID = "police"
     local classes = lia.faction.getClasses(factionID)
     if #classes > 0 then
-        print("Classes for " .. factionID .. ":")
-        for _, class in ipairs(classes) do
-            print("- " .. class.name)
-        end
+    print("Classes for " .. factionID .. ":")
+    for _, class in ipairs(classes) do
+    print("- " .. class.name)
+    end
     else
-        print("No classes found for " .. factionID)
+    print("No classes found for " .. factionID)
     end
     ```
 
@@ -398,27 +398,27 @@ end
     ```lua
     -- High: Get classes for multiple factions with filtering
     local function getFactionClasses(factionID)
-        local faction = lia.faction.get(factionID)
-        if not faction then
-            return {}
-        end
-
-        local classes = lia.faction.getClasses(factionID)
-        local result = {}
-
-        for _, class in ipairs(classes) do
-            if class.isDefault or not class.isDefault then -- Include all classes
-                table.insert(result, {
-                    name = class.name,
-                    desc = class.desc,
-                    isDefault = class.isDefault
-                })
-            end
-        end
-
-        return result
+    local faction = lia.faction.get(factionID)
+    if not faction then
+    return {}
     end
-
+    
+    local classes = lia.faction.getClasses(factionID)
+    local result = {}
+    
+    for _, class in ipairs(classes) do
+    if class.isDefault or not class.isDefault then -- Include all classes
+    table.insert(result, {
+    name = class.name,
+    desc = class.desc,
+    isDefault = class.isDefault
+    })
+    end
+    end
+    
+    return result
+    end
+    
     local policeClasses = getFactionClasses("police")
     ```
 ]]
@@ -454,12 +454,12 @@ end
     local factionID = "police"
     local players = lia.faction.getPlayers(factionID)
     if #players > 0 then
-        print("Players in " .. factionID .. ":")
-        for _, ply in ipairs(players) do
-            print("- " .. ply:Name())
-        end
+    print("Players in " .. factionID .. ":")
+    for _, ply in ipairs(players) do
+    print("- " .. ply:Name())
+    end
     else
-        print("No players in " .. factionID)
+    print("No players in " .. factionID)
     end
     ```
 
@@ -467,25 +467,25 @@ end
     ```lua
     -- High: Get players with additional character data
     local function getFactionPlayers(factionID)
-        local players = lia.faction.getPlayers(factionID)
-        local result = {}
-
-        for _, ply in ipairs(players) do
-            local char = ply:getChar()
-            if char then
-                table.insert(result, {
-                    player = ply,
-                    name = ply:Name(),
-                    charName = char:getName(),
-                    steamID = ply:SteamID(),
-                    isAlive = ply:Alive()
-                })
-            end
-        end
-
-        return result
+    local players = lia.faction.getPlayers(factionID)
+    local result = {}
+    
+    for _, ply in ipairs(players) do
+    local char = ply:getChar()
+    if char then
+    table.insert(result, {
+    player = ply,
+    name = ply:Name(),
+    charName = char:getName(),
+    steamID = ply:SteamID(),
+    isAlive = ply:Alive()
+    })
     end
-
+    end
+    
+    return result
+    end
+    
     local policePlayers = getFactionPlayers("police")
     ```
 ]]
@@ -522,9 +522,9 @@ end
     local factionID = "police"
     local count = lia.faction.getPlayerCount(factionID)
     if count > 0 then
-        print("There are " .. count .. " players in " .. factionID)
+    print("There are " .. count .. " players in " .. factionID)
     else
-        print("No players in " .. factionID)
+    print("No players in " .. factionID)
     end
     ```
 
@@ -532,20 +532,20 @@ end
     ```lua
     -- High: Get player counts for multiple factions with statistics
     local function getFactionStatistics()
-        local factions = {"citizen", "police", "medic", "staff"}
-        local stats = {}
-        local totalPlayers = 0
-
-        for _, factionID in ipairs(factions) do
-            local count = lia.faction.getPlayerCount(factionID)
-            stats[factionID] = count
-            totalPlayers = totalPlayers + count
-        end
-
-        stats.total = totalPlayers
-        return stats
+    local factions = {"citizen", "police", "medic", "staff"}
+    local stats = {}
+    local totalPlayers = 0
+    
+    for _, factionID in ipairs(factions) do
+    local count = lia.faction.getPlayerCount(factionID)
+    stats[factionID] = count
+    totalPlayers = totalPlayers + count
     end
-
+    
+    stats.total = totalPlayers
+    return stats
+    end
+    
     local stats = getFactionStatistics()
     print("Total players: " .. stats.total)
     ```
@@ -584,11 +584,11 @@ end
     -- Medium: Check faction category with validation
     local medicalFactions = {"medic", "doctor", "paramedic"}
     local factionID = "medic"
-
+    
     if lia.faction.isFactionCategory(factionID, medicalFactions) then
-        print(factionID .. " is a medical faction")
+    print(factionID .. " is a medical faction")
     else
-        print(factionID .. " is not a medical faction")
+    print(factionID .. " is not a medical faction")
     end
     ```
 
@@ -596,28 +596,28 @@ end
     ```lua
     -- High: Check multiple factions against multiple categories
     local function categorizeFactions(factionIDs)
-        local categories = {
-            lawEnforcement = {"police", "swat", "fbi", "security"},
-            medical = {"medic", "doctor", "paramedic", "nurse"},
-            civilian = {"citizen", "businessman", "unemployed"}
-        }
-
-        local results = {}
-
-        for _, factionID in ipairs(factionIDs) do
-            local category = "unknown"
-            for catName, catFactions in pairs(categories) do
-                if lia.faction.isFactionCategory(factionID, catFactions) then
-                    category = catName
-                    break
-                end
-            end
-            results[factionID] = category
-        end
-
-        return results
+    local categories = {
+    lawEnforcement = {"police", "swat", "fbi", "security"},
+    medical = {"medic", "doctor", "paramedic", "nurse"},
+    civilian = {"citizen", "businessman", "unemployed"}
+    }
+    
+    local results = {}
+    
+    for _, factionID in ipairs(factionIDs) do
+    local category = "unknown"
+    for catName, catFactions in pairs(categories) do
+    if lia.faction.isFactionCategory(factionID, catFactions) then
+    category = catName
+    break
     end
-
+    end
+    results[factionID] = category
+    end
+    
+    return results
+    end
+    
     local factionCategories = categorizeFactions({"police", "medic", "citizen"})
     ```
 ]]
@@ -658,19 +658,19 @@ end
     ```lua
     -- High: Generate faction with complex model data
     local function generateCustomFaction(index, name, color, isDefault)
-        local models = {
-            {"models/player/police_male.mdl", "Male Officer", {1, 2}},
-            {"models/player/police_female.mdl", "Female Officer", {1}},
-            {"models/player/swat.mdl", "SWAT Officer", {0, 1, 2, 3}}
-        }
-
-        local faction = lia.faction.jobGenerate(index, name, color, isDefault, models)
-        faction.uniqueID = string.lower(name:gsub(" ", "_"))
-        faction.desc = "A " .. name .. " faction"
-
-        return faction
+    local models = {
+    {"models/player/police_male.mdl", "Male Officer", {1, 2}},
+    {"models/player/police_female.mdl", "Female Officer", {1}},
+    {"models/player/swat.mdl", "SWAT Officer", {0, 1, 2, 3}}
+    }
+    
+    local faction = lia.faction.jobGenerate(index, name, color, isDefault, models)
+    faction.uniqueID = string.lower(name:gsub(" ", "_"))
+    faction.desc = "A " .. name .. " faction"
+    
+    return faction
     end
-
+    
     local policeFaction = generateCustomFaction(2, "Police Officer", Color(0, 0, 255), false)
     ```
 ]]
@@ -758,9 +758,9 @@ end
     ```lua
     -- Medium: Format model data with validation
     if lia.faction.teams and table.Count(lia.faction.teams) > 0 then
-        print("Formatting model data for " .. table.Count(lia.faction.teams) .. " factions")
-        lia.faction.formatModelData()
-        print("Model data formatting complete")
+    print("Formatting model data for " .. table.Count(lia.faction.teams) .. " factions")
+    lia.faction.formatModelData()
+    print("Model data formatting complete")
     end
     ```
 
@@ -768,22 +768,22 @@ end
     ```lua
     -- High: Format model data with progress tracking and error handling
     local function formatFactionModels()
-        local factionCount = table.Count(lia.faction.teams)
-        local processed = 0
-
-        print("Starting model data formatting for " .. factionCount .. " factions")
-
-        local success, err = pcall(lia.faction.formatModelData)
-
-        if success then
-            print("Successfully formatted model data for all factions")
-        else
-            print("Error formatting model data: " .. tostring(err))
-        end
-
-        return success
+    local factionCount = table.Count(lia.faction.teams)
+    local processed = 0
+    
+    print("Starting model data formatting for " .. factionCount .. " factions")
+    
+    local success, err = pcall(lia.faction.formatModelData)
+    
+    if success then
+    print("Successfully formatted model data for all factions")
+    else
+    print("Error formatting model data: " .. tostring(err))
     end
-
+    
+    return success
+    end
+    
     local success = formatFactionModels()
     ```
 ]]
@@ -830,14 +830,14 @@ end
     -- Medium: Get categories with validation
     local factionID = "medic"
     local categories = lia.faction.getCategories(factionID)
-
+    
     if #categories > 0 then
-        print("Categories for " .. factionID .. ":")
-        for _, category in ipairs(categories) do
-            print("- " .. category)
-        end
+    print("Categories for " .. factionID .. ":")
+    for _, category in ipairs(categories) do
+    print("- " .. category)
+    end
     else
-        print("No categories found for " .. factionID)
+    print("No categories found for " .. factionID)
     end
     ```
 
@@ -845,23 +845,23 @@ end
     ```lua
     -- High: Get categories for multiple factions with detailed info
     local function getFactionCategories(factionIDs)
-        local results = {}
-
-        for _, factionID in ipairs(factionIDs) do
-            local faction = lia.faction.get(factionID)
-            if faction then
-                local categories = lia.faction.getCategories(factionID)
-                results[factionID] = {
-                    name = faction.name,
-                    categories = categories,
-                    categoryCount = #categories
-                }
-            end
-        end
-
-        return results
+    local results = {}
+    
+    for _, factionID in ipairs(factionIDs) do
+    local faction = lia.faction.get(factionID)
+    if faction then
+    local categories = lia.faction.getCategories(factionID)
+    results[factionID] = {
+    name = faction.name,
+    categories = categories,
+    categoryCount = #categories
+    }
     end
-
+    end
+    
+    return results
+    end
+    
     local factionData = getFactionCategories({"police", "medic", "citizen"})
     ```
 ]]
@@ -901,14 +901,14 @@ end
     local factionID = "medic"
     local category = "female"
     local models = lia.faction.getModelsFromCategory(factionID, category)
-
+    
     if table.Count(models) > 0 then
-        print("Female medic models:")
-        for index, model in pairs(models) do
-            print("- " .. index .. ": " .. tostring(model))
-        end
+    print("Female medic models:")
+    for index, model in pairs(models) do
+    print("- " .. index .. ": " .. tostring(model))
+    end
     else
-        print("No models found in " .. category .. " category for " .. factionID)
+    print("No models found in " .. category .. " category for " .. factionID)
     end
     ```
 
@@ -916,25 +916,25 @@ end
     ```lua
     -- High: Get models from multiple categories with detailed processing
     local function getFactionModelsByCategory(factionID, categories)
-        local results = {}
-
-        for _, category in ipairs(categories) do
-            local models = lia.faction.getModelsFromCategory(factionID, category)
-            if table.Count(models) > 0 then
-                results[category] = {}
-                for index, model in pairs(models) do
-                    table.insert(results[category], {
-                        index = index,
-                        model = model,
-                        modelPath = istable(model) and model[1] or model
-                    })
-                end
-            end
-        end
-
-        return results
+    local results = {}
+    
+    for _, category in ipairs(categories) do
+    local models = lia.faction.getModelsFromCategory(factionID, category)
+    if table.Count(models) > 0 then
+    results[category] = {}
+    for index, model in pairs(models) do
+    table.insert(results[category], {
+    index = index,
+    model = model,
+    modelPath = istable(model) and model[1] or model
+    })
     end
-
+    end
+    end
+    
+    return results
+    end
+    
     local modelData = getFactionModelsByCategory("police", {"male", "female", "special"})
     ```
 ]]
@@ -965,7 +965,7 @@ end
     -- Simple: Get default class for a faction
     local defaultClass = lia.faction.getDefaultClass("citizen")
     if defaultClass then
-        print("Default citizen class: " .. defaultClass.name)
+    print("Default citizen class: " .. defaultClass.name)
     end
     ```
 
@@ -974,12 +974,12 @@ end
     -- Medium: Get default class with validation
     local factionID = "police"
     local defaultClass = lia.faction.getDefaultClass(factionID)
-
+    
     if defaultClass then
-        print("Default class for " .. factionID .. ": " .. defaultClass.name)
-        print("Description: " .. defaultClass.desc)
+    print("Default class for " .. factionID .. ": " .. defaultClass.name)
+    print("Description: " .. defaultClass.desc)
     else
-        print("No default class found for " .. factionID)
+    print("No default class found for " .. factionID)
     end
     ```
 
@@ -987,33 +987,33 @@ end
     ```lua
     -- High: Get default classes for multiple factions with fallback handling
     local function getDefaultClasses(factionIDs)
-        local results = {}
-
-        for _, factionID in ipairs(factionIDs) do
-            local defaultClass = lia.faction.getDefaultClass(factionID)
-            if defaultClass then
-                results[factionID] = {
-                    name = defaultClass.name,
-                    desc = defaultClass.desc,
-                    class = defaultClass
-                }
-            else
-                -- Fallback to first available class
-                local classes = lia.faction.getClasses(factionID)
-                if #classes > 0 then
-                    results[factionID] = {
-                        name = classes[1].name,
-                        desc = classes[1].desc,
-                        class = classes[1],
-                        isFallback = true
-                    }
-                end
-            end
-        end
-
-        return results
+    local results = {}
+    
+    for _, factionID in ipairs(factionIDs) do
+    local defaultClass = lia.faction.getDefaultClass(factionID)
+    if defaultClass then
+    results[factionID] = {
+    name = defaultClass.name,
+    desc = defaultClass.desc,
+    class = defaultClass
+    }
+    else
+    -- Fallback to first available class
+    local classes = lia.faction.getClasses(factionID)
+    if #classes > 0 then
+    results[factionID] = {
+    name = classes[1].name,
+    desc = classes[1].desc,
+    class = classes[1],
+    isFallback = true
+    }
     end
-
+    end
+    end
+    
+    return results
+    end
+    
     local defaultClasses = getDefaultClasses({"citizen", "police", "medic"})
     ```
 ]]
@@ -1060,11 +1060,11 @@ FACTION_STAFF = lia.faction.register("staff", {
     -- Medium: Check whitelist with validation
     local factionID = "medic"
     local hasWhitelist = lia.faction.hasWhitelist(factionID)
-
+    
     if hasWhitelist then
-        print("Faction " .. factionID .. " requires whitelist")
+    print("Faction " .. factionID .. " requires whitelist")
     else
-        print("Faction " .. factionID .. " is open to all players")
+    print("Faction " .. factionID .. " is open to all players")
     end
     ```
 
@@ -1072,24 +1072,24 @@ FACTION_STAFF = lia.faction.register("staff", {
     ```lua
     -- High: Check whitelist for multiple factions with detailed info
     local function checkFactionWhitelists(factionIDs)
-        local results = {}
-
-        for _, factionID in ipairs(factionIDs) do
-            local faction = lia.faction.get(factionID)
-            if faction then
-                local hasWhitelist = lia.faction.hasWhitelist(factionID)
-                results[factionID] = {
-                    name = faction.name,
-                    hasWhitelist = hasWhitelist,
-                    isDefault = faction.isDefault,
-                    canAccess = not hasWhitelist or faction.isDefault
-                }
-            end
-        end
-
-        return results
+    local results = {}
+    
+    for _, factionID in ipairs(factionIDs) do
+    local faction = lia.faction.get(factionID)
+    if faction then
+    local hasWhitelist = lia.faction.hasWhitelist(factionID)
+    results[factionID] = {
+    name = faction.name,
+    hasWhitelist = hasWhitelist,
+    isDefault = faction.isDefault,
+    canAccess = not hasWhitelist or faction.isDefault
+    }
     end
-
+    end
+    
+    return results
+    end
+    
     local whitelistInfo = checkFactionWhitelists({"citizen", "police", "medic", "staff"})
     ```
 ]]
@@ -1131,11 +1131,11 @@ if CLIENT then
     -- Medium: Check whitelist with validation
     local factionID = "medic"
     local hasWhitelist = lia.faction.hasWhitelist(factionID)
-
+    
     if hasWhitelist then
-        print("Faction " .. factionID .. " requires whitelist")
+    print("Faction " .. factionID .. " requires whitelist")
     else
-        print("Faction " .. factionID .. " is open to all players")
+    print("Faction " .. factionID .. " is open to all players")
     end
     ```
 
@@ -1143,24 +1143,24 @@ if CLIENT then
     ```lua
     -- High: Check whitelist for multiple factions with detailed info
     local function checkFactionWhitelists(factionIDs)
-        local results = {}
-
-        for _, factionID in ipairs(factionIDs) do
-            local faction = lia.faction.get(factionID)
-            if faction then
-                local hasWhitelist = lia.faction.hasWhitelist(factionID)
-                results[factionID] = {
-                    name = faction.name,
-                    hasWhitelist = hasWhitelist,
-                    isDefault = faction.isDefault,
-                    canAccess = not hasWhitelist or faction.isDefault
-                }
-            end
-        end
-
-        return results
+    local results = {}
+    
+    for _, factionID in ipairs(factionIDs) do
+    local faction = lia.faction.get(factionID)
+    if faction then
+    local hasWhitelist = lia.faction.hasWhitelist(factionID)
+    results[factionID] = {
+    name = faction.name,
+    hasWhitelist = hasWhitelist,
+    isDefault = faction.isDefault,
+    canAccess = not hasWhitelist or faction.isDefault
+    }
     end
-
+    end
+    
+    return results
+    end
+    
     local whitelistInfo = checkFactionWhitelists({"citizen", "police", "medic", "staff"})
     ```
 ]]

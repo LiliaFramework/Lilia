@@ -34,35 +34,38 @@ Shared
 ```lua
 -- Simple: Generate syntax for basic arguments
 local args = {
-{type = "string", name = "target"},
-{type = "player", name = "player"}
+    {type = "string", name = "target"},
+    {type = "player", name = "player"}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[string target] [player player]"
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Generate syntax with optional arguments
 local args = {
-{type = "string", name = "message"},
-{type = "bool", name = "silent", optional = true}
+    {type = "string", name = "message"},
+    {type = "bool", name = "silent", optional = true}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[string message] [bool silent optional]"
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Generate syntax for complex command with multiple argument types
 local args = {
-{type = "player", name = "target"},
-{type = "string", name = "reason"},
-{type = "number", name = "duration", optional = true},
-{type = "bool", name = "notify", optional = true}
+    {type = "player", name = "target"},
+    {type = "string", name = "reason"},
+    {type = "number", name = "duration", optional = true},
+    {type = "bool", name = "notify", optional = true}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[player target] [string reason] [number duration optional] [bool notify optional]"
+
 ```
 
 ---
@@ -91,54 +94,57 @@ Shared
 ```lua
 -- Simple: Register a basic command
 lia.command.add("hello", {
-onRun = function(client, arguments)
-client:notify("Hello, " .. client:Name() .. "!")
-end,
-desc = "Say hello"
+    onRun = function(client, arguments)
+        client:notify("Hello, " .. client:Name() .. "!")
+    end,
+    desc = "Say hello"
 })
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Register command with arguments and admin privilege
 lia.command.add("kick", {
-arguments = {
-{type = "player", name = "target"},
-{type = "string", name = "reason", optional = true}
-},
-onRun = function(client, arguments)
-local target = arguments[1]
-local reason = arguments[2] or "No reason provided"
-target:Kick(reason)
-client:notify("Kicked " .. target:Name())
-end,
-adminOnly = true,
-desc = "Kick a player from the server"
+    arguments = {
+        {type = "player", name = "target"},
+        {type = "string", name = "reason", optional = true}
+    },
+    onRun = function(client, arguments)
+        local target = arguments[1]
+        local reason = arguments[2] or "No reason provided"
+        target:Kick(reason)
+        client:notify("Kicked " .. target:Name())
+    end,
+    adminOnly = true,
+    desc = "Kick a player from the server"
 })
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Register complex command with aliases, custom access check, and privilege
 lia.command.add("ban", {
-arguments = {
-{type = "player", name = "target"},
-{type = "string", name = "reason"},
-{type = "number", name = "duration", optional = true}
-},
-alias = {"tempban", "tban"},
-onRun = function(client, arguments)
-local target = arguments[1]
-local reason = arguments[2]
-local duration = arguments[3] or 0
--- Ban logic here
-end,
-onCheckAccess = function(client, command, data)
-return client:IsSuperAdmin() or client:hasPrivilege("moderation")
-end,
-privilege = "moderation",
-desc = "Ban a player temporarily or permanently"
+    arguments = {
+        {type = "player", name = "target"},
+        {type = "string", name = "reason"},
+        {type = "number", name = "duration", optional = true}
+    },
+    alias = {"tempban", "tban"},
+    onRun = function(client, arguments)
+        local target = arguments[1]
+        local reason = arguments[2]
+        local duration = arguments[3] or 0
+        -- Ban logic here
+    end,
+    onCheckAccess = function(client, command, data)
+        return client:IsSuperAdmin() or client:hasPrivilege("moderation")
+    end,
+    privilege = "moderation",
+    desc = "Ban a player temporarily or permanently"
 })
+
 ```
 
 ---
@@ -168,8 +174,9 @@ Shared
 -- Simple: Check basic command access
 local hasAccess, privilege = lia.command.hasAccess(client, "hello")
 if hasAccess then
-client:notify("You can use the hello command!")
+    client:notify("You can use the hello command!")
 end
+
 ```
 
 **Medium Complexity:**
@@ -177,10 +184,11 @@ end
 -- Medium: Check admin command access with custom privilege
 local hasAccess, privilege = lia.command.hasAccess(client, "kick")
 if not hasAccess then
-client:notifyError("You need " .. privilege .. " to use this command!")
-return
+    client:notifyError("You need " .. privilege .. " to use this command!")
+    return
 end
 -- Execute kick command
+
 ```
 
 **High Complexity:**
@@ -188,16 +196,17 @@ end
 -- High: Check access with faction/class specific permissions
 local hasAccess, privilege = lia.command.hasAccess(client, "arrest")
 if hasAccess then
-local char = client:getChar()
-local faction = lia.faction.indices[char:getFaction()]
-if faction and faction.commands and faction.commands["arrest"] then
-client:notify("Faction command access granted!")
-elseif client:hasPrivilege(privilege) then
-client:notify("Privilege-based access granted!")
-end
+    local char = client:getChar()
+    local faction = lia.faction.indices[char:getFaction()]
+    if faction and faction.commands and faction.commands["arrest"] then
+        client:notify("Faction command access granted!")
+    elseif client:hasPrivilege(privilege) then
+        client:notify("Privilege-based access granted!")
+    end
 else
-client:notifyError("Access denied: " .. privilege)
+    client:notifyError("Access denied: " .. privilege)
 end
+
 ```
 
 ---
@@ -227,6 +236,7 @@ Shared
 -- Simple: Extract basic arguments
 local args = lia.command.extractArgs("player1 Hello World")
 -- Returns: {"player1", "Hello", "World"}
+
 ```
 
 **Medium Complexity:**
@@ -234,6 +244,7 @@ local args = lia.command.extractArgs("player1 Hello World")
 -- Medium: Extract arguments with quoted strings
 local args = lia.command.extractArgs('player1 "Hello World" true')
 -- Returns: {"player1", "Hello World", "true"}
+
 ```
 
 **High Complexity:**
@@ -246,6 +257,7 @@ local target = args[1]
 local message = args[2]
 local duration = tonumber(args[3])
 local silent = args[4] == "true"
+
 ```
 
 ---
@@ -275,6 +287,7 @@ Server
 -- Simple: Execute a basic command
 lia.command.run(client, "hello", {})
 -- Executes the hello command for the client
+
 ```
 
 **Medium Complexity:**
@@ -283,6 +296,7 @@ lia.command.run(client, "hello", {})
 local args = {"player1", "Hello World"}
 lia.command.run(client, "pm", args)
 -- Executes PM command with target and message
+
 ```
 
 **High Complexity:**
@@ -293,11 +307,12 @@ local args = {target:Name(), "Rule violation"}
 -- Check access first
 local hasAccess = lia.command.hasAccess(client, command)
 if hasAccess then
-lia.command.run(client, command, args)
-lia.log.add(client, "command", "/" .. command .. " " .. table.concat(args, " "))
+    lia.command.run(client, command, args)
+    lia.log.add(client, "command", "/" .. command .. " " .. table.concat(args, " "))
 else
-client:notifyError("Access denied!")
+    client:notifyError("Access denied!")
 end
+
 ```
 
 ---
@@ -327,8 +342,9 @@ Server
 -- Simple: Parse basic command from chat
 local success = lia.command.parse(client, "/hello")
 if success then
--- Command was processed
+    -- Command was processed
 end
+
 ```
 
 **Medium Complexity:**
@@ -336,8 +352,9 @@ end
 -- Medium: Parse command with arguments
 local success = lia.command.parse(client, "/kick player1 Rule violation")
 if success then
--- Kick command was executed
+    -- Kick command was executed
 end
+
 ```
 
 **High Complexity:**
@@ -346,12 +363,13 @@ end
 local text = "/pm"
 local success = lia.command.parse(client, text)
 if success then
--- If arguments are missing, client will be prompted
--- If arguments are valid, PM command will execute
+    -- If arguments are missing, client will be prompted
+    -- If arguments are valid, PM command will execute
 else
--- Not a command, treat as regular chat
-lia.chatbox.add(client, text)
+    -- Not a command, treat as regular chat
+    lia.chatbox.add(client, text)
 end
+
 ```
 
 ---
@@ -381,6 +399,7 @@ Client
 -- Simple: Open prompt for single missing argument
 lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Shows GUI to select target player for PM command
+
 ```
 
 **Medium Complexity:**
@@ -388,6 +407,7 @@ lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Medium: Open prompt with partial arguments
 lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
 -- Shows GUI to enter reason, player1 already provided
+
 ```
 
 **High Complexity:**
@@ -399,6 +419,7 @@ lia.command.openArgumentPrompt("ban", {"reason", "duration"}, {"player1"})
 -- - Duration number field
 -- - Submit button (enabled when all required fields filled)
 -- - Cancel button
+
 ```
 
 ---
@@ -428,6 +449,7 @@ Client
 -- Simple: Open prompt for single missing argument
 lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Shows GUI to select target player for PM command
+
 ```
 
 **Medium Complexity:**
@@ -435,6 +457,7 @@ lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Medium: Open prompt with partial arguments
 lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
 -- Shows GUI to enter reason, player1 already provided
+
 ```
 
 **High Complexity:**
@@ -446,6 +469,7 @@ lia.command.openArgumentPrompt("ban", {"reason", "duration"}, {"player1"})
 -- - Duration number field
 -- - Submit button (enabled when all required fields filled)
 -- - Cancel button
+
 ```
 
 ---
@@ -475,6 +499,7 @@ Client
 -- Simple: Open prompt for single missing argument
 lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Shows GUI to select target player for PM command
+
 ```
 
 **Medium Complexity:**
@@ -482,6 +507,7 @@ lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Medium: Open prompt with partial arguments
 lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
 -- Shows GUI to enter reason, player1 already provided
+
 ```
 
 **High Complexity:**
@@ -493,6 +519,7 @@ lia.command.openArgumentPrompt("ban", {"reason", "duration"}, {"player1"})
 -- - Duration number field
 -- - Submit button (enabled when all required fields filled)
 -- - Cancel button
+
 ```
 
 ---
@@ -522,6 +549,7 @@ Client
 -- Simple: Open prompt for single missing argument
 lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Shows GUI to select target player for PM command
+
 ```
 
 **Medium Complexity:**
@@ -529,6 +557,7 @@ lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Medium: Open prompt with partial arguments
 lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
 -- Shows GUI to enter reason, player1 already provided
+
 ```
 
 **High Complexity:**
@@ -540,6 +569,7 @@ lia.command.openArgumentPrompt("ban", {"reason", "duration"}, {"player1"})
 -- - Duration number field
 -- - Submit button (enabled when all required fields filled)
 -- - Cancel button
+
 ```
 
 ---
@@ -569,6 +599,7 @@ Client
 -- Simple: Open prompt for single missing argument
 lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Shows GUI to select target player for PM command
+
 ```
 
 **Medium Complexity:**
@@ -576,6 +607,7 @@ lia.command.openArgumentPrompt("pm", {"target"}, {})
 -- Medium: Open prompt with partial arguments
 lia.command.openArgumentPrompt("kick", {"reason"}, {"player1"})
 -- Shows GUI to enter reason, player1 already provided
+
 ```
 
 **High Complexity:**
@@ -587,6 +619,7 @@ lia.command.openArgumentPrompt("ban", {"reason", "duration"}, {"player1"})
 -- - Duration number field
 -- - Submit button (enabled when all required fields filled)
 -- - Cancel button
+
 ```
 
 ---
@@ -616,6 +649,7 @@ Client
 -- Simple: Send basic command
 lia.command.send("hello")
 -- Sends hello command to server
+
 ```
 
 **Medium Complexity:**
@@ -623,6 +657,7 @@ lia.command.send("hello")
 -- Medium: Send command with arguments
 lia.command.send("pm", "player1", "Hello there!")
 -- Sends PM command with target and message
+
 ```
 
 **High Complexity:**
@@ -633,6 +668,7 @@ local reason = "Rule violation"
 local duration = 300
 lia.command.send("ban", target, reason, duration)
 -- Sends ban command with all parameters
+
 ```
 
 ---

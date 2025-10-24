@@ -39,14 +39,16 @@ Client
 ```lua
 -- Simple: Set up inventory listening for a basic panel
 panel:liaListenForInventoryChanges(playerInventory)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Set up inventory listening with conditional setup
 if playerInventory then
-characterPanel:liaListenForInventoryChanges(playerInventory)
+    characterPanel:liaListenForInventoryChanges(playerInventory)
 end
+
 ```
 
 **High Complexity:**
@@ -54,10 +56,11 @@ end
 -- High: Set up inventory listening for multiple panels with error handling
 local panels = {inventoryPanel, characterPanel, equipmentPanel}
 for _, pnl in ipairs(panels) do
-if IsValid(pnl) and playerInventory then
-pnl:liaListenForInventoryChanges(playerInventory)
+    if IsValid(pnl) and playerInventory then
+        pnl:liaListenForInventoryChanges(playerInventory)
+    end
 end
-end
+
 ```
 
 ---
@@ -90,14 +93,16 @@ Client
 ```lua
 -- Simple: Remove hooks for a specific inventory
 panel:liaDeleteInventoryHooks(inventoryID)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Clean up hooks when closing a panel
 if IsValid(panel) then
-panel:liaDeleteInventoryHooks()
+    panel:liaDeleteInventoryHooks()
 end
+
 ```
 
 **High Complexity:**
@@ -106,10 +111,11 @@ end
 local panels = {inventoryPanel, equipmentPanel, storagePanel}
 local inventoryIDs = {playerInvID, equipmentInvID, storageInvID}
 for i, pnl in ipairs(panels) do
-if IsValid(pnl) then
-pnl:liaDeleteInventoryHooks(inventoryIDs[i])
+    if IsValid(pnl) then
+        pnl:liaDeleteInventoryHooks(inventoryIDs[i])
+    end
 end
-end
+
 ```
 
 ---
@@ -145,6 +151,7 @@ Client
 ```lua
 -- Simple: Position a button at scaled coordinates
 button:setScaledPos(100, 50)
+
 ```
 
 **Medium Complexity:**
@@ -153,6 +160,7 @@ button:setScaledPos(100, 50)
 local x = ScrW() * 0.5 - 200
 local y = ScrH() * 0.3
 panel:setScaledPos(x, y)
+
 ```
 
 **High Complexity:**
@@ -160,15 +168,16 @@ panel:setScaledPos(x, y)
 -- High: Position multiple panels with responsive layout
 local panels = {mainPanel, sidePanel, footerPanel}
 local positions = {
-{ScrW() * 0.1, ScrH() * 0.1},
-{ScrW() * 0.7, ScrH() * 0.1},
-{ScrW() * 0.1, ScrH() * 0.8}
+    {ScrW() * 0.1, ScrH() * 0.1},
+    {ScrW() * 0.7, ScrH() * 0.1},
+    {ScrW() * 0.1, ScrH() * 0.8}
 }
 for i, pnl in ipairs(panels) do
-if IsValid(pnl) then
-pnl:setScaledPos(positions[i][1], positions[i][2])
+    if IsValid(pnl) then
+        pnl:setScaledPos(positions[i][1], positions[i][2])
+    end
 end
-end
+
 ```
 
 ---
@@ -204,6 +213,7 @@ Client
 ```lua
 -- Simple: Set panel size with scaled dimensions
 panel:setScaledSize(400, 300)
+
 ```
 
 **Medium Complexity:**
@@ -212,6 +222,7 @@ panel:setScaledSize(400, 300)
 local w = ScrW() * 0.8
 local h = ScrH() * 0.6
 panel:setScaledSize(w, h)
+
 ```
 
 **High Complexity:**
@@ -219,15 +230,16 @@ panel:setScaledSize(w, h)
 -- High: Set sizes for multiple panels with responsive layout
 local panels = {mainPanel, sidePanel, footerPanel}
 local sizes = {
-{ScrW() * 0.7, ScrH() * 0.6},
-{ScrW() * 0.25, ScrH() * 0.6},
-{ScrW() * 0.95, ScrH() * 0.1}
+    {ScrW() * 0.7, ScrH() * 0.6},
+    {ScrW() * 0.25, ScrH() * 0.6},
+    {ScrW() * 0.95, ScrH() * 0.1}
 }
 for i, pnl in ipairs(panels) do
-if IsValid(pnl) then
-pnl:setScaledSize(sizes[i][1], sizes[i][2])
+    if IsValid(pnl) then
+        pnl:setScaledSize(sizes[i][1], sizes[i][2])
+    end
 end
-end
+
 ```
 
 ---

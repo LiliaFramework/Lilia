@@ -41,18 +41,21 @@ Shared
 ```lua
 -- Simple: Load a basic module
 lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Load module with custom variable name
 lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load module with submodule skipping
 lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+
 ```
 
 ---
@@ -88,18 +91,21 @@ Shared
 ```lua
 -- Simple: Load a basic module
 lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Load module with custom variable name
 lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load module with submodule skipping
 lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+
 ```
 
 ---
@@ -135,18 +141,21 @@ Shared
 ```lua
 -- Simple: Load a basic module
 lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Load module with custom variable name
 lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load module with submodule skipping
 lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+
 ```
 
 ---
@@ -182,18 +191,21 @@ Shared
 ```lua
 -- Simple: Load a basic module
 lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Load module with custom variable name
 lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load module with submodule skipping
 lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+
 ```
 
 ---
@@ -222,6 +234,7 @@ Shared
 ```lua
 -- Simple: Initialize modules (typically called automatically)
 lia.module.initialize()
+
 ```
 
 **Medium Complexity:**
@@ -230,6 +243,7 @@ lia.module.initialize()
 local schemaPath = "gamemodes/mygamemode"
 lia.module.load("schema", schemaPath .. "/schema", false, "schema")
 lia.module.initialize()
+
 ```
 
 **High Complexity:**
@@ -238,10 +252,11 @@ lia.module.initialize()
 lia.module.initialize()
 -- Custom post-initialization logic
 for id, mod in pairs(lia.module.list) do
-if mod.PostInitialize then
-mod:PostInitialize()
+    if mod.PostInitialize then
+        mod:PostInitialize()
+    end
 end
-end
+
 ```
 
 ---
@@ -276,12 +291,14 @@ Shared
 ```lua
 -- Simple: Load all modules from a directory
 lia.module.loadFromDir("gamemodes/lilia/modules", "module")
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Load modules with specific group type
 lia.module.loadFromDir("gamemodes/mygamemode/modules", "module")
+
 ```
 
 **High Complexity:**
@@ -289,6 +306,7 @@ lia.module.loadFromDir("gamemodes/mygamemode/modules", "module")
 -- High: Load modules with skip list
 local skipModules = {["disabledmodule"] = true, ["testmodule"] = true}
 lia.module.loadFromDir("gamemodes/lilia/modules", "module", skipModules)
+
 ```
 
 ---
@@ -321,6 +339,7 @@ Shared
 ```lua
 -- Simple: Get a module
 local myModule = lia.module.get("mymodule")
+
 ```
 
 **Medium Complexity:**
@@ -328,19 +347,21 @@ local myModule = lia.module.get("mymodule")
 -- Medium: Check if module exists and use it
 local module = lia.module.get("inventory")
 if module and module.GetItem then
-local item = module:GetItem("weapon_pistol")
+    local item = module:GetItem("weapon_pistol")
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Iterate through all modules and perform operations
 for id, module in pairs(lia.module.list) do
-local mod = lia.module.get(id)
-if mod and mod.OnPlayerSpawn then
-mod:OnPlayerSpawn(player)
+    local mod = lia.module.get(id)
+    if mod and mod.OnPlayerSpawn then
+        mod:OnPlayerSpawn(player)
+    end
 end
-end
+
 ```
 
 ---

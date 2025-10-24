@@ -42,43 +42,46 @@ Shared
 ```lua
 -- Simple: Add a basic boolean configuration
 lia.config.add("EnableFeature", "Enable Feature", true, nil, {
-desc = "Enable or disable this feature",
-category = "general",
-type = "Boolean"
+    desc = "Enable or disable this feature",
+    category = "general",
+    type = "Boolean"
 })
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Add configuration with callback and constraints
 lia.config.add("WalkSpeed", "Walk Speed", 130, function(_, newValue)
-for _, client in player.Iterator() do
-client:SetWalkSpeed(newValue)
-end
+    for _, client in player.Iterator() do
+        client:SetWalkSpeed(newValue)
+    end
 end, {
-desc = "Player walking speed",
-category = "character",
-type = "Int",
-min = 50,
-max = 300
+    desc = "Player walking speed",
+    category = "character",
+    type = "Int",
+    min = 50,
+    max = 300
 })
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Add configuration with dynamic options and complex validation
 lia.config.add("Language", "Language", "English", nil, {
-desc = "Select your preferred language",
-category = "general",
-type = "Table",
-options = function()
-local languages = {}
-for code, data in pairs(lia.lang.getLanguages()) do
-languages[data.name] = code
-end
-return languages
-end
+    desc = "Select your preferred language",
+    category = "general",
+    type = "Table",
+    options = function()
+        local languages = {}
+        for code, data in pairs(lia.lang.getLanguages()) do
+            languages[data.name] = code
+        end
+        return languages
+    end
 })
+
 ```
 
 ---
@@ -112,8 +115,9 @@ Shared
 -- Simple: Get static options for a configuration
 local options = lia.config.getOptions("DermaSkin")
 for _, option in ipairs(options) do
-print("Available skin:", option)
+    print("Available skin:", option)
 end
+
 ```
 
 **Medium Complexity:**
@@ -122,23 +126,25 @@ end
 local combo = vgui.Create("liaComboBox")
 local options = lia.config.getOptions("Language")
 for _, text in pairs(options) do
-combo:AddChoice(text, text)
+    combo:AddChoice(text, text)
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Dynamic options with validation and filtering
 local function createDynamicOptions()
-local options = lia.config.getOptions("DefaultMenuTab")
-local filteredOptions = {}
-for key, value in pairs(options) do
-if IsValid(value) and value:IsVisible() then
-filteredOptions[key] = value
+    local options = lia.config.getOptions("DefaultMenuTab")
+    local filteredOptions = {}
+    for key, value in pairs(options) do
+        if IsValid(value) and value:IsVisible() then
+            filteredOptions[key] = value
+        end
+    end
+    return filteredOptions
 end
-end
-return filteredOptions
-end
+
 ```
 
 ---
@@ -172,6 +178,7 @@ Shared
 ```lua
 -- Simple: Update default value for a configuration
 lia.config.setDefault("MaxCharacters", 10)
+
 ```
 
 **Medium Complexity:**
@@ -179,21 +186,23 @@ lia.config.setDefault("MaxCharacters", 10)
 -- Medium: Update default based on server conditions
 local maxChars = SERVER and 5 or 3
 lia.config.setDefault("MaxCharacters", maxChars)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Update multiple defaults based on module availability
 local function updateModuleDefaults()
-local defaults = {
-MaxCharacters = lia.module.get("characters") and 5 or 1,
-AllowPMs = lia.module.get("chatbox") and true or false,
-WalkSpeed = lia.module.get("attributes") and 130 or 100
-}
-for key, value in pairs(defaults) do
-lia.config.setDefault(key, value)
+    local defaults = {
+        MaxCharacters = lia.module.get("characters") and 5 or 1,
+        AllowPMs = lia.module.get("chatbox") and true or false,
+        WalkSpeed = lia.module.get("attributes") and 130 or 100
+    }
+    for key, value in pairs(defaults) do
+        lia.config.setDefault(key, value)
+    end
 end
-end
+
 ```
 
 ---
@@ -228,6 +237,7 @@ Shared
 ```lua
 -- Simple: Force set a configuration value
 lia.config.forceSet("WalkSpeed", 150)
+
 ```
 
 **Medium Complexity:**
@@ -236,19 +246,21 @@ lia.config.forceSet("WalkSpeed", 150)
 lia.config.forceSet("DebugMode", true, true)
 -- Do some debug operations
 lia.config.forceSet("DebugMode", false, true)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Bulk force set with conditional saving
 local function applyModuleConfigs(moduleName, configs, saveAfter)
-for key, value in pairs(configs) do
-lia.config.forceSet(key, value, not saveAfter)
+    for key, value in pairs(configs) do
+        lia.config.forceSet(key, value, not saveAfter)
+    end
+    if saveAfter then
+        lia.config.save()
+    end
 end
-if saveAfter then
-lia.config.save()
-end
-end
+
 ```
 
 ---
@@ -282,35 +294,38 @@ Shared
 ```lua
 -- Simple: Set a configuration value
 lia.config.set("WalkSpeed", 150)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Set configuration with validation
 local function setConfigWithValidation(key, value, min, max)
-if type(value) == "number" and value >= min and value <= max then
-lia.config.set(key, value)
-else
-print("Invalid value for " .. key)
+    if type(value) == "number" and value >= min and value <= max then
+        lia.config.set(key, value)
+    else
+        print("Invalid value for " .. key)
+    end
 end
-end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Batch configuration updates with rollback
 local function batchConfigUpdate(updates)
-local originalValues = {}
-for key, value in pairs(updates) do
-originalValues[key] = lia.config.get(key)
-lia.config.set(key, value)
+    local originalValues = {}
+    for key, value in pairs(updates) do
+        originalValues[key] = lia.config.get(key)
+        lia.config.set(key, value)
+    end
+    return function()
+        for key, value in pairs(originalValues) do
+            lia.config.set(key, value)
+        end
+    end
 end
-return function()
-for key, value in pairs(originalValues) do
-lia.config.set(key, value)
-end
-end
-end
+
 ```
 
 ---
@@ -345,38 +360,41 @@ Shared
 -- Simple: Get a configuration value
 local walkSpeed = lia.config.get("WalkSpeed")
 player:SetWalkSpeed(walkSpeed)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Get configuration with validation and fallback
 local function getConfigValue(key, expectedType, fallback)
-local value = lia.config.get(key, fallback)
-if type(value) == expectedType then
-return value
-else
-return fallback
+    local value = lia.config.get(key, fallback)
+    if type(value) == expectedType then
+        return value
+    else
+        return fallback
+    end
 end
-end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Get multiple configurations with type checking and validation
 local function getPlayerSettings()
-local settings = {}
-local configs = {
-walkSpeed = {"WalkSpeed", "number", 130},
-runSpeed = {"RunSpeed", "number", 275},
-maxChars = {"MaxCharacters", "number", 5}
-}
-for setting, data in pairs(configs) do
-local key, expectedType, fallback = data[1], data[2], data[3]
-local value = lia.config.get(key, fallback)
-settings[setting] = type(value) == expectedType and value or fallback
+    local settings = {}
+    local configs = {
+        walkSpeed = {"WalkSpeed", "number", 130},
+        runSpeed = {"RunSpeed", "number", 275},
+        maxChars = {"MaxCharacters", "number", 5}
+    }
+    for setting, data in pairs(configs) do
+        local key, expectedType, fallback = data[1], data[2], data[3]
+        local value = lia.config.get(key, fallback)
+        settings[setting] = type(value) == expectedType and value or fallback
+    end
+    return settings
 end
-return settings
-end
+
 ```
 
 ---
@@ -405,6 +423,7 @@ Shared
 ```lua
 -- Simple: Load configurations during initialization
 lia.config.load()
+
 ```
 
 **Medium Complexity:**
@@ -412,24 +431,26 @@ lia.config.load()
 -- Medium: Load configurations with callback
 lia.config.load()
 hook.Add("InitializedConfig", "MyModule", function()
-print("Configurations loaded successfully")
--- Initialize module with loaded configs
+    print("Configurations loaded successfully")
+    -- Initialize module with loaded configs
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load configurations with error handling and fallback
 local function loadConfigWithFallback()
-local success = pcall(lia.config.load)
-if not success then
-print("Failed to load configurations, using defaults")
--- Apply default configurations
-for key, config in pairs(lia.config.stored) do
-config.value = config.default
+    local success = pcall(lia.config.load)
+    if not success then
+        print("Failed to load configurations, using defaults")
+        -- Apply default configurations
+        for key, config in pairs(lia.config.stored) do
+            config.value = config.default
+        end
+    end
 end
-end
-end
+
 ```
 
 ---
@@ -459,40 +480,43 @@ Server
 -- Simple: Get all changed values
 local changed = lia.config.getChangedValues()
 print("Changed configurations:", table.Count(changed))
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Send only changed configurations to specific client
 local function sendConfigToClient(client)
-local changed = lia.config.getChangedValues()
-if table.Count(changed) > 0 then
-net.Start("liaCfgList")
-net.WriteTable(changed)
-net.Send(client)
+    local changed = lia.config.getChangedValues()
+    if table.Count(changed) > 0 then
+        net.Start("liaCfgList")
+        net.WriteTable(changed)
+        net.Send(client)
+    end
 end
-end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Export changed configurations with filtering and validation
 local function exportChangedConfigs(filterFunc)
-local changed = lia.config.getChangedValues()
-local filtered = {}
-for key, value in pairs(changed) do
-local config = lia.config.stored[key]
-if config and (not filterFunc or filterFunc(key, value, config)) then
-filtered[key] = {
-value = value,
-name = config.name,
-category = config.category,
-type = config.data.type
-}
+    local changed = lia.config.getChangedValues()
+    local filtered = {}
+    for key, value in pairs(changed) do
+        local config = lia.config.stored[key]
+        if config and (not filterFunc or filterFunc(key, value, config)) then
+            filtered[key] = {
+                value = value,
+                name = config.name,
+                category = config.category,
+                type = config.data.type
+            }
+        end
+    end
+    return filtered
 end
-end
-return filtered
-end
+
 ```
 
 ---
@@ -525,40 +549,43 @@ Server
 ```lua
 -- Simple: Send configurations to all clients
 lia.config.send()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Send configurations to specific client on connect
 hook.Add("PlayerInitialSpawn", "SendConfigs", function(client)
-timer.Simple(1, function()
-if IsValid(client) then
-lia.config.send(client)
-end
+    timer.Simple(1, function()
+        if IsValid(client) then
+            lia.config.send(client)
+        end
+    end)
 end)
-end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Send configurations with priority and filtering
 local function sendConfigsWithPriority(priority, filterFunc)
-local changed = lia.config.getChangedValues()
-local filtered = {}
-for key, value in pairs(changed) do
-local config = lia.config.stored[key]
-if config and (not filterFunc or filterFunc(key, value, config)) then
-if config.data.priority == priority then
-filtered[key] = value
+    local changed = lia.config.getChangedValues()
+    local filtered = {}
+    for key, value in pairs(changed) do
+        local config = lia.config.stored[key]
+        if config and (not filterFunc or filterFunc(key, value, config)) then
+            if config.data.priority == priority then
+                filtered[key] = value
+            end
+        end
+    end
+    if table.Count(filtered) > 0 then
+        net.Start("liaCfgList")
+        net.WriteTable(filtered)
+        net.Broadcast()
+    end
 end
-end
-end
-if table.Count(filtered) > 0 then
-net.Start("liaCfgList")
-net.WriteTable(filtered)
-net.Broadcast()
-end
-end
+
 ```
 
 ---
@@ -587,36 +614,39 @@ Server
 ```lua
 -- Simple: Save all configurations
 lia.config.save()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Save configurations with error handling
 local function saveConfigsSafely()
-local success, err = pcall(lia.config.save)
-if not success then
-print("Failed to save configurations:", err)
--- Implement fallback or retry logic
+    local success, err = pcall(lia.config.save)
+    if not success then
+        print("Failed to save configurations:", err)
+        -- Implement fallback or retry logic
+    end
 end
-end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Save configurations with backup and validation
 local function saveConfigsWithBackup()
-local changed = lia.config.getChangedValues()
-if table.Count(changed) == 0 then return end
--- Create backup
-local backup = util.TableToJSON(changed)
-file.Write("config_backup_" .. os.time() .. ".json", backup)
--- Save with validation
-local success, err = pcall(lia.config.save)
-if not success then
-print("Save failed, restoring from backup")
--- Restore from backup logic
+    local changed = lia.config.getChangedValues()
+    if table.Count(changed) == 0 then return end
+    -- Create backup
+    local backup = util.TableToJSON(changed)
+    file.Write("config_backup_" .. os.time() .. ".json", backup)
+    -- Save with validation
+    local success, err = pcall(lia.config.save)
+    if not success then
+        print("Save failed, restoring from backup")
+        -- Restore from backup logic
+    end
 end
-end
+
 ```
 
 ---
@@ -645,35 +675,38 @@ Server
 ```lua
 -- Simple: Reset all configurations to defaults
 lia.config.reset()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Reset configurations with confirmation
 local function resetConfigsWithConfirmation()
-print("Resetting all configurations to defaults...")
-lia.config.reset()
-print("Configuration reset complete")
+    print("Resetting all configurations to defaults...")
+    lia.config.reset()
+    print("Configuration reset complete")
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Reset configurations with selective restoration and logging
 local function resetConfigsSelectively(keepConfigs)
-local originalValues = {}
--- Store current values for configs to keep
-for _, key in ipairs(keepConfigs) do
-originalValues[key] = lia.config.get(key)
+    local originalValues = {}
+    -- Store current values for configs to keep
+    for _, key in ipairs(keepConfigs) do
+        originalValues[key] = lia.config.get(key)
+    end
+    -- Reset all configurations
+    lia.config.reset()
+    -- Restore selected configurations
+    for key, value in pairs(originalValues) do
+        lia.config.set(key, value)
+    end
+    print("Reset complete, restored " .. table.Count(originalValues) .. " configurations")
 end
--- Reset all configurations
-lia.config.reset()
--- Restore selected configurations
-for key, value in pairs(originalValues) do
-lia.config.set(key, value)
-end
-print("Reset complete, restored " .. table.Count(originalValues) .. " configurations")
-end
+
 ```
 
 ---

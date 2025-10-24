@@ -35,6 +35,7 @@ Shared
 -- Simple: Get character string representation
 local charString = character:tostring()
 print(charString) -- Output: "character[123]"
+
 ```
 
 **Medium Complexity:**
@@ -42,8 +43,9 @@ print(charString) -- Output: "character[123]"
 -- Medium: Use in debug messages
 local char = player:getChar()
 if char then
-print("Character: " .. char:tostring())
+    print("Character: " .. char:tostring())
 end
+
 ```
 
 **High Complexity:**
@@ -51,6 +53,7 @@ end
 -- High: Use in logging system
 local char = player:getChar()
 lia.log.add(player, "action", "Character " .. char:tostring() .. " performed action")
+
 ```
 
 ---
@@ -81,8 +84,9 @@ Shared
 local char1 = player1:getChar()
 local char2 = player2:getChar()
 if char1:eq(char2) then
-print("Same character")
+    print("Same character")
 end
+
 ```
 
 **Medium Complexity:**
@@ -91,19 +95,21 @@ end
 local targetChar = target:getChar()
 local myChar = player:getChar()
 if myChar:eq(targetChar) then
--- Handle self-targeting
+    -- Handle self-targeting
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Use in character management system
 for _, char in pairs(characterList) do
-if char:eq(selectedCharacter) then
--- Process matching character
-break
+    if char:eq(selectedCharacter) then
+        -- Process matching character
+        break
+    end
 end
-end
+
 ```
 
 ---
@@ -134,6 +140,7 @@ Shared
 local char = player:getChar()
 local charID = char:getID()
 print("Character ID: " .. charID)
+
 ```
 
 **Medium Complexity:**
@@ -142,6 +149,7 @@ print("Character ID: " .. charID)
 local char = player:getChar()
 local charID = char:getID()
 lia.db.query("SELECT * FROM chardata WHERE charID = " .. charID)
+
 ```
 
 **High Complexity:**
@@ -150,6 +158,7 @@ lia.db.query("SELECT * FROM chardata WHERE charID = " .. charID)
 net.Start("liaCharInfo")
 net.WriteUInt(char:getID(), 32)
 net.Send(player)
+
 ```
 
 ---
@@ -180,8 +189,9 @@ Shared
 local char = player:getChar()
 local owner = char:getPlayer()
 if IsValid(owner) then
-print("Player: " .. owner:Name())
+    print("Player: " .. owner:Name())
 end
+
 ```
 
 **Medium Complexity:**
@@ -189,8 +199,9 @@ end
 -- Medium: Use player for operations
 local char = character:getPlayer()
 if IsValid(char) then
-char:SetPos(Vector(0, 0, 0))
+    char:SetPos(Vector(0, 0, 0))
 end
+
 ```
 
 **High Complexity:**
@@ -198,10 +209,11 @@ end
 -- High: Use in networking and validation
 local char = character:getPlayer()
 if IsValid(char) then
-net.Start("liaCharSync")
-net.WriteEntity(char)
-net.Broadcast()
+    net.Start("liaCharSync")
+    net.WriteEntity(char)
+    net.Broadcast()
 end
+
 ```
 
 ---
@@ -232,6 +244,7 @@ Shared
 local char = target:getChar()
 local displayName = char:getDisplayedName(player)
 print("You see: " .. displayName)
+
 ```
 
 **Medium Complexity:**
@@ -240,6 +253,7 @@ print("You see: " .. displayName)
 local char = speaker:getChar()
 local displayName = char:getDisplayedName(listener)
 chat.AddText(Color(255, 255, 255), displayName .. ": " .. message)
+
 ```
 
 **High Complexity:**
@@ -248,6 +262,7 @@ chat.AddText(Color(255, 255, 255), displayName .. ": " .. message)
 local char = character:getDisplayedName(client)
 local nameColor = char == "unknown" and Color(128, 128, 128) or Color(255, 255, 255)
 draw.SimpleText(char, "DermaDefault", x, y, nameColor)
+
 ```
 
 ---
@@ -277,8 +292,9 @@ Shared
 -- Simple: Check if player can afford an item
 local char = player:getChar()
 if char:hasMoney(100) then
-print("Can afford item")
+    print("Can afford item")
 end
+
 ```
 
 **Medium Complexity:**
@@ -287,9 +303,10 @@ end
 local char = buyer:getChar()
 local itemPrice = 500
 if char:hasMoney(itemPrice) then
-char:takeMoney(itemPrice)
-char:giveItem("item_id")
+    char:takeMoney(itemPrice)
+    char:giveItem("item_id")
 end
+
 ```
 
 **High Complexity:**
@@ -298,10 +315,11 @@ end
 local char = player:getChar()
 local totalCost = calculateTotalCost(items)
 if char:hasMoney(totalCost) then
-processTransaction(char, items, totalCost)
+    processTransaction(char, items, totalCost)
 else
-showInsufficientFundsError(char, totalCost)
+    showInsufficientFundsError(char, totalCost)
 end
+
 ```
 
 ---
@@ -331,8 +349,9 @@ Shared
 -- Simple: Check for admin flag
 local char = player:getChar()
 if char:hasFlags("a") then
-print("Player is admin")
+    print("Player is admin")
 end
+
 ```
 
 **Medium Complexity:**
@@ -340,9 +359,10 @@ end
 -- Medium: Check multiple flags
 local char = player:getChar()
 if char:hasFlags("ad") then
--- Player has admin or donator flag
-grantSpecialAccess(char)
+    -- Player has admin or donator flag
+    grantSpecialAccess(char)
 end
+
 ```
 
 **High Complexity:**
@@ -351,10 +371,11 @@ end
 local char = player:getChar()
 local requiredFlags = "adm"
 if char:hasFlags(requiredFlags) then
-showAdminPanel(player)
+    showAdminPanel(player)
 else
-showAccessDenied(player)
+    showAccessDenied(player)
 end
+
 ```
 
 ---
@@ -384,8 +405,9 @@ Shared
 -- Simple: Check if player has weapon
 local char = player:getChar()
 if char:getItemWeapon() then
-print("Player has weapon")
+    print("Player has weapon")
 end
+
 ```
 
 **Medium Complexity:**
@@ -393,9 +415,10 @@ end
 -- Medium: Check weapon with equip requirement
 local char = player:getChar()
 if char:getItemWeapon(true) then
--- Player has equipped weapon
-allowWeaponUse(char)
+    -- Player has equipped weapon
+    allowWeaponUse(char)
 end
+
 ```
 
 **High Complexity:**
@@ -404,10 +427,11 @@ end
 local char = player:getChar()
 local hasWeapon = char:getItemWeapon(requireEquip)
 if hasWeapon then
-processWeaponAction(char, action)
+    processWeaponAction(char, action)
 else
-showWeaponRequiredError(char)
+    showWeaponRequiredError(char)
 end
+
 ```
 
 ---
@@ -438,6 +462,7 @@ Shared
 local char = player:getChar()
 local strength = char:getAttrib("str")
 print("Strength: " .. strength)
+
 ```
 
 **Medium Complexity:**
@@ -446,8 +471,9 @@ print("Strength: " .. strength)
 local char = player:getChar()
 local intelligence = char:getAttrib("int", 10)
 if intelligence > 15 then
-grantSpecialAbility(char)
+    grantSpecialAbility(char)
 end
+
 ```
 
 **High Complexity:**
@@ -458,6 +484,7 @@ local baseStr = char:getAttrib("str")
 local baseInt = char:getAttrib("int")
 local totalBonus = baseStr + baseInt
 calculateCombatEffectiveness(char, totalBonus)
+
 ```
 
 ---
@@ -484,29 +511,11 @@ Shared
 
 **Low Complexity:**
 ```lua
+        Medium Complexity:
 
-```
+        High Complexity:
 
-**Medium Complexity:**
-```lua
--- Medium: Check specific boost
-local char = player:getChar()
-local boosts = char:getBoost("int")
-if boosts and boosts["item_boost"] then
-print("Has item intelligence boost")
-end
-```
-
-**High Complexity:**
-```lua
--- High: Use in boost management system
-local char = player:getChar()
-local boosts = char:getBoost(attribID)
-if boosts then
-for boostID, value in pairs(boosts) do
-processBoost(char, attribID, boostID, value)
-end
-end
+]]
 ```
 
 ---
@@ -537,8 +546,9 @@ Shared
 local char = player:getChar()
 local targetChar = target:getChar()
 if char:doesRecognize(targetChar) then
-print("Player recognizes target")
+    print("Player recognizes target")
 end
+
 ```
 
 **Medium Complexity:**
@@ -547,10 +557,11 @@ end
 local char = player:getChar()
 local targetID = target:getChar():getID()
 if char:doesRecognize(targetID) then
-showRealName(char, target)
+    showRealName(char, target)
 else
-showUnknownName(char, target)
+    showUnknownName(char, target)
 end
+
 ```
 
 **High Complexity:**
@@ -558,10 +569,11 @@ end
 -- High: Use in complex recognition logic
 local char = player:getChar()
 for _, otherChar in pairs(characterList) do
-if char:doesRecognize(otherChar) then
-addToKnownList(char, otherChar)
+    if char:doesRecognize(otherChar) then
+        addToKnownList(char, otherChar)
+    end
 end
-end
+
 ```
 
 ---
@@ -592,8 +604,9 @@ Shared
 local char = player:getChar()
 local targetChar = target:getChar()
 if char:doesFakeRecognize(targetChar) then
-print("Player knows fake name")
+    print("Player knows fake name")
 end
+
 ```
 
 **Medium Complexity:**
@@ -602,10 +615,11 @@ end
 local char = player:getChar()
 local targetID = target:getChar():getID()
 if char:doesFakeRecognize(targetID) then
-showFakeName(char, target)
+    showFakeName(char, target)
 else
-showUnknownName(char, target)
+    showUnknownName(char, target)
 end
+
 ```
 
 **High Complexity:**
@@ -613,10 +627,11 @@ end
 -- High: Use in complex identity system
 local char = player:getChar()
 for _, otherChar in pairs(characterList) do
-if char:doesFakeRecognize(otherChar) then
-addToFakeKnownList(char, otherChar)
+    if char:doesFakeRecognize(otherChar) then
+        addToFakeKnownList(char, otherChar)
+    end
 end
-end
+
 ```
 
 ---
@@ -646,6 +661,7 @@ Server
 -- Simple: Set single data value
 local char = player:getChar()
 char:setData("lastLogin", os.time())
+
 ```
 
 **Medium Complexity:**
@@ -653,16 +669,15 @@ char:setData("lastLogin", os.time())
 
 ```
 
-**High Complexity:**
+**Char Complexity:**
 ```lua
--- High: Use in data management system
-local char = player:getChar()
-local dataToSet = {
-["inventory"] = serializeInventory(inventory),
-["position"] = player:GetPos(),
-["health"] = player:Health()
-}
-char:setData(dataToSet, nil, false, specificPlayer)
+High Complexity:
+
+```
+
+**Char Complexity:**
+```lua
+]]
 ```
 
 ---
@@ -693,6 +708,7 @@ Shared
 local char = player:getChar()
 local level = char:getData("level", 1)
 print("Level: " .. level)
+
 ```
 
 **Medium Complexity:**
@@ -701,8 +717,9 @@ print("Level: " .. level)
 local char = player:getChar()
 local allData = char:getData()
 for key, value in pairs(allData) do
-print(key .. ": " .. tostring(value))
+    print(key .. ": " .. tostring(value))
 end
+
 ```
 
 **High Complexity:**
@@ -712,6 +729,7 @@ local char = player:getChar()
 local inventory = char:getData("inventory", {})
 local position = char:getData("position", Vector(0, 0, 0))
 processCharacterState(char, inventory, position)
+
 ```
 
 ---
@@ -741,8 +759,9 @@ Shared
 -- Simple: Check if character is banned
 local char = player:getChar()
 if char:isBanned() then
-print("Character is banned")
+    print("Character is banned")
 end
+
 ```
 
 **Medium Complexity:**
@@ -750,9 +769,10 @@ end
 -- Medium: Use in login validation
 local char = player:getChar()
 if char:isBanned() then
-player:Kick("Your character is banned")
-return
+    player:Kick("Your character is banned")
+    return
 end
+
 ```
 
 **High Complexity:**
@@ -760,10 +780,11 @@ end
 -- High: Use in ban management system
 local char = player:getChar()
 if char:isBanned() then
-local banTime = char:getBanned()
-local banReason = char:getData("banReason", "No reason provided")
-showBanMessage(player, banTime, banReason)
+    local banTime = char:getBanned()
+    local banReason = char:getData("banReason", "No reason provided")
+    showBanMessage(player, banTime, banReason)
 end
+
 ```
 
 ---
@@ -794,6 +815,7 @@ Server
 local char = player:getChar()
 local targetChar = target:getChar()
 char:recognize(targetChar)
+
 ```
 
 **Medium Complexity:**
@@ -802,6 +824,7 @@ char:recognize(targetChar)
 local char = player:getChar()
 local targetID = target:getChar():getID()
 char:recognize(targetID, "John Doe")
+
 ```
 
 **High Complexity:**
@@ -809,10 +832,11 @@ char:recognize(targetID, "John Doe")
 -- High: Use in recognition system
 local char = player:getChar()
 for _, otherChar in pairs(characterList) do
-if shouldRecognize(char, otherChar) then
-char:recognize(otherChar, getFakeName(char, otherChar))
+    if shouldRecognize(char, otherChar) then
+        char:recognize(otherChar, getFakeName(char, otherChar))
+    end
 end
-end
+
 ```
 
 ---
@@ -842,6 +866,7 @@ Server
 -- Simple: Join a class
 local char = player:getChar()
 char:joinClass("citizen")
+
 ```
 
 **Medium Complexity:**
@@ -849,8 +874,9 @@ char:joinClass("citizen")
 -- Medium: Force class change
 local char = player:getChar()
 if char:joinClass("police", true) then
-print("Successfully joined police force")
+    print("Successfully joined police force")
 end
+
 ```
 
 **High Complexity:**
@@ -859,11 +885,12 @@ end
 local char = player:getChar()
 local newClass = determineClass(char, player)
 if char:joinClass(newClass) then
-updateCharacterUI(player)
-notifyClassChange(player, newClass)
+    updateCharacterUI(player)
+    notifyClassChange(player, newClass)
 else
-showClassChangeError(player, newClass)
+    showClassChangeError(player, newClass)
 end
+
 ```
 
 ---
@@ -893,6 +920,7 @@ Server
 -- Simple: Kick from class
 local char = player:getChar()
 char:kickClass()
+
 ```
 
 **Medium Complexity:**
@@ -900,9 +928,10 @@ char:kickClass()
 -- Medium: Use in demotion system
 local char = player:getChar()
 if char:getClass() == "police" then
-char:kickClass()
-notifyDemotion(player)
+    char:kickClass()
+    notifyDemotion(player)
 end
+
 ```
 
 **High Complexity:**
@@ -913,6 +942,7 @@ local oldClass = char:getClass()
 char:kickClass()
 logClassChange(player, oldClass, "none")
 updateCharacterPermissions(player)
+
 ```
 
 ---
@@ -942,6 +972,7 @@ Server
 -- Simple: Increase strength
 local char = player:getChar()
 char:updateAttrib("str", 1)
+
 ```
 
 **Medium Complexity:**
@@ -951,6 +982,7 @@ local char = player:getChar()
 char:updateAttrib("int", 2)
 char:updateAttrib("str", 1)
 notifyStatIncrease(player, "int", 2)
+
 ```
 
 **High Complexity:**
@@ -959,9 +991,10 @@ notifyStatIncrease(player, "int", 2)
 local char = player:getChar()
 local statGains = calculateStatGains(char, experience)
 for stat, gain in pairs(statGains) do
-char:updateAttrib(stat, gain)
-logStatChange(player, stat, gain)
+    char:updateAttrib(stat, gain)
+    logStatChange(player, stat, gain)
 end
+
 ```
 
 ---
@@ -991,6 +1024,7 @@ Server
 -- Simple: Set strength to specific value
 local char = player:getChar()
 char:setAttrib("str", 10)
+
 ```
 
 **Medium Complexity:**
@@ -1000,6 +1034,7 @@ local char = player:getChar()
 char:setAttrib("str", 5)
 char:setAttrib("int", 8)
 char:setAttrib("dex", 6)
+
 ```
 
 **High Complexity:**
@@ -1008,9 +1043,10 @@ char:setAttrib("dex", 6)
 local char = player:getChar()
 local newStats = calculateNewStats(char, adminCommand)
 for stat, value in pairs(newStats) do
-char:setAttrib(stat, value)
-logAdminAction(admin, "set " .. stat .. " to " .. value)
+    char:setAttrib(stat, value)
+    logAdminAction(admin, "set " .. stat .. " to " .. value)
 end
+
 ```
 
 ---
@@ -1040,6 +1076,7 @@ Server
 -- Simple: Add strength boost
 local char = player:getChar()
 char:addBoost("potion_str", "str", 5)
+
 ```
 
 **Medium Complexity:**
@@ -1048,8 +1085,9 @@ char:addBoost("potion_str", "str", 5)
 local char = player:getChar()
 local item = char:getItem("strength_potion")
 if item then
-char:addBoost("item_" .. item:getID(), "str", item:getData("boostAmount", 3))
+    char:addBoost("item_" .. item:getID(), "str", item:getData("boostAmount", 3))
 end
+
 ```
 
 **High Complexity:**
@@ -1058,8 +1096,9 @@ end
 local char = player:getChar()
 local boosts = calculateBoosts(char, equipment)
 for boostID, boostData in pairs(boosts) do
-char:addBoost(boostID, boostData.attrib, boostData.amount)
+    char:addBoost(boostID, boostData.attrib, boostData.amount)
 end
+
 ```
 
 ---
@@ -1089,6 +1128,7 @@ Server
 -- Simple: Remove strength boost
 local char = player:getChar()
 char:removeBoost("potion_str", "str")
+
 ```
 
 **Medium Complexity:**
@@ -1097,8 +1137,9 @@ char:removeBoost("potion_str", "str")
 local char = player:getChar()
 local item = char:getItem("strength_potion")
 if item then
-char:removeBoost("item_" .. item:getID(), "str")
+    char:removeBoost("item_" .. item:getID(), "str")
 end
+
 ```
 
 **High Complexity:**
@@ -1107,8 +1148,9 @@ end
 local char = player:getChar()
 local expiredBoosts = getExpiredBoosts(char)
 for boostID, attribID in pairs(expiredBoosts) do
-char:removeBoost(boostID, attribID)
+    char:removeBoost(boostID, attribID)
 end
+
 ```
 
 ---
@@ -1138,6 +1180,7 @@ Server
 -- Simple: Set admin flags
 local char = player:getChar()
 char:setFlags("a")
+
 ```
 
 **Medium Complexity:**
@@ -1146,6 +1189,7 @@ char:setFlags("a")
 local char = player:getChar()
 char:setFlags("ad")
 notifyPermissionChange(player, "admin and donator")
+
 ```
 
 **High Complexity:**
@@ -1156,6 +1200,7 @@ local newFlags = calculateFlags(char, role, level)
 char:setFlags(newFlags)
 updateCharacterPermissions(player)
 logPermissionChange(admin, player, newFlags)
+
 ```
 
 ---
@@ -1185,6 +1230,7 @@ Server
 -- Simple: Give donator flag
 local char = player:getChar()
 char:giveFlags("d")
+
 ```
 
 **Medium Complexity:**
@@ -1193,6 +1239,7 @@ char:giveFlags("d")
 local char = player:getChar()
 char:giveFlags("v")
 notifyReward(player, "VIP status granted")
+
 ```
 
 **High Complexity:**
@@ -1203,6 +1250,7 @@ local earnedFlags = calculateEarnedFlags(char, achievements)
 char:giveFlags(earnedFlags)
 updateCharacterUI(player)
 logFlagGrant(admin, player, earnedFlags)
+
 ```
 
 ---
@@ -1232,6 +1280,7 @@ Server
 -- Simple: Remove admin flag
 local char = player:getChar()
 char:takeFlags("a")
+
 ```
 
 **Medium Complexity:**
@@ -1240,6 +1289,7 @@ char:takeFlags("a")
 local char = player:getChar()
 char:takeFlags("a")
 notifyDemotion(player, "Admin status revoked")
+
 ```
 
 **High Complexity:**
@@ -1250,6 +1300,7 @@ local revokedFlags = calculateRevokedFlags(char, violations)
 char:takeFlags(revokedFlags)
 updateCharacterUI(player)
 logFlagRevoke(admin, player, revokedFlags)
+
 ```
 
 ---
@@ -1279,6 +1330,7 @@ Server
 -- Simple: Save character
 local char = player:getChar()
 char:save()
+
 ```
 
 **Medium Complexity:**
@@ -1286,8 +1338,9 @@ char:save()
 -- Medium: Save with callback
 local char = player:getChar()
 char:save(function()
-print("Character saved successfully")
+    print("Character saved successfully")
 end)
+
 ```
 
 **High Complexity:**
@@ -1295,10 +1348,11 @@ end)
 -- High: Use in save system
 local char = player:getChar()
 char:save(function()
-updateCharacterCache(char)
-notifySaveComplete(player)
-logCharacterSave(char)
+    updateCharacterCache(char)
+    notifySaveComplete(player)
+    logCharacterSave(char)
 end)
+
 ```
 
 ---
@@ -1328,6 +1382,7 @@ Server
 -- Simple: Sync to all players
 local char = player:getChar()
 char:sync()
+
 ```
 
 **Medium Complexity:**
@@ -1335,6 +1390,7 @@ char:sync()
 -- Medium: Sync to specific player
 local char = player:getChar()
 char:sync(targetPlayer)
+
 ```
 
 **High Complexity:**
@@ -1344,6 +1400,7 @@ local char = player:getChar()
 char:sync(receiver)
 updateCharacterUI(receiver)
 logCharacterSync(char, receiver)
+
 ```
 
 ---
@@ -1373,6 +1430,7 @@ Server
 -- Simple: Setup character
 local char = player:getChar()
 char:setup()
+
 ```
 
 **Medium Complexity:**
@@ -1380,6 +1438,7 @@ char:setup()
 -- Medium: Setup without networking
 local char = player:getChar()
 char:setup(true)
+
 ```
 
 **High Complexity:**
@@ -1389,6 +1448,7 @@ local char = player:getChar()
 char:setup(noNetworking)
 updateCharacterUI(player)
 logCharacterLoad(char)
+
 ```
 
 ---
@@ -1418,6 +1478,7 @@ Server
 -- Simple: Kick character
 local char = player:getChar()
 char:kick()
+
 ```
 
 **Medium Complexity:**
@@ -1426,6 +1487,7 @@ char:kick()
 local char = target:getChar()
 char:kick()
 notifyKick(admin, target)
+
 ```
 
 **High Complexity:**
@@ -1435,6 +1497,7 @@ local char = player:getChar()
 char:kick()
 logCharacterKick(char, reason)
 updateCharacterList()
+
 ```
 
 ---
@@ -1464,6 +1527,7 @@ Server
 -- Simple: Ban character permanently
 local char = player:getChar()
 char:ban()
+
 ```
 
 **Medium Complexity:**
@@ -1471,6 +1535,7 @@ char:ban()
 -- Medium: Ban for specific time
 local char = player:getChar()
 char:ban(3600) -- 1 hour ban
+
 ```
 
 **High Complexity:**
@@ -1480,6 +1545,7 @@ local char = player:getChar()
 char:ban(banTime)
 logCharacterBan(char, banTime, reason)
 notifyBan(admin, player, banTime)
+
 ```
 
 ---
@@ -1509,6 +1575,7 @@ Server
 -- Simple: Delete character
 local char = player:getChar()
 char:delete()
+
 ```
 
 **Medium Complexity:**
@@ -1517,6 +1584,7 @@ char:delete()
 local char = target:getChar()
 char:delete()
 notifyDeletion(admin, target)
+
 ```
 
 **High Complexity:**
@@ -1526,6 +1594,7 @@ local char = player:getChar()
 char:delete()
 logCharacterDeletion(char, reason)
 updateCharacterList()
+
 ```
 
 ---
@@ -1555,6 +1624,7 @@ Server
 -- Simple: Destroy character
 local char = player:getChar()
 char:destroy()
+
 ```
 
 **Medium Complexity:**
@@ -1563,6 +1633,7 @@ char:destroy()
 local char = player:getChar()
 char:destroy()
 updateCharacterList()
+
 ```
 
 **High Complexity:**
@@ -1572,6 +1643,7 @@ local char = player:getChar()
 char:destroy()
 logCharacterDestroy(char)
 updateCharacterCache()
+
 ```
 
 ---
@@ -1601,6 +1673,7 @@ Server
 -- Simple: Give money
 local char = player:getChar()
 char:giveMoney(100)
+
 ```
 
 **Medium Complexity:**
@@ -1609,6 +1682,7 @@ char:giveMoney(100)
 local char = player:getChar()
 char:giveMoney(rewardAmount)
 notifyReward(player, "You received $" .. rewardAmount)
+
 ```
 
 **High Complexity:**
@@ -1618,6 +1692,7 @@ local char = player:getChar()
 char:giveMoney(amount)
 logMoneyTransaction(char, amount, "reward")
 updateEconomyStats()
+
 ```
 
 ---
@@ -1647,6 +1722,7 @@ Server
 -- Simple: Take money
 local char = player:getChar()
 char:takeMoney(50)
+
 ```
 
 **Medium Complexity:**
@@ -1655,6 +1731,7 @@ char:takeMoney(50)
 local char = player:getChar()
 char:takeMoney(itemPrice)
 notifyPayment(player, "You paid $" .. itemPrice)
+
 ```
 
 **High Complexity:**
@@ -1664,6 +1741,7 @@ local char = player:getChar()
 char:takeMoney(amount)
 logMoneyTransaction(char, -amount, "purchase")
 updateEconomyStats()
+
 ```
 
 ---

@@ -43,35 +43,38 @@ Shared
 ```lua
 -- Simple: Add a boolean toggle option
 lia.option.add("showHUD", "Show HUD", "Toggle HUD visibility", true, nil, {
-category = "categoryGeneral",
-isQuick = true
+    category = "categoryGeneral",
+    isQuick = true
 })
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Add a numeric slider with callback
 lia.option.add("volume", "Volume", "Master volume level", 0.8, function(oldVal, newVal)
-RunConsoleCommand("volume", tostring(newVal))
+    RunConsoleCommand("volume", tostring(newVal))
 end, {
-category = "categoryAudio",
-min = 0,
-max = 1,
-decimals = 2
+    category = "categoryAudio",
+    min = 0,
+    max = 1,
+    decimals = 2
 })
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Add a color picker with visibility condition and networking
 lia.option.add("espColor", "ESP Color", "Color for ESP display", Color(255, 0, 0), nil, {
-category = "categoryESP",
-visible = function()
-return LocalPlayer():isStaffOnDuty()
-end,
-shouldNetwork = true,
-type = "Color"
+    category = "categoryESP",
+    visible = function()
+        return LocalPlayer():isStaffOnDuty()
+    end,
+    shouldNetwork = true,
+    type = "Color"
 })
+
 ```
 
 ---
@@ -105,6 +108,7 @@ Shared
 -- Simple: Get static options for a dropdown
 local options = lia.option.getOptions("weaponSelectorPosition")
 -- Returns: {"Left", "Right", "Center"}
+
 ```
 
 **Medium Complexity:**
@@ -113,8 +117,9 @@ local options = lia.option.getOptions("weaponSelectorPosition")
 local combo = vgui.Create("liaComboBox")
 local options = lia.option.getOptions("language")
 for _, option in pairs(options) do
-combo:AddChoice(option, option)
+    combo:AddChoice(option, option)
 end
+
 ```
 
 **High Complexity:**
@@ -122,14 +127,15 @@ end
 -- High: Dynamic options with validation
 local options = lia.option.getOptions("teamSelection")
 if #options > 0 then
-for i, option in ipairs(options) do
-if option and option ~= "" then
-teamCombo:AddChoice(option, option)
-end
-end
+    for i, option in ipairs(options) do
+        if option and option ~= "" then
+            teamCombo:AddChoice(option, option)
+        end
+    end
 else
-teamCombo:AddChoice("No teams available", "")
+    teamCombo:AddChoice("No teams available", "")
 end
+
 ```
 
 ---
@@ -163,6 +169,7 @@ Shared
 ```lua
 -- Simple: Set a boolean option
 lia.option.set("showHUD", true)
+
 ```
 
 **Medium Complexity:**
@@ -170,22 +177,24 @@ lia.option.set("showHUD", true)
 -- Medium: Set option with callback execution
 lia.option.set("volume", 0.5)
 -- This will trigger the callback function if one was defined
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Set multiple options with validation
 local optionsToSet = {
-{"showHUD", true},
-{"volume", 0.8},
-{"espColor", Color(255, 0, 0)}
+    {"showHUD", true},
+    {"volume", 0.8},
+    {"espColor", Color(255, 0, 0)}
 }
 for _, optionData in ipairs(optionsToSet) do
-local key, value = optionData[1], optionData[2]
-if lia.option.stored[key] then
-lia.option.set(key, value)
+    local key, value = optionData[1], optionData[2]
+    if lia.option.stored[key] then
+        lia.option.set(key, value)
+    end
 end
-end
+
 ```
 
 ---
@@ -220,8 +229,9 @@ Shared
 -- Simple: Get a boolean option
 local showHUD = lia.option.get("showHUD")
 if showHUD then
--- HUD is enabled
+    -- HUD is enabled
 end
+
 ```
 
 **Medium Complexity:**
@@ -229,23 +239,25 @@ end
 -- Medium: Get option with fallback
 local volume = lia.option.get("volume", 0.5)
 RunConsoleCommand("volume", tostring(volume))
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Get multiple options with validation and type checking
 local config = {
-showHUD = lia.option.get("showHUD", true),
-volume = lia.option.get("volume", 0.8),
-espColor = lia.option.get("espColor", Color(255, 0, 0))
+    showHUD = lia.option.get("showHUD", true),
+    volume = lia.option.get("volume", 0.8),
+    espColor = lia.option.get("espColor", Color(255, 0, 0))
 }
 -- Validate and apply configuration
 if type(config.showHUD) == "boolean" then
-hook.Run("HUDVisibilityChanged", config.showHUD)
+    hook.Run("HUDVisibilityChanged", config.showHUD)
 end
 if type(config.volume) == "number" and config.volume >= 0 and config.volume <= 1 then
-RunConsoleCommand("volume", tostring(config.volume))
+    RunConsoleCommand("volume", tostring(config.volume))
 end
+
 ```
 
 ---
@@ -275,41 +287,44 @@ Client
 -- Simple: Save options after changes
 lia.option.set("showHUD", true)
 lia.option.save() -- Automatically called, but can be called manually
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Save options with error handling
 local function saveOptionsSafely()
-local success, err = pcall(lia.option.save)
-if not success then
-print("Failed to save options: " .. tostring(err))
-end
+    local success, err = pcall(lia.option.save)
+    if not success then
+        print("Failed to save options: " .. tostring(err))
+    end
 end
 saveOptionsSafely()
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Batch save with validation and backup
 local function batchSaveOptions()
--- Create backup of current options
-local backupPath = "lilia/options_backup_" .. os.time() .. ".json"
-local currentData = file.Read("lilia/options.json", "DATA")
-if currentData then
-file.Write(backupPath, currentData)
-end
--- Save current options
-lia.option.save()
--- Verify save was successful
-local savedData = file.Read("lilia/options.json", "DATA")
-if savedData then
-print("Options saved successfully")
-else
-print("Failed to save options")
-end
+    -- Create backup of current options
+    local backupPath = "lilia/options_backup_" .. os.time() .. ".json"
+    local currentData = file.Read("lilia/options.json", "DATA")
+    if currentData then
+        file.Write(backupPath, currentData)
+    end
+    -- Save current options
+    lia.option.save()
+    -- Verify save was successful
+    local savedData = file.Read("lilia/options.json", "DATA")
+    if savedData then
+        print("Options saved successfully")
+    else
+        print("Failed to save options")
+    end
 end
 batchSaveOptions()
+
 ```
 
 ---
@@ -339,57 +354,60 @@ Client
 -- Simple: Load options at startup
 lia.option.load()
 -- This is typically called automatically during initialization
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Load options with error handling
 local function loadOptionsSafely()
-local success, err = pcall(lia.option.load)
-if not success then
-print("Failed to load options: " .. tostring(err))
--- Reset to defaults
-for key, option in pairs(lia.option.stored) do
-option.value = option.default
-end
-end
+    local success, err = pcall(lia.option.load)
+    if not success then
+        print("Failed to load options: " .. tostring(err))
+        -- Reset to defaults
+        for key, option in pairs(lia.option.stored) do
+            option.value = option.default
+        end
+    end
 end
 loadOptionsSafely()
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load options with validation and migration
 local function loadOptionsWithMigration()
--- Check if options file exists
-if file.Exists("lilia/options.json", "DATA") then
-local data = file.Read("lilia/options.json", "DATA")
-if data then
-local saved = util.JSONToTable(data)
-if saved then
--- Validate and migrate old option formats
-for key, value in pairs(saved) do
-if lia.option.stored[key] then
-local option = lia.option.stored[key]
--- Type validation
-if option.type == "Boolean" and type(value) ~= "boolean" then
-value = tobool(value)
-elseif option.type == "Int" and type(value) ~= "number" then
-value = tonumber(value) or option.default
-end
-option.value = value
-end
-end
-end
-end
-else
--- No saved options, use defaults
-lia.option.load()
-end
--- Trigger initialization hook
-hook.Run("InitializedOptions")
+    -- Check if options file exists
+    if file.Exists("lilia/options.json", "DATA") then
+        local data = file.Read("lilia/options.json", "DATA")
+        if data then
+            local saved = util.JSONToTable(data)
+            if saved then
+                -- Validate and migrate old option formats
+                for key, value in pairs(saved) do
+                    if lia.option.stored[key] then
+                        local option = lia.option.stored[key]
+                        -- Type validation
+                        if option.type == "Boolean" and type(value) ~= "boolean" then
+                            value = tobool(value)
+                        elseif option.type == "Int" and type(value) ~= "number" then
+                            value = tonumber(value) or option.default
+                        end
+                        option.value = value
+                    end
+                end
+            end
+        end
+    else
+        -- No saved options, use defaults
+        lia.option.load()
+    end
+    -- Trigger initialization hook
+    hook.Run("InitializedOptions")
 end
 loadOptionsWithMigration()
+
 ```
 
 ---

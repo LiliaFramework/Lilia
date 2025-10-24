@@ -28,7 +28,7 @@ lia.attribs.list = lia.attribs.list or {}
     -- Medium: Load attributes with conditional directory checking
     local attrDir = "gamemode/attributes"
     if file.Exists(attrDir, "LUA") then
-        lia.attribs.loadFromDir(attrDir)
+    lia.attribs.loadFromDir(attrDir)
     end
     ```
 
@@ -37,11 +37,11 @@ lia.attribs.list = lia.attribs.list or {}
     -- High: Load attributes from multiple directories with error handling
     local attributeDirs = {"gamemode/attributes", "modules/attributes", "plugins/attributes"}
     for _, dir in ipairs(attributeDirs) do
-        if file.Exists(dir, "LUA") then
-            lia.attribs.loadFromDir(dir)
-        else
-            print("Warning: Attribute directory not found: " .. dir)
-        end
+    if file.Exists(dir, "LUA") then
+    lia.attribs.loadFromDir(dir)
+    else
+    print("Warning: Attribute directory not found: " .. dir)
+    end
     end
     ```
 ]]
@@ -68,33 +68,33 @@ if SERVER then
         Example Usage:
 
         Low Complexity:
-        ```lua
-        -- Simple: Setup attributes for a client
-        lia.attribs.setup(client)
-        ```
+    ```lua
+    -- Simple: Setup attributes for a client
+    lia.attribs.setup(client)
+    ```
 
         Medium Complexity:
-        ```lua
-        -- Medium: Setup attributes with validation
-        if IsValid(client) and client:IsPlayer() then
-            lia.attribs.setup(client)
-        end
-        ```
+    ```lua
+    -- Medium: Setup attributes with validation
+    if IsValid(client) and client:IsPlayer() then
+    lia.attribs.setup(client)
+    end
+    ```
 
         High Complexity:
-        ```lua
-        -- High: Setup attributes with custom logic and error handling
-        hook.Add("PlayerSpawn", "SetupAttributes", function(client)
-            if not client:getChar() then return end
-
-            timer.Simple(0.1, function()
-                if IsValid(client) then
-                    lia.attribs.setup(client)
-                    print("Attributes set up for " .. client:Name())
-                end
-            end)
-        end)
-        ```
+    ```lua
+    -- High: Setup attributes with custom logic and error handling
+    hook.Add("PlayerSpawn", "SetupAttributes", function(client)
+    if not client:getChar() then return end
+    
+    timer.Simple(0.1, function()
+    if IsValid(client) then
+    lia.attribs.setup(client)
+    print("Attributes set up for " .. client:Name())
+    end
+    end)
+    end)
+    ```
     ]]
     --
     function lia.attribs.setup(client)

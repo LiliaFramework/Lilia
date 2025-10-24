@@ -35,6 +35,7 @@ Client
 -- Simple: Create a basic context menu
 local menu = lia.derma.dermaMenu()
 menu:AddOption("Option 1", function() print("Option 1 clicked") end)
+
 ```
 
 **Medium Complexity:**
@@ -45,6 +46,7 @@ menu:AddOption("Edit", function() editItem() end)
 menu:AddOption("Delete", function() deleteItem() end)
 menu:AddSpacer()
 menu:AddOption("Properties", function() showProperties() end)
+
 ```
 
 **High Complexity:**
@@ -52,12 +54,13 @@ menu:AddOption("Properties", function() showProperties() end)
 -- High: Create dynamic context menu based on conditions
 local menu = lia.derma.dermaMenu()
 if player:IsAdmin() then
-menu:AddOption("Admin Action", function() adminAction() end)
+    menu:AddOption("Admin Action", function() adminAction() end)
 end
 if item:CanUse() then
-menu:AddOption("Use Item", function() item:Use() end)
+    menu:AddOption("Use Item", function() item:Use() end)
 end
 menu:AddOption("Inspect", function() inspectItem(item) end)
+
 ```
 
 ---
@@ -91,8 +94,9 @@ Client
 ```lua
 -- Simple: Open color picker with callback
 lia.derma.colorPicker(function(color)
-print("Selected color:", color.r, color.g, color.b)
+    print("Selected color:", color.r, color.g, color.b)
 end)
+
 ```
 
 **Medium Complexity:**
@@ -100,8 +104,9 @@ end)
 -- Medium: Open color picker with default color
 local defaultColor = Color(255, 0, 0)
 lia.derma.colorPicker(function(color)
-myPanel:SetColor(color)
+    myPanel:SetColor(color)
 end, defaultColor)
+
 ```
 
 **High Complexity:**
@@ -109,12 +114,13 @@ end, defaultColor)
 -- High: Color picker with validation and multiple callbacks
 local currentColor = settings:GetColor("theme_color")
 lia.derma.colorPicker(function(color)
-if color:Distance(currentColor) > 50 then
-settings:SetColor("theme_color", color)
-updateTheme(color)
-notify("Theme color updated!")
-end
+    if color:Distance(currentColor) > 50 then
+        settings:SetColor("theme_color", color)
+        updateTheme(color)
+        notify("Theme color updated!")
+    end
 end, currentColor)
+
 ```
 
 ---
@@ -154,6 +160,7 @@ Client
 local menu = lia.derma.radialMenu()
 menu:AddOption("Option 1", function() print("Option 1 selected") end)
 menu:AddOption("Option 2", function() print("Option 2 selected") end)
+
 ```
 
 **Medium Complexity:**
@@ -163,16 +170,17 @@ local menu = lia.derma.radialMenu()
 menu:AddOption("Edit", function() editItem() end, "icon16/pencil.png", "Edit this item")
 menu:AddOption("Delete", function() deleteItem() end, "icon16/delete.png", "Delete this item")
 menu:AddOption("Copy", function() copyItem() end, "icon16/copy.png", "Copy this item")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Create radial menu with custom options and submenus
 local options = {
-radius = 320,
-inner_radius = 120,
-hover_sound = "ui/buttonclick.wav",
-scale_animation = true
+    radius = 320,
+    inner_radius = 120,
+    hover_sound = "ui/buttonclick.wav",
+    scale_animation = true
 }
 local menu = lia.derma.radialMenu(options)
 -- Add main options
@@ -183,6 +191,7 @@ submenu:AddOption("Attack", function() attackTarget() end, "icon16/sword.png", "
 submenu:AddOption("Defend", function() defendPosition() end, "icon16/shield.png", "Defend position")
 -- Add submenu option
 menu:AddSubMenuOption("Actions", submenu, "icon16/gear.png", "Access action menu")
+
 ```
 
 ---
@@ -215,33 +224,36 @@ Client
 ```lua
 -- Simple: Open player selector with callback
 lia.derma.playerSelector(function(player)
-print("Selected player:", player:Name())
+    print("Selected player:", player:Name())
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Player selector with validation
 lia.derma.playerSelector(function(player)
-if IsValid(player) and player:IsPlayer() then
-sendMessage(player, "Hello!")
-end
+    if IsValid(player) and player:IsPlayer() then
+        sendMessage(player, "Hello!")
+    end
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Player selector with admin checks and multiple actions
 lia.derma.playerSelector(function(player)
-if not IsValid(player) then return end
-local menu = lia.derma.dermaMenu()
-menu:AddOption("Teleport", function() teleportToPlayer(player) end)
-menu:AddOption("Spectate", function() spectatePlayer(player) end)
-if player:IsAdmin() then
-menu:AddOption("Admin Panel", function() openAdminPanel(player) end)
-end
-menu:Open()
+    if not IsValid(player) then return end
+    local menu = lia.derma.dermaMenu()
+    menu:AddOption("Teleport", function() teleportToPlayer(player) end)
+    menu:AddOption("Spectate", function() spectatePlayer(player) end)
+    if player:IsAdmin() then
+        menu:AddOption("Admin Panel", function() openAdminPanel(player) end)
+    end
+    menu:Open()
 end)
+
 ```
 
 ---
@@ -276,39 +288,42 @@ Client
 ```lua
 -- Simple: Open text input dialog
 lia.derma.textBox("Enter Name", "Type your name here", function(text)
-print("Entered:", text)
+    print("Entered:", text)
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Text input with validation
 lia.derma.textBox("Set Password", "Enter new password", function(text)
-if string.len(text) >= 6 then
-setPassword(text)
-else
-notify("Password too short!")
-end
+    if string.len(text) >= 6 then
+        setPassword(text)
+    else
+        notify("Password too short!")
+    end
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Text input with multiple validations and processing
 lia.derma.textBox("Create Item", "Enter item name", function(text)
-if not text or text == "" then return end
-local cleanText = string.Trim(text)
-if string.len(cleanText) < 3 then
-notify("Name too short!")
-return
-end
-if itemExists(cleanText) then
-notify("Item already exists!")
-return
-end
-createItem(cleanText)
-refreshItemList()
+    if not text or text == "" then return end
+    local cleanText = string.Trim(text)
+    if string.len(cleanText) < 3 then
+        notify("Name too short!")
+        return
+    end
+    if itemExists(cleanText) then
+        notify("Item already exists!")
+        return
+    end
+    createItem(cleanText)
+    refreshItemList()
 end)
+
 ```
 
 ---
@@ -343,39 +358,42 @@ Client
 ```lua
 -- Simple: Open text input dialog
 lia.derma.textBox("Enter Name", "Type your name here", function(text)
-print("Entered:", text)
+    print("Entered:", text)
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Text input with validation
 lia.derma.textBox("Set Password", "Enter new password", function(text)
-if string.len(text) >= 6 then
-setPassword(text)
-else
-notify("Password too short!")
-end
+    if string.len(text) >= 6 then
+        setPassword(text)
+    else
+        notify("Password too short!")
+    end
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Text input with multiple validations and processing
 lia.derma.textBox("Create Item", "Enter item name", function(text)
-if not text or text == "" then return end
-local cleanText = string.Trim(text)
-if string.len(cleanText) < 3 then
-notify("Name too short!")
-return
-end
-if itemExists(cleanText) then
-notify("Item already exists!")
-return
-end
-createItem(cleanText)
-refreshItemList()
+    if not text or text == "" then return end
+    local cleanText = string.Trim(text)
+    if string.len(cleanText) < 3 then
+        notify("Name too short!")
+        return
+    end
+    if itemExists(cleanText) then
+        notify("Item already exists!")
+        return
+    end
+    createItem(cleanText)
+    refreshItemList()
 end)
+
 ```
 
 ---
@@ -410,39 +428,42 @@ Client
 ```lua
 -- Simple: Open text input dialog
 lia.derma.textBox("Enter Name", "Type your name here", function(text)
-print("Entered:", text)
+    print("Entered:", text)
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Text input with validation
 lia.derma.textBox("Set Password", "Enter new password", function(text)
-if string.len(text) >= 6 then
-setPassword(text)
-else
-notify("Password too short!")
-end
+    if string.len(text) >= 6 then
+        setPassword(text)
+    else
+        notify("Password too short!")
+    end
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Text input with multiple validations and processing
 lia.derma.textBox("Create Item", "Enter item name", function(text)
-if not text or text == "" then return end
-local cleanText = string.Trim(text)
-if string.len(cleanText) < 3 then
-notify("Name too short!")
-return
-end
-if itemExists(cleanText) then
-notify("Item already exists!")
-return
-end
-createItem(cleanText)
-refreshItemList()
+    if not text or text == "" then return end
+    local cleanText = string.Trim(text)
+    if string.len(cleanText) < 3 then
+        notify("Name too short!")
+        return
+    end
+    if itemExists(cleanText) then
+        notify("Item already exists!")
+        return
+    end
+    createItem(cleanText)
+    refreshItemList()
 end)
+
 ```
 
 ---
@@ -481,6 +502,7 @@ Client
 ```lua
 -- Simple: Draw a basic rounded rectangle
 lia.derma.draw(8, 100, 100, 200, 100, Color(255, 0, 0))
+
 ```
 
 **Medium Complexity:**
@@ -488,6 +510,7 @@ lia.derma.draw(8, 100, 100, 200, 100, Color(255, 0, 0))
 -- Medium: Draw with custom flags and color
 local flags = lia.derma.SHAPE_IOS
 lia.derma.draw(12, 50, 50, 300, 150, Color(0, 255, 0, 200), flags)
+
 ```
 
 **High Complexity:**
@@ -497,6 +520,7 @@ local radius = isHovered and 16 or 8
 local color = isSelected and Color(255, 255, 0) or Color(100, 100, 100)
 local flags = bit.bor(lia.derma.SHAPE_FIGMA, lia.derma.BLUR)
 lia.derma.draw(radius, x, y, w, h, color, flags)
+
 ```
 
 ---
@@ -536,6 +560,7 @@ Client
 ```lua
 -- Simple: Draw outlined rounded rectangle
 lia.derma.drawOutlined(8, 100, 100, 200, 100, Color(255, 0, 0), 2)
+
 ```
 
 **Medium Complexity:**
@@ -543,6 +568,7 @@ lia.derma.drawOutlined(8, 100, 100, 200, 100, Color(255, 0, 0), 2)
 -- Medium: Draw with custom thickness and flags
 local flags = lia.derma.SHAPE_IOS
 lia.derma.drawOutlined(12, 50, 50, 300, 150, Color(0, 255, 0), 3, flags)
+
 ```
 
 **High Complexity:**
@@ -551,6 +577,7 @@ lia.derma.drawOutlined(12, 50, 50, 300, 150, Color(0, 255, 0), 3, flags)
 local thickness = isHovered and 3 or 1
 local color = isActive and Color(255, 255, 0) or Color(100, 100, 100)
 lia.derma.drawOutlined(radius, x, y, w, h, color, thickness, flags)
+
 ```
 
 ---
@@ -591,6 +618,7 @@ Client
 -- Simple: Draw textured rounded rectangle
 local texture = Material("icon16/user.png"):GetTexture("$basetexture")
 lia.derma.drawTexture(8, 100, 100, 200, 100, Color(255, 255, 255), texture)
+
 ```
 
 **Medium Complexity:**
@@ -599,6 +627,7 @@ lia.derma.drawTexture(8, 100, 100, 200, 100, Color(255, 255, 255), texture)
 local texture = Material("gui/button.png"):GetTexture("$basetexture")
 local flags = lia.derma.SHAPE_IOS
 lia.derma.drawTexture(12, 50, 50, 300, 150, Color(200, 200, 200), texture, flags)
+
 ```
 
 **High Complexity:**
@@ -607,6 +636,7 @@ lia.derma.drawTexture(12, 50, 50, 300, 150, Color(200, 200, 200), texture, flags
 local texture = isHovered and hoverTexture or normalTexture
 local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
 lia.derma.drawTexture(radius, x, y, w, h, color, texture, flags)
+
 ```
 
 ---
@@ -647,6 +677,7 @@ Client
 -- Simple: Draw material-based rounded rectangle
 local mat = Material("gui/button.png")
 lia.derma.drawMaterial(8, 100, 100, 200, 100, Color(255, 255, 255), mat)
+
 ```
 
 **Medium Complexity:**
@@ -654,8 +685,9 @@ lia.derma.drawMaterial(8, 100, 100, 200, 100, Color(255, 255, 255), mat)
 -- Medium: Draw with color tint and validation
 local mat = Material("effects/fire_cloud1")
 if mat and mat:IsValid() then
-lia.derma.drawMaterial(12, 50, 50, 300, 150, Color(255, 200, 0), mat)
+    lia.derma.drawMaterial(12, 50, 50, 300, 150, Color(255, 200, 0), mat)
 end
+
 ```
 
 **High Complexity:**
@@ -663,12 +695,13 @@ end
 -- High: Dynamic material drawing with fallback
 local mat = getMaterialForState(currentState)
 if mat and mat:IsValid() then
-local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
-lia.derma.drawMaterial(radius, x, y, w, h, color, mat, flags)
+    local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
+    lia.derma.drawMaterial(radius, x, y, w, h, color, mat, flags)
 else
--- Fallback to solid color
-lia.derma.draw(radius, x, y, w, h, fallbackColor, flags)
+    -- Fallback to solid color
+    lia.derma.draw(radius, x, y, w, h, fallbackColor, flags)
 end
+
 ```
 
 ---
@@ -705,6 +738,7 @@ Client
 ```lua
 -- Simple: Draw a basic circle
 lia.derma.drawCircle(100, 100, 50, Color(255, 0, 0))
+
 ```
 
 **Medium Complexity:**
@@ -712,6 +746,7 @@ lia.derma.drawCircle(100, 100, 50, Color(255, 0, 0))
 -- Medium: Draw circle with custom flags
 local flags = lia.derma.SHAPE_CIRCLE
 lia.derma.drawCircle(200, 200, 75, Color(0, 255, 0, 200), flags)
+
 ```
 
 **High Complexity:**
@@ -720,6 +755,7 @@ lia.derma.drawCircle(200, 200, 75, Color(0, 255, 0, 200), flags)
 local radius = isHovered and 60 or 50
 local color = isActive and Color(255, 255, 0) or Color(100, 100, 100)
 lia.derma.drawCircle(x, y, radius, color, flags)
+
 ```
 
 ---
@@ -757,6 +793,7 @@ Client
 ```lua
 -- Simple: Draw outlined circle
 lia.derma.drawCircleOutlined(100, 100, 50, Color(255, 0, 0), 2)
+
 ```
 
 **Medium Complexity:**
@@ -764,6 +801,7 @@ lia.derma.drawCircleOutlined(100, 100, 50, Color(255, 0, 0), 2)
 -- Medium: Draw with custom thickness and flags
 local flags = lia.derma.SHAPE_CIRCLE
 lia.derma.drawCircleOutlined(200, 200, 75, Color(0, 255, 0), 3, flags)
+
 ```
 
 **High Complexity:**
@@ -772,6 +810,7 @@ lia.derma.drawCircleOutlined(200, 200, 75, Color(0, 255, 0), 3, flags)
 local thickness = isHovered and 3 or 1
 local color = isActive and Color(255, 255, 0) or Color(100, 100, 100)
 lia.derma.drawCircleOutlined(x, y, radius, color, thickness, flags)
+
 ```
 
 ---
@@ -810,6 +849,7 @@ Client
 -- Simple: Draw textured circle
 local texture = Material("icon16/user.png"):GetTexture("$basetexture")
 lia.derma.drawCircleTexture(100, 100, 50, Color(255, 255, 255), texture)
+
 ```
 
 **Medium Complexity:**
@@ -818,6 +858,7 @@ lia.derma.drawCircleTexture(100, 100, 50, Color(255, 255, 255), texture)
 local texture = Material("gui/button.png"):GetTexture("$basetexture")
 local flags = lia.derma.SHAPE_CIRCLE
 lia.derma.drawCircleTexture(200, 200, 75, Color(200, 200, 200), texture, flags)
+
 ```
 
 **High Complexity:**
@@ -826,6 +867,7 @@ lia.derma.drawCircleTexture(200, 200, 75, Color(200, 200, 200), texture, flags)
 local texture = isHovered and hoverTexture or normalTexture
 local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
 lia.derma.drawCircleTexture(x, y, radius, color, texture, flags)
+
 ```
 
 ---
@@ -864,6 +906,7 @@ Client
 -- Simple: Draw material-based circle
 local mat = Material("gui/button.png")
 lia.derma.drawCircleMaterial(100, 100, 50, Color(255, 255, 255), mat)
+
 ```
 
 **Medium Complexity:**
@@ -871,8 +914,9 @@ lia.derma.drawCircleMaterial(100, 100, 50, Color(255, 255, 255), mat)
 -- Medium: Draw with color tint and validation
 local mat = Material("effects/fire_cloud1")
 if mat and mat:IsValid() then
-lia.derma.drawCircleMaterial(200, 200, 75, Color(255, 200, 0), mat)
+    lia.derma.drawCircleMaterial(200, 200, 75, Color(255, 200, 0), mat)
 end
+
 ```
 
 **High Complexity:**
@@ -880,12 +924,13 @@ end
 -- High: Dynamic material circle with fallback
 local mat = getMaterialForState(currentState)
 if mat and mat:IsValid() then
-local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
-lia.derma.drawCircleMaterial(x, y, radius, color, mat, flags)
+    local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
+    lia.derma.drawCircleMaterial(x, y, radius, color, mat, flags)
 else
--- Fallback to solid color circle
-lia.derma.drawCircle(x, y, radius, fallbackColor, flags)
+    -- Fallback to solid color circle
+    lia.derma.drawCircle(x, y, radius, fallbackColor, flags)
 end
+
 ```
 
 ---
@@ -927,6 +972,7 @@ Client
 ```lua
 -- Simple: Draw blurred rectangle
 lia.derma.drawBlur(100, 100, 200, 100)
+
 ```
 
 **Medium Complexity:**
@@ -934,6 +980,7 @@ lia.derma.drawBlur(100, 100, 200, 100)
 -- Medium: Draw with custom corner radii and flags
 local flags = lia.derma.SHAPE_IOS
 lia.derma.drawBlur(50, 50, 300, 150, flags, 12, 12, 12, 12)
+
 ```
 
 **High Complexity:**
@@ -944,6 +991,7 @@ local tr = isTopRight and 16 or 8
 local bl = isBottomLeft and 16 or 8
 local br = isBottomRight and 16 or 8
 lia.derma.drawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
+
 ```
 
 ---
@@ -988,12 +1036,14 @@ Client
 ```lua
 -- Simple: Draw basic shadow
 lia.derma.drawShadowsEx(100, 100, 200, 100, Color(0, 0, 0, 100))
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom spread and intensity
 lia.derma.drawShadowsEx(50, 50, 300, 150, Color(0, 0, 0, 150), flags, 12, 12, 12, 12, 20, 25)
+
 ```
 
 **High Complexity:**
@@ -1002,6 +1052,7 @@ lia.derma.drawShadowsEx(50, 50, 300, 150, Color(0, 0, 0, 150), flags, 12, 12, 12
 local spread = isHovered and 40 or 20
 local intensity = spread * 1.5
 lia.derma.drawShadowsEx(x, y, w, h, shadowColor, flags, tl, tr, bl, br, spread, intensity, thickness)
+
 ```
 
 ---
@@ -1042,12 +1093,14 @@ Client
 ```lua
 -- Simple: Draw basic shadow with uniform radius
 lia.derma.drawShadows(8, 100, 100, 200, 100, Color(0, 0, 0, 100))
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom spread and intensity
 lia.derma.drawShadows(12, 50, 50, 300, 150, Color(0, 0, 0, 150), 20, 25)
+
 ```
 
 **High Complexity:**
@@ -1057,6 +1110,7 @@ local radius = isHovered and 16 or 8
 local spread = isHovered and 40 or 20
 local intensity = spread * 1.5
 lia.derma.drawShadows(radius, x, y, w, h, shadowColor, spread, intensity, flags)
+
 ```
 
 ---
@@ -1098,12 +1152,14 @@ Client
 ```lua
 -- Simple: Draw outlined shadow
 lia.derma.drawShadowsOutlined(8, 100, 100, 200, 100, Color(0, 0, 0, 100), 2)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom thickness and spread
 lia.derma.drawShadowsOutlined(12, 50, 50, 300, 150, Color(0, 0, 0, 150), 3, 20, 25)
+
 ```
 
 **High Complexity:**
@@ -1113,6 +1169,7 @@ local thickness = isHovered and 3 or 1
 local spread = isHovered and 40 or 20
 local intensity = spread * 1.5
 lia.derma.drawShadowsOutlined(radius, x, y, w, h, shadowColor, thickness, spread, intensity, flags)
+
 ```
 
 ---
@@ -1148,27 +1205,30 @@ Client
 ```lua
 -- Simple: Create and draw a rectangle
 lia.derma.rect(100, 100, 200, 100):Color(Color(255, 0, 0)):Draw()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Create rectangle with multiple properties
 lia.derma.rect(50, 50, 300, 150)
-:Color(Color(0, 255, 0, 200))
-:Rad(12)
-:Shape(lia.derma.SHAPE_IOS)
-:Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Rad(12)
+    :Shape(lia.derma.SHAPE_IOS)
+    :Draw()
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex rectangle with shadows and clipping
 lia.derma.rect(x, y, w, h)
-:Color(backgroundColor)
-:Radii(16, 8, 16, 8)
-:Shadow(20, 25)
-:Clip(parentPanel)
-:Draw()
+    :Color(backgroundColor)
+    :Radii(16, 8, 16, 8)
+    :Shadow(20, 25)
+    :Clip(parentPanel)
+    :Draw()
+
 ```
 
 ---
@@ -1203,26 +1263,29 @@ Client
 ```lua
 -- Simple: Create and draw a circle
 lia.derma.circle(100, 100, 50):Color(Color(255, 0, 0)):Draw()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Create circle with multiple properties
 lia.derma.circle(200, 200, 75)
-:Color(Color(0, 255, 0, 200))
-:Outline(2)
-:Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Outline(2)
+    :Draw()
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex circle with shadows and textures
 lia.derma.circle(x, y, radius)
-:Color(circleColor)
-:Texture(circleTexture)
-:Shadow(15, 20)
-:Blur(1.5)
-:Draw()
+    :Color(circleColor)
+    :Texture(circleTexture)
+    :Shadow(15, 20)
+    :Blur(1.5)
+    :Draw()
+
 ```
 
 ---
@@ -1257,26 +1320,29 @@ Client
 ```lua
 -- Simple: Create and draw a circle
 lia.derma.circle(100, 100, 50):Color(Color(255, 0, 0)):Draw()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Create circle with multiple properties
 lia.derma.circle(200, 200, 75)
-:Color(Color(0, 255, 0, 200))
-:Outline(2)
-:Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Outline(2)
+    :Draw()
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex circle with shadows and textures
 lia.derma.circle(x, y, radius)
-:Color(circleColor)
-:Texture(circleTexture)
-:Shadow(15, 20)
-:Blur(1.5)
-:Draw()
+    :Color(circleColor)
+    :Texture(circleTexture)
+    :Shadow(15, 20)
+    :Blur(1.5)
+    :Draw()
+
 ```
 
 ---
@@ -1311,26 +1377,29 @@ Client
 ```lua
 -- Simple: Create and draw a circle
 lia.derma.circle(100, 100, 50):Color(Color(255, 0, 0)):Draw()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Create circle with multiple properties
 lia.derma.circle(200, 200, 75)
-:Color(Color(0, 255, 0, 200))
-:Outline(2)
-:Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Outline(2)
+    :Draw()
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex circle with shadows and textures
 lia.derma.circle(x, y, radius)
-:Color(circleColor)
-:Texture(circleTexture)
-:Shadow(15, 20)
-:Blur(1.5)
-:Draw()
+    :Color(circleColor)
+    :Texture(circleTexture)
+    :Shadow(15, 20)
+    :Blur(1.5)
+    :Draw()
+
 ```
 
 ---
@@ -1371,12 +1440,14 @@ Client
 ```lua
 -- Simple: Draw text with shadow
 lia.derma.shadowText("Hello World", "DermaDefault", 100, 100, Color(255, 255, 255), Color(0, 0, 0), 2)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom alignment
 lia.derma.shadowText("Centered Text", "LiliaFont.20", 200, 200, Color(255, 255, 255), Color(0, 0, 0, 150), 3, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
 ```
 
 **High Complexity:**
@@ -1385,6 +1456,7 @@ lia.derma.shadowText("Centered Text", "LiliaFont.20", 200, 200, Color(255, 255, 
 local shadowDist = isHovered and 4 or 2
 local shadowColor = Color(0, 0, 0, isHovered and 200 or 100)
 lia.derma.shadowText(text, font, x, y, textColor, shadowColor, shadowDist, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
 ```
 
 ---
@@ -1424,12 +1496,14 @@ Client
 ```lua
 -- Simple: Draw outlined text
 lia.derma.drawTextOutlined("Hello World", "DermaDefault", 100, 100, Color(255, 255, 255), TEXT_ALIGN_LEFT, 2, Color(0, 0, 0))
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom alignment and outline
 lia.derma.drawTextOutlined("Centered Text", "LiliaFont.20", 200, 200, Color(255, 255, 255), TEXT_ALIGN_CENTER, 3, Color(0, 0, 0, 200))
+
 ```
 
 **High Complexity:**
@@ -1438,6 +1512,7 @@ lia.derma.drawTextOutlined("Centered Text", "LiliaFont.20", 200, 200, Color(255,
 local outlineWidth = isHovered and 4 or 2
 local outlineColor = Color(0, 0, 0, isHovered and 255 or 150)
 lia.derma.drawTextOutlined(text, font, x, y, textColor, TEXT_ALIGN_CENTER, outlineWidth, outlineColor)
+
 ```
 
 ---
@@ -1477,12 +1552,14 @@ Client
 ```lua
 -- Simple: Draw basic tooltip
 lia.derma.drawTip(100, 100, 200, 80, "Help text", "DermaDefault", Color(255, 255, 255), Color(0, 0, 0))
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom styling
 lia.derma.drawTip(50, 50, 300, 100, "This is a tooltip", "LiliaFont.16", Color(255, 255, 255), Color(100, 100, 100))
+
 ```
 
 **High Complexity:**
@@ -1493,6 +1570,7 @@ local h = 60
 local textColor = Color(255, 255, 255)
 local outlineColor = Color(0, 0, 0, isHovered and 200 or 100)
 lia.derma.drawTip(x, y, w, h, text, font, textColor, outlineColor)
+
 ```
 
 ---
@@ -1532,12 +1610,14 @@ Client
 ```lua
 -- Simple: Draw text with automatic shadow
 lia.derma.drawText("Hello World", 100, 100)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom color and alignment
 lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
 ```
 
 **High Complexity:**
@@ -1546,6 +1626,7 @@ lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTE
 local textColor = Color(255, 255, 255)
 local alpha = isHovered and 1.0 or 0.7
 lia.derma.drawText(text, x, y, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, font, alpha)
+
 ```
 
 ---
@@ -1585,12 +1666,14 @@ Client
 ```lua
 -- Simple: Draw text with automatic shadow
 lia.derma.drawText("Hello World", 100, 100)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom color and alignment
 lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
 ```
 
 **High Complexity:**
@@ -1599,6 +1682,7 @@ lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTE
 local textColor = Color(255, 255, 255)
 local alpha = isHovered and 1.0 or 0.7
 lia.derma.drawText(text, x, y, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, font, alpha)
+
 ```
 
 ---
@@ -1638,12 +1722,14 @@ Client
 ```lua
 -- Simple: Draw text with automatic shadow
 lia.derma.drawText("Hello World", 100, 100)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom color and alignment
 lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
 ```
 
 **High Complexity:**
@@ -1652,6 +1738,7 @@ lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTE
 local textColor = Color(255, 255, 255)
 local alpha = isHovered and 1.0 or 0.7
 lia.derma.drawText(text, x, y, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, font, alpha)
+
 ```
 
 ---
@@ -1691,12 +1778,14 @@ Client
 ```lua
 -- Simple: Draw text with automatic shadow
 lia.derma.drawText("Hello World", 100, 100)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom color and alignment
 lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
 ```
 
 **High Complexity:**
@@ -1705,6 +1794,7 @@ lia.derma.drawText("Centered Text", 200, 200, Color(255, 0, 0), TEXT_ALIGN_CENTE
 local textColor = Color(255, 255, 255)
 local alpha = isHovered and 1.0 or 0.7
 lia.derma.drawText(text, x, y, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, font, alpha)
+
 ```
 
 ---
@@ -1740,6 +1830,7 @@ Client
 ```lua
 -- Simple: Smooth value transition
 local currentValue = lia.derma.approachExp(currentValue, targetValue, 5, FrameTime())
+
 ```
 
 **Medium Complexity:**
@@ -1747,6 +1838,7 @@ local currentValue = lia.derma.approachExp(currentValue, targetValue, 5, FrameTi
 -- Medium: Animate panel alpha
 local targetAlpha = isVisible and 255 or 0
 panel:SetAlpha(lia.derma.approachExp(panel:GetAlpha(), targetAlpha, 8, FrameTime()))
+
 ```
 
 **High Complexity:**
@@ -1757,13 +1849,14 @@ local targetX = isHovered and hoverX or normalX
 local targetY = isHovered and hoverY or normalY
 local targetScale = isHovered and 1.1 or 1.0
 panel:SetPos(
-lia.derma.approachExp(panel:GetPos(), targetX, 6, dt),
-lia.derma.approachExp(panel:GetPos(), targetY, 6, dt)
+    lia.derma.approachExp(panel:GetPos(), targetX, 6, dt),
+    lia.derma.approachExp(panel:GetPos(), targetY, 6, dt)
 )
 panel:SetSize(
-lia.derma.approachExp(panel:GetWide(), targetW * targetScale, 4, dt),
-lia.derma.approachExp(panel:GetTall(), targetH * targetScale, 4, dt)
+    lia.derma.approachExp(panel:GetWide(), targetW * targetScale, 4, dt),
+    lia.derma.approachExp(panel:GetTall(), targetH * targetScale, 4, dt)
 )
+
 ```
 
 ---
@@ -1797,6 +1890,7 @@ Client
 -- Simple: Apply ease-out to animation progress
 local eased = lia.derma.easeOutCubic(animationProgress)
 panel:SetAlpha(eased * 255)
+
 ```
 
 **Medium Complexity:**
@@ -1805,6 +1899,7 @@ panel:SetAlpha(eased * 255)
 local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
 local eased = lia.derma.easeOutCubic(progress)
 panel:SetPos(startX + (endX - startX) * eased, startY + (endY - startY) * eased)
+
 ```
 
 **High Complexity:**
@@ -1813,14 +1908,15 @@ panel:SetPos(startX + (endX - startX) * eased, startY + (endY - startY) * eased)
 local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
 local eased = lia.derma.easeOutCubic(progress)
 panel:SetPos(
-startX + (endX - startX) * eased,
-startY + (endY - startY) * eased
+    startX + (endX - startX) * eased,
+    startY + (endY - startY) * eased
 )
 panel:SetSize(
-startW + (endW - startW) * eased,
-startH + (endH - startH) * eased
+    startW + (endW - startW) * eased,
+    startH + (endH - startH) * eased
 )
 panel:SetAlpha(startAlpha + (endAlpha - startAlpha) * eased)
+
 ```
 
 ---
@@ -1854,6 +1950,7 @@ Client
 -- Simple: Apply ease-in-out to animation progress
 local eased = lia.derma.easeInOutCubic(animationProgress)
 panel:SetAlpha(eased * 255)
+
 ```
 
 **Medium Complexity:**
@@ -1863,6 +1960,7 @@ local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
 local eased = lia.derma.easeInOutCubic(progress)
 local scale = startScale + (endScale - startScale) * eased
 panel:SetSize(baseW * scale, baseH * scale)
+
 ```
 
 **High Complexity:**
@@ -1872,14 +1970,15 @@ local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
 local eased = lia.derma.easeInOutCubic(progress)
 -- Animate position, size, and rotation
 panel:SetPos(
-startX + (endX - startX) * eased,
-startY + (endY - startY) * eased
+    startX + (endX - startX) * eased,
+    startY + (endY - startY) * eased
 )
 panel:SetSize(
-startW + (endW - startW) * eased,
-startH + (endH - startH) * eased
+    startW + (endW - startW) * eased,
+    startH + (endH - startH) * eased
 )
 panel:SetRotation(startRotation + (endRotation - startRotation) * eased)
+
 ```
 
 ---
@@ -1918,30 +2017,33 @@ Client
 ```lua
 -- Simple: Animate panel appearance
 lia.derma.animateAppearance(myPanel, 300, 200)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-print("Animation completed!")
+    print("Animation completed!")
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex animation with validation and effects
 if IsValid(panel) then
-local targetW = isExpanded and 500 or 300
-local targetH = isExpanded and 400 or 200
-local duration = isExpanded and 0.25 or 0.15
-local scaleFactor = isExpanded and 0.9 or 0.7
-lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-if IsValid(animPanel) then
-onAnimationComplete(animPanel)
+    local targetW = isExpanded and 500 or 300
+    local targetH = isExpanded and 400 or 200
+    local duration = isExpanded and 0.25 or 0.15
+    local scaleFactor = isExpanded and 0.9 or 0.7
+    lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
 end
-end, scaleFactor)
-end
+
 ```
 
 ---
@@ -1980,30 +2082,33 @@ Client
 ```lua
 -- Simple: Animate panel appearance
 lia.derma.animateAppearance(myPanel, 300, 200)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-print("Animation completed!")
+    print("Animation completed!")
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex animation with validation and effects
 if IsValid(panel) then
-local targetW = isExpanded and 500 or 300
-local targetH = isExpanded and 400 or 200
-local duration = isExpanded and 0.25 or 0.15
-local scaleFactor = isExpanded and 0.9 or 0.7
-lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-if IsValid(animPanel) then
-onAnimationComplete(animPanel)
+    local targetW = isExpanded and 500 or 300
+    local targetH = isExpanded and 400 or 200
+    local duration = isExpanded and 0.25 or 0.15
+    local scaleFactor = isExpanded and 0.9 or 0.7
+    lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
 end
-end, scaleFactor)
-end
+
 ```
 
 ---
@@ -2042,30 +2147,33 @@ Client
 ```lua
 -- Simple: Animate panel appearance
 lia.derma.animateAppearance(myPanel, 300, 200)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-print("Animation completed!")
+    print("Animation completed!")
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex animation with validation and effects
 if IsValid(panel) then
-local targetW = isExpanded and 500 or 300
-local targetH = isExpanded and 400 or 200
-local duration = isExpanded and 0.25 or 0.15
-local scaleFactor = isExpanded and 0.9 or 0.7
-lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-if IsValid(animPanel) then
-onAnimationComplete(animPanel)
+    local targetW = isExpanded and 500 or 300
+    local targetH = isExpanded and 400 or 200
+    local duration = isExpanded and 0.25 or 0.15
+    local scaleFactor = isExpanded and 0.9 or 0.7
+    lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
 end
-end, scaleFactor)
-end
+
 ```
 
 ---
@@ -2104,30 +2212,33 @@ Client
 ```lua
 -- Simple: Animate panel appearance
 lia.derma.animateAppearance(myPanel, 300, 200)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-print("Animation completed!")
+    print("Animation completed!")
 end)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex animation with validation and effects
 if IsValid(panel) then
-local targetW = isExpanded and 500 or 300
-local targetH = isExpanded and 400 or 200
-local duration = isExpanded and 0.25 or 0.15
-local scaleFactor = isExpanded and 0.9 or 0.7
-lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-if IsValid(animPanel) then
-onAnimationComplete(animPanel)
+    local targetW = isExpanded and 500 or 300
+    local targetH = isExpanded and 400 or 200
+    local duration = isExpanded and 0.25 or 0.15
+    local scaleFactor = isExpanded and 0.9 or 0.7
+    lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
 end
-end, scaleFactor)
-end
+
 ```
 
 ---
@@ -2163,22 +2274,25 @@ Client
 ```lua
 -- Simple: Draw blur behind panel
 lia.derma.drawBlur(myPanel)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom blur settings
 lia.derma.drawBlur(myPanel, 8, 0.3, 200)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Dynamic blur with panel validation
 if IsValid(panel) and panel:IsVisible() then
-local amount = isHovered and 10 or 5
-local alpha = isActive and 255 or 150
-lia.derma.drawBlur(panel, amount, 0.2, alpha)
+    local amount = isHovered and 10 or 5
+    local alpha = isActive and 255 or 150
+    lia.derma.drawBlur(panel, amount, 0.2, alpha)
 end
+
 ```
 
 ---
@@ -2214,22 +2328,25 @@ Client
 ```lua
 -- Simple: Draw blur behind panel
 lia.derma.drawBlur(myPanel)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom blur settings
 lia.derma.drawBlur(myPanel, 8, 0.3, 200)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Dynamic blur with panel validation
 if IsValid(panel) and panel:IsVisible() then
-local amount = isHovered and 10 or 5
-local alpha = isActive and 255 or 150
-lia.derma.drawBlur(panel, amount, 0.2, alpha)
+    local amount = isHovered and 10 or 5
+    local alpha = isActive and 255 or 150
+    lia.derma.drawBlur(panel, amount, 0.2, alpha)
 end
+
 ```
 
 ---
@@ -2268,12 +2385,14 @@ Client
 ```lua
 -- Simple: Draw blur at specific position
 lia.derma.drawBlurAt(100, 100, 200, 100)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom blur settings
 lia.derma.drawBlurAt(50, 50, 300, 150, 8, 0.3, 200)
+
 ```
 
 **High Complexity:**
@@ -2282,9 +2401,10 @@ lia.derma.drawBlurAt(50, 50, 300, 150, 8, 0.3, 200)
 local x, y = getScreenPosition()
 local w, h = getBlurSize()
 if x >= 0 and y >= 0 and x + w <= ScrW() and y + h <= ScrH() then
-local amount = isHovered and 10 or 5
-lia.derma.drawBlurAt(x, y, w, h, amount, 0.2, 255)
+    local amount = isHovered and 10 or 5
+    lia.derma.drawBlurAt(x, y, w, h, amount, 0.2, 255)
 end
+
 ```
 
 ---
@@ -2320,43 +2440,46 @@ Client
 ```lua
 -- Simple: Request basic arguments
 local argTypes = {
-name = "string",
-age = "number",
-isActive = "boolean"
+    name = "string",
+    age = "number",
+    isActive = "boolean"
 }
 lia.derma.requestArguments("User Info", argTypes, function(success, results)
-if success then
-print("Name:", results.name, "Age:", results.age)
-end
+    if success then
+        print("Name:", results.name, "Age:", results.age)
+    end
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with dropdown and defaults
 local argTypes = {
-{name = "player", type = "player"},
-{name = "action", type = "table", data = {"kick", "ban", "mute"}},
-{name = "reason", type = "string"}
+    {name = "player", type = "player"},
+    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
+    {name = "reason", type = "string"}
 }
 local defaults = {reason = "No reason provided"}
 lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex argument validation with ordered fields
 local argTypes = {
-{name = "itemName", type = "string"},
-{name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-{name = "quantity", type = "number"},
-{name = "isStackable", type = "boolean"}
+    {name = "itemName", type = "string"},
+    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+    {name = "quantity", type = "number"},
+    {name = "isStackable", type = "boolean"}
 }
 lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-if success and validateItemData(results) then
-createItem(results)
-end
+    if success and validateItemData(results) then
+        createItem(results)
+    end
 end)
+
 ```
 
 ---
@@ -2392,43 +2515,46 @@ Client
 ```lua
 -- Simple: Request basic arguments
 local argTypes = {
-name = "string",
-age = "number",
-isActive = "boolean"
+    name = "string",
+    age = "number",
+    isActive = "boolean"
 }
 lia.derma.requestArguments("User Info", argTypes, function(success, results)
-if success then
-print("Name:", results.name, "Age:", results.age)
-end
+    if success then
+        print("Name:", results.name, "Age:", results.age)
+    end
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with dropdown and defaults
 local argTypes = {
-{name = "player", type = "player"},
-{name = "action", type = "table", data = {"kick", "ban", "mute"}},
-{name = "reason", type = "string"}
+    {name = "player", type = "player"},
+    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
+    {name = "reason", type = "string"}
 }
 local defaults = {reason = "No reason provided"}
 lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex argument validation with ordered fields
 local argTypes = {
-{name = "itemName", type = "string"},
-{name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-{name = "quantity", type = "number"},
-{name = "isStackable", type = "boolean"}
+    {name = "itemName", type = "string"},
+    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+    {name = "quantity", type = "number"},
+    {name = "isStackable", type = "boolean"}
 }
 lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-if success and validateItemData(results) then
-createItem(results)
-end
+    if success and validateItemData(results) then
+        createItem(results)
+    end
 end)
+
 ```
 
 ---
@@ -2464,43 +2590,46 @@ Client
 ```lua
 -- Simple: Request basic arguments
 local argTypes = {
-name = "string",
-age = "number",
-isActive = "boolean"
+    name = "string",
+    age = "number",
+    isActive = "boolean"
 }
 lia.derma.requestArguments("User Info", argTypes, function(success, results)
-if success then
-print("Name:", results.name, "Age:", results.age)
-end
+    if success then
+        print("Name:", results.name, "Age:", results.age)
+    end
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with dropdown and defaults
 local argTypes = {
-{name = "player", type = "player"},
-{name = "action", type = "table", data = {"kick", "ban", "mute"}},
-{name = "reason", type = "string"}
+    {name = "player", type = "player"},
+    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
+    {name = "reason", type = "string"}
 }
 local defaults = {reason = "No reason provided"}
 lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex argument validation with ordered fields
 local argTypes = {
-{name = "itemName", type = "string"},
-{name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-{name = "quantity", type = "number"},
-{name = "isStackable", type = "boolean"}
+    {name = "itemName", type = "string"},
+    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+    {name = "quantity", type = "number"},
+    {name = "isStackable", type = "boolean"}
 }
 lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-if success and validateItemData(results) then
-createItem(results)
-end
+    if success and validateItemData(results) then
+        createItem(results)
+    end
 end)
+
 ```
 
 ---
@@ -2536,25 +2665,28 @@ Client
 ```lua
 -- Simple: Draw entity name
 lia.derma.drawEntText(entity, entity:GetName())
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Draw with custom offset and alpha
 lia.derma.drawEntText(entity, "Custom Text", 20, 200)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Dynamic entity text with conditions
 if IsValid(entity) and entity:IsPlayer() then
-local text = entity:Name()
-if entity:IsAdmin() then
-text = "[ADMIN] " .. text
+    local text = entity:Name()
+    if entity:IsAdmin() then
+        text = "[ADMIN] " .. text
+    end
+    local alpha = entity:IsTyping() and 150 or 255
+    lia.derma.drawEntText(entity, text, 0, alpha)
 end
-local alpha = entity:IsTyping() and 150 or 255
-lia.derma.drawEntText(entity, text, 0, alpha)
-end
+
 ```
 
 ---
@@ -2591,21 +2723,23 @@ Client
 -- Simple: Request dropdown selection
 local options = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestDropdown("Choose Option", options, function(selected)
-print("Selected:", selected)
+    print("Selected:", selected)
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with data values and default
 local options = {
-{"Kick Player", "kick"},
-{"Ban Player", "ban"},
-{"Mute Player", "mute"}
+    {"Kick Player", "kick"},
+    {"Ban Player", "ban"},
+    {"Mute Player", "mute"}
 }
 lia.derma.requestDropdown("Admin Action", options, function(text, data)
-performAction(data)
+    performAction(data)
 end, "kick")
+
 ```
 
 **High Complexity:**
@@ -2613,15 +2747,16 @@ end, "kick")
 -- High: Dynamic options with validation
 local options = {}
 for _, player in pairs(player.GetAll()) do
-if IsValid(player) then
-table.insert(options, {player:Name(), player:SteamID()})
-end
+    if IsValid(player) then
+        table.insert(options, {player:Name(), player:SteamID()})
+    end
 end
 lia.derma.requestDropdown("Select Player", options, function(name, steamid)
-if steamid and steamid ~= "" then
-processPlayerSelection(steamid)
-end
+    if steamid and steamid ~= "" then
+        processPlayerSelection(steamid)
+    end
 end)
+
 ```
 
 ---
@@ -2658,38 +2793,41 @@ Client
 ```lua
 -- Simple: Request text input
 lia.derma.requestString("Enter Name", "Type your name:", function(text)
-if text and text ~= "" then
-print("Name:", text)
-end
+    if text and text ~= "" then
+        print("Name:", text)
+    end
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with default value and max length
 lia.derma.requestString("Set Password", "Enter new password:", function(password)
-if string.len(password) >= 6 then
-setPassword(password)
-end
+    if string.len(password) >= 6 then
+        setPassword(password)
+    end
 end, "", 20)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Request with validation and processing
 lia.derma.requestString("Create Item", "Enter item name:", function(name)
-if not name or name == "" then return end
-local cleanName = string.Trim(name)
-if string.len(cleanName) < 3 then
-notify("Name too short!")
-return
-end
-if itemExists(cleanName) then
-notify("Item already exists!")
-return
-end
-createItem(cleanName)
+    if not name or name == "" then return end
+    local cleanName = string.Trim(name)
+    if string.len(cleanName) < 3 then
+        notify("Name too short!")
+        return
+    end
+    if itemExists(cleanName) then
+        notify("Item already exists!")
+        return
+    end
+    createItem(cleanName)
 end, "", 50)
+
 ```
 
 ---
@@ -2726,22 +2864,24 @@ Client
 -- Simple: Request multiple selections
 local options = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestOptions("Choose Options", options, function(selected)
-print("Selected:", table.concat(selected, ", "))
+    print("Selected:", table.concat(selected, ", "))
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with data values and defaults
 local options = {
-{"Admin", "admin"},
-{"Moderator", "moderator"},
-{"VIP", "vip"}
+    {"Admin", "admin"},
+    {"Moderator", "moderator"},
+    {"VIP", "vip"}
 }
 local defaults = {"admin"}
 lia.derma.requestOptions("Select Roles", options, function(selected)
-assignRoles(selected)
+    assignRoles(selected)
 end, defaults)
+
 ```
 
 **High Complexity:**
@@ -2749,15 +2889,16 @@ end, defaults)
 -- High: Dynamic options with validation
 local options = {}
 for _, permission in pairs(availablePermissions) do
-table.insert(options, {permission.displayName, permission.id})
+    table.insert(options, {permission.displayName, permission.id})
 end
 lia.derma.requestOptions("Select Permissions", options, function(selected)
-if #selected > 0 then
-validateAndAssignPermissions(selected)
-else
-notify("Please select at least one permission!")
-end
+    if #selected > 0 then
+        validateAndAssignPermissions(selected)
+    else
+        notify("Please select at least one permission!")
+    end
 end, userPermissions)
+
 ```
 
 ---
@@ -2794,37 +2935,40 @@ Client
 ```lua
 -- Simple: Request confirmation
 lia.derma.requestBinaryQuestion("Confirm", "Are you sure?", function(result)
-if result then
-print("User confirmed")
-else
-print("User cancelled")
-end
+    if result then
+        print("User confirmed")
+    else
+        print("User cancelled")
+    end
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with custom button text
 lia.derma.requestBinaryQuestion("Delete Item", "Delete this item permanently?", function(result)
-if result then
-deleteItem(item)
-end
+    if result then
+        deleteItem(item)
+    end
 end, "Delete", "Cancel")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Request with validation and logging
 lia.derma.requestBinaryQuestion("Admin Action", "Execute admin command: " .. command .. "?", function(result)
-if result then
-if validateAdminCommand(command) then
-executeAdminCommand(command)
-logAdminAction(command)
-else
-notify("Invalid command!")
-end
-end
+    if result then
+        if validateAdminCommand(command) then
+            executeAdminCommand(command)
+            logAdminAction(command)
+        else
+            notify("Invalid command!")
+        end
+    end
 end, "Execute", "Cancel")
+
 ```
 
 ---
@@ -2861,19 +3005,21 @@ Client
 -- Simple: Request button selection
 local buttons = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestButtons("Choose Action", buttons, function(index, text)
-print("Selected:", text)
+    print("Selected:", text)
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with custom callbacks and icons
 local buttons = {
-{text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
-{text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
-{text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
+    {text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
+    {text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
+    {text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
 }
 lia.derma.requestButtons("Item Actions", buttons, nil, "Choose an action for this item")
+
 ```
 
 **High Complexity:**
@@ -2881,15 +3027,16 @@ lia.derma.requestButtons("Item Actions", buttons, nil, "Choose an action for thi
 -- High: Dynamic buttons with validation
 local buttons = {}
 if player:IsAdmin() then
-table.insert(buttons, {text = "Admin Panel", callback = function() openAdminPanel() end})
+    table.insert(buttons, {text = "Admin Panel", callback = function() openAdminPanel() end})
 end
 if item:CanEdit() then
-table.insert(buttons, {text = "Edit", callback = function() editItem(item) end})
+    table.insert(buttons, {text = "Edit", callback = function() editItem(item) end})
 end
 table.insert(buttons, {text = "View", callback = function() viewItem(item) end})
 lia.derma.requestButtons("Item Options", buttons, function(index, text)
-logAction("Button clicked: " .. text)
+    logAction("Button clicked: " .. text)
 end, "Available actions for " .. item:GetName())
+
 ```
 
 ---
@@ -2926,19 +3073,21 @@ Client
 -- Simple: Request button selection
 local buttons = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestButtons("Choose Action", buttons, function(index, text)
-print("Selected:", text)
+    print("Selected:", text)
 end)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Request with custom callbacks and icons
 local buttons = {
-{text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
-{text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
-{text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
+    {text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
+    {text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
+    {text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
 }
 lia.derma.requestButtons("Item Actions", buttons, nil, "Choose an action for this item")
+
 ```
 
 **High Complexity:**
@@ -2946,15 +3095,16 @@ lia.derma.requestButtons("Item Actions", buttons, nil, "Choose an action for thi
 -- High: Dynamic buttons with validation
 local buttons = {}
 if player:IsAdmin() then
-table.insert(buttons, {text = "Admin Panel", callback = function() openAdminPanel() end})
+    table.insert(buttons, {text = "Admin Panel", callback = function() openAdminPanel() end})
 end
 if item:CanEdit() then
-table.insert(buttons, {text = "Edit", callback = function() editItem(item) end})
+    table.insert(buttons, {text = "Edit", callback = function() editItem(item) end})
 end
 table.insert(buttons, {text = "View", callback = function() viewItem(item) end})
 lia.derma.requestButtons("Item Options", buttons, function(index, text)
-logAction("Button clicked: " .. text)
+    logAction("Button clicked: " .. text)
 end, "Available actions for " .. item:GetName())
+
 ```
 
 ---

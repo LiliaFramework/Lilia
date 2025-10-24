@@ -34,8 +34,9 @@ Server
 -- Simple: Check if a position is empty
 local pos = Vector(100, 200, 50)
 if lia.darkrp.isEmpty(pos) then
-print("Position is empty")
+    print("Position is empty")
 end
+
 ```
 
 **Medium Complexity:**
@@ -44,8 +45,9 @@ end
 local pos = player:GetPos()
 local ignoreEntities = {player, someProp}
 if lia.darkrp.isEmpty(pos, ignoreEntities) then
-player:SetPos(pos)
+    player:SetPos(pos)
 end
+
 ```
 
 **High Complexity:**
@@ -54,15 +56,16 @@ end
 local spawnPos = Vector(0, 0, 0)
 local ignoreList = {}
 for _, ent in ipairs(ents.GetAll()) do
-if ent:GetClass() == "prop_physics" then
-table.insert(ignoreList, ent)
-end
+    if ent:GetClass() == "prop_physics" then
+        table.insert(ignoreList, ent)
+    end
 end
 if lia.darkrp.isEmpty(spawnPos, ignoreList) then
-local spawn = ents.Create("npc_citizen")
-spawn:SetPos(spawnPos)
-spawn:Spawn()
+    local spawn = ents.Create("npc_citizen")
+    spawn:SetPos(spawnPos)
+    spawn:Spawn()
 end
+
 ```
 
 ---
@@ -101,6 +104,7 @@ Server
 local spawnPos = Vector(0, 0, 0)
 local emptyPos = lia.darkrp.findEmptyPos(spawnPos, {}, 100, 10, Vector(0, 0, 0))
 player:SetPos(emptyPos)
+
 ```
 
 **Medium Complexity:**
@@ -110,8 +114,9 @@ local startPos = Vector(100, 200, 50)
 local ignoreList = {player, someNPC}
 local emptyPos = lia.darkrp.findEmptyPos(startPos, ignoreList, 200, 25, Vector(32, 32, 64))
 if emptyPos ~= startPos then
-print("Found empty position at: " .. tostring(emptyPos))
+    print("Found empty position at: " .. tostring(emptyPos))
 end
+
 ```
 
 **High Complexity:**
@@ -120,19 +125,20 @@ end
 local spawnPoints = {Vector(0, 0, 0), Vector(100, 0, 0), Vector(0, 100, 0)}
 local ignoreEntities = {}
 for _, ent in ipairs(ents.FindInSphere(Vector(0, 0, 0), 500)) do
-if ent:IsPlayer() or ent:IsNPC() then
-table.insert(ignoreEntities, ent)
-end
+    if ent:IsPlayer() or ent:IsNPC() then
+        table.insert(ignoreEntities, ent)
+    end
 end
 for _, spawnPoint in ipairs(spawnPoints) do
-local emptyPos = lia.darkrp.findEmptyPos(spawnPoint, ignoreEntities, 150, 20, Vector(16, 16, 32))
-if emptyPos ~= spawnPoint then
-local newPlayer = ents.Create("npc_citizen")
-newPlayer:SetPos(emptyPos)
-newPlayer:Spawn()
-break
+    local emptyPos = lia.darkrp.findEmptyPos(spawnPoint, ignoreEntities, 150, 20, Vector(16, 16, 32))
+    if emptyPos ~= spawnPoint then
+        local newPlayer = ents.Create("npc_citizen")
+        newPlayer:SetPos(emptyPos)
+        newPlayer:Spawn()
+        break
+    end
 end
-end
+
 ```
 
 ---
@@ -168,6 +174,7 @@ Server
 ```lua
 -- Simple: Send basic notification
 lia.darkrp.notify(player, nil, nil, "welcome_message")
+
 ```
 
 **Medium Complexity:**
@@ -175,6 +182,7 @@ lia.darkrp.notify(player, nil, nil, "welcome_message")
 -- Medium: Send notification with context
 local message = "player_joined"
 lia.darkrp.notify(player, nil, nil, message)
+
 ```
 
 **High Complexity:**
@@ -182,10 +190,11 @@ lia.darkrp.notify(player, nil, nil, message)
 -- High: Send notifications to multiple players
 local message = "server_restart_warning"
 for _, ply in ipairs(player.GetAll()) do
-if ply:IsValid() and ply:IsConnected() then
-lia.darkrp.notify(ply, nil, nil, message)
+    if ply:IsValid() and ply:IsConnected() then
+        lia.darkrp.notify(ply, nil, nil, message)
+    end
 end
-end
+
 ```
 
 ---
@@ -221,6 +230,7 @@ Client
 -- Simple: Wrap basic text
 local wrappedText = lia.darkrp.textWrap("Hello world this is a long text", "DermaDefault", 200)
 print(wrappedText)
+
 ```
 
 **Medium Complexity:**
@@ -234,25 +244,27 @@ local wrapped = lia.darkrp.textWrap(text, font, maxWidth)
 local label = vgui.Create("DLabel")
 label:SetText(wrapped)
 label:SetFont(font)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Dynamic text wrapping with multiple paragraphs
 local paragraphs = {
-"First paragraph with lots of text that needs wrapping",
-"Second paragraph with different content",
-"Third paragraph with even more content"
+    "First paragraph with lots of text that needs wrapping",
+    "Second paragraph with different content",
+    "Third paragraph with even more content"
 }
 local font = "liaFont"
 local maxWidth = 400
 local wrappedParagraphs = {}
 for i, paragraph in ipairs(paragraphs) do
-local wrapped = lia.darkrp.textWrap(paragraph, font, maxWidth)
-table.insert(wrappedParagraphs, wrapped)
+    local wrapped = lia.darkrp.textWrap(paragraph, font, maxWidth)
+    table.insert(wrappedParagraphs, wrapped)
 end
 local finalText = table.concat(wrappedParagraphs, "\n\n")
 -- Use finalText in UI
+
 ```
 
 ---
@@ -286,6 +298,7 @@ Shared
 -- Simple: Format a basic amount
 local formatted = lia.darkrp.formatMoney(1000)
 print(formatted) -- "$1,000"
+
 ```
 
 **Medium Complexity:**
@@ -294,6 +307,7 @@ print(formatted) -- "$1,000"
 local playerMoney = player:getMoney()
 local formattedMoney = lia.darkrp.formatMoney(playerMoney)
 player:notifyInfoLocalized("your_money")
+
 ```
 
 **High Complexity:**
@@ -302,11 +316,12 @@ player:notifyInfoLocalized("your_money")
 local amounts = {500, 1250, 9999, 150000}
 local formattedAmounts = {}
 for _, amount in ipairs(amounts) do
-local formatted = lia.darkrp.formatMoney(amount)
-table.insert(formattedAmounts, formatted)
+    local formatted = lia.darkrp.formatMoney(amount)
+    table.insert(formattedAmounts, formatted)
 end
 local displayText = "Transaction amounts: " .. table.concat(formattedAmounts, ", ")
 chat.AddText(Color(255, 255, 255), displayText)
+
 ```
 
 ---
@@ -346,52 +361,55 @@ Shared
 ```lua
 -- Simple: Create a basic entity
 lia.darkrp.createEntity("Chair", {
-model = "models/props_c17/FurnitureChair001a.mdl",
-price = 50
+    model = "models/props_c17/FurnitureChair001a.mdl",
+    price = 50
 })
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Create entity with full configuration
 lia.darkrp.createEntity("Advanced Computer", {
-cmd = "computer",
-model = "models/props_lab/monitor01b.mdl",
-desc = "A high-tech computer for advanced operations",
-category = "Electronics",
-ent = "prop_physics",
-price = 200
+    cmd = "computer",
+    model = "models/props_lab/monitor01b.mdl",
+    desc = "A high-tech computer for advanced operations",
+    category = "Electronics",
+    ent = "prop_physics",
+    price = 200
 })
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Create multiple entities from configuration table
 local entities = {
-{
-name = "Office Desk",
-data = {
-cmd = "desk",
-model = "models/props_c17/FurnitureTable002a.mdl",
-desc = "A sturdy office desk",
-category = "Furniture",
-price = 100
-}
-},
-{
-name = "Filing Cabinet",
-data = {
-cmd = "cabinet",
-model = "models/props_c17/FurnitureDrawer001a.mdl",
-desc = "Store important documents",
-category = "Furniture",
-price = 75
-}
-}
+    {
+        name = "Office Desk",
+        data = {
+            cmd = "desk",
+            model = "models/props_c17/FurnitureTable002a.mdl",
+            desc = "A sturdy office desk",
+            category = "Furniture",
+            price = 100
+        }
+    },
+    {
+        name = "Filing Cabinet",
+        data = {
+            cmd = "cabinet",
+            model = "models/props_c17/FurnitureDrawer001a.mdl",
+            desc = "Store important documents",
+            category = "Furniture",
+            price = 75
+        }
+    }
 }
 for _, entity in ipairs(entities) do
-lia.darkrp.createEntity(entity.name, entity.data)
+    lia.darkrp.createEntity(entity.name, entity.data)
 end
+
 ```
 
 ---
@@ -420,28 +438,31 @@ Shared
 ```lua
 -- Simple: Call the function (no effect)
 lia.darkrp.createCategory()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Use in DarkRP compatibility code
 if DarkRP and DarkRP.createCategory then
-lia.darkrp.createCategory()
+    lia.darkrp.createCategory()
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Use in addon initialization
 local function initializeDarkRPCompatibility()
--- Ensure DarkRP compatibility functions exist
-lia.darkrp.createCategory()
--- Other DarkRP compatibility setup
-if DarkRP and DarkRP.createEntity then
-print("DarkRP compatibility initialized")
-end
+    -- Ensure DarkRP compatibility functions exist
+    lia.darkrp.createCategory()
+    -- Other DarkRP compatibility setup
+    if DarkRP and DarkRP.createEntity then
+        print("DarkRP compatibility initialized")
+    end
 end
 initializeDarkRPCompatibility()
+
 ```
 
 ---
@@ -470,28 +491,31 @@ Shared
 ```lua
 -- Simple: Call the function (no effect)
 lia.darkrp.createCategory()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Use in DarkRP compatibility code
 if DarkRP and DarkRP.createCategory then
-lia.darkrp.createCategory()
+    lia.darkrp.createCategory()
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Use in addon initialization
 local function initializeDarkRPCompatibility()
--- Ensure DarkRP compatibility functions exist
-lia.darkrp.createCategory()
--- Other DarkRP compatibility setup
-if DarkRP and DarkRP.createEntity then
-print("DarkRP compatibility initialized")
-end
+    -- Ensure DarkRP compatibility functions exist
+    lia.darkrp.createCategory()
+    -- Other DarkRP compatibility setup
+    if DarkRP and DarkRP.createEntity then
+        print("DarkRP compatibility initialized")
+    end
 end
 initializeDarkRPCompatibility()
+
 ```
 
 ---
@@ -520,28 +544,31 @@ Shared
 ```lua
 -- Simple: Call the function (no effect)
 lia.darkrp.createCategory()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Use in DarkRP compatibility code
 if DarkRP and DarkRP.createCategory then
-lia.darkrp.createCategory()
+    lia.darkrp.createCategory()
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Use in addon initialization
 local function initializeDarkRPCompatibility()
--- Ensure DarkRP compatibility functions exist
-lia.darkrp.createCategory()
--- Other DarkRP compatibility setup
-if DarkRP and DarkRP.createEntity then
-print("DarkRP compatibility initialized")
-end
+    -- Ensure DarkRP compatibility functions exist
+    lia.darkrp.createCategory()
+    -- Other DarkRP compatibility setup
+    if DarkRP and DarkRP.createEntity then
+        print("DarkRP compatibility initialized")
+    end
 end
 initializeDarkRPCompatibility()
+
 ```
 
 ---
@@ -570,28 +597,31 @@ Shared
 ```lua
 -- Simple: Call the function (no effect)
 lia.darkrp.createCategory()
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Use in DarkRP compatibility code
 if DarkRP and DarkRP.createCategory then
-lia.darkrp.createCategory()
+    lia.darkrp.createCategory()
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Use in addon initialization
 local function initializeDarkRPCompatibility()
--- Ensure DarkRP compatibility functions exist
-lia.darkrp.createCategory()
--- Other DarkRP compatibility setup
-if DarkRP and DarkRP.createEntity then
-print("DarkRP compatibility initialized")
-end
+    -- Ensure DarkRP compatibility functions exist
+    lia.darkrp.createCategory()
+    -- Other DarkRP compatibility setup
+    if DarkRP and DarkRP.createEntity then
+        print("DarkRP compatibility initialized")
+    end
 end
 initializeDarkRPCompatibility()
+
 ```
 
 ---

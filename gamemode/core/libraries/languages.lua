@@ -29,7 +29,7 @@ lia.lang.stored = lia.lang.stored or {}
     -- Medium: Load languages from custom module directory
     local moduleDir = "lilia/gamemode/modules/mymodule/languages"
     if file.Exists(moduleDir, "LUA") then
-        lia.lang.loadFromDir(moduleDir)
+    lia.lang.loadFromDir(moduleDir)
     end
     ```
 
@@ -37,15 +37,15 @@ lia.lang.stored = lia.lang.stored or {}
     ```lua
     -- High: Load languages from multiple directories with validation
     local languageDirs = {
-        "lilia/gamemode/languages",
-        "lilia/gamemode/modules/custom/languages",
-        "addons/mycustomaddon/languages"
+    "lilia/gamemode/languages",
+    "lilia/gamemode/modules/custom/languages",
+    "addons/mycustomaddon/languages"
     }
-
+    
     for _, dir in ipairs(languageDirs) do
-        if file.Exists(dir, "LUA") then
-            lia.lang.loadFromDir(dir)
-        end
+    if file.Exists(dir, "LUA") then
+    lia.lang.loadFromDir(dir)
+    end
     end
     ```
 ]]
@@ -88,8 +88,8 @@ end
     ```lua
     -- Simple: Add basic language strings
     lia.lang.addTable("english", {
-        hello = "Hello",
-        goodbye = "Goodbye"
+    hello = "Hello",
+    goodbye = "Goodbye"
     })
     ```
 
@@ -97,9 +97,9 @@ end
     ```lua
     -- Medium: Add module-specific language strings
     local moduleLang = {
-        moduleTitle = "My Module",
-        moduleDescription = "This is a custom module",
-        moduleError = "An error occurred: %s"
+    moduleTitle = "My Module",
+    moduleDescription = "This is a custom module",
+    moduleError = "An error occurred: %s"
     }
     lia.lang.addTable("english", moduleLang)
     ```
@@ -108,15 +108,15 @@ end
     ```lua
     -- High: Add multiple language tables with validation
     local languages = {
-        english = { title = "Title", desc = "Description" },
-        spanish = { title = "Título", desc = "Descripción" },
-        french = { title = "Titre", desc = "Description" }
+    english = { title = "Title", desc = "Description" },
+    spanish = { title = "Título", desc = "Descripción" },
+    french = { title = "Titre", desc = "Description" }
     }
-
+    
     for lang, strings in pairs(languages) do
-        if type(strings) == "table" then
-            lia.lang.addTable(lang, strings)
-        end
+    if type(strings) == "table" then
+    lia.lang.addTable(lang, strings)
+    end
     end
     ```
 ]]
@@ -149,9 +149,9 @@ end
     local languages = lia.lang.getLanguages()
     local menu = vgui.Create("DFrame")
     local combo = vgui.Create("DComboBox", menu)
-
+    
     for _, lang in ipairs(languages) do
-        combo:AddChoice(lang)
+    combo:AddChoice(lang)
     end
     ```
 
@@ -159,22 +159,22 @@ end
     ```lua
     -- High: Validate language selection with fallback
     local function setLanguage(langName)
-        local languages = lia.lang.getLanguages()
-        local found = false
-
-        for _, lang in ipairs(languages) do
-            if lang:lower() == langName:lower() then
-                found = true
-                break
-            end
-        end
-
-        if found then
-            lia.config.set("Language", langName:lower())
-        else
-            lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
-            lia.config.set("Language", "english")
-        end
+    local languages = lia.lang.getLanguages()
+    local found = false
+    
+    for _, lang in ipairs(languages) do
+    if lang:lower() == langName:lower() then
+    found = true
+    break
+    end
+    end
+    
+    if found then
+    lia.config.set("Language", langName:lower())
+    else
+    lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
+    lia.config.set("Language", "english")
+    end
     end
     ```
 ]]
@@ -216,15 +216,15 @@ end
     ```lua
     -- High: Complex localized string with multiple parameters and error handling
     local function displayItemInfo(itemName, quantity, price)
-        local lang = lia.config and lia.config.get("Language", "english") or "english"
-        local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
-        local template = langTable and langTable["itemInfo"] or "itemInfo"
-        if template then
-            local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
-            lia.notice.add(message, NOTIFY_GENERIC)
-        else
-            lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
-        end
+    local lang = lia.config and lia.config.get("Language", "english") or "english"
+    local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
+    local template = langTable and langTable["itemInfo"] or "itemInfo"
+    if template then
+    local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
+    lia.notice.add(message, NOTIFY_GENERIC)
+    else
+    lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
+    end
     end
     ```
 ]]
@@ -275,8 +275,8 @@ end
     ```lua
     -- Medium: Use L function with parameters in chat
     local function onPlayerChat(ply, text)
-        local welcomeMsg = L("playerSays", ply:Name(), text)
-        chat.AddText(Color(255, 255, 255), welcomeMsg)
+    local welcomeMsg = L("playerSays", ply:Name(), text)
+    chat.AddText(Color(255, 255, 255), welcomeMsg)
     end
     ```
 
@@ -284,20 +284,20 @@ end
     ```lua
     -- High: Use L function in complex UI with multiple languages
     local function updateUI()
-        local currentLang = lia.config.get("Language", "english")
-        local title = L("menuTitle")
-        local description = L("menuDescription")
-        local buttonText = L("confirmButton")
-
-        if IsValid(self.titleLabel) then
-            self.titleLabel:SetText(title)
-        end
-        if IsValid(self.descLabel) then
-            self.descLabel:SetText(description)
-        end
-        if IsValid(self.confirmBtn) then
-            self.confirmBtn:SetText(buttonText)
-        end
+    local currentLang = lia.config.get("Language", "english")
+    local title = L("menuTitle")
+    local description = L("menuDescription")
+    local buttonText = L("confirmButton")
+    
+    if IsValid(self.titleLabel) then
+    self.titleLabel:SetText(title)
+    end
+    if IsValid(self.descLabel) then
+    self.descLabel:SetText(description)
+    end
+    if IsValid(self.confirmBtn) then
+    self.confirmBtn:SetText(buttonText)
+    end
     end
     ```
 ]]

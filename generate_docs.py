@@ -50,14 +50,14 @@ def parse_comment_block(comment_text):
     Realm: [realm]
     Example Usage:
         Low Complexity:
-        ```lua
+    ```lua
         [code]
-        ```
+    ```
 
         Medium Complexity:
-        ```lua
+    ```lua
         [code]
-        ```
+    ```
     ]]
     """
 
@@ -189,8 +189,13 @@ def parse_comment_block(comment_text):
         elif line.startswith('Example Usage:'):
             current_section = 'examples'
         elif current_section == 'examples':
-            # Handle example sections
-            complexity_match = re.match(r'(\w+)\s+Complexity:', line)
+            # Handle example sections - but only if we're not inside a code block
+            complexity_match = None
+            if not (current_example and current_example.get('in_code_block', False)):
+                complexity_match = re.match(r'(\w+)(?:\s+Complexity)?(?:\s+Example)?:', line)
+                # Also handle special cases like "Hook Implementation Example:"
+                if not complexity_match and 'Example:' in line:
+                    complexity_match = re.match(r'(.+?)\s+Example:', line)
             if complexity_match:
                 if current_example:
                     parsed['examples'].append(current_example)
@@ -200,18 +205,37 @@ def parse_comment_block(comment_text):
                     'complexity': example_complexity,
                     'code': []
                 }
+            elif not current_example and line.strip().startswith('```'):
+                # Start of code block without complexity - create default example
+                current_example = {
+                    'complexity': 'example',
+                    'code': []
+                }
+                current_example['in_code_block'] = True
             elif current_example and line.strip().startswith('```'):
                 # Start or end of code block
-                if not current_example['code']:
+                if not current_example.get('in_code_block', False):
                     # Start of code block - skip the ```lua line
                     current_example['in_code_block'] = True
                 else:
-                    # End of code block
-                    parsed['examples'].append(current_example)
-                    current_example = None
+                    # End of code block - but don't end the example yet
+                    # Only end the example if we encounter a new complexity level
+                    current_example['in_code_block'] = False
+                    # Add a blank line to separate multiple code blocks
+                    current_example['code'].append('')
             elif current_example and current_example.get('in_code_block', False):
-                # Inside code block - add the line
-                current_example['code'].append(line)
+                # Inside code block - check for complexity level in comments
+                if line.strip().startswith('--') and ':' in line:
+                    # Check if this is a complexity level comment like "-- Low:"
+                    complexity_match = re.match(r'--\s*(\w+):', line.strip())
+                    if complexity_match and complexity_match.group(1).lower() in ['low', 'medium', 'high']:
+                        # This is a complexity level comment, update the current example
+                        current_example['complexity'] = complexity_match.group(1).lower()
+                # Add the line to code (preserve original indentation from original_line)
+                # Remove the leading whitespace that was added by the comment block indentation
+                # but preserve the relative indentation within the code block
+                # Strip only trailing whitespace, keep leading indentation
+                current_example['code'].append(original_line.rstrip())
 
     # Add final example if exists
     if current_example:
@@ -257,6 +281,40 @@ def parse_file_header(header_text):
     return ""
 
 
+def format_lua_code(code_lines):
+    """
+    Format Lua code blocks with proper indentation and spacing.
+    """
+    if not code_lines:
+        return code_lines
+    
+    # Find the minimum indentation (excluding empty lines)
+    min_indent = float('inf')
+    for line in code_lines:
+        stripped = line.strip()
+        if stripped:  # Skip only empty lines
+            indent = len(line) - len(line.lstrip())
+            min_indent = min(min_indent, indent)
+    
+    # If no valid indentation found, return as-is
+    if min_indent == float('inf') or min_indent == 0:
+        return code_lines
+    
+    # Remove the minimum indentation from all lines
+    formatted_lines = []
+    for line in code_lines:
+        stripped = line.strip()
+        if stripped:  # Non-empty line
+            if len(line) >= min_indent:
+                formatted_lines.append(line[min_indent:])
+            else:
+                formatted_lines.append(line)
+        else:  # Empty line
+            formatted_lines.append('')
+    
+    return formatted_lines
+
+
 def parse_overview_section(overview_text):
     """
     Parse and format the overview section comment.
@@ -292,7 +350,11 @@ def parse_overview_section(overview_text):
             out_lines.append(ln)
             blank = False
 
-    return '\n\n'.join(out_lines).strip()
+    # Join with single newlines, then replace double newlines with paragraph breaks
+    result = '\n'.join(out_lines).strip()
+    # Replace multiple newlines with double newlines for proper paragraph spacing
+    result = re.sub(r'\n{3,}', '\n\n', result)
+    return result
 
 
 def extract_function_name_from_comment(comment_text, file_path):
@@ -401,7 +463,8 @@ def generate_markdown_for_function(function_name, parsed_comment, is_library=Fal
             complexity = example['complexity'].title()
             md += f'**{complexity} Complexity:**\n'
             md += '```lua\n'
-            md += '\n'.join(example['code'])
+            formatted_code = format_lua_code(example['code'])
+            md += '\n'.join(formatted_code)
             md += '\n```\n\n'
 
     return md
@@ -611,11 +674,21 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
         if parsed.get('examples'):
             md_parts.append('**Example Usage**\n\n')
             for example in parsed['examples']:
-                complexity = (example.get('complexity') or 'Example').title()
-                md_parts.append(f'**{complexity} Complexity:**\n')
-                md_parts.append('```lua\n')
-                md_parts.append('\n'.join(example.get('code', [])))
-                md_parts.append('\n```\n\n')
+                complexity = example.get('complexity', 'example')
+                if complexity == 'example':
+                    # Simple example without complexity level
+                    md_parts.append('```lua\n')
+                    formatted_code = format_lua_code(example.get('code', []))
+                    md_parts.append('\n'.join(formatted_code))
+                    md_parts.append('\n```\n\n')
+                else:
+                    # Complex example with complexity level
+                    complexity_title = complexity.title()
+                    md_parts.append(f'**{complexity_title} Complexity:**\n')
+                    md_parts.append('```lua\n')
+                    formatted_code = format_lua_code(example.get('code', []))
+                    md_parts.append('\n'.join(formatted_code))
+                    md_parts.append('\n```\n\n')
         md_parts.append('---\n\n')
 
     return ''.join(md_parts)

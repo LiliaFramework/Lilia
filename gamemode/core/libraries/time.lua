@@ -27,8 +27,8 @@ lia.time = lia.time or {}
     -- Medium: Get time since a date string with validation
     local playerData = {lastLogin = "2024-01-01"}
     if playerData.lastLogin then
-        local timeAgo = lia.time.timeSince(playerData.lastLogin)
-        print("Player last seen: " .. timeAgo)
+    local timeAgo = lia.time.timeSince(playerData.lastLogin)
+    print("Player last seen: " .. timeAgo)
     end
     ```
 
@@ -37,10 +37,10 @@ lia.time = lia.time or {}
     -- High: Batch process multiple timestamps with error handling
     local timestamps = {1640995200, "2024-01-01", 1641081600}
     for i, timestamp in ipairs(timestamps) do
-        local result = lia.time.timeSince(timestamp)
-        if result ~= L("invalidDate") and result ~= L("invalidInput") then
-            print("Item " .. i .. " was created " .. result)
-        end
+    local result = lia.time.timeSince(timestamp)
+    if result ~= L("invalidDate") and result ~= L("invalidInput") then
+    print("Item " .. i .. " was created " .. result)
+    end
     end
     ```
 ]]
@@ -97,7 +97,7 @@ end
     local dateStr = "2024-01-15 14:30:45"
     local timeData = lia.time.toNumber(dateStr)
     if timeData.year and timeData.month then
-        print("Year: " .. timeData.year .. ", Month: " .. timeData.month)
+    print("Year: " .. timeData.year .. ", Month: " .. timeData.month)
     end
     ```
 
@@ -106,10 +106,10 @@ end
     -- High: Batch parse multiple dates and validate ranges
     local dates = {"2024-01-01 00:00:00", "2024-12-31 23:59:59", "2023-06-15 12:30:00"}
     for i, dateStr in ipairs(dates) do
-        local timeData = lia.time.toNumber(dateStr)
-        if timeData.year >= 2024 and timeData.month <= 12 then
-            print("Valid date " .. i .. ": " .. timeData.day .. "/" .. timeData.month .. "/" .. timeData.year)
-        end
+    local timeData = lia.time.toNumber(dateStr)
+    if timeData.year >= 2024 and timeData.month <= 12 then
+    print("Valid date " .. i .. ": " .. timeData.day .. "/" .. timeData.month .. "/" .. timeData.year)
+    end
     end
     ```
 ]]
@@ -153,23 +153,23 @@ end
     ```lua
     -- High: Log system with date formatting and multiple outputs
     local function logWithTimestamp(message)
-        local timestamp = lia.time.getDate()
-        local logEntry = "[" .. timestamp .. "] " .. message
-
-        -- Log to console
-        print(logEntry)
-
-        -- Log to file (if file logging exists)
-        if file.Exists("logs/server.log", "DATA") then
-            file.Append("logs/server.log", logEntry .. "\n")
-        end
-
-        -- Send to admin chat
-        for _, admin in ipairs(player.GetAll()) do
-            if admin:IsAdmin() then
-                admin:ChatPrint(logEntry)
-            end
-        end
+    local timestamp = lia.time.getDate()
+    local logEntry = "[" .. timestamp .. "] " .. message
+    
+    -- Log to console
+    print(logEntry)
+    
+    -- Log to file (if file logging exists)
+    if file.Exists("logs/server.log", "DATA") then
+    file.Append("logs/server.log", logEntry .. "\n")
+    end
+    
+    -- Send to admin chat
+    for _, admin in ipairs(player.GetAll()) do
+    if admin:IsAdmin() then
+    admin:ChatPrint(logEntry)
+    end
+    end
     end
     ```
 ]]
@@ -208,8 +208,8 @@ end
     -- Medium: Format cooldown with validation
     local cooldownTime = player:GetNWInt("cooldown", 0)
     if cooldownTime > 0 then
-        local formatted = lia.time.formatDHM(cooldownTime)
-        player:ChatPrint("Cooldown remaining: " .. formatted)
+    local formatted = lia.time.formatDHM(cooldownTime)
+    player:ChatPrint("Cooldown remaining: " .. formatted)
     end
     ```
 
@@ -217,20 +217,20 @@ end
     ```lua
     -- High: Multiple duration formatting with conditional display
     local function formatMultipleDurations(durations)
-        local results = {}
-        for name, seconds in pairs(durations) do
-            if seconds and seconds > 0 then
-                local formatted = lia.time.formatDHM(seconds)
-                table.insert(results, name .. ": " .. formatted)
-            end
-        end
-        return table.concat(results, ", ")
+    local results = {}
+    for name, seconds in pairs(durations) do
+    if seconds and seconds > 0 then
+    local formatted = lia.time.formatDHM(seconds)
+    table.insert(results, name .. ": " .. formatted)
     end
-
+    end
+    return table.concat(results, ", ")
+    end
+    
     local durations = {
-        cooldown = 3600,
-        banTime = 86400,
-        muteTime = 1800
+    cooldown = 3600,
+    banTime = 86400,
+    muteTime = 1800
     }
     print(formatMultipleDurations(durations))
     ```
@@ -266,26 +266,26 @@ end
     -- Medium: Time-based greeting system
     local hour = lia.time.getHour()
     local greeting = ""
-
+    
     if lia.config.get("AmericanTimeStamps", false) then
-        -- American format returns string like "2pm"
-        local hourNum = tonumber(hour:match("%d+"))
-        if hourNum >= 6 and hourNum < 12 then
-            greeting = "Good morning!"
-        elseif hourNum >= 12 and hourNum < 18 then
-            greeting = "Good afternoon!"
-        else
-            greeting = "Good evening!"
-        end
+    -- American format returns string like "2pm"
+    local hourNum = tonumber(hour:match("%d+"))
+    if hourNum >= 6 and hourNum < 12 then
+    greeting = "Good morning!"
+    elseif hourNum >= 12 and hourNum < 18 then
+    greeting = "Good afternoon!"
     else
-        -- 24-hour format returns number
-        if hour >= 6 and hour < 12 then
-            greeting = "Good morning!"
-        elseif hour >= 12 and hour < 18 then
-            greeting = "Good afternoon!"
-        else
-            greeting = "Good evening!"
-        end
+    greeting = "Good evening!"
+    end
+    else
+    -- 24-hour format returns number
+    if hour >= 6 and hour < 12 then
+    greeting = "Good morning!"
+    elseif hour >= 12 and hour < 18 then
+    greeting = "Good afternoon!"
+    else
+    greeting = "Good evening!"
+    end
     end
     ```
 
@@ -293,35 +293,35 @@ end
     ```lua
     -- High: Dynamic server events based on time with multiple time zones
     local function getServerEvents()
-        local hour = lia.time.getHour()
-        local events = {}
-
-        -- Parse hour for both formats
-        local hourNum
-        if type(hour) == "string" then
-            hourNum = tonumber(hour:match("%d+"))
-            local isPM = hour:find("pm")
-            if isPM and hourNum ~= 12 then
-                hourNum = hourNum + 12
-            elseif not isPM and hourNum == 12 then
-                hourNum = 0
-            end
-        else
-            hourNum = hour
-        end
-
-        -- Schedule events based on hour
-        if hourNum >= 0 and hourNum < 6 then
-            table.insert(events, "Night shift bonus active")
-        elseif hourNum >= 6 and hourNum < 12 then
-            table.insert(events, "Morning rush hour")
-        elseif hourNum >= 12 and hourNum < 18 then
-            table.insert(events, "Afternoon activities")
-        else
-            table.insert(events, "Evening events")
-        end
-
-        return events
+    local hour = lia.time.getHour()
+    local events = {}
+    
+    -- Parse hour for both formats
+    local hourNum
+    if type(hour) == "string" then
+    hourNum = tonumber(hour:match("%d+"))
+    local isPM = hour:find("pm")
+    if isPM and hourNum ~= 12 then
+    hourNum = hourNum + 12
+    elseif not isPM and hourNum == 12 then
+    hourNum = 0
+    end
+    else
+    hourNum = hour
+    end
+    
+    -- Schedule events based on hour
+    if hourNum >= 0 and hourNum < 6 then
+    table.insert(events, "Night shift bonus active")
+    elseif hourNum >= 6 and hourNum < 12 then
+    table.insert(events, "Morning rush hour")
+    elseif hourNum >= 12 and hourNum < 18 then
+    table.insert(events, "Afternoon activities")
+    else
+    table.insert(events, "Evening events")
+    end
+    
+    return events
     end
     ```
 ]]

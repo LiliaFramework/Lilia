@@ -34,6 +34,7 @@ Shared
 ```lua
 -- Simple: Load attributes from a single directory
 lia.attribs.loadFromDir("gamemode/attributes")
+
 ```
 
 **Medium Complexity:**
@@ -41,8 +42,9 @@ lia.attribs.loadFromDir("gamemode/attributes")
 -- Medium: Load attributes with conditional directory checking
 local attrDir = "gamemode/attributes"
 if file.Exists(attrDir, "LUA") then
-lia.attribs.loadFromDir(attrDir)
+    lia.attribs.loadFromDir(attrDir)
 end
+
 ```
 
 **High Complexity:**
@@ -50,12 +52,13 @@ end
 -- High: Load attributes from multiple directories with error handling
 local attributeDirs = {"gamemode/attributes", "modules/attributes", "plugins/attributes"}
 for _, dir in ipairs(attributeDirs) do
-if file.Exists(dir, "LUA") then
-lia.attribs.loadFromDir(dir)
-else
-print("Warning: Attribute directory not found: " .. dir)
+    if file.Exists(dir, "LUA") then
+        lia.attribs.loadFromDir(dir)
+    else
+        print("Warning: Attribute directory not found: " .. dir)
+    end
 end
-end
+
 ```
 
 ---
@@ -84,28 +87,31 @@ Server
 ```lua
 -- Simple: Setup attributes for a client
 lia.attribs.setup(client)
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Setup attributes with validation
 if IsValid(client) and client:IsPlayer() then
-lia.attribs.setup(client)
+    lia.attribs.setup(client)
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Setup attributes with custom logic and error handling
 hook.Add("PlayerSpawn", "SetupAttributes", function(client)
-if not client:getChar() then return end
-timer.Simple(0.1, function()
-if IsValid(client) then
-lia.attribs.setup(client)
-print("Attributes set up for " .. client:Name())
-end
+    if not client:getChar() then return end
+    timer.Simple(0.1, function()
+        if IsValid(client) then
+            lia.attribs.setup(client)
+            print("Attributes set up for " .. client:Name())
+        end
+    end)
 end)
-end)
+
 ```
 
 ---

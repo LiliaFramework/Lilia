@@ -35,6 +35,7 @@ Shared (works on both client and server)
 -- Simple: Format a basic currency amount
 local formatted = lia.currency.get(100)
 print(formatted) -- "$100 dollars" (example output)
+
 ```
 
 **Medium Complexity:**
@@ -42,9 +43,10 @@ print(formatted) -- "$100 dollars" (example output)
 -- Medium: Format currency with conditional display
 local playerMoney = 1500
 if playerMoney > 0 then
-local displayText = "Balance: " .. lia.currency.get(playerMoney)
-chat.AddText(Color(255, 255, 255), displayText)
+    local displayText = "Balance: " .. lia.currency.get(playerMoney)
+    chat.AddText(Color(255, 255, 255), displayText)
 end
+
 ```
 
 **High Complexity:**
@@ -52,12 +54,13 @@ end
 -- High: Format multiple currency amounts with validation
 local transactions = {100, 1, 0, -50, 2500}
 for _, amount in ipairs(transactions) do
-if amount and amount ~= 0 then
-local formatted = lia.currency.get(math.abs(amount))
-local prefix = amount > 0 and "+" or "-"
-print(prefix .. formatted)
+    if amount and amount ~= 0 then
+        local formatted = lia.currency.get(math.abs(amount))
+        local prefix = amount > 0 and "+" or "-"
+        print(prefix .. formatted)
+    end
 end
-end
+
 ```
 
 ---
@@ -93,6 +96,7 @@ Server only
 -- Simple: Spawn money at player's position
 local pos = player:GetPos()
 lia.currency.spawn(pos, 100)
+
 ```
 
 **Medium Complexity:**
@@ -101,27 +105,29 @@ lia.currency.spawn(pos, 100)
 local dropPos = trace.HitPos
 local dropAmount = math.random(50, 200)
 if dropPos then
-local money = lia.currency.spawn(dropPos, dropAmount, Angle(0, math.random(0, 360), 0))
-if money then
-print("Money spawned successfully")
+    local money = lia.currency.spawn(dropPos, dropAmount, Angle(0, math.random(0, 360), 0))
+    if money then
+        print("Money spawned successfully")
+    end
 end
-end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Spawn multiple money entities with advanced positioning
 local spawnPositions = {
-{pos = Vector(100, 200, 50), amount = 500, angle = Angle(0, 45, 0)},
-{pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
-{pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
+    {pos = Vector(100, 200, 50), amount = 500, angle = Angle(0, 45, 0)},
+    {pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
+    {pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
 }
 for _, data in ipairs(spawnPositions) do
-local money = lia.currency.spawn(data.pos, data.amount, data.angle)
-if money then
-money:SetVelocity(Vector(math.random(-50, 50), math.random(-50, 50), 100))
+    local money = lia.currency.spawn(data.pos, data.amount, data.angle)
+    if money then
+        money:SetVelocity(Vector(math.random(-50, 50), math.random(-50, 50), 100))
+    end
 end
-end
+
 ```
 
 ---

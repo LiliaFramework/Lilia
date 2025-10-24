@@ -35,27 +35,30 @@ Shared
 -- Simple: Get timestamp for IC message
 local timestamp = lia.chat.timestamp(false)
 -- Returns: " (14:30) " or "" if timestamps disabled
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Use timestamp in custom chat format
 local function customChatFormat(speaker, text)
-local timeStr = lia.chat.timestamp(false)
-chat.AddText(timeStr, Color(255, 255, 255), speaker:Name() .. ": " .. text)
+    local timeStr = lia.chat.timestamp(false)
+    chat.AddText(timeStr, Color(255, 255, 255), speaker:Name() .. ": " .. text)
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Dynamic timestamp with custom formatting
 local function getFormattedTimestamp(isOOC, customFormat)
-local baseTime = lia.chat.timestamp(isOOC)
-if customFormat and baseTime ~= "" then
-return baseTime:gsub("%((%d+:%d+)%)", "[" .. customFormat .. "]")
+    local baseTime = lia.chat.timestamp(isOOC)
+    if customFormat and baseTime ~= "" then
+        return baseTime:gsub("%((%d+:%d+)%)", "[" .. customFormat .. "]")
+    end
+    return baseTime
 end
-return baseTime
-end
+
 ```
 
 ---
@@ -89,42 +92,45 @@ Shared
 ```lua
 -- Simple: Register basic IC chat
 lia.chat.register("ic", {
-prefix = "/",
-color = Color(255, 255, 255),
-radius = 200
+    prefix = "/",
+    color = Color(255, 255, 255),
+    radius = 200
 })
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Register whisper chat with custom properties
 lia.chat.register("whisper", {
-prefix = {"/w", "/whisper"},
-color = Color(150, 150, 255),
-radius = 50,
-format = "whisperFormat",
-desc = "Whisper to nearby players"
+    prefix = {"/w", "/whisper"},
+    color = Color(150, 150, 255),
+    radius = 50,
+    format = "whisperFormat",
+    desc = "Whisper to nearby players"
 })
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Register admin chat with complex validation
 lia.chat.register("admin", {
-prefix = "/a",
-color = Color(255, 100, 100),
-onCanSay = function(speaker)
-return speaker:IsAdmin()
-end,
-onCanHear = function(speaker, listener)
-return listener:IsAdmin()
-end,
-format = "adminFormat",
-arguments = {
-{type = "string", name = "message"}
-},
-desc = "Admin-only communication channel"
+    prefix = "/a",
+    color = Color(255, 100, 100),
+    onCanSay = function(speaker)
+        return speaker:IsAdmin()
+    end,
+    onCanHear = function(speaker, listener)
+        return listener:IsAdmin()
+    end,
+    format = "adminFormat",
+    arguments = {
+        {type = "string", name = "message"}
+    },
+    desc = "Admin-only communication channel"
 })
+
 ```
 
 ---
@@ -160,36 +166,39 @@ Shared
 -- Simple: Parse a basic IC message
 local chatType, message, anonymous = lia.chat.parse(LocalPlayer(), "Hello everyone!")
 -- Returns: "ic", "Hello everyone!", false
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Parse message with prefix detection
 local function processPlayerMessage(player, rawMessage)
-local chatType, cleanMessage, anonymous = lia.chat.parse(player, rawMessage)
-if chatType == "ooc" then
-print(player:Name() .. " said OOC: " .. cleanMessage)
+    local chatType, cleanMessage, anonymous = lia.chat.parse(player, rawMessage)
+    if chatType == "ooc" then
+        print(player:Name() .. " said OOC: " .. cleanMessage)
+    end
+    return chatType, cleanMessage, anonymous
 end
-return chatType, cleanMessage, anonymous
-end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Advanced message processing with validation
 local function advancedMessageParser(player, message, options)
-local chatType, cleanMessage, anonymous = lia.chat.parse(player, message, options.noSend)
--- Custom validation based on chat type
-if chatType == "admin" and not player:IsAdmin() then
-player:notifyErrorLocalized("noPerm")
-return nil, nil, nil
+    local chatType, cleanMessage, anonymous = lia.chat.parse(player, message, options.noSend)
+    -- Custom validation based on chat type
+    if chatType == "admin" and not player:IsAdmin() then
+        player:notifyErrorLocalized("noPerm")
+        return nil, nil, nil
+    end
+    -- Log message for moderation
+    if options.logMessages then
+        lia.log.add("chat", player:Name() .. " [" .. chatType .. "]: " .. cleanMessage)
+    end
+    return chatType, cleanMessage, anonymous
 end
--- Log message for moderation
-if options.logMessages then
-lia.log.add("chat", player:Name() .. " [" .. chatType .. "]: " .. cleanMessage)
-end
-return chatType, cleanMessage, anonymous
-end
+
 ```
 
 ---
@@ -226,32 +235,35 @@ Server
 ```lua
 -- Simple: Send IC message to all nearby players
 lia.chat.send(player, "ic", "Hello everyone!")
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Send anonymous whisper to specific players
 local function sendAnonymousWhisper(speaker, message, targets)
-lia.chat.send(speaker, "whisper", message, true, targets)
+    lia.chat.send(speaker, "whisper", message, true, targets)
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Advanced message broadcasting with custom logic
 local function broadcastAdminMessage(speaker, message, options)
-local receivers = {}
--- Collect admin players
-for _, player in pairs(player.GetAll()) do
-if player:IsAdmin() and (not options.excludeSelf or player ~= speaker) then
-table.insert(receivers, player)
+    local receivers = {}
+    -- Collect admin players
+    for _, player in pairs(player.GetAll()) do
+        if player:IsAdmin() and (not options.excludeSelf or player ~= speaker) then
+            table.insert(receivers, player)
+        end
+    end
+    -- Send with custom formatting
+    lia.chat.send(speaker, "admin", "[ADMIN] " .. message, false, receivers)
+    -- Log the message
+    lia.log.add("admin_chat", speaker:Name() .. ": " .. message)
 end
-end
--- Send with custom formatting
-lia.chat.send(speaker, "admin", "[ADMIN] " .. message, false, receivers)
--- Log the message
-lia.log.add("admin_chat", speaker:Name() .. ": " .. message)
-end
+
 ```
 
 ---

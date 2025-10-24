@@ -34,6 +34,7 @@ Server/Client
 ```lua
 -- Simple: Load languages from default directory
 lia.lang.loadFromDir("lilia/gamemode/languages")
+
 ```
 
 **Medium Complexity:**
@@ -41,23 +42,25 @@ lia.lang.loadFromDir("lilia/gamemode/languages")
 -- Medium: Load languages from custom module directory
 local moduleDir = "lilia/gamemode/modules/mymodule/languages"
 if file.Exists(moduleDir, "LUA") then
-lia.lang.loadFromDir(moduleDir)
+    lia.lang.loadFromDir(moduleDir)
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Load languages from multiple directories with validation
 local languageDirs = {
-"lilia/gamemode/languages",
-"lilia/gamemode/modules/custom/languages",
-"addons/mycustomaddon/languages"
+    "lilia/gamemode/languages",
+    "lilia/gamemode/modules/custom/languages",
+    "addons/mycustomaddon/languages"
 }
 for _, dir in ipairs(languageDirs) do
-if file.Exists(dir, "LUA") then
-lia.lang.loadFromDir(dir)
+    if file.Exists(dir, "LUA") then
+        lia.lang.loadFromDir(dir)
+    end
 end
-end
+
 ```
 
 ---
@@ -86,35 +89,38 @@ Server/Client
 ```lua
 -- Simple: Add basic language strings
 lia.lang.addTable("english", {
-hello = "Hello",
-goodbye = "Goodbye"
+    hello = "Hello",
+    goodbye = "Goodbye"
 })
+
 ```
 
 **Medium Complexity:**
 ```lua
 -- Medium: Add module-specific language strings
 local moduleLang = {
-moduleTitle = "My Module",
-moduleDescription = "This is a custom module",
-moduleError = "An error occurred: %s"
+    moduleTitle = "My Module",
+    moduleDescription = "This is a custom module",
+    moduleError = "An error occurred: %s"
 }
 lia.lang.addTable("english", moduleLang)
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Add multiple language tables with validation
 local languages = {
-english = { title = "Title", desc = "Description" },
-spanish = { title = "Título", desc = "Descripción" },
-french = { title = "Titre", desc = "Description" }
+    english = { title = "Title", desc = "Description" },
+    spanish = { title = "Título", desc = "Descripción" },
+    french = { title = "Titre", desc = "Description" }
 }
 for lang, strings in pairs(languages) do
-if type(strings) == "table" then
-lia.lang.addTable(lang, strings)
+    if type(strings) == "table" then
+        lia.lang.addTable(lang, strings)
+    end
 end
-end
+
 ```
 
 ---
@@ -144,6 +150,7 @@ Server/Client
 -- Simple: Get list of available languages
 local languages = lia.lang.getLanguages()
 print("Available languages:", table.concat(languages, ", "))
+
 ```
 
 **Medium Complexity:**
@@ -153,29 +160,31 @@ local languages = lia.lang.getLanguages()
 local menu = vgui.Create("DFrame")
 local combo = vgui.Create("DComboBox", menu)
 for _, lang in ipairs(languages) do
-combo:AddChoice(lang)
+    combo:AddChoice(lang)
 end
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Validate language selection with fallback
 local function setLanguage(langName)
-local languages = lia.lang.getLanguages()
-local found = false
-for _, lang in ipairs(languages) do
-if lang:lower() == langName:lower() then
-found = true
-break
+    local languages = lia.lang.getLanguages()
+    local found = false
+    for _, lang in ipairs(languages) do
+        if lang:lower() == langName:lower() then
+            found = true
+            break
+        end
+    end
+    if found then
+        lia.config.set("Language", langName:lower())
+    else
+        lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
+        lia.config.set("Language", "english")
+    end
 end
-end
-if found then
-lia.config.set("Language", langName:lower())
-else
-lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
-lia.config.set("Language", "english")
-end
-end
+
 ```
 
 ---
@@ -205,6 +214,7 @@ Server/Client
 -- Simple: Get basic localized string
 local message = lia.lang.getLocalizedString("hello")
 print(message) -- Outputs: "Hello" (in current language)
+
 ```
 
 **Medium Complexity:**
@@ -213,22 +223,24 @@ print(message) -- Outputs: "Hello" (in current language)
 local playerName = "John"
 local welcomeMsg = lia.lang.getLocalizedString("welcomePlayer", playerName)
 print(welcomeMsg) -- Outputs: "Welcome, John!" (if template is "Welcome, %s!")
+
 ```
 
 **High Complexity:**
 ```lua
 -- High: Complex localized string with multiple parameters and error handling
 local function displayItemInfo(itemName, quantity, price)
-local lang = lia.config and lia.config.get("Language", "english") or "english"
-local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
-local template = langTable and langTable["itemInfo"] or "itemInfo"
-if template then
-local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
-lia.notice.add(message, NOTIFY_GENERIC)
-else
-lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
+    local lang = lia.config and lia.config.get("Language", "english") or "english"
+    local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
+    local template = langTable and langTable["itemInfo"] or "itemInfo"
+    if template then
+        local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
+        lia.notice.add(message, NOTIFY_GENERIC)
+    else
+        lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
+    end
 end
-end
+
 ```
 
 ---

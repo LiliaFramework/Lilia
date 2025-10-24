@@ -246,9 +246,9 @@ end
     lia.module.initialize()
     -- Custom post-initialization logic
     for id, mod in pairs(lia.module.list) do
-        if mod.PostInitialize then
-            mod:PostInitialize()
-        end
+    if mod.PostInitialize then
+    mod:PostInitialize()
+    end
     end
     ```
 ]]
@@ -347,7 +347,7 @@ end
     -- Medium: Check if module exists and use it
     local module = lia.module.get("inventory")
     if module and module.GetItem then
-        local item = module:GetItem("weapon_pistol")
+    local item = module:GetItem("weapon_pistol")
     end
     ```
 
@@ -355,10 +355,10 @@ end
     ```lua
     -- High: Iterate through all modules and perform operations
     for id, module in pairs(lia.module.list) do
-        local mod = lia.module.get(id)
-        if mod and mod.OnPlayerSpawn then
-            mod:OnPlayerSpawn(player)
-        end
+    local mod = lia.module.get(id)
+    if mod and mod.OnPlayerSpawn then
+    mod:OnPlayerSpawn(player)
+    end
     end
     ```
 ]]
