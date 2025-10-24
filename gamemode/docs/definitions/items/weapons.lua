@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Weapons Item Definition
 
     Weapon item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Items remain in inventory when equipped
     - Can be unequipped to remove weapons
     - Weapons drop on death if ITEM.DropOnDeath is true
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the weapon item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Pistol"
         ```
-]]--
+]]
+--
 ITEM.name = "weaponsName"
 --[[
     ITEM.desc
@@ -35,7 +37,8 @@ ITEM.name = "weaponsName"
         ```lua
         ITEM.desc = "A standard issue pistol"
         ```
-]]--
+]]
+--
 ITEM.desc = "weaponsDesc"
 --[[
     ITEM.category
@@ -45,7 +48,8 @@ ITEM.desc = "weaponsDesc"
         ```lua
         ITEM.category = "weapons"
         ```
-]]--
+]]
+--
 ITEM.category = "weapons"
 --[[
     ITEM.model
@@ -55,7 +59,8 @@ ITEM.category = "weapons"
         ```lua
         ITEM.model = "models/weapons/w_pistol.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/weapons/w_pistol.mdl"
 --[[
     ITEM.class
@@ -65,7 +70,8 @@ ITEM.model = "models/weapons/w_pistol.mdl"
         ```lua
         ITEM.class = "weapon_pistol"
         ```
-]]--
+]]
+--
 ITEM.class = "weapon_pistol"
 --[[
     ITEM.width
@@ -75,7 +81,8 @@ ITEM.class = "weapon_pistol"
         ```lua
         ITEM.width = 2  -- Takes 2 slot width
         ```
-]]--
+]]
+--
 ITEM.width = 2
 --[[
     ITEM.height
@@ -85,7 +92,8 @@ ITEM.width = 2
         ```lua
         ITEM.height = 2  -- Takes 2 slot height
         ```
-]]--
+]]
+--
 ITEM.height = 2
 --[[
     ITEM.isWeapon
@@ -95,7 +103,8 @@ ITEM.height = 2
         ```lua
         ITEM.isWeapon = true
         ```
-]]--
+]]
+--
 ITEM.isWeapon = true
 --[[
     ITEM.RequiredSkillLevels
@@ -105,7 +114,8 @@ ITEM.isWeapon = true
         ```lua
         ITEM.RequiredSkillLevels = {}  -- No skill requirements
         ```
-]]--
+]]
+--
 ITEM.RequiredSkillLevels = {}
 --[[
     ITEM.DropOnDeath
@@ -115,7 +125,8 @@ ITEM.RequiredSkillLevels = {}
         ```lua
         ITEM.DropOnDeath = true  -- Drops on death
         ```
-]]--
+]]
+--
 ITEM.DropOnDeath = true
 --[[
     ITEM.postHooks:drop()
@@ -132,7 +143,8 @@ ITEM.DropOnDeath = true
             end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:hook("drop", function(item) ... end)
     Purpose: Handles weapon dropping with ragdoll and equip checks
@@ -149,7 +161,8 @@ ITEM.DropOnDeath = true
             -- Handle equipped weapon removal
         end)
         ```
-]]--
+]]
+--
 --[[
     ITEM:OnCanBeTransfered(_, newInventory)
     Purpose: Prevents transfer of equipped weapons
@@ -161,7 +174,8 @@ ITEM.DropOnDeath = true
             return true
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onLoadout()
     Purpose: Handles weapon loading on player spawn
@@ -182,7 +196,8 @@ ITEM.DropOnDeath = true
             end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:OnSave()
     Purpose: Saves weapon ammo data
@@ -196,7 +211,8 @@ ITEM.DropOnDeath = true
             if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:getName()
     Purpose: Custom name function for weapons (CLIENT only)
@@ -209,8 +225,8 @@ ITEM.DropOnDeath = true
             return self.name
         end
         ```
-]]--
-
+]]
+--
 --[[
 Example Item:
 
@@ -224,4 +240,5 @@ ITEM.class = "weapon_pistol"                      -- Weapon class to give when e
 ITEM.width = 2                                    -- Inventory width (2 slots)
 ITEM.height = 2                                   -- Inventory height (2 slots)
 ```
-]]--
+]]
+--

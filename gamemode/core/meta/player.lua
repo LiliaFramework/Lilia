@@ -2983,7 +2983,7 @@ end
         local parts = player:getParts()
         local validParts = {}
         local invalidParts = {}
-        
+
         for partID, _ in pairs(parts) do
             if lia.pac.isValidPart(partID) then
                 table.insert(validParts, partID)
@@ -2992,7 +2992,7 @@ end
                 player:removePart(partID)
             end
         end
-        
+
         if #invalidParts > 0 then
             player:notifyError("Removed " .. #invalidParts .. " invalid parts")
         end
@@ -3036,7 +3036,7 @@ if SERVER then
             local parts = player:getParts()
             local syncCount = 0
             local removedParts = {}
-            
+
             for partID, _ in pairs(parts) do
                 if not lia.pac.isValidPart(partID) then
                     table.insert(removedParts, partID)
@@ -3045,10 +3045,10 @@ if SERVER then
                     syncCount = syncCount + 1
                 end
             end
-            
+
             player:setNetVar("parts", parts)
             player:syncParts()
-            
+
             if #removedParts > 0 then
                 lia.log.add("Player " .. player:Name() .. " had " .. #removedParts .. " invalid parts removed")
             end
@@ -3081,7 +3081,7 @@ if SERVER then
             for _, _ in pairs(parts) do
                 partCount = partCount + 1
             end
-            
+
             if partCount < 10 and lia.pac.isValidPart(partID) then
                 player:addPart(partID)
                 player:notifySuccess("Part equipped: " .. partID)
@@ -3095,7 +3095,7 @@ if SERVER then
             -- High: Complex part system with permissions and effects
             local partID = "premium_hat_001"
             local char = player:getChar()
-            
+
             if char and char:hasFlags("P") then
                 if lia.pac.isValidPart(partID) then
                     local parts = player:getParts()
@@ -3103,7 +3103,7 @@ if SERVER then
                         player:addPart(partID)
                         player:notifySuccess("Premium part equipped!")
                         lia.log.add("Player " .. player:Name() .. " equipped premium part: " .. partID)
-                        
+
                         -- Apply special effects
                         player:setData("premiumPartEquipped", true)
                         player:notifyInfo("Premium effects activated!")
@@ -3150,7 +3150,7 @@ if SERVER then
             if parts[partID] then
                 player:removePart(partID)
                 player:notifySuccess("Part removed: " .. partID)
-                
+
                 -- Clean up related data
                 player:setData("part_" .. partID .. "_equipped", false)
             else
@@ -3163,19 +3163,19 @@ if SERVER then
             -- High: Complex part removal with effects and logging
             local partID = "premium_hat_001"
             local parts = player:getParts()
-            
+
             if parts[partID] then
                 player:removePart(partID)
-                
+
                 -- Remove special effects
                 if partID:find("premium_") then
                     player:setData("premiumPartEquipped", false)
                     player:notifyInfo("Premium effects deactivated")
                 end
-                
+
                 -- Log the removal
                 lia.log.add("Player " .. player:Name() .. " removed part: " .. partID)
-                
+
                 -- Check if any premium parts remain
                 local hasPremiumParts = false
                 for id, _ in pairs(parts) do
@@ -3184,7 +3184,7 @@ if SERVER then
                         break
                     end
                 end
-                
+
                 if not hasPremiumParts then
                     player:notifyWarning("No premium parts remaining")
                 end
@@ -3224,7 +3224,7 @@ if SERVER then
             for _, _ in pairs(parts) do
                 partCount = partCount + 1
             end
-            
+
             if partCount > 0 then
                 player:resetParts()
                 player:notifySuccess("All parts removed (" .. partCount .. " parts)")
@@ -3239,7 +3239,7 @@ if SERVER then
             local parts = player:getParts()
             local removedParts = {}
             local premiumParts = 0
-            
+
             -- Count and categorize parts before removal
             for partID, _ in pairs(parts) do
                 table.insert(removedParts, partID)
@@ -3247,24 +3247,24 @@ if SERVER then
                     premiumParts = premiumParts + 1
                 end
             end
-            
+
             if #removedParts > 0 then
                 player:resetParts()
-                
+
                 -- Clean up related data
                 player:setData("premiumPartEquipped", false)
                 player:setData("lastPartReset", os.time())
-                
+
                 -- Log the reset
                 lia.log.add("Player " .. player:Name() .. " reset " .. #removedParts .. " parts (Premium: " .. premiumParts .. ")")
-                
+
                 -- Notify with details
                 if premiumParts > 0 then
                     player:notifyWarning("Reset " .. #removedParts .. " parts including " .. premiumParts .. " premium items")
                 else
                     player:notifySuccess("Reset " .. #removedParts .. " parts")
                 end
-                
+
                 -- Trigger cleanup hooks
                 hook.Run("OnPlayerResetParts", player, removedParts)
             else

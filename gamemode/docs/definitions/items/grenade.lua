@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Grenade Item Definition
 
     Grenade item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Items are consumed when equipped
     - Weapons can be thrown and will explode
     - Grenades drop on death if ITEM.DropOnDeath is true
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the grenade item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Fragmentation Grenade"
         ```
-]]--
+]]
+--
 ITEM.name = "grenadeName"
 --[[
     ITEM.desc
@@ -35,7 +37,8 @@ ITEM.name = "grenadeName"
         ```lua
         ITEM.desc = "A deadly fragmentation grenade"
         ```
-]]--
+]]
+--
 ITEM.desc = "grenadeDesc"
 --[[
     ITEM.category
@@ -45,7 +48,8 @@ ITEM.desc = "grenadeDesc"
         ```lua
         ITEM.category = "itemCatGrenades"
         ```
-]]--
+]]
+--
 ITEM.category = "itemCatGrenades"
 --[[
     ITEM.model
@@ -55,7 +59,8 @@ ITEM.category = "itemCatGrenades"
         ```lua
         ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 --[[
     ITEM.class
@@ -65,7 +70,8 @@ ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
         ```lua
         ITEM.class = "weapon_frag"
         ```
-]]--
+]]
+--
 ITEM.class = "weapon_frag"
 --[[
     ITEM.width
@@ -75,7 +81,8 @@ ITEM.class = "weapon_frag"
         ```lua
         ITEM.width = 1  -- Takes 1 slot width
         ```
-]]--
+]]
+--
 ITEM.width = 1
 --[[
     ITEM.height
@@ -85,7 +92,8 @@ ITEM.width = 1
         ```lua
         ITEM.height = 1  -- Takes 1 slot height
         ```
-]]--
+]]
+--
 ITEM.height = 1
 --[[
     ITEM.DropOnDeath
@@ -95,7 +103,8 @@ ITEM.height = 1
         ```lua
         ITEM.DropOnDeath = true  -- Drops on death
         ```
-]]--
+]]
+--
 ITEM.DropOnDeath = true
 --[[
 Example Item:
@@ -110,4 +119,5 @@ ITEM.class = "weapon_frag"                             -- Weapon class to give w
 ITEM.width = 1                                         -- Inventory width (1 slot)
 ITEM.height = 1                                        -- Inventory height (1 slot)
 ```
-]]--
+]]
+--

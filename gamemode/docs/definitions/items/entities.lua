@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Entities Item Definition
 
     Entity placement item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Entities are placed at the player's position
     - Items are consumed when placed
     - Entities can be picked up and returned to inventory
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the entity item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Chair"
         ```
-]]--
+]]
+--
 ITEM.name = "entitiesName"
 --[[
     ITEM.model
@@ -35,7 +37,8 @@ ITEM.name = "entitiesName"
         ```lua
         ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = ""
 --[[
     ITEM.desc
@@ -45,7 +48,8 @@ ITEM.model = ""
         ```lua
         ITEM.desc = "A comfortable chair for sitting"
         ```
-]]--
+]]
+--
 ITEM.desc = "entitiesDesc"
 --[[
     ITEM.category
@@ -55,7 +59,8 @@ ITEM.desc = "entitiesDesc"
         ```lua
         ITEM.category = "entities"
         ```
-]]--
+]]
+--
 ITEM.category = "entities"
 --[[
     ITEM.entityid
@@ -65,7 +70,8 @@ ITEM.category = "entities"
         ```lua
         ITEM.entityid = "prop_physics"
         ```
-]]--
+]]
+--
 ITEM.entityid = ""
 --[[
 Example Item:
@@ -78,4 +84,5 @@ ITEM.desc = "A comfortable chair for sitting"                -- Description text
 ITEM.category = "entities"                                   -- Category for inventory sorting
 ITEM.entityid = "prop_physics"                               -- Entity class to spawn when placed
 ```
-]]--
+]]
+--

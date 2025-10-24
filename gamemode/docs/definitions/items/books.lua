@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Books Item Definition
 
     Literature item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Content can include HTML tags, CSS styling, and images
     - Books are not consumed when read
     - Can be used multiple times
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the book item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Medical Journal"
         ```
-]]--
+]]
+--
 ITEM.name = "booksName"
 --[[
     ITEM.desc
@@ -35,7 +37,8 @@ ITEM.name = "booksName"
         ```lua
         ITEM.desc = "A medical journal containing important information"
         ```
-]]--
+]]
+--
 ITEM.desc = "booksDesc"
 --[[
     ITEM.category
@@ -45,7 +48,8 @@ ITEM.desc = "booksDesc"
         ```lua
         ITEM.category = "itemCatLiterature"
         ```
-]]--
+]]
+--
 ITEM.category = "itemCatLiterature"
 --[[
     ITEM.model
@@ -55,7 +59,8 @@ ITEM.category = "itemCatLiterature"
         ```lua
         ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 --[[
     ITEM.contents
@@ -65,7 +70,8 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
         ```lua
         ITEM.contents = "<h1>Chapter 1</h1><p>This is the content...</p>"
         ```
-]]--
+]]
+--
 ITEM.contents = ""
 --[[
 Example Item:
@@ -78,4 +84,5 @@ ITEM.category = "itemCatLiterature"                              -- Category for
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"           -- 3D model for the book
 ITEM.contents = "<h1>Chapter 1: Basic Medicine</h1><p>This journal contains essential medical knowledge...</p>"  -- HTML content displayed when reading
 ```
-]]--
+]]
+--

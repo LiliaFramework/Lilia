@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Stackable Item Definition
 
     Stackable item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Visual indicators show quantity in inventory
     - Items are consumed when used
     - Maximum quantity is controlled by ITEM.maxQuantity
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the stackable item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Ammo Box"
         ```
-]]--
+]]
+--
 ITEM.name = "stackableName"
 --[[
     ITEM.model
@@ -35,7 +37,8 @@ ITEM.name = "stackableName"
         ```lua
         ITEM.model = "models/props_junk/cardboard_box001a.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/props_junk/cardboard_box001a.mdl"
 --[[
     ITEM.width
@@ -45,7 +48,8 @@ ITEM.model = "models/props_junk/cardboard_box001a.mdl"
         ```lua
         ITEM.width = 1  -- Takes 1 slot width
         ```
-]]--
+]]
+--
 ITEM.width = 1
 --[[
     ITEM.height
@@ -55,7 +59,8 @@ ITEM.width = 1
         ```lua
         ITEM.height = 1  -- Takes 1 slot height
         ```
-]]--
+]]
+--
 ITEM.height = 1
 --[[
     ITEM.isStackable
@@ -65,7 +70,8 @@ ITEM.height = 1
         ```lua
         ITEM.isStackable = true
         ```
-]]--
+]]
+--
 ITEM.isStackable = true
 --[[
     ITEM.maxQuantity
@@ -75,7 +81,8 @@ ITEM.isStackable = true
         ```lua
         ITEM.maxQuantity = 10  -- Maximum 10 items per stack
         ```
-]]--
+]]
+--
 ITEM.maxQuantity = 10
 --[[
     ITEM.canSplit
@@ -85,7 +92,8 @@ ITEM.maxQuantity = 10
         ```lua
         ITEM.canSplit = true  -- Allows splitting the stack
         ```
-]]--
+]]
+--
 ITEM.canSplit = true
 --[[
     ITEM:getDesc()
@@ -97,7 +105,8 @@ ITEM.canSplit = true
             return L("stackableDesc", self:getQuantity())
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:paintOver(item)
     Purpose: Custom paint function to display quantity on the item
@@ -109,7 +118,8 @@ ITEM.canSplit = true
             lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onCombine(other)
     Purpose: Handles combining stackable items
@@ -129,8 +139,8 @@ ITEM.canSplit = true
             return true
         end
         ```
-]]--
-
+]]
+--
 --[[
 Example Item:
 
@@ -143,4 +153,5 @@ ITEM.height = 1                                           -- Inventory height (1
 ITEM.isStackable = true                                   -- Enables stacking functionality
 ITEM.maxQuantity = 10                                     -- Maximum items per stack
 ```
-]]--
+]]
+--

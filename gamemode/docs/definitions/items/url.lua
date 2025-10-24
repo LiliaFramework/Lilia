@@ -1,4 +1,4 @@
---[[
+﻿--[[
     URL Item Definition
 
     URL item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - URLs open in the player's default browser
     - Items are not consumed when used
     - Can be used multiple times
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the URL item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Website Link"
         ```
-]]--
+]]
+--
 ITEM.name = "urlName"
 --[[
     ITEM.desc
@@ -35,7 +37,8 @@ ITEM.name = "urlName"
         ```lua
         ITEM.desc = "A link to an external website"
         ```
-]]--
+]]
+--
 ITEM.desc = "urlDesc"
 --[[
     ITEM.model
@@ -45,7 +48,8 @@ ITEM.desc = "urlDesc"
         ```lua
         ITEM.model = "models/props_interiors/pot01a.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/props_interiors/pot01a.mdl"
 --[[
     ITEM.url
@@ -55,7 +59,8 @@ ITEM.model = "models/props_interiors/pot01a.mdl"
         ```lua
         ITEM.url = "https://example.com"
         ```
-]]--
+]]
+--
 ITEM.url = ""
 --[[
 Example Item:
@@ -67,4 +72,5 @@ ITEM.desc = "A link to an external website"       -- Description text
 ITEM.model = "models/props_interiors/pot01a.mdl"  -- 3D model for the item
 ITEM.url = "https://example.com"                  -- URL to open when used
 ```
-]]--
+]]
+--

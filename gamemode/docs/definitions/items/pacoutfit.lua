@@ -1,4 +1,4 @@
---[[
+﻿--[[
     PAC Outfit Item Definition
 
     PAC outfit item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Items remain in inventory when equipped
     - Can be unequipped to remove PAC3 parts
     - Requires PAC3 addon to function properly
-]]--
+]]
+--
 --[[
     if not pac then return end
     Purpose: Prevents loading if PAC addon is not available
@@ -25,7 +26,8 @@
         ```lua
         if not pac then return end
         ```
-]]--
+]]
+--
 if not pac then return end
 --[[
     ITEM.name
@@ -35,7 +37,8 @@ if not pac then return end
         ```lua
         ITEM.name = "Hat"
         ```
-]]--
+]]
+--
 ITEM.name = "pacoutfitName"
 --[[
     ITEM.desc
@@ -45,7 +48,8 @@ ITEM.name = "pacoutfitName"
         ```lua
         ITEM.desc = "A stylish hat"
         ```
-]]--
+]]
+--
 ITEM.desc = "pacoutfitDesc"
 --[[
     ITEM.category
@@ -55,7 +59,8 @@ ITEM.desc = "pacoutfitDesc"
         ```lua
         ITEM.category = "outfit"
         ```
-]]--
+]]
+--
 ITEM.category = "outfit"
 --[[
     ITEM.model
@@ -65,7 +70,8 @@ ITEM.category = "outfit"
         ```lua
         ITEM.model = "models/Gibs/HGIBS.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/Gibs/HGIBS.mdl"
 --[[
     ITEM.width
@@ -75,7 +81,8 @@ ITEM.model = "models/Gibs/HGIBS.mdl"
         ```lua
         ITEM.width = 1  -- Takes 1 slot width
         ```
-]]--
+]]
+--
 ITEM.width = 1
 --[[
     ITEM.height
@@ -85,7 +92,8 @@ ITEM.width = 1
         ```lua
         ITEM.height = 1  -- Takes 1 slot height
         ```
-]]--
+]]
+--
 ITEM.height = 1
 --[[
     ITEM.outfitCategory
@@ -95,7 +103,8 @@ ITEM.height = 1
         ```lua
         ITEM.outfitCategory = "hat"  -- Prevents multiple items of same category
         ```
-]]--
+]]
+--
 ITEM.outfitCategory = "hat"
 --[[
     ITEM.pacData
@@ -105,7 +114,8 @@ ITEM.outfitCategory = "hat"
         ```lua
         ITEM.pacData = {}  -- PAC attachment data
         ```
-]]--
+]]
+--
 ITEM.pacData = {}
 --[[
     ITEM:paintOver(item, w, h)
@@ -120,7 +130,8 @@ ITEM.pacData = {}
             end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:removePart(client)
     Purpose: Removes the PAC part from the player
@@ -134,7 +145,8 @@ ITEM.pacData = {}
             -- Remove attribute boosts
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onCanBeTransfered(_, newInventory)
     Purpose: Prevents transfer of equipped PAC outfits
@@ -146,7 +158,8 @@ ITEM.pacData = {}
             return true
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onLoadout()
     Purpose: Handles PAC outfit loading on player spawn
@@ -157,7 +170,8 @@ ITEM.pacData = {}
             if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onRemoved()
     Purpose: Handles PAC outfit removal when item is removed
@@ -170,7 +184,8 @@ ITEM.pacData = {}
             if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:hook("drop", function(item) ... end)
     Purpose: Handles PAC outfit removal when item is dropped
@@ -182,8 +197,8 @@ ITEM.pacData = {}
             if item:getData("equip") then item:removePart(client) end
         end)
         ```
-]]--
-
+]]
+--
 --[[
 Example Item:
 
@@ -197,4 +212,5 @@ ITEM.width = 1                                  -- Inventory width (1 slot)
 ITEM.height = 1                                 -- Inventory height (1 slot)
 ITEM.outfitCategory = "hat"                     -- Outfit category for conflict checking
 ```
-]]--
+]]
+--

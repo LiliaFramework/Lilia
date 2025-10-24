@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Outfit Item Definition
 
     Outfit item system for the Lilia framework.
@@ -16,7 +16,8 @@
     - Items remain in inventory when equipped
     - Can be unequipped to restore original appearance
     - Outfit categories prevent conflicts between items
-]]--
+]]
+--
 --[[
     ITEM.name
     Purpose: Sets the display name of the outfit item
@@ -25,7 +26,8 @@
         ```lua
         ITEM.name = "Police Uniform"
         ```
-]]--
+]]
+--
 ITEM.name = "outfit"
 --[[
     ITEM.desc
@@ -35,7 +37,8 @@ ITEM.name = "outfit"
         ```lua
         ITEM.desc = "A standard police uniform"
         ```
-]]--
+]]
+--
 ITEM.desc = "outfitDesc"
 --[[
     ITEM.category
@@ -45,7 +48,8 @@ ITEM.desc = "outfitDesc"
         ```lua
         ITEM.category = "outfit"
         ```
-]]--
+]]
+--
 ITEM.category = "outfit"
 --[[
     ITEM.model
@@ -55,7 +59,8 @@ ITEM.category = "outfit"
         ```lua
         ITEM.model = "models/props_c17/BriefCase001a.mdl"
         ```
-]]--
+]]
+--
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
 --[[
     ITEM.width
@@ -65,7 +70,8 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl"
         ```lua
         ITEM.width = 1  -- Takes 1 slot width
         ```
-]]--
+]]
+--
 ITEM.width = 1
 --[[
     ITEM.height
@@ -75,7 +81,8 @@ ITEM.width = 1
         ```lua
         ITEM.height = 1  -- Takes 1 slot height
         ```
-]]--
+]]
+--
 ITEM.height = 1
 --[[
     ITEM.outfitCategory
@@ -85,7 +92,8 @@ ITEM.height = 1
         ```lua
         ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
         ```
-]]--
+]]
+--
 ITEM.outfitCategory = "model"
 --[[
     ITEM.pacData
@@ -95,7 +103,8 @@ ITEM.outfitCategory = "model"
         ```lua
         ITEM.pacData = {}  -- PAC attachment data
         ```
-]]--
+]]
+--
 ITEM.pacData = {}
 --[[
     ITEM.isOutfit
@@ -105,7 +114,8 @@ ITEM.pacData = {}
         ```lua
         ITEM.isOutfit = true
         ```
-]]--
+]]
+--
 ITEM.isOutfit = true
 --[[
     ITEM:paintOver(item, w, h)
@@ -120,7 +130,8 @@ ITEM.isOutfit = true
             end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:removeOutfit(client)
     Purpose: Removes the outfit from the player
@@ -131,7 +142,8 @@ ITEM.isOutfit = true
             -- Custom removal logic
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:wearOutfit(client, isForLoadout)
     Purpose: Applies the outfit to the player
@@ -142,7 +154,8 @@ ITEM.isOutfit = true
             -- Custom wear logic
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:OnCanBeTransfered(_, newInventory)
     Purpose: Prevents transfer of equipped outfits
@@ -154,7 +167,8 @@ ITEM.isOutfit = true
             return true
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onLoadout()
     Purpose: Handles outfit loading on player spawn
@@ -165,7 +179,8 @@ ITEM.isOutfit = true
             if self:getData("equip") then self:wearOutfit(self.player, true) end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:onRemoved()
     Purpose: Handles outfit removal when item is removed
@@ -176,7 +191,8 @@ ITEM.isOutfit = true
             if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
         end
         ```
-]]--
+]]
+--
 --[[
     ITEM:hook("drop", function(item) ... end)
     Purpose: Handles outfit removal when item is dropped
@@ -185,8 +201,8 @@ ITEM.isOutfit = true
         ```lua
         ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
         ```
-]]--
-
+]]
+--
 --[[
 Example Item:
 
@@ -200,4 +216,5 @@ ITEM.width = 1                                      -- Inventory width (1 slot)
 ITEM.height = 1                                     -- Inventory height (1 slot)
 ITEM.outfitCategory = "model"                       -- Outfit category for conflict checking
 ```
-]]--
+]]
+--
