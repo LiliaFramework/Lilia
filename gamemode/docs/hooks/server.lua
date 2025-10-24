@@ -1,5 +1,5 @@
 ﻿--[[
-    Lilia Framework - Server-Side Hooks
+    Server-Side Hooks
 
     Server-side hook system for the Lilia framework.
     These hooks run on the server and are used for game logic, data management, and server-side processing.

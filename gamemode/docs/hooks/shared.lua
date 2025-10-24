@@ -1,5 +1,5 @@
 ﻿--[[
-    Lilia Framework - Shared Hooks
+    Shared Hooks
 
     Shared hook system for the Lilia framework.
     These hooks run on both client and server and are used for shared functionality and data synchronization.
