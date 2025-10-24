@@ -1,4 +1,4 @@
-# Lilia Framework - Server-Side Hooks
+# Server-Side Hooks
 
 Server-side hook system for the Lilia framework.
 

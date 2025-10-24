@@ -1,4 +1,4 @@
-# Lilia Framework - Client-Side Hooks
+# Client-Side Hooks
 
 Client-side hook system for the Lilia framework.
 

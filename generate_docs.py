@@ -688,14 +688,25 @@ def generate_documentation_for_panels(file_path: Path, output_path: Path) -> Non
 def generate_documentation_for_definitions_file(file_path: Path, output_dir: Path) -> None:
     name = file_path.stem.lower()
     output_filename = f'{name}.md'
-    output_path = output_dir / output_filename
+    
+    # Check if this is an item definition file
+    if file_path.parent.name == 'items':
+        # Put item files in an items subdirectory
+        output_path = output_dir / 'items' / output_filename
+    else:
+        output_path = output_dir / output_filename
 
     if name == 'panels':
         generate_documentation_for_panels(file_path, output_path)
         return
 
-    # Generic CLASS/FACTION/MODULE definitions
-    entity_prefixes: Tuple[str, ...] = ('CLASS', 'FACTION', 'MODULE')
+    # Check if this is an item definition file
+    if file_path.parent.name == 'items':
+        # This is an item definition file
+        entity_prefixes: Tuple[str, ...] = ('ITEM',)
+    else:
+        # Generic CLASS/FACTION/MODULE definitions
+        entity_prefixes: Tuple[str, ...] = ('CLASS', 'FACTION', 'MODULE')
     comment_blocks, file_header, overview_section = find_comment_blocks_in_file(file_path)
     entries = parse_definition_property_blocks(file_path, entity_prefixes)
 
@@ -711,7 +722,7 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
                 subtitle = parts[1].strip()
 
     md = generate_markdown_for_definition_entries(title, subtitle, overview_section, entries)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(md)
     print(f"  Generated {output_path.name}")
@@ -822,6 +833,12 @@ def main():
                 p = input_dir / name
                 if p.exists():
                     files_to_process.append(str(p))
+            
+            # Process items subdirectory
+            items_dir = input_dir / 'items'
+            if items_dir.exists():
+                for item_file in items_dir.glob('*.lua'):
+                    files_to_process.append(str(item_file))
         elif args.type == 'hooks':
             for name in ('client.lua', 'server.lua', 'shared.lua'):
                 p = input_dir / name

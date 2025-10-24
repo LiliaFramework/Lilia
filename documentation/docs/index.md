@@ -3,7 +3,7 @@
 ---
 
 <p align="center">
-  <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true" alt="Lilia Logo" />
+  <img src="https://bleonheart.github.io/Samael-Assets/lilia.png?raw=true" alt="Lilia Logo" width="200" height="200" />
 </p>
 
 Lilia is an advanced roleplay framework for Garry's Mod. Inspired by Lillia from League of Legends, it lets you create immersive servers with stability, rich features, and open-source flexibility. Because Lilia is only a framework, you must install a roleplay schema and launch your server using that schema's gamemode (for example, `+gamemode skeleton`).
