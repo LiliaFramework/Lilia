@@ -61,19 +61,12 @@ If you see this message and no errors, Lilia is working correctly.
 
 ## Troubleshooting
 
-**"Gamemode 'skeleton' is missing"**
-- Check that your schema is installed in `garrysmod/gamemodes/` with the correct folder name
+**"Gamemode 'skeleton' is missing"** - Check that your schema is installed in `garrysmod/gamemodes/` with the correct folder name
 
-**Workshop items not downloading**
-- Verify internet connection and Workshop parameters in startup options (not `server.cfg`)
+**Workshop items not downloading** - Verify internet connection and Workshop parameters in startup options (not `server.cfg`)
 
-**"Lilia framework not found"**
-- Ensure you're subscribed to the Lilia Workshop addon and check console for download messages
+**"Lilia framework not found"** - Ensure you're subscribed to the Lilia Workshop addon and check console for download messages
 
-**Server won't start with new gamemode**
-- Verify `+gamemode <SchemaName>` is set in your server startup options
+**Server won't start with new gamemode** - Verify `+gamemode <SchemaName>` is set in your server startup options
 
-**Need more help?**
-- Check server console for error messages
-- Visit [Lilia Discord](https://discord.gg/esCRH5ckbQ) for community support
-- Review [GitHub Issues](https://github.com/LiliaFramework/Lilia/issues) for known problems
+**Need more help?** - Check server console for error messages - Visit [Lilia Discord](https://discord.gg/esCRH5ckbQ) for community support - Review [GitHub Issues](https://github.com/LiliaFramework/Lilia/issues) for known problems
