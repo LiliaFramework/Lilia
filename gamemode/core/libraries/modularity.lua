@@ -177,7 +177,6 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
     end
 
     lia.loader.include(coreFile, "shared")
-
     local enabled, disableReason
     if isfunction(MODULE.enabled) then
         enabled, disableReason = MODULE.enabled()
@@ -199,7 +198,6 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
     loadPermissions(MODULE.Privileges)
     loadDependencies(MODULE.Dependencies)
     loadExtras(path)
-
     MODULE.loading = false
     for k, f in pairs(MODULE) do
         if isfunction(f) then hook.Add(k, MODULE, f) end

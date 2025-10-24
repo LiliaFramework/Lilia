@@ -796,7 +796,6 @@ else
         scroll:SetSize(frameW, frameH - titleH - titleY - gap)
         local layout = vgui.Create("DListLayout", scroll)
         layout:Dock(FILL)
-
         for _, entry in pairs(optionsList) do
             local btn = vgui.Create("liaButton", layout)
             btn:SetTall(entryH)

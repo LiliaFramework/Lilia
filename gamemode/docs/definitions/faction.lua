@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Faction Properties and Methods
 
     Character faction definition system for the Lilia framework.
@@ -393,6 +393,7 @@ FACTION.OnCheckLimitReached = nil
 ]]
 function FACTION:OnTransferred(client)
 end
+
 --[[
     FACTION.OnSpawn
     Purpose: Called when a player spawns with this faction
@@ -412,7 +413,6 @@ end
 ]]
 function FACTION:OnSpawn(client)
 end
-
 --[[
     Example Faction:
 

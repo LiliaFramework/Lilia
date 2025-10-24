@@ -35,11 +35,10 @@ function PANEL:RefreshGroups()
     end
 
     table.sort(keys, function(a, b) return a:lower() < b:lower() end)
-    local buttonType = self.buttonType or "liaUserGroupButton" -- Default to old style if not specified
+    local buttonType = self.buttonType or "liaUserGroupButton"
     for _, groupName in ipairs(keys) do
         local groupData = self.groups[groupName]
         local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[groupName] ~= nil
-
         local groupBtn
         if buttonType == "liaButton" then
             groupBtn = self.scrollPanel:Add("liaButton")
@@ -51,13 +50,11 @@ function PANEL:RefreshGroups()
             groupBtn.selected = false
             groupBtn.groupName = groupName
             groupBtn.isDefault = isDefault
-
             -- Style the button like the modern admin interface buttons
             groupBtn.Paint = function(s, w, h)
                 local bgColor = lia.color.theme.panel[1]
                 local textColor = lia.color.theme.text
                 local accentColor = lia.config.get("Color")
-
                 if s.selected then
                     bgColor = ColorAlpha(accentColor, 30)
                     textColor = accentColor
@@ -66,9 +63,7 @@ function PANEL:RefreshGroups()
                 end
 
                 lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
-                if s.selected then
-                    lia.derma.rect(0, 0, w, h):Rad(8):Color(accentColor):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw()
-                end
+                if s.selected then lia.derma.rect(0, 0, w, h):Rad(8):Color(accentColor):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw() end
                 draw.SimpleText(s.text, "liaMediumFont", 15, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
         else
@@ -87,7 +82,6 @@ end
 
 function PANEL:SelectGroup(groupName)
     local buttonType = self.buttonType or "liaUserGroupButton"
-
     -- Clear previous selection
     if self.selectedGroup and self.groupButtons[self.selectedGroup] then
         local prevBtn = self.groupButtons[self.selectedGroup]
@@ -99,7 +93,6 @@ function PANEL:SelectGroup(groupName)
     end
 
     self.selectedGroup = groupName
-
     -- Set new selection
     if self.groupButtons[groupName] then
         local newBtn = self.groupButtons[groupName]

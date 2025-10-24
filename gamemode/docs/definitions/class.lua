@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Class Properties and Methods
 
     Character class definition system for the Lilia framework.
@@ -52,7 +52,7 @@
     CLASS.name
     Purpose: Sets the display name of the character class
     When Called: During class definition
-    
+
     Example Usage:
         ```lua
         CLASS.name = "Police Officer"
@@ -426,7 +426,6 @@ end
 ]]
 function CLASS:OnLeave(client)
 end
-
 --[[
     Example Class:
 

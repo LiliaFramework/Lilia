@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Module Properties and Methods
 
     Module definition system for the Lilia framework.

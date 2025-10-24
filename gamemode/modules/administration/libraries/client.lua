@@ -228,9 +228,7 @@ function MODULE:ShowPlayerOptions(target, options)
     }
 
     for _, v in ipairs(orderedOptions) do
-        if v then -- Filter out nil values from conditional functions
-            options[#options + 1] = v
-        end
+        if v then options[#options + 1] = v end
     end
 end
 

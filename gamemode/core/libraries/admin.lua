@@ -2180,7 +2180,7 @@ else
         groupsList:Dock(LEFT)
         groupsList:SetWide(200)
         groupsList:DockMargin(10, 5, 5, 10)
-        groupsList.buttonType = "liaButton" -- Use modern button style
+        groupsList.buttonType = "liaButton"
         local groupDetails = container:Add("DPanel")
         groupDetails:Dock(FILL)
         groupDetails:DockMargin(5, 5, 10, 10)

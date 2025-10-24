@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Lilia Framework Hooks
 
     Comprehensive hook system for the Lilia framework.
