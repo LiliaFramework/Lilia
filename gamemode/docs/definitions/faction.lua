@@ -26,15 +26,15 @@
 ]]
 --[[
     Overview:
-    The faction system provides comprehensive functionality for defining character factions within the Lilia framework. 
-    Factions represent the main organizational units that characters belong to, serving as parent containers for classes. 
+    The faction system provides comprehensive functionality for defining character factions within the Lilia framework.
+    Factions represent the main organizational units that characters belong to, serving as parent containers for classes.
     Each character belongs to exactly ONE faction and can have multiple classes within that faction.
 
     **Faction-Class Relationship:**
     - **Factions** are the main organizational units (Citizens, Police, Medical, Staff)
     - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
     - Each character belongs to exactly ONE faction but can switch between classes within that faction
-    - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence 
+    - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
       over the same property in the parent faction.
 
     **Example Hierarchy:**
@@ -46,26 +46,26 @@
     └── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
     ```
 
-    Factions are defined using the FACTION table structure, which includes properties for identification, 
-    visual representation, gameplay mechanics, and access control. The system includes callback methods 
-    that are automatically invoked during key character lifecycle events, enabling dynamic behavior and 
+    Factions are defined using the FACTION table structure, which includes properties for identification,
+    visual representation, gameplay mechanics, and access control. The system includes callback methods
+    that are automatically invoked during key character lifecycle events, enabling dynamic behavior and
     customization.
 
-    Factions can have player limits, whitelist requirements, specialized loadouts, and attribute 
-    modifications that affect gameplay. The system supports modifying player health, armor, movement 
-    speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based 
+    Factions can have player limits, whitelist requirements, specialized loadouts, and attribute
+    modifications that affect gameplay. The system supports modifying player health, armor, movement
+    speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based
     gameplay systems.
 
     **Player Management:**
-    Factions support player limits (absolute or percentage-based), character restrictions (one character 
-    per player), custom name generation templates, and custom limit checking logic for advanced access 
+    Factions support player limits (absolute or percentage-based), character restrictions (one character
+    per player), custom name generation templates, and custom limit checking logic for advanced access
     control scenarios.
 
     **Access Control:**
-    Factions use the `isDefault` property to determine if they are accessible to all players, and can 
+    Factions use the `isDefault` property to determine if they are accessible to all players, and can
     implement custom permission logic through whitelist systems and the framework's permission system.
 
-    In addition to the FACTION table properties, factions can also modify character variables such as 
+    In addition to the FACTION table properties, factions can also modify character variables such as
     classwhitelists to control which classes a character has access to within the faction.
 ]]
 --[[
