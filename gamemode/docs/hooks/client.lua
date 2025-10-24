@@ -19466,7 +19466,7 @@ end
     Purpose: Called when the database is initialized
     When Called: After the database connection is established and tables are created
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19516,7 +19516,7 @@ end
     Purpose: Called when the database has finished loading all data
     When Called: After all database operations and data loading is complete
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19570,7 +19570,7 @@ end
     Purpose: Called when the database is reset
     When Called: When the database is reset to default state
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19631,7 +19631,7 @@ end
     Purpose: Called when the database is completely wiped
     When Called: When all database data is permanently deleted
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19688,7 +19688,7 @@ end
     Parameters:
         client (Player) - The player who died
         deathSound (string) - The sound file that was played
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -19749,7 +19749,7 @@ end
     Parameters:
         createdEnt (Entity) - The entity that was created
         data (table) - The saved entity data
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19811,7 +19811,7 @@ end
     Parameters:
         ent (Entity) - The entity being updated
         data (table) - The updated persistent data
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19877,7 +19877,7 @@ end
     Parameters:
         ent (Entity) - The entity being saved
         entData (table) - The entity data being saved
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -19938,7 +19938,7 @@ end
     Purpose: Called when fonts are refreshed
     When Called: When the font system is reloaded or updated
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -20178,7 +20178,7 @@ end
     When Called: When a new item is added to the item system
     Parameters:
         ITEM (table) - The item table being registered
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -20334,7 +20334,7 @@ end
         fromChar (Character) - The character items were transferred from
         toChar (Character) - The character items were transferred to
         items (table) - Table of items that were transferred
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -20396,7 +20396,7 @@ end
     Purpose: Called when database tables are being loaded
     When Called: During database initialization when tables are loaded
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -20441,7 +20441,7 @@ end
     Purpose: Called when the framework has finished loading
     When Called: After all framework components have been initialized
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -20498,7 +20498,7 @@ end
     Parameters:
         moduleName (string) - The name of the module
         moduleTable (table) - The module table that was created
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -20553,7 +20553,7 @@ end
     When Called: When a module is unregistered from the framework
     Parameters:
         moduleName (string) - The name of the module being removed
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -20820,7 +20820,7 @@ end
     When Called: When a PAC3 part is moved between players or inventories
     Parameters:
         part (table) - The PAC3 part data being transferred
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -20884,7 +20884,7 @@ end
     Parameters:
         client (Player) - The player who is in pain
         painSound (string) - The sound file that was played
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -20945,7 +20945,7 @@ end
     Parameters:
         client (Player) - The player picking up money
         moneyEntity (Entity) - The money entity being picked up
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -22172,7 +22172,7 @@ end
     When Called: When a player's stack item is removed or lost
     Parameters:
         itemTypeOrItem (string/Item) - The item type or item instance that was lost
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23105,7 +23105,7 @@ end
         name (string) - The display name of the privilege
         access (string) - The access level required
         category (string) - The category the privilege belongs to
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -23165,7 +23165,7 @@ end
     Parameters:
         privilege (string) - The privilege identifier
         name (string) - The display name of the privilege
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -23217,7 +23217,7 @@ end
     When Called: When a quest-related item is loaded into the game
     Parameters:
         item (Item) - The quest item that was loaded
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -23277,7 +23277,7 @@ end
         dbTable (string) - The name of the database table
         data (table) - The data that was upserted
         action (string) - The action performed ("insert" or "update")
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23341,7 +23341,7 @@ end
     Parameters:
         item (Item) - The item being transferred
         targetInventory (Inventory) - The target inventory
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23398,7 +23398,7 @@ end
     When Called: After a successful database restore operation
     Parameters:
         restoreLog (table) - Information about the restore operation
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23456,7 +23456,7 @@ end
     When Called: After a failed database restore operation
     Parameters:
         failedLog (table) - Information about the failed restore operation
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23516,7 +23516,7 @@ end
     When Called: When a player's salary amount is modified
     Parameters:
         client (Player) - The player whose salary is being adjusted
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23580,7 +23580,7 @@ end
         pay (number) - The amount of salary paid
         faction (number) - The faction ID
         class (number) - The class ID
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23641,7 +23641,7 @@ end
     When Called: When items are loaded from the database
     Parameters:
         loadedItems (table) - Table of items that were loaded
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23703,7 +23703,7 @@ end
         logType (string) - The type of log entry
         logString (string) - The log message
         category (string) - The log category
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23774,7 +23774,7 @@ end
         character (Character) - The character whose skills changed
         oldValue (table) - The old skill values
         value (table) - The new skill values
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23839,7 +23839,7 @@ end
     Parameters:
         tableName (string) - The name of the table that was backed up
         snapshot (table) - The backup snapshot data
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23903,7 +23903,7 @@ end
     Parameters:
         tableName (string) - The name of the table that was removed
         snapshot (table) - The final snapshot of the table data
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -23962,7 +23962,7 @@ end
     Parameters:
         tableName (string) - The name of the table that was restored
         data (table) - The restored table data
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24024,7 +24024,7 @@ end
     Purpose: Called when all database tables are ready
     When Called: After all database tables have been initialized and are ready for use
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24083,7 +24083,7 @@ end
     Parameters:
         themeName (string) - The name of the new theme
         themeData (table) - The theme configuration data
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -24140,7 +24140,7 @@ end
         client (Player) - The admin claiming the ticket
         requester (Player) - The player who created the ticket
         ticketMessage (string) - The ticket message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24200,7 +24200,7 @@ end
         client (Player) - The admin closing the ticket
         requester (Player) - The player who created the ticket
         ticketMessage (string) - The ticket message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24259,7 +24259,7 @@ end
     Parameters:
         noob (Player) - The player creating the ticket
         message (string) - The ticket message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24326,7 +24326,7 @@ end
         toChar (Character) - The character items were being transferred to
         items (table) - Table of items that failed to transfer
         err (string) - The error message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24393,7 +24393,7 @@ end
     When Called: When a player is successfully transferred
     Parameters:
         targetPlayer (Player) - The player who was transferred
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24454,7 +24454,7 @@ end
     Parameters:
         groupName (string) - The name of the usergroup
         groupData (table) - The usergroup configuration data
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24514,7 +24514,7 @@ end
     Parameters:
         groupName (string) - The name of the usergroup
         permissions (table) - The new permissions table
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24580,7 +24580,7 @@ end
     When Called: When a usergroup is deleted from the system
     Parameters:
         groupName (string) - The name of the usergroup being removed
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24641,7 +24641,7 @@ end
     Parameters:
         oldName (string) - The old name of the usergroup
         newName (string) - The new name of the usergroup
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24816,7 +24816,7 @@ end
     When Called: When the server receives updated staff information
     Parameters:
         staffData (table) - The staff data containing online staff information
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -24880,7 +24880,7 @@ end
     When Called: When an admin opens the admin stick interface
     Parameters:
         tgt (Entity) - The target entity being examined
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -24945,7 +24945,7 @@ end
         key (string) - The option key that was changed
         old (any) - The old value
         value (any) - The new value
-    Returns: void
+    Returns: None
     Realm: Shared
     Example Usage:
 
@@ -25010,7 +25010,7 @@ end
         client (Player) - The player who sent the option
         key (string) - The option key
         value (any) - The option value
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -25450,7 +25450,7 @@ end
     When Called: When anti-cheat systems detect suspicious behavior
     Parameters:
         client (Player) - The player who was detected cheating
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -25749,7 +25749,7 @@ end
     When Called: When a player's framework data has been loaded from the database
     Parameters:
         client (Player) - The player whose data was loaded
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31077,7 +31077,7 @@ end
     Parameters:
         self (Entity) - The storage entity being removed
         inventory (Inventory) - The inventory associated with the storage
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31158,7 +31158,7 @@ end
         entity (Entity) - The storage entity
         inventory (Inventory) - The inventory being set
         isCar (boolean) - Whether this is a car storage
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31234,7 +31234,7 @@ end
     Purpose: Called when an item is removed from storage
     When Called: When an item is removed from a storage inventory
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31321,7 +31321,7 @@ end
     Parameters:
         storage (Entity) - The storage entity being opened
         isCar (boolean) - Whether this is a car storage
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31404,7 +31404,7 @@ end
     Parameters:
         ent (Entity) - The storage entity being restored
         inventory (Inventory) - The inventory being restored
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31491,7 +31491,7 @@ end
     When Called: When a player attempts to unlock a locked storage
     Parameters:
         entity (Entity) - The storage entity being unlocked
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -31575,7 +31575,7 @@ end
     When Called: When spawn points are being stored
     Parameters:
         spawns (table) - The spawn points to store
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31652,7 +31652,7 @@ end
     When Called: When character list needs to be synchronized
     Parameters:
         client (Player) - The client to sync with
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31729,7 +31729,7 @@ end
     When Called: When third person view is enabled or disabled
     Parameters:
         newValue (boolean) - The new third person state
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -31905,7 +31905,7 @@ end
         client (Player) - The admin claiming the ticket
         requester (Player) - The player who requested the ticket
         ticketMessage (string) - The ticket message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -31984,7 +31984,7 @@ end
         client (Player) - The admin closing the ticket
         requester (Player) - The player who requested the ticket
         ticketMessage (string) - The ticket message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -32071,7 +32071,7 @@ end
     Parameters:
         noob (Player) - The player creating the ticket
         message (string) - The ticket message
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -32157,7 +32157,7 @@ end
         client (Player) - The player toggling the lock
         door (Entity) - The door entity
         state (boolean) - The new lock state
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -32239,7 +32239,7 @@ end
     Parameters:
         self (Panel) - The tooltip panel
         panel (Panel) - The parent panel
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -32312,7 +32312,7 @@ end
     When Called: When a tooltip needs to be laid out
     Parameters:
         self (Panel) - The tooltip panel
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -32398,7 +32398,7 @@ end
         self (Panel) - The tooltip panel
         w (number) - The width of the tooltip
         h (number) - The height of the tooltip
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -32476,7 +32476,7 @@ end
     When Called: When an item is being transferred
     Parameters:
         itemID (string) - The ID of the item being transferred
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -32571,7 +32571,7 @@ end
     When Called: When attempting to view an entity model
     Parameters:
         entity (Entity) - The entity to view
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -32680,7 +32680,7 @@ end
     When Called: When an entity's persistence data needs to be updated
     Parameters:
         ent (Entity) - The entity to update
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -32766,7 +32766,7 @@ end
     When Called: When scoreboard colors need to be updated
     Parameters:
         teamColors (table) - The team colors table
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -32846,7 +32846,7 @@ end
         vendor (Entity) - The vendor entity
         id (string) - The class ID being updated
         allowed (boolean) - Whether the class is allowed
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -32925,7 +32925,7 @@ end
     Parameters:
         liaVendorEnt (Entity) - The vendor entity being edited
         key (string) - The property key being edited
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -33002,7 +33002,7 @@ end
     Purpose: Called when a vendor is exited
     When Called: When a player closes a vendor
     Parameters: None
-    Returns: void
+    Returns: None
     Realm: Client
     Example Usage:
 
@@ -33074,7 +33074,7 @@ end
         vendor (Entity) - The vendor entity
         id (string) - The faction ID being updated
         allowed (boolean) - Whether the faction is allowed
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -33167,7 +33167,7 @@ end
         vendor (Entity) - The vendor entity
         itemType (string) - The item type being updated
         value (number) - The new maximum stock value
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -33258,7 +33258,7 @@ end
         vendor (Entity) - The vendor entity
         itemType (string) - The item type being updated
         value (string) - The new mode value
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -33353,7 +33353,7 @@ end
         vendor (Entity) - The vendor entity
         itemType (string) - The item type being updated
         value (number) - The new price value
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
@@ -33453,7 +33453,7 @@ end
         vendor (Entity) - The vendor entity
         itemType (string) - The item type being updated
         value (number) - The new stock value
-    Returns: void
+    Returns: None
     Realm: Server
     Example Usage:
 
