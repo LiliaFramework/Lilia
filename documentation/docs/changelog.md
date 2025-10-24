@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.884 (October 24, 2025)
+
+### Changes
+
+- Update ci.yml
+- Successfully updated workshop Lilia to 6.882
+- Create generate_docs.py
+- Update faction.lua
+- Update class.lua
+- Linting
+- Update player.lua
+- More Docs
+- Successfully updated workshop Lilia to 6.875
+- More Docs
+- Successfully updated workshop Lilia to 6.873
+- Successfully updated workshop Lilia to 6.871
+- Hooks
+- Revert "Merge branch 'main' of https://github.com/LiliaFramework/Lilia"
+- Update client.lua
+- Successfully updated workshop Lilia to 6.868
+- Spacing
+- Temp New Docs
+- Successfully updated workshop Lilia to 6.865
+- Fixes
+
 ## Version 6.882 (October 24, 2025)
 
 ### Changes
