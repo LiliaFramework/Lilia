@@ -14,12 +14,6 @@ Sets the display name of the grenade item
 
 During item definition
 
-**Example Usage**
-
-```lua
-ITEM.name = "Fragmentation Grenade"
-```
-
 ---
 
 ### desc
@@ -31,12 +25,6 @@ Sets the description of the grenade item
 **When Called**
 
 During item definition
-
-**Example Usage**
-
-```lua
-ITEM.desc = "A deadly fragmentation grenade"
-```
 
 ---
 
@@ -50,12 +38,6 @@ Sets the category for the grenade item
 
 During item definition
 
-**Example Usage**
-
-```lua
-ITEM.category = "itemCatGrenades"
-```
-
 ---
 
 ### model
@@ -67,12 +49,6 @@ Sets the 3D model for the grenade item
 **When Called**
 
 During item definition
-
-**Example Usage**
-
-```lua
-ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
-```
 
 ---
 
@@ -86,12 +62,6 @@ Sets the weapon class name for the grenade
 
 During item definition (used in Use function)
 
-**Example Usage**
-
-```lua
-ITEM.class = "weapon_frag"
-```
-
 ---
 
 ### width
@@ -103,12 +73,6 @@ Sets the inventory width of the grenade item
 **When Called**
 
 During item definition
-
-**Example Usage**
-
-```lua
-ITEM.width = 1  -- Takes 1 slot width
-```
 
 ---
 
@@ -122,12 +86,6 @@ Sets the inventory height of the grenade item
 
 During item definition
 
-**Example Usage**
-
-```lua
-ITEM.height = 1  -- Takes 1 slot height
-```
-
 ---
 
 ### DropOnDeath
@@ -139,12 +97,6 @@ Sets whether the grenade drops when player dies
 **When Called**
 
 During item definition
-
-**Example Usage**
-
-```lua
-ITEM.DropOnDeath = true  -- Drops on death
-```
 
 ---
 
