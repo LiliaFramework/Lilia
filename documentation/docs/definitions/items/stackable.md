@@ -14,6 +14,13 @@ Sets the display name of the stackable item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.name = "Ammo Box"
+
+```
+
 ---
 
 ### model
@@ -25,6 +32,13 @@ Sets the 3D model for the stackable item
 **When Called**
 
 During item definition
+
+**Example Usage**
+
+```lua
+ITEM.model = "models/props_junk/cardboard_box001a.mdl"
+
+```
 
 ---
 
@@ -38,6 +52,13 @@ Sets the inventory width of the stackable item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.width = 1  -- Takes 1 slot width
+
+```
+
 ---
 
 ### height
@@ -49,6 +70,13 @@ Sets the inventory height of the stackable item
 **When Called**
 
 During item definition
+
+**Example Usage**
+
+```lua
+ITEM.height = 1  -- Takes 1 slot height
+
+```
 
 ---
 
@@ -62,6 +90,13 @@ Marks the item as stackable
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.isStackable = true
+
+```
+
 ---
 
 ### maxQuantity
@@ -73,6 +108,13 @@ Sets the maximum quantity for the stackable item
 **When Called**
 
 During item definition
+
+**Example Usage**
+
+```lua
+ITEM.maxQuantity = 10  -- Maximum 10 items per stack
+
+```
 
 ---
 
@@ -86,6 +128,13 @@ Sets whether the item can be split
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.canSplit = true  -- Allows splitting the stack
+
+```
+
 ---
 
 ### ITEM:getDesc()
@@ -97,6 +146,15 @@ Custom description function that shows quantity
 **When Called**
 
 When displaying item description
+
+**Example Usage**
+
+```lua
+function ITEM:getDesc()
+return L("stackableDesc", self:getQuantity())
+end
+
+```
 
 ---
 
@@ -110,6 +168,16 @@ Custom paint function to display quantity on the item
 
 When rendering the item in inventory
 
+**Example Usage**
+
+```lua
+function ITEM:paintOver(item)
+local quantity = item:getQuantity()
+lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
+end
+
+```
+
 ---
 
 ### ITEM:onCombine(other)
@@ -121,6 +189,24 @@ Handles combining stackable items
 **When Called**
 
 When two stackable items are combined
+
+**Example Usage**
+
+```lua
+function ITEM:onCombine(other)
+if other.uniqueID ~= self.uniqueID then return end
+local combined = self:getQuantity() + other:getQuantity()
+if combined <= self.maxQuantity then
+self:setQuantity(combined)
+other:remove()
+else
+self:setQuantity(self.maxQuantity)
+other:setQuantity(combined - self.maxQuantity)
+end
+return true
+end
+
+```
 
 ---
 

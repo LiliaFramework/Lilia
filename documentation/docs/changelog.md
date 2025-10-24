@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.893 (October 24, 2025)
+
+### Changes
+
+- Empty Lines
+- Small Voice Range Change
+- Spaciong
+- Successfully updated workshop Lilia to 6.889
+- Update installation.md
+- Update compatibility.md
+- Items
+- Naming of Page
+- Successfully updated workshop Lilia to 6.884
+- Update ci.yml
+- Successfully updated workshop Lilia to 6.882
+- Create generate_docs.py
+- Update faction.lua
+- Update class.lua
+- Linting
+- Update player.lua
+- More Docs
+- Successfully updated workshop Lilia to 6.875
+- More Docs
+- Successfully updated workshop Lilia to 6.873
+
 ## Version 6.889 (October 24, 2025)
 
 ### Changes

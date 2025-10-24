@@ -14,6 +14,13 @@ Sets the display name of the aid item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.name = "Medical Kit"
+
+```
+
 ---
 
 ### desc
@@ -25,6 +32,13 @@ Sets the description of the aid item
 **When Called**
 
 During item definition
+
+**Example Usage**
+
+```lua
+ITEM.desc = "A medical kit that restores health"
+
+```
 
 ---
 
@@ -38,6 +52,13 @@ Sets the 3D model for the aid item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.model = "models/weapons/w_package.mdl"
+
+```
+
 ---
 
 ### width
@@ -49,6 +70,13 @@ Sets the inventory width of the aid item
 **When Called**
 
 During item definition
+
+**Example Usage**
+
+```lua
+ITEM.width = 1  -- Takes 1 slot width
+
+```
 
 ---
 
@@ -62,6 +90,13 @@ Sets the inventory height of the aid item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.height = 1  -- Takes 1 slot height
+
+```
+
 ---
 
 ### health
@@ -73,6 +108,13 @@ Sets the amount of health restored by the aid item
 **When Called**
 
 During item definition (used in use functions)
+
+**Example Usage**
+
+```lua
+ITEM.health = 25  -- Restores 25 health points
+
+```
 
 ---
 

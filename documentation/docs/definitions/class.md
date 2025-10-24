@@ -9,7 +9,6 @@ Character class definition system for the Lilia framework.
 The class system provides comprehensive functionality for defining character classes within the Lilia framework.
 Classes represent specific roles or professions that characters can assume within factions, creating a
 hierarchical structure where factions serve as parent containers for classes.
-
 **Faction-Class Relationship:**
 - **Factions** are the main organizational units (Citizens, Police, Medical, etc.)
 - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
@@ -17,7 +16,6 @@ hierarchical structure where factions serve as parent containers for classes.
 - Classes inherit all properties from their parent faction by default
 - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
 over the same property in the parent faction.
-
 **Example Hierarchy:**
 ```
 Faction: Police Department
@@ -26,22 +24,18 @@ Faction: Police Department
 ├── Class: Police Captain (inherits police properties, overrides with command-specific permissions)
 └── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
 ```
-
 Classes are defined using the CLASS table structure, which includes properties for identification,
 visual representation, gameplay mechanics, and access control. The system includes callback methods
 that are automatically invoked during key character lifecycle events, enabling dynamic behavior and
 customization.
-
 Classes can have player limits, whitelist requirements, specialized loadouts, and attribute
 modifications that affect gameplay. The system supports modifying player health, armor, movement
 speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based
 gameplay systems.
-
 **Access Control:**
 Classes use the `isWhitelisted` property to require whitelist access, and the `OnCanBe` callback
 method to implement custom permission logic. The `OnCanBe` callback is called when a player attempts
 to join a class and can check attributes, permissions, or any other conditions before allowing access.
-
 In addition to the CLASS table properties, classes can also modify character variables such as
 classwhitelists to control which classes a character has access to.
 
@@ -61,6 +55,7 @@ During class definition
 
 ```lua
 CLASS.name = "Police Officer"
+
 ```
 
 ---
@@ -79,6 +74,7 @@ During class definition
 
 ```lua
 CLASS.desc = "A law enforcement officer responsible for maintaining order"
+
 ```
 
 ---
@@ -97,6 +93,7 @@ During class definition
 
 ```lua
 CLASS.faction = FACTION_POLICE
+
 ```
 
 ---
@@ -116,6 +113,7 @@ During class definition
 ```lua
 CLASS.limit = 5  -- Maximum 5 players
 CLASS.limit = 0  -- Unlimited players
+
 ```
 
 ---
@@ -134,6 +132,7 @@ During class definition
 
 ```lua
 CLASS.model = "models/player/barney.mdl"
+
 ```
 
 ---
@@ -152,6 +151,12 @@ During class definition
 
 ```lua
 CLASS.isWhitelisted = true  -- Requires whitelist permission to join
+
+```
+
+**Note Complexity:**
+```lua
+
 ```
 
 ---
@@ -170,6 +175,7 @@ During class definition
 
 ```lua
 CLASS.isDefault = true
+
 ```
 
 ---
@@ -188,6 +194,7 @@ During class definition
 
 ```lua
 CLASS.scoreboardHidden = true  -- Class will not appear in scoreboard categories
+
 ```
 
 ---
@@ -206,6 +213,7 @@ During class definition
 
 ```lua
 CLASS.pay = 100  -- $100 salary
+
 ```
 
 ---
@@ -228,6 +236,7 @@ lia.class.register("police_officer", {
 name = "Police Officer",
 -- uniqueID will be "police_officer"
 })
+
 ```
 
 ---
@@ -250,6 +259,7 @@ lia.class.register("police_officer", {
 name = "Police Officer",
 -- index will be assigned based on registration order
 })
+
 ```
 
 ---
@@ -268,6 +278,7 @@ During class definition
 
 ```lua
 CLASS.Color = Color(0, 100, 255)  -- Blue color for police
+
 ```
 
 ---
@@ -286,6 +297,7 @@ During class definition (applied when player joins class)
 
 ```lua
 CLASS.health = 150  -- Police officers have 150 max health
+
 ```
 
 ---
@@ -304,6 +316,7 @@ During class definition (applied when player joins class)
 
 ```lua
 CLASS.armor = 50  -- Police officers have 50 armor
+
 ```
 
 ---
@@ -323,6 +336,7 @@ During class definition (applied when player spawns)
 ```lua
 CLASS.weapons = {"weapon_pistol", "weapon_stunstick"}  -- Table of weapons
 CLASS.weapons = "weapon_crowbar"  -- Single weapon string
+
 ```
 
 ---
@@ -341,6 +355,7 @@ During class definition (applied when player joins class)
 
 ```lua
 CLASS.scale = 1.1  -- Slightly larger model
+
 ```
 
 ---
@@ -361,6 +376,7 @@ During class definition (applied when player joins class)
 CLASS.runSpeed = 300  -- Absolute run speed
 CLASS.runSpeedMultiplier = true
 CLASS.runSpeed = 1.2  -- 20% faster than default
+
 ```
 
 ---
@@ -381,6 +397,7 @@ During class definition (applied when player joins class)
 CLASS.walkSpeed = 150  -- Absolute walk speed
 CLASS.walkSpeedMultiplier = true
 CLASS.walkSpeed = 1.1  -- 10% faster than default
+
 ```
 
 ---
@@ -401,6 +418,7 @@ During class definition (applied when player joins class)
 CLASS.jumpPower = 200  -- Absolute jump power
 CLASS.jumpPowerMultiplier = true
 CLASS.jumpPower = 1.3  -- 30% higher jump
+
 ```
 
 ---
@@ -422,6 +440,7 @@ CLASS.NPCRelations = {
 ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
 ["npc_citizen"] = D_NU       -- Neutral to citizens
 }
+
 ```
 
 ---
@@ -441,6 +460,7 @@ During class definition (applied when player joins class)
 ```lua
 CLASS.bloodcolor = BLOOD_COLOR_RED  -- Red blood
 CLASS.bloodcolor = BLOOD_COLOR_YELLOW  -- Yellow blood for aliens
+
 ```
 
 ---
@@ -460,6 +480,7 @@ During class definition (used with runSpeed property)
 ```lua
 CLASS.runSpeedMultiplier = true
 CLASS.runSpeed = 1.2  -- 20% faster than default
+
 ```
 
 ---
@@ -479,6 +500,7 @@ During class definition (used with walkSpeed property)
 ```lua
 CLASS.walkSpeedMultiplier = true
 CLASS.walkSpeed = 1.1  -- 10% faster than default
+
 ```
 
 ---
@@ -498,6 +520,7 @@ During class definition (used with jumpPower property)
 ```lua
 CLASS.jumpPowerMultiplier = true
 CLASS.jumpPower = 1.3  -- 30% higher jump
+
 ```
 
 ---
@@ -544,6 +567,7 @@ end
 end
 return true
 end
+
 ```
 
 ---
@@ -572,6 +596,7 @@ Server
 function CLASS:OnSet(client)
 client:notify("Welcome to " .. self.name)
 end
+
 ```
 
 ---
@@ -603,6 +628,7 @@ if oldClass then
 client:notify("Switched from " .. oldClass.name .. " to " .. self.name)
 end
 end
+
 ```
 
 ---
@@ -633,6 +659,7 @@ client:Give("weapon_stunstick")
 client:SetHealth(150)
 client:SetArmor(50)
 end
+
 ```
 
 ---
@@ -661,6 +688,7 @@ Server
 function CLASS:OnLeave(client)
 client:StripWeapon("weapon_stunstick")
 end
+
 ```
 
 ---

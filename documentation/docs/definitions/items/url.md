@@ -14,6 +14,13 @@ Sets the display name of the URL item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.name = "Website Link"
+
+```
+
 ---
 
 ### desc
@@ -25,6 +32,13 @@ Sets the description of the URL item
 **When Called**
 
 During item definition
+
+**Example Usage**
+
+```lua
+ITEM.desc = "A link to an external website"
+
+```
 
 ---
 
@@ -38,6 +52,13 @@ Sets the 3D model for the URL item
 
 During item definition
 
+**Example Usage**
+
+```lua
+ITEM.model = "models/props_interiors/pot01a.mdl"
+
+```
+
 ---
 
 ### url
@@ -49,6 +70,13 @@ Sets the URL to open when the item is used
 **When Called**
 
 During item definition (used in use function)
+
+**Example Usage**
+
+```lua
+ITEM.url = "https://example.com"
+
+```
 
 ---
 
