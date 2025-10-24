@@ -6,31 +6,7 @@ Module definition system for the Lilia framework.
 
 ## Overview
 
-The module system provides comprehensive functionality for defining modules
-
-within the Lilia framework. Modules represent self-contained systems that
-
-add specific functionality to the gamemode, each with unique properties,
-
-behaviors, and configuration options. The system supports both server-side
-
-logic for gameplay mechanics and client-side properties for user interface
-
-and experience.
-
-
-
-Modules are defined using the MODULE table structure, which includes properties
-
-for identification, metadata, dependencies, privileges, and configuration.
-
-The system includes callback methods that are automatically invoked during
-
-key module lifecycle events, enabling dynamic behavior and customization.
-
-Modules can have dependencies, privileges, network strings, and various
-
-configuration options, providing a flexible foundation for modular systems.
+The module system provides comprehensive functionality for defining modules within the Lilia framework. Modules represent self-contained systems that add specific functionality to the gamemode, each with unique properties, behaviors, and configuration options. The system supports both server-side logic for gameplay mechanics and client-side properties for user interface and experience. Modules are defined using the MODULE table structure, which includes properties for identification, metadata, dependencies, privileges, and configuration. The system includes callback methods that are automatically invoked during key module lifecycle events, enabling dynamic behavior and customization. Modules can have dependencies, privileges, network strings, and various configuration options, providing a flexible foundation for modular systems.
 
 ---
 
