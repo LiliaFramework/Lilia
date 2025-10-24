@@ -1,7 +1,29 @@
 ﻿--[[
-    Module Properties and Methods
+    Module Definitions
 
     Module definition system for the Lilia framework.
+
+    PLACEMENT INSTRUCTIONS:
+    
+    SCHEMA LOCATION:
+    - Path: garrysmod/gamemodes/<SchemaName>/schema/modules/
+    - File naming: Use descriptive names like "inventory.lua", "chatbox.lua", "doors.lua"
+    - Registration: Each file should define a MODULE table and register it using lia.module.register()
+    - Example: lia.module.register("inventory", MODULE)
+    
+    MODULE LOCATION:
+    - Path: garrysmod/gamemodes/<SchemaName>/modules/<ModuleName>/
+    - File naming: Use descriptive names like "sh_inventory.lua", "cl_inventory.lua", "sv_inventory.lua"
+    - Registration: Each file should define a MODULE table and register it using lia.module.register()
+    - Example: lia.module.register("custom_inventory", MODULE)
+    
+    FILE STRUCTURE EXAMPLES:
+    Schema: garrysmod/gamemodes/myschema/schema/modules/inventory.lua
+    Module: garrysmod/gamemodes/myschema/modules/custommodule/sh_inventory.lua
+    
+    NOTE: Modules represent self-contained systems that add specific functionality to the gamemode.
+    Each module can have dependencies, privileges, network strings, and various configuration options.
+    Modules support both server-side logic for gameplay mechanics and client-side properties for UI.
 ]]
 --[[
     Overview:

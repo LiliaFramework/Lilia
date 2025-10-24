@@ -1,10 +1,25 @@
 ﻿--[[
-    Class Properties and Methods
+    Class Definitions
 
     Character class definition system for the Lilia framework.
 
-    Classes should be saved in: garrysmod/gamemodes/<SchemaName>/schema/classes/
-    Each class file should define a CLASS table and register it using lia.class.register()
+    PLACEMENT INSTRUCTIONS:
+    
+    SCHEMA LOCATION:
+    - Path: garrysmod/gamemodes/<SchemaName>/schema/classes/
+    - File naming: Use descriptive names like "police_officer.lua", "citizen.lua"
+    - Registration: Each file should define a CLASS table and register it using lia.class.register()
+    - Example: lia.class.register("police_officer", CLASS)
+    
+    MODULE LOCATION:
+    - Path: garrysmod/gamemodes/<SchemaName>/modules/<ModuleName>/classes/
+    - File naming: Use descriptive names like "swat_officer.lua", "detective.lua"
+    - Registration: Each file should define a CLASS table and register it using lia.class.register()
+    - Example: lia.class.register("swat_officer", CLASS)
+    
+    FILE STRUCTURE EXAMPLES:
+    Schema: garrysmod/gamemodes/myschema/schema/classes/police_officer.lua
+    Module: garrysmod/gamemodes/myschema/modules/policemodule/classes/swat_officer.lua
 ]]
 --[[
     Overview:

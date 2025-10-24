@@ -1,9 +1,28 @@
 ﻿--[[
-    Faction Properties and Methods
+    Faction Definitions
 
     Character faction definition system for the Lilia framework.
 
-    Factions should be saved in: garrysmod/gamemodes/<SchemaName>/schema/factions/
+    PLACEMENT INSTRUCTIONS:
+    
+    SCHEMA LOCATION:
+    - Path: garrysmod/gamemodes/<SchemaName>/schema/factions/
+    - File naming: Use descriptive names like "police.lua", "citizen.lua", "medical.lua"
+    - Registration: Each file should define a FACTION table and register it using lia.faction.register()
+    - Example: lia.faction.register("police", FACTION)
+    
+    MODULE LOCATION:
+    - Path: garrysmod/gamemodes/<SchemaName>/modules/<ModuleName>/factions/
+    - File naming: Use descriptive names like "swat.lua", "fire_department.lua"
+    - Registration: Each file should define a FACTION table and register it using lia.faction.register()
+    - Example: lia.faction.register("swat", FACTION)
+
+    FILE STRUCTURE EXAMPLES:
+    Schema: garrysmod/gamemodes/myschema/schema/factions/police.lua
+    Module: garrysmod/gamemodes/myschema/modules/policemodule/factions/swat.lua
+    
+    NOTE: Factions are the parent containers for classes. Each character belongs to exactly ONE faction
+    and can have multiple classes within that faction.
 ]]
 --[[
     Overview:

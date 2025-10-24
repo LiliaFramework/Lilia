@@ -2948,7 +2948,321 @@ function playerMeta:requestDropdown(title, subTitle, options, callback)
     end
 end
 
+        Medium Complexity:
+        ```lua
+        -- Medium: Part validation and management
+        local parts = player:getParts()
+        local partCount = 0
+        for partID, _ in pairs(parts) do
+            partCount = partCount + 1
+        end
+        if partCount > 5 then
+            player:notifyWarning("You have too many accessories equipped")
+        end
+        ```
+
+        High Complexity:
+        ```lua
+        -- High: Complex part system with validation and effects
+        local parts = player:getParts()
+        local validParts = {}
+        local invalidParts = {}
+        
+        for partID, _ in pairs(parts) do
+            if lia.pac.isValidPart(partID) then
+                table.insert(validParts, partID)
+            else
+                table.insert(invalidParts, partID)
+                player:removePart(partID)
+            end
+        end
+        
+        if #invalidParts > 0 then
+            player:notifyError("Removed " .. #invalidParts .. " invalid parts")
+        end
+        ```
+]]
+function playerMeta:getParts()
+    return self:getNetVar("parts", {})
+end
+
 if SERVER then
+    --[[
+        playerMeta:syncParts()
+        Purpose: Synchronizes the player's PAC parts with all clients
+        When Called: When player's PAC parts need to be synchronized
+        Parameters: None
+        Returns: None
+        Realm: Server
+        Example Usage:
+            ```lua
+            -- Low: Basic part synchronization
+            player:syncParts()
+            ```
+
+            Medium Complexity:
+            ```lua
+            -- Medium: Sync parts after validation
+            local parts = player:getParts()
+            local validParts = {}
+            for partID, _ in pairs(parts) do
+                if lia.pac.isValidPart(partID) then
+                    validParts[partID] = true
+                end
+            end
+            player:setNetVar("parts", validParts)
+            player:syncParts()
+            ```
+
+            High Complexity:
+            ```lua
+            -- High: Complex synchronization with logging and validation
+            local parts = player:getParts()
+            local syncCount = 0
+            local removedParts = {}
+            
+            for partID, _ in pairs(parts) do
+                if not lia.pac.isValidPart(partID) then
+                    table.insert(removedParts, partID)
+                    parts[partID] = nil
+                else
+                    syncCount = syncCount + 1
+                end
+            end
+            
+            player:setNetVar("parts", parts)
+            player:syncParts()
+            
+            if #removedParts > 0 then
+                lia.log.add("Player " .. player:Name() .. " had " .. #removedParts .. " invalid parts removed")
+            end
+            ```
+    ]]
+    function playerMeta:syncParts()
+        net.Start("liaPacSync")
+        net.Send(self)
+    end
+
+    --[[
+        playerMeta:addPart(partID)
+        Purpose: Adds a PAC part to the player and synchronizes it with all clients
+        When Called: When a player equips a new PAC accessory
+        Parameters:
+            - partID (string): The unique identifier of the PAC part to add
+        Returns: None
+        Realm: Server
+        Example Usage:
+            ```lua
+            -- Low: Basic part addition
+            player:addPart("hat_001")
+            ```
+
+            Medium Complexity:
+            ```lua
+            -- Medium: Part addition with validation and limits
+            local parts = player:getParts()
+            local partCount = 0
+            for _, _ in pairs(parts) do
+                partCount = partCount + 1
+            end
+            
+            if partCount < 10 and lia.pac.isValidPart(partID) then
+                player:addPart(partID)
+                player:notifySuccess("Part equipped: " .. partID)
+            else
+                player:notifyError("Cannot equip more parts or invalid part ID")
+            end
+            ```
+
+            High Complexity:
+            ```lua
+            -- High: Complex part system with permissions and effects
+            local partID = "premium_hat_001"
+            local char = player:getChar()
+            
+            if char and char:hasFlags("P") then
+                if lia.pac.isValidPart(partID) then
+                    local parts = player:getParts()
+                    if not parts[partID] then
+                        player:addPart(partID)
+                        player:notifySuccess("Premium part equipped!")
+                        lia.log.add("Player " .. player:Name() .. " equipped premium part: " .. partID)
+                        
+                        -- Apply special effects
+                        player:setData("premiumPartEquipped", true)
+                        player:notifyInfo("Premium effects activated!")
+                    else
+                        player:notifyWarning("Part already equipped")
+                    end
+                else
+                    player:notifyError("Invalid part ID")
+                end
+            else
+                player:notifyError("Insufficient permissions for this part")
+            end
+            ```
+    ]]
+    function playerMeta:addPart(partID)
+        if self:getParts()[partID] then return end
+        net.Start("liaPacPartAdd")
+        net.WriteEntity(self)
+        net.WriteString(partID)
+        net.Broadcast()
+        local parts = self:getParts()
+        parts[partID] = true
+        self:setNetVar("parts", parts)
+    end
+
+    --[[
+        playerMeta:removePart(partID)
+        Purpose: Removes a PAC part from the player and synchronizes the change with all clients
+        When Called: When a player unequips a PAC accessory
+        Parameters:
+            - partID (string): The unique identifier of the PAC part to remove
+        Returns: None
+        Realm: Server
+        Example Usage:
+            ```lua
+            -- Low: Basic part removal
+            player:removePart("hat_001")
+            ```
+
+            Medium Complexity:
+            ```lua
+            -- Medium: Part removal with validation and cleanup
+            local parts = player:getParts()
+            if parts[partID] then
+                player:removePart(partID)
+                player:notifySuccess("Part removed: " .. partID)
+                
+                -- Clean up related data
+                player:setData("part_" .. partID .. "_equipped", false)
+            else
+                player:notifyWarning("Part not equipped")
+            end
+            ```
+
+            High Complexity:
+            ```lua
+            -- High: Complex part removal with effects and logging
+            local partID = "premium_hat_001"
+            local parts = player:getParts()
+            
+            if parts[partID] then
+                player:removePart(partID)
+                
+                -- Remove special effects
+                if partID:find("premium_") then
+                    player:setData("premiumPartEquipped", false)
+                    player:notifyInfo("Premium effects deactivated")
+                end
+                
+                -- Log the removal
+                lia.log.add("Player " .. player:Name() .. " removed part: " .. partID)
+                
+                -- Check if any premium parts remain
+                local hasPremiumParts = false
+                for id, _ in pairs(parts) do
+                    if id:find("premium_") then
+                        hasPremiumParts = true
+                        break
+                    end
+                end
+                
+                if not hasPremiumParts then
+                    player:notifyWarning("No premium parts remaining")
+                end
+            else
+                player:notifyError("Part not found")
+            end
+            ```
+    ]]
+    function playerMeta:removePart(partID)
+        net.Start("liaPacPartRemove")
+        net.WriteEntity(self)
+        net.WriteString(partID)
+        net.Broadcast()
+        local parts = self:getParts()
+        parts[partID] = nil
+        self:setNetVar("parts", parts)
+    end
+
+    --[[
+        playerMeta:resetParts()
+        Purpose: Removes all PAC parts from the player and synchronizes the reset with all clients
+        When Called: When a player wants to remove all accessories or during cleanup
+        Parameters: None
+        Returns: None
+        Realm: Server
+        Example Usage:
+            ```lua
+            -- Low: Basic parts reset
+            player:resetParts()
+            ```
+
+            Medium Complexity:
+            ```lua
+            -- Medium: Reset parts with validation and notification
+            local parts = player:getParts()
+            local partCount = 0
+            for _, _ in pairs(parts) do
+                partCount = partCount + 1
+            end
+            
+            if partCount > 0 then
+                player:resetParts()
+                player:notifySuccess("All parts removed (" .. partCount .. " parts)")
+            else
+                player:notifyInfo("No parts to remove")
+            end
+            ```
+
+            High Complexity:
+            ```lua
+            -- High: Complex parts reset with logging and cleanup
+            local parts = player:getParts()
+            local removedParts = {}
+            local premiumParts = 0
+            
+            -- Count and categorize parts before removal
+            for partID, _ in pairs(parts) do
+                table.insert(removedParts, partID)
+                if partID:find("premium_") then
+                    premiumParts = premiumParts + 1
+                end
+            end
+            
+            if #removedParts > 0 then
+                player:resetParts()
+                
+                -- Clean up related data
+                player:setData("premiumPartEquipped", false)
+                player:setData("lastPartReset", os.time())
+                
+                -- Log the reset
+                lia.log.add("Player " .. player:Name() .. " reset " .. #removedParts .. " parts (Premium: " .. premiumParts .. ")")
+                
+                -- Notify with details
+                if premiumParts > 0 then
+                    player:notifyWarning("Reset " .. #removedParts .. " parts including " .. premiumParts .. " premium items")
+                else
+                    player:notifySuccess("Reset " .. #removedParts .. " parts")
+                end
+                
+                -- Trigger cleanup hooks
+                hook.Run("OnPlayerResetParts", player, removedParts)
+            else
+                player:notifyInfo("No parts to reset")
+            end
+            ```
+    ]]
+    function playerMeta:resetParts()
+        net.Start("liaPacPartReset")
+        net.WriteEntity(self)
+        net.Broadcast()
+        self:setNetVar("parts", {})
+    end
+
     --[[
     Purpose: Restores stamina to the player's character
     When Called: When implementing stamina recovery, rest systems, or character healing for the player
