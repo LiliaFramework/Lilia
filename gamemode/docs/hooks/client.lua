@@ -8588,3 +8588,119 @@ end
 ]]
 function WebSoundDownloaded(name, path)
 end
+
+--[[
+    Purpose: Allows modification of the voice indicator text displayed when a player is speaking
+    When Called: When the voice indicator is being drawn and a player is currently speaking
+    Parameters:
+        client (Player) - The LocalPlayer() who is currently speaking
+        voiceText (string) - The current voice indicator text (e.g., "You are talking - 3 players can hear you")
+        voiceType (string) - The voice type string (e.g., "talking", "whispering", "yelling")
+    Returns: string or nil - Return a string to replace the voice text, or return nil/false to keep the original text
+    Realm: Client
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Add emojis to voice indicator
+    hook.Add("ModifyVoiceIndicatorText", "AddVoiceEmojis", function(client, voiceText, voiceType)
+        if voiceType == L("whispering") then
+            return "🔇 " .. voiceText .. " 🔇"
+        elseif voiceType == L("yelling") then
+            return "📢 " .. voiceText .. " 📢"
+        elseif voiceType == L("talking") then
+            return "💬 " .. voiceText .. " 💬"
+        end
+        return nil -- Keep original text
+    end)
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Custom formatting based on voice type
+    hook.Add("ModifyVoiceIndicatorText", "CustomVoiceFormat", function(client, voiceText, voiceType)
+        local char = client:getChar()
+        if not char then return nil end
+        
+        local name = char:getName()
+        if voiceType == L("whispering") then
+            return name .. " is whispering quietly..."
+        elseif voiceType == L("yelling") then
+            return name .. " is YELLING LOUDLY!"
+        elseif voiceType == L("talking") then
+            return name .. " is speaking normally"
+        end
+        
+        return nil -- Keep original text
+    end)
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Advanced voice indicator with custom styling
+    hook.Add("ModifyVoiceIndicatorText", "AdvancedVoiceIndicator", function(client, voiceText, voiceType)
+        local char = client:getChar()
+        if not char then return nil end
+        
+        local name = char:getName()
+        local faction = char:getFaction()
+        local factionData = lia.faction.get(faction)
+        
+        -- Get listener count if voice range is enabled
+        local listenerCount = 0
+        if lia.option.get("voiceRange", false) then
+            -- Calculate listeners (simplified version)
+            local baseRange = voiceType == L("whispering") and lia.config.get("WhisperRange", 70) or 
+                             voiceType == L("talking") and lia.config.get("TalkRange", 280) or 
+                             voiceType == L("yelling") and lia.config.get("YellRange", 840) or 
+                             lia.config.get("TalkRange", 280)
+            
+            local count = 0
+            local clientPos = client:GetPos()
+            for _, ply in player.Iterator() do
+                if ply ~= client and IsValid(ply) and ply:getChar() and ply:Alive() then
+                    local distance = clientPos:Distance(ply:GetPos())
+                    local clearLOS = IsLineOfSightClear(client, ply)
+                    local effectiveRange = clearLOS and baseRange or baseRange * 0.16
+                    if distance <= effectiveRange then
+                        count = count + 1
+                    end
+                end
+            end
+            listenerCount = count
+        end
+        
+        -- Custom formatting based on faction and voice type
+        local prefix = ""
+        local suffix = ""
+        
+        if factionData and factionData.color then
+            local color = factionData.color
+            prefix = string.format("[%s] ", ColorToHex(color))
+        end
+        
+        if voiceType == L("whispering") then
+            suffix = " whispers softly"
+        elseif voiceType == L("yelling") then
+            suffix = " YELLS LOUDLY"
+        elseif voiceType == L("talking") then
+            suffix = " speaks"
+        end
+        
+        local result = prefix .. name .. suffix
+        
+        if listenerCount > 0 then
+            result = result .. " - " .. listenerCount .. " players can hear you"
+        end
+        
+        return result
+    end)
+
+    -- Helper function for color conversion
+    function ColorToHex(color)
+        return string.format("#%02X%02X%02X", color.r, color.g, color.b)
+    end
+    ```
+]]
+function ModifyVoiceIndicatorText(client, voiceText, voiceType)
+end

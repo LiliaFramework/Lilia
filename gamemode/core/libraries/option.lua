@@ -965,7 +965,10 @@ lia.option.add("ChatShowTime", "chatShowTime", "chatShowTimeDesc", false, nil, {
 lia.option.add("voiceRange", "voiceRange", "voiceRangeDesc", false, nil, {
     category = "categoryHUD",
     isQuick = true,
-    type = "Boolean"
+    type = "Boolean",
+    visible = function()
+        return LocalPlayer():IsSuperAdmin()
+    end
 })
 
 lia.option.add("weaponSelectorPosition", "weaponSelectorPosition", "weaponSelectorPositionDesc", "Left", nil, {
