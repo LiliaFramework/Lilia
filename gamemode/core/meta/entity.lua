@@ -29,6 +29,7 @@ local validClasses = {
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -78,6 +79,7 @@ end
     Returns: boolean - True if the entity is a prop_physics, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is a prop
@@ -113,6 +115,7 @@ end
     Returns: boolean - True if the entity is a lia_item, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is an item
@@ -152,6 +155,7 @@ end
     Returns: boolean - True if the entity is a lia_money, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is money
@@ -194,6 +198,7 @@ end
     Returns: boolean - True if the entity is a supported vehicle, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is a vehicle
@@ -236,6 +241,7 @@ end
     Returns: boolean - True if the client has access, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check basic door access
@@ -282,6 +288,7 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Set vehicle owner
@@ -324,6 +331,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Lock vehicle
@@ -362,6 +370,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Unlock vehicle
@@ -400,6 +409,7 @@ end
     Returns: Player or nil - The door owner if it's a vehicle with CPPI, nil otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get door owner
@@ -441,6 +451,7 @@ end
     Returns: boolean - True if the entity is locked, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is locked
@@ -480,6 +491,7 @@ end
     Returns: boolean - True if the door is locked, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if door is locked
@@ -520,6 +532,7 @@ end
     Returns: Vector, Angle - The drop position and angle
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get drop position
@@ -570,6 +583,7 @@ end
     Returns: boolean - True if the entity is female, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is female
@@ -612,6 +626,7 @@ end
     Returns: boolean - True if near another entity, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is near any other entity
@@ -656,6 +671,7 @@ end
     Returns: Entity or nil - The partner door if found, nil otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get door partner
@@ -713,6 +729,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Send network variable to all clients
@@ -753,6 +770,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Clear all network variables
@@ -792,6 +810,7 @@ if SERVER then
     Returns: None
     Realm: Server (can only be called on server)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Remove door access data
@@ -834,6 +853,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Lock entity
@@ -866,6 +886,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Make vehicle non-ownable
@@ -897,6 +918,7 @@ if SERVER then
     Returns: boolean - True if the entity is a door, false otherwise
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is a door
@@ -942,6 +964,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Set a network variable
@@ -980,6 +1003,7 @@ if SERVER then
     Returns: any - The network variable value or default
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get a network variable
@@ -1015,6 +1039,7 @@ else
     Returns: boolean - True if the entity is a door, false otherwise
     Realm: Client (can only be called on client)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if entity is a door
@@ -1053,6 +1078,7 @@ else
     Returns: any - The network variable value or default
     Realm: Client (can only be called on client)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get a network variable
@@ -1097,6 +1123,7 @@ else
     Returns: None
     Realm: Client (can only be called on client)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play following sound

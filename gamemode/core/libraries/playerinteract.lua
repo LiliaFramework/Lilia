@@ -19,6 +19,7 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     Returns: boolean - true if within range, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if player is within default range of an entity
@@ -60,6 +61,7 @@ end
     Returns: table - Dictionary of available interactions indexed by interaction name
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get all available interactions for local player
@@ -118,6 +120,7 @@ end
     Returns: table - Dictionary of available actions indexed by action name
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get all available personal actions
@@ -170,6 +173,7 @@ end
     Returns: table - Array of options for flat display
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get options for display
@@ -231,6 +235,7 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Add basic player interaction
@@ -338,6 +343,7 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Add basic personal action
@@ -451,6 +457,7 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Sync all interactions to all clients
@@ -626,6 +633,7 @@ else
         Returns: void
         Realm: Client
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Open basic interaction menu

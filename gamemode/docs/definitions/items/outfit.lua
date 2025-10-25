@@ -115,6 +115,7 @@ ITEM.pacData = {}
 ITEM.isOutfit = true
 --[[
 Example Item:
+
     ```lua
     -- Basic item identification
     ITEM.name = "Police Uniform"                        -- Display name shown to players

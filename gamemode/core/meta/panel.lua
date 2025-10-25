@@ -15,6 +15,7 @@ local panelMeta = FindMetaTable("Panel")
     Returns: Nothing
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Set up inventory listening for a basic panel
@@ -84,6 +85,7 @@ end
     Returns: Nothing
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Remove hooks for a specific inventory
@@ -138,6 +140,7 @@ end
     Returns: Nothing
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Position a button at scaled coordinates
@@ -185,6 +188,7 @@ end
     Returns: Nothing
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Set panel size with scaled dimensions

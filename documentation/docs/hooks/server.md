@@ -53,7 +53,7 @@ hook.Run("AddWarning", charID, playerName, steamID, os.time(), "Rule violation",
 local reason = "Excessive RDM - 3 kills in 5 minutes"
 local timestamp = os.time()
 hook.Run("AddWarning", target:getChar():getID(), target:Nick(), target:SteamID(),
-    timestamp, reason, client:Nick(), client:SteamID())
+timestamp, reason, client:Nick(), client:SteamID())
 
 ```
 
@@ -61,23 +61,23 @@ hook.Run("AddWarning", target:getChar():getID(), target:Nick(), target:SteamID()
 ```lua
 -- High: Add warning with validation and logging
 hook.Add("AddWarning", "MyAddon", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
-    -- Log the warning to a custom system
-    print(string.format("Warning issued: %s warned %s for: %s", warner, warned, message))
-    -- Send notification to other admins
-    for _, admin in ipairs(player.GetAll()) do
-        if admin:IsAdmin() then
-            admin:ChatPrint(string.format("[WARNING] %s warned %s: %s", warner, warned, message))
-        end
-    end
-    -- Check for warning limits
-    local warnings = hook.Run("GetWarnings", charID)
-    if #warnings >= 3 then
-        -- Auto-kick after 3 warnings
-        local target = player.GetBySteamID(warnedSteamID)
-        if IsValid(target) then
-            target:Kick("Too many warnings")
-        end
-    end
+-- Log the warning to a custom system
+print(string.format("Warning issued: %s warned %s for: %s", warner, warned, message))
+-- Send notification to other admins
+for _, admin in ipairs(player.GetAll()) do
+if admin:IsAdmin() then
+admin:ChatPrint(string.format("[WARNING] %s warned %s: %s", warner, warned, message))
+end
+end
+-- Check for warning limits
+local warnings = hook.Run("GetWarnings", charID)
+if #warnings >= 3 then
+-- Auto-kick after 3 warnings
+local target = player.GetBySteamID(warnedSteamID)
+if IsValid(target) then
+target:Kick("Too many warnings")
+end
+end
 end)
 
 ```
@@ -115,7 +115,7 @@ Server
 ```lua
 -- Simple: Add default money to new characters
 hook.Add("AdjustCreationData", "MyAddon", function(client, data, newData, originalData)
-    data.money = data.money + 1000 -- Give extra starting money
+data.money = data.money + 1000 -- Give extra starting money
 end)
 
 ```
@@ -124,12 +124,12 @@ end)
 ```lua
 -- Medium: Modify character based on faction
 hook.Add("AdjustCreationData", "FactionBonuses", function(client, data, newData, originalData)
-    if data.faction == "police" then
-        data.money = data.money + 500 -- Police get extra money
-        data.desc = data.desc .. "\n\n[Police Officer]"
-    elseif data.faction == "citizen" then
-        data.money = data.money + 200 -- Citizens get small bonus
-    end
+if data.faction == "police" then
+data.money = data.money + 500 -- Police get extra money
+data.desc = data.desc .. "\n\n[Police Officer]"
+elseif data.faction == "citizen" then
+data.money = data.money + 200 -- Citizens get small bonus
+end
 end)
 
 ```
@@ -138,27 +138,27 @@ end)
 ```lua
 -- High: Complex character creation system with validation
 hook.Add("AdjustCreationData", "AdvancedCreation", function(client, data, newData, originalData)
-    -- Validate character name
-    if string.len(data.name) < 3 then
-        data.name = data.name .. " Jr."
-    end
-    -- Add faction-specific bonuses
-    local factionBonuses = {
-        ["police"] = {money = 1000, items = {"weapon_pistol"}},
-        ["medic"] = {money = 800, items = {"medkit"}},
-        ["citizen"] = {money = 200, items = {}}
-    }
-    local bonus = factionBonuses[data.faction]
-    if bonus then
-        data.money = data.money + bonus.money
-        data.startingItems = data.startingItems or {}
-        for _, item in ipairs(bonus.items) do
-            table.insert(data.startingItems, item)
-        end
-    end
-    -- Add creation timestamp
-    data.creationTime = os.time()
-    data.creationIP = client:IPAddress()
+-- Validate character name
+if string.len(data.name) < 3 then
+data.name = data.name .. " Jr."
+end
+-- Add faction-specific bonuses
+local factionBonuses = {
+["police"] = {money = 1000, items = {"weapon_pistol"}},
+["medic"] = {money = 800, items = {"medkit"}},
+["citizen"] = {money = 200, items = {}}
+}
+local bonus = factionBonuses[data.faction]
+if bonus then
+data.money = data.money + bonus.money
+data.startingItems = data.startingItems or {}
+for _, item in ipairs(bonus.items) do
+table.insert(data.startingItems, item)
+end
+end
+-- Add creation timestamp
+data.creationTime = os.time()
+data.creationIP = client:IPAddress()
 end)
 
 ```
@@ -194,7 +194,7 @@ Server
 ```lua
 -- Simple: Log when bag inventory is ready
 hook.Add("BagInventoryReady", "MyAddon", function(self, inventory)
-    print("Bag inventory ready for item: " .. self.uniqueID)
+print("Bag inventory ready for item: " .. self.uniqueID)
 end)
 
 ```
@@ -203,13 +203,13 @@ end)
 ```lua
 -- Medium: Add special items to bag inventory
 hook.Add("BagInventoryReady", "SpecialBags", function(self, inventory)
-    if self.uniqueID == "magic_bag" then
-        -- Add a magic item to the bag
-        local magicItem = lia.item.instance("magic_crystal")
-        if magicItem then
-            inventory:add(magicItem)
-        end
-    end
+if self.uniqueID == "magic_bag" then
+-- Add a magic item to the bag
+local magicItem = lia.item.instance("magic_crystal")
+if magicItem then
+inventory:add(magicItem)
+end
+end
 end)
 
 ```

@@ -18,6 +18,7 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Send basic notification to all players
@@ -66,6 +67,7 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Send localized notification to all players
@@ -117,6 +119,7 @@ else
         Returns: None
         Realm: Client
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Function is called automatically when server sends notification
@@ -171,6 +174,7 @@ else
         Returns: None
         Realm: Client
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Function is called automatically when server sends localized notification
@@ -240,6 +244,7 @@ else
         Returns: None
         Realm: Client
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Display basic notification
@@ -288,6 +293,7 @@ else
         Returns: None
         Realm: Client
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Display localized notification
@@ -331,6 +337,7 @@ else
         Returns: None
         Realm: Client
         Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Use legacy notification system
@@ -379,6 +386,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Function is called automatically when notifications are created

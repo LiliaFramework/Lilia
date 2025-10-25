@@ -16,6 +16,7 @@ lia.lang.stored = lia.lang.stored or {}
     Returns: None
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load languages from default directory
@@ -78,6 +79,7 @@ end
     Returns: None
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Add basic language strings
@@ -126,6 +128,7 @@ end
     Returns: table - Sorted array of language names with proper capitalization
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get list of available languages
@@ -181,6 +184,7 @@ end
     Returns: string - The localized and formatted string, or the key if not found
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get basic localized string
@@ -246,6 +250,7 @@ end
     Returns: string - The localized and formatted string, or the key if not found
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Use global L function for basic strings

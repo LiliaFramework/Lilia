@@ -137,6 +137,79 @@ ITEM.canSplit = true  -- Allows splitting the stack
 
 ---
 
+### ITEM:getDesc()
+
+**Purpose**
+
+Custom description function that shows quantity
+
+**When Called**
+
+When displaying item description
+
+**Example Usage**
+
+```lua
+function ITEM:getDesc()
+return L("stackableDesc", self:getQuantity())
+end
+
+```
+
+---
+
+### ITEM:paintOver(item)
+
+**Purpose**
+
+Custom paint function to display quantity on the item
+
+**When Called**
+
+When rendering the item in inventory
+
+**Example Usage**
+
+```lua
+function ITEM:paintOver(item)
+local quantity = item:getQuantity()
+lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
+end
+
+```
+
+---
+
+### ITEM:onCombine(other)
+
+**Purpose**
+
+Handles combining stackable items
+
+**When Called**
+
+When two stackable items are combined
+
+**Example Usage**
+
+```lua
+function ITEM:onCombine(other)
+if other.uniqueID ~= self.uniqueID then return end
+local combined = self:getQuantity() + other:getQuantity()
+if combined <= self.maxQuantity then
+self:setQuantity(combined)
+other:remove()
+else
+self:setQuantity(self.maxQuantity)
+other:setQuantity(combined - self.maxQuantity)
+end
+return true
+end
+
+```
+
+---
+
 ### Example Item:
 
 **Example Usage**

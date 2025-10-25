@@ -108,6 +108,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load a basic module
@@ -221,6 +222,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Initialize modules (typically called automatically)
@@ -291,6 +293,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Load all modules from a directory
@@ -325,6 +328,7 @@ end
     Returns: Module table or nil if not found
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get a module

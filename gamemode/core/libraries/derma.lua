@@ -20,6 +20,7 @@ local color_target = Color(255, 255, 255, 200)
     Returns: Panel - The created context menu panel
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create a basic context menu
@@ -67,6 +68,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Open color picker with callback
@@ -271,6 +273,7 @@ end
     Returns: Panel - The created radial menu panel with methods for adding options
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create a basic radial menu
@@ -328,6 +331,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Open player selector with callback
@@ -459,6 +463,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Open text input dialog
@@ -743,6 +748,7 @@ end
     Returns: boolean - Success status
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw a basic rounded rectangle
@@ -782,6 +788,7 @@ end
     Returns: boolean - Success status
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined rounded rectangle
@@ -820,6 +827,7 @@ end
     Returns: boolean - Success status
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw textured rounded rectangle
@@ -860,6 +868,7 @@ end
     Returns: boolean - Success status (if material has valid texture)
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw material-based rounded rectangle
@@ -904,6 +913,7 @@ end
     Returns: boolean - Success status
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw a basic circle
@@ -940,6 +950,7 @@ end
     Returns: boolean - Success status
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined circle
@@ -976,6 +987,7 @@ end
     Returns: boolean - Success status
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw textured circle
@@ -1014,6 +1026,7 @@ end
     Returns: boolean - Success status (if material has valid texture)
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw material-based circle
@@ -1080,6 +1093,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw blurred rectangle
@@ -1161,6 +1175,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw basic shadow
@@ -1213,6 +1228,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw basic shadow with uniform radius
@@ -1253,6 +1269,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined shadow
@@ -1452,6 +1469,7 @@ lia.derma.Types = {
     Returns: Table - Fluent drawing object with methods for chaining
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create and draw a rectangle
@@ -1491,6 +1509,7 @@ end
     Returns: Table - Fluent drawing object with methods for chaining
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create and draw a circle
@@ -1620,6 +1639,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw text with shadow
@@ -1666,6 +1686,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined text
@@ -1710,6 +1731,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw basic tooltip
@@ -1785,6 +1807,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw text with automatic shadow
@@ -2078,6 +2101,7 @@ end
     Returns: number - New interpolated value
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Smooth value transition
@@ -2119,6 +2143,7 @@ end
     Returns: number - Eased value
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Apply ease-out to animation progress
@@ -2160,6 +2185,7 @@ end
     Returns: number - Eased value
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Apply ease-in-out to animation progress
@@ -2213,6 +2239,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Animate panel appearance
@@ -2451,6 +2478,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw blur behind panel
@@ -2556,6 +2584,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw blur at specific position
@@ -2603,6 +2632,7 @@ end
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request basic arguments
@@ -3263,6 +3293,7 @@ lia.derma.entsScales = lia.derma.entsScales or {}
     Returns: None
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw entity name
@@ -3353,6 +3384,7 @@ end
     Returns: Panel - The created dialog frame
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request dropdown selection
@@ -3505,6 +3537,7 @@ end
     Returns: Panel - The created dialog frame
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request text input
@@ -3614,6 +3647,7 @@ end
     Returns: Panel - The created dialog frame
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request multiple selections
@@ -3740,6 +3774,7 @@ end
     Returns: Panel - The created dialog frame
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Request confirmation
@@ -3833,6 +3868,7 @@ end
     Returns: Panel, Table - The created dialog frame and button panels array
     Realm: Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request button selection

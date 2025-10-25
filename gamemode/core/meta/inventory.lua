@@ -21,6 +21,7 @@ Inventory.id = -1
     Returns: The data value or default value if key doesn't exist
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local money = inventory:getData("money", 0)
@@ -58,6 +59,7 @@ end
     Returns: The extended class with Inventory functionality
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local PlayerInventory = Inventory:extend("PlayerInventory")
@@ -93,6 +95,7 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     function MyInventory:configure()
@@ -129,6 +132,7 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     inventory:addDataProxy("money", function(old, new)
@@ -169,6 +173,7 @@ end
     Returns: Table of items matching the uniqueID
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local weapons = inventory:getItemsByUniqueID("weapon_pistol")
@@ -208,6 +213,7 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     MyInventory:register("player")
@@ -252,6 +258,7 @@ end
     Returns: New inventory instance
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local newInventory = MyInventory:new()
@@ -280,6 +287,7 @@ end
     Returns: String representation of the inventory
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     print(inventory:tostring())
@@ -307,6 +315,7 @@ end
     Returns: The inventory type configuration table
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local config = inventory:getType()
@@ -340,6 +349,7 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     -- This is usually called automatically, not manually
@@ -385,6 +395,7 @@ end
     Returns: Table of all items in the inventory
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local items = inventory:getItems()
@@ -422,6 +433,7 @@ end
     Returns: Table of items matching the specified type
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local weapons = inventory:getItemsOfType("weapon_pistol")
@@ -461,6 +473,7 @@ end
     Returns: The first item found of the specified type, or nil if none found
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local weapon = inventory:getFirstItemOfType("weapon_pistol")
@@ -501,6 +514,7 @@ end
     Returns: Boolean indicating if the item type exists in inventory
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     if inventory:hasItem("food_apple") then print("Has apple!") end
@@ -539,6 +553,7 @@ end
     Returns: Number representing total quantity of specified item type
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local appleCount = inventory:getItemCount("food_apple")
@@ -576,6 +591,7 @@ end
     Returns: The inventory's unique ID number
     Realm: Both
     Example Usage:
+
     Low Complexity:
     ```lua
     local id = inventory:getID()

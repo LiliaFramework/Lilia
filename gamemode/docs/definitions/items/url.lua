@@ -60,6 +60,7 @@ ITEM.model = "models/props_interiors/pot01a.mdl"
 ITEM.url = ""
 --[[
 Example Item:
+
     ```lua
     -- Basic item identification
     ITEM.name = "Website Link"                        -- Display name shown to players

@@ -15,6 +15,7 @@ lia.font.stored = lia.font.stored or {}
     Returns: None
     Realm: Client-side only
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load all fonts after registration
@@ -66,6 +67,7 @@ end
     Returns: None (calls lia.error if parameters are invalid)
     Realm: Shared (server stores metadata, client creates actual font)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Register a basic font
@@ -121,6 +123,7 @@ end
         - list (table): An alphabetically sorted table of font name strings
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get all available fonts
@@ -169,6 +172,7 @@ end
         - (string): The bold variant of the font name
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get bold version of a font
@@ -219,6 +223,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Register default fonts

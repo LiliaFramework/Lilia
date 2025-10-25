@@ -259,6 +259,7 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add a basic custom log type
@@ -306,6 +307,7 @@ end
         - category (string): The category of the log type, or nil if log type doesn't exist
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get a basic log string
@@ -356,6 +358,7 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Log a basic player action

@@ -131,6 +131,7 @@ local KeybindKeys = {
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add a basic keybind with table configuration

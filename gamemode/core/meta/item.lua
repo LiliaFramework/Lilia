@@ -26,6 +26,7 @@ ITEM.scale = 1
     Returns: boolean - True if the item is rotated, false otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Check if item is rotated
@@ -55,6 +56,7 @@ end
     Returns: number - The effective width of the item (height if rotated)
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item width
@@ -82,6 +84,7 @@ end
     Returns: number - The effective height of the item (width if rotated)
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item height
@@ -109,6 +112,7 @@ end
     Returns: number - The current quantity of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item quantity
@@ -143,6 +147,7 @@ end
     Returns: string - Formatted string representation of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Print item info
@@ -170,6 +175,7 @@ end
     Returns: number - The unique ID of the item instance
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item ID
@@ -200,6 +206,7 @@ end
     Returns: string - The model path of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item model
@@ -231,6 +238,7 @@ end
     Returns: number - The skin index of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item skin
@@ -264,6 +272,7 @@ end
     Returns: table - The bodygroup data of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item bodygroups
@@ -299,6 +308,7 @@ end
     Returns: number - The calculated price of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item price
@@ -336,6 +346,7 @@ end
     Returns: any - The return value(s) from the called method
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Call item method
@@ -378,6 +389,7 @@ end
     Returns: Player - The player who owns the item, or nil if not found
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item owner
@@ -419,6 +431,7 @@ end
     Returns: any - The data value or default if not found
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item data
@@ -457,6 +470,7 @@ end
     Returns: table - Complete data table combining item and entity data
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get all item data
@@ -497,6 +511,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Register hook
@@ -532,6 +547,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Register post-hook
@@ -565,6 +581,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic registration
@@ -601,6 +618,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Print basic info
@@ -634,6 +652,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Print item data
@@ -668,6 +687,7 @@ end
     Returns: string - The display name of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item name
@@ -698,6 +718,7 @@ end
     Returns: string - The description of the item
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item description
@@ -730,6 +751,7 @@ if SERVER then
     Returns: Promise - Promise that resolves when removal is complete
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Remove from inventory
@@ -764,6 +786,7 @@ if SERVER then
     Returns: Promise - Promise that resolves when deletion is complete
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Delete item
@@ -797,6 +820,7 @@ if SERVER then
     Returns: Promise - Promise that resolves when removal is complete
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Remove item
@@ -834,6 +858,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Destroy item
@@ -874,6 +899,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -907,6 +933,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -939,6 +966,7 @@ if SERVER then
     Returns: Entity - The spawned item entity, or nil if failed
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Spawn item
@@ -1024,6 +1052,7 @@ if SERVER then
     Returns: boolean - True if transfer was successful
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Transfer item
@@ -1063,6 +1092,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1096,6 +1126,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1129,6 +1160,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1162,6 +1194,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1195,6 +1228,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1239,6 +1273,7 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Set item data
@@ -1307,6 +1342,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1341,6 +1377,7 @@ if SERVER then
     Returns: boolean - True if sound was played successfully
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Play a basic sound
@@ -1392,6 +1429,7 @@ if SERVER then
     Returns: boolean - True if interaction was successful
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Use item
@@ -1484,6 +1522,7 @@ end
     Returns: string - The localized category name
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get item category

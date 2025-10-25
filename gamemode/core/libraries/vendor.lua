@@ -139,6 +139,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Add a basic rarity
@@ -178,6 +179,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Add a basic weapon vendor preset
@@ -226,6 +228,7 @@ end
     Returns: table or nil - The preset data table if found, nil otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get a preset and apply it to a vendor

@@ -14,6 +14,7 @@ local toolGunMeta = lia.meta.tool or {}
     Returns: table - The newly created tool gun object
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Create a basic tool gun instance
@@ -63,6 +64,7 @@ end
     Returns: None
     Realm: Shared (different behavior on client vs server)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Initialize basic ConVars for a tool
@@ -108,6 +110,7 @@ end
     Returns: None
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic data update call
@@ -146,6 +149,7 @@ end
     Returns: None
     Realm: Client (affects local player movement)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic movement freeze
@@ -191,6 +195,7 @@ end
     Returns: None
     Realm: Client (HUD rendering only occurs on client)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Draw basic tool information
@@ -242,6 +247,7 @@ end
     Returns: ConVar - The server ConVar object for the specified property
     Realm: Server (accesses server-side console variables)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get basic server ConVar
@@ -282,6 +288,7 @@ end
     Returns: table - A table mapping ConVar names to their default values
     Realm: Shared (can be used on both client and server)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get basic ConVar list
@@ -331,6 +338,7 @@ end
     Returns: string - The current value of the client's ConVar for the specified property
     Realm: Shared (accesses client-side data through the owner)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get basic client ConVar value
@@ -373,6 +381,7 @@ end
     Returns: number - The numeric value of the client's ConVar or the default value
     Realm: Shared (accesses client-side data through the owner)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get basic numeric client ConVar
@@ -416,6 +425,7 @@ end
     Returns: boolean - True if the tool is allowed, false otherwise
     Realm: Shared (client always returns true, server checks ConVar)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic permission check
@@ -458,6 +468,7 @@ end
     Returns: None
     Realm: Shared (can be overridden for specific tool initialization)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic initialization
@@ -503,6 +514,7 @@ end
     Returns: string - The current tool mode name
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get current tool mode
@@ -547,6 +559,7 @@ end
     Returns: Weapon - The SWEP entity instance
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get the weapon instance
@@ -594,6 +607,7 @@ end
     Returns: Player - The player entity that owns this tool
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get the tool owner
@@ -647,6 +661,7 @@ end
     Returns: Weapon - The weapon entity instance
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Get the weapon entity
@@ -703,6 +718,7 @@ end
     Returns: boolean - True if the click was handled, false otherwise
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic left click handling
@@ -777,6 +793,7 @@ end
     Returns: boolean - True if the click was handled, false otherwise
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic right click handling
@@ -852,6 +869,7 @@ end
     Returns: None
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic reload functionality
@@ -930,6 +948,7 @@ end
     Returns: None
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic deploy functionality
@@ -1003,6 +1022,7 @@ end
     Returns: None
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic holster functionality
@@ -1069,6 +1089,7 @@ end
     Returns: None
     Realm: Shared (can be overridden for specific tool behavior)
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic per-frame updates
@@ -1144,6 +1165,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic object validation
@@ -1239,6 +1261,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic object clearing
@@ -1307,6 +1330,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
         -- Simple: Basic ghost entity cleanup

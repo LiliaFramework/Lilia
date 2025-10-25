@@ -116,14 +116,14 @@ During faction definition
 FACTION.models = {"models/player/police.mdl", "models/player/swat.mdl"}
 -- Advanced: Complex model data with bodygroups
 FACTION.models = {
-    ["male"] = {
-        {"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
-        {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-    },
-    ["female"] = {
-        {"models/player/police_female.mdl", "Female Officer", {1, 2}},
-        {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
-    }
+"male" = {
+{"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
+{"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+},
+"female" = {
+{"models/player/police_female.mdl", "Female Officer", {1, 2}},
+{"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+}
 }
 
 ```
@@ -185,8 +185,8 @@ Set automatically during faction registration
 ```lua
 -- This is set automatically when you register the faction
 lia.faction.register("police", {
-    name = "Police Department",
-    -- uniqueID will be "police"
+name = "Police Department",
+-- uniqueID will be "police"
 })
 -- For faction files, uniqueID is set to the filename
 -- File: factions/police.lua -> uniqueID = "police"
@@ -212,8 +212,8 @@ Set automatically during faction registration, or manually specified
 ```lua
 -- This is set automatically when you register the faction
 lia.faction.register("police", {
-    name = "Police Department",
-    -- index will be assigned based on registration order
+name = "Police Department",
+-- index will be assigned based on registration order
 })
 -- Or manually specify the team index
 FACTION.index = 2  -- Will use team index 2
@@ -356,8 +356,8 @@ During faction definition (applied when player joins faction)
 
 ```lua
 FACTION.NPCRelations = {
-    ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-    ["npc_citizen"] = D_NU       -- Neutral to citizens
+["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
+["npc_citizen"] = D_NU       -- Neutral to citizens
 }
 
 ```
@@ -518,8 +518,8 @@ During faction definition
 
 ```lua
 function FACTION:NameTemplate(info, client)
-    local index = math.random(1000, 9999)
-    return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
+local index = math.random(1000, 9999)
+return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
 end
 
 ```
@@ -540,7 +540,7 @@ During faction definition
 
 ```lua
 function FACTION:GetDefaultName(client)
-    return "Citizen " .. math.random(1000, 9999)
+return "Citizen " .. math.random(1000, 9999)
 end
 
 ```
@@ -561,7 +561,7 @@ During faction definition
 
 ```lua
 function FACTION:GetDefaultDesc(client)
-    return "A citizen of the city"
+return "A citizen of the city"
 end
 
 ```
@@ -591,14 +591,14 @@ When a player tries to join a faction that might be at capacity
 
 ```lua
 function FACTION:OnCheckLimitReached(character, client)
-    -- Custom logic for checking faction limits
-    -- For example, check player permissions, character attributes, etc.
-    -- Check if player has special permission to bypass limits
-    if client:hasFlags("L") then
-        return false  -- Allow admins to bypass limits
-    end
-    -- Use default limit checking
-    return self:CheckFactionLimitReached(character, client)
+-- Custom logic for checking faction limits
+-- For example, check player permissions, character attributes, etc.
+-- Check if player has special permission to bypass limits
+if client:hasFlags("L") then
+return false  -- Allow admins to bypass limits
+end
+-- Use default limit checking
+return self:CheckFactionLimitReached(character, client)
 end
 
 ```
@@ -627,9 +627,9 @@ Server
 
 ```lua
 function FACTION:OnTransferred(client)
-    client:notify("Welcome to the " .. self.name)
-    -- Set up faction-specific data
-    -- Could trigger department assignment or training
+client:notify("Welcome to the " .. self.name)
+-- Set up faction-specific data
+-- Could trigger department assignment or training
 end
 
 ```
@@ -658,10 +658,10 @@ Server
 
 ```lua
 function FACTION:OnSpawn(client)
-    -- Apply faction-specific spawn effects
-    client:Give("weapon_stunstick")
-    client:SetHealth(self.health or 100)
-    client:SetArmor(self.armor or 0)
+-- Apply faction-specific spawn effects
+client:Give("weapon_stunstick")
+client:SetHealth(self.health or 100)
+client:SetArmor(self.armor or 0)
 end
 
 ```
