@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.899 (October 25, 2025)
+
+### Changes
+
+- Update commands.lua
+- Dumb Check
+- Bot Command
+- Successfully updated workshop Lilia to 6.895
+- Example Usage
+- Successfully updated workshop Lilia to 6.893
+- Empty Lines
+- Small Voice Range Change
+- Spaciong
+- Successfully updated workshop Lilia to 6.889
+- Update installation.md
+- Update compatibility.md
+- Items
+- Naming of Page
+- Successfully updated workshop Lilia to 6.884
+- Update ci.yml
+- Successfully updated workshop Lilia to 6.882
+- Create generate_docs.py
+- Update faction.lua
+- Update class.lua
+
 ## Version 6.895 (October 24, 2025)
 
 ### Changes
