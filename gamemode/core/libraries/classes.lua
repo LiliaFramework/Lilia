@@ -17,7 +17,6 @@ lia.class.list = lia.class.list or {}
     Returns: The registered class table
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     lia.class.register("citizen", {
@@ -104,7 +103,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     lia.class.loadFromDir("gamemodes/lilia/classes")
@@ -179,7 +177,6 @@ end
     Returns: boolean, string - Whether the player can join and reason if they cannot
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local canJoin, reason = lia.class.canBe(client, 1)
@@ -244,7 +241,6 @@ end
     Returns: table - The class data table or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local class = lia.class.get(1)
@@ -302,7 +298,6 @@ end
     Returns: table - Array of player entities in the specified class
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local players = lia.class.getPlayers(1)
@@ -369,7 +364,6 @@ end
     Returns: number - Number of players in the specified class
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local count = lia.class.getPlayerCount(1)
@@ -428,7 +422,6 @@ end
     Returns: number - The class index if found, nil otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local classIndex = lia.class.retrieveClass("citizen")
@@ -483,7 +476,6 @@ end
     Returns: boolean - True if the class has whitelist restrictions, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local hasWhitelist = lia.class.hasWhitelist(1)
@@ -550,7 +542,6 @@ end
     Returns: table - Array of class tables that the client can join
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     local joinableClasses = lia.class.retrieveJoinable(client)

@@ -21,7 +21,6 @@ lia.char.pendingRequests = lia.char.pendingRequests or {}
     Returns: Character object if found/loaded, nil otherwise
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get a character by ID
@@ -91,7 +90,6 @@ end
     Returns: Table with Player objects as keys and their Character objects as values
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all characters and count them
@@ -145,7 +143,6 @@ end
     Returns: Boolean - true if character is loaded, false otherwise
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if character is loaded
@@ -197,7 +194,6 @@ end
     Returns: None
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a character to cache
@@ -249,7 +245,6 @@ end
     Returns: None
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Remove character from cache
@@ -304,7 +299,6 @@ end
     Returns: Character object with proper metatable and initialized variables
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create a basic character
@@ -394,7 +388,6 @@ end
     Returns: None
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Hook a variable change
@@ -464,7 +457,6 @@ end
     Returns: None
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic character variable
@@ -983,7 +975,6 @@ lia.char.registerVar("banned", {
     Returns: Table of character data or specific value if key provided
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all character data
@@ -1045,7 +1036,6 @@ end
     Returns: Raw decoded data or specific value if key provided
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get raw character data
@@ -1114,7 +1104,6 @@ end
     Returns: Player object if found, nil otherwise
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find character owner
@@ -1170,7 +1159,6 @@ end
     Returns: Character object if found, nil otherwise
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find character by Steam ID
@@ -1229,7 +1217,6 @@ end
     Returns: Color object representing the team/class color
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get player team color
@@ -1286,7 +1273,6 @@ if SERVER then
     Returns: None (uses callback for result)
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create a basic character
@@ -1416,7 +1402,6 @@ if SERVER then
     Returns: None (uses callback for result)
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Restore all characters for player
@@ -1592,7 +1577,6 @@ if SERVER then
     Returns: None
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Clean up player characters
@@ -1671,7 +1655,6 @@ if SERVER then
     Returns: None
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Delete a character
@@ -1783,7 +1766,6 @@ if SERVER then
     Returns: Number representing ban timestamp (0 if not banned)
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if character is banned
@@ -1847,7 +1829,6 @@ if SERVER then
     Returns: Boolean indicating success
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Set character data
@@ -2009,7 +1990,6 @@ if SERVER then
     Returns: Boolean indicating success
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Unload a character
@@ -2107,7 +2087,6 @@ if SERVER then
     Returns: Number of characters unloaded
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Unload unused characters
@@ -2173,7 +2152,6 @@ if SERVER then
     Returns: None (uses callback for result)
     Realm: Server only
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Load a single character

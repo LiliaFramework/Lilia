@@ -43,7 +43,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic inventory type
@@ -106,7 +105,6 @@ end
     Returns: Inventory instance (table) with items and config properties
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create a basic player inventory
@@ -153,7 +151,6 @@ if SERVER then
     Returns: Deferred promise that resolves to inventory instance
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load inventory by ID
@@ -218,7 +215,6 @@ if SERVER then
     Returns: Deferred promise that resolves to inventory instance
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load inventory from default storage
@@ -298,7 +294,6 @@ if SERVER then
     Returns: Deferred promise that resolves to the created inventory instance
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create a new inventory instance
@@ -362,7 +357,6 @@ if SERVER then
     Returns: Deferred promise that resolves to array of inventory instances
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load all inventories for a character
@@ -430,7 +424,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Delete an inventory by ID
@@ -497,7 +490,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Clean up character inventories
@@ -558,7 +550,6 @@ if SERVER then
     Returns: Boolean indicating whether overflow items were found and stored
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check for overflow after inventory resize
@@ -628,7 +619,6 @@ if SERVER then
     Returns: The registered storage data table
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic storage container
@@ -702,7 +692,6 @@ if SERVER then
     Returns: Storage data table if found, nil otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get storage data for a model
@@ -774,7 +763,6 @@ if SERVER then
     Returns: The registered trunk data table
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic vehicle trunk
@@ -861,7 +849,6 @@ if SERVER then
     Returns: Trunk data table if found, nil otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get trunk data for a vehicle
@@ -934,7 +921,6 @@ if SERVER then
     Returns: Table containing all trunk configurations indexed by vehicle class
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all trunks
@@ -1016,7 +1002,6 @@ if SERVER then
     Returns: Table containing all storage configurations indexed by model/class
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all storage (including trunks)
@@ -1102,7 +1087,6 @@ else
     Returns: The created inventory panel
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Show inventory panel

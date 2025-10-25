@@ -20,7 +20,6 @@
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a health bar field
@@ -72,7 +71,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a basic section
@@ -110,7 +108,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add a character name field
@@ -158,7 +155,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic entity information
@@ -224,7 +220,6 @@ end
     Returns: table|nil - Modified part data, or nil to use original data
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Modify part color
@@ -304,7 +299,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Attach a hat to a player
@@ -374,7 +368,6 @@ end
     Returns: boolean - True if info should be displayed, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Display all character info
@@ -432,7 +425,6 @@ end
     Returns: boolean - True if panel can be opened, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all bag panels to open
@@ -501,7 +493,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always allow
@@ -555,7 +546,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add custom column
@@ -622,7 +612,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add custom data to entry
@@ -690,7 +679,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic extra details
@@ -762,7 +750,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character list loading
@@ -839,7 +826,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character list updates
@@ -937,7 +923,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log menu closing
@@ -980,7 +965,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log menu opening
@@ -1028,7 +1012,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log chat text
@@ -1084,7 +1067,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log panel creation
@@ -1131,7 +1113,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log chatbox text
@@ -1184,7 +1165,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character choice
@@ -1229,7 +1209,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log config updates
@@ -1277,7 +1256,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log creation step configuration
@@ -1339,7 +1317,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log chat creation
@@ -1383,7 +1360,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add a basic information button
@@ -1451,7 +1427,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log inventory panel creation
@@ -1501,7 +1476,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add a basic menu button
@@ -1567,7 +1541,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log skin change
@@ -1619,7 +1592,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic character info
@@ -1674,7 +1646,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic door info
@@ -1737,7 +1708,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic entity info
@@ -1796,7 +1766,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log model view drawing
@@ -1843,7 +1812,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ragdoll drawing
@@ -1909,7 +1877,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage exit
@@ -1963,7 +1930,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log F1 menu closing
@@ -2011,7 +1977,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log F1 menu opening
@@ -2066,7 +2031,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log model filtering
@@ -2139,7 +2103,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door info filtering
@@ -2206,7 +2169,6 @@ end
     Returns: table - The adjusted part data
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return basic part data
@@ -2278,7 +2240,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic door info
@@ -2351,7 +2312,6 @@ end
     Returns: string - The injury text to display
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return basic injury text
@@ -2427,7 +2387,6 @@ end
     Returns: table - Position data for the menu
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default position
@@ -2493,7 +2452,6 @@ end
     Returns: string - The display name of the weapon
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return weapon class name
@@ -2560,7 +2518,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log visibility change
@@ -2613,7 +2570,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log keybind initialization
@@ -2677,7 +2633,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log option initialization
@@ -2748,7 +2703,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log menu closing
@@ -2798,7 +2752,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log menu opening
@@ -2857,7 +2810,6 @@ end
     Returns: boolean - True to intercept, false to allow
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item clicks
@@ -2940,7 +2892,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log inventory close
@@ -3001,7 +2952,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log icon creation
@@ -3084,7 +3034,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log inventory open
@@ -3145,7 +3094,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log panel creation
@@ -3240,7 +3188,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Draw item name
@@ -3314,7 +3261,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log entity menu display
@@ -3384,7 +3330,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log keybinds loaded
@@ -3452,7 +3397,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character kick
@@ -3513,7 +3457,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character info load
@@ -3563,7 +3506,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic info
@@ -3617,7 +3559,6 @@ end
     Returns: string - The modified model path
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return player model
@@ -3665,7 +3606,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log menu close
@@ -3713,7 +3653,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log received messages
@@ -3800,7 +3739,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log received messages
@@ -3889,7 +3827,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic menu option
@@ -3983,7 +3920,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage panel creation
@@ -4059,7 +3995,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log death sounds
@@ -4114,7 +4049,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log font refresh
@@ -4170,7 +4104,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor menu opening
@@ -4256,7 +4189,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log pain sounds
@@ -4313,7 +4245,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data sync
@@ -4405,7 +4336,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log theme changes
@@ -4455,7 +4385,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log admin stick usage
@@ -4513,7 +4442,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Draw item name
@@ -4576,7 +4504,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic option
@@ -4635,7 +4562,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic tab
@@ -4712,7 +4638,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic config page
@@ -4794,7 +4719,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic category
@@ -4866,7 +4790,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log inventory draw
@@ -4917,7 +4840,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log font load
@@ -4973,7 +4895,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log physgun beam
@@ -5030,7 +4951,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log font refresh
@@ -5088,7 +5008,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log part removal
@@ -5140,7 +5059,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log panel reset
@@ -5187,7 +5105,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log scoreboard close
@@ -5232,7 +5149,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log scoreboard open
@@ -5286,7 +5202,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log row creation
@@ -5342,7 +5257,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log row removal
@@ -5383,7 +5297,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log PAC3 setup
@@ -5453,7 +5366,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log quick menu setup
@@ -5518,7 +5430,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all overrides
@@ -5560,7 +5471,6 @@ end
     Returns: boolean - True if the bar should be drawn, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Draw all bars
@@ -5643,7 +5553,6 @@ end
     Returns: boolean - True to draw, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always draw bars
@@ -5695,7 +5604,6 @@ end
     Returns: boolean - True to disable, false to allow
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Never disable thirdperson
@@ -5761,7 +5669,6 @@ end
     Returns: boolean - True to draw, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always draw ammo
@@ -5819,7 +5726,6 @@ end
     Returns: boolean - True to draw, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always draw entity info
@@ -5885,7 +5791,6 @@ end
     Returns: boolean - True if player info should be drawn, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Draw all player info
@@ -5972,7 +5877,6 @@ end
     Returns: boolean - Whether to draw weapon selection (true) or not (false)
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always show weapon selection
@@ -6031,7 +5935,6 @@ end
     Returns: boolean - True if bars should be hidden, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Never hide bars
@@ -6117,7 +6020,6 @@ end
     Returns: boolean - True to show, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Show all buttons
@@ -6175,7 +6077,6 @@ end
     Returns: boolean - True to play, false to suppress
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Play all death sounds
@@ -6236,7 +6137,6 @@ end
     Returns: boolean - True to play, false to suppress
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Play all pain sounds
@@ -6302,7 +6202,6 @@ end
     Returns: boolean - True to show respawn screen, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always show respawn screen
@@ -6368,7 +6267,6 @@ end
     Returns: boolean - True to show, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Show all classes
@@ -6428,7 +6326,6 @@ end
     Returns: boolean - True to show, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Show all factions
@@ -6497,7 +6394,6 @@ end
     Returns: boolean - True to show, false to hide
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Show all players
@@ -6571,7 +6467,6 @@ end
     Returns: boolean - True to spawn, false to suppress
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Spawn all ragdolls
@@ -6648,7 +6543,6 @@ end
     Returns: table - Modified options table
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add basic options
@@ -6736,7 +6630,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log unlock prompt
@@ -6811,7 +6704,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log third person toggle
@@ -6872,7 +6764,6 @@ end
     Returns: Panel - The ticket frame panel
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create basic ticket frame
@@ -6965,7 +6856,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set basic tooltip properties
@@ -7031,7 +6921,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set basic layout
@@ -7105,7 +6994,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Draw basic background
@@ -7171,7 +7059,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log model view attempt
@@ -7268,7 +7155,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log color update
@@ -7336,7 +7222,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log vendor exit
@@ -7397,7 +7282,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log vendor sync
@@ -7452,7 +7336,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log voice toggle
@@ -7501,7 +7384,6 @@ end
     Returns: string - The sound path
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return default sound
@@ -7552,7 +7434,6 @@ end
     Returns: string - The sound path
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return default sound
@@ -7605,7 +7486,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log image download
@@ -7659,7 +7539,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log sound download
@@ -7714,7 +7593,6 @@ end
     Returns: string or nil - Return a string to replace the voice text, or return nil/false to keep the original text
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add emojis to voice indicator

@@ -16,7 +16,6 @@
     Returns: number - The modified stamina offset, or nil to use original offset
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Increase stamina regeneration
@@ -92,7 +91,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Always allow
@@ -156,7 +154,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log command additions
@@ -204,7 +201,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module includes
@@ -258,7 +254,6 @@ end
     Returns: string - The modified description
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return unchanged
@@ -312,7 +307,6 @@ end
     Returns: string - The displayed name
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return character name
@@ -375,7 +369,6 @@ end
     Returns: table - The modified door info
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return unchanged
@@ -429,7 +422,6 @@ end
     Returns: string - "male" or "female"
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return default gender
@@ -480,7 +472,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log config initialization
@@ -533,7 +524,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item initialization
@@ -609,7 +599,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module initialization
@@ -681,7 +670,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log schema initialization
@@ -747,7 +735,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log data changes
@@ -806,7 +793,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log inventory initialization
@@ -880,7 +866,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item data changes
@@ -954,7 +939,6 @@ end
     Returns: boolean - True if fake recognized, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Always return false
@@ -1003,7 +987,6 @@ end
     Returns: boolean - True if recognized, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check recognition list
@@ -1072,7 +1055,6 @@ end
     Returns: boolean - True if recognition is required, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Only IC chat requires recognition
@@ -1121,7 +1103,6 @@ end
     Returns: boolean - True if valid, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Basic validation
@@ -1163,7 +1144,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item data changes
@@ -1242,7 +1222,6 @@ end
     Returns: table - Table of default functions
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return basic functions
@@ -1310,7 +1289,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item initialization
@@ -1374,7 +1352,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log quantity changes
@@ -1443,7 +1420,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log framework load
@@ -1496,7 +1472,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log netvar changes
@@ -1551,7 +1526,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log item registration
@@ -1609,7 +1583,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log framework loaded
@@ -1663,7 +1636,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module creation
@@ -1715,7 +1687,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log module removal
@@ -1770,7 +1741,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log privilege registration
@@ -1827,7 +1797,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log privilege removal
@@ -1876,7 +1845,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log quest item loading
@@ -1933,7 +1901,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log option changes
@@ -1993,7 +1960,6 @@ end
     Returns: string - The overridden description (or nil to use default)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add prefix to description
@@ -2040,7 +2006,6 @@ end
     Returns: table - The overridden models table (or nil to use default)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a model to faction
@@ -2099,7 +2064,6 @@ end
     Returns: string - The overridden name (or nil to use default)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add prefix to name
@@ -2153,7 +2117,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log stamina depletion
@@ -2211,7 +2174,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log stamina gain
@@ -2264,7 +2226,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log stamina loss
@@ -2314,7 +2275,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Log pre-load
@@ -2357,7 +2317,6 @@ end
     Returns: number - The stamina change amount
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Return default stamina change
@@ -2430,7 +2389,6 @@ end
     Returns: any - The retrieved data or default value
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get data with default

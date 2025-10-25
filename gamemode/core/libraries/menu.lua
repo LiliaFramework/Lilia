@@ -58,7 +58,6 @@ end
     Returns: (number) Index of the created menu in the menu list
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create a basic context menu
@@ -143,7 +142,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Called automatically by the framework
@@ -227,7 +225,6 @@ end
     Returns: (number, function|nil) Menu index and callback function if menu item is hovered, nil otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if player is hovering over a menu
@@ -301,7 +298,6 @@ end
     Returns: (boolean) True if callback was executed, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Remove menu and execute callback

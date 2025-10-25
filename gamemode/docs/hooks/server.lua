@@ -21,7 +21,6 @@
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a basic warning
@@ -73,7 +72,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add default money to new characters
@@ -133,7 +131,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log when bag inventory is ready
@@ -213,7 +210,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log when bag inventory is removed
@@ -268,7 +264,6 @@ end
     Returns: boolean - True if transfer is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all transfers
@@ -333,7 +328,6 @@ end
     Returns: boolean - True if transfer is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Use same logic as CanBeTransfered
@@ -406,7 +400,6 @@ end
     Returns: boolean - True if deletion is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all character deletions
@@ -473,7 +466,6 @@ end
     Returns: boolean - True if invitation is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all class invitations
@@ -538,7 +530,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow admins only
@@ -597,7 +588,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow admins only
@@ -665,7 +655,6 @@ end
     Returns: boolean - True if transfer is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item transfers
@@ -733,7 +722,6 @@ end
     Returns: boolean - True if transfer is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all transfers
@@ -825,7 +813,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow admins only
@@ -884,7 +871,6 @@ end
     Returns: boolean - True to persist, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Persist all props
@@ -952,7 +938,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all money pickup
@@ -1029,7 +1014,6 @@ end
     Returns: boolean - True if access is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all door access
@@ -1119,7 +1103,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all players
@@ -1174,7 +1157,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all players
@@ -1236,7 +1218,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all weapons
@@ -1297,7 +1278,6 @@ end
     Returns: boolean - True if creation is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all character creation
@@ -1381,7 +1361,6 @@ end
     Returns: boolean - True if dropping is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item drops
@@ -1452,7 +1431,6 @@ end
     Returns: boolean - True if dropping is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item drops
@@ -1555,7 +1533,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all players
@@ -1614,7 +1591,6 @@ end
     Returns: boolean - True if equipping is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item equipping
@@ -1698,7 +1674,6 @@ end
     Returns: boolean - True if equipping is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item equips
@@ -1811,7 +1786,6 @@ end
     Returns: boolean - True if holding is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all object holding
@@ -1873,7 +1847,6 @@ end
     Returns: boolean - True if interaction is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item interactions
@@ -1949,7 +1922,6 @@ end
     Returns: boolean - True if joining is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all class joins
@@ -2006,7 +1978,6 @@ end
     Returns: boolean - True if knocking is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all knocking
@@ -2065,7 +2036,6 @@ end
     Returns: boolean - True if locking is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all door locking
@@ -2123,7 +2093,6 @@ end
     Returns: boolean - True if modification is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Only allow admins
@@ -2181,7 +2150,6 @@ end
     Returns: boolean - True if opening is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all scoreboard access
@@ -2236,7 +2204,6 @@ end
     Returns: boolean - True if rotation is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item rotation
@@ -2287,7 +2254,6 @@ end
     Returns: boolean - True if viewing is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow admins to see all logs
@@ -2345,7 +2311,6 @@ end
     Returns: boolean - True if spawning is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all storage spawning
@@ -2409,7 +2374,6 @@ end
     Returns: boolean - True if switching is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all character switching
@@ -2476,7 +2440,6 @@ end
     Returns: boolean - True if taking is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item takes
@@ -2586,7 +2549,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all players
@@ -2646,7 +2608,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all trades
@@ -2717,7 +2678,6 @@ end
     Returns: boolean - True if unequipping is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item unequips
@@ -2816,7 +2776,6 @@ end
     Returns: boolean - True if unlocking is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all door unlocking
@@ -2869,7 +2828,6 @@ end
     Returns: boolean - True if using is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all character usage
@@ -2922,7 +2880,6 @@ end
     Returns: boolean - True if command use is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all commands
@@ -2992,7 +2949,6 @@ end
     Returns: boolean - True if door use is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all door usage
@@ -3052,7 +3008,6 @@ end
     Returns: boolean - True if viewing inventories is allowed, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all inventory viewing
@@ -3148,7 +3103,6 @@ end
     Returns: boolean - True if action can be run, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all item actions
@@ -3216,7 +3170,6 @@ end
     Returns: boolean - True if data can be saved, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all data saving
@@ -3281,7 +3234,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character cleanup
@@ -3342,7 +3294,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character deletion
@@ -3435,7 +3386,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log forced recognition
@@ -3510,7 +3460,6 @@ end
     Returns: boolean - True if character has flags, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check basic flags
@@ -3577,7 +3526,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character loading
@@ -3638,7 +3586,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character loading
@@ -3711,7 +3658,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character save
@@ -3756,7 +3702,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character save
@@ -3813,7 +3758,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character restoration
@@ -3864,7 +3808,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log parsed chat
@@ -3919,7 +3862,6 @@ end
     Returns: boolean - True if limit is reached, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: No faction limits
@@ -3991,7 +3933,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log command execution
@@ -4053,7 +3994,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log config changes
@@ -4116,7 +4056,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character creation
@@ -4169,7 +4108,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log inventory creation
@@ -4239,7 +4177,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log salary timer creation
@@ -4295,7 +4232,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create basic salary timer
@@ -4378,7 +4314,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all class changes
@@ -4467,7 +4402,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Print all logs
@@ -4525,7 +4459,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log connection
@@ -4571,7 +4504,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log deletion
@@ -4619,7 +4551,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log Discord send
@@ -4673,7 +4604,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log unavailability
@@ -4723,7 +4653,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log successful relay
@@ -4772,7 +4701,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door state change
@@ -4828,7 +4756,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door visibility change
@@ -4890,7 +4817,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door lock changes
@@ -4978,7 +4904,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ownable toggle
@@ -5051,7 +4976,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door price changes
@@ -5153,7 +5077,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log price change
@@ -5224,7 +5147,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log title change
@@ -5300,7 +5222,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log spawn fetching
@@ -5360,7 +5281,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log recognition range setting
@@ -5419,7 +5339,6 @@ end
     Returns: table - Table of all case claims
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return empty claims table
@@ -5481,7 +5400,6 @@ end
     Returns: number - The maximum value for the attribute
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default max
@@ -5554,7 +5472,6 @@ end
     Returns: number - The maximum attribute value
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default max
@@ -5620,7 +5537,6 @@ end
     Returns: number - The starting maximum attribute value
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default starting max
@@ -5677,7 +5593,6 @@ end
     Returns: number - The maximum stamina value
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default max stamina
@@ -5756,7 +5671,6 @@ end
     Returns: number - The modified damage scale
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return original scale
@@ -5849,7 +5763,6 @@ end
     Returns: number - The modified damage scale
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default scale
@@ -5910,7 +5823,6 @@ end
     Returns: string - The default description
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return generic description
@@ -5959,7 +5871,6 @@ end
     Returns: string - The default name
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return generic name
@@ -6011,7 +5922,6 @@ end
     Returns: table - {width, height} inventory size
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default size
@@ -6072,7 +5982,6 @@ end
     Returns: string - The inventory type
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default type
@@ -6130,7 +6039,6 @@ end
     Returns: table - The save data for the entity
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return basic save data
@@ -6202,7 +6110,6 @@ end
     Returns: number - The attack speed multiplier
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default attack speed
@@ -6267,7 +6174,6 @@ end
     Returns: string - The model path for the dropped item
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default model
@@ -6340,7 +6246,6 @@ end
     Returns: string - The stack key for grouping items
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Use item ID as stack key
@@ -6403,7 +6308,6 @@ end
     Returns: table - Table of item stacks
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return empty stacks
@@ -6475,7 +6379,6 @@ end
     Returns: number - The maximum number of characters allowed
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default limit
@@ -6546,7 +6449,6 @@ end
     Returns: number - The maximum number of skill points allowed
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default skill points
@@ -6605,7 +6507,6 @@ end
     Returns: number - The maximum skill points
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default max
@@ -6661,7 +6562,6 @@ end
     Returns: number - The maximum starting attribute points
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default count
@@ -6714,7 +6614,6 @@ end
     Returns: string - The model path
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default model
@@ -6764,7 +6663,6 @@ end
     Returns: number - The delay in seconds
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default delay
@@ -6814,7 +6712,6 @@ end
     Returns: number - The playtime in seconds
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return UTime playtime
@@ -6860,7 +6757,6 @@ end
     Returns: string - The death sound path
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default sound
@@ -6914,7 +6810,6 @@ end
     Returns: string - The pain sound path
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default sound
@@ -6975,7 +6870,6 @@ end
     Returns: number - The punch damage amount
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default punch damage
@@ -7043,7 +6937,6 @@ end
     Returns: number - The ragdoll time in seconds
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default ragdoll time
@@ -7115,7 +7008,6 @@ end
     Returns: number - The overridden price
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return original price
@@ -7195,7 +7087,6 @@ end
     Returns: number - The modified ragdoll time
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return original time
@@ -7265,7 +7156,6 @@ end
     Returns: number - The salary amount
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return base salary
@@ -7333,7 +7223,6 @@ end
     Returns: table - Table of tickets created by the requester
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return empty tickets
@@ -7399,7 +7288,6 @@ end
     Returns: number - The sale scale multiplier
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default scale
@@ -7466,7 +7354,6 @@ end
     Returns: table - Table of warnings for the character
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return empty warnings
@@ -7529,7 +7416,6 @@ end
     Returns: table - Table of warnings issued by the player
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return empty warnings
@@ -7612,7 +7498,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log transfer request
@@ -7694,7 +7579,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage initialization
@@ -7759,7 +7643,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log inventory deletion
@@ -7811,7 +7694,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item additions
@@ -7896,7 +7778,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item addition
@@ -7962,7 +7843,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item removals
@@ -8047,7 +7927,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item removal
@@ -8113,7 +7992,6 @@ end
     Returns: boolean - True if suitable, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Only vehicles are suitable
@@ -8180,7 +8058,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all combinations
@@ -8262,7 +8139,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item deletion
@@ -8314,7 +8190,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all drags
@@ -8382,7 +8257,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log function calls
@@ -8448,7 +8322,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item transfers
@@ -8552,7 +8425,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log key lock
@@ -8610,7 +8482,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log key unlock
@@ -8665,7 +8536,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log tables loaded
@@ -8710,7 +8580,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data load
@@ -8761,7 +8630,6 @@ end
     Returns: string - The modified model path
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Return default model
@@ -8826,7 +8694,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log admin system load
@@ -8884,7 +8751,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log backup creation
@@ -8939,7 +8805,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log attribute boost
@@ -8995,7 +8860,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log attribute updates
@@ -9056,7 +8920,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character creation
@@ -9146,7 +9009,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character deletion
@@ -9229,7 +9091,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character disconnect
@@ -9319,7 +9180,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character fallover
@@ -9424,7 +9284,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log fallover
@@ -9483,7 +9342,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log flags given
@@ -9546,7 +9404,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log flags taken
@@ -9608,7 +9465,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character getup
@@ -9706,7 +9562,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character kick
@@ -9808,7 +9663,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log network variable changes
@@ -9918,7 +9772,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log permanent character death
@@ -10025,7 +9878,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character recognition
@@ -10128,7 +9980,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor trades
@@ -10234,7 +10085,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log variable changes
@@ -10352,7 +10202,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character creation
@@ -10439,7 +10288,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character creation
@@ -10528,7 +10376,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character death
@@ -10615,7 +10462,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character deletion
@@ -10722,7 +10568,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log field updates
@@ -10789,7 +10634,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character loading
@@ -10890,7 +10734,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character revival
@@ -11004,7 +10847,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log schema validation
@@ -11073,7 +10915,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character updates
@@ -11168,7 +11009,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character restoration
@@ -11260,7 +11100,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log cheater detection
@@ -11344,7 +11183,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log cheater status changes
@@ -11439,7 +11277,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log column additions
@@ -11507,7 +11344,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log column removals
@@ -11588,7 +11424,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log config updates
@@ -11659,7 +11494,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ragdoll creation
@@ -11731,7 +11565,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data setting
@@ -11811,7 +11644,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log database connection
@@ -11881,7 +11713,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log database initialization
@@ -11926,7 +11757,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log database loaded
@@ -11975,7 +11805,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log database reset
@@ -12030,7 +11859,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log database wipe
@@ -12081,7 +11909,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log entity loading
@@ -12138,7 +11965,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log entity updates
@@ -12199,7 +12025,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log entity persistence
@@ -12257,7 +12082,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item additions
@@ -12335,7 +12159,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item creation
@@ -12418,7 +12241,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item spawning
@@ -12500,7 +12322,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item transfers
@@ -12557,7 +12378,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log table loading
@@ -12601,7 +12421,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log OOC messages
@@ -12703,7 +12522,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log PAC3 part transfer
@@ -12762,7 +12580,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log money pickup
@@ -12823,7 +12640,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log weapon drops
@@ -12917,7 +12733,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log sequence entry
@@ -13023,7 +12838,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item interactions
@@ -13133,7 +12947,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log class changes
@@ -13244,7 +13057,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log sequence exit
@@ -13337,7 +13149,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log level ups
@@ -13418,7 +13229,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log level ups
@@ -13499,7 +13309,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log level ups
@@ -13580,7 +13389,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log level ups
@@ -13661,7 +13469,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log level ups
@@ -13743,7 +13550,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log stack item loss
@@ -13804,7 +13610,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log observer mode changes
@@ -13924,7 +13729,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door purchases
@@ -14008,7 +13812,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ragdoll creation
@@ -14096,7 +13899,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log table creation
@@ -14163,7 +13965,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log class switches
@@ -14285,7 +14086,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log XP gain
@@ -14376,7 +14176,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log XP gain
@@ -14467,7 +14266,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log XP gain
@@ -14561,7 +14359,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log record upserts
@@ -14621,7 +14418,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item transfer requests
@@ -14675,7 +14471,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log restore completion
@@ -14729,7 +14524,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log restore failure
@@ -14785,7 +14579,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log salary adjustments
@@ -14845,7 +14638,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log salary payments
@@ -14902,7 +14694,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log loaded items
@@ -14960,7 +14751,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Print server logs
@@ -15027,7 +14817,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log skill changes
@@ -15089,7 +14878,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log table backups
@@ -15149,7 +14937,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log table removal
@@ -15203,7 +14990,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log table restoration
@@ -15261,7 +15047,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log tables ready
@@ -15316,7 +15101,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ticket claims
@@ -15372,7 +15156,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ticket closures
@@ -15427,7 +15210,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ticket creation
@@ -15489,7 +15271,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log transfer failures
@@ -15550,7 +15331,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log player transfers
@@ -15605,7 +15385,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log usergroup creation
@@ -15661,7 +15440,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log permission changes
@@ -15722,7 +15500,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log usergroup removal
@@ -15778,7 +15555,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log usergroup rename
@@ -15837,7 +15613,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor edits
@@ -15937,7 +15712,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log staff data
@@ -15999,7 +15773,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log option changes
@@ -16057,7 +15830,6 @@ end
     Returns: number - The overridden respawn time (or nil to use default)
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Reduce respawn time
@@ -16119,7 +15891,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor access
@@ -16177,7 +15948,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log cheat detection
@@ -16247,7 +16017,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log player disconnections
@@ -16332,7 +16101,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log disconnect
@@ -16388,7 +16156,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log gag
@@ -16447,7 +16214,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data loading
@@ -16505,7 +16271,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character loading
@@ -16617,7 +16382,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log all messages
@@ -16709,7 +16473,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log messages
@@ -16772,7 +16535,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log model change
@@ -16829,7 +16591,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log mute
@@ -16887,7 +16648,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always allow
@@ -16942,7 +16702,6 @@ end
     Returns: boolean - True to permakill, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Never permakill
@@ -17003,7 +16762,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log spawn point
@@ -17055,7 +16813,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log punch
@@ -17108,7 +16865,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ungag
@@ -17153,7 +16909,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log unmute
@@ -17198,7 +16953,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door usage
@@ -17296,7 +17050,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door usage
@@ -17350,7 +17103,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door data load
@@ -17413,7 +17165,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data load completion
@@ -17461,7 +17212,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Welcome message
@@ -17536,7 +17286,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Welcome message
@@ -17595,7 +17344,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log loadout
@@ -17659,7 +17407,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log player speech
@@ -17749,7 +17496,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log chat messages
@@ -17803,7 +17549,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log damage scaling
@@ -17858,7 +17603,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character deletion
@@ -17910,7 +17654,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door save
@@ -17966,7 +17709,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all interactions
@@ -18030,7 +17772,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character load
@@ -18086,7 +17827,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log salary
@@ -18149,7 +17889,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log damage scaling
@@ -18202,7 +17941,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log statement registration
@@ -18248,7 +17986,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log warning removal
@@ -18308,7 +18045,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log admin commands
@@ -18364,7 +18100,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data save
@@ -18412,7 +18147,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log popup
@@ -18465,7 +18199,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log access rules setup
@@ -18515,7 +18248,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log bot setup
@@ -18563,7 +18295,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log database setup
@@ -18611,7 +18342,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log model setup
@@ -18677,7 +18407,6 @@ end
     Returns: boolean - True to save, false to skip
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Always save data
@@ -18725,7 +18454,6 @@ end
     Returns: boolean - True to delete, false to keep
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Never delete saved items
@@ -18778,7 +18506,6 @@ end
     Returns: boolean - True to allow, false to deny
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Allow all transfers
@@ -18856,7 +18583,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage removal
@@ -18927,7 +18653,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage inventory set
@@ -18996,7 +18721,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item removal
@@ -19075,7 +18799,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage opening
@@ -19149,7 +18872,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log storage restoration
@@ -19226,7 +18948,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log spawn storage
@@ -19296,7 +19017,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log character list sync
@@ -19367,7 +19087,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ticket claim
@@ -19436,7 +19155,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ticket close
@@ -19512,7 +19230,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log ticket creation
@@ -19588,7 +19305,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log door lock toggle
@@ -19660,7 +19376,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item transfer
@@ -19741,7 +19456,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log entity persistence update
@@ -19820,7 +19534,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor class update
@@ -19892,7 +19605,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor edit
@@ -19965,7 +19677,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor faction update
@@ -20050,7 +19761,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log max stock update
@@ -20131,7 +19841,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log item mode update
@@ -20216,7 +19925,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log price update
@@ -20305,7 +20013,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log stock update
@@ -20395,7 +20102,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor opening
@@ -20470,7 +20176,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log vendor trade
@@ -20534,7 +20239,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log warning
@@ -20598,7 +20302,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log warning removal
@@ -20656,7 +20359,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Log data setting

@@ -82,7 +82,6 @@ ITEM.height = 1
 ITEM.health = 0
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Medical Kit"                    -- Display name shown to players

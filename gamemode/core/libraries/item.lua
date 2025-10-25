@@ -154,7 +154,6 @@ lia.meta.item.height = 1
     Returns: table - The item definition table, or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get a basic item definition
@@ -190,7 +189,6 @@ end
     Returns: table - Contains 'item' (the item instance) and 'location' (string: "inventory", "world", or "unknown"), or nil, error message
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get item with location
@@ -253,7 +251,6 @@ end
     Returns: table - The item instance, or nil, error message
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get item instance
@@ -304,7 +301,6 @@ end
     Returns: table - The item's data table, or nil, error message
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get item data
@@ -361,7 +357,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load a basic item file
@@ -400,7 +395,6 @@ end
     Returns: boolean - True if the object is an item, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if object is an item
@@ -446,7 +440,6 @@ end
     Returns: table - The inventory instance, or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get inventory by ID
@@ -484,7 +477,6 @@ end
     Returns: table - The registered item definition
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Register a basic item
@@ -591,7 +583,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load items from default directory
@@ -647,7 +638,6 @@ end
     Returns: table - The new item instance, or error if item definition not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create a new item instance
@@ -704,7 +694,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Register a basic inventory type
@@ -752,7 +741,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create inventory for player
@@ -802,7 +790,6 @@ end
     Returns: table - The created inventory instance
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create basic inventory
@@ -914,7 +901,6 @@ lia.item.holdTypeSizeMapping = {
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Override weapon name
@@ -970,7 +956,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Blacklist a single weapon
@@ -1010,7 +995,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Generate all weapons
@@ -1079,7 +1063,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Generate all ammunition items
@@ -1153,7 +1136,6 @@ if SERVER then
         Returns: boolean, string - Success status and error message if failed
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set item data
@@ -1202,7 +1184,6 @@ if SERVER then
         Returns: Promise - Resolves with the created item instance
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create item in inventory
@@ -1290,7 +1271,6 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Delete an item
@@ -1337,7 +1317,6 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load a single item
@@ -1408,7 +1387,6 @@ if SERVER then
         Returns: Promise - Resolves with the spawned item instance
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Spawn item at position
@@ -1478,7 +1456,6 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Restore inventory

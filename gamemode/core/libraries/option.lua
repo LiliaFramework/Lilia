@@ -21,7 +21,6 @@ lia.option.stored = lia.option.stored or {}
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add a boolean toggle option
@@ -101,7 +100,6 @@ end
     Returns: table - Array of available option choices (localized strings)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get static options for a dropdown
@@ -160,7 +158,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set a boolean option
@@ -208,7 +205,6 @@ end
     Returns: any - The current option value, default value, or provided fallback
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get a boolean option
@@ -256,7 +252,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Save options after changes
@@ -315,7 +310,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load options at startup

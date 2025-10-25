@@ -15,7 +15,6 @@ lia.chat.classes = lia.chat.classes or {}
     Returns: string - Formatted timestamp string or empty string if timestamps disabled
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get timestamp for IC message
@@ -56,7 +55,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register basic IC chat
@@ -184,7 +182,6 @@ end
     Returns: chatType (string), message (string), anonymous (boolean)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Parse a basic IC message
@@ -273,7 +270,6 @@ end
     Returns: void
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Send IC message to all nearby players

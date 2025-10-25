@@ -60,7 +60,6 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Connect to database with callback
@@ -119,7 +118,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Wipe all tables with confirmation
@@ -187,7 +185,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Load tables after connection
@@ -402,7 +399,6 @@ end
     Returns: Deferred promise object
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Wait for tables to load before proceeding
@@ -505,7 +501,6 @@ end
     Returns: String representation of the value in SQL format
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Convert basic data types
@@ -580,7 +575,6 @@ end
     Returns: Deferred promise object with results and lastID
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Insert a new character
@@ -650,7 +644,6 @@ end
     Returns: Deferred promise object with results and lastID
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Update character money
@@ -719,7 +712,6 @@ end
     Returns: Deferred promise object with results array
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Select all characters
@@ -793,7 +785,6 @@ end
     Returns: Deferred promise object with results array
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Select with basic condition
@@ -896,7 +887,6 @@ end
     Returns: Deferred promise object resolving to the count number
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Count all characters
@@ -954,7 +944,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add fields after table creation
@@ -1015,7 +1004,6 @@ end
     Returns: Deferred promise object resolving to boolean (true if records exist)
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if player exists
@@ -1075,7 +1063,6 @@ end
     Returns: Deferred promise object resolving to the first matching record or nil
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get character by ID
@@ -1148,7 +1135,6 @@ end
     Returns: Deferred promise object resolving when all records are inserted
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Insert multiple items
@@ -1244,7 +1230,6 @@ end
     Returns: Deferred promise object resolving when all records are upserted
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Upsert configuration data
@@ -1343,7 +1328,6 @@ end
     Returns: Deferred promise object with results and lastID
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Insert configuration without duplicates
@@ -1423,7 +1407,6 @@ end
     Returns: Deferred promise object resolving to boolean (true if table exists)
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if table exists
@@ -1492,7 +1475,6 @@ end
     Returns: Deferred promise object resolving to boolean (true if field exists)
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if field exists
@@ -1560,7 +1542,6 @@ end
     Returns: Deferred promise object resolving to array of table names
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get all Lilia tables
@@ -1638,7 +1619,6 @@ end
     Returns: Deferred promise object resolving when all queries succeed or rejecting on failure
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Transfer money between characters
@@ -1727,7 +1707,6 @@ end
     Returns: Escaped identifier string wrapped in backticks
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Escape a column name
@@ -1776,7 +1755,6 @@ end
     Returns: Deferred promise object with results and lastID
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Upsert configuration
@@ -1851,7 +1829,6 @@ end
     Returns: Deferred promise object with results and lastID
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Delete character by ID
@@ -1921,7 +1898,6 @@ end
     Returns: Deferred promise object resolving to true on success
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Create a basic table
@@ -2025,7 +2001,6 @@ end
     Returns: Deferred promise object resolving to true on success, false if column already exists
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add a new column
@@ -2117,7 +2092,6 @@ end
     Returns: Deferred promise object resolving to true on success, false if table doesn't exist
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Remove a table
@@ -2196,7 +2170,6 @@ end
     Returns: Deferred promise object resolving to true on success, false if column doesn't exist
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Remove a column
@@ -2314,7 +2287,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get character table columns
@@ -2418,7 +2390,6 @@ end
     Returns: Deferred promise object resolving to snapshot information (file, path, records)
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create a snapshot
@@ -2521,7 +2492,6 @@ end
     Returns: Deferred promise object resolving to restore information (table, records, timestamp)
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Load a snapshot

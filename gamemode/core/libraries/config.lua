@@ -21,7 +21,6 @@ lia.config.stored = lia.config.stored or {}
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a basic boolean configuration
@@ -111,7 +110,6 @@ end
     Returns: table - Array of available options for the configuration
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get static options for a configuration
@@ -172,7 +170,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Update default value for a configuration
@@ -214,7 +211,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Force set a configuration value
@@ -260,7 +256,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Set a configuration value
@@ -323,7 +318,6 @@ end
     Returns: any - The current configuration value, default value, or provided fallback
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get a configuration value
@@ -383,7 +377,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Load configurations during initialization

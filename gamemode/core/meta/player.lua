@@ -146,7 +146,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Make player wave
@@ -190,7 +189,6 @@ end
     Returns: boolean - True if player has the privilege, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if player is admin
@@ -236,7 +234,6 @@ end
     Returns: None
     Realm: Server (only called on server side)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Remove player's ragdoll
@@ -274,7 +271,6 @@ end
     Returns: boolean - True if player is stuck, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if player is stuck
@@ -319,7 +315,6 @@ end
     Returns: boolean - True if player is within radius, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if player is near another player
@@ -361,7 +356,6 @@ end
     Returns: table - Array of entities within the radius
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all nearby entities
@@ -403,7 +397,6 @@ end
     Returns: weapon (Entity|nil), item (table|nil) - The weapon entity and item data if found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get player's active weapon item
@@ -461,7 +454,6 @@ end
     Returns: boolean - True if player is running, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if player is running
@@ -501,7 +493,6 @@ end
     Returns: boolean - True if player is using family shared account, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if account is family shared
@@ -538,7 +529,6 @@ end
     Returns: Vector - The calculated drop position
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get drop position for item

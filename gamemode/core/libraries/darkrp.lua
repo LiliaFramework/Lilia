@@ -23,7 +23,6 @@ if SERVER then
         Returns: boolean - true if the position is empty, false otherwise
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if a position is empty
@@ -85,7 +84,6 @@ if SERVER then
         Returns: Vector - The nearest empty position found, or the original position if none found
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find empty position near spawn point
@@ -148,7 +146,6 @@ if SERVER then
         Returns: nil
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Send basic notification
@@ -199,7 +196,6 @@ else
         Returns: string - The wrapped text with line breaks inserted
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Wrap basic text
@@ -274,7 +270,6 @@ end
     Returns: string - The formatted currency string
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Format a basic amount
@@ -320,7 +315,6 @@ end
     Returns: nil
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create a basic entity
@@ -390,7 +384,6 @@ end
     Returns: nil
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Call the function (no effect)

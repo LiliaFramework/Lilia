@@ -75,7 +75,6 @@ end
     Returns: None (uses callback for results)
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Download a single image
@@ -211,7 +210,6 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Register and download a single image
@@ -267,7 +265,6 @@ end
     Returns: Material object if found, nil otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get a cached material
@@ -405,7 +402,6 @@ end
     Returns: Table containing statistics (downloaded count, stored count, last reset time)
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get basic statistics

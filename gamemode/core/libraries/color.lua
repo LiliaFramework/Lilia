@@ -19,7 +19,6 @@ if CLIENT then
         Returns: None
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic color
@@ -59,7 +58,6 @@ if CLIENT then
         Returns: Color - New adjusted color with clamped values
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Brighten a color
@@ -99,7 +97,6 @@ if CLIENT then
         Returns: Color - New darkened color with preserved alpha
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Darken a color slightly
@@ -133,7 +130,6 @@ if CLIENT then
         Returns: string - Current theme name in lowercase
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check current theme
@@ -171,7 +167,6 @@ if CLIENT then
         Returns: string - Current theme name with proper capitalization
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Display theme name
@@ -212,7 +207,6 @@ if CLIENT then
         Returns: Color - The main color from current theme or default teal
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get main theme color
@@ -259,7 +253,6 @@ if CLIENT then
         Returns: None
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Apply theme without transition
@@ -324,7 +317,6 @@ if CLIENT then
         Returns: boolean - True if transition is active, false otherwise
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if transition is running
@@ -374,7 +366,6 @@ if CLIENT then
         Returns: None
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Test theme transition
@@ -424,7 +415,6 @@ if CLIENT then
         Returns: None
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Start theme transition
@@ -535,7 +525,6 @@ if CLIENT then
         Returns: boolean - True if value is a valid color, false otherwise
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if value is color
@@ -585,7 +574,6 @@ if CLIENT then
         Returns: table - Table containing adjusted colors (background, sidebar, accent, text, hover, border, highlight)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get theme colors
@@ -655,7 +643,6 @@ if CLIENT then
         Returns: Color - Interpolated color between col1 and col2
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Lerp between colors
@@ -750,7 +737,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic theme
@@ -803,7 +789,6 @@ end
     Returns: table - Array of theme names in alphabetical order
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all themes

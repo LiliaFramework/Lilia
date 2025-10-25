@@ -25,7 +25,6 @@ end
     Returns: table|nil - The bar object if found, nil otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get a bar by identifier
@@ -75,7 +74,6 @@ end
     Returns: number - The priority assigned to the bar
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add a basic health bar
@@ -140,7 +138,6 @@ end
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Remove a bar by identifier
@@ -192,7 +189,6 @@ end
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Draw a basic progress bar
@@ -236,7 +232,6 @@ end
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Show reload progress
@@ -299,7 +294,6 @@ end
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Manually trigger bar rendering

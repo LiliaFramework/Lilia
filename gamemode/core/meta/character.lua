@@ -17,7 +17,6 @@ characterMeta.vars = characterMeta.vars or {}
     Returns: string - Formatted character string with ID
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get character string representation
@@ -50,7 +49,6 @@ end
     Returns: boolean - True if both characters have the same ID, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Compare two character objects
@@ -91,7 +89,6 @@ end
     Returns: number - The character's unique ID
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get character ID
@@ -125,7 +122,6 @@ end
     Returns: Player - The player entity, or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get the player from character
@@ -179,7 +175,6 @@ end
     Returns: string - The name to display (real name, fake name, or "unknown")
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get display name for a player
@@ -223,7 +218,6 @@ end
     Returns: boolean - True if character has sufficient funds, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if player can afford an item
@@ -267,7 +261,6 @@ end
     Returns: boolean - True if character has any of the specified flags, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check for admin flag
@@ -313,7 +306,6 @@ end
     Returns: boolean - True if character has the weapon item, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if player has weapon
@@ -364,7 +356,6 @@ end
     Returns: number - The attribute value with boosts applied
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get character strength
@@ -409,7 +400,6 @@ end
     Returns: table - Table containing boost values for the attribute
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get strength boosts
@@ -452,7 +442,6 @@ end
     Returns: boolean - True if character recognizes the other, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if player recognizes target
@@ -496,7 +485,6 @@ end
     Returns: boolean - True if character has fake recognition, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check fake recognition
@@ -543,7 +531,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set single data value
@@ -639,7 +626,6 @@ end
     Returns: any - The data value, all data table, or default value
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get specific data
@@ -679,7 +665,6 @@ end
     Returns: boolean - True if character is banned, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if character is banned
@@ -722,7 +707,6 @@ if SERVER then
     Returns: boolean - True if recognition was successful
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Recognize another character
@@ -775,7 +759,6 @@ if SERVER then
     Returns: boolean - True if class change was successful, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Join a class
@@ -838,7 +821,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Kick from class
@@ -891,7 +873,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Increase strength
@@ -943,7 +924,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set strength to specific value
@@ -995,7 +975,6 @@ if SERVER then
     Returns: boolean - True if boost was added successfully
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Add strength boost
@@ -1037,7 +1016,6 @@ if SERVER then
     Returns: boolean - True if boost was removed successfully
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Remove strength boost
@@ -1078,7 +1056,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set admin flags
@@ -1137,7 +1114,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Give donator flag
@@ -1186,7 +1162,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Remove admin flag
@@ -1236,7 +1211,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Save character
@@ -1285,7 +1259,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Sync to all players
@@ -1365,7 +1338,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Setup character
@@ -1427,7 +1399,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Kick character
@@ -1481,7 +1452,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Ban character permanently
@@ -1525,7 +1495,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Delete character
@@ -1559,7 +1528,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Destroy character
@@ -1594,7 +1562,6 @@ if SERVER then
     Returns: boolean - True if money was given successfully
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Give money
@@ -1630,7 +1597,6 @@ if SERVER then
     Returns: boolean - True if money was taken successfully
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Take money

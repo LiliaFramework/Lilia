@@ -20,7 +20,6 @@ lia.net.registry = lia.net.registry or {}
     Returns: boolean - true if registration successful, false if invalid arguments
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic message handler
@@ -72,7 +71,6 @@ end
     Returns: boolean - true if message sent successfully, false if invalid name or target
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Send message to all clients
@@ -143,7 +141,6 @@ end
     Returns: None
     Realm: Shared (works on both server and client)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Set up receiver for large data

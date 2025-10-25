@@ -15,7 +15,6 @@ lia.attribs.list = lia.attribs.list or {}
     Returns: None (modifies lia.attribs.list)
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Load attributes from a single directory
@@ -63,7 +62,6 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Setup attributes for a client

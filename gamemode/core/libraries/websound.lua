@@ -99,7 +99,6 @@ end
     Returns: None (uses callback for results)
     Realm: Client and Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Download a sound file
@@ -234,7 +233,6 @@ end
     Returns: None (uses callback for results)
     Realm: Client and Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Register a sound file
@@ -302,7 +300,6 @@ end
     Returns: string or nil - The local file path if found, nil if not cached
     Realm: Client and Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if a sound is cached
@@ -563,7 +560,6 @@ end
     Returns: table - Contains downloaded count, stored count, and last reset timestamp
     Realm: Client and Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get basic statistics
@@ -640,7 +636,6 @@ end
     Returns: None (uses callback for results)
     Realm: Client only
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Play default button sound

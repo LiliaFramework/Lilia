@@ -15,7 +15,6 @@ lia.command.list = lia.command.list or {}
     Returns: string - Formatted syntax string showing argument types and names
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Generate syntax for basic arguments
@@ -77,7 +76,6 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic command
@@ -238,7 +236,6 @@ end
     Returns: boolean, string - Access granted status and privilege name
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check basic command access
@@ -316,7 +313,6 @@ end
     Returns: table - Array of extracted argument strings
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Extract basic arguments
@@ -407,7 +403,6 @@ if SERVER then
     Returns: void
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Execute a basic command
@@ -461,7 +456,6 @@ if SERVER then
     Returns: boolean - True if command was processed, false if not a command
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Parse basic command from chat
@@ -553,7 +547,6 @@ else
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Open prompt for single missing argument
@@ -808,7 +801,6 @@ else
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Send basic command
@@ -904,7 +896,6 @@ end)
     Returns: Player or nil - Found player entity or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find player by exact name

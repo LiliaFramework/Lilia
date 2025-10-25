@@ -270,11 +270,9 @@ end
         Low Complexity:
             -- Simple: Kick a player for cheating
             lia.administrator.applyPunishment(player, "Cheating detected", true, false)
-
         Medium Complexity:
             -- Medium: Ban a player for 60 minutes with custom message
             lia.administrator.applyPunishment(player, "RDM", false, true, 60, "kickedForRDM", "bannedForRDM")
-
         High Complexity:
             -- High: Apply punishment based on infraction severity
             local punishments = {
@@ -309,7 +307,6 @@ end
             if lia.administrator.hasAccess(player, "tool_adminstick") then
                 -- Grant access to admin stick
             end
-
         Medium Complexity:
             -- Medium: Check access for different user groups
             local groups = {"admin", "moderator", "user"}
@@ -318,7 +315,6 @@ end
                     print(group .. " can manage user groups")
                 end
             end
-
         High Complexity:
             -- High: Complex permission checking with fallback
             local function checkMultiplePrivileges(player, privileges)
@@ -403,7 +399,6 @@ end
         Low Complexity:
             -- Simple: Save administrator data
             lia.administrator.save()
-
         Medium Complexity:
             -- Medium: Save without network sync during bulk operations
             for i = 1, 10 do
@@ -411,7 +406,6 @@ end
             end
             lia.administrator.save(true) -- Save without network sync
             lia.administrator.save() -- Final save with sync
-
         High Complexity:
             -- High: Batch save with error handling
             local function safeSave(noNetwork)
@@ -481,7 +475,6 @@ end
                 Name = "Access Admin Panel",
                 MinAccess = "admin"
             })
-
         Medium Complexity:
             -- Medium: Register privilege with category
             lia.administrator.registerPrivilege({
@@ -490,7 +483,6 @@ end
                 MinAccess = "moderator",
                 Category = "Player Management"
             })
-
         High Complexity:
             -- High: Register multiple privileges from module
             local modulePrivileges = {
@@ -546,7 +538,6 @@ end
         Low Complexity:
             -- Simple: Remove a privilege
             lia.administrator.unregisterPrivilege("oldPrivilege")
-
         Medium Complexity:
             -- Medium: Remove privilege with validation
             local privilegeToRemove = "deprecatedFeature"
@@ -554,7 +545,6 @@ end
                 lia.administrator.unregisterPrivilege(privilegeToRemove)
                 print("Privilege removed: " .. privilegeToRemove)
             end
-
         High Complexity:
             -- High: Remove multiple privileges with cleanup
             local privilegesToRemove = {"old_feature1", "old_feature2", "deprecated_tool"}
@@ -596,12 +586,10 @@ end
         Low Complexity:
             -- Simple: Apply inheritance to a group
             lia.administrator.applyInheritance("moderator")
-
         Medium Complexity:
             -- Medium: Apply inheritance after group modification
             lia.administrator.groups["moderator"]._info.inheritance = "admin"
             lia.administrator.applyInheritance("moderator")
-
         High Complexity:
             -- High: Apply inheritance to multiple groups with validation
             local groupsToUpdate = {"moderator", "helper", "vip"}
@@ -649,14 +637,12 @@ end
         Low Complexity:
             -- Simple: Load administrator data
             lia.administrator.load()
-
         Medium Complexity:
             -- Medium: Load with callback handling
             lia.administrator.load()
             hook.Add("OnAdminSystemLoaded", "MyModule", function(groups, privileges)
                 print("Admin system loaded with " .. table.Count(groups) .. " groups")
             end)
-
         High Complexity:
             -- High: Load with error handling and validation
             local function safeLoad()
@@ -744,7 +730,6 @@ end
         Low Complexity:
             -- Simple: Create a basic group
             lia.administrator.createGroup("moderator")
-
         Medium Complexity:
             -- Medium: Create group with inheritance
             lia.administrator.createGroup("helper", {
@@ -753,7 +738,6 @@ end
                     types = {"Staff"}
                 }
             })
-
         High Complexity:
             -- High: Create multiple groups with different configurations
             local groupConfigs = {
@@ -801,7 +785,6 @@ end
         Low Complexity:
             -- Simple: Remove a group
             lia.administrator.removeGroup("oldGroup")
-
         Medium Complexity:
             -- Medium: Remove group with validation
             local groupToRemove = "deprecatedGroup"
@@ -809,7 +792,6 @@ end
                 lia.administrator.removeGroup(groupToRemove)
                 print("Group removed: " .. groupToRemove)
             end
-
         High Complexity:
             -- High: Remove multiple groups with safety checks
             local groupsToRemove = {"tempGroup1", "tempGroup2", "oldModerator"}
@@ -851,7 +833,6 @@ end
         Low Complexity:
             -- Simple: Rename a group
             lia.administrator.renameGroup("oldModerator", "moderator")
-
         Medium Complexity:
             -- Medium: Rename with validation
             local oldGroupName = "tempGroup"
@@ -859,7 +840,6 @@ end
             if lia.administrator.groups[oldGroupName] and not lia.administrator.groups[newGroupName] then
                 lia.administrator.renameGroup(oldGroupName, newGroupName)
             end
-
         High Complexity:
             -- High: Batch rename with error handling
             local renameOperations = {
@@ -919,7 +899,6 @@ if SERVER then
                 text = "Player kicked for cheating",
                 type = "warning"
             })
-
         Medium Complexity:
             -- Medium: Notify with specific privilege requirement
             lia.administrator.notifyAdmin({
@@ -927,7 +906,6 @@ if SERVER then
                 type = "alert",
                 privilege = "canSeeAltingNotifications"
             })
-
         High Complexity:
             -- High: Batch notifications with different privilege levels
             local notifications = {
@@ -958,11 +936,9 @@ if SERVER then
         Low Complexity:
             -- Simple: Add permission to group
             lia.administrator.addPermission("moderator", "kickPlayers")
-
         Medium Complexity:
             -- Medium: Add permission silently during bulk operations
             lia.administrator.addPermission("helper", "mutePlayers", true)
-
         High Complexity:
             -- High: Add multiple permissions with validation
             local permissions = {"kickPlayers", "mutePlayers", "banPlayers"}
@@ -1001,11 +977,9 @@ if SERVER then
         Low Complexity:
             -- Simple: Remove permission from group
             lia.administrator.removePermission("moderator", "banPlayers")
-
         Medium Complexity:
             -- Medium: Remove permission silently during bulk operations
             lia.administrator.removePermission("helper", "kickPlayers", true)
-
         High Complexity:
             -- High: Remove multiple permissions with validation
             local permissionsToRemove = {"banPlayers", "kickPlayers", "mutePlayers"}
@@ -1042,11 +1016,9 @@ if SERVER then
         Low Complexity:
             -- Simple: Sync with all clients
             lia.administrator.sync()
-
         Medium Complexity:
             -- Medium: Sync with specific client
             lia.administrator.sync(player)
-
         High Complexity:
             -- High: Sync with validation and error handling
             local function safeSync(client)
@@ -1120,11 +1092,9 @@ if SERVER then
         Low Complexity:
             -- Simple: Change player's group
             lia.administrator.setPlayerUsergroup(player, "moderator")
-
         Medium Complexity:
             -- Medium: Change group with source tracking
             lia.administrator.setPlayerUsergroup(player, "admin", "MyModule")
-
         High Complexity:
             -- High: Batch group changes with validation
             local groupChanges = {
@@ -1161,11 +1131,9 @@ if SERVER then
         Low Complexity:
             -- Simple: Change Steam ID's group
             lia.administrator.setSteamIDUsergroup("STEAM_0:1:123456789", "moderator")
-
         Medium Complexity:
             -- Medium: Change group with source tracking
             lia.administrator.setSteamIDUsergroup("STEAM_0:1:123456789", "admin", "WebPanel")
-
         High Complexity:
             -- High: Batch Steam ID group changes with validation
             local steamGroupChanges = {
@@ -1205,11 +1173,9 @@ if SERVER then
         Low Complexity:
             -- Simple: Kick a player
             lia.administrator.serverExecCommand("kick", player, nil, "Cheating", admin)
-
         Medium Complexity:
             -- Medium: Ban player with duration
             lia.administrator.serverExecCommand("ban", player, 60, "RDM", admin)
-
         High Complexity:
             -- High: Execute multiple commands with validation
             local commands = {
@@ -1488,11 +1454,9 @@ else
         Low Complexity:
             -- Simple: Kick a player
             lia.administrator.execCommand("kick", player, nil, "Cheating")
-
         Medium Complexity:
             -- Medium: Ban player with duration
             lia.administrator.execCommand("ban", player, 60, "RDM")
-
         High Complexity:
             -- High: Execute multiple commands with validation
             local commands = {
@@ -1511,7 +1475,6 @@ else
                     print("Command sent: " .. command.cmd)
                 end
             end
-
         Hook Implementation Example:
             -- Custom admin system hook
             hook.Add("RunAdminSystemCommand", "MyAdminSystem", function(cmd, victim, dur, reason)

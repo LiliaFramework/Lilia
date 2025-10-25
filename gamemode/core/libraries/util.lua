@@ -15,7 +15,6 @@
     Returns: Table of player entities found within the box area
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find players in a small area around a position
@@ -61,7 +60,6 @@ end
     Returns: Player entity if found with a valid character, nil otherwise
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find player by Steam ID
@@ -112,7 +110,6 @@ end
     Returns: Table of player entities found within the spherical area
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find players within 500 units of a position
@@ -168,7 +165,6 @@ end
     Returns: Player entity if found, nil otherwise with appropriate error notifications
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find player by partial name
@@ -258,7 +254,6 @@ end
     Returns: Table of item entities created by the specified player
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find all items dropped by a player
@@ -306,7 +301,6 @@ end
     Returns: Table of item entities of the specified class created by the player
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find all weapons dropped by a player
@@ -355,7 +349,6 @@ end
     Returns: Table of entities created by or associated with the specified player
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find all entities created by a player
@@ -408,7 +401,6 @@ end
     Returns: Boolean indicating if the strings match using any of the comparison methods
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if strings are equal (case-insensitive)
@@ -459,7 +451,6 @@ end
     Returns: Table of player entities that are currently staff members
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get all online admins
@@ -512,7 +503,6 @@ end
     Returns: Player entity if found, nil otherwise
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find player by Steam ID 64
@@ -557,7 +547,6 @@ end
     Returns: Player entity if found, nil otherwise
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find player by Steam ID
@@ -611,7 +600,6 @@ end
     Returns: Boolean indicating if the position is clear (true) or obstructed (false)
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if player can fit at position
@@ -671,7 +659,6 @@ end
     Returns: Table of player entities found within the specified radius
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find players within 100 units
@@ -729,7 +716,6 @@ end
     Returns: String with placeholders replaced by provided values
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Format string with individual arguments
@@ -791,7 +777,6 @@ end
     Returns: IMaterial object for the specified material path
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get a cached material
@@ -842,7 +827,6 @@ end
     Returns: Faction table if found, nil otherwise with error notification
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Find faction by name
@@ -970,7 +954,6 @@ end
     Returns: String containing a randomly generated full name (FirstName LastName)
     Realm: Both (Universal)
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Generate a random name using defaults
@@ -1034,7 +1017,6 @@ if SERVER then
         Returns: Nothing (sends network message to client)
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Send basic player list
@@ -1123,7 +1105,6 @@ if SERVER then
         Returns: Table of valid Vector positions sorted by distance from the entity
         Realm: Server
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find nearby empty spaces
@@ -1220,7 +1201,6 @@ else
         Returns: Nothing (modifies panel directly)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Basic panel appearance animation
@@ -1319,7 +1299,6 @@ else
         Returns: Nothing (modifies panel position directly)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Keep panel within screen bounds
@@ -1436,7 +1415,6 @@ else
         Returns: Nothing (draws directly to screen)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Draw a basic gradient background
@@ -1491,7 +1469,6 @@ else
         Returns: Table of wrapped text lines, Number: Maximum width of any line
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Wrap text to fit in a label
@@ -1583,7 +1560,6 @@ else
         Returns: Nothing (draws directly to screen)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add basic blur behind a panel
@@ -1665,7 +1641,6 @@ else
         Returns: Nothing (draws directly to screen)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add dark blur behind a panel
@@ -1752,7 +1727,6 @@ else
         Returns: Nothing (draws directly to screen)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Blur a specific screen area
@@ -1812,7 +1786,6 @@ else
         Returns: Frame, ListView: The created frame and list view objects
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create basic table UI
@@ -2007,7 +1980,6 @@ else
         Returns: Frame: The created options menu frame
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create basic options menu
@@ -2171,7 +2143,6 @@ else
         Returns: Nothing (draws directly to screen)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Draw text above an entity
@@ -2285,7 +2256,6 @@ else
         Returns: Nothing (draws directly to screen)
         Realm: Client
         Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Draw text where player is looking

@@ -288,7 +288,6 @@ local ConditionalFiles = {
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Include a shared library file
@@ -359,7 +358,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Include all files in a directory
@@ -411,7 +409,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Include files with automatic realm detection
@@ -513,7 +510,6 @@ local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check for updates during server startup
@@ -673,7 +669,6 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Display a basic error message
@@ -723,7 +718,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Display a basic warning message
@@ -772,7 +766,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Display a basic information message
@@ -818,7 +811,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Display a basic bootstrap message
@@ -862,7 +854,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Send a basic Discord message
@@ -966,7 +957,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Include entities from the default gamemode path

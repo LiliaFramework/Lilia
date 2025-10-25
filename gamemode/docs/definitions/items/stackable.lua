@@ -94,7 +94,6 @@ ITEM.canSplit = true
 --
 --[[
 Example Item:
-
     ```lua
     -- Basic item identification
     ITEM.name = "Ammo Box"                                    -- Display name shown to players

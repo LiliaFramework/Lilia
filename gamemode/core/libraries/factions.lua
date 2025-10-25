@@ -21,7 +21,6 @@ local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group
         - faction (table): The complete faction data table
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic faction
@@ -113,7 +112,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Cache basic string models
@@ -164,7 +162,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Load factions from a basic directory
@@ -255,7 +252,6 @@ end
         - faction (table): The faction data table, or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get faction by unique ID
@@ -306,7 +302,6 @@ end
         - index (number): The faction's team index, or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get faction index
@@ -356,7 +351,6 @@ end
         - classes (table): Table of class objects belonging to the faction
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get all classes for a faction
@@ -419,7 +413,6 @@ end
         - players (table): Table of player entities in the faction
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get all players in a faction
@@ -482,7 +475,6 @@ end
         - count (number): Number of players in the faction
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Get player count for a faction
@@ -539,7 +531,6 @@ end
         - isCategory (boolean): True if the faction is in the category, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Check if faction is in a category
@@ -602,7 +593,6 @@ end
         - faction (table): The generated faction data table
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Generate a basic faction
@@ -704,7 +694,6 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
         -- Simple: Format all faction model data
@@ -767,7 +756,6 @@ end
         - categories (table): Table of category names for the faction's models
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get categories for a faction
@@ -831,7 +819,6 @@ end
         - models (table): Table of models in the specified category
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get models from a category
@@ -897,7 +884,6 @@ end
         - defaultClass (table): The default class object, or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get default class for a faction
@@ -979,7 +965,6 @@ FACTION_STAFF = lia.faction.register("staff", {
         - hasWhitelist (boolean): True if the faction has whitelist restrictions, false otherwise
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if faction has whitelist
@@ -1044,7 +1029,6 @@ if CLIENT then
         - hasWhitelist (boolean): True if the faction has whitelist restrictions, false otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if faction has whitelist
