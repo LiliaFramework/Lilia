@@ -303,33 +303,33 @@ end
     ```lua
     -- Medium: Custom rendering with conditions
     hook.Add("HUDPaint", "CustomBarRender", function()
-    if not hook.Run("ShouldHideBars") then
-    lia.bar.drawAll()
-    end
+        if not hook.Run("ShouldHideBars") then
+            lia.bar.drawAll()
+        end
     end)
     ```
     High Complexity:
     ```lua
     -- High: Advanced rendering with custom positioning and filtering
     local function customDrawAll()
-    if hook.Run("ShouldHideBars") then return end
-    -- Custom positioning logic
-    local baseX, baseY = 10, 10
-    local barSpacing = 18
-    -- Sort bars by priority
-    table.sort(lia.bar.list, function(a, b)
-    if a.priority == b.priority then
-    return (a.order or 0) < (b.order or 0)
-    end
-    return a.priority < b.priority
-    end)
-    -- Draw each bar with custom logic
-    for i, bar in ipairs(lia.bar.list) do
-    if hook.Run("ShouldBarDraw", bar) then
-    local y = baseY + (i - 1) * barSpacing
-    lia.bar.drawBar(baseX, y, 200, 14, bar.getValue(), 1, bar.color)
-    end
-    end
+        if hook.Run("ShouldHideBars") then return end
+        -- Custom positioning logic
+        local baseX, baseY = 10, 10
+        local barSpacing = 18
+        -- Sort bars by priority
+        table.sort(lia.bar.list, function(a, b)
+            if a.priority == b.priority then
+                return (a.order or 0) < (b.order or 0)
+            end
+            return a.priority < b.priority
+        end)
+        -- Draw each bar with custom logic
+        for i, bar in ipairs(lia.bar.list) do
+            if hook.Run("ShouldBarDraw", bar) then
+                local y = baseY + (i - 1) * barSpacing
+                lia.bar.drawBar(baseX, y, 200, 14, bar.getValue(), 1, bar.color)
+            end
+        end
     end
     ```
 ]]

@@ -19,8 +19,8 @@ lia.command.list = lia.command.list or {}
     ```lua
     -- Simple: Generate syntax for basic arguments
     local args = {
-    {type = "string", name = "target"},
-    {type = "player", name = "player"}
+        {type = "string", name = "target"},
+        {type = "player", name = "player"}
     }
     local syntax = lia.command.buildSyntaxFromArguments(args)
     -- Returns: "[string target] [player player]"
@@ -29,8 +29,8 @@ lia.command.list = lia.command.list or {}
     ```lua
     -- Medium: Generate syntax with optional arguments
     local args = {
-    {type = "string", name = "message"},
-    {type = "bool", name = "silent", optional = true}
+        {type = "string", name = "message"},
+        {type = "bool", name = "silent", optional = true}
     }
     local syntax = lia.command.buildSyntaxFromArguments(args)
     -- Returns: "[string message] [bool silent optional]"
@@ -39,10 +39,10 @@ lia.command.list = lia.command.list or {}
     ```lua
     -- High: Generate syntax for complex command with multiple argument types
     local args = {
-    {type = "player", name = "target"},
-    {type = "string", name = "reason"},
-    {type = "number", name = "duration", optional = true},
-    {type = "bool", name = "notify", optional = true}
+        {type = "player", name = "target"},
+        {type = "string", name = "reason"},
+        {type = "number", name = "duration", optional = true},
+        {type = "bool", name = "notify", optional = true}
     }
     local syntax = lia.command.buildSyntaxFromArguments(args)
     -- Returns: "[player target] [string reason] [number duration optional] [bool notify optional]"
