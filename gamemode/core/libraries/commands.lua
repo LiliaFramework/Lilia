@@ -15,7 +15,6 @@ lia.command.list = lia.command.list or {}
     Returns: string - Formatted syntax string showing argument types and names
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Generate syntax for basic arguments
@@ -77,56 +76,55 @@ end
     Returns: void
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic command
     lia.command.add("hello", {
-        onRun = function(client, arguments)
-            client:notify("Hello, " .. client:Name() .. "!")
-        end,
-        desc = "Say hello"
+    onRun = function(client, arguments)
+    client:notify("Hello, " .. client:Name() .. "!")
+    end,
+    desc = "Say hello"
     })
     ```
     Medium Complexity:
     ```lua
     -- Medium: Register command with arguments and admin privilege
     lia.command.add("kick", {
-        arguments = {
-            {type = "player", name = "target"},
-            {type = "string", name = "reason", optional = true}
-        },
-        onRun = function(client, arguments)
-            local target = arguments[1]
-            local reason = arguments[2] or "No reason provided"
-            target:Kick(reason)
-            client:notify("Kicked " .. target:Name())
-        end,
-        adminOnly = true,
-        desc = "Kick a player from the server"
+    arguments = {
+    {type = "player", name = "target"},
+    {type = "string", name = "reason", optional = true}
+    },
+    onRun = function(client, arguments)
+    local target = arguments[1]
+    local reason = arguments[2] or "No reason provided"
+    target:Kick(reason)
+    client:notify("Kicked " .. target:Name())
+    end,
+    adminOnly = true,
+    desc = "Kick a player from the server"
     })
     ```
     High Complexity:
     ```lua
     -- High: Register complex command with aliases, custom access check, and privilege
     lia.command.add("ban", {
-        arguments = {
-            {type = "player", name = "target"},
-            {type = "string", name = "reason"},
-            {type = "number", name = "duration", optional = true}
-        },
-        alias = {"tempban", "tban"},
-        onRun = function(client, arguments)
-            local target = arguments[1]
-            local reason = arguments[2]
-            local duration = arguments[3] or 0
-            -- Ban logic here
-        end,
-        onCheckAccess = function(client, command, data)
-            return client:IsSuperAdmin() or client:hasPrivilege("moderation")
-        end,
-        privilege = "moderation",
-        desc = "Ban a player temporarily or permanently"
+    arguments = {
+    {type = "player", name = "target"},
+    {type = "string", name = "reason"},
+    {type = "number", name = "duration", optional = true}
+    },
+    alias = {"tempban", "tban"},
+    onRun = function(client, arguments)
+    local target = arguments[1]
+    local reason = arguments[2]
+    local duration = arguments[3] or 0
+    -- Ban logic here
+    end,
+    onCheckAccess = function(client, command, data)
+    return client:IsSuperAdmin() or client:hasPrivilege("moderation")
+    end,
+    privilege = "moderation",
+    desc = "Ban a player temporarily or permanently"
     })
     ```
 ]]
@@ -238,7 +236,6 @@ end
     Returns: boolean, string - Access granted status and privilege name
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check basic command access
@@ -316,7 +313,6 @@ end
     Returns: table - Array of extracted argument strings
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Extract basic arguments
@@ -407,7 +403,6 @@ if SERVER then
     Returns: void
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Execute a basic command
@@ -461,7 +456,6 @@ if SERVER then
     Returns: boolean - True if command was processed, false if not a command
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Parse basic command from chat
@@ -553,7 +547,6 @@ else
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Open prompt for single missing argument
@@ -808,7 +801,6 @@ else
     Returns: void
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Send basic command
@@ -904,7 +896,6 @@ end)
     Returns: Player or nil - Found player entity or nil if not found
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Find player by exact name

@@ -43,26 +43,25 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic inventory type
     lia.inventory.newType("player", {
-        className = "PlayerInventory",
-        typeID = "player",
-        config = {w = 10, h = 5}
+    className = "PlayerInventory",
+    typeID = "player",
+    config = {w = 10, h = 5}
     })
     ```
     Medium Complexity:
     ```lua
     -- Medium: Register inventory type with custom methods
     local playerInvType = {
-        className = "PlayerInventory",
-        typeID = "player",
-        config = {w = 10, h = 5},
-        add = function(self, item) -- custom add method
-            -- custom logic here
-        end
+    className = "PlayerInventory",
+    typeID = "player",
+    config = {w = 10, h = 5},
+    add = function(self, item) -- custom add method
+    -- custom logic here
+    end
     }
     lia.inventory.newType("player", playerInvType)
     ```
@@ -70,22 +69,22 @@ end
     ```lua
     -- High: Register complex inventory type with validation
     local complexInvType = {
-        className = "ComplexInventory",
-        typeID = "complex",
-        config = {
-            w = 20, h = 10,
-            maxWeight = 100,
-            restrictions = {"weapons", "drugs"}
-        },
-        add = function(self, item)
-            if self:canAddItem(item) then
-                return self:doAddItem(item)
-            end
-            return false
-        end,
-        remove = function(self, item)
-            return self:doRemoveItem(item)
-        end
+    className = "ComplexInventory",
+    typeID = "complex",
+    config = {
+    w = 20, h = 10,
+    maxWeight = 100,
+    restrictions = {"weapons", "drugs"}
+    },
+    add = function(self, item)
+    if self:canAddItem(item) then
+    return self:doAddItem(item)
+    end
+    return false
+    end,
+    remove = function(self, item)
+    return self:doRemoveItem(item)
+    end
     }
     lia.inventory.newType("complex", complexInvType)
     ```
@@ -106,27 +105,26 @@ end
     Returns: Inventory instance (table) with items and config properties
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
-        -- Simple: Create a basic player inventory
-        local playerInv = lia.inventory.new("player")
+    -- Simple: Create a basic player inventory
+    local playerInv = lia.inventory.new("player")
     ```
     Medium Complexity:
     ```lua
-        -- Medium: Create inventory and configure it
-        local storageInv = lia.inventory.new("storage")
-        storageInv.config.w = 15
-        storageInv.config.h = 8
+    -- Medium: Create inventory and configure it
+    local storageInv = lia.inventory.new("storage")
+    storageInv.config.w = 15
+    storageInv.config.h = 8
     ```
     High Complexity:
     ```lua
-        -- High: Create inventory with custom configuration
-        local customInv = lia.inventory.new("player")
-        customInv.config.w = 12
-        customInv.config.h = 6
-        customInv.config.maxWeight = 50
-        customInv.items = {}
+    -- High: Create inventory with custom configuration
+    local customInv = lia.inventory.new("player")
+    customInv.config.w = 12
+    customInv.config.h = 6
+    customInv.config.maxWeight = 50
+    customInv.items = {}
     ```
 ]]
 function lia.inventory.new(typeID)
@@ -153,40 +151,39 @@ if SERVER then
     Returns: Deferred promise that resolves to inventory instance
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
-        -- Simple: Load inventory by ID
-        lia.inventory.loadByID(123):next(function(inv)
-            print("Loaded inventory:", inv.id)
-        end)
+    -- Simple: Load inventory by ID
+    lia.inventory.loadByID(123):next(function(inv)
+    print("Loaded inventory:", inv.id)
+    end)
     ```
     Medium Complexity:
     ```lua
-        -- Medium: Load inventory with error handling
-        lia.inventory.loadByID(123):next(function(inv)
-            if inv then
-                print("Successfully loaded inventory:", inv.id)
-            end
-        end):catch(function(err)
-            print("Failed to load inventory:", err)
-        end)
+    -- Medium: Load inventory with error handling
+    lia.inventory.loadByID(123):next(function(inv)
+    if inv then
+    print("Successfully loaded inventory:", inv.id)
+    end
+    end):catch(function(err)
+    print("Failed to load inventory:", err)
+    end)
     ```
     High Complexity:
     ```lua
-        -- High: Load inventory with cache bypass and validation
-        local function loadInventorySafely(id)
-            return lia.inventory.loadByID(id, true):next(function(inv)
-                if not inv then
-                    return deferred.reject("Inventory not found")
-                end
-                -- Validate inventory data
-                if not inv.data or not inv.items then
-                    return deferred.reject("Invalid inventory data")
-                end
-                return inv
-            end)
-        end
+    -- High: Load inventory with cache bypass and validation
+    local function loadInventorySafely(id)
+    return lia.inventory.loadByID(id, true):next(function(inv)
+    if not inv then
+    return deferred.reject("Inventory not found")
+    end
+    -- Validate inventory data
+    if not inv.data or not inv.items then
+    return deferred.reject("Invalid inventory data")
+    end
+    return inv
+    end)
+    end
     ```
     ]]
     function lia.inventory.loadByID(id, noCache)
@@ -218,45 +215,44 @@ if SERVER then
     Returns: Deferred promise that resolves to inventory instance
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
-        -- Simple: Load inventory from default storage
-        lia.inventory.loadFromDefaultStorage(123):next(function(inv)
-            print("Loaded from database:", inv.id)
-        end)
+    -- Simple: Load inventory from default storage
+    lia.inventory.loadFromDefaultStorage(123):next(function(inv)
+    print("Loaded from database:", inv.id)
+    end)
     ```
     Medium Complexity:
     ```lua
-        -- Medium: Load with cache bypass
-        lia.inventory.loadFromDefaultStorage(123, true):next(function(inv)
-            if inv then
-                print("Fresh load from database:", inv.id)
-            end
-        end)
+    -- Medium: Load with cache bypass
+    lia.inventory.loadFromDefaultStorage(123, true):next(function(inv)
+    if inv then
+    print("Fresh load from database:", inv.id)
+    end
+    end)
     ```
     High Complexity:
     ```lua
-        -- High: Load with comprehensive error handling and validation
-        local function loadFromDatabase(id)
-            return lia.inventory.loadFromDefaultStorage(id, true):next(function(inv)
-                if not inv then
-                    lia.error("Failed to load inventory " .. id .. " from database")
-                    return deferred.reject("Inventory not found in database")
-                end
-                -- Validate inventory structure
-                if not inv.data or not inv.items then
-                    lia.error("Invalid inventory structure for ID: " .. id)
-                    return deferred.reject("Corrupted inventory data")
-                end
-                -- Log successful load
-                lia.log("Successfully loaded inventory " .. id .. " from database")
-                return inv
-            end):catch(function(err)
-                lia.error("Database load error for inventory " .. id .. ": " .. tostring(err))
-                return deferred.reject(err)
-            end)
-        end
+    -- High: Load with comprehensive error handling and validation
+    local function loadFromDatabase(id)
+    return lia.inventory.loadFromDefaultStorage(id, true):next(function(inv)
+    if not inv then
+    lia.error("Failed to load inventory " .. id .. " from database")
+    return deferred.reject("Inventory not found in database")
+    end
+    -- Validate inventory structure
+    if not inv.data or not inv.items then
+    lia.error("Invalid inventory structure for ID: " .. id)
+    return deferred.reject("Corrupted inventory data")
+    end
+    -- Log successful load
+    lia.log("Successfully loaded inventory " .. id .. " from database")
+    return inv
+    end):catch(function(err)
+    lia.error("Database load error for inventory " .. id .. ": " .. tostring(err))
+    return deferred.reject(err)
+    end)
+    end
     ```
     ]]
     function lia.inventory.loadFromDefaultStorage(id, noCache)
@@ -298,45 +294,44 @@ if SERVER then
     Returns: Deferred promise that resolves to the created inventory instance
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
-        -- Simple: Create a new inventory instance
-        lia.inventory.instance("player"):next(function(inv)
-            print("Created inventory:", inv.id)
-        end)
+    -- Simple: Create a new inventory instance
+    lia.inventory.instance("player"):next(function(inv)
+    print("Created inventory:", inv.id)
+    end)
     ```
     Medium Complexity:
     ```lua
-        -- Medium: Create inventory with initial data
-        local initialData = {owner = "player123", maxWeight = 50}
-        lia.inventory.instance("storage", initialData):next(function(inv)
-            print("Created storage inventory:", inv.id)
-            print("Owner:", inv.data.owner)
-        end)
+    -- Medium: Create inventory with initial data
+    local initialData = {owner = "player123", maxWeight = 50}
+    lia.inventory.instance("storage", initialData):next(function(inv)
+    print("Created storage inventory:", inv.id)
+    print("Owner:", inv.data.owner)
+    end)
     ```
     High Complexity:
     ```lua
-        -- High: Create inventory with validation and error handling
-        local function createInventorySafely(typeID, data)
-            if not lia.inventory.types[typeID] then
-                return deferred.reject("Invalid inventory type: " .. typeID)
-            end
-            return lia.inventory.instance(typeID, data):next(function(inv)
-                if not inv or not inv.id then
-                    return deferred.reject("Failed to create inventory instance")
-                end
-                -- Validate created inventory
-                if not inv.data or not inv.items then
-                    return deferred.reject("Invalid inventory structure")
-                end
-                lia.log("Successfully created inventory " .. inv.id .. " of type " .. typeID)
-                return inv
-            end):catch(function(err)
-                lia.error("Failed to create inventory: " .. tostring(err))
-                return deferred.reject(err)
-            end)
-        end
+    -- High: Create inventory with validation and error handling
+    local function createInventorySafely(typeID, data)
+    if not lia.inventory.types[typeID] then
+    return deferred.reject("Invalid inventory type: " .. typeID)
+    end
+    return lia.inventory.instance(typeID, data):next(function(inv)
+    if not inv or not inv.id then
+    return deferred.reject("Failed to create inventory instance")
+    end
+    -- Validate created inventory
+    if not inv.data or not inv.items then
+    return deferred.reject("Invalid inventory structure")
+    end
+    lia.log("Successfully created inventory " .. inv.id .. " of type " .. typeID)
+    return inv
+    end):catch(function(err)
+    lia.error("Failed to create inventory: " .. tostring(err))
+    return deferred.reject(err)
+    end)
+    end
     ```
     ]]
     function lia.inventory.instance(typeID, initialData)
@@ -362,54 +357,53 @@ if SERVER then
     Returns: Deferred promise that resolves to array of inventory instances
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
-        -- Simple: Load all inventories for a character
-        lia.inventory.loadAllFromCharID(123):next(function(inventories)
-            print("Loaded", #inventories, "inventories")
-        end)
+    -- Simple: Load all inventories for a character
+    lia.inventory.loadAllFromCharID(123):next(function(inventories)
+    print("Loaded", #inventories, "inventories")
+    end)
     ```
     Medium Complexity:
     ```lua
-        -- Medium: Load inventories with error handling
-        lia.inventory.loadAllFromCharID(123):next(function(inventories)
-            if inventories and #inventories > 0 then
-                print("Successfully loaded", #inventories, "inventories")
-                for _, inv in ipairs(inventories) do
-                    print("Inventory ID:", inv.id, "Type:", inv.data.invType)
-                end
-            end
-        end):catch(function(err)
-            print("Failed to load character inventories:", err)
-        end)
+    -- Medium: Load inventories with error handling
+    lia.inventory.loadAllFromCharID(123):next(function(inventories)
+    if inventories and #inventories > 0 then
+    print("Successfully loaded", #inventories, "inventories")
+    for _, inv in ipairs(inventories) do
+    print("Inventory ID:", inv.id, "Type:", inv.data.invType)
+    end
+    end
+    end):catch(function(err)
+    print("Failed to load character inventories:", err)
+    end)
     ```
     High Complexity:
     ```lua
-        -- High: Load inventories with validation and processing
-        local function loadCharacterInventories(charID)
-            return lia.inventory.loadAllFromCharID(charID):next(function(inventories)
-                if not inventories then
-                    return deferred.reject("No inventories found for character " .. charID)
-                end
-                local validInventories = {}
-                for _, inv in ipairs(inventories) do
-                    if inv and inv.id and inv.data then
-                        -- Validate inventory structure
-                        if inv.items and inv.config then
-                            table.insert(validInventories, inv)
-                        else
-                            lia.warning("Invalid inventory structure for ID: " .. inv.id)
-                        end
-                    end
-                end
-                lia.log("Loaded " .. #validInventories .. " valid inventories for character " .. charID)
-                return validInventories
-            end):catch(function(err)
-                lia.error("Failed to load inventories for character " .. charID .. ": " .. tostring(err))
-                return deferred.reject(err)
-            end)
-        end
+    -- High: Load inventories with validation and processing
+    local function loadCharacterInventories(charID)
+    return lia.inventory.loadAllFromCharID(charID):next(function(inventories)
+    if not inventories then
+    return deferred.reject("No inventories found for character " .. charID)
+    end
+    local validInventories = {}
+    for _, inv in ipairs(inventories) do
+    if inv and inv.id and inv.data then
+    -- Validate inventory structure
+    if inv.items and inv.config then
+    table.insert(validInventories, inv)
+    else
+    lia.warning("Invalid inventory structure for ID: " .. inv.id)
+    end
+    end
+    end
+    lia.log("Loaded " .. #validInventories .. " valid inventories for character " .. charID)
+    return validInventories
+    end):catch(function(err)
+    lia.error("Failed to load inventories for character " .. charID .. ": " .. tostring(err))
+    return deferred.reject(err)
+    end)
+    end
     ```
     ]]
     function lia.inventory.loadAllFromCharID(charID)
@@ -430,55 +424,54 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
-        -- Simple: Delete an inventory by ID
-        lia.inventory.deleteByID(123)
+    -- Simple: Delete an inventory by ID
+    lia.inventory.deleteByID(123)
     ```
     Medium Complexity:
     ```lua
-        -- Medium: Delete inventory with validation
-        local function deleteInventory(id)
-            if not isnumber(id) or id <= 0 then
-                lia.error("Invalid inventory ID for deletion: " .. tostring(id))
-                return false
-            end
-            lia.inventory.deleteByID(id)
-            lia.log("Deleted inventory ID: " .. id)
-            return true
-        end
+    -- Medium: Delete inventory with validation
+    local function deleteInventory(id)
+    if not isnumber(id) or id <= 0 then
+    lia.error("Invalid inventory ID for deletion: " .. tostring(id))
+    return false
+    end
+    lia.inventory.deleteByID(id)
+    lia.log("Deleted inventory ID: " .. id)
+    return true
+    end
     ```
     High Complexity:
     ```lua
-        -- High: Delete inventory with comprehensive cleanup
-        local function deleteInventorySafely(id)
-            if not isnumber(id) or id <= 0 then
-                return deferred.reject("Invalid inventory ID: " .. tostring(id))
-            end
-            -- Check if inventory exists before deletion
-            return lia.inventory.loadByID(id):next(function(inv)
-                if not inv then
-                    lia.warning("Attempted to delete non-existent inventory: " .. id)
-                    return false
-                end
-                -- Clean up any items in the inventory
-                if inv.items then
-                    for _, item in pairs(inv.items) do
-                        if item and item.destroy then
-                            item:destroy()
-                        end
-                    end
-                end
-                -- Delete from database
-                lia.inventory.deleteByID(id)
-                lia.log("Successfully deleted inventory " .. id .. " and all associated data")
-                return true
-            end):catch(function(err)
-                lia.error("Failed to delete inventory " .. id .. ": " .. tostring(err))
-                return false
-            end)
-        end
+    -- High: Delete inventory with comprehensive cleanup
+    local function deleteInventorySafely(id)
+    if not isnumber(id) or id <= 0 then
+    return deferred.reject("Invalid inventory ID: " .. tostring(id))
+    end
+    -- Check if inventory exists before deletion
+    return lia.inventory.loadByID(id):next(function(inv)
+    if not inv then
+    lia.warning("Attempted to delete non-existent inventory: " .. id)
+    return false
+    end
+    -- Clean up any items in the inventory
+    if inv.items then
+    for _, item in pairs(inv.items) do
+    if item and item.destroy then
+    item:destroy()
+    end
+    end
+    end
+    -- Delete from database
+    lia.inventory.deleteByID(id)
+    lia.log("Successfully deleted inventory " .. id .. " and all associated data")
+    return true
+    end):catch(function(err)
+    lia.error("Failed to delete inventory " .. id .. ": " .. tostring(err))
+    return false
+    end)
+    end
     ```
     ]]
     function lia.inventory.deleteByID(id)
@@ -497,7 +490,6 @@ if SERVER then
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Clean up character inventories
@@ -558,7 +550,6 @@ if SERVER then
     Returns: Boolean indicating whether overflow items were found and stored
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check for overflow after inventory resize
@@ -628,7 +619,6 @@ if SERVER then
     Returns: The registered storage data table
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic storage container
@@ -702,7 +692,6 @@ if SERVER then
     Returns: Storage data table if found, nil otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get storage data for a model
@@ -774,7 +763,6 @@ if SERVER then
     Returns: The registered trunk data table
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Register a basic vehicle trunk
@@ -861,7 +849,6 @@ if SERVER then
     Returns: Trunk data table if found, nil otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get trunk data for a vehicle
@@ -934,7 +921,6 @@ if SERVER then
     Returns: Table containing all trunk configurations indexed by vehicle class
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all trunks
@@ -1016,7 +1002,6 @@ if SERVER then
     Returns: Table containing all storage configurations indexed by model/class
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all storage (including trunks)
@@ -1102,7 +1087,6 @@ else
     Returns: The created inventory panel
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Show inventory panel

@@ -390,7 +390,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Add basic door preset for a map
@@ -466,7 +465,6 @@ end
     Returns: Table or nil - The preset data table if found, nil otherwise
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get preset for current map
@@ -520,7 +518,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Verify schema on server start
@@ -632,7 +629,6 @@ end
     Returns: None
     Realm: Server
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Run cleanup on server start

@@ -17,46 +17,45 @@ lia.class.list = lia.class.list or {}
     Returns: The registered class table
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     lia.class.register("citizen", {
-        name = "Citizen",
-        desc = "A regular citizen",
-        faction = FACTION_CITIZEN,
-        limit = 0
+    name = "Citizen",
+    desc = "A regular citizen",
+    faction = FACTION_CITIZEN,
+    limit = 0
     })
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     lia.class.register("police_officer", {
-        name = "Police Officer",
-        desc = "A law enforcement officer",
-        faction = FACTION_POLICE,
-        limit = 5,
-        OnCanBe = function(self, client)
-            return client:getChar():getAttrib("strength", 0) >= 10
-        end
+    name = "Police Officer",
+    desc = "A law enforcement officer",
+    faction = FACTION_POLICE,
+    limit = 5,
+    OnCanBe = function(self, client)
+    return client:getChar():getAttrib("strength", 0) >= 10
+    end
     })
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local classData = {
-        name = "Elite Soldier",
-        desc = "A highly trained military operative",
-        faction = FACTION_MILITARY,
-        limit = 2,
-        isWhitelisted = true,
-        OnCanBe = function(self, client)
-            local char = client:getChar()
-            return char:getAttrib("strength", 0) >= 15 and
-                char:getAttrib("endurance", 0) >= 12 and
-                client:IsAdmin()
-        end,
-        OnSpawn = function(self, client)
-            client:Give("weapon_ar2")
-            client:SetHealth(150)
-        end
+    name = "Elite Soldier",
+    desc = "A highly trained military operative",
+    faction = FACTION_MILITARY,
+    limit = 2,
+    isWhitelisted = true,
+    OnCanBe = function(self, client)
+    local char = client:getChar()
+    return char:getAttrib("strength", 0) >= 15 and
+    char:getAttrib("endurance", 0) >= 12 and
+    client:IsAdmin()
+    end,
+    OnSpawn = function(self, client)
+    client:Give("weapon_ar2")
+    client:SetHealth(150)
+    end
     }
     lia.class.register("elite_soldier", classData)
     ```
@@ -104,30 +103,29 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     lia.class.loadFromDir("gamemodes/lilia/classes")
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local classDir = "gamemodes/lilia/modules/custom_classes/classes"
     if file.Exists(classDir, "LUA") then
-        lia.class.loadFromDir(classDir)
+    lia.class.loadFromDir(classDir)
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local classDirectories = {
-        "gamemodes/lilia/classes",
-        "gamemodes/lilia/modules/factions/classes",
-        "gamemodes/lilia/modules/custom_classes/classes"
+    "gamemodes/lilia/classes",
+    "gamemodes/lilia/modules/factions/classes",
+    "gamemodes/lilia/modules/custom_classes/classes"
     }
     for _, dir in ipairs(classDirectories) do
-        if file.Exists(dir, "LUA") then
-            print("Loading classes from: " .. dir)
-            lia.class.loadFromDir(dir)
-        end
+    if file.Exists(dir, "LUA") then
+    print("Loading classes from: " .. dir)
+    lia.class.loadFromDir(dir)
+    end
     end
     ```
 ]]
@@ -179,47 +177,46 @@ end
     Returns: boolean, string - Whether the player can join and reason if they cannot
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local canJoin, reason = lia.class.canBe(client, 1)
     if canJoin then
-        print("Player can join class")
+    print("Player can join class")
     else
-        print("Cannot join: " .. reason)
+    print("Cannot join: " .. reason)
     end
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function checkClassAvailability(client, className)
-        local classIndex = lia.class.retrieveClass(className)
-        if not classIndex then
-            return false, "Class not found"
-        end
-        local canJoin, reason = lia.class.canBe(client, classIndex)
+    local classIndex = lia.class.retrieveClass(className)
+    if not classIndex then
+    return false, "Class not found"
+    end
+    local canJoin, reason = lia.class.canBe(client, classIndex)
     return canJoin, reason
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function validateClassSwitch(client, newClass)
-        local currentChar = client:getChar()
-        if not currentChar then
-            return false, "No character"
-        end
-        local currentClass = currentChar:getClass()
-        if currentClass == newClass then
-            return false, "Already in this class"
-        end
-        local canJoin, reason = lia.class.canBe(client, newClass)
-        if not canJoin then
-            return false, reason
-        end
-        -- Additional custom validation
-        if hook.Run("CustomClassValidation", client, newClass) == false then
-            return false, "Custom validation failed"
-        end
-        return true, "Valid"
+    local currentChar = client:getChar()
+    if not currentChar then
+    return false, "No character"
+    end
+    local currentClass = currentChar:getClass()
+    if currentClass == newClass then
+    return false, "Already in this class"
+    end
+    local canJoin, reason = lia.class.canBe(client, newClass)
+    if not canJoin then
+    return false, reason
+    end
+    -- Additional custom validation
+    if hook.Run("CustomClassValidation", client, newClass) == false then
+    return false, "Custom validation failed"
+    end
+    return true, "Valid"
     end
     ```
 ]]
@@ -244,48 +241,47 @@ end
     Returns: table - The class data table or nil if not found
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local class = lia.class.get(1)
     if class then
-        print("Class name: " .. class.name)
+    print("Class name: " .. class.name)
     end
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function getClassInfo(identifier)
-        local class = lia.class.get(identifier)
-        if not class then
-            return nil, "Class not found"
-        end
-        return {
-            name = class.name,
-            description = class.desc,
-            limit = class.limit,
-            faction = class.faction
-        }
+    local class = lia.class.get(identifier)
+    if not class then
+    return nil, "Class not found"
+    end
+    return {
+    name = class.name,
+    description = class.desc,
+    limit = class.limit,
+    faction = class.faction
+    }
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function getClassDetails(identifier)
-        local class = lia.class.get(identifier)
-        if not class then
-            return nil, "Class not found"
-        end
-        local players = lia.class.getPlayers(identifier)
-        local playerCount = #players
-        return {
-            info = class,
-            currentPlayers = players,
-            playerCount = playerCount,
-            isAvailable = class.limit == 0 or playerCount < class.limit,
-            isWhitelisted = class.isWhitelisted or false,
-            canJoin = function(client)
-                return lia.class.canBe(client, identifier)
-            end
-        }
+    local class = lia.class.get(identifier)
+    if not class then
+    return nil, "Class not found"
+    end
+    local players = lia.class.getPlayers(identifier)
+    local playerCount = #players
+    return {
+    info = class,
+    currentPlayers = players,
+    playerCount = playerCount,
+    isAvailable = class.limit == 0 or playerCount < class.limit,
+    isWhitelisted = class.isWhitelisted or false,
+    canJoin = function(client)
+    return lia.class.canBe(client, identifier)
+    end
+    }
     end
     ```
 ]]
@@ -302,52 +298,51 @@ end
     Returns: table - Array of player entities in the specified class
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local players = lia.class.getPlayers(1)
     print("Players in class 1: " .. #players)
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function getClassMembers(className)
-        local classIndex = lia.class.retrieveClass(className)
-        if not classIndex then
-            return {}
-        end
-        local players = lia.class.getPlayers(classIndex)
-        local memberNames = {}
-        for _, player in ipairs(players) do
-            table.insert(memberNames, player:Name())
-        end
-        return memberNames
+    local classIndex = lia.class.retrieveClass(className)
+    if not classIndex then
+    return {}
+    end
+    local players = lia.class.getPlayers(classIndex)
+    local memberNames = {}
+    for _, player in ipairs(players) do
+    table.insert(memberNames, player:Name())
+    end
+    return memberNames
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function getClassStatistics(classIndex)
-        local players = lia.class.getPlayers(classIndex)
-        local stats = {
-            count = #players,
-            players = {},
-            onlineTime = 0,
-            averageLevel = 0
-        }
-        for _, player in ipairs(players) do
-            local char = player:getChar()
-            if char then
-                table.insert(stats.players, {
-                    name = player:Name(),
-                    level = char:getLevel(),
-                    playtime = char:getPlayTime()
-                })
-                stats.onlineTime = stats.onlineTime + char:getPlayTime()
-            end
-        end
-        if stats.count > 0 then
-            stats.averageLevel = stats.onlineTime / stats.count
-        end
-        return stats
+    local players = lia.class.getPlayers(classIndex)
+    local stats = {
+    count = #players,
+    players = {},
+    onlineTime = 0,
+    averageLevel = 0
+    }
+    for _, player in ipairs(players) do
+    local char = player:getChar()
+    if char then
+    table.insert(stats.players, {
+    name = player:Name(),
+    level = char:getLevel(),
+    playtime = char:getPlayTime()
+    })
+    stats.onlineTime = stats.onlineTime + char:getPlayTime()
+    end
+    end
+    if stats.count > 0 then
+    stats.averageLevel = stats.onlineTime / stats.count
+    end
+    return stats
     end
     ```
 ]]
@@ -369,44 +364,43 @@ end
     Returns: number - Number of players in the specified class
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local count = lia.class.getPlayerCount(1)
     print("Players in class: " .. count)
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function checkClassAvailability(classIndex)
-        local class = lia.class.get(classIndex)
-        if not class then
-            return false, "Class not found"
-        end
-        local currentCount = lia.class.getPlayerCount(classIndex)
-        local isFull = class.limit > 0 and currentCount >= class.limit
-        return not isFull, isFull and "Class is full" or "Available"
+    local class = lia.class.get(classIndex)
+    if not class then
+    return false, "Class not found"
+    end
+    local currentCount = lia.class.getPlayerCount(classIndex)
+    local isFull = class.limit > 0 and currentCount >= class.limit
+    return not isFull, isFull and "Class is full" or "Available"
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function getClassPopulationReport()
-        local report = {}
-        for i, class in ipairs(lia.class.list) do
-            local count = lia.class.getPlayerCount(i)
-            local percentage = 0
-            if class.limit > 0 then
-                percentage = (count / class.limit) * 100
-            end
-            table.insert(report, {
-                name = class.name,
-                currentCount = count,
-                limit = class.limit,
-                percentage = percentage,
-                isFull = class.limit > 0 and count >= class.limit,
-                faction = class.faction
-            })
-        end
-        return report
+    local report = {}
+    for i, class in ipairs(lia.class.list) do
+    local count = lia.class.getPlayerCount(i)
+    local percentage = 0
+    if class.limit > 0 then
+    percentage = (count / class.limit) * 100
+    end
+    table.insert(report, {
+    name = class.name,
+    currentCount = count,
+    limit = class.limit,
+    percentage = percentage,
+    isFull = class.limit > 0 and count >= class.limit,
+    faction = class.faction
+    })
+    end
+    return report
     end
     ```
 ]]
@@ -428,42 +422,41 @@ end
     Returns: number - The class index if found, nil otherwise
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local classIndex = lia.class.retrieveClass("citizen")
     if classIndex then
-        print("Found class at index: " .. classIndex)
+    print("Found class at index: " .. classIndex)
     end
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function findClassByName(searchTerm)
-        local classIndex = lia.class.retrieveClass(searchTerm)
-        if not classIndex then
-            return nil, "Class '" .. searchTerm .. "' not found"
-        end
-        local class = lia.class.get(classIndex)
-        return classIndex, class
+    local classIndex = lia.class.retrieveClass(searchTerm)
+    if not classIndex then
+    return nil, "Class '" .. searchTerm .. "' not found"
+    end
+    local class = lia.class.get(classIndex)
+    return classIndex, class
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function searchClasses(searchTerm)
-        local results = {}
-        local term = string.lower(searchTerm)
-        for i, class in ipairs(lia.class.list) do
-            local uniqueID = string.lower(class.uniqueID or "")
-            local name = string.lower(class.name or "")
-            if string.find(uniqueID, term) or string.find(name, term) then
-                table.insert(results, {
-                    index = i,
-                    class = class,
-                    matchType = string.find(uniqueID, term) and "uniqueID" or "name"
-                })
-            end
-        end
-        return results
+    local results = {}
+    local term = string.lower(searchTerm)
+    for i, class in ipairs(lia.class.list) do
+    local uniqueID = string.lower(class.uniqueID or "")
+    local name = string.lower(class.name or "")
+    if string.find(uniqueID, term) or string.find(name, term) then
+    table.insert(results, {
+    index = i,
+    class = class,
+    matchType = string.find(uniqueID, term) and "uniqueID" or "name"
+    })
+    end
+    end
+    return results
     end
     ```
 ]]
@@ -483,15 +476,14 @@ end
     Returns: boolean - True if the class has whitelist restrictions, false otherwise
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local hasWhitelist = lia.class.hasWhitelist(1)
     if hasWhitelist then
     print("This class requires whitelist")
     end
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function checkClassAccess(client, classIndex)
     local class = lia.class.get(classIndex)
@@ -506,7 +498,7 @@ end
     return true, "No whitelist required"
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function getWhitelistClasses()
     local whitelistClasses = {}
@@ -550,13 +542,12 @@ end
     Returns: table - Array of class tables that the client can join
     Realm: Shared
     Example Usage:
-
-    Low Complexity:
+        Low Complexity:
     ```lua
     local joinableClasses = lia.class.retrieveJoinable(client)
     print("Player can join " .. #joinableClasses .. " classes")
     ```
-    Medium Complexity:
+        Medium Complexity:
     ```lua
     local function getJoinableClassNames(client)
     local joinableClasses = lia.class.retrieveJoinable(client)
@@ -567,7 +558,7 @@ end
     return classNames
     end
     ```
-    High Complexity:
+        High Complexity:
     ```lua
     local function getDetailedJoinableClasses(client)
     local joinableClasses = lia.class.retrieveJoinable(client)

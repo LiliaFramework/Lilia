@@ -64,7 +64,7 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
     When Called: During item definition (used in Read function)
     Example Usage:
     ```lua
-        ITEM.contents = "<h1>Chapter 1</h1><p>This is the content...</p>"
+    ITEM.contents = "<h1>Chapter 1</h1><p>This is the content...</p>"
     ```
 ]]
 --
