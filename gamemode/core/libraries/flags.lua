@@ -18,35 +18,36 @@ lia.flag.list = lia.flag.list or {}
     Returns: None
     Realm: Shared
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     -- Simple: Add a basic flag with description
     lia.flag.add("A", "flagAdmin")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     -- Medium: Add flag with callback for weapon management
     lia.flag.add("w", "flagWeapon", function(client, isGiven)
-    if isGiven then
-    client:Give("weapon_pistol")
-    else
-    client:StripWeapon("weapon_pistol")
-    end
+        if isGiven then
+            client:Give("weapon_pistol")
+        else
+            client:StripWeapon("weapon_pistol")
+        end
     end)
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     -- High: Add flag with complex callback and validation
     lia.flag.add("M", "flagModerator", function(client, isGiven)
-    if isGiven then
-    client:SetNWBool("isModerator", true)
-    client:ChatPrint("Moderator privileges granted!")
-    -- Additional setup logic here
-    else
-    client:SetNWBool("isModerator", false)
-    client:ChatPrint("Moderator privileges revoked!")
-    -- Cleanup logic here
-    end
+        if isGiven then
+            client:SetNWBool("isModerator", true)
+            client:ChatPrint("Moderator privileges granted!")
+            -- Additional setup logic here
+        else
+            client:SetNWBool("isModerator", false)
+            client:ChatPrint("Moderator privileges revoked!")
+            -- Cleanup logic here
+        end
     end)
     ```
 ]]
@@ -67,29 +68,29 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
-    -- Simple: Called automatically when player spawns
-    -- No direct usage needed - handled by framework
+        -- Simple: Called automatically when player spawns
+        -- No direct usage needed - handled by framework
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
-    -- Medium: Manual flag processing for specific cases
-    local client = Player(1)
-    if client and client:IsValid() then
-    lia.flag.onSpawn(client)
-    end
+        -- Medium: Manual flag processing for specific cases
+        local client = Player(1)
+        if client and client:IsValid() then
+            lia.flag.onSpawn(client)
+        end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
-    -- High: Custom spawn handling with flag validation
-    hook.Add("PlayerSpawn", "CustomFlagHandler", function(client)
-    if client:getChar() then
-    -- Custom pre-spawn logic
-    lia.flag.onSpawn(client)
-    -- Custom post-spawn logic
-    end
-    end)
+        -- High: Custom spawn handling with flag validation
+        hook.Add("PlayerSpawn", "CustomFlagHandler", function(client)
+            if client:getChar() then
+                -- Custom pre-spawn logic
+                lia.flag.onSpawn(client)
+                -- Custom post-spawn logic
+            end
+        end)
     ```
     ]]
     function lia.flag.onSpawn(client)

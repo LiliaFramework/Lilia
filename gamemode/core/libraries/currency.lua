@@ -17,6 +17,7 @@ lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
     Returns: string - Formatted currency string with symbol and proper singular/plural form
     Realm: Shared (works on both client and server)
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Format a basic currency amount
@@ -28,8 +29,8 @@ lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
     -- Medium: Format currency with conditional display
     local playerMoney = 1500
     if playerMoney > 0 then
-    local displayText = "Balance: " .. lia.currency.get(playerMoney)
-    chat.AddText(Color(255, 255, 255), displayText)
+        local displayText = "Balance: " .. lia.currency.get(playerMoney)
+        chat.AddText(Color(255, 255, 255), displayText)
     end
     ```
     High Complexity:
@@ -37,10 +38,10 @@ lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
     -- High: Format multiple currency amounts with validation
     local transactions = {100, 1, 0, -50, 2500}
     for _, amount in ipairs(transactions) do
-    if amount and amount ~= 0 then
-    local formatted = lia.currency.get(math.abs(amount))
-    local prefix = amount > 0 and "+" or "-"
-    print(prefix .. formatted)
+        if amount and amount ~= 0 then
+            local formatted = lia.currency.get(math.abs(amount))
+            local prefix = amount > 0 and "+" or "-"
+            print(prefix .. formatted)
     end
     end
     ```
@@ -60,13 +61,14 @@ if SERVER then
         Returns: Entity - The created money entity if successful, nil if parameters are invalid
         Realm: Server only
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     -- Simple: Spawn money at player's position
     local pos = player:GetPos()
     lia.currency.spawn(pos, 100)
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     -- Medium: Spawn money with specific angle and validation
     local dropPos = trace.HitPos
@@ -78,7 +80,7 @@ if SERVER then
     end
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     -- High: Spawn multiple money entities with advanced positioning
     local spawnPositions = {

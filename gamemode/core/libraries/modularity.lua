@@ -108,6 +108,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load a basic module
@@ -221,28 +222,29 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Initialize modules (typically called automatically)
-    lia.module.initialize()
+        -- Simple: Initialize modules (typically called automatically)
+        lia.module.initialize()
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Initialize with custom schema path
-    local schemaPath = "gamemodes/mygamemode"
-    lia.module.load("schema", schemaPath .. "/schema", false, "schema")
-    lia.module.initialize()
+        -- Medium: Initialize with custom schema path
+        local schemaPath = "gamemodes/mygamemode"
+        lia.module.load("schema", schemaPath .. "/schema", false, "schema")
+        lia.module.initialize()
     ```
     High Complexity:
     ```lua
-    -- High: Initialize with custom module loading order
-    lia.module.initialize()
-    -- Custom post-initialization logic
-    for id, mod in pairs(lia.module.list) do
-    if mod.PostInitialize then
-    mod:PostInitialize()
-    end
-    end
+        -- High: Initialize with custom module loading order
+        lia.module.initialize()
+        -- Custom post-initialization logic
+        for id, mod in pairs(lia.module.list) do
+            if mod.PostInitialize then
+                mod:PostInitialize()
+            end
+        end
     ```
 ]]
 --
@@ -291,21 +293,22 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Load all modules from a directory
-    lia.module.loadFromDir("gamemodes/lilia/modules", "module")
+        -- Simple: Load all modules from a directory
+        lia.module.loadFromDir("gamemodes/lilia/modules", "module")
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Load modules with specific group type
-    lia.module.loadFromDir("gamemodes/mygamemode/modules", "module")
+        -- Medium: Load modules with specific group type
+        lia.module.loadFromDir("gamemodes/mygamemode/modules", "module")
     ```
     High Complexity:
     ```lua
-    -- High: Load modules with skip list
-    local skipModules = {["disabledmodule"] = true, ["testmodule"] = true}
-    lia.module.loadFromDir("gamemodes/lilia/modules", "module", skipModules)
+        -- High: Load modules with skip list
+        local skipModules = {["disabledmodule"] = true, ["testmodule"] = true}
+        lia.module.loadFromDir("gamemodes/lilia/modules", "module", skipModules)
     ```
 ]]
 --
@@ -325,28 +328,29 @@ end
     Returns: Module table or nil if not found
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Get a module
-    local myModule = lia.module.get("mymodule")
+        -- Simple: Get a module
+        local myModule = lia.module.get("mymodule")
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Check if module exists and use it
-    local module = lia.module.get("inventory")
-    if module and module.GetItem then
-    local item = module:GetItem("weapon_pistol")
-    end
+        -- Medium: Check if module exists and use it
+        local module = lia.module.get("inventory")
+        if module and module.GetItem then
+            local item = module:GetItem("weapon_pistol")
+        end
     ```
     High Complexity:
     ```lua
-    -- High: Iterate through all modules and perform operations
-    for id, module in pairs(lia.module.list) do
-    local mod = lia.module.get(id)
-    if mod and mod.OnPlayerSpawn then
-    mod:OnPlayerSpawn(player)
-    end
-    end
+        -- High: Iterate through all modules and perform operations
+        for id, module in pairs(lia.module.list) do
+            local mod = lia.module.get(id)
+            if mod and mod.OnPlayerSpawn then
+                mod:OnPlayerSpawn(player)
+            end
+        end
     ```
 ]]
 --

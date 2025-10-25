@@ -64,7 +64,7 @@ ITEM.category = "entities"
     When Called: During item definition (used in Place function)
     Example Usage:
     ```lua
-    ITEM.entityid = "prop_physics"
+        ITEM.entityid = "prop_physics"
     ```
 ]]
 --

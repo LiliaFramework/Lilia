@@ -16,6 +16,7 @@ lia.lang.stored = lia.lang.stored or {}
     Returns: None
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load languages from default directory
@@ -26,21 +27,21 @@ lia.lang.stored = lia.lang.stored or {}
     -- Medium: Load languages from custom module directory
     local moduleDir = "lilia/gamemode/modules/mymodule/languages"
     if file.Exists(moduleDir, "LUA") then
-    lia.lang.loadFromDir(moduleDir)
+        lia.lang.loadFromDir(moduleDir)
     end
     ```
     High Complexity:
     ```lua
     -- High: Load languages from multiple directories with validation
     local languageDirs = {
-    "lilia/gamemode/languages",
-    "lilia/gamemode/modules/custom/languages",
-    "addons/mycustomaddon/languages"
+        "lilia/gamemode/languages",
+        "lilia/gamemode/modules/custom/languages",
+        "addons/mycustomaddon/languages"
     }
     for _, dir in ipairs(languageDirs) do
-    if file.Exists(dir, "LUA") then
-    lia.lang.loadFromDir(dir)
-    end
+        if file.Exists(dir, "LUA") then
+            lia.lang.loadFromDir(dir)
+        end
     end
     ```
 ]]
@@ -78,37 +79,38 @@ end
     Returns: None
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Add basic language strings
-    lia.lang.addTable("english", {
-    hello = "Hello",
-    goodbye = "Goodbye"
-    })
+        -- Simple: Add basic language strings
+        lia.lang.addTable("english", {
+            hello = "Hello",
+            goodbye = "Goodbye"
+        })
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Add module-specific language strings
-    local moduleLang = {
-    moduleTitle = "My Module",
-    moduleDescription = "This is a custom module",
-    moduleError = "An error occurred: %s"
-    }
-    lia.lang.addTable("english", moduleLang)
+        -- Medium: Add module-specific language strings
+        local moduleLang = {
+            moduleTitle = "My Module",
+            moduleDescription = "This is a custom module",
+            moduleError = "An error occurred: %s"
+        }
+        lia.lang.addTable("english", moduleLang)
     ```
     High Complexity:
     ```lua
-    -- High: Add multiple language tables with validation
-    local languages = {
-    english = { title = "Title", desc = "Description" },
-    spanish = { title = "Título", desc = "Descripción" },
-    french = { title = "Titre", desc = "Description" }
-    }
-    for lang, strings in pairs(languages) do
-    if type(strings) == "table" then
-    lia.lang.addTable(lang, strings)
-    end
-    end
+        -- High: Add multiple language tables with validation
+        local languages = {
+            english = { title = "Title", desc = "Description" },
+            spanish = { title = "Título", desc = "Descripción" },
+            french = { title = "Titre", desc = "Description" }
+        }
+        for lang, strings in pairs(languages) do
+            if type(strings) == "table" then
+                lia.lang.addTable(lang, strings)
+            end
+        end
     ```
 ]]
 function lia.lang.addTable(name, tbl)
@@ -126,41 +128,42 @@ end
     Returns: table - Sorted array of language names with proper capitalization
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Get list of available languages
-    local languages = lia.lang.getLanguages()
-    print("Available languages:", table.concat(languages, ", "))
+        -- Simple: Get list of available languages
+        local languages = lia.lang.getLanguages()
+        print("Available languages:", table.concat(languages, ", "))
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Create language selection menu
-    local languages = lia.lang.getLanguages()
-    local menu = vgui.Create("DFrame")
-    local combo = vgui.Create("DComboBox", menu)
-    for _, lang in ipairs(languages) do
-    combo:AddChoice(lang)
-    end
+        -- Medium: Create language selection menu
+        local languages = lia.lang.getLanguages()
+        local menu = vgui.Create("DFrame")
+        local combo = vgui.Create("DComboBox", menu)
+        for _, lang in ipairs(languages) do
+            combo:AddChoice(lang)
+        end
     ```
     High Complexity:
     ```lua
-    -- High: Validate language selection with fallback
-    local function setLanguage(langName)
-    local languages = lia.lang.getLanguages()
-    local found = false
-    for _, lang in ipairs(languages) do
-    if lang:lower() == langName:lower() then
-    found = true
-    break
-    end
-    end
-    if found then
-    lia.config.set("Language", langName:lower())
-    else
-    lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
-    lia.config.set("Language", "english")
-    end
-    end
+        -- High: Validate language selection with fallback
+        local function setLanguage(langName)
+            local languages = lia.lang.getLanguages()
+            local found = false
+            for _, lang in ipairs(languages) do
+                if lang:lower() == langName:lower() then
+                    found = true
+                    break
+                end
+            end
+            if found then
+                lia.config.set("Language", langName:lower())
+            else
+                lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
+                lia.config.set("Language", "english")
+            end
+        end
     ```
 ]]
 function lia.lang.getLanguages()
@@ -181,33 +184,34 @@ end
     Returns: string - The localized and formatted string, or the key if not found
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Get basic localized string
-    local message = lia.lang.getLocalizedString("hello")
-    print(message) -- Outputs: "Hello" (in current language)
+        -- Simple: Get basic localized string
+        local message = lia.lang.getLocalizedString("hello")
+        print(message) -- Outputs: "Hello" (in current language)
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Get localized string with parameters
-    local playerName = "John"
-    local welcomeMsg = lia.lang.getLocalizedString("welcomePlayer", playerName)
-    print(welcomeMsg) -- Outputs: "Welcome, John!" (if template is "Welcome, %s!")
+        -- Medium: Get localized string with parameters
+        local playerName = "John"
+        local welcomeMsg = lia.lang.getLocalizedString("welcomePlayer", playerName)
+        print(welcomeMsg) -- Outputs: "Welcome, John!" (if template is "Welcome, %s!")
     ```
     High Complexity:
     ```lua
-    -- High: Complex localized string with multiple parameters and error handling
-    local function displayItemInfo(itemName, quantity, price)
-    local lang = lia.config and lia.config.get("Language", "english") or "english"
-    local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
-    local template = langTable and langTable["itemInfo"] or "itemInfo"
-    if template then
-    local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
-    lia.notice.add(message, NOTIFY_GENERIC)
-    else
-    lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
-    end
-    end
+        -- High: Complex localized string with multiple parameters and error handling
+        local function displayItemInfo(itemName, quantity, price)
+            local lang = lia.config and lia.config.get("Language", "english") or "english"
+            local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
+            local template = langTable and langTable["itemInfo"] or "itemInfo"
+            if template then
+                local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
+                lia.notice.add(message, NOTIFY_GENERIC)
+            else
+                lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
+            end
+        end
     ```
 ]]
 function lia.lang.getLocalizedString(key, ...)
@@ -246,37 +250,38 @@ end
     Returns: string - The localized and formatted string, or the key if not found
     Realm: Server/Client
     Example Usage:
+
     Low Complexity:
     ```lua
-    -- Simple: Use global L function for basic strings
-    print(L("hello")) -- Outputs: "Hello" (in current language)
+        -- Simple: Use global L function for basic strings
+        print(L("hello")) -- Outputs: "Hello" (in current language)
     ```
     Medium Complexity:
     ```lua
-    -- Medium: Use L function with parameters in chat
-    local function onPlayerChat(ply, text)
-    local welcomeMsg = L("playerSays", ply:Name(), text)
-    chat.AddText(Color(255, 255, 255), welcomeMsg)
-    end
+        -- Medium: Use L function with parameters in chat
+        local function onPlayerChat(ply, text)
+            local welcomeMsg = L("playerSays", ply:Name(), text)
+            chat.AddText(Color(255, 255, 255), welcomeMsg)
+        end
     ```
     High Complexity:
     ```lua
-    -- High: Use L function in complex UI with multiple languages
-    local function updateUI()
-    local currentLang = lia.config.get("Language", "english")
-    local title = L("menuTitle")
-    local description = L("menuDescription")
-    local buttonText = L("confirmButton")
-    if IsValid(self.titleLabel) then
-    self.titleLabel:SetText(title)
-    end
-    if IsValid(self.descLabel) then
-    self.descLabel:SetText(description)
-    end
-    if IsValid(self.confirmBtn) then
-    self.confirmBtn:SetText(buttonText)
-    end
-    end
+        -- High: Use L function in complex UI with multiple languages
+        local function updateUI()
+            local currentLang = lia.config.get("Language", "english")
+            local title = L("menuTitle")
+            local description = L("menuDescription")
+            local buttonText = L("confirmButton")
+            if IsValid(self.titleLabel) then
+                self.titleLabel:SetText(title)
+            end
+            if IsValid(self.descLabel) then
+                self.descLabel:SetText(description)
+            end
+            if IsValid(self.confirmBtn) then
+                self.confirmBtn:SetText(buttonText)
+            end
+        end
     ```
 ]]
 L = lia.lang.getLocalizedString

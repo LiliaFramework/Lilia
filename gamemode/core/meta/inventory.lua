@@ -21,26 +21,27 @@ Inventory.id = -1
     Returns: The data value or default value if key doesn't exist
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local money = inventory:getData("money", 0)
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local characterName = inventory:getData("charName", "Unknown")
     if characterName ~= "Unknown" then
-    print("Character: " .. characterName)
+        print("Character: " .. characterName)
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local settings = {
-    autoSave = inventory:getData("autoSave", true),
-    maxSlots = inventory:getData("maxSlots", 50),
-    permissions = inventory:getData("permissions", {})
+        autoSave = inventory:getData("autoSave", true),
+        maxSlots = inventory:getData("maxSlots", 50),
+        permissions = inventory:getData("permissions", {})
     }
     for setting, value in pairs(settings) do
-    print(setting .. ": " .. tostring(value))
+        print(setting .. ": " .. tostring(value))
     end
     ```
 ]]
@@ -58,22 +59,23 @@ end
     Returns: The extended class with Inventory functionality
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local PlayerInventory = Inventory:extend("PlayerInventory")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local CustomInventory = Inventory:extend("Backpack")
     CustomInventory.maxSlots = 20
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local SecureInventory = Inventory:extend("BankVault")
     SecureInventory.accessLevel = "admin"
     SecureInventory.auditLog = {}
     function SecureInventory:logAccess(player)
-    table.insert(self.auditLog, {player = player, time = os.time()})
+        table.insert(self.auditLog, {player = player, time = os.time()})
     end
     ```
 ]]
@@ -93,27 +95,28 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     function MyInventory:configure()
     self.maxWeight = 100
     end
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     function PlayerInventory:configure()
-    self.config.data["money"] = {default = 0}
-    self.config.data["level"] = {default = 1}
+        self.config.data["money"] = {default = 0}
+        self.config.data["level"] = {default = 1}
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     function AdvancedInventory:configure()
-    self.config.data["permissions"] = {default = {}}
-    self.config.data["settings"] = {default = {}}
-    self:addDataProxy("permissions", function(old, new)
-    print("Permissions changed from", old, "to", new)
-    end)
+        self.config.data["permissions"] = {default = {}}
+        self.config.data["settings"] = {default = {}}
+        self:addDataProxy("permissions", function(old, new)
+            print("Permissions changed from", old, "to", new)
+        end)
     end
     ```
 ]]
@@ -129,13 +132,14 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     inventory:addDataProxy("money", function(old, new)
     print("Money changed from", old, "to", new)
     end)
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     inventory:addDataProxy("level", function(old, new)
     if new > old then
@@ -143,13 +147,13 @@ end
     end
     end)
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function complexProxy(old, new)
-    if new.xp and old.xp and new.xp > old.xp then
-    local gained = new.xp - old.xp
-    hook.Run("OnPlayerXPGain", player, gained, new.level)
-    end
+        if new.xp and old.xp and new.xp > old.xp then
+            local gained = new.xp - old.xp
+            hook.Run("OnPlayerXPGain", player, gained, new.level)
+        end
     end
     inventory:addDataProxy("stats", complexProxy)
     ```
@@ -169,25 +173,26 @@ end
     Returns: Table of items matching the uniqueID
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local weapons = inventory:getItemsByUniqueID("weapon_pistol")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local foodItems = inventory:getItemsByUniqueID("food_apple")
     for _, food in ipairs(foodItems) do
-    print("Found apple:", food:getID())
+        print("Found apple:", food:getID())
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local allItems = inventory:getItemsByUniqueID("consumable")
     local totalValue = 0
     for _, item in ipairs(allItems) do
-    if item.data and item.data.value then
-    totalValue = totalValue + item.data.value
-    end
+        if item.data and item.data.value then
+            totalValue = totalValue + item.data.value
+        end
     end
     print("Total consumable value:", totalValue)
     ```
@@ -208,16 +213,17 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     MyInventory:register("player")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     PlayerInventory:register("player_backpack")
     BankInventory:register("secure_storage")
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local types = {"player", "vehicle", "house", "guild"}
     for _, typeName in ipairs(types) do
@@ -252,16 +258,17 @@ end
     Returns: New inventory instance
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local newInventory = MyInventory:new()
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local playerInv = PlayerInventory:new()
     local bankInv = BankInventory:new()
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local inventories = {}
     for i = 1, 10 do
@@ -280,15 +287,16 @@ end
     Returns: String representation of the inventory
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     print(inventory:tostring())
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     lia.chat.send(player, "Inventory: " .. inventory:tostring())
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local inventories = {inv1, inv2, inv3}
     for i, inv in ipairs(inventories) do
@@ -307,16 +315,17 @@ end
     Returns: The inventory type configuration table
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local config = inventory:getType()
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local invType = inventory:getType()
     if invType.maxSlots then print("Max slots:", invType.maxSlots) end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function analyzeInventoryType(inv)
     local config = inv:getType()
@@ -340,12 +349,13 @@ end
     Returns: Nothing
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     -- This is usually called automatically, not manually
     inventory:onDataChanged("money", 100, 150)
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     -- Override in subclass for custom behavior
     function MyInventory:onDataChanged(key, old, new)
@@ -354,7 +364,7 @@ end
     end
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     function AdvancedInventory:onDataChanged(key, old, new)
     if key == "permissions" then
@@ -385,17 +395,18 @@ end
     Returns: Table of all items in the inventory
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local items = inventory:getItems()
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     for _, item in pairs(inventory:getItems()) do
     print("Item:", item:getName())
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function analyzeInventoryContents(inv)
     local items = inv:getItems()
@@ -422,16 +433,17 @@ end
     Returns: Table of items matching the specified type
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local weapons = inventory:getItemsOfType("weapon_pistol")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local food = inventory:getItemsOfType("food_apple")
     print("Found", #food, "apples")
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function getItemsByRarity(inv, rarity)
     local items = {}
@@ -461,16 +473,17 @@ end
     Returns: The first item found of the specified type, or nil if none found
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local weapon = inventory:getFirstItemOfType("weapon_pistol")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local apple = inventory:getFirstItemOfType("food_apple")
     if apple then apple:use(player) end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function findBestTool(inv, toolType)
     local tools = inv:getItemsOfType(toolType)
@@ -501,17 +514,18 @@ end
     Returns: Boolean indicating if the item type exists in inventory
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     if inventory:hasItem("food_apple") then print("Has apple!") end
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     if inventory:hasItem("weapon_pistol") then
     player:giveWeapon("weapon_pistol")
     end
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function canCraftRecipe(inv, recipe)
     for _, ingredient in ipairs(recipe.ingredients) do
@@ -539,16 +553,17 @@ end
     Returns: Number representing total quantity of specified item type
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local appleCount = inventory:getItemCount("food_apple")
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     local totalFood = inventory:getItemCount("food")
     local totalWeapons = inventory:getItemCount("weapon")
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function calculateInventoryWeight(inv)
     local totalWeight = 0
@@ -576,15 +591,16 @@ end
     Returns: The inventory's unique ID number
     Realm: Both
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
     ```lua
     local id = inventory:getID()
     ```
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     print("Inventory ID:", inventory:getID())
     ```
-        High Complexity:
+    High Complexity:
     ```lua
     local function transferItems(fromInv, toInv, itemType)
     local items = fromInv:getItemsOfType(itemType)
@@ -611,16 +627,16 @@ if SERVER then
         Returns: The inventory instance for method chaining
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:addItem(myItem)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local weapon = lia.item.new("weapon_pistol", 1)
     player:getInventory():addItem(weapon)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function addItemsToInventory(inv, itemList)
     for _, itemData in ipairs(itemList) do
@@ -655,15 +671,15 @@ if SERVER then
         Returns: The inventory instance for method chaining
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:add(myItem)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     playerInventory:add(lia.item.new("food_apple", 1))
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local items = {weapon = "weapon_pistol", armor = "armor_helmet"}
     for slot, uniqueID in pairs(items) do
@@ -684,18 +700,18 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     -- Usually called automatically by addItem
     inventory:syncItemAdded(item)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local item = lia.item.new("weapon_sniper", 1)
     inventory:addItem(item)
     -- syncItemAdded is called automatically
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function batchAddItems(inv, items)
     for _, item in ipairs(items) do
@@ -727,12 +743,12 @@ if SERVER then
         Returns: Deferred object that resolves when storage is initialized
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     local deferred = inventory:initializeStorage({char = characterID})
     deferred:next(function(id) print("Created inventory:", id) end)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local initialData = {
     char = player:getCharacter():getID(),
@@ -740,7 +756,7 @@ if SERVER then
     }
     inventory:initializeStorage(initialData)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function createGuildInventory(guildData)
     local inventory = lia.inventory.new("guild_storage")
@@ -788,21 +804,21 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     -- Override in subclass for custom restoration logic
     function MyInventory:restoreFromStorage()
     -- Custom restoration code here
     end
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     function SecureInventory:restoreFromStorage()
     -- Load encryption keys, permissions, etc.
     self.encryptionKey = self:getData("encryptionKey")
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     function AdvancedInventory:restoreFromStorage()
     -- Restore complex state from multiple data sources
@@ -824,16 +840,16 @@ if SERVER then
         Returns: Deferred object that resolves when removal is complete
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:removeItem(12345)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local itemID = playerInventory:getFirstItemOfType("food_apple"):getID()
     inventory:removeItem(itemID)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function removeItemsByType(inv, itemType, preserve)
     local items = inv:getItemsOfType(itemType)
@@ -879,16 +895,16 @@ if SERVER then
         Returns: Deferred object that resolves when removal is complete
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:remove(12345)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local item = inventory:getFirstItemOfType("weapon_knife")
     if item then inventory:remove(item:getID()) end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function clearInventoryOfType(inv, itemType)
     local items = inv:getItemsOfType(itemType)
@@ -912,15 +928,15 @@ if SERVER then
         Returns: The inventory instance for method chaining
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:setData("money", 1000)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     inventory:setData("permissions", {"read", "write", "admin"})
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function updateInventoryStats(inv, stats)
     for statName, statValue in pairs(stats) do
@@ -966,17 +982,17 @@ if SERVER then
         Returns: Boolean indicating if action is allowed, and optional reason string
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     local canAccess, reason = inventory:canAccess("repl")
     if not canAccess then print("Access denied:", reason) end
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local canAdd, reason = inventory:canAccess("add", {client = player})
     if canAdd then inventory:addItem(item) end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function checkInventoryPermissions(inv, player, action)
     local context = {
@@ -1012,13 +1028,13 @@ if SERVER then
         Returns: The inventory instance for method chaining
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:addAccessRule(function(inv, action, context)
     if action == "repl" then return true end
     end)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     inventory:addAccessRule(function(inv, action, context)
     if context.client == inv:getOwner() then
@@ -1026,7 +1042,7 @@ if SERVER then
     end
     end)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function complexAccessRule(inv, action, context)
     local client = context.client
@@ -1066,11 +1082,11 @@ if SERVER then
         Returns: The inventory instance for method chaining
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:removeAccessRule(myRule)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local rules = inventory.config.accessRules
     for i, rule in ipairs(rules) do
@@ -1080,7 +1096,7 @@ if SERVER then
     end
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function cleanupAccessRules(inv)
     local rules = inv.config.accessRules
@@ -1108,18 +1124,18 @@ if SERVER then
         Returns: Table of client entities that can access this inventory
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     local recipients = inventory:getRecipients()
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local players = inventory:getRecipients()
     for _, client in ipairs(players) do
     client:ChatPrint("Inventory updated")
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function sendCustomNotification(inv, message)
     local recipients = inv:getRecipients()
@@ -1149,14 +1165,14 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     -- Override in subclass for custom initialization
     function MyInventory:onInstanced()
     print("New inventory created")
     end
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     function PlayerInventory:onInstanced()
     self:addAccessRule(function(inv, action, context)
@@ -1164,7 +1180,7 @@ if SERVER then
     end)
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     function SecureInventory:onInstanced()
     -- Initialize security features
@@ -1195,13 +1211,13 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     function MyInventory:onLoaded()
     print("Inventory loaded from storage")
     end
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     function PlayerInventory:onLoaded()
     -- Restore character-specific settings
@@ -1211,7 +1227,7 @@ if SERVER then
     end
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     function AdvancedInventory:onLoaded()
     -- Validate inventory integrity
@@ -1235,13 +1251,13 @@ if SERVER then
         Returns: Deferred object that resolves with loaded items
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:loadItems():next(function(items)
     print("Loaded", #items, "items")
     end)
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     playerInventory:loadItems():next(function(items)
     for _, item in pairs(items) do
@@ -1251,7 +1267,7 @@ if SERVER then
     end
     end)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function loadInventoryWithValidation(inv)
     return inv:loadItems():next(function(items)
@@ -1313,13 +1329,13 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     function MyInventory:onItemsLoaded(items)
     print("Loaded", #items, "items")
     end
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     function PlayerInventory:onItemsLoaded(items)
     for _, item in pairs(items) do
@@ -1329,7 +1345,7 @@ if SERVER then
     end
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     function AdvancedInventory:onItemsLoaded(items)
     -- Categorize items
@@ -1361,18 +1377,18 @@ if SERVER then
         Returns: New inventory instance
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     local inventory = MyInventory:instance({char = playerID})
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local bank = BankInventory:instance({
     char = characterID,
     accessLevel = "premium"
     })
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function createComplexInventory(typeClass, config)
     local inventory = typeClass:instance({
@@ -1412,16 +1428,16 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:syncData("money")
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     inventory:setData("level", 5)
     -- syncData is called automatically
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function updateInventoryData(inv, updates)
     local recipients = inv:getRecipients()
@@ -1453,16 +1469,16 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:sync()
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local recipients = inventory:getRecipients()
     inventory:sync(recipients)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function fullInventorySync(inv, targetClients)
     -- Send full inventory state
@@ -1513,17 +1529,17 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:delete()
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     if inventory:getItemCount() == 0 then
     inventory:delete()
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function safelyDeleteInventory(inv)
     -- Archive inventory data first
@@ -1551,17 +1567,17 @@ if SERVER then
         Returns: Nothing
         Realm: Server
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:destroy()
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     if shouldDestroy then
     inventory:destroy()
     end
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function cleanupPlayerInventory(player)
     local inventory = player:getInventory()
@@ -1603,15 +1619,15 @@ else
         Returns: The created inventory panel
         Realm: Client
         Example Usage:
-            Low Complexity:
+        Low Complexity:
     ```lua
     inventory:show()
     ```
-            Medium Complexity:
+        Medium Complexity:
     ```lua
     local panel = inventory:show(myCustomParent)
     ```
-            High Complexity:
+        High Complexity:
     ```lua
     local function createCustomInventoryUI(inv)
     local frame = vgui.Create("DFrame")
