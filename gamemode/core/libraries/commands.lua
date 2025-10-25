@@ -4816,15 +4816,13 @@ lia.command.add("bot", {
     desc = "botCommandDesc",
     onRun = function(client)
         if not SERVER then return end
-        
         local currentPlayers = #player.GetAll()
         local maxPlayers = game.MaxPlayers()
-        
         if currentPlayers >= maxPlayers then
             client:notifyErrorLocalized("serverFull")
             return
         end
-        
+
         client:notifyLocalized("botSpawning")
         game.ConsoleCommand("bot\n")
         client:notifyLocalized("botSpawned")
