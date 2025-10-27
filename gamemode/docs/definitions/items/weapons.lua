@@ -1,15 +1,11 @@
 ﻿--[[
     Weapons Item Definition
-
     Weapon item system for the Lilia framework.
-
     Weapon items are equippable weapons that can be given to players.
     They support ammo tracking, weapon categories, and visual indicators.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/weapons/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/weapons/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Weapon items are equipped by using them
     - They give the weapon specified in ITEM.class
@@ -229,7 +225,6 @@ ITEM.DropOnDeath = true
 --
 --[[
 Example Item:
-
 ```lua
 -- Basic item identification
 ITEM.name = "Pistol"                              -- Display name shown to players

@@ -1,6 +1,5 @@
 ﻿--[[
     Player Meta
-
     Player management system for the Lilia framework.
 ]]
 --[[
@@ -27,7 +26,6 @@ do
             print("Player has character:", char:getName())
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check character and access properties
@@ -37,7 +35,6 @@ do
             char:setData("money", money + 100)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Full character validation and operations
@@ -70,7 +67,6 @@ do
             print("Player has character:", char:getName())
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check character and access properties
@@ -80,7 +76,6 @@ do
             char:setData("money", money + 100)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Full character validation and operations
@@ -116,14 +111,12 @@ do
         local playerName = player:tostring()
         print("Player name:", playerName)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use in logging with fallback
         local playerName = player:tostring()
         lia.log.add("Player " .. playerName .. " performed action")
         ```
-
         High Complexity:
         ```lua
         -- High: Use in complex display logic with validation
@@ -158,7 +151,6 @@ end
         -- Simple: Make player wave
         player:doGesture(ACT_GMOD_GESTURE_WAVE, 1, true)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Conditional gesture based on player state
@@ -166,7 +158,6 @@ end
             player:doGesture(ACT_GMOD_GESTURE_BOW, 2, true)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex gesture system with validation
@@ -205,7 +196,6 @@ end
             print("Player is an admin")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Conditional access based on privilege
@@ -213,7 +203,6 @@ end
             player:SetHealth(100)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex permission system with multiple checks
@@ -250,7 +239,6 @@ end
         -- Simple: Remove player's ragdoll
         player:removeRagdoll()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Remove ragdoll with validation
@@ -258,7 +246,6 @@ end
             player:removeRagdoll()
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex ragdoll cleanup with state management
@@ -291,7 +278,6 @@ end
             print("Player is stuck!")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Handle stuck player with teleport
@@ -299,7 +285,6 @@ end
             player:SetPos(Vector(0, 0, 0))
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex stuck detection with logging and recovery
@@ -337,7 +322,6 @@ end
             print("Players are close!")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Proximity-based interaction
@@ -346,7 +330,6 @@ end
             player:notify("Press E to talk to NPC")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex proximity system with multiple entities
@@ -379,7 +362,6 @@ end
         local nearby = player:entitiesNearPlayer(100)
         print("Found " .. #nearby .. " entities nearby")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Get only nearby players
@@ -388,7 +370,6 @@ end
             ply:notify("You are near " .. player:Name())
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex entity filtering and processing
@@ -424,7 +405,6 @@ end
             print("Player has weapon:", weapon:GetClass())
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check weapon and modify properties
@@ -436,7 +416,6 @@ end
             end
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex weapon system with inventory management
@@ -482,7 +461,6 @@ end
             print("Player is running!")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Running-based stamina system
@@ -491,7 +469,6 @@ end
             player:setData("stamina", math.max(0, stamina - 1))
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex movement system with effects
@@ -523,7 +500,6 @@ end
             print("Player is using family shared account")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Restrict features for family shared accounts
@@ -532,7 +508,6 @@ end
             return false
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex account validation with logging
@@ -561,7 +536,6 @@ end
         local item = ents.Create("lia_item")
         item:SetPos(dropPos)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Drop item with validation
@@ -571,7 +545,6 @@ end
             item:spawn(dropPos)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex item dropping with physics and effects
@@ -612,7 +585,6 @@ end
             print("Player has " .. #items .. " items")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Search for specific items
@@ -625,7 +597,6 @@ end
             end
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex inventory analysis and management
@@ -667,7 +638,6 @@ end
             print("Player is looking at:", ent:GetClass())
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Interaction with traced entity
@@ -676,7 +646,6 @@ end
             player:notify("Looking at player: " .. ent:Name())
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex interaction system with validation
@@ -718,7 +687,6 @@ end
             print("Hit something at:", trace.HitPos)
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Surface detection and interaction
@@ -729,7 +697,6 @@ end
             player:notify("Looking at: " .. trace.Entity:GetClass())
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex spatial analysis with physics
@@ -775,7 +742,6 @@ end
             print("Looking at:", ent:GetClass())
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Distance-based interaction
@@ -784,7 +750,6 @@ end
             player:notify("Looking at player: " .. ent:Name())
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex targeting system with validation
@@ -820,14 +785,12 @@ end
         -- Simple: Send basic notification
         player:notify("Hello, player!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send typed notification
         player:notify("You found a weapon!", "success")
         player:notify("Health is low!", "warning")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex notification system with conditions
@@ -864,14 +827,12 @@ end
         -- Simple: Send localized notification
         player:notifyLocalized("welcome_message")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized notification with formatting
         player:notifySuccessLocalized("item_found")
         player:notifyWarningLocalized("health_low")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized notification system
@@ -902,7 +863,6 @@ end
         -- Simple: Send error notification
         player:notifyError("Something went wrong!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send error with context
@@ -910,7 +870,6 @@ end
             player:notifyError("You don't have permission to do that!")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex error handling with logging
@@ -945,7 +904,6 @@ end
         -- Simple: Send warning notification
         player:notifyWarning("Be careful!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send warning with condition
@@ -953,7 +911,6 @@ end
             player:notifyWarning("Health is critically low!")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex warning system with multiple conditions
@@ -987,13 +944,11 @@ end
         -- Simple: Send info notification
         player:notifyInfo("Welcome to the server!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send info with context
         player:notifyInfo("You have " .. player:GetAmmoCount("Pistol") .. " pistol rounds")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex info system with data
@@ -1026,13 +981,11 @@ end
         -- Simple: Send success notification
         player:notifySuccess("Task completed!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send success with context
         player:notifySuccess("You earned $" .. amount .. "!")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex success system with rewards
@@ -1066,14 +1019,12 @@ end
         -- Simple: Send money notification
         player:notifyMoney("You received $100!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send money notification with context
         local amount = 500
         player:notifyMoney("Payment received: $" .. amount)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex money system with character data
@@ -1107,13 +1058,11 @@ end
         -- Simple: Send admin notification
         player:notifyAdmin("Admin command executed!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send admin notification with context
         player:notifyAdmin("Player " .. target:Name() .. " has been banned")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex admin system with logging
@@ -1146,13 +1095,11 @@ end
         -- Simple: Send localized error notification
         player:notifyErrorLocalized("error_generic")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized error with formatting
         player:notifyErrorLocalized("error_permission_denied")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized error system with context
@@ -1190,13 +1137,11 @@ end
         -- Simple: Send localized warning notification
         player:notifyWarningLocalized("warning_generic")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized warning with formatting
         player:notifyWarningLocalized("warning_health_low")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized warning system with conditions
@@ -1234,13 +1179,11 @@ end
         -- Simple: Send localized info notification
         player:notifyInfoLocalized("info_welcome")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized info with formatting
         player:notifyInfoLocalized("info_ammo_count")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized info system with character data
@@ -1274,13 +1217,11 @@ end
         -- Simple: Send localized success notification
         player:notifySuccessLocalized("success_task_completed")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized success with formatting
         player:notifySuccessLocalized("success_money_earned")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized success system with rewards
@@ -1315,13 +1256,11 @@ end
         -- Simple: Send localized money notification
         player:notifyMoneyLocalized("money_received")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized money notification with formatting
         player:notifyMoneyLocalized("money_payment_received")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized money system with character data
@@ -1356,13 +1295,11 @@ end
         -- Simple: Send localized admin notification
         player:notifyAdminLocalized("admin_command_executed")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized admin notification with formatting
         player:notifyAdminLocalized("admin_player_banned")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex localized admin system with logging
@@ -1396,7 +1333,6 @@ end
             print("Player can edit this vendor")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Conditional vendor editing with feedback
@@ -1406,7 +1342,6 @@ end
             player:notifyError("You don't have permission to edit this vendor")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex vendor system with logging and validation
@@ -1459,7 +1394,6 @@ end
             print("Player is staff")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Staff-only feature access
@@ -1469,7 +1403,6 @@ end
             player:notifyError("This feature is for staff only")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex staff system with different levels
@@ -1503,7 +1436,6 @@ end
             print("Player is VIP")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: VIP-only feature access
@@ -1513,7 +1445,6 @@ end
             player:notifyError("This feature is for VIP members only")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex VIP system with benefits
@@ -1546,7 +1477,6 @@ end
             print("Player is on duty as staff")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Duty-based feature access
@@ -1556,7 +1486,6 @@ end
             player:notifyError("You must be on duty to use this")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex duty system with logging and management
@@ -1589,7 +1518,6 @@ end
             print("Player can join police faction")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Faction selection with whitelist check
@@ -1599,7 +1527,6 @@ end
             player:notifyError("You don't have whitelist for police faction")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex whitelist system with multiple checks
@@ -1640,7 +1567,6 @@ end
             print("Player class:", classData.name)
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use class data for features
@@ -1649,7 +1575,6 @@ end
             player:notify("Class: " .. classData.name .. " - " .. classData.description)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex class system with abilities and restrictions
@@ -1691,7 +1616,6 @@ end
             print("Player has $" .. money)
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use DarkRP var for compatibility
@@ -1700,7 +1624,6 @@ end
             player:notify("You have enough money for this purchase")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex DarkRP compatibility system
@@ -1736,7 +1659,6 @@ end
         local money = player:getMoney()
         print("Player has $" .. money)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check if player can afford something
@@ -1748,7 +1670,6 @@ end
             player:notifyError("You need $" .. (cost - money) .. " more")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex economic system with multiple currencies
@@ -1781,7 +1702,6 @@ end
             print("Player can afford $1000")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Purchase validation with feedback
@@ -1792,7 +1712,6 @@ end
             player:notifyError("You need $" .. (cost - player:getMoney()) .. " more")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex economic system with multiple checks
@@ -1830,7 +1749,6 @@ end
             print("Player has strength level 5 or higher")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Skill-based feature access
@@ -1840,7 +1758,6 @@ end
             player:notifyError("You need engineering level 10 for this")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex skill system with multiple requirements
@@ -1881,7 +1798,6 @@ end
             print("Player meets all skill requirements")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Complex feature with multiple skill checks
@@ -1892,7 +1808,6 @@ end
             player:notifyError("You don't meet the skill requirements")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Dynamic skill system with detailed feedback
@@ -1934,7 +1849,6 @@ end
         -- Simple: Play animation sequence
         player:forceSequence("sit")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Play sequence with callback
@@ -1942,7 +1856,6 @@ end
             player:notify("Animation completed!")
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex sequence system with timing and effects
@@ -1999,14 +1912,12 @@ end
         -- Simple: End animation sequence
         player:leaveSequence()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: End sequence with notification
         player:leaveSequence()
         player:notify("Animation sequence ended")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex sequence management with cleanup
@@ -2042,7 +1953,6 @@ end
         local flags = player:getFlags()
         print("Player flags:", flags)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check for specific flags
@@ -2051,7 +1961,6 @@ end
             player:notify("You have admin flags")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex flag system with multiple checks
@@ -2082,7 +1991,6 @@ end
         -- Simple: Give flags to player
         player:giveFlags("a")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Give flags with validation
@@ -2091,7 +1999,6 @@ end
             player:notify("Admin flags granted!")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex flag system with logging
@@ -2124,7 +2031,6 @@ end
         -- Simple: Take flags from player
         player:takeFlags("a")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Take flags with validation
@@ -2133,7 +2039,6 @@ end
             player:notify("Admin flags removed!")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex flag system with logging
@@ -2168,7 +2073,6 @@ end
         local boneData = {ValveBiped.Bip01_Head1 = Angle(0, 0, 0)}
         player:networkAnimation(true, boneData)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Network animation with multiple bones
@@ -2178,7 +2082,6 @@ end
         }
         player:networkAnimation(true, boneData)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex animation system with timing
@@ -2223,7 +2126,6 @@ end
         local data = player:getAllLiliaData()
         print("Player data keys:", table.GetKeys(data))
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Access specific data with validation
@@ -2232,7 +2134,6 @@ end
             player:notify("Settings loaded: " .. tostring(data.settings))
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex data management with logging
@@ -2271,13 +2172,11 @@ end
         -- Simple: Set basic waypoint
         player:setWaypoint("Objective", Vector(100, 200, 50))
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Set waypoint with icon
         player:setWaypoint("Treasure", Vector(500, 300, 100), "icon16/star.png")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex waypoint system with callback
@@ -2386,7 +2285,6 @@ end
         local settings = player:getLiliaData("settings", {})
         print("Player settings:", settings)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Get data with validation
@@ -2395,7 +2293,6 @@ end
             player:notify("You are level " .. level)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex data management with fallbacks
@@ -2439,7 +2336,6 @@ end
             print("Player has admin flags")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check multiple flags
@@ -2447,7 +2343,6 @@ end
             player:notify("You have admin, builder, or custom flags")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex flag system with detailed feedback
@@ -2488,7 +2383,6 @@ end
             print("Player has played for more than 1 hour")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Time-based feature access
@@ -2498,7 +2392,6 @@ end
             player:notifyError("You need 2 hours of play time for this feature")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex time-based system with rewards
@@ -2534,7 +2427,6 @@ end
         -- Simple: Request single option
         player:requestOptions("Choose Action", "What do you want to do?", {"Option 1", "Option 2"})
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Request with callback
@@ -2544,7 +2436,6 @@ end
         end
         player:requestOptions("Confirmation", "Do you want to continue?", options, 1, callback)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex options system with validation
@@ -2603,7 +2494,6 @@ end
             print("Player entered:", name)
         end)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Request with default value
@@ -2611,7 +2501,6 @@ end
             player:notify("You said: " .. message)
         end, "Hello World")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex string input with validation
@@ -2673,7 +2562,6 @@ end
             print("Name:", args[1], "Age:", args[2])
         end)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Request with validation
@@ -2685,7 +2573,6 @@ end
             player:notify("Created " .. args[2] .. "x " .. args[1])
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex argument system with multiple types
@@ -2751,7 +2638,6 @@ end
         -- Simple: Ask yes/no question
         player:binaryQuestion("Do you want to continue?", "Yes", "No")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Ask with callback
@@ -2763,7 +2649,6 @@ end
             end
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex confirmation system with validation
@@ -2818,7 +2703,6 @@ end
         }
         player:requestButtons("Choose Action", buttons)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Request with different actions
@@ -2829,7 +2713,6 @@ end
         }
         player:requestButtons("Player Actions", buttons)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex button system with validation
@@ -2896,7 +2779,6 @@ end
         local options = {"Option 1", "Option 2", "Option 3"}
         player:requestDropdown("Choose Option", "Select an option:", options)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Request with callback
@@ -2906,7 +2788,6 @@ end
         end
         player:requestDropdown("Choose Color", "Select your favorite color:", options, callback)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex dropdown system with validation
@@ -2963,7 +2844,6 @@ end
             player:notify("You have a hat equipped")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Part validation and management
@@ -2976,14 +2856,12 @@ end
             player:notifyWarning("You have too many accessories equipped")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex part system with validation and effects
         local parts = player:getParts()
         local validParts = {}
         local invalidParts = {}
-
         for partID, _ in pairs(parts) do
             if lia.pac.isValidPart(partID) then
                 table.insert(validParts, partID)
@@ -2992,7 +2870,6 @@ end
                 player:removePart(partID)
             end
         end
-
         if #invalidParts > 0 then
             player:notifyError("Removed " .. #invalidParts .. " invalid parts")
         end
@@ -3015,7 +2892,6 @@ if SERVER then
             -- Low: Basic part synchronization
             player:syncParts()
             ```
-
             Medium Complexity:
             ```lua
             -- Medium: Sync parts after validation
@@ -3029,14 +2905,12 @@ if SERVER then
             player:setNetVar("parts", validParts)
             player:syncParts()
             ```
-
             High Complexity:
             ```lua
             -- High: Complex synchronization with logging and validation
             local parts = player:getParts()
             local syncCount = 0
             local removedParts = {}
-
             for partID, _ in pairs(parts) do
                 if not lia.pac.isValidPart(partID) then
                     table.insert(removedParts, partID)
@@ -3045,10 +2919,8 @@ if SERVER then
                     syncCount = syncCount + 1
                 end
             end
-
             player:setNetVar("parts", parts)
             player:syncParts()
-
             if #removedParts > 0 then
                 lia.log.add("Player " .. player:Name() .. " had " .. #removedParts .. " invalid parts removed")
             end
@@ -3072,7 +2944,6 @@ if SERVER then
             -- Low: Basic part addition
             player:addPart("hat_001")
             ```
-
             Medium Complexity:
             ```lua
             -- Medium: Part addition with validation and limits
@@ -3081,7 +2952,6 @@ if SERVER then
             for _, _ in pairs(parts) do
                 partCount = partCount + 1
             end
-
             if partCount < 10 and lia.pac.isValidPart(partID) then
                 player:addPart(partID)
                 player:notifySuccess("Part equipped: " .. partID)
@@ -3089,13 +2959,11 @@ if SERVER then
                 player:notifyError("Cannot equip more parts or invalid part ID")
             end
             ```
-
             High Complexity:
             ```lua
             -- High: Complex part system with permissions and effects
             local partID = "premium_hat_001"
             local char = player:getChar()
-
             if char and char:hasFlags("P") then
                 if lia.pac.isValidPart(partID) then
                     local parts = player:getParts()
@@ -3103,7 +2971,6 @@ if SERVER then
                         player:addPart(partID)
                         player:notifySuccess("Premium part equipped!")
                         lia.log.add("Player " .. player:Name() .. " equipped premium part: " .. partID)
-
                         -- Apply special effects
                         player:setData("premiumPartEquipped", true)
                         player:notifyInfo("Premium effects activated!")
@@ -3142,7 +3009,6 @@ if SERVER then
             -- Low: Basic part removal
             player:removePart("hat_001")
             ```
-
             Medium Complexity:
             ```lua
             -- Medium: Part removal with validation and cleanup
@@ -3150,32 +3016,26 @@ if SERVER then
             if parts[partID] then
                 player:removePart(partID)
                 player:notifySuccess("Part removed: " .. partID)
-
                 -- Clean up related data
                 player:setData("part_" .. partID .. "_equipped", false)
             else
                 player:notifyWarning("Part not equipped")
             end
             ```
-
             High Complexity:
             ```lua
             -- High: Complex part removal with effects and logging
             local partID = "premium_hat_001"
             local parts = player:getParts()
-
             if parts[partID] then
                 player:removePart(partID)
-
                 -- Remove special effects
                 if partID:find("premium_") then
                     player:setData("premiumPartEquipped", false)
                     player:notifyInfo("Premium effects deactivated")
                 end
-
                 -- Log the removal
                 lia.log.add("Player " .. player:Name() .. " removed part: " .. partID)
-
                 -- Check if any premium parts remain
                 local hasPremiumParts = false
                 for id, _ in pairs(parts) do
@@ -3184,7 +3044,6 @@ if SERVER then
                         break
                     end
                 end
-
                 if not hasPremiumParts then
                     player:notifyWarning("No premium parts remaining")
                 end
@@ -3215,7 +3074,6 @@ if SERVER then
             -- Low: Basic parts reset
             player:resetParts()
             ```
-
             Medium Complexity:
             ```lua
             -- Medium: Reset parts with validation and notification
@@ -3224,7 +3082,6 @@ if SERVER then
             for _, _ in pairs(parts) do
                 partCount = partCount + 1
             end
-
             if partCount > 0 then
                 player:resetParts()
                 player:notifySuccess("All parts removed (" .. partCount .. " parts)")
@@ -3232,14 +3089,12 @@ if SERVER then
                 player:notifyInfo("No parts to remove")
             end
             ```
-
             High Complexity:
             ```lua
             -- High: Complex parts reset with logging and cleanup
             local parts = player:getParts()
             local removedParts = {}
             local premiumParts = 0
-
             -- Count and categorize parts before removal
             for partID, _ in pairs(parts) do
                 table.insert(removedParts, partID)
@@ -3247,24 +3102,19 @@ if SERVER then
                     premiumParts = premiumParts + 1
                 end
             end
-
             if #removedParts > 0 then
                 player:resetParts()
-
                 -- Clean up related data
                 player:setData("premiumPartEquipped", false)
                 player:setData("lastPartReset", os.time())
-
                 -- Log the reset
                 lia.log.add("Player " .. player:Name() .. " reset " .. #removedParts .. " parts (Premium: " .. premiumParts .. ")")
-
                 -- Notify with details
                 if premiumParts > 0 then
                     player:notifyWarning("Reset " .. #removedParts .. " parts including " .. premiumParts .. " premium items")
                 else
                     player:notifySuccess("Reset " .. #removedParts .. " parts")
                 end
-
                 -- Trigger cleanup hooks
                 hook.Run("OnPlayerResetParts", player, removedParts)
             else
@@ -3292,7 +3142,6 @@ if SERVER then
         -- Simple: Restore stamina
         player:restoreStamina(25)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Restore stamina with notification
@@ -3300,7 +3149,6 @@ if SERVER then
         player:restoreStamina(amount)
         player:notify("Stamina restored by " .. amount)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex stamina system with effects
@@ -3341,7 +3189,6 @@ if SERVER then
         -- Simple: Consume stamina
         player:consumeStamina(10)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Consume stamina with validation
@@ -3354,7 +3201,6 @@ if SERVER then
             player:notifyError("Not enough stamina!")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex stamina system with effects
@@ -3395,7 +3241,6 @@ if SERVER then
         -- Simple: Add money to player
         player:addMoney(100)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Add money with notification
@@ -3404,7 +3249,6 @@ if SERVER then
             player:notify("You received $" .. amount)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex economic system with logging
@@ -3443,7 +3287,6 @@ if SERVER then
         -- Simple: Take money from player
         player:takeMoney(50)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Take money with validation
@@ -3455,7 +3298,6 @@ if SERVER then
             player:notifyError("You can't afford this!")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex economic system with logging
@@ -3492,7 +3334,6 @@ if SERVER then
         -- Simple: Load player data
         player:loadLiliaData()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Load data with callback
@@ -3500,7 +3341,6 @@ if SERVER then
             player:notify("Data loaded with " .. table.Count(data) .. " entries")
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex data loading with validation
@@ -3568,7 +3408,6 @@ if SERVER then
         -- Simple: Save player data
         player:saveLiliaData()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Save data with validation
@@ -3577,7 +3416,6 @@ if SERVER then
             player:notify("Data saved successfully")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex data saving with logging
@@ -3625,13 +3463,11 @@ if SERVER then
         -- Simple: Set player data
         player:setLiliaData("level", 5)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Set data with networking
         player:setLiliaData("settings", {theme = "dark"}, false, true)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex data management with validation
@@ -3670,14 +3506,12 @@ if SERVER then
         -- Simple: Ban player
         player:banPlayer("Cheating")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Ban with duration
         local duration = 86400 -- 24 hours
         player:banPlayer("Griefing", duration, admin)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex ban system with logging
@@ -3718,13 +3552,11 @@ if SERVER then
         -- Simple: Set action
         player:setAction("Loading...")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Set action with duration
         player:setAction("Crafting item...", 5)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex action system with callback
@@ -3780,14 +3612,12 @@ if SERVER then
         -- Simple: Stare at entity
         player:doStaredAction(ent, function() print("Action completed") end, 3)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Stare with cancellation
         local onCancel = function() player:notify("Action cancelled") end
         player:doStaredAction(ent, function() player:notify("Action completed") end, 5, onCancel)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex interaction system with validation
@@ -3840,14 +3670,12 @@ if SERVER then
         -- Simple: Stop player action
         player:stopAction()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Stop action with notification
         player:stopAction()
         player:notify("Action stopped")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex action management with cleanup
@@ -3880,7 +3708,6 @@ if SERVER then
         local playTime = player:getPlayTime()
         print("Play time:", playTime)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Display play time in hours
@@ -3888,7 +3715,6 @@ if SERVER then
         local hours = math.floor(playTime / 3600)
         player:notify("You have played for " .. hours .. " hours")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex play time system with rewards
@@ -3929,7 +3755,6 @@ if SERVER then
         local sessionTime = player:getSessionTime()
         print("Session time:", sessionTime)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Display session time in minutes
@@ -3937,7 +3762,6 @@ if SERVER then
         local minutes = math.floor(sessionTime / 60)
         player:notify("You have been online for " .. minutes .. " minutes")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex session system with rewards
@@ -3968,14 +3792,12 @@ if SERVER then
         -- Simple: Create ragdoll
         local ragdoll = player:createRagdoll()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Create ragdoll for death
         local ragdoll = player:createRagdoll(false, true)
         player:notify("Ragdoll created")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex ragdoll system with effects
@@ -4047,13 +3869,11 @@ if SERVER then
         -- Simple: Ragdoll player
         player:setRagdolled(true)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Ragdoll with custom time
         player:setRagdolled(true, 15, 5, "Getting up...")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex ragdoll system with effects
@@ -4178,7 +3998,6 @@ if SERVER then
         -- Simple: Sync variables to player
         player:syncVars()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Sync variables with validation
@@ -4187,7 +4006,6 @@ if SERVER then
             player:notify("Variables synchronized")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex synchronization with logging
@@ -4238,7 +4056,6 @@ if SERVER then
         -- Simple: Set network variable
         player:setNetVar("health", 100)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Set network variable with validation
@@ -4246,7 +4063,6 @@ if SERVER then
         player:setNetVar("health", health)
         player:notify("Health updated to " .. health)
         ```
-
         High Complexity:
         ```lua
         -- High: Complex network variable system with hooks
@@ -4283,7 +4099,6 @@ else
             print("Player can use third person")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Conditional view override
@@ -4293,7 +4108,6 @@ else
             player:notify("Third person mode disabled")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex view system with validation
@@ -4331,7 +4145,6 @@ else
             print("Player is in third person mode")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Conditional third person handling
@@ -4341,7 +4154,6 @@ else
             player:notify("First person mode active")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Complex camera system with effects
@@ -4373,7 +4185,6 @@ else
         local playTime = player:getPlayTime()
         print("Play time:", playTime)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Display play time in hours
@@ -4381,7 +4192,6 @@ else
         local hours = math.floor(playTime / 3600)
         player:notify("You have played for " .. hours .. " hours")
         ```
-
         High Complexity:
         ```lua
         -- High: Complex play time system with rewards

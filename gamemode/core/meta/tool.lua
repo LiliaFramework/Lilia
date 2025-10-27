@@ -1,6 +1,5 @@
 ﻿--[[
     Tool Gun Meta
-
     Tool gun management system for the Lilia framework.
 ]]
 --[[
@@ -20,7 +19,6 @@ local toolGunMeta = lia.meta.tool or {}
         -- Simple: Create a basic tool gun instance
         local tool = toolGunMeta:create()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Create tool with custom properties
@@ -28,7 +26,6 @@ local toolGunMeta = lia.meta.tool or {}
         tool.Mode = "custom_tool"
         tool.Stage = 1
         ```
-
         High Complexity:
         ```lua
         -- High: Create tool with full configuration and custom objects
@@ -72,7 +69,6 @@ end
         local tool = toolGunMeta:create()
         tool:createConVars()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Set up tool with client-side options
@@ -80,7 +76,6 @@ end
         tool.ClientConVar = {["size"] = "1", ["material"] = "wood"}
         tool:createConVars()
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced tool with multiple client and server ConVars
@@ -118,7 +113,6 @@ end
         -- Simple: Basic data update call
         tool:updateData()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Update data with custom logic
@@ -127,7 +121,6 @@ end
             self.ObjectCount = #self.Objects
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced data synchronization with networking
@@ -158,7 +151,6 @@ end
         -- Simple: Basic movement freeze
         tool:freezeMovement()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Conditional movement freezing
@@ -168,7 +160,6 @@ end
             end
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced movement control with restoration
@@ -180,7 +171,6 @@ end
                 ply:SetMoveType(MOVETYPE_NONE)
             end
         end
-
         function tool:unfreezeMovement()
             local ply = self:GetOwner()
             if ply.FrozenPosition then
@@ -208,43 +198,35 @@ end
             draw.SimpleText(self.Message, "default", 10, 10, color_white)
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Draw tool progress and object count
         function tool:drawHUD()
             local scrW, scrH = ScrW(), ScrH()
-
             -- Draw tool name and stage
             draw.SimpleText(self:getMode(), "liaGenericFont", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
-
             -- Draw progress bar
             local progress = self.Stage / 3
             surface.SetDrawColor(0, 255, 0, 255)
             surface.DrawRect(scrW/2 - 50, scrH - 80, progress * 100, 10)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced HUD with object preview and controls
         function tool:drawHUD()
             local scrW, scrH = ScrW(), ScrH()
-
             -- Draw tool header
             surface.SetDrawColor(0, 0, 0, 200)
             surface.DrawRect(0, scrH - 150, scrW, 150)
-
             -- Draw tool name and status
             draw.SimpleText(self:getMode():upper(), "liaGenericFont", 10, scrH - 140, color_white)
-
             -- Draw object list
             local y = scrH - 120
             for i, obj in ipairs(self.Objects) do
                 draw.SimpleText("Object " .. i .. ": " .. tostring(obj.Ent), "liaSmallFont", 10, y, color_white)
                 y = y + 20
             end
-
             -- Draw control hints
             draw.SimpleText("Left Click: Place | Right Click: Cancel | Reload: Clear", "liaSmallFont", scrW/2, scrH - 20, color_white, TEXT_ALIGN_CENTER)
         end
@@ -265,7 +247,6 @@ end
         -- Simple: Get basic server ConVar
         local maxObjects = tool:getServerInfo("max_objects")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use server info for validation
@@ -275,7 +256,6 @@ end
             return false
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced server configuration management
@@ -285,7 +265,6 @@ end
             local convar = tool:getServerInfo(prop)
             serverConfig[prop] = convar:GetInt()
         end
-
         if serverConfig.auto_save > 0 then
             tool:ScheduleAutoSave(serverConfig.auto_save)
         end
@@ -309,7 +288,6 @@ end
         local convars = tool:buildConVarList()
         PrintTable(convars)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use ConVar list for UI population
@@ -320,13 +298,11 @@ end
             panel:SetValue(default)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced ConVar management with validation
         local convars = tool:buildConVarList()
         local validatedConfig = {}
-
         for name, default in pairs(convars) do
             local value = GetConVar(name):GetString()
             if self:ValidateConVar(name, value) then
@@ -336,7 +312,6 @@ end
                 print("Invalid ConVar value for " .. name .. ", using default")
             end
         end
-
         self:ApplyConfiguration(validatedConfig)
         ```
 ]]
@@ -361,7 +336,6 @@ end
         -- Simple: Get basic client ConVar value
         local size = tool:getClientInfo("build_size")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use client info for tool behavior
@@ -370,13 +344,11 @@ end
             self.GhostEntity:SetMaterial("wood")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced client configuration with fallback
         local properties = {"build_size", "build_material", "auto_align"}
         local config = {}
-
         for _, prop in ipairs(properties) do
             local value = tool:getClientInfo(prop)
             if value and value ~= "0" then
@@ -385,7 +357,6 @@ end
                 config[prop] = self.ClientConVar[prop] or "1"
             end
         end
-
         self:ApplyClientConfiguration(config)
         ```
 ]]
@@ -407,19 +378,16 @@ end
         -- Simple: Get basic numeric client ConVar
         local size = tool:getClientNumber("build_size", 1)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use numeric client info for calculations
         local count = tool:getClientNumber("object_count", 5)
         local spacing = tool:getClientNumber("build_spacing", 10)
-
         for i = 1, count do
             local pos = Vector(i * spacing, 0, 0)
             self:CreateObjectAt(pos)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced numeric configuration with validation
@@ -428,14 +396,12 @@ end
             ["build_speed"] = {default = 1, min = 0.1, max = 5},
             ["max_objects"] = {default = 50, min = 1, max = 1000}
         }
-
         local validatedNumbers = {}
         for prop, config in pairs(numericConfig) do
             local value = tool:getClientNumber(prop, config.default)
             value = math.Clamp(value, config.min, config.max)
             validatedNumbers[prop] = value
         end
-
         self:ApplyNumericConfiguration(validatedNumbers)
         ```
 ]]
@@ -455,7 +421,6 @@ end
         -- Simple: Basic permission check
         if not tool:allowed() then return false end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Permission-based tool behavior
@@ -465,7 +430,6 @@ end
             tool.Message = "Tool usage not allowed"
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced permission system with logging
@@ -473,13 +437,11 @@ end
             local playerName = tool:GetOwner():Name()
             local toolMode = tool:getMode()
             print(string.format("Player %s attempted to use %s but was denied", playerName, toolMode))
-
             if SERVER then
                 tool:GetOwner():ChatPrint("Tool usage is currently disabled")
             end
             return false
         end
-
         -- Continue with allowed operation
         tool:PerformAction()
         ```
@@ -501,7 +463,6 @@ end
         -- Simple: Basic initialization
         tool:init()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Initialize with custom setup
@@ -511,7 +472,6 @@ end
             self.Objects = {}
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced initialization with networking and validation
@@ -519,20 +479,16 @@ end
             -- Initialize basic properties
             self.Stage = 0
             self.Objects = {}
-
             -- Set up networking if server
             if SERVER then
                 self:InitializeNetworkChannels()
             end
-
             -- Load saved data if available
             if file.Exists(self.SavePath, "DATA") then
                 self:LoadToolData()
             end
-
             -- Initialize ghost entity
             self:CreateGhostEntity()
-
             print("Tool " .. self:getMode() .. " initialized for " .. self:GetOwner():Name())
         end
         ```
@@ -552,7 +508,6 @@ end
         -- Simple: Get current tool mode
         local mode = tool:getMode()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use mode for conditional behavior
@@ -563,24 +518,20 @@ end
             tool:EnableRemoveMode()
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced mode-based configuration and validation
         local mode = tool:getMode()
-
         -- Validate mode exists and is allowed
         if not self.ToolModes[mode] then
             error("Invalid tool mode: " .. mode)
             return
         end
-
         -- Apply mode-specific configuration
         local modeConfig = self.ToolModes[mode]
         for setting, value in pairs(modeConfig) do
             self[setting] = value
         end
-
         -- Initialize mode-specific systems
         self:InitializeModeSystems(mode)
         ```
@@ -601,7 +552,6 @@ end
         -- Simple: Get the weapon instance
         local swep = tool:getSWEP()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use SWEP for weapon-specific operations
@@ -611,29 +561,24 @@ end
             print("Primary ammo type: " .. ammo)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced SWEP interaction and validation
         local swep = tool:getSWEP()
-
         -- Validate SWEP exists and is valid
         if not IsValid(swep) then
             error("Tool SWEP is not valid")
             return
         end
-
         -- Access weapon properties
         local weaponClass = swep:GetClass()
         local isReloading = swep:IsReloading()
-
         -- Perform weapon-specific operations
         if weaponClass == "weapon_physgun" then
             self:HandlePhysgunSpecificLogic(swep)
         elseif weaponClass == "weapon_physcannon" then
             self:HandleGravityGunSpecificLogic(swep)
         end
-
         -- Update tool state based on weapon
         self.LastWeaponCheck = CurTime()
         ```
@@ -654,7 +599,6 @@ end
         -- Simple: Get the tool owner
         local owner = tool:GetOwner()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use owner for player-specific operations
@@ -664,38 +608,31 @@ end
             tool.Message = "Owner health: " .. health
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced owner validation and management
         local owner = tool:GetOwner()
-
         -- Validate owner exists and is valid
         if not IsValid(owner) then
             print("Tool has no valid owner")
             return false
         end
-
         -- Check owner permissions
         if not owner:IsAdmin() and not owner:IsSuperAdmin() then
             tool.Message = "Insufficient permissions"
             return false
         end
-
         -- Perform owner-specific operations
         local steamID = owner:SteamID()
         local team = owner:Team()
-
         -- Log tool usage
         print(string.format("Player %s (Team %d) used tool %s",
               owner:Name(), team, tool:getMode()))
-
         -- Apply team-based restrictions
         if self:HasTeamRestrictions(team) then
             tool.Message = "Your team cannot use this tool"
             return false
         end
-
         return true
         ```
 ]]
@@ -715,7 +652,6 @@ end
         -- Simple: Get the weapon entity
         local weapon = tool:getWeapon()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Use weapon for position and angle operations
@@ -726,22 +662,18 @@ end
             self.GhostEntity:SetPos(pos + ang:Forward() * 50)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced weapon interaction and validation
         local weapon = tool:getWeapon()
-
         -- Validate weapon exists and is valid
         if not IsValid(weapon) then
             print("Tool weapon is not valid")
             return false
         end
-
         -- Access weapon properties
         local weaponClass = weapon:GetClass()
         local worldModel = weapon:GetModel()
-
         -- Perform weapon-specific operations
         if weaponClass == "weapon_physgun" then
             -- Handle physics gun specific logic
@@ -756,7 +688,6 @@ end
                 self:UpdateGhostEntity()
             end
         end
-
         -- Update tool state based on weapon
         self.LastWeaponUpdate = CurTime()
         ```
@@ -780,49 +711,40 @@ end
             return true
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Left click with object placement
         function tool:leftClick()
             if not tool:allowed() then return false end
-
             local trace = self:GetOwner():GetEyeTrace()
             if not trace.Hit then return false end
-
             local entity = ents.Create("prop_physics")
             entity:SetPos(trace.HitPos)
             entity:Spawn()
-
             table.insert(self.Objects, {Ent = entity, Time = CurTime()})
             return true
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced left click with validation and networking
         function tool:leftClick()
             local owner = self:GetOwner()
-
             -- Validate permissions and conditions
             if not self:allowed() then return false end
             if not owner:KeyDown(IN_USE) then return false end
-
             -- Get target position and validate
             local trace = owner:GetEyeTrace()
             if not trace.Hit or trace.HitWorld then
                 self.Message = "Invalid target"
                 return false
             end
-
             -- Check distance and line of sight
             local distance = owner:GetPos():Distance(trace.HitPos)
             if distance > self:getClientNumber("max_distance", 100) then
                 self.Message = "Too far away"
                 return false
             end
-
             -- Create object with server validation
             if SERVER then
                 local success = self:CreateServerObject(trace.HitPos, trace.HitNormal)
@@ -840,7 +762,6 @@ end
                 net.SendToServer()
                 return true
             end
-
             return false
         end
         ```
@@ -864,44 +785,36 @@ end
             return true
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Right click for object selection/manipulation
         function tool:rightClick()
             local trace = self:GetOwner():GetEyeTrace()
             if not trace.Hit then return false end
-
             local hitEntity = trace.Entity
             if IsValid(hitEntity) and hitEntity:GetClass() == "prop_physics" then
                 self.SelectedEntity = hitEntity
                 self.Message = "Selected: " .. hitEntity:GetModel()
                 return true
             end
-
             return false
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced right click with context menus and validation
         function tool:rightClick()
             local owner = self:GetOwner()
-
             -- Get target and validate
             local trace = owner:GetEyeTrace()
             if not trace.Hit then return false end
-
             local hitEntity = trace.Entity
-
             -- Handle different target types
             if trace.HitWorld then
                 -- World click - show position info
                 self.Message = string.format("World: %.2f, %.2f, %.2f",
                     trace.HitPos.x, trace.HitPos.y, trace.HitPos.z)
                 return true
-
             elseif IsValid(hitEntity) then
                 -- Entity click - show context menu or manipulate
                 if hitEntity:IsPlayer() then
@@ -912,7 +825,6 @@ end
                         self.Message = "Hold SHIFT for player menu"
                     end
                     return true
-
                 elseif hitEntity:GetClass() == "prop_physics" then
                     -- Prop manipulation
                     if self:CanManipulateEntity(hitEntity) then
@@ -925,7 +837,6 @@ end
                     end
                 end
             end
-
             return false
         end
         ```
@@ -949,7 +860,6 @@ end
             self.Message = "Objects cleared"
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Reload with confirmation and logging
@@ -958,35 +868,29 @@ end
                 self.Message = "No objects to clear"
                 return
             end
-
             local count = #self.Objects
             self:clearObjects()
             self.Message = string.format("Cleared %d objects", count)
-
             if SERVER then
                 print(string.format("Player %s cleared %d objects",
                     self:GetOwner():Name(), count))
             end
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced reload with backup and networking
         function tool:reload()
             local owner = self:GetOwner()
-
             -- Check if there are objects to clear
             if #self.Objects == 0 then
                 self.Message = "No objects to clear"
                 return
             end
-
             -- Create backup before clearing (if configured)
             if self:getClientInfo("backup_on_reload") == "1" then
                 self:CreateBackup()
             end
-
             -- Clear objects with individual cleanup
             local clearedCount = 0
             for i = #self.Objects, 1, -1 do
@@ -999,20 +903,16 @@ end
                 end
                 table.remove(self.Objects, i)
             end
-
             -- Reset tool state
             self.Stage = 0
             self.GhostEntity = nil
-
             -- Notify and log
             self.Message = string.format("Cleared %d objects", clearedCount)
-
             if SERVER then
                 -- Network cleanup confirmation to client
                 net.Start("tool_objects_cleared")
                 net.WriteUInt(clearedCount, 16)
                 net.Send(owner)
-
                 print(string.format("Player %s cleared %d tool objects",
                     owner:Name(), clearedCount))
             end
@@ -1037,7 +937,6 @@ end
             self.Message = "Tool deployed"
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Deploy with initialization
@@ -1048,41 +947,33 @@ end
             self.Message = "Tool ready"
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced deploy with validation and networking
         function tool:deploy()
             local owner = self:GetOwner()
-
             -- Release any existing ghost entity
             self:releaseGhostEntity()
-
             -- Initialize tool systems
             self:init()
-
             -- Create ConVars for this session
             self:createConVars()
-
             -- Validate tool mode and permissions
             if not self:allowed() then
                 self.Message = "Tool usage disabled"
                 return
             end
-
             -- Check if tool mode is valid
             local mode = self:getMode()
             if not self.ToolModes or not self.ToolModes[mode] then
                 self.Message = "Invalid tool mode"
                 return
             end
-
             -- Initialize mode-specific systems
             if SERVER then
                 -- Server-side initialization
                 self:InitializeServerSystems()
                 self:LoadPlayerData(owner)
-
                 -- Network tool state to client
                 net.Start("tool_deployed")
                 net.WriteString(mode)
@@ -1092,12 +983,10 @@ end
                 self:InitializeClientSystems()
                 self:CreateGhostEntity()
             end
-
             -- Set initial state
             self.Stage = 0
             self.LastDeploy = CurTime()
             self.Message = string.format("%s tool ready", mode)
-
             print(string.format("Player %s deployed %s tool",
                 owner:Name(), mode))
         end
@@ -1122,7 +1011,6 @@ end
             self.Message = "Tool holstered"
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Holster with cleanup
@@ -1133,35 +1021,28 @@ end
             self.Message = ""
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced holster with state preservation and networking
         function tool:holster()
             local owner = self:GetOwner()
-
             -- Release ghost entity and clean up visual elements
             self:releaseGhostEntity()
-
             -- Save current tool state if configured
             if self:getClientInfo("save_state_on_holster") == "1" then
                 self:SaveToolState()
             end
-
             -- Clean up temporary objects and effects
             self:CleanupTemporaryObjects()
-
             -- Reset tool state
             self.Stage = 0
             self.LastInteraction = nil
             self.Message = ""
-
             -- Handle realm-specific cleanup
             if SERVER then
                 -- Server-side cleanup
                 self:SavePlayerData(owner)
                 self:CleanupServerObjects()
-
                 -- Network holster state to client
                 net.Start("tool_holstered")
                 net.WriteBool(true) -- Successfully holstered
@@ -1171,7 +1052,6 @@ end
                 self:CleanupClientEffects()
                 self:ResetClientState()
             end
-
             -- Log holster action
             print(string.format("Player %s holstered %s tool",
                 owner:Name(), self:getMode()))
@@ -1197,13 +1077,11 @@ end
             self:updateData()
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Think with ghost entity management
         function tool:think()
             local owner = self:GetOwner()
-
             -- Update ghost entity position if it exists
             if not IsValid(self.GhostEntity) then
                 self:CreateGhostEntity()
@@ -1214,32 +1092,25 @@ end
                     self.GhostEntity:SetAngles(trace.HitNormal:Angle())
                 end
             end
-
             -- Update tool state
             self:updateData()
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced think with multiple systems and networking
         function tool:think()
             local owner = self:GetOwner()
             local curTime = CurTime()
-
             -- Rate limiting for performance
             if not self.LastThink or curTime - self.LastThink > 0.1 then
                 self.LastThink = curTime
-
                 -- Update ghost entity with advanced positioning
                 self:UpdateGhostEntity()
-
                 -- Check object validity and cleanup invalid ones
                 self:checkObjects()
-
                 -- Update tool data and state
                 self:updateData()
-
                 -- Handle player input and interactions
                 if owner:KeyDown(IN_ATTACK) and not self.LastLeftClick then
                     self:leftClick()
@@ -1247,16 +1118,13 @@ end
                 elseif not owner:KeyDown(IN_ATTACK) then
                     self.LastLeftClick = false
                 end
-
                 -- Network updates to clients (server only)
                 if SERVER and curTime - (self.LastNetworkUpdate or 0) > 1.0 then
                     self:NetworkToolState()
                     self.LastNetworkUpdate = curTime
                 end
-
                 -- Update effects and visual feedback
                 self:UpdateVisualEffects()
-
                 -- Check for tool mode changes
                 if self:ShouldChangeMode() then
                     self:ChangeToolMode()
@@ -1287,30 +1155,25 @@ end
             end
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check objects with individual cleanup
         function tool:checkObjects()
             local invalidObjects = {}
-
             for i, v in pairs(self.Objects) do
                 if not IsValid(v.Ent) or v.Ent:IsWorld() then
                     table.insert(invalidObjects, i)
                 end
             end
-
             -- Remove invalid objects
             for i = #invalidObjects, 1, -1 do
                 table.remove(self.Objects, invalidObjects[i])
             end
-
             if #invalidObjects > 0 then
                 self.Message = string.format("Cleaned up %d invalid objects", #invalidObjects)
             end
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced object validation with networking and logging
@@ -1318,10 +1181,8 @@ end
             local owner = self:GetOwner()
             local invalidObjects = {}
             local removedCount = 0
-
             for i, obj in pairs(self.Objects) do
                 local isValid = true
-
                 -- Multiple validation checks
                 if not IsValid(obj.Ent) then
                     isValid = false
@@ -1334,40 +1195,32 @@ end
                     -- Client-side visibility check
                     isValid = false
                 end
-
                 if not isValid then
                     table.insert(invalidObjects, i)
-
                     -- Handle object cleanup
                     if SERVER and IsValid(obj.Ent) then
                         obj.Ent:Remove()
                     end
-
                     removedCount = removedCount + 1
                 end
             end
-
             -- Remove invalid object references
             for i = #invalidObjects, 1, -1 do
                 table.remove(self.Objects, invalidObjects[i])
             end
-
             -- Handle results
             if removedCount > 0 then
                 self.Message = string.format("Cleaned up %d invalid objects", removedCount)
-
                 if SERVER then
                     -- Network cleanup to clients
                     net.Start("tool_objects_cleaned")
                     net.WriteUInt(removedCount, 8)
                     net.Broadcast()
-
                     -- Log cleanup action
                     print(string.format("Player %s had %d invalid tool objects cleaned up",
                         owner:Name(), removedCount))
                 end
             end
-
             -- Update cleanup timestamp
             self.LastObjectCheck = CurTime()
         end
@@ -1391,7 +1244,6 @@ end
         -- Simple: Basic object clearing
         tool:clearObjects()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Clear with confirmation message
@@ -1401,53 +1253,42 @@ end
             self.Message = string.format("Cleared %d objects", count)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced clearing with individual cleanup and networking
         function tool:clearObjects()
             local owner = self:GetOwner()
             local clearedCount = #self.Objects
-
             if clearedCount == 0 then return end
-
             -- Clean up each object individually
             for _, obj in pairs(self.Objects) do
                 if SERVER and IsValid(obj.Ent) then
                     -- Server-side entity cleanup
                     obj.Ent:Remove()
-
                     -- Remove associated data
                     if obj.Data then
                         self:CleanupObjectData(obj.Data)
                     end
                 end
             end
-
             -- Clear the objects table
             self.Objects = {}
-
             -- Reset related state
             self.Stage = 0
             self.SelectedEntity = nil
-
             -- Update UI and notify
             self.Message = string.format("Cleared %d objects", clearedCount)
-
             if SERVER then
                 -- Network clear confirmation to client
                 net.Start("tool_objects_cleared")
                 net.WriteUInt(clearedCount, 16)
                 net.Send(owner)
-
                 -- Log the clearing action
                 print(string.format("Player %s cleared all %d tool objects",
                     owner:Name(), clearedCount))
-
                 -- Save state after clearing
                 self:SaveToolState()
             end
-
             -- Reset ghost entity if needed
             if IsValid(self.GhostEntity) then
                 self:releaseGhostEntity()
@@ -1471,7 +1312,6 @@ end
         -- Simple: Basic ghost entity cleanup
         tool:releaseGhostEntity()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Release with effects cleanup
@@ -1484,20 +1324,17 @@ end
                     end
                     self.GhostEffects = nil
                 end
-
                 SafeRemoveEntity(self.GhostEntity)
                 self.GhostEntity = nil
                 self.Message = "Ghost entity removed"
             end
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced ghost entity management with networking
         function tool:releaseGhostEntity()
             local owner = self:GetOwner()
-
             if IsValid(self.GhostEntity) then
                 -- Store ghost entity data before removal (if needed)
                 if self:getClientInfo("preserve_ghost_data") == "1" then
@@ -1508,27 +1345,21 @@ end
                         Time = CurTime()
                     }
                 end
-
                 -- Clean up associated effects and particles
                 self:CleanupGhostEffects()
-
                 -- Remove the ghost entity safely
                 SafeRemoveEntity(self.GhostEntity)
                 self.GhostEntity = nil
-
                 -- Reset ghost-related state
                 self.GhostStage = 0
                 self.GhostLastUpdate = nil
-
                 -- Update UI
                 self.Message = "Preview removed"
-
                 if SERVER then
                     -- Network ghost removal to clients
                     net.Start("tool_ghost_removed")
                     net.WriteEntity(owner)
                     net.Broadcast()
-
                     -- Log ghost entity removal
                     print(string.format("Player %s removed ghost entity for %s tool",
                         owner:Name(), self:getMode()))

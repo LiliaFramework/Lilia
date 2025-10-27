@@ -1,26 +1,20 @@
 ﻿--[[
     Attribute Definitions
-
     Character attribute definition system for the Lilia framework.
-
     PLACEMENT INSTRUCTIONS:
-
     SCHEMA LOCATION:
     - Path: garrysmod/gamemodes/<SchemaName>/schema/attributes/
     - File naming: Use descriptive names like "strength.lua", "intelligence.lua", "agility.lua"
     - Registration: Each file should define an ATTRIBUTE table and register it using lia.attribs.loadFromDir()
     - Example: lia.attribs.loadFromDir("schema/attributes/")
-
     MODULE LOCATION:
     - Path: garrysmod/gamemodes/<SchemaName>/modules/<ModuleName>/attributes/
     - File naming: Use descriptive names like "magic.lua", "stealth.lua", "charisma.lua"
     - Registration: Each file should define an ATTRIBUTE table and register it using lia.attribs.loadFromDir()
     - Example: lia.attribs.loadFromDir("modules/magicmodule/attributes/")
-
     FILE STRUCTURE EXAMPLES:
     Schema: garrysmod/gamemodes/myschema/schema/attributes/strength.lua
     Module: garrysmod/gamemodes/myschema/modules/magicmodule/attributes/magic.lua
-
     NOTE: Attributes represent character statistics that can be modified, boosted, and used in
     gameplay calculations. They can be configured with maximum values, starting limits, and
     whether they appear in character creation.
@@ -35,7 +29,6 @@
     ATTRIBUTE.name
     Purpose: Sets the display name of the attribute
     When Called: During attribute definition
-
     Example Usage:
         ```lua
         ATTRIBUTE.name = "Strength"
@@ -101,7 +94,6 @@ ATTRIBUTE.noStartBonus = false
         function ATTRIBUTE:OnSetup(client, value)
             local char = client:getChar()
             if not char then return end
-
             -- Set default attribute value if not already set
             if value == 0 then
                 char:setAttrib(self.uniqueID, 10)
@@ -114,30 +106,24 @@ function ATTRIBUTE:OnSetup(client, value)
 end
 --[[
     Example Attribute:
-
     Below is a comprehensive example showing how to define a complete attribute with all
     available properties and methods. This example creates a "Strength" attribute
     that demonstrates typical usage of the attribute system.
-
         ```lua
     ATTRIBUTE.name = "Strength"
     ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
-
     -- Configuration
     ATTRIBUTE.maxValue = 30
     ATTRIBUTE.startingMax = 15
     ATTRIBUTE.noStartBonus = false
-
     -- Callback Methods
     function ATTRIBUTE:OnSetup(client, value)
         local char = client:getChar()
         if not char then return end
-
         -- Set default strength value if not already set
         if value == 0 then
             char:setAttrib("str", 10)
         end
-
         -- Apply strength-based effects
         local strength = char:getAttrib("str", 10)
         char:setVar("meleeDamageBonus", math.max(0, strength - 10))
@@ -148,29 +134,23 @@ end
 --
 --[[
     Example Attribute: Intelligence
-
     Below is another example showing how to define an "Intelligence" attribute
     that demonstrates different configuration options and usage patterns.
-
         ```lua
     ATTRIBUTE.name = "Intelligence"
     ATTRIBUTE.desc = "Mental acuity and reasoning ability. Affects learning speed and technical skills."
-
     -- Configuration
     ATTRIBUTE.maxValue = 40
     ATTRIBUTE.startingMax = 20
     ATTRIBUTE.noStartBonus = false
-
     -- Callback Methods
     function ATTRIBUTE:OnSetup(client, value)
         local char = client:getChar()
         if not char then return end
-
         -- Set default intelligence value if not already set
         if value == 0 then
             char:setAttrib("int", 10)
         end
-
         -- Apply intelligence-based effects
         local intelligence = char:getAttrib("int", 10)
         char:setVar("learningSpeedBonus", math.max(0, intelligence - 10))
@@ -181,29 +161,23 @@ end
 --
 --[[
     Example Attribute: Luck (Hidden from Character Creation)
-
     Below is an example showing how to define a "Luck" attribute that is hidden
     from character creation but can still be modified through gameplay.
-
         ```lua
     ATTRIBUTE.name = "Luck"
     ATTRIBUTE.desc = "Fortune and chance. Affects random events and critical success rates."
-
     -- Configuration
     ATTRIBUTE.maxValue = 20
     ATTRIBUTE.startingMax = 5
     ATTRIBUTE.noStartBonus = true  -- Hidden from character creation
-
     -- Callback Methods
     function ATTRIBUTE:OnSetup(client, value)
         local char = client:getChar()
         if not char then return end
-
         -- Set default luck value if not already set
         if value == 0 then
             char:setAttrib("luck", 5)
         end
-
         -- Apply luck-based effects
         local luck = char:getAttrib("luck", 5)
         char:setVar("criticalChanceBonus", math.max(0, luck - 5) * 0.02)

@@ -137,10 +137,10 @@ Sets the privileges required for this module
 ```lua
 -- Define required privileges for module access
 MODULE.Privileges = {
-{
-Name = "canManageInventory",
-Min = 1
-}
+    {
+        Name = "canManageInventory",
+        Min = 1
+    }
 }
 
 ```
@@ -158,10 +158,10 @@ Sets the file dependencies for this module
 ```lua
 -- Define required files for this module
 MODULE.Dependencies = {
-{
-File = "gridinv.lua",
-Type = "shared"
-}
+    {
+        File = "gridinv.lua",
+        Type = "shared"
+    }
 }
 
 ```
@@ -212,7 +212,7 @@ Sets the web-hosted sound files used by this module
 ```lua
 -- Define web-hosted sound files for the module
 MODULE.WebSounds = {
-["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
+    ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
 }
 
 ```
@@ -230,7 +230,7 @@ Sets the web-hosted image files used by this module
 ```lua
 -- Define web-hosted image files for the module
 MODULE.WebImages = {
-["icons/inventory.png"] = "https://example.com/icons/inventory.png"
+    ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
 }
 
 ```
@@ -296,7 +296,7 @@ Called when the module is fully loaded
 ```lua
 -- Called after all module files are loaded
 function MODULE:OnLoaded()
-print("Module loaded successfully!")
+    print("Module loaded successfully!")
 end
 
 ```

@@ -208,12 +208,12 @@ After weapon is dropped
 
 ```lua
 function ITEM.postHooks:drop()
-local client = self.player
-if not client or not IsValid(client) then return end
-if client:HasWeapon(self.class) then
-client:notifyErrorLocalized("invalidWeapon")
-client:StripWeapon(self.class)
-end
+    local client = self.player
+    if not client or not IsValid(client) then return end
+    if client:HasWeapon(self.class) then
+        client:notifyErrorLocalized("invalidWeapon")
+        client:StripWeapon(self.class)
+    end
 end
 
 ```
@@ -234,13 +234,13 @@ When weapon is dropped
 
 ```lua
 ITEM:hook("drop", function(item)
-local client = item.player
-if not client or not IsValid(client) then return false end
-if IsValid(client:getNetVar("ragdoll")) then
-client:notifyErrorLocalized("noRagdollAction")
-return false
-end
--- Handle equipped weapon removal
+    local client = item.player
+    if not client or not IsValid(client) then return false end
+    if IsValid(client:getNetVar("ragdoll")) then
+        client:notifyErrorLocalized("noRagdollAction")
+        return false
+    end
+    -- Handle equipped weapon removal
 end)
 
 ```
@@ -261,8 +261,8 @@ When attempting to transfer the weapon
 
 ```lua
 function ITEM:OnCanBeTransfered(_, newInventory)
-if newInventory and self:getData("equip") then return false end
-return true
+    if newInventory and self:getData("equip") then return false end
+    return true
 end
 
 ```
@@ -283,17 +283,17 @@ When player spawns with equipped weapon
 
 ```lua
 function ITEM:onLoadout()
-if self:getData("equip") then
-local client = self.player
-if not client or not IsValid(client) then return end
-local weapon = client:Give(self.class, true)
-if IsValid(weapon) then
-client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
-weapon:SetClip1(self:getData("ammo", 0))
-else
-lia.error(L("weaponDoesNotExist", self.class))
-end
-end
+    if self:getData("equip") then
+        local client = self.player
+        if not client or not IsValid(client) then return end
+        local weapon = client:Give(self.class, true)
+        if IsValid(weapon) then
+            client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
+            weapon:SetClip1(self:getData("ammo", 0))
+        else
+            lia.error(L("weaponDoesNotExist", self.class))
+        end
+    end
 end
 
 ```
@@ -314,10 +314,10 @@ When saving the weapon item
 
 ```lua
 function ITEM:OnSave()
-local client = self.player
-if not client or not IsValid(client) then return end
-local weapon = client:GetWeapon(self.class)
-if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
+    local client = self.player
+    if not client or not IsValid(client) then return end
+    local weapon = client:GetWeapon(self.class)
+    if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
 end
 
 ```
@@ -338,9 +338,9 @@ When displaying weapon name
 
 ```lua
 function ITEM:getName()
-local weapon = weapons.GetStored(self.class)
-if weapon and weapon.PrintName then return language.GetPhrase(weapon.PrintName) end
-return self.name
+    local weapon = weapons.GetStored(self.class)
+    if weapon and weapon.PrintName then return language.GetPhrase(weapon.PrintName) end
+    return self.name
 end
 
 ```

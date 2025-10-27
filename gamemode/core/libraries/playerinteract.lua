@@ -1,6 +1,5 @@
 ﻿--[[
     Player Interaction Library
-
     Player-to-player and entity interaction management system for the Lilia framework.
 ]]
 --[[
@@ -20,7 +19,6 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     Returns: boolean - true if within range, false otherwise
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Check if player is within default range of an entity
@@ -28,7 +26,6 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
         -- Player is within 250 units
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Check with custom range for specific interaction
@@ -37,7 +34,6 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
         -- Player is within 100 units for close-range interaction
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Dynamic range checking with validation
@@ -64,7 +60,6 @@ end
     Returns: table - Dictionary of available interactions indexed by interaction name
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all available interactions for local player
@@ -73,7 +68,6 @@ end
         print("Available interaction:", name)
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Get interactions for specific player with validation
@@ -86,7 +80,6 @@ end
         end
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Filter interactions by category and validate conditions
@@ -125,7 +118,6 @@ end
     Returns: table - Dictionary of available actions indexed by action name
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get all available personal actions
@@ -134,7 +126,6 @@ end
         print("Available action:", name)
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Get actions with character validation
@@ -147,7 +138,6 @@ end
         end
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Filter actions by category and execute specific ones
@@ -180,7 +170,6 @@ end
     Returns: table - Array of options for flat display
     Realm: Shared
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Get options for display
@@ -190,7 +179,6 @@ end
         print("Option:", option.name)
     end
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Process options for custom display
@@ -201,7 +189,6 @@ end
         -- Options are ready for display
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Filter and process options
@@ -244,7 +231,6 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Add basic player interaction
@@ -257,7 +243,6 @@ if SERVER then
             end
         })
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Add timed interaction with progress indicators
@@ -276,7 +261,6 @@ if SERVER then
             end
         })
         ```
-
         High Complexity:
         ```lua
         -- High: Complex interaction with validation and server-side processing
@@ -300,7 +284,6 @@ if SERVER then
                     client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
                     return
                 end
-
                 target:getChar():setData("arrested", true)
                 target:StripWeapons()
                 client:notify("Suspect arrested!")
@@ -355,7 +338,6 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Add basic personal action
@@ -371,7 +353,6 @@ if SERVER then
             end
         })
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Add timed personal action with progress indicator
@@ -395,7 +376,6 @@ if SERVER then
             end
         })
         ```
-
         High Complexity:
         ```lua
         -- High: Complex personal action with multiple conditions and effects
@@ -420,20 +400,17 @@ if SERVER then
                         client:setNetVar("emergencyCooldown", false)
                     end
                 end)
-
                 -- Notify emergency services
                 local emergencyMsg = string.format(
                     "Emergency call from %s at %s",
                     client:getChar():getDisplayedName(),
                     client:GetPos()
                 )
-
                 for _, ply in ipairs(player.GetAll()) do
                     if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
                         ply:notify(emergencyMsg)
                     end
                 end
-
                 client:notify("Emergency services have been notified!")
             end
         })
@@ -474,13 +451,11 @@ if SERVER then
         Returns: void
         Realm: Server
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Sync all interactions to all clients
         lia.playerinteract.syncToClients()
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Sync to specific client after they connect
@@ -492,13 +467,11 @@ if SERVER then
             end)
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Conditional sync with validation and error handling
         function syncInteractionsToClient(client)
             if not IsValid(client) then return end
-
             -- Check if client is ready
             if not client:IsConnected() or not client:getChar() then
                 timer.Simple(1, function()
@@ -506,7 +479,6 @@ if SERVER then
                 end)
                 return
             end
-
             -- Sync with custom filtering
             local filteredData = {}
             for name, data in pairs(lia.playerinteract.stored) do
@@ -525,7 +497,6 @@ if SERVER then
                     }
                 end
             end
-
             lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
             lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
         end
@@ -655,30 +626,25 @@ else
         Returns: void
         Realm: Client
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Open basic interaction menu
         local interactions = lia.playerinteract.getInteractions()
         lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Open action menu with custom title and key
         local actions = lia.playerinteract.getActions()
         lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
         ```
-
         High Complexity:
         ```lua
         -- High: Custom menu with pre-filtered options and validation
         local client = LocalPlayer()
         if not IsValid(client) then return end
-
         local interactions = lia.playerinteract.getInteractions(client)
         local filteredInteractions = {}
-
         -- Filter interactions based on custom criteria
         for name, interaction in pairs(interactions) do
             if interaction.category == "Voice" and
@@ -686,7 +652,6 @@ else
                 filteredInteractions[name] = interaction
             end
         end
-
         if table.Count(filteredInteractions) > 0 then
             lia.playerinteract.openMenu(
                 filteredInteractions,

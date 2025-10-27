@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.98 (October 27, 2025)
+
+### Changes
+
+- Update shared.lua
+- Fixes
+- Successfully updated workshop Lilia to 6.95
+- Revert "Spacing"
+- Revert "Successfully updated workshop Lilia to 6.92"
+- Successfully updated workshop Lilia to 6.92
+- Spacing
+- xd
+- Successfully updated workshop Lilia to 6.899
+- Update commands.lua
+- Dumb Check
+- Bot Command
+- Successfully updated workshop Lilia to 6.895
+- Example Usage
+- Successfully updated workshop Lilia to 6.893
+- Empty Lines
+- Small Voice Range Change
+- Spaciong
+- Successfully updated workshop Lilia to 6.889
+- Update installation.md
+
 ## Version 6.95 (October 25, 2025)
 
 ### Changes

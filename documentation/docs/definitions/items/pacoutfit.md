@@ -189,10 +189,10 @@ When rendering the item in inventory (CLIENT only)
 
 ```lua
 function ITEM:paintOver(item, w, h)
-if item:getData("equip") then
-surface.SetDrawColor(110, 255, 110, 100)
-surface.DrawRect(w - 14, h - 14, 8, 8)
-end
+    if item:getData("equip") then
+        surface.SetDrawColor(110, 255, 110, 100)
+        surface.DrawRect(w - 14, h - 14, 8, 8)
+    end
 end
 
 ```
@@ -213,10 +213,10 @@ When unequipping the PAC outfit
 
 ```lua
 function ITEM:removePart(client)
-local char = client:getChar()
-self:setData("equip", false)
-if client.removePart then client:removePart(self.uniqueID) end
--- Remove attribute boosts
+    local char = client:getChar()
+    self:setData("equip", false)
+    if client.removePart then client:removePart(self.uniqueID) end
+    -- Remove attribute boosts
 end
 
 ```
@@ -237,8 +237,8 @@ When attempting to transfer the item
 
 ```lua
 function ITEM:onCanBeTransfered(_, newInventory)
-if newInventory and self:getData("equip") then return false end
-return true
+    if newInventory and self:getData("equip") then return false end
+    return true
 end
 
 ```
@@ -259,7 +259,7 @@ When player spawns with equipped PAC outfit
 
 ```lua
 function ITEM:onLoadout()
-if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
+    if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
 end
 
 ```
@@ -280,9 +280,9 @@ When item is removed from inventory
 
 ```lua
 function ITEM:onRemoved()
-local inv = lia.item.inventories[self.invID]
-local receiver = inv.getReceiver and inv:getReceiver()
-if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
+    local inv = lia.item.inventories[self.invID]
+    local receiver = inv.getReceiver and inv:getReceiver()
+    if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
 end
 
 ```
@@ -303,8 +303,8 @@ When item is dropped
 
 ```lua
 ITEM:hook("drop", function(item)
-local client = item.player
-if item:getData("equip") then item:removePart(client) end
+    local client = item.player
+    if item:getData("equip") then item:removePart(client) end
 end)
 
 ```

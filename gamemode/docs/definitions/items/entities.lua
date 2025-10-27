@@ -1,15 +1,11 @@
 ﻿--[[
     Entities Item Definition
-
     Entity placement item system for the Lilia framework.
-
     Entity items allow players to place down entities in the world.
     They support data restoration and various entity properties.
-
     PLACEMENT:
     - Place in: ModuleFolder/items/entities/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/entities/ItemHere.lua (for schema-specific items)
-
     USAGE:
     - Entity items are placed by using the item
     - They spawn the entity specified in ITEM.entityid
@@ -75,7 +71,6 @@ ITEM.category = "entities"
 ITEM.entityid = ""
 --[[
 Example Item:
-
 ```lua
 -- Basic item identification
 ITEM.name = "Chair"                                          -- Display name shown to players
