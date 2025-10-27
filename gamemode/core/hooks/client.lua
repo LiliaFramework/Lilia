@@ -276,6 +276,8 @@ local function drawVoiceIndicator()
     if not IsValid(client) or not client:IsSpeaking() then return end
     local voiceType = client:getNetVar("VoiceType", L("talking"))
     local voiceText = L("youAre") .. " " .. voiceType
+    local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
+    if modifiedText then voiceText = modifiedText end
     -- Calculate position (top center)
     local boxX = ScrW() / 2
     local boxY = 50
