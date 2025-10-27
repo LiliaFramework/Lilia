@@ -1,20 +1,26 @@
 --[[
     Panel Definitions
+
     Comprehensive documentation for all Lilia VGUI panels.
+
     PLACEMENT INSTRUCTIONS:
+
     SCHEMA LOCATION:
     - Path: garrysmod/gamemodes/<SchemaName>/schema/panels/
     - File naming: Use descriptive names like "custom_panel.lua", "inventory_panel.lua"
     - Registration: Each file should define a PANEL table and register it using lia.panel.register()
     - Example: lia.panel.register("custom_panel", PANEL)
+
     MODULE LOCATION:
     - Path: garrysmod/gamemodes/<SchemaName>/modules/<ModuleName>/panels/
     - File naming: Use descriptive names like "sh_custom_panel.lua", "cl_custom_panel.lua"
     - Registration: Each file should define a PANEL table and register it using lia.panel.register()
     - Example: lia.panel.register("module_panel", PANEL)
+
     FILE STRUCTURE EXAMPLES:
     Schema: garrysmod/gamemodes/myschema/schema/panels/custom_panel.lua
     Module: garrysmod/gamemodes/myschema/modules/custommodule/panels/sh_custom_panel.lua
+
     NOTE: Panels are VGUI elements that provide user interface functionality. They can be used
     for character creation, inventory management, settings, and other UI interactions. All panels
     documented below are actually implemented in the Lilia framework and available for use.

@@ -271,37 +271,11 @@ function GM:DrawEntityInfo(e, a, pos)
     end
 end
 
-local function getPlayersInVoiceRange(client)
-    if not IsValid(client) or not client:getChar() then return 0 end
-    local voiceType = client:getNetVar("VoiceType", L("talking"))
-    local baseRange = voiceType == L("whispering") and lia.config.get("WhisperRange", 70) or voiceType == L("talking") and lia.config.get("TalkRange", 280) or voiceType == L("yelling") and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
-    local count = 0
-    local clientPos = client:GetPos()
-    for _, ply in player.Iterator() do
-        if ply ~= client and IsValid(ply) and ply:getChar() and ply:Alive() then
-            local distance = clientPos:Distance(ply:GetPos())
-            local clearLOS = IsLineOfSightClear(client, ply)
-            local effectiveRange = clearLOS and baseRange or baseRange * 0.16
-            if distance <= effectiveRange then count = count + 1 end
-        end
-    end
-    return count
-end
-
 local function drawVoiceIndicator()
     local client = LocalPlayer()
     if not IsValid(client) or not client:IsSpeaking() then return end
     local voiceType = client:getNetVar("VoiceType", L("talking"))
     local voiceText = L("youAre") .. " " .. voiceType
-    -- Add listener count if voiceRange option is enabled
-    if lia.option.get("voiceRange", false) then
-        local listenerCount = getPlayersInVoiceRange(client)
-        voiceText = voiceText .. " - " .. listenerCount .. " players can hear you"
-    end
-
-    -- Allow modification of the voice text via hook
-    local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
-    if modifiedText then voiceText = modifiedText end
     -- Calculate position (top center)
     local boxX = ScrW() / 2
     local boxY = 50

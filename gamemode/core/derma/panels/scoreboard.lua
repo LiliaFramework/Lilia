@@ -513,5 +513,4 @@ end
 
 hook.Add("ScoreboardHide", "liaScoreboardHide", liaScoreboardHide)
 hook.Add("ScoreboardShow", "liaScoreboardShow", liaScoreboardShow)
-hook.Add("OnReloaded", "liaScoreboardCleanup", liaScoreboardHide)
 hook.Add("InteractionMenuOpened", "liaScoreboardInteractionMenuOpened", liaScoreboardHide)
