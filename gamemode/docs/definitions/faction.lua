@@ -1,26 +1,20 @@
 ﻿--[[
     Faction Definitions
-
     Character faction definition system for the Lilia framework.
-
     PLACEMENT INSTRUCTIONS:
-
     SCHEMA LOCATION:
     - Path: garrysmod/gamemodes/<SchemaName>/schema/factions/
     - File naming: Use descriptive names like "police.lua", "citizen.lua", "medical.lua"
     - Registration: Each file should define a FACTION table and register it using lia.faction.register()
     - Example: lia.faction.register("police", FACTION)
-
     MODULE LOCATION:
     - Path: garrysmod/gamemodes/<SchemaName>/modules/<ModuleName>/factions/
     - File naming: Use descriptive names like "swat.lua", "fire_department.lua"
     - Registration: Each file should define a FACTION table and register it using lia.faction.register()
     - Example: lia.faction.register("swat", FACTION)
-
     FILE STRUCTURE EXAMPLES:
     Schema: garrysmod/gamemodes/myschema/schema/factions/police.lua
     Module: garrysmod/gamemodes/myschema/modules/policemodule/factions/swat.lua
-
     NOTE: Factions are the parent containers for classes. Each character belongs to exactly ONE faction
     and can have multiple classes within that faction.
 ]]
@@ -29,14 +23,12 @@
     The faction system provides comprehensive functionality for defining character factions within the Lilia framework.
     Factions represent the main organizational units that characters belong to, serving as parent containers for classes.
     Each character belongs to exactly ONE faction and can have multiple classes within that faction.
-
     **Faction-Class Relationship:**
     - **Factions** are the main organizational units (Citizens, Police, Medical, Staff)
     - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
     - Each character belongs to exactly ONE faction but can switch between classes within that faction
     - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
       over the same property in the parent faction.
-
     **Example Hierarchy:**
     ```
     Faction: Police Department
@@ -45,26 +37,21 @@
     ├── Class: Police Captain (inherits police properties, overrides with command-specific permissions)
     └── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
     ```
-
     Factions are defined using the FACTION table structure, which includes properties for identification,
     visual representation, gameplay mechanics, and access control. The system includes callback methods
     that are automatically invoked during key character lifecycle events, enabling dynamic behavior and
     customization.
-
     Factions can have player limits, whitelist requirements, specialized loadouts, and attribute
     modifications that affect gameplay. The system supports modifying player health, armor, movement
     speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based
     gameplay systems.
-
     **Player Management:**
     Factions support player limits (absolute or percentage-based), character restrictions (one character
     per player), custom name generation templates, and custom limit checking logic for advanced access
     control scenarios.
-
     **Access Control:**
     Factions use the `isDefault` property to determine if they are accessible to all players, and can
     implement custom permission logic through whitelist systems and the framework's permission system.
-
     In addition to the FACTION table properties, factions can also modify character variables such as
     classwhitelists to control which classes a character has access to within the faction.
 ]]
@@ -72,7 +59,6 @@
     FACTION.name
     Purpose: Sets the display name of the character faction
     When Called: During faction definition
-
     Example Usage:
         ```lua
         FACTION.name = "Police Department"
@@ -106,7 +92,6 @@ FACTION.color = Color(255, 255, 255)
     Example Usage:
         ```lua
         FACTION.models = {"models/player/police.mdl", "models/player/swat.mdl"}
-
         -- Advanced: Complex model data with bodygroups
         FACTION.models = {
             "male" = {
@@ -156,7 +141,6 @@ FACTION.isDefault = true
             name = "Police Department",
             -- uniqueID will be "police"
         })
-
         -- For faction files, uniqueID is set to the filename
         -- File: factions/police.lua -> uniqueID = "police"
         -- File: factions/sh_police.lua -> uniqueID = "police" (sh_ prefix removed)
@@ -175,7 +159,6 @@ FACTION.uniqueID = ""
             name = "Police Department",
             -- index will be assigned based on registration order
         })
-
         -- Or manually specify the team index
         FACTION.index = 2  -- Will use team index 2
         ```
@@ -387,12 +370,10 @@ FACTION.GetDefaultDesc = nil
         function FACTION:OnCheckLimitReached(character, client)
             -- Custom logic for checking faction limits
             -- For example, check player permissions, character attributes, etc.
-
             -- Check if player has special permission to bypass limits
             if client:hasFlags("L") then
                 return false  -- Allow admins to bypass limits
             end
-
             -- Use default limit checking
             return self:CheckFactionLimitReached(character, client)
         end
@@ -439,49 +420,40 @@ function FACTION:OnSpawn(client)
 end
 --[[
     Example Faction:
-
     Below is a comprehensive example showing how to define a complete faction with all
     available properties and methods. This example creates a "Police Department" faction
     that demonstrates typical usage of the faction system.
-
         ```lua
     FACTION.name = "Police Department"
     FACTION.desc = "Law enforcement officers responsible for maintaining order and protecting citizens"
     FACTION.color = Color(0, 100, 255)  -- Blue color for police
-
     -- Access Control
     FACTION.isDefault = false  -- Requires whitelist or special permission
     FACTION.oneCharOnly = true  -- Players can only have one police character
     FACTION.limit = 12  -- Maximum 12 police officers
     FACTION.index = FACTION_POLICE  -- Team index for this faction
     -- FACTION.uniqueID is automatically set to the filename (e.g., "police" for police.lua)
-
     -- Name Generation
     function FACTION:NameTemplate(info, client)
         local badgeNumber = math.random(1000, 9999)
         return "Officer " .. badgeNumber
     end
-
     function FACTION:GetDefaultName(client)
         return "Police Officer " .. math.random(1000, 9999)
     end
-
     function FACTION:GetDefaultDesc(client)
         return "A law enforcement officer of the City Police Department"
     end
-
     function FACTION:OnCheckLimitReached(character, client)
         -- Allow admins to bypass police limits
         if client:hasFlags("L") then
             return false
         end
-
         -- Check if character has police training
         if not character:getData("police_training", false) then
             client:notify("You need police training to join this faction.")
             return true
         end
-
         -- Use default limit checking for others
         local maxPlayers = self.limit or 0
         if self.limit < 1 and self.limit > 0 then
@@ -489,7 +461,6 @@ end
         end
         return team.NumPlayers(self.index) >= maxPlayers
     end
-
     -- Visual Properties
     FACTION.models = {
         "male" = {
@@ -503,25 +474,21 @@ end
     }
     FACTION.scale = 1.0  -- Normal model scale
     FACTION.bloodcolor = BLOOD_COLOR_RED
-
     -- Gameplay Properties
     FACTION.health = 120  -- Higher health than default citizens
     FACTION.armor = 50    -- Standard police armor
-
     -- Weapons (given when spawning)
     FACTION.weapons = {
         "weapon_pistol",
         "weapon_stunstick",
         "weapon_police_baton"
     }
-
     -- Starting Items (given when character is created)
     FACTION.items = {
         "item_police_badge",
         "item_handcuffs",
         "item_police_radio"
     }
-
     -- Movement Properties
     FACTION.runSpeed = 280  -- Slightly slower than default for tactical movement
     FACTION.walkSpeed = 150  -- Standard walking speed
@@ -529,44 +496,36 @@ end
     FACTION.runSpeedMultiplier = false  -- Use absolute speed values
     FACTION.walkSpeedMultiplier = false  -- Use absolute speed values
     FACTION.jumpPowerMultiplier = false  -- Use absolute jump power values
-
     -- NPC Relationships
     FACTION.NPCRelations = {
         ["npc_metropolice"] = D_LI,  -- Liked by metropolice
         ["npc_citizen"] = D_NU,      -- Neutral to citizens
         ["npc_rebel"] = D_HT         -- Hated by rebels
     }
-
     -- Callback Methods
     function FACTION:OnTransferred(client)
         client:notify("Welcome to the City Police Department!")
-
         -- Set up police-specific data
         local char = client:getChar()
         if char then
             char:setData("department", "patrol")
             char:setData("badge_number", math.random(1000, 9999))
         end
-
         -- Log the transfer for administrative purposes
         lia.log.add(client, "faction_transfer", {
             old_faction = client:getChar():getFaction(),
             new_faction = self.uniqueID
         })
     end
-
     function FACTION:OnSpawn(client)
         -- Set up police-specific spawn behavior
         client:Give("weapon_police_radio")
         client:Give("item_police_badge")
-
         -- Apply police-specific effects
         client:SetHealth(self.health or 100)
         client:SetArmor(self.armor or 0)
-
         -- Set up police radio frequency
         client:setData("police_frequency", "city_police")
-
         -- Apply wanted status immunity
         client:setData("immunity_level", 1)
     end

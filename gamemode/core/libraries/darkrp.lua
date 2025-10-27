@@ -1,6 +1,5 @@
 ﻿--[[
     DarkRP Compatibility Library
-
     The DarkRP compatibility library provides essential functions for maintaining compatibility
     with DarkRP-based gamemodes and addons. It includes utility functions for position
     validation, text wrapping, entity creation, chat command handling, and money formatting.
@@ -17,19 +16,13 @@ DarkRP.disabledDefaults = DarkRP.disabledDefaults or {}
 if SERVER then
     --[[
         Purpose: Checks if a given position is empty and suitable for spawning entities or players
-
         When Called: Called when checking spawn positions, entity placement, or any position validation
-
         Parameters:
             position (Vector): The world position to check
             entitiesToIgnore (table, optional): Table of entities to ignore during the check
-
         Returns: boolean - true if the position is empty, false otherwise
-
         Realm: Server
-
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Check if a position is empty
@@ -38,7 +31,6 @@ if SERVER then
             print("Position is empty")
         end
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Check position while ignoring specific entities
@@ -48,7 +40,6 @@ if SERVER then
             player:SetPos(pos)
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Validate spawn position with multiple checks
@@ -59,7 +50,6 @@ if SERVER then
                 table.insert(ignoreList, ent)
             end
         end
-
         if lia.darkrp.isEmpty(spawnPos, ignoreList) then
             local spawn = ents.Create("npc_citizen")
             spawn:SetPos(spawnPos)
@@ -84,22 +74,16 @@ if SERVER then
 
     --[[
         Purpose: Finds the nearest empty position to a starting position within specified parameters
-
         When Called: Called when spawning entities or players and the initial position is occupied
-
         Parameters:
             startPos (Vector): The starting position to search from
             entitiesToIgnore (table, optional): Table of entities to ignore during the search
             maxDistance (number): Maximum distance to search from the starting position
             searchStep (number): Step size for the search radius
             checkArea (Vector): Additional area to check around each position
-
         Returns: Vector - The nearest empty position found, or the original position if none found
-
         Realm: Server
-
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Find empty position near spawn point
@@ -107,7 +91,6 @@ if SERVER then
         local emptyPos = lia.darkrp.findEmptyPos(spawnPos, {}, 100, 10, Vector(0, 0, 0))
         player:SetPos(emptyPos)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Find spawn position ignoring specific entities
@@ -118,19 +101,16 @@ if SERVER then
             print("Found empty position at: " .. tostring(emptyPos))
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Advanced spawn system with multiple checks
         local spawnPoints = {Vector(0, 0, 0), Vector(100, 0, 0), Vector(0, 100, 0)}
         local ignoreEntities = {}
-
         for _, ent in ipairs(ents.FindInSphere(Vector(0, 0, 0), 500)) do
             if ent:IsPlayer() or ent:IsNPC() then
                 table.insert(ignoreEntities, ent)
             end
         end
-
         for _, spawnPoint in ipairs(spawnPoints) do
             local emptyPos = lia.darkrp.findEmptyPos(spawnPoint, ignoreEntities, 150, 20, Vector(16, 16, 32))
             if emptyPos ~= spawnPoint then
@@ -157,34 +137,26 @@ if SERVER then
 
     --[[
         Purpose: Sends a localized notification to a client (DarkRP compatibility function)
-
         When Called: Called when sending notifications to players in DarkRP-compatible systems
-
         Parameters:
             client (Player): The player to send the notification to
             _ (any): Unused parameter (DarkRP compatibility)
             _ (any): Unused parameter (DarkRP compatibility)
             message (string): The localized message key to send
-
         Returns: nil
-
         Realm: Server
-
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Send basic notification
         lia.darkrp.notify(player, nil, nil, "welcome_message")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send notification with context
         local message = "player_joined"
         lia.darkrp.notify(player, nil, nil, message)
         ```
-
         High Complexity:
         ```lua
         -- High: Send notifications to multiple players
@@ -216,27 +188,20 @@ else
 
     --[[
         Purpose: Wraps text to fit within a specified maximum line width using font metrics
-
         When Called: Called when displaying text in UI elements that need to fit within width constraints
-
         Parameters:
             text (string): The text to wrap
             fontName (string): The font name to use for width calculations
             maxLineWidth (number): The maximum width in pixels for each line
-
         Returns: string - The wrapped text with line breaks inserted
-
         Realm: Client
-
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Wrap basic text
         local wrappedText = lia.darkrp.textWrap("Hello world this is a long text", "DermaDefault", 200)
         print(wrappedText)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Wrap text with different fonts
@@ -244,13 +209,11 @@ else
         local font = "liaFont"
         local maxWidth = 300
         local wrapped = lia.darkrp.textWrap(text, font, maxWidth)
-
         -- Display in a panel
         local label = vgui.Create("DLabel")
         label:SetText(wrapped)
         label:SetFont(font)
         ```
-
         High Complexity:
         ```lua
         -- High: Dynamic text wrapping with multiple paragraphs
@@ -259,16 +222,13 @@ else
             "Second paragraph with different content",
             "Third paragraph with even more content"
         }
-
         local font = "liaFont"
         local maxWidth = 400
         local wrappedParagraphs = {}
-
         for i, paragraph in ipairs(paragraphs) do
             local wrapped = lia.darkrp.textWrap(paragraph, font, maxWidth)
             table.insert(wrappedParagraphs, wrapped)
         end
-
         local finalText = table.concat(wrappedParagraphs, "\n\n")
         -- Use finalText in UI
         ```
@@ -304,25 +264,18 @@ end
 
 --[[
     Purpose: Formats a numeric amount as currency using the Lilia currency system
-
     When Called: Called when displaying money amounts in UI or chat messages
-
     Parameters:
         amount (number): The numeric amount to format
-
     Returns: string - The formatted currency string
-
     Realm: Shared
-
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Format a basic amount
     local formatted = lia.darkrp.formatMoney(1000)
     print(formatted) -- "$1,000"
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Format player's money for display
@@ -330,18 +283,15 @@ end
     local formattedMoney = lia.darkrp.formatMoney(playerMoney)
     player:notifyInfoLocalized("your_money")
     ```
-
     High Complexity:
     ```lua
     -- High: Format multiple amounts for transaction display
     local amounts = {500, 1250, 9999, 150000}
     local formattedAmounts = {}
-
     for _, amount in ipairs(amounts) do
         local formatted = lia.darkrp.formatMoney(amount)
         table.insert(formattedAmounts, formatted)
     end
-
     local displayText = "Transaction amounts: " .. table.concat(formattedAmounts, ", ")
     chat.AddText(Color(255, 255, 255), displayText)
     ```
@@ -352,9 +302,7 @@ end
 
 --[[
     Purpose: Creates a DarkRP-compatible entity item in the Lilia item system
-
     When Called: Called when registering DarkRP entities for compatibility with existing addons
-
     Parameters:
         name (string): The display name of the entity
         data (table): Table containing entity configuration data
@@ -364,13 +312,9 @@ end
             - category (string, optional): Category for the entity
             - ent (string, optional): Entity class name
             - price (number, optional): Price of the entity
-
     Returns: nil
-
     Realm: Shared
-
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Create a basic entity
@@ -379,7 +323,6 @@ end
         price = 50
     })
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Create entity with full configuration
@@ -392,7 +335,6 @@ end
         price = 200
     })
     ```
-
     High Complexity:
     ```lua
     -- High: Create multiple entities from configuration table
@@ -418,7 +360,6 @@ end
             }
         }
     }
-
     for _, entity in ipairs(entities) do
         lia.darkrp.createEntity(entity.name, entity.data)
     end
@@ -438,23 +379,16 @@ end
 
 --[[
     Purpose: Creates a DarkRP-compatible category (placeholder function for compatibility)
-
     When Called: Called by DarkRP addons that expect a createCategory function to exist
-
     Parameters: None
-
     Returns: nil
-
     Realm: Shared
-
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Call the function (no effect)
     lia.darkrp.createCategory()
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Use in DarkRP compatibility code
@@ -462,20 +396,17 @@ end
         lia.darkrp.createCategory()
     end
     ```
-
     High Complexity:
     ```lua
     -- High: Use in addon initialization
     local function initializeDarkRPCompatibility()
         -- Ensure DarkRP compatibility functions exist
         lia.darkrp.createCategory()
-
         -- Other DarkRP compatibility setup
         if DarkRP and DarkRP.createEntity then
             print("DarkRP compatibility initialized")
         end
     end
-
     initializeDarkRPCompatibility()
     ```
 ]]

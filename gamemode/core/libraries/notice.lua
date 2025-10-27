@@ -1,6 +1,5 @@
 ﻿--[[
     Notice Library
-
     Player notification and messaging system for the Lilia framework.
 ]]
 --[[
@@ -19,13 +18,11 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Send basic notification to all players
         lia.notices.notify(nil, "Server restarting in 5 minutes!")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send error notification to specific player
@@ -34,7 +31,6 @@ if SERVER then
             lia.notices.notify(player, "You don't have permission to do that!", "error")
         end
         ```
-
         High Complexity:
         ```lua
         -- High: Send notifications to multiple players with different types
@@ -70,20 +66,17 @@ if SERVER then
         Returns: None
         Realm: Server
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Send localized notification to all players
         lia.notices.notifyLocalized(nil, "server.restart", "info")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Send localized notification with one parameter
         local player = Player(1)
         lia.notices.notifyLocalized(player, "player.welcome", "success", player:Name())
         ```
-
         High Complexity:
         ```lua
         -- High: Send localized notifications with multiple parameters
@@ -124,13 +117,11 @@ else
         Returns: None
         Realm: Client
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Function is called automatically when server sends notification
         -- No direct usage needed - handled by network receiver
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Custom network receiver with additional processing
@@ -140,7 +131,6 @@ else
             print("Notification received from server")
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Override default behavior with custom notification handling
@@ -148,13 +138,11 @@ else
         lia.notices.receiveNotify = function()
             local msg = net.ReadString() or ""
             local ntype = net.ReadString() or "default"
-
             -- Custom processing before creating notice
             if ntype == "error" then
                 -- Log errors to file
                 file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
             end
-
             -- Call original function
             originalReceiveNotify()
         end
@@ -183,13 +171,11 @@ else
         Returns: None
         Realm: Client
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Function is called automatically when server sends localized notification
         -- No direct usage needed - handled by network receiver
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Custom network receiver with additional processing
@@ -199,7 +185,6 @@ else
             print("Localized notification received from server")
         end)
         ```
-
         High Complexity:
         ```lua
         -- High: Override default behavior with custom localized notification handling
@@ -211,14 +196,12 @@ else
             for i = 1, argc do
                 args[i] = net.ReadString()
             end
-
             -- Custom processing before creating notice
             local msg = L(key, unpack(args))
             if string.find(msg, "error") then
                 -- Log errors to file
                 file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
             end
-
             -- Call original function
             originalReceiveNotifyL()
         end
@@ -257,20 +240,17 @@ else
         Returns: None
         Realm: Client
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Display basic notification
         lia.notices.notify(nil, "Settings saved!", "success")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Display notification with dynamic content
         local playerName = LocalPlayer():Name()
         lia.notices.notify(nil, "Welcome back, " .. playerName .. "!", "info")
         ```
-
         High Complexity:
         ```lua
         -- High: Display notifications based on conditions
@@ -308,20 +288,17 @@ else
         Returns: None
         Realm: Client
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Display localized notification
         lia.notices.notifyLocalized(nil, "ui.settings.saved", "success")
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Display localized notification with one parameter
         local playerName = LocalPlayer():Name()
         lia.notices.notifyLocalized(nil, "ui.welcome.back", "info", playerName)
         ```
-
         High Complexity:
         ```lua
         -- High: Display localized notifications with multiple parameters
@@ -329,7 +306,6 @@ else
         local health = player:GetNWInt("health")
         local maxHealth = player:GetMaxHealth()
         local healthPercent = math.floor((health / maxHealth) * 100)
-
         if health < 25 then
             lia.notices.notifyLocalized(nil, "ui.health.critical", "error",
                 health, maxHealth, healthPercent)
@@ -355,13 +331,11 @@ else
         Returns: None
         Realm: Client
         Example Usage:
-
         Low Complexity:
         ```lua
         -- Simple: Use legacy notification system
         notification.AddLegacy("Server restarting!", 0)
         ```
-
         Medium Complexity:
         ```lua
         -- Medium: Convert legacy notifications to new system
@@ -370,7 +344,6 @@ else
         local typeId = 1
         notification.AddLegacy(message, typeId)
         ```
-
         High Complexity:
         ```lua
         -- High: Override legacy notification with custom handling
@@ -378,13 +351,11 @@ else
         notification.AddLegacy = function(text, typeId)
             local map = {[0] = "info", [1] = "error", [2] = "success"}
             local notifType = map[tonumber(typeId) or -1] or "default"
-
             -- Custom processing
             if notifType == "error" then
                 -- Log errors to file
                 file.Append("legacy_notifications.log", os.date() .. ": " .. text .. "\n")
             end
-
             -- Call original function
             originalAddLegacy(text, typeId)
         end
@@ -408,13 +379,11 @@ end
     Returns: None
     Realm: Client
     Example Usage:
-
     Low Complexity:
     ```lua
     -- Simple: Function is called automatically when notifications are created
     -- No direct usage needed - handled internally
     ```
-
     Medium Complexity:
     ```lua
     -- Medium: Manually organize notices after bulk creation
@@ -423,7 +392,6 @@ end
     end
     OrganizeNotices() -- Ensure proper positioning
     ```
-
     High Complexity:
     ```lua
     -- High: Custom notice organization with different positioning
@@ -433,7 +401,6 @@ end
         local baseY = ScrH() - 300 * scale -- Different base position
         local spacing = 8 * scale -- Different spacing
         local y = baseY
-
         for _, v in ipairs(lia.notices) do
             if IsValid(v) then
                 v.targetY = y
