@@ -1,5 +1,6 @@
 ﻿--[[
     Entity Meta
+
     Entity management system for the Lilia framework.
 ]]
 --[[
@@ -34,11 +35,13 @@ local validClasses = {
         -- Simple: Play a basic sound
         entity:EmitSound("buttons/button15.wav")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Play sound with custom volume and distance
         entity:EmitSound("ambient/atmosphere/city_hum_loop.wav", 200, 100, 0.5)
         ```
+
         High Complexity:
         ```lua
         -- High: Play web sound with full parameters
@@ -85,6 +88,7 @@ end
             print("This is a physics prop")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in conditional logic
@@ -92,6 +96,7 @@ end
             entity:GetPhysicsObject():Wake()
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Combine with other checks for complex logic
@@ -120,6 +125,7 @@ end
             print("This is a Lilia item")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in item handling logic
@@ -128,6 +134,7 @@ end
             print("Item name:", itemData.name)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Combine with inventory system
@@ -159,6 +166,7 @@ end
             print("This is money")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in money handling logic
@@ -168,6 +176,7 @@ end
             entity:Remove()
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Combine with economy system
@@ -201,6 +210,7 @@ end
             print("This is a vehicle")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in vehicle handling logic
@@ -210,6 +220,7 @@ end
             end
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Combine with vehicle systems
@@ -243,6 +254,7 @@ end
             door:Fire("Open")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Check specific access level
@@ -250,6 +262,7 @@ end
             ply:notify("You own this door")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in door interaction system
@@ -287,6 +300,7 @@ end
         -- Simple: Set vehicle owner
         vehicle:keysOwn(ply)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Set owner with validation
@@ -295,6 +309,7 @@ end
             ply:notify("You now own this vehicle")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in vehicle purchase system
@@ -329,6 +344,7 @@ end
         -- Simple: Lock vehicle
         vehicle:keysLock()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Lock with validation
@@ -337,6 +353,7 @@ end
             ply:notify("Vehicle locked")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in vehicle interaction system
@@ -367,6 +384,7 @@ end
         -- Simple: Unlock vehicle
         vehicle:keysUnLock()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Unlock with validation
@@ -375,6 +393,7 @@ end
             ply:notify("Vehicle unlocked")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in vehicle interaction system
@@ -408,6 +427,7 @@ end
             print("Door owner:", owner:Name())
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Check ownership for access control
@@ -416,6 +436,7 @@ end
             ply:notify("You own this door")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in door management system
@@ -448,6 +469,7 @@ end
             print("Entity is locked")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in interaction logic
@@ -457,6 +479,7 @@ end
             entity:Use(ply)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in security system
@@ -487,6 +510,7 @@ end
             print("Door is locked")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in door interaction
@@ -496,6 +520,7 @@ end
             door:Fire("Open")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in door access system
@@ -525,6 +550,7 @@ end
         -- Simple: Get drop position
         local pos, ang = entity:getEntItemDropPos()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use with custom offset
@@ -533,6 +559,7 @@ end
         item:SetPos(pos)
         item:SetAngles(ang)
         ```
+
         High Complexity:
         ```lua
         -- High: Use in item dropping system
@@ -577,6 +604,7 @@ end
             print("This is a female character")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in character customization
@@ -586,6 +614,7 @@ end
             entity:SetBodygroup(1, 0) -- Set male bodygroup
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in roleplay system
@@ -619,6 +648,7 @@ end
             print("Entity is near something")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Check proximity to specific entity
@@ -626,6 +656,7 @@ end
             print("Entity is near target")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in interaction system
@@ -664,6 +695,7 @@ end
             print("Found door partner")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in door synchronization
@@ -673,6 +705,7 @@ end
             door:Fire("Open")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in door management system
@@ -718,11 +751,13 @@ if SERVER then
         -- Simple: Send network variable to all clients
         entity:sendNetVar("health")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Send to specific player
         entity:sendNetVar("owner", ply)
         ```
+
         High Complexity:
         ```lua
         -- High: Use in data synchronization system
@@ -758,11 +793,13 @@ if SERVER then
         -- Simple: Clear all network variables
         entity:clearNetVars()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Clear for specific player
         entity:clearNetVars(ply)
         ```
+
         High Complexity:
         ```lua
         -- High: Use in entity cleanup system
@@ -797,6 +834,7 @@ if SERVER then
         -- Simple: Remove door access data
         door:removeDoorAccessData()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in door cleanup
@@ -805,6 +843,7 @@ if SERVER then
             door:Remove()
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in door management system
@@ -839,11 +878,13 @@ if SERVER then
         -- Simple: Lock entity
         entity:setLocked(true)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Toggle lock state
         entity:setLocked(not entity:isLocked())
         ```
+
         High Complexity:
         ```lua
         -- High: Use in security system
@@ -871,11 +912,13 @@ if SERVER then
         -- Simple: Make vehicle non-ownable
         vehicle:setKeysNonOwnable(true)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Toggle ownable state
         vehicle:setKeysNonOwnable(not vehicle:getNetVar("noSell", false))
         ```
+
         High Complexity:
         ```lua
         -- High: Use in vehicle management system
@@ -904,6 +947,7 @@ if SERVER then
             print("This is a door")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in door interaction
@@ -911,6 +955,7 @@ if SERVER then
             entity:Fire("Open")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in door management system
@@ -947,11 +992,13 @@ if SERVER then
         -- Simple: Set a network variable
         entity:setNetVar("health", 100)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Set with specific receiver
         entity:setNetVar("owner", ply, ply)
         ```
+
         High Complexity:
         ```lua
         -- High: Use in data management system
@@ -985,6 +1032,7 @@ if SERVER then
         -- Simple: Get a network variable
         local health = entity:getNetVar("health", 100)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in server-side logic
@@ -993,6 +1041,7 @@ if SERVER then
             print("Entity owner:", owner:Name())
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in server-side data management
@@ -1022,6 +1071,7 @@ else
             print("This is a door")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in client-side door interaction
@@ -1029,6 +1079,7 @@ else
             draw.DrawText("Press E to open door", "DermaDefault", ScrW()/2, ScrH()/2)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in client-side door management
@@ -1058,6 +1109,7 @@ else
         -- Simple: Get a network variable
         local health = entity:getNetVar("health", 100)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use in client-side logic
@@ -1066,6 +1118,7 @@ else
             print("You own this entity")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Use in client-side rendering
@@ -1102,11 +1155,13 @@ else
         -- Simple: Play following sound
         entity:playFollowingSound("ambient/atmosphere/city_hum_loop.wav")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Play with custom volume and distance
         entity:playFollowingSound("buttons/button15.wav", 0.5, true, 500)
         ```
+
         High Complexity:
         ```lua
         -- High: Play web sound with full parameters

@@ -1,5 +1,6 @@
 ﻿--[[
     Classes Library
+
     Character class management and validation system for the Lilia framework.
 ]]
 --[[
@@ -26,6 +27,7 @@ lia.class.list = lia.class.list or {}
             limit = 0
         })
         ```
+
         Medium Complexity:
         ```lua
         lia.class.register("police_officer", {
@@ -38,6 +40,7 @@ lia.class.list = lia.class.list or {}
             end
         })
         ```
+
         High Complexity:
         ```lua
         local classData = {
@@ -107,6 +110,7 @@ end
         ```lua
         lia.class.loadFromDir("gamemodes/lilia/classes")
         ```
+
         Medium Complexity:
         ```lua
         local classDir = "gamemodes/lilia/modules/custom_classes/classes"
@@ -114,6 +118,7 @@ end
             lia.class.loadFromDir(classDir)
         end
         ```
+
         High Complexity:
         ```lua
         local classDirectories = {
@@ -121,6 +126,7 @@ end
             "gamemodes/lilia/modules/factions/classes",
             "gamemodes/lilia/modules/custom_classes/classes"
         }
+
         for _, dir in ipairs(classDirectories) do
             if file.Exists(dir, "LUA") then
                 print("Loading classes from: " .. dir)
@@ -186,6 +192,7 @@ end
             print("Cannot join: " .. reason)
         end
         ```
+
         Medium Complexity:
         ```lua
         local function checkClassAvailability(client, className)
@@ -193,10 +200,12 @@ end
             if not classIndex then
                 return false, "Class not found"
             end
+
             local canJoin, reason = lia.class.canBe(client, classIndex)
             return canJoin, reason
         end
         ```
+
         High Complexity:
         ```lua
         local function validateClassSwitch(client, newClass)
@@ -204,18 +213,22 @@ end
             if not currentChar then
                 return false, "No character"
             end
+
             local currentClass = currentChar:getClass()
             if currentClass == newClass then
                 return false, "Already in this class"
             end
+
             local canJoin, reason = lia.class.canBe(client, newClass)
             if not canJoin then
                 return false, reason
             end
+
             -- Additional custom validation
             if hook.Run("CustomClassValidation", client, newClass) == false then
                 return false, "Custom validation failed"
             end
+
             return true, "Valid"
         end
         ```
@@ -248,6 +261,7 @@ end
             print("Class name: " .. class.name)
         end
         ```
+
         Medium Complexity:
         ```lua
         local function getClassInfo(identifier)
@@ -255,6 +269,7 @@ end
             if not class then
                 return nil, "Class not found"
             end
+
             return {
                 name = class.name,
                 description = class.desc,
@@ -263,6 +278,7 @@ end
             }
         end
         ```
+
         High Complexity:
         ```lua
         local function getClassDetails(identifier)
@@ -270,8 +286,10 @@ end
             if not class then
                 return nil, "Class not found"
             end
+
             local players = lia.class.getPlayers(identifier)
             local playerCount = #players
+
             return {
                 info = class,
                 currentPlayers = players,
@@ -303,6 +321,7 @@ end
         local players = lia.class.getPlayers(1)
         print("Players in class 1: " .. #players)
         ```
+
         Medium Complexity:
         ```lua
         local function getClassMembers(className)
@@ -310,14 +329,18 @@ end
             if not classIndex then
                 return {}
             end
+
             local players = lia.class.getPlayers(classIndex)
             local memberNames = {}
+
             for _, player in ipairs(players) do
                 table.insert(memberNames, player:Name())
             end
+
             return memberNames
         end
         ```
+
         High Complexity:
         ```lua
         local function getClassStatistics(classIndex)
@@ -328,6 +351,7 @@ end
                 onlineTime = 0,
                 averageLevel = 0
             }
+
             for _, player in ipairs(players) do
                 local char = player:getChar()
                 if char then
@@ -339,9 +363,11 @@ end
                     stats.onlineTime = stats.onlineTime + char:getPlayTime()
                 end
             end
+
             if stats.count > 0 then
                 stats.averageLevel = stats.onlineTime / stats.count
             end
+
             return stats
         end
         ```
@@ -369,6 +395,7 @@ end
         local count = lia.class.getPlayerCount(1)
         print("Players in class: " .. count)
         ```
+
         Medium Complexity:
         ```lua
         local function checkClassAvailability(classIndex)
@@ -376,21 +403,27 @@ end
             if not class then
                 return false, "Class not found"
             end
+
             local currentCount = lia.class.getPlayerCount(classIndex)
             local isFull = class.limit > 0 and currentCount >= class.limit
+
             return not isFull, isFull and "Class is full" or "Available"
         end
         ```
+
         High Complexity:
         ```lua
         local function getClassPopulationReport()
             local report = {}
+
             for i, class in ipairs(lia.class.list) do
                 local count = lia.class.getPlayerCount(i)
                 local percentage = 0
+
                 if class.limit > 0 then
                     percentage = (count / class.limit) * 100
                 end
+
                 table.insert(report, {
                     name = class.name,
                     currentCount = count,
@@ -400,6 +433,7 @@ end
                     faction = class.faction
                 })
             end
+
             return report
         end
         ```
@@ -429,6 +463,7 @@ end
             print("Found class at index: " .. classIndex)
         end
         ```
+
         Medium Complexity:
         ```lua
         local function findClassByName(searchTerm)
@@ -436,18 +471,22 @@ end
             if not classIndex then
                 return nil, "Class '" .. searchTerm .. "' not found"
             end
+
             local class = lia.class.get(classIndex)
             return classIndex, class
         end
         ```
+
         High Complexity:
         ```lua
         local function searchClasses(searchTerm)
             local results = {}
             local term = string.lower(searchTerm)
+
             for i, class in ipairs(lia.class.list) do
                 local uniqueID = string.lower(class.uniqueID or "")
                 local name = string.lower(class.name or "")
+
                 if string.find(uniqueID, term) or string.find(name, term) then
                     table.insert(results, {
                         index = i,
@@ -456,6 +495,7 @@ end
                     })
                 end
             end
+
             return results
         end
         ```
@@ -483,6 +523,7 @@ end
             print("This class requires whitelist")
         end
         ```
+
         Medium Complexity:
         ```lua
         local function checkClassAccess(client, classIndex)
@@ -490,19 +531,23 @@ end
             if not class then
                 return false, "Class not found"
             end
+
             if lia.class.hasWhitelist(classIndex) then
                 -- Check if player has whitelist access
                 local hasAccess = client:IsAdmin() or client:IsSuperAdmin()
                 return hasAccess, hasAccess and "Access granted" or "Whitelist required"
             end
+
             return true, "No whitelist required"
         end
         ```
+
         High Complexity:
         ```lua
         local function getWhitelistClasses()
             local whitelistClasses = {}
             local regularClasses = {}
+
             for i, class in ipairs(lia.class.list) do
                 if lia.class.hasWhitelist(i) then
                     table.insert(whitelistClasses, {
@@ -517,6 +562,7 @@ end
                     })
                 end
             end
+
             return {
                 whitelist = whitelistClasses,
                 regular = regularClasses,
@@ -547,25 +593,31 @@ end
         local joinableClasses = lia.class.retrieveJoinable(client)
         print("Player can join " .. #joinableClasses .. " classes")
         ```
+
         Medium Complexity:
         ```lua
         local function getJoinableClassNames(client)
             local joinableClasses = lia.class.retrieveJoinable(client)
             local classNames = {}
+
             for _, class in ipairs(joinableClasses) do
                 table.insert(classNames, class.name)
             end
+
             return classNames
         end
         ```
+
         High Complexity:
         ```lua
         local function getDetailedJoinableClasses(client)
             local joinableClasses = lia.class.retrieveJoinable(client)
             local detailedClasses = {}
+
             for _, class in ipairs(joinableClasses) do
                 local playerCount = lia.class.getPlayerCount(class.index)
                 local isFull = class.limit > 0 and playerCount >= class.limit
+
                 table.insert(detailedClasses, {
                     class = class,
                     playerCount = playerCount,
@@ -575,6 +627,7 @@ end
                     requiresWhitelist = lia.class.hasWhitelist(class.index)
                 })
             end
+
             -- Sort by availability and name
             table.sort(detailedClasses, function(a, b)
                 if a.isFull ~= b.isFull then
@@ -582,6 +635,7 @@ end
                 end
                 return a.class.name < b.class.name
             end)
+
             return detailedClasses
         end
         ```

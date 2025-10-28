@@ -1,5 +1,6 @@
 ﻿--[[
     Vendor Library
+
     NPC vendor management system with editing and rarity support for the Lilia framework.
 ]]
 --[[
@@ -139,17 +140,20 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add a basic rarity
     lia.vendor.addRarities("common", Color(255, 255, 255))
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Add multiple rarities with custom colors
     lia.vendor.addRarities("rare", Color(0, 255, 0))
     lia.vendor.addRarities("epic", Color(128, 0, 255))
     ```
+
     High Complexity:
     ```lua
     -- High: Add rarities with validation and error handling
@@ -160,6 +164,7 @@ end
         {name = "epic", color = Color(128, 0, 255)},
         {name = "legendary", color = Color(255, 165, 0)}
     }
+
     for _, rarity in ipairs(rarities) do
         lia.vendor.addRarities(rarity.name, rarity.color)
     end
@@ -178,6 +183,7 @@ end
     Returns: None
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add a basic weapon vendor preset
@@ -186,6 +192,7 @@ end
         ["weapon_shotgun"] = {price = 250, stock = 2}
     })
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Add a medical vendor preset with various items
@@ -195,6 +202,7 @@ end
         ["painkillers"] = {price = 50, stock = 8, mode = 1}
     })
     ```
+
     High Complexity:
     ```lua
     -- High: Add a comprehensive vendor preset with validation
@@ -205,6 +213,7 @@ end
         ["ammo_pistol"] = {price = 10, stock = 50, mode = 1},
         ["ammo_shotgun"] = {price = 15, stock = 30, mode = 1}
     }
+
     lia.vendor.addPreset("gun_dealer", weaponPreset)
     ```
 ]]
@@ -226,6 +235,7 @@ end
     Returns: table or nil - The preset data table if found, nil otherwise
     Realm: Shared
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get a preset and apply it to a vendor
@@ -234,6 +244,7 @@ end
         vendor:applyPreset("weapon_vendor")
     end
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Check if preset exists and validate items
@@ -245,11 +256,13 @@ end
         print("Preset '" .. presetName .. "' not found")
     end
     ```
+
     High Complexity:
     ```lua
     -- High: Get preset and dynamically configure vendor based on preset data
     local presetName = "gun_dealer"
     local preset = lia.vendor.getPreset(presetName)
+
     if preset then
         for itemType, itemData in pairs(preset) do
             vendor:setItemPrice(itemType, itemData.price)

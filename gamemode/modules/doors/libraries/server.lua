@@ -1,5 +1,6 @@
 ﻿--[[
     Doors Library Server
+
     Server-side door management and configuration system for the Lilia framework.
 ]]
 --[[
@@ -390,6 +391,7 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add basic door preset for a map
@@ -401,6 +403,7 @@ end
         }
     })
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Add preset with faction restrictions
@@ -419,6 +422,7 @@ end
         }
     })
     ```
+
     High Complexity:
     ```lua
     -- High: Complex preset with multiple doors and restrictions
@@ -465,6 +469,7 @@ end
     Returns: Table or nil - The preset data table if found, nil otherwise
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get preset for current map
@@ -473,6 +478,7 @@ end
         print("Found preset for map")
     end
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Check and use preset data
@@ -484,6 +490,7 @@ end
         end
     end
     ```
+
     High Complexity:
     ```lua
     -- High: Dynamic preset loading with validation
@@ -493,6 +500,7 @@ end
             lia.warning("No door preset found for map: " .. mapName)
             return false
         end
+
         local validDoors = 0
         for doorID, doorData in pairs(preset) do
             local ent = ents.GetMapCreatedEntity(doorID)
@@ -502,6 +510,7 @@ end
                 ent:setNetVar("doorData", doorData)
             end
         end
+
         lia.information("Loaded " .. validDoors .. " doors from preset for " .. mapName)
         return true
     end
@@ -518,11 +527,13 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Verify schema on server start
     lia.doors.verifyDatabaseSchema()
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Verify schema with custom handling
@@ -532,15 +543,18 @@ end
         end)
     end)
     ```
+
     High Complexity:
     ```lua
     -- High: Custom schema verification with migration
     function customSchemaCheck()
         lia.doors.verifyDatabaseSchema()
+
         -- Check for missing columns and add them
         local missingColumns = {
             door_group = "text"
         }
+
         for column, type in pairs(missingColumns) do
             lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. column .. " " .. type)
         end
@@ -629,11 +643,13 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Run cleanup on server start
     lia.doors.cleanupCorruptedData()
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Schedule cleanup with delay
@@ -643,16 +659,20 @@ end
         end)
     end)
     ```
+
     High Complexity:
     ```lua
     -- High: Custom cleanup with logging and validation
     function advancedDoorCleanup()
         lia.information("Starting door data cleanup...")
+
         lia.doors.cleanupCorruptedData()
+
         -- Additional validation
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
         local map = game.GetMap()
         local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
+
         lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
             local count = res.results[1].count
             lia.information("Door cleanup completed. Total doors in database: " .. count)

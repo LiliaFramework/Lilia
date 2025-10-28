@@ -1,5 +1,6 @@
 ﻿--[[
     Currency Library
+
     In-game currency formatting, display, and management system for the Lilia framework.
 ]]
 --[[
@@ -17,12 +18,14 @@ lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
     Returns: string - Formatted currency string with symbol and proper singular/plural form
     Realm: Shared (works on both client and server)
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Format a basic currency amount
     local formatted = lia.currency.get(100)
     print(formatted) -- "$100 dollars" (example output)
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Format currency with conditional display
@@ -32,6 +35,7 @@ lia.currency.plural = L(lia.config.get("CurrencyPluralName", "currencyPlural"))
         chat.AddText(Color(255, 255, 255), displayText)
     end
     ```
+
     High Complexity:
     ```lua
     -- High: Format multiple currency amounts with validation
@@ -60,12 +64,14 @@ if SERVER then
         Returns: Entity - The created money entity if successful, nil if parameters are invalid
         Realm: Server only
         Example Usage:
+
         Low Complexity:
         ```lua
         -- Simple: Spawn money at player's position
         local pos = player:GetPos()
         lia.currency.spawn(pos, 100)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Spawn money with specific angle and validation
@@ -78,6 +84,7 @@ if SERVER then
             end
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Spawn multiple money entities with advanced positioning
@@ -86,6 +93,7 @@ if SERVER then
             {pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
             {pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
         }
+
         for _, data in ipairs(spawnPositions) do
             local money = lia.currency.spawn(data.pos, data.amount, data.angle)
             if money then

@@ -1,5 +1,6 @@
 ﻿--[[
     Logger Library
+
     Comprehensive logging and audit trail system for the Lilia framework.
 ]]
 --[[
@@ -259,6 +260,7 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add a basic custom log type
@@ -266,6 +268,7 @@ end
         return client:Name() .. " performed " .. action
     end, "Custom")
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Add log type with validation and localization
@@ -274,6 +277,7 @@ end
         return L("logModuleEvent", client:Name(), moduleName, event, data or "")
     end, "Modules")
     ```
+
     High Complexity:
     ```lua
     -- High: Add complex log type with multiple parameters and error handling
@@ -306,6 +310,7 @@ end
         - category (string): The category of the log type, or nil if log type doesn't exist
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get a basic log string
@@ -314,6 +319,7 @@ end
         print("Log: " .. message)
     end
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Get log string with multiple parameters
@@ -322,6 +328,7 @@ end
         hook.Run("CustomLogHandler", message, category)
     end
     ```
+
     High Complexity:
     ```lua
     -- High: Get log string with error handling and validation
@@ -333,6 +340,7 @@ end
             return "Failed to generate log: " .. tostring(logType), "Error"
         end
     end
+
     local message, category = safeGetLogString(client, "adminAction", target, action, reason)
     ```
 ]]
@@ -356,11 +364,13 @@ end
     Returns: None
     Realm: Server
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Log a basic player action
     lia.log.add(client, "charCreate", character)
     ```
+
     Medium Complexity:
     ```lua
     -- Medium: Log with multiple parameters and validation
@@ -368,16 +378,20 @@ end
         lia.log.add(client, "itemTransfer", itemName, fromID, toID)
     end
     ```
+
     High Complexity:
     ```lua
     -- High: Log with conditional parameters and error handling
     local function logAdminAction(client, target, action, reason, amount)
         local logType = "adminAction"
         local params = {target, action}
+
         if reason then table.insert(params, reason) end
         if amount then table.insert(params, amount) end
+
         lia.log.add(client, logType, unpack(params))
     end
+
     logAdminAction(client, target, "kick", "Rule violation", nil)
     ```
 ]]

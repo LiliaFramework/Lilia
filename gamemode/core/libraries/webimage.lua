@@ -1,5 +1,6 @@
 ﻿--[[
     Web Image Library
+
     Web-based image downloading, caching, and management system for the Lilia framework.
 ]]
 --[[
@@ -80,6 +81,7 @@ end
         -- Simple: Download a single image
         lia.webimage.download("logo", "https://example.com/logo.png")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Download with callback and custom flags
@@ -91,6 +93,7 @@ end
             end
         end, "noclamp smooth")
         ```
+
         High Complexity:
         ```lua
         -- High: Batch download with error handling and progress tracking
@@ -99,6 +102,7 @@ end
             {name = "icon", url = "https://example.com/icon.jpg"},
             {name = "background", url = "https://example.com/bg.png"}
         }
+
         local completed = 0
         for _, img in ipairs(images) do
             lia.webimage.download(img.name, img.url, function(material, fromCache, error)
@@ -108,6 +112,7 @@ end
                 else
                     print("Failed to download " .. img.name .. ": " .. (error or "unknown error"))
                 end
+
                 if completed == #images then
                     print("All downloads completed")
                 end
@@ -215,6 +220,7 @@ end
         -- Simple: Register and download a single image
         lia.webimage.register("logo", "https://example.com/logo.png")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Register with callback for UI updates
@@ -225,6 +231,7 @@ end
             end
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Register multiple images with progress tracking
@@ -233,6 +240,7 @@ end
             {name = "icon", url = "https://example.com/icon.jpg", flags = "smooth"},
             {name = "background", url = "https://example.com/bg.png"}
         }
+
         local registered = 0
         for _, config in ipairs(imageConfigs) do
             lia.webimage.register(config.name, config.url, function(material)
@@ -240,6 +248,7 @@ end
                 if material then
                     print("Registered: " .. config.name)
                 end
+
                 if registered == #imageConfigs then
                     print("All images registered successfully")
                 end
@@ -274,6 +283,7 @@ end
             surface.DrawTexturedRect(0, 0, 100, 100)
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Get material with custom flags and fallback
@@ -284,11 +294,13 @@ end
             avatarPanel:SetImage("icon16/user.png") -- fallback
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Batch retrieval with validation and error handling
         local imageNames = {"banner", "icon", "background", "logo"}
         local materials = {}
+
         for _, name in ipairs(imageNames) do
             local material = lia.webimage.get(name, "noclamp")
             if material and not material:IsError() then
@@ -300,6 +312,7 @@ end
                 lia.webimage.download(name)
             end
         end
+
         -- Use materials for rendering
         for name, material in pairs(materials) do
             surface.SetMaterial(material)
@@ -409,22 +422,27 @@ end
         print("Downloaded images: " .. stats.downloaded)
         print("Stored images: " .. stats.stored)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Display statistics in a panel
         local stats = lia.webimage.getStats()
         local statsPanel = vgui.Create("DPanel")
         statsPanel:SetSize(200, 100)
+
         local downloadedLabel = vgui.Create("DLabel", statsPanel)
         downloadedLabel:SetText("Downloaded: " .. stats.downloaded)
         downloadedLabel:SetPos(10, 10)
+
         local storedLabel = vgui.Create("DLabel", statsPanel)
         storedLabel:SetText("Stored: " .. stats.stored)
         storedLabel:SetPos(10, 30)
+
         local resetLabel = vgui.Create("DLabel", statsPanel)
         resetLabel:SetText("Last Reset: " .. os.date("%H:%M:%S", stats.lastReset))
         resetLabel:SetPos(10, 50)
         ```
+
         High Complexity:
         ```lua
         -- High: Create a comprehensive statistics dashboard
@@ -435,35 +453,43 @@ end
             dashboard:SetTitle("Web Image Statistics")
             dashboard:Center()
             dashboard:MakePopup()
+
             local scrollPanel = vgui.Create("DScrollPanel", dashboard)
             scrollPanel:Dock(FILL)
+
             -- Download statistics
             local downloadPanel = vgui.Create("DPanel", scrollPanel)
             downloadPanel:SetSize(380, 80)
             downloadPanel:Dock(TOP)
             downloadPanel:DockMargin(5, 5, 5, 5)
+
             local downloadLabel = vgui.Create("DLabel", downloadPanel)
             downloadLabel:SetText("Downloaded Images: " .. stats.downloaded)
             downloadLabel:SetPos(10, 10)
             downloadLabel:SetFont("DermaDefault")
+
             -- Stored statistics
             local storedPanel = vgui.Create("DPanel", scrollPanel)
             storedPanel:SetSize(380, 80)
             storedPanel:Dock(TOP)
             storedPanel:DockMargin(5, 5, 5, 5)
+
             local storedLabel = vgui.Create("DLabel", storedPanel)
             storedLabel:SetText("Stored Images: " .. stats.stored)
             storedLabel:SetPos(10, 10)
             storedLabel:SetFont("DermaDefault")
+
             -- Reset time
             local resetPanel = vgui.Create("DPanel", scrollPanel)
             resetPanel:SetSize(380, 80)
             resetPanel:Dock(TOP)
             resetPanel:DockMargin(5, 5, 5, 5)
+
             local resetLabel = vgui.Create("DLabel", resetPanel)
             resetLabel:SetText("Last Reset: " .. os.date("%Y-%m-%d %H:%M:%S", stats.lastReset))
             resetLabel:SetPos(10, 10)
             resetLabel:SetFont("DermaDefault")
+
             -- Refresh button
             local refreshBtn = vgui.Create("DButton", dashboard)
             refreshBtn:SetText("Refresh Stats")
@@ -474,6 +500,7 @@ end
                 createStatsDashboard() -- Refresh
             end
         end
+
         createStatsDashboard()
         ```
 ]]

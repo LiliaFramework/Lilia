@@ -233,8 +233,8 @@ Set automatically during class registration
 ```lua
 -- This is set automatically when you register the class
 lia.class.register("police_officer", {
-    name = "Police Officer",
-    -- uniqueID will be "police_officer"
+name = "Police Officer",
+-- uniqueID will be "police_officer"
 })
 
 ```
@@ -256,8 +256,8 @@ Set automatically during class registration
 ```lua
 -- This is set automatically when you register the class
 lia.class.register("police_officer", {
-    name = "Police Officer",
-    -- index will be assigned based on registration order
+name = "Police Officer",
+-- index will be assigned based on registration order
 })
 
 ```
@@ -437,8 +437,8 @@ During class definition (applied when player joins class)
 
 ```lua
 CLASS.NPCRelations = {
-    ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-    ["npc_citizen"] = D_NU       -- Neutral to citizens
+["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
+["npc_citizen"] = D_NU       -- Neutral to citizens
 }
 
 ```
@@ -547,25 +547,25 @@ When a player attempts to join this class
 
 ```lua
 function CLASS:OnCanBe(client)
-    local char = client:getChar()
-    if char then
-        -- Check character attributes
-        if char:getAttrib("str", 0) < 10 then
-            client:notify("You need at least 10 strength to join this class.")
-            return false
-        end
-        -- Check permissions (use framework permission system)
-        if not client:hasFlags("P") then  -- Example permission flag
-            client:notify("You don't have permission to join this class.")
-            return false
-        end
-        -- Check custom conditions
-        if char:getData("banned_from_class", false) then
-            client:notify("You are banned from this class.")
-            return false
-        end
-    end
-    return true
+local char = client:getChar()
+if char then
+-- Check character attributes
+if char:getAttrib("str", 0) < 10 then
+client:notify("You need at least 10 strength to join this class.")
+return false
+end
+-- Check permissions (use framework permission system)
+if not client:hasFlags("P") then  -- Example permission flag
+client:notify("You don't have permission to join this class.")
+return false
+end
+-- Check custom conditions
+if char:getData("banned_from_class", false) then
+client:notify("You are banned from this class.")
+return false
+end
+end
+return true
 end
 
 ```
@@ -594,7 +594,7 @@ Server
 
 ```lua
 function CLASS:OnSet(client)
-    client:notify("Welcome to " .. self.name)
+client:notify("Welcome to " .. self.name)
 end
 
 ```
@@ -624,9 +624,9 @@ Server
 
 ```lua
 function CLASS:OnTransferred(client, oldClass)
-    if oldClass then
-        client:notify("Switched from " .. oldClass.name .. " to " .. self.name)
-    end
+if oldClass then
+client:notify("Switched from " .. oldClass.name .. " to " .. self.name)
+end
 end
 
 ```
@@ -655,9 +655,9 @@ Server
 
 ```lua
 function CLASS:OnSpawn(client)
-    client:Give("weapon_stunstick")
-    client:SetHealth(150)
-    client:SetArmor(50)
+client:Give("weapon_stunstick")
+client:SetHealth(150)
+client:SetArmor(50)
 end
 
 ```
@@ -686,7 +686,7 @@ Server
 
 ```lua
 function CLASS:OnLeave(client)
-    client:StripWeapon("weapon_stunstick")
+client:StripWeapon("weapon_stunstick")
 end
 
 ```

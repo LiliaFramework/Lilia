@@ -1,5 +1,6 @@
 ﻿--[[
     WebSound Library
+
     Web-based audio content downloading, caching, and playback system for the Lilia framework.
 ]]
 --[[
@@ -104,6 +105,7 @@ end
         -- Simple: Download a sound file
         lia.websound.download("notification.wav", "https://example.com/sound.wav")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Download with callback handling
@@ -118,6 +120,7 @@ end
             end
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Batch download with validation and error handling
@@ -126,8 +129,10 @@ end
             {name = "ui/hover.wav", url = "https://cdn.example.com/ui/hover.wav"},
             {name = "ui/error.wav", url = "https://cdn.example.com/ui/error.wav"}
         }
+
         local downloadCount = 0
         local totalSounds = #sounds
+
         for _, soundData in ipairs(sounds) do
             lia.websound.download(soundData.name, soundData.url, function(path, fromCache, error)
                 downloadCount = downloadCount + 1
@@ -136,6 +141,7 @@ end
                 else
                     -- Failed to download sound
                 end
+
                 if downloadCount == totalSounds then
                     -- All sounds processed
                 end
@@ -238,6 +244,7 @@ end
         -- Simple: Register a sound file
         lia.websound.register("button_click.wav", "https://example.com/click.wav")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Register with callback and error handling
@@ -250,6 +257,7 @@ end
             end
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Register multiple sounds with validation and progress tracking
@@ -264,11 +272,13 @@ end
                 {name = "ambient/wind.mp3", url = "https://cdn.example.com/ambient/wind.mp3"}
             }
         }
+
         local registeredCount = 0
         local totalSounds = 0
         for category, sounds in pairs(soundRegistry) do
             totalSounds = totalSounds + #sounds
         end
+
         for category, sounds in pairs(soundRegistry) do
             for _, soundData in ipairs(sounds) do
                 lia.websound.register(soundData.name, soundData.url, function(path, fromCache, error)
@@ -278,6 +288,7 @@ end
                     else
                         -- Failed to register sound
                     end
+
                     if registeredCount == totalSounds then
                         -- All sounds registered successfully
                     end
@@ -310,6 +321,7 @@ end
             -- Sound not cached yet
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Get sound path with fallback handling
@@ -323,12 +335,14 @@ end
                 return false
             end
         end
+
         -- Usage
         if not playSoundIfAvailable("notification.wav") then
             -- Fallback to default sound or download
             lia.websound.register("notification.wav", "https://example.com/notify.wav")
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Batch check multiple sounds with availability tracking
@@ -339,8 +353,10 @@ end
             "ambient/rain.mp3",
             "ambient/wind.mp3"
         }
+
         local availableSounds = {}
         local missingSounds = {}
+
         for _, soundName in ipairs(requiredSounds) do
             local soundPath = lia.websound.get(soundName)
             if soundPath then
@@ -351,6 +367,7 @@ end
                 -- Sound not cached
             end
         end
+
         if #missingSounds > 0 then
             -- Missing sounds, downloading...
             for _, soundName in ipairs(missingSounds) do
@@ -567,19 +584,23 @@ end
         -- Downloaded sounds: stats.downloaded
         -- Stored sounds: stats.stored
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Display formatted statistics with timestamp
         local function displayWebSoundStats()
             local stats = lia.websound.getStats()
             local resetTime = os.date("%Y-%m-%d %H:%M:%S", stats.lastReset)
+
             -- WebSound Statistics
             -- Downloaded sounds: stats.downloaded
             -- Stored sounds: stats.stored
             -- Last reset: resetTime
         end
+
         displayWebSoundStats()
         ```
+
         High Complexity:
         ```lua
         -- High: Monitor statistics with logging and performance tracking
@@ -587,6 +608,7 @@ end
             local stats = lia.websound.getStats()
             local currentTime = os.time()
             local timeSinceReset = currentTime - stats.lastReset
+
             -- Log statistics to file
             local logData = {
                 timestamp = os.date("%Y-%m-%d %H:%M:%S", currentTime),
@@ -595,22 +617,27 @@ end
                 timeSinceReset = timeSinceReset,
                 downloadRate = timeSinceReset > 0 and (stats.downloaded / timeSinceReset) or 0
             }
+
             -- Save to file
             file.Write("websound_stats.json", util.TableToJSON(logData, true))
+
             -- Display performance metrics
             -- WebSound Performance Report
             -- Downloads: stats.downloaded sounds
             -- Storage: stats.stored registered sounds
             -- Uptime: timeSinceReset seconds
             -- Download rate: logData.downloadRate sounds/second
+
             -- Performance warnings
             if stats.downloaded > 100 then
                 -- WARNING: High download count detected!
             end
+
             if timeSinceReset > 3600 and stats.downloaded == 0 then
                 -- INFO: No downloads in the last hour
             end
         end
+
         -- Run monitoring every 5 minutes
         timer.Create("WebSoundMonitor", 300, 0, monitorWebSoundPerformance)
         ```
@@ -641,6 +668,7 @@ end
         -- Simple: Play default button sound
         lia.websound.playButtonSound()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Play custom sound with fallback
@@ -652,11 +680,13 @@ end
             end
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Conditional button sounds with error handling
         local function handleButtonClick(buttonType, customSound)
             local soundToPlay = customSound or "button_click.wav"
+
             lia.websound.playButtonSound(soundToPlay, function(success)
                 if success then
                     -- Played sound for button
@@ -667,6 +697,7 @@ end
                 end
             end)
         end
+
         -- Usage
         handleButtonClick("primary", "primary_click.wav")
         handleButtonClick("secondary") -- Will use default

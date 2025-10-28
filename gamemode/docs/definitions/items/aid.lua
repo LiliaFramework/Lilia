@@ -1,11 +1,15 @@
 ﻿--[[
     Aid Item Definition
+
     Medical aid item system for the Lilia framework.
+
     Aid items are consumable medical items that can restore health to players.
     They can be used on the player themselves or on other players through targeting.
+
     PLACEMENT:
     - Place in: ModuleFolder/items/aid/ItemHere.lua (for module-specific items)
     - Place in: SchemaFolder/items/aid/ItemHere.lua (for schema-specific items)
+
     USAGE:
     - Aid items are automatically consumed when used
     - They restore health based on the ITEM.health value
@@ -82,6 +86,7 @@ ITEM.height = 1
 ITEM.health = 0
 --[[
 Example Item:
+
 ```lua
 -- Basic item identification
 ITEM.name = "Medical Kit"                    -- Display name shown to players

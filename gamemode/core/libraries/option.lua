@@ -1,5 +1,6 @@
 ﻿--[[
     Option Library
+
     User-configurable settings management system for the Lilia framework.
 ]]
 --[[
@@ -29,6 +30,7 @@ lia.option.stored = lia.option.stored or {}
             isQuick = true
         })
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Add a numeric slider with callback
@@ -41,6 +43,7 @@ lia.option.stored = lia.option.stored or {}
             decimals = 2
         })
         ```
+
         High Complexity:
         ```lua
         -- High: Add a color picker with visibility condition and networking
@@ -106,6 +109,7 @@ end
         local options = lia.option.getOptions("weaponSelectorPosition")
         -- Returns: {"Left", "Right", "Center"}
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Use options in UI creation
@@ -115,6 +119,7 @@ end
             combo:AddChoice(option, option)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Dynamic options with validation
@@ -163,12 +168,14 @@ end
         -- Simple: Set a boolean option
         lia.option.set("showHUD", true)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Set option with callback execution
         lia.option.set("volume", 0.5)
         -- This will trigger the callback function if one was defined
         ```
+
         High Complexity:
         ```lua
         -- High: Set multiple options with validation
@@ -177,6 +184,7 @@ end
             {"volume", 0.8},
             {"espColor", Color(255, 0, 0)}
         }
+
         for _, optionData in ipairs(optionsToSet) do
             local key, value = optionData[1], optionData[2]
             if lia.option.stored[key] then
@@ -213,12 +221,14 @@ end
             -- HUD is enabled
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Get option with fallback
         local volume = lia.option.get("volume", 0.5)
         RunConsoleCommand("volume", tostring(volume))
         ```
+
         High Complexity:
         ```lua
         -- High: Get multiple options with validation and type checking
@@ -227,10 +237,12 @@ end
             volume = lia.option.get("volume", 0.8),
             espColor = lia.option.get("espColor", Color(255, 0, 0))
         }
+
         -- Validate and apply configuration
         if type(config.showHUD) == "boolean" then
             hook.Run("HUDVisibilityChanged", config.showHUD)
         end
+
         if type(config.volume) == "number" and config.volume >= 0 and config.volume <= 1 then
             RunConsoleCommand("volume", tostring(config.volume))
         end
@@ -258,6 +270,7 @@ end
         lia.option.set("showHUD", true)
         lia.option.save() -- Automatically called, but can be called manually
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Save options with error handling
@@ -269,6 +282,7 @@ end
         end
         saveOptionsSafely()
         ```
+
         High Complexity:
         ```lua
         -- High: Batch save with validation and backup
@@ -279,8 +293,10 @@ end
             if currentData then
                 file.Write(backupPath, currentData)
             end
+
             -- Save current options
             lia.option.save()
+
             -- Verify save was successful
             local savedData = file.Read("lilia/options.json", "DATA")
             if savedData then
@@ -316,6 +332,7 @@ end
         lia.option.load()
         -- This is typically called automatically during initialization
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Load options with error handling
@@ -331,6 +348,7 @@ end
         end
         loadOptionsSafely()
         ```
+
         High Complexity:
         ```lua
         -- High: Load options with validation and migration
@@ -360,6 +378,7 @@ end
                 -- No saved options, use defaults
                 lia.option.load()
             end
+
             -- Trigger initialization hook
             hook.Run("InitializedOptions")
         end

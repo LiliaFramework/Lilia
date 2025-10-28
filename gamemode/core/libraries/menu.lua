@@ -1,5 +1,6 @@
 ﻿--[[
     Menu Library
+
     Interactive 3D context menu system for world and entity interactions in the Lilia framework.
 ]]
 --[[
@@ -66,6 +67,7 @@ end
             ["Drop"] = function() print("Dropped item") end
         })
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Create menu attached to an entity
@@ -76,6 +78,7 @@ end
             ["Destroy"] = function() ent:Remove() end
         }, ent)
         ```
+
         High Complexity:
         ```lua
         -- High: Create menu with custom position and cleanup
@@ -90,9 +93,11 @@ end
                 print("Menu cancelled")
             end
         }
+
         local cleanupFunc = function()
             print("Menu was removed")
         end
+
         local menuIndex = lia.menu.add(menuData, Vector(100, 200, 50), cleanupFunc)
         ```
 ]]
@@ -148,6 +153,7 @@ end
         -- This function is typically called from hooks like HUDPaint
         hook.Add("HUDPaint", "MenuDraw", lia.menu.drawAll)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Custom rendering with additional checks
@@ -156,6 +162,7 @@ end
             lia.menu.drawAll()
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Conditional rendering with performance optimization
@@ -163,6 +170,7 @@ end
         hook.Add("HUDPaint", "OptimizedMenuDraw", function()
             local currentTime = RealTime()
             if currentTime - lastDrawTime < 0.016 then return end -- Limit to ~60fps
+
             if #lia.menu.list > 0 then
                 lia.menu.drawAll()
                 lastDrawTime = currentTime
@@ -233,6 +241,7 @@ end
             print("Player is hovering over menu item")
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Handle menu interaction with validation
@@ -246,6 +255,7 @@ end
             end
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Advanced menu interaction with cooldown and logging
@@ -254,10 +264,12 @@ end
             if button == MOUSE_LEFT then
                 local currentTime = RealTime()
                 if currentTime - lastMenuTime < 0.1 then return end -- Prevent spam
+
                 local menuIndex, callback = lia.menu.getActiveMenu()
                 if callback then
                     lastMenuTime = currentTime
                     callback()
+
                     -- Log the interaction
                     print(string.format("Menu interaction at time %f, menu index %d", currentTime, menuIndex))
                 end
@@ -306,6 +318,7 @@ end
             print("Menu button pressed!")
         end)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Handle menu interaction with validation
@@ -321,6 +334,7 @@ end
             end
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Advanced menu handling with error checking and logging
@@ -329,18 +343,22 @@ end
                 print("Invalid menu index")
                 return false
             end
+
             if not callback or type(callback) ~= "function" then
                 print("Invalid callback function")
                 return false
             end
+
             local success = lia.menu.onButtonPressed(menuIndex, function()
                 local success, err = pcall(callback)
                 if not success then
                     print("Menu callback error: " .. tostring(err))
                 end
             end)
+
             return success
         end
+
         -- Usage
         local menuIndex, callback = lia.menu.getActiveMenu()
         if menuIndex then

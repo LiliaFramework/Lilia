@@ -1,5 +1,6 @@
 ﻿--[[
     Keybind Library
+
     Keyboard binding registration, storage, and execution system for the Lilia framework.
 ]]
 --[[
@@ -143,6 +144,7 @@ local KeybindKeys = {
             end
         })
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Add keybind with conditional execution and server-only flag
@@ -160,6 +162,7 @@ local KeybindKeys = {
             end
         })
         ```
+
         High Complexity:
         ```lua
         -- High: Add keybind with multiple callbacks and complex validation
@@ -433,6 +436,7 @@ if CLIENT then
             local inventoryKey = lia.keybind.get("openInventory")
             print("Inventory key:", inventoryKey)
             ```
+
             Medium Complexity:
             ```lua
             -- Medium: Get key with fallback default
@@ -443,11 +447,13 @@ if CLIENT then
                 print("Admin mode bound to:", input.GetKeyName(adminKey))
             end
             ```
+
             High Complexity:
             ```lua
             -- High: Check multiple keybinds and handle different states
             local keybinds = {"openInventory", "adminMode", "quickTakeItem"}
             local boundKeys = {}
+
             for _, action in ipairs(keybinds) do
                 local key = lia.keybind.get(action, KEY_NONE)
                 if key ~= KEY_NONE then
@@ -457,6 +463,7 @@ if CLIENT then
                     }
                 end
             end
+
             -- Process bound keys...
             ```
     ]]
@@ -478,6 +485,7 @@ if CLIENT then
             -- Simple: Save keybinds after player changes settings
             lia.keybind.save()
             ```
+
             Medium Complexity:
             ```lua
             -- Medium: Save keybinds with validation
@@ -485,14 +493,17 @@ if CLIENT then
                 local success = pcall(function()
                     lia.keybind.save()
                 end)
+
                 if success then
                     print("Keybinds saved successfully")
                 else
                     print("Failed to save keybinds")
                 end
             end
+
             saveKeybindsSafely()
             ```
+
             High Complexity:
             ```lua
             -- High: Save keybinds with backup and error handling
@@ -500,14 +511,17 @@ if CLIENT then
                 -- Create backup of current settings
                 local backupPath = "lilia/keybinds_backup.json"
                 local currentPath = "lilia/keybinds.json"
+
                 if file.Exists(currentPath, "DATA") then
                     local currentData = file.Read(currentPath, "DATA")
                     file.Write(backupPath, currentData)
                 end
+
                 -- Save new settings
                 local success = pcall(function()
                     lia.keybind.save()
                 end)
+
                 if not success then
                     -- Restore from backup if save failed
                     if file.Exists(backupPath, "DATA") then
@@ -516,6 +530,7 @@ if CLIENT then
                     end
                 end
             end
+
             saveKeybindsWithBackup()
             ```
     ]]
@@ -542,6 +557,7 @@ if CLIENT then
             -- Simple: Load keybinds during initialization
             lia.keybind.load()
             ```
+
             Medium Complexity:
             ```lua
             -- Medium: Load keybinds with validation and fallback
@@ -549,6 +565,7 @@ if CLIENT then
                 local success = pcall(function()
                     lia.keybind.load()
                 end)
+
                 if success then
                     print("Keybinds loaded successfully")
                     hook.Run("KeybindsLoaded")
@@ -562,14 +579,17 @@ if CLIENT then
                     end
                 end
             end
+
             loadKeybindsSafely()
             ```
+
             High Complexity:
             ```lua
             -- High: Load keybinds with migration and validation
             local function loadKeybindsWithMigration()
                 local keybindPath = "lilia/keybinds.json"
                 local oldPath = "lilia/old_keybinds.json"
+
                 -- Check for old format and migrate if needed
                 if file.Exists(oldPath, "DATA") and not file.Exists(keybindPath, "DATA") then
                     local oldData = file.Read(oldPath, "DATA")
@@ -578,10 +598,12 @@ if CLIENT then
                         file.Delete(oldPath)
                     end
                 end
+
                 -- Load with error handling
                 local success = pcall(function()
                     lia.keybind.load()
                 end)
+
                 if not success then
                     -- Create default keybind file
                     local defaultKeybinds = {}
@@ -590,12 +612,14 @@ if CLIENT then
                             defaultKeybinds[action] = data.default
                         end
                     end
+
                     local json = util.TableToJSON(defaultKeybinds, true)
                     if json then
                         file.Write(keybindPath, json)
                         lia.keybind.load()
                     end
                 end
+
                 -- Validate loaded keybinds
                 for action, data in pairs(lia.keybind.stored) do
                     if istable(data) and data.value then
@@ -605,6 +629,7 @@ if CLIENT then
                     end
                 end
             end
+
             loadKeybindsWithMigration()
             ```
     ]]

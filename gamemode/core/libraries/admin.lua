@@ -1,5 +1,6 @@
 ﻿--[[
     Administrator Library
+
     Comprehensive user group and privilege management system for the Lilia framework.
 ]]
 --[[
@@ -272,11 +273,13 @@ end
         -- Simple: Kick a player for cheating
         lia.administrator.applyPunishment(player, "Cheating detected", true, false)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Ban a player for 60 minutes with custom message
         lia.administrator.applyPunishment(player, "RDM", false, true, 60, "kickedForRDM", "bannedForRDM")
         ```
+
         High Complexity:
         ```lua
         -- High: Apply punishment based on infraction severity
@@ -315,6 +318,7 @@ end
             -- Grant access to admin stick
         end
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Check access for different user groups
@@ -325,6 +329,7 @@ end
             end
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Complex permission checking with fallback
@@ -336,6 +341,7 @@ end
             end
             return false, nil
         end
+
         local hasAccess, grantedPrivilege = checkMultiplePrivileges(player, {"admin", "moderator", "helper"})
         ```
 ]]
@@ -413,6 +419,7 @@ end
         -- Simple: Save administrator data
         lia.administrator.save()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Save without network sync during bulk operations
@@ -422,6 +429,7 @@ end
         lia.administrator.save(true) -- Save without network sync
         lia.administrator.save() -- Final save with sync
         ```
+
         High Complexity:
         ```lua
         -- High: Batch save with error handling
@@ -435,6 +443,7 @@ end
             end
             return true
         end
+
         if safeSave(true) then
             print("Administrator data saved successfully")
         end
@@ -495,6 +504,7 @@ end
             MinAccess = "admin"
         })
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Register privilege with category
@@ -505,6 +515,7 @@ end
             Category = "Player Management"
         })
         ```
+
         High Complexity:
         ```lua
         -- High: Register multiple privileges from module
@@ -513,6 +524,7 @@ end
             {ID = "module_feature2", Name = "Feature 2", MinAccess = "admin", Category = "Module"},
             {ID = "module_feature3", Name = "Feature 3", MinAccess = "superadmin", Category = "Module"}
         }
+
         for _, privilege in ipairs(modulePrivileges) do
             lia.administrator.registerPrivilege(privilege)
         end
@@ -564,6 +576,7 @@ end
         -- Simple: Remove a privilege
         lia.administrator.unregisterPrivilege("oldPrivilege")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Remove privilege with validation
@@ -573,6 +586,7 @@ end
             print("Privilege removed: " .. privilegeToRemove)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Remove multiple privileges with cleanup
@@ -618,12 +632,14 @@ end
         -- Simple: Apply inheritance to a group
         lia.administrator.applyInheritance("moderator")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Apply inheritance after group modification
         lia.administrator.groups["moderator"]._info.inheritance = "admin"
         lia.administrator.applyInheritance("moderator")
         ```
+
         High Complexity:
         ```lua
         -- High: Apply inheritance to multiple groups with validation
@@ -675,6 +691,7 @@ end
         -- Simple: Load administrator data
         lia.administrator.load()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Load with callback handling
@@ -683,6 +700,7 @@ end
             print("Admin system loaded with " .. table.Count(groups) .. " groups")
         end)
         ```
+
         High Complexity:
         ```lua
         -- High: Load with error handling and validation
@@ -702,6 +720,7 @@ end
             end
             return true
         end
+
         if safeLoad() then
             print("Administrator system loaded successfully")
         else
@@ -774,6 +793,7 @@ end
         -- Simple: Create a basic group
         lia.administrator.createGroup("moderator")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Create group with inheritance
@@ -784,6 +804,7 @@ end
             }
         })
         ```
+
         High Complexity:
         ```lua
         -- High: Create multiple groups with different configurations
@@ -792,6 +813,7 @@ end
             {name = "helper", inherit = "user", types = {"Staff"}},
             {name = "vip", inherit = "user", types = {"VIP"}}
         }
+
         for _, config in ipairs(groupConfigs) do
             lia.administrator.createGroup(config.name, {
                 _info = {
@@ -835,6 +857,7 @@ end
         -- Simple: Remove a group
         lia.administrator.removeGroup("oldGroup")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Remove group with validation
@@ -844,6 +867,7 @@ end
             print("Group removed: " .. groupToRemove)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Remove multiple groups with safety checks
@@ -889,6 +913,7 @@ end
         -- Simple: Rename a group
         lia.administrator.renameGroup("oldModerator", "moderator")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Rename with validation
@@ -898,6 +923,7 @@ end
             lia.administrator.renameGroup(oldGroupName, newGroupName)
         end
         ```
+
         High Complexity:
         ```lua
         -- High: Batch rename with error handling
@@ -906,6 +932,7 @@ end
             {old = "oldVIP", new = "vip"},
             {old = "tempMod", new = "moderator"}
         }
+
         for _, operation in ipairs(renameOperations) do
             if lia.administrator.groups[operation.old] and not lia.administrator.groups[operation.new] then
                 lia.administrator.renameGroup(operation.old, operation.new)
@@ -961,6 +988,7 @@ if SERVER then
             type = "warning"
         })
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Notify with specific privilege requirement
@@ -970,6 +998,7 @@ if SERVER then
             privilege = "canSeeAltingNotifications"
         })
         ```
+
         High Complexity:
         ```lua
         -- High: Batch notifications with different privilege levels
@@ -978,6 +1007,7 @@ if SERVER then
             {text = "New player joined", privilege = "moderator"},
             {text = "VIP player online", privilege = "vip"}
         }
+
         for _, notification in ipairs(notifications) do
             lia.administrator.notifyAdmin(notification)
         end
@@ -1004,11 +1034,13 @@ if SERVER then
         -- Simple: Add permission to group
         lia.administrator.addPermission("moderator", "kickPlayers")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Add permission silently during bulk operations
         lia.administrator.addPermission("helper", "mutePlayers", true)
         ```
+
         High Complexity:
         ```lua
         -- High: Add multiple permissions with validation
@@ -1051,11 +1083,13 @@ if SERVER then
         -- Simple: Remove permission from group
         lia.administrator.removePermission("moderator", "banPlayers")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Remove permission silently during bulk operations
         lia.administrator.removePermission("helper", "kickPlayers", true)
         ```
+
         High Complexity:
         ```lua
         -- High: Remove multiple permissions with validation
@@ -1096,11 +1130,13 @@ if SERVER then
         -- Simple: Sync with all clients
         lia.administrator.sync()
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Sync with specific client
         lia.administrator.sync(player)
         ```
+
         High Complexity:
         ```lua
         -- High: Sync with validation and error handling
@@ -1109,15 +1145,19 @@ if SERVER then
                 lia.log.add(nil, "syncError", "Invalid client")
                 return false
             end
+
             local success, err = pcall(function()
                 lia.administrator.sync(client)
             end)
+
             if not success then
                 lia.log.add(nil, "syncError", err)
                 return false
             end
+
             return true
         end
+
         if safeSync(player) then
             print("Administrator data synced successfully")
         end
@@ -1178,11 +1218,13 @@ if SERVER then
         -- Simple: Change player's group
         lia.administrator.setPlayerUsergroup(player, "moderator")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Change group with source tracking
         lia.administrator.setPlayerUsergroup(player, "admin", "MyModule")
         ```
+
         High Complexity:
         ```lua
         -- High: Batch group changes with validation
@@ -1191,6 +1233,7 @@ if SERVER then
             {player = player2, group = "helper", source = "demotion"},
             {player = player3, group = "vip", source = "donation"}
         }
+
         for _, change in ipairs(groupChanges) do
             if IsValid(change.player) then
                 lia.administrator.setPlayerUsergroup(change.player, change.group, change.source)
@@ -1223,11 +1266,13 @@ if SERVER then
         -- Simple: Change Steam ID's group
         lia.administrator.setSteamIDUsergroup("STEAM_0:1:123456789", "moderator")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Change group with source tracking
         lia.administrator.setSteamIDUsergroup("STEAM_0:1:123456789", "admin", "WebPanel")
         ```
+
         High Complexity:
         ```lua
         -- High: Batch Steam ID group changes with validation
@@ -1236,6 +1281,7 @@ if SERVER then
             {steamid = "STEAM_0:1:987654321", group = "helper", source = "demotion"},
             {steamid = "STEAM_0:1:555555555", group = "vip", source = "donation"}
         }
+
         for _, change in ipairs(steamGroupChanges) do
             if change.steamid and change.steamid ~= "" then
                 lia.administrator.setSteamIDUsergroup(change.steamid, change.group, change.source)
@@ -1271,11 +1317,13 @@ if SERVER then
         -- Simple: Kick a player
         lia.administrator.serverExecCommand("kick", player, nil, "Cheating", admin)
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Ban player with duration
         lia.administrator.serverExecCommand("ban", player, 60, "RDM", admin)
         ```
+
         High Complexity:
         ```lua
         -- High: Execute multiple commands with validation
@@ -1284,6 +1332,7 @@ if SERVER then
             {cmd = "ban", target = player2, duration = 30, reason = "RDM"},
             {cmd = "mute", target = player3, duration = 10, reason = "Spam"}
         }
+
         for _, command in ipairs(commands) do
             local success = lia.administrator.serverExecCommand(
                 command.cmd,
@@ -1558,11 +1607,13 @@ else
         -- Simple: Kick a player
         lia.administrator.execCommand("kick", player, nil, "Cheating")
         ```
+
         Medium Complexity:
         ```lua
         -- Medium: Ban player with duration
         lia.administrator.execCommand("ban", player, 60, "RDM")
         ```
+
         High Complexity:
         ```lua
         -- High: Execute multiple commands with validation
@@ -1571,6 +1622,7 @@ else
             {cmd = "ban", target = player2, duration = 30, reason = "RDM"},
             {cmd = "mute", target = player3, duration = 10, reason = "Spam"}
         }
+
         for _, command in ipairs(commands) do
             local success = lia.administrator.execCommand(
                 command.cmd,
@@ -1583,6 +1635,7 @@ else
             end
         end
         ```
+
         Hook Implementation Example:
         ```lua
         -- Custom admin system hook

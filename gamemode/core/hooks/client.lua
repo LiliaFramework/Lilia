@@ -276,6 +276,23 @@ local function drawVoiceIndicator()
     if not IsValid(client) or not client:IsSpeaking() then return end
     local voiceType = client:getNetVar("VoiceType", L("talking"))
     local voiceText = L("youAre") .. " " .. voiceType
+    -- Calculate listener count if voice range is enabled
+    local listenerCount = 0
+    if lia.option.get("voiceRange", false) then
+        local radius = VoiceRanges[voiceType] or VoiceRanges[L("talking")]
+        local clientPos = client:GetPos()
+        local count = 0
+        for _, ply in ipairs(player.GetAll()) do
+            if ply ~= client and IsValid(ply) and ply:getChar() and ply:Alive() then
+                local distance = clientPos:Distance(ply:GetPos())
+                if distance <= radius then count = count + 1 end
+            end
+        end
+
+        listenerCount = count
+        if listenerCount > 0 then voiceText = voiceText .. " - " .. listenerCount .. " people can hear you" end
+    end
+
     local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
     if modifiedText then voiceText = modifiedText end
     -- Calculate position (top center)
