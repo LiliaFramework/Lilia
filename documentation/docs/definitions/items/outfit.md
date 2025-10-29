@@ -189,10 +189,10 @@ When rendering the item in inventory (CLIENT only)
 
 ```lua
 function ITEM:paintOver(item, w, h)
-if item:getData("equip") then
-surface.SetDrawColor(110, 255, 110, 100)
-surface.DrawRect(w - 14, h - 14, 8, 8)
-end
+    if item:getData("equip") then
+        surface.SetDrawColor(110, 255, 110, 100)
+        surface.DrawRect(w - 14, h - 14, 8, 8)
+    end
 end
 
 ```
@@ -213,7 +213,7 @@ When unequipping the outfit
 
 ```lua
 function ITEM:removeOutfit(client)
--- Custom removal logic
+    -- Custom removal logic
 end
 
 ```
@@ -234,7 +234,7 @@ When equipping the outfit
 
 ```lua
 function ITEM:wearOutfit(client, isForLoadout)
--- Custom wear logic
+    -- Custom wear logic
 end
 
 ```
@@ -255,8 +255,8 @@ When attempting to transfer the item
 
 ```lua
 function ITEM:OnCanBeTransfered(_, newInventory)
-if newInventory and self:getData("equip") then return false end
-return true
+    if newInventory and self:getData("equip") then return false end
+    return true
 end
 
 ```
@@ -277,7 +277,7 @@ When player spawns with equipped outfit
 
 ```lua
 function ITEM:onLoadout()
-if self:getData("equip") then self:wearOutfit(self.player, true) end
+    if self:getData("equip") then self:wearOutfit(self.player, true) end
 end
 
 ```
@@ -298,7 +298,7 @@ When item is removed from inventory
 
 ```lua
 function ITEM:onRemoved()
-if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
+    if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
 end
 
 ```

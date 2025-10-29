@@ -526,10 +526,7 @@ function GM:OnContextMenuOpen()
     else
         lia.gui.quick:SetVisible(true)
         lia.gui.quick:MakePopup()
-        -- Only repopulate if cache is invalidated
-        if lia.gui.quick.forceRepopulate then
-            lia.gui.quick:populateOptions()
-        end
+        if lia.gui.quick.forceRepopulate then lia.gui.quick:populateOptions() end
     end
 end
 

@@ -9,12 +9,14 @@ Character faction definition system for the Lilia framework.
 The faction system provides comprehensive functionality for defining character factions within the Lilia framework.
 Factions represent the main organizational units that characters belong to, serving as parent containers for classes.
 Each character belongs to exactly ONE faction and can have multiple classes within that faction.
+
 **Faction-Class Relationship:**
 - **Factions** are the main organizational units (Citizens, Police, Medical, Staff)
 - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
 - Each character belongs to exactly ONE faction but can switch between classes within that faction
 - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
 over the same property in the parent faction.
+
 **Example Hierarchy:**
 ```
 Faction: Police Department
@@ -23,21 +25,26 @@ Faction: Police Department
 ├── Class: Police Captain (inherits police properties, overrides with command-specific permissions)
 └── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
 ```
+
 Factions are defined using the FACTION table structure, which includes properties for identification,
 visual representation, gameplay mechanics, and access control. The system includes callback methods
 that are automatically invoked during key character lifecycle events, enabling dynamic behavior and
 customization.
+
 Factions can have player limits, whitelist requirements, specialized loadouts, and attribute
 modifications that affect gameplay. The system supports modifying player health, armor, movement
 speeds, model scale, weapons, and NPC relationships, providing a flexible foundation for role-based
 gameplay systems.
+
 **Player Management:**
 Factions support player limits (absolute or percentage-based), character restrictions (one character
 per player), custom name generation templates, and custom limit checking logic for advanced access
 control scenarios.
+
 **Access Control:**
 Factions use the `isDefault` property to determine if they are accessible to all players, and can
 implement custom permission logic through whitelist systems and the framework's permission system.
+
 In addition to the FACTION table properties, factions can also modify character variables such as
 classwhitelists to control which classes a character has access to within the faction.
 
@@ -116,14 +123,14 @@ During faction definition
 FACTION.models = {"models/player/police.mdl", "models/player/swat.mdl"}
 -- Advanced: Complex model data with bodygroups
 FACTION.models = {
-"male" = {
-{"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
-{"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-},
-"female" = {
-{"models/player/police_female.mdl", "Female Officer", {1, 2}},
-{"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
-}
+    "male" = {
+        {"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
+        {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+    },
+    "female" = {
+        {"models/player/police_female.mdl", "Female Officer", {1, 2}},
+        {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+    }
 }
 
 ```
@@ -185,8 +192,8 @@ Set automatically during faction registration
 ```lua
 -- This is set automatically when you register the faction
 lia.faction.register("police", {
-name = "Police Department",
--- uniqueID will be "police"
+    name = "Police Department",
+    -- uniqueID will be "police"
 })
 -- For faction files, uniqueID is set to the filename
 -- File: factions/police.lua -> uniqueID = "police"
@@ -212,8 +219,8 @@ Set automatically during faction registration, or manually specified
 ```lua
 -- This is set automatically when you register the faction
 lia.faction.register("police", {
-name = "Police Department",
--- index will be assigned based on registration order
+    name = "Police Department",
+    -- index will be assigned based on registration order
 })
 -- Or manually specify the team index
 FACTION.index = 2  -- Will use team index 2
@@ -356,8 +363,8 @@ During faction definition (applied when player joins faction)
 
 ```lua
 FACTION.NPCRelations = {
-["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-["npc_citizen"] = D_NU       -- Neutral to citizens
+    ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
+    ["npc_citizen"] = D_NU       -- Neutral to citizens
 }
 
 ```
@@ -518,8 +525,8 @@ During faction definition
 
 ```lua
 function FACTION:NameTemplate(info, client)
-local index = math.random(1000, 9999)
-return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
+    local index = math.random(1000, 9999)
+    return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
 end
 
 ```
@@ -540,7 +547,7 @@ During faction definition
 
 ```lua
 function FACTION:GetDefaultName(client)
-return "Citizen " .. math.random(1000, 9999)
+    return "Citizen " .. math.random(1000, 9999)
 end
 
 ```
@@ -561,7 +568,7 @@ During faction definition
 
 ```lua
 function FACTION:GetDefaultDesc(client)
-return "A citizen of the city"
+    return "A citizen of the city"
 end
 
 ```
@@ -591,14 +598,14 @@ When a player tries to join a faction that might be at capacity
 
 ```lua
 function FACTION:OnCheckLimitReached(character, client)
--- Custom logic for checking faction limits
--- For example, check player permissions, character attributes, etc.
--- Check if player has special permission to bypass limits
-if client:hasFlags("L") then
-return false  -- Allow admins to bypass limits
-end
--- Use default limit checking
-return self:CheckFactionLimitReached(character, client)
+    -- Custom logic for checking faction limits
+    -- For example, check player permissions, character attributes, etc.
+    -- Check if player has special permission to bypass limits
+    if client:hasFlags("L") then
+        return false  -- Allow admins to bypass limits
+    end
+    -- Use default limit checking
+    return self:CheckFactionLimitReached(character, client)
 end
 
 ```
@@ -627,9 +634,9 @@ Server
 
 ```lua
 function FACTION:OnTransferred(client)
-client:notify("Welcome to the " .. self.name)
--- Set up faction-specific data
--- Could trigger department assignment or training
+    client:notify("Welcome to the " .. self.name)
+    -- Set up faction-specific data
+    -- Could trigger department assignment or training
 end
 
 ```
@@ -658,10 +665,10 @@ Server
 
 ```lua
 function FACTION:OnSpawn(client)
--- Apply faction-specific spawn effects
-client:Give("weapon_stunstick")
-client:SetHealth(self.health or 100)
-client:SetArmor(self.armor or 0)
+    -- Apply faction-specific spawn effects
+    client:Give("weapon_stunstick")
+    client:SetHealth(self.health or 100)
+    client:SetArmor(self.armor or 0)
 end
 
 ```

@@ -472,7 +472,6 @@ function sound.PlayFile(path, mode, cb)
                     return origPlayFile(localPath, mode or "", cb)
                 end
             else
-                -- If it's a registered websounds entry but not yet cached, download then play
                 local url = lia.websound.stored and lia.websound.stored[webPath]
                 if url then
                     lia.websound.register(webPath, url, function(downloadedPath)
@@ -581,7 +580,6 @@ function surface.PlaySound(soundPath, _, cb)
                 if cb then cb(true) end
                 return
             else
-                -- If registered but not cached yet, download then play
                 local url = lia.websound.stored and lia.websound.stored[webPath]
                 if url then
                     lia.websound.register(webPath, url, function(downloadedPath)

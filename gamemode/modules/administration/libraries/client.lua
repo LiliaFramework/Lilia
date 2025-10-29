@@ -1079,7 +1079,6 @@ local function GenerateDynamicCategories()
         if not mergedCategories[key] then
             mergedCategories[key] = data
         else
-            -- merge subcategories from hardcoded into existing category
             if not mergedCategories[key].subcategories then mergedCategories[key].subcategories = {} end
             for subKey, subData in pairs(data.subcategories or {}) do
                 if not mergedCategories[key].subcategories[subKey] then mergedCategories[key].subcategories[subKey] = subData end
@@ -1953,7 +1952,6 @@ function MODULE:OpenAdminStickUI(tgt)
     if not (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then return end
     local tempMenu = lia.derma.dermaMenu()
     local stores = {}
-    -- Clear any existing stores to ensure fresh menu creation
     MODULE.adminStickCategories = {}
     MODULE.adminStickCategoryOrder = {}
     local hasOptions = false
@@ -2007,7 +2005,7 @@ function MODULE:OpenAdminStickUI(tgt)
     end
 
     if #cmds > 0 then hasOptions = true end
-    local tempStores = {} -- Use separate stores for temp menu to avoid polluting the real stores
+    local tempStores = {}
     hook.Run("PopulateAdminStick", tempMenu, tgt, tempStores)
     tempMenu:Remove()
     if not hasOptions then
@@ -2154,7 +2152,6 @@ function MODULE:OpenAdminStickUI(tgt)
         local canFaction = client:hasPrivilege("manageTransfers")
         local canClass = client:hasPrivilege("manageClasses")
         local canWhitelist = client:hasPrivilege("manageWhitelists")
-        -- Only proceed if target is valid and is a player
         if not target or not IsValid(target) or not target:IsPlayer() then return end
         local char = target:getChar()
         if not char then return end
@@ -3661,7 +3658,6 @@ lia.command.add("testsounds", {
         frame:SetSize(600, 500)
         frame:Center()
         frame:MakePopup()
-        -- Get registered websounds
         local websounds = lia.websound.stored or {}
         local soundList = {}
         for name, _ in pairs(websounds) do
@@ -3669,7 +3665,6 @@ lia.command.add("testsounds", {
         end
 
         table.sort(soundList)
-        -- Sound selection combobox
         local soundLabel = vgui.Create("DLabel", frame)
         soundLabel:SetText("Select WebSound:")
         soundLabel:Dock(TOP)
@@ -3683,11 +3678,9 @@ lia.command.add("testsounds", {
         end
 
         if #soundList > 0 then soundCombo:SetValue(soundList[1]) end
-        -- Test buttons panel
         local buttonPanel = vgui.Create("DPanel", frame)
         buttonPanel:Dock(FILL)
         buttonPanel:DockMargin(5, 5, 5, 5)
-        -- EmitSound test
         local emitSoundBtn = vgui.Create("liaSmallButton", buttonPanel)
         emitSoundBtn:SetText("Test EmitSound (on player)")
         emitSoundBtn:Dock(TOP)
@@ -3700,7 +3693,6 @@ lia.command.add("testsounds", {
             end
         end
 
-        -- Surface.PlaySound test
         local surfaceSoundBtn = vgui.Create("liaSmallButton", buttonPanel)
         surfaceSoundBtn:SetText("Test surface.PlaySound")
         surfaceSoundBtn:Dock(TOP)
@@ -3713,7 +3705,6 @@ lia.command.add("testsounds", {
             end
         end
 
-        -- Sound.PlayFile test
         local playFileBtn = vgui.Create("liaSmallButton", buttonPanel)
         playFileBtn:SetText("Test sound.PlayFile")
         playFileBtn:Dock(TOP)
@@ -3731,7 +3722,6 @@ lia.command.add("testsounds", {
             end
         end
 
-        -- Divider
         local divider = vgui.Create("DPanel", buttonPanel)
         divider:Dock(TOP)
         divider:SetTall(2)
@@ -3741,7 +3731,6 @@ lia.command.add("testsounds", {
             surface.DrawRect(0, 0, w, h)
         end
 
-        -- Manual sound entry
         local manualLabel = vgui.Create("DLabel", buttonPanel)
         manualLabel:SetText("Manual Sound Entry:")
         manualLabel:Dock(TOP)
@@ -3750,7 +3739,6 @@ lia.command.add("testsounds", {
         manualEntry:Dock(TOP)
         manualEntry:DockMargin(0, 0, 0, 5)
         manualEntry:SetPlaceholderText("Enter sound name (e.g. cuffs/handcuffs_close.wav)")
-        -- Manual test buttons
         local manualPanel = vgui.Create("DPanel", buttonPanel)
         manualPanel:Dock(TOP)
         manualPanel:SetTall(30)
@@ -3796,7 +3784,6 @@ lia.command.add("testsounds", {
             end
         end
 
-        -- Info panel
         local infoLabel = vgui.Create("DLabel", buttonPanel)
         infoLabel:Dock(BOTTOM)
         infoLabel:DockMargin(0, 10, 0, 0)

@@ -66,7 +66,6 @@ function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, chann
         end
     end
 
-    -- Server-side automap: if a plain name is registered as a websounds entry, broadcast it as a websounds path
     if SERVER and isstring(soundName) then
         local name = soundName:gsub("\\", "/"):gsub("^%s+", ""):gsub("%s+$", "")
         if string.StartWith(name, "sound/") then name = name:sub(7) end

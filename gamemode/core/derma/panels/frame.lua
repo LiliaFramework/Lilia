@@ -183,7 +183,6 @@ function PANEL:Notify(text, duration, col)
     if IsValid(self.messagePanel) then self.messagePanel:Remove() end
     duration = duration or 2
     col = col or lia.color.theme.theme
-    -- Split text into title, description, and cost
     local title, remaining = text:match("^(.-)\n(.*)$")
     if not title then
         title = text
@@ -215,26 +214,22 @@ function PANEL:Notify(text, duration, col)
 
     local padding = 12
     local lineSpacing = 6
-    local totalHeight = titleH + (desc ~= "" and descH + lineSpacing or 0) + (cost ~= "" and costH + lineSpacing or 0) + padding * 2 + 8 -- Extra height
+    local totalHeight = titleH + (desc ~= "" and descH + lineSpacing or 0) + (cost ~= "" and costH + lineSpacing or 0) + padding * 2 + 8
     local maxWidth = math.max(titleW, descW, costW) + padding * 2
     local mp = vgui.Create("DPanel", self)
     mp:SetSize(maxWidth, totalHeight)
     mp:SetMouseInputEnabled(false)
-    local startY = -mp:GetTall() -- Start above the frame
-    local endY = 16 -- End at top with margin
+    local startY = -mp:GetTall()
+    local endY = 16
     mp:SetPos((self:GetWide() - mp:GetWide()) * 0.5, startY)
     mp:SetAlpha(0)
     mp.Paint = function(_, w, h)
-        -- liaFrame style painting
         local shadowIntensity = 8
         local shadowBlur = 12
         lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
         lia.derma.rect(0, 0, w, h):Radii(6, 6, 6, 6):Color(lia.color.theme.background or col):Draw()
-        -- Draw title at center top
         draw.SimpleText(title, "LiliaFont.20", w * 0.5, padding, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-        -- Draw description centered underneath
         if desc ~= "" then draw.SimpleText(desc, "LiliaFont.16", w * 0.5, padding + titleH + lineSpacing, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP) end
-        -- Draw cost centered underneath with theme accent color
         if cost ~= "" then
             local costY = padding + titleH + (desc ~= "" and descH + lineSpacing * 2 or lineSpacing)
             draw.SimpleText(cost, "LiliaFont.16", w * 0.5, costY, lia.color.theme.accent or lia.color.theme.theme, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)

@@ -248,12 +248,9 @@ function QuickPanel:RefreshTheme()
         end
     end
 
-    -- Only update text colors for valid items to avoid unnecessary work
     local themeText = lia.color.theme.text or color_white
     for _, item in ipairs(self.items or {}) do
-        if IsValid(item) and item.SetTextColor then
-            item:SetTextColor(themeText)
-        end
+        if IsValid(item) and item.SetTextColor then item:SetTextColor(themeText) end
     end
 
     self:InvalidateLayout(true)
@@ -314,7 +311,6 @@ function QuickPanel:populateOptions()
 
     for _, info in ipairs(allOptions) do
         local opt = info.opt
-        -- Check visibility before adding to groups
         if not opt.visible or (isfunction(opt.visible) and opt.visible()) then
             if opt.type == "Boolean" then
                 groups.Boolean[#groups.Boolean + 1] = info

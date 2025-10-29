@@ -151,7 +151,7 @@ When displaying item description
 
 ```lua
 function ITEM:getDesc()
-return L("stackableDesc", self:getQuantity())
+    return L("stackableDesc", self:getQuantity())
 end
 
 ```
@@ -172,8 +172,8 @@ When rendering the item in inventory
 
 ```lua
 function ITEM:paintOver(item)
-local quantity = item:getQuantity()
-lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
+    local quantity = item:getQuantity()
+    lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
 end
 
 ```
@@ -194,16 +194,16 @@ When two stackable items are combined
 
 ```lua
 function ITEM:onCombine(other)
-if other.uniqueID ~= self.uniqueID then return end
-local combined = self:getQuantity() + other:getQuantity()
-if combined <= self.maxQuantity then
-self:setQuantity(combined)
-other:remove()
-else
-self:setQuantity(self.maxQuantity)
-other:setQuantity(combined - self.maxQuantity)
-end
-return true
+    if other.uniqueID ~= self.uniqueID then return end
+    local combined = self:getQuantity() + other:getQuantity()
+    if combined <= self.maxQuantity then
+        self:setQuantity(combined)
+        other:remove()
+    else
+        self:setQuantity(self.maxQuantity)
+        other:setQuantity(combined - self.maxQuantity)
+    end
+    return true
 end
 
 ```
