@@ -983,12 +983,13 @@ if SERVER then
     concommand.Add("plysetgroup", function(ply, _, args)
         local target = lia.util.findPlayer(ply, args[1])
         local usergroup = args[2]
-        if not IsValid(ply) then
+        if not IsValid(ply) or not game.IsDedicated() then
             if IsValid(target) then
                 if lia.administrator.groups[usergroup] then
                     target.liaUserGroup = usergroup
                     target:notifyInfoLocalized("userGroupSet", usergroup)
                     lia.log.add(nil, "usergroup", target, usergroup)
+                    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Set " .. target:getName() .. " (" .. target:SteamID() .. ") to usergroup: " .. usergroup .. "\n")
                 else
                     MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("invalidUsergroup") .. " \"" .. usergroup .. "\"\n")
                 end
@@ -1002,6 +1003,7 @@ if SERVER then
                     target:notifyInfoLocalized("userGroupSet", usergroup)
                     ply:notifyInfoLocalized("userGroupSetBy", target:getName(), usergroup)
                     lia.log.add(ply, "usergroup", target, usergroup)
+                    MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), "Set " .. target:getName() .. " (" .. target:SteamID() .. ") to usergroup: " .. usergroup .. "\n")
                 else
                     ply:notifyErrorLocalized("invalidUsergroup" .. " \"" .. usergroup .. "\"")
                 end
@@ -1202,7 +1204,7 @@ if SERVER then
             return
         end
 
-        lia.notices.notifylocalized("testNotification")
+        lia.notices.notifyLocalized("testNotification")
         lia.notices.notifyInfoLocalized("testNotificationInfo")
         lia.notices.notifyWarningLocalized("testNotificationWarning")
         lia.notices.notifyErrorLocalized("testNotificationError")
@@ -1328,12 +1330,9 @@ else
             playButton:SetWide(80)
             playButton:Dock(RIGHT)
             playButton:DockMargin(5, 5, 5, 5)
-            -- Override the button's click behavior to prevent the default sound
             playButton.DoClick = function()
-                -- Don't call the original DoClick to avoid button sound interference
                 if file.Exists(soundPath, "DATA") then
                     local fullPath = "data/" .. soundPath
-                    -- Add a small delay to ensure the sound system is ready
                     timer.Simple(0.1, function()
                         sound.PlayFile(fullPath, "", function(channel, _, errorString)
                             if IsValid(channel) then
@@ -1353,9 +1352,7 @@ else
             stopButton:SetWide(80)
             stopButton:Dock(RIGHT)
             stopButton:DockMargin(5, 5, 5, 5)
-            -- Override the button's click behavior to prevent the default sound
             stopButton.DoClick = function()
-                -- Don't call the original DoClick to avoid button sound interference
                 timer.Simple(0.1, function()
                     sound.PlayFile("", "", function() end)
                     LocalPlayer():ChatPrint("Stopped all sounds")
@@ -1745,10 +1742,10 @@ else
             MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewUsingMap", currentMap, faction.name) .. "\n")
             MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewPosition", tostring(position)) .. "\n")
             if angles then MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewAngles", tostring(angles)) .. "\n") end
-            client:notifylocalized("viewingAsFaction", faction.name)
-            client:notifylocalized("factionViewPosition", tostring(position))
-            if angles then client:notifylocalized("factionViewAngles", tostring(angles)) end
-            client:notifylocalized("stopFactionView")
+            client:notifyInfoLocalized("viewingAsFaction", faction.name)
+            client:notifyInfoLocalized("factionViewPosition", tostring(position))
+            if angles then client:notifyInfoLocalized("factionViewAngles", tostring(angles)) end
+            client:notifyInfoLocalized("stopFactionView")
         end)
     end)
 
@@ -1831,7 +1828,7 @@ lia.command.add("demorequests", {
     privilege = "Staff",
     onRun = function(client)
         if SERVER then
-            client:notifylocalized("openingDemo")
+            client:notifyInfoLocalized("openingDemo")
             client:binaryQuestion(L("demoQuestion"), L("yesShowMe"), L("noThanks"), false, function(confirmed)
                 if confirmed then
                     client:requestDropdown(L("demoDropdownTitle"), L("chooseColor"), {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected)
@@ -1873,7 +1870,7 @@ lia.command.add("demorequests", {
                                                             text = L("exitDemo"),
                                                             icon = "icon16/door.png"
                                                         }
-                                                    }, function(_, buttonText) client:notifylocalized("demoCompleted", buttonText) end, L("chooseNextAction"))
+                                                    }, function(_, buttonText) client:notifySuccessLocalized("demoCompleted", buttonText) end, L("chooseNextAction"))
                                                 else
                                                     client:notifyWarningLocalized("argumentsDemoCancelled")
                                                 end
@@ -4737,6 +4734,8 @@ lia.command.add("fillwithbots", {
                     timer.Remove("Bots_Add_Timer")
                 end
             end)
+
+            client:notifyInfoLocalized("botsFillingServer")
         else
             client:notifyErrorLocalized("botsAlreadyAdding")
         end
@@ -4769,7 +4768,7 @@ lia.command.add("spawnbots", {
         end
 
         local botsSpawned = 0
-        client:notifylocalized("spawningBots", requestedAmount)
+        client:notifyInfoLocalized("spawningBots", requestedAmount)
         for i = 1, requestedAmount do
             timer.Simple((i - 1) * 0.5, function()
                 if not IsValid(client) then return end
@@ -4778,7 +4777,42 @@ lia.command.add("spawnbots", {
             end)
         end
 
-        timer.Simple(requestedAmount * 0.5 + 2, function() if IsValid(client) then client:notifylocalized("botsSpawnedSimple", botsSpawned) end end)
+        timer.Simple(requestedAmount * 0.5 + 2, function() if IsValid(client) then client:notifySuccessLocalized("botsSpawnedSimple", botsSpawned) end end)
+    end
+})
+
+lia.command.add("bot", {
+    superAdminOnly = true,
+    desc = "spawnBotDesc",
+    onRun = function(client)
+        if not SERVER then return end
+        local currentPlayers = #player.GetAll()
+        local maxPlayers = game.MaxPlayers()
+        if currentPlayers >= maxPlayers then
+            client:notifyErrorLocalized("spawnBotsLimit", 1, 0, maxPlayers)
+            return
+        end
+
+        client:notifyInfoLocalized("spawningBots", 1)
+        game.ConsoleCommand("bot\n")
+        timer.Simple(0.5, function()
+            if not IsValid(client) then return end
+            local bots = {}
+            for _, ply in ipairs(player.GetAll()) do
+                if ply:IsBot() then table.insert(bots, ply) end
+            end
+
+            table.sort(bots, function(a, b) return a:UserID() > b:UserID() end)
+            local bot = bots[1]
+            if IsValid(bot) then
+                bot:SetPos(client:GetPos() + client:GetForward() * 50)
+                local botName = bot:Name()
+                if botName == "" then botName = "Bot" .. bot:UserID() end
+                client:notifySuccessLocalized("botSpawnedAndBrought", botName)
+            else
+                client:notifyErrorLocalized("botSpawnFailed")
+            end
+        end)
     end
 })
 
@@ -4807,7 +4841,7 @@ lia.command.add("botspeak", {
             return
         end
 
-        client:notifylocalized("foundBotsStarting", #bots, phrasesPerBot)
+        client:notifyInfoLocalized("foundBotsStarting", #bots, phrasesPerBot)
         local randomPhrases = {L("chatHelloThere"), L("chatWhatsGoingOn"), L("chatNeedHelp"), L("chatOverHere"), L("chatWatchOut"), L("chatComeOn"), L("chatLetsGo"), L("chatThisWay"), L("chatBehindYou"), L("chatEnemySpotted"), L("chatClear"), L("chatMoveUp"), L("chatHoldPosition"), L("chatCoverMe"), L("chatReloading"), L("chatTakingFire"), L("chatNeedBackup"), L("chatAllClear"), L("chatContact"), L("chatEngaging"), L("chatFallBack"), L("chatPushForward"), L("chatHoldTheLine"), L("chatSecureArea"), L("chatEnemyDown"), L("chatGotOne"), L("chatNiceShot"), L("chatGoodWork"), L("chatKeepMoving"), L("chatStayAlert")}
         local phraseCount = {}
         for _, bot in ipairs(bots) do
@@ -4823,7 +4857,7 @@ lia.command.add("botspeak", {
                 if phraseCount[bot] < phrasesPerBot then
                     timer.Simple(cooldown, function() if IsValid(bot) then makeBotSpeak(bot) end end)
                 else
-                    client:notifylocalized("botFinishedPhrases", bot:GetName() or tostring(bot), phrasesPerBot)
+                    client:notifySuccessLocalized("botFinishedPhrases", bot:GetName() or tostring(bot), phrasesPerBot)
                 end
             end
         end
@@ -4838,7 +4872,7 @@ lia.command.add("botspeak", {
                 totalPhrases = totalPhrases + count
             end
 
-            client:notifylocalized("allBotsFinished", totalPhrases)
+            client:notifySuccessLocalized("allBotsFinished", totalPhrases)
         end)
     end
 })
@@ -7523,7 +7557,7 @@ lia.command.add("kickbots", {
         if kickedCount == 0 then
             client:notifyErrorLocalized("noBotsToKick")
         else
-            client:notifyLocalized("botsKickedAll", kickedCount)
+            client:notifyInfoLocalized("botsKickedAll", kickedCount)
         end
     end
 })

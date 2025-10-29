@@ -617,7 +617,6 @@ function GM:PlayerDeathThink()
     local lastDeathTime = client:getNetVar("lastDeathTime", 0)
     local currentTime = os.time()
     local timeSinceDeath = currentTime - lastDeathTime
-    -- Only allow respawn if enough time has passed
     return timeSinceDeath >= respawnTime
 end
 
@@ -936,22 +935,14 @@ local function IsLineOfSightClear(listener, speaker)
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    -- Early validation checks
     if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end
-    -- Check speaker restrictions
     if speaker:getNetVar("IsDeadRestricted", false) or speaker:getNetVar("liaGagged", false) or not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
-    -- Check if voice is enabled globally
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
-    -- Get voice type and corresponding range (cache config lookups)
     local voiceType = speaker:getNetVar("VoiceType", L("talking"))
     local baseRange = voiceType == L("whispering") and lia.config.get("WhisperRange", 70) or voiceType == L("talking") and lia.config.get("TalkRange", 280) or voiceType == L("yelling") and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
-    -- fallback
-    -- Calculate distance once
     local distance = listener:GetPos():Distance(speaker:GetPos())
-    -- Line of sight check (more expensive, so do it last)
     local clearLOS = IsLineOfSightClear(listener, speaker)
     local effectiveRange = clearLOS and baseRange or baseRange * 0.16
-    -- Single distance comparison
     local canHear = distance <= effectiveRange
     return canHear, canHear
 end

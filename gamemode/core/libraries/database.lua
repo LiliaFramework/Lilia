@@ -777,7 +777,6 @@ end
 ]]
 function lia.db.select(fields, dbTable, condition, limit)
     local d = deferred.new()
-    -- Validate fields parameter and provide default
     if fields == nil then
         lia.error("lia.db.select called with nil fields parameter - using default '*'")
         fields = "*"
@@ -863,7 +862,6 @@ end
 ]]
 function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
     local d = deferred.new()
-    -- Validate fields parameter and provide default
     if fields == nil then
         lia.error("lia.db.selectWithCondition called with nil fields parameter - using default '*'")
         fields = "*"
@@ -1143,7 +1141,6 @@ end
 ]]
 function lia.db.selectOne(fields, dbTable, condition)
     local c = deferred.new()
-    -- Validate fields parameter and provide default
     if fields == nil then
         lia.error("lia.db.selectOne called with nil fields parameter - using default '*'")
         fields = "*"

@@ -44,7 +44,6 @@ lia.time = lia.time or {}
     end
     ```
 ]]
---
 function lia.time.timeSince(strTime)
     local timestamp
     if isnumber(strTime) then
@@ -113,7 +112,6 @@ end
     end
     ```
 ]]
---
 function lia.time.toNumber(str)
     str = str or os.date("%Y-%m-%d %H:%M:%S", os.time())
     return {
@@ -173,7 +171,6 @@ end
     end
     ```
 ]]
---
 function lia.time.getDate()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)
@@ -235,7 +232,6 @@ end
     print(formatMultipleDurations(durations))
     ```
 ]]
---
 function lia.time.formatDHM(seconds)
     seconds = math.max(seconds or 0, 0)
     local days = math.floor(seconds / 86400)
@@ -325,7 +321,6 @@ end
     end
     ```
 ]]
---
 function lia.time.getHour()
     local ct = os.date("*t")
     local american = lia.config.get("AmericanTimeStamps", false)

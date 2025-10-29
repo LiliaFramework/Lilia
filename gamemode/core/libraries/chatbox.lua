@@ -45,7 +45,6 @@ lia.chat.classes = lia.chat.classes or {}
     end
     ```
 ]]
---
 function lia.chat.timestamp(ooc)
     return lia.option.ChatShowTime and (ooc and " " or "") .. "(" .. lia.time.getHour() .. ")" .. (ooc and "" or " ") or ""
 end
@@ -102,7 +101,6 @@ end
     })
     ```
 ]]
---
 function lia.chat.register(chatType, data)
     data.arguments = data.arguments or {}
     data.syntax = L(lia.command.buildSyntaxFromArguments(data.arguments))
@@ -230,7 +228,6 @@ end
     end
     ```
 ]]
---
 function lia.chat.parse(client, message, noSend)
     local anonymous = false
     local chatType = "ic"
@@ -319,7 +316,6 @@ end
     end
     ```
 ]]
---
 if SERVER then
     function lia.chat.send(speaker, chatType, text, anonymous, receivers)
         local class = lia.chat.classes[chatType]

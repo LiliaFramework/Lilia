@@ -2718,7 +2718,7 @@ end
     hook.Add("ModifyVoiceIndicatorText", "AdvancedVoiceIndicator", function(client, voiceText, voiceType)
         local char = client:getChar()
         if not char then return nil end
-        
+
         -- Extract listener count if voice range is enabled
         local listenerCount = 0
         if lia.option.get("voiceRange", false) then
@@ -2727,11 +2727,11 @@ end
                 listenerCount = tonumber(match)
             end
         end
-        
+
         -- Custom formatting with color codes
         local prefix = ""
         local suffix = ""
-        
+
         if voiceType == L("whispering") then
             prefix = "[QUIET] "
             suffix = " whispers softly"
@@ -2742,14 +2742,14 @@ end
             prefix = "[NORMAL] "
             suffix = " speaks"
         end
-        
+
         local result = prefix .. voiceText:gsub("You are ", ""):gsub(" - %d+ people can hear you", "") .. suffix
-        
+
         -- Add listener count back if it was present
         if listenerCount > 0 then
             result = result .. " - " .. listenerCount .. " people can hear you"
         end
-        
+
         return result
     end)
     ```
@@ -2903,6 +2903,99 @@ end
     ```
 ]]
 function GetWeaponName(weapon)
+end
+
+--[[
+    Purpose: Called to display player HUD information, primarily for admin tools
+    When Called: Every frame during HUD rendering to allow modules to add custom HUD information
+    Parameters:
+        client (Player) - The local player
+        hudInfos (table) - Array of HUD information objects to display, each containing text, position, color, and font properties
+    Returns: None
+    Realm: Client
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Add basic player health info
+    hook.Add("DisplayPlayerHUDInformation", "BasicHUDInfo", function(client, hudInfos)
+        table.insert(hudInfos, {
+            text = "Health: " .. client:Health(),
+            position = Vector(10, 10),
+            color = Color(255, 0, 0)
+        })
+    end)
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Add character and faction info
+    hook.Add("DisplayPlayerHUDInformation", "CharacterHUDInfo", function(client, hudInfos)
+        local char = client:getChar()
+        if char then
+            table.insert(hudInfos, {
+                text = "Name: " .. char:getName(),
+                position = Vector(10, 30),
+                color = Color(255, 255, 255)
+            })
+
+            local faction = lia.faction.indices[client:Team()]
+            if faction then
+                table.insert(hudInfos, {
+                    text = "Faction: " .. faction.name,
+                    position = Vector(10, 50),
+                    color = faction.color or Color(100, 100, 100)
+                })
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Advanced admin HUD with multiple info panels
+    hook.Add("DisplayPlayerHUDInformation", "AdvancedAdminHUD", function(client, hudInfos)
+        if not client:IsAdmin() then return end
+
+        -- Player count info
+        local playerCount = #player.GetAll()
+        table.insert(hudInfos, {
+            text = "Players: " .. playerCount,
+            position = Vector(ScrW() - 200, 10),
+            color = Color(0, 255, 0),
+            font = "liaMediumFont"
+        })
+
+        -- Server time
+        local time = os.date("%H:%M:%S")
+        table.insert(hudInfos, {
+            text = "Server Time: " .. time,
+            position = Vector(ScrW() - 200, 30),
+            color = Color(255, 255, 0)
+        })
+
+        -- Performance info
+        local fps = 1 / FrameTime()
+        table.insert(hudInfos, {
+            text = string.format("FPS: %.0f", fps),
+            position = Vector(ScrW() - 200, 50),
+            color = fps > 30 and Color(0, 255, 0) or Color(255, 0, 0)
+        })
+
+        -- Character info if available
+        local char = client:getChar()
+        if char then
+            local money = char:getMoney()
+            table.insert(hudInfos, {
+                text = "Money: " .. lia.currency.format(money),
+                position = Vector(ScrW() - 200, 70),
+                color = Color(0, 255, 255)
+            })
+        end
+    end)
+    ```
+]]
+function DisplayPlayerHUDInformation(client, hudInfos)
 end
 
 --[[
@@ -5153,6 +5246,7 @@ end
     Parameters:
         tempMenu (Menu) - The menu being populated
         tgt (Entity) - The target entity
+        stores (table) - A table containing references to existing submenu categories
     Returns: None
     Realm: Client
     Example Usage:
@@ -5160,7 +5254,7 @@ end
     Low Complexity:
     ```lua
     -- Simple: Add basic option
-    hook.Add("PopulateAdminStick", "MyAddon", function(tempMenu, tgt)
+    hook.Add("PopulateAdminStick", "MyAddon", function(tempMenu, tgt, stores)
         tempMenu:AddOption("Custom Action", function()
             print("Custom action performed")
         end)
@@ -5170,7 +5264,7 @@ end
     Medium Complexity:
     ```lua
     -- Medium: Add conditional options
-    hook.Add("PopulateAdminStick", "ConditionalAdminOptions", function(tempMenu, tgt)
+    hook.Add("PopulateAdminStick", "ConditionalAdminOptions", function(tempMenu, tgt, stores)
         if IsValid(tgt) and tgt:IsPlayer() then
             tempMenu:AddOption("Teleport To", function()
                 RunConsoleCommand("lia_plyteleporttome", tgt:SteamID())
@@ -5182,7 +5276,7 @@ end
     High Complexity:
     ```lua
     -- High: Complex admin stick menu
-    hook.Add("PopulateAdminStick", "AdvancedAdminStick", function(tempMenu, tgt)
+    hook.Add("PopulateAdminStick", "AdvancedAdminStick", function(tempMenu, tgt, stores)
         if not IsValid(tgt) then return end
 
         -- Player options
@@ -5210,8 +5304,225 @@ end
         end)
     end)
     ```
+
+    Using Stores to Add to Existing Categories:
+    ```lua
+    -- Add to existing submenu categories
+    hook.Add("PopulateAdminStick", "AddToExistingMenus", function(tempMenu, tgt, stores)
+        -- Add to existing teleportation submenu
+        if stores and stores["teleportation"] and IsValid(stores["teleportation"]) then
+            stores["teleportation"]:AddOption("Custom Teleport", function()
+                RunConsoleCommand("lia_customteleport", tgt:SteamID())
+            end)
+        end
+
+        -- Add to existing utility commands submenu
+        if stores and stores["utility_commands"] and IsValid(stores["utility_commands"]) then
+            stores["utility_commands"]:AddOption("Custom Utility", function()
+                print("Custom utility command")
+            end)
+        end
+    end)
+    ```
 ]]
-function PopulateAdminStick(tempMenu, tgt)
+function PopulateAdminStick(tempMenu, tgt, stores)
+end
+
+--[[
+    Purpose: Called to add custom list options to the admin stick menu
+    When Called: When building the admin stick context menu, before it's populated
+    Parameters:
+        tgt (Entity) - The target entity
+        lists (table) - The table to populate with list data
+    Returns: None (modified by reference)
+    Realm: Client
+    List Data Structure:
+        Each entry in lists should be a table with:
+        - name (string) - The display name of the list
+        - category (string) - The category key (e.g., "characterManagement", "utility")
+        - subcategory (string) - The subcategory key within the category
+        - items (table) - Array of items to display
+
+        Each item in items should be a table with:
+        - name (string) - The display name of the option
+        - callback (function) - Function to execute when clicked (receives target and item as parameters)
+        - icon (string, optional) - Icon path to display
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Add a list of custom options
+    hook.Add("GetAdminStickLists", "MyAddon", function(tgt, lists)
+        table.insert(lists, {
+            name = "Custom Weapons",
+            category = "characterManagement",
+            subcategory = "items",
+            items = {
+                { name = "Gun 1", callback = function(target, item) RunConsoleCommand("say", "/give", target:SteamID(), "weapon_pistol") end },
+                { name = "Gun 2", callback = function(target, item) RunConsoleCommand("say", "/give", target:SteamID(), "weapon_rifle") end }
+            }
+        })
+    end)
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Add conditional list based on target
+    hook.Add("GetAdminStickLists", "ConditionalLists", function(tgt, lists)
+        if tgt:IsPlayer() and tgt:getChar() then
+            table.insert(lists, {
+                name = "Quick Factions",
+                category = "characterManagement",
+                subcategory = "factions",
+                items = {
+                    {
+                        name = "Police",
+                        icon = "icon16/user_police.png",
+                        callback = function(target, item)
+                            RunConsoleCommand("say", "/setfaction", target:SteamID(), "police")
+                        end
+                    },
+                    {
+                        name = "Medic",
+                        icon = "icon16/user_medical.png",
+                        callback = function(target, item)
+                            RunConsoleCommand("say", "/setfaction", target:SteamID(), "medic")
+                        end
+                    }
+                }
+            })
+        end
+    end)
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Add multiple lists with dynamic data
+    hook.Add("GetAdminStickLists", "AdvancedLists", function(tgt, lists)
+        if not IsValid(tgt) or not tgt:IsPlayer() then return end
+
+        -- Add available ranks based on target's class
+        local targetChar = tgt:getChar()
+        if targetChar then
+            local targetClass = targetChar:getClass()
+            local ranks = lia.ranking.rankTable[targetClass]
+            if ranks then
+                local rankItems = {}
+                for rankKey, rankData in pairs(ranks) do
+                    table.insert(rankItems, {
+                        name = rankData.RankName or rankKey,
+                        icon = "icon16/user_green.png",
+                        callback = function(target, item)
+                            local cmd = 'say /setrank ' .. QuoteArgs(GetIdentifier(target), rankKey)
+                            LocalPlayer():ConCommand(cmd)
+                        end
+                    })
+                end
+
+                table.insert(lists, {
+                    name = "Ranks",
+                    category = "characterManagement",
+                    subcategory = "ranking",
+                    items = rankItems
+                })
+            end
+        end
+    end)
+    ```
+]]
+function GetAdminStickLists(tgt, lists)
+end
+
+--[[
+    Purpose: Called to register custom subcategories for admin stick menu categories
+    When Called: During admin stick menu generation, before menu population
+    Parameters:
+        categories (table) - The categories table to modify by reference
+    Returns: None (modified by reference)
+    Realm: Client
+    Category Structure:
+        categories[categoryKey] should be a table with:
+        - name (string) - Display name of the category
+        - icon (string) - Icon path for the category
+        - subcategories (table) - Table of subcategories
+
+        Each subcategory in subcategories[subKey] should be a table with:
+        - name (string) - Display name of the subcategory
+        - icon (string) - Icon path for the subcategory
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Add a single subcategory to an existing category
+    hook.Add("RegisterAdminStickSubcategories", "MyAddonSubcategories", function(categories)
+        if categories.characterManagement then
+            categories.characterManagement.subcategories = categories.characterManagement.subcategories or {}
+            categories.characterManagement.subcategories.myAddon = {
+                name = "My Addon Tools",
+                icon = "icon16/plugin.png"
+            }
+        end
+    end)
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Add multiple subcategories and ensure category exists
+    hook.Add("RegisterAdminStickSubcategories", "BankingSubcategories", function(categories)
+        -- Ensure banking category exists
+        categories.banking = categories.banking or {
+            name = "Banking",
+            icon = "icon16/money.png",
+            subcategories = {}
+        }
+
+        -- Add subcategories
+        categories.banking.subcategories.admin = {
+            name = "Admin Banking",
+            icon = "icon16/shield.png"
+        }
+        categories.banking.subcategories.player = {
+            name = "Player Banking",
+            icon = "icon16/user_green.png"
+        }
+    end)
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Complex addon with multiple categories and subcategories
+    hook.Add("RegisterAdminStickSubcategories", "ComplexAddon", function(categories)
+        -- Create main category
+        categories.myComplexAddon = {
+            name = "My Complex Addon",
+            icon = "icon16/application.png",
+            subcategories = {
+                management = {
+                    name = "Management",
+                    icon = "icon16/cog.png"
+                },
+                statistics = {
+                    name = "Statistics",
+                    icon = "icon16/chart_bar.png"
+                },
+                maintenance = {
+                    name = "Maintenance",
+                    icon = "icon16/wrench.png"
+                }
+            }
+        }
+
+        -- Add to existing category
+        if categories.characterManagement then
+            categories.characterManagement.subcategories.myAddon = {
+                name = "My Addon Integration",
+                icon = "icon16/plugin_add.png"
+            }
+        end
+    end)
+    ```
+]]
+function RegisterAdminStickSubcategories(categories)
 end
 
 --[[

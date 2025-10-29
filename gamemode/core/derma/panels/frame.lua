@@ -183,19 +183,62 @@ function PANEL:Notify(text, duration, col)
     if IsValid(self.messagePanel) then self.messagePanel:Remove() end
     duration = duration or 2
     col = col or lia.color.theme.theme
+    -- Split text into title, description, and cost
+    local title, remaining = text:match("^(.-)\n(.*)$")
+    if not title then
+        title = text
+        remaining = ""
+    end
+
+    local desc, cost = "", ""
+    if remaining ~= "" then
+        desc, cost = remaining:match("^(.-)\n\n(.*)$")
+        if not desc then
+            desc = remaining
+            cost = ""
+        end
+    end
+
     surface.SetFont("LiliaFont.20")
-    local tw, th = surface.GetTextSize(text)
+    local titleW, titleH = surface.GetTextSize(title)
+    local descW, descH = 0, 0
+    local costW, costH = 0, 0
+    if desc ~= "" then
+        surface.SetFont("LiliaFont.16")
+        descW, descH = surface.GetTextSize(desc)
+    end
+
+    if cost ~= "" then
+        surface.SetFont("LiliaFont.16")
+        costW, costH = surface.GetTextSize(cost)
+    end
+
+    local padding = 12
+    local lineSpacing = 6
+    local totalHeight = titleH + (desc ~= "" and descH + lineSpacing or 0) + (cost ~= "" and costH + lineSpacing or 0) + padding * 2 + 8 -- Extra height
+    local maxWidth = math.max(titleW, descW, costW) + padding * 2
     local mp = vgui.Create("DPanel", self)
-    mp:SetSize(tw + 16, th + 8)
+    mp:SetSize(maxWidth, totalHeight)
     mp:SetMouseInputEnabled(false)
-    local startY = self:GetTall() + mp:GetTall()
-    local endY = self:GetTall() - mp:GetTall() - 16
+    local startY = -mp:GetTall() -- Start above the frame
+    local endY = 16 -- End at top with margin
     mp:SetPos((self:GetWide() - mp:GetWide()) * 0.5, startY)
     mp:SetAlpha(0)
     mp.Paint = function(_, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(col):Shadow(7, 20):Outline(3):Clip(self):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(col):Draw()
-        draw.SimpleText(text, "LiliaFont.20", w * 0.5, h * 0.5 - 1, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        -- liaFrame style painting
+        local shadowIntensity = 8
+        local shadowBlur = 12
+        lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(0, 0, w, h):Radii(6, 6, 6, 6):Color(lia.color.theme.background or col):Draw()
+        -- Draw title at center top
+        draw.SimpleText(title, "LiliaFont.20", w * 0.5, padding, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        -- Draw description centered underneath
+        if desc ~= "" then draw.SimpleText(desc, "LiliaFont.16", w * 0.5, padding + titleH + lineSpacing, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP) end
+        -- Draw cost centered underneath with theme accent color
+        if cost ~= "" then
+            local costY = padding + titleH + (desc ~= "" and descH + lineSpacing * 2 or lineSpacing)
+            draw.SimpleText(cost, "LiliaFont.16", w * 0.5, costY, lia.color.theme.accent or lia.color.theme.theme, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        end
     end
 
     mp:MoveTo(mp.x, endY, 0.3, 0, 0.7)

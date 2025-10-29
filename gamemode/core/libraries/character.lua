@@ -62,7 +62,6 @@ lia.char.pendingRequests = lia.char.pendingRequests or {}
         end
         ```
 ]]
---
 function lia.char.getCharacter(charID, client, callback)
     if SERVER then
         local character = lia.char.loaded[charID]
@@ -135,7 +134,6 @@ end
         end
         ```
 ]]
---
 function lia.char.getAll()
     local charTable = {}
     for _, client in player.Iterator() do
@@ -193,7 +191,6 @@ end
         print("Loaded:", table.Count(loadedChars), "Unloaded:", #unloadedChars)
         ```
 ]]
---
 function lia.char.isLoaded(charID)
     return lia.char.loaded[charID] ~= nil
 end
@@ -247,7 +244,6 @@ end
         print("Loaded", table.Count(characters), "characters into cache")
         ```
 ]]
---
 function lia.char.addCharacter(id, character)
     lia.char.loaded[id] = character
     if lia.char.pendingRequests and lia.char.pendingRequests[id] then
@@ -306,7 +302,6 @@ end
         print("Removed", removedCount, "characters from cache")
         ```
 ]]
---
 function lia.char.removeCharacter(id)
     lia.char.loaded[id] = nil
 end
@@ -379,7 +374,6 @@ end
         end
         ```
 ]]
---
 function lia.char.new(data, id, client, steamID)
     local character = setmetatable({
         vars = {}
@@ -478,7 +472,6 @@ end
         end
         ```
 ]]
---
 function lia.char.hookVar(varName, hookName, func)
     lia.char.varHooks[varName] = lia.char.varHooks[varName] or {}
     lia.char.varHooks[varName][hookName] = func
@@ -579,7 +572,6 @@ end
         })
         ```
 ]]
---
 function lia.char.registerVar(key, data)
     lia.char.vars[key] = data
     data.index = data.index or table.Count(lia.char.vars)
@@ -1059,7 +1051,6 @@ lia.char.registerVar("banned", {
         print("Retrieved data for", table.Count(charactersData), "characters")
         ```
 ]]
---
 function lia.char.getCharData(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -1128,7 +1119,6 @@ end
         return processedData
         ```
 ]]
---
 function lia.char.getCharDataRaw(charID, key)
     local charIDsafe = tonumber(charID)
     if not charIDsafe then return end
@@ -1202,7 +1192,6 @@ end
         print("Found owners for", table.Count(owners), "characters")
         ```
 ]]
---
 function lia.char.getOwnerByID(ID)
     ID = tonumber(ID)
     for client, character in pairs(lia.char.getAll()) do
@@ -1263,7 +1252,6 @@ end
         print("Found", table.Count(foundCharacters), "characters")
         ```
 ]]
---
 function lia.char.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
     local lookupID = steamID
@@ -1322,7 +1310,6 @@ end
         hook.Run("UpdateScoreboardColors", teamColors)
         ```
 ]]
---
 function lia.char.getTeamColor(client)
     local char = client:getChar()
     if not char then return team.GetColor(client:Team()) end
@@ -1429,7 +1416,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.create(data, callback)
         local timeStamp = os.date("%Y-%m-%d %H:%M:%S", os.time())
         data.money = data.money or lia.config.get("DefaultMoney")
@@ -1557,7 +1543,6 @@ if SERVER then
         end)
         ```
 ]]
-    --
     function lia.char.restore(client, callback, id)
         local steamID = client:SteamID()
         local fields = {"id"}
@@ -1722,7 +1707,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.cleanUpForPlayer(client)
         for _, charID in pairs(client.liaCharList or {}) do
             if lia.char.loaded[charID] then lia.char.unloadCharacter(charID) end
@@ -1811,7 +1795,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.delete(id, client)
         assert(isnumber(id), L("idMustBeNumber"))
         local playersToSync = {}
@@ -1921,7 +1904,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.getCharBanned(charID)
         local charIDsafe = tonumber(charID)
         if not charIDsafe then return end
@@ -1999,7 +1981,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.setCharDatabase(charID, field, value)
         local charIDsafe = tonumber(charID)
         if not charIDsafe or not field then return false end
@@ -2174,7 +2155,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.unloadCharacter(charID)
         local character = lia.char.loaded[charID]
         if not character then return false end
@@ -2266,7 +2246,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.unloadUnusedCharacters(client, activeCharID)
         local unloadedCount = 0
         for _, charID in pairs(client.liaCharList or {}) do
@@ -2384,7 +2363,6 @@ if SERVER then
         end
         ```
 ]]
-    --
     function lia.char.loadSingleCharacter(charID, client, callback)
         if lia.char.loaded[charID] then
             if callback then callback(lia.char.loaded[charID]) end

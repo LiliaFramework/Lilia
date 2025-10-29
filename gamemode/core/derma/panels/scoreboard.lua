@@ -55,6 +55,7 @@ function PANEL:Init()
     hook.Run("ScoreboardOpened", self)
     self:ApplyConfig()
     self:ShowCloseButton(false)
+    self.playerOptionFrames = {}
     local header = self:Add("DPanel")
     header:Dock(TOP)
     header:SetTall(40)
@@ -275,6 +276,16 @@ function PANEL:addPlayer(ply, parent)
             frame:MakePopup()
             frame:SetTitle(L("sbOptions"))
             frame:LiteMode()
+            table.insert(self.playerOptionFrames, frame)
+            frame.OnRemove = function()
+                for i, f in ipairs(self.playerOptionFrames) do
+                    if f == frame then
+                        table.remove(self.playerOptionFrames, i)
+                        break
+                    end
+                end
+            end
+
             local scrollPanel = vgui.Create("liaScrollPanel", frame)
             scrollPanel:Dock(FILL)
             scrollPanel:DockMargin(5, 5, 5, 5)
@@ -474,9 +485,19 @@ function PANEL:Update()
     end
 end
 
+function PANEL:ClosePlayerOptionFrames()
+    if not self.playerOptionFrames then return end
+    for _, frame in ipairs(self.playerOptionFrames) do
+        if IsValid(frame) then frame:Remove() end
+    end
+
+    self.playerOptionFrames = {}
+end
+
 function PANEL:OnRemove()
     hook.Run("ScoreboardClosed", self)
     CloseDermaMenus()
+    self:ClosePlayerOptionFrames()
 end
 
 vgui.Register("liaScoreboard", PANEL, "liaSemiTransparentDFrame")
@@ -484,6 +505,7 @@ local function liaScoreboardHide()
     if IsValid(lia.gui.score) and lia.gui.score:IsVisible() then
         lia.gui.score:SetVisible(false)
         CloseDermaMenus()
+        if lia.gui.score.ClosePlayerOptionFrames then lia.gui.score:ClosePlayerOptionFrames() end
         hook.Run("ScoreboardClosed", lia.gui.score)
     end
 

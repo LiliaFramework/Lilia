@@ -29,11 +29,13 @@ local subMenuIcons = {
     adminStickUnwhitelistName = "icon16/group_delete.png",
     adminStickClassWhitelistName = "icon16/user_add.png",
     adminStickClassUnwhitelistName = "icon16/user_delete.png",
+    adminStickSubCategoryRanking = "icon16/user_green.png",
+    Ranks = "icon16/user_green.png",
     server = "icon16/cog.png",
     permissions = "icon16/key.png",
 }
 
-local function GetIdentifier(ent)
+function GetIdentifier(ent)
     if not IsValid(ent) or not ent:IsPlayer() then return "" end
     if ent:IsBot() then return ent:Name() end
     return ent:SteamID()
@@ -50,182 +52,166 @@ end
 function MODULE:ShowPlayerOptions(target, options)
     local client = LocalPlayer()
     if not IsValid(client) or not IsValid(target) then return end
-    if not (client:hasPrivilege("canAccessScoreboardInfoOutOfStaff") or client:hasPrivilege("canAccessScoreboardAdminOptions") and client:isStaffOnDuty()) then return end
-    local orderedOptions = {
-        {
-            name = L("nameCopyFormat", target:Name()),
-            image = "icon16/page_copy.png",
-            func = function()
-                client:notifySuccessLocalized("copiedToClipboard", target:Name(), L("name"))
-                SetClipboardText(target:Name())
+    local userGroup = client:GetUserGroup()
+    local isAdmin = userGroup == "admin" or userGroup == "superadmin" or userGroup == "owner" or userGroup == "moderator"
+    if not (isAdmin or client:hasPrivilege("canAccessScoreboardInfoOutOfStaff") or (client:hasPrivilege("canAccessScoreboardAdminOptions") and client:isStaffOnDuty())) then return end
+    local orderedOptions = {}
+    table.insert(orderedOptions, {
+        name = L("nameCopyFormat", target:Name()),
+        image = "icon16/page_copy.png",
+        func = function()
+            client:notifySuccessLocalized("copiedToClipboard", target:Name(), L("name"))
+            SetClipboardText(target:Name())
+        end
+    })
+
+    local charID = target:getChar() and target:getChar():getID() or L("na")
+    table.insert(orderedOptions, {
+        name = L("charIDCopyFormat", charID),
+        image = "icon16/page_copy.png",
+        func = function()
+            if target:getChar() then
+                client:notifySuccessLocalized("copiedCharID", target:getChar():getID())
+                SetClipboardText(target:getChar():getID())
             end
-        },
-        {
-            name = L("charIDCopyFormat", target:getChar() and target:getChar():getID() or L("na")),
-            image = "icon16/page_copy.png",
-            func = function()
-                if target:getChar() then
-                    client:notifySuccessLocalized("copiedCharID", target:getChar():getID())
-                    SetClipboardText(target:getChar():getID())
-                end
-            end
-        },
-        {
-            name = L("steamIDCopyFormat", target:SteamID()),
-            image = "icon16/page_copy.png",
-            func = function()
-                client:notifySuccessLocalized("copiedToClipboard", target:Name(), L("steamID"))
-                SetClipboardText(target:SteamID())
-            end
-        },
-        -- Only show blind option if player is not currently blinded
-        (function()
-            local isBlinded = timer.Exists("liaBlind" .. target:SteamID())
-            if not isBlinded then
-                return {
-                    name = L("blind"),
-                    image = "icon16/eye.png",
-                    func = function() lia.administrator.execCommand("blind", target) end
-                }
-            end
-        end)(),
-        -- Only show freeze option if player is not currently frozen
-        (function()
-            if not target:IsFrozen() then
-                return {
-                    name = L("freeze"),
-                    image = "icon16/lock.png",
-                    func = function() lia.administrator.execCommand("freeze", target) end
-                }
-            end
-        end)(),
-        -- Only show gag option if player is not currently gagged
-        (function()
-            if not target:getNetVar("liaGagged", false) then
-                return {
-                    name = L("gag"),
-                    image = "icon16/sound_mute.png",
-                    func = function() lia.administrator.execCommand("gag", target) end
-                }
-            end
-        end)(),
-        -- Only show ignite option if player is not currently on fire
-        (function()
-            if not target:IsOnFire() then
-                return {
-                    name = L("ignite"),
-                    image = "icon16/fire.png",
-                    func = function() lia.administrator.execCommand("ignite", target) end
-                }
-            end
-        end)(),
-        -- Only show jail option if player is not currently jailed
-        (function()
-            if not target:isLocked() then
-                return {
-                    name = L("jail"),
-                    image = "icon16/lock.png",
-                    func = function() lia.administrator.execCommand("jail", target) end
-                }
-            end
-        end)(),
-        -- Only show mute option if player is not currently muted
-        (function()
-            if not (target:getChar() and target:getLiliaData("VoiceBan", false)) then
-                return {
-                    name = L("mute"),
-                    image = "icon16/sound_delete.png",
-                    func = function() lia.administrator.execCommand("mute", target) end
-                }
-            end
-        end)(),
-        {
-            name = L("slay"),
-            image = "icon16/bomb.png",
-            func = function() lia.administrator.execCommand("slay", target) end
-        },
-        -- Only show unblind option if player is currently blinded
-        (function()
-            local isBlinded = timer.Exists("liaBlind" .. target:SteamID())
-            if isBlinded then
-                return {
-                    name = L("unblind"),
-                    image = "icon16/eye.png",
-                    func = function() lia.administrator.execCommand("unblind", target) end
-                }
-            end
-        end)(),
-        -- Only show ungag option if player is currently gagged
-        (function()
-            if target:getNetVar("liaGagged", false) then
-                return {
-                    name = L("ungag"),
-                    image = "icon16/sound_low.png",
-                    func = function() lia.administrator.execCommand("ungag", target) end
-                }
-            end
-        end)(),
-        -- Only show unfreeze option if player is currently frozen
-        (function()
-            if target:IsFrozen() then
-                return {
-                    name = L("unfreeze"),
-                    image = "icon16/accept.png",
-                    func = function() lia.administrator.execCommand("unfreeze", target) end
-                }
-            end
-        end)(),
-        -- Only show unmute option if player is currently muted
-        (function()
-            if target:getChar() and target:getLiliaData("VoiceBan", false) then
-                return {
-                    name = L("unmute"),
-                    image = "icon16/sound_add.png",
-                    func = function() lia.administrator.execCommand("unmute", target) end
-                }
-            end
-        end)(),
-        {
-            name = L("bring"),
-            image = "icon16/arrow_down.png",
-            func = function() lia.administrator.execCommand("bring", target) end
-        },
-        {
-            name = L("goTo"),
-            image = "icon16/arrow_right.png",
-            func = function() lia.administrator.execCommand("goto", target) end
-        },
-        {
-            name = L("respawn"),
-            image = "icon16/arrow_refresh.png",
-            func = function() lia.administrator.execCommand("respawn", target) end
-        },
-        {
-            name = L("returnText"),
-            image = "icon16/arrow_redo.png",
-            func = function() lia.administrator.execCommand("return", target) end
-        },
-        -- Only show extinguish option if player is currently on fire
-        (function()
-            if target:IsOnFire() then
-                return {
-                    name = L("extinguish"),
-                    image = "icon16/fire_delete.png",
-                    func = function() lia.administrator.execCommand("extinguish", target) end
-                }
-            end
-        end)(),
-        -- Only show unjail option if player is currently jailed
-        (function()
-            if target:isLocked() then
-                return {
-                    name = L("unjail"),
-                    image = "icon16/lock_open.png",
-                    func = function() lia.administrator.execCommand("unjail", target) end
-                }
-            end
-        end)()
-    }
+        end
+    })
+
+    table.insert(orderedOptions, {
+        name = L("steamIDCopyFormat", target:SteamID()),
+        image = "icon16/page_copy.png",
+        func = function()
+            client:notifySuccessLocalized("copiedToClipboard", target:Name(), L("steamID"))
+            SetClipboardText(target:SteamID())
+        end
+    })
+
+    local isBlinded = timer.Exists("liaBlind" .. target:SteamID())
+    if not isBlinded then
+        table.insert(orderedOptions, {
+            name = L("blind"),
+            image = "icon16/eye.png",
+            func = function() lia.administrator.execCommand("blind", target) end
+        })
+    end
+
+    if not target:IsFrozen() then
+        table.insert(orderedOptions, {
+            name = L("freeze"),
+            image = "icon16/lock.png",
+            func = function() lia.administrator.execCommand("freeze", target) end
+        })
+    end
+
+    if not target:getNetVar("liaGagged", false) then
+        table.insert(orderedOptions, {
+            name = L("gag"),
+            image = "icon16/sound_mute.png",
+            func = function() lia.administrator.execCommand("gag", target) end
+        })
+    end
+
+    if not target:IsOnFire() then
+        table.insert(orderedOptions, {
+            name = L("ignite"),
+            image = "icon16/fire.png",
+            func = function() lia.administrator.execCommand("ignite", target) end
+        })
+    end
+
+    if not target:isLocked() then
+        table.insert(orderedOptions, {
+            name = L("jail"),
+            image = "icon16/lock.png",
+            func = function() lia.administrator.execCommand("jail", target) end
+        })
+    end
+
+    if not (target:getChar() and target:getLiliaData("VoiceBan", false)) then
+        table.insert(orderedOptions, {
+            name = L("mute"),
+            image = "icon16/sound_delete.png",
+            func = function() lia.administrator.execCommand("mute", target) end
+        })
+    end
+
+    table.insert(orderedOptions, {
+        name = L("slay"),
+        image = "icon16/bomb.png",
+        func = function() lia.administrator.execCommand("slay", target) end
+    })
+
+    table.insert(orderedOptions, {
+        name = L("bring"),
+        image = "icon16/arrow_down.png",
+        func = function() lia.administrator.execCommand("bring", target) end
+    })
+
+    table.insert(orderedOptions, {
+        name = L("goTo"),
+        image = "icon16/arrow_right.png",
+        func = function() lia.administrator.execCommand("goto", target) end
+    })
+
+    table.insert(orderedOptions, {
+        name = L("respawn"),
+        image = "icon16/arrow_refresh.png",
+        func = function() lia.administrator.execCommand("respawn", target) end
+    })
+
+    table.insert(orderedOptions, {
+        name = L("returnText"),
+        image = "icon16/arrow_redo.png",
+        func = function() lia.administrator.execCommand("return", target) end
+    })
+
+    if isBlinded then
+        table.insert(orderedOptions, {
+            name = L("unblind"),
+            image = "icon16/eye.png",
+            func = function() lia.administrator.execCommand("unblind", target) end
+        })
+    end
+
+    if target:getNetVar("liaGagged", false) then
+        table.insert(orderedOptions, {
+            name = L("ungag"),
+            image = "icon16/sound_low.png",
+            func = function() lia.administrator.execCommand("ungag", target) end
+        })
+    end
+
+    if target:IsFrozen() then
+        table.insert(orderedOptions, {
+            name = L("unfreeze"),
+            image = "icon16/accept.png",
+            func = function() lia.administrator.execCommand("unfreeze", target) end
+        })
+    end
+
+    if target:getChar() and target:getLiliaData("VoiceBan", false) then
+        table.insert(orderedOptions, {
+            name = L("unmute"),
+            image = "icon16/sound_add.png",
+            func = function() lia.administrator.execCommand("unmute", target) end
+        })
+    end
+
+    if target:IsOnFire() then
+        table.insert(orderedOptions, {
+            name = L("extinguish"),
+            image = "icon16/fire_delete.png",
+            func = function() lia.administrator.execCommand("extinguish", target) end
+        })
+    end
+
+    if target:isLocked() then
+        table.insert(orderedOptions, {
+            name = L("unjail"),
+            image = "icon16/lock_open.png",
+            func = function() lia.administrator.execCommand("unjail", target) end
+        })
+    end
 
     for _, v in ipairs(orderedOptions) do
         if v then options[#options + 1] = v end
@@ -686,7 +672,8 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                 local ply = character:getPlayer()
                 if IsValid(ply) then
                     local steamID = ply:SteamID() or ""
-                    combo:AddChoice(L("characterSteamIDFormat", character:getName() or L("unknown"), steamID), steamID)
+                    local charName = character:getName() or L("unknown")
+                    combo:AddChoice(L("characterSteamIDFormat", charName, steamID), steamID)
                 end
             end
 
@@ -1020,7 +1007,7 @@ local function GenerateDynamicCategories()
         end
     end
 
-    local preferredOrder = {"playerInformation", "moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
+    local preferredOrder = {"moderation", "characterManagement", "doorManagement", "teleportation", "utility"}
     local orderedCategories = {}
     for _, preferredCategory in ipairs(preferredOrder) do
         if mergedCategories[preferredCategory] then table.insert(orderedCategories, preferredCategory) end
@@ -1031,76 +1018,80 @@ local function GenerateDynamicCategories()
     end
 
     local hardcodedCategories = {
+        moderation = {
+            name = L("adminStickCategoryModeration") or "Moderation",
+            icon = "icon16/shield.png",
+            subcategories = {}
+        },
+        characterManagement = {
+            name = L("adminStickCategoryCharacterManagement") or "Character Management",
+            icon = "icon16/user_gray.png",
+            subcategories = {
+                factions = {
+                    name = L("adminStickSubCategoryFactions") or "Factions",
+                    icon = "icon16/group.png"
+                },
+                classes = {
+                    name = L("adminStickSubCategoryClasses") or "Classes",
+                    icon = "icon16/user.png"
+                },
+                whitelists = {
+                    name = L("adminStickSubCategoryWhitelists") or "Whitelists",
+                    icon = "icon16/group_add.png"
+                }
+            }
+        },
         doorManagement = {
-            name = L("adminStickCategoryDoorManagement") or "Door Management",
+            name = L("adminStickCategoryDoorManagement"),
             icon = "icon16/door.png",
             subcategories = {
                 doorActions = {
-                    name = L("adminStickSubCategoryDoorActions") or L("actions"),
+                    name = L("adminStickSubCategoryDoorActions") or L("adminStickSubCategoryActions"),
                     icon = "icon16/lightning.png"
                 },
                 doorSettings = {
-                    name = L("adminStickSubCategoryDoorSettings") or "Settings",
+                    name = L("adminStickSubCategoryDoorSettings") or L("adminStickSubCategorySettings"),
                     icon = "icon16/cog.png"
                 },
                 doorMaintenance = {
-                    name = L("adminStickSubCategoryDoorMaintenance") or "Maintenance",
+                    name = L("adminStickSubCategoryDoorMaintenance") or L("adminStickSubCategoryMaintenance"),
                     icon = "icon16/wrench.png"
                 },
                 doorInformation = {
-                    name = L("adminStickSubCategoryDoorInformation") or "Information",
+                    name = L("adminStickSubCategoryDoorInformation") or L("adminStickSubCategoryInformation"),
                     icon = "icon16/information.png"
                 }
             }
         },
-        playerInformation = {
-            name = L("adminStickCategoryPlayerInformation") or "Player Information",
-            icon = "icon16/user.png",
+        teleportation = {
+            name = L("adminStickCategoryTeleportation"),
+            icon = "icon16/world.png",
             subcategories = {}
         },
-        teleportation = {
-            name = L("adminStickCategoryTeleportation") or "Teleportation",
-            icon = "icon16/world.png",
+        utility = {
+            name = L("adminStickCategoryUtility") or "Utility",
+            icon = "icon16/application_view_tile.png",
             subcategories = {}
         }
     }
 
-    if mergedCategories.characterManagement then
-        mergedCategories.characterManagement.subcategories = mergedCategories.characterManagement.subcategories or {}
-        mergedCategories.characterManagement.subcategories.factions = {
-            name = L("adminStickSubCategoryFactions") or "Factions",
-            icon = "icon16/group.png"
-        }
-
-        mergedCategories.characterManagement.subcategories.classes = {
-            name = L("adminStickSubCategoryClasses") or "Classes",
-            icon = "icon16/group_edit.png"
-        }
-
-        mergedCategories.characterManagement.subcategories.whitelists = {
-            name = L("adminStickSubCategoryWhitelists") or "Whitelists",
-            icon = "icon16/group_key.png"
-        }
-
-        mergedCategories.characterManagement.subcategories.flags = {
-            name = L("adminStickSubCategoryFlags") or "Flags",
-            icon = "icon16/flag_red.png"
-        }
-    end
-
-    if mergedCategories.utility then
-        mergedCategories.utility.subcategories = mergedCategories.utility.subcategories or {}
-        mergedCategories.utility.subcategories.commands = {
-            name = L("adminStickSubCategoryCommands") or "Commands",
-            icon = "icon16/script.png"
-        }
-    end
-
     for key, data in pairs(hardcodedCategories) do
         if not mergedCategories[key] then
             mergedCategories[key] = data
-            if not table.HasValue(orderedCategories, key) then table.insert(orderedCategories, key) end
+        else
+            -- merge subcategories from hardcoded into existing category
+            if not mergedCategories[key].subcategories then mergedCategories[key].subcategories = {} end
+            for subKey, subData in pairs(data.subcategories or {}) do
+                if not mergedCategories[key].subcategories[subKey] then mergedCategories[key].subcategories[subKey] = subData end
+            end
         end
+
+        if not table.HasValue(orderedCategories, key) then table.insert(orderedCategories, key) end
+    end
+
+    hook.Run("RegisterAdminStickSubcategories", mergedCategories)
+    for key, _ in pairs(mergedCategories) do
+        if not table.HasValue(orderedCategories, key) then table.insert(orderedCategories, key) end
     end
     return mergedCategories, orderedCategories
 end
@@ -1156,7 +1147,17 @@ end
 local function GetOrCreateCategoryMenu(parent, categoryKey, store)
     if not parent or not IsValid(parent) then return end
     local category = MODULE.adminStickCategories[categoryKey]
-    if not category then return parent end
+    if not category then
+        MODULE.adminStickCategories[categoryKey] = {
+            name = L(categoryKey) ~= categoryKey and L(categoryKey) or categoryKey:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end):gsub("_", " "),
+            icon = GetIconForCategory(categoryKey),
+            subcategories = {}
+        }
+
+        category = MODULE.adminStickCategories[categoryKey]
+        if MODULE.adminStickCategoryOrder and not table.HasValue(MODULE.adminStickCategoryOrder, categoryKey) then table.insert(MODULE.adminStickCategoryOrder, categoryKey) end
+    end
+
     if not store[categoryKey] then
         local menu, option = parent:AddSubMenu(category.name, function() end)
         if category.icon and option then option:SetIcon(category.icon) end
@@ -1172,7 +1173,16 @@ end
 local function GetOrCreateSubCategoryMenu(parent, categoryKey, subcategoryKey, store)
     if not parent or not IsValid(parent) then return end
     local category = MODULE.adminStickCategories[categoryKey]
-    if not category or not category.subcategories or not category.subcategories[subcategoryKey] then return parent end
+    if not category then category = GetOrCreateCategoryMenu(parent, categoryKey, store) and MODULE.adminStickCategories[categoryKey] end
+    if not category then return parent end
+    category.subcategories = category.subcategories or {}
+    if not category.subcategories[subcategoryKey] then
+        category.subcategories[subcategoryKey] = {
+            name = L(subcategoryKey) ~= subcategoryKey and L(subcategoryKey) or subcategoryKey:gsub("(%l)(%w*)", function(a, b) return string.upper(a) .. b end):gsub("_", " "),
+            icon = GetIconForCategory(subcategoryKey)
+        }
+    end
+
     local subcategory = category.subcategories[subcategoryKey]
     local fullKey = categoryKey .. "_" .. subcategoryKey
     if not store[fullKey] then
@@ -1187,31 +1197,22 @@ local function GetOrCreateSubCategoryMenu(parent, categoryKey, subcategoryKey, s
     return store[fullKey] or parent
 end
 
-local function CreateOrganizedAdminStickMenu(tgt, stores)
-    local menu = lia.derma.dermaMenu()
-    if not IsValid(menu) then return end
+local function CreateOrganizedAdminStickMenu(tgt, stores, existingMenu)
+    local menu = existingMenu or lia.derma.dermaMenu()
+    if not IsValid(menu) then return menu end
     local cl = LocalPlayer()
-    local categories, categoryOrder
-    if not MODULE.adminStickCategories or table.Count(MODULE.adminStickCategories) == 0 then
-        categories, categoryOrder = GenerateDynamicCategories()
-        MODULE.adminStickCategories = categories
-        MODULE.adminStickCategoryOrder = categoryOrder
-    else
-        categories = MODULE.adminStickCategories
-        categoryOrder = MODULE.adminStickCategoryOrder
-    end
-
+    local categories, categoryOrder = GenerateDynamicCategories()
+    MODULE.adminStickCategories = categories
+    MODULE.adminStickCategoryOrder = categoryOrder
     for _, categoryKey in ipairs(categoryOrder) do
         local category = categories[categoryKey]
         if category then
             local hasContent
-            if categoryKey == "playerInformation" and tgt:IsPlayer() then
+            if categoryKey == "moderation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
                 hasContent = true
-            elseif categoryKey == "moderation" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
+            elseif categoryKey == "characterManagement" and tgt:IsPlayer() then
                 hasContent = true
-            elseif categoryKey == "characterManagement" and tgt:IsPlayer() and (cl:hasPrivilege("manageTransfers") or cl:hasPrivilege("manageClasses") or cl:hasPrivilege("manageWhitelists") or cl:hasPrivilege("manageCharacterInformation") or cl:hasPrivilege("manageFlags")) then
-                hasContent = true
-            elseif categoryKey == "flagManagement" and tgt:IsPlayer() and cl:hasPrivilege("manageFlags") then
+            elseif categoryKey == "flagManagement" and tgt:IsPlayer() and (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then
                 hasContent = true
             elseif categoryKey == "doorManagement" and tgt:isDoor() then
                 hasContent = true
@@ -1240,7 +1241,7 @@ local function OpenPlayerModelUI(tgt)
     AdminStickIsOpen = true
     local fr = vgui.Create("liaFrame")
     fr:SetTitle(L("changePlayerModel"))
-    fr:SetSize(450, 300)
+    fr:SetSize(800, 600)
     fr:Center()
     function fr:OnClose()
         fr:Remove()
@@ -1279,10 +1280,147 @@ local function OpenPlayerModelUI(tgt)
     for _, md in ipairs(modList) do
         local ic = wr:Add("SpawnIcon")
         ic:SetModel(md.mdl)
-        ic:SetSize(64, 64)
+        ic:SetSize(128, 128)
         ic:SetTooltip(md.name)
         ic.model_path = md.mdl
         ic.DoClick = function() ed:SetValue(ic.model_path) end
+    end
+
+    fr:MakePopup()
+end
+
+local function OpenFactionPlayerModelUI(tgt)
+    AdminStickIsOpen = true
+    local fr = vgui.Create("liaFrame")
+    fr:SetTitle(L("changePlayerModel") .. " - " .. L("faction"))
+    fr:SetSize(800, 600)
+    fr:Center()
+    function fr:OnClose()
+        fr:Remove()
+        LocalPlayer().AdminStickTarget = nil
+        AdminStickIsOpen = false
+    end
+
+    local sc = vgui.Create("liaScrollPanel", fr)
+    sc:Dock(FILL)
+    local wr = vgui.Create("DIconLayout", sc)
+    wr:Dock(FILL)
+    local ed = vgui.Create("liaEntry", fr)
+    ed:Dock(BOTTOM)
+    ed:SetText(tgt:GetModel())
+    local bt = vgui.Create("liaButton", fr)
+    bt:SetText(L("change"))
+    bt:Dock(TOP)
+    function bt:DoClick()
+        local txt = ed:GetValue()
+        local id = GetIdentifier(tgt)
+        if id ~= "" then RunConsoleCommand("say", "/charsetmodel " .. QuoteArgs(id, txt)) end
+        fr:Remove()
+        LocalPlayer().AdminStickTarget = nil
+        AdminStickIsOpen = false
+    end
+
+    local factionList = {}
+    for k, v in pairs(lia.faction.teams) do
+        table.insert(factionList, {
+            name = v.name,
+            uniqueID = k,
+            faction = v
+        })
+    end
+
+    table.sort(factionList, function(a, b) return a.name < b.name end)
+    for _, factionData in ipairs(factionList) do
+        local fac = factionData.faction
+        local ic = wr:Add("SpawnIcon")
+        ic:SetModel(fac.models and (istable(fac.models) and #fac.models > 0 and fac.models[1] or fac.models) or "models/player/group01/male_01.mdl")
+        ic:SetSize(128, 128)
+        ic:SetTooltip(factionData.name)
+        ic.factionData = fac
+        ic.DoClick = function()
+            wr:Clear()
+            local backBtn = vgui.Create("liaButton", fr)
+            backBtn:SetText(L("back"))
+            backBtn:Dock(TOP)
+            function backBtn:DoClick()
+                backBtn:Remove()
+                OpenFactionPlayerModelUI(tgt)
+            end
+
+            local models = fac.models or {}
+            local modList = {}
+            if istable(models) then
+                if models.male or models.female then
+                    if models.male then
+                        for _, modelData in ipairs(models.male) do
+                            if istable(modelData) then
+                                table.insert(modList, {
+                                    name = modelData[2] or factionData.name,
+                                    mdl = modelData[1],
+                                    faction = factionData.name
+                                })
+                            else
+                                table.insert(modList, {
+                                    name = factionData.name,
+                                    mdl = modelData,
+                                    faction = factionData.name
+                                })
+                            end
+                        end
+                    end
+
+                    if models.female then
+                        for _, modelData in ipairs(models.female) do
+                            if istable(modelData) then
+                                table.insert(modList, {
+                                    name = modelData[2] or factionData.name,
+                                    mdl = modelData[1],
+                                    faction = factionData.name
+                                })
+                            else
+                                table.insert(modList, {
+                                    name = factionData.name,
+                                    mdl = modelData,
+                                    faction = factionData.name
+                                })
+                            end
+                        end
+                    end
+                else
+                    for _, modelData in ipairs(models) do
+                        if istable(modelData) then
+                            table.insert(modList, {
+                                name = modelData[2] or factionData.name,
+                                mdl = modelData[1],
+                                faction = factionData.name
+                            })
+                        else
+                            table.insert(modList, {
+                                name = factionData.name,
+                                mdl = modelData,
+                                faction = factionData.name
+                            })
+                        end
+                    end
+                end
+            else
+                table.insert(modList, {
+                    name = factionData.name,
+                    mdl = models,
+                    faction = factionData.name
+                })
+            end
+
+            table.sort(modList, function(a, b) return a.name < b.name end)
+            for _, md in ipairs(modList) do
+                local modelIc = wr:Add("SpawnIcon")
+                modelIc:SetModel(md.mdl)
+                modelIc:SetSize(128, 128)
+                modelIc:SetTooltip(md.name .. " (" .. md.faction .. ")")
+                modelIc.model_path = md.mdl
+                modelIc.DoClick = function() ed:SetValue(modelIc.model_path) end
+            end
+        end
     end
 
     fr:MakePopup()
@@ -1346,7 +1484,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
     local modSubCategory = GetOrCreateSubCategoryMenu(modCategory, "moderation", "moderationTools", stores)
     if not modSubCategory then return end
     local mods = {}
-    -- Add blind/unblind options conditionally based on player state
     local isBlinded = timer.Exists("liaBlind" .. tgt:SteamID())
     if isBlinded then
         mods[#mods + 1] = {
@@ -1362,7 +1499,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    -- Add freeze/unfreeze options conditionally
     if tgt:IsFrozen() then
         mods[#mods + 1] = {
             name = L("unfreeze"),
@@ -1377,7 +1513,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    -- Add gag/ungag options conditionally
     if tgt:getNetVar("liaGagged", false) then
         mods[#mods + 1] = {
             name = L("ungag"),
@@ -1392,7 +1527,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    -- Add mute/unmute options conditionally
     if tgt:getChar() and tgt:getLiliaData("VoiceBan", false) then
         mods[#mods + 1] = {
             name = L("unmute"),
@@ -1407,7 +1541,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    -- Add ignite/extinguish options conditionally
     if tgt:IsOnFire() then
         mods[#mods + 1] = {
             name = L("extinguish"),
@@ -1422,7 +1555,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    -- Add jail/unjail options conditionally
     if tgt:isLocked() then
         mods[#mods + 1] = {
             name = L("unjail"),
@@ -1437,7 +1569,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    -- Add other single-action options
     local otherMods = {
         {
             name = L("slay"),
@@ -1446,7 +1577,6 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     }
 
-    -- Add other moderation options to the main mods array
     for _, mod in ipairs(otherMods) do
         mods[#mods + 1] = mod
     end
@@ -1548,166 +1678,23 @@ end
 
 local function IncludeCharacterManagement(tgt, menu, stores)
     local cl = LocalPlayer()
-    local canFaction = cl:hasPrivilege("manageTransfers")
-    local canClass = cl:hasPrivilege("manageClasses")
-    local canWhitelist = cl:hasPrivilege("manageWhitelists")
     local charCategory = GetOrCreateCategoryMenu(menu, "characterManagement", stores)
     if not charCategory then return end
-    local char = tgt:getChar()
-    if char then
-        local facID = char:getFaction()
-        if facID then
-            if canFaction then
-                local facOptions = {}
-                for _, f in pairs(lia.faction.teams) do
-                    if f.index == facID then
-                        for _, v in pairs(lia.faction.teams) do
-                            table.insert(facOptions, {
-                                name = v.name,
-                                cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(tgt), v.uniqueID)
-                            })
-                        end
-
-                        break
-                    end
-                end
-
-                table.sort(facOptions, function(a, b) return a.name < b.name end)
-                if #facOptions > 0 then
-                    local factionsSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "factions", stores)
-                    if factionsSubCategory and IsValid(factionsSubCategory) then
-                        for _, o in ipairs(facOptions) do
-                            factionsSubCategory:AddOption(L(o.name), function()
-                                cl:ConCommand(o.cmd)
-                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-                            end):SetIcon("icon16/group.png")
-                        end
-
-                        if factionsSubCategory.UpdateSize then factionsSubCategory:UpdateSize() end
-                    end
-                end
-            end
-
-            local classes = lia.faction.getClasses and lia.faction.getClasses(facID) or {}
-            if classes and #classes > 1 and canClass then
-                local cls = {}
-                for _, c in ipairs(classes) do
-                    table.insert(cls, {
-                        name = c.name,
-                        cmd = 'say /setclass ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
-                    })
-                end
-
-                table.sort(cls, function(a, b) return a.name < b.name end)
-                local classesSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "classes", stores)
-                if classesSubCategory and IsValid(classesSubCategory) then
-                    for _, o in ipairs(cls) do
-                        classesSubCategory:AddOption(L(o.name), function()
-                            cl:ConCommand(o.cmd)
-                            timer.Simple(0.1, function()
-                                LocalPlayer().AdminStickTarget = nil
-                                AdminStickIsOpen = false
-                            end)
-                        end):SetIcon("icon16/user.png")
-                    end
-
-                    if classesSubCategory.UpdateSize then classesSubCategory:UpdateSize() end
-                end
-            end
-
-            if canWhitelist then
-                local facAdd, facRemove = {}, {}
-                for _, v in pairs(lia.faction.teams) do
-                    if not v.isDefault then
-                        if not tgt:hasWhitelist(v.index) then
-                            table.insert(facAdd, {
-                                name = v.name,
-                                cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.uniqueID)
-                            })
-                        else
-                            table.insert(facRemove, {
-                                name = v.name,
-                                cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), v.uniqueID)
-                            })
-                        end
-                    end
-                end
-
-                table.sort(facAdd, function(a, b) return a.name < b.name end)
-                table.sort(facRemove, function(a, b) return a.name < b.name end)
-                local whitelistsSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "whitelists", stores)
-                if whitelistsSubCategory and IsValid(whitelistsSubCategory) then
-                    for _, o in ipairs(facAdd) do
-                        whitelistsSubCategory:AddOption(L(o.name), function()
-                            cl:ConCommand(o.cmd)
-                            timer.Simple(0.1, function()
-                                LocalPlayer().AdminStickTarget = nil
-                                AdminStickIsOpen = false
-                            end)
-                        end):SetIcon("icon16/group_add.png")
-                    end
-
-                    for _, o in ipairs(facRemove) do
-                        whitelistsSubCategory:AddOption(L(o.name), function()
-                            cl:ConCommand(o.cmd)
-                            timer.Simple(0.1, function()
-                                LocalPlayer().AdminStickTarget = nil
-                                AdminStickIsOpen = false
-                            end)
-                        end):SetIcon("icon16/group_delete.png")
-                    end
-
-                    if whitelistsSubCategory.UpdateSize then whitelistsSubCategory:UpdateSize() end
-                end
-
-                if classes and #classes > 0 then
-                    local cw, cu = {}, {}
-                    for _, c in ipairs(classes) do
-                        if not tgt:getChar():getClasswhitelists()[c.index] then
-                            table.insert(cw, {
-                                name = c.name,
-                                cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
-                            })
-                        else
-                            table.insert(cu, {
-                                name = c.name,
-                                cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(tgt), c.uniqueID)
-                            })
-                        end
-                    end
-
-                    table.sort(cw, function(a, b) return a.name < b.name end)
-                    table.sort(cu, function(a, b) return a.name < b.name end)
-                    if whitelistsSubCategory and IsValid(whitelistsSubCategory) then
-                        for _, o in ipairs(cw) do
-                            whitelistsSubCategory:AddOption(L(o.name), function()
-                                cl:ConCommand(o.cmd)
-                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-                            end):SetIcon("icon16/user_add.png")
-                        end
-
-                        for _, o in ipairs(cu) do
-                            whitelistsSubCategory:AddOption(L(o.name), function()
-                                cl:ConCommand(o.cmd)
-                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
-                            end):SetIcon("icon16/user_delete.png")
-                        end
-
-                        if whitelistsSubCategory.UpdateSize then whitelistsSubCategory:UpdateSize() end
-                    end
-                end
-            end
-        end
-    end
-
     if cl:hasPrivilege("manageCharacterInformation") then
         local attributesSubCategory = GetOrCreateSubCategoryMenu(charCategory, "characterManagement", "attributes", stores)
-        attributesSubCategory:AddOption(L("changePlayerModel"), function()
-            OpenPlayerModelUI(tgt)
-            timer.Simple(0.1, function() AdminStickIsOpen = false end)
-        end):SetIcon("icon16/user_suit.png")
+        if attributesSubCategory then
+            attributesSubCategory:AddOption(L("changePlayerModel"), function()
+                OpenPlayerModelUI(tgt)
+                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+            end):SetIcon("icon16/user_suit.png")
 
-        if attributesSubCategory.UpdateSize then attributesSubCategory:UpdateSize() end
+            attributesSubCategory:AddOption(L("changePlayerModel") .. " - " .. L("faction"), function()
+                OpenFactionPlayerModelUI(tgt)
+                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+            end):SetIcon("icon16/group.png")
+
+            if attributesSubCategory.UpdateSize then attributesSubCategory:UpdateSize() end
+        end
     end
 end
 
@@ -1752,6 +1739,8 @@ local function IncludeFlagManagement(tgt, menu, stores)
                 timer.Simple(0.1, function() AdminStickIsOpen = false end)
             end):SetIcon(f.icon)
         end
+
+        if cf.UpdateSize then cf:UpdateSize() end
     end
 
     if cf and IsValid(cf) then
@@ -1964,11 +1953,15 @@ function MODULE:OpenAdminStickUI(tgt)
     if not (cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty()) then return end
     local tempMenu = lia.derma.dermaMenu()
     local stores = {}
+    -- Clear any existing stores to ensure fresh menu creation
+    MODULE.adminStickCategories = {}
+    MODULE.adminStickCategoryOrder = {}
     local hasOptions = false
     if tgt:IsPlayer() then
+        local charID = tgt:getChar() and tgt:getChar():getID() or L("na")
         local info = {
             {
-                name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or L("na")),
+                name = L("charIDCopyFormat", charID),
                 cmd = function() end,
                 icon = "icon16/page_copy.png"
             },
@@ -1986,7 +1979,6 @@ function MODULE:OpenAdminStickUI(tgt)
 
         if #info > 0 then hasOptions = true end
         if cl:hasPrivilege("alwaysSpawnAdminStick") or cl:isStaffOnDuty() then hasOptions = true end
-        if cl:hasPrivilege("manageTransfers") or cl:hasPrivilege("manageClasses") or cl:hasPrivilege("manageWhitelists") or cl:hasPrivilege("manageCharacterInformation") then hasOptions = true end
     end
 
     local tgtClass = tgt:GetClass()
@@ -2015,7 +2007,8 @@ function MODULE:OpenAdminStickUI(tgt)
     end
 
     if #cmds > 0 then hasOptions = true end
-    hook.Run("PopulateAdminStick", tempMenu, tgt)
+    local tempStores = {} -- Use separate stores for temp menu to avoid polluting the real stores
+    hook.Run("PopulateAdminStick", tempMenu, tgt, tempStores)
     tempMenu:Remove()
     if not hasOptions then
         cl:notifyInfoLocalized("adminStickNoOptions")
@@ -2023,19 +2016,17 @@ function MODULE:OpenAdminStickUI(tgt)
     end
 
     AdminStickIsOpen = true
-    local menu = CreateOrganizedAdminStickMenu(tgt, stores)
-    menu:Center()
-    menu:MakePopup()
+    local menu = lia.derma.dermaMenu()
+    if not IsValid(menu) then return end
     if tgt:IsPlayer() then
+        local charID = tgt:getChar() and tgt:getChar():getID() or L("na")
         local info = {
             {
-                name = L("charIDCopyFormat", tgt:getChar() and tgt:getChar():getID() or L("na")),
+                name = L("steamIDCopyFormat", tgt:SteamID()),
                 cmd = function()
-                    if tgt:getChar() then
-                        cl:notifySuccessLocalized("adminStickCopiedCharID")
-                        SetClipboardText(tgt:getChar():getID())
-                    end
-
+                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
+                    SetClipboardText(tgt:SteamID())
+                    menu:Remove()
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
@@ -2045,15 +2036,20 @@ function MODULE:OpenAdminStickUI(tgt)
                 cmd = function()
                     cl:notifySuccessLocalized("adminStickCopiedToClipboard")
                     SetClipboardText(tgt:Name())
+                    menu:Remove()
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
             },
             {
-                name = L("steamIDCopyFormat", tgt:SteamID()),
+                name = L("charIDCopyFormat", charID),
                 cmd = function()
-                    cl:notifySuccessLocalized("adminStickCopiedToClipboard")
-                    SetClipboardText(tgt:SteamID())
+                    if tgt:getChar() then
+                        cl:notifySuccessLocalized("adminStickCopiedCharID")
+                        SetClipboardText(tgt:getChar():getID())
+                    end
+
+                    menu:Remove()
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end,
                 icon = "icon16/page_copy.png"
@@ -2061,12 +2057,19 @@ function MODULE:OpenAdminStickUI(tgt)
         }
 
         table.sort(info, function(a, b) return a.name < b.name end)
-        local infoCategory = GetOrCreateCategoryMenu(menu, "playerInformation", stores)
-        if not infoCategory then return end
         for _, o in ipairs(info) do
-            infoCategory:AddOption(L(o.name), o.cmd):SetIcon(o.icon)
+            local option = menu:AddOption(L(o.name), o.cmd)
+            option:SetIcon(o.icon)
+            option:SetZPos(-100)
         end
 
+        menu:AddSpacer()
+    end
+
+    CreateOrganizedAdminStickMenu(tgt, stores, menu)
+    menu:Center()
+    menu:MakePopup()
+    if tgt:IsPlayer() then
         IncludeAdminMenu(tgt, menu, stores)
         IncludeCharacterManagement(tgt, menu, stores)
         IncludeFlagManagement(tgt, menu, stores)
@@ -2113,7 +2116,231 @@ function MODULE:OpenAdminStickUI(tgt)
         end
     end
 
-    hook.Run("PopulateAdminStick", menu, tgt)
+    hook.Add("RegisterAdminStickSubcategories", "liaDefaultSubcategories", function(categories)
+        if categories.characterManagement then
+            categories.characterManagement.subcategories = categories.characterManagement.subcategories or {}
+            categories.characterManagement.subcategories.factions = {
+                name = L("adminStickSubCategoryFactions") or "Factions",
+                icon = "icon16/group.png"
+            }
+
+            categories.characterManagement.subcategories.classes = {
+                name = L("adminStickSubCategoryClasses") or "Classes",
+                icon = "icon16/group_edit.png"
+            }
+
+            categories.characterManagement.subcategories.whitelists = {
+                name = L("adminStickSubCategoryWhitelists") or "Whitelists",
+                icon = "icon16/group_key.png"
+            }
+
+            categories.characterManagement.subcategories.flags = {
+                name = L("adminStickSubCategoryFlags") or "Flags",
+                icon = "icon16/flag_red.png"
+            }
+        end
+
+        if categories.utility then
+            categories.utility.subcategories = categories.utility.subcategories or {}
+            categories.utility.subcategories.commands = {
+                name = L("adminStickSubCategoryCommands") or "Commands",
+                icon = "icon16/script.png"
+            }
+        end
+    end)
+
+    hook.Add("GetAdminStickLists", "liaDefaultAdminStickLists", function(target, lists)
+        local client = LocalPlayer()
+        local canFaction = client:hasPrivilege("manageTransfers")
+        local canClass = client:hasPrivilege("manageClasses")
+        local canWhitelist = client:hasPrivilege("manageWhitelists")
+        -- Only proceed if target is valid and is a player
+        if not target or not IsValid(target) or not target:IsPlayer() then return end
+        local char = target:getChar()
+        if not char then return end
+        if char then
+            local facID = char:getFaction()
+            if facID then
+                if canFaction then
+                    local facOptions = {}
+                    for _, f in pairs(lia.faction.teams) do
+                        if f.index == facID then
+                            for _, v in pairs(lia.faction.teams) do
+                                table.insert(facOptions, {
+                                    name = v.name,
+                                    icon = "icon16/group.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /plytransfer ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
+                                })
+                            end
+
+                            break
+                        end
+                    end
+
+                    if #facOptions > 0 then
+                        table.insert(lists, {
+                            name = "Factions",
+                            category = "characterManagement",
+                            subcategory = "factions",
+                            items = facOptions
+                        })
+                    end
+                end
+
+                local classes = lia.faction.getClasses and lia.faction.getClasses(facID) or {}
+                if classes and #classes > 1 and canClass then
+                    local cls = {}
+                    for _, c in ipairs(classes) do
+                        table.insert(cls, {
+                            name = c.name,
+                            icon = "icon16/user.png",
+                            callback = function(callbackTarget)
+                                local cmd = 'say /setclass ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                client:ConCommand(cmd)
+                            end
+                        })
+                    end
+
+                    if #cls > 0 then
+                        table.insert(lists, {
+                            name = "Classes",
+                            category = "characterManagement",
+                            subcategory = "classes",
+                            items = cls
+                        })
+                    end
+                end
+
+                if canWhitelist then
+                    local facAdd, facRemove = {}, {}
+                    for _, v in pairs(lia.faction.teams) do
+                        if not v.isDefault then
+                            if not target:hasWhitelist(v.index) then
+                                table.insert(facAdd, {
+                                    name = v.name,
+                                    icon = "icon16/group_add.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /plywhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
+                                })
+                            else
+                                table.insert(facRemove, {
+                                    name = v.name,
+                                    icon = "icon16/group_delete.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /plyunwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), v.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
+                                })
+                            end
+                        end
+                    end
+
+                    local whitelistItems = {}
+                    for _, item in ipairs(facAdd) do
+                        table.insert(whitelistItems, item)
+                    end
+
+                    for _, item in ipairs(facRemove) do
+                        table.insert(whitelistItems, item)
+                    end
+
+                    if #whitelistItems > 0 then
+                        table.insert(lists, {
+                            name = "Whitelists",
+                            category = "characterManagement",
+                            subcategory = "whitelists",
+                            items = whitelistItems
+                        })
+                    end
+
+                    if classes and #classes > 0 then
+                        local cw, cu = {}, {}
+                        for _, c in ipairs(classes) do
+                            if not target:getChar():getClasswhitelists()[c.index] then
+                                table.insert(cw, {
+                                    name = c.name,
+                                    icon = "icon16/user_add.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /classwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
+                                })
+                            else
+                                table.insert(cu, {
+                                    name = c.name,
+                                    icon = "icon16/user_delete.png",
+                                    callback = function(callbackTarget)
+                                        local cmd = 'say /classunwhitelist ' .. QuoteArgs(GetIdentifier(callbackTarget), c.uniqueID)
+                                        client:ConCommand(cmd)
+                                    end
+                                })
+                            end
+                        end
+
+                        local classWhitelistItems = {}
+                        for _, item in ipairs(cw) do
+                            table.insert(classWhitelistItems, item)
+                        end
+
+                        for _, item in ipairs(cu) do
+                            table.insert(classWhitelistItems, item)
+                        end
+
+                        if #classWhitelistItems > 0 then
+                            table.insert(lists, {
+                                name = "Class Whitelists",
+                                category = "characterManagement",
+                                subcategory = "whitelists",
+                                items = classWhitelistItems
+                            })
+                        end
+                    end
+                end
+            end
+        end
+    end)
+
+    hook.Add("PopulateAdminStick", "liaAddAdminStickLists", function(currentMenu, currentTarget, currentStores)
+        local lists = {}
+        hook.Run("GetAdminStickLists", currentTarget, lists)
+        for _, listData in ipairs(lists) do
+            local listName = listData.name
+            local categoryKey = listData.category
+            local subcategoryKey = listData.subcategory
+            local items = listData.items
+            if listName and categoryKey and subcategoryKey and items and #items > 0 then
+                local category = GetOrCreateCategoryMenu(currentMenu, categoryKey, currentStores)
+                if category and IsValid(category) then
+                    local subcategory = GetOrCreateSubCategoryMenu(category, categoryKey, subcategoryKey, currentStores)
+                    if subcategory and IsValid(subcategory) then
+                        table.sort(items, function(a, b) return (a.name or "") < (b.name or "") end)
+                        local icon = subMenuIcons[listName] or "icon16/page.png"
+                        for _, item in ipairs(items) do
+                            local option = subcategory:AddOption(L(item.name), function()
+                                if item.callback then item.callback(currentTarget, item) end
+                                timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                            end)
+
+                            if item.icon and IsValid(option) then
+                                option:SetIcon(item.icon)
+                            elseif icon and icon ~= "icon16/page.png" and IsValid(option) then
+                                option:SetIcon(icon)
+                            end
+                        end
+
+                        if subcategory.UpdateSize then subcategory:UpdateSize() end
+                    end
+                end
+            end
+        end
+    end)
+
+    hook.Run("PopulateAdminStick", menu, tgt, stores)
     function menu:OnRemove()
         cl.AdminStickTarget = nil
         AdminStickIsOpen = false
@@ -3423,3 +3650,158 @@ function MODULE:OnAdminStickMenuClosed()
     local client = LocalPlayer()
     if IsValid(client) and client.AdminStickTarget == client then client.AdminStickTarget = nil end
 end
+
+lia.command.add("testsounds", {
+    desc = "Open websound testing interface",
+    privilege = "adminChat",
+    adminOnly = true,
+    onRun = function(client)
+        local frame = vgui.Create("liaFrame")
+        frame:SetTitle("WebSound Test Interface")
+        frame:SetSize(600, 500)
+        frame:Center()
+        frame:MakePopup()
+        -- Get registered websounds
+        local websounds = lia.websound.stored or {}
+        local soundList = {}
+        for name, _ in pairs(websounds) do
+            table.insert(soundList, name)
+        end
+
+        table.sort(soundList)
+        -- Sound selection combobox
+        local soundLabel = vgui.Create("DLabel", frame)
+        soundLabel:SetText("Select WebSound:")
+        soundLabel:Dock(TOP)
+        soundLabel:DockMargin(5, 5, 5, 0)
+        local soundCombo = vgui.Create("liaComboBox", frame)
+        soundCombo:Dock(TOP)
+        soundCombo:DockMargin(5, 0, 5, 5)
+        soundCombo:PostInit()
+        for _, soundName in ipairs(soundList) do
+            soundCombo:AddChoice(soundName, soundName)
+        end
+
+        if #soundList > 0 then soundCombo:SetValue(soundList[1]) end
+        -- Test buttons panel
+        local buttonPanel = vgui.Create("DPanel", frame)
+        buttonPanel:Dock(FILL)
+        buttonPanel:DockMargin(5, 5, 5, 5)
+        -- EmitSound test
+        local emitSoundBtn = vgui.Create("liaSmallButton", buttonPanel)
+        emitSoundBtn:SetText("Test EmitSound (on player)")
+        emitSoundBtn:Dock(TOP)
+        emitSoundBtn:DockMargin(0, 0, 0, 5)
+        emitSoundBtn.DoClick = function()
+            local selectedSound = soundCombo:GetSelected()
+            if selectedSound then
+                client:EmitSound(selectedSound)
+                client:notifySuccess("Played EmitSound: " .. selectedSound)
+            end
+        end
+
+        -- Surface.PlaySound test
+        local surfaceSoundBtn = vgui.Create("liaSmallButton", buttonPanel)
+        surfaceSoundBtn:SetText("Test surface.PlaySound")
+        surfaceSoundBtn:Dock(TOP)
+        surfaceSoundBtn:DockMargin(0, 0, 0, 5)
+        surfaceSoundBtn.DoClick = function()
+            local selectedSound = soundCombo:GetSelected()
+            if selectedSound then
+                surface.PlaySound(selectedSound)
+                client:notifySuccess("Played surface.PlaySound: " .. selectedSound)
+            end
+        end
+
+        -- Sound.PlayFile test
+        local playFileBtn = vgui.Create("liaSmallButton", buttonPanel)
+        playFileBtn:SetText("Test sound.PlayFile")
+        playFileBtn:Dock(TOP)
+        playFileBtn:DockMargin(0, 0, 0, 5)
+        playFileBtn.DoClick = function()
+            local selectedSound = soundCombo:GetSelected()
+            if selectedSound then
+                sound.PlayFile(selectedSound, "", function(channel)
+                    if IsValid(channel) then
+                        client:notifySuccess("Played sound.PlayFile: " .. selectedSound)
+                    else
+                        client:notifyError("Failed to play sound.PlayFile: " .. selectedSound)
+                    end
+                end)
+            end
+        end
+
+        -- Divider
+        local divider = vgui.Create("DPanel", buttonPanel)
+        divider:Dock(TOP)
+        divider:SetTall(2)
+        divider:DockMargin(0, 10, 0, 10)
+        divider.Paint = function(_, w, h)
+            surface.SetDrawColor(100, 100, 100, 255)
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        -- Manual sound entry
+        local manualLabel = vgui.Create("DLabel", buttonPanel)
+        manualLabel:SetText("Manual Sound Entry:")
+        manualLabel:Dock(TOP)
+        manualLabel:DockMargin(0, 0, 0, 5)
+        local manualEntry = vgui.Create("DTextEntry", buttonPanel)
+        manualEntry:Dock(TOP)
+        manualEntry:DockMargin(0, 0, 0, 5)
+        manualEntry:SetPlaceholderText("Enter sound name (e.g. cuffs/handcuffs_close.wav)")
+        -- Manual test buttons
+        local manualPanel = vgui.Create("DPanel", buttonPanel)
+        manualPanel:Dock(TOP)
+        manualPanel:SetTall(30)
+        manualPanel:DockMargin(0, 0, 0, 5)
+        local manualEmitBtn = vgui.Create("DButton", manualPanel)
+        manualEmitBtn:SetText("EmitSound")
+        manualEmitBtn:SetSize(100, 30)
+        manualEmitBtn:SetPos(0, 0)
+        manualEmitBtn.DoClick = function()
+            local soundName = manualEntry:GetValue()
+            if soundName and soundName ~= "" then
+                client:EmitSound(soundName)
+                client:notifySuccess("Played manual EmitSound: " .. soundName)
+            end
+        end
+
+        local manualSurfaceBtn = vgui.Create("DButton", manualPanel)
+        manualSurfaceBtn:SetText("PlaySound")
+        manualSurfaceBtn:SetSize(100, 30)
+        manualSurfaceBtn:SetPos(110, 0)
+        manualSurfaceBtn.DoClick = function()
+            local soundName = manualEntry:GetValue()
+            if soundName and soundName ~= "" then
+                surface.PlaySound(soundName)
+                client:notifySuccess("Played manual surface.PlaySound: " .. soundName)
+            end
+        end
+
+        local manualPlayFileBtn = vgui.Create("DButton", manualPanel)
+        manualPlayFileBtn:SetText("PlayFile")
+        manualPlayFileBtn:SetSize(100, 30)
+        manualPlayFileBtn:SetPos(220, 0)
+        manualPlayFileBtn.DoClick = function()
+            local soundName = manualEntry:GetValue()
+            if soundName and soundName ~= "" then
+                sound.PlayFile(soundName, "", function(channel)
+                    if IsValid(channel) then
+                        client:notifySuccess("Played manual sound.PlayFile: " .. soundName)
+                    else
+                        client:notifyError("Failed to play manual sound.PlayFile: " .. soundName)
+                    end
+                end)
+            end
+        end
+
+        -- Info panel
+        local infoLabel = vgui.Create("DLabel", buttonPanel)
+        infoLabel:Dock(BOTTOM)
+        infoLabel:DockMargin(0, 10, 0, 0)
+        infoLabel:SetText("This interface tests the websound automap feature.\nRegistered websounds can be called directly without 'lilia/websounds/' prefix.")
+        infoLabel:SetWrap(true)
+        infoLabel:SetAutoStretchVertical(true)
+    end
+})

@@ -93,6 +93,8 @@ function lia.option.add(key, name, desc, default, callback, data)
         shouldNetwork = data.shouldNetwork,
         isQuick = data.isQuick
     }
+
+    hook.Run("OptionAdded", key, lia.option.stored[key])
 end
 
 --[[

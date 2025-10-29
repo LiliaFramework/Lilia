@@ -83,7 +83,7 @@ local DefaultFunctions = {
                 local h = newRot and (item.width or 1) or item.height or 1
                 local invW, invH = inv:getSize()
                 if x < 1 or y < 1 or x + w - 1 > invW or y + h - 1 > invH then
-                    if item.player and item.player.notifyLocalized then item.player:notifyErrorLocalized("itemNoFit", w, h) end
+                    item.player:notifyErrorLocalized("itemNoFit", w, h)
                     return false
                 end
 
@@ -96,7 +96,7 @@ local DefaultFunctions = {
                             local x2 = x + w - 1
                             local y2 = y + h - 1
                             if x <= ix2 and ix <= x2 and y <= iy2 and iy <= y2 then
-                                if item.player and item.player.notifyLocalized then item.player:notifyErrorLocalized("itemNoFit", w, h) end
+                                item.player:notifyErrorLocalized("itemNoFit", w, h)
                                 return false
                             end
                         end
@@ -181,7 +181,6 @@ lia.meta.item.height = 1
     end
     ```
 ]]
---
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
 end
@@ -233,7 +232,6 @@ end
     end
     ```
 ]]
---
 function lia.item.getItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -297,7 +295,6 @@ end
     end
     ```
 ]]
---
 function lia.item.getInstancedItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -357,7 +354,6 @@ end
     end
     ```
 ]]
---
 function lia.item.getItemDataByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
     local item = lia.item.instances[itemID]
@@ -392,7 +388,6 @@ end
     lia.item.load("lilia/gamemode/items/weapons/assault_rifle.lua", "base_weapons")
     ```
 ]]
---
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
     if uniqueID then
@@ -449,7 +444,6 @@ end
     end
     ```
 ]]
---
 function lia.item.isItem(object)
     return istable(object) and object.isItem
 end
@@ -489,7 +483,6 @@ end
     end
     ```
 ]]
---
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
 end
@@ -534,7 +527,6 @@ end
     }
     ```
 ]]
---
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
     local baseTable = lia.item.base[baseID] or lia.meta.item
@@ -639,7 +631,6 @@ end
     end
     ```
 ]]
---
 function lia.item.loadFromDir(directory)
     local files, folders
     files = file.Find(directory .. "/base/*.lua", "LUA")
@@ -698,7 +689,6 @@ end
     end
     ```
 ]]
---
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
     assert(isnumber(id), L("itemNonNumberID"))
@@ -755,7 +745,6 @@ end
     end
     ```
 ]]
---
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -805,7 +794,6 @@ end
     end)
     ```
 ]]
---
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
         char = owner
@@ -860,7 +848,6 @@ end
     end
     ```
 ]]
---
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
     assert(GridInv, L("gridInvNotFound"))
@@ -992,7 +979,6 @@ lia.item.holdTypeSizeMapping = {
     end
     ```
 ]]
---
 function lia.item.addWeaponOverride(className, data)
     lia.item.WeaponOverrides[className] = data
 end
@@ -1035,7 +1021,6 @@ end
     end
     ```
 ]]
---
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
 end
@@ -1089,7 +1074,6 @@ end
     lia.item.generateWeapons()
     ```
 ]]
---
 function lia.item.generateWeapons()
     for _, wep in ipairs(weapons.GetList()) do
         local className = wep.ClassName
@@ -1164,7 +1148,6 @@ end
     lia.item.generateAmmo()
     ```
 ]]
---
 function lia.item.generateAmmo()
     local entityList = {}
     local scriptedEntities = scripted_ents.GetList()
@@ -1234,7 +1217,6 @@ if SERVER then
         end
         ```
     ]]
-    --
     function lia.item.setItemDataByID(itemID, key, value, receivers, noSave, noCheckEntity)
         assert(isnumber(itemID), L("itemIDNumberRequired"))
         assert(isstring(key), L("itemKeyString"))
@@ -1284,7 +1266,6 @@ if SERVER then
         end)
         ```
     ]]
-    --
     function lia.item.instance(index, uniqueID, itemData, x, y, callback)
         if isstring(index) and (istable(uniqueID) or itemData == nil and x == nil) then
             itemData = uniqueID
@@ -1375,7 +1356,6 @@ if SERVER then
         end
         ```
     ]]
-    --
     function lia.item.deleteByID(id)
         if lia.item.instances[id] then
             lia.item.instances[id]:delete()
@@ -1427,7 +1407,6 @@ if SERVER then
         end
         ```
     ]]
-    --
     function lia.item.loadItemByID(itemIndex)
         local range
         if istable(itemIndex) then
@@ -1500,7 +1479,6 @@ if SERVER then
         end)
         ```
     ]]
-    --
     function lia.item.spawn(uniqueID, position, callback, angles, data)
         local d
         if not isfunction(callback) then
@@ -1576,7 +1554,6 @@ if SERVER then
         end
         ```
     ]]
-    --
     function lia.item.restoreInv(invID, w, h, callback)
         lia.inventory.loadByID(invID):next(function(inventory)
             if not inventory then return end

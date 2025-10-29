@@ -152,30 +152,39 @@ function PANEL:CreateSection(parent, title)
     frame:Dock(TOP)
     frame:DockMargin(0, 10, 0, 10)
     frame:SetTall(200)
+    local maxSectionHeight = ScrH() * 0.45
     frame.Paint = function(_, w)
         draw.SimpleText(L(title), "liaSmallFont", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
         surface.DrawLine(12, 28, w - 12, 28)
     end
 
-    local contents = vgui.Create("DPanel", frame)
-    contents:Dock(FILL)
-    contents:DockPadding(8, 35, 8, 10)
+    local header = vgui.Create("DPanel", frame)
+    header:SetTall(35)
+    header:Dock(TOP)
+    header:DockPadding(0, 0, 0, 0)
+    header.Paint = function() end
+    local scroll = vgui.Create("liaScrollPanel", frame)
+    scroll:Dock(FILL)
+    scroll.Paint = function() end
+    local contents = scroll:GetCanvas()
+    contents:DockPadding(8, 8, 8, 10)
     contents.Paint = function() end
-    contents.PerformLayout = function(s)
-        local contentHeight = 35
-        for _, child in ipairs(s:GetChildren()) do
+    frame.PerformLayout = function(f)
+        local estimatedHeight = 35
+        for _, child in ipairs(contents:GetChildren()) do
             if IsValid(child) then
-                contentHeight = contentHeight + child:GetTall()
+                estimatedHeight = estimatedHeight + child:GetTall()
                 if child.GetDockMargin then
-                    local _, top = child:GetDockMargin()
-                    if top then contentHeight = contentHeight + top end
+                    local _, top, _, bottom = child:GetDockMargin()
+                    if top then estimatedHeight = estimatedHeight + top end
+                    if bottom then estimatedHeight = estimatedHeight + bottom end
                 end
             end
         end
 
-        contentHeight = contentHeight + 10
-        frame:SetTall(math.max(60, contentHeight))
+        estimatedHeight = estimatedHeight + 10
+        f:SetTall(math.max(100, math.min(estimatedHeight, maxSectionHeight)))
     end
     return contents
 end
@@ -466,10 +475,7 @@ function PANEL:OnKeyCodePressed(key)
 end
 
 function PANEL:Update()
-    -- Don't recreate the menu during font updates - just refresh the layout
-    -- The menu should only be recreated when explicitly opened by the user
     if self:IsVisible() and not self.closing then
-        -- Just refresh the layout instead of recreating the entire menu
         self:InvalidateLayout(true)
         for _, child in pairs(self:GetChildren()) do
             if IsValid(child) then child:InvalidateLayout(true) end
@@ -772,7 +778,6 @@ hook.Add("LoadCharInformation", "liaF1MenuGeneralInfo", function()
     end)
 end)
 
--- AddSection hook
 hook.Add("AddSection", "liaF1MenuAddSection", function(sectionName, color, priority, location)
     if IsValid(lia.gui.info) then
         local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -792,7 +797,6 @@ hook.Add("AddSection", "liaF1MenuAddSection", function(sectionName, color, prior
     end
 end)
 
--- AddTextField hook
 hook.Add("AddTextField", "liaF1MenuAddTextField", function(sectionName, fieldName, labelText, valueFunc)
     if IsValid(lia.gui.info) then
         local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -833,7 +837,6 @@ hook.Add("AddTextField", "liaF1MenuAddTextField", function(sectionName, fieldNam
     end
 end)
 
--- AddBarField hook
 hook.Add("AddBarField", "liaF1MenuAddBarField", function(sectionName, fieldName, labelText, minFunc, maxFunc, valueFunc)
     if IsValid(lia.gui.info) then
         local localizedSectionName = isstring(sectionName) and L(sectionName) or sectionName
@@ -856,7 +859,6 @@ hook.Add("AddBarField", "liaF1MenuAddBarField", function(sectionName, fieldName,
     end
 end)
 
--- PlayerBindPress as hook
 hook.Add("PlayerBindPress", "liaF1MenuPlayerBindPress", function(client, bind, pressed)
     if bind:lower():find("gm_showhelp") and pressed then
         if IsValid(lia.gui.menu) then
@@ -868,7 +870,6 @@ hook.Add("PlayerBindPress", "liaF1MenuPlayerBindPress", function(client, bind, p
     end
 end)
 
--- CreateMenuButtons as hook
 hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
     tabs["you"] = function(statusPanel)
         statusPanel.info = vgui.Create("liaCharInfo", statusPanel)
@@ -1433,7 +1434,6 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
     end
 end)
 
--- CanDisplayCharInfo as a hook
 hook.Add("CanDisplayCharInfo", "liaF1MenuCanDisplayCharInfo", function(name)
     local client = LocalPlayer()
     if not client then return true end

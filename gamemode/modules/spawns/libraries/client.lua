@@ -8,7 +8,6 @@ function MODULE:HUDPaint()
     baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
     local lastDeath = ply:getNetVar("lastDeathTime", os.time())
     local left = clamp(baseTime - (os.time() - lastDeath), 0, baseTime)
-    -- Ensure countdown appears even if lastDeathTime is not properly set
     if left >= baseTime and not ply:Alive() then left = baseTime end
     if hook.Run("ShouldRespawnScreenAppear") == false then return end
     if ply:getChar() and ply:Alive() then

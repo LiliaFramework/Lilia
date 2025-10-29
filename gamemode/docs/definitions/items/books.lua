@@ -17,7 +17,6 @@
     - Books are not consumed when read
     - Can be used multiple times
 ]]
---
 --[[
     ITEM.name
     Purpose: Sets the display name of the book item
@@ -27,7 +26,6 @@
         ITEM.name = "Medical Journal"
         ```
 ]]
---
 ITEM.name = "booksName"
 --[[
     ITEM.desc
@@ -38,7 +36,6 @@ ITEM.name = "booksName"
         ITEM.desc = "A medical journal containing important information"
         ```
 ]]
---
 ITEM.desc = "booksDesc"
 --[[
     ITEM.category
@@ -49,7 +46,6 @@ ITEM.desc = "booksDesc"
         ITEM.category = "itemCatLiterature"
         ```
 ]]
---
 ITEM.category = "itemCatLiterature"
 --[[
     ITEM.model
@@ -60,7 +56,6 @@ ITEM.category = "itemCatLiterature"
         ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
         ```
 ]]
---
 ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 --[[
     ITEM.contents
@@ -71,7 +66,6 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
         ITEM.contents = "<h1>Chapter 1</h1><p>This is the content...</p>"
         ```
 ]]
---
 ITEM.contents = ""
 --[[
 Example Item:
@@ -85,4 +79,3 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"           -- 3D model for
 ITEM.contents = "<h1>Chapter 1: Basic Medicine</h1><p>This journal contains essential medical knowledge...</p>"  -- HTML content displayed when reading
 ```
 ]]
---

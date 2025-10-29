@@ -69,7 +69,6 @@ local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group
     })
     ```
 ]]
---
 function lia.faction.register(uniqueID, data)
     assert(isstring(uniqueID), L("factionUniqueIDString"))
     assert(istable(data), L("factionDataTable"))
@@ -150,7 +149,6 @@ end
     lia.faction.cacheModels(models)
     ```
 ]]
---
 function lia.faction.cacheModels(models)
     for _, modelData in pairs(models or {}) do
         if isstring(modelData) then
@@ -202,7 +200,6 @@ end
     end
     ```
 ]]
---
 function lia.faction.loadFromDir(directory)
     for _, v in ipairs(file.Find(directory .. "/*.lua", "LUA")) do
         local niceName
@@ -303,7 +300,6 @@ end
     local faction = getFactionSafely("police")
     ```
 ]]
---
 function lia.faction.get(identifier)
     return lia.faction.indices[identifier] or lia.faction.teams[identifier]
 end
@@ -357,7 +353,6 @@ end
     return indices
     ```
 ]]
---
 function lia.faction.getIndex(uniqueID)
     return lia.faction.teams[uniqueID] and lia.faction.teams[uniqueID].index
 end
@@ -422,7 +417,6 @@ end
     local policeClasses = getFactionClasses("police")
     ```
 ]]
---
 function lia.faction.getClasses(faction)
     local classes = {}
     for _, class in pairs(lia.class.list) do
@@ -489,7 +483,6 @@ end
     local policePlayers = getFactionPlayers("police")
     ```
 ]]
---
 function lia.faction.getPlayers(faction)
     local players = {}
     for _, v in player.Iterator() do
@@ -550,7 +543,6 @@ end
     print("Total players: " .. stats.total)
     ```
 ]]
---
 function lia.faction.getPlayerCount(faction)
     local count = 0
     for _, v in player.Iterator() do
@@ -621,7 +613,6 @@ end
     local factionCategories = categorizeFactions({"police", "medic", "citizen"})
     ```
 ]]
---
 function lia.faction.isFactionCategory(faction, categoryFactions)
     if table.HasValue(categoryFactions, faction) then return true end
     return false
@@ -674,7 +665,6 @@ end
     local policeFaction = generateCustomFaction(2, "Police Officer", Color(0, 0, 255), false)
     ```
 ]]
---
 function lia.faction.jobGenerate(index, name, color, default, models)
     local FACTION = {}
     FACTION.index = index
@@ -787,7 +777,6 @@ end
     local success = formatFactionModels()
     ```
 ]]
---
 function lia.faction.formatModelData()
     for name, faction in pairs(lia.faction.teams) do
         if faction.models then
@@ -865,7 +854,6 @@ end
     local factionData = getFactionCategories({"police", "medic", "citizen"})
     ```
 ]]
---
 function lia.faction.getCategories(teamName)
     local categories = {}
     local faction = lia.faction.teams[teamName]
@@ -938,7 +926,6 @@ end
     local modelData = getFactionModelsByCategory("police", {"male", "female", "special"})
     ```
 ]]
---
 function lia.faction.getModelsFromCategory(teamName, category)
     local models = {}
     local faction = lia.faction.teams[teamName]
@@ -1017,7 +1004,6 @@ end
     local defaultClasses = getDefaultClasses({"citizen", "police", "medic"})
     ```
 ]]
---
 function lia.faction.getDefaultClass(id)
     local defaultClass = nil
     for _, class in ipairs(lia.class.list) do
@@ -1093,7 +1079,6 @@ FACTION_STAFF = lia.faction.register("staff", {
     local whitelistInfo = checkFactionWhitelists({"citizen", "police", "medic", "staff"})
     ```
 ]]
---
 if CLIENT then
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]
@@ -1164,7 +1149,6 @@ if CLIENT then
     local whitelistInfo = checkFactionWhitelists({"citizen", "police", "medic", "staff"})
     ```
 ]]
-    --
 else
     function lia.faction.hasWhitelist(faction)
         local data = lia.faction.indices[faction]

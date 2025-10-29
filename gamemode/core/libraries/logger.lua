@@ -290,7 +290,6 @@ end
     end, "Advanced")
     ```
 ]]
---
 function lia.log.addType(logType, func, category)
     lia.log.types[logType] = {
         func = func,
@@ -344,7 +343,6 @@ end
     local message, category = safeGetLogString(client, "adminAction", target, action, reason)
     ```
 ]]
---
 function lia.log.getString(client, logType, ...)
     local logData = lia.log.types[logType]
     if not logData then return end
@@ -395,7 +393,6 @@ end
     logAdminAction(client, target, "kick", "Rule violation", nil)
     ```
 ]]
---
 function lia.log.add(client, logType, ...)
     local logString, category = lia.log.getString(client, logType, ...)
     if not isstring(category) then category = L("uncategorized") end

@@ -49,7 +49,6 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     end
     ```
 ]]
---
 function lia.playerinteract.isWithinRange(client, entity, customRange)
     if not IsValid(client) or not IsValid(entity) then return false end
     local range = customRange or 250
@@ -100,7 +99,6 @@ end
     end
     ```
 ]]
---
 function lia.playerinteract.getInteractions(client)
     client = client or LocalPlayer()
     local ent = client:getTracedEntity()
@@ -161,7 +159,6 @@ end
     end
     ```
 ]]
---
 function lia.playerinteract.getActions(client)
     client = client or LocalPlayer()
     if not IsValid(client) or not client:getChar() then return {} end
@@ -215,7 +212,6 @@ end
     end
     ```
 ]]
---
 function lia.playerinteract.getCategorizedOptions(options)
     local flatList = {}
     for _, entry in pairs(options) do
@@ -309,7 +305,6 @@ if SERVER then
         })
         ```
     ]]
-    --
     function lia.playerinteract.addInteraction(name, data)
         data.type = "interaction"
         data.range = data.range or 250
@@ -439,7 +434,6 @@ if SERVER then
         })
         ```
     ]]
-    --
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
         data.range = data.range or 250
@@ -531,7 +525,6 @@ if SERVER then
         end
         ```
     ]]
-    --
     function lia.playerinteract.syncToClients(client)
         local filteredData = {}
         for name, data in pairs(lia.playerinteract.stored) do
@@ -701,7 +694,6 @@ else
         end
         ```
     ]]
-    --
     function lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)
         local client, ent = LocalPlayer(), LocalPlayer():getTracedEntity()
         local visible = {}

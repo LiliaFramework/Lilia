@@ -143,7 +143,7 @@ function QuickPanel:Init()
 
     self.items = {}
     self.optionsCache = {}
-    self.lastOptionsUpdate = 0
+    self.forceRepopulate = true
     hook.Run("SetupQuickMenu", self)
     self:populateOptions()
     local h = 0
@@ -160,6 +160,7 @@ function QuickPanel:Init()
     self:SetZPos(999)
     self:SetMouseInputEnabled(true)
     hook.Add("OnThemeChanged", self, function() if IsValid(self) then self:RefreshTheme() end end)
+    hook.Add("OptionAdded", self, function(_, _, option) if (option.isQuick or (option.data and option.data.isQuick)) and IsValid(self) then self:InvalidateCache() end end)
 end
 
 function QuickPanel:Paint(w, h)
@@ -173,41 +174,6 @@ end
 
 function QuickPanel:PerformLayout(w)
     if IsValid(self.cls) then self.cls:SetPos(w - 22, 2) end
-end
-
-local categoryDoClick = function(this)
-    this.expanded = not this.expanded
-    local items = lia.gui.quick.items
-    local i0 = table.KeyFromValue(items, this)
-    for i = i0 + 1, #items do
-        if items[i].categoryLabel then break end
-        if not items[i].h then items[i].w, items[i].h = items[i]:GetSize() end
-        local animDuration = this.expanded and 0.1 or 0.08
-        items[i]:SizeTo(items[i].w, this.expanded and (items[i].h or 36) or 0, animDuration)
-    end
-end
-
-function QuickPanel:addCategory(text)
-    local label = self:addButton(text, categoryDoClick)
-    label.categoryLabel = true
-    label.expanded = true
-    label:SetText(text)
-    label:SetTall(36)
-    label:Dock(TOP)
-    label:DockMargin(0, 1, 0, 0)
-    label:SetFont("liaMediumFont")
-    label:SetTextColor(lia.color.theme.text or color_white)
-    label:SetExpensiveShadow(1, lia.color.theme.text and ColorAlpha(lia.color.theme.text, 150) or Color(0, 0, 0, 150))
-    label:SetContentAlignment(5)
-    label.Paint = function(panel, w, h)
-        local theme = lia.color.theme
-        local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
-        local borderColor = theme and theme.panel and theme.panel[3] or Color(80, 80, 80)
-        draw.RoundedBox(4, 0, 0, w, h, panelColor)
-        draw.RoundedBox(4, 0, 0, w, h, ColorAlpha(borderColor, 100))
-        local textColor = theme and theme.text or Color(255, 255, 255)
-        draw.SimpleText(panel:GetText(), "liaMediumFont", w * 0.5, h * 0.5, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
 end
 
 function QuickPanel:addButton(text, cb)
@@ -274,74 +240,82 @@ end
 
 function QuickPanel:RefreshTheme()
     if not IsValid(self) then return end
-    if IsValid(self.scroll) then self.scroll.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme and lia.color.theme.panel[1] or Color(50, 50, 50)):Shape(lia.derma.SHAPE_IOS):Draw() end end
+    if IsValid(self.scroll) then
+        self.scroll.Paint = function(_, w, h)
+            local theme = lia.color.theme
+            local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
+            draw.RoundedBox(8, 0, 0, w, h, panelColor)
+        end
+    end
+
+    -- Only update text colors for valid items to avoid unnecessary work
+    local themeText = lia.color.theme.text or color_white
     for _, item in ipairs(self.items or {}) do
-        if IsValid(item) and item.SetTextColor then item:SetTextColor(lia.color.theme.text or color_white) end
+        if IsValid(item) and item.SetTextColor then
+            item:SetTextColor(themeText)
+        end
     end
 
     self:InvalidateLayout(true)
 end
 
+function QuickPanel:InvalidateCache()
+    self.forceRepopulate = true
+end
+
 function QuickPanel:OnRemove()
     hook.Remove("OnThemeChanged", self)
+    hook.Remove("OptionAdded", self)
     if lia.gui.quick == self then lia.gui.quick = nil end
 end
 
+function QuickPanel:OnClose()
+    self:SetVisible(false)
+    return false
+end
+
 function QuickPanel:populateOptions()
-    local currentTime = CurTime()
-    if self.optionsCache and self.lastOptionsUpdate and (currentTime - self.lastOptionsUpdate) < 1 then
+    if self.optionsCache and #self.optionsCache > 0 and not self.forceRepopulate then
         for _, item in ipairs(self.optionsCache) do
             if IsValid(item) then self.items[#self.items + 1] = item end
         end
         return
     end
 
-    for _, item in ipairs(self.items) do
-        if IsValid(item) then item:Remove() end
+    if self.forceRepopulate then
+        for _, item in ipairs(self.items) do
+            if IsValid(item) then item:Remove() end
+        end
     end
 
     self.items = {}
     self.optionsCache = {}
-    local cats = {}
+    self.forceRepopulate = false
+    local allOptions = {}
     for k, v in pairs(lia.option.stored) do
         if v and (v.isQuick or v.data and v.data.isQuick) then
-            local cat = v.data and v.data.category or L("categoryGeneral")
-            cats[cat] = cats[cat] or {}
-            cats[cat][#cats[cat] + 1] = {
+            allOptions[#allOptions + 1] = {
                 key = k,
                 opt = v
             }
         end
     end
 
-    if table.IsEmpty(cats) then
+    if #allOptions == 0 then
         self:Remove()
         return
     end
 
-    local names = {}
-    for n in pairs(cats) do
-        names[#names + 1] = n
-    end
+    local groups = {
+        Boolean = {},
+        Int = {},
+        Float = {}
+    }
 
-    local generalCat = L("categoryGeneral")
-    table.sort(names, function(a, b)
-        if a == generalCat and b ~= generalCat then return true end
-        if b == generalCat and a ~= generalCat then return false end
-        return a < b
-    end)
-
-    for i, cat in ipairs(names) do
-        self:addCategory(cat)
-        local list = cats[cat]
-        local groups = {
-            Boolean = {},
-            Int = {},
-            Float = {}
-        }
-
-        for _, info in ipairs(list) do
-            local opt = info.opt
+    for _, info in ipairs(allOptions) do
+        local opt = info.opt
+        -- Check visibility before adding to groups
+        if not opt.visible or (isfunction(opt.visible) and opt.visible()) then
             if opt.type == "Boolean" then
                 groups.Boolean[#groups.Boolean + 1] = info
             elseif opt.type == "Int" then
@@ -350,45 +324,41 @@ function QuickPanel:populateOptions()
                 groups.Float[#groups.Float + 1] = info
             end
         end
-
-        for _, group in pairs(groups) do
-            table.sort(group, function(a, b)
-                local nameA = a.opt.name or a.key
-                local nameB = b.opt.name or b.key
-                return nameA < nameB
-            end)
-        end
-
-        local groupOrder = {"Boolean", "Int", "Float"}
-        local hasAddedItems = false
-        for _, groupType in ipairs(groupOrder) do
-            local group = groups[groupType]
-            if #group > 0 then
-                if hasAddedItems then self:addSpacer() end
-                for j, info in ipairs(group) do
-                    local key = info.key
-                    local opt = info.opt
-                    local data = opt.data or {}
-                    local val = lia.option.get(key, opt.default)
-                    local item
-                    if opt.type == "Boolean" then
-                        item = self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val)
-                    elseif opt.type == "Int" or opt.type == "Float" then
-                        item = self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0)
-                    end
-
-                    if item then self.optionsCache[#self.optionsCache + 1] = item end
-                    if j < #group then self:addSpacer() end
-                end
-
-                hasAddedItems = true
-            end
-        end
-
-        if i < #names then self:addSpacer() end
     end
 
-    self.lastOptionsUpdate = currentTime
+    for _, group in pairs(groups) do
+        table.sort(group, function(a, b)
+            local nameA = a.opt.name or a.key
+            local nameB = b.opt.name or b.key
+            return nameA < nameB
+        end)
+    end
+
+    local groupOrder = {"Boolean", "Int", "Float"}
+    local hasAddedItems = false
+    for _, groupType in ipairs(groupOrder) do
+        local group = groups[groupType]
+        if #group > 0 then
+            if hasAddedItems then self:addSpacer() end
+            for j, info in ipairs(group) do
+                local key = info.key
+                local opt = info.opt
+                local data = opt.data or {}
+                local val = lia.option.get(key, opt.default)
+                local item
+                if opt.type == "Boolean" then
+                    item = self:addCheck(opt.name or key, function(_, state) lia.option.set(key, state) end, val)
+                elseif opt.type == "Int" or opt.type == "Float" then
+                    item = self:addSlider(opt.name or key, function(_, v) lia.option.set(key, v) end, val, data.min or 0, data.max or 100, opt.type == "Float" and (data.decimals or 2) or 0)
+                end
+
+                if item then self.optionsCache[#self.optionsCache + 1] = item end
+                if j < #group then self:addSpacer() end
+            end
+
+            hasAddedItems = true
+        end
+    end
 end
 
 vgui.Register("liaQuick", QuickPanel, "liaFrame")

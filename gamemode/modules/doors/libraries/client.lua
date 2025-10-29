@@ -69,7 +69,6 @@
 end
 
 function MODULE:DrawEntityInfo(entity, alpha)
-    -- Don't show door UI if admin stick is out
     local client = LocalPlayer()
     local activeWeapon = client:GetActiveWeapon()
     if IsValid(client) and IsValid(activeWeapon) and activeWeapon:GetClass() == "adminstick" then return end
@@ -83,32 +82,12 @@ function MODULE:DrawEntityInfo(entity, alpha)
 
             local doorInfo = {}
             hook.Run("GetDoorInfo", entity, doorData, doorInfo)
-            -- Allow filtering/modifying door information before display
-            -- Hook: FilterDoorInfo(entity, doorData, doorInfo)
-            -- Parameters:
-            --   entity: The door entity
-            --   doorData: The door's configuration data
-            --   doorInfo: Table of door information entries (can be modified)
-            -- Each entry in doorInfo has: {text = "display text", color = Color(255,255,255)}
-            -- You can remove entries by setting them to nil or remove them from the table
-            -- Example: Remove price information for non-admins
-            -- hook.Add("FilterDoorInfo", "HidePriceForNonAdmins", function(entity, doorData, doorInfo)
-            --     if not LocalPlayer():isStaffOnDuty() then
-            --         for i = #doorInfo, 1, -1 do
-            --             if doorInfo[i].text and doorInfo[i].text:find("Price:") then
-            --                 table.remove(doorInfo, i)
-            --             end
-            --         end
-            --     end
-            -- end)
             hook.Run("FilterDoorInfo", entity, doorData, doorInfo)
-            -- Collect all door info text into a single array
             local infoTexts = {}
             for _, info in ipairs(doorInfo) do
                 if info.text and info.text ~= "" then table.insert(infoTexts, info.text) end
             end
 
-            -- Draw all door info in a single box if there's any info
             if #infoTexts > 0 then self:DrawDoorInfoBox(entity, infoTexts, alpha) end
         end
     end
@@ -116,7 +95,6 @@ end
 
 function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
     if not (IsValid(entity) and infoTexts and #infoTexts > 0) then return end
-    -- Use the same distance and fade logic as drawEntText
     local distSqr = EyePos():DistToSqr(entity:GetPos())
     local maxDist = 380
     if distSqr > maxDist * maxDist then return end
@@ -160,12 +138,9 @@ function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
     end
 
     if fade <= 0 then return end
-    -- Apply fade to colors
     local fadeAlpha = math.Clamp(fade, 0, 1)
-    -- Draw at bottom center of screen
     local screenX = ScrW() / 2
     local screenY = ScrH() - 50
-    -- Draw the door info box using drawBoxWithText
     lia.derma.drawBoxWithText(infoTexts, screenX, screenY, {
         font = "LiliaFont.18",
         textColor = Color(255, 255, 255, math.floor(255 * fadeAlpha)),
@@ -187,76 +162,80 @@ function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
     })
 end
 
-function MODULE:PopulateAdminStick(AdminMenu, target)
-    if IsValid(target) and target:isDoor() then
-        local doorData = target:getNetVar("doorData", {})
-        local factionsAssigned = doorData.factions or {}
-        local addFactionMenu, addFactionPanel = AdminMenu:AddSubMenu(L("doorAddFaction"))
-        addFactionPanel:SetIcon("icon16/group_add.png")
-        for _, faction in pairs(lia.faction.teams) do
-            if not table.HasValue(factionsAssigned, faction.uniqueID) then
-                addFactionMenu:AddOption(faction.name, function()
-                    LocalPlayer():ConCommand("say /dooraddfaction '" .. faction.uniqueID .. "'")
-                    AdminStickIsOpen = false
-                end):SetIcon("icon16/group_add.png")
+function MODULE:GetAdminStickLists(tgt, lists)
+    if not IsValid(tgt) or not tgt:isDoor() then return end
+    local client = LocalPlayer()
+    if not client:hasPrivilege("manageDoors") and not client:isStaffOnDuty() then return end
+    local doorData = tgt:getNetVar("doorData", {})
+    local factionsAssigned = doorData.factions or {}
+    local existingClasses = doorData.classes or {}
+    local items = {}
+    for _, faction in pairs(lia.faction.teams) do
+        if not table.HasValue(factionsAssigned, faction.uniqueID) then
+            table.insert(items, {
+                name = L("doorAddFaction") .. ": " .. faction.name,
+                icon = "icon16/group_add.png",
+                callback = function() LocalPlayer():ConCommand("say /dooraddfaction '" .. faction.uniqueID .. "'") end
+            })
+        end
+    end
+
+    for _, id in ipairs(factionsAssigned) do
+        local faction = lia.faction.get(id)
+        if faction then
+            table.insert(items, {
+                name = L("doorRemoveFactionAdmin") .. ": " .. faction.name,
+                icon = "icon16/group_delete.png",
+                callback = function() LocalPlayer():ConCommand("say /doorremovefaction '" .. faction.uniqueID .. "'") end
+            })
+        end
+    end
+
+    for classID, classData in pairs(lia.class.list) do
+        local isAlreadyAssigned = false
+        for _, classUID in ipairs(existingClasses) do
+            if lia.class.retrieveClass(classUID) == classID then
+                isAlreadyAssigned = true
+                break
             end
         end
 
-        if #factionsAssigned > 0 then
-            local removeFactionMenu, removeFactionPanel = AdminMenu:AddSubMenu(L("doorRemoveFactionAdmin"))
-            removeFactionPanel:SetIcon("icon16/group_delete.png")
-            for _, id in ipairs(factionsAssigned) do
-                local faction = lia.faction.get(id)
-                if faction then
-                    removeFactionMenu:AddOption(faction.name, function()
-                        LocalPlayer():ConCommand("say /doorremovefaction '" .. faction.uniqueID .. "'")
-                        AdminStickIsOpen = false
-                    end):SetIcon("icon16/group_delete.png")
-                end
-            end
-        else
-            AdminMenu:AddOption(L("doorNoFactions")):SetEnabled(false)
+        if not isAlreadyAssigned then
+            table.insert(items, {
+                name = L("set") .. " " .. L("door") .. " " .. L("class") .. ": " .. classData.name,
+                icon = "icon16/tag_blue.png",
+                callback = function() LocalPlayer():ConCommand("say /doorsetclass '" .. classID .. "'") end
+            })
         end
+    end
 
-        local setClassMenu, setClassPanel = AdminMenu:AddSubMenu(L("set") .. " " .. L("door") .. " " .. L("class"))
-        setClassPanel:SetIcon("icon16/tag_blue.png")
-        local existingClasses = doorData.classes or {}
-        for classID, classData in pairs(lia.class.list) do
-            local isAlreadyAssigned = false
-            for _, classUID in ipairs(existingClasses) do
-                if lia.class.retrieveClass(classUID) == classID then
-                    isAlreadyAssigned = true
-                    break
-                end
-            end
-
-            if not isAlreadyAssigned then
-                setClassMenu:AddOption(classData.name, function()
-                    LocalPlayer():ConCommand("say /doorsetclass '" .. classID .. "'")
-                    AdminStickIsOpen = false
-                end):SetIcon("icon16/tag_blue.png")
-            end
+    for _, classUID in ipairs(existingClasses) do
+        local classIndex = lia.class.retrieveClass(classUID)
+        local classInfo = lia.class.list[classIndex]
+        if classInfo then
+            table.insert(items, {
+                name = L("remove") .. " " .. L("door") .. " " .. L("class") .. ": " .. classInfo.name,
+                icon = "icon16/delete.png",
+                callback = function() LocalPlayer():ConCommand("say /doorremoveclass '" .. classUID .. "'") end
+            })
         end
+    end
 
-        if existingClasses and #existingClasses > 0 then
-            local removeClassMenu, removeClassPanel = AdminMenu:AddSubMenu(L("remove") .. " " .. L("door") .. " " .. L("class"))
-            removeClassPanel:SetIcon("icon16/delete.png")
-            for _, classUID in ipairs(existingClasses) do
-                local classIndex = lia.class.retrieveClass(classUID)
-                local classInfo = lia.class.list[classIndex]
-                if classInfo then
-                    removeClassMenu:AddOption(classInfo.name, function()
-                        LocalPlayer():ConCommand("say /doorremoveclass '" .. classUID .. "'")
-                        AdminStickIsOpen = false
-                    end):SetIcon("icon16/delete.png")
-                end
-            end
+    if #existingClasses > 0 then
+        table.insert(items, {
+            name = L("remove") .. " " .. L("all") .. " " .. L("classes"),
+            icon = "icon16/delete.png",
+            callback = function() LocalPlayer():ConCommand("say /doorremoveclass ''") end
+        })
+    end
 
-            removeClassMenu:AddOption(L("remove") .. " " .. L("all") .. " " .. L("classes"), function()
-                LocalPlayer():ConCommand("say /doorremoveclass ''")
-                AdminStickIsOpen = false
-            end):SetIcon("icon16/delete.png")
-        end
+    if #items > 0 then
+        table.insert(lists, {
+            name = L("adminStickSubCategoryDoorSettings") or L("adminStickSubCategorySettings"),
+            category = "doorManagement",
+            subcategory = "doorSettings",
+            items = items
+        })
     end
 end
 

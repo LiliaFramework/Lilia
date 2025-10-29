@@ -66,6 +66,22 @@ function entityMeta:EmitSound(soundName, soundLevel, pitchPercent, volume, chann
         end
     end
 
+    -- Server-side automap: if a plain name is registered as a websounds entry, broadcast it as a websounds path
+    if SERVER and isstring(soundName) then
+        local name = soundName:gsub("\\", "/"):gsub("^%s+", ""):gsub("%s+$", "")
+        if string.StartWith(name, "sound/") then name = name:sub(7) end
+        if lia.websound and lia.websound.stored and lia.websound.stored[name] then
+            net.Start("liaEmitUrlSound")
+            net.WriteEntity(self)
+            net.WriteString("lilia/websounds/" .. name)
+            net.WriteFloat(volume or 100)
+            net.WriteFloat(soundLevel or 100)
+            net.WriteBool(false)
+            net.Broadcast()
+            return true
+        end
+    end
+
     if CLIENT and isstring(soundName) and lia.websound.get(soundName) then
         local maxDistance = soundLevel and soundLevel * 13.33 or 1000
         self:playFollowingSound(soundName, volume or 100, true, maxDistance)

@@ -1851,9 +1851,7 @@ function lia.derma.drawBoxWithText(text, x, y, options)
     local textAlignY = options.textAlignY or TEXT_ALIGN_CENTER
     local autoSize = options.autoSize ~= false
     local lineSpacing = options.lineSpacing or 4
-    -- Convert text to table if it's a string
     local textLines = istable(text) and text or {text}
-    -- Calculate text size
     surface.SetFont(font)
     local maxWidth, totalHeight = 0, 0
     for i, line in ipairs(textLines) do
@@ -1866,7 +1864,6 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         end
     end
 
-    -- Calculate box dimensions
     local boxWidth, boxHeight
     if autoSize then
         boxWidth = maxWidth + padding
@@ -1876,7 +1873,6 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         boxHeight = options.height or totalHeight + padding
     end
 
-    -- Adjust x position based on text alignment
     local boxX = x
     if textAlignX == TEXT_ALIGN_RIGHT then
         boxX = x - boxWidth
@@ -1884,7 +1880,6 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         boxX = x - boxWidth / 2
     end
 
-    -- Adjust y position based on text alignment
     local boxY = y
     if textAlignY == TEXT_ALIGN_BOTTOM then
         boxY = y - boxHeight
@@ -1892,13 +1887,9 @@ function lia.derma.drawBoxWithText(text, x, y, options)
         boxY = y - boxHeight / 2
     end
 
-    -- Draw blur background if enabled
     if blur.enabled then lia.util.drawBlurAt(boxX, boxY, boxWidth, boxHeight, blur.amount, blur.passes, blur.alpha) end
-    -- Draw background box
     lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(backgroundColor):Rad(borderRadius):Draw()
-    -- Draw border
     if borderThickness > 0 then lia.derma.rect(boxX, boxY, boxWidth, boxHeight):Color(borderColor):Rad(borderRadius):Outline(borderThickness):Draw() end
-    -- Draw text lines
     local startY = boxY + padding / 2
     if textAlignY == TEXT_ALIGN_CENTER then
         startY = boxY + (boxHeight - totalHeight) / 2
@@ -2425,7 +2416,6 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
     frame:ShowCloseButton(false)
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("enterArguments"))
-    -- Set high z-order to ensure all request dialogs appear above other panels
     frame:SetZPos(1000)
     local scroll = vgui.Create("liaScrollPanel", frame)
     scroll:Dock(FILL)
@@ -3084,7 +3074,6 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("selectOption"))
     frame:ShowAnimation()
-    -- Set high z-order to ensure all request dialogs appear above other panels
     frame:SetZPos(1000)
     local dropdown = vgui.Create("liaComboBox", frame)
     dropdown:Dock(TOP)
@@ -3123,10 +3112,10 @@ function lia.derma.requestDropdown(title, options, callback, defaultValue)
         end
     end
 
-    dropdown.OnSelect = function(_, text, data)
-        dropdown.selectedText = text
+    dropdown.OnSelect = function(_, _, value, data)
+        dropdown.selectedText = value
         dropdown.selectedData = data
-        dropdown.selected = text
+        dropdown.selected = value
     end
 
     local buttonPanel = vgui.Create("Panel", frame)
@@ -3230,7 +3219,6 @@ end
 ]]
 function lia.derma.requestString(title, description, callback, defaultValue, maxLength)
     if IsValid(lia.derma.menuRequestString) then lia.derma.menuRequestString:Remove() end
-    -- Temporarily hide vendor panels to ensure request dialog is visible
     local vendorPanel = lia.gui.vendor
     local vendorEditor = lia.gui.vendorEditor
     if IsValid(vendorPanel) then vendorPanel:SetVisible(false) end
@@ -3242,7 +3230,6 @@ function lia.derma.requestString(title, description, callback, defaultValue, max
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("enterText"))
     frame:ShowAnimation()
-    -- Restore vendor panels when dialog is closed
     frame.OnRemove = function()
         if IsValid(vendorPanel) then vendorPanel:SetVisible(true) end
         if IsValid(vendorEditor) then vendorEditor:SetVisible(true) end
@@ -3350,7 +3337,6 @@ function lia.derma.requestOptions(title, options, callback, defaults)
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("selectOptions"))
     frame:ShowAnimation()
-    -- Set high z-order to ensure all request dialogs appear above other panels
     frame:SetZPos(1000)
     local scrollPanel = vgui.Create("liaScrollPanel", frame)
     scrollPanel:Dock(FILL)
@@ -3477,7 +3463,6 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("question"))
     frame:ShowAnimation()
-    -- Set high z-order to ensure all request dialogs appear above other panels
     frame:SetZPos(1000)
     local questionLabel = vgui.Create("DLabel", frame)
     questionLabel:Dock(TOP)
@@ -3575,7 +3560,6 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     frame:SetTitle("")
     frame:SetCenterTitle(title or L("selectOption"))
     frame:ShowAnimation()
-    -- Set high z-order to ensure all request dialogs appear above other panels
     frame:SetZPos(1000)
     local descriptionLabel = vgui.Create("DLabel", frame)
     descriptionLabel:Dock(TOP)

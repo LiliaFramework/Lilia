@@ -78,7 +78,6 @@ function PANEL:onFinish()
     lia.module.get("mainmenu"):CreateCharacter(self.context):next(function(charID)
         finish()
         hook.Run("ResetCharacterPanel")
-        -- Auto-switch  tothe newly created character
         lia.module.get("mainmenu"):ChooseCharacter(charID):next(function() if IsValid(lia.gui.character) then lia.gui.character:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end, fail)
 

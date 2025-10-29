@@ -625,7 +625,6 @@ if SERVER then
     end
     ```
     ]]
-    --
     function lia.inventory.checkOverflow(inv, character, oldW, oldH)
         local overflow, toRemove = {}, {}
         for _, item in pairs(inv:getItems()) do
@@ -1245,7 +1244,6 @@ else
     end
     ```
 ]]
-    --
     function lia.inventory.show(inventory, parent)
         local globalName = "inv" .. inventory.id
         if IsValid(lia.gui[globalName]) then lia.gui[globalName]:Remove() end

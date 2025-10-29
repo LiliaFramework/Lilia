@@ -50,7 +50,6 @@ function PANEL:RefreshGroups()
             groupBtn.selected = false
             groupBtn.groupName = groupName
             groupBtn.isDefault = isDefault
-            -- Style the button like the modern admin interface buttons
             groupBtn.Paint = function(s, w, h)
                 local bgColor = lia.color.theme.panel[1]
                 local textColor = lia.color.theme.text
@@ -67,7 +66,6 @@ function PANEL:RefreshGroups()
                 draw.SimpleText(s.text, "liaMediumFont", 15, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
         else
-            -- Fallback to old button type
             groupBtn = self.scrollPanel:Add("liaUserGroupButton")
             groupBtn:Dock(TOP)
             groupBtn:SetTall(50)
@@ -82,7 +80,6 @@ end
 
 function PANEL:SelectGroup(groupName)
     local buttonType = self.buttonType or "liaUserGroupButton"
-    -- Clear previous selection
     if self.selectedGroup and self.groupButtons[self.selectedGroup] then
         local prevBtn = self.groupButtons[self.selectedGroup]
         if buttonType == "liaButton" then
@@ -93,7 +90,6 @@ function PANEL:SelectGroup(groupName)
     end
 
     self.selectedGroup = groupName
-    -- Set new selection
     if self.groupButtons[groupName] then
         local newBtn = self.groupButtons[groupName]
         if buttonType == "liaButton" then

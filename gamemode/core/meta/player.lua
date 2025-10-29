@@ -4225,13 +4225,14 @@ if SERVER then
     end
 
     --[[
-    Purpose: Sets a network variable for the player that synchronizes to the client
-    When Called: When updating player state, implementing networked properties, or client-server communication
+    Purpose: Sets a network variable for the player that synchronizes to all clients
+    When Called: When updating player state, implementing networked properties, or when other players need to see the change (like handcuff status)
     Parameters:
         key (string) - The network variable key
         value (any) - The value to set
     Returns: None
     Realm: Server (only called on server side)
+    Notes: Broadcasts to all clients so other players can see the player's state changes
     Example Usage:
         Low Complexity:
         ```lua
@@ -4262,10 +4263,18 @@ if SERVER then
         lia.net[self] = lia.net[self] or {}
         local oldValue = lia.net[self][key]
         lia.net[self][key] = value
-        net.Start("liaNetLocal")
+        net.Start("liaNetVar")
+        net.WriteUInt(self:EntIndex(), 16)
         net.WriteString(key)
         net.WriteType(value)
-        net.Send(self)
+        net.Broadcast()
+        if not self:IsBot() then
+            net.Start("liaNetLocal")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Send(self)
+        end
+
         hook.Run("NetVarChanged", self, key, oldValue, value)
     end
 else

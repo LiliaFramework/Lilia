@@ -74,14 +74,14 @@ if SERVER then
         Low Complexity:
         ```lua
         -- Simple: Send localized notification to all players
-        lia.notices.notifyLocalized(nil, "server.restart", "info")
+        lia.notices.notifyInfoLocalized(nil, "server.restart")
         ```
 
         Medium Complexity:
         ```lua
         -- Medium: Send localized notification with one parameter
         local player = Player(1)
-        lia.notices.notifyLocalized(player, "player.welcome", "success", player:Name())
+        lia.notices.notifySuccessLocalized(player, "player.welcome", player:Name())
         ```
 
         High Complexity:
@@ -90,7 +90,7 @@ if SERVER then
         local players = player.GetAll()
         for _, ply in ipairs(players) do
             local timeLeft = math.max(0, 300 - CurTime())
-            lia.notices.notifyLocalized(ply, "server.restart.time", "warning",
+            lia.notices.notifyWarningLocalized(ply, "server.restart.time",
                 ply:Name(), math.floor(timeLeft / 60), timeLeft % 60)
         end
         ```
@@ -312,14 +312,14 @@ else
         Low Complexity:
         ```lua
         -- Simple: Display localized notification
-        lia.notices.notifyLocalized(nil, "ui.settings.saved", "success")
+        lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
         ```
 
         Medium Complexity:
         ```lua
         -- Medium: Display localized notification with one parameter
         local playerName = LocalPlayer():Name()
-        lia.notices.notifyLocalized(nil, "ui.welcome.back", "info", playerName)
+        lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
         ```
 
         High Complexity:
@@ -331,19 +331,43 @@ else
         local healthPercent = math.floor((health / maxHealth) * 100)
 
         if health < 25 then
-            lia.notices.notifyLocalized(nil, "ui.health.critical", "error",
+            lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
                 health, maxHealth, healthPercent)
         elseif health < 50 then
-            lia.notices.notifyLocalized(nil, "ui.health.low", "warning",
+            lia.notices.notifyWarningLocalized(nil, "ui.health.low",
                 health, maxHealth, healthPercent)
         else
-            lia.notices.notifyLocalized(nil, "ui.health.good", "success",
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
                 health, maxHealth, healthPercent)
         end
         ```
     ]]
     function lia.notices.notifyLocalized(client, key, notifType, ...)
         lia.notices.notify(client, L(key, ...), notifType or "default")
+    end
+
+    function lia.notices.notifyInfoLocalized(client, key, ...)
+        lia.notices.notify(client, L(key, ...), "info")
+    end
+
+    function lia.notices.notifyWarningLocalized(client, key, ...)
+        lia.notices.notify(client, L(key, ...), "warning")
+    end
+
+    function lia.notices.notifyErrorLocalized(client, key, ...)
+        lia.notices.notify(client, L(key, ...), "error")
+    end
+
+    function lia.notices.notifySuccessLocalized(client, key, ...)
+        lia.notices.notify(client, L(key, ...), "success")
+    end
+
+    function lia.notices.notifyMoneyLocalized(client, key, ...)
+        lia.notices.notify(client, L(key, ...), "money")
+    end
+
+    function lia.notices.notifyAdminLocalized(client, key, ...)
+        lia.notices.notify(client, L(key, ...), "admin")
     end
 
     --[[

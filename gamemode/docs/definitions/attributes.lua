@@ -25,12 +25,10 @@
     gameplay calculations. They can be configured with maximum values, starting limits, and
     whether they appear in character creation.
 ]]
---
 --[[
     Overview:
     The attribute system provides functionality for defining character attributes within the Lilia framework. Attributes represent character statistics that can be modified, boosted, and used in gameplay calculations. The system includes automatic attribute loading from directories, localization support for attribute names and descriptions, and hooks for custom attribute behavior. Attributes can be configured with maximum values, starting limits, and whether they appear in character creation. The system supports attribute boosts through the character system and validation through callback methods that are automatically invoked during character setup.
 ]]
---
 --[[
     ATTRIBUTE.name
     Purpose: Sets the display name of the attribute
@@ -41,7 +39,6 @@
         ATTRIBUTE.name = "Strength"
         ```
 ]]
---
 ATTRIBUTE.name = ""
 --[[
     ATTRIBUTE.desc
@@ -52,7 +49,6 @@ ATTRIBUTE.name = ""
         ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
         ```
 ]]
---
 ATTRIBUTE.desc = ""
 --[[
     ATTRIBUTE.maxValue
@@ -63,7 +59,6 @@ ATTRIBUTE.desc = ""
         ATTRIBUTE.maxValue = 50
         ```
 ]]
---
 ATTRIBUTE.maxValue = nil
 --[[
     ATTRIBUTE.startingMax
@@ -74,7 +69,6 @@ ATTRIBUTE.maxValue = nil
         ATTRIBUTE.startingMax = 20
         ```
 ]]
---
 ATTRIBUTE.startingMax = nil
 --[[
     ATTRIBUTE.noStartBonus
@@ -85,7 +79,6 @@ ATTRIBUTE.startingMax = nil
         ATTRIBUTE.noStartBonus = true
         ```
 ]]
---
 ATTRIBUTE.noStartBonus = false
 --[[
     ATTRIBUTE.OnSetup
@@ -109,7 +102,6 @@ ATTRIBUTE.noStartBonus = false
         end
         ```
 ]]
---
 function ATTRIBUTE:OnSetup(client, value)
 end
 --[[
@@ -145,7 +137,6 @@ end
     end
         ```
 ]]
---
 --[[
     Example Attribute: Intelligence
 
@@ -178,7 +169,6 @@ end
     end
         ```
 ]]
---
 --[[
     Example Attribute: Luck (Hidden from Character Creation)
 
@@ -211,4 +201,3 @@ end
     end
         ```
 ]]
---

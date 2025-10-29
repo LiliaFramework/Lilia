@@ -17,7 +17,6 @@
     - Items are not consumed when used
     - Can be used multiple times
 ]]
---
 --[[
     ITEM.name
     Purpose: Sets the display name of the URL item
@@ -27,7 +26,6 @@
         ITEM.name = "Website Link"
         ```
 ]]
---
 ITEM.name = "urlName"
 --[[
     ITEM.desc
@@ -38,7 +36,6 @@ ITEM.name = "urlName"
         ITEM.desc = "A link to an external website"
         ```
 ]]
---
 ITEM.desc = "urlDesc"
 --[[
     ITEM.model
@@ -49,7 +46,6 @@ ITEM.desc = "urlDesc"
         ITEM.model = "models/props_interiors/pot01a.mdl"
         ```
 ]]
---
 ITEM.model = "models/props_interiors/pot01a.mdl"
 --[[
     ITEM.url
@@ -60,7 +56,6 @@ ITEM.model = "models/props_interiors/pot01a.mdl"
         ITEM.url = "https://example.com"
         ```
 ]]
---
 ITEM.url = ""
 --[[
 Example Item:
@@ -73,4 +68,3 @@ ITEM.model = "models/props_interiors/pot01a.mdl"  -- 3D model for the item
 ITEM.url = "https://example.com"                  -- URL to open when used
 ```
 ]]
---

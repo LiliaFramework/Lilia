@@ -17,7 +17,6 @@
     - Can be used to reload equipped weapons
     - Items are removed from inventory after use
 ]]
---
 --[[
     ITEM.name
     Purpose: Sets the display name of the ammo item
@@ -27,7 +26,6 @@
         ITEM.name = "Pistol Ammo"
         ```
 ]]
---
 ITEM.name = "ammoName"
 --[[
     ITEM.model
@@ -38,7 +36,6 @@ ITEM.name = "ammoName"
         ITEM.model = "models/props_c17/SuitCase001a.mdl"
         ```
 ]]
---
 ITEM.model = "models/props_c17/SuitCase001a.mdl"
 --[[
     ITEM.width
@@ -49,7 +46,6 @@ ITEM.model = "models/props_c17/SuitCase001a.mdl"
         ITEM.width = 1  -- Takes 1 slot width
         ```
 ]]
---
 ITEM.width = 1
 --[[
     ITEM.height
@@ -60,7 +56,6 @@ ITEM.width = 1
         ITEM.height = 1  -- Takes 1 slot height
         ```
 ]]
---
 ITEM.height = 1
 --[[
     ITEM.ammo
@@ -72,7 +67,6 @@ ITEM.height = 1
         ITEM.ammo = "smg1"    -- SMG ammunition type
         ```
 ]]
---
 ITEM.ammo = "pistol"
 --[[
     ITEM.category
@@ -83,7 +77,6 @@ ITEM.ammo = "pistol"
         ITEM.category = "itemCatAmmunition"
         ```
 ]]
---
 ITEM.category = "itemCatAmmunition"
 --[[
 Example Item:
@@ -98,4 +91,3 @@ ITEM.ammo = "pistol"                         -- Ammo type (matches weapon ammo t
 ITEM.category = "itemCatAmmunition"          -- Category for inventory sorting
 ```
 ]]
---

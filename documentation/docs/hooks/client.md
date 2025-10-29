@@ -5785,6 +5785,90 @@ end)
 
 ---
 
+### GetAdminStickLists
+
+**Purpose**
+
+Called to add custom list options to the admin stick menu, similar to the class list functionality
+
+**When Called**
+
+When building the admin stick context menu, before it's populated
+
+**Parameters**
+
+* `tgt` (*Entity*): The target entity
+* `lists` (*Table*): The table to populate with list data
+
+**Returns**
+
+* None (modified by reference)
+
+**Realm**
+
+Client
+
+**List Data Structure**
+
+Each entry in `lists` should be a table with:
+* `name` (*String*): The display name of the list
+* `category` (*String*): The category key (e.g., "characterManagement", "utility")
+* `subcategory` (*String*): The subcategory key within the category
+* `items` (*Table*): Array of items to display
+
+Each item in `items` should be a table with:
+* `name` (*String*): The display name of the option
+* `callback` (*Function*): Function to execute when clicked (receives `target` and `item` as parameters)
+* `icon` (*String*, optional): Icon path to display
+
+**Example Usage**
+
+**Simple List:**
+```lua
+hook.Add("GetAdminStickLists", "MyAddon", function(tgt, lists)
+    table.insert(lists, {
+        name = "Custom Weapons",
+        category = "characterManagement",
+        subcategory = "items",
+        items = {
+            { name = "Gun 1", callback = function(target, item) RunConsoleCommand("say", "/give", target:SteamID(), "weapon_pistol") end },
+            { name = "Gun 2", callback = function(target, item) RunConsoleCommand("say", "/give", target:SteamID(), "weapon_rifle") end }
+        }
+    })
+end)
+```
+
+**Complex List with Icons:**
+```lua
+hook.Add("GetAdminStickLists", "AdvancedLists", function(tgt, lists)
+    if tgt:IsPlayer() and tgt:getChar() then
+        table.insert(lists, {
+            name = "Quick Factions",
+            category = "characterManagement",
+            subcategory = "factions",
+            items = {
+                {
+                    name = "Police",
+                    icon = "icon16/user_police.png",
+                    callback = function(target, item)
+                        RunConsoleCommand("say", "/setfaction", target:SteamID(), "police")
+                    end
+                },
+                {
+                    name = "Medic",
+                    icon = "icon16/user_medical.png",
+                    callback = function(target, item)
+                        RunConsoleCommand("say", "/setfaction", target:SteamID(), "medic")
+                    end
+                }
+            }
+        })
+    end
+end)
+```
+
+---
+
 ### PopulateAdminTabs
 
 **Purpose**

@@ -128,7 +128,6 @@ end
     lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
     ```
 ]]
---
 function lia.module.load(uniqueID, path, variable, skipSubmodules)
     variable = variable or "MODULE"
     local lowerVar = variable:lower()
@@ -252,7 +251,6 @@ end
     end
     ```
 ]]
---
 function lia.module.initialize()
     local schemaPath = engine.ActiveGamemode()
     lia.module.load("schema", schemaPath .. "/schema", "schema")
@@ -317,7 +315,6 @@ end
     lia.module.loadFromDir("gamemodes/lilia/modules", "module", skipModules)
     ```
 ]]
---
 function lia.module.loadFromDir(directory, group, skip)
     local locationVar = group == "schema" and "SCHEMA" or "MODULE"
     local _, folders = file.Find(directory .. "/*", "LUA")
@@ -361,7 +358,6 @@ end
     end
     ```
 ]]
---
 function lia.module.get(identifier)
     return lia.module.list[identifier]
 end

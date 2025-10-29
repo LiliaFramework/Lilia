@@ -378,7 +378,6 @@ net.Receive("liaNPCWeaponChange", function(_, ply)
     local wep = net.ReadString()
     if not IsValid(ent) or not ent:IsNPC() then return end
     if not IsValid(ply) or not ply:hasPrivilege("canSpawnSWEPs") then return end
-    -- Remove current weapon if it exists
     if IsValid(ent:GetActiveWeapon()) then ent:GetActiveWeapon():Remove() end
     ent:Give(wep)
 end)

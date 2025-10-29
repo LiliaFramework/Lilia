@@ -471,6 +471,24 @@ function sound.PlayFile(path, mode, cb)
                 else
                     return origPlayFile(localPath, mode or "", cb)
                 end
+            else
+                -- If it's a registered websounds entry but not yet cached, download then play
+                local url = lia.websound.stored and lia.websound.stored[webPath]
+                if url then
+                    lia.websound.register(webPath, url, function(downloadedPath)
+                        if not downloadedPath then
+                            if cb then cb(nil, nil, "failed") end
+                            return
+                        end
+
+                        if webPath:match("%.wav$") then
+                            origPlayFile(downloadedPath, mode or "", cb)
+                        else
+                            origPlayFile(downloadedPath, mode or "", cb)
+                        end
+                    end)
+                    return
+                end
             end
         end
     end
@@ -562,6 +580,21 @@ function surface.PlaySound(soundPath, _, cb)
                 origSurfacePlaySound(surfacePath)
                 if cb then cb(true) end
                 return
+            else
+                -- If registered but not cached yet, download then play
+                local url = lia.websound.stored and lia.websound.stored[webPath]
+                if url then
+                    lia.websound.register(webPath, url, function(downloadedPath)
+                        if downloadedPath then
+                            local surfacePath = downloadedPath:gsub("^data/", "")
+                            origSurfacePlaySound(surfacePath)
+                            if cb then cb(true) end
+                        elseif cb then
+                            cb(false, "failed")
+                        end
+                    end)
+                    return
+                end
             end
         end
     end
@@ -704,78 +737,44 @@ end
         ```
 ]]
 function lia.websound.playButtonSound(customSound, callback)
-    -- playButtonSound called with customSound
-    -- If it's a custom sound and not the default, try to play it first
     if customSound and customSound ~= "button_click.wav" then
-        -- Check if it's a websound
         if customSound:find("^lilia/websounds/") or customSound:find("^websounds/") then
-            -- Playing custom websound
             surface.PlaySound(customSound)
             if callback then callback(true) end
             return
         end
 
-        -- Check if it's a URL
         if customSound:find("^https?://") then
-            -- Registering custom sound from URL
             lia.websound.register(customSound, customSound, function(localPath)
                 if localPath then
                     local surfacePath = localPath:gsub("^data/", "")
-                    -- Playing downloaded custom sound
                     surface.PlaySound(surfacePath)
                     if callback then callback(true) end
                 else
-                    -- Custom sound download failed, falling back to default
-                    -- Fallback to default if custom fails
                     lia.websound.playButtonSound(nil, callback)
                 end
             end)
             return
         end
 
-        -- Try as regular sound
-        -- Playing custom sound as regular sound
         surface.PlaySound(customSound)
         if callback then callback(true) end
         return
     end
 
-    -- Play default button sound using websound system
-    -- Playing default button sound using websound system
-    -- Check if the sound is already available
     local cachedPath = lia.websound.get("button_click.wav")
     if cachedPath then
-        -- Button sound found in cache, playing immediately
-        -- Cached path: cachedPath
-        -- Use sound.PlayFile directly with the full path (like lia_saved_sounds does)
-        sound.PlayFile(cachedPath, "", function()
-            -- Button sound played or failed to play
-        end)
-
+        sound.PlayFile(cachedPath, "", function() end)
         if callback then callback(true) end
         return
     end
 
-    -- If not cached, ensure it's registered and wait for it
-    -- Button sound not cached, ensuring registration...
-    if not lia.websound.stored["button_click.wav"] then
-        -- Button sound not registered, registering now...
-        lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav")
-    end
-
-    -- Try to download and play
+    if not lia.websound.stored["button_click.wav"] then lia.websound.register("button_click.wav", "https://bleonheart.github.io/Samael-Assets/misc/button_click.wav") end
     lia.websound.download("button_click.wav", nil, function(localPath)
         if localPath then
-            -- Button sound downloaded successfully, playing
-            -- Use sound.PlayFile directly with the full path (like lia_saved_sounds does)
-            sound.PlayFile(localPath, "", function()
-                -- Button sound played or failed to play
-            end)
-
+            sound.PlayFile(localPath, "", function() end)
             if callback then callback(true) end
         else
-            -- Button sound download failed
-            -- Fallback to regular surface.PlaySound
             surface.PlaySound("lilia/websounds/button_click.wav")
             if callback then callback(false) end
         end

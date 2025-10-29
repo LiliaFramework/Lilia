@@ -333,7 +333,7 @@ end
                 validatedConfig[name] = value
             else
                 validatedConfig[name] = default
-                print("Invalid ConVar value for " .. name .. ", using default")
+                -- Invalid ConVar value for " .. name .. ", using default
             end
         end
 
@@ -533,7 +533,7 @@ end
             -- Initialize ghost entity
             self:CreateGhostEntity()
 
-            print("Tool " .. self:getMode() .. " initialized for " .. self:GetOwner():Name())
+            -- Tool " .. self:getMode() .. " initialized for " .. self:GetOwner():Name()
         end
         ```
 ]]
@@ -964,8 +964,7 @@ end
             self.Message = string.format("Cleared %d objects", count)
 
             if SERVER then
-                print(string.format("Player %s cleared %d objects",
-                    self:GetOwner():Name(), count))
+                -- Player " .. self:GetOwner():Name() .. " cleared " .. count .. " objects
             end
         end
         ```
@@ -1013,8 +1012,7 @@ end
                 net.WriteUInt(clearedCount, 16)
                 net.Send(owner)
 
-                print(string.format("Player %s cleared %d tool objects",
-                    owner:Name(), clearedCount))
+                -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
             end
         end
         ```
@@ -1098,8 +1096,7 @@ end
             self.LastDeploy = CurTime()
             self.Message = string.format("%s tool ready", mode)
 
-            print(string.format("Player %s deployed %s tool",
-                owner:Name(), mode))
+            -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
         end
         ```
 ]]
@@ -1173,8 +1170,7 @@ end
             end
 
             -- Log holster action
-            print(string.format("Player %s holstered %s tool",
-                owner:Name(), self:getMode()))
+            -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
         end
         ```
 ]]
@@ -1363,8 +1359,7 @@ end
                     net.Broadcast()
 
                     -- Log cleanup action
-                    print(string.format("Player %s had %d invalid tool objects cleaned up",
-                        owner:Name(), removedCount))
+                    -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
                 end
             end
 
@@ -1441,8 +1436,7 @@ end
                 net.Send(owner)
 
                 -- Log the clearing action
-                print(string.format("Player %s cleared all %d tool objects",
-                    owner:Name(), clearedCount))
+                -- Player " .. owner:Name() .. " cleared all " .. clearedCount .. " tool objects
 
                 -- Save state after clearing
                 self:SaveToolState()

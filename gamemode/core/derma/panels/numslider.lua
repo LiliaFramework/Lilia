@@ -30,16 +30,19 @@ function PANEL:Init()
         local sliderWidth = 20
         local sliderHeight = h
         local sliderX = ((self.value - self.min) / (self.max - self.min)) * (trackWidth - sliderWidth)
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.window_shadow):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.slider_track or Color(60, 60, 60)):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(sliderX, 0, sliderWidth, h):Rad(16):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Shadow(3, 10):Draw()
+        local trackColor = lia.color.theme.slider_track or Color(60, 60, 60)
+        draw.RoundedBox(16, 0, 0, w, h, trackColor)
+        draw.RoundedBox(16, sliderX, 0, sliderWidth, h, lia.color.theme.theme)
         if s:IsHovered() or self.dragging then
             self.hoverAnim = math.Clamp(self.hoverAnim + FrameTime() * 8, 0, 1)
         else
             self.hoverAnim = math.Clamp(self.hoverAnim - FrameTime() * 8, 0, 1)
         end
 
-        if self.hoverAnim > 0 then lia.derma.rect(sliderX, 0, sliderWidth, sliderHeight):Rad(16):Color(Color(lia.color.theme.button_hovered.r, lia.color.theme.button_hovered.g, lia.color.theme.button_hovered.b, self.hoverAnim * 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
+        if self.hoverAnim > 0 then
+            local hoverColor = Color(lia.color.theme.button_hovered.r, lia.color.theme.button_hovered.g, lia.color.theme.button_hovered.b, self.hoverAnim * 100)
+            draw.RoundedBox(16, sliderX, 0, sliderWidth, sliderHeight, hoverColor)
+        end
     end
 
     self.slider.OnMousePressed = function(_, mouseCode)

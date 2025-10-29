@@ -276,8 +276,6 @@ local function drawVoiceIndicator()
     if not IsValid(client) or not client:IsSpeaking() then return end
     local voiceType = client:getNetVar("VoiceType", L("talking"))
     local voiceText = L("youAre") .. " " .. voiceType
-    -- Calculate listener count if voice range is enabled
-    local listenerCount = 0
     if lia.option.get("voiceRange", false) then
         local radius = VoiceRanges[voiceType] or VoiceRanges[L("talking")]
         local clientPos = client:GetPos()
@@ -289,16 +287,13 @@ local function drawVoiceIndicator()
             end
         end
 
-        listenerCount = count
-        if listenerCount > 0 then voiceText = voiceText .. " - " .. listenerCount .. " people can hear you" end
+        if count > 0 then voiceText = voiceText .. " - " .. count .. " people can hear you" end
     end
 
     local modifiedText = hook.Run("ModifyVoiceIndicatorText", client, voiceText, voiceType)
     if modifiedText then voiceText = modifiedText end
-    -- Calculate position (top center)
     local boxX = ScrW() / 2
     local boxY = 50
-    -- Draw box with text using the new function
     lia.derma.drawBoxWithText(voiceText, boxX, boxY, {
         font = "LiliaFont.18",
         textColor = Color(255, 255, 255),
@@ -319,9 +314,32 @@ function GM:HUDPaint()
         local wpn = client:GetActiveWeapon()
         if canDrawAmmo(wpn) then drawAmmo(wpn) end
         if canDrawCrosshair() then drawCrosshair() end
+        local hudInfos = {}
+        hook.Run("DisplayPlayerHUDInformation", client, hudInfos)
+        if #hudInfos > 0 then
+            for _, info in ipairs(hudInfos) do
+                if info.text and info.position then
+                    local drawOptions = {
+                        textColor = info.color or Color(255, 255, 255),
+                        font = info.font or "LiliaFont.20"
+                    }
+
+                    if info.backgroundColor then drawOptions.backgroundColor = info.backgroundColor end
+                    if info.borderColor then drawOptions.borderColor = info.borderColor end
+                    if info.borderRadius then drawOptions.borderRadius = info.borderRadius end
+                    if info.borderThickness then drawOptions.borderThickness = info.borderThickness end
+                    if info.padding then drawOptions.padding = info.padding end
+                    if info.textAlignX then drawOptions.textAlignX = info.textAlignX end
+                    if info.textAlignY then drawOptions.textAlignY = info.textAlignY end
+                    if info.lineSpacing then drawOptions.lineSpacing = info.lineSpacing end
+                    if info.autoSize then drawOptions.autoSize = info.autoSize end
+                    if info.blur then drawOptions.blur = info.blur end
+                    lia.derma.drawBoxWithText(info.text, info.position.x, info.position.y, drawOptions)
+                end
+            end
+        end
     end
 
-    -- Draw voice chat indicator
     drawVoiceIndicator()
 end
 
@@ -503,12 +521,21 @@ end
 
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
-    vgui.Create("liaQuick")
+    if not IsValid(lia.gui.quick) then
+        lia.gui.quick = vgui.Create("liaQuick")
+    else
+        lia.gui.quick:SetVisible(true)
+        lia.gui.quick:MakePopup()
+        -- Only repopulate if cache is invalidated
+        if lia.gui.quick.forceRepopulate then
+            lia.gui.quick:populateOptions()
+        end
+    end
 end
 
 function GM:OnContextMenuClose()
     self.BaseClass:OnContextMenuClose()
-    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
+    if IsValid(lia.gui.quick) then lia.gui.quick:SetVisible(false) end
 end
 
 function GM:CharListLoaded()
@@ -604,40 +631,6 @@ end
 
 function GM:DrawDeathNotice()
     return false
-end
-
-function GM:RefreshFonts()
-    local function refreshPanel(panel)
-        if not IsValid(panel) then return end
-        panel:InvalidateLayout(true)
-        panel:SetVisible(false)
-        panel:SetVisible(true)
-        for _, child in pairs(panel:GetChildren()) do
-            refreshPanel(child)
-        end
-    end
-
-    if lia.gui.menu and IsValid(lia.gui.menu) then
-        lia.gui.menu:Update()
-        refreshPanel(lia.gui.menu)
-    end
-
-    if lia.gui.character and IsValid(lia.gui.character) then
-        lia.gui.character:Update()
-        refreshPanel(lia.gui.character)
-    end
-
-    if lia.gui.score and IsValid(lia.gui.score) then
-        lia.gui.score:Update()
-        refreshPanel(lia.gui.score)
-    end
-
-    if lia.gui.chat and IsValid(lia.gui.chat) then
-        lia.gui.chat:Update()
-        refreshPanel(lia.gui.chat)
-    end
-
-    hook.Run("OnFontsRefreshed")
 end
 
 function GM:GetMainMenuPosition(character)

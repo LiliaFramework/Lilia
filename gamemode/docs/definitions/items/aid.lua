@@ -17,7 +17,6 @@
     - Health restoration is instant and cannot be interrupted
     - Items are removed from inventory after use
 ]]
---
 --[[
     ITEM.name
     Purpose: Sets the display name of the aid item
@@ -27,7 +26,6 @@
         ITEM.name = "Medical Kit"
         ```
 ]]
---
 ITEM.name = "aidName"
 --[[
     ITEM.desc
@@ -38,7 +36,6 @@ ITEM.name = "aidName"
         ITEM.desc = "A medical kit that restores health"
         ```
 ]]
---
 ITEM.desc = "aidDesc"
 --[[
     ITEM.model
@@ -49,7 +46,6 @@ ITEM.desc = "aidDesc"
         ITEM.model = "models/weapons/w_package.mdl"
         ```
 ]]
---
 ITEM.model = "models/weapons/w_package.mdl"
 --[[
     ITEM.width
@@ -60,7 +56,6 @@ ITEM.model = "models/weapons/w_package.mdl"
         ITEM.width = 1  -- Takes 1 slot width
         ```
 ]]
---
 ITEM.width = 1
 --[[
     ITEM.height
@@ -71,7 +66,6 @@ ITEM.width = 1
         ITEM.height = 1  -- Takes 1 slot height
         ```
 ]]
---
 ITEM.height = 1
 --[[
     ITEM.health
@@ -82,7 +76,6 @@ ITEM.height = 1
         ITEM.health = 25  -- Restores 25 health points
         ```
 ]]
---
 ITEM.health = 0
 --[[
 Example Item:
@@ -97,4 +90,3 @@ ITEM.height = 1                              -- Inventory height (1 slot)
 ITEM.health = 25                             -- Health amount restored when used
 ```
 ]]
---

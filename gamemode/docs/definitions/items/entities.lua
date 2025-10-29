@@ -17,7 +17,6 @@
     - Items are consumed when placed
     - Entities can be picked up and returned to inventory
 ]]
---
 --[[
     ITEM.name
     Purpose: Sets the display name of the entity item
@@ -27,7 +26,6 @@
         ITEM.name = "Chair"
         ```
 ]]
---
 ITEM.name = "entitiesName"
 --[[
     ITEM.model
@@ -38,7 +36,6 @@ ITEM.name = "entitiesName"
         ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
         ```
 ]]
---
 ITEM.model = ""
 --[[
     ITEM.desc
@@ -49,7 +46,6 @@ ITEM.model = ""
         ITEM.desc = "A comfortable chair for sitting"
         ```
 ]]
---
 ITEM.desc = "entitiesDesc"
 --[[
     ITEM.category
@@ -60,7 +56,6 @@ ITEM.desc = "entitiesDesc"
         ITEM.category = "entities"
         ```
 ]]
---
 ITEM.category = "entities"
 --[[
     ITEM.entityid
@@ -71,7 +66,6 @@ ITEM.category = "entities"
         ITEM.entityid = "prop_physics"
         ```
 ]]
---
 ITEM.entityid = ""
 --[[
 Example Item:
@@ -85,4 +79,3 @@ ITEM.category = "entities"                                   -- Category for inv
 ITEM.entityid = "prop_physics"                               -- Entity class to spawn when placed
 ```
 ]]
---

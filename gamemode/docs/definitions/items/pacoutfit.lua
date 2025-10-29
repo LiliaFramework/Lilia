@@ -17,7 +17,6 @@
     - Can be unequipped to remove PAC3 parts
     - Requires PAC3 addon to function properly
 ]]
---
 --[[
     if not pac then return end
     Purpose: Prevents loading if PAC addon is not available
@@ -27,7 +26,6 @@
         if not pac then return end
         ```
 ]]
---
 if not pac then return end
 --[[
     ITEM.name
@@ -38,7 +36,6 @@ if not pac then return end
         ITEM.name = "Hat"
         ```
 ]]
---
 ITEM.name = "pacoutfitName"
 --[[
     ITEM.desc
@@ -49,7 +46,6 @@ ITEM.name = "pacoutfitName"
         ITEM.desc = "A stylish hat"
         ```
 ]]
---
 ITEM.desc = "pacoutfitDesc"
 --[[
     ITEM.category
@@ -60,7 +56,6 @@ ITEM.desc = "pacoutfitDesc"
         ITEM.category = "outfit"
         ```
 ]]
---
 ITEM.category = "outfit"
 --[[
     ITEM.model
@@ -71,7 +66,6 @@ ITEM.category = "outfit"
         ITEM.model = "models/Gibs/HGIBS.mdl"
         ```
 ]]
---
 ITEM.model = "models/Gibs/HGIBS.mdl"
 --[[
     ITEM.width
@@ -82,7 +76,6 @@ ITEM.model = "models/Gibs/HGIBS.mdl"
         ITEM.width = 1  -- Takes 1 slot width
         ```
 ]]
---
 ITEM.width = 1
 --[[
     ITEM.height
@@ -93,7 +86,6 @@ ITEM.width = 1
         ITEM.height = 1  -- Takes 1 slot height
         ```
 ]]
---
 ITEM.height = 1
 --[[
     ITEM.outfitCategory
@@ -104,7 +96,6 @@ ITEM.height = 1
         ITEM.outfitCategory = "hat"  -- Prevents multiple items of same category
         ```
 ]]
---
 ITEM.outfitCategory = "hat"
 --[[
     ITEM.pacData
@@ -115,7 +106,6 @@ ITEM.outfitCategory = "hat"
         ITEM.pacData = {}  -- PAC attachment data
         ```
 ]]
---
 ITEM.pacData = {}
 --[[
     ITEM:paintOver(item, w, h)
@@ -131,7 +121,6 @@ ITEM.pacData = {}
         end
         ```
 ]]
---
 --[[
     ITEM:removePart(client)
     Purpose: Removes the PAC part from the player
@@ -146,7 +135,6 @@ ITEM.pacData = {}
         end
         ```
 ]]
---
 --[[
     ITEM:onCanBeTransfered(_, newInventory)
     Purpose: Prevents transfer of equipped PAC outfits
@@ -159,7 +147,6 @@ ITEM.pacData = {}
         end
         ```
 ]]
---
 --[[
     ITEM:onLoadout()
     Purpose: Handles PAC outfit loading on player spawn
@@ -171,7 +158,6 @@ ITEM.pacData = {}
         end
         ```
 ]]
---
 --[[
     ITEM:onRemoved()
     Purpose: Handles PAC outfit removal when item is removed
@@ -185,7 +171,6 @@ ITEM.pacData = {}
         end
         ```
 ]]
---
 --[[
     ITEM:hook("drop", function(item) ... end)
     Purpose: Handles PAC outfit removal when item is dropped
@@ -198,7 +183,6 @@ ITEM.pacData = {}
         end)
         ```
 ]]
---
 --[[
 Example Item:
 
@@ -213,4 +197,3 @@ ITEM.height = 1                                 -- Inventory height (1 slot)
 ITEM.outfitCategory = "hat"                     -- Outfit category for conflict checking
 ```
 ]]
---

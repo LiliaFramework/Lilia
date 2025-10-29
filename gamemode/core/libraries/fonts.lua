@@ -342,6 +342,13 @@ function lia.font.registerFonts(fontName)
         weight = 400
     })
 
+    lia.font.register("liaTinyFont", {
+        font = mainFont,
+        size = 12,
+        extended = true,
+        weight = 400
+    })
+
     local fontSizes = {12, 14, 15, 16, 17, 18, 20, 22, 23, 24, 25, 26, 28, 30, 34, 36, 40, 48}
     for _, size in ipairs(fontSizes) do
         lia.font.register("LiliaFont." .. size, {

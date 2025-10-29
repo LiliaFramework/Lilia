@@ -17,7 +17,6 @@
     - Weapons can be thrown and will explode
     - Grenades drop on death if ITEM.DropOnDeath is true
 ]]
---
 --[[
     ITEM.name
     Purpose: Sets the display name of the grenade item
@@ -27,7 +26,6 @@
         ITEM.name = "Fragmentation Grenade"
         ```
 ]]
---
 ITEM.name = "grenadeName"
 --[[
     ITEM.desc
@@ -38,7 +36,6 @@ ITEM.name = "grenadeName"
         ITEM.desc = "A deadly fragmentation grenade"
         ```
 ]]
---
 ITEM.desc = "grenadeDesc"
 --[[
     ITEM.category
@@ -49,7 +46,6 @@ ITEM.desc = "grenadeDesc"
         ITEM.category = "itemCatGrenades"
         ```
 ]]
---
 ITEM.category = "itemCatGrenades"
 --[[
     ITEM.model
@@ -60,7 +56,6 @@ ITEM.category = "itemCatGrenades"
         ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
         ```
 ]]
---
 ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 --[[
     ITEM.class
@@ -71,7 +66,6 @@ ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
         ITEM.class = "weapon_frag"
         ```
 ]]
---
 ITEM.class = "weapon_frag"
 --[[
     ITEM.width
@@ -82,7 +76,6 @@ ITEM.class = "weapon_frag"
         ITEM.width = 1  -- Takes 1 slot width
         ```
 ]]
---
 ITEM.width = 1
 --[[
     ITEM.height
@@ -93,7 +86,6 @@ ITEM.width = 1
         ITEM.height = 1  -- Takes 1 slot height
         ```
 ]]
---
 ITEM.height = 1
 --[[
     ITEM.DropOnDeath
@@ -104,7 +96,6 @@ ITEM.height = 1
         ITEM.DropOnDeath = true  -- Drops on death
         ```
 ]]
---
 ITEM.DropOnDeath = true
 --[[
 Example Item:
@@ -120,4 +111,3 @@ ITEM.width = 1                                         -- Inventory width (1 slo
 ITEM.height = 1                                        -- Inventory height (1 slot)
 ```
 ]]
---
