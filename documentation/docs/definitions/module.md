@@ -12,10 +12,6 @@ The module system provides comprehensive functionality for defining modules with
 
 ### name
 
-**Purpose**
-
-Sets the display name of the module
-
 **Example Usage**
 
 ```lua
@@ -27,10 +23,6 @@ MODULE.name = "Inventory System"
 ---
 
 ### author
-
-**Purpose**
-
-Sets the author of the module
 
 **Example Usage**
 
@@ -44,10 +36,6 @@ MODULE.author = "Samael"
 
 ### discord
 
-**Purpose**
-
-Sets the Discord contact for the module author
-
 **Example Usage**
 
 ```lua
@@ -59,10 +47,6 @@ MODULE.discord = "@liliaplayer"
 ---
 
 ### desc
-
-**Purpose**
-
-Sets the description of the module
 
 **Example Usage**
 
@@ -76,10 +60,6 @@ MODULE.desc = "A comprehensive inventory management system"
 
 ### version
 
-**Purpose**
-
-Sets the version number of the module
-
 **Example Usage**
 
 ```lua
@@ -91,10 +71,6 @@ MODULE.version = 1.0
 ---
 
 ### versionID
-
-**Purpose**
-
-Sets the unique version identifier for the module
 
 **Example Usage**
 
@@ -108,14 +84,6 @@ MODULE.versionID = "private_inventory"
 
 ### uniqueID
 
-**Purpose**
-
-Unique identifier for the module (INTERNAL - set automatically when loaded)
-
-**When Called**
-
-Set automatically during module loading
-
 **Example Usage**
 
 ```lua
@@ -127,10 +95,6 @@ Set automatically during module loading
 ---
 
 ### Privileges
-
-**Purpose**
-
-Sets the privileges required for this module
 
 **Example Usage**
 
@@ -149,10 +113,6 @@ MODULE.Privileges = {
 
 ### Dependencies
 
-**Purpose**
-
-Sets the file dependencies for this module
-
 **Example Usage**
 
 ```lua
@@ -170,10 +130,6 @@ MODULE.Dependencies = {
 
 ### NetworkStrings
 
-**Purpose**
-
-Sets the network strings used by this module
-
 **Example Usage**
 
 ```lua
@@ -185,10 +141,6 @@ MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
 ---
 
 ### WorkshopContent
-
-**Purpose**
-
-Sets the Workshop content IDs required by this module
 
 **Example Usage**
 
@@ -202,10 +154,6 @@ MODULE.WorkshopContent = {"1234567890", "0987654321"}
 ---
 
 ### WebSounds
-
-**Purpose**
-
-Sets the web-hosted sound files used by this module
 
 **Example Usage**
 
@@ -221,10 +169,6 @@ MODULE.WebSounds = {
 
 ### WebImages
 
-**Purpose**
-
-Sets the web-hosted image files used by this module
-
 **Example Usage**
 
 ```lua
@@ -239,10 +183,6 @@ MODULE.WebImages = {
 
 ### enabled
 
-**Purpose**
-
-Sets whether the module is enabled by default
-
 **Example Usage**
 
 ```lua
@@ -255,41 +195,21 @@ MODULE.enabled = true
 
 ### folder
 
-**Purpose**
-
-Sets the folder path for the module
-
 ---
 
 ### path
-
-**Purpose**
-
-Sets the file path for the module
 
 ---
 
 ### variable
 
-**Purpose**
-
-Sets the variable name for the module
-
 ---
 
 ### loading
 
-**Purpose**
-
-Sets whether the module is currently loading
-
 ---
 
 ### OnLoaded
-
-**Purpose**
-
-Called when the module is fully loaded
 
 **Example Usage**
 

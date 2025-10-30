@@ -3256,7 +3256,6 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
 end
 
 function lia.derma.createTableUI(title, columns, data, options, charID)
-    -- Clean up any existing table UI
     if IsValid(lia.gui.menuTableUI) then lia.gui.menuTableUI:Remove() end
     local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
     local frame = vgui.Create("liaDListView")
@@ -3416,7 +3415,6 @@ end
 
 function lia.derma.openOptionsMenu(title, options)
     if not istable(options) then return end
-    -- Clean up any existing open options menu
     if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
     local entries = {}
     if options[1] then
@@ -4266,7 +4264,6 @@ function lia.derma.requestButtons(title, buttons, callback, description)
 end
 
 timer.Simple(0, function()
-    -- Clean up GUI panels
     if IsValid(lia.gui.menuDermaMenu) then lia.gui.menuDermaMenu:Remove() end
     if IsValid(lia.gui.menuTextBox) then lia.gui.menuTextBox:Remove() end
     if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
