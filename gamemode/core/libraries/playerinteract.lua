@@ -5,23 +5,28 @@
 ]]
 --[[
     Overview:
-    The player interaction library provides comprehensive functionality for managing player interactions and actions within the Lilia framework. It handles the creation, registration, and execution of various interaction types including player-to-player interactions, entity interactions, and personal actions. The library operates on both server and client sides, with the server managing interaction registration and validation, while the client handles UI display and user input. It includes range checking, timed actions, and network synchronization to ensure consistent interaction behavior across all clients. The library supports both immediate and delayed actions with progress indicators, making it suitable for complex interaction systems like money transfers, voice changes, and other gameplay mechanics.
+        The player interaction library provides comprehensive functionality for managing player interactions and actions within the Lilia framework. It handles the creation, registration, and execution of various interaction types including player-to-player interactions, entity interactions, and personal actions. The library operates on both server and client sides, with the server managing interaction registration and validation, while the client handles UI display and user input. It includes range checking, timed actions, and network synchronization to ensure consistent interaction behavior across all clients. The library supports both immediate and delayed actions with progress indicators, making it suitable for complex interaction systems like money transfers, voice changes, and other gameplay mechanics.
 ]]
 lia.playerinteract = lia.playerinteract or {}
 lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
 --[[
-    Purpose: Checks if a client is within interaction range of an entity
-    When Called: Called when determining if an interaction should be available to a player
+    Purpose:
+        Checks if a client is within interaction range of an entity
+    When Called:
+        Called when determining if an interaction should be available to a player
     Parameters:
         - client (Player): The player attempting the interaction
         - entity (Entity): The target entity to check distance against
         - customRange (number, optional): Custom range override (defaults to 250 units)
-    Returns: boolean - true if within range, false otherwise
-    Realm: Shared
+    Returns:
+        boolean - true if within range, false otherwise
+    Realm:
+        Shared
     Example Usage:
 
     Low Complexity:
+
     ```lua
     -- Simple: Check if player is within default range of an entity
     if lia.playerinteract.isWithinRange(client, targetEntity) then
@@ -30,6 +35,7 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     ```
 
     Medium Complexity:
+
     ```lua
     -- Medium: Check with custom range for specific interaction
     local customRange = 100
@@ -39,13 +45,14 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     ```
 
     High Complexity:
+
     ```lua
     -- High: Dynamic range checking with validation
     local interactionRange = interactionData.range or 250
     if IsValid(client) and IsValid(targetEntity) and
-       lia.playerinteract.isWithinRange(client, targetEntity, interactionRange) then
-        -- Player is within specified range for this interaction type
-        return true
+    lia.playerinteract.isWithinRange(client, targetEntity, interactionRange) then
+    -- Player is within specified range for this interaction type
+    return true
     end
     ```
 ]]
@@ -56,15 +63,20 @@ function lia.playerinteract.isWithinRange(client, entity, customRange)
 end
 
 --[[
-    Purpose: Retrieves all available interactions for a client based on their traced entity
-    When Called: Called when opening interaction menu or checking available interactions
+    Purpose:
+        Retrieves all available interactions for a client based on their traced entity
+    When Called:
+        Called when opening interaction menu or checking available interactions
     Parameters:
         - client (Player, optional): The player to get interactions for (defaults to LocalPlayer())
-    Returns: table - Dictionary of available interactions indexed by interaction name
-    Realm: Client
+    Returns:
+        table - Dictionary of available interactions indexed by interaction name
+    Realm:
+        Client
     Example Usage:
 
     Low Complexity:
+
     ```lua
     -- Simple: Get all available interactions for local player
     local interactions = lia.playerinteract.getInteractions()
@@ -74,6 +86,7 @@ end
     ```
 
     Medium Complexity:
+
     ```lua
     -- Medium: Get interactions for specific player with validation
     local client = LocalPlayer()
@@ -87,15 +100,16 @@ end
     ```
 
     High Complexity:
+
     ```lua
     -- High: Filter interactions by category and validate conditions
     local interactions = lia.playerinteract.getInteractions()
     local filteredInteractions = {}
     for name, interaction in pairs(interactions) do
         if interaction.category == "Voice" and
-           (not interaction.shouldShow or interaction.shouldShow(LocalPlayer())) then
-            filteredInteractions[name] = interaction
-        end
+        (not interaction.shouldShow or interaction.shouldShow(LocalPlayer())) then
+        filteredInteractions[name] = interaction
+    end
     end
     ```
 ]]
@@ -116,15 +130,20 @@ function lia.playerinteract.getInteractions(client)
 end
 
 --[[
-    Purpose: Retrieves all available personal actions for a client
-    When Called: Called when opening personal actions menu or checking available actions
+    Purpose:
+        Retrieves all available personal actions for a client
+    When Called:
+        Called when opening personal actions menu or checking available actions
     Parameters:
         - client (Player, optional): The player to get actions for (defaults to LocalPlayer())
-    Returns: table - Dictionary of available actions indexed by action name
-    Realm: Client
+    Returns:
+        table - Dictionary of available actions indexed by action name
+    Realm:
+        Client
     Example Usage:
 
     Low Complexity:
+
     ```lua
     -- Simple: Get all available personal actions
     local actions = lia.playerinteract.getActions()
@@ -134,6 +153,7 @@ end
     ```
 
     Medium Complexity:
+
     ```lua
     -- Medium: Get actions with character validation
     local client = LocalPlayer()
@@ -147,15 +167,16 @@ end
     ```
 
     High Complexity:
+
     ```lua
     -- High: Filter actions by category and execute specific ones
     local actions = lia.playerinteract.getActions()
     local voiceActions = {}
     for name, action in pairs(actions) do
         if action.category == L("categoryVoice") and
-           (not action.shouldShow or action.shouldShow(LocalPlayer())) then
-            voiceActions[name] = action
-        end
+        (not action.shouldShow or action.shouldShow(LocalPlayer())) then
+        voiceActions[name] = action
+    end
     end
     ```
 ]]
@@ -170,15 +191,20 @@ function lia.playerinteract.getActions(client)
 end
 
 --[[
-    Purpose: Prepares interaction/action options for UI display in a flat list
-    When Called: Called when preparing options for display in the interaction menu
+    Purpose:
+        Prepares interaction/action options for UI display in a flat list
+    When Called:
+        Called when preparing options for display in the interaction menu
     Parameters:
         - options (table): Dictionary of options to prepare
-    Returns: table - Array of options for flat display
-    Realm: Shared
+    Returns:
+        table - Array of options for flat display
+    Realm:
+        Shared
     Example Usage:
 
     Low Complexity:
+
     ```lua
     -- Simple: Get options for display
     local interactions = lia.playerinteract.getInteractions()
@@ -189,6 +215,7 @@ end
     ```
 
     Medium Complexity:
+
     ```lua
     -- Medium: Process options for custom display
     local actions = lia.playerinteract.getActions()
@@ -200,6 +227,7 @@ end
     ```
 
     High Complexity:
+
     ```lua
     -- High: Filter and process options
     local interactions = lia.playerinteract.getInteractions()
@@ -222,8 +250,10 @@ end
 
 if SERVER then
     --[[
-        Purpose: Registers a new player-to-player or player-to-entity interaction
-        When Called: Called during module initialization or when registering custom interactions
+        Purpose:
+            Registers a new player-to-player or player-to-entity interaction
+        When Called:
+            Called during module initialization or when registering custom interactions
         Parameters:
             - name (string): Unique identifier for the interaction
             - data (table): Interaction configuration table containing:
@@ -237,24 +267,28 @@ if SERVER then
                 - actionText (string, optional): Text shown to performing player during timed action
                 - targetActionText (string, optional): Text shown to target player during timed action
                 - categoryColor (Color, optional): Color for category display
-        Returns: void
-        Realm: Server
+        Returns:
+            void
+        Realm:
+            Server
         Example Usage:
 
         Low Complexity:
+
         ```lua
         -- Simple: Add basic player interaction
         lia.playerinteract.addInteraction("giveMoney", {
             shouldShow = function(client, target)
-                return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0
+            return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0
             end,
             onRun = function(client, target)
-                -- Give money logic here
-            end
+            -- Give money logic here
+        end
         })
         ```
 
         Medium Complexity:
+
         ```lua
         -- Medium: Add timed interaction with progress indicators
         lia.playerinteract.addInteraction("healPlayer", {
@@ -264,16 +298,17 @@ if SERVER then
             actionText = "Healing player...",
             targetActionText = "Being healed...",
             shouldShow = function(client, target)
-                return IsValid(target) and target:IsPlayer() and target:Health() < target:GetMaxHealth()
+            return IsValid(target) and target:IsPlayer() and target:Health() < target:GetMaxHealth()
             end,
             onRun = function(client, target)
-                target:SetHealth(target:GetMaxHealth())
-                client:notify("Player healed successfully!")
-            end
+            target:SetHealth(target:GetMaxHealth())
+            client:notify("Player healed successfully!")
+        end
         })
         ```
 
         High Complexity:
+
         ```lua
         -- High: Complex interaction with validation and server-side processing
         lia.playerinteract.addInteraction("arrestPlayer", {
@@ -284,25 +319,25 @@ if SERVER then
             actionText = "Arresting suspect...",
             targetActionText = "Being arrested...",
             shouldShow = function(client, target)
-                if not IsValid(target) or not target:IsPlayer() then return false end
+            if not IsValid(target) or not target:IsPlayer() then return false end
                 if not client:getChar() or not target:getChar() then return false end
-                return client:getChar():getFaction() == FACTION_POLICE and
-                       target:getChar():getFaction() ~= FACTION_POLICE
-            end,
-            onRun = function(client, target)
-                -- Complex arrest logic with validation
-                if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
-                    lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
-                    client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
-                    return
-                end
+                    return client:getChar():getFaction() == FACTION_POLICE and
+                    target:getChar():getFaction() ~= FACTION_POLICE
+                    end,
+                    onRun = function(client, target)
+                    -- Complex arrest logic with validation
+                    if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
+                        lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
+                        client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
+                        return
+                    end
 
-                target:getChar():setData("arrested", true)
-                target:StripWeapons()
-                client:notify("Suspect arrested!")
-                target:notify("You have been arrested!")
-            end
-        })
+                    target:getChar():setData("arrested", true)
+                    target:StripWeapons()
+                    client:notify("Suspect arrested!")
+                    target:notify("You have been arrested!")
+                end
+                })
         ```
     ]]
     function lia.playerinteract.addInteraction(name, data)
@@ -333,8 +368,10 @@ if SERVER then
     end
 
     --[[
-        Purpose: Registers a new personal action that doesn't require a target entity
-        When Called: Called during module initialization or when registering custom personal actions
+        Purpose:
+            Registers a new personal action that doesn't require a target entity
+        When Called:
+            Called during module initialization or when registering custom personal actions
         Parameters:
             - name (string): Unique identifier for the action
             - data (table): Action configuration table containing:
@@ -347,27 +384,31 @@ if SERVER then
                 - actionText (string, optional): Text shown to performing player during timed action
                 - targetActionText (string, optional): Text shown to target player during timed action
                 - categoryColor (Color, optional): Color for category display
-        Returns: void
-        Realm: Server
+        Returns:
+            void
+        Realm:
+            Server
         Example Usage:
 
         Low Complexity:
+
         ```lua
         -- Simple: Add basic personal action
         lia.playerinteract.addAction("changeToWhisper", {
             category = L("categoryVoice"),
             shouldShow = function(client)
-                return client:getChar() and client:Alive() and
-                       client:getNetVar("VoiceType") ~= L("whispering")
+            return client:getChar() and client:Alive() and
+            client:getNetVar("VoiceType") ~= L("whispering")
             end,
             onRun = function(client)
-                client:setNetVar("VoiceType", L("whispering"))
-                client:notifyInfoLocalized("voiceModeSet", L("whispering"))
-            end
+            client:setNetVar("VoiceType", L("whispering"))
+            client:notifyInfoLocalized("voiceModeSet", L("whispering"))
+        end
         })
         ```
 
         Medium Complexity:
+
         ```lua
         -- Medium: Add timed personal action with progress indicator
         lia.playerinteract.addAction("meditate", {
@@ -375,23 +416,24 @@ if SERVER then
             timeToComplete = 10,
             actionText = "Meditating...",
             shouldShow = function(client)
-                return client:getChar() and client:Alive() and
-                       not client:getNetVar("meditating", false)
+            return client:getChar() and client:Alive() and
+            not client:getNetVar("meditating", false)
             end,
             onRun = function(client)
-                client:setNetVar("meditating", true)
-                client:SetHealth(math.min(client:Health() + 25, client:GetMaxHealth()))
-                client:notify("Meditation complete! Health restored.")
-                timer.Simple(1, function()
-                    if IsValid(client) then
-                        client:setNetVar("meditating", false)
-                    end
-                end)
+            client:setNetVar("meditating", true)
+            client:SetHealth(math.min(client:Health() + 25, client:GetMaxHealth()))
+            client:notify("Meditation complete! Health restored.")
+            timer.Simple(1, function()
+            if IsValid(client) then
+                client:setNetVar("meditating", false)
             end
+        end)
+        end
         })
         ```
 
         High Complexity:
+
         ```lua
         -- High: Complex personal action with multiple conditions and effects
         lia.playerinteract.addAction("emergencyCall", {
@@ -400,37 +442,37 @@ if SERVER then
             timeToComplete = 5,
             actionText = "Calling emergency services...",
             shouldShow = function(client)
-                if not client:getChar() or not client:Alive() then return false end
+            if not client:getChar() or not client:Alive() then return false end
                 local char = client:getChar()
                 if char:getFaction() == FACTION_POLICE or char:getFaction() == FACTION_MEDIC then
                     return false -- Emergency services don't need to call themselves
                 end
                 return not client:getNetVar("emergencyCooldown", false)
-            end,
-            onRun = function(client)
+                end,
+                onRun = function(client)
                 -- Set cooldown to prevent spam
                 client:setNetVar("emergencyCooldown", true)
                 timer.Simple(300, function() -- 5 minute cooldown
-                    if IsValid(client) then
-                        client:setNetVar("emergencyCooldown", false)
-                    end
-                end)
-
-                -- Notify emergency services
-                local emergencyMsg = string.format(
-                    "Emergency call from %s at %s",
-                    client:getChar():getDisplayedName(),
-                    client:GetPos()
-                )
-
-                for _, ply in ipairs(player.GetAll()) do
-                    if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
-                        ply:notify(emergencyMsg)
-                    end
+                if IsValid(client) then
+                    client:setNetVar("emergencyCooldown", false)
                 end
+            end)
 
-                client:notify("Emergency services have been notified!")
+            -- Notify emergency services
+            local emergencyMsg = string.format(
+            "Emergency call from %s at %s",
+            client:getChar():getDisplayedName(),
+            client:GetPos()
+            )
+
+            for _, ply in ipairs(player.GetAll()) do
+                if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
+                    ply:notify(emergencyMsg)
+                end
             end
+
+            client:notify("Emergency services have been notified!")
+        end
         })
         ```
     ]]
@@ -461,41 +503,48 @@ if SERVER then
     end
 
     --[[
-        Purpose: Synchronizes interaction and action data from server to clients
-        When Called: Called when interactions/actions are added or when clients connect
+        Purpose:
+            Synchronizes interaction and action data from server to clients
+        When Called:
+            Called when interactions/actions are added or when clients connect
         Parameters:
             - client (Player, optional): Specific client to sync to (if nil, syncs to all players)
-        Returns: void
-        Realm: Server
+        Returns:
+            void
+        Realm:
+            Server
         Example Usage:
 
         Low Complexity:
+
         ```lua
         -- Simple: Sync all interactions to all clients
         lia.playerinteract.syncToClients()
         ```
 
         Medium Complexity:
+
         ```lua
         -- Medium: Sync to specific client after they connect
         hook.Add("PlayerInitialSpawn", "SyncInteractions", function(client)
             timer.Simple(2, function() -- Wait for client to fully load
-                if IsValid(client) then
-                    lia.playerinteract.syncToClients(client)
-                end
-            end)
+            if IsValid(client) then
+                lia.playerinteract.syncToClients(client)
+            end
+        end)
         end)
         ```
 
         High Complexity:
+
         ```lua
         -- High: Conditional sync with validation and error handling
         function syncInteractionsToClient(client)
             if not IsValid(client) then return end
 
-            -- Check if client is ready
-            if not client:IsConnected() or not client:getChar() then
-                timer.Simple(1, function()
+                -- Check if client is ready
+                if not client:IsConnected() or not client:getChar() then
+                    timer.Simple(1, function()
                     syncInteractionsToClient(client)
                 end)
                 return
@@ -636,8 +685,10 @@ if SERVER then
     })
 else
     --[[
-        Purpose: Opens the interaction/action menu UI with options in a flat list
-        When Called: Called when player presses interaction keybind or requests menu
+        Purpose:
+            Opens the interaction/action menu UI by delegating to lia.derma.optionsMenu
+        When Called:
+            Called when player presses interaction keybind or requests menu
         Parameters:
             - options (table): Dictionary of available options to display
             - isInteraction (boolean): Whether this is an interaction menu (true) or action menu (false)
@@ -645,11 +696,15 @@ else
             - closeKey (number): Key code that closes the menu when released
             - netMsg (string): Network message name for server-only interactions
             - preFiltered (boolean, optional): Whether options are already filtered (defaults to false)
-        Returns: void
-        Realm: Client
+        Returns:
+            Panel - The created menu frame (returns from lia.derma.optionsMenu)
+        Realm:
+            Client
+        Note: This function is now a thin wrapper around lia.derma.optionsMenu for backwards compatibility.
         Example Usage:
 
         Low Complexity:
+
         ```lua
         -- Simple: Open basic interaction menu
         local interactions = lia.playerinteract.getInteractions()
@@ -657,6 +712,7 @@ else
         ```
 
         Medium Complexity:
+
         ```lua
         -- Medium: Open action menu with custom title and key
         local actions = lia.playerinteract.getActions()
@@ -664,160 +720,49 @@ else
         ```
 
         High Complexity:
+
         ```lua
         -- High: Custom menu with pre-filtered options and validation
         local client = LocalPlayer()
         if not IsValid(client) then return end
 
-        local interactions = lia.playerinteract.getInteractions(client)
-        local filteredInteractions = {}
+            local interactions = lia.playerinteract.getInteractions(client)
+            local filteredInteractions = {}
 
-        -- Filter interactions based on custom criteria
-        for name, interaction in pairs(interactions) do
-            if interaction.category == "Voice" and
-               (not interaction.shouldShow or interaction.shouldShow(client)) then
+            -- Filter interactions based on custom criteria
+            for name, interaction in pairs(interactions) do
+                if interaction.category == "Voice" and
+                (not interaction.shouldShow or interaction.shouldShow(client)) then
                 filteredInteractions[name] = interaction
             end
         end
 
         if table.Count(filteredInteractions) > 0 then
             lia.playerinteract.openMenu(
-                filteredInteractions,
-                true,
-                "Voice Interactions",
-                KEY_TAB,
-                "liaRequestInteractOptions",
-                true -- preFiltered
+            filteredInteractions,
+            true,
+            "Voice Interactions",
+            KEY_TAB,
+            "liaRequestInteractOptions",
+            true -- preFiltered
             )
-        else
-            client:notify("No voice interactions available!")
-        end
+            else
+                client:notify("No voice interactions available!")
+            end
         ```
     ]]
     function lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)
-        local client, ent = LocalPlayer(), LocalPlayer():getTracedEntity()
-        local visible = {}
-        if preFiltered then
-            for name, opt in pairs(options) do
-                visible[#visible + 1] = {
-                    name = name,
-                    opt = opt
-                }
-            end
-        else
-            for name, opt in pairs(options) do
-                if isInteraction then
-                    if opt.type == "interaction" and IsValid(ent) and lia.playerinteract.isWithinRange(client, ent, opt.range) then
-                        local targetType = opt.target or "player"
-                        local isPlayerTarget = ent:IsPlayer()
-                        local targetMatches = targetType == "any" or targetType == "player" and isPlayerTarget or targetType == "entity" and not isPlayerTarget
-                        if targetMatches then
-                            local shouldShow = true
-                            if opt.shouldShow then shouldShow = opt.shouldShow(client, ent) end
-                            if shouldShow then
-                                visible[#visible + 1] = {
-                                    name = name,
-                                    opt = opt
-                                }
-                            end
-                        end
-                    end
-                else
-                    if opt.type == "action" and (not opt.shouldShow or opt.shouldShow(client)) then
-                        visible[#visible + 1] = {
-                            name = name,
-                            opt = opt
-                        }
-                    end
-                end
-            end
-        end
-
-        if #visible == 0 then return end
-        local optionsList = lia.playerinteract.getCategorizedOptions(visible)
-        local fadeSpeed = 0.05
-        local frameW = 450
-        local entryH = 30
-        local baseH = entryH * #visible + 80
-        local frameH = isInteraction and baseH or math.min(baseH, ScrH() * 0.6)
-        local titleH = isInteraction and 36 or 16
-        local titleY = 2
-        local gap = 24
-        local padding = ScrW() * 0.15
-        local xPos = ScrW() - frameW - padding
-        local yPos = (ScrH() - frameH) / 2
-        local frame = vgui.Create("liaFrame")
-        frame:SetSize(frameW, frameH)
-        frame:SetPos(xPos, yPos)
-        frame:MakePopup()
-        frame:SetTitle("")
-        frame:ShowCloseButton(false)
-        hook.Run("InteractionMenuOpened", frame)
-        local oldOnRemove = frame.OnRemove
-        function frame:OnRemove()
-            if oldOnRemove then oldOnRemove(self) end
-            lia.gui.InteractionMenu = nil
-            hook.Run("InteractionMenuClosed")
-        end
-
-        frame:SetAlpha(0)
-        frame:AlphaTo(255, fadeSpeed)
-        function frame:Think()
-            if not input.IsKeyDown(closeKey) then self:Close() end
-        end
-
-        timer.Remove("InteractionMenu_Frame_Timer")
-        timer.Create("InteractionMenu_Frame_Timer", 30, 1, function() if IsValid(frame) then frame:Close() end end)
-        local title = frame:Add("DLabel")
-        title:SetPos(0, titleY)
-        title:SetSize(frameW, titleH)
-        title:SetText(titleText)
-        title:SetFont("liaSmallFont")
-        title:SetColor(color_white)
-        title:SetContentAlignment(5)
-        local scroll = frame:Add("liaScrollPanel")
-        scroll:SetPos(0, titleH + titleY + gap)
-        scroll:SetSize(frameW, frameH - titleH - titleY - gap)
-        local layout = vgui.Create("DListLayout", scroll)
-        layout:Dock(FILL)
-        for _, entry in pairs(optionsList) do
-            local btn = vgui.Create("liaButton", layout)
-            btn:SetTall(entryH)
-            btn:Dock(TOP)
-            btn:DockMargin(15, 8, 15, 0)
-            btn:SetText(L(entry.name))
-            btn:SetFont("liaSmallFont")
-            btn:SetTextColor(color_white)
-            btn:SetContentAlignment(5)
-            btn.DoClick = function()
-                frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Close() end end)
-                if not entry.opt.serverOnly and entry.opt.onRun then
-                    if isInteraction then
-                        if ent:IsPlayer() then
-                            local target = ent
-                            if ent:IsBot() then if client:Team() == FACTION_STAFF then target = client end end
-                            entry.opt.onRun(client, target)
-                        else
-                            entry.opt.onRun(client, ent)
-                        end
-                    else
-                        entry.opt.onRun(client, ent)
-                    end
-                end
-
-                if entry.opt.serverOnly then
-                    net.Start(netMsg)
-                    net.WriteString(entry.name)
-                    net.WriteBool(isInteraction)
-                    net.WriteEntity(ent)
-                    net.SendToServer()
-                end
-            end
-
-            layout:Add(btn)
-        end
-
-        lia.gui.InteractionMenu = frame
+        local client = LocalPlayer()
+        if not IsValid(client) then return end
+        local ent = isfunction(client.getTracedEntity) and client:getTracedEntity() or NULL
+        return lia.derma.optionsMenu(options, {
+            mode = isInteraction and "interaction" or "action",
+            title = titleText,
+            closeKey = closeKey,
+            netMsg = netMsg,
+            preFiltered = preFiltered,
+            entity = ent
+        })
     end
 
     lia.net.readBigTable("liaPlayerInteractSync", function(data)

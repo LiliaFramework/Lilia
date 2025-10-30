@@ -31,8 +31,10 @@
 ]]
 --[[
     ATTRIBUTE.name
-    Purpose: Sets the display name of the attribute
-    When Called: During attribute definition
+    Purpose:
+        Sets the display name of the attribute
+    When Called:
+        During attribute definition
 
     Example Usage:
         ```lua
@@ -42,8 +44,10 @@
 ATTRIBUTE.name = ""
 --[[
     ATTRIBUTE.desc
-    Purpose: Sets the description of the attribute that appears in tooltips and UI
-    When Called: During attribute definition
+    Purpose:
+        Sets the description of the attribute that appears in tooltips and UI
+    When Called:
+        During attribute definition
     Example Usage:
         ```lua
         ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
@@ -52,8 +56,10 @@ ATTRIBUTE.name = ""
 ATTRIBUTE.desc = ""
 --[[
     ATTRIBUTE.maxValue
-    Purpose: Sets the maximum value this attribute can reach
-    When Called: During attribute definition (used by GetAttributeMax hook)
+    Purpose:
+        Sets the maximum value this attribute can reach
+    When Called:
+        During attribute definition (used by GetAttributeMax hook)
     Example Usage:
         ```lua
         ATTRIBUTE.maxValue = 50
@@ -62,8 +68,10 @@ ATTRIBUTE.desc = ""
 ATTRIBUTE.maxValue = nil
 --[[
     ATTRIBUTE.startingMax
-    Purpose: Sets the maximum value this attribute can have during character creation
-    When Called: During attribute definition (used by GetAttributeStartingMax hook)
+    Purpose:
+        Sets the maximum value this attribute can have during character creation
+    When Called:
+        During attribute definition (used by GetAttributeStartingMax hook)
     Example Usage:
         ```lua
         ATTRIBUTE.startingMax = 20
@@ -72,8 +80,10 @@ ATTRIBUTE.maxValue = nil
 ATTRIBUTE.startingMax = nil
 --[[
     ATTRIBUTE.noStartBonus
-    Purpose: Prevents this attribute from appearing in character creation attribute allocation
-    When Called: During attribute definition (checked in character creation UI)
+    Purpose:
+        Prevents this attribute from appearing in character creation attribute allocation
+    When Called:
+        During attribute definition (checked in character creation UI)
     Example Usage:
         ```lua
         ATTRIBUTE.noStartBonus = true
@@ -82,24 +92,28 @@ ATTRIBUTE.startingMax = nil
 ATTRIBUTE.noStartBonus = false
 --[[
     ATTRIBUTE.OnSetup
-    Purpose: Hook function called when setting up attributes for a character
-    When Called: When a character spawns or when their attributes are initialized
+    Purpose:
+        Hook function called when setting up attributes for a character
+    When Called:
+        When a character spawns or when their attributes are initialized
     Parameters:
         - client (Player): The client whose character is being set up
         - value (number): The current attribute value
-    Returns: None
-    Realm: Server
+    Returns:
+        None
+    Realm:
+        Server
     Example Usage:
         ```lua
         function ATTRIBUTE:OnSetup(client, value)
             local char = client:getChar()
             if not char then return end
 
-            -- Set default attribute value if not already set
-            if value == 0 then
-                char:setAttrib(self.uniqueID, 10)
+                -- Set default attribute value if not already set
+                if value == 0 then
+                    char:setAttrib(self.uniqueID, 10)
+                end
             end
-        end
         ```
 ]]
 function ATTRIBUTE:OnSetup(client, value)
@@ -112,29 +126,29 @@ end
     that demonstrates typical usage of the attribute system.
 
         ```lua
-    ATTRIBUTE.name = "Strength"
-    ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
+        ATTRIBUTE.name = "Strength"
+        ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
 
-    -- Configuration
-    ATTRIBUTE.maxValue = 30
-    ATTRIBUTE.startingMax = 15
-    ATTRIBUTE.noStartBonus = false
+        -- Configuration
+        ATTRIBUTE.maxValue = 30
+        ATTRIBUTE.startingMax = 15
+        ATTRIBUTE.noStartBonus = false
 
-    -- Callback Methods
-    function ATTRIBUTE:OnSetup(client, value)
-        local char = client:getChar()
-        if not char then return end
+        -- Callback Methods
+        function ATTRIBUTE:OnSetup(client, value)
+            local char = client:getChar()
+            if not char then return end
 
-        -- Set default strength value if not already set
-        if value == 0 then
-            char:setAttrib("str", 10)
-        end
+                -- Set default strength value if not already set
+                if value == 0 then
+                    char:setAttrib("str", 10)
+                end
 
-        -- Apply strength-based effects
-        local strength = char:getAttrib("str", 10)
-        char:setVar("meleeDamageBonus", math.max(0, strength - 10))
-        char:setVar("carryCapacityBonus", math.floor(strength / 2))
-    end
+                -- Apply strength-based effects
+                local strength = char:getAttrib("str", 10)
+                char:setVar("meleeDamageBonus", math.max(0, strength - 10))
+                char:setVar("carryCapacityBonus", math.floor(strength / 2))
+            end
         ```
 ]]
 --[[
@@ -144,29 +158,29 @@ end
     that demonstrates different configuration options and usage patterns.
 
         ```lua
-    ATTRIBUTE.name = "Intelligence"
-    ATTRIBUTE.desc = "Mental acuity and reasoning ability. Affects learning speed and technical skills."
+        ATTRIBUTE.name = "Intelligence"
+        ATTRIBUTE.desc = "Mental acuity and reasoning ability. Affects learning speed and technical skills."
 
-    -- Configuration
-    ATTRIBUTE.maxValue = 40
-    ATTRIBUTE.startingMax = 20
-    ATTRIBUTE.noStartBonus = false
+        -- Configuration
+        ATTRIBUTE.maxValue = 40
+        ATTRIBUTE.startingMax = 20
+        ATTRIBUTE.noStartBonus = false
 
-    -- Callback Methods
-    function ATTRIBUTE:OnSetup(client, value)
-        local char = client:getChar()
-        if not char then return end
+        -- Callback Methods
+        function ATTRIBUTE:OnSetup(client, value)
+            local char = client:getChar()
+            if not char then return end
 
-        -- Set default intelligence value if not already set
-        if value == 0 then
-            char:setAttrib("int", 10)
-        end
+                -- Set default intelligence value if not already set
+                if value == 0 then
+                    char:setAttrib("int", 10)
+                end
 
-        -- Apply intelligence-based effects
-        local intelligence = char:getAttrib("int", 10)
-        char:setVar("learningSpeedBonus", math.max(0, intelligence - 10))
-        char:setVar("technicalSkillBonus", math.floor(intelligence / 3))
-    end
+                -- Apply intelligence-based effects
+                local intelligence = char:getAttrib("int", 10)
+                char:setVar("learningSpeedBonus", math.max(0, intelligence - 10))
+                char:setVar("technicalSkillBonus", math.floor(intelligence / 3))
+            end
         ```
 ]]
 --[[
@@ -176,28 +190,28 @@ end
     from character creation but can still be modified through gameplay.
 
         ```lua
-    ATTRIBUTE.name = "Luck"
-    ATTRIBUTE.desc = "Fortune and chance. Affects random events and critical success rates."
+        ATTRIBUTE.name = "Luck"
+        ATTRIBUTE.desc = "Fortune and chance. Affects random events and critical success rates."
 
-    -- Configuration
-    ATTRIBUTE.maxValue = 20
-    ATTRIBUTE.startingMax = 5
-    ATTRIBUTE.noStartBonus = true  -- Hidden from character creation
+        -- Configuration
+        ATTRIBUTE.maxValue = 20
+        ATTRIBUTE.startingMax = 5
+        ATTRIBUTE.noStartBonus = true  -- Hidden from character creation
 
-    -- Callback Methods
-    function ATTRIBUTE:OnSetup(client, value)
-        local char = client:getChar()
-        if not char then return end
+        -- Callback Methods
+        function ATTRIBUTE:OnSetup(client, value)
+            local char = client:getChar()
+            if not char then return end
 
-        -- Set default luck value if not already set
-        if value == 0 then
-            char:setAttrib("luck", 5)
-        end
+                -- Set default luck value if not already set
+                if value == 0 then
+                    char:setAttrib("luck", 5)
+                end
 
-        -- Apply luck-based effects
-        local luck = char:getAttrib("luck", 5)
-        char:setVar("criticalChanceBonus", math.max(0, luck - 5) * 0.02)
-        char:setVar("randomEventBonus", math.floor(luck / 2))
-    end
+                -- Apply luck-based effects
+                local luck = char:getAttrib("luck", 5)
+                char:setVar("criticalChanceBonus", math.max(0, luck - 5) * 0.02)
+                char:setVar("randomEventBonus", math.floor(luck / 2))
+            end
         ```
 ]]

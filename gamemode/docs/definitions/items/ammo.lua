@@ -19,8 +19,10 @@
 ]]
 --[[
     ITEM.name
-    Purpose: Sets the display name of the ammo item
-    When Called: During item definition
+    Purpose:
+        Sets the display name of the ammo item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.name = "Pistol Ammo"
@@ -29,8 +31,10 @@
 ITEM.name = "ammoName"
 --[[
     ITEM.model
-    Purpose: Sets the 3D model for the ammo item
-    When Called: During item definition
+    Purpose:
+        Sets the 3D model for the ammo item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.model = "models/props_c17/SuitCase001a.mdl"
@@ -39,8 +43,10 @@ ITEM.name = "ammoName"
 ITEM.model = "models/props_c17/SuitCase001a.mdl"
 --[[
     ITEM.width
-    Purpose: Sets the inventory width of the ammo item
-    When Called: During item definition
+    Purpose:
+        Sets the inventory width of the ammo item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.width = 1  -- Takes 1 slot width
@@ -49,8 +55,10 @@ ITEM.model = "models/props_c17/SuitCase001a.mdl"
 ITEM.width = 1
 --[[
     ITEM.height
-    Purpose: Sets the inventory height of the ammo item
-    When Called: During item definition
+    Purpose:
+        Sets the inventory height of the ammo item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.height = 1  -- Takes 1 slot height
@@ -59,8 +67,10 @@ ITEM.width = 1
 ITEM.height = 1
 --[[
     ITEM.ammo
-    Purpose: Sets the ammo type for the item
-    When Called: During item definition (used in use functions)
+    Purpose:
+        Sets the ammo type for the item
+    When Called:
+        During item definition (used in use functions)
     Example Usage:
         ```lua
         ITEM.ammo = "pistol"  -- Pistol ammunition type
@@ -70,8 +80,10 @@ ITEM.height = 1
 ITEM.ammo = "pistol"
 --[[
     ITEM.category
-    Purpose: Sets the category for the ammo item
-    When Called: During item definition
+    Purpose:
+        Sets the category for the ammo item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.category = "itemCatAmmunition"

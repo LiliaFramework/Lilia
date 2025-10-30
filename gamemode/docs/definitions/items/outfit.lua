@@ -19,8 +19,10 @@
 ]]
 --[[
     ITEM.name
-    Purpose: Sets the display name of the outfit item
-    When Called: During item definition
+    Purpose:
+        Sets the display name of the outfit item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.name = "Police Uniform"
@@ -29,8 +31,10 @@
 ITEM.name = "outfit"
 --[[
     ITEM.desc
-    Purpose: Sets the description of the outfit item
-    When Called: During item definition
+    Purpose:
+        Sets the description of the outfit item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.desc = "A standard police uniform"
@@ -39,8 +43,10 @@ ITEM.name = "outfit"
 ITEM.desc = "outfitDesc"
 --[[
     ITEM.category
-    Purpose: Sets the category for the outfit item
-    When Called: During item definition
+    Purpose:
+        Sets the category for the outfit item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.category = "outfit"
@@ -49,8 +55,10 @@ ITEM.desc = "outfitDesc"
 ITEM.category = "outfit"
 --[[
     ITEM.model
-    Purpose: Sets the 3D model for the outfit item
-    When Called: During item definition
+    Purpose:
+        Sets the 3D model for the outfit item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.model = "models/props_c17/BriefCase001a.mdl"
@@ -59,8 +67,10 @@ ITEM.category = "outfit"
 ITEM.model = "models/props_c17/BriefCase001a.mdl"
 --[[
     ITEM.width
-    Purpose: Sets the inventory width of the outfit item
-    When Called: During item definition
+    Purpose:
+        Sets the inventory width of the outfit item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.width = 1  -- Takes 1 slot width
@@ -69,8 +79,10 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl"
 ITEM.width = 1
 --[[
     ITEM.height
-    Purpose: Sets the inventory height of the outfit item
-    When Called: During item definition
+    Purpose:
+        Sets the inventory height of the outfit item
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.height = 1  -- Takes 1 slot height
@@ -79,8 +91,10 @@ ITEM.width = 1
 ITEM.height = 1
 --[[
     ITEM.outfitCategory
-    Purpose: Sets the outfit category for conflict checking
-    When Called: During item definition
+    Purpose:
+        Sets the outfit category for conflict checking
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
@@ -89,8 +103,10 @@ ITEM.height = 1
 ITEM.outfitCategory = "model"
 --[[
     ITEM.pacData
-    Purpose: Sets the PAC data for the outfit
-    When Called: During item definition
+    Purpose:
+        Sets the PAC data for the outfit
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.pacData = {}  -- PAC attachment data
@@ -99,8 +115,10 @@ ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 --[[
     ITEM.isOutfit
-    Purpose: Marks the item as an outfit
-    When Called: During item definition
+    Purpose:
+        Marks the item as an outfit
+    When Called:
+        During item definition
     Example Usage:
         ```lua
         ITEM.isOutfit = true
@@ -109,8 +127,10 @@ ITEM.pacData = {}
 ITEM.isOutfit = true
 --[[
     ITEM:paintOver(item, w, h)
-    Purpose: Custom paint function to show equipped status
-    When Called: When rendering the item in inventory (CLIENT only)
+    Purpose:
+        Custom paint function to show equipped status
+    When Called:
+        When rendering the item in inventory (CLIENT only)
     Example Usage:
         ```lua
         function ITEM:paintOver(item, w, h)
@@ -123,8 +143,10 @@ ITEM.isOutfit = true
 ]]
 --[[
     ITEM:removeOutfit(client)
-    Purpose: Removes the outfit from the player
-    When Called: When unequipping the outfit
+    Purpose:
+        Removes the outfit from the player
+    When Called:
+        When unequipping the outfit
     Example Usage:
         ```lua
         function ITEM:removeOutfit(client)
@@ -134,8 +156,10 @@ ITEM.isOutfit = true
 ]]
 --[[
     ITEM:wearOutfit(client, isForLoadout)
-    Purpose: Applies the outfit to the player
-    When Called: When equipping the outfit
+    Purpose:
+        Applies the outfit to the player
+    When Called:
+        When equipping the outfit
     Example Usage:
         ```lua
         function ITEM:wearOutfit(client, isForLoadout)
@@ -145,42 +169,50 @@ ITEM.isOutfit = true
 ]]
 --[[
     ITEM:OnCanBeTransfered(_, newInventory)
-    Purpose: Prevents transfer of equipped outfits
-    When Called: When attempting to transfer the item
+    Purpose:
+        Prevents transfer of equipped outfits
+    When Called:
+        When attempting to transfer the item
     Example Usage:
         ```lua
         function ITEM:OnCanBeTransfered(_, newInventory)
             if newInventory and self:getData("equip") then return false end
-            return true
-        end
+                return true
+            end
         ```
 ]]
 --[[
     ITEM:onLoadout()
-    Purpose: Handles outfit loading on player spawn
-    When Called: When player spawns with equipped outfit
+    Purpose:
+        Handles outfit loading on player spawn
+    When Called:
+        When player spawns with equipped outfit
     Example Usage:
         ```lua
         function ITEM:onLoadout()
             if self:getData("equip") then self:wearOutfit(self.player, true) end
-        end
+            end
         ```
 ]]
 --[[
     ITEM:onRemoved()
-    Purpose: Handles outfit removal when item is removed
-    When Called: When item is removed from inventory
+    Purpose:
+        Handles outfit removal when item is removed
+    When Called:
+        When item is removed from inventory
     Example Usage:
         ```lua
         function ITEM:onRemoved()
             if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
-        end
+            end
         ```
 ]]
 --[[
     ITEM:hook("drop", function(item) ... end)
-    Purpose: Handles outfit removal when item is dropped
-    When Called: When item is dropped
+    Purpose:
+        Handles outfit removal when item is dropped
+    When Called:
+        When item is dropped
     Example Usage:
         ```lua
         ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)

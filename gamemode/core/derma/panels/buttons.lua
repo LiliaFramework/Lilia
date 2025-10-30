@@ -193,6 +193,7 @@ local function RegisterButton(name, defaultFont, useBase)
 
     function BUTTON_PANEL:SetFont(font)
         self.ButtonFont = font
+        self.BaseClass.SetFont(self, font)
     end
 
     function BUTTON_PANEL:GetFont()
@@ -225,3 +226,4 @@ RegisterButton("liaMediumButton", "liaMediumFont", true)
 RegisterButton("liaSmallButton", "liaSmallFont", true)
 RegisterButton("liaMiniButton", "liaMiniFont", true)
 RegisterButton("liaNoBGButton", "liaBigFont", false)
+RegisterButton("liaCustomFontButton", "liaSmallFont", true)

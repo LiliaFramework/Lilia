@@ -7286,6 +7286,54 @@ end)
 
 ---
 
+### ShouldShowQuickMenu
+
+**Purpose**
+
+Called to determine if the quick menu should be shown when the context menu opens
+
+**When Called**
+
+When the context menu (right-click menu) is opened
+
+**Parameters**
+
+* None
+
+**Returns**
+
+* `boolean`: Return `false` to prevent the quick menu from opening, return `nil` or `true` to allow it
+
+**Example Usage**
+
+```lua
+-- Simple: Disable quick menu completely
+hook.Add("ShouldShowQuickMenu", "DisableQuickMenu", function()
+    return false
+end)
+
+-- Medium: Disable quick menu for specific players
+hook.Add("ShouldShowQuickMenu", "RestrictQuickMenu", function()
+    if LocalPlayer():GetUserGroup() == "user" then
+        return false
+    end
+end)
+
+-- High: Conditional quick menu based on game state
+hook.Add("ShouldShowQuickMenu", "ConditionalQuickMenu", function()
+    local char = LocalPlayer():getChar()
+    if not char then return false end
+
+    -- Only show for certain factions
+    local allowedFactions = {"police", "medic"}
+    return table.HasValue(allowedFactions, char:getFaction())
+end)
+
+-- Note: The radio module automatically prevents the quick menu when holding a radio (radio or hololink_radio weapons)
+```
+
+---
+
 ### SetupQuickMenu
 
 **Purpose**

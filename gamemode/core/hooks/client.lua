@@ -521,6 +521,7 @@ end
 
 function GM:OnContextMenuOpen()
     self.BaseClass:OnContextMenuOpen()
+    if hook.Run("ShouldShowQuickMenu") == false then return end
     if not IsValid(lia.gui.quick) then
         lia.gui.quick = vgui.Create("liaQuick")
     else
