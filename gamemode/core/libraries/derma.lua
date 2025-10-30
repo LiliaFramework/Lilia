@@ -4255,10 +4255,8 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     return frame, buttonPanels
 end
 
--- Clean up any orphaned panels on library reload
 if SERVER then return end
 timer.Simple(0, function()
-    -- Clean up derma menu panels
     if IsValid(lia.derma.menuTextBox) then lia.derma.menuTextBox:Remove() end
     if IsValid(lia.derma.menuColorPicker) then lia.derma.menuColorPicker:Remove() end
     if IsValid(lia.derma.menu_radial) then lia.derma.menu_radial:Remove() end
@@ -4268,7 +4266,5 @@ timer.Simple(0, function()
     if IsValid(lia.derma.menuRequestOptions) then lia.derma.menuRequestOptions:Remove() end
     if IsValid(lia.derma.menuRequestBinary) then lia.derma.menuRequestBinary:Remove() end
     if IsValid(lia.derma.menuRequestButtons) then lia.derma.menuRequestButtons:Remove() end
-
-    -- Clean up other GUI panels that might be orphaned
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
 end)

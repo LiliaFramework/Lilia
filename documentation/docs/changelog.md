@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.916 (October 30, 2025)
+
+### Changes
+
+- New Docs Format
+- Successfully updated workshop Lilia to 6.914
+- Way too many changes lel
+- Spacing
+- Successfully updated workshop Lilia to 6.911
+- Update client.lua
+- Update buttons.lua
+- Successfully updated workshop Lilia to 6.98
+- Update shared.lua
+- Fixes
+- Successfully updated workshop Lilia to 6.95
+- Revert "Spacing"
+- Revert "Successfully updated workshop Lilia to 6.92"
+- Successfully updated workshop Lilia to 6.92
+- Spacing
+- xd
+- Successfully updated workshop Lilia to 6.899
+- Update commands.lua
+- Dumb Check
+- Bot Command
+
 ## Version 6.914 (October 29, 2025)
 
 ### Changes
