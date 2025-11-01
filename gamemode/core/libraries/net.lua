@@ -478,9 +478,7 @@ if SERVER then
             end
         end
     end
-end
 
-if SERVER then
     function checkBadType(name, object)
         if isfunction(object) then
             lia.error(L("netVarBadType", name))
