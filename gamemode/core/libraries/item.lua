@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Item Library
 
     Comprehensive item registration, instantiation, and management system for the Lilia framework.
