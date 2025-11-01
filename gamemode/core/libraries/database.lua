@@ -55,18 +55,22 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
 --[[
     Purpose:
         Establishes a connection to the database using the configured database module
+
     When Called:
         During server startup, module initialization, or when reconnecting to database
+
     Parameters:
         - callback (function, optional): Function to call after successful connection
         - reconnect (boolean, optional): Force reconnection even if already connected
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Connect to database with callback
         lia.db.connect(function()
@@ -75,7 +79,6 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Connect with error handling and reconnection
         lia.db.connect(function()
@@ -85,17 +88,16 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
         ```
 
         High Complexity:
-
         ```lua
         -- High: Connect with conditional logic and module validation
         if lia.db.module and lia.db.modules[lia.db.module] then
             lia.db.connect(function()
             lia.bootstrap("Database", "Connected to " .. lia.db.module)
             hook.Run("OnDatabaseConnected")
-            end, not lia.db.connected)
-            else
-                lia.error("Invalid database module: " .. tostring(lia.db.module))
-            end
+        end, not lia.db.connected)
+        else
+            lia.error("Invalid database module: " .. tostring(lia.db.module))
+        end
         ```
 ]]
 function lia.db.connect(callback, reconnect)
@@ -123,17 +125,21 @@ end
 --[[
     Purpose:
         Removes all Lilia database tables and their data from the database
+
     When Called:
         During database reset operations, development testing, or administrative cleanup
+
     Parameters:
         - callback (function, optional): Function to call after all tables are wiped
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Wipe all tables with confirmation
         lia.db.wipeTables(function()
@@ -142,7 +148,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Wipe tables with logging and backup
         lia.log.add("Starting database wipe operation")
@@ -153,7 +158,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Wipe tables with confirmation and error handling
         local function confirmWipe()
@@ -201,17 +205,21 @@ end
 --[[
     Purpose:
         Creates all core Lilia database tables if they don't exist and initializes the database schema
+
     When Called:
         During server startup after database connection, or when initializing a new database
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Load tables after connection
         lia.db.connect(function()
@@ -220,7 +228,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Load tables with hook integration
         lia.db.connect(function()
@@ -230,7 +237,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Load tables with conditional logic and error handling
         local function initializeDatabase()
@@ -238,7 +244,7 @@ end
             lia.db.loadTables()
             hook.Run("OnDatabaseInitialized")
             lia.bootstrap("Database", "Schema loaded and ready")
-            end, true)
+        end, true)
         end
 
         if lia.db.module and lia.db.modules[lia.db.module] then
@@ -426,17 +432,21 @@ end
 --[[
     Purpose:
         Returns a deferred promise that resolves when database tables have finished loading
+
     When Called:
         Before performing database operations that require tables to be loaded
+
     Parameters:
         None
+
     Returns:
         Deferred promise object
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Wait for tables to load before proceeding
         lia.db.waitForTablesToLoad():next(function()
@@ -445,7 +455,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Wait for tables with error handling
         lia.db.waitForTablesToLoad():next(function()
@@ -457,7 +466,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Wait for tables with timeout and fallback
         local function initializeAfterTables()
@@ -465,12 +473,12 @@ end
             lia.char.loadCharacters()
             lia.inventory.loadInventories()
             lia.bootstrap("Database", "All systems initialized")
-            end):catch(function(err)
-            lia.error("Critical database initialization failure: " .. tostring(err))
-            lia.db.connect(function()
-            lia.db.loadTables()
-            initializeAfterTables()
-            end, true)
+        end):catch(function(err)
+        lia.error("Critical database initialization failure: " .. tostring(err))
+        lia.db.connect(function()
+        lia.db.loadTables()
+        initializeAfterTables()
+        end, true)
         end)
         end
 
@@ -537,18 +545,22 @@ end
 --[[
     Purpose:
         Converts Lua values to SQL-compatible format with proper escaping and type handling
+
     When Called:
         Internally by database functions when preparing data for SQL queries
+
     Parameters:
         - value (any): The value to convert to SQL format
         - noEscape (boolean, optional): Skip escaping for raw SQL values
+
     Returns:
         String representation of the value in SQL format
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Convert basic data types
         local sqlString = lia.db.convertDataType("Hello World")
@@ -557,7 +569,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Convert complex data with escaping
         local playerData = {
@@ -574,7 +585,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Convert with conditional logic and error handling
         local function safeConvert(value, fieldName)
@@ -620,32 +630,35 @@ end
 --[[
     Purpose:
         Inserts a new record into a specified database table
+
     When Called:
         When creating new database records for players, characters, items, etc.
+
     Parameters:
         - value (table): Key-value pairs representing the data to insert
         - callback (function, optional): Function to call after successful insertion
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
+
     Returns:
         Deferred promise object with results and lastID
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Insert a new character
         lia.db.insertTable({
-            steamID = "STEAM_0:1:12345678",
-            name = "John Doe",
-            model = "models/player/kleiner.mdl"
-            }, function(results, lastID)
-            print("Character created with ID:", lastID)
-            end, "characters")
+        steamID = "STEAM_0:1:12345678",
+        name = "John Doe",
+        model = "models/player/kleiner.mdl"
+        }, function(results, lastID)
+        print("Character created with ID:", lastID)
+        end, "characters")
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Insert with error handling and validation
         local characterData = {
@@ -665,7 +678,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Insert with validation, error handling, and rollback
         local function createCharacterWithValidation(playerData)
@@ -679,7 +691,7 @@ end
                 lia.char.cache[lastID] = playerData
                 hook.Run("OnCharacterCreated", lastID, playerData)
             end
-            end, "characters")
+        end, "characters")
         end
         ```
 ]]
@@ -699,31 +711,34 @@ end
 --[[
     Purpose:
         Updates existing records in a specified database table based on conditions
+
     When Called:
         When modifying existing database records for players, characters, items, etc.
+
     Parameters:
         - value (table): Key-value pairs representing the data to update
         - callback (function, optional): Function to call after successful update
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
         - condition (table/string, optional): WHERE clause conditions for the update
+
     Returns:
         Deferred promise object with results and lastID
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Update character money
         lia.db.updateTable({
-            money = "1000"
-            }, function(results, lastID)
-            print("Character updated successfully!")
-            end, "characters", {id = 1})
+        money = "1000"
+        }, function(results, lastID)
+        print("Character updated successfully!")
+        end, "characters", {id = 1})
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Update with complex conditions and logging
         local updateData = {
@@ -740,7 +755,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Update with validation, transaction, and rollback
         local function updateCharacterWithValidation(charID, updateData)
@@ -749,15 +763,15 @@ end
             "UPDATE lia_characters SET " ..
             table.concat(lia.util.map(updateData, function(k, v)
             return k .. " = " .. lia.db.convertDataType(v)
-            end), ", ") ..
-            " WHERE id = " .. charID,
-            "COMMIT"
-            }):next(function()
-            lia.char.cache[charID] = lia.util.merge(lia.char.cache[charID] or {}, updateData)
-                hook.Run("OnCharacterUpdated", charID, updateData)
-                end):catch(function(err)
-                lia.error("Failed to update character " .. charID .. ": " .. tostring(err))
-            end)
+        end), ", ") ..
+        " WHERE id = " .. charID,
+        "COMMIT"
+        }):next(function()
+        lia.char.cache[charID] = lia.util.merge(lia.char.cache[charID] or {}, updateData)
+        hook.Run("OnCharacterUpdated", charID, updateData)
+        end):catch(function(err)
+        lia.error("Failed to update character " .. charID .. ": " .. tostring(err))
+        end)
         end
         ```
 ]]
@@ -777,20 +791,24 @@ end
 --[[
     Purpose:
         Performs a SELECT query on a specified database table with optional conditions and limits
+
     When Called:
         When retrieving data from database tables for players, characters, items, etc.
+
     Parameters:
         - fields (string/table): Field names to select (string or table of strings)
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
         - condition (table/string, optional): WHERE clause conditions for the query
         - limit (number, optional): Maximum number of records to return
+
     Returns:
         Deferred promise object with results array
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Select all characters
         lia.db.select("*", "characters"):next(function(results)
@@ -799,20 +817,18 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Select with conditions and specific fields
         lia.db.select({"name", "money", "faction"}, "characters", {
-            steamID = "STEAM_0:1:12345678"
-            }, 10):next(function(results)
-            for _, char in ipairs(results) do
-                print(char.name .. " has $" .. char.money)
-            end
+        steamID = "STEAM_0:1:12345678"
+        }, 10):next(function(results)
+        for _, char in ipairs(results) do
+            print(char.name .. " has $" .. char.money)
+        end
         end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Select with complex conditions, pagination, and error handling
         local function getCharactersByFaction(faction, page, pageSize)
@@ -820,16 +836,16 @@ end
             return lia.db.select("*", "characters", {
             faction = faction,
             lastJoinTime = {operator = ">", value = os.date("%Y-%m-%d", os.time() - 86400)}
-                }, pageSize):next(function(results)
-                local characters = {}
-                for _, char in ipairs(results) do
-                    table.insert(characters, lia.char.new(char))
-                end
-                return characters
-                end):catch(function(err)
-                lia.error("Failed to load characters: " .. tostring(err))
-                return {}
-            end)
+            }, pageSize):next(function(results)
+            local characters = {}
+            for _, char in ipairs(results) do
+                table.insert(characters, lia.char.new(char))
+            end
+            return characters
+        end):catch(function(err)
+        lia.error("Failed to load characters: " .. tostring(err))
+        return {}
+        end)
         end
         ```
 ]]
@@ -857,72 +873,74 @@ end
 --[[
     Purpose:
         Performs a SELECT query with advanced condition handling and optional ordering
+
     When Called:
         When retrieving data with complex WHERE clauses and ORDER BY requirements
+
     Parameters:
         - fields (string/table): Field names to select (string or table of strings)
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
         - conditions (table/string, optional): WHERE clause conditions with operator support
         - limit (number, optional): Maximum number of records to return
         - orderBy (string, optional): ORDER BY clause for sorting results
+
     Returns:
         Deferred promise object with results array
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Select with basic condition
         lia.db.selectWithCondition("*", "characters", {
-            faction = "citizen"
-            }):next(function(results)
-            print("Found " .. #results .. " citizens")
+        faction = "citizen"
+        }):next(function(results)
+        print("Found " .. #results .. " citizens")
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Select with operators and ordering
         lia.db.selectWithCondition({"name", "money"}, "characters", {
-            money = {operator = ">", value = "1000"},
-                faction = "citizen"
-                }, 5, "money DESC"):next(function(results)
-                for _, char in ipairs(results) do
-                    print(char.name .. " has $" .. char.money)
-                end
-            end)
+        money = {operator = ">", value = "1000"},
+        faction = "citizen"
+        }, 5, "money DESC"):next(function(results)
+        for _, char in ipairs(results) do
+            print(char.name .. " has $" .. char.money)
+        end
+        end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Select with complex conditions, pagination, and error handling
         local function searchCharacters(searchTerm, faction, minMoney, maxResults)
             local conditions = {}
             if searchTerm then
                 conditions.name = {operator = "LIKE", value = "%" .. searchTerm .. "%"}
-                end
-                if faction then
-                    conditions.faction = faction
-                end
-                if minMoney then
-                    conditions.money = {operator = ">=", value = tostring(minMoney)}
-                    end
-
-                    return lia.db.selectWithCondition("*", "characters", conditions,
-                    maxResults, "lastJoinTime DESC"):next(function(results)
-                    local characters = {}
-                    for _, char in ipairs(results) do
-                        table.insert(characters, lia.char.new(char))
-                    end
-                    return characters
-                    end):catch(function(err)
-                    lia.error("Character search failed: " .. tostring(err))
-                    return {}
-                end)
             end
+            if faction then
+                conditions.faction = faction
+            end
+            if minMoney then
+                conditions.money = {operator = ">=", value = tostring(minMoney)}
+            end
+
+            return lia.db.selectWithCondition("*", "characters", conditions,
+            maxResults, "lastJoinTime DESC"):next(function(results)
+            local characters = {}
+            for _, char in ipairs(results) do
+                table.insert(characters, lia.char.new(char))
+            end
+            return characters
+        end):catch(function(err)
+        lia.error("Character search failed: " .. tostring(err))
+        return {}
+        end)
+        end
         ```
 ]]
 function lia.db.selectWithCondition(fields, dbTable, conditions, limit, orderBy)
@@ -971,18 +989,22 @@ end
 --[[
     Purpose:
         Counts the number of records in a database table matching specified conditions
+
     When Called:
         When checking record counts for statistics, validation, or pagination
+
     Parameters:
         - dbTable (string): Table name without 'lia_' prefix
         - condition (table/string, optional): WHERE clause conditions for counting
+
     Returns:
         Deferred promise object resolving to the count number
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Count all characters
         lia.db.count("characters"):next(function(count)
@@ -991,19 +1013,17 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Count with conditions
         lia.db.count("characters", {
-            faction = "citizen",
-            money = {operator = ">", value = "1000"}
-                }):next(function(count)
-                print("Rich citizens: " .. count)
-            end)
+        faction = "citizen",
+        money = {operator = ">", value = "1000"}
+        }):next(function(count)
+        print("Rich citizens: " .. count)
+        end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Count with validation and error handling
         local function getPlayerStats(steamID)
@@ -1013,7 +1033,7 @@ end
             characters = charCount,
             playerRecords = playerCount,
             isNewPlayer = playerCount == 0
-        }
+            }
         end)
         end):catch(function(err)
         lia.error("Failed to get player stats: " .. tostring(err))
@@ -1039,24 +1059,27 @@ end
 --[[
     Purpose:
         Dynamically adds new columns to the lia_characters table based on character variables
+
     When Called:
         During database initialization to ensure character table has all required fields
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Add fields after table creation
         lia.db.loadTables() -- This automatically calls addDatabaseFields()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Add fields with logging
         lia.db.addDatabaseFields()
@@ -1064,7 +1087,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Add fields with validation and error handling
         local function ensureCharacterFields()
@@ -1109,46 +1131,48 @@ end
 --[[
     Purpose:
         Checks if any records exist in a database table matching specified conditions
+
     When Called:
         When validating data existence before operations or for conditional logic
+
     Parameters:
         - dbTable (string): Table name without 'lia_' prefix
         - condition (table/string, optional): WHERE clause conditions for checking existence
+
     Returns:
         Deferred promise object resolving to boolean (true if records exist)
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if player exists
         lia.db.exists("players", {steamID = "STEAM_0:1:12345678"}):next(function(exists)
-            if exists then
-                print("Player found in database")
-                else
-                    print("New player")
-                end
-            end)
+        if exists then
+            print("Player found in database")
+            else
+                print("New player")
+            end
+        end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check with complex conditions
         lia.db.exists("characters", {
-            steamID = player:SteamID(),
-            faction = "citizen",
-            money = {operator = ">", value = "1000"}
-                }):next(function(exists)
-                if exists then
-                    lia.log.add("Player has wealthy citizen character")
-                end
-            end)
+        steamID = player:SteamID(),
+        faction = "citizen",
+        money = {operator = ">", value = "1000"}
+        }):next(function(exists)
+        if exists then
+            lia.log.add("Player has wealthy citizen character")
+        end
+        end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Check with validation and error handling
         local function validatePlayerData(steamID)
@@ -1162,9 +1186,9 @@ end
                 }, nil, "players")
             end
             return playerExists
-            end):catch(function(err)
-            lia.error("Failed to validate player data: " .. tostring(err))
-            return false
+        end):catch(function(err)
+        lia.error("Failed to validate player data: " .. tostring(err))
+        return false
         end)
         end
         ```
@@ -1176,44 +1200,46 @@ end
 --[[
     Purpose:
         Retrieves a single record from a database table matching specified conditions
+
     When Called:
         When fetching unique records like player data, character info, or single items
+
     Parameters:
         - fields (string/table): Field names to select (string or table of strings)
         - dbTable (string): Table name without 'lia_' prefix
         - condition (table/string, optional): WHERE clause conditions for the query
+
     Returns:
         Deferred promise object resolving to the first matching record or nil
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get character by ID
         lia.db.selectOne("*", "characters", {id = 1}):next(function(char)
-            if char then
-                print("Character name: " .. char.name)
-            end
+        if char then
+            print("Character name: " .. char.name)
+        end
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Get player data with specific fields
         lia.db.selectOne({"steamName", "userGroup", "lastJoin"}, "players", {
-            steamID = player:SteamID()
-            }):next(function(playerData)
-            if playerData then
-                player:SetUserGroup(playerData.userGroup)
-                lia.log.add("Loaded player: " .. playerData.steamName)
-            end
+        steamID = player:SteamID()
+        }):next(function(playerData)
+        if playerData then
+            player:SetUserGroup(playerData.userGroup)
+            lia.log.add("Loaded player: " .. playerData.steamName)
+        end
         end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Get with validation and error handling
         local function loadCharacter(charID)
@@ -1226,9 +1252,9 @@ end
             lia.char.cache[charID] = character
             hook.Run("OnCharacterLoaded", character)
             return character
-            end):catch(function(err)
-            lia.error("Failed to load character " .. charID .. ": " .. tostring(err))
-            return nil
+        end):catch(function(err)
+        lia.error("Failed to load character " .. charID .. ": " .. tostring(err))
+        return nil
         end)
         end
         ```
@@ -1258,56 +1284,58 @@ end
 --[[
     Purpose:
         Inserts multiple records into a database table in a single operation for better performance
+
     When Called:
         When inserting large amounts of data like inventory items, logs, or batch operations
+
     Parameters:
         - dbTable (string): Table name without 'lia_' prefix
         - rows (table): Array of tables containing the data to insert
+
     Returns:
         Deferred promise object resolving when all records are inserted
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Insert multiple items
         local items = {
         {uniqueID = "pistol", quantity = 1, x = 1, y = 1},
-            {uniqueID = "ammo", quantity = 50, x = 2, y = 1}
-            }
-            lia.db.bulkInsert("items", items):next(function()
-            print("Items inserted successfully")
+        {uniqueID = "ammo", quantity = 50, x = 2, y = 1}
+        }
+        lia.db.bulkInsert("items", items):next(function()
+        print("Items inserted successfully")
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Insert with validation and error handling
         local function insertInventoryItems(invID, items)
             local rows = {}
             for _, item in ipairs(items) do
                 table.insert(rows, {
-                    invID = invID,
-                    uniqueID = item.uniqueID,
-                    data = util.TableToJSON(item.data or {}),
-                        quantity = item.quantity or 1,
-                        x = item.x or 1,
-                        y = item.y or 1
-                        })
-                    end
-
-                    return lia.db.bulkInsert("items", rows):next(function()
-                    lia.log.add("Inserted " .. #rows .. " items into inventory " .. invID)
-                    end):catch(function(err)
-                    lia.error("Failed to insert items: " .. tostring(err))
-                end)
+                invID = invID,
+                uniqueID = item.uniqueID,
+                data = util.TableToJSON(item.data or {}),
+                quantity = item.quantity or 1,
+                x = item.x or 1,
+                y = item.y or 1
+                })
             end
+
+            return lia.db.bulkInsert("items", rows):next(function()
+            lia.log.add("Inserted " .. #rows .. " items into inventory " .. invID)
+        end):catch(function(err)
+        lia.error("Failed to insert items: " .. tostring(err))
+        end)
+        end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Insert with batching, validation, and progress tracking
         local function bulkInsertWithBatching(dbTable, data, batchSize)
@@ -1367,55 +1395,57 @@ end
 --[[
     Purpose:
         Performs bulk INSERT OR REPLACE operations for updating existing records or inserting new ones
+
     When Called:
         When synchronizing data that may already exist, like configuration updates or data imports
+
     Parameters:
         - dbTable (string): Table name without 'lia_' prefix
         - rows (table): Array of tables containing the data to upsert
+
     Returns:
         Deferred promise object resolving when all records are upserted
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Upsert configuration data
         local configs = {
         {schema = "default", key = "maxPlayers", value = "32"},
-            {schema = "default", key = "serverName", value = "My Server"}
-            }
-            lia.db.bulkUpsert("config", configs):next(function()
-            print("Configuration updated")
+        {schema = "default", key = "serverName", value = "My Server"}
+        }
+        lia.db.bulkUpsert("config", configs):next(function()
+        print("Configuration updated")
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Upsert with validation and error handling
         local function syncPlayerData(players)
             local rows = {}
             for _, player in ipairs(players) do
                 table.insert(rows, {
-                    steamID = player:SteamID(),
-                    steamName = player:Name(),
-                    lastJoin = os.date("%Y-%m-%d %H:%M:%S"),
-                    lastIP = player:IPAddress(),
-                    userGroup = player:GetUserGroup()
-                    })
-                end
+                steamID = player:SteamID(),
+                steamName = player:Name(),
+                lastJoin = os.date("%Y-%m-%d %H:%M:%S"),
+                lastIP = player:IPAddress(),
+                userGroup = player:GetUserGroup()
+                })
+            end
 
-                return lia.db.bulkUpsert("players", rows):next(function()
-                lia.log.add("Synchronized " .. #rows .. " player records")
-                end):catch(function(err)
-                lia.error("Failed to sync player data: " .. tostring(err))
-            end)
+            return lia.db.bulkUpsert("players", rows):next(function()
+            lia.log.add("Synchronized " .. #rows .. " player records")
+        end):catch(function(err)
+        lia.error("Failed to sync player data: " .. tostring(err))
+        end)
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Upsert with conflict resolution and progress tracking
         local function bulkSyncWithConflictResolution(dbTable, data, conflictFields)
@@ -1479,50 +1509,52 @@ end
 --[[
     Purpose:
         Inserts a record into a database table, ignoring the operation if it would cause a constraint violation
+
     When Called:
         When inserting data that may already exist, like unique configurations or duplicate-safe operations
+
     Parameters:
         - value (table): Key-value pairs representing the data to insert
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
+
     Returns:
         Deferred promise object with results and lastID
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Insert configuration without duplicates
         lia.db.insertOrIgnore({
-            schema = "default",
-            key = "serverName",
-            value = "My Server"
-            }, "config"):next(function(results, lastID)
-            print("Configuration inserted or ignored")
+        schema = "default",
+        key = "serverName",
+        value = "My Server"
+        }, "config"):next(function(results, lastID)
+        print("Configuration inserted or ignored")
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Insert with validation and logging
         local function ensureDefaultConfig(configs)
             for _, config in ipairs(configs) do
                 lia.db.insertOrIgnore({
-                    schema = config.schema,
-                    key = config.key,
-                    value = config.value
-                    }, "config"):next(function(results, lastID)
-                    if lastID then
-                        lia.log.add("Added new config: " .. config.key)
-                    end
-                end)
-            end
+                schema = config.schema,
+                key = config.key,
+                value = config.value
+                }, "config"):next(function(results, lastID)
+                if lastID then
+                    lia.log.add("Added new config: " .. config.key)
+                end
+            end)
+        end
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Insert with conflict detection and fallback
         local function safeInsertWithFallback(data, dbTable, fallbackData)
@@ -1538,9 +1570,9 @@ end
                     return {success = true, action = "updated"}
                 end)
             end
-            end):catch(function(err)
-            lia.error("Insert or ignore failed: " .. tostring(err))
-            return {success = false, error = err}
+        end):catch(function(err)
+        lia.error("Insert or ignore failed: " .. tostring(err))
+        return {success = false, error = err}
         end)
         end
         ```
@@ -1568,17 +1600,21 @@ end
 --[[
     Purpose:
         Checks if a database table exists in the current database
+
     When Called:
         When validating table existence before operations or during schema validation
+
     Parameters:
         - tbl (string): Table name to check for existence
+
     Returns:
         Deferred promise object resolving to boolean (true if table exists)
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if table exists
         lia.db.tableExists("lia_characters"):next(function(exists)
@@ -1591,22 +1627,20 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check with conditional logic
         lia.db.tableExists("lia_custom_table"):next(function(exists)
         if not exists then
             lia.log.add("Custom table missing, creating...")
             lia.db.createTable("custom_table", "id", {
-                {name = "id", type = "INTEGER", not_null = true},
-                    {name = "data", type = "TEXT"}
-                        })
-                    end
-                end)
+            {name = "id", type = "INTEGER", not_null = true},
+            {name = "data", type = "TEXT"}
+            })
+        end
+        end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Check with validation and error handling
         local function validateDatabaseSchema()
@@ -1647,18 +1681,22 @@ end
 --[[
     Purpose:
         Checks if a specific field/column exists in a database table
+
     When Called:
         When validating column existence before operations or during schema migrations
+
     Parameters:
         - tbl (string): Table name to check
         - field (string): Field/column name to check for existence
+
     Returns:
         Deferred promise object resolving to boolean (true if field exists)
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if field exists
         lia.db.fieldExists("lia_characters", "money"):next(function(exists)
@@ -1671,7 +1709,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check with conditional field creation
         lia.db.fieldExists("lia_characters", "newField"):next(function(exists)
@@ -1683,7 +1720,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Check with validation and error handling
         local function validateCharacterFields()
@@ -1728,17 +1764,21 @@ end
 --[[
     Purpose:
         Retrieves a list of all Lilia database tables in the current database
+
     When Called:
         When auditing database structure, generating reports, or managing tables
+
     Parameters:
         None
+
     Returns:
         Deferred promise object resolving to array of table names
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get all Lilia tables
         lia.db.getTables():next(function(tables)
@@ -1750,7 +1790,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Get tables with analysis
         lia.db.getTables():next(function(tables)
@@ -1772,7 +1811,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Get tables with validation and management
         local function auditDatabaseStructure()
@@ -1790,14 +1828,14 @@ end
                 local tableName = tables[index]
                 return lia.db.count(tableName:sub(5)):next(function(count)
                 tableStats[tableName] = {count = count}
-                    return analyzeNextTable(index + 1)
-                end)
-            end
+                return analyzeNextTable(index + 1)
+            end)
+        end
 
-            return analyzeNextTable(1)
-            end):catch(function(err)
-            lia.error("Database audit failed: " .. tostring(err))
-            return {}
+        return analyzeNextTable(1)
+        end):catch(function(err)
+        lia.error("Database audit failed: " .. tostring(err))
+        return {}
         end)
         end
         ```
@@ -1818,31 +1856,34 @@ end
 --[[
     Purpose:
         Executes multiple database queries as a single atomic transaction with rollback on failure
+
     When Called:
         When performing complex operations that must succeed or fail together
+
     Parameters:
         - queries (table): Array of SQL query strings to execute in sequence
+
     Returns:
         Deferred promise object resolving when all queries succeed or rejecting on failure
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Transfer money between characters
         lia.db.transaction({
-            "UPDATE lia_characters SET money = money - 100 WHERE id = 1",
-            "UPDATE lia_characters SET money = money + 100 WHERE id = 2"
-            }):next(function()
-            print("Money transfer completed")
-            end):catch(function(err)
-            print("Transfer failed: " .. tostring(err))
+        "UPDATE lia_characters SET money = money - 100 WHERE id = 1",
+        "UPDATE lia_characters SET money = money + 100 WHERE id = 2"
+        }):next(function()
+        print("Money transfer completed")
+        end):catch(function(err)
+        print("Transfer failed: " .. tostring(err))
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Create character with inventory
         local function createCharacterWithInventory(charData)
@@ -1850,11 +1891,11 @@ end
             "INSERT INTO lia_characters (steamID, name, faction) VALUES ('" ..
             charData.steamID .. "', '" .. charData.name .. "', '" .. charData.faction .. "')",
             "INSERT INTO lia_inventories (charID, invType) VALUES (last_insert_rowid(), 'pocket')"
-        }
+            }
 
-        return lia.db.transaction(queries):next(function()
-        lia.log.add("Character and inventory created successfully")
-        hook.Run("OnCharacterCreated", charData)
+            return lia.db.transaction(queries):next(function()
+            lia.log.add("Character and inventory created successfully")
+            hook.Run("OnCharacterCreated", charData)
         end):catch(function(err)
         lia.error("Failed to create character: " .. tostring(err))
         end)
@@ -1862,7 +1903,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Complex transaction with validation and rollback
         local function transferItemsWithValidation(fromChar, toChar, items)
@@ -1889,9 +1929,9 @@ end
             return lia.db.transaction(queries):next(function()
             lia.log.add("Items transferred successfully")
             hook.Run("OnItemsTransferred", fromChar, toChar, items)
-            end):catch(function(err)
-            lia.error("Item transfer failed: " .. tostring(err))
-            hook.Run("OnTransferFailed", fromChar, toChar, items, err)
+        end):catch(function(err)
+        lia.error("Item transfer failed: " .. tostring(err))
+        hook.Run("OnTransferFailed", fromChar, toChar, items, err)
         end)
         end
         ```
@@ -1919,25 +1959,29 @@ end
 --[[
     Purpose:
         Escapes database identifiers (table names, column names) to prevent SQL injection
+
     When Called:
         Internally by database functions when building SQL queries with dynamic identifiers
+
     Parameters:
         - id (string): Identifier to escape (table name, column name, etc.)
+
     Returns:
         Escaped identifier string wrapped in backticks
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Escape a column name
         local escapedColumn = lia.db.escapeIdentifier("user_name")
+
         -- Returns: `user_name`
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Escape multiple identifiers
         local function buildSelectQuery(tableName, columns)
@@ -1953,7 +1997,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Escape with validation and error handling
         local function safeEscapeIdentifiers(identifiers)
@@ -1977,31 +2020,34 @@ end
 --[[
     Purpose:
         Inserts a new record or updates an existing one based on primary key conflicts
+
     When Called:
         When synchronizing data that may already exist, like configuration updates or data imports
+
     Parameters:
         - value (table): Key-value pairs representing the data to upsert
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
+
     Returns:
         Deferred promise object with results and lastID
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Upsert configuration
         lia.db.upsert({
-            schema = "default",
-            key = "serverName",
-            value = "My Server"
-            }, "config"):next(function(results, lastID)
-            print("Configuration upserted")
+        schema = "default",
+        key = "serverName",
+        value = "My Server"
+        }, "config"):next(function(results, lastID)
+        print("Configuration upserted")
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Upsert with validation and logging
         local function syncPlayerData(player)
@@ -2010,11 +2056,11 @@ end
             steamName = player:Name(),
             lastJoin = os.date("%Y-%m-%d %H:%M:%S"),
             userGroup = player:GetUserGroup()
-        }
+            }
 
-        return lia.db.upsert(playerData, "players"):next(function(results, lastID)
-        lia.log.add("Player data synchronized: " .. player:Name())
-        hook.Run("OnPlayerDataSynced", player, lastID)
+            return lia.db.upsert(playerData, "players"):next(function(results, lastID)
+            lia.log.add("Player data synchronized: " .. player:Name())
+            hook.Run("OnPlayerDataSynced", player, lastID)
         end):catch(function(err)
         lia.error("Failed to sync player data: " .. tostring(err))
         end)
@@ -2022,7 +2068,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Upsert with conflict resolution and validation
         local function upsertWithValidation(data, dbTable, validationRules)
@@ -2042,9 +2087,9 @@ end
 
             hook.Run("OnRecordUpserted", dbTable, data, action)
             return {success = true, action = action, id = lastID}
-            end):catch(function(err)
-            lia.error("Upsert failed: " .. tostring(err))
-            return {success = false, error = err}
+        end):catch(function(err)
+        lia.error("Upsert failed: " .. tostring(err))
+        return {success = false, error = err}
         end)
         end
         ```
@@ -2064,27 +2109,30 @@ end
 --[[
     Purpose:
         Deletes records from a database table based on specified conditions
+
     When Called:
         When removing data like deleted characters, expired items, or cleanup operations
+
     Parameters:
         - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'character')
         - condition (table/string, optional): WHERE clause conditions for the deletion
+
     Returns:
         Deferred promise object with results and lastID
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Delete character by ID
         lia.db.delete("characters", {id = 1}):next(function(results, lastID)
-            print("Character deleted")
+        print("Character deleted")
         end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Delete with validation and logging
         local function deleteCharacter(charID)
@@ -2094,15 +2142,14 @@ end
 
             -- Clean up related data
             lia.db.delete("items", {invID = charID})
-                lia.db.delete("inventories", {charID = charID})
-                    end):catch(function(err)
-                    lia.error("Failed to delete character: " .. tostring(err))
-                end)
-            end
+            lia.db.delete("inventories", {charID = charID})
+        end):catch(function(err)
+        lia.error("Failed to delete character: " .. tostring(err))
+        end)
+        end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Delete with cascade and transaction safety
         local function deleteCharacterWithCascade(charID)
@@ -2121,9 +2168,9 @@ end
 
             hook.Run("OnCharacterDeleted", charID)
             return {success = true, charID = charID}
-            end):catch(function(err)
-            lia.error("Failed to delete character with cascade: " .. tostring(err))
-            return {success = false, error = err}
+        end):catch(function(err)
+        lia.error("Failed to delete character with cascade: " .. tostring(err))
+        return {success = false, error = err}
         end)
         end
         ```
@@ -2144,56 +2191,58 @@ end
 --[[
     Purpose:
         Creates a new database table with specified schema and primary key
+
     When Called:
         When setting up custom tables for modules or extending the database schema
+
     Parameters:
         - dbName (string): Table name without 'lia_' prefix
         - primaryKey (string, optional): Primary key column name
         - schema (table): Array of column definitions with name, type, not_null, and default properties
+
     Returns:
         Deferred promise object resolving to true on success
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Create a basic table
         lia.db.createTable("custom_data", "id", {
-            {name = "id", type = "INTEGER", not_null = true},
-                {name = "data", type = "TEXT"}
-                    }):next(function(success)
-                    print("Table created successfully")
-                end)
+        {name = "id", type = "INTEGER", not_null = true},
+        {name = "data", type = "TEXT"}
+        }):next(function(success)
+        print("Table created successfully")
+        end)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Create table with validation
         local function createPlayerStatsTable()
             local schema = {
             {name = "id", type = "INTEGER", not_null = true},
-                {name = "steamID", type = "VARCHAR(255)", not_null = true},
-                    {name = "kills", type = "INTEGER", default = 0},
-                        {name = "deaths", type = "INTEGER", default = 0},
-                            {name = "score", type = "INTEGER", default = 0},
-                                {name = "lastUpdated", type = "DATETIME", default = "CURRENT_TIMESTAMP"}
-                                }
+            {name = "steamID", type = "VARCHAR(255)", not_null = true},
+            {name = "kills", type = "INTEGER", default = 0},
+            {name = "deaths", type = "INTEGER", default = 0},
+            {name = "score", type = "INTEGER", default = 0},
+            {name = "lastUpdated", type = "DATETIME", default = "CURRENT_TIMESTAMP"}
+            }
 
-                                return lia.db.createTable("player_stats", "id", schema):next(function(success)
-                                if success then
-                                    lia.log.add("Player stats table created")
-                                    hook.Run("OnPlayerStatsTableCreated")
-                                end
-                                end):catch(function(err)
-                                lia.error("Failed to create player stats table: " .. tostring(err))
-                            end)
-                        end
+            return lia.db.createTable("player_stats", "id", schema):next(function(success)
+            if success then
+                lia.log.add("Player stats table created")
+                hook.Run("OnPlayerStatsTableCreated")
+            end
+        end):catch(function(err)
+        lia.error("Failed to create player stats table: " .. tostring(err))
+        end)
+        end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Create table with validation and error handling
         local function createModuleTable(moduleName, tableConfig)
@@ -2259,20 +2308,24 @@ end
 --[[
     Purpose:
         Adds a new column to an existing database table
+
     When Called:
         When extending table schemas, adding new fields, or during database migrations
+
     Parameters:
         - tableName (string): Table name without 'lia_' prefix
         - columnName (string): Name of the new column to add
         - columnType (string): SQL data type for the column
         - defaultValue (any, optional): Default value for the column
+
     Returns:
         Deferred promise object resolving to true on success, false if column already exists
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Add a new column
         lia.db.createColumn("characters", "level", "INTEGER", 1):next(function(success)
@@ -2285,7 +2338,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Add column with validation
         local function addPlayerStatsColumn()
@@ -2296,43 +2348,42 @@ end
                 else
                     lia.log.add("totalPlayTime column already exists")
                 end
-                end):catch(function(err)
-                lia.error("Failed to add column: " .. tostring(err))
-            end)
+            end):catch(function(err)
+            lia.error("Failed to add column: " .. tostring(err))
+        end)
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Add column with validation and error handling
         local function migrateCharacterTable()
             local newColumns = {
             {name = "level", type = "INTEGER", default = 1},
-                {name = "experience", type = "INTEGER", default = 0},
-                    {name = "lastLevelUp", type = "DATETIME", default = "CURRENT_TIMESTAMP"}
-                    }
+            {name = "experience", type = "INTEGER", default = 0},
+            {name = "lastLevelUp", type = "DATETIME", default = "CURRENT_TIMESTAMP"}
+            }
 
-                    local function addNextColumn(index)
-                        if index > #newColumns then
-                            lia.log.add("Character table migration completed")
-                            return deferred.new():resolve()
-                        end
-
-                        local column = newColumns[index]
-                        return lia.db.createColumn("characters", column.name, column.type, column.default):next(function(success)
-                        if success then
-                            lia.log.add("Added column: " .. column.name)
-                        end
-                        return addNextColumn(index + 1)
-                        end):catch(function(err)
-                        lia.error("Failed to add column " .. column.name .. ": " .. tostring(err))
-                        return addNextColumn(index + 1)
-                    end)
+            local function addNextColumn(index)
+                if index > #newColumns then
+                    lia.log.add("Character table migration completed")
+                    return deferred.new():resolve()
                 end
 
-                return addNextColumn(1)
-            end
+                local column = newColumns[index]
+                return lia.db.createColumn("characters", column.name, column.type, column.default):next(function(success)
+                if success then
+                    lia.log.add("Added column: " .. column.name)
+                end
+                return addNextColumn(index + 1)
+            end):catch(function(err)
+            lia.error("Failed to add column " .. column.name .. ": " .. tostring(err))
+            return addNextColumn(index + 1)
+        end)
+        end
+
+        return addNextColumn(1)
+        end
         ```
 ]]
 function lia.db.createColumn(tableName, columnName, columnType, defaultValue)
@@ -2365,17 +2416,21 @@ end
 --[[
     Purpose:
         Removes a database table and all its data from the database
+
     When Called:
         When cleaning up unused tables, removing modules, or during database maintenance
+
     Parameters:
         - tableName (string): Table name without 'lia_' prefix
+
     Returns:
         Deferred promise object resolving to true on success, false if table doesn't exist
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Remove a table
         lia.db.removeTable("old_data"):next(function(success)
@@ -2388,7 +2443,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Remove table with validation
         local function cleanupOldModule(moduleName)
@@ -2399,14 +2453,13 @@ end
                 else
                     lia.log.add("Table for module " .. moduleName .. " doesn't exist")
                 end
-                end):catch(function(err)
-                lia.error("Failed to remove table: " .. tostring(err))
-            end)
+            end):catch(function(err)
+            lia.error("Failed to remove table: " .. tostring(err))
+        end)
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Remove table with backup and validation
         local function removeTableWithBackup(tableName)
@@ -2453,18 +2506,22 @@ end
 --[[
     Purpose:
         Removes a column from an existing database table using table recreation
+
     When Called:
         When removing unused columns, cleaning up schemas, or during database migrations
+
     Parameters:
         - tableName (string): Table name without 'lia_' prefix
         - columnName (string): Name of the column to remove
+
     Returns:
         Deferred promise object resolving to true on success, false if column doesn't exist
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Remove a column
         lia.db.removeColumn("characters", "old_field"):next(function(success)
@@ -2477,7 +2534,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Remove column with validation
         local function cleanupOldColumn(tableName, columnName)
@@ -2488,14 +2544,13 @@ end
                 else
                     lia.log.add("Column " .. columnName .. " doesn't exist in " .. tableName)
                 end
-                end):catch(function(err)
-                lia.error("Failed to remove column: " .. tostring(err))
-            end)
+            end):catch(function(err)
+            lia.error("Failed to remove column: " .. tostring(err))
+        end)
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Remove column with backup and validation
         local function removeColumnWithBackup(tableName, columnName)
@@ -2583,17 +2638,21 @@ end
 --[[
     Purpose:
         Retrieves the column information for the lia_characters table
+
     When Called:
         When analyzing character table structure, generating reports, or during schema validation
+
     Parameters:
         - callback (function): Function to call with the column information array
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get character table columns
         lia.db.getCharacterTable(function(columns)
@@ -2605,7 +2664,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Get columns with analysis
         local function analyzeCharacterTable()
@@ -2629,7 +2687,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Get columns with validation and error handling
         local function validateCharacterSchema()
@@ -2642,48 +2699,48 @@ end
 
             local schemaValidation = {
             required = {"id", "steamID", "name", "model", "faction", "money"},
-                optional = {"desc", "attribs", "schema", "createTime", "lastJoinTime", "recognition", "fakenames"}
-                }
+            optional = {"desc", "attribs", "schema", "createTime", "lastJoinTime", "recognition", "fakenames"}
+            }
 
-                local validationResults = {
-                valid = true,
-                missing = {},
-                    extra = {}
-                    }
+            local validationResults = {
+            valid = true,
+            missing = {},
+            extra = {}
+            }
 
-                    -- Check for missing required columns
-                    for _, required in ipairs(schemaValidation.required) do
-                        if not table.HasValue(columns, required) then
-                            table.insert(validationResults.missing, required)
-                            validationResults.valid = false
-                        end
-                    end
-
-                    -- Check for extra columns
-                    for _, column in ipairs(columns) do
-                        if not table.HasValue(schemaValidation.required, column) and
-                        not table.HasValue(schemaValidation.optional, column) then
-                        table.insert(validationResults.extra, column)
-                    end
+            -- Check for missing required columns
+            for _, required in ipairs(schemaValidation.required) do
+                if not table.HasValue(columns, required) then
+                    table.insert(validationResults.missing, required)
+                    validationResults.valid = false
                 end
+            end
 
-                if validationResults.valid then
-                    lia.log.add("Character table schema validation passed")
-                    else
-                        lia.log.add("Character table schema issues found")
-                        if #validationResults.missing > 0 then
-                            lia.log.add("Missing columns: " .. table.concat(validationResults.missing, ", "))
-                        end
-                        if #validationResults.extra > 0 then
-                            lia.log.add("Extra columns: " .. table.concat(validationResults.extra, ", "))
-                        end
-                    end
+            -- Check for extra columns
+            for _, column in ipairs(columns) do
+                if not table.HasValue(schemaValidation.required, column) and
+                not table.HasValue(schemaValidation.optional, column) then
+                table.insert(validationResults.extra, column)
+            end
+        end
 
-                    hook.Run("OnCharacterSchemaValidated", validationResults)
-                end)
-                end):catch(function(err)
-                lia.error("Character schema validation failed: " .. tostring(err))
-            end)
+        if validationResults.valid then
+            lia.log.add("Character table schema validation passed")
+            else
+                lia.log.add("Character table schema issues found")
+                if #validationResults.missing > 0 then
+                    lia.log.add("Missing columns: " .. table.concat(validationResults.missing, ", "))
+                end
+                if #validationResults.extra > 0 then
+                    lia.log.add("Extra columns: " .. table.concat(validationResults.extra, ", "))
+                end
+            end
+
+            hook.Run("OnCharacterSchemaValidated", validationResults)
+        end)
+        end):catch(function(err)
+        lia.error("Character schema validation failed: " .. tostring(err))
+        end)
         end
         ```
 ]]
@@ -2703,17 +2760,21 @@ end
 --[[
     Purpose:
         Creates a backup snapshot of a database table and saves it to a JSON file
+
     When Called:
         When backing up data before major operations, creating restore points, or archiving data
+
     Parameters:
         - tableName (string): Table name without 'lia_' prefix
+
     Returns:
         Deferred promise object resolving to snapshot information (file, path, records)
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Create a snapshot
         lia.db.createSnapshot("characters"):next(function(snapshot)
@@ -2723,7 +2784,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Create snapshot with validation
         local function backupTable(tableName)
@@ -2731,14 +2791,13 @@ end
             lia.log.add("Backup created: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
             hook.Run("OnTableBackedUp", tableName, snapshot)
             return snapshot
-            end):catch(function(err)
-            lia.error("Failed to backup table " .. tableName .. ": " .. tostring(err))
+        end):catch(function(err)
+        lia.error("Failed to backup table " .. tableName .. ": " .. tostring(err))
         end)
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Create snapshot with validation and error handling
         local function createBackupWithValidation(tableName)
@@ -2762,15 +2821,15 @@ end
             path = snapshot.path,
             server = GetHostName(),
             version = lia.version or "unknown"
-        }
+            }
 
-        -- Save metadata
-        local metadataFile = "lilia/snapshots/" .. snapshot.file .. ".meta"
-        file.Write(metadataFile, util.TableToJSON(metadata, true))
+            -- Save metadata
+            local metadataFile = "lilia/snapshots/" .. snapshot.file .. ".meta"
+            file.Write(metadataFile, util.TableToJSON(metadata, true))
 
-        lia.log.add("Backup completed: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
-        hook.Run("OnBackupCreated", metadata)
-        return metadata
+            lia.log.add("Backup completed: " .. snapshot.file .. " (" .. snapshot.records .. " records)")
+            hook.Run("OnBackupCreated", metadata)
+            return metadata
         end):catch(function(err)
         lia.error("Backup failed for " .. tableName .. ": " .. tostring(err))
         return {success = false, error = err}
@@ -2818,17 +2877,21 @@ end
 --[[
     Purpose:
         Restores a database table from a previously created snapshot file
+
     When Called:
         When restoring data from backups, recovering from errors, or migrating data
+
     Parameters:
         - fileName (string): Name of the snapshot file to load
+
     Returns:
         Deferred promise object resolving to restore information (table, records, timestamp)
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Load a snapshot
         lia.db.loadSnapshot("snapshot_characters_1234567890.json"):next(function(result)
@@ -2837,7 +2900,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Load snapshot with validation
         local function restoreTable(fileName)
@@ -2845,14 +2907,13 @@ end
             lia.log.add("Restored " .. result.records .. " records to " .. result.table)
             hook.Run("OnTableRestored", result.table, result.records)
             return result
-            end):catch(function(err)
-            lia.error("Failed to restore from " .. fileName .. ": " .. tostring(err))
+        end):catch(function(err)
+        lia.error("Failed to restore from " .. fileName .. ": " .. tostring(err))
         end)
         end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Load snapshot with validation and error handling
         local function restoreWithValidation(fileName)
@@ -2876,11 +2937,11 @@ end
             timestamp = result.timestamp,
             restoredAt = os.time(),
             success = true
-        }
+            }
 
-        lia.log.add("Restore completed successfully: " .. fileName)
-        hook.Run("OnRestoreCompleted", restoreLog)
-        return restoreLog
+            lia.log.add("Restore completed successfully: " .. fileName)
+            hook.Run("OnRestoreCompleted", restoreLog)
+            return restoreLog
         end)
         end):catch(function(err)
         lia.error("Restore failed: " .. tostring(err))

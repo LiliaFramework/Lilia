@@ -15,25 +15,27 @@ if SERVER then
     --[[
         Purpose:
             Adds a workshop addon ID to the server's required workshop content list
+
         When Called:
             Called when modules or addons need specific workshop content
+
         Parameters:
             id (string/number) - The Steam Workshop ID of the addon to add
+
         Returns:
             None
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
                 ```lua
                 -- Simple: Add a single workshop addon
                 lia.workshop.addWorkshop("1234567890")
                 ```
 
             Medium Complexity:
-
                 ```lua
                 -- Medium: Add workshop addon from module configuration
                 local workshopId = module.WorkshopContent
@@ -43,7 +45,6 @@ if SERVER then
                 ```
 
             High Complexity:
-
                 ```lua
                 -- High: Add multiple workshop addons with validation
                 local workshopIds = {"1234567890", "0987654321", "1122334455"}
@@ -72,25 +73,27 @@ if SERVER then
     --[[
         Purpose:
             Gathers all workshop IDs from mounted addons and module configurations
+
         When Called:
             Called during module initialization to collect all required workshop content
+
         Parameters:
             None
+
         Returns:
             table - Table containing all workshop IDs that need to be downloaded
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
                 ```lua
                 -- Simple: Gather workshop IDs
                 local workshopIds = lia.workshop.gather()
                 ```
 
             Medium Complexity:
-
                 ```lua
                 -- Medium: Gather and validate workshop IDs
                 local workshopIds = lia.workshop.gather()
@@ -99,7 +102,6 @@ if SERVER then
                 ```
 
             High Complexity:
-
                 ```lua
                 -- High: Gather workshop IDs and send to specific players
                 local workshopIds = lia.workshop.gather()
@@ -141,25 +143,27 @@ if SERVER then
     --[[
         Purpose:
             Sends the cached workshop IDs to a specific player to initiate download
+
         When Called:
             Called when a player requests workshop content or during initial spawn
+
         Parameters:
             ply (Player) - The player to send workshop IDs to
+
         Returns:
             None
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
                 ```lua
                 -- Simple: Send workshop IDs to a player
                 lia.workshop.send(player.GetByID(1))
                 ```
 
             Medium Complexity:
-
                 ```lua
                 -- Medium: Send workshop IDs to admin players only
                 for _, ply in pairs(player.GetAll()) do
@@ -170,7 +174,6 @@ if SERVER then
                 ```
 
             High Complexity:
-
                 ```lua
                 -- High: Send workshop IDs with validation and logging
                 local function sendToPlayer(ply)
@@ -181,8 +184,8 @@ if SERVER then
                 end
 
                 hook.Add("PlayerInitialSpawn", "CustomWorkshopSend", function(ply)
-                    timer.Simple(5, function()
-                    sendToPlayer(ply)
+                timer.Simple(5, function()
+                sendToPlayer(ply)
                 end)
                 end)
                 ```
@@ -240,18 +243,21 @@ else
     --[[
         Purpose:
             Checks if there are any workshop addons that need to be downloaded
+
         When Called:
             Called to determine if the client needs to download workshop content
+
         Parameters:
             None
+
         Returns:
             boolean - True if content needs to be downloaded, false otherwise
+
         Realm:
             Client
+
         Example Usage:
-
             Low Complexity:
-
                 ```lua
                 -- Simple: Check if downloads are needed
                 if lia.workshop.hasContentToDownload() then
@@ -260,7 +266,6 @@ else
                 ```
 
             Medium Complexity:
-
                 ```lua
                 -- Medium: Check and show notification
                 if lia.workshop.hasContentToDownload() then
@@ -269,7 +274,6 @@ else
                 ```
 
             High Complexity:
-
                 ```lua
                 -- High: Check downloads and create custom UI
                 local function checkDownloads()
@@ -291,9 +295,9 @@ else
                 end
 
                 hook.Add("OnEntityCreated", "CheckWorkshopDownloads", function(ent)
-                    if ent == LocalPlayer() then
-                        timer.Simple(1, checkDownloads)
-                    end
+                if ent == LocalPlayer() then
+                    timer.Simple(1, checkDownloads)
+                end
                 end)
                 ```
     ]]
@@ -421,38 +425,39 @@ else
     --[[
         Purpose:
             Initiates the mounting process for required workshop content with user confirmation
+
         When Called:
             Called when the client needs to download and mount workshop addons
+
         Parameters:
             None
+
         Returns:
             None
+
         Realm:
             Client
+
         Example Usage:
-
             Low Complexity:
-
                 ```lua
                 -- Simple: Mount workshop content
                 lia.workshop.mountContent()
                 ```
 
             Medium Complexity:
-
                 ```lua
                 -- Medium: Mount content with custom callback
                 lia.workshop.mountContent()
                 hook.Add("Think", "CheckMountComplete", function()
-                    if not lia.workshop.hasContentToDownload() then
-                        print("All workshop content mounted successfully")
-                        hook.Remove("Think", "CheckMountComplete")
-                    end
+                if not lia.workshop.hasContentToDownload() then
+                    print("All workshop content mounted successfully")
+                    hook.Remove("Think", "CheckMountComplete")
+                end
                 end)
                 ```
 
             High Complexity:
-
                 ```lua
                 -- High: Mount content with progress tracking and custom UI
                 local function mountWithProgress()
@@ -486,9 +491,9 @@ else
                 end
 
                 hook.Add("PlayerInitialSpawn", "MountWorkshopContent", function(ply)
-                    if ply == LocalPlayer() then
-                        timer.Simple(3, mountWithProgress)
-                    end
+                if ply == LocalPlayer() then
+                    timer.Simple(3, mountWithProgress)
+                end
                 end)
                 ```
     ]]

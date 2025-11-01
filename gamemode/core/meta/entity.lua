@@ -19,8 +19,10 @@ local validClasses = {
 --[[
     Purpose:
         Emits a sound from the entity, with support for web sounds and URL-based audio
+
     When Called:
         When an entity needs to play a sound effect or audio
+
     Parameters:
         - soundName (string): The sound file path, URL, or websound identifier
         - soundLevel (number, optional): Sound level/distance (default: 100)
@@ -29,27 +31,27 @@ local validClasses = {
         - channel (number, optional): Sound channel
         - flags (number, optional): Sound flags
         - dsp (number, optional): DSP effect
+
     Returns:
         boolean - True if sound was played successfully
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Play a basic sound
         entity:EmitSound("buttons/button15.wav")
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Play sound with custom volume and distance
         entity:EmitSound("ambient/atmosphere/city_hum_loop.wav", 200, 100, 0.5)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Play web sound with full parameters
         entity:EmitSound("https://example.com/sound.mp3", 300, 100, 0.8, CHAN_AUTO, 0, 0)
@@ -99,17 +101,21 @@ end
 --[[
     Purpose:
         Checks if the entity is a physics prop
+
     When Called:
         When you need to determine if an entity is a prop_physics object
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is a prop_physics, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is a prop
         if entity:isProp() then
@@ -118,7 +124,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in conditional logic
         if entity:isProp() and entity:GetPhysicsObject():IsValid() then
@@ -127,7 +132,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Combine with other checks for complex logic
         if entity:isProp() and entity:GetModel():find("wood") then
@@ -144,17 +148,21 @@ end
 --[[
     Purpose:
         Checks if the entity is a Lilia item entity
+
     When Called:
         When you need to determine if an entity is a lia_item object
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is a lia_item, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is an item
         if entity:isItem() then
@@ -163,7 +171,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in item handling logic
         if entity:isItem() and entity:GetItemData() then
@@ -173,7 +180,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Combine with inventory system
         if entity:isItem() and IsValid(ply) then
@@ -193,17 +199,21 @@ end
 --[[
     Purpose:
         Checks if the entity is a Lilia money entity
+
     When Called:
         When you need to determine if an entity is a lia_money object
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is a lia_money, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is money
         if entity:isMoney() then
@@ -212,7 +222,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in money handling logic
         if entity:isMoney() and IsValid(ply) then
@@ -223,7 +232,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Combine with economy system
         if entity:isMoney() and IsValid(ply) then
@@ -245,17 +253,21 @@ end
 --[[
     Purpose:
         Checks if the entity is a Simfphys vehicle or LVS vehicle
+
     When Called:
         When you need to determine if an entity is a vehicle from Simfphys or LVS
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is a supported vehicle, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is a vehicle
         if entity:isSimfphysCar() then
@@ -264,7 +276,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in vehicle handling logic
         if entity:isSimfphysCar() and IsValid(ply) then
@@ -275,7 +286,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Combine with vehicle systems
         if entity:isSimfphysCar() and IsValid(ply) then
@@ -295,18 +305,22 @@ end
 --[[
     Purpose:
         Checks if a client has access to a door with the specified access level
+
     When Called:
         When you need to verify if a player can access a door
+
     Parameters:
         - client (Player): The player to check access for
         - access (number, optional): The required access level (default: DOOR_GUEST)
+
     Returns:
         boolean - True if the client has access, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check basic door access
         if door:checkDoorAccess(ply) then
@@ -315,7 +329,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check specific access level
         if door:checkDoorAccess(ply, DOOR_OWNER) then
@@ -324,7 +337,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in door interaction system
         if door:checkDoorAccess(ply, DOOR_GUEST) then
@@ -351,24 +363,27 @@ end
 --[[
     Purpose:
         Sets a client as the owner of a vehicle and updates ownership data
+
     When Called:
         When a player becomes the owner of a vehicle
+
     Parameters:
         - client (Player): The player to set as the owner
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Set vehicle owner
         vehicle:keysOwn(ply)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Set owner with validation
         if IsValid(ply) and ply:getChar() then
@@ -378,7 +393,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in vehicle purchase system
         if ply:getChar():getMoney() >= vehiclePrice then
@@ -403,24 +417,27 @@ end
 --[[
     Purpose:
         Locks a vehicle if it is a valid vehicle entity
+
     When Called:
         When a player wants to lock their vehicle
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Lock vehicle
         vehicle:keysLock()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Lock with validation
         if IsValid(vehicle) and vehicle:IsVehicle() then
@@ -430,7 +447,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in vehicle interaction system
         if vehicle:keysOwn(ply) and not vehicle:isLocked() then
@@ -451,24 +467,27 @@ end
 --[[
     Purpose:
         Unlocks a vehicle if it is a valid vehicle entity
+
     When Called:
         When a player wants to unlock their vehicle
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Unlock vehicle
         vehicle:keysUnLock()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Unlock with validation
         if IsValid(vehicle) and vehicle:IsVehicle() then
@@ -478,7 +497,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in vehicle interaction system
         if vehicle:keysOwn(ply) and vehicle:isLocked() then
@@ -499,17 +517,21 @@ end
 --[[
     Purpose:
         Gets the owner of a door entity
+
     When Called:
         When you need to retrieve the owner of a door
+
     Parameters:
         None
+
     Returns:
         Player or nil - The door owner if it's a vehicle with CPPI, nil otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get door owner
         local owner = door:getDoorOwner()
@@ -519,7 +541,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check ownership for access control
         local owner = door:getDoorOwner()
@@ -529,7 +550,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in door management system
         local owner = door:getDoorOwner()
@@ -550,17 +570,21 @@ end
 --[[
     Purpose:
         Checks if the entity is locked using network variables
+
     When Called:
         When you need to check if an entity is in a locked state
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is locked, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is locked
         if entity:isLocked() then
@@ -569,7 +593,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in interaction logic
         if entity:isLocked() then
@@ -580,7 +603,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in security system
         if entity:isLocked() and not ply:hasFlags("A") then
@@ -599,17 +621,21 @@ end
 --[[
     Purpose:
         Checks if a door entity is locked using internal variables or custom properties
+
     When Called:
         When you need to check if a door is in a locked state
+
     Parameters:
         None
+
     Returns:
         boolean - True if the door is locked, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if door is locked
         if door:isDoorLocked() then
@@ -618,7 +644,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in door interaction
         if door:isDoorLocked() then
@@ -629,7 +654,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in door access system
         if door:isDoorLocked() and not door:checkDoorAccess(ply, DOOR_OWNER) then
@@ -648,24 +672,27 @@ end
 --[[
     Purpose:
         Calculates the position and angle for dropping items from an entity
+
     When Called:
         When an entity needs to drop an item at a specific location
+
     Parameters:
         - offset (number, optional): Distance to trace forward from entity (default: 64)
+
     Returns:
         Vector, Angle - The drop position and angle
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get drop position
         local pos, ang = entity:getEntItemDropPos()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use with custom offset
         local pos, ang = entity:getEntItemDropPos(100)
@@ -675,7 +702,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in item dropping system
         local pos, ang = entity:getEntItemDropPos(offset)
@@ -708,17 +734,21 @@ end
 --[[
     Purpose:
         Checks if the entity's model represents a female character
+
     When Called:
         When you need to determine the gender of a character entity
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is female, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is female
         if entity:isFemale() then
@@ -727,7 +757,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in character customization
         if entity:isFemale() then
@@ -738,7 +767,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in roleplay system
         if entity:isFemale() then
@@ -746,8 +774,8 @@ end
             if char then
                 char:setData("gender", "female")
                 char:setData("pronouns", {"she", "her", "hers"})
-                end
             end
+        end
         ```
 ]]
 function entityMeta:isFemale()
@@ -758,18 +786,22 @@ end
 --[[
     Purpose:
         Checks if the entity is near another entity within a specified radius
+
     When Called:
         When you need to check proximity between entities
+
     Parameters:
         - radius (number, optional): Search radius in units (default: 96)
         - otherEntity (Entity, optional): Specific entity to check for proximity
+
     Returns:
         boolean - True if near another entity, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is near any other entity
         if entity:isNearEntity() then
@@ -778,7 +810,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check proximity to specific entity
         if entity:isNearEntity(150, targetEntity) then
@@ -787,7 +818,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in interaction system
         if entity:isNearEntity(100, ply) then
@@ -813,17 +843,21 @@ end
 --[[
     Purpose:
         Gets the partner door entity for double doors
+
     When Called:
         When you need to find the paired door in a double door setup
+
     Parameters:
         None
+
     Returns:
         Entity or nil - The partner door if found, nil otherwise
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get door partner
         local partner = door:getDoorPartner()
@@ -833,7 +867,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in door synchronization
         local partner = door:getDoorPartner()
@@ -844,7 +877,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in door management system
         local partner = door:getDoorPartner()
@@ -878,32 +910,34 @@ if SERVER then
     --[[
     Purpose:
         Sends a network variable to clients via network message
+
     When Called:
         When you need to synchronize entity data with clients
+
     Parameters:
         - key (string): The network variable key to send
         - receiver (Player, optional): Specific player to send to, or nil for all players
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Send network variable to all clients
         entity:sendNetVar("health")
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Send to specific player
         entity:sendNetVar("owner", ply)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in data synchronization system
         if entity:getNetVar("dirty") then
@@ -928,31 +962,33 @@ if SERVER then
     --[[
     Purpose:
         Clears all network variables for the entity and notifies clients
+
     When Called:
         When you need to remove all network data from an entity
+
     Parameters:
         - receiver (Player, optional): Specific player to notify, or nil for all players
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Clear all network variables
         entity:clearNetVars()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Clear for specific player
         entity:clearNetVars(ply)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in entity cleanup system
         if entity:IsValid() then
@@ -977,24 +1013,27 @@ if SERVER then
     --[[
     Purpose:
         Removes all door access data and notifies clients to close door menus
+
     When Called:
         When you need to clear all door access permissions and close related UIs
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Server (can only be called on server)
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Remove door access data
         door:removeDoorAccessData()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in door cleanup
         if door:IsValid() then
@@ -1004,7 +1043,6 @@ if SERVER then
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in door management system
         if ply:hasFlags("A") then
@@ -1028,31 +1066,33 @@ if SERVER then
     --[[
     Purpose:
         Sets the locked state of an entity using network variables
+
     When Called:
         When you need to lock or unlock an entity
+
     Parameters:
         - state (boolean): True to lock, false to unlock
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Lock entity
         entity:setLocked(true)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Toggle lock state
         entity:setLocked(not entity:isLocked())
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in security system
         if ply:hasFlags("A") then
@@ -1069,31 +1109,33 @@ if SERVER then
     --[[
     Purpose:
         Sets whether a vehicle can be owned or sold
+
     When Called:
         When you need to make a vehicle non-ownable or ownable
+
     Parameters:
         - state (boolean): True to make non-ownable, false to make ownable
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Make vehicle non-ownable
         vehicle:setKeysNonOwnable(true)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Toggle ownable state
         vehicle:setKeysNonOwnable(not vehicle:getNetVar("noSell", false))
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in vehicle management system
         if ply:hasFlags("A") then
@@ -1110,17 +1152,21 @@ if SERVER then
     --[[
     Purpose:
         Checks if the entity is a door by examining its class name
+
     When Called:
         When you need to determine if an entity is a door
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is a door, false otherwise
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is a door
         if entity:isDoor() then
@@ -1129,7 +1175,6 @@ if SERVER then
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in door interaction
         if entity:isDoor() and entity:checkDoorAccess(ply) then
@@ -1138,7 +1183,6 @@ if SERVER then
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in door management system
         if entity:isDoor() then
@@ -1162,33 +1206,35 @@ if SERVER then
     --[[
     Purpose:
         Sets a network variable for the entity and synchronizes it with clients
+
     When Called:
         When you need to store and sync data on an entity
+
     Parameters:
         - key (string): The network variable key
         - value (any): The value to store
         - receiver (Player, optional): Specific player to send to, or nil for all players
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Set a network variable
         entity:setNetVar("health", 100)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Set with specific receiver
         entity:setNetVar("owner", ply, ply)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in data management system
         if entity:getNetVar("dirty") then
@@ -1210,25 +1256,28 @@ if SERVER then
     --[[
     Purpose:
         Gets a network variable from the entity (server-side)
+
     When Called:
         When you need to retrieve synchronized data from an entity on the server
+
     Parameters:
         - key (string): The network variable key to retrieve
         - default (any, optional): Default value if the key doesn't exist
+
     Returns:
         any - The network variable value or default
+
     Realm:
         Server
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get a network variable
         local health = entity:getNetVar("health", 100)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in server-side logic
         local owner = entity:getNetVar("owner")
@@ -1238,13 +1287,12 @@ if SERVER then
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in server-side data management
         local data = entity:getNetVar("data", {})
         if data.lastUpdate and CurTime() - data.lastUpdate > 300 then
             entity:setNetVar("data", {lastUpdate = CurTime()})
-            end
+        end
         ```
 ]]
     function entityMeta:getNetVar(key, default)
@@ -1256,17 +1304,21 @@ else
     --[[
     Purpose:
         Checks if the entity is a door by examining its class name (client-side)
+
     When Called:
         When you need to determine if an entity is a door on the client
+
     Parameters:
         None
+
     Returns:
         boolean - True if the entity is a door, false otherwise
+
     Realm:
         Client (can only be called on client)
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Check if entity is a door
         if entity:isDoor() then
@@ -1275,7 +1327,6 @@ else
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in client-side door interaction
         if entity:isDoor() and entity:isNearEntity(100, LocalPlayer()) then
@@ -1284,7 +1335,6 @@ else
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in client-side door management
         if entity:isDoor() then
@@ -1302,25 +1352,28 @@ else
     --[[
     Purpose:
         Gets a network variable from the entity (client-side)
+
     When Called:
         When you need to retrieve synchronized data from an entity on the client
+
     Parameters:
         - key (string): The network variable key to retrieve
         - default (any, optional): Default value if the key doesn't exist
+
     Returns:
         any - The network variable value or default
+
     Realm:
         Client (can only be called on client)
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get a network variable
         local health = entity:getNetVar("health", 100)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use in client-side logic
         local owner = entity:getNetVar("owner")
@@ -1330,7 +1383,6 @@ else
         ```
 
         High Complexity:
-
         ```lua
         -- High: Use in client-side rendering
         local locked = entity:getNetVar("locked", false)
@@ -1348,8 +1400,10 @@ else
     --[[
     Purpose:
         Plays a sound that follows the entity with 3D positioning and distance attenuation
+
     When Called:
         When you need to play a sound that moves with an entity
+
     Parameters:
         - soundPath (string): Path to the sound file or URL
         - volume (number, optional): Volume level (0-1, default: 1)
@@ -1360,27 +1414,27 @@ else
         - pitch (number, optional): Pitch multiplier (default: 1)
         - _ (any, optional): Unused parameter
         - dsp (number, optional): DSP effect ID (default: 0)
+
     Returns:
         None
+
     Realm:
         Client (can only be called on client)
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Play following sound
         entity:playFollowingSound("ambient/atmosphere/city_hum_loop.wav")
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Play with custom volume and distance
         entity:playFollowingSound("buttons/button15.wav", 0.5, true, 500)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Play web sound with full parameters
         entity:playFollowingSound("https://example.com/sound.mp3", 0.8, true, 1000, 0.5, 100, 1.2, nil, 1)

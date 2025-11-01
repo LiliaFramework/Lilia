@@ -22,18 +22,21 @@ end
 --[[
     Purpose:
         Retrieves a bar object by its identifier from the bars list
+
     When Called:
         When you need to access or modify an existing bar's properties
+
     Parameters:
         identifier (string) - The unique identifier of the bar to retrieve
+
     Returns:
         table|nil - The bar object if found, nil otherwise
+
     Realm:
         Client
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Get a bar by identifier
     local healthBar = lia.bar.get("health")
@@ -43,7 +46,6 @@ end
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Get and modify bar properties
     local customBar = lia.bar.get("custom_stamina")
@@ -54,7 +56,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Dynamic bar management with validation
     local barIdentifiers = {"health", "armor", "stamina", "hunger"}
@@ -78,21 +79,24 @@ end
 --[[
     Purpose:
         Adds a new progress bar to the bars system with specified properties
+
     When Called:
         When creating custom bars or adding new progress indicators to the HUD
+
     Parameters:
         getValue (function) - Function that returns the current value (0-1) for the bar
         color (Color) - Color of the bar fill (optional, defaults to random color)
         priority (number) - Display priority, lower numbers appear first (optional)
         identifier (string) - Unique identifier for the bar (optional)
+
     Returns:
         number - The priority assigned to the bar
+
     Realm:
         Client
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Add a basic health bar
     lia.bar.add(function()
@@ -101,18 +105,16 @@ end
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Add a custom stamina bar with validation
     lia.bar.add(function()
     local ply = LocalPlayer()
     if not IsValid(ply) then return 0 end
         return ply:GetNWFloat("stamina", 100) / 100
-        end, Color(0, 255, 0), 2, "stamina")
+    end, Color(0, 255, 0), 2, "stamina")
     ```
 
     High Complexity:
-
     ```lua
     -- High: Dynamic bar creation with multiple conditions
     local function createConditionalBar(condition, getValue, color, priority, id)
@@ -121,18 +123,18 @@ end
             local ply = LocalPlayer()
             if not IsValid(ply) then return 0 end
                 return getValue(ply)
-                end, color, priority, id)
-            end
-            return nil
+            end, color, priority, id)
         end
+        return nil
+    end
 
-        createConditionalBar(
-        true,
-        function(ply) return ply:Armor() / ply:GetMaxArmor() end,
-            Color(0, 0, 255),
-            3,
-            "armor"
-            )
+    createConditionalBar(
+    true,
+    function(ply) return ply:Armor() / ply:GetMaxArmor() end,
+        Color(0, 0, 255),
+        3,
+        "armor"
+        )
     ```
 ]]
 function lia.bar.add(getValue, color, priority, identifier)
@@ -157,25 +159,27 @@ end
 --[[
     Purpose:
         Removes a bar from the bars system by its identifier
+
     When Called:
         When you need to remove a specific bar from the HUD or clean up bars
+
     Parameters:
         identifier (string) - The unique identifier of the bar to remove
+
     Returns:
         void
+
     Realm:
         Client
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Remove a bar by identifier
     lia.bar.remove("health")
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Conditionally remove bars
     if not player:HasPermission("see_health") then
@@ -184,7 +188,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Remove multiple bars with validation
     local barsToRemove = {"stamina", "hunger", "thirst"}
@@ -212,8 +215,10 @@ end
 --[[
     Purpose:
         Draws a single progress bar at specified coordinates with given properties
+
     When Called:
         Internally by the bars system or when manually drawing custom bars
+
     Parameters:
         x (number) - X coordinate for the bar position
         y (number) - Y coordinate for the bar position
@@ -222,21 +227,21 @@ end
         pos (number) - Current progress value (0-max)
         max (number) - Maximum value for the bar
         color (Color) - Color of the bar fill
+
     Returns:
         void
+
     Realm:
         Client
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Draw a basic progress bar
     lia.bar.drawBar(10, 10, 200, 20, 75, 100, Color(255, 0, 0))
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Draw a bar with calculated values
     local health = LocalPlayer():Health()
@@ -245,7 +250,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Dynamic bar drawing with multiple conditions
     local function drawCustomBar(x, y, w, h, value, maxValue, color, condition)
@@ -271,26 +275,28 @@ end
 --[[
     Purpose:
         Draws a temporary action progress bar with text overlay for timed actions
+
     When Called:
         When displaying progress for actions like reloading, healing, or other timed activities
+
     Parameters:
         text (string) - Text to display above the progress bar
         duration (number) - Duration in seconds for the action to complete
+
     Returns:
         void
+
     Realm:
         Client
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Show reload progress
     lia.bar.drawAction("Reloading...", 2.5)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Show healing progress with dynamic text
     local healAmount = 50
@@ -298,7 +304,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Conditional action display with multiple states
     local function showActionProgress(actionType, duration, data)
@@ -347,36 +352,37 @@ end
 --[[
     Purpose:
         Renders all registered bars in priority order with smooth animations and visibility management
+
     When Called:
         Automatically called during HUDPaintBackground hook, or manually for custom rendering
+
     Parameters:
         None
+
     Returns:
         void
+
     Realm:
         Client
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Manually trigger bar rendering
     lia.bar.drawAll()
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Custom rendering with conditions
     hook.Add("HUDPaint", "CustomBarRender", function()
-        if not hook.Run("ShouldHideBars") then
-            lia.bar.drawAll()
-        end
+    if not hook.Run("ShouldHideBars") then
+        lia.bar.drawAll()
+    end
     end)
     ```
 
     High Complexity:
-
     ```lua
     -- High: Advanced rendering with custom positioning and filtering
     local function customDrawAll()

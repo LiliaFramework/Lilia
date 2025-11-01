@@ -13,32 +13,35 @@ lia.config.stored = lia.config.stored or {}
 --[[
     Purpose:
         Adds a new configuration option to the system with specified properties and validation
+
     When Called:
         During gamemode initialization, module loading, or when registering new config options
+
     Parameters:
         - key (string): Unique identifier for the configuration option
         - name (string): Display name for the configuration option
         - value (any): Default value for the configuration option
         - callback (function, optional): Function to call when the option value changes
         - data (table): Configuration metadata including type, description, category, and constraints
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Add a basic boolean configuration
         lia.config.add("EnableFeature", "Enable Feature", true, nil, {
-            desc = "Enable or disable this feature",
-            category = "general",
-            type = "Boolean"
-            })
+        desc = "Enable or disable this feature",
+        category = "general",
+        type = "Boolean"
+        })
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Add configuration with callback and constraints
         lia.config.add("WalkSpeed", "Walk Speed", 130, function(_, newValue)
@@ -46,28 +49,27 @@ lia.config.stored = lia.config.stored or {}
             client:SetWalkSpeed(newValue)
         end
         end, {
-            desc = "Player walking speed",
-            category = "character",
-            type = "Int",
-            min = 50,
-            max = 300
-            })
+        desc = "Player walking speed",
+        category = "character",
+        type = "Int",
+        min = 50,
+        max = 300
+        })
         ```
 
         High Complexity:
-
         ```lua
         -- High: Add configuration with dynamic options and complex validation
         lia.config.add("Language", "Language", "English", nil, {
-            desc = "Select your preferred language",
-            category = "general",
-            type = "Table",
-            options = function()
-            local languages = {}
-            for code, data in pairs(lia.lang.getLanguages()) do
-                languages[data.name] = code
-            end
-            return languages
+        desc = "Select your preferred language",
+        category = "general",
+        type = "Table",
+        options = function()
+        local languages = {}
+        for code, data in pairs(lia.lang.getLanguages()) do
+            languages[data.name] = code
+        end
+        return languages
         end
         })
         ```
@@ -115,17 +117,21 @@ end
 --[[
     Purpose:
         Retrieves the available options for a configuration setting, supporting both static and dynamic option lists
+
     When Called:
         When building UI elements for configuration options, particularly dropdown menus and selection lists
+
     Parameters:
         - key (string): The configuration key to get options for
+
     Returns:
         table - Array of available options for the configuration
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get static options for a configuration
         local options = lia.config.getOptions("DermaSkin")
@@ -135,7 +141,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Use options in UI creation
         local combo = vgui.Create("liaComboBox")
@@ -146,7 +151,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Dynamic options with validation and filtering
         local function createDynamicOptions()
@@ -183,25 +187,28 @@ end
 --[[
     Purpose:
         Updates the default value for an existing configuration option without changing the current value
+
     When Called:
         During configuration updates, module reloads, or when default values need to be changed
+
     Parameters:
         - key (string): The configuration key to update the default for
         - value (any): The new default value to set
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Update default value for a configuration
         lia.config.setDefault("MaxCharacters", 10)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Update default based on server conditions
         local maxChars = SERVER and 5 or 3
@@ -209,7 +216,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Update multiple defaults based on module availability
         local function updateModuleDefaults()
@@ -217,10 +223,10 @@ end
             MaxCharacters = lia.module.get("characters") and 5 or 1,
             AllowPMs = lia.module.get("chatbox") and true or false,
             WalkSpeed = lia.module.get("attributes") and 130 or 100
-        }
-        for key, value in pairs(defaults) do
-            lia.config.setDefault(key, value)
-        end
+            }
+            for key, value in pairs(defaults) do
+                lia.config.setDefault(key, value)
+            end
         end
         ```
 ]]
@@ -232,26 +238,29 @@ end
 --[[
     Purpose:
         Forces a configuration value to be set immediately without triggering networking or callbacks, with optional save control
+
     When Called:
         During initialization, module loading, or when bypassing normal configuration update mechanisms
+
     Parameters:
         - key (string): The configuration key to set
         - value (any): The value to set
         - noSave (boolean, optional): If true, prevents automatic saving of the configuration
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Force set a configuration value
         lia.config.forceSet("WalkSpeed", 150)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Force set without saving for temporary changes
         lia.config.forceSet("DebugMode", true, true)
@@ -260,7 +269,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Bulk force set with conditional saving
         local function applyModuleConfigs(moduleName, configs, saveAfter)
@@ -287,25 +295,28 @@ end
 --[[
     Purpose:
         Sets a configuration value with full networking, callback execution, and automatic saving on server
+
     When Called:
         When users change configuration values through UI, commands, or programmatic updates
+
     Parameters:
         - key (string): The configuration key to set
         - value (any): The value to set
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Set a configuration value
         lia.config.set("WalkSpeed", 150)
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Set configuration with validation
         local function setConfigWithValidation(key, value, min, max)
@@ -318,7 +329,6 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Batch configuration updates with rollback
         local function batchConfigUpdate(updates)
@@ -359,18 +369,22 @@ end
 --[[
     Purpose:
         Retrieves the current value of a configuration option with fallback to default values
+
     When Called:
         When reading configuration values for gameplay logic, UI updates, or module functionality
+
     Parameters:
         - key (string): The configuration key to retrieve
         - default (any, optional): Fallback value if configuration doesn't exist
+
     Returns:
         any - The current configuration value, default value, or provided fallback
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Get a configuration value
         local walkSpeed = lia.config.get("WalkSpeed")
@@ -378,7 +392,6 @@ end
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Get configuration with validation and fallback
         local function getConfigValue(key, expectedType, fallback)
@@ -392,25 +405,24 @@ end
         ```
 
         High Complexity:
-
         ```lua
         -- High: Get multiple configurations with type checking and validation
         local function getPlayerSettings()
             local settings = {}
             local configs = {
             walkSpeed = {"WalkSpeed", "number", 130},
-                runSpeed = {"RunSpeed", "number", 275},
-                    maxChars = {"MaxCharacters", "number", 5}
-                    }
+            runSpeed = {"RunSpeed", "number", 275},
+            maxChars = {"MaxCharacters", "number", 5}
+            }
 
-                    for setting, data in pairs(configs) do
-                        local key, expectedType, fallback = data[1], data[2], data[3]
-                        local value = lia.config.get(key, fallback)
-                        settings[setting] = type(value) == expectedType and value or fallback
-                    end
+            for setting, data in pairs(configs) do
+                local key, expectedType, fallback = data[1], data[2], data[3]
+                local value = lia.config.get(key, fallback)
+                settings[setting] = type(value) == expectedType and value or fallback
+            end
 
-                    return settings
-                end
+            return settings
+        end
         ```
 ]]
 function lia.config.get(key, default)
@@ -431,35 +443,37 @@ end
 --[[
     Purpose:
         Loads configuration values from the database on server or requests them from server on client
+
     When Called:
         During gamemode initialization, after database connection, or when configuration needs to be refreshed
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
         Low Complexity:
-
         ```lua
         -- Simple: Load configurations during initialization
         lia.config.load()
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Load configurations with callback
         lia.config.load()
         hook.Add("InitializedConfig", "MyModule", function()
-            print("Configurations loaded successfully")
-            -- Initialize module with loaded configs
+        print("Configurations loaded successfully")
+        -- Initialize module with loaded configs
         end)
         ```
 
         High Complexity:
-
         ```lua
         -- High: Load configurations with error handling and fallback
         local function loadConfigWithFallback()
@@ -526,18 +540,21 @@ if SERVER then
     --[[
         Purpose:
             Retrieves all configuration values that differ from their default values for efficient synchronization
+
         When Called:
             Before sending configurations to clients or when preparing configuration data for export
+
         Parameters:
             None
+
         Returns:
             table - Dictionary of changed configuration keys and their current values
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
             ```lua
             -- Simple: Get all changed values
             local changed = lia.config.getChangedValues()
@@ -545,7 +562,6 @@ if SERVER then
             ```
 
             Medium Complexity:
-
             ```lua
             -- Medium: Send only changed configurations to specific client
             local function sendConfigToClient(client)
@@ -559,7 +575,6 @@ if SERVER then
             ```
 
             High Complexity:
-
             ```lua
             -- High: Export changed configurations with filtering and validation
             local function exportChangedConfigs(filterFunc)
@@ -570,10 +585,10 @@ if SERVER then
                     local config = lia.config.stored[key]
                     if config and (not filterFunc or filterFunc(key, value, config)) then
                         filtered[key] = {
-                            value = value,
-                            name = config.name,
-                            category = config.category,
-                            type = config.data.type
+                        value = value,
+                        name = config.name,
+                        category = config.category,
+                        type = config.data.type
                         }
                     end
                 end
@@ -593,38 +608,39 @@ if SERVER then
     --[[
         Purpose:
             Sends configuration data to clients with intelligent batching and rate limiting for large datasets
+
         When Called:
             When a client connects, when configurations change, or when manually syncing configurations
+
         Parameters:
             - client (Player, optional): Specific client to send to, or nil to send to all clients
+
         Returns:
             None
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
             ```lua
             -- Simple: Send configurations to all clients
             lia.config.send()
             ```
 
             Medium Complexity:
-
             ```lua
             -- Medium: Send configurations to specific client on connect
             hook.Add("PlayerInitialSpawn", "SendConfigs", function(client)
-                timer.Simple(1, function()
-                if IsValid(client) then
-                    lia.config.send(client)
-                end
+            timer.Simple(1, function()
+            if IsValid(client) then
+                lia.config.send(client)
+            end
             end)
             end)
             ```
 
             High Complexity:
-
             ```lua
             -- High: Send configurations with priority and filtering
             local function sendConfigsWithPriority(priority, filterFunc)
@@ -706,25 +722,27 @@ if SERVER then
     --[[
         Purpose:
             Saves all changed configuration values to the database using transaction-based operations
+
         When Called:
             When configuration values change, during server shutdown, or when manually saving configurations
+
         Parameters:
             None
+
         Returns:
             None
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
             ```lua
             -- Simple: Save all configurations
             lia.config.save()
             ```
 
             Medium Complexity:
-
             ```lua
             -- Medium: Save configurations with error handling
             local function saveConfigsSafely()
@@ -737,7 +755,6 @@ if SERVER then
             ```
 
             High Complexity:
-
             ```lua
             -- High: Save configurations with backup and validation
             local function saveConfigsWithBackup()
@@ -779,25 +796,27 @@ if SERVER then
     --[[
         Purpose:
             Resets all configuration values to their default values and synchronizes changes to clients
+
         When Called:
             When resetting server configurations, during maintenance, or when reverting to defaults
+
         Parameters:
             None
+
         Returns:
             None
+
         Realm:
             Server
+
         Example Usage:
-
             Low Complexity:
-
             ```lua
             -- Simple: Reset all configurations to defaults
             lia.config.reset()
             ```
 
             Medium Complexity:
-
             ```lua
             -- Medium: Reset configurations with confirmation
             local function resetConfigsWithConfirmation()
@@ -808,7 +827,6 @@ if SERVER then
             ```
 
             High Complexity:
-
             ```lua
             -- High: Reset configurations with selective restoration and logging
             local function resetConfigsSelectively(keepConfigs)

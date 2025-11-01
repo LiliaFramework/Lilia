@@ -11,15 +11,20 @@
 --[[
     Purpose:
         Allows modification of stamina regeneration/drain offset for a player
+
     When Called:
         During stamina calculation, allowing custom stamina modifiers
+
     Parameters:
         client (Player) - The player whose stamina is being calculated
         offset (number) - The current stamina offset (positive for regen, negative for drain)
+
     Returns:
         number - The modified stamina offset, or nil to use original offset
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -41,13 +46,13 @@
         local char = client:getChar()
         if not char then return end
 
-            local con = char:getAttrib("con", 0) -- Constitution attribute
-            if offset > 0 then -- Regeneration
-                return offset * (1 + con * 0.1) -- 10% bonus per constitution point
-                else -- Drain
-                    return offset * (1 - con * 0.05) -- 5% less drain per constitution point
-                end
-            end)
+        local con = char:getAttrib("con", 0) -- Constitution attribute
+        if offset > 0 then -- Regeneration
+            return offset * (1 + con * 0.1) -- 10% bonus per constitution point
+        else -- Drain
+            return offset * (1 - con * 0.05) -- 5% less drain per constitution point
+        end
+    end)
     ```
 
     High Complexity:
@@ -58,7 +63,7 @@
         local char = client:getChar()
         if not char then return end
 
-            local modifiers = {
+        local modifiers = {
             regeneration = 1.0,
             drain = 1.0
         }
@@ -73,28 +78,28 @@
         if faction == "athlete" then
             modifiers.regeneration = modifiers.regeneration + 0.3
             modifiers.drain = modifiers.drain - 0.2
-            elseif faction == "elderly" then
-                modifiers.regeneration = modifiers.regeneration - 0.2
+        elseif faction == "elderly" then
+            modifiers.regeneration = modifiers.regeneration - 0.2
+            modifiers.drain = modifiers.drain + 0.3
+        end
+
+        -- Equipment bonuses
+        local items = char:getInv()
+        for _, item in pairs(items) do
+            if item.uniqueID == "stamina_boost" then
+                modifiers.regeneration = modifiers.regeneration + 0.5
+            elseif item.uniqueID == "heavy_armor" then
                 modifiers.drain = modifiers.drain + 0.3
             end
+        end
 
-            -- Equipment bonuses
-            local items = char:getInv()
-            for _, item in pairs(items) do
-                if item.uniqueID == "stamina_boost" then
-                    modifiers.regeneration = modifiers.regeneration + 0.5
-                    elseif item.uniqueID == "heavy_armor" then
-                        modifiers.drain = modifiers.drain + 0.3
-                    end
-                end
-
-                -- Apply modifiers
-                if offset > 0 then
-                    return offset * modifiers.regeneration
-                    else
-                        return offset * modifiers.drain
-                    end
-                end)
+        -- Apply modifiers
+        if offset > 0 then
+            return offset * modifiers.regeneration
+        else
+            return offset * modifiers.drain
+        end
+    end)
     ```
 ]]
 function AdjustStaminaOffset(client, offset)
@@ -103,14 +108,19 @@ end
 --[[
     Purpose:
         Called to check if an outfit can change model
+
     When Called:
         When attempting to change a player's model via outfit
+
     Parameters:
         self (Item) - The outfit item
+
     Returns:
         boolean - True to allow, false to deny
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -130,16 +140,16 @@ end
         local client = self.player
         if not client then return false end
 
-            local char = client:getChar()
-            if not char then return false end
+        local char = client:getChar()
+        if not char then return false end
 
-                local allowedFactions = self.allowedFactions
-                if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
-                    return false
-                end
+        local allowedFactions = self.allowedFactions
+        if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
+            return false
+        end
 
-                return true
-            end)
+        return true
+    end)
     ```
 
     High Complexity:
@@ -150,30 +160,30 @@ end
         local client = self.player
         if not client then return false end
 
-            local char = client:getChar()
-            if not char then return false end
+        local char = client:getChar()
+        if not char then return false end
 
-                -- Check faction restrictions
-                local allowedFactions = self.allowedFactions
-                if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
-                    if SERVER then
-                        client:ChatPrint("Your faction cannot wear this outfit")
-                    end
-                    return false
-                end
+        -- Check faction restrictions
+        local allowedFactions = self.allowedFactions
+        if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
+            if SERVER then
+                client:ChatPrint("Your faction cannot wear this outfit")
+            end
+            return false
+        end
 
-                -- Check level requirements
-                local requiredLevel = self.requiredLevel or 0
-                local charLevel = char:getData("level", 1)
-                if charLevel < requiredLevel then
-                    if SERVER then
-                        client:ChatPrint("You need to be level " .. requiredLevel .. " to wear this outfit")
-                    end
-                    return false
-                end
+        -- Check level requirements
+        local requiredLevel = self.requiredLevel or 0
+        local charLevel = char:getData("level", 1)
+        if charLevel < requiredLevel then
+            if SERVER then
+                client:ChatPrint("You need to be level " .. requiredLevel .. " to wear this outfit")
+            end
+            return false
+        end
 
-                return true
-            end)
+        return true
+    end)
     ```
 ]]
 function CanOutfitChangeModel(self)
@@ -182,15 +192,20 @@ end
 --[[
     Purpose:
         Called when a command is added
+
     When Called:
         When a new command is registered to the framework
+
     Parameters:
         command (string) - The command name
         data (table) - The command data and properties
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -208,9 +223,9 @@ end
     -- Medium: Track registered commands
     hook.Add("CommandAdded", "CommandTracking", function(command, data)
         lia.commandList = lia.commandList or {}
-            table.insert(lia.commandList, command)
-            print("Command " .. command .. " registered")
-        end)
+        table.insert(lia.commandList, command)
+        print("Command " .. command .. " registered")
+    end)
     ```
 
     High Complexity:
@@ -220,18 +235,18 @@ end
     hook.Add("CommandAdded", "AdvancedCommandTracking", function(command, data)
         -- Track command registration
         lia.commandList = lia.commandList or {}
-            table.insert(lia.commandList, {
-                name = command,
-                data = data,
-                registeredAt = os.time()
-                })
+        table.insert(lia.commandList, {
+            name = command,
+            data = data,
+            registeredAt = os.time()
+        })
 
-                -- Log command details
-                print(string.format("Command registered: %s (Admin: %s, Syntax: %s)",
-                command,
-                tostring(data.adminOnly or false),
-                data.syntax or "N/A"))
-            end)
+        -- Log command details
+        print(string.format("Command registered: %s (Admin: %s, Syntax: %s)",
+            command,
+            tostring(data.adminOnly or false),
+            data.syntax or "N/A"))
+    end)
     ```
 ]]
 function CommandAdded(command, data)
@@ -240,15 +255,20 @@ end
 --[[
     Purpose:
         Called when doing module includes
+
     When Called:
         When a module is being loaded and files are being included
+
     Parameters:
         path (string) - The path being included
         MODULE (table) - The module table
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -268,9 +288,9 @@ end
         local startTime = SysTime()
 
         timer.Simple(0, function()
-        local loadTime = SysTime() - startTime
-        print("Loaded " .. path .. " in " .. loadTime .. "s")
-    end)
+            local loadTime = SysTime() - startTime
+            print("Loaded " .. path .. " in " .. loadTime .. "s")
+        end)
     end)
     ```
 
@@ -292,11 +312,11 @@ end
 
         -- Measure load time
         timer.Simple(0, function()
-        local loadTime = SysTime() - startTime
-        print("Loaded " .. (MODULE.name or "Unknown") .. " in " .. loadTime .. "s")
+            local loadTime = SysTime() - startTime
+            print("Loaded " .. (MODULE.name or "Unknown") .. " in " .. loadTime .. "s")
 
-        -- Store load statistics
-        lia.moduleLoadTimes = lia.moduleLoadTimes or {}
+            -- Store load statistics
+            lia.moduleLoadTimes = lia.moduleLoadTimes or {}
             lia.moduleLoadTimes[MODULE.name or path] = loadTime
         end)
     end)
@@ -308,15 +328,20 @@ end
 --[[
     Purpose:
         Called to get displayed description
+
     When Called:
         When showing a player's description
+
     Parameters:
         ply (Player) - The player being described
         description (string) - The current description
+
     Returns:
         string - The modified description
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -351,24 +376,24 @@ end
         local char = ply:getChar()
         if not char then return description end
 
-            -- Add faction and rank
-            local faction = char:getFaction()
-            local rank = char:getData("rank", 0)
-            local rankName = char:getData("rankName", "Recruit")
+        -- Add faction and rank
+        local faction = char:getFaction()
+        local rank = char:getData("rank", 0)
+        local rankName = char:getData("rankName", "Recruit")
 
-            local prefix = string.format("[%s - %s] ", faction, rankName)
+        local prefix = string.format("[%s - %s] ", faction, rankName)
 
-            -- Add status indicators
-            if char:getData("injured", false) then
-                prefix = prefix .. "[INJURED] "
-            end
+        -- Add status indicators
+        if char:getData("injured", false) then
+            prefix = prefix .. "[INJURED] "
+        end
 
-            if char:getData("wanted", false) then
-                prefix = prefix .. "[WANTED] "
-            end
+        if char:getData("wanted", false) then
+            prefix = prefix .. "[WANTED] "
+        end
 
-            return prefix .. description
-        end)
+        return prefix .. description
+    end)
     ```
 ]]
 function GetDisplayedDescription(ply, description)
@@ -377,15 +402,20 @@ end
 --[[
     Purpose:
         Called to get displayed name in chat
+
     When Called:
         When showing a player's name in chat
+
     Parameters:
         speaker (Player) - The player speaking
         chatType (string) - The chat type
+
     Returns:
         string - The displayed name
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -406,12 +436,12 @@ end
         local char = speaker:getChar()
         if not char then return speaker:Name() end
 
-            if chatType == "ooc" then
-                return speaker:Name()
-                else
-                    return char:getName()
-                end
-            end)
+        if chatType == "ooc" then
+            return speaker:Name()
+        else
+            return char:getName()
+        end
+    end)
     ```
 
     High Complexity:
@@ -422,30 +452,30 @@ end
         local char = speaker:getChar()
         if not char then return speaker:Name() end
 
-            -- OOC shows Steam name
-            if chatType == "ooc" then
-                return speaker:Name()
-            end
+        -- OOC shows Steam name
+        if chatType == "ooc" then
+            return speaker:Name()
+        end
 
-            -- IC shows character name with title
-            local name = char:getName()
-            local faction = char:getFaction()
+        -- IC shows character name with title
+        local name = char:getName()
+        local faction = char:getFaction()
 
-            -- Add faction title
-            if faction == "police" then
-                local rank = char:getData("rankName", "Officer")
-                name = rank .. " " .. name
-                elseif faction == "medic" then
-                    name = "Dr. " .. name
-                end
+        -- Add faction title
+        if faction == "police" then
+            local rank = char:getData("rankName", "Officer")
+            name = rank .. " " .. name
+        elseif faction == "medic" then
+            name = "Dr. " .. name
+        end
 
-                -- Add status indicators
-                if speaker:IsAdmin() then
-                    name = "[ADMIN] " .. name
-                end
+        -- Add status indicators
+        if speaker:IsAdmin() then
+            name = "[ADMIN] " .. name
+        end
 
-                return name
-            end)
+        return name
+    end)
     ```
 ]]
 function GetDisplayedName(speaker, chatType)
@@ -454,16 +484,21 @@ end
 --[[
     Purpose:
         Called to get door information
+
     When Called:
         When retrieving door data
+
     Parameters:
         entity (Entity) - The door entity
         doorData (table) - The door data table
         doorInfo (table) - The door info table
+
     Returns:
         table - The modified door info
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -523,14 +558,19 @@ end
 --[[
     Purpose:
         Called to get model gender
+
     When Called:
         When determining a model's gender
+
     Parameters:
         model (string) - The model path
+
     Returns:
         string - "male" or "female"
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -570,15 +610,15 @@ end
 
         -- Check specific models
         local femaleModels = {
-        ["models/player/alyx.mdl"] = true,
-        ["models/player/mossman.mdl"] = true
-    }
+            ["models/player/alyx.mdl"] = true,
+            ["models/player/mossman.mdl"] = true
+        }
 
-    if femaleModels[model] then
-        return "female"
-    end
+        if femaleModels[model] then
+            return "female"
+        end
 
-    return "male"
+        return "male"
     end)
     ```
 ]]
@@ -588,14 +628,19 @@ end
 --[[
     Purpose:
         Called when configuration is initialized
+
     When Called:
         When the configuration system has finished loading
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -624,29 +669,29 @@ end
     hook.Add("InitializedConfig", "AdvancedConfigInit", function()
         -- Add custom configuration options
         local configOptions = {
-        {key = "myAddonEnabled", default = true, description = "Enable My Addon", type = "boolean"},
+            {key = "myAddonEnabled", default = true, description = "Enable My Addon", type = "boolean"},
             {key = "myAddonValue", default = 100, description = "My Addon Value", type = "number"},
-                {key = "myAddonString", default = "default", description = "My Addon String", type = "string"},
-                    {key = "myAddonColor", default = Color(255, 255, 255), description = "My Addon Color", type = "color"}
-                    }
+            {key = "myAddonString", default = "default", description = "My Addon String", type = "string"},
+            {key = "myAddonColor", default = Color(255, 255, 255), description = "My Addon Color", type = "color"}
+        }
 
-                    for _, option in ipairs(configOptions) do
-                        lia.config.add(option.key, option.default, option.description)
-                    end
+        for _, option in ipairs(configOptions) do
+            lia.config.add(option.key, option.default, option.description)
+        end
 
-                    -- Load saved configuration
-                    local savedConfig = lia.data.get("myAddonConfig", {})
-                    for key, value in pairs(savedConfig) do
-                        lia.config.set(key, value)
-                    end
+        -- Load saved configuration
+        local savedConfig = lia.data.get("myAddonConfig", {})
+        for key, value in pairs(savedConfig) do
+            lia.config.set(key, value)
+        end
 
-                    -- Set up configuration callbacks
-                    lia.config.addCallback("myAddonEnabled", function(value)
-                    print("My Addon enabled: " .. tostring(value))
-                end)
+        -- Set up configuration callbacks
+        lia.config.addCallback("myAddonEnabled", function(value)
+            print("My Addon enabled: " .. tostring(value))
+        end)
 
-                print("Configuration system initialized with " .. #configOptions .. " options")
-            end)
+        print("Configuration system initialized with " .. #configOptions .. " options")
+    end)
     ```
 ]]
 function InitializedConfig()
@@ -655,14 +700,19 @@ end
 --[[
     Purpose:
         Called when items are initialized
+
     When Called:
         When the item system has finished loading
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -683,8 +733,8 @@ end
             name = "My Custom Item",
             model = "models/props_junk/cardboard_box004a.mdl",
             description = "A custom item"
-            })
-        end)
+        })
+    end)
     ```
 
     High Complexity:
@@ -694,49 +744,49 @@ end
     hook.Add("InitializedItems", "AdvancedItemInit", function()
         -- Register custom item categories
         local categories = {
-        "weapons",
-        "medical",
-        "food",
-        "tools",
-        "misc"
-    }
-
-    for _, category in ipairs(categories) do
-        lia.item.addCategory(category)
-    end
-
-    -- Register custom items
-    local customItems = {
-    {
-        uniqueID = "my_weapon",
-        name = "My Weapon",
-        model = "models/weapons/w_pistol.mdl",
-        description = "A custom weapon",
-        category = "weapons",
-        weight = 2,
-        price = 100
-        },
-        {
-            uniqueID = "my_medkit",
-            name = "My Medkit",
-            model = "models/items/medkit.mdl",
-            description = "A custom medkit",
-            category = "medical",
-            weight = 1,
-            price = 50
+            "weapons",
+            "medical",
+            "food",
+            "tools",
+            "misc"
         }
-    }
 
-    for _, itemData in ipairs(customItems) do
-        lia.item.register(itemData.uniqueID, itemData)
-    end
+        for _, category in ipairs(categories) do
+            lia.item.addCategory(category)
+        end
 
-    -- Set up item callbacks
-    lia.item.addCallback("my_weapon", "onUse", function(item, client)
-    client:ChatPrint("Used custom weapon!")
-    end)
+        -- Register custom items
+        local customItems = {
+            {
+                uniqueID = "my_weapon",
+                name = "My Weapon",
+                model = "models/weapons/w_pistol.mdl",
+                description = "A custom weapon",
+                category = "weapons",
+                weight = 2,
+                price = 100
+            },
+            {
+                uniqueID = "my_medkit",
+                name = "My Medkit",
+                model = "models/items/medkit.mdl",
+                description = "A custom medkit",
+                category = "medical",
+                weight = 1,
+                price = 50
+            }
+        }
 
-    print("Item system initialized with " .. #customItems .. " custom items")
+        for _, itemData in ipairs(customItems) do
+            lia.item.register(itemData.uniqueID, itemData)
+        end
+
+        -- Set up item callbacks
+        lia.item.addCallback("my_weapon", "onUse", function(item, client)
+            client:ChatPrint("Used custom weapon!")
+        end)
+
+        print("Item system initialized with " .. #customItems .. " custom items")
     end)
     ```
 ]]
@@ -746,14 +796,19 @@ end
 --[[
     Purpose:
         Called when modules are initialized
+
     When Called:
         When the module system has finished loading
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -775,8 +830,8 @@ end
             description = "A custom module",
             author = "Me",
             version = "1.0.0"
-            })
-        end)
+        })
+    end)
     ```
 
     High Complexity:
@@ -786,34 +841,34 @@ end
     hook.Add("InitializedModules", "AdvancedModuleInit", function()
         -- Register custom modules
         local modules = {
-        {
-            uniqueID = "my_module",
-            name = "My Module",
-            description = "A custom module",
-            author = "Me",
-            version = "1.0.0",
-            dependencies = {"base"}
-                },
-                {
-                    uniqueID = "my_other_module",
-                    name = "My Other Module",
-                    description = "Another custom module",
-                    author = "Me",
-                    version = "1.0.0",
-                    dependencies = {"my_module"}
-                    }
-                }
+            {
+                uniqueID = "my_module",
+                name = "My Module",
+                description = "A custom module",
+                author = "Me",
+                version = "1.0.0",
+                dependencies = {"base"}
+            },
+            {
+                uniqueID = "my_other_module",
+                name = "My Other Module",
+                description = "Another custom module",
+                author = "Me",
+                version = "1.0.0",
+                dependencies = {"my_module"}
+            }
+        }
 
-                for _, moduleData in ipairs(modules) do
-                    lia.module.register(moduleData.uniqueID, moduleData)
-                end
+        for _, moduleData in ipairs(modules) do
+            lia.module.register(moduleData.uniqueID, moduleData)
+        end
 
-                -- Set up module callbacks
-                lia.module.addCallback("my_module", "onLoad", function()
-                print("My module loaded!")
-            end)
+        -- Set up module callbacks
+        lia.module.addCallback("my_module", "onLoad", function()
+            print("My module loaded!")
+        end)
 
-            lia.module.addCallback("my_module", "onUnload", function()
+        lia.module.addCallback("my_module", "onUnload", function()
             print("My module unloaded!")
         end)
 
@@ -833,14 +888,19 @@ end
 --[[
     Purpose:
         Called when schema is initialized
+
     When Called:
         When the schema system has finished loading
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -869,38 +929,38 @@ end
     hook.Add("InitializedSchema", "AdvancedSchemaInit", function()
         -- Set up custom schema data
         local schemaData = {
-        version = "1.0.0",
-        name = "My Custom Schema",
-        description = "A custom schema for my addon",
-        author = "Me",
-        enabled = true,
-        settings = {
-            maxPlayers = 32,
-            respawnTime = 5,
-            roundTime = 600
+            version = "1.0.0",
+            name = "My Custom Schema",
+            description = "A custom schema for my addon",
+            author = "Me",
+            enabled = true,
+            settings = {
+                maxPlayers = 32,
+                respawnTime = 5,
+                roundTime = 600
+            }
         }
-    }
 
-    for key, value in pairs(schemaData) do
-        lia.schema.set(key, value)
-    end
+        for key, value in pairs(schemaData) do
+            lia.schema.set(key, value)
+        end
 
-    -- Set up schema callbacks
-    lia.schema.addCallback("onLoad", function()
-    print("Schema loaded!")
-    end)
+        -- Set up schema callbacks
+        lia.schema.addCallback("onLoad", function()
+            print("Schema loaded!")
+        end)
 
-    lia.schema.addCallback("onUnload", function()
-    print("Schema unloaded!")
-    end)
+        lia.schema.addCallback("onUnload", function()
+            print("Schema unloaded!")
+        end)
 
-    -- Load saved schema settings
-    local savedSettings = lia.data.get("schemaSettings", {})
-    for key, value in pairs(savedSettings) do
-        lia.schema.set(key, value)
-    end
+        -- Load saved schema settings
+        local savedSettings = lia.data.get("schemaSettings", {})
+        for key, value in pairs(savedSettings) do
+            lia.schema.set(key, value)
+        end
 
-    print("Schema system initialized with custom data")
+        print("Schema system initialized with custom data")
     end)
     ```
 ]]
@@ -910,17 +970,22 @@ end
 --[[
     Purpose:
         Called when inventory data changes
+
     When Called:
         When an inventory's data is modified
+
     Parameters:
         instance (Inventory) - The inventory instance
         key (string) - The data key that changed
         oldValue (any) - The old value
         value (any) - The new value
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -939,10 +1004,10 @@ end
     hook.Add("InventoryDataChanged", "TrackInventoryChanges", function(instance, key, oldValue, value)
         if key == "weight" then
             print("Inventory weight changed from " .. oldValue .. " to " .. value)
-            elseif key == "maxWeight" then
-                print("Max weight changed from " .. oldValue .. " to " .. value)
-            end
-        end)
+        elseif key == "maxWeight" then
+            print("Max weight changed from " .. oldValue .. " to " .. value)
+        end
+    end)
     ```
 
     High Complexity:
@@ -953,7 +1018,7 @@ end
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO inventory_logs (timestamp, invid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
-            os.time(), instance:getID(), key, tostring(oldValue), tostring(value))
+                os.time(), instance:getID(), key, tostring(oldValue), tostring(value))
         end
 
         -- Track weight changes
@@ -983,15 +1048,20 @@ end
 
 --[[
     Purpose:
-        Called when an inventory is initialized
+                Called when an inventory is initialized
+
     When Called:
-        When an inventory is first created and set up
+                When an inventory is first created and set up
+
     Parameters:
         instance (Inventory) - The inventory being initialized
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1028,7 +1098,7 @@ end
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO inventory_logs (timestamp, invid, action) VALUES (?, ?, ?)",
-            os.time(), instance:getID(), "initialized")
+                os.time(), instance:getID(), "initialized")
 
             -- Set up owner-specific settings
             local owner = instance:getOwner()
@@ -1039,25 +1109,25 @@ end
                     local faction = char:getFaction()
                     if faction == "police" then
                         instance:setData("maxWeight", 150)
-                        elseif faction == "medic" then
-                            instance:setData("maxWeight", 120)
-                        end
+                    elseif faction == "medic" then
+                        instance:setData("maxWeight", 120)
+                    end
 
-                        -- Add starting items
-                        if instance:getData("isNew", true) then
-                            local startingItems = {"item_bandage", "item_water"}
-                            for _, itemID in ipairs(startingItems) do
-                                local item = lia.item.instance(itemID)
-                                if item then
-                                    instance:add(item)
-                                end
+                    -- Add starting items
+                    if instance:getData("isNew", true) then
+                        local startingItems = {"item_bandage", "item_water"}
+                        for _, itemID in ipairs(startingItems) do
+                            local item = lia.item.instance(itemID)
+                            if item then
+                                instance:add(item)
                             end
-                            instance:setData("isNew", false)
                         end
+                        instance:setData("isNew", false)
                     end
                 end
             end
-        end)
+        end
+    end)
     ```
 ]]
 function InventoryInitialized(instance)
@@ -1065,19 +1135,24 @@ end
 
 --[[
     Purpose:
-        Called when an item's data changes in an inventory
+                Called when an item's data changes in an inventory
+
     When Called:
-        When an item's data is modified while in an inventory
+                When an item's data is modified while in an inventory
+
     Parameters:
         item (Item) - The item whose data changed
         key (string) - The data key that changed
         oldValue (any) - The old value
         newValue (any) - The new value
         inventory (Inventory) - The inventory containing the item
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1097,11 +1172,11 @@ end
         if key == "durability" then
             if newValue <= 0 then
                 print("Item " .. item.name .. " is broken!")
-                elseif newValue <= 20 then
-                    print("Item " .. item.name .. " is almost broken!")
-                end
+            elseif newValue <= 20 then
+                print("Item " .. item.name .. " is almost broken!")
             end
-        end)
+        end
+    end)
     ```
 
     High Complexity:
@@ -1112,7 +1187,7 @@ end
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
-            os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
+                os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
 
             -- Handle durability changes
             if key == "durability" then
@@ -1125,10 +1200,10 @@ end
 
                     -- Remove item if it's broken
                     timer.Simple(1, function()
-                    if IsValid(item) then
-                        item:remove()
-                    end
-                end)
+                        if IsValid(item) then
+                            item:remove()
+                        end
+                    end)
                 elseif newValue <= 20 then
                     -- Item is almost broken
                     local owner = inventory:getOwner()
@@ -1154,16 +1229,21 @@ end
 
 --[[
     Purpose:
-        Called to check if a character is fake recognized
+                Called to check if a character is fake recognized
+
     When Called:
-        When checking if a character appears recognized but isn't truly
+                When checking if a character appears recognized but isn't truly
+
     Parameters:
         self (Character) - The character checking recognition
         id (number) - The character ID being checked
+
     Returns:
         boolean - True if fake recognized, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1198,15 +1278,15 @@ end
             local fakeRecognitionTime = self:getData("fakeRecognitionTime_" .. id, 0)
             if os.time() - fakeRecognitionTime < 3600 then -- 1 hour
                 return true
-                else
-                    -- Remove expired fake recognition
-                    table.RemoveByValue(fakeRecognized, id)
-                    self:setData("fakeRecognized", fakeRecognized)
-                end
+            else
+                -- Remove expired fake recognition
+                table.RemoveByValue(fakeRecognized, id)
+                self:setData("fakeRecognized", fakeRecognized)
             end
+        end
 
-            return false
-        end)
+        return false
+    end)
     ```
 ]]
 function IsCharFakeRecognized(self, id)
@@ -1214,16 +1294,21 @@ end
 
 --[[
     Purpose:
-        Called to check if a character is recognized
+                Called to check if a character is recognized
+
     When Called:
-        When checking if one character recognizes another
+                When checking if one character recognizes another
+
     Parameters:
         self (Character) - The character checking recognition
         id (number) - The character ID being checked
+
     Returns:
         boolean - True if recognized, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1269,30 +1354,30 @@ end
         local targetChar = lia.char.loaded[id]
         if not targetChar then return false end
 
-            -- Same faction members recognize each other
-            if targetChar:getFaction() == self:getFaction() then
+        -- Same faction members recognize each other
+        if targetChar:getFaction() == self:getFaction() then
+            return true
+        end
+
+        -- Check if in same group/party
+        local myGroup = self:getData("group")
+        local targetGroup = targetChar:getData("group")
+        if myGroup and targetGroup and myGroup == targetGroup then
+            return true
+        end
+
+        -- Check proximity-based recognition
+        local myPlayer = self:getPlayer()
+        local targetPlayer = targetChar:getPlayer()
+        if IsValid(myPlayer) and IsValid(targetPlayer) then
+            local distance = myPlayer:GetPos():Distance(targetPlayer:GetPos())
+            if distance < 100 then -- Very close range
                 return true
             end
+        end
 
-            -- Check if in same group/party
-            local myGroup = self:getData("group")
-            local targetGroup = targetChar:getData("group")
-            if myGroup and targetGroup and myGroup == targetGroup then
-                return true
-            end
-
-            -- Check proximity-based recognition
-            local myPlayer = self:getPlayer()
-            local targetPlayer = targetChar:getPlayer()
-            if IsValid(myPlayer) and IsValid(targetPlayer) then
-                local distance = myPlayer:GetPos():Distance(targetPlayer:GetPos())
-                if distance < 100 then -- Very close range
-                    return true
-                end
-            end
-
-            return false
-        end)
+        return false
+    end)
     ```
 ]]
 function IsCharRecognized(self, id)
@@ -1300,15 +1385,20 @@ end
 
 --[[
     Purpose:
-        Called to check if a chat type requires recognition
+                Called to check if a chat type requires recognition
+
     When Called:
-        When determining if players need to be recognized to see names in chat
+                When determining if players need to be recognized to see names in chat
+
     Parameters:
         chatType (string) - The chat type being checked
+
     Returns:
         boolean - True if recognition is required, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1362,15 +1452,20 @@ end
 
 --[[
     Purpose:
-        Called to validate an entity
+                Called to validate an entity
+
     When Called:
-        When checking if an entity reference is valid
+                When checking if an entity reference is valid
+
     Parameters:
         None
+
     Returns:
         boolean - True if valid, false otherwise
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1410,18 +1505,23 @@ end
 
 --[[
     Purpose:
-        Called when an item's data changes
+                Called when an item's data changes
+
     When Called:
-        When an item's data is modified
+                When an item's data is modified
+
     Parameters:
         item (Item) - The item whose data changed
         key (string) - The data key that changed
         oldValue (any) - The old value
         newValue (any) - The new value
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1441,11 +1541,11 @@ end
         if key == "durability" then
             if newValue <= 0 then
                 print("Item " .. item.name .. " is broken!")
-                elseif newValue <= 20 then
-                    print("Item " .. item.name .. " is almost broken!")
-                end
+            elseif newValue <= 20 then
+                print("Item " .. item.name .. " is almost broken!")
             end
-        end)
+        end
+    end)
     ```
 
     High Complexity:
@@ -1456,7 +1556,7 @@ end
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
-            os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
+                os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
 
             -- Handle durability changes
             if key == "durability" then
@@ -1469,10 +1569,10 @@ end
 
                     -- Remove item
                     timer.Simple(1, function()
-                    if IsValid(item) then
-                        item:remove()
-                    end
-                end)
+                        if IsValid(item) then
+                            item:remove()
+                        end
+                    end)
                 elseif newValue <= 20 then
                     -- Item is almost broken
                     local owner = item:getOwner()
@@ -1505,15 +1605,20 @@ end
 
 --[[
     Purpose:
-        Called to get default functions for an item
+                Called to get default functions for an item
+
     When Called:
-        When building the default interaction functions for an item
+                When building the default interaction functions for an item
+
     Parameters:
         item (Item) - The item to get functions for
+
     Returns:
         table - Table of default functions
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1522,10 +1627,10 @@ end
     -- Simple: Return basic functions
     hook.Add("ItemDefaultFunctions", "MyAddon", function(item)
         return {
-        use = {name = "Use", icon = "icon16/accept.png"},
+            use = {name = "Use", icon = "icon16/accept.png"},
             drop = {name = "Drop", icon = "icon16/bin.png"}
-            }
-        end)
+        }
+    end)
     ```
 
     Medium Complexity:
@@ -1535,17 +1640,17 @@ end
     hook.Add("ItemDefaultFunctions", "ConditionalItemFunctions", function(item)
         local functions = {
             use = {name = "Use", icon = "icon16/accept.png"},
-                drop = {name = "Drop", icon = "icon16/bin.png"}
-                }
+            drop = {name = "Drop", icon = "icon16/bin.png"}
+        }
 
-                if not item:getData("equipped", false) then
-                    functions.equip = {name = "Equip", icon = "icon16/add.png"}
-                        else
-                            functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
-                            end
+        if not item:getData("equipped", false) then
+            functions.equip = {name = "Equip", icon = "icon16/add.png"}
+        else
+            functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
+        end
 
-                            return functions
-                        end)
+        return functions
+    end)
     ```
 
     High Complexity:
@@ -1555,34 +1660,34 @@ end
     hook.Add("ItemDefaultFunctions", "AdvancedItemFunctions", function(item)
         local functions = {}
 
-            -- Always add use function
-            functions.use = {name = "Use", icon = "icon16/accept.png"}
+        -- Always add use function
+        functions.use = {name = "Use", icon = "icon16/accept.png"}
 
-                -- Add drop if not equipped
-                if not item:getData("equipped", false) then
-                    functions.drop = {name = "Drop", icon = "icon16/bin.png"}
-                    end
+        -- Add drop if not equipped
+        if not item:getData("equipped", false) then
+            functions.drop = {name = "Drop", icon = "icon16/bin.png"}
+        end
 
-                    -- Add equip/unequip
-                    if item.equipable then
-                        if item:getData("equipped", false) then
-                            functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
-                                else
-                                    functions.equip = {name = "Equip", icon = "icon16/add.png"}
-                                    end
-                                end
+        -- Add equip/unequip
+        if item.equipable then
+            if item:getData("equipped", false) then
+                functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
+            else
+                functions.equip = {name = "Equip", icon = "icon16/add.png"}
+            end
+        end
 
-                                -- Add examine
-                                functions.examine = {name = "Examine", icon = "icon16/magnifier.png"}
+        -- Add examine
+        functions.examine = {name = "Examine", icon = "icon16/magnifier.png"}
 
-                                    -- Add repair if damaged
-                                    local durability = item:getData("durability")
-                                    if durability and durability < 100 then
-                                        functions.repair = {name = "Repair", icon = "icon16/wrench.png"}
-                                        end
+        -- Add repair if damaged
+        local durability = item:getData("durability")
+        if durability and durability < 100 then
+            functions.repair = {name = "Repair", icon = "icon16/wrench.png"}
+        end
 
-                                        return functions
-                                    end)
+        return functions
+    end)
     ```
 ]]
 function ItemDefaultFunctions(item)
@@ -1590,15 +1695,20 @@ end
 
 --[[
     Purpose:
-        Called when an item is initialized
+                Called when an item is initialized
+
     When Called:
-        When an item is first created and set up
+                When an item is first created and set up
+
     Parameters:
         item (Item) - The item being initialized
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1643,20 +1753,20 @@ end
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO item_logs (timestamp, itemid, action) VALUES (?, ?, ?)",
-            os.time(), item:getID(), "initialized")
+                os.time(), item:getID(), "initialized")
 
             -- Set up item-specific data
             if item.category == "weapon" then
                 item:setData("ammo", item.maxAmmo or 30)
-                elseif item.category == "armor" then
-                    item:setData("defense", item.baseDefense or 10)
-                end
+            elseif item.category == "armor" then
+                item:setData("defense", item.baseDefense or 10)
+            end
 
-                -- Add to item registry
-                lia.itemRegistry = lia.itemRegistry or {}
-                    lia.itemRegistry[item:getID()] = item
-                end
-            end)
+            -- Add to item registry
+            lia.itemRegistry = lia.itemRegistry or {}
+            lia.itemRegistry[item:getID()] = item
+        end
+    end)
     ```
 ]]
 function ItemInitialized(item)
@@ -1664,17 +1774,22 @@ end
 
 --[[
     Purpose:
-        Called when an item's quantity changes
+                Called when an item's quantity changes
+
     When Called:
-        When the stack size of an item is modified
+                When the stack size of an item is modified
+
     Parameters:
         item (Item) - The item whose quantity changed
         oldValue (number) - The old quantity
         quantity (number) - The new quantity
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
 
     Low Complexity:
@@ -1705,7 +1820,7 @@ end
         if SERVER then
             -- Log to database
             lia.db.query("INSERT INTO item_quantity_logs (timestamp, itemid, oldquantity, newquantity) VALUES (?, ?, ?, ?)",
-            os.time(), item:getID(), oldValue, quantity)
+                os.time(), item:getID(), oldValue, quantity)
 
             -- Remove item if quantity is zero or negative
             if quantity <= 0 then
@@ -1723,24 +1838,24 @@ end
                 local change = quantity - oldValue
                 if change > 0 then
                     owner:ChatPrint("+" .. change .. " " .. item.name)
-                    else
-                        owner:ChatPrint(change .. " " .. item.name)
-                    end
+                else
+                    owner:ChatPrint(change .. " " .. item.name)
                 end
+            end
 
-                -- Check for achievements
-                if quantity >= 100 then
-                    local owner = item:getOwner()
-                    if IsValid(owner) then
-                        local char = owner:getChar()
-                        if char and not char:getData("achievement_hoarder_" .. item.uniqueID, false) then
-                            char:setData("achievement_hoarder_" .. item.uniqueID, true)
-                            owner:ChatPrint("Achievement unlocked: Hoarder of " .. item.name)
-                        end
+            -- Check for achievements
+            if quantity >= 100 then
+                local owner = item:getOwner()
+                if IsValid(owner) then
+                    local char = owner:getChar()
+                    if char and not char:getData("achievement_hoarder_" .. item.uniqueID, false) then
+                        char:setData("achievement_hoarder_" .. item.uniqueID, true)
+                        owner:ChatPrint("Achievement unlocked: Hoarder of " .. item.name)
                     end
                 end
             end
-        end)
+        end
+    end)
     ```
 ]]
 function ItemQuantityChanged(item, oldValue, quantity)
@@ -1748,33 +1863,35 @@ end
 
 --[[
     Purpose:
-        Called when Lilia framework is fully loaded
+                Called when Lilia framework is fully loaded
+
     When Called:
-        After all Lilia systems are initialized
+                After all Lilia systems are initialized
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log framework load
     hook.Add("LiliaLoaded", "MyAddon", function()
-        print("Lilia framework loaded")
+    print("Lilia framework loaded")
     end)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Initialize addon systems
     hook.Add("LiliaLoaded", "InitializeAddon", function()
-        MyAddon.Initialize()
-        print("MyAddon initialized")
+    MyAddon.Initialize()
+    print("MyAddon initialized")
     end)
     ```
 
@@ -1790,8 +1907,8 @@ end
         lia.command.add("mycmd", {
             description = "My custom command",
             onRun = function(client, arguments)
-            client:ChatPrint("Command executed!")
-        end
+                client:ChatPrint("Command executed!")
+            end
         })
 
         -- Register custom items
@@ -1799,10 +1916,10 @@ end
             name = "My Item",
             desc = "A custom item",
             model = "models/props_lab/box01a.mdl"
-            })
+        })
 
-            print("MyAddon fully initialized with Lilia")
-        end)
+        print("MyAddon fully initialized with Lilia")
+    end)
     ```
 ]]
 function LiliaLoaded()
@@ -1810,26 +1927,29 @@ end
 
 --[[
     Purpose:
-        Called when a network variable changes
+                Called when a network variable changes
+
     When Called:
-        When an entity's netvar is modified
+                When an entity's netvar is modified
+
     Parameters:
         entity (Entity) - The entity whose netvar changed
         key (string) - The netvar key
         oldValue (any) - The old value
         value (any) - The new value
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log netvar changes
     hook.Add("NetVarChanged", "MyAddon", function(entity, key, oldValue, value)
-        print("NetVar changed: " .. key .. " = " .. tostring(value))
+    print("NetVar changed: " .. key .. " = " .. tostring(value))
     end)
     ```
 
@@ -1840,10 +1960,10 @@ end
     hook.Add("NetVarChanged", "TrackNetvars", function(entity, key, oldValue, value)
         if key == "health" then
             print("Health changed from " .. oldValue .. " to " .. value)
-            elseif key == "armor" then
-                print("Armor changed from " .. oldValue .. " to " .. value)
-            end
-        end)
+        elseif key == "armor" then
+            print("Armor changed from " .. oldValue .. " to " .. value)
+        end
+    end)
     ```
 
     High Complexity:
@@ -1853,26 +1973,26 @@ end
     hook.Add("NetVarChanged", "AdvancedNetvarTracking", function(entity, key, oldValue, value)
         if not IsValid(entity) then return end
 
-            -- Log to console
-            print(string.format("NetVar changed on %s: %s = %s (was %s)",
+        -- Log to console
+        print(string.format("NetVar changed on %s: %s = %s (was %s)",
             tostring(entity), key, tostring(value), tostring(oldValue)))
 
-            -- Handle specific netvars
-            if key == "health" and entity:IsPlayer() then
-                if value < oldValue then
-                    -- Player took damage
-                    local damage = oldValue - value
-                    print(entity:Name() .. " took " .. damage .. " damage")
-                    elseif value > oldValue then
-                        -- Player healed
-                        local healing = value - oldValue
-                        print(entity:Name() .. " healed " .. healing .. " HP")
-                    end
-                end
+        -- Handle specific netvars
+        if key == "health" and entity:IsPlayer() then
+            if value < oldValue then
+                -- Player took damage
+                local damage = oldValue - value
+                print(entity:Name() .. " took " .. damage .. " damage")
+            elseif value > oldValue then
+                -- Player healed
+                local healing = value - oldValue
+                print(entity:Name() .. " healed " .. healing .. " HP")
+            end
+        end
 
-                -- Trigger custom events
-                hook.Run("CustomNetVarChanged_" .. key, entity, oldValue, value)
-            end)
+        -- Trigger custom events
+        hook.Run("CustomNetVarChanged_" .. key, entity, oldValue, value)
+    end)
     ```
 ]]
 function NetVarChanged(entity, key, oldValue, value)
@@ -1880,38 +2000,40 @@ end
 
 --[[
     Purpose:
-        Called when an item is registered
+                Called when an item is registered
+
     When Called:
-        When a new item is added to the item system
+                When a new item is added to the item system
+
     Parameters:
         ITEM (table) - The item table being registered
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log item registration
     hook.Add("OnItemRegistered", "MyAddon", function(ITEM)
-        print("Item registered: " .. ITEM.name)
+    print("Item registered: " .. ITEM.name)
     end)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Track registered items
     hook.Add("OnItemRegistered", "TrackItems", function(ITEM)
-        MyAddon.registeredItems = MyAddon.registeredItems or {}
-            MyAddon.registeredItems[ITEM.uniqueID] = {
-                name = ITEM.name,
-                model = ITEM.model,
-                registered = os.time()
-            }
-        end)
+    MyAddon.registeredItems = MyAddon.registeredItems or {}
+    MyAddon.registeredItems[ITEM.uniqueID] = {
+    name = ITEM.name,
+    model = ITEM.model,
+    registered = os.time()
+    }
+    end)
     ```
 
     High Complexity:
@@ -1925,26 +2047,26 @@ end
             name = ITEM.name,
             model = ITEM.model,
             timestamp = os.time()
-            })
+        })
 
-            -- Validate item data
-            if not ITEM.uniqueID or not ITEM.name then
-                print("Warning: Invalid item data for " .. tostring(ITEM.uniqueID))
-            end
+        -- Validate item data
+        if not ITEM.uniqueID or not ITEM.name then
+            print("Warning: Invalid item data for " .. tostring(ITEM.uniqueID))
+        end
 
-            -- Add custom properties
-            ITEM.customProperty = "MyAddonValue"
+        -- Add custom properties
+        ITEM.customProperty = "MyAddonValue"
 
-            -- Register item in custom system
-            MyAddon.itemSystem:RegisterItem(ITEM)
+        -- Register item in custom system
+        MyAddon.itemSystem:RegisterItem(ITEM)
 
-            -- Notify clients if server
-            if SERVER then
-                net.Start("liaItemRegistered")
-                net.WriteString(ITEM.uniqueID)
-                net.Broadcast()
-            end
-        end)
+        -- Notify clients if server
+        if SERVER then
+            net.Start("liaItemRegistered")
+            net.WriteString(ITEM.uniqueID)
+            net.Broadcast()
+        end
+    end)
     ```
 ]]
 function OnItemRegistered(ITEM)
@@ -1952,23 +2074,26 @@ end
 
 --[[
     Purpose:
-        Called when the framework has finished loading
+                Called when the framework has finished loading
+
     When Called:
-        After all framework components have been initialized
+                After all framework components have been initialized
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log framework loaded
     hook.Add("OnLoaded", "MyAddon", function()
-        print("Lilia framework has finished loading")
+    print("Lilia framework has finished loading")
     end)
     ```
 
@@ -1980,11 +2105,11 @@ end
         if SERVER then
             -- Server-side initialization
             print("Server addon initialized")
-            else
-                -- Client-side initialization
-                print("Client addon initialized")
-            end
-        end)
+        else
+            -- Client-side initialization
+            print("Client addon initialized")
+        end
+    end)
     ```
 
     High Complexity:
@@ -2001,13 +2126,13 @@ end
 
             -- Register custom network strings
             util.AddNetworkString("MyAddonSync")
-            else
-                -- Setup client UI
-                hook.Add("HUDPaint", "MyAddonHUD", function()
-                    -- Draw custom HUD elements
-                end)
-            end
-        end)
+        else
+            -- Setup client UI
+            hook.Add("HUDPaint", "MyAddonHUD", function()
+                -- Draw custom HUD elements
+            end)
+        end
+    end)
     ```
 ]]
 function OnLoaded()
@@ -2015,167 +2140,43 @@ end
 
 --[[
     Purpose:
-        Called when a module table is created
+                Called when a new privilege is registered
+
     When Called:
-        When a new module table is registered in the framework
-    Parameters:
-        moduleName (string) - The name of the module
-        moduleTable (table) - The module table that was created
-    Returns:
-        None
-    Realm:
-        Shared
-    Example Usage:
+                When a privilege is added to the system
 
-    Low Complexity:
-
-    ```lua
-    -- Simple: Log module creation
-    hook.Add("OnModuleTableCreated", "MyAddon", function(moduleName, moduleTable)
-        print("Module created: " .. moduleName)
-    end)
-    ```
-
-    Medium Complexity:
-
-    ```lua
-    -- Medium: Track module creation
-    hook.Add("OnModuleTableCreated", "TrackModules", function(moduleName, moduleTable)
-        MyAddon.modules = MyAddon.modules or {}
-            MyAddon.modules[moduleName] = {
-                name = moduleName,
-                created = os.time(),
-                enabled = moduleTable.enabled or false
-            }
-        end)
-    ```
-
-    High Complexity:
-
-    ```lua
-    -- High: Complex module management
-    hook.Add("OnModuleTableCreated", "AdvancedModuleManagement", function(moduleName, moduleTable)
-        -- Register module dependencies
-        if moduleTable.dependencies then
-            for _, dep in ipairs(moduleTable.dependencies) do
-                if not lia.module.list[dep] then
-                    print("Warning: Module " .. moduleName .. " requires " .. dep)
-                end
-            end
-        end
-
-        -- Initialize module data
-        if SERVER then
-            lia.data.get("module_" .. moduleName, {}, function(data)
-                moduleTable.data = data
-            end)
-        end
-    end)
-    ```
-]]
-function OnModuleTableCreated(moduleName, moduleTable)
-end
-
---[[
-    Purpose:
-        Called when a module table is removed
-    When Called:
-        When a module is unregistered from the framework
-    Parameters:
-        moduleName (string) - The name of the module being removed
-    Returns:
-        None
-    Realm:
-        Shared
-    Example Usage:
-
-    Low Complexity:
-
-    ```lua
-    -- Simple: Log module removal
-    hook.Add("OnModuleTableRemoved", "MyAddon", function(moduleName)
-        print("Module removed: " .. moduleName)
-    end)
-    ```
-
-    Medium Complexity:
-
-    ```lua
-    -- Medium: Clean up module data
-    hook.Add("OnModuleTableRemoved", "CleanupModule", function(moduleName)
-        if MyAddon.modules and MyAddon.modules[moduleName] then
-            MyAddon.modules[moduleName] = nil
-            print("Cleaned up data for module: " .. moduleName)
-        end
-    end)
-    ```
-
-    High Complexity:
-
-    ```lua
-    -- High: Complex module cleanup
-    hook.Add("OnModuleTableRemoved", "AdvancedModuleCleanup", function(moduleName)
-        -- Remove module hooks
-        for hookName, hookTable in pairs(hook.GetTable()) do
-            if hookTable[moduleName] then
-                hook.Remove(hookName, moduleName)
-            end
-        end
-
-        -- Clean up module data
-        if SERVER then
-            lia.data.delete("module_" .. moduleName)
-        end
-
-        -- Notify admins
-        for _, ply in ipairs(player.GetAll()) do
-            if ply:IsAdmin() then
-                ply:ChatPrint("Module " .. moduleName .. " has been removed")
-            end
-        end
-    end)
-    ```
-]]
-function OnModuleTableRemoved(moduleName)
-end
-
---[[
-    Purpose:
-        Called when a new privilege is registered
-    When Called:
-        When a privilege is added to the system
     Parameters:
         privilege (string) - The privilege identifier
         name (string) - The display name of the privilege
         access (string) - The access level required
         category (string) - The category the privilege belongs to
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log privilege registration
     hook.Add("OnPrivilegeRegistered", "MyAddon", function(privilege, name, access, category)
-        print("Privilege registered: " .. name)
+    print("Privilege registered: " .. name)
     end)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Track privileges
     hook.Add("OnPrivilegeRegistered", "TrackPrivileges", function(privilege, name, access, category)
-        MyAddon.privileges = MyAddon.privileges or {}
-            MyAddon.privileges[privilege] = {
-                name = name,
-                access = access,
-                category = category
-            }
-        end)
+    MyAddon.privileges = MyAddon.privileges or {}
+    MyAddon.privileges[privilege] = {
+    name = name,
+    access = access,
+    category = category
+    }
+    end)
     ```
 
     High Complexity:
@@ -2210,24 +2211,27 @@ end
 
 --[[
     Purpose:
-        Called when a privilege is unregistered
+                Called when a privilege is unregistered
+
     When Called:
-        When a privilege is removed from the system
+                When a privilege is removed from the system
+
     Parameters:
         privilege (string) - The privilege identifier
         name (string) - The display name of the privilege
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log privilege removal
     hook.Add("OnPrivilegeUnregistered", "MyAddon", function(privilege, name)
-        print("Privilege unregistered: " .. name)
+    print("Privilege unregistered: " .. name)
     end)
     ```
 
@@ -2270,106 +2274,119 @@ end
 
 --[[
     Purpose:
-        Called when a quest item is loaded
+                Called when an option is added to the options system
+
     When Called:
-        When a quest-related item is loaded into the game
+                When a new option is registered
+
     Parameters:
-        item (Item) - The quest item that was loaded
+        key (string) - The option key that was added
+        option (table) - The option data table containing all option properties
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
-    -- Simple: Log quest item loading
-    hook.Add("OnQuestItemLoaded", "MyAddon", function(item)
-        print("Quest item loaded: " .. item.name)
+    -- Simple: Log when options are added
+    hook.Add("OptionAdded", "MyAddon", function(key, option)
+    print("Option " .. key .. " was added")
     end)
     ```
 
     Medium Complexity:
-
     ```lua
-    -- Medium: Track quest items
-    hook.Add("OnQuestItemLoaded", "TrackQuestItems", function(item)
-        MyAddon.questItems = MyAddon.questItems or {}
-            table.insert(MyAddon.questItems, {
-                uniqueID = item.uniqueID,
-                name = item.name,
-                loaded = os.time()
-                })
-            end)
+    -- Medium: Track added options
+    hook.Add("OptionAdded", "TrackOptions", function(key, option)
+    MyAddon.addedOptions = MyAddon.addedOptions or {}
+    MyAddon.addedOptions[key] = option
+    end)
     ```
 
     High Complexity:
 
     ```lua
-    -- High: Complex quest item management
-    hook.Add("OnQuestItemLoaded", "AdvancedQuestItemManagement", function(item)
-        -- Register quest item in quest system
-        if item.questID then
-            MyAddon.quests = MyAddon.quests or {}
-                MyAddon.quests[item.questID] = MyAddon.quests[item.questID] or {items = {}}
-                    table.insert(MyAddon.quests[item.questID].items, item.uniqueID)
-                end
+    -- High: Advanced option handling
+    hook.Add("OptionAdded", "AdvancedOptionHandler", function(key, option)
+        -- Log option addition
+        lia.log.write("option_added", {
+            key = key,
+            type = option.type,
+            default = option.default,
+            timestamp = os.time()
+        })
 
-                -- Setup quest item tracking
-                if SERVER then
-                    lia.data.get("questItems", {}, function(data)
-                        data[item.uniqueID] = {
-                            name = item.name,
-                            questID = item.questID,
-                            loaded = os.time()
-                        }
-                        lia.data.set("questItems", data)
-                    end)
-                end
-            end)
+        -- Handle special option types
+        if option.type == "boolean" then
+            -- Initialize boolean option handling
+            MyAddon.booleanOptions = MyAddon.booleanOptions or {}
+            MyAddon.booleanOptions[key] = option.default or false
+        elseif option.type == "number" then
+            -- Initialize number option handling
+            MyAddon.numberOptions = MyAddon.numberOptions or {}
+            MyAddon.numberOptions[key] = {
+                value = option.default or 0,
+                min = option.min or 0,
+                max = option.max or 100
+            }
+        end
+
+        -- Notify clients if needed
+        if SERVER and option.shouldNetwork then
+            net.Start("liaOptionAdded")
+            net.WriteString(key)
+            net.WriteTable(option)
+            net.Broadcast()
+        end
+    end)
     ```
 ]]
-function OnQuestItemLoaded(item)
+function OptionAdded(key, option)
 end
 
 --[[
     Purpose:
-        Called when a configuration option is changed
+                Called when a configuration option is changed
+
     When Called:
-        When a configuration value is modified
+                When a configuration value is modified
+
     Parameters:
         key (string) - The option key that was changed
         old (any) - The old value
         value (any) - The new value
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log option changes
     hook.Add("OptionChanged", "MyAddon", function(key, old, value)
-        print("Option " .. key .. " changed from " .. tostring(old) .. " to " .. tostring(value))
+    print("Option " .. key .. " changed from " .. tostring(old) .. " to " .. tostring(value))
     end)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Track option changes
     hook.Add("OptionChanged", "TrackOptions", function(key, old, value)
-        MyAddon.optionHistory = MyAddon.optionHistory or {}
-            table.insert(MyAddon.optionHistory, {
-                key = key,
-                old = old,
-                new = value,
-                time = os.time()
-                })
-            end)
+    MyAddon.optionHistory = MyAddon.optionHistory or {}
+    table.insert(MyAddon.optionHistory, {
+    key = key,
+    old = old,
+    new = value,
+    time = os.time()
+    })
+    end)
     ```
 
     High Complexity:
@@ -2383,23 +2400,23 @@ end
             old = tostring(old),
             new = tostring(value),
             timestamp = os.time()
-            })
+        })
 
-            -- Handle specific option changes
-            if key == "serverName" then
-                SetHostName(value)
-                elseif key == "maxPlayers" then
-                    game.SetMaxPlayers(value)
-                end
+        -- Handle specific option changes
+        if key == "serverName" then
+            SetHostName(value)
+        elseif key == "maxPlayers" then
+            game.SetMaxPlayers(value)
+        end
 
-                -- Notify clients of important changes
-                if SERVER then
-                    net.Start("liaOptionChanged")
-                    net.WriteString(key)
-                    net.WriteType(value)
-                    net.Broadcast()
-                end
-            end)
+        -- Notify clients of important changes
+        if SERVER then
+            net.Start("liaOptionChanged")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Broadcast()
+        end
+    end)
     ```
 ]]
 function OptionChanged(key, old, value)
@@ -2407,24 +2424,27 @@ end
 
 --[[
     Purpose:
-        Called to override a faction's description
+                Called to override a faction's description
+
     When Called:
-        When a faction description needs to be modified
+                When a faction description needs to be modified
+
     Parameters:
         uniqueID (string) - The faction's unique ID
         description (string) - The current description
+
     Returns:
         string - The overridden description (or nil to use default)
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Add prefix to description
     hook.Add("OverrideFactionDesc", "MyAddon", function(uniqueID, description)
-        return "[FACTION] " .. description
+    return "[FACTION] " .. description
     end)
     ```
 
@@ -2447,17 +2467,17 @@ end
         local faction = lia.faction.indices[uniqueID]
         if not faction then return end
 
-            -- Add player count to description
-            local count = 0
-            for _, ply in ipairs(player.GetAll()) do
-                local char = ply:getChar()
-                if char and char:getFaction() == faction.index then
-                    count = count + 1
-                end
+        -- Add player count to description
+        local count = 0
+        for _, ply in ipairs(player.GetAll()) do
+            local char = ply:getChar()
+            if char and char:getFaction() == faction.index then
+                count = count + 1
             end
+        end
 
-            return description .. "\n\nCurrent Members: " .. count
-        end)
+        return description .. "\n\nCurrent Members: " .. count
+    end)
     ```
 ]]
 function OverrideFactionDesc(uniqueID, description)
@@ -2465,18 +2485,22 @@ end
 
 --[[
     Purpose:
-        Called to override a faction's models
+                Called to override a faction's models
+
     When Called:
-        When a faction's available models need to be modified
+                When a faction's available models need to be modified
+
     Parameters:
         uniqueID (string) - The faction's unique ID
         models (table) - The current models table
+
     Returns:
         table - The overridden models table (or nil to use default)
+
     Realm:
         Shared
-    Example Usage:
 
+    Example Usage:
     Low Complexity:
 
     ```lua
@@ -2496,10 +2520,10 @@ end
     hook.Add("OverrideFactionModels", "ReplaceFactionModels", function(uniqueID, models)
         if uniqueID == "police" then
             return {
-            "models/player/police.mdl",
-            "models/player/police_fem.mdl"
-        }
-    end
+                "models/player/police.mdl",
+                "models/player/police_fem.mdl"
+            }
+        end
     end)
     ```
 
@@ -2511,23 +2535,23 @@ end
         local faction = lia.faction.indices[uniqueID]
         if not faction then return end
 
-            -- Load models from configuration
-            local customModels = lia.config.get("faction_models_" .. uniqueID, {})
-            if table.Count(customModels) > 0 then
-                return customModels
-            end
+        -- Load models from configuration
+        local customModels = lia.config.get("faction_models_" .. uniqueID, {})
+        if table.Count(customModels) > 0 then
+            return customModels
+        end
 
-            -- Filter models based on gender setting
-            if lia.config.get("faction_gender_filter", false) then
-                local filtered = {}
-                for _, model in ipairs(models) do
-                    if not string.find(model, "_fem") then
-                        table.insert(filtered, model)
-                    end
+        -- Filter models based on gender setting
+        if lia.config.get("faction_gender_filter", false) then
+            local filtered = {}
+            for _, model in ipairs(models) do
+                if not string.find(model, "_fem") then
+                    table.insert(filtered, model)
                 end
-                return filtered
             end
-        end)
+            return filtered
+        end
+    end)
     ```
 ]]
 function OverrideFactionModels(uniqueID, models)
@@ -2535,36 +2559,38 @@ end
 
 --[[
     Purpose:
-        Called to override a faction's name
+                Called to override a faction's name
+
     When Called:
-        When a faction name needs to be modified
+                When a faction name needs to be modified
+
     Parameters:
         uniqueID (string) - The faction's unique ID
         name (string) - The current name
+
     Returns:
         string - The overridden name (or nil to use default)
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Add prefix to name
     hook.Add("OverrideFactionName", "MyAddon", function(uniqueID, name)
-        return "[" .. uniqueID:upper() .. "] " .. name
+    return "[" .. uniqueID:upper() .. "] " .. name
     end)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Localize faction names
     hook.Add("OverrideFactionName", "LocalizeFactionNames", function(uniqueID, name)
-        local localizedNames = {
-        citizen = "Citoyen",
-        police = "Police",
-        medic = "Médecin"
+    local localizedNames = {
+    citizen = "Citoyen",
+    police = "Police",
+    medic = "Médecin"
     }
 
     return localizedNames[uniqueID] or name
@@ -2579,23 +2605,23 @@ end
         local faction = lia.faction.indices[uniqueID]
         if not faction then return end
 
-            -- Add member count to name
-            local count = 0
-            for _, ply in ipairs(player.GetAll()) do
-                local char = ply:getChar()
-                if char and char:getFaction() == faction.index then
-                    count = count + 1
-                end
+        -- Add member count to name
+        local count = 0
+        for _, ply in ipairs(player.GetAll()) do
+            local char = ply:getChar()
+            if char and char:getFaction() == faction.index then
+                count = count + 1
             end
+        end
 
-            -- Add status indicator
-            local status = ""
-            if lia.config.get("faction_recruiting_" .. uniqueID, false) then
-                status = " [RECRUITING]"
-            end
+        -- Add status indicator
+        local status = ""
+        if lia.config.get("faction_recruiting_" .. uniqueID, false) then
+            status = " [RECRUITING]"
+        end
 
-            return name .. " (" .. count .. ")" .. status
-        end)
+        return name .. " (" .. count .. ")" .. status
+    end)
     ```
 ]]
 function OverrideFactionName(uniqueID, name)
@@ -2603,94 +2629,26 @@ end
 
 --[[
     Purpose:
-        Called when player stamina is depleted
+                Called when player gains stamina
+
     When Called:
-        When a player runs out of stamina
-    Parameters:
-        player (Player) - The player whose stamina depleted
-    Returns:
-        None
-    Realm:
-        Shared
-    Example Usage:
+                When a player's stamina increases
 
-    Low Complexity:
-
-    ```lua
-    -- Simple: Log stamina depletion
-    hook.Add("PlayerStaminaDepleted", "MyAddon", function(player)
-        print(player:Name() .. " ran out of stamina")
-    end)
-    ```
-
-    Medium Complexity:
-
-    ```lua
-    -- Medium: Apply exhaustion effect
-    hook.Add("PlayerStaminaDepleted", "ExhaustionEffect", function(player)
-        if SERVER then
-            player:SetRunSpeed(150)
-            player:SetWalkSpeed(75)
-        end
-    end)
-    ```
-
-    High Complexity:
-
-    ```lua
-    -- High: Complex stamina depletion system
-    hook.Add("PlayerStaminaDepleted", "AdvancedStaminaDepletion", function(player)
-        if SERVER then
-            local char = player:getChar()
-            if not char then return end
-
-                -- Apply exhaustion effect
-                player:SetRunSpeed(150)
-                player:SetWalkSpeed(75)
-
-                -- Track depletion count
-                local depletionCount = char:getData("staminaDepletions", 0)
-                char:setData("staminaDepletions", depletionCount + 1)
-
-                -- Apply damage if depleted too many times
-                if depletionCount >= 5 then
-                    player:TakeDamage(5)
-                    player:ChatPrint("You are exhausted!")
-                end
-
-                -- Restore speed after cooldown
-                timer.Simple(5, function()
-                if IsValid(player) then
-                    player:SetRunSpeed(250)
-                    player:SetWalkSpeed(100)
-                end
-            end)
-        end
-    end)
-    ```
-]]
-function PlayerStaminaDepleted(player)
-end
-
---[[
-    Purpose:
-        Called when player gains stamina
-    When Called:
-        When a player's stamina increases
     Parameters:
         self (Player) - The player gaining stamina
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log stamina gain
     hook.Add("PlayerStaminaGained", "MyAddon", function(self)
-        print(self:Name() .. " gained stamina")
+    print(self:Name() .. " gained stamina")
     end)
     ```
 
@@ -2718,19 +2676,19 @@ end
             local char = self:getChar()
             if not char then return end
 
-                -- Track stamina gains
-                local staminaGains = char:getData("staminaGains", 0)
-                char:setData("staminaGains", staminaGains + 1)
+            -- Track stamina gains
+            local staminaGains = char:getData("staminaGains", 0)
+            char:setData("staminaGains", staminaGains + 1)
 
-                -- Check for achievements
-                if staminaGains + 1 >= 1000 then
-                    if not char:getData("achievement_marathonRunner", false) then
-                        char:setData("achievement_marathonRunner", true)
-                        self:ChatPrint("Achievement unlocked: Marathon Runner!")
-                    end
+            -- Check for achievements
+            if staminaGains + 1 >= 1000 then
+                if not char:getData("achievement_marathonRunner", false) then
+                    char:setData("achievement_marathonRunner", true)
+                    self:ChatPrint("Achievement unlocked: Marathon Runner!")
                 end
             end
-        end)
+        end
+    end)
     ```
 ]]
 function PlayerStaminaGained(self)
@@ -2738,23 +2696,26 @@ end
 
 --[[
     Purpose:
-        Called when player loses stamina
+                Called when player loses stamina
+
     When Called:
-        When a player's stamina decreases
+                When a player's stamina decreases
+
     Parameters:
         self (Player) - The player losing stamina
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log stamina loss
     hook.Add("PlayerStaminaLost", "MyAddon", function(self)
-        print(self:Name() .. " lost stamina")
+    print(self:Name() .. " lost stamina")
     end)
     ```
 
@@ -2782,17 +2743,17 @@ end
             local char = self:getChar()
             if not char then return end
 
-                -- Track stamina loss
-                local staminaLoss = char:getData("staminaLoss", 0)
-                char:setData("staminaLoss", staminaLoss + 1)
+            -- Track stamina loss
+            local staminaLoss = char:getData("staminaLoss", 0)
+            char:setData("staminaLoss", staminaLoss + 1)
 
-                -- Check if stamina is critically low
-                local stamina = self:getNetVar("stamina", 100)
-                if stamina <= 10 then
-                    self:ChatPrint("Warning: Stamina is critically low!")
-                end
+            -- Check if stamina is critically low
+            local stamina = self:getNetVar("stamina", 100)
+            if stamina <= 10 then
+                self:ChatPrint("Warning: Stamina is critically low!")
             end
-        end)
+        end
+    end)
     ```
 ]]
 function PlayerStaminaLost(self)
@@ -2800,33 +2761,35 @@ end
 
 --[[
     Purpose:
-        Called before Lilia framework is loaded
+                Called before Lilia framework is loaded
+
     When Called:
-        Before Lilia systems are initialized
+                Before Lilia systems are initialized
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Log pre-load
     hook.Add("PreLiliaLoaded", "MyAddon", function()
-        print("Lilia is about to load")
+    print("Lilia is about to load")
     end)
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Initialize addon systems
     hook.Add("PreLiliaLoaded", "InitializeAddon", function()
-        MyAddon.PreInitialize()
-        print("Addon pre-initialized")
+    MyAddon.PreInitialize()
+    print("Addon pre-initialized")
     end)
     ```
 
@@ -2840,14 +2803,14 @@ end
 
         -- Set up configuration
         MyAddon.config = MyAddon.config or {}
-            MyAddon.config.enabled = true
-            MyAddon.config.debug = false
+        MyAddon.config.enabled = true
+        MyAddon.config.debug = false
 
-            -- Register custom hooks
-            hook.Add("PlayerInitialSpawn", "MyAddonSpawn", MyAddon.OnPlayerSpawn)
+        -- Register custom hooks
+        hook.Add("PlayerInitialSpawn", "MyAddonSpawn", MyAddon.OnPlayerSpawn)
 
-                print("Advanced pre-load initialization completed")
-            end)
+        print("Advanced pre-load initialization completed")
+    end)
     ```
 ]]
 function PreLiliaLoaded()
@@ -2855,23 +2818,26 @@ end
 
 --[[
     Purpose:
-        Called to calculate stamina change
+                Called to calculate stamina change
+
     When Called:
-        When calculating how much stamina should change
+                When calculating how much stamina should change
+
     Parameters:
         client (Player) - The player whose stamina is changing
+
     Returns:
         number - The stamina change amount
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Return default stamina change
     hook.Add("calcStaminaChange", "MyAddon", function(client)
-        return 1
+    return 1
     end)
     ```
 
@@ -2883,9 +2849,9 @@ end
         local char = client:getChar()
         if not char then return 1 end
 
-            local endurance = char:getAttrib("end", 0)
-            return 1 + (endurance * 0.1)
-        end)
+        local endurance = char:getAttrib("end", 0)
+        return 1 + (endurance * 0.1)
+    end)
     ```
 
     High Complexity:
@@ -2896,17 +2862,17 @@ end
         local char = client:getChar()
         if not char then return 1 end
 
-            -- Base stamina change
-            local baseChange = 1
+        -- Base stamina change
+        local baseChange = 1
 
-            -- Attribute bonus
-            local endurance = char:getAttrib("end", 0)
-            local strength = char:getAttrib("str", 0)
-            local attrBonus = (endurance * 0.1) + (strength * 0.05)
+        -- Attribute bonus
+        local endurance = char:getAttrib("end", 0)
+        local strength = char:getAttrib("str", 0)
+        local attrBonus = (endurance * 0.1) + (strength * 0.05)
 
-            -- Faction bonus
-            local faction = char:getFaction()
-            local factionBonuses = {
+        -- Faction bonus
+        local faction = char:getFaction()
+        local factionBonuses = {
             ["athlete"] = 0.5,
             ["soldier"] = 0.3,
             ["citizen"] = 0.0
@@ -2944,23 +2910,26 @@ end
 
 --[[
     Purpose:
-        Called to get persistent data
+                Called to get persistent data
+
     When Called:
-        When retrieving stored data
+                When retrieving stored data
+
     Parameters:
         default (any) - The default value if data doesn't exist
+
     Returns:
         any - The retrieved data or default value
+
     Realm:
         Shared
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Get data with default
     hook.Add("getData", "MyAddon", function(default)
-        return default
+    return default
     end)
     ```
 

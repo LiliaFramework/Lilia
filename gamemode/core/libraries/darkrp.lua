@@ -33,9 +33,7 @@ if SERVER then
             Server
 
         Example Usage:
-
         Low Complexity:
-
         ```lua
         -- Simple: Check if a position is empty
         local pos = Vector(100, 200, 50)
@@ -45,7 +43,6 @@ if SERVER then
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Check position while ignoring specific entities
         local pos = player:GetPos()
@@ -56,7 +53,6 @@ if SERVER then
         ```
 
         High Complexity:
-
         ```lua
         -- High: Validate spawn position with multiple checks
         local spawnPos = Vector(0, 0, 0)
@@ -110,9 +106,7 @@ if SERVER then
             Server
 
         Example Usage:
-
         Low Complexity:
-
         ```lua
         -- Simple: Find empty position near spawn point
         local spawnPos = Vector(0, 0, 0)
@@ -121,7 +115,6 @@ if SERVER then
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Find spawn position ignoring specific entities
         local startPos = Vector(100, 200, 50)
@@ -133,7 +126,6 @@ if SERVER then
         ```
 
         High Complexity:
-
         ```lua
         -- High: Advanced spawn system with multiple checks
         local spawnPoints = {Vector(0, 0, 0), Vector(100, 0, 0), Vector(0, 100, 0)}
@@ -189,16 +181,13 @@ if SERVER then
             Server
 
         Example Usage:
-
         Low Complexity:
-
         ```lua
         -- Simple: Send basic notification
         lia.darkrp.notify(player, nil, nil, "welcome_message")
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Send notification with context
         local message = "player_joined"
@@ -206,7 +195,6 @@ if SERVER then
         ```
 
         High Complexity:
-
         ```lua
         -- High: Send notifications to multiple players
         local message = "server_restart_warning"
@@ -254,9 +242,7 @@ else
             Client
 
         Example Usage:
-
         Low Complexity:
-
         ```lua
         -- Simple: Wrap basic text
         local wrappedText = lia.darkrp.textWrap("Hello world this is a long text", "DermaDefault", 200)
@@ -264,7 +250,6 @@ else
         ```
 
         Medium Complexity:
-
         ```lua
         -- Medium: Wrap text with different fonts
         local text = "This is a sample text that needs to be wrapped properly"
@@ -279,7 +264,6 @@ else
         ```
 
         High Complexity:
-
         ```lua
         -- High: Dynamic text wrapping with multiple paragraphs
         local paragraphs = {
@@ -347,9 +331,7 @@ end
         Shared
 
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Format a basic amount
     local formatted = lia.darkrp.formatMoney(1000)
@@ -357,7 +339,6 @@ end
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Format player's money for display
     local playerMoney = player:getMoney()
@@ -366,7 +347,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Format multiple amounts for transaction display
     local amounts = {500, 1250, 9999, 150000}
@@ -409,56 +389,52 @@ end
         Shared
 
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Create a basic entity
     lia.darkrp.createEntity("Chair", {
-        model = "models/props_c17/FurnitureChair001a.mdl",
-        price = 50
-        })
+    model = "models/props_c17/FurnitureChair001a.mdl",
+    price = 50
+    })
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Create entity with full configuration
     lia.darkrp.createEntity("Advanced Computer", {
-        cmd = "computer",
-        model = "models/props_lab/monitor01b.mdl",
-        desc = "A high-tech computer for advanced operations",
-        category = "Electronics",
-        ent = "prop_physics",
-        price = 200
-        })
+    cmd = "computer",
+    model = "models/props_lab/monitor01b.mdl",
+    desc = "A high-tech computer for advanced operations",
+    category = "Electronics",
+    ent = "prop_physics",
+    price = 200
+    })
     ```
 
     High Complexity:
-
     ```lua
     -- High: Create multiple entities from configuration table
     local entities = {
     {
-        name = "Office Desk",
-        data = {
-            cmd = "desk",
-            model = "models/props_c17/FurnitureTable002a.mdl",
-            desc = "A sturdy office desk",
-            category = "Furniture",
-            price = 100
-        }
-        },
-        {
-            name = "Filing Cabinet",
-            data = {
-                cmd = "cabinet",
-                model = "models/props_c17/FurnitureDrawer001a.mdl",
-                desc = "Store important documents",
-                category = "Furniture",
-                price = 75
-            }
-        }
+    name = "Office Desk",
+    data = {
+    cmd = "desk",
+    model = "models/props_c17/FurnitureTable002a.mdl",
+    desc = "A sturdy office desk",
+    category = "Furniture",
+    price = 100
+    }
+    },
+    {
+    name = "Filing Cabinet",
+    data = {
+    cmd = "cabinet",
+    model = "models/props_c17/FurnitureDrawer001a.mdl",
+    desc = "Store important documents",
+    category = "Furniture",
+    price = 75
+    }
+    }
     }
 
     for _, entity in ipairs(entities) do
@@ -495,16 +471,13 @@ end
         Shared
 
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Call the function (no effect)
     lia.darkrp.createCategory()
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Use in DarkRP compatibility code
     if DarkRP and DarkRP.createCategory then
@@ -513,7 +486,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Use in addon initialization
     local function initializeDarkRPCompatibility()

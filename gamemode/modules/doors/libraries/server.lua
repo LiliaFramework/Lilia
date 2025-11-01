@@ -375,11 +375,13 @@ end
 --[[
     Purpose:
         Adds a door preset configuration for a specific map
+
     When Called:
         When setting up predefined door configurations for maps
+
     Parameters:
-        mapName (string) - The name of the map to apply the preset to
-        presetData (table) - Table containing door configuration data with the following structure:
+        - mapName (string): The name of the map to apply the preset to
+        - presetData (table): Table containing door configuration data with the following structure:
             [doorID] = {
                 name (string, optional) - Custom name for the door
                 price (number, optional) - Price to purchase the door
@@ -390,72 +392,71 @@ end
                 factions (table, optional) - Array of faction uniqueIDs that can access the door
                 classes (table, optional) - Array of class uniqueIDs that can access the door
             }
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Add basic door preset for a map
     lia.doors.addPreset("rp_downtown_v4c_v2", {
-        [123] = {
-            name = "Police Station Door",
-            price = 1000,
-            locked = true
-        }
-        })
+    [123] = {
+    name = "Police Station Door",
+    price = 1000,
+    locked = true
+    }
+    })
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Add preset with faction restrictions
     lia.doors.addPreset("rp_downtown_v4c_v2", {
-        [123] = {
-            name = "Police Station",
-            price = 5000,
-            locked = false,
-            factions = {"police", "mayor"}
-                },
-                [124] = {
-                    name = "Evidence Room",
-                    price = 0,
-                    locked = true,
-                    factions = {"police"}
-                    }
-                    })
+    [123] = {
+    name = "Police Station",
+    price = 5000,
+    locked = false,
+    factions = {"police", "mayor"}
+    },
+    [124] = {
+    name = "Evidence Room",
+    price = 0,
+    locked = true,
+    factions = {"police"}
+    }
+    })
     ```
 
     High Complexity:
-
     ```lua
     -- High: Complex preset with multiple doors and restrictions
     local policeDoors = {
     [123] = {
-        name = "Police Station Main",
-        price = 10000,
-        locked = false,
-        factions = {"police", "mayor", "chief"}
-            },
-            [124] = {
-                name = "Evidence Room",
-                price = 0,
-                locked = true,
-                factions = {"police"},
-                    classes = {"detective", "chief"}
-                        },
-                        [125] = {
-                            name = "Interrogation Room",
-                            price = 0,
-                            locked = true,
-                            factions = {"police"},
-                                classes = {"detective", "chief", "officer"}
-                                }
-                            }
-                            lia.doors.addPreset("rp_downtown_v4c_v2", policeDoors)
+    name = "Police Station Main",
+    price = 10000,
+    locked = false,
+    factions = {"police", "mayor", "chief"}
+    },
+    [124] = {
+    name = "Evidence Room",
+    price = 0,
+    locked = true,
+    factions = {"police"},
+    classes = {"detective", "chief"}
+    },
+    [125] = {
+    name = "Interrogation Room",
+    price = 0,
+    locked = true,
+    factions = {"police"},
+    classes = {"detective", "chief", "officer"}
+    }
+    }
+    lia.doors.addPreset("rp_downtown_v4c_v2", policeDoors)
     ```
 ]]
 function lia.doors.addPreset(mapName, presetData)
@@ -471,18 +472,21 @@ end
 --[[
     Purpose:
         Retrieves a door preset configuration for a specific map
+
     When Called:
         When loading door data or checking for existing presets
+
     Parameters:
-        mapName (string) - The name of the map to get the preset for
+        - mapName (string): The name of the map to get the preset for
+
     Returns:
         Table or nil - The preset data table if found, nil otherwise
+
     Realm:
         Server
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Get preset for current map
     local preset = lia.doors.getPreset(game.GetMap())
@@ -492,7 +496,6 @@ end
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Check and use preset data
     local mapName = game.GetMap()
@@ -505,7 +508,6 @@ end
     ```
 
     High Complexity:
-
     ```lua
     -- High: Dynamic preset loading with validation
     local function loadMapPresets(mapName)
@@ -537,36 +539,37 @@ end
 --[[
     Purpose:
         Verifies the database schema for the doors table matches expected structure
+
     When Called:
         During server initialization or when checking database integrity
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Verify schema on server start
     lia.doors.verifyDatabaseSchema()
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Verify schema with custom handling
     hook.Add("InitPostEntity", "VerifyDoorSchema", function()
-        timer.Simple(5, function()
-        lia.doors.verifyDatabaseSchema()
+    timer.Simple(5, function()
+    lia.doors.verifyDatabaseSchema()
     end)
     end)
     ```
 
     High Complexity:
-
     ```lua
     -- High: Custom schema verification with migration
     function customSchemaCheck()
@@ -575,11 +578,11 @@ end
         -- Check for missing columns and add them
         local missingColumns = {
         door_group = "text"
-    }
+        }
 
-    for column, type in pairs(missingColumns) do
-        lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. column .. " " .. type)
-    end
+        for column, type in pairs(missingColumns) do
+            lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. column .. " " .. type)
+        end
     end
     ```
 ]]
@@ -661,36 +664,37 @@ end
 --[[
     Purpose:
         Cleans up corrupted door data in the database by removing invalid faction/class data
+
     When Called:
         During server initialization or when data corruption is detected
+
     Parameters:
         None
+
     Returns:
         None
+
     Realm:
         Server
+
     Example Usage:
-
     Low Complexity:
-
     ```lua
     -- Simple: Run cleanup on server start
     lia.doors.cleanupCorruptedData()
     ```
 
     Medium Complexity:
-
     ```lua
     -- Medium: Schedule cleanup with delay
     hook.Add("InitPostEntity", "CleanupDoorData", function()
-        timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
+    timer.Simple(2, function()
+    lia.doors.cleanupCorruptedData()
     end)
     end)
     ```
 
     High Complexity:
-
     ```lua
     -- High: Custom cleanup with logging and validation
     function advancedDoorCleanup()
