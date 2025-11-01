@@ -294,3 +294,33 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
+### OnLoaded
+
+**Purpose**
+
+Called when the module is fully loaded
+
+**When Called**
+
+After all module files have been loaded and initialized
+
+**Realm**
+
+Shared (called on both server and client)
+
+**Returns**
+
+* None
+
+**Example Usage**
+
+```lua
+-- Called after all module files are loaded
+function MODULE:OnLoaded()
+    print("Module loaded successfully!")
+    end
+
+```
+
+---
+

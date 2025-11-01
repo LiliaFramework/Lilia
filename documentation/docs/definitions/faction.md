@@ -618,7 +618,7 @@ function FACTION:OnCheckLimitReached(character, client)
 
 ---
 
-### name
+### OnTransferred
 
 **Purpose**
 
@@ -649,7 +649,7 @@ function FACTION:OnTransferred(client)
 
 ---
 
-### name
+### OnSpawn
 
 **Purpose**
 

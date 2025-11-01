@@ -537,7 +537,7 @@ CLASS.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### name
+### OnCanBe
 
 **Purpose**
 
@@ -584,7 +584,7 @@ function CLASS:OnCanBe(client)
 
 ---
 
-### name
+### OnSet
 
 **Purpose**
 
@@ -613,7 +613,7 @@ function CLASS:OnSet(client)
 
 ---
 
-### name
+### OnTransferred
 
 **Purpose**
 
@@ -645,7 +645,7 @@ function CLASS:OnTransferred(client, oldClass)
 
 ---
 
-### name
+### OnSpawn
 
 **Purpose**
 
@@ -676,7 +676,7 @@ function CLASS:OnSpawn(client)
 
 ---
 
-### name
+### OnLeave
 
 **Purpose**
 

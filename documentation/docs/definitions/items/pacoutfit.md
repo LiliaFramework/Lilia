@@ -175,7 +175,7 @@ ITEM.pacData = {}  -- PAC attachment data
 
 ---
 
-### name
+### removePart
 
 **Purpose**
 
@@ -199,7 +199,7 @@ function ITEM:paintOver(item, w, h)
 
 ---
 
-### name
+### onCanBeTransfered
 
 **Purpose**
 
@@ -223,7 +223,7 @@ function ITEM:removePart(client)
 
 ---
 
-### name
+### onLoadout
 
 **Purpose**
 
@@ -245,7 +245,7 @@ function ITEM:onCanBeTransfered(_, newInventory)
 
 ---
 
-### name
+### onRemoved
 
 **Purpose**
 

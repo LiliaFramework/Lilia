@@ -194,7 +194,7 @@ ITEM.DropOnDeath = true  -- Drops on death
 
 ---
 
-### name
+### OnCanBeTransfered
 
 **Purpose**
 
@@ -220,7 +220,7 @@ function ITEM.postHooks:drop()
 
 ---
 
-### name
+### OnCanBeTransfered
 
 **Purpose**
 
@@ -247,7 +247,7 @@ if not client or not IsValid(client) then return false end
 
 ---
 
-### name
+### onLoadout
 
 **Purpose**
 
@@ -269,7 +269,7 @@ function ITEM:OnCanBeTransfered(_, newInventory)
 
 ---
 
-### name
+### OnSave
 
 **Purpose**
 
@@ -300,7 +300,7 @@ function ITEM:onLoadout()
 
 ---
 
-### name
+### getName
 
 **Purpose**
 

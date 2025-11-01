@@ -687,10 +687,17 @@ def parse_definition_property_blocks(file_path: Path, entity_prefixes: Tuple[str
             if s.startswith('--'):
                 continue
             # Extract property name from patterns like CLASS.name, ITEM.name, etc.
+            # Also handle function definitions like function CLASS:OnCanBe
             for prefix in entity_prefixes:
+                # Check for property assignments: CLASS.name =
                 m = re.match(rf'{prefix}\.([A-Za-z_][\w]*)', s)
                 if m:
                     prop_name = m.group(1)  # Only the property name (suffix)
+                    break
+                # Check for function definitions: function CLASS:FunctionName
+                m = re.match(rf'function\s+{prefix}:([A-Za-z_][\w]*)', s)
+                if m:
+                    prop_name = m.group(1)  # Only the function name (suffix)
                     break
             if prop_name:
                 break
@@ -843,6 +850,9 @@ def generate_documentation_for_definitions_file(file_path: Path, output_dir: Pat
     if file_path.parent.name == 'items':
         # This is an item definition file
         entity_prefixes: Tuple[str, ...] = ('ITEM',)
+    elif name == 'attributes':
+        # Attributes file uses ATTRIBUTE prefix
+        entity_prefixes: Tuple[str, ...] = ('ATTRIBUTE',)
     else:
         # Generic CLASS/FACTION/MODULE definitions
         entity_prefixes: Tuple[str, ...] = ('CLASS', 'FACTION', 'MODULE')
@@ -968,7 +978,7 @@ def main():
                             files_to_process.extend(list(module_lib_dir.glob('*.lua')))
         elif args.type == 'definitions':
             # Specific known definition files
-            for name in ('panels.lua', 'faction.lua', 'module.lua', 'items.lua', 'class.lua'):
+            for name in ('panels.lua', 'faction.lua', 'module.lua', 'items.lua', 'class.lua', 'attributes.lua'):
                 p = input_dir / name
                 if p.exists():
                     files_to_process.append(str(p))

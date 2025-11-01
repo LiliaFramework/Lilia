@@ -175,7 +175,7 @@ ITEM.isOutfit = true
 
 ---
 
-### name
+### removeOutfit
 
 **Purpose**
 
@@ -199,7 +199,7 @@ end
 
 ---
 
-### name
+### wearOutfit
 
 **Purpose**
 
@@ -220,7 +220,7 @@ end
 
 ---
 
-### name
+### OnCanBeTransfered
 
 **Purpose**
 
@@ -241,7 +241,7 @@ end
 
 ---
 
-### name
+### onLoadout
 
 **Purpose**
 
@@ -263,7 +263,7 @@ end
 
 ---
 
-### name
+### onRemoved
 
 **Purpose**
 
