@@ -141,7 +141,8 @@ local KeybindKeys = {
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Add a basic keybind with table configuration
         lia.keybind.add("openInventory", {
@@ -448,7 +449,7 @@ if CLIENT then
             Client
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             -- Simple: Get the key bound to open inventory
             local inventoryKey = lia.keybind.get("openInventory")
@@ -508,7 +509,7 @@ if CLIENT then
             Client
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             -- Simple: Save keybinds after player changes settings
             lia.keybind.save()
@@ -590,7 +591,7 @@ if CLIENT then
             Client
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             -- Simple: Load keybinds during initialization
             lia.keybind.load()

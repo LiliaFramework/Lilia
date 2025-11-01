@@ -29,7 +29,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Register a basic color
         lia.color.register("myred", {255, 0, 0})
@@ -45,9 +46,9 @@ if CLIENT then
         ```lua
         -- High: Register multiple colors from configuration
         local colorConfig = {
-        primary = {100, 150, 200},
-        secondary = {200, 100, 150},
-        accent = {150, 200, 100}
+            primary   = {100, 150, 200},
+            secondary = {200, 100, 150},
+            accent    = {150, 200, 100}
         }
         for name, color in pairs(colorConfig) do
             lia.color.register(name, color)
@@ -79,7 +80,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Brighten a color
         local brightRed = lia.color.adjust(Color(100, 0, 0), 50, 0, 0)
@@ -99,10 +101,10 @@ if CLIENT then
         local function adjustColorForTime(color, timeOfDay)
             local multiplier = math.sin(timeOfDay * math.pi / 12) * 0.3
             return lia.color.adjust(color,
-            multiplier * 50,
-            multiplier * 30,
-            multiplier * 20,
-            multiplier * 100
+                multiplier * 50,
+                multiplier * 30,
+                multiplier * 20,
+                multiplier * 100
             )
         end
         ```
@@ -129,7 +131,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Darken a color slightly
         local darkBlue = lia.color.darken(Color(0, 0, 255))
@@ -174,7 +177,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check current theme
         local currentTheme = lia.color.getCurrentTheme()
@@ -195,8 +199,8 @@ if CLIENT then
         local function getThemeSpecificColor(colorName)
             local theme = lia.color.getCurrentTheme()
             local themeColors = {
-            dark = {primary = Color(100, 100, 100)},
-            light = {primary = Color(200, 200, 200)}
+                dark  = {primary = Color(100, 100, 100)},
+                light = {primary = Color(200, 200, 200)}
             }
             return themeColors[theme] and themeColors[theme][colorName] or Color(255, 255, 255)
         end
@@ -223,7 +227,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Display theme name
         local themeName = lia.color.getCurrentThemeName()
@@ -276,7 +281,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get main theme color
         local mainColor = lia.color.getMainColor()
@@ -299,10 +305,10 @@ if CLIENT then
         local function generateColorScheme()
             local mainColor = lia.color.getMainColor()
             return {
-            primary = mainColor,
-            secondary = lia.color.adjust(mainColor, -50, -50, -50),
-            accent = lia.color.adjust(mainColor, 50, 50, 50),
-            background = lia.color.darken(mainColor, 0.8)
+                primary    = mainColor,
+                secondary  = lia.color.adjust(mainColor, -50, -50, -50),
+                accent     = lia.color.adjust(mainColor, 50, 50, 50),
+                background = lia.color.darken(mainColor, 0.8)
             }
         end
         ```
@@ -333,7 +339,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Apply theme without transition
         lia.color.applyTheme("dark")
@@ -410,7 +417,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if transition is running
         if lia.color.isTransitionActive() then
@@ -437,12 +445,12 @@ if CLIENT then
         local function queueThemeChange(themeName)
             if lia.color.isTransitionActive() then
                 table.insert(themeQueue, themeName)
-                else
-                    lia.color.applyTheme(themeName, true)
-                end
+            else
+                lia.color.applyTheme(themeName, true)
             end
+        end
 
-            hook.Add("OnThemeChanged", "ProcessThemeQueue", function()
+        hook.Add("OnThemeChanged", "ProcessThemeQueue", function()
             if #themeQueue > 0 and not lia.color.isTransitionActive() then
                 local nextTheme = table.remove(themeQueue, 1)
                 lia.color.applyTheme(nextTheme, true)
@@ -471,7 +479,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Test theme transition
         lia.color.testThemeTransition("dark")
@@ -483,8 +492,8 @@ if CLIENT then
         local function previewTheme(themeName)
             lia.color.testThemeTransition(themeName)
             timer.Simple(2, function()
-            lia.color.applyTheme(lia.color.getCurrentTheme(), true)
-        end)
+                lia.color.applyTheme(lia.color.getCurrentTheme(), true)
+            end)
         end
         ```
 
@@ -497,12 +506,12 @@ if CLIENT then
         local function cycleThemePreview()
             if lia.color.isTransitionActive() then return end
 
-                local theme = previewThemes[currentPreview]
-                lia.color.testThemeTransition(theme)
+            local theme = previewThemes[currentPreview]
+            lia.color.testThemeTransition(theme)
 
-                currentPreview = (currentPreview % #previewThemes) + 1
-                timer.Simple(3, cycleThemePreview)
-            end
+            currentPreview = (currentPreview % #previewThemes) + 1
+            timer.Simple(3, cycleThemePreview)
+        end
         ```
     ]]
     function lia.color.testThemeTransition(themeName)
@@ -534,7 +543,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Start theme transition
         lia.color.startThemeTransition("dark")
@@ -565,12 +575,12 @@ if CLIENT then
             local function checkProgress()
                 if not lia.color.isTransitionActive() then
                     if callback then callback() end
-                        return
-                    end
-                    timer.Simple(0.1, checkProgress)
+                    return
                 end
-                checkProgress()
+                timer.Simple(0.1, checkProgress)
             end
+            checkProgress()
+        end
         ```
     ]]
     function lia.color.startThemeTransition(name)
@@ -654,7 +664,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if value is color
         if lia.color.isColor(someValue) then
@@ -668,13 +679,13 @@ if CLIENT then
         local function processColorData(data)
             if lia.color.isColor(data) then
                 return data
-                else
-                    return Color(255, 255, 255)
-                end
+            else
+                return Color(255, 255, 255)
             end
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Recursive color validation in nested tables
         local function validateThemeData(themeData)
@@ -685,13 +696,13 @@ if CLIENT then
                             error("Invalid color at " .. key .. "[" .. i .. "]")
                         end
                     end
-                    elseif lia.color.isColor(value) then
-                        -- Valid color
-                        else
-                            error("Invalid color at " .. key)
-                        end
-                    end
+                elseif lia.color.isColor(value) then
+                    -- Valid color
+                else
+                    error("Invalid color at " .. key)
                 end
+            end
+        end
         ```
     ]]
     function lia.color.isColor(v)
@@ -715,7 +726,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get theme colors
         local colors = lia.color.returnMainAdjustedColors()
@@ -730,27 +742,27 @@ if CLIENT then
             local panel = vgui.Create("DPanel")
             panel:SetBackgroundColor(colors.background)
             panel.Paint = function(self, w, h)
-            draw.RoundedBox(4, 0, 0, w, h, colors.background)
-            draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
-        end
-        return panel
+                draw.RoundedBox(4, 0, 0, w, h, colors.background)
+                draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
+            end
+            return panel
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Dynamic UI system with theme colors
         local function createAdvancedUI()
             local colors = lia.color.returnMainAdjustedColors()
 
             local ui = {
-            background = colors.background,
-            primary = colors.accent,
-            secondary = colors.sidebar,
-            text = colors.text,
-            hover = colors.hover,
-            border = colors.border,
-            highlight = colors.highlight
+                background = colors.background,
+                primary    = colors.accent,
+                secondary  = colors.sidebar,
+                text       = colors.text,
+                hover      = colors.hover,
+                border     = colors.border,
+                highlight  = colors.highlight
             }
 
             -- Apply colors to multiple UI elements
@@ -798,7 +810,8 @@ if CLIENT then
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Lerp between colors
         local blendedColor = lia.color.lerp(5, Color(255, 0, 0), Color(0, 255, 0))
@@ -811,20 +824,20 @@ if CLIENT then
             local startTime = CurTime()
 
             hook.Add("Think", "ColorFade", function()
-            local elapsed = CurTime() - startTime
-            local progress = math.min(elapsed / duration, 1)
+                local elapsed = CurTime() - startTime
+                local progress = math.min(elapsed / duration, 1)
 
-            if progress >= 1 then
-                hook.Remove("Think", "ColorFade")
-            end
+                if progress >= 1 then
+                    hook.Remove("Think", "ColorFade")
+                end
 
-            local currentColor = lia.color.lerp(10, startColor, endColor)
-            -- Use currentColor for UI elements
-        end)
+                local currentColor = lia.color.lerp(10, startColor, endColor)
+                -- Use currentColor for UI elements
+            end)
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Multi-color gradient system
         local function createColorGradient(colors, steps)
@@ -909,48 +922,49 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Register a basic theme
-    lia.color.registerTheme("MyTheme", {
-    maincolor = Color(100, 150, 200),
-    background = Color(20, 20, 20),
-    text = Color(255, 255, 255)
-    })
-    ```
+        ```lua
+        -- Simple: Register a basic theme
+        lia.color.registerTheme("MyTheme", {
+            maincolor   = Color(100, 150, 200),
+            background  = Color(20, 20, 20),
+            text        = Color(255, 255, 255)
+        })
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Register theme with full color set
-    lia.color.registerTheme("CustomDark", {
-    header = Color(40, 40, 40),
-    background = Color(25, 25, 25),
-    button = Color(54, 54, 54),
-    maincolor = Color(106, 108, 197),
-    text = Color(255, 255, 255),
-    accent = Color(106, 108, 197)
-    })
-    ```
+        ```lua
+        -- Medium: Register theme with full color set
+        lia.color.registerTheme("CustomDark", {
+            header     = Color(40, 40, 40),
+            background = Color(25, 25, 25),
+            button     = Color(54, 54, 54),
+            maincolor  = Color(106, 108, 197),
+            text       = Color(255, 255, 255),
+            accent     = Color(106, 108, 197)
+        })
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Dynamic theme generation
-    local function generateThemeFromConfig(config)
-        local themeData = {
-        maincolor = Color(config.primary.r, config.primary.g, config.primary.b),
-        background = Color(config.background.r, config.background.g, config.background.b),
-        text = Color(config.text.r, config.text.g, config.text.b),
-        accent = Color(config.accent.r, config.accent.g, config.accent.b),
-        panel = {
-        Color(config.panel1.r, config.panel1.g, config.panel1.b),
-        Color(config.panel2.r, config.panel2.g, config.panel2.b),
-        Color(config.panel3.r, config.panel3.g, config.panel3.b)
-        }
-        }
+        ```lua
+        -- High: Dynamic theme generation
+        local function generateThemeFromConfig(config)
+            local themeData = {
+                maincolor  = Color(config.primary.r, config.primary.g, config.primary.b),
+                background = Color(config.background.r, config.background.g, config.background.b),
+                text       = Color(config.text.r, config.text.g, config.text.b),
+                accent     = Color(config.accent.r, config.accent.g, config.accent.b),
+                panel      = {
+                    Color(config.panel1.r, config.panel1.g, config.panel1.b),
+                    Color(config.panel2.r, config.panel2.g, config.panel2.b),
+                    Color(config.panel3.r, config.panel3.g, config.panel3.b)
+                }
+            }
 
-        lia.color.registerTheme(config.name, themeData)
-    end
-    ```
+            lia.color.registerTheme(config.name, themeData)
+        end
+        ```
 ]]
 function lia.color.registerTheme(name, themeData)
     local id = name:lower()
@@ -974,6 +988,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get all themes
@@ -982,45 +997,45 @@ end
     ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Create theme selection menu
-    local function createThemeMenu()
-        local themes = lia.color.getAllThemes()
-        local menu = vgui.Create("DFrame")
+        ```lua
+        -- Medium: Create theme selection menu
+        local function createThemeMenu()
+            local themes = lia.color.getAllThemes()
+            local menu = vgui.Create("DFrame")
 
-        for _, themeName in ipairs(themes) do
-            local button = vgui.Create("DButton", menu)
-            button:SetText(themeName)
-            button.DoClick = function()
-            lia.color.applyTheme(themeName, true)
+            for _, themeName in ipairs(themes) do
+                local button = vgui.Create("DButton", menu)
+                button:SetText(themeName)
+                button.DoClick = function()
+                    lia.color.applyTheme(themeName, true)
+                end
+            end
         end
-    end
-    end
-    ```
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Theme validation and management system
-    local function validateAndManageThemes()
-        local themes = lia.color.getAllThemes()
-        local validThemes = {}
+        ```lua
+        -- High: Theme validation and management system
+        local function validateAndManageThemes()
+            local themes = lia.color.getAllThemes()
+            local validThemes = {}
 
-        for _, themeName in ipairs(themes) do
-            local themeData = lia.color.themes[themeName]
-            if themeData and themeData.maincolor then
-                table.insert(validThemes, {
-                name = themeName,
-                displayName = themeName:gsub("_", " "):gsub("(%a)([%w]*)", function(first, rest)
-                return first:upper() .. rest:lower()
-            end),
-            mainColor = themeData.maincolor
-            })
+            for _, themeName in ipairs(themes) do
+                local themeData = lia.color.themes[themeName]
+                if themeData and themeData.maincolor then
+                    table.insert(validThemes, {
+                        name        = themeName,
+                        displayName = themeName:gsub("_", " "):gsub("(%a)([%w]*)", function(first, rest)
+                            return first:upper() .. rest:lower()
+                        end),
+                        mainColor   = themeData.maincolor
+                    })
+                end
+            end
+
+            return validThemes
         end
-    end
-
-    return validThemes
-    end
-    ```
+        ```
 ]]
 function lia.color.getAllThemes()
     local themes = {}

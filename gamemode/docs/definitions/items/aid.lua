@@ -100,11 +100,11 @@ Example Item:
 
 ```lua
 -- Basic item identification
-ITEM.name = "Medical Kit"                    -- Display name shown to players
-ITEM.desc = "A medical kit that restores 25 health points"  -- Description text
-ITEM.model = "models/items/medkit.mdl"       -- 3D model for the item
-ITEM.width = 1                               -- Inventory width (1 slot)
-ITEM.height = 1                              -- Inventory height (1 slot)
-ITEM.health = 25                             -- Health amount restored when used
+    ITEM.name = "Medical Kit"                    -- Display name shown to players
+    ITEM.desc = "A medical kit that restores 25 health points"  -- Description text
+    ITEM.model = "models/items/medkit.mdl"       -- 3D model for the item
+    ITEM.width = 1                               -- Inventory width (1 slot)
+    ITEM.height = 1                              -- Inventory height (1 slot)
+    ITEM.health = 25                             -- Health amount restored when used
 ```
 ]]

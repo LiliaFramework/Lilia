@@ -31,6 +31,7 @@ local color_target = Color(255, 255, 255, 200)
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create a basic context menu
@@ -128,6 +129,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Display a basic custom options menu
@@ -477,6 +479,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Open color picker with callback
@@ -692,6 +695,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create a basic radial menu
@@ -764,6 +768,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Open player selector with callback
@@ -907,6 +912,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Open text input dialog
@@ -1206,6 +1212,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw a basic rounded rectangle
@@ -1256,6 +1263,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined rounded rectangle
@@ -1305,6 +1313,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw textured rounded rectangle
@@ -1356,6 +1365,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw material-based rounded rectangle
@@ -1411,6 +1421,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw a basic circle
@@ -1458,6 +1469,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined circle
@@ -1505,6 +1517,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw textured circle
@@ -1554,6 +1567,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw material-based circle
@@ -1631,6 +1645,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw blurred rectangle
@@ -1723,6 +1738,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw basic shadow
@@ -1786,6 +1802,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw basic shadow with uniform radius
@@ -1837,6 +1854,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined shadow
@@ -2047,6 +2065,7 @@ lia.derma.Types = {
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create and draw a rectangle
@@ -2097,6 +2116,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create and draw a circle
@@ -2175,6 +2195,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw text with shadow
@@ -2232,6 +2253,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw outlined text
@@ -2287,6 +2309,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw basic tooltip
@@ -2373,6 +2396,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw text with automatic shadow
@@ -2530,6 +2554,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Smooth value transition
@@ -2583,6 +2608,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Apply ease-out to animation progress
@@ -2636,6 +2662,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Apply ease-in-out to animation progress
@@ -2701,6 +2728,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Animate panel appearance
@@ -2850,6 +2878,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw blur behind panel
@@ -2934,6 +2963,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw blur at specific position
@@ -2992,6 +3022,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request basic arguments
@@ -3564,6 +3595,7 @@ lia.derma.entsScales = lia.derma.entsScales or {}
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Draw entity name
@@ -3665,6 +3697,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request dropdown selection
@@ -3827,6 +3860,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request text input
@@ -3948,6 +3982,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request multiple selections
@@ -4084,6 +4119,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request confirmation
@@ -4187,6 +4223,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Request button selection

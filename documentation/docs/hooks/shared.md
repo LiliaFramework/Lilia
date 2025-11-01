@@ -2876,6 +2876,108 @@ end)
 
 ---
 
+### OnConfigUpdated
+
+**Purpose**
+
+Called when a configuration value is updated
+
+**When Called**
+
+After a configuration option value changes through `lia.config.set()` or `lia.config.forceSet()`
+
+**Parameters**
+
+* `key` (*string*): The configuration key that was updated
+* `oldValue` (*any*): The previous value of the configuration
+* `value` (*any*): The new value of the configuration
+
+**Returns**
+
+* None
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Log configuration changes
+hook.Add("OnConfigUpdated", "MyAddon", function(key, oldValue, value)
+    print("Config " .. key .. " changed from " .. tostring(oldValue) .. " to " .. tostring(value))
+end)
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: React to specific configuration changes
+hook.Add("OnConfigUpdated", "ConfigReactor", function(key, oldValue, value)
+    if key == "WalkSpeed" then
+        -- Update all players' walk speed
+        for _, ply in ipairs(player.GetAll()) do
+            if IsValid(ply) and ply:Alive() then
+                ply:SetWalkSpeed(value)
+            end
+        end
+    elseif key == "Theme" then
+        -- Reload UI theme
+        lia.color.applyTheme(value, true)
+    end
+end)
+```
+
+**High Complexity:**
+```lua
+-- High: Complex configuration change handler with validation and rollback
+hook.Add("OnConfigUpdated", "AdvancedConfigHandler", function(key, oldValue, value)
+    local config = lia.config.stored[key]
+    if not config then return end
+    
+    -- Validate value based on config type
+    if config.data and config.data.type == "Number" then
+        if type(value) ~= "number" then
+            print("Warning: Invalid type for " .. key .. ", reverting")
+            lia.config.forceSet(key, oldValue)
+            return
+        end
+        
+        -- Check min/max constraints
+        if config.data.min and value < config.data.min then
+            lia.config.forceSet(key, config.data.min)
+            return
+        end
+        if config.data.max and value > config.data.max then
+            lia.config.forceSet(key, config.data.max)
+            return
+        end
+    end
+    
+    -- Track configuration changes
+    if not lia.config.changeHistory then
+        lia.config.changeHistory = {}
+    end
+    table.insert(lia.config.changeHistory, {
+        key = key,
+        oldValue = oldValue,
+        newValue = value,
+        time = os.time()
+    })
+    
+    -- Notify admins of critical changes
+    if config.data and config.data.critical then
+        for _, ply in ipairs(player.GetAll()) do
+            if ply:IsAdmin() then
+                ply:ChatPrint("[CONFIG] " .. key .. " changed by " .. (config.changedBy or "system"))
+            end
+        end
+    end
+end)
+```
+
+---
+
 ### calcStaminaChange
 
 **Purpose**
@@ -3040,6 +3142,111 @@ hook.Add("getData", "AdvancedDataGet", function(default)
     return data
 end)
 
+```
+
+---
+
+### setData
+
+**Purpose**
+
+Called to set persistent data for modules
+
+**When Called**
+
+When setting module-specific persistent data through the module system
+
+**Parameters**
+
+* `value` (*any*): The value to set
+* `global` (*boolean*): Whether this is global data (accessible across all gamemodes/maps)
+* `ignoreMap` (*boolean*): Whether to ignore map-specific data (accessible across all maps in current gamemode)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Set module data
+function MODULE:setData(value, global, ignoreMap)
+    -- Default implementation stores data with module's uniqueID
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Set data with validation
+function MODULE:setData(value, global, ignoreMap)
+    -- Validate data before setting
+    if type(value) == "table" then
+        -- Check for excessive nesting
+        local function getDepth(t, depth)
+            depth = depth or 0
+            if depth > 10 then return depth end
+            local maxDepth = depth
+            for k, v in pairs(t) do
+                if type(v) == "table" then
+                    maxDepth = math.max(maxDepth, getDepth(v, depth + 1))
+                end
+            end
+            return maxDepth
+        end
+        
+        if getDepth(value) > 5 then
+            print("Warning: Data table too deeply nested")
+            return
+        end
+    end
+    
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+```
+
+**High Complexity:**
+```lua
+-- High: Complex data setting with encryption and versioning
+function MODULE:setData(value, global, ignoreMap)
+    -- Encrypt sensitive data
+    local processedValue = value
+    if self.encrypted and type(value) == "table" then
+        processedValue = {}
+        for k, v in pairs(value) do
+            if self.sensitiveFields and self.sensitiveFields[k] then
+                processedValue[k] = lia.util.encrypt(tostring(v))
+            else
+                processedValue[k] = v
+            end
+        end
+        processedValue._encrypted = true
+    end
+    
+    -- Add versioning metadata
+    if type(processedValue) == "table" then
+        processedValue._version = self.dataVersion or 1
+        processedValue._timestamp = os.time()
+    end
+    
+    -- Store with module identifier
+    lia.data.set(self.uniqueID, processedValue, global, ignoreMap)
+    
+    -- Trigger module-specific callback
+    if self.OnDataChanged then
+        self:OnDataChanged(value, global, ignoreMap)
+    end
+    
+    -- Log data changes for debugging
+    if self.debug then
+        print("[MODULE] " .. self.uniqueID .. " data updated: " .. util.TableToJSON(processedValue, true))
+    end
+end
 ```
 
 ---

@@ -34,23 +34,24 @@ ITEM.scale = 1
         Boolean indicating if the item is rotated
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         if item:isRotated() then
             print("Item is rotated")
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local width = item:isRotated() and item:getHeight() or item:getWidth()
         local height = item:isRotated() and item:getWidth() or item:getHeight()
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getItemDisplaySize(item)
             if item:isRotated() then
@@ -80,22 +81,23 @@ end
         Number representing the item's width in grid units
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local width = item:getWidth()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getWidth() > maxWidth then
             print("Item too wide for slot")
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function canPlaceItem(inventory, item, x, y)
             local width = item:getWidth()
@@ -125,20 +127,21 @@ end
         Number representing the item's height in grid units
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local height = item:getHeight()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local totalSpace = item:getWidth() * item:getHeight()
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function calculateInventorySpace(items)
             local totalWidth = 0
@@ -170,22 +173,23 @@ end
         Number representing the item's current quantity
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local count = item:getQuantity()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getQuantity() >= requiredAmount then
             useItem(item)
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function calculateTotalValue(items)
             local total = 0
@@ -218,27 +222,28 @@ end
         String representation of the item
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         print(item:tostring())
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         lia.information("Processing " .. item:tostring())
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function logItemTransaction(item, action, player)
             local logEntry = string.format("[%s] %s performed %s on %s",
-            os.date("%H:%M:%S"),
-            player:GetName(),
-            action,
-            item:tostring()
+                os.date("%H:%M:%S"),
+                player:GetName(),
+                action,
+                item:tostring()
             )
             file.Append("item_transactions.txt", logEntry .. "\n")
         end
@@ -263,22 +268,23 @@ end
         Number representing the item's unique ID
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local itemID = item:getID()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getID() == targetID then
             selectItem(item)
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function findItemByID(inventory, targetID)
             for _, item in pairs(inventory:getItems()) do
@@ -309,22 +315,23 @@ end
         String representing the item's model path
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local model = item:getModel()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getModel() then
             entity:SetModel(item:getModel())
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function createItemEntity(item, position)
             local ent = ents.Create("prop_physics")
@@ -357,22 +364,23 @@ end
         Number representing the skin index, or nil if none set
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local skin = item:getSkin()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getSkin() then
             entity:SetSkin(item:getSkin())
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function applyItemAppearance(entity, item)
             entity:SetModel(item:getModel())
@@ -403,22 +411,23 @@ end
         Table of bodygroup settings, empty table if none set
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local bodygroups = item:getBodygroups()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         for id, value in pairs(item:getBodygroups()) do
             entity:SetBodygroup(id, value)
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function applyBodygroups(entity, bodygroups)
             for bodygroupID, bodygroupValue in pairs(bodygroups) do
@@ -428,12 +437,12 @@ end
                     if id ~= -1 then
                         entity:SetBodygroup(id, bodygroupValue)
                     end
-                    else
-                        entity:SetBodygroup(bodygroupID, bodygroupValue)
-                    end
+                else
+                    entity:SetBodygroup(bodygroupID, bodygroupValue)
                 end
             end
-            applyBodygroups(myEntity, item:getBodygroups())
+        end
+        applyBodygroups(myEntity, item:getBodygroups())
         ```
 ]]
 function ITEM:getBodygroups()
@@ -454,22 +463,23 @@ end
         Number representing the item's price
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local price = item:getPrice()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if player:getMoney() >= item:getPrice() then
             player:buyItem(item)
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function calculateTotalCost(items)
             local total = 0
@@ -510,15 +520,16 @@ end
         The return values from the called method
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:call("use", player)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local success = item:call("canUse", player, entity)
         if success then
@@ -526,7 +537,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function executeItemAction(item, action, player, entity, ...)
             local canRun, reason = item:call("can" .. action, player, entity, ...)
@@ -534,12 +545,12 @@ end
                 local result = {item:call("on" .. action, player, entity, ...)}
                 hook.Run("OnItem" .. action, item, player, entity, unpack(result))
                 return true, unpack(result)
-                else
-                    player:notifyError(reason or "Cannot perform action")
-                    return false
-                end
+            else
+                player:notifyError(reason or "Cannot perform action")
+                return false
             end
-            local success, data = executeItemAction(myItem, "Use", player, nil, target)
+        end
+        local success, data = executeItemAction(myItem, "Use", player, nil, target)
         ```
 ]]
 function ITEM:call(method, client, entity, ...)
@@ -572,44 +583,45 @@ end
         Player entity who owns the item, or nil if not found
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local owner = item:getOwner()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getOwner() == player then
             allowModification = true
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function canPlayerAccessItem(player, item)
             local owner = item:getOwner()
             if not owner then return false end
 
-                -- Check if player is the owner
-                if owner == player then return true end
+            -- Check if player is the owner
+            if owner == player then return true end
 
-                    -- Check if player has admin permissions
-                    if player:isAdmin() then return true end
+            -- Check if player has admin permissions
+            if player:isAdmin() then return true end
 
-                        -- Check if item is in shared inventory
-                        local inventory = lia.inventory.instances[item.invID]
-                        if inventory and inventory:getData("shared") then
-                            return inventory:canAccess("view", {client = player})
-                        end
+            -- Check if item is in shared inventory
+            local inventory = lia.inventory.instances[item.invID]
+            if inventory and inventory:getData("shared") then
+                return inventory:canAccess("view", {client = player})
+            end
 
-                        return false
-                    end
-                    if canPlayerAccessItem(client, myItem) then
-                        -- Allow access
-                    end
+            return false
+        end
+        if canPlayerAccessItem(client, myItem) then
+            -- Allow access
+        end
         ```
 ]]
 function ITEM:getOwner()
@@ -637,21 +649,22 @@ end
         The data value or default value if key doesn't exist
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local durability = item:getData("durability", 100)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local color = item:getData("color", Color(255, 255, 255))
         entity:SetColor(color)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function applyItemModifiers(entity, item)
             -- Apply durability-based modifications
@@ -699,15 +712,16 @@ end
         Table containing all item data
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local allData = item:getAllData()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local data = item:getAllData()
         for key, value in pairs(data) do
@@ -715,7 +729,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function serializeItemForSave(item)
             local data = item:getAllData()
@@ -758,39 +772,40 @@ end
         Nothing
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:hook("use", function(item)
-        print("Item used!")
+            print("Item used!")
         end)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         item:hook("drop", function(item)
-        if item:getData("soulbound") then
-            return false -- Prevent dropping
-        end
+            if item:getData("soulbound") then
+                return false -- Prevent dropping
+            end
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         item:hook("use", function(item)
-        -- Check cooldown
-        local lastUsed = item:getData("lastUsed", 0)
-        local cooldown = item:getData("cooldown", 60)
-        if CurTime() - lastUsed < cooldown then
-            item.player:notifyError("Item is on cooldown")
-            return false
-        end
-        -- Update last used time
-        item:setData("lastUsed", CurTime())
-        -- Apply custom effects
-        applyItemEffect(item.player, item.uniqueID)
+            -- Check cooldown
+            local lastUsed = item:getData("lastUsed", 0)
+            local cooldown = item:getData("cooldown", 60)
+            if CurTime() - lastUsed < cooldown then
+                item.player:notifyError("Item is on cooldown")
+                return false
+            end
+            -- Update last used time
+            item:setData("lastUsed", CurTime())
+            -- Apply custom effects
+            applyItemEffect(item.player, item.uniqueID)
         end)
         ```
 ]]
@@ -813,40 +828,41 @@ end
         Nothing
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:postHook("use", function(item)
-        print("Item use completed")
+            print("Item use completed")
         end)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         item:postHook("drop", function(item)
-        lia.log.add(item.player, "item_dropped", item:getName())
+            lia.log.add(item.player, "item_dropped", item:getName())
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         item:postHook("use", function(item, result)
-        -- Log usage statistics
-        local stats = lia.data.get("item_usage_stats", {})
-        stats[item.uniqueID] = (stats[item.uniqueID] or 0) + 1
-        lia.data.set("item_usage_stats", stats)
+            -- Log usage statistics
+            local stats = lia.data.get("item_usage_stats", {})
+            stats[item.uniqueID] = (stats[item.uniqueID] or 0) + 1
+            lia.data.set("item_usage_stats", stats)
 
-        -- Apply post-use effects
-        if result == true and item:getData("consumable") then
-            item:addQuantity(-1)
-        end
+            -- Apply post-use effects
+            if result == true and item:getData("consumable") then
+                item:addQuantity(-1)
+            end
 
-        -- Trigger achievements
-        if stats[item.uniqueID] >= 100 then
-            item.player:unlockAchievement("frequent_user")
-        end
+            -- Trigger achievements
+            if stats[item.uniqueID] >= 100 then
+                item.player:unlockAchievement("frequent_user")
+            end
         end)
         ```
 ]]
@@ -868,17 +884,18 @@ end
         Nothing
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         function ITEM:onRegistered()
             print("Item registered: " .. self.uniqueID)
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         function ITEM:onRegistered()
             if self.model then
@@ -887,7 +904,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         function ITEM:onRegistered()
             -- Precache model
@@ -931,20 +948,21 @@ end
         Nothing
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:print()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         item:print(true) -- Show detailed info
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function debugInventory(inventory)
             for _, item in pairs(inventory:getItems()) do
@@ -977,22 +995,23 @@ end
         Nothing
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:printData()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getData("debug") then
             item:printData()
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function auditItemData(item)
             item:printData()
@@ -1029,30 +1048,31 @@ end
         String representing the item's name
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local name = item:getName()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         chat.AddText(Color(255, 255, 255), "You received: ", item:getName())
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function formatItemName(item)
             local name = item:getName()
             local quality = item:getData("quality")
             if quality then
                 local colors = {
-                common = Color(255, 255, 255),
-                rare = Color(0, 255, 255),
-                epic = Color(255, 0, 255),
-                legendary = Color(255, 165, 0)
+                    common     = Color(255, 255, 255),
+                    rare        = Color(0, 255, 255),
+                    epic        = Color(255, 0, 255),
+                    legendary   = Color(255, 165, 0)
                 }
                 return colors[quality], name
             end
@@ -1079,20 +1099,21 @@ end
         String representing the item's description
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local desc = item:getDesc()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         print("Item description: " .. item:getDesc())
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getFormattedDescription(item)
             local desc = item:getDesc()
@@ -1134,27 +1155,28 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:removeFromInventory()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         item:removeFromInventory(true):next(function()
-        print("Item removed but preserved")
+            print("Item removed but preserved")
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function transferItem(item, fromInv, toInv)
             return item:removeFromInventory(true):next(function()
-            return toInv:add(item)
-        end):next(function()
-        lia.log.add(nil, "item_transferred",
-        item:getID(), fromInv:getID(), toInv:getID())
-        end)
+                return toInv:add(item)
+            end):next(function()
+                lia.log.add(nil, "item_transferred",
+                    item:getID(), fromInv:getID(), toInv:getID())
+            end)
         end
         transferItem(myItem, playerInv, bankInv)
         ```
@@ -1185,7 +1207,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             item:delete()
             ```
@@ -1202,16 +1224,16 @@ if SERVER then
             local function safelyDeleteExpiredItems()
                 local expiredItems = lia.db.select("*", "items", "expiry_date < " .. os.time())
                 expiredItems:next(function(results)
-                for _, row in ipairs(results.results or {}) do
-                    local item = lia.item.instances[tonumber(row.itemID)]
-                    if item then
-                        -- Log deletion reason
-                        lia.log.add(nil, "expired_item_deleted", row.itemID, row.uniqueID)
-                        -- Delete the item
-                        item:delete()
+                    for _, row in ipairs(results.results or {}) do
+                        local item = lia.item.instances[tonumber(row.itemID)]
+                        if item then
+                            -- Log deletion reason
+                            lia.log.add(nil, "expired_item_deleted", row.itemID, row.uniqueID)
+                            -- Delete the item
+                            item:delete()
+                        end
                     end
-                end
-            end)
+                end)
             end
             safelyDeleteExpiredItems()
             ```
@@ -1238,19 +1260,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:remove()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         item:remove():next(function()
         player:notify("Item consumed")
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function consumeItemWithEffects(item, player)
             -- Apply item effects before removal
@@ -1260,23 +1283,23 @@ if SERVER then
 
             -- Remove the item
             return item:remove():next(function()
-            -- Post-consumption effects
-            if item:getData("reusable") then
-                -- Create a new instance if reusable
-                local newItem = lia.item.new(item.uniqueID, 1)
-                player:getInventory():add(newItem)
-            end
+                -- Post-consumption effects
+                if item:getData("reusable") then
+                    -- Create a new instance if reusable
+                    local newItem = lia.item.new(item.uniqueID, 1)
+                    player:getInventory():add(newItem)
+                end
 
-            -- Trigger achievements
-            local consumedCount = player:getData("items_consumed", 0) + 1
-            player:setData("items_consumed", consumedCount)
-            if consumedCount >= 100 then
-                player:unlockAchievement("consumptive")
-            end
-        end)
+                -- Trigger achievements
+                local consumedCount = player:getData("items_consumed", 0) + 1
+                player:setData("items_consumed", consumedCount)
+                if consumedCount >= 100 then
+                    player:unlockAchievement("consumptive")
+                end
+            end)
         end
         consumeItemWithEffects(myItem, player)
-            ```
+        ```
     ]]
     function ITEM:remove()
         local d = deferred.new()
@@ -1305,19 +1328,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:destroy()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getData("temporary") then
             item:destroy()
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function destroyItemsInRadius(position, radius)
             local items = ents.FindInSphere(position, radius)
@@ -1366,14 +1390,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         function ITEM:onDisposed()
             -- Cleanup code here
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         function ITEM:onDisposed()
             -- Clean up associated entities
@@ -1383,7 +1408,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         function ITEM:onDisposed()
             -- Comprehensive cleanup
@@ -1429,12 +1454,13 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local entity = item:getEntity()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local entity = item:getEntity()
         if entity then
@@ -1442,19 +1468,19 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function teleportItemToPlayer(item, player)
             local entity = item:getEntity()
             if entity then
                 -- Remove from inventory first
                 item:removeFromInventory(true):next(function()
-                -- Teleport entity to player
-                entity:SetPos(player:GetPos() + Vector(0, 0, 50))
-                entity:SetVelocity(Vector(0, 0, 0))
-                -- Log the action
-                lia.log.add(player, "item_teleported", item:getID(), item:getName())
-            end)
+                    -- Teleport entity to player
+                    entity:SetPos(player:GetPos() + Vector(0, 0, 50))
+                    entity:SetVelocity(Vector(0, 0, 0))
+                    -- Log the action
+                    lia.log.add(player, "item_teleported", item:getID(), item:getName())
+                end)
             else
                 player:notifyError("Item has no physical entity")
             end
@@ -1487,17 +1513,18 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:spawn(Vector(0, 0, 0))
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         item:spawn(player:GetPos() + Vector(0, 0, 50), Angle(0, 0, 0))
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function dropItemWithPhysics(item, player, force)
             -- Remove from inventory
@@ -1596,19 +1623,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         item:transfer(otherInventory)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:transfer(bankInventory) then
             player:notify("Item stored in bank")
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function tradeItems(player1, player2, itemID, payment)
             local item = player1:getInventory():getItems()[itemID]
@@ -1619,22 +1647,22 @@ if SERVER then
                     return false, "Insufficient funds"
                 end
 
-                -- Transfer item
-                if item:transfer(player2:getInventory()) then
-                    -- Handle payment
-                    player2:addMoney(-payment)
-                    player1:addMoney(payment)
+            -- Transfer item
+            if item:transfer(player2:getInventory()) then
+                -- Handle payment
+                player2:addMoney(-payment)
+                player1:addMoney(payment)
 
-                    -- Log the trade
-                    lia.log.add(nil, "item_trade",
+                -- Log the trade
+                lia.log.add(nil, "item_trade",
                     item:getID(), player1:GetName(), player2:GetName(), payment)
 
-                    return true
-                    else
-                        return false, "Transfer failed"
-                    end
-                end
-                local success, reason = tradeItems(seller, buyer, itemID, 500)
+                return true
+            else
+                return false, "Transfer failed"
+            end
+        end
+        local success, reason = tradeItems(seller, buyer, itemID, 500)
         ```
     ]]
     function ITEM:transfer(newInventory, bBypass)
@@ -1661,14 +1689,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         function ITEM:onInstanced()
             print("New item instance created")
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         function ITEM:onInstanced()
             -- Set default data for new instances
@@ -1678,7 +1707,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         function ITEM:onInstanced()
             -- Initialize complex item state
@@ -1688,18 +1717,18 @@ if SERVER then
             -- Register with item tracking system
             local trackingData = lia.data.get("item_tracking", {})
             trackingData[self:getID()] = {
-            uniqueID = self.uniqueID,
-            created = os.time(),
-            owner = self:getOwner() and self:getOwner():GetName() or "unknown"
+                uniqueID = self.uniqueID,
+                created  = os.time(),
+                owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
             }
             lia.data.set("item_tracking", trackingData)
 
             -- Apply category-specific initialization
             if self.category == "weapons" then
                 self:setData("ammo", self:getData("maxAmmo", 30))
-                elseif self.category == "armor" then
-                    self:setData("protection", self:getData("maxProtection", 50))
-                end
+            elseif self.category == "armor" then
+                self:setData("protection", self:getData("maxProtection", 50))
+            end
             end
         ```
     ]]
@@ -1723,7 +1752,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             function ITEM:onSync(recipient)
                 -- Custom sync logic
@@ -1789,7 +1818,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             function ITEM:onRemoved()
                 print("Item permanently removed")
@@ -1852,7 +1881,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             function ITEM:onRestored(inventory)
                 print("Item restored from database")
@@ -1892,16 +1921,16 @@ if SERVER then
                     if expiryTime and expiryTime < os.time() then
                         -- Item has expired, schedule removal
                         timer.Simple(0, function()
-                        if IsValid(self) then
-                            self:remove()
-                            lia.log.add(nil, "expired_item_removed_on_restore", itemID)
-                        end
-                    end)
+                            if IsValid(self) then
+                                self:remove()
+                                lia.log.add(nil, "expired_item_removed_on_restore", itemID)
+                            end
+                        end)
+                    end
                 end
-            end
 
-            -- Trigger restoration hooks
-            hook.Run("OnItemRestored", self, inventory)
+                -- Trigger restoration hooks
+                hook.Run("OnItemRestored", self, inventory)
             end
             ```
     ]]
@@ -1925,7 +1954,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             item:sync()
             ```
@@ -1942,16 +1971,16 @@ if SERVER then
                 for _, player in ipairs(players) do
                     if player:canAccessItem(item) then
                         item:sync(player)
-                        else
-                            -- Send limited data
-                            net.Start("liaItemLimited")
-                            net.WriteUInt(item:getID(), 32)
-                            net.WriteString(item:getName())
-                            net.Send(player)
-                        end
+                    else
+                        -- Send limited data
+                        net.Start("liaItemLimited")
+                        net.WriteUInt(item:getID(), 32)
+                        net.WriteString(item:getName())
+                        net.Send(player)
                     end
                 end
-                syncItemToGroup(myItem, nearbyPlayers)
+            end
+            syncItemToGroup(myItem, nearbyPlayers)
             ```
     ]]
     function ITEM:sync(recipient)
@@ -1991,7 +2020,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             item:setData("durability", 50)
             ```
@@ -2086,7 +2115,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             item:addQuantity(5)
             ```
@@ -2108,17 +2137,17 @@ if SERVER then
                         item1:setQuantity(combinedQuantity)
                         item2:remove()
                         return true, "Items combined successfully"
-                        else
-                            -- Fill first stack and adjust second
-                            local overflow = combinedQuantity - maxStack
-                            item1:setQuantity(maxStack)
-                            item2:setQuantity(overflow)
-                            return true, "Items partially combined"
-                        end
+                    else
+                        -- Fill first stack and adjust second
+                        local overflow = combinedQuantity - maxStack
+                        item1:setQuantity(maxStack)
+                        item2:setQuantity(overflow)
+                        return true, "Items partially combined"
                     end
-                    return false, "Items cannot be combined"
                 end
-                local success, message = combineStacks(stack1, stack2)
+                return false, "Items cannot be combined"
+            end
+            local success, message = combineStacks(stack1, stack2)
             ```
     ]]
     function ITEM:addQuantity(quantity, receivers, noCheckEntity)
@@ -2144,7 +2173,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             item:setQuantity(10)
             ```
@@ -2226,7 +2255,7 @@ if SERVER then
             Server
 
     Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             item:interact("use", player)
             ```
@@ -2353,22 +2382,23 @@ end
         String representing the localized category name
 
     Realm:
-        Both
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local category = item:getCategory()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         if item:getCategory() == "weapons" then
             -- Handle weapon-specific logic
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function organizeItemsByCategory(items)
             local categories = {}
@@ -2381,9 +2411,9 @@ end
             local sortedCategories = {}
             for categoryName, categoryItems in pairs(categories) do
                 table.insert(sortedCategories, {
-                name = categoryName,
-                items = categoryItems,
-                count = #categoryItems
+                    name  = categoryName,
+                    items = categoryItems,
+                    count = #categoryItems
                 })
             end
             table.sort(sortedCategories, function(a, b) return a.name < b.name end)

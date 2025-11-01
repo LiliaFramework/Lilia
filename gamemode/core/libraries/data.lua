@@ -26,36 +26,37 @@ lia.data.stored = lia.data.stored or {}
         Shared
 
     Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Encode a vector
-    local encoded = lia.data.encodetable(Vector(100, 200, 300))
 
-    -- Returns: {100, 200, 300}
-    ```
+    Low Complexity:
+        ```lua
+        -- Simple: Encode a vector
+        local encoded = lia.data.encodetable(Vector(100, 200, 300))
+
+        -- Returns: {100, 200, 300}
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Encode a color with alpha
-    local color = Color(255, 128, 64, 200)
-    local encoded = lia.data.encodetable(color)
+        ```lua
+        -- Medium: Encode a color with alpha
+        local color = Color(255, 128, 64, 200)
+        local encoded = lia.data.encodetable(color)
 
-    -- Returns: {255, 128, 64, 200}
-    ```
+        -- Returns: {255, 128, 64, 200}
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Encode nested table with mixed data types
-    local complexData = {
-    position = Vector(0, 0, 0),
-    rotation = Angle(0, 90, 0),
-    color = Color(255, 0, 0),
-    settings = {enabled = true, count = 5}
-    }
-    local encoded = lia.data.encodetable(complexData)
+        ```lua
+        -- High: Encode nested table with mixed data types
+        local complexData = {
+            position = Vector(0, 0, 0),
+            rotation = Angle(0, 90, 0),
+            color   = Color(255, 0, 0),
+            settings = {enabled = true, count = 5}
+        }
+        local encoded = lia.data.encodetable(complexData)
 
-    -- Returns: {position = {0, 0, 0}, rotation = {0, 90, 0}, color = {255, 0, 0, 255}, settings = {enabled = true, count = 5}}
-    ```
+        -- Returns: {position = {0, 0, 0}, rotation = {0, 90, 0}, color = {255, 0, 0, 255}, settings = {enabled = true, count = 5}}
+        ```
 ]]
 function lia.data.encodetable(value)
     if isvector(value) then
@@ -228,36 +229,37 @@ end
         Shared
 
     Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Decode a vector from encoded format
-    local decoded = lia.data.decode({100, 200, 300})
 
-    -- Returns: Vector(100, 200, 300)
-    ```
+    Low Complexity:
+        ```lua
+        -- Simple: Decode a vector from encoded format
+        local decoded = lia.data.decode({100, 200, 300})
+
+        -- Returns: Vector(100, 200, 300)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Decode an angle from encoded format
-    local encodedAngle = {0, 90, 0}
-    local decoded = lia.data.decode(encodedAngle)
+        ```lua
+        -- Medium: Decode an angle from encoded format
+        local encodedAngle = {0, 90, 0}
+        local decoded = lia.data.decode(encodedAngle)
 
-    -- Returns: Angle(0, 90, 0)
-    ```
+        -- Returns: Angle(0, 90, 0)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Decode complex nested data structure
-    local encodedData = {
-    position = {100, 200, 300},
-    rotation = {0, 90, 0},
-    color = {255, 0, 0, 255},
-    settings = {enabled = true, count = 5}
-    }
-    local decoded = lia.data.decode(encodedData)
+        ```lua
+        -- High: Decode complex nested data structure
+        local encodedData = {
+            position = {100, 200, 300},
+            rotation = {0, 90, 0},
+            color    = {255, 0, 0, 255},
+            settings = {enabled = true, count = 5}
+        }
+        local decoded = lia.data.decode(encodedData)
 
-    -- Returns: {position = Vector(100, 200, 300), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
-    ```
+        -- Returns: {position = Vector(100, 200, 300), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
+        ```
 ]]
 function lia.data.decode(value)
     return deepDecode(value)
@@ -280,35 +282,36 @@ end
         Shared
 
     Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Serialize a basic table
-    local serialized = lia.data.serialize({name = "test", value = 42})
 
-    -- Returns: '{"name":"test","value":42}'
-    ```
+    Low Complexity:
+        ```lua
+        -- Simple: Serialize a basic table
+        local serialized = lia.data.serialize({name = "test", value = 42})
+
+        -- Returns: '{"name":"test","value":42}'
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Serialize a vector
-    local serialized = lia.data.serialize(Vector(100, 200, 300))
+        ```lua
+        -- Medium: Serialize a vector
+        local serialized = lia.data.serialize(Vector(100, 200, 300))
 
-    -- Returns: '{"value":[100,200,300]}'
-    ```
+        -- Returns: '{"value":[100,200,300]}'
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Serialize complex nested data with mixed types
-    local complexData = {
-    position = Vector(0, 0, 0),
-    rotation = Angle(0, 90, 0),
-    color = Color(255, 0, 0),
-    settings = {enabled = true, count = 5}
-    }
-    local serialized = lia.data.serialize(complexData)
+        ```lua
+        -- High: Serialize complex nested data with mixed types
+        local complexData = {
+            position = Vector(0, 0, 0),
+            rotation = Angle(0, 90, 0),
+            color    = Color(255, 0, 0),
+            settings = {enabled = true, count = 5}
+        }
+        local serialized = lia.data.serialize(complexData)
 
-    -- Returns: JSON string with all data properly encoded
-    ```
+        -- Returns: JSON string with all data properly encoded
+        ```
 ]]
 function lia.data.serialize(value)
     local encoded = lia.data.encodetable(value) or {}
@@ -337,31 +340,32 @@ end
         Shared
 
     Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Deserialize a JSON string
-    local deserialized = lia.data.deserialize('{"name":"test","value":42}')
 
-    -- Returns: {name = "test", value = 42}
-    ```
+    Low Complexity:
+        ```lua
+        -- Simple: Deserialize a JSON string
+        local deserialized = lia.data.deserialize('{"name":"test","value":42}')
+
+        -- Returns: {name = "test", value = 42}
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Deserialize encoded vector data
-    local jsonData = '{"value":[100,200,300]}'
-    local deserialized = lia.data.deserialize(jsonData)
+        ```lua
+        -- Medium: Deserialize encoded vector data
+        local jsonData = '{"value":[100,200,300]}'
+        local deserialized = lia.data.deserialize(jsonData)
 
-    -- Returns: Vector(100, 200, 300)
-    ```
+        -- Returns: Vector(100, 200, 300)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Deserialize complex data with fallback handling
-    local complexJson = '{"position":[0,0,0],"rotation":[0,90,0],"color":[255,0,0,255],"settings":{"enabled":true,"count":5}}'
-    local deserialized = lia.data.deserialize(complexJson)
+        ```lua
+        -- High: Deserialize complex data with fallback handling
+        local complexJson = '{"position":[0,0,0],"rotation":[0,90,0],"color":[255,0,0,255],"settings":{"enabled":true,"count":5}}'
+        local deserialized = lia.data.deserialize(complexJson)
 
-    -- Returns: {position = Vector(0, 0, 0), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
-    ```
+        -- Returns: {position = Vector(0, 0, 0), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
+        ```
 ]]
 function lia.data.deserialize(raw)
     if not raw then return nil end
@@ -400,31 +404,32 @@ end
         Shared
 
     Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Decode vector from array format
-    local vector = lia.data.decodeVector({100, 200, 300})
 
-    -- Returns: Vector(100, 200, 300)
-    ```
+    Low Complexity:
+        ```lua
+        -- Simple: Decode vector from array format
+        local vector = lia.data.decodeVector({100, 200, 300})
+
+        -- Returns: Vector(100, 200, 300)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Decode vector from JSON string
-    local jsonString = '[100,200,300]'
-    local vector = lia.data.decodeVector(jsonString)
+        ```lua
+        -- Medium: Decode vector from JSON string
+        local jsonString = '[100,200,300]'
+        local vector = lia.data.decodeVector(jsonString)
 
-    -- Returns: Vector(100, 200, 300)
-    ```
+        -- Returns: Vector(100, 200, 300)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Decode vector with multiple format fallbacks
-    local vectorData = "Vector(100, 200, 300)"
-    local vector = lia.data.decodeVector(vectorData)
+        ```lua
+        -- High: Decode vector with multiple format fallbacks
+        local vectorData = "Vector(100, 200, 300)"
+        local vector = lia.data.decodeVector(vectorData)
 
-    -- Returns: Vector(100, 200, 300) - handles string parsing
-    ```
+        -- Returns: Vector(100, 200, 300) - handles string parsing
+        ```
 ]]
 function lia.data.decodeVector(raw)
     if not raw then return nil end
@@ -462,31 +467,32 @@ end
         Shared
 
     Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Decode angle from array format
-    local angle = lia.data.decodeAngle({0, 90, 0})
 
-    -- Returns: Angle(0, 90, 0)
-    ```
+    Low Complexity:
+        ```lua
+        -- Simple: Decode angle from array format
+        local angle = lia.data.decodeAngle({0, 90, 0})
+
+        -- Returns: Angle(0, 90, 0)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Decode angle from JSON string
-    local jsonString = '[0,90,0]'
-    local angle = lia.data.decodeAngle(jsonString)
+        ```lua
+        -- Medium: Decode angle from JSON string
+        local jsonString = '[0,90,0]'
+        local angle = lia.data.decodeAngle(jsonString)
 
-    -- Returns: Angle(0, 90, 0)
-    ```
+        -- Returns: Angle(0, 90, 0)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Decode angle with multiple format fallbacks
-    local angleData = "Angle(0, 90, 0)"
-    local angle = lia.data.decodeAngle(angleData)
+        ```lua
+        -- High: Decode angle with multiple format fallbacks
+        local angleData = "Angle(0, 90, 0)"
+        local angle = lia.data.decodeAngle(angleData)
 
-    -- Returns: Angle(0, 90, 0) - handles string parsing
-    ```
+        -- Returns: Angle(0, 90, 0) - handles string parsing
+        ```
 ]]
 function lia.data.decodeAngle(raw)
     if not raw then return nil end
@@ -530,31 +536,32 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Store basic data for current gamemode and map
-    lia.data.set("playerCount", 25)
-    -- Stores data scoped to current gamemode and map
-    ```
+        ```lua
+        -- Simple: Store basic data for current gamemode and map
+        lia.data.set("playerCount", 25)
+        -- Stores data scoped to current gamemode and map
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Store data globally across all gamemodes and maps
-    lia.data.set("serverVersion", "1.0.0", true)
-    -- Stores data globally, accessible from any gamemode/map
-    ```
+        ```lua
+        -- Medium: Store data globally across all gamemodes and maps
+        lia.data.set("serverVersion", "1.0.0", true)
+        -- Stores data globally, accessible from any gamemode/map
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Store complex data with custom scoping
-    local playerData = {
-    position = Vector(100, 200, 300),
-    inventory = {weapon = "pistol", ammo = 50},
-    settings = {volume = 0.8, graphics = "high"}
-    }
-    lia.data.set("player_" .. player:SteamID64(), playerData, false, true)
-    -- Stores player data for current gamemode but all maps
-    ```
+        ```lua
+        -- High: Store complex data with custom scoping
+        local playerData = {
+            position  = Vector(100, 200, 300),
+            inventory = {weapon = "pistol", ammo = 50},
+            settings  = {volume = 0.8, graphics = "high"}
+        }
+        lia.data.set("player_" .. player:SteamID64(), playerData, false, true)
+        -- Stores player data for current gamemode but all maps
+        ```
 ]]
 function lia.data.set(key, value, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -600,27 +607,28 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Delete data for current gamemode and map
-    lia.data.delete("playerCount")
-    -- Removes data scoped to current gamemode and map
-    ```
+        ```lua
+        -- Simple: Delete data for current gamemode and map
+        lia.data.delete("playerCount")
+        -- Removes data scoped to current gamemode and map
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Delete data globally across all gamemodes and maps
-    lia.data.delete("serverVersion", true)
-    -- Removes data from global scope
-    ```
+        ```lua
+        -- Medium: Delete data globally across all gamemodes and maps
+        lia.data.delete("serverVersion", true)
+        -- Removes data from global scope
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Delete player data with custom scoping
-    local playerID = "player_" .. player:SteamID64()
-    lia.data.delete(playerID, false, true)
-    -- Removes player data for current gamemode but all maps
-    ```
+        ```lua
+        -- High: Delete player data with custom scoping
+        local playerID = "player_" .. player:SteamID64()
+        lia.data.delete(playerID, false, true)
+        -- Removes player data for current gamemode but all maps
+        ```
 ]]
 function lia.data.delete(key, global, ignoreMap)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -664,28 +672,29 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Load all data tables
-    lia.data.loadTables()
-    -- Loads global, gamemode, and map-specific data
-    ```
+        ```lua
+        -- Simple: Load all data tables
+        lia.data.loadTables()
+        -- Loads global, gamemode, and map-specific data
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Load data with custom initialization
-    lia.data.loadTables()
-    -- After loading, access specific data
-    local playerCount = lia.data.get("playerCount", 0)
-    ```
+        ```lua
+        -- Medium: Load data with custom initialization
+        lia.data.loadTables()
+        -- After loading, access specific data
+        local playerCount = lia.data.get("playerCount", 0)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Load data with validation and error handling
-    lia.data.loadTables()
-    -- Data is loaded hierarchically: global -> gamemode -> map-specific
-    -- Later data overrides earlier data (map overrides gamemode overrides global)
-    ```
+        ```lua
+        -- High: Load data with validation and error handling
+        lia.data.loadTables()
+        -- Data is loaded hierarchically: global -> gamemode -> map-specific
+        -- Later data overrides earlier data (map overrides gamemode overrides global)
+        ```
 ]]
 function lia.data.loadTables()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -755,35 +764,36 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Load persistence schema
-    lia.data.loadPersistence()
-    -- Ensures all required columns exist in persistence table
-    ```
+        ```lua
+        -- Simple: Load persistence schema
+        lia.data.loadPersistence()
+        -- Ensures all required columns exist in persistence table
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Load persistence with error handling
-    lia.data.loadPersistence():next(function()
-    print("Persistence schema loaded successfully")
-    end):catch(function(err)
-    print("Failed to load persistence schema: " .. err)
-    end)
-    ```
+        ```lua
+        -- Medium: Load persistence with error handling
+        lia.data.loadPersistence():next(function()
+            print("Persistence schema loaded successfully")
+        end):catch(function(err)
+            print("Failed to load persistence schema: " .. err)
+        end)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Load persistence as part of initialization sequence
-    lia.data.loadPersistence():next(function()
-    return lia.data.loadPersistenceData(function(entities)
-    -- Process loaded entities
-    for _, ent in ipairs(entities) do
-        -- Spawn entities or process data
-    end
-    end)
-    end)
-    ```
+        ```lua
+        -- High: Load persistence as part of initialization sequence
+        lia.data.loadPersistence():next(function()
+            return lia.data.loadPersistenceData(function(entities)
+                -- Process loaded entities
+                for _, ent in ipairs(entities) do
+                    -- Spawn entities or process data
+                end
+            end)
+        end)
+        ```
 ]]
 function lia.data.loadPersistence()
     return ensurePersistenceColumns(baseCols)
@@ -806,50 +816,51 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Save basic entity data
-    local entities = {
-    {class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
-    }
-    lia.data.savePersistence(entities)
-    ```
+        ```lua
+        -- Simple: Save basic entity data
+        local entities = {
+            {class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
+        }
+        lia.data.savePersistence(entities)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Save entities with custom properties
-    local entities = {
-    {
-    class = "lia_vendor",
-    pos = Vector(100, 200, 0),
-    angles = Angle(0, 90, 0),
-    model = "models/player.mdl",
-    name = "Weapon Vendor",
-    items = {"weapon_pistol", "weapon_shotgun"}
-    }
-    }
-    lia.data.savePersistence(entities)
-    ```
+        ```lua
+        -- Medium: Save entities with custom properties
+        local entities = {
+            {
+                class   = "lia_vendor",
+                pos     = Vector(100, 200, 0),
+                angles  = Angle(0, 90, 0),
+                model   = "models/player.mdl",
+                name    = "Weapon Vendor",
+                items   = {"weapon_pistol", "weapon_shotgun"}
+            }
+        }
+        lia.data.savePersistence(entities)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Save complex entities with dynamic properties
-    local entities = {}
-    for _, ent in ipairs(ents.GetAll()) do
-        if ent:GetClass() == "lia_item" then
-            table.insert(entities, {
-            class = ent:GetClass(),
-            pos = ent:GetPos(),
-            angles = ent:GetAngles(),
-            model = ent:GetModel(),
-            itemID = ent:GetItemID(),
-            amount = ent:GetAmount(),
-            data = ent:GetData()
-            })
+        ```lua
+        -- High: Save complex entities with dynamic properties
+        local entities = {}
+        for _, ent in ipairs(ents.GetAll()) do
+            if ent:GetClass() == "lia_item" then
+                table.insert(entities, {
+                    class   = ent:GetClass(),
+                    pos     = ent:GetPos(),
+                    angles  = ent:GetAngles(),
+                    model   = ent:GetModel(),
+                    itemID  = ent:GetItemID(),
+                    amount  = ent:GetAmount(),
+                    data    = ent:GetData()
+                })
+            end
         end
-    end
-    lia.data.savePersistence(entities)
-    ```
+        lia.data.savePersistence(entities)
+        ```
 ]]
 function lia.data.savePersistence(entities)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -916,46 +927,47 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Load persistence data
-    lia.data.loadPersistenceData()
-    -- Loads entity data into cache
-    ```
+        ```lua
+        -- Simple: Load persistence data
+        lia.data.loadPersistenceData()
+        -- Loads entity data into cache
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Load persistence data with callback
-    lia.data.loadPersistenceData(function(entities)
-    print("Loaded " .. #entities .. " entities")
-    for _, ent in ipairs(entities) do
-        print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
-    end
-    end)
-    ```
+        ```lua
+        -- Medium: Load persistence data with callback
+        lia.data.loadPersistenceData(function(entities)
+            print("Loaded " .. #entities .. " entities")
+            for _, ent in ipairs(entities) do
+                print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
+            end
+        end)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Load persistence data with entity spawning
-    lia.data.loadPersistenceData(function(entities)
-    for _, entData in ipairs(entities) do
-        local ent = ents.Create(entData.class)
-        if IsValid(ent) then
-            ent:SetPos(entData.pos)
-            ent:SetAngles(entData.angles)
-            ent:SetModel(entData.model)
-            ent:Spawn()
+        ```lua
+        -- High: Load persistence data with entity spawning
+        lia.data.loadPersistenceData(function(entities)
+            for _, entData in ipairs(entities) do
+                local ent = ents.Create(entData.class)
+                if IsValid(ent) then
+                    ent:SetPos(entData.pos)
+                    ent:SetAngles(entData.angles)
+                    ent:SetModel(entData.model)
+                    ent:Spawn()
 
-            -- Restore custom properties
-            for k, v in pairs(entData) do
-                if not defaultCols[k] then
-                    ent:SetNWVar(k, v)
+                    -- Restore custom properties
+                    for k, v in pairs(entData) do
+                        if not defaultCols[k] then
+                            ent:SetNWVar(k, v)
+                        end
+                    end
                 end
             end
-        end
-    end
-    end)
-    ```
+        end)
+        ```
 ]]
 function lia.data.loadPersistenceData(callback)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
@@ -999,35 +1011,36 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get basic data
-    local playerCount = lia.data.get("playerCount", 0)
-    -- Returns stored player count or 0 if not found
+        ```lua
+        -- Simple: Get basic data
+        local playerCount = lia.data.get("playerCount", 0)
+        -- Returns stored player count or 0 if not found
     ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get data with default fallback
-    local serverSettings = lia.data.get("serverSettings", {
-    maxPlayers = 32,
-    mapRotation = {"gm_flatgrass", "gm_construct"}
-    })
-    -- Returns stored settings or default configuration
-    ```
+        ```lua
+        -- Medium: Get data with default fallback
+        local serverSettings = lia.data.get("serverSettings", {
+            maxPlayers  = 32,
+            mapRotation = {"gm_flatgrass", "gm_construct"}
+        })
+        -- Returns stored settings or default configuration
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get complex data with validation
-    local playerData = lia.data.get("player_" .. player:SteamID64(), {})
-    if playerData.position then
-        player:SetPos(playerData.position)
-    end
-    if playerData.inventory then
-        player:GetInventory():LoadFromData(playerData.inventory)
-    end
-    -- Retrieves and processes complex player data
-    ```
+        ```lua
+        -- High: Get complex data with validation
+        local playerData = lia.data.get("player_" .. player:SteamID64(), {})
+        if playerData.position then
+            player:SetPos(playerData.position)
+        end
+        if playerData.inventory then
+            player:GetInventory():LoadFromData(playerData.inventory)
+        end
+        -- Retrieves and processes complex player data
+        ```
 ]]
 function lia.data.get(key, default)
     local stored = lia.data.stored[key]
@@ -1058,42 +1071,43 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get persistence data
-    local entities = lia.data.getPersistence()
-    print("Loaded " .. #entities .. " entities")
-    ```
+        ```lua
+        -- Simple: Get persistence data
+        local entities = lia.data.getPersistence()
+        print("Loaded " .. #entities .. " entities")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get persistence data with filtering
-    local entities = lia.data.getPersistence()
-    local vendors = {}
-    for _, ent in ipairs(entities) do
-        if ent.class == "lia_vendor" then
-            table.insert(vendors, ent)
+        ```lua
+        -- Medium: Get persistence data with filtering
+        local entities = lia.data.getPersistence()
+        local vendors = {}
+        for _, ent in ipairs(entities) do
+            if ent.class == "lia_vendor" then
+                table.insert(vendors, ent)
+            end
         end
-    end
-    print("Found " .. #vendors .. " vendors")
-    ```
+        print("Found " .. #vendors .. " vendors")
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get persistence data with processing
-    local entities = lia.data.getPersistence()
-    local entityStats = {}
-    for _, ent in ipairs(entities) do
-        if not entityStats[ent.class] then
-            entityStats[ent.class] = 0
+        ```lua
+        -- High: Get persistence data with processing
+        local entities = lia.data.getPersistence()
+        local entityStats = {}
+        for _, ent in ipairs(entities) do
+            if not entityStats[ent.class] then
+                entityStats[ent.class] = 0
+            end
+            entityStats[ent.class] = entityStats[ent.class] + 1
         end
-        entityStats[ent.class] = entityStats[ent.class] + 1
-    end
 
-    for class, count in pairs(entityStats) do
-        print(class .. ": " .. count .. " entities")
-    end
-    ```
+        for class, count in pairs(entityStats) do
+            print(class .. ": " .. count .. " entities")
+        end
+        ```
 ]]
 function lia.data.getPersistence()
     return lia.data.persistCache or {}

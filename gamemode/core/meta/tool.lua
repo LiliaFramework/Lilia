@@ -25,13 +25,14 @@ local toolGunMeta = lia.meta.tool or {}
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Create a basic tool gun instance
         local tool = toolGunMeta:create()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Create tool with custom properties
         local tool = toolGunMeta:create()
@@ -39,14 +40,14 @@ local toolGunMeta = lia.meta.tool or {}
         tool.Stage = 1
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Create tool with full configuration and custom objects
         local tool = toolGunMeta:create()
         tool.Mode = "advanced_builder"
         tool.ClientConVar = {
-        ["build_size"] = "1",
-        ["build_material"] = "wood"
+            ["build_size"]     = "1",
+            ["build_material"] = "wood"
         }
         tool.Objects = {}
         tool.Stage = 0
@@ -83,17 +84,18 @@ end
         None
 
     Realm:
-        Shared (different behavior on client vs server)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Initialize basic ConVars for a tool
         local tool = toolGunMeta:create()
         tool:createConVars()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set up tool with client-side options
         local tool = toolGunMeta:create()
@@ -101,15 +103,15 @@ end
         tool:createConVars()
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced tool with multiple client and server ConVars
         local tool = toolGunMeta:create()
         tool.Mode = "advanced_builder"
         tool.ClientConVar = {
-        ["build_size"] = "1",
-        ["build_material"] = "wood",
-        ["auto_align"] = "1"
+            ["build_size"]     = "1",
+            ["build_material"] = "wood",
+            ["auto_align"]     = "1"
         }
         tool:createConVars()
         ```
@@ -140,16 +142,17 @@ end
         None
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic data update call
         tool:updateData()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Update data with custom logic
         function tool:updateData()
@@ -158,7 +161,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced data synchronization with networking
         function tool:updateData()
@@ -190,16 +193,17 @@ end
         None
 
     Realm:
-        Client (affects local player movement)
+        Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic movement freeze
         tool:freezeMovement()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Conditional movement freezing
         function tool:freezeMovement()
@@ -209,7 +213,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced movement control with restoration
         function tool:freezeMovement()
@@ -248,10 +252,11 @@ end
         None
 
     Realm:
-        Client (HUD rendering only occurs on client)
+        Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Draw basic tool information
         function tool:drawHUD()
@@ -259,7 +264,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Draw tool progress and object count
         function tool:drawHUD()
@@ -275,7 +280,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced HUD with object preview and controls
         function tool:drawHUD()
@@ -317,16 +322,17 @@ end
         ConVar - The server ConVar object for the specified property
 
     Realm:
-        Server (accesses server-side console variables)
+        Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get basic server ConVar
         local maxObjects = tool:getServerInfo("max_objects")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use server info for validation
         local maxObjects = tool:getServerInfo("max_objects")
@@ -337,7 +343,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced server configuration management
         local serverConfig = {}
@@ -371,17 +377,18 @@ end
         table - A table mapping ConVar names to their default values
 
     Realm:
-        Shared (can be used on both client and server)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get basic ConVar list
         local convars = tool:buildConVarList()
         PrintTable(convars)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use ConVar list for UI population
         local convars = tool:buildConVarList()
@@ -392,7 +399,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced ConVar management with validation
         local convars = tool:buildConVarList()
@@ -404,7 +411,7 @@ end
                 validatedConfig[name] = value
             else
                 validatedConfig[name] = default
-                -- Invalid ConVar value for " .. name .. ", using default
+                print("Invalid ConVar value for " .. name .. ", using default")
             end
         end
 
@@ -434,16 +441,17 @@ end
         string - The current value of the client's ConVar for the specified property
 
     Realm:
-        Shared (accesses client-side data through the owner)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get basic client ConVar value
         local size = tool:getClientInfo("build_size")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use client info for tool behavior
         local material = tool:getClientInfo("build_material")
@@ -452,7 +460,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced client configuration with fallback
         local properties = {"build_size", "build_material", "auto_align"}
@@ -489,16 +497,17 @@ end
         number - The numeric value of the client's ConVar or the default value
 
     Realm:
-        Shared (accesses client-side data through the owner)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get basic numeric client ConVar
         local size = tool:getClientNumber("build_size", 1)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use numeric client info for calculations
         local count = tool:getClientNumber("object_count", 5)
@@ -510,13 +519,13 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced numeric configuration with validation
         local numericConfig = {
-        ["build_size"] = {default = 1, min = 0.1, max = 10},
-        ["build_speed"] = {default = 1, min = 0.1, max = 5},
-        ["max_objects"] = {default = 50, min = 1, max = 1000}
+            ["build_size"]  = {default = 1,   min = 0.1, max = 10},
+            ["build_speed"] = {default = 1,   min = 0.1, max = 5},
+            ["max_objects"] = {default = 50,  min = 1,   max = 1000}
         }
 
         local validatedNumbers = {}
@@ -547,16 +556,17 @@ end
         boolean - True if the tool is allowed, false otherwise
 
     Realm:
-        Shared (client always returns true, server checks ConVar)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic permission check
         if not tool:allowed() then return false end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Permission-based tool behavior
         if tool:allowed() then
@@ -566,13 +576,14 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced permission system with logging
         if not tool:allowed() then
             local playerName = tool:GetOwner():Name()
             local toolMode = tool:getMode()
-            print(string.format("Player %s attempted to use %s but was denied", playerName, toolMode))
+            print(string.format("Player %s attempted to use %s but was denied",
+                playerName, toolMode))
 
             if SERVER then
                 tool:GetOwner():ChatPrint("Tool usage is currently disabled")
@@ -603,16 +614,17 @@ end
         None
 
     Realm:
-        Shared (can be overridden for specific tool initialization)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic initialization
         tool:init()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Initialize with custom setup
         function tool:init()
@@ -622,7 +634,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced initialization with networking and validation
         function tool:init()
@@ -667,24 +679,25 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get current tool mode
         local mode = tool:getMode()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use mode for conditional behavior
         local mode = tool:getMode()
         if mode == "builder" then
             tool:EnableBuildMode()
-            elseif mode == "remover" then
-                tool:EnableRemoveMode()
-            end
+        elseif mode == "remover" then
+            tool:EnableRemoveMode()
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced mode-based configuration and validation
         local mode = tool:getMode()
@@ -726,13 +739,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get the weapon instance
         local swep = tool:getSWEP()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use SWEP for weapon-specific operations
         local swep = tool:getSWEP()
@@ -742,7 +756,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced SWEP interaction and validation
         local swep = tool:getSWEP()
@@ -760,12 +774,12 @@ end
         -- Perform weapon-specific operations
         if weaponClass == "weapon_physgun" then
             self:HandlePhysgunSpecificLogic(swep)
-            elseif weaponClass == "weapon_physcannon" then
-                self:HandleGravityGunSpecificLogic(swep)
-            end
+        elseif weaponClass == "weapon_physcannon" then
+            self:HandleGravityGunSpecificLogic(swep)
+        end
 
-            -- Update tool state based on weapon
-            self.LastWeaponCheck = CurTime()
+        -- Update tool state based on weapon
+        self.LastWeaponCheck = CurTime()
         ```
 ]]
 function toolGunMeta:getSWEP()
@@ -789,13 +803,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get the tool owner
         local owner = tool:GetOwner()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use owner for player-specific operations
         local owner = tool:GetOwner()
@@ -805,7 +820,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced owner validation and management
         local owner = tool:GetOwner()
@@ -828,7 +843,7 @@ end
 
         -- Log tool usage
         print(string.format("Player %s (Team %d) used tool %s",
-        owner:Name(), team, tool:getMode()))
+            owner:Name(), team, tool:getMode()))
 
         -- Apply team-based restrictions
         if self:HasTeamRestrictions(team) then
@@ -860,13 +875,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get the weapon entity
         local weapon = tool:getWeapon()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use weapon for position and angle operations
         local weapon = tool:getWeapon()
@@ -877,7 +893,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced weapon interaction and validation
         local weapon = tool:getWeapon()
@@ -899,16 +915,16 @@ end
             if IsValid(heldEntity) then
                 self:HandleHeldEntity(heldEntity)
             end
-            elseif weaponClass == "weapon_toolgun" then
-                -- Handle tool gun specific logic
-                local toolMode = self:getMode()
-                if toolMode == "builder" then
-                    self:UpdateGhostEntity()
-                end
+        elseif weaponClass == "weapon_toolgun" then
+            -- Handle tool gun specific logic
+            local toolMode = self:getMode()
+            if toolMode == "builder" then
+                self:UpdateGhostEntity()
             end
+        end
 
-            -- Update tool state based on weapon
-            self.LastWeaponUpdate = CurTime()
+        -- Update tool state based on weapon
+        self.LastWeaponUpdate = CurTime()
         ```
 ]]
 function toolGunMeta:getWeapon()
@@ -929,10 +945,11 @@ end
         boolean - True if the click was handled, false otherwise
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic left click handling
         function tool:leftClick()
@@ -941,7 +958,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Left click with object placement
         function tool:leftClick()
@@ -959,7 +976,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced left click with validation and networking
         function tool:leftClick()
@@ -1023,10 +1040,11 @@ end
         boolean - True if the click was handled, false otherwise
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic right click handling
         function tool:rightClick()
@@ -1035,7 +1053,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Right click for object selection/manipulation
         function tool:rightClick()
@@ -1053,7 +1071,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced right click with context menus and validation
         function tool:rightClick()
@@ -1120,10 +1138,11 @@ end
         None
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic reload functionality
         function tool:reload()
@@ -1132,7 +1151,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Reload with confirmation and logging
         function tool:reload()
@@ -1151,7 +1170,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced reload with backup and networking
         function tool:reload()
@@ -1194,7 +1213,7 @@ end
                 net.WriteUInt(clearedCount, 16)
                 net.Send(owner)
 
-                -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
+                print("Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects")
             end
         end
         ```
@@ -1217,10 +1236,11 @@ end
         None
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic deploy functionality
         function tool:deploy()
@@ -1228,7 +1248,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Deploy with initialization
         function tool:deploy()
@@ -1239,7 +1259,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced deploy with validation and networking
         function tool:deploy()
@@ -1288,7 +1308,7 @@ end
             self.LastDeploy = CurTime()
             self.Message = string.format("%s tool ready", mode)
 
-            -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
+            print("Player " .. owner:Name() .. " deployed " .. mode .. " tool")
         end
         ```
 ]]
@@ -1310,10 +1330,11 @@ end
         None
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic holster functionality
         function tool:holster()
@@ -1322,7 +1343,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Holster with cleanup
         function tool:holster()
@@ -1333,7 +1354,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced holster with state preservation and networking
         function tool:holster()
@@ -1372,7 +1393,7 @@ end
             end
 
             -- Log holster action
-            -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
+            print("Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool")
         end
         ```
 ]]
@@ -1394,10 +1415,11 @@ end
         None
 
     Realm:
-        Shared (can be overridden for specific tool behavior)
+        Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic per-frame updates
         function tool:think()
@@ -1406,7 +1428,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Think with ghost entity management
         function tool:think()
@@ -1428,7 +1450,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced think with multiple systems and networking
         function tool:think()
@@ -1494,7 +1516,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic object validation
         function tool:checkObjects()
@@ -1506,7 +1529,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check objects with individual cleanup
         function tool:checkObjects()
@@ -1529,7 +1552,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced object validation with networking and logging
         function tool:checkObjects()
@@ -1548,7 +1571,7 @@ end
                 elseif SERVER and obj.Ent:GetPos():Distance(owner:GetPos()) > 5000 then
                     -- Server-side distance check
                     isValid = false
-                elseif CLIENT and not obj.Ent:GetNoDraw() == false then
+                elseif CLIENT and obj.Ent:GetNoDraw() then
                     -- Client-side visibility check
                     isValid = false
                 end
@@ -1581,7 +1604,7 @@ end
                     net.Broadcast()
 
                     -- Log cleanup action
-                    -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
+                    print("Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up")
                 end
             end
 
@@ -1613,13 +1636,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic object clearing
         tool:clearObjects()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Clear with confirmation message
         function tool:clearObjects()
@@ -1629,7 +1653,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced clearing with individual cleanup and networking
         function tool:clearObjects()
@@ -1702,13 +1726,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic ghost entity cleanup
         tool:releaseGhostEntity()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Release with effects cleanup
         function tool:releaseGhostEntity()
@@ -1728,7 +1753,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced ghost entity management with networking
         function tool:releaseGhostEntity()
@@ -1738,10 +1763,10 @@ end
                 -- Store ghost entity data before removal (if needed)
                 if self:getClientInfo("preserve_ghost_data") == "1" then
                     self.LastGhostData = {
-                    Model = self.GhostEntity:GetModel(),
-                    Pos = self.GhostEntity:GetPos(),
-                    Ang = self.GhostEntity:GetAngles(),
-                    Time = CurTime()
+                        Model = self.GhostEntity:GetModel(),
+                        Pos   = self.GhostEntity:GetPos(),
+                        Ang   = self.GhostEntity:GetAngles(),
+                        Time  = CurTime()
                     }
                 end
 
@@ -1767,13 +1792,13 @@ end
 
                     -- Log ghost entity removal
                     print(string.format("Player %s removed ghost entity for %s tool",
-                    owner:Name(), self:getMode()))
-                    else
-                        -- Client-side cleanup confirmation
-                        self:ResetGhostMaterials()
-                    end
+                        owner:Name(), self:getMode()))
+                else
+                    -- Client-side cleanup confirmation
+                    self:ResetGhostMaterials()
                 end
             end
+        end
         ```
 ]]
 function toolGunMeta:releaseGhostEntity()

@@ -324,3 +324,94 @@ ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit
 
 ---
 
+## Complete Examples
+
+The following examples demonstrate how to use all the properties and methods together to create complete definitions.
+
+### Complete Item Example
+
+Below is a comprehensive example showing how to define a complete item with all available properties and methods.
+
+```lua
+ITEM.name = "Police Uniform"
+
+ITEM.desc = "A standard police uniform"
+
+ITEM.category = "outfit"
+
+ITEM.model = "models/props_c17/BriefCase001a.mdl"
+
+ITEM.width = 1  -- Takes 1 slot width
+
+ITEM.height = 1  -- Takes 1 slot height
+
+ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
+
+ITEM.pacData = {}  -- PAC attachment data
+
+ITEM.isOutfit = true
+
+```
+
+```lua
+function ITEM:paintOver(item, w, h)
+    if item:getData("equip") then
+        surface.SetDrawColor(110, 255, 110, 100)
+        surface.DrawRect(w - 14, h - 14, 8, 8)
+    end
+end
+
+```
+
+```lua
+function ITEM:removeOutfit(client)
+    -- Custom removal logic
+end
+
+```
+
+```lua
+function ITEM:wearOutfit(client, isForLoadout)
+    -- Custom wear logic
+end
+
+```
+
+```lua
+function ITEM:OnCanBeTransfered(_, newInventory)
+    if newInventory and self:getData("equip") then return false end
+    return true
+end
+
+```
+
+```lua
+function ITEM:onLoadout()
+    if self:getData("equip") then self:wearOutfit(self.player, true) end
+end
+
+```
+
+```lua
+function ITEM:onRemoved()
+    if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
+end
+
+```
+
+```lua
+        ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
+
+-- Basic item identification
+ITEM.name = "Police Uniform"                        -- Display name shown to players
+ITEM.desc = "A standard police uniform"             -- Description text
+ITEM.category = "outfit"                            -- Category for inventory sorting
+ITEM.model = "models/props_c17/BriefCase001a.mdl"   -- 3D model for the item
+ITEM.width = 1                                      -- Inventory width (1 slot)
+ITEM.height = 1                                     -- Inventory height (1 slot)
+ITEM.outfitCategory = "model"                       -- Outfit category for conflict checking
+
+```
+
+---
+

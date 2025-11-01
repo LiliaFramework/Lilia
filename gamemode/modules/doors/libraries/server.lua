@@ -400,6 +400,7 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Add basic door preset for a map
@@ -486,6 +487,7 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get preset for current map
@@ -553,6 +555,7 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Verify schema on server start
@@ -678,6 +681,7 @@ end
         Server
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Run cleanup on server start

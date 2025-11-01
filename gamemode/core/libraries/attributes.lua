@@ -26,6 +26,7 @@ lia.attribs.list = lia.attribs.list or {}
         Shared
 
     Example Usage:
+
     Low Complexity:
         ```lua
         -- Simple: Load attributes from a single directory
@@ -48,10 +49,10 @@ lia.attribs.list = lia.attribs.list or {}
         for _, dir in ipairs(attributeDirs) do
             if file.Exists(dir, "LUA") then
                 lia.attribs.loadFromDir(dir)
-                else
-                    print("Warning: Attribute directory not found: " .. dir)
-                end
+            else
+                print("Warning: Attribute directory not found: " .. dir)
             end
+        end
         ```
 ]]
 function lia.attribs.loadFromDir(directory)
@@ -84,7 +85,8 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
             ```lua
             -- Simple: Setup attributes for a client
             lia.attribs.setup(client)
@@ -102,14 +104,14 @@ if SERVER then
             ```lua
             -- High: Setup attributes with custom logic and error handling
             hook.Add("PlayerSpawn", "SetupAttributes", function(client)
-            if not client:getChar() then return end
+                if not client:getChar() then return end
 
                 timer.Simple(0.1, function()
-                if IsValid(client) then
-                    lia.attribs.setup(client)
-                    print("Attributes set up for " .. client:Name())
-                end
-            end)
+                    if IsValid(client) then
+                        lia.attribs.setup(client)
+                        print("Attributes set up for " .. client:Name())
+                    end
+                end)
             end)
             ```
     ]]

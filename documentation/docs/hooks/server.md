@@ -42,43 +42,66 @@ Server
 
 **Low Complexity:**
 ```lua
--- Simple: Add a basic warning
-hook.Run("AddWarning", charID, playerName, steamID, os.time(), "Rule violation", adminName, adminSteamID)
+-- Simple: Basic warning addition
+hook.Add("AddWarning", "MyAddon", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
+    -- Log the warning to a custom system
+    print("Warning issued: " .. warned .. " by " .. warner)
+end)
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Add warning with custom message
-local reason = "Excessive RDM - 3 kills in 5 minutes"
-local timestamp = os.time()
-hook.Run("AddWarning", target:getChar():getID(), target:Nick(), target:SteamID(),
-timestamp, reason, client:Nick(), client:SteamID())
+-- Medium: Enhanced warning logging with notifications
+hook.Add("AddWarning", "WarningNotification", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
+    -- Send notification to all online staff
+    for _, ply in ipairs(player.GetAll()) do
+        if ply:hasPrivilege("canSeeWarnings") then
+            ply:notify("Warning issued to " .. warned .. " by " .. warner .. ": " .. message)
+        end
+    end
+
+    -- Log to external service
+    lia.log.add(nil, "warning_issued", warned, warnedSteamID, warner, warnerSteamID, message)
+end)
 
 ```
 
 **High Complexity:**
 ```lua
--- High: Add warning with validation and logging
-hook.Add("AddWarning", "MyAddon", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
--- Log the warning to a custom system
-print(string.format("Warning issued: %s warned %s for: %s", warner, warned, message))
--- Send notification to other admins
-for _, admin in ipairs(player.GetAll()) do
-    if admin:IsAdmin() then
-        admin:ChatPrint(string.format("[WARNING] %s warned %s: %s", warner, warned, message))
-    end
+-- High: Comprehensive warning system with escalation
+hook.Add("AddWarning", "AdvancedWarningSystem", function(charID, warned, warnedSteamID, timestamp, message, warner, warnerSteamID)
+    local client = player.GetBySteamID(warnedSteamID)
+    local warnerPlayer = player.GetBySteamID(warnerSteamID)
+
+    -- Check for warning escalation
+    lia.db.selectOne({"COUNT(*) as warning_count"}, "warnings", "warnedSteamID = " .. lia.db.convertDataType(warnedSteamID)):next(function(result)
+        local warningCount = result and result.warning_count or 0
+
+        -- Automatic actions based on warning count
+        if warningCount >= 3 then
+            -- Third warning - kick player
+            if IsValid(client) then
+                client:Kick("Multiple warnings - please review server rules")
+            end
+        elseif warningCount >= 5 then
+            -- Fifth warning - ban player
+            if IsValid(warnerPlayer) then
+                lia.command.run(warnerPlayer, "ban", {warnedSteamID, "86400", "Multiple warnings - review server rules"})
+            end
+        end
+
+        -- Notify staff channel
+        local embed = {
+            title = "Player Warning Issued",
+            description = string.format("**Player:** %s (%s)\n**Warner:** %s (%s)\n**Reason:** %s\n**Total Warnings:** %d",
+                warned, warnedSteamID, warner, warnerSteamID, message, warningCount + 1),
+            color = 0xffa500
+        }
+
+        hook.Run("DiscordRelaySend", embed)
+    end)
 end
--- Check for warning limits
-local warnings = hook.Run("GetWarnings", charID)
-if #warnings >= 3 then
-    -- Auto-kick after 3 warnings
-    local target = player.GetBySteamID(warnedSteamID)
-    if IsValid(target) then
-        target:Kick("Too many warnings")
-    end
-end
-end)
 
 ```
 
@@ -114,51 +137,59 @@ Server
 **Low Complexity:**
 ```lua
 -- Simple: Add default money to new characters
-hook.Add("AdjustCreationData", "MyAddon", function(client, data, newData, originalData)
-data.money = data.money + 1000 -- Give extra starting money
+hook.Add("AdjustCreationData", "DefaultMoney", function(client, data, newData, originalData)
+    newData.money = 500
+    return newData
 end)
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Modify character based on faction
+-- Medium: Apply faction-based bonuses
 hook.Add("AdjustCreationData", "FactionBonuses", function(client, data, newData, originalData)
-if data.faction == "police" then
-    data.money = data.money + 500 -- Police get extra money
-    data.desc = data.desc .. "\n\n[Police Officer]"
-elseif data.faction == "citizen" then
-    data.money = data.money + 200 -- Citizens get small bonus
-end
+    local faction = lia.faction.indices[data.faction]
+    if faction then
+        -- Apply faction-specific starting attributes
+        if faction.startingAttributes then
+            newData.attributes = newData.attributes or {}
+            for attr, value in pairs(faction.startingAttributes) do
+                newData.attributes[attr] = (newData.attributes[attr] or 0) + value
+            end
+        end
+    end
+    return newData
 end)
 
 ```
 
 **High Complexity:**
 ```lua
--- High: Complex character creation system with validation
+-- High: Complex character creation with validation and bonuses
 hook.Add("AdjustCreationData", "AdvancedCreation", function(client, data, newData, originalData)
--- Validate character name
-if string.len(data.name) < 3 then
-    data.name = data.name .. " Jr."
-end
--- Add faction-specific bonuses
-local factionBonuses = {
-["police"] = {money = 1000, items = {"weapon_pistol"}},
-["medic"] = {money = 800, items = {"medkit"}},
-["citizen"] = {money = 200, items = {}}
-}
-local bonus = factionBonuses[data.faction]
-if bonus then
-    data.money = data.money + bonus.money
-    data.startingItems = data.startingItems or {}
-    for _, item in ipairs(bonus.items) do
-        table.insert(data.startingItems, item)
+    -- Validate character name uniqueness per player
+    lia.db.selectOne({"id"}, "characters", string.format("name = %s AND steamID = %s",
+        lia.db.convertDataType(data.name), lia.db.convertDataType(client:SteamID()))):next(function(existing)
+        if existing then
+            client:notifyErrorLocalized("nameTaken")
+            return false -- Cancel character creation
+        end
+    end)
+
+    -- Apply premium bonuses for donors
+    if client:getLiliaData("donator") then
+        newData.money = (newData.money or 0) + 1000
+        newData.attributes = newData.attributes or {}
+        newData.attributes["str"] = (newData.attributes["str"] or 0) + 5
+        newData.attributes["end"] = (newData.attributes["end"] or 0) + 5
     end
-end
--- Add creation timestamp
-data.creationTime = os.time()
-data.creationIP = client:IPAddress()
+
+    -- Apply server-wide bonuses for special events
+    if lia.config.get("EventMode") then
+        newData.money = (newData.money or 0) * 1.5
+    end
+
+    return newData
 end)
 
 ```
@@ -192,23 +223,32 @@ Server
 
 **Low Complexity:**
 ```lua
--- Simple: Log when bag inventory is ready
-hook.Add("BagInventoryReady", "MyAddon", function(self, inventory)
-print("Bag inventory ready for item: " .. self.uniqueID)
+-- Simple: Add default items to bags
+hook.Add("BagInventoryReady", "DefaultBagItems", function(self, inventory)
+    if self.uniqueID == "backpack" then
+        inventory:add("water")
+    end
 end)
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Add special items to bag inventory
-hook.Add("BagInventoryReady", "SpecialBags", function(self, inventory)
-if self.uniqueID == "magic_bag" then
-    -- Add a magic item to the bag
-    local magicItem = lia.item.instance("magic_crystal")
-    if magicItem then
-        inventory:add(magicItem)
-        end
+-- Medium: Initialize bag with faction-specific items
+hook.Add("BagInventoryReady", "FactionBagItems", function(self, inventory)
+    local client = self.player
+    if not client then return end
+
+    local char = client:getChar()
+    if not char then return end
+
+    local faction = char:getFaction()
+    if faction == FACTION_POLICE then
+        inventory:add("handcuffs")
+        inventory:add("radio")
+    elseif faction == FACTION_MEDIC then
+        inventory:add("medkit")
+        inventory:add("bandage", 3)
     end
 end)
 
@@ -216,48 +256,33 @@ end)
 
 **High Complexity:**
 ```lua
--- High: Complex bag inventory system with validation
-hook.Add("BagInventoryReady", "AdvancedBags", function(self, inventory)
-local char = self:getOwner()
-if not char then return end
-    -- Set up faction-specific bag contents
-    local faction = char:getFaction()
-    local bagContents = {
-    ["police"] = {
-    {item = "handcuffs", quantity = 1},
-    {item = "police_badge", quantity = 1},
-    {item = "radio", quantity = 1}
-    },
-    ["medic"] = {
-    {item = "medkit", quantity = 2},
-    {item = "bandage", quantity = 5},
-    {item = "stethoscope", quantity = 1}
-    },
-    ["citizen"] = {
-    {item = "wallet", quantity = 1},
-    {item = "phone", quantity = 1}
-    }
-    }
-    local contents = bagContents[faction]
-    if contents then
-        for _, content in ipairs(contents) do
-            local item = lia.item.instance(content.item)
-            if item then
-                item:setData("quantity", content.quantity)
-                inventory:add(item)
-                end
-            end
+-- High: Advanced bag initialization with size and weight limits
+hook.Add("BagInventoryReady", "AdvancedBagSetup", function(self, inventory)
+    local client = self.player
+    if not client then return end
+
+    local char = client:getChar()
+    if not char then return end
+
+    -- Set custom inventory size based on character attributes
+    local strength = char:getAttrib("str", 0)
+    local bagSize = math.floor(10 + strength * 2) -- Base 10 slots + 2 per strength
+    inventory:setSize(bagSize)
+
+    -- Add random loot based on character level
+    local level = char:getAttrib("level", 1)
+    if level >= 5 then
+        local lootTable = {"food", "water", "bandage", "ammo_pistol"}
+        local itemCount = math.random(1, 3)
+        for i = 1, itemCount do
+            local randomItem = lootTable[math.random(#lootTable)]
+            inventory:add(randomItem)
         end
-    -- Set up access rules based on character data
-    local charLevel = char:getData("level", 1)
-    if charLevel >= 10 then
-        -- High level characters get extra space
-        inventory:setData("maxWeight", inventory:getData("maxWeight", 100) * 1.5)
-        end
-    -- Log the bag creation
-    print(string.format("Bag inventory created for %s (Level %d, Faction: %s)",
-    char:getName(), charLevel, faction))
-    end)
+    end
+
+    -- Log bag creation for analytics
+    lia.log.add(client, "bag_created", self.uniqueID, bagSize)
+end)
 
 ```
 
@@ -11280,31 +11305,32 @@ Server
 **Low Complexity:**
 ```lua
 -- Simple: Log variable changes
-hook.Add("OnCharVarChanged", "MyAddon", function(character, varName, oldVar, newVar)
-print(character:getName() .. " var changed: " .. varName .. " = " .. tostring(newVar))
+hook.Add("OnCharVarChanged", "LogChanges", function(character, varName, oldVar, newVar)
+    print(string.format("Character %s: %s changed from %s to %s",
+        character:getName(), varName, tostring(oldVar), tostring(newVar)))
 end)
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Track specific variable changes
-hook.Add("OnCharVarChanged", "VarTracking", function(character, varName, oldVar, newVar)
-if varName == "level" then
-    local client = character:getPlayer()
-    if client then
-        client:ChatPrint("Level changed from " .. oldVar .. " to " .. newVar)
-        end
-elseif varName == "money" then
-    local client = character:getPlayer()
-    if client then
-        local difference = newVar - oldVar
-        if difference > 0 then
-            client:ChatPrint("You gained $" .. difference)
-        elseif difference < 0 then
-            client:ChatPrint("You lost $" .. math.abs(difference))
+-- Medium: Validate and handle specific variables
+hook.Add("OnCharVarChanged", "ValidateChanges", function(character, varName, oldVar, newVar)
+    -- Handle reputation changes
+    if varName == "reputation" then
+        local client = character:getPlayer()
+        if IsValid(client) then
+            local diff = (newVar or 0) - (oldVar or 0)
+            if diff > 0 then
+                client:notifyInfo(string.format("Your reputation increased by %d!", diff))
+            elseif diff < 0 then
+                client:notifyWarning(string.format("Your reputation decreased by %d", math.abs(diff)))
             end
         end
+
+        -- Clamp reputation
+        newVar = math.Clamp(newVar or 0, -1000, 1000)
+        character.vars[varName] = newVar
     end
 end)
 
@@ -11312,76 +11338,80 @@ end)
 
 **High Complexity:**
 ```lua
--- High: Complex variable change system
-hook.Add("OnCharVarChanged", "AdvancedVarChange", function(character, varName, oldVar, newVar)
-local client = character:getPlayer()
-if not client then return end
-    -- Track variable change history
-    local changeHistory = character:getData("varHistory", {})
-    changeHistory[varName] = changeHistory[varName] or {}
-    table.insert(changeHistory[varName], {
-    oldValue = oldVar,
-    newValue = newVar,
-    timestamp = os.time()
-    })
-    -- Keep only last 20 changes per variable
-    if #changeHistory[varName] > 20 then
-        table.remove(changeHistory[varName], 1)
+-- High: Advanced variable change system
+hook.Add("OnCharVarChanged", "AdvancedChanges", function(character, varName, oldVar, newVar)
+    local charID = character:getID()
+    local client = character:getPlayer()
+
+    -- Track change history for important variables
+    local trackedVars = {"reputation", "karma", "level", "experience"}
+    if table.HasValue(trackedVars, varName) then
+        local changeHistory = character:getData("varChangeHistory", {})
+        if not changeHistory[varName] then
+            changeHistory[varName] = {}
         end
-    character:setData("varHistory", changeHistory)
-    -- Handle specific variable changes
-    if varName == "level" then
-        -- Level change effects
+        table.insert(changeHistory[varName], {
+            oldValue = oldVar,
+            newValue = newVar,
+            timestamp = os.time(),
+            changedBy = IsValid(client) and client:SteamID64() or "System"
+        })
+        -- Keep only last 100 changes
+        if #changeHistory[varName] > 100 then
+            table.remove(changeHistory[varName], 1)
+        end
+        character:setData("varChangeHistory", changeHistory)
+    end
+
+    -- Variable-specific handlers
+    if varName == "reputation" then
+        -- Reputation bonuses/penalties
+        if newVar > 500 and oldVar <= 500 then
+            if IsValid(client) then
+                client:notifyInfo("You've achieved Hero status!")
+                character:setData("isHero", true)
+            end
+        elseif newVar < -500 and oldVar >= -500 then
+            if IsValid(client) then
+                client:notifyWarning("You've been marked as a Villain!")
+                character:setData("isVillain", true)
+            end
+        end
+    elseif varName == "level" then
+        -- Level up bonuses
         if newVar > oldVar then
-            hook.Run("OnPlayerLevelUp", client, oldVar, newVar)
+            local levelsGained = newVar - oldVar
+            if IsValid(client) then
+                client:notifyInfo(string.format("Level Up! You are now level %d!", newVar))
             end
-    elseif varName == "money" then
-        -- Money change effects
-        local difference = newVar - oldVar
-        if difference > 0 then
-            client:ChatPrint("You gained $" .. difference)
-        elseif difference < 0 then
-            client:ChatPrint("You lost $" .. math.abs(difference))
-            end
-        -- Check for money milestones
-        if newVar >= 10000 and oldVar < 10000 then
-            client:ChatPrint("Congratulations! You've reached $10,000!")
-        elseif newVar >= 100000 and oldVar < 100000 then
-            client:ChatPrint("Congratulations! You've reached $100,000!")
-            end
-    elseif varName == "faction" then
-        -- Faction change effects
-        client:SetTeam(newVar)
-        client:ChatPrint("Faction changed to: " .. newVar)
-        -- Notify other players
-        for _, ply in ipairs(player.GetAll()) do
-            if ply ~= client then
-                ply:ChatPrint(character:getName() .. " joined faction: " .. newVar)
+            -- Give attribute points per level
+            local unspentPoints = character:getData("unspentAttributePoints", 0)
+            character:setData("unspentAttributePoints", unspentPoints + (levelsGained * 2))
+        end
+
+        -- Notify client of significant changes
+        if IsValid(client) then
+            if isnumber(oldVar) and isnumber(newVar) then
+                local diff = newVar - oldVar
+                if math.abs(diff) > 10 then
+                    client:notifyInfo(string.format("%s changed by %d (now: %d)", varName, diff, newVar))
                 end
             end
-    elseif varName == "health" then
-        -- Health change effects
-        if newVar <= 0 and oldVar > 0 then
-            -- Character died
-            hook.Run("OnCharacterDeath", character)
-        elseif newVar > 0 and oldVar <= 0 then
-            -- Character revived
-            hook.Run("OnCharacterRevive", character)
-            end
-    elseif varName == "stamina" then
-        -- Stamina change effects
-        if newVar <= 0 and oldVar > 0 then
-            -- Stamina depleted
-            hook.Run("PlayerStaminaDepleted", client)
-        elseif newVar > 0 and oldVar <= 0 then
-            -- Stamina restored
-            hook.Run("PlayerStaminaGained", client)
-            end
         end
-    -- Log significant changes
-    if math.abs(newVar - oldVar) > 100 or varName == "faction" or varName == "level" then
-        print(string.format("%s var changed: %s from %s to %s",
-        character:getName(), varName, tostring(oldVar), tostring(newVar)))
+
+        -- Log significant changes
+        if varName ~= "lastUpdate" then
+            lia.log.add(client, "charVarChanged", varName, oldVar, newVar, charID)
+        end
+
+        -- Analytics tracking
+        if lia.analytics then
+            lia.analytics.track("character_variable_changed", {
+                char_id = charID,
+                variable = varName,
+                old_value = oldVar,
+                new_value = newVar
+            })
         end
     end)
 

@@ -85,7 +85,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Download a single image
         lia.webimage.download("logo", "https://example.com/logo.png")
@@ -233,7 +234,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Register and download a single image
         lia.webimage.register("logo", "https://example.com/logo.png")
@@ -301,7 +303,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get a cached material
         local logo = lia.webimage.get("logo")
@@ -452,7 +455,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get basic statistics
         local stats = lia.webimage.getStats()

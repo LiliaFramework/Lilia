@@ -39,19 +39,20 @@ local validClasses = {
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Play a basic sound
         entity:EmitSound("buttons/button15.wav")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Play sound with custom volume and distance
         entity:EmitSound("ambient/atmosphere/city_hum_loop.wav", 200, 100, 0.5)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Play web sound with full parameters
         entity:EmitSound("https://example.com/sound.mp3", 300, 100, 0.8, CHAN_AUTO, 0, 0)
@@ -115,7 +116,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is a prop
         if entity:isProp() then
@@ -123,7 +125,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in conditional logic
         if entity:isProp() and entity:GetPhysicsObject():IsValid() then
@@ -131,7 +133,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Combine with other checks for complex logic
         if entity:isProp() and entity:GetModel():find("wood") then
@@ -162,7 +164,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is an item
         if entity:isItem() then
@@ -170,7 +173,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in item handling logic
         if entity:isItem() and entity:GetItemData() then
@@ -179,7 +182,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Combine with inventory system
         if entity:isItem() and IsValid(ply) then
@@ -213,7 +216,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is money
         if entity:isMoney() then
@@ -221,7 +225,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in money handling logic
         if entity:isMoney() and IsValid(ply) then
@@ -231,7 +235,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Combine with economy system
         if entity:isMoney() and IsValid(ply) then
@@ -267,7 +271,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is a vehicle
         if entity:isSimfphysCar() then
@@ -275,7 +280,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in vehicle handling logic
         if entity:isSimfphysCar() and IsValid(ply) then
@@ -285,7 +290,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Combine with vehicle systems
         if entity:isSimfphysCar() and IsValid(ply) then
@@ -320,7 +325,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check basic door access
         if door:checkDoorAccess(ply) then
@@ -328,7 +334,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check specific access level
         if door:checkDoorAccess(ply, DOOR_OWNER) then
@@ -336,19 +342,19 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in door interaction system
         if door:checkDoorAccess(ply, DOOR_GUEST) then
             if door:isDoorLocked() then
                 ply:notify("The door is locked")
-                else
-                    door:Fire("Open")
-                    ply:notify("Door opened")
-                end
-                else
-                    ply:notify("You don't have access to this door")
-                end
+            else
+                door:Fire("Open")
+                ply:notify("Door opened")
+            end
+        else
+            ply:notify("You don't have access to this door")
+        end
         ```
 ]]
 function entityMeta:checkDoorAccess(client, access)
@@ -377,13 +383,14 @@ end
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set vehicle owner
         vehicle:keysOwn(ply)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set owner with validation
         if IsValid(ply) and ply:getChar() then
@@ -392,16 +399,16 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in vehicle purchase system
         if ply:getChar():getMoney() >= vehiclePrice then
             ply:getChar():takeMoney(vehiclePrice)
             vehicle:keysOwn(ply)
             ply:notify("Vehicle purchased for $" .. vehiclePrice)
-            else
-                ply:notify("Insufficient funds")
-            end
+        else
+            ply:notify("Insufficient funds")
+        end
         ```
 ]]
 function entityMeta:keysOwn(client)
@@ -431,13 +438,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Lock vehicle
         vehicle:keysLock()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Lock with validation
         if IsValid(vehicle) and vehicle:IsVehicle() then
@@ -446,17 +454,17 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in vehicle interaction system
         if vehicle:keysOwn(ply) and not vehicle:isLocked() then
             vehicle:keysLock()
             ply:notify("Vehicle locked")
-            elseif not vehicle:keysOwn(ply) then
-                ply:notify("You don't own this vehicle")
-                else
-                    ply:notify("Vehicle is already locked")
-                end
+        elseif not vehicle:keysOwn(ply) then
+            ply:notify("You don't own this vehicle")
+        else
+            ply:notify("Vehicle is already locked")
+        end
         ```
 ]]
 function entityMeta:keysLock()
@@ -481,13 +489,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Unlock vehicle
         vehicle:keysUnLock()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Unlock with validation
         if IsValid(vehicle) and vehicle:IsVehicle() then
@@ -496,17 +505,17 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in vehicle interaction system
         if vehicle:keysOwn(ply) and vehicle:isLocked() then
             vehicle:keysUnLock()
             ply:notify("Vehicle unlocked")
-            elseif not vehicle:keysOwn(ply) then
-                ply:notify("You don't own this vehicle")
-                else
-                    ply:notify("Vehicle is already unlocked")
-                end
+        elseif not vehicle:keysOwn(ply) then
+            ply:notify("You don't own this vehicle")
+        else
+            ply:notify("Vehicle is already unlocked")
+        end
         ```
 ]]
 function entityMeta:keysUnLock()
@@ -531,7 +540,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get door owner
         local owner = door:getDoorOwner()
@@ -540,7 +550,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check ownership for access control
         local owner = door:getDoorOwner()
@@ -549,7 +559,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in door management system
         local owner = door:getDoorOwner()
@@ -584,7 +594,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is locked
         if entity:isLocked() then
@@ -592,25 +603,25 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in interaction logic
         if entity:isLocked() then
             ply:notify("This is locked")
-            else
-                entity:Use(ply)
-            end
+        else
+            entity:Use(ply)
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in security system
         if entity:isLocked() and not ply:hasFlags("A") then
             ply:notify("Access denied - locked")
-            elseif entity:isLocked() and ply:hasFlags("A") then
-                entity:setLocked(false)
-                ply:notify("Unlocked with admin access")
-            end
+        elseif entity:isLocked() and ply:hasFlags("A") then
+            entity:setLocked(false)
+            ply:notify("Unlocked with admin access")
+        end
         ```
 ]]
 function entityMeta:isLocked()
@@ -635,7 +646,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if door is locked
         if door:isDoorLocked() then
@@ -643,25 +655,25 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in door interaction
         if door:isDoorLocked() then
             ply:notify("The door is locked")
-            else
-                door:Fire("Open")
-            end
+        else
+            door:Fire("Open")
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in door access system
         if door:isDoorLocked() and not door:checkDoorAccess(ply, DOOR_OWNER) then
             ply:notify("Door is locked and you don't have access")
-            elseif door:isDoorLocked() and door:checkDoorAccess(ply, DOOR_OWNER) then
-                door:setLocked(false)
-                ply:notify("Door unlocked with your key")
-            end
+        elseif door:isDoorLocked() and door:checkDoorAccess(ply, DOOR_OWNER) then
+            door:setLocked(false)
+            ply:notify("Door unlocked with your key")
+        end
         ```
 ]]
 function entityMeta:isDoorLocked()
@@ -686,13 +698,14 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get drop position
         local pos, ang = entity:getEntItemDropPos()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use with custom offset
         local pos, ang = entity:getEntItemDropPos(100)
@@ -701,14 +714,14 @@ end
         item:SetAngles(ang)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in item dropping system
         local pos, ang = entity:getEntItemDropPos(offset)
         local tr = util.TraceLine({
-        start = pos,
-        endpos = pos + Vector(0, 0, -50),
-        mask = MASK_SOLID_BRUSHONLY
+            start  = pos,
+            endpos = pos + Vector(0, 0, -50),
+            mask   = MASK_SOLID_BRUSHONLY
         })
         if tr.Hit then
             pos = tr.HitPos + tr.HitNormal * 5
@@ -748,7 +761,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is female
         if entity:isFemale() then
@@ -756,17 +770,17 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in character customization
         if entity:isFemale() then
             entity:SetBodygroup(1, 1) -- Set female bodygroup
-            else
-                entity:SetBodygroup(1, 0) -- Set male bodygroup
-            end
+        else
+            entity:SetBodygroup(1, 0) -- Set male bodygroup
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in roleplay system
         if entity:isFemale() then
@@ -801,7 +815,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is near any other entity
         if entity:isNearEntity() then
@@ -809,7 +824,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check proximity to specific entity
         if entity:isNearEntity(150, targetEntity) then
@@ -817,16 +832,16 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in interaction system
         if entity:isNearEntity(100, ply) then
             if entity:isItem() then
                 ply:notify("Press E to pick up " .. entity:GetItemData().name)
-                elseif entity:isMoney() then
-                    ply:notify("Press E to collect $" .. entity:GetAmount())
-                end
+            elseif entity:isMoney() then
+                ply:notify("Press E to collect $" .. entity:GetAmount())
             end
+        end
         ```
 ]]
 function entityMeta:isNearEntity(radius, otherEntity)
@@ -857,7 +872,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get door partner
         local partner = door:getDoorPartner()
@@ -866,7 +882,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in door synchronization
         local partner = door:getDoorPartner()
@@ -876,18 +892,18 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in door management system
         local partner = door:getDoorPartner()
         if IsValid(partner) then
             if door:isDoorLocked() then
                 partner:setLocked(true)
-                else
-                    partner:setLocked(false)
-                end
-                door:setNetVar("partnerID", partner:EntIndex())
+            else
+                partner:setLocked(false)
             end
+            door:setNetVar("partnerID", partner:EntIndex())
+        end
         ```
 ]]
 function entityMeta:getDoorPartner()
@@ -925,19 +941,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Send network variable to all clients
         entity:sendNetVar("health")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Send to specific player
         entity:sendNetVar("owner", ply)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in data synchronization system
         if entity:getNetVar("dirty") then
@@ -976,19 +993,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Clear all network variables
         entity:clearNetVars()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Clear for specific player
         entity:clearNetVars(ply)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in entity cleanup system
         if entity:IsValid() then
@@ -1024,16 +1042,17 @@ if SERVER then
         None
 
     Realm:
-        Server (can only be called on server)
+        Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Remove door access data
         door:removeDoorAccessData()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in door cleanup
         if door:IsValid() then
@@ -1042,7 +1061,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in door management system
         if ply:hasFlags("A") then
@@ -1080,19 +1099,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Lock entity
         entity:setLocked(true)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Toggle lock state
         entity:setLocked(not entity:isLocked())
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in security system
         if ply:hasFlags("A") then
@@ -1123,19 +1143,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Make vehicle non-ownable
         vehicle:setKeysNonOwnable(true)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Toggle ownable state
         vehicle:setKeysNonOwnable(not vehicle:getNetVar("noSell", false))
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in vehicle management system
         if ply:hasFlags("A") then
@@ -1166,7 +1187,8 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is a door
         if entity:isDoor() then
@@ -1174,7 +1196,7 @@ if SERVER then
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in door interaction
         if entity:isDoor() and entity:checkDoorAccess(ply) then
@@ -1182,7 +1204,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in door management system
         if entity:isDoor() then
@@ -1222,19 +1244,20 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set a network variable
         entity:setNetVar("health", 100)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set with specific receiver
         entity:setNetVar("owner", ply, ply)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in data management system
         if entity:getNetVar("dirty") then
@@ -1271,13 +1294,14 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get a network variable
         local health = entity:getNetVar("health", 100)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in server-side logic
         local owner = entity:getNetVar("owner")
@@ -1286,7 +1310,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in server-side data management
         local data = entity:getNetVar("data", {})
@@ -1315,10 +1339,11 @@ else
         boolean - True if the entity is a door, false otherwise
 
     Realm:
-        Client (can only be called on client)
+        Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if entity is a door
         if entity:isDoor() then
@@ -1326,7 +1351,7 @@ else
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in client-side door interaction
         if entity:isDoor() and entity:isNearEntity(100, LocalPlayer()) then
@@ -1334,7 +1359,7 @@ else
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in client-side door management
         if entity:isDoor() then
@@ -1364,16 +1389,17 @@ else
         any - The network variable value or default
 
     Realm:
-        Client (can only be called on client)
+        Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get a network variable
         local health = entity:getNetVar("health", 100)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in client-side logic
         local owner = entity:getNetVar("owner")
@@ -1382,7 +1408,7 @@ else
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in client-side rendering
         local locked = entity:getNetVar("locked", false)
@@ -1419,22 +1445,23 @@ else
         None
 
     Realm:
-        Client (can only be called on client)
+        Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Play following sound
         entity:playFollowingSound("ambient/atmosphere/city_hum_loop.wav")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Play with custom volume and distance
         entity:playFollowingSound("buttons/button15.wav", 0.5, true, 500)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Play web sound with full parameters
         entity:playFollowingSound("https://example.com/sound.mp3", 0.8, true, 1000, 0.5, 100, 1.2, nil, 1)

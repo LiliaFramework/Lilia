@@ -29,13 +29,13 @@ if SERVER then
             Server
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
                 ```lua
                 -- Simple: Add a single workshop addon
                 lia.workshop.addWorkshop("1234567890")
                 ```
 
-            Medium Complexity:
+        Medium Complexity:
                 ```lua
                 -- Medium: Add workshop addon from module configuration
                 local workshopId = module.WorkshopContent
@@ -44,7 +44,7 @@ if SERVER then
                 end
                 ```
 
-            High Complexity:
+        High Complexity:
                 ```lua
                 -- High: Add multiple workshop addons with validation
                 local workshopIds = {"1234567890", "0987654321", "1122334455"}
@@ -87,13 +87,13 @@ if SERVER then
             Server
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
                 ```lua
                 -- Simple: Gather workshop IDs
                 local workshopIds = lia.workshop.gather()
                 ```
 
-            Medium Complexity:
+        Medium Complexity:
                 ```lua
                 -- Medium: Gather and validate workshop IDs
                 local workshopIds = lia.workshop.gather()
@@ -101,7 +101,7 @@ if SERVER then
                 print("Found " .. count .. " workshop addons")
                 ```
 
-            High Complexity:
+        High Complexity:
                 ```lua
                 -- High: Gather workshop IDs and send to specific players
                 local workshopIds = lia.workshop.gather()
@@ -157,13 +157,13 @@ if SERVER then
             Server
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
                 ```lua
                 -- Simple: Send workshop IDs to a player
                 lia.workshop.send(player.GetByID(1))
                 ```
 
-            Medium Complexity:
+        Medium Complexity:
                 ```lua
                 -- Medium: Send workshop IDs to admin players only
                 for _, ply in pairs(player.GetAll()) do
@@ -173,7 +173,7 @@ if SERVER then
                 end
                 ```
 
-            High Complexity:
+        High Complexity:
                 ```lua
                 -- High: Send workshop IDs with validation and logging
                 local function sendToPlayer(ply)
@@ -184,9 +184,9 @@ if SERVER then
                 end
 
                 hook.Add("PlayerInitialSpawn", "CustomWorkshopSend", function(ply)
-                timer.Simple(5, function()
-                sendToPlayer(ply)
-                end)
+                    timer.Simple(5, function()
+                        sendToPlayer(ply)
+                    end)
                 end)
                 ```
     ]]
@@ -257,7 +257,7 @@ else
             Client
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
                 ```lua
                 -- Simple: Check if downloads are needed
                 if lia.workshop.hasContentToDownload() then
@@ -265,7 +265,7 @@ else
                 end
                 ```
 
-            Medium Complexity:
+        Medium Complexity:
                 ```lua
                 -- Medium: Check and show notification
                 if lia.workshop.hasContentToDownload() then
@@ -273,7 +273,7 @@ else
                 end
                 ```
 
-            High Complexity:
+        High Complexity:
                 ```lua
                 -- High: Check downloads and create custom UI
                 local function checkDownloads()
@@ -288,16 +288,16 @@ else
                         btn:SetText("Download Now")
                         btn:Dock(BOTTOM)
                         btn.DoClick = function()
-                        lia.workshop.mountContent()
-                        frame:Close()
+                            lia.workshop.mountContent()
+                            frame:Close()
+                        end
                     end
-                end
                 end
 
                 hook.Add("OnEntityCreated", "CheckWorkshopDownloads", function(ent)
-                if ent == LocalPlayer() then
-                    timer.Simple(1, checkDownloads)
-                end
+                    if ent == LocalPlayer() then
+                        timer.Simple(1, checkDownloads)
+                    end
                 end)
                 ```
     ]]
@@ -439,25 +439,25 @@ else
             Client
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
                 ```lua
                 -- Simple: Mount workshop content
                 lia.workshop.mountContent()
                 ```
 
-            Medium Complexity:
+        Medium Complexity:
                 ```lua
                 -- Medium: Mount content with custom callback
                 lia.workshop.mountContent()
                 hook.Add("Think", "CheckMountComplete", function()
-                if not lia.workshop.hasContentToDownload() then
-                    print("All workshop content mounted successfully")
-                    hook.Remove("Think", "CheckMountComplete")
-                end
+                    if not lia.workshop.hasContentToDownload() then
+                        print("All workshop content mounted successfully")
+                        hook.Remove("Think", "CheckMountComplete")
+                    end
                 end)
                 ```
 
-            High Complexity:
+        High Complexity:
                 ```lua
                 -- High: Mount content with progress tracking and custom UI
                 local function mountWithProgress()
@@ -491,9 +491,9 @@ else
                 end
 
                 hook.Add("PlayerInitialSpawn", "MountWorkshopContent", function(ply)
-                if ply == LocalPlayer() then
-                    timer.Simple(3, mountWithProgress)
-                end
+                    if ply == LocalPlayer() then
+                        timer.Simple(3, mountWithProgress)
+                    end
                 end)
                 ```
     ]]

@@ -31,38 +31,39 @@ lia.option.stored = lia.option.stored or {}
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Add a boolean toggle option
         lia.option.add("showHUD", "Show HUD", "Toggle HUD visibility", true, nil, {
-        category = "categoryGeneral",
-        isQuick = true
+            category = "categoryGeneral",
+            isQuick  = true
         })
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Add a numeric slider with callback
         lia.option.add("volume", "Volume", "Master volume level", 0.8, function(oldVal, newVal)
-        RunConsoleCommand("volume", tostring(newVal))
+            RunConsoleCommand("volume", tostring(newVal))
         end, {
-        category = "categoryAudio",
-        min = 0,
-        max = 1,
-        decimals = 2
+            category = "categoryAudio",
+            min      = 0,
+            max      = 1,
+            decimals = 2
         })
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Add a color picker with visibility condition and networking
         lia.option.add("espColor", "ESP Color", "Color for ESP display", Color(255, 0, 0), nil, {
-        category = "categoryESP",
-        visible = function()
-        return LocalPlayer():isStaffOnDuty()
-        end,
-        shouldNetwork = true,
-        type = "Color"
+            category      = "categoryESP",
+            visible       = function()
+                return LocalPlayer():isStaffOnDuty()
+            end,
+            shouldNetwork = true,
+            type          = "Color"
         })
         ```
 ]]
@@ -123,7 +124,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get static options for a dropdown
         local options = lia.option.getOptions("weaponSelectorPosition")
@@ -193,26 +195,27 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set a boolean option
         lia.option.set("showHUD", true)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set option with callback execution
         lia.option.set("volume", 0.5)
         -- This will trigger the callback function if one was defined
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Set multiple options with validation
         local optionsToSet = {
-        {"showHUD", true},
-        {"volume", 0.8},
-        {"espColor", Color(255, 0, 0)}
+            {"showHUD", true},
+            {"volume",  0.8},
+            {"espColor", Color(255, 0, 0)}
         }
 
         for _, optionData in ipairs(optionsToSet) do
@@ -252,7 +255,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get a boolean option
         local showHUD = lia.option.get("showHUD")
@@ -261,20 +265,20 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Get option with fallback
         local volume = lia.option.get("volume", 0.5)
         RunConsoleCommand("volume", tostring(volume))
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Get multiple options with validation and type checking
         local config = {
-        showHUD = lia.option.get("showHUD", true),
-        volume = lia.option.get("volume", 0.8),
-        espColor = lia.option.get("espColor", Color(255, 0, 0))
+            showHUD  = lia.option.get("showHUD", true),
+            volume   = lia.option.get("volume", 0.8),
+            espColor = lia.option.get("espColor", Color(255, 0, 0))
         }
 
         -- Validate and apply configuration
@@ -313,14 +317,15 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Save options after changes
         lia.option.set("showHUD", true)
         lia.option.save() -- Automatically called, but can be called manually
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Save options with error handling
         local function saveOptionsSafely()
@@ -332,7 +337,7 @@ end
         saveOptionsSafely()
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Batch save with validation and backup
         local function batchSaveOptions()
@@ -350,11 +355,11 @@ end
             local savedData = file.Read("lilia/options.json", "DATA")
             if savedData then
                 print("Options saved successfully")
-                else
-                    print("Failed to save options")
-                end
+            else
+                print("Failed to save options")
             end
-            batchSaveOptions()
+        end
+        batchSaveOptions()
         ```
 ]]
 function lia.option.save()
@@ -385,14 +390,15 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Load options at startup
         lia.option.load()
         -- This is typically called automatically during initialization
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Load options with error handling
         local function loadOptionsSafely()
@@ -408,7 +414,7 @@ end
         loadOptionsSafely()
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Load options with validation and migration
         local function loadOptionsWithMigration()
@@ -425,23 +431,22 @@ end
                                 -- Type validation
                                 if option.type == "Boolean" and type(value) ~= "boolean" then
                                     value = tobool(value)
-                                    elseif option.type == "Int" and type(value) ~= "number" then
-                                        value = tonumber(value) or option.default
-                                    end
-                                    option.value = value
+                                elseif option.type == "Int" and type(value) ~= "number" then
+                                    value = tonumber(value) or option.default
                                 end
+                                option.value = value
                             end
                         end
                     end
-                    else
-                        -- No saved options, use defaults
-                        lia.option.load()
-                    end
-
-                    -- Trigger initialization hook
-                    hook.Run("InitializedOptions")
+                else
+                    -- No saved options, use defaults
+                    lia.option.load()
                 end
-                loadOptionsWithMigration()
+
+                -- Trigger initialization hook
+                hook.Run("InitializedOptions")
+            end
+            loadOptionsWithMigration()
         ```
 ]]
 function lia.option.load()

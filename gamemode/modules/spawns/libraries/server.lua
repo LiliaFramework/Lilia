@@ -134,7 +134,6 @@ local function RemovedDropOnDeathItems(client)
     local inventory = character:getInv()
     if not inventory then return end
     local items = inventory:getItems()
-    client.carryWeapons = {}
     client.LostItems = {}
     for _, item in pairs(items) do
         if item.isWeapon and item.DropOnDeath and item:getData("equip", false) or not item.isWeapon and item.DropOnDeath then

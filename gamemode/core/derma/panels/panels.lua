@@ -276,6 +276,7 @@ function QuickPanel:populateOptions()
         for _, item in ipairs(self.optionsCache) do
             if IsValid(item) then self.items[#self.items + 1] = item end
         end
+
         return
     end
 

@@ -118,10 +118,7 @@ MODULE.uniqueID = ""
         ```lua
         -- Define required privileges for module access
         MODULE.Privileges = {
-        {
-        Name = "canManageInventory",
-        Min = 1
-        }
+            { Name = "canManageInventory", Min = 1 }
         }
         ```
 ]]
@@ -134,10 +131,7 @@ MODULE.Privileges = {}
         ```lua
         -- Define required files for this module
         MODULE.Dependencies = {
-        {
-        File = "gridinv.lua",
-        Type = "shared"
-        }
+            { File = "gridinv.lua", Type = "shared" }
         }
         ```
 ]]
@@ -173,7 +167,7 @@ MODULE.WorkshopContent = ""
         ```lua
         -- Define web-hosted sound files for the module
         MODULE.WebSounds = {
-        ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
+            ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
         }
         ```
 ]]
@@ -186,7 +180,7 @@ MODULE.WebSounds = {}
         ```lua
         -- Define web-hosted image files for the module
         MODULE.WebImages = {
-        ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
+            ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
         }
         ```
 ]]
@@ -240,14 +234,14 @@ MODULE.loading = false
         None
 
     Realm:
-        Shared (called on both server and client)
+        Shared
 
     Example Usage:
         ```lua
         -- Called after all module files are loaded
         function MODULE:OnLoaded()
             print("Module loaded successfully!")
-            end
+        end
         ```
 ]]
 function MODULE:OnLoaded()

@@ -53,6 +53,16 @@ theme:
       primary: teal
       accent: lavender
 
+nav:
+  - Home: index.md
+  - Getting Started: gettingstarted.md
+  - Libraries: libraries/
+  - Hooks: hooks/
+  - Meta: meta/
+  - Modules: modules/
+  - Addon Compatibility: compatibility.md
+  - Changelog: changelog.md
+
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true

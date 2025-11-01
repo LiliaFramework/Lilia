@@ -118,6 +118,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load a basic module
@@ -242,6 +243,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Initialize modules (typically called automatically)
@@ -321,6 +323,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Load all modules from a directory
@@ -365,6 +368,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get a module

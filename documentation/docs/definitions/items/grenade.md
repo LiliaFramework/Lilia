@@ -156,3 +156,41 @@ ITEM.DropOnDeath = true  -- Drops on death
 
 ---
 
+## Complete Examples
+
+The following examples demonstrate how to use all the properties and methods together to create complete definitions.
+
+### Complete Item Example
+
+Below is a comprehensive example showing how to define a complete item with all available properties and methods.
+
+```lua
+        ITEM.name = "Fragmentation Grenade"
+
+        ITEM.desc = "A deadly fragmentation grenade"
+
+        ITEM.category = "itemCatGrenades"
+
+        ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
+
+        ITEM.class = "weapon_frag"
+
+        ITEM.width = 1  -- Takes 1 slot width
+
+        ITEM.height = 1  -- Takes 1 slot height
+
+        ITEM.DropOnDeath = true  -- Drops on death
+
+-- Basic item identification
+ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players
+ITEM.desc = "A deadly fragmentation grenade"           -- Description text
+ITEM.category = "itemCatGrenades"                      -- Category for inventory sorting
+ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"     -- 3D model for the grenade
+ITEM.class = "weapon_frag"                             -- Weapon class to give when used
+ITEM.width = 1                                         -- Inventory width (1 slot)
+ITEM.height = 1                                        -- Inventory height (1 slot)
+
+```
+
+---
+

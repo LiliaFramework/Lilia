@@ -117,18 +117,45 @@ FACTION.name = "Citizens"
 FACTION.desc = "Regular people living in the city"
 FACTION.color = Color(100, 150, 100)
 
+-- Access Control
 FACTION.isDefault = true  -- Allow players to join
+FACTION.oneCharOnly = false  -- Players can have multiple citizen characters
+FACTION.limit = 0  -- Unlimited players
 
+-- Visual Properties
 FACTION.models = {
     "models/player/Group01/male_01.mdl",
     "models/player/Group01/female_01.mdl"
 }
+FACTION.scale = 1.0  -- Normal model scale
+FACTION.bloodcolor = BLOOD_COLOR_RED
 
+-- Gameplay Properties
+FACTION.health = 100  -- Default health
+FACTION.armor = 0    -- No armor
+
+-- Weapons (given when spawning)
+FACTION.weapons = {
+    -- No default weapons for citizens
+}
+
+-- Starting Items (given when character is created)
 FACTION.items = {
     "item_wallet"
 }
 
-lia.faction.register("citizen", FACTION)
+-- Movement Properties
+FACTION.runSpeed = 300  -- Default run speed
+FACTION.walkSpeed = 150  -- Default walk speed
+FACTION.jumpPower = 200  -- Default jump power
+
+-- NPC Relationships
+FACTION.NPCRelations = {
+    ["npc_metropolice"] = D_NU,  -- Neutral to metropolice
+    ["npc_citizen"] = D_LI       -- Liked by citizens
+}
+
+FACTION.index = 0  -- Index that you can call during code calls
 ```
 
 3. Save the file and restart your server
@@ -188,20 +215,45 @@ First create a police faction, then add this class file:
 ```lua
 -- Police Officer Class
 CLASS.name = "Police Officer"
-CLASS.desc = "A basic law enforcement officer"
-CLASS.faction = FACTION_POLICE
+CLASS.desc = "A law enforcement officer responsible for maintaining order and protecting citizens"
+CLASS.faction = FACTION_CITY
 
+-- Access Control
+CLASS.limit = 8  -- Maximum 8 officers
+CLASS.isWhitelisted = true  -- Requires whitelist
+CLASS.isDefault = false  -- Not the default class for the faction
+
+-- Visual Properties
 CLASS.model = "models/player/police.mdl"
+CLASS.Color = Color(0, 100, 255)  -- Blue color for police
+CLASS.scale = 1.0  -- Normal model scale
+CLASS.bloodcolor = BLOOD_COLOR_RED
 
-CLASS.health = 120  -- More health than citizens
-CLASS.armor = 50    -- Police armor
+-- Gameplay Properties
+CLASS.health = 120  -- Higher health than default
+CLASS.armor = 50    -- Standard police armor
+CLASS.pay = 150     -- $150 salary per paycheck
 
+-- Weapons (given when spawning)
 CLASS.weapons = {
     "weapon_pistol",
-    "weapon_stunstick"
+    "weapon_stunstick",
+    "weapon_police_baton"
 }
 
-lia.class.register("police_officer", CLASS)
+-- Movement Properties
+CLASS.runSpeed = 280  -- Slightly slower than default for tactical movement
+CLASS.walkSpeed = 150  -- Standard walking speed
+CLASS.jumpPower = 200  -- Standard jump power
+
+-- NPC Relationships (overrides faction settings)
+CLASS.NPCRelations = {
+    ["npc_metropolice"] = D_LI,  -- Liked by metropolice
+    ["npc_citizen"] = D_NU,      -- Neutral to citizens
+    ["npc_rebel"] = D_HT         -- Hated by rebels
+}
+
+CLASS.index = CLASS_POLICE -- Index that you can call during code calls
 ```
 
 ### When to Use Classes
@@ -240,9 +292,20 @@ Weapon customization changes how weapons appear in inventories, shops, and gamep
 - Control weapon access
 - Adjust inventory space usage
 
-### Basic Customization
+### File Location
 
-Add this code to your schema's `sh_init.lua` file:
+1. **Create libraries folder**
+
+   Add this code to your schema's `libraries/shared.lua` file:
+
+   ```
+   garrysmod/gamemodes/YOUR_SCHEMA/schema/libraries/shared.lua
+   ```
+
+### Create Weapon Overrides
+
+1. Create or edit your schema's `libraries/shared.lua` file
+2. Add this code to customize weapons:
 
 ```lua
 -- Customize pistol
@@ -260,9 +323,10 @@ lia.item.addWeaponOverride("weapon_shotgun", {
 })
 ```
 
-Add this code before `lia.item.generateWeapons()` is called.
+3. Save the file and restart your server
+4. Test by checking weapon names and prices in shops/inventories
 
-### Available Options
+### Weapon Properties
 
 | Property | Purpose | Example |
 |----------|---------|---------|
@@ -273,6 +337,14 @@ Add this code before `lia.item.generateWeapons()` is called.
 | `width`/`height` | Inventory size | `width = 3, height = 2` |
 | `ammo` | Ammo type | `"pistol"` |
 | `ammoAmount` | Magazine size | `17` |
+
+### Expanding Weapon Customization
+
+After basic weapon overrides work, you can add:
+- Additional weapon customizations
+- Flag-based access restrictions
+- Custom ammo types and amounts
+- Unique weapon descriptions
 
 For more weapon options, see the [Weapon Guide](definitions/items/weapons.md).
 
@@ -291,19 +363,6 @@ Modules are plugins that add new features to your server.
 5. Upload the module folder to `garrysmod/gamemodes/YOUR_SCHEMA/modules/`
 6. Restart your server
 
-### Verify Installation
-
-- Check server console for success messages
-- Test new features in-game
-- Review module documentation for additional setup
-
-### Module Guidelines
-
-- Start with a few modules rather than installing everything
-- Read module instructions for any special setup requirements
-- Ensure compatibility with your schema
-- Back up your server before adding modules
-
 Browse all available modules in the [Modules Section](modules/).
 
 ---
@@ -319,10 +378,3 @@ Browse all available modules in the [Modules Section](modules/).
 - [Complete Documentation](index.md) - Detailed guides
 - [Discord Community](https://discord.gg/esCRH5ckbQ) - Support and discussion
 - [GitHub Issues](https://github.com/LiliaFramework/Lilia/issues) - Bug reports
-
-### Best Practices
-
-- Start with basic features before adding complex ones
-- Back up your server before making changes
-- Test new features regularly
-- Listen to player feedback for improvements

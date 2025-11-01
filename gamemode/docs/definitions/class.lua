@@ -199,8 +199,8 @@ CLASS.pay = 0
         ```lua
         -- This is set automatically when you register the class
         lia.class.register("police_officer", {
-        name = "Police Officer",
-        -- uniqueID will be "police_officer"
+            name = "Police Officer",
+            -- uniqueID will be "police_officer"
         })
         ```
 ]]
@@ -216,8 +216,8 @@ CLASS.uniqueID = ""
         ```lua
         -- This is set automatically when you register the class
         lia.class.register("police_officer", {
-        name = "Police Officer",
-        -- index will be assigned based on registration order
+            name = "Police Officer",
+            -- index will be assigned based on registration order
         })
         ```
 ]]
@@ -343,8 +343,8 @@ CLASS.jumpPower = 0
     Example Usage:
         ```lua
         CLASS.NPCRelations = {
-        ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-        ["npc_citizen"] = D_NU       -- Neutral to citizens
+            ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
+            ["npc_citizen"]     = D_NU   -- Neutral to citizens
         }
         ```
 ]]
@@ -427,23 +427,23 @@ CLASS.jumpPowerMultiplier = false
                 if char:getAttrib("str", 0) < 10 then
                     client:notify("You need at least 10 strength to join this class.")
                     return false
-                    end
+                end
 
                 -- Check permissions (use framework permission system)
                 if not client:hasFlags("P") then  -- Example permission flag
                     client:notify("You don't have permission to join this class.")
                     return false
-                    end
+                end
 
                 -- Check custom conditions
                 if char:getData("banned_from_class", false) then
                     client:notify("You are banned from this class.")
                     return false
-                    end
                 end
+            end
 
             return true
-            end
+        end
         ```
 ]]
 function CLASS:OnCanBe(client)
@@ -467,7 +467,7 @@ end
         ```lua
         function CLASS:OnSet(client)
             client:notify("Welcome to " .. self.name)
-            end
+        end
         ```
 ]]
 function CLASS:OnSet(client)
@@ -492,8 +492,8 @@ end
         function CLASS:OnTransferred(client, oldClass)
             if oldClass then
                 client:notify("Switched from " .. oldClass.name .. " to " .. self.name)
-                end
             end
+        end
         ```
 ]]
 function CLASS:OnTransferred(client, oldClass)
@@ -518,7 +518,7 @@ end
             client:Give("weapon_stunstick")
             client:SetHealth(150)
             client:SetArmor(50)
-            end
+        end
         ```
 ]]
 function CLASS:OnSpawn(client)
@@ -541,7 +541,7 @@ end
         ```lua
         function CLASS:OnLeave(client)
             client:StripWeapon("weapon_stunstick")
-            end
+        end
         ```
 ]]
 function CLASS:OnLeave(client)
@@ -576,9 +576,9 @@ end
 
         -- Weapons (given when spawning)
         CLASS.weapons = {
-        "weapon_pistol",
-        "weapon_stunstick",
-        "weapon_police_baton"
+            "weapon_pistol",
+            "weapon_stunstick",
+            "weapon_police_baton"
         }
 
         -- Movement Properties
@@ -588,9 +588,9 @@ end
 
         -- NPC Relationships (overrides faction settings)
         CLASS.NPCRelations = {
-        ["npc_metropolice"] = D_LI,  -- Liked by metropolice
-        ["npc_citizen"] = D_NU,      -- Neutral to citizens
-        ["npc_rebel"] = D_HT         -- Hated by rebels
+            ["npc_metropolice"] = D_LI,  -- Liked by metropolice
+            ["npc_citizen"]     = D_NU,  -- Neutral to citizens
+            ["npc_rebel"]       = D_HT   -- Hated by rebels
         }
 
         -- Callback Methods
@@ -601,28 +601,28 @@ end
                 if char:getAttrib("str", 0) < 10 then
                     client:notify("You need at least 10 strength to become a police officer.")
                     return false
-                    end
+                end
 
                 -- Check if character has criminal record
                 if char:getData("criminal_record", false) then
                     client:notify("You cannot become a police officer with a criminal record.")
                     return false
-                    end
+                end
 
                 -- Check for police-specific permissions
                 if not client:hasFlags("P") then
                     client:notify("You don't have permission to become a police officer.")
                     return false
-                    end
                 end
+            end
 
             return true
-            end
+        end
 
         function CLASS:OnSet(client)
             client:notify("Welcome to the City Police Department, Officer!")
             -- Could add police radio equipment here
-            end
+        end
 
         function CLASS:OnSpawn(client)
             -- Set up police-specific spawn behavior
@@ -632,16 +632,16 @@ end
             -- Apply police-specific effects
             client:SetHealth(self.health)
             client:SetArmor(self.armor)
-            end
+        end
 
         function CLASS:OnTransferred(client, oldClass)
             if oldClass then
                 client:notify("You have been transferred from " .. oldClass.name .. " to Police Officer.")
-                end
+            end
 
             -- Update police database records
             -- Could trigger promotion/demotion logic here
-            end
+        end
 
         function CLASS:OnLeave(client)
             -- Clean up police-specific items and effects
@@ -649,6 +649,6 @@ end
             client:StripWeapon("weapon_police_badge")
 
             client:notify("You are no longer a police officer.")
-            end
+        end
         ```
 ]]

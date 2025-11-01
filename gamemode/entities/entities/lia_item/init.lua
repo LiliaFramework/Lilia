@@ -35,6 +35,7 @@ function ENT:setItem(itemID)
     if not model or model == "" then model = "models/props_junk/cardboard_box002b.mdl" end
     self:SetModel(model)
     self:SetSkin(itemTable.skin or 0)
+    self.health = itemTable.health or 100
     local paintMat = hook.Run("PaintItem", itemTable)
     if isstring(paintMat) and paintMat ~= "" then
         self:SetMaterial(paintMat)

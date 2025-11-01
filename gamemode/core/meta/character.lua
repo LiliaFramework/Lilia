@@ -28,14 +28,15 @@ characterMeta.vars = characterMeta.vars or {}
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get character string representation
         local charString = character:tostring()
         print(charString) -- Output: "character[123]"
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in debug messages
         local char = player:getChar()
@@ -44,7 +45,7 @@ characterMeta.vars = characterMeta.vars or {}
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in logging system
         local char = player:getChar()
@@ -72,7 +73,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Compare two character objects
         local char1 = player1:getChar()
@@ -82,7 +84,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in conditional logic
         local targetChar = target:getChar()
@@ -92,7 +94,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in character management system
         for _, char in pairs(characterList) do
@@ -124,7 +126,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get character ID
         local char = player:getChar()
@@ -132,7 +135,7 @@ end
         print("Character ID: " .. charID)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use ID for database operations
         local char = player:getChar()
@@ -140,7 +143,7 @@ end
         lia.db.query("SELECT * FROM chardata WHERE charID = " .. charID)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use ID in networking
         net.Start("liaCharInfo")
@@ -169,7 +172,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get the player from character
         local char = player:getChar()
@@ -179,7 +183,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use player for operations
         local char = character:getPlayer()
@@ -188,7 +192,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in networking and validation
         local char = character:getPlayer()
@@ -234,7 +238,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get display name for a player
         local char = target:getChar()
@@ -242,7 +247,7 @@ end
         print("You see: " .. displayName)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in chat system
         local char = speaker:getChar()
@@ -250,12 +255,13 @@ end
         chat.AddText(Color(255, 255, 255), displayName .. ": " .. message)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in UI display system
-        local char = character:getDisplayedName(client)
-        local nameColor = char == "unknown" and Color(128, 128, 128) or Color(255, 255, 255)
-        draw.SimpleText(char, "DermaDefault", x, y, nameColor)
+        local char = target:getChar()
+        local displayName = char:getDisplayedName(client)
+        local nameColor = displayName == "unknown" and Color(128, 128, 128) or Color(255, 255, 255)
+        draw.SimpleText(displayName, "DermaDefault", x, y, nameColor)
         ```
 ]]
 function characterMeta:getDisplayedName(client)
@@ -289,7 +295,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if player can afford an item
         local char = player:getChar()
@@ -298,7 +305,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in shop system
         local char = buyer:getChar()
@@ -309,16 +316,16 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex transaction system
         local char = player:getChar()
         local totalCost = calculateTotalCost(items)
         if char:hasMoney(totalCost) then
             processTransaction(char, items, totalCost)
-            else
-                showInsufficientFundsError(char, totalCost)
-            end
+        else
+            showInsufficientFundsError(char, totalCost)
+        end
         ```
 ]]
 function characterMeta:hasMoney(amount)
@@ -344,7 +351,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check for admin flag
         local char = player:getChar()
@@ -353,7 +361,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check multiple flags
         local char = player:getChar()
@@ -363,16 +371,16 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in permission system
         local char = player:getChar()
         local requiredFlags = "adm"
         if char:hasFlags(requiredFlags) then
             showAdminPanel(player)
-            else
-                showAccessDenied(player)
-            end
+        else
+            showAccessDenied(player)
+        end
         ```
 ]]
 function characterMeta:hasFlags(flagStr)
@@ -401,7 +409,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if player has weapon
         local char = player:getChar()
@@ -410,7 +419,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check weapon with equip requirement
         local char = player:getChar()
@@ -420,16 +429,16 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in weapon validation system
         local char = player:getChar()
         local hasWeapon = char:getItemWeapon(requireEquip)
         if hasWeapon then
             processWeaponAction(char, action)
-            else
-                showWeaponRequiredError(char)
-            end
+        else
+            showWeaponRequiredError(char)
+        end
         ```
 ]]
 function characterMeta:getItemWeapon(requireEquip)
@@ -465,7 +474,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get character strength
         local char = player:getChar()
@@ -473,7 +483,7 @@ end
         print("Strength: " .. strength)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in skill checks
         local char = player:getChar()
@@ -483,7 +493,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex calculations
         local char = player:getChar()
@@ -521,7 +531,9 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
+        ```lua
         -- Simple: Get strength boosts
         local char = player:getChar()
         local strBoosts = char:getBoost("str")
@@ -530,7 +542,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Check specific boost
         local char = player:getChar()
@@ -540,7 +552,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in boost management system
         local char = player:getChar()
@@ -574,7 +586,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if player recognizes target
         local char = player:getChar()
@@ -584,19 +597,19 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in recognition system
         local char = player:getChar()
         local targetID = target:getChar():getID()
         if char:doesRecognize(targetID) then
             showRealName(char, target)
-            else
-                showUnknownName(char, target)
-            end
+        else
+            showUnknownName(char, target)
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex recognition logic
         local char = player:getChar()
@@ -629,7 +642,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check fake recognition
         local char = player:getChar()
@@ -639,19 +653,19 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in disguise system
         local char = player:getChar()
         local targetID = target:getChar():getID()
         if char:doesFakeRecognize(targetID) then
             showFakeName(char, target)
-            else
-                showUnknownName(char, target)
-            end
+        else
+            showUnknownName(char, target)
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex identity system
         local char = player:getChar()
@@ -693,31 +707,33 @@ end
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set single data value
         local char = player:getChar()
         char:setData("lastLogin", os.time())
         ```
 
-        Medium Complexity:
+    Medium Complexity:
+        ```lua
         -- Medium: Set multiple values
         local char = player:getChar()
         char:setData({
-            ["level"] = 5,
+            ["level"]      = 5,
             ["experience"] = 1000,
-            ["class"] = "warrior"
+            ["class"]      = "warrior"
         })
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in data management system
         local char = player:getChar()
         local dataToSet = {
-        ["inventory"] = serializeInventory(inventory),
-        ["position"] = player:GetPos(),
-        ["health"] = player:Health()
+            ["inventory"] = serializeInventory(inventory),
+            ["position"]  = player:GetPos(),
+            ["health"]    = player:Health()
         }
         char:setData(dataToSet, nil, false, specificPlayer)
         ```
@@ -801,7 +817,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Get specific data
         local char = player:getChar()
@@ -809,7 +826,7 @@ end
         print("Level: " .. level)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Get all character data
         local char = player:getChar()
@@ -819,7 +836,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in data processing system
         local char = player:getChar()
@@ -852,7 +869,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if character is banned
         local char = player:getChar()
@@ -861,7 +879,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in login validation
         local char = player:getChar()
@@ -871,7 +889,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in ban management system
         local char = player:getChar()
@@ -908,7 +926,8 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Recognize another character
         local char = player:getChar()
@@ -916,7 +935,7 @@ if SERVER then
         char:recognize(targetChar)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Recognize with fake name
         local char = player:getChar()
@@ -924,7 +943,7 @@ if SERVER then
         char:recognize(targetID, "John Doe")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in recognition system
         local char = player:getChar()
@@ -974,14 +993,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Join a class
         local char = player:getChar()
         char:joinClass("citizen")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Force class change
         local char = player:getChar()
@@ -990,7 +1010,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in class management system
         local char = player:getChar()
@@ -998,9 +1018,9 @@ if SERVER then
         if char:joinClass(newClass) then
             updateCharacterUI(player)
             notifyClassChange(player, newClass)
-            else
-                showClassChangeError(player, newClass)
-            end
+        else
+            showClassChangeError(player, newClass)
+        end
         ```
 ]]
     function characterMeta:joinClass(class, isForced)
@@ -1048,14 +1068,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Kick from class
         local char = player:getChar()
         char:kickClass()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in demotion system
         local char = player:getChar()
@@ -1065,7 +1086,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in class management system
         local char = player:getChar()
@@ -1114,14 +1135,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Increase strength
         local char = player:getChar()
         char:updateAttrib("str", 1)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in level up system
         local char = player:getChar()
@@ -1130,7 +1152,7 @@ if SERVER then
         notifyStatIncrease(player, "int", 2)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex attribute system
         local char = player:getChar()
@@ -1179,14 +1201,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set strength to specific value
         local char = player:getChar()
         char:setAttrib("str", 10)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in character creation
         local char = player:getChar()
@@ -1195,7 +1218,7 @@ if SERVER then
         char:setAttrib("dex", 6)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in admin system
         local char = player:getChar()
@@ -1246,14 +1269,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Add strength boost
         local char = player:getChar()
         char:addBoost("potion_str", "str", 5)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in item system
         local char = player:getChar()
@@ -1263,7 +1287,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex boost system
         local char = player:getChar()
@@ -1301,14 +1325,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Remove strength boost
         local char = player:getChar()
         char:removeBoost("potion_str", "str")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in item removal
         local char = player:getChar()
@@ -1318,7 +1343,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in boost cleanup system
         local char = player:getChar()
@@ -1353,14 +1378,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set admin flags
         local char = player:getChar()
         char:setFlags("a")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in permission system
         local char = player:getChar()
@@ -1368,7 +1394,7 @@ if SERVER then
         notifyPermissionChange(player, "admin and donator")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex permission management
         local char = player:getChar()
@@ -1423,14 +1449,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Give donator flag
         local char = player:getChar()
         char:giveFlags("d")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in reward system
         local char = player:getChar()
@@ -1438,7 +1465,7 @@ if SERVER then
         notifyReward(player, "VIP status granted")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex permission system
         local char = player:getChar()
@@ -1483,14 +1510,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Remove admin flag
         local char = player:getChar()
         char:takeFlags("a")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in demotion system
         local char = player:getChar()
@@ -1498,7 +1526,7 @@ if SERVER then
         notifyDemotion(player, "Admin status revoked")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex permission system
         local char = player:getChar()
@@ -1544,30 +1572,31 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Save character
         local char = player:getChar()
         char:save()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Save with callback
         local char = player:getChar()
         char:save(function()
-        print("Character saved successfully")
+            print("Character saved successfully")
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in save system
         local char = player:getChar()
         char:save(function()
-        updateCharacterCache(char)
-        notifySaveComplete(player)
-        logCharacterSave(char)
+            updateCharacterCache(char)
+            notifySaveComplete(player)
+            logCharacterSave(char)
         end)
         ```
 ]]
@@ -1604,21 +1633,22 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Sync to all players
         local char = player:getChar()
         char:sync()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Sync to specific player
         local char = player:getChar()
         char:sync(targetPlayer)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in sync system
         local char = player:getChar()
@@ -1695,21 +1725,22 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Setup character
         local char = player:getChar()
         char:setup()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Setup without networking
         local char = player:getChar()
         char:setup(true)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in character loading system
         local char = player:getChar()
@@ -1768,14 +1799,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Kick character
         local char = player:getChar()
         char:kick()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in admin system
         local char = target:getChar()
@@ -1783,7 +1815,7 @@ if SERVER then
         notifyKick(admin, target)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex kick system
         local char = player:getChar()
@@ -1833,21 +1865,22 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Ban character permanently
         local char = player:getChar()
         char:ban()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Ban for specific time
         local char = player:getChar()
         char:ban(3600) -- 1 hour ban
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in ban system
         local char = player:getChar()
@@ -1888,14 +1921,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Delete character
         local char = player:getChar()
         char:delete()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in admin system
         local char = target:getChar()
@@ -1903,7 +1937,7 @@ if SERVER then
         notifyDeletion(admin, target)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex deletion system
         local char = player:getChar()
@@ -1933,14 +1967,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Destroy character
         local char = player:getChar()
         char:destroy()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in cleanup system
         local char = player:getChar()
@@ -1948,7 +1983,7 @@ if SERVER then
         updateCharacterList()
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex cleanup system
         local char = player:getChar()
@@ -1979,14 +2014,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Give money
         local char = player:getChar()
         char:giveMoney(100)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in reward system
         local char = player:getChar()
@@ -1994,7 +2030,7 @@ if SERVER then
         notifyReward(player, "You received $" .. rewardAmount)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex economy system
         local char = player:getChar()
@@ -2026,14 +2062,15 @@ if SERVER then
         Server
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Take money
         local char = player:getChar()
         char:takeMoney(50)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use in payment system
         local char = player:getChar()
@@ -2041,7 +2078,7 @@ if SERVER then
         notifyPayment(player, "You paid $" .. itemPrice)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Use in complex economy system
         local char = player:getChar()

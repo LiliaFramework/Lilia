@@ -151,8 +151,8 @@ ITEM.pacData = {}
             if item:getData("equip") then
                 surface.SetDrawColor(110, 255, 110, 100)
                 surface.DrawRect(w - 14, h - 14, 8, 8)
-                end
             end
+        end
         ```
 ]]
 --[[
@@ -170,8 +170,8 @@ ITEM.pacData = {}
             local char = client:getChar()
             self:setData("equip", false)
             if client.removePart then client:removePart(self.uniqueID) end
-                -- Remove attribute boosts
-                end
+            -- Remove attribute boosts
+        end
         ```
 ]]
 --[[
@@ -187,8 +187,8 @@ ITEM.pacData = {}
         ```lua
         function ITEM:onCanBeTransfered(_, newInventory)
             if newInventory and self:getData("equip") then return false end
-                return true
-                end
+            return true
+        end
         ```
 ]]
 --[[
@@ -204,7 +204,7 @@ ITEM.pacData = {}
         ```lua
         function ITEM:onLoadout()
             if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
-                end
+        end
         ```
 ]]
 --[[
@@ -222,7 +222,7 @@ ITEM.pacData = {}
             local inv = lia.item.inventories[self.invID]
             local receiver = inv.getReceiver and inv:getReceiver()
             if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
-                end
+        end
         ```
 ]]
 --[[
@@ -237,9 +237,9 @@ ITEM.pacData = {}
     Example Usage:
         ```lua
         ITEM:hook("drop", function(item)
-        local client = item.player
-        if item:getData("equip") then item:removePart(client) end
-            end)
+            local client = item.player
+            if item:getData("equip") then item:removePart(client) end
+        end)
         ```
 ]]
 --[[
@@ -247,12 +247,12 @@ Example Item:
 
 ```lua
 -- Basic item identification
-ITEM.name = "Hat"                               -- Display name shown to players
-ITEM.desc = "A stylish hat"                     -- Description text
-ITEM.category = "outfit"                        -- Category for inventory sorting
-ITEM.model = "models/Gibs/HGIBS.mdl"            -- 3D model for the item
-ITEM.width = 1                                  -- Inventory width (1 slot)
-ITEM.height = 1                                 -- Inventory height (1 slot)
-ITEM.outfitCategory = "hat"                     -- Outfit category for conflict checking
+    ITEM.name = "Hat"                               -- Display name shown to players
+    ITEM.desc = "A stylish hat"                     -- Description text
+    ITEM.category = "outfit"                        -- Category for inventory sorting
+    ITEM.model = "models/Gibs/HGIBS.mdl"            -- 3D model for the item
+    ITEM.width = 1                                  -- Inventory width (1 slot)
+    ITEM.height = 1                                 -- Inventory height (1 slot)
+    ITEM.outfitCategory = "hat"                     -- Outfit category for conflict checking
 ```
 ]]

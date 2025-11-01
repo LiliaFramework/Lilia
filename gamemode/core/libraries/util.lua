@@ -22,39 +22,40 @@
         Table of player entities found within the box area
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find players in a small area around a position
-    local players = lia.util.findPlayersInBox(Vector(-100, -100, -50), Vector(100, 100, 50))
-    ```
+        ```lua
+        -- Simple: Find players in a small area around a position
+        local players = lia.util.findPlayersInBox(Vector(-100, -100, -50), Vector(100, 100, 50))
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Find players in a zone and notify them
-    local zonePlayers = lia.util.findPlayersInBox(zoneMin, zoneMax)
-    for _, player in ipairs(zonePlayers) do
-        player:notify("You are in the danger zone!")
-    end
-    ```
+        ```lua
+        -- Medium: Find players in a zone and notify them
+        local zonePlayers = lia.util.findPlayersInBox(zoneMin, zoneMax)
+        for _, player in ipairs(zonePlayers) do
+            player:notify("You are in the danger zone!")
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Create a dynamic zone system with multiple areas
-    local zones = {
-    {mins = Vector(0, 0, 0), maxs = Vector(100, 100, 100), name = "Safe Zone"},
-    {mins = Vector(200, 200, 0), maxs = Vector(300, 300, 100), name = "Combat Zone"}
-    }
+        ```lua
+        -- High: Create a dynamic zone system with multiple areas
+        local zones = {
+            {mins = Vector(0, 0, 0),     maxs = Vector(100, 100, 100), name = "Safe Zone"  },
+            {mins = Vector(200, 200, 0), maxs = Vector(300, 300, 100), name = "Combat Zone"}
+        }
 
-    for _, zone in ipairs(zones) do
-        local players = lia.util.findPlayersInBox(zone.mins, zone.maxs)
-        for _, player in ipairs(players) do
-            player:notify("Entered: " .. zone.name)
+        for _, zone in ipairs(zones) do
+            local players = lia.util.findPlayersInBox(zone.mins, zone.maxs)
+            for _, player in ipairs(players) do
+                player:notify("Entered: " .. zone.name)
+            end
         end
-    end
-    ```
+        ```
 ]]
 function lia.util.findPlayersInBox(mins, maxs)
     local entsList = ents.FindInBox(mins, maxs)
@@ -79,44 +80,44 @@ end
         Player entity if found with a valid character, nil otherwise
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find player by Steam ID
-    local player = lia.util.getBySteamID("STEAM_0:0:12345678")
-    ```
+        ```lua
+        -- Simple: Find player by Steam ID
+        local player = lia.util.getBySteamID("STEAM_0:0:12345678")
+        ```
 
     Medium Complexity:
-
-    ```lua
-    -- Medium: Check if player is online before performing action
-    local targetPlayer = lia.util.getBySteamID(playerSteamID)
-    if IsValid(targetPlayer) then
-        targetPlayer:giveMoney(1000)
-    else
-        print("Player not found or offline")
-    end
-    ```
+        ```lua
+        -- Medium: Check if player is online before performing action
+        local targetPlayer = lia.util.getBySteamID(playerSteamID)
+        if IsValid(targetPlayer) then
+            targetPlayer:giveMoney(1000)
+        else
+            print("Player not found or offline")
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Process multiple Steam IDs with validation
-    local steamIDs = {"STEAM_0:0:123456", "STEAM_0:1:789012", "76561198012345678"}
-    local foundPlayers = {}
+        ```lua
+        -- High: Process multiple Steam IDs with validation
+        local steamIDs = {"STEAM_0:0:123456", "STEAM_0:1:789012", "76561198012345678"}
+        local foundPlayers = {}
 
-    for _, steamID in ipairs(steamIDs) do
-        local player = lia.util.getBySteamID(steamID)
-        if IsValid(player) then
-            foundPlayers[#foundPlayers + 1] = {
-            steamID = steamID,
-            player = player,
-            charName = player:getChar():getName()
-            }
+        for _, steamID in ipairs(steamIDs) do
+            local player = lia.util.getBySteamID(steamID)
+            if IsValid(player) then
+                foundPlayers[#foundPlayers + 1] = {
+                    steamID  = steamID,
+                    player   = player,
+                    charName = player:getChar():getName()
+                }
+            end
         end
-    end
-    ```
+        ```
 ]]
 function lia.util.getBySteamID(steamID)
     if not isstring(steamID) or steamID == "" then return end
@@ -142,51 +143,52 @@ end
         Table of player entities found within the spherical area
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find players within 500 units of a position
-    local nearbyPlayers = lia.util.findPlayersInSphere(playerPos, 500)
-    ```
+        ```lua
+        -- Simple: Find players within 500 units of a position
+        local nearbyPlayers = lia.util.findPlayersInSphere(playerPos, 500)
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Apply effect to players within radius
-    local explosionPos = Vector(100, 200, 50)
-    local affectedPlayers = lia.util.findPlayersInSphere(explosionPos, 300)
+    Medium Complexity:
+        ```lua
+        -- Medium: Apply effect to players within radius
+        local explosionPos = Vector(100, 200, 50)
+        local affectedPlayers = lia.util.findPlayersInSphere(explosionPos, 300)
 
-    for _, player in ipairs(affectedPlayers) do
-        player:takeDamage(50)
-        player:notify("Hit by explosion!")
-    end
-    ```
+        for _, player in ipairs(affectedPlayers) do
+            player:takeDamage(50)
+            player:notify("Hit by explosion!")
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a zone system with multiple overlapping spheres
-    local zones = {
-    {center = Vector(0, 0, 0), radius = 200, type = "safe"},
-    {center = Vector(500, 0, 0), radius = 150, type = "danger"},
-    {center = Vector(250, 250, 0), radius = 100, type = "neutral"}
-    }
+    High Complexity:
+        ```lua
+        -- High: Create a zone system with multiple overlapping spheres
+        local zones = {
+            {center = Vector(0, 0, 0),      radius = 200, type = "safe"   },
+            {center = Vector(500, 0, 0),    radius = 150, type = "danger" },
+            {center = Vector(250, 250, 0),  radius = 100, type = "neutral"}
+        }
 
-    for _, player in player.GetAll() do
-        local playerPos = player:GetPos()
-        local inZone = {}
+        for _, player in player.GetAll() do
+            local playerPos = player:GetPos()
+            local inZone = {}
 
-        for _, zone in ipairs(zones) do
-            if playerPos:Distance(zone.center) <= zone.radius then
-                inZone[zone.type] = true
+            for _, zone in ipairs(zones) do
+                if playerPos:Distance(zone.center) <= zone.radius then
+                    inZone[zone.type] = true
+                end
+            end
+
+            if inZone.danger and not inZone.safe then
+                player:takeDamage(10)
             end
         end
-
-        if inZone.danger and not inZone.safe then
-            player:takeDamage(10)
-        end
-    end
-    ```
+        ```
 ]]
 function lia.util.findPlayersInSphere(origin, radius)
     local plys = {}
@@ -212,52 +214,53 @@ end
         Player entity if found, nil otherwise with appropriate error notifications
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find player by partial name
-    local targetPlayer = lia.util.findPlayer(client, "John")
-    ```
+        ```lua
+        -- Simple: Find player by partial name
+        local targetPlayer = lia.util.findPlayer(client, "John")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Find player and perform action with error handling
-    local targetPlayer = lia.util.findPlayer(client, targetSteamID)
-    if targetPlayer then
-        targetPlayer:giveMoney(100)
-        client:notify("Gave money to " .. targetPlayer:Name())
-    end
-    ```
-
-    High Complexity Example:
-    ```lua
-    -- High: Create a player selection system with multiple methods
-    local function selectPlayer(admin, identifier)
-        -- Try Steam ID first
-        local target = lia.util.findPlayer(admin, identifier)
-
-        if not target then
-            -- Try Steam ID 64
-            if string.match(identifier, "^%d+$") and #identifier >= 17 then
-                target = lia.util.findPlayer(admin, identifier)
-            end
+    Medium Complexity:
+        ```lua
+        -- Medium: Find player and perform action with error handling
+        local targetPlayer = lia.util.findPlayer(client, targetSteamID)
+        if targetPlayer then
+            targetPlayer:giveMoney(100)
+            client:notify("Gave money to " .. targetPlayer:Name())
         end
+        ```
 
-        if not target then
-            -- Try partial name match
-            for _, ply in player.Iterator() do
-                if string.find(ply:Name():lower(), identifier:lower()) then
-                    target = ply
-                    break
+    High Complexity:
+        ```lua
+        -- High: Create a player selection system with multiple methods
+        local function selectPlayer(admin, identifier)
+            -- Try Steam ID first
+            local target = lia.util.findPlayer(admin, identifier)
+
+            if not target then
+                -- Try Steam ID 64
+                if string.match(identifier, "^%d+$") and #identifier >= 17 then
+                    target = lia.util.findPlayer(admin, identifier)
                 end
             end
-        end
 
-        return target
-    end
-    ```
+            if not target then
+                -- Try partial name match
+                for _, ply in player.Iterator() do
+                    if string.find(ply:Name():lower(), identifier:lower()) then
+                        target = ply
+                        break
+                    end
+                end
+            end
+
+            return target
+        end
+        ```
 ]]
 function lia.util.findPlayer(client, identifier)
     local isValidClient = IsValid(client)
@@ -315,40 +318,42 @@ end
         Table of item entities created by the specified player
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find all items dropped by a player
-    local playerItems = lia.util.findPlayerItems(somePlayer)
-    ```
+        ```lua
+        -- Simple: Find all items dropped by a player
+        local playerItems = lia.util.findPlayerItems(somePlayer)
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Clean up items after player disconnects
-    local droppedItems = lia.util.findPlayerItems(disconnectingPlayer)
-    for _, item in ipairs(droppedItems) do
-        item:Remove()
-    end
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Clean up items after player disconnects
+        local droppedItems = lia.util.findPlayerItems(disconnectingPlayer)
+        for _, item in ipairs(droppedItems) do
+            item:Remove()
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create an item management system with ownership tracking
-    local function managePlayerItems(player, action)
-        local items = lia.util.findPlayerItems(player)
+    High Complexity:
+        ```lua
+        -- High: Create an item management system with ownership tracking
+        local function managePlayerItems(player, action)
+            local items = lia.util.findPlayerItems(player)
 
-        for _, item in ipairs(items) do
-            if action == "remove" then
-                item:Remove()
-            elseif action == "transfer" then
-                item:SetCreator(newOwner)
-            elseif action == "info" then
-                print("Item: " .. item:getNetVar("id") .. " at " .. tostring(item:GetPos()))
+            for _, item in ipairs(items) do
+                if action == "remove" then
+                    item:Remove()
+                elseif action == "transfer" then
+                    item:SetCreator(newOwner)
+                elseif action == "info" then
+                    print("Item: " .. item:getNetVar("id") .. " at " .. tostring(item:GetPos()))
+                end
             end
         end
-    ```
+        ```
 ]]
 function lia.util.findPlayerItems(client)
     local items = {}
@@ -373,44 +378,45 @@ end
         Table of item entities of the specified class created by the player
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find all weapons dropped by a player
-    local droppedWeapons = lia.util.findPlayerItemsByClass(player, "weapon_ar2")
-    ```
+        ```lua
+        -- Simple: Find all weapons dropped by a player
+        local droppedWeapons = lia.util.findPlayerItemsByClass(player, "weapon_ar2")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Remove specific item types after player death
-    local healthKits = lia.util.findPlayerItemsByClass(deadPlayer, "item_healthkit")
-    for _, kit in ipairs(healthKits) do
-        kit:Remove()
-    end
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Remove specific item types after player death
+        local healthKits = lia.util.findPlayerItemsByClass(deadPlayer, "item_healthkit")
+        for _, kit in ipairs(healthKits) do
+            kit:Remove()
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create an inventory management system with class-based filtering
-    local function cleanupPlayerItems(player, itemClasses)
-        local removedCount = 0
+    High Complexity:
+        ```lua
+        -- High: Create an inventory management system with class-based filtering
+        local function cleanupPlayerItems(player, itemClasses)
+            local removedCount = 0
 
-        for _, class in ipairs(itemClasses) do
-            local items = lia.util.findPlayerItemsByClass(player, class)
-            for _, item in ipairs(items) do
-                item:Remove()
-                removedCount = removedCount + 1
+            for _, class in ipairs(itemClasses) do
+                local items = lia.util.findPlayerItemsByClass(player, class)
+                for _, item in ipairs(items) do
+                    item:Remove()
+                    removedCount = removedCount + 1
+                end
             end
+
+            return removedCount
         end
 
-        return removedCount
-    end
-
-    -- Usage
-    local removed = cleanupPlayerItems(leavingPlayer, {"weapon_*", "item_*"})
-    ```
+        -- Usage
+        local removed = cleanupPlayerItems(leavingPlayer, {"weapon_*", "item_*"})
+        ```
 ]]
 function lia.util.findPlayerItemsByClass(client, class)
     local items = {}
@@ -435,35 +441,36 @@ end
         Table of entities created by or associated with the specified player
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find all entities created by a player
-    local playerEntities = lia.util.findPlayerEntities(somePlayer)
-    ```
+        ```lua
+        -- Simple: Find all entities created by a player
+        local playerEntities = lia.util.findPlayerEntities(somePlayer)
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Find specific entity types created by player
-    local playerProps = lia.util.findPlayerEntities(player, "prop_physics")
-    for _, prop in ipairs(playerProps) do
-        prop:Remove()
-    end
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Find specific entity types created by player
+        local playerProps = lia.util.findPlayerEntities(player, "prop_physics")
+        for _, prop in ipairs(playerProps) do
+            prop:Remove()
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create an entity management system with ownership tracking
-    local function managePlayerEntities(player, action, classFilter)
-        local entities = lia.util.findPlayerEntities(player, classFilter)
-        local results = {removed = 0, modified = 0}
+    High Complexity:
+        ```lua
+        -- High: Create an entity management system with ownership tracking
+        local function managePlayerEntities(player, action, classFilter)
+            local entities = lia.util.findPlayerEntities(player, classFilter)
+            local results = {removed = 0, modified = 0}
 
-        for _, entity in ipairs(entities) do
-            if action == "remove" then
-                entity:Remove()
-                results.removed = results.removed + 1
+            for _, entity in ipairs(entities) do
+                if action == "remove" then
+                    entity:Remove()
+                    results.removed = results.removed + 1
                 elseif action == "freeze" then
                     local phys = entity:GetPhysicsObject()
                     if IsValid(phys) then
@@ -475,7 +482,7 @@ end
 
             return results
         end
-    ```
+        ```
 ]]
 function lia.util.findPlayerEntities(client, class)
     local entities = {}
@@ -500,45 +507,46 @@ end
         Boolean indicating if the strings match using any of the comparison methods
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Check if strings are equal (case-insensitive)
-    local matches = lia.util.stringMatches("Hello", "hello")
-    ```
+        ```lua
+        -- Simple: Check if strings are equal (case-insensitive)
+        local matches = lia.util.stringMatches("Hello", "hello")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Check if player name contains search term
-    local function playerNameMatches(player, searchTerm)
-        return lia.util.stringMatches(player:Name(), searchTerm)
-    end
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Check if player name contains search term
+        local function playerNameMatches(player, searchTerm)
+            return lia.util.stringMatches(player:Name(), searchTerm)
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a flexible search system with multiple criteria
-    local function advancedStringSearch(text, searchTerms)
-        local results = {}
+    High Complexity:
+        ```lua
+        -- High: Create a flexible search system with multiple criteria
+        local function advancedStringSearch(text, searchTerms)
+            local results = {}
 
-        for _, term in ipairs(searchTerms) do
-            if lia.util.stringMatches(text, term) then
-                results[#results + 1] = {
-                text = text,
-                matchedTerm = term,
-                matchType = "partial"
-                }
+            for _, term in ipairs(searchTerms) do
+                if lia.util.stringMatches(text, term) then
+                    results[#results + 1] = {
+                        text        = text,
+                        matchedTerm = term,
+                        matchType   = "partial"
+                    }
+                end
             end
+
+            return results
         end
 
-        return results
-    end
-
-    -- Usage
-    local searchResults = advancedStringSearch("Player Name", {"player", "name", "test"})
-    ```
+        -- Usage
+        local searchResults = advancedStringSearch("Player Name", {"player", "name", "test"})
+        ```
 ]]
 function lia.util.stringMatches(a, b)
     if a and b then
@@ -565,48 +573,49 @@ end
         Table of player entities that are currently staff members
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get all online admins
-    local admins = lia.util.getAdmins()
-    ```
-
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Send notification to all admins
-    local admins = lia.util.getAdmins()
-    for _, admin in ipairs(admins) do
-        admin:notify("Server maintenance in 5 minutes!")
-    end
-    ```
-
-    High Complexity Example:
-    ```lua
-    -- High: Create an admin monitoring system with activity tracking
-    local function getActiveAdmins()
+        ```lua
+        -- Simple: Get all online admins
         local admins = lia.util.getAdmins()
-        local activeAdmins = {}
+        ```
 
+    Medium Complexity:
+        ```lua
+        -- Medium: Send notification to all admins
+        local admins = lia.util.getAdmins()
         for _, admin in ipairs(admins) do
-            if admin:isStaff() and admin:getChar() then
-                activeAdmins[#activeAdmins + 1] = {
-                player = admin,
-                steamID = admin:SteamID(),
-                name = admin:Name(),
-                lastSeen = CurTime()
-                }
+            admin:notify("Server maintenance in 5 minutes!")
+        end
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Create an admin monitoring system with activity tracking
+        local function getActiveAdmins()
+            local admins = lia.util.getAdmins()
+            local activeAdmins = {}
+
+            for _, admin in ipairs(admins) do
+                if admin:isStaff() and admin:getChar() then
+                    activeAdmins[#activeAdmins + 1] = {
+                        player   = admin,
+                        steamID  = admin:SteamID(),
+                        name     = admin:Name(),
+                        lastSeen = CurTime()
+                    }
+                end
             end
+
+            return activeAdmins
         end
 
-        return activeAdmins
-    end
-
-    -- Usage
-    local activeStaff = getActiveAdmins()
-    ```
+        -- Usage
+        local activeStaff = getActiveAdmins()
+        ```
 ]]
 function lia.util.getAdmins()
     local staff = {}
@@ -631,41 +640,42 @@ end
         Player entity if found, nil otherwise
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find player by Steam ID 64
-    local player = lia.util.findPlayerBySteamID64("76561198012345678")
-    ```
+        ```lua
+        -- Simple: Find player by Steam ID 64
+        local player = lia.util.findPlayerBySteamID64("76561198012345678")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Check if Steam ID 64 is currently online
-    local targetPlayer = lia.util.findPlayerBySteamID64(steamID64)
-    if IsValid(targetPlayer) then
-        print(targetPlayer:Name() .. " is currently online")
-    end
-    ```
-
-    High Complexity Example:
-    ```lua
-    -- High: Process multiple Steam ID 64s for batch operations
-    local steamID64s = {"76561198012345678", "76561198098765432", "76561198111111111"}
-    local onlinePlayers = {}
-
-    for _, steamID64 in ipairs(steamID64s) do
-        local player = lia.util.findPlayerBySteamID64(steamID64)
-        if IsValid(player) then
-            onlinePlayers[#onlinePlayers + 1] = {
-            steamID64 = steamID64,
-            player = player,
-            character = player:getChar():getName()
-            }
+    Medium Complexity:
+        ```lua
+        -- Medium: Check if Steam ID 64 is currently online
+        local targetPlayer = lia.util.findPlayerBySteamID64(steamID64)
+        if IsValid(targetPlayer) then
+            print(targetPlayer:Name() .. " is currently online")
         end
-    end
-    ```
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Process multiple Steam ID 64s for batch operations
+        local steamID64s = {"76561198012345678", "76561198098765432", "76561198111111111"}
+        local onlinePlayers = {}
+
+        for _, steamID64 in ipairs(steamID64s) do
+            local player = lia.util.findPlayerBySteamID64(steamID64)
+            if IsValid(player) then
+                onlinePlayers[#onlinePlayers + 1] = {
+                    steamID64 = steamID64,
+                    player    = player,
+                    character = player:getChar():getName()
+                }
+            end
+        end
+        ```
 ]]
 function lia.util.findPlayerBySteamID64(SteamID64)
     local SteamID = util.SteamIDFrom64(SteamID64)
@@ -687,46 +697,47 @@ end
         Player entity if found, nil otherwise
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find player by Steam ID
-    local player = lia.util.findPlayerBySteamID("STEAM_0:0:12345678")
-    ```
+        ```lua
+        -- Simple: Find player by Steam ID
+        local player = lia.util.findPlayerBySteamID("STEAM_0:0:12345678")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Verify player identity before action
-    local targetPlayer = lia.util.findPlayerBySteamID(steamID)
-    if IsValid(targetPlayer) and targetPlayer:getChar() then
-        targetPlayer:kick("Reason for kick")
-    end
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Verify player identity before action
+        local targetPlayer = lia.util.findPlayerBySteamID(steamID)
+        if IsValid(targetPlayer) and targetPlayer:getChar() then
+            targetPlayer:kick("Reason for kick")
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a player tracking system with Steam ID validation
-    local function trackPlayerActivity(steamID)
-        local player = lia.util.findPlayerBySteamID(steamID)
+    High Complexity:
+        ```lua
+        -- High: Create a player tracking system with Steam ID validation
+        local function trackPlayerActivity(steamID)
+            local player = lia.util.findPlayerBySteamID(steamID)
 
-        if IsValid(player) then
-            return {
-            steamID = steamID,
-            name = player:Name(),
-            character = player:getChar():getName(),
-            position = player:GetPos(),
-            status = "online"
-            }
+            if IsValid(player) then
+                return {
+                    steamID   = steamID,
+                    name      = player:Name(),
+                    character = player:getChar():getName(),
+                    position  = player:GetPos(),
+                    status    = "online"
+                }
             else
                 return {
-                steamID = steamID,
-                status = "offline"
+                    steamID = steamID,
+                    status  = "offline"
                 }
             end
         end
-    ```
+        ```
 ]]
 function lia.util.findPlayerBySteamID(SteamID)
     for _, client in player.Iterator() do
@@ -752,51 +763,52 @@ end
         Boolean indicating if the position is clear (true) or obstructed (false)
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Check if player can fit at position
-    local canTeleport = lia.util.canFit(targetPosition)
-    ```
+        ```lua
+        -- Simple: Check if player can fit at position
+        local canTeleport = lia.util.canFit(targetPosition)
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Validate spawn position for entity
-    local spawnPos = Vector(100, 200, 50)
-    if lia.util.canFit(spawnPos, Vector(-16, -16, 0), Vector(16, 16, 72)) then
-        local npc = ents.Create("npc_zombie")
-        npc:SetPos(spawnPos)
-        npc:Spawn()
-    end
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Validate spawn position for entity
+        local spawnPos = Vector(100, 200, 50)
+        if lia.util.canFit(spawnPos, Vector(-16, -16, 0), Vector(16, 16, 72)) then
+            local npc = ents.Create("npc_zombie")
+            npc:SetPos(spawnPos)
+            npc:Spawn()
+        end
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a smart placement system with multiple validation checks
-    local function findValidPlacement(centerPos, entitySize, attempts)
-        local validPositions = {}
+    High Complexity:
+        ```lua
+        -- High: Create a smart placement system with multiple validation checks
+        local function findValidPlacement(centerPos, entitySize, attempts)
+            local validPositions = {}
 
-        for i = 1, attempts do
-            local randomOffset = Vector(
-            math.random(-100, 100),
-            math.random(-100, 100),
-            0
-            )
-            local testPos = centerPos + randomOffset
+            for i = 1, attempts do
+                local randomOffset = Vector(
+                    math.random(-100, 100),
+                    math.random(-100, 100),
+                    0
+                )
+                local testPos = centerPos + randomOffset
 
-            if lia.util.canFit(testPos, entitySize.mins, entitySize.maxs) then
-                validPositions[#validPositions + 1] = testPos
+                if lia.util.canFit(testPos, entitySize.mins, entitySize.maxs) then
+                    validPositions[#validPositions + 1] = testPos
+                end
             end
+
+            return validPositions
         end
 
-        return validPositions
-    end
-
-    -- Usage
-    local positions = findValidPlacement(playerPos, {mins = Vector(-16, -16, 0), maxs = Vector(16, 16, 72)}, 50)
-    ```
+        -- Usage
+        local positions = findValidPlacement(playerPos, {mins = Vector(-16, -16, 0), maxs = Vector(16, 16, 72)}, 50)
+        ```
 ]]
 function lia.util.canFit(pos, mins, maxs, filter)
     mins = mins ~= nil and mins or Vector(16, 16, 0)
@@ -826,53 +838,54 @@ end
         Table of player entities found within the specified radius
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find players within 100 units
-    local nearbyPlayers = lia.util.playerInRadius(playerPos, 100)
-    ```
+        ```lua
+        -- Simple: Find players within 100 units
+        local nearbyPlayers = lia.util.playerInRadius(playerPos, 100)
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Apply area effect to players in radius
-    local explosionCenter = Vector(500, 300, 100)
-    local affectedPlayers = lia.util.playerInRadius(explosionCenter, 200)
+    Medium Complexity:
+        ```lua
+        -- Medium: Apply area effect to players in radius
+        local explosionCenter = Vector(500, 300, 100)
+        local affectedPlayers = lia.util.playerInRadius(explosionCenter, 200)
 
-    for _, player in ipairs(affectedPlayers) do
-        player:takeDamage(75)
-        player:notify("You were caught in the blast!")
-    end
-    ```
-
-    High Complexity Example:
-    ```lua
-    -- High: Create a zone management system with multiple areas
-    local zones = {
-    {center = Vector(0, 0, 0), radius = 150, type = "safe"},
-    {center = Vector(400, 0, 0), radius = 100, type = "combat"},
-    {center = Vector(200, 200, 0), radius = 80, type = "neutral"}
-    }
-
-    for _, player in player.GetAll() do
-        local playerPos = player:GetPos()
-        local zonesIn = {}
-
-        for _, zone in ipairs(zones) do
-            if playerPos:Distance(zone.center) <= zone.radius then
-                zonesIn[zone.type] = true
-            end
+        for _, player in ipairs(affectedPlayers) do
+            player:takeDamage(75)
+            player:notify("You were caught in the blast!")
         end
+        ```
 
-        if zonesIn.combat and not zonesIn.safe then
-            player:setNetVar("inCombat", true)
+    High Complexity:
+        ```lua
+        -- High: Create a zone management system with multiple areas
+        local zones = {
+            {center = Vector(0, 0, 0),     radius = 150, type = "safe"   },
+            {center = Vector(400, 0, 0),  radius = 100, type = "combat" },
+            {center = Vector(200, 200, 0), radius = 80,  type = "neutral"}
+        }
+
+        for _, player in player.GetAll() do
+            local playerPos = player:GetPos()
+            local zonesIn = {}
+
+            for _, zone in ipairs(zones) do
+                if playerPos:Distance(zone.center) <= zone.radius then
+                    zonesIn[zone.type] = true
+                end
+            end
+
+            if zonesIn.combat and not zonesIn.safe then
+                player:setNetVar("inCombat", true)
             else
                 player:setNetVar("inCombat", false)
             end
         end
-    ```
+        ```
 ]]
 function lia.util.playerInRadius(pos, dist)
     dist = dist * dist
@@ -898,47 +911,48 @@ end
         String with placeholders replaced by provided values
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Format string with individual arguments
-    local message = lia.util.formatStringNamed("Hello {name}!", "John")
-    ```
+        ```lua
+        -- Simple: Format string with individual arguments
+        local message = lia.util.formatStringNamed("Hello {name}!", "John")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Format string with named parameters
-    local data = {name = "Alice", score = 150}
-    local message = lia.util.formatStringNamed("Player {name} scored {score} points!", data)
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Format string with named parameters
+        local data = {name = "Alice", score = 150}
+        local message = lia.util.formatStringNamed("Player {name} scored {score} points!", data)
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a templating system with complex data structures
-    local template = "Player {name} from {faction} has {health} HP and {money} credits"
-    local playerData = {
-    name = "Bob",
-    faction = "Security",
-    health = 85,
-    money = 2500
-    }
+    High Complexity:
+        ```lua
+        -- High: Create a templating system with complex data structures
+        local template = "Player {name} from {faction} has {health} HP and {money} credits"
+        local playerData = {
+            name    = "Bob",
+            faction = "Security",
+            health  = 85,
+            money   = 2500
+        }
 
-    local function formatPlayerInfo(template, data)
-        local formatted = template
+        local function formatPlayerInfo(template, data)
+            local formatted = template
 
-        for key, value in pairs(data) do
-            formatted = formatted:gsub("{" .. key .. "}", tostring(value))
+            for key, value in pairs(data) do
+                formatted = formatted:gsub("{" .. key .. "}", tostring(value))
+            end
+
+            return formatted
         end
 
-        return formatted
-    end
-
-    -- Usage with both methods
-    local message1 = lia.util.formatStringNamed(template, playerData)
-    local message2 = formatPlayerInfo(template, playerData)
-    ```
+        -- Usage with both methods
+        local message1 = lia.util.formatStringNamed(template, playerData)
+        local message2 = formatPlayerInfo(template, playerData)
+        ```
 ]]
 function lia.util.formatStringNamed(format, ...)
     local arguments = {...}
@@ -974,48 +988,49 @@ end
         IMaterial object for the specified material path
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get a cached material
-    local blurMaterial = lia.util.getMaterial("pp/blurscreen")
-    ```
+        ```lua
+        -- Simple: Get a cached material
+        local blurMaterial = lia.util.getMaterial("pp/blurscreen")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Use material for rendering effects
-    local material = lia.util.getMaterial("effects/flashlight001")
-    surface.SetMaterial(material)
-    surface.SetDrawColor(255, 255, 255, 128)
-    surface.DrawTexturedRect(x, y, w, h)
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Use material for rendering effects
+        local material = lia.util.getMaterial("effects/flashlight001")
+        surface.SetMaterial(material)
+        surface.SetDrawColor(255, 255, 255, 128)
+        surface.DrawTexturedRect(x, y, w, h)
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a material management system with preloading
-    local materialCache = {}
+    High Complexity:
+        ```lua
+        -- High: Create a material management system with preloading
+        local materialCache = {}
 
-    local function preloadMaterials(materialList)
-        for _, materialPath in ipairs(materialList) do
-            materialCache[materialPath] = lia.util.getMaterial(materialPath)
+        local function preloadMaterials(materialList)
+            for _, materialPath in ipairs(materialList) do
+                materialCache[materialPath] = lia.util.getMaterial(materialPath)
+            end
         end
-    end
 
-    local function drawMaterialEffect(materialPath, x, y, w, h, alpha)
-        local material = materialCache[materialPath] or lia.util.getMaterial(materialPath)
-        if material then
-            surface.SetMaterial(material)
-            surface.SetDrawColor(255, 255, 255, alpha or 255)
-            surface.DrawTexturedRect(x, y, w, h)
+        local function drawMaterialEffect(materialPath, x, y, w, h, alpha)
+            local material = materialCache[materialPath] or lia.util.getMaterial(materialPath)
+            if material then
+                surface.SetMaterial(material)
+                surface.SetDrawColor(255, 255, 255, alpha or 255)
+                surface.DrawTexturedRect(x, y, w, h)
+            end
         end
-    end
 
-    -- Usage
-    preloadMaterials({"effects/water_warp01", "effects/bubble", "pp/blurscreen"})
-    drawMaterialEffect("effects/water_warp01", 100, 100, 200, 200, 150)
-    ```
+        -- Usage
+        preloadMaterials({"effects/water_warp01", "effects/bubble", "pp/blurscreen"})
+        drawMaterialEffect("effects/water_warp01", 100, 100, 200, 200, 150)
+        ```
 ]]
 function lia.util.getMaterial(materialPath, materialParameters)
     lia.util.cachedMaterials = lia.util.cachedMaterials or {}
@@ -1038,51 +1053,52 @@ end
         Faction table if found, nil otherwise with error notification
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Find faction by name
-    local faction = lia.util.findFaction(player, "Security")
-    ```
+        ```lua
+        -- Simple: Find faction by name
+        local faction = lia.util.findFaction(player, "Security")
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Check faction before performing action
-    local faction = lia.util.findFaction(client, factionName)
-    if faction then
-        player:setFaction(faction.index)
-        client:notify("Player moved to " .. faction.name)
-    end
-    ```
-
-    High Complexity Example:
-    ```lua
-    -- High: Create a faction management system with validation
-    local function managePlayerFaction(admin, targetPlayer, factionName, action)
-        local faction = lia.util.findFaction(admin, factionName)
-
-        if not faction then
-            return false, "Faction not found"
+    Medium Complexity:
+        ```lua
+        -- Medium: Check faction before performing action
+        local faction = lia.util.findFaction(client, factionName)
+        if faction then
+            player:setFaction(faction.index)
+            client:notify("Player moved to " .. faction.name)
         end
+        ```
 
-        if action == "assign" then
-            targetPlayer:setFaction(faction.index)
-            return true, "Player assigned to " .. faction.name
-            elseif action == "check" then
-                return true, "Player is in faction: " .. (targetPlayer:getFaction() == faction.index and faction.name or "Different faction")
-                elseif action == "info" then
-                    return true, string.format("Faction: %s, Color: %s, Models: %d",
-                    faction.name, tostring(faction.color), #faction.models)
-                end
+    High Complexity:
+        ```lua
+        -- High: Create a faction management system with validation
+        local function managePlayerFaction(admin, targetPlayer, factionName, action)
+            local faction = lia.util.findFaction(admin, factionName)
 
-                return false, "Invalid action"
+            if not faction then
+                return false, "Faction not found"
             end
 
-            -- Usage
-            local success, message = managePlayerFaction(admin, target, "Citizen", "assign")
-    ```
+            if action == "assign" then
+                targetPlayer:setFaction(faction.index)
+                return true, "Player assigned to " .. faction.name
+            elseif action == "check" then
+                return true, "Player is in faction: " .. (targetPlayer:getFaction() == faction.index and faction.name or "Different faction")
+            elseif action == "info" then
+                return true, string.format("Faction: %s, Color: %s, Models: %d",
+                    faction.name, tostring(faction.color), #faction.models)
+            end
+
+            return false, "Invalid action"
+        end
+
+        -- Usage
+        local success, message = managePlayerFaction(admin, target, "Citizen", "assign")
+        ```
 ]]
 function lia.util.findFaction(client, name)
     if lia.faction.teams[name] then return lia.faction.teams[name] end
@@ -1180,49 +1196,50 @@ end
         String containing a randomly generated full name (FirstName LastName)
 
     Realm:
-        Both (Universal)
+        Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Generate a random name using defaults
-    local randomName = lia.util.generateRandomName()
-    ```
+        ```lua
+        -- Simple: Generate a random name using defaults
+        local randomName = lia.util.generateRandomName()
+        ```
 
-    Medium Complexity Example:
-    ```lua
-    -- Medium: Generate name with custom name lists
-    local fantasyFirstNames = {"Aragorn", "Legolas", "Gimli", "Frodo"}
-    local fantasyLastNames = {"Stormwind", "Ironfist", "Shadowalker", "Lightbringer"}
-    local fantasyName = lia.util.generateRandomName(fantasyFirstNames, fantasyLastNames)
-    ```
+    Medium Complexity:
+        ```lua
+        -- Medium: Generate name with custom name lists
+        local fantasyFirstNames = {"Aragorn", "Legolas", "Gimli", "Frodo"}
+        local fantasyLastNames = {"Stormwind", "Ironfist", "Shadowalker", "Lightbringer"}
+        local fantasyName = lia.util.generateRandomName(fantasyFirstNames, fantasyLastNames)
+        ```
 
-    High Complexity Example:
-    ```lua
-    -- High: Create a name generation system with cultural variations
-    local nameCultures = {
-    western = {
-    first = {"John", "Jane", "Michael", "Sarah"},
-    last = {"Smith", "Johnson", "Williams", "Brown"}
-    },
-    eastern = {
-    first = {"Hiroshi", "Yuki", "Kenji", "Sakura"},
-    last = {"Tanaka", "Suzuki", "Yamamoto", "Watanabe"}
-    }
-    }
+    High Complexity:
+        ```lua
+        -- High: Create a name generation system with cultural variations
+        local nameCultures = {
+            western = {
+                first = {"John", "Jane", "Michael", "Sarah"},
+                last  = {"Smith", "Johnson", "Williams", "Brown"}
+            },
+            eastern = {
+                first = {"Hiroshi", "Yuki", "Kenji", "Sakura"},
+                last  = {"Tanaka", "Suzuki", "Yamamoto", "Watanabe"}
+            }
+        }
 
-    local function generateCulturalName(culture)
-        local cultureData = nameCultures[culture]
-        if cultureData then
-            return lia.util.generateRandomName(cultureData.first, cultureData.last)
+        local function generateCulturalName(culture)
+            local cultureData = nameCultures[culture]
+            if cultureData then
+                return lia.util.generateRandomName(cultureData.first, cultureData.last)
+            end
+            return lia.util.generateRandomName() -- fallback to defaults
         end
-        return lia.util.generateRandomName() -- fallback to defaults
-    end
 
-    -- Usage
-    local westernName = generateCulturalName("western")
-    local easternName = generateCulturalName("eastern")
-    ```
+        -- Usage
+        local westernName = generateCulturalName("western")
+        local easternName = generateCulturalName("eastern")
+        ```
 ]]
 function lia.util.generateRandomName(firstNames, lastNames)
     local defaultFirstNames = {"John", "Jane", "Michael", "Sarah", "David", "Emily", "Robert", "Amanda", "James", "Jennifer", "William", "Elizabeth", "Richard", "Michelle", "Thomas", "Lisa", "Daniel", "Stephanie", "Matthew", "Nicole", "Anthony", "Samantha", "Charles", "Mary", "Joseph", "Patricia", "Christopher", "Linda", "Andrew", "Barbara", "Joshua", "Susan", "Ryan", "Jessica", "Brandon", "Helen", "Tyler", "Nancy", "Kevin", "Betty", "Jason", "Sandra", "Jacob", "Donna", "Kyle", "Carol", "Nathan", "Ruth", "Jeffrey", "Sharon", "Frank", "Michelle", "Scott", "Laura", "Steven", "Sarah", "Nicholas", "Kimberly", "Gregory", "Deborah", "Eric", "Dorothy", "Stephen", "Amy", "Timothy", "Angela", "Larry", "Melissa", "Jonathan", "Brenda", "Raymond", "Emma", "Patrick", "Anna", "Benjamin", "Rebecca", "Bryan", "Virginia", "Samuel", "Kathleen", "Alexander", "Pamela", "Jack", "Martha", "Dennis", "Debra", "Jerry", "Amanda", "Tyler", "Stephanie", "Aaron", "Christine", "Henry", "Marie", "Douglas", "Janet", "Peter", "Catherine", "Jose", "Frances", "Adam", "Ann", "Zachary", "Joyce", "Walter", "Diane", "Kenneth", "Alice", "Ryan", "Julie", "Gregory", "Heather", "Austin", "Teresa", "Keith", "Doris", "Samuel", "Gloria", "Gary", "Evelyn", "Jesse", "Jean", "Joe", "Cheryl", "Billy", "Mildred", "Bruce", "Katherine", "Gabriel", "Joan", "Roy", "Ashley", "Albert", "Judith", "Willie", "Rose", "Logan", "Janice", "Randy", "Kelly", "Louis", "Nicole", "Russell", "Judy", "Ralph", "Christina", "Sean", "Kathy", "Eugene", "Theresa", "Vincent", "Beverly", "Bobby", "Denise", "Johnny", "Tammy", "Bradley", "Irene", "Philip", "Jane", "Todd", "Lori", "Jesse", "Rachel", "Craig", "Marilyn", "Alan", "Andrea", "Shawn", "Kathryn", "Clarence", "Louise", "Sean", "Sara", "Victor", "Anne", "Jimmy", "Jacqueline", "Chad", "Wanda", "Phillip", "Bonnie", "Travis", "Julia", "Carlos", "Ruby", "Shane", "Lois", "Ronald", "Tina", "Brandon", "Phyllis", "Angel", "Norma", "Russell", "Paula", "Harold", "Diana", "Dustin", "Annie", "Pedro", "Lillian", "Shawn", "Emily", "Colin", "Robin", "Brian", "Rita"}
@@ -1259,12 +1276,13 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Send basic player list
         local columns = {
-        {name = "Name", width = 150},
-        {name = "Steam ID", width = 200}
+            {name = "Name",    width = 150},
+            {name = "Steam ID", width = 200}
         }
         local players = player.GetAll()
         local data = {}
@@ -1274,48 +1292,48 @@ if SERVER then
         lia.util.sendTableUI(client, "Player List", columns, data)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Send inventory with action options
         local columns = {
-        {name = "Item", width = 150},
-        {name = "Quantity", width = 80},
-        {name = "Value", width = 100}
+            {name = "Item",     width = 150},
+            {name = "Quantity", width = 80 },
+            {name = "Value",    width = 100}
         }
         local options = {
-        {name = "Drop", net = "liaDropItem"},
-        {name = "Use", net = "liaUseItem"}
+            {name = "Drop", net = "liaDropItem"},
+            {name = "Use",  net = "liaUseItem" }
         }
         lia.util.sendTableUI(client, "Inventory", columns, inventoryData, options, characterID)
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a comprehensive admin panel with multiple data types
         local function sendAdminPanel(admin, targetPlayer)
             local columns = {
-            {name = "Property", width = 150},
-            {name = "Value", width = 200},
-            {name = "Actions", width = 100}
+                {name = "Property", width = 150},
+                {name = "Value",    width = 200},
+                {name = "Actions",  width = 100}
             }
 
             local playerData = {
-            {"Name", targetPlayer:Name()},
-            {"Steam ID", targetPlayer:SteamID()},
-            {"Health", targetPlayer:Health()},
-            {"Armor", targetPlayer:Armor()},
-            {"Money", targetPlayer:getMoney()},
-            {"Faction", targetPlayer:getFaction()},
+                {"Name",     targetPlayer:Name()},
+                {"Steam ID", targetPlayer:SteamID()},
+                {"Health",   targetPlayer:Health()},
+                {"Armor",    targetPlayer:Armor()},
+                {"Money",    targetPlayer:getMoney()},
+                {"Faction",  targetPlayer:getFaction()}
             }
 
             local options = {
-            {name = "Kick", net = "liaKickPlayer"},
-            {name = "Ban", net = "liaBanPlayer"},
-            {name = "Teleport", net = "liaTeleportPlayer"}
+                {name = "Kick",     net = "liaKickPlayer"   },
+                {name = "Ban",      net = "liaBanPlayer"    },
+                {name = "Teleport", net = "liaTeleportPlayer"}
             }
 
             lia.util.sendTableUI(admin, "Player Info: " .. targetPlayer:Name(),
-            columns, playerData, options, targetPlayer:getChar() and targetPlayer:getChar():getID())
+                columns, playerData, options, targetPlayer:getChar() and targetPlayer:getChar():getID())
         end
         ```
     ]]
@@ -1361,25 +1379,26 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Find nearby empty spaces
         local emptySpaces = lia.util.findEmptySpace(someEntity)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Find spawn locations for NPCs around player
         local spawnPositions = lia.util.findEmptySpace(player, player, 64, 5, 72, 10)
         for _, pos in ipairs(spawnPositions) do
             if #spawnPositions >= 3 then break end -- Limit to 3 NPCs
-                local npc = ents.Create("npc_zombie")
-                npc:SetPos(pos)
-                npc:Spawn()
-            end
+            local npc = ents.Create("npc_zombie")
+            npc:SetPos(pos)
+            npc:Spawn()
+        end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a smart spawning system with validation
         local function spawnEntitiesInArea(centerEntity, entityType, count, spacing)
@@ -1393,9 +1412,9 @@ if SERVER then
 
                     -- Add some randomization to position
                     local randomOffset = Vector(
-                    math.random(-16, 16),
-                    math.random(-16, 16),
-                    0
+                        math.random(-16, 16),
+                        math.random(-16, 16),
+                        0
                     )
                     entity:SetPos(pos + randomOffset)
                     entity:Spawn()
@@ -1472,7 +1491,8 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Basic panel appearance animation
         local panel = vgui.Create("DPanel")
@@ -1480,7 +1500,7 @@ else
         lia.util.animateAppearance(panel, 200, 100)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Animate panel with custom duration and callback
         local frame = vgui.Create("DFrame")
@@ -1488,12 +1508,12 @@ else
         frame:Center()
 
         lia.util.animateAppearance(frame, 400, 300, 0.3, 0.2, function(panel)
-        print("Animation completed!")
-        panel:MakePopup()
+            print("Animation completed!")
+            panel:MakePopup()
         end)
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a complex UI system with staggered animations
         local function createAnimatedMenu(title, options)
@@ -1514,15 +1534,16 @@ else
 
                 -- Stagger animation timing
                 timer.Simple(i * 0.05, function()
-                if IsValid(button) then
-                    button:SetAlpha(0)
-                    lia.util.animateAppearance(button, button:GetWide(), button:GetTall(), 0.15, 0.1)
-                end
-            end)
-        end
+                    if IsValid(button) then
+                        button:SetAlpha(0)
+                        lia.util.animateAppearance(button, button:GetWide(), button:GetTall(), 0.15, 0.1)
+                    end
+                end)
+            end
 
-        return frame
+            return frame
         end
+        ```
         ```
     ]]
     function lia.util.animateAppearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)
@@ -1586,7 +1607,8 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Keep panel within screen bounds
         local panel = vgui.Create("DPanel")
@@ -1594,7 +1616,7 @@ else
         lia.util.clampMenuPosition(panel) -- Will move panel back on screen
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create a draggable panel that stays within bounds
         local frame = vgui.Create("DFrame")
@@ -1603,11 +1625,11 @@ else
 
         -- Clamp position when dragging ends
         frame.OnMouseReleased = function()
-        lia.util.clampMenuPosition(frame)
+            lia.util.clampMenuPosition(frame)
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a smart positioning system for multiple panels
         local function positionPanelsSmartly(panels)
@@ -1632,41 +1654,41 @@ else
                     local otherW, otherH = otherPanel:GetSize()
 
                     if x < otherX + otherW + margin and x + w + margin > otherX and
-                    y < otherY + otherH + margin and y + h + margin > otherY then
-                    needsReposition = true
-                    break
-                end
-            end
-
-            if needsReposition then
-                -- Find best available position
-                local bestX, bestY = margin, margin
-                local minDistance = math.huge
-
-                for testY = margin, screenH - h - margin, 20 do
-                    for testX = margin, screenW - w - margin, 20 do
-                        local distance = 0
-
-                        -- Calculate distance from other panels
-                        for _, otherPanel in ipairs(panels) do
-                            if otherPanel ~= panel then
-                                local otherX, otherY = otherPanel:GetPos()
-                                local dx = testX - otherX
-                                local dy = testY - otherY
-                                distance = distance + (dx * dx + dy * dy)
-                            end
-                        end
-
-                        if distance < minDistance then
-                            minDistance = distance
-                            bestX, bestY = testX, testY
-                        end
+                       y < otherY + otherH + margin and y + h + margin > otherY then
+                        needsReposition = true
+                        break
                     end
                 end
 
-                panel:SetPos(bestX, bestY)
+                if needsReposition then
+                    -- Find best available position
+                    local bestX, bestY = margin, margin
+                    local minDistance = math.huge
+
+                    for testY = margin, screenH - h - margin, 20 do
+                        for testX = margin, screenW - w - margin, 20 do
+                            local distance = 0
+
+                            -- Calculate distance from other panels
+                            for _, otherPanel in ipairs(panels) do
+                                if otherPanel ~= panel then
+                                    local otherX, otherY = otherPanel:GetPos()
+                                    local dx = testX - otherX
+                                    local dy = testY - otherY
+                                    distance = distance + (dx * dx + dy * dy)
+                                end
+                            end
+
+                            if distance < minDistance then
+                                minDistance = distance
+                                bestX, bestY = testX, testY
+                            end
+                        end
+                    end
+
+                    panel:SetPos(bestX, bestY)
+                end
             end
-        end
         end
         ```
     ]]
@@ -1724,29 +1746,30 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Draw a basic gradient background
         lia.util.drawGradient(100, 100, 200, 150, 2, Color(0, 0, 0, 150))
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create a gradient panel background
         local panel = vgui.Create("DPanel")
         panel.Paint = function(self, w, h)
-        lia.util.drawGradient(0, 0, w, h, 2, Color(50, 50, 50, 200), 8)
+            lia.util.drawGradient(0, 0, w, h, 2, Color(50, 50, 50, 200), 8)
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create animated gradient backgrounds
         local gradients = {
-        {dir = 1, color = Color(255, 100, 100, 150)},
-        {dir = 2, color = Color(100, 255, 100, 150)},
-        {dir = 3, color = Color(100, 100, 255, 150)},
-        {dir = 4, color = Color(255, 255, 100, 150)}
+            {dir = 1, color = Color(255, 100, 100, 150)},
+            {dir = 2, color = Color(100, 255, 100, 150)},
+            {dir = 3, color = Color(100, 100, 255, 150)},
+            {dir = 4, color = Color(255, 255, 100, 150)}
         }
 
         local currentGradient = 1
@@ -1763,7 +1786,7 @@ else
         -- Usage in panel
         local panel = vgui.Create("DPanel")
         panel.Paint = function(self, w, h)
-        drawAnimatedGradient(0, 0, w, h)
+            drawAnimatedGradient(0, 0, w, h)
         end
         ```
     ]]
@@ -1792,13 +1815,14 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Wrap text to fit in a label
         local lines, maxWidth = lia.util.wrapText("This is a long text that needs wrapping", 200)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create a multi-line label with wrapped text
         local text = "This is a very long description that should wrap to multiple lines when displayed in the UI."
@@ -1816,7 +1840,7 @@ else
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a dynamic text wrapping system with font scaling
         local function createResponsiveTextPanel(text, maxWidth, fontBase)
@@ -1840,14 +1864,14 @@ else
             panel:SetSize(maxWidth, #lines * (tonumber(finalFont:match("%d+")) or 16))
 
             panel.Paint = function(self, w, h)
-            surface.SetFont(finalFont)
-            for i, line in ipairs(lines) do
-                surface.SetTextPos(0, (i-1) * (h / #lines))
-                surface.DrawText(line)
+                surface.SetFont(finalFont)
+                for i, line in ipairs(lines) do
+                    surface.SetTextPos(0, (i-1) * (h / #lines))
+                    surface.DrawText(line)
+                end
             end
-        end
 
-        return panel
+            return panel
         end
 
         -- Usage
@@ -1902,14 +1926,15 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Add basic blur behind a panel
         local panel = vgui.Create("DPanel")
         lia.util.drawBlur(panel, 5, nil, 200)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create a blurred dialog background
         local frame = vgui.Create("DFrame")
@@ -1918,12 +1943,12 @@ else
         frame:Center()
 
         frame.Paint = function(self, w, h)
-        lia.util.drawBlur(self, 8, nil, 180)
-        draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 150))
+            lia.util.drawBlur(self, 8, nil, 180)
+            draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 150))
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create an animated blur effect system
         local blurIntensity = 0
@@ -1940,25 +1965,25 @@ else
             frame:Center()
 
             frame.Paint = function(self, w, h)
-            drawDynamicBlur(self)
-            draw.RoundedBox(12, 0, 0, w, h, Color(20, 20, 20, 200))
-        end
-
-        for i, option in ipairs(options) do
-            local button = vgui.Create("DButton", frame)
-            button:SetText(option.text)
-            button:Dock(TOP)
-            button:DockMargin(20, 10, 20, 10)
-
-            button.Paint = function(self, w, h)
-            if self:IsHovered() then
-                lia.util.drawBlur(self, 3, nil, 150)
+                drawDynamicBlur(self)
+                draw.RoundedBox(12, 0, 0, w, h, Color(20, 20, 20, 200))
             end
-            draw.RoundedBox(6, 0, 0, w, h, Color(60, 60, 60, 200))
-        end
 
-        button.DoClick = option.callback
-        end
+            for i, option in ipairs(options) do
+                local button = vgui.Create("DButton", frame)
+                button:SetText(option.text)
+                button:Dock(TOP)
+                button:DockMargin(20, 10, 20, 10)
+
+                button.Paint = function(self, w, h)
+                    if self:IsHovered() then
+                        lia.util.drawBlur(self, 3, nil, 150)
+                    end
+                    draw.RoundedBox(6, 0, 0, w, h, Color(60, 60, 60, 200))
+                end
+
+                button.DoClick = option.callback
+            end
 
         return frame
         end
@@ -2002,14 +2027,15 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Add dark blur behind a panel
         local panel = vgui.Create("DPanel")
         lia.util.drawBlackBlur(panel, 6, 5, 255, 220)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create a cinematic menu with dark blur
         local menu = vgui.Create("DFrame")
@@ -2023,14 +2049,14 @@ else
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create an adaptive blur system based on context
         local function drawContextualBlur(panel, context)
             local settings = {
-            menu = {amount = 6, passes = 5, alpha = 255, darkAlpha = 220},
-            dialog = {amount = 8, passes = 7, alpha = 255, darkAlpha = 240},
-            overlay = {amount = 4, passes = 3, alpha = 200, darkAlpha = 180}
+                menu    = {amount = 6,   passes = 5, alpha = 255, darkAlpha = 220},
+                dialog  = {amount = 8,   passes = 7, alpha = 255, darkAlpha = 240},
+                overlay = {amount = 4,   passes = 3, alpha = 200, darkAlpha = 180}
             }
 
             local config = settings[context] or settings.menu
@@ -2044,9 +2070,9 @@ else
             frame:Center()
 
             frame.Paint = function(self, w, h)
-            drawContextualBlur(self, context)
-            draw.RoundedBox(8, 0, 0, w, h, Color(10, 10, 10, 200))
-        end
+                drawContextualBlur(self, context)
+                draw.RoundedBox(8, 0, 0, w, h, Color(10, 10, 10, 200))
+            end
 
         return frame
         end
@@ -2105,13 +2131,14 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Blur a specific screen area
         lia.util.drawBlurAt(100, 100, 200, 150, 5, 0.2, 255)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create a blurred HUD overlay for damage effects
         local function drawDamageOverlay(damage)
@@ -2120,7 +2147,7 @@ else
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a dynamic minimap with blur effects
         local function drawMinimapWithEffects(playerPos, mapSize)
@@ -2178,36 +2205,37 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Create basic table UI
         local frame, listView = lia.util.createTableUI("Player List", columns, playerData)
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create table with action options
         local options = {
-        {name = "Teleport", net = "liaTeleportTo"},
-        {name = "Kick", net = "liaKickPlayer"}
+            {name = "Teleport", net = "liaTeleportTo"},
+            {name = "Kick",     net = "liaKickPlayer"}
         }
         local frame, listView = lia.util.createTableUI("Admin Panel", columns, data, options, charID)
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create comprehensive data management interface
         local function createDataManager(dataType)
             local columns = {
-            {name = "ID", field = "id", width = 80},
-            {name = "Name", field = "name", width = 200},
-            {name = "Status", field = "status", width = 120}
+                {name = "ID",     field = "id",     width = 80 },
+                {name = "Name",   field = "name",   width = 200},
+                {name = "Status", field = "status", width = 120}
             }
 
             local options = {
-            {name = "Edit", net = "liaEdit" .. dataType},
-            {name = "Delete", net = "liaDelete" .. dataType},
-            {name = "View Details", net = "liaView" .. dataType}
+                {name = "Edit",        net = "liaEdit" .. dataType  },
+                {name = "Delete",      net = "liaDelete" .. dataType},
+                {name = "View Details", net = "liaView" .. dataType }
             }
 
             return lia.util.createTableUI(dataType .. " Management", columns, getData(dataType), options)
@@ -2385,7 +2413,8 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Create basic options menu
         local frame = lia.util.openOptionsMenu("Choose Action", {
@@ -2394,18 +2423,18 @@ else
         })
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Create contextual options menu
         local options = {
-        ["Heal Player"] = function() healTargetPlayer(target) end,
-        ["Teleport"] = function() teleportToTarget(target) end,
-        ["Give Item"] = function() openGiveItemMenu(target) end
+            ["Heal Player"] = function() healTargetPlayer(target) end,
+            ["Teleport"]    = function() teleportToTarget(target) end,
+            ["Give Item"]   = function() openGiveItemMenu(target) end
         }
         lia.util.openOptionsMenu("Player Actions", options)
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create dynamic options system with categories
         local function createCategorizedOptions(categories)
@@ -2414,9 +2443,9 @@ else
             for categoryName, categoryOptions in pairs(categories) do
                 -- Add category header (disabled button)
                 allOptions[#allOptions + 1] = {
-                name = categoryName,
-                callback = function() end, -- No action for headers
-                disabled = true
+                    name     = categoryName,
+                    callback = function() end, -- No action for headers
+                    disabled = true
                 }
 
                 -- Add category options
@@ -2426,9 +2455,9 @@ else
 
                 -- Add spacer
                 allOptions[#allOptions + 1] = {
-                name = "",
-                callback = function() end,
-                separator = true
+                    name      = "",
+                    callback  = function() end,
+                    separator = true
                 }
             end
 
@@ -2563,26 +2592,27 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Draw text above an entity
         lia.util.drawEntText(someEntity, "Important Item")
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Draw contextual entity information
         local function drawEntityInfo(ent)
             if ent:isItem() then
                 local itemName = ent:getNetVar("id", "Unknown Item")
                 lia.util.drawEntText(ent, itemName, 20)
-                elseif ent:IsPlayer() then
-                    lia.util.drawEntText(ent, ent:Name(), 30)
-                end
+            elseif ent:IsPlayer() then
+                lia.util.drawEntText(ent, ent:Name(), 30)
             end
+        end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create a comprehensive entity labeling system
         local function drawSmartEntityLabels()
@@ -2591,30 +2621,29 @@ else
             for _, ent in ipairs(entities) do
                 if not IsValid(ent) then continue end
 
-                    local text = ""
-                    local offset = 0
-                    local alpha = nil
+                local text = ""
+                local offset = 0
+                local alpha = nil
 
-                    if ent:IsPlayer() then
-                        text = ent:Name()
-                        offset = 40
-                    elseif ent:isItem() then
-                            text = ent:getNetVar("id", "Item")
-                            offset = 25
-                            alpha = 200 -- Slightly transparent for items
-                            elseif ent:GetClass() == "prop_physics" then
-                                text = "Interactive Object"
-                                offset = 30
-                            end
+                if ent:IsPlayer() then
+                    text = ent:Name()
+                    offset = 40
+                elseif ent:isItem() then
+                    text = ent:getNetVar("id", "Item")
+                    offset = 25
+                    alpha = 200 -- Slightly transparent for items
+                elseif ent:GetClass() == "prop_physics" then
+                    text = "Interactive Object"
+                    offset = 30
+                end
 
-                            if text ~= "" then
-                                lia.util.drawEntText(ent, text, offset, alpha)
-                            end
-                        end
-                    end
+                if text ~= "" then
+                    lia.util.drawEntText(ent, text, offset, alpha)
+                end
+            end
 
-                    -- Call in HUDPaint or Think hook
-                    hook.Add("HUDPaint", "DrawEntityLabels", drawSmartEntityLabels)
+            -- Call in HUDPaint or Think hook
+            hook.Add("HUDPaint", "DrawEntityLabels", drawSmartEntityLabels)
         ```
     ]]
     function lia.util.drawEntText(ent, text, posY, alphaOverride)
@@ -2692,13 +2721,14 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Draw text where player is looking
         lia.util.drawLookText("Target Location")
         ```
 
-        Medium Complexity Example:
+    Medium Complexity:
         ```lua
         -- Medium: Show distance-based information
         local trace = LocalPlayer():GetEyeTrace()
@@ -2708,40 +2738,40 @@ else
         end
         ```
 
-        High Complexity Example:
+    High Complexity:
         ```lua
         -- High: Create an interactive world information system
         local function drawContextualWorldInfo()
             local trace = util.TraceLine({
-            start = EyePos(),
-        endpos = EyePos() + EyeAngles():Forward() * 200,
-        filter = LocalPlayer()
-        })
+                start   = EyePos(),
+                endpos  = EyePos() + EyeAngles():Forward() * 200,
+                filter  = LocalPlayer()
+            })
 
-        if trace.Hit and trace.HitPos:Distance(EyePos()) <= 200 then
-            local hitPos = trace.HitPos
-            local hitEntity = trace.Entity
+            if trace.Hit and trace.HitPos:Distance(EyePos()) <= 200 then
+                local hitPos = trace.HitPos
+                local hitEntity = trace.Entity
 
-            if IsValid(hitEntity) then
-                if hitEntity:IsPlayer() then
-                    lia.util.drawLookText("Player: " .. hitEntity:Name(), 30)
-                elseif hitEntity:isItem() then
+                if IsValid(hitEntity) then
+                    if hitEntity:IsPlayer() then
+                        lia.util.drawLookText("Player: " .. hitEntity:Name(), 30)
+                    elseif hitEntity:isItem() then
                         local itemName = hitEntity:getNetVar("id", "Unknown Item")
                         lia.util.drawLookText("Item: " .. itemName, 25)
-                        else
-                            lia.util.drawLookText("Entity: " .. hitEntity:GetClass(), 20)
-                        end
-                        else
-                            -- Show world position information
-                            local posText = string.format("X: %d, Y: %d, Z: %d",
-                            math.Round(hitPos.x), math.Round(hitPos.y), math.Round(hitPos.z))
-                            lia.util.drawLookText("Position: " .. posText, 15)
-                        end
+                    else
+                        lia.util.drawLookText("Entity: " .. hitEntity:GetClass(), 20)
                     end
+                else
+                    -- Show world position information
+                    local posText = string.format("X: %d, Y: %d, Z: %d",
+                        math.Round(hitPos.x), math.Round(hitPos.y), math.Round(hitPos.z))
+                    lia.util.drawLookText("Position: " .. posText, 15)
                 end
+            end
+        end
 
-                -- Call in HUDPaint hook
-                hook.Add("HUDPaint", "DrawWorldInfo", drawContextualWorldInfo)
+        -- Call in HUDPaint hook
+        hook.Add("HUDPaint", "DrawWorldInfo", drawContextualWorldInfo)
         ```
     ]]
     function lia.util.drawLookText(text, posY, alphaOverride, maxDist)

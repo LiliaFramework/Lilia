@@ -1,7 +1,9 @@
 arrange:
   - index.md
-  - installation.md
-  - hooks
+  - gettingstarted.md
   - libraries
+  - hooks
   - meta
+  - modules
   - compatibility.md
+  - changelog.md

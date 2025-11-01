@@ -33,7 +33,8 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if a position is empty
         local pos = Vector(100, 200, 50)
@@ -106,7 +107,8 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Find empty position near spawn point
         local spawnPos = Vector(0, 0, 0)
@@ -181,7 +183,8 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Send basic notification
         lia.darkrp.notify(player, nil, nil, "welcome_message")
@@ -242,7 +245,8 @@ else
             Client
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Wrap basic text
         local wrappedText = lia.darkrp.textWrap("Hello world this is a long text", "DermaDefault", 200)
@@ -331,6 +335,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Format a basic amount
@@ -389,6 +394,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Create a basic entity
@@ -471,6 +477,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Call the function (no effect)

@@ -127,14 +127,6 @@ liaCharacterAttribsRow
 liaButton
 --[[
     Purpose:
-        Button with custom font support
-        A button panel that defaults to liaSmallFont but allows custom font specification while maintaining Lilia styling
-    When Used:
-        Throughout the UI for interactive elements where custom fonts are needed
-]]
-liaCustomFontButton
---[[
-    Purpose:
         Category header for organizing UI elements
         A collapsible category header for grouping related UI elements
     When Used:

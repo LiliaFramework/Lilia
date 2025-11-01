@@ -25,13 +25,14 @@ local panelMeta = FindMetaTable("Panel")
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set up inventory listening for a basic panel
         panel:liaListenForInventoryChanges(playerInventory)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set up inventory listening with conditional setup
         if playerInventory then
@@ -39,7 +40,7 @@ local panelMeta = FindMetaTable("Panel")
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Set up inventory listening for multiple panels with error handling
         local panels = {inventoryPanel, characterPanel, equipmentPanel}
@@ -105,13 +106,14 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Remove hooks for a specific inventory
         panel:liaDeleteInventoryHooks(inventoryID)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Clean up hooks when closing a panel
         if IsValid(panel) then
@@ -119,7 +121,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Clean up multiple panels with different inventory IDs
         local panels = {inventoryPanel, equipmentPanel, storagePanel}
@@ -171,13 +173,14 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Position a button at scaled coordinates
         button:setScaledPos(100, 50)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Position panel based on screen dimensions
         local x = ScrW() * 0.5 - 200
@@ -185,14 +188,14 @@ end
         panel:setScaledPos(x, y)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Position multiple panels with responsive layout
         local panels = {mainPanel, sidePanel, footerPanel}
         local positions = {
-        {ScrW() * 0.1, ScrH() * 0.1},
-        {ScrW() * 0.7, ScrH() * 0.1},
-        {ScrW() * 0.1, ScrH() * 0.8}
+            {ScrW() * 0.1, ScrH() * 0.1},
+            {ScrW() * 0.7, ScrH() * 0.1},
+            {ScrW() * 0.1, ScrH() * 0.8}
         }
 
         for i, pnl in ipairs(panels) do
@@ -230,13 +233,14 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set panel size with scaled dimensions
         panel:setScaledSize(400, 300)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set size based on screen proportions
         local w = ScrW() * 0.8
@@ -244,14 +248,14 @@ end
         panel:setScaledSize(w, h)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Set sizes for multiple panels with responsive layout
         local panels = {mainPanel, sidePanel, footerPanel}
         local sizes = {
-        {ScrW() * 0.7, ScrH() * 0.6},
-        {ScrW() * 0.25, ScrH() * 0.6},
-        {ScrW() * 0.95, ScrH() * 0.1}
+            {ScrW() * 0.7, ScrH() * 0.6},
+            {ScrW() * 0.25, ScrH() * 0.6},
+            {ScrW() * 0.95, ScrH() * 0.1}
         }
 
         for i, pnl in ipairs(panels) do

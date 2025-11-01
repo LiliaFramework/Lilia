@@ -27,47 +27,48 @@ lia.class.list = lia.class.list or {}
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         lia.class.register("citizen", {
-        name = "Citizen",
-        desc = "A regular citizen",
-        faction = FACTION_CITIZEN,
-        limit = 0
+            name    = "Citizen",
+            desc    = "A regular citizen",
+            faction = FACTION_CITIZEN,
+            limit   = 0
         })
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         lia.class.register("police_officer", {
-        name = "Police Officer",
-        desc = "A law enforcement officer",
-        faction = FACTION_POLICE,
-        limit = 5,
-        OnCanBe = function(self, client)
-        return client:getChar():getAttrib("strength", 0) >= 10
-        end
+            name    = "Police Officer",
+            desc    = "A law enforcement officer",
+            faction = FACTION_POLICE,
+            limit   = 5,
+            OnCanBe = function(self, client)
+                return client:getChar():getAttrib("strength", 0) >= 10
+            end
         })
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local classData = {
-        name = "Elite Soldier",
-        desc = "A highly trained military operative",
-        faction = FACTION_MILITARY,
-        limit = 2,
-        isWhitelisted = true,
-        OnCanBe = function(self, client)
-        local char = client:getChar()
-        return char:getAttrib("strength", 0) >= 15 and
-        char:getAttrib("endurance", 0) >= 12 and
-        client:IsAdmin()
-        end,
-        OnSpawn = function(self, client)
-        client:Give("weapon_ar2")
-        client:SetHealth(150)
-        end
+            name         = "Elite Soldier",
+            desc         = "A highly trained military operative",
+            faction      = FACTION_MILITARY,
+            limit        = 2,
+            isWhitelisted = true,
+            OnCanBe      = function(self, client)
+                local char = client:getChar()
+                return char:getAttrib("strength", 0) >= 15 and
+                       char:getAttrib("endurance", 0) >= 12 and
+                       client:IsAdmin()
+            end,
+            OnSpawn      = function(self, client)
+                client:Give("weapon_ar2")
+                client:SetHealth(150)
+            end
         }
         lia.class.register("elite_soldier", classData)
         ```
@@ -124,7 +125,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         lia.class.loadFromDir("gamemodes/lilia/classes")
         ```
@@ -137,12 +139,12 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local classDirectories = {
-        "gamemodes/lilia/classes",
-        "gamemodes/lilia/modules/factions/classes",
-        "gamemodes/lilia/modules/custom_classes/classes"
+            "gamemodes/lilia/classes",
+            "gamemodes/lilia/modules/factions/classes",
+            "gamemodes/lilia/modules/custom_classes/classes"
         }
 
         for _, dir in ipairs(classDirectories) do
@@ -210,17 +212,18 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local canJoin, reason = lia.class.canBe(client, 1)
         if canJoin then
             print("Player can join class")
-            else
-                print("Cannot join: " .. reason)
-            end
+        else
+            print("Cannot join: " .. reason)
+        end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function checkClassAvailability(client, className)
             local classIndex = lia.class.retrieveClass(className)
@@ -233,7 +236,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function validateClassSwitch(client, newClass)
             local currentChar = client:getChar()
@@ -290,7 +293,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local class = lia.class.get(1)
         if class then
@@ -298,7 +302,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function getClassInfo(identifier)
             local class = lia.class.get(identifier)
@@ -307,15 +311,15 @@ end
             end
 
             return {
-            name = class.name,
-            description = class.desc,
-            limit = class.limit,
-            faction = class.faction
+                name        = class.name,
+                description = class.desc,
+                limit       = class.limit,
+                faction     = class.faction
             }
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getClassDetails(identifier)
             local class = lia.class.get(identifier)
@@ -327,15 +331,15 @@ end
             local playerCount = #players
 
             return {
-            info = class,
-            currentPlayers = players,
-            playerCount = playerCount,
-            isAvailable = class.limit == 0 or playerCount < class.limit,
-            isWhitelisted = class.isWhitelisted or false,
-            canJoin = function(client)
-            return lia.class.canBe(client, identifier)
-        end
-        }
+                info         = class,
+                currentPlayers = players,
+                playerCount  = playerCount,
+                isAvailable  = class.limit == 0 or playerCount < class.limit,
+                isWhitelisted = class.isWhitelisted or false,
+                canJoin      = function(client)
+                    return lia.class.canBe(client, identifier)
+                end
+            }
         end
         ```
 ]]
@@ -361,7 +365,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local players = lia.class.getPlayers(1)
         print("Players in class 1: " .. #players)
@@ -386,24 +391,24 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getClassStatistics(classIndex)
             local players = lia.class.getPlayers(classIndex)
             local stats = {
-            count = #players,
-            players = {},
-            onlineTime = 0,
-            averageLevel = 0
+                count        = #players,
+                players      = {},
+                onlineTime   = 0,
+                averageLevel = 0
             }
 
             for _, player in ipairs(players) do
                 local char = player:getChar()
                 if char then
                     table.insert(stats.players, {
-                    name = player:Name(),
-                    level = char:getLevel(),
-                    playtime = char:getPlayTime()
+                        name     = player:Name(),
+                        level    = char:getLevel(),
+                        playtime = char:getPlayTime()
                     })
                     stats.onlineTime = stats.onlineTime + char:getPlayTime()
                 end
@@ -444,7 +449,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local count = lia.class.getPlayerCount(1)
         print("Players in class: " .. count)
@@ -465,7 +471,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getClassPopulationReport()
             local report = {}
@@ -479,12 +485,12 @@ end
                 end
 
                 table.insert(report, {
-                name = class.name,
-                currentCount = count,
-                limit = class.limit,
-                percentage = percentage,
-                isFull = class.limit > 0 and count >= class.limit,
-                faction = class.faction
+                    name         = class.name,
+                    currentCount = count,
+                    limit        = class.limit,
+                    percentage   = percentage,
+                    isFull       = class.limit > 0 and count >= class.limit,
+                    faction      = class.faction
                 })
             end
 
@@ -519,7 +525,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local classIndex = lia.class.retrieveClass("citizen")
         if classIndex then
@@ -540,7 +547,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function searchClasses(searchTerm)
             local results = {}
@@ -552,9 +559,9 @@ end
 
                 if string.find(uniqueID, term) or string.find(name, term) then
                     table.insert(results, {
-                    index = i,
-                    class = class,
-                    matchType = string.find(uniqueID, term) and "uniqueID" or "name"
+                        index    = i,
+                        class    = class,
+                        matchType = string.find(uniqueID, term) and "uniqueID" or "name"
                     })
                 end
             end
@@ -588,7 +595,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local hasWhitelist = lia.class.hasWhitelist(1)
         if hasWhitelist then
@@ -669,7 +677,8 @@ end
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         local joinableClasses = lia.class.retrieveJoinable(client)
         print("Player can join " .. #joinableClasses .. " classes")

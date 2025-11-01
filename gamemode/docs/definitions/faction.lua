@@ -124,14 +124,14 @@ FACTION.color = Color(255, 255, 255)
 
         -- Advanced: Complex model data with bodygroups
         FACTION.models = {
-        "male" = {
-        {"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
-        {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-        },
-        "female" = {
-        {"models/player/police_female.mdl", "Female Officer", {1, 2}},
-        {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
-        }
+            male = {
+                {"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
+                {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+            },
+            female = {
+                {"models/player/police_female.mdl", "Female Officer", {1, 2}},
+                {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+            }
         }
         ```
 ]]
@@ -177,8 +177,8 @@ FACTION.isDefault = true
         ```lua
         -- This is set automatically when you register the faction
         lia.faction.register("police", {
-        name = "Police Department",
-        -- uniqueID will be "police"
+            name = "Police Department",
+            -- uniqueID will be "police"
         })
 
         -- For faction files, uniqueID is set to the filename
@@ -199,8 +199,8 @@ FACTION.uniqueID = ""
         ```lua
         -- This is set automatically when you register the faction
         lia.faction.register("police", {
-        name = "Police Department",
-        -- index will be assigned based on registration order
+            name = "Police Department",
+            -- index will be assigned based on registration order
         })
 
         -- Or manually specify the team index
@@ -302,8 +302,8 @@ FACTION.jumpPower = 0
     Example Usage:
         ```lua
         FACTION.NPCRelations = {
-        ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-        ["npc_citizen"] = D_NU       -- Neutral to citizens
+            ["npc_metropolice"] = D_LI,    -- Police are liked by metropolice
+            ["npc_citizen"]     = D_NU     -- Neutral to citizens
         }
         ```
 ]]
@@ -418,7 +418,7 @@ FACTION.limit = 0
         function FACTION:NameTemplate(info, client)
             local index = math.random(1000, 9999)
             return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
-            end
+        end
         ```
 ]]
 FACTION.NameTemplate = nil
@@ -433,7 +433,7 @@ FACTION.NameTemplate = nil
         ```lua
         function FACTION:GetDefaultName(client)
             return "Citizen " .. math.random(1000, 9999)
-            end
+        end
         ```
 ]]
 FACTION.GetDefaultName = nil
@@ -448,7 +448,7 @@ FACTION.GetDefaultName = nil
         ```lua
         function FACTION:GetDefaultDesc(client)
             return "A citizen of the city"
-            end
+        end
         ```
 ]]
 FACTION.GetDefaultDesc = nil
@@ -475,11 +475,11 @@ FACTION.GetDefaultDesc = nil
             -- Check if player has special permission to bypass limits
             if client:hasFlags("L") then
                 return false  -- Allow admins to bypass limits
-                end
+            end
 
             -- Use default limit checking
             return self:CheckFactionLimitReached(character, client)
-            end
+        end
         ```
 ]]
 FACTION.OnCheckLimitReached = nil
@@ -502,7 +502,7 @@ FACTION.OnCheckLimitReached = nil
             client:notify("Welcome to the " .. self.name)
             -- Set up faction-specific data
             -- Could trigger department assignment or training
-            end
+        end
         ```
 ]]
 function FACTION:OnTransferred(client)
@@ -528,7 +528,7 @@ end
             client:Give("weapon_stunstick")
             client:SetHealth(self.health or 100)
             client:SetArmor(self.armor or 0)
-            end
+        end
         ```
 ]]
 function FACTION:OnSpawn(client)
@@ -546,9 +546,9 @@ end
         FACTION.color = Color(0, 100, 255)  -- Blue color for police
 
         -- Access Control
-        FACTION.isDefault = false  -- Requires whitelist or special permission
-        FACTION.oneCharOnly = true  -- Players can only have one police character
-        FACTION.limit = 12  -- Maximum 12 police officers
+        FACTION.isDefault = false     -- Requires whitelist or special permission
+        FACTION.oneCharOnly = true    -- Players can only have one police character
+        FACTION.limit = 12            -- Maximum 12 police officers
         FACTION.index = FACTION_POLICE  -- Team index for this faction
         -- FACTION.uniqueID is automatically set to the filename (e.g., "police" for police.lua)
 
@@ -556,81 +556,81 @@ end
         function FACTION:NameTemplate(info, client)
             local badgeNumber = math.random(1000, 9999)
             return "Officer " .. badgeNumber
-            end
+        end
 
         function FACTION:GetDefaultName(client)
             return "Police Officer " .. math.random(1000, 9999)
-            end
+        end
 
         function FACTION:GetDefaultDesc(client)
             return "A law enforcement officer of the City Police Department"
-            end
+        end
 
         function FACTION:OnCheckLimitReached(character, client)
             -- Allow admins to bypass police limits
             if client:hasFlags("L") then
                 return false
-                end
+            end
 
             -- Check if character has police training
             if not character:getData("police_training", false) then
                 client:notify("You need police training to join this faction.")
                 return true
-                end
+            end
 
             -- Use default limit checking for others
             local maxPlayers = self.limit or 0
-            if self.limit < 1 and self.limit > 0 then
+            if self.limit > 0 and self.limit < 1 then
                 maxPlayers = math.Round(player.GetCount() * self.limit)
-                end
-            return team.NumPlayers(self.index) >= maxPlayers
             end
+            return team.NumPlayers(self.index) >= maxPlayers
+        end
 
         -- Visual Properties
         FACTION.models = {
-        "male" = {
-        {"models/player/police_male.mdl", "Male Officer", {1, 2}},
-        {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-        },
-        "female" = {
-        {"models/player/police_female.mdl", "Female Officer", {1}},
-        {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+            male = {
+                {"models/player/police_male.mdl", "Male Officer", {1, 2}},
+                {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+            },
+            female = {
+                {"models/player/police_female.mdl", "Female Officer", {1}},
+                {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+            }
         }
-        }
-        FACTION.scale = 1.0  -- Normal model scale
+        FACTION.scale = 1.0         -- Normal model scale
         FACTION.bloodcolor = BLOOD_COLOR_RED
 
         -- Gameplay Properties
-        FACTION.health = 120  -- Higher health than default citizens
-        FACTION.armor = 50    -- Standard police armor
+        FACTION.health = 120    -- Higher health than default citizens
+        FACTION.armor = 50      -- Standard police armor
 
         -- Weapons (given when spawning)
         FACTION.weapons = {
-        "weapon_pistol",
-        "weapon_stunstick",
-        "weapon_police_baton"
+            "weapon_pistol",
+            "weapon_stunstick",
+            "weapon_police_baton"
         }
 
         -- Starting Items (given when character is created)
         FACTION.items = {
-        "item_police_badge",
-        "item_handcuffs",
-        "item_police_radio"
+            "item_police_badge",
+            "item_handcuffs",
+            "item_police_radio"
         }
 
         -- Movement Properties
-        FACTION.runSpeed = 280  -- Slightly slower than default for tactical movement
-        FACTION.walkSpeed = 150  -- Standard walking speed
-        FACTION.jumpPower = 200  -- Standard jump power
+        FACTION.runSpeed = 280     -- Slightly slower than default for tactical movement
+        FACTION.walkSpeed = 150    -- Standard walking speed
+        FACTION.jumpPower = 200    -- Standard jump power
         FACTION.runSpeedMultiplier = false  -- Use absolute speed values
         FACTION.walkSpeedMultiplier = false  -- Use absolute speed values
         FACTION.jumpPowerMultiplier = false  -- Use absolute jump power values
 
         -- NPC Relationships
         FACTION.NPCRelations = {
-        ["npc_metropolice"] = D_LI,  -- Liked by metropolice
-        ["npc_citizen"] = D_NU,      -- Neutral to citizens
-        ["npc_rebel"] = D_HT         -- Hated by rebels
+            ["npc_metropolice"] = D_LI,    -- Liked by metropolice
+            ["npc_citizen"]     = D_NU,    -- Neutral to citizens
+            ["npc_rebel"]       = D_HT     -- Hated by rebels
         }
 
         -- Callback Methods
@@ -642,14 +642,14 @@ end
             if char then
                 char:setData("department", "patrol")
                 char:setData("badge_number", math.random(1000, 9999))
-                end
+            end
 
             -- Log the transfer for administrative purposes
             lia.log.add(client, "faction_transfer", {
-            old_faction = client:getChar():getFaction(),
-            new_faction = self.uniqueID
+                old_faction = client:getChar():getFaction(),
+                new_faction = self.uniqueID
             })
-            end
+        end
 
         function FACTION:OnSpawn(client)
             -- Set up police-specific spawn behavior
@@ -665,6 +665,6 @@ end
 
             -- Apply wanted status immunity
             client:setData("immunity_level", 1)
-            end
+        end
         ```
 ]]

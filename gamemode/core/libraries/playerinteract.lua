@@ -29,6 +29,7 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Check if player is within default range of an entity
@@ -51,9 +52,9 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     -- High: Dynamic range checking with validation
     local interactionRange = interactionData.range or 250
     if IsValid(client) and IsValid(targetEntity) and
-    lia.playerinteract.isWithinRange(client, targetEntity, interactionRange) then
-    -- Player is within specified range for this interaction type
-    return true
+        lia.playerinteract.isWithinRange(client, targetEntity, interactionRange) then
+        -- Player is within specified range for this interaction type
+        return true
     end
     ```
 ]]
@@ -80,6 +81,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get all available interactions for local player
@@ -109,9 +111,9 @@ end
     local filteredInteractions = {}
     for name, interaction in pairs(interactions) do
         if interaction.category == "Voice" and
-        (not interaction.shouldShow or interaction.shouldShow(LocalPlayer())) then
-        filteredInteractions[name] = interaction
-    end
+            (not interaction.shouldShow or interaction.shouldShow(LocalPlayer())) then
+            filteredInteractions[name] = interaction
+        end
     end
     ```
 ]]
@@ -148,6 +150,7 @@ end
         Client
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get all available personal actions
@@ -177,9 +180,9 @@ end
     local voiceActions = {}
     for name, action in pairs(actions) do
         if action.category == L("categoryVoice") and
-        (not action.shouldShow or action.shouldShow(LocalPlayer())) then
-        voiceActions[name] = action
-    end
+            (not action.shouldShow or action.shouldShow(LocalPlayer())) then
+            voiceActions[name] = action
+        end
     end
     ```
 ]]
@@ -210,6 +213,7 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
     ```lua
     -- Simple: Get options for display
@@ -281,42 +285,43 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
-        ```lua
-        -- Simple: Add basic player interaction
-        lia.playerinteract.addInteraction("giveMoney", {
+
+    Low Complexity:
+    ```lua
+    -- Simple: Add basic player interaction
+    lia.playerinteract.addInteraction("giveMoney", {
         shouldShow = function(client, target)
-        return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0
+            return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0
         end,
         onRun = function(client, target)
-        -- Give money logic here
+            -- Give money logic here
         end
-        })
-        ```
+    })
+    ```
 
         Medium Complexity:
-        ```lua
-        -- Medium: Add timed interaction with progress indicators
-        lia.playerinteract.addInteraction("healPlayer", {
+    ```lua
+    -- Medium: Add timed interaction with progress indicators
+    lia.playerinteract.addInteraction("healPlayer", {
         category = "Medical",
         range = 100,
         timeToComplete = 5,
         actionText = "Healing player...",
         targetActionText = "Being healed...",
         shouldShow = function(client, target)
-        return IsValid(target) and target:IsPlayer() and target:Health() < target:GetMaxHealth()
+            return IsValid(target) and target:IsPlayer() and target:Health() < target:GetMaxHealth()
         end,
         onRun = function(client, target)
-        target:SetHealth(target:GetMaxHealth())
-        client:notify("Player healed successfully!")
+            target:SetHealth(target:GetMaxHealth())
+            client:notify("Player healed successfully!")
         end
-        })
-        ```
+    })
+    ```
 
         High Complexity:
-        ```lua
-        -- High: Complex interaction with validation and server-side processing
-        lia.playerinteract.addInteraction("arrestPlayer", {
+    ```lua
+    -- High: Complex interaction with validation and server-side processing
+    lia.playerinteract.addInteraction("arrestPlayer", {
         serverOnly = true,
         category = "Law Enforcement",
         range = 150,
@@ -324,12 +329,12 @@ if SERVER then
         actionText = "Arresting suspect...",
         targetActionText = "Being arrested...",
         shouldShow = function(client, target)
-        if not IsValid(target) or not target:IsPlayer() then return false end
+            if not IsValid(target) or not target:IsPlayer() then return false end
             if not client:getChar() or not target:getChar() then return false end
-                return client:getChar():getFaction() == FACTION_POLICE and
+            return client:getChar():getFaction() == FACTION_POLICE and
                 target:getChar():getFaction() ~= FACTION_POLICE
-            end,
-            onRun = function(client, target)
+        end,
+        onRun = function(client, target)
             -- Complex arrest logic with validation
             if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
                 lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
@@ -342,8 +347,8 @@ if SERVER then
             client:notify("Suspect arrested!")
             target:notify("You have been arrested!")
         end
-        })
-        ```
+    })
+    ```
     ]]
     function lia.playerinteract.addInteraction(name, data)
         data.type = "interaction"
@@ -399,56 +404,57 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
-        ```lua
-        -- Simple: Add basic personal action
-        lia.playerinteract.addAction("changeToWhisper", {
+
+    Low Complexity:
+    ```lua
+    -- Simple: Add basic personal action
+    lia.playerinteract.addAction("changeToWhisper", {
         category = L("categoryVoice"),
         shouldShow = function(client)
-        return client:getChar() and client:Alive() and
-        client:getNetVar("VoiceType") ~= L("whispering")
+            return client:getChar() and client:Alive() and
+                client:getNetVar("VoiceType") ~= L("whispering")
         end,
         onRun = function(client)
-        client:setNetVar("VoiceType", L("whispering"))
-        client:notifyInfoLocalized("voiceModeSet", L("whispering"))
+            client:setNetVar("VoiceType", L("whispering"))
+            client:notifyInfoLocalized("voiceModeSet", L("whispering"))
         end
-        })
-        ```
+    })
+    ```
 
         Medium Complexity:
-        ```lua
-        -- Medium: Add timed personal action with progress indicator
-        lia.playerinteract.addAction("meditate", {
+    ```lua
+    -- Medium: Add timed personal action with progress indicator
+    lia.playerinteract.addAction("meditate", {
         category = "Personal",
         timeToComplete = 10,
         actionText = "Meditating...",
         shouldShow = function(client)
-        return client:getChar() and client:Alive() and
-        not client:getNetVar("meditating", false)
+            return client:getChar() and client:Alive() and
+                not client:getNetVar("meditating", false)
         end,
         onRun = function(client)
-        client:setNetVar("meditating", true)
-        client:SetHealth(math.min(client:Health() + 25, client:GetMaxHealth()))
-        client:notify("Meditation complete! Health restored.")
-        timer.Simple(1, function()
-        if IsValid(client) then
-            client:setNetVar("meditating", false)
+            client:setNetVar("meditating", true)
+            client:SetHealth(math.min(client:Health() + 25, client:GetMaxHealth()))
+            client:notify("Meditation complete! Health restored.")
+            timer.Simple(1, function()
+                if IsValid(client) then
+                    client:setNetVar("meditating", false)
+                end
+            end)
         end
-        end)
-        end
-        })
-        ```
+    })
+    ```
 
         High Complexity:
-        ```lua
-        -- High: Complex personal action with multiple conditions and effects
-        lia.playerinteract.addAction("emergencyCall", {
+    ```lua
+    -- High: Complex personal action with multiple conditions and effects
+    lia.playerinteract.addAction("emergencyCall", {
         serverOnly = true,
         category = "Emergency",
         timeToComplete = 5,
         actionText = "Calling emergency services...",
         shouldShow = function(client)
-        if not client:getChar() or not client:Alive() then return false end
+            if not client:getChar() or not client:Alive() then return false end
             local char = client:getChar()
             if char:getFaction() == FACTION_POLICE or char:getFaction() == FACTION_MEDIC then
                 return false -- Emergency services don't need to call themselves
@@ -456,31 +462,31 @@ if SERVER then
             return not client:getNetVar("emergencyCooldown", false)
         end,
         onRun = function(client)
-        -- Set cooldown to prevent spam
-        client:setNetVar("emergencyCooldown", true)
-        timer.Simple(300, function() -- 5 minute cooldown
-        if IsValid(client) then
-            client:setNetVar("emergencyCooldown", false)
-        end
-        end)
+            -- Set cooldown to prevent spam
+            client:setNetVar("emergencyCooldown", true)
+            timer.Simple(300, function() -- 5 minute cooldown
+                if IsValid(client) then
+                    client:setNetVar("emergencyCooldown", false)
+                end
+            end)
 
-        -- Notify emergency services
-        local emergencyMsg = string.format(
-        "Emergency call from %s at %s",
-        client:getChar():getDisplayedName(),
-        client:GetPos()
-        )
+            -- Notify emergency services
+            local emergencyMsg = string.format(
+                "Emergency call from %s at %s",
+                client:getChar():getDisplayedName(),
+                client:GetPos()
+            )
 
-        for _, ply in ipairs(player.GetAll()) do
-            if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
-                ply:notify(emergencyMsg)
+            for _, ply in ipairs(player.GetAll()) do
+                if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
+                    ply:notify(emergencyMsg)
+                end
             end
-        end
 
-        client:notify("Emergency services have been notified!")
+            client:notify("Emergency services have been notified!")
         end
-        })
-        ```
+    })
+    ```
     ]]
     function lia.playerinteract.addAction(name, data)
         data.type = "action"
@@ -525,44 +531,45 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
-        ```lua
-        -- Simple: Sync all interactions to all clients
-        lia.playerinteract.syncToClients()
-        ```
 
-        Medium Complexity:
-        ```lua
-        -- Medium: Sync to specific client after they connect
-        hook.Add("PlayerInitialSpawn", "SyncInteractions", function(client)
+    Low Complexity:
+    ```lua
+    -- Simple: Sync all interactions to all clients
+    lia.playerinteract.syncToClients()
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Sync to specific client after they connect
+    hook.Add("PlayerInitialSpawn", "SyncInteractions", function(client)
         timer.Simple(2, function() -- Wait for client to fully load
-        if IsValid(client) then
-            lia.playerinteract.syncToClients(client)
-        end
+            if IsValid(client) then
+                lia.playerinteract.syncToClients(client)
+            end
         end)
-        end)
-        ```
+    end)
+    ```
 
         High Complexity:
-        ```lua
-        -- High: Conditional sync with validation and error handling
-        function syncInteractionsToClient(client)
-            if not IsValid(client) then return end
+    ```lua
+    -- High: Conditional sync with validation and error handling
+    function syncInteractionsToClient(client)
+        if not IsValid(client) then return end
 
-                -- Check if client is ready
-                if not client:IsConnected() or not client:getChar() then
-                    timer.Simple(1, function()
-                    syncInteractionsToClient(client)
-                end)
-                return
-            end
+        -- Check if client is ready
+        if not client:IsConnected() or not client:getChar() then
+            timer.Simple(1, function()
+                syncInteractionsToClient(client)
+            end)
+            return
+        end
 
-            -- Sync with custom filtering
-            local filteredData = {}
-            for name, data in pairs(lia.playerinteract.stored) do
-                -- Only sync non-admin interactions to regular players
-                if not data.adminOnly or client:IsAdmin() then
-                    filteredData[name] = {
+        -- Sync with custom filtering
+        local filteredData = {}
+        for name, data in pairs(lia.playerinteract.stored) do
+            -- Only sync non-admin interactions to regular players
+            if not data.adminOnly or client:IsAdmin() then
+                filteredData[name] = {
                     type = data.type,
                     serverOnly = data.serverOnly and true or false,
                     name = name,
@@ -572,14 +579,14 @@ if SERVER then
                     timeToComplete = data.timeToComplete,
                     actionText = data.actionText,
                     targetActionText = data.targetActionText
-                    }
-                end
+                }
             end
-
-            lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
-            lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
         end
-        ```
+
+        lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
+        lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
+    end
+    ```
     ]]
     function lia.playerinteract.syncToClients(client)
         local filteredData = {}
@@ -714,50 +721,51 @@ else
         Note: This function is now a thin wrapper around lia.derma.optionsMenu for backwards compatibility.
 
         Example Usage:
-        Low Complexity:
-        ```lua
-        -- Simple: Open basic interaction menu
-        local interactions = lia.playerinteract.getInteractions()
-        lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
-        ```
 
-        Medium Complexity:
-        ```lua
-        -- Medium: Open action menu with custom title and key
-        local actions = lia.playerinteract.getActions()
-        lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
-        ```
+    Low Complexity:
+    ```lua
+    -- Simple: Open basic interaction menu
+    local interactions = lia.playerinteract.getInteractions()
+    lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Open action menu with custom title and key
+    local actions = lia.playerinteract.getActions()
+    lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
+    ```
 
         High Complexity:
-        ```lua
-        -- High: Custom menu with pre-filtered options and validation
-        local client = LocalPlayer()
-        if not IsValid(client) then return end
+    ```lua
+    -- High: Custom menu with pre-filtered options and validation
+    local client = LocalPlayer()
+    if not IsValid(client) then return end
 
-            local interactions = lia.playerinteract.getInteractions(client)
-            local filteredInteractions = {}
+    local interactions = lia.playerinteract.getInteractions(client)
+    local filteredInteractions = {}
 
-            -- Filter interactions based on custom criteria
-            for name, interaction in pairs(interactions) do
-                if interaction.category == "Voice" and
-                (not interaction.shouldShow or interaction.shouldShow(client)) then
-                filteredInteractions[name] = interaction
-            end
+    -- Filter interactions based on custom criteria
+    for name, interaction in pairs(interactions) do
+        if interaction.category == "Voice" and
+            (not interaction.shouldShow or interaction.shouldShow(client)) then
+            filteredInteractions[name] = interaction
         end
+    end
 
-        if table.Count(filteredInteractions) > 0 then
-            lia.playerinteract.openMenu(
+    if table.Count(filteredInteractions) > 0 then
+        lia.playerinteract.openMenu(
             filteredInteractions,
             true,
             "Voice Interactions",
             KEY_TAB,
             "liaRequestInteractOptions",
             true -- preFiltered
-            )
-            else
-                client:notify("No voice interactions available!")
-            end
-        ```
+        )
+    else
+        client:notify("No voice interactions available!")
+    end
+    ```
     ]]
     function lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)
         local client = LocalPlayer()
@@ -796,6 +804,38 @@ else
     end)
 
     lia.net.readBigTable("liaPlayerInteractCategories", function(data) if istable(data) then lia.playerinteract.categories = data end end)
+    -- Clean up VGUI panels and GUI references on reload to prevent accumulation
+    timer.Simple(0.1, function()
+        -- Clean up GUI table references
+        if lia.gui then
+            for key, panel in pairs(lia.gui) do
+                if IsValid(panel) and panel.Remove then
+                    panel:Remove()
+                end
+                lia.gui[key] = nil
+            end
+        end
+
+        -- Clean up VGUI panels (exclude critical system panels)
+        local world = vgui.GetWorldPanel()
+        if IsValid(world) then
+            local children = world:GetChildren()
+            for _, panel in ipairs(children) do
+                if IsValid(panel) then
+                    local initInfo = panel.Init and debug.getinfo(panel.Init, "Sln")
+                    local src = initInfo and initInfo.short_src or ""
+                    -- Exclude chatbox, spawnmenu, and other critical system panels
+                    if not (src:find("chatbox") or src:find("spawnmenu") or src:find("creationmenu") or src:find("controlpanel")) then
+                        panel:Remove()
+                    end
+                end
+            end
+        end
+    end)
+
+    -- Clear stored tables
+    if lia.playerinteract.stored then table.Empty(lia.playerinteract.stored) end
+    if lia.playerinteract.categories then table.Empty(lia.playerinteract.categories) end
 end
 
 lia.keybind.add("interactionMenu", {

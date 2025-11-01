@@ -99,3 +99,33 @@ ITEM.entityid = "prop_physics"
 
 ---
 
+## Complete Examples
+
+The following examples demonstrate how to use all the properties and methods together to create complete definitions.
+
+### Complete Item Example
+
+Below is a comprehensive example showing how to define a complete item with all available properties and methods.
+
+```lua
+        ITEM.name = "Chair"
+
+        ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
+
+        ITEM.desc = "A comfortable chair for sitting"
+
+        ITEM.category = "entities"
+
+        ITEM.entityid = "prop_physics"
+
+-- Basic item identification
+ITEM.name = "Chair"                                          -- Display name shown to players
+ITEM.model = "models/props_c17/FurnitureChair001a.mdl"       -- 3D model for the item
+ITEM.desc = "A comfortable chair for sitting"                -- Description text
+ITEM.category = "entities"                                   -- Category for inventory sorting
+ITEM.entityid = "prop_physics"                               -- Entity class to spawn when placed
+
+```
+
+---
+

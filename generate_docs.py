@@ -706,6 +706,28 @@ def parse_definition_property_blocks(file_path: Path, entity_prefixes: Tuple[str
             parsed = parse_comment_block(block_text)
             entries.append({'name': prop_name, 'parsed': parsed})
 
+    # Also extract comprehensive example sections (Example Class, Example Faction, Example Item)
+    example_patterns = [
+        ('Example Class:', 'example_class'),
+        ('Example Faction:', 'example_faction'),
+        ('Example Item:', 'example_item')
+    ]
+
+    for pattern, entry_name in example_patterns:
+        # Find the comprehensive example section
+        example_match = re.search(rf'--\[\[.*?\b{re.escape(pattern)}.*?\]\]', text, re.DOTALL)
+        if example_match:
+            example_block = example_match.group(0)
+            # Parse the example block to extract the code
+            parsed_example = parse_comment_block(example_block)
+            if parsed_example.get('examples'):
+                # Create a special entry for the comprehensive example
+                entries.append({
+                    'name': entry_name,
+                    'parsed': parsed_example,
+                    'is_comprehensive_example': True
+                })
+
     return entries
 
 
@@ -721,7 +743,18 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
         md_parts.append(parse_overview_section(overview_section) + '\n\n')
         md_parts.append('---\n\n')
 
+    # Separate regular entries from comprehensive examples
+    regular_entries = []
+    comprehensive_examples = []
+
     for entry in entries:
+        if entry.get('is_comprehensive_example', False):
+            comprehensive_examples.append(entry)
+        else:
+            regular_entries.append(entry)
+
+    # Process regular entries
+    for entry in regular_entries:
         name = entry['name']
         parsed = entry['parsed']
         # Use existing function section generator for consistent field rendering
@@ -763,6 +796,45 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
                     md_parts.append('\n'.join(formatted_code))
                     md_parts.append('\n```\n\n')
         md_parts.append('---\n\n')
+
+    # Add comprehensive examples at the end
+    if comprehensive_examples:
+        md_parts.append('## Complete Examples\n\n')
+        md_parts.append('The following examples demonstrate how to use all the properties and methods together to create complete definitions.\n\n')
+
+        for example_entry in comprehensive_examples:
+            parsed = example_entry['parsed']
+            entry_name = example_entry['name']
+
+            # Set appropriate title based on entry type
+            if entry_name == 'example_class':
+                example_title = "Complete Class Example"
+                description = "Below is a comprehensive example showing how to define a complete class with all available properties and methods. This example creates a \"Police Officer\" class that demonstrates typical usage of the class system."
+            elif entry_name == 'example_faction':
+                example_title = "Complete Faction Example"
+                description = "Below is a comprehensive example showing how to define a complete faction with all available properties and methods."
+            elif entry_name == 'example_item':
+                example_title = "Complete Item Example"
+                description = "Below is a comprehensive example showing how to define a complete item with all available properties and methods."
+            else:
+                example_title = "Complete Example"
+                description = parsed.get('purpose', '')
+
+            md_parts.append(f'### {example_title}\n\n')
+
+            # Add description
+            if description:
+                md_parts.append(f'{description}\n\n')
+
+            # Add the example code
+            if parsed.get('examples'):
+                for example in parsed['examples']:
+                    md_parts.append('```lua\n')
+                    formatted_code = format_lua_code(example.get('code', []))
+                    md_parts.append('\n'.join(formatted_code))
+                    md_parts.append('\n```\n\n')
+
+            md_parts.append('---\n\n')
 
     return ''.join(md_parts)
 

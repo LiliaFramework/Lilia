@@ -28,7 +28,8 @@ lia.flag.list = lia.flag.list or {}
         Shared
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Add a basic flag with description
         lia.flag.add("A", "flagAdmin")
@@ -88,7 +89,7 @@ if SERVER then
             Server
 
         Example Usage:
-            Low Complexity:
+        Low Complexity:
             ```lua
             -- Simple: Called automatically when player spawns
             -- No direct usage needed - handled by framework

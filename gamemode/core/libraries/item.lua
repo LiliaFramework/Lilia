@@ -165,30 +165,31 @@ lia.meta.item.height = 1
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get a basic item definition
-    local itemDef = lia.item.get("base_weapons")
-    ```
+        ```lua
+        -- Simple: Get a basic item definition
+        local itemDef = lia.item.get("base_weapons")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get item definition with validation
-    local itemDef = lia.item.get("weapon_pistol")
-    if itemDef then
-        print("Found item:", itemDef.name)
-    end
-    ```
+        ```lua
+        -- Medium: Get item definition with validation
+        local itemDef = lia.item.get("weapon_pistol")
+        if itemDef then
+            print("Found item:", itemDef.name)
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get item definition and check inheritance
-    local itemDef = lia.item.get("custom_rifle")
-    if itemDef and itemDef.base == "base_weapons" then
-        local baseDef = lia.item.get(itemDef.base)
-        print("Item inherits from:", baseDef.name)
-    end
-    ```
+        ```lua
+        -- High: Get item definition and check inheritance
+        local itemDef = lia.item.get("custom_rifle")
+        if itemDef and itemDef.base == "base_weapons" then
+            local baseDef = lia.item.get(itemDef.base)
+            print("Item inherits from:", baseDef.name)
+        end
+        ```
 ]]
 function lia.item.get(identifier)
     return lia.item.base[identifier] or lia.item.list[identifier]
@@ -211,44 +212,45 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get item with location
-    local result = lia.item.getItemByID(123)
-    if result then
-        print("Item location:", result.location)
-    end
-    ```
+        ```lua
+        -- Simple: Get item with location
+        local result = lia.item.getItemByID(123)
+        if result then
+            print("Item location:", result.location)
+        end
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get item and handle different locations
-    local result = lia.item.getItemByID(456)
-    if result then
-        if result.location == "inventory" then
-            print("Item is in inventory")
-        elseif result.location == "world" then
-            print("Item is in world")
+        ```lua
+        -- Medium: Get item and handle different locations
+        local result = lia.item.getItemByID(456)
+        if result then
+            if result.location == "inventory" then
+                print("Item is in inventory")
+            elseif result.location == "world" then
+                print("Item is in world")
+            end
         end
-    end
-    ```
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get item and perform location-specific actions
-    local result = lia.item.getItemByID(789)
-    if result then
-        local item = result.item
-        if result.location == "inventory" then
-            local inv = lia.item.getInv(item.invID)
-            if inv then
-                print("Item in inventory:", inv:getName())
+        ```lua
+        -- High: Get item and perform location-specific actions
+        local result = lia.item.getItemByID(789)
+        if result then
+            local item = result.item
+            if result.location == "inventory" then
+                local inv = lia.item.getInv(item.invID)
+                if inv then
+                    print("Item in inventory:", inv:getName())
+                end
+            elseif result.location == "world" and IsValid(item.entity) then
+                print("Item entity position:", item.entity:GetPos())
             end
-        elseif result.location == "world" and IsValid(item.entity) then
-            print("Item entity position:", item.entity:GetPos())
         end
-    end
-    ```
+        ```
 ]]
 function lia.item.getItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
@@ -284,43 +286,44 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get item instance
-    local item = lia.item.getInstancedItemByID(123)
-    if item then
-        print("Item name:", item.name)
-    end
-    ```
+        ```lua
+        -- Simple: Get item instance
+        local item = lia.item.getInstancedItemByID(123)
+        if item then
+            print("Item name:", item.name)
+        end
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get item and access properties
-    local item = lia.item.getInstancedItemByID(456)
-    if item then
-        print("Item ID:", item.id)
-        print("Item uniqueID:", item.uniqueID)
-        print("Item quantity:", item.quantity)
-    end
-    ```
+        ```lua
+        -- Medium: Get item and access properties
+        local item = lia.item.getInstancedItemByID(456)
+        if item then
+            print("Item ID:", item.id)
+            print("Item uniqueID:", item.uniqueID)
+            print("Item quantity:", item.quantity)
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get item and perform operations
-    local item = lia.item.getInstancedItemByID(789)
-    if item then
-        if item.player and IsValid(item.player) then
-            local char = item.player:getChar()
-            if char then
-                print("Item owner:", char:getName())
+        ```lua
+        -- High: Get item and perform operations
+        local item = lia.item.getInstancedItemByID(789)
+        if item then
+            if item.player and IsValid(item.player) then
+                local char = item.player:getChar()
+                if char then
+                    print("Item owner:", char:getName())
+                end
+            end
+
+            if item:getData("customProperty") then
+                print("Custom property:", item:getData("customProperty"))
             end
         end
-
-        if item:getData("customProperty") then
-            print("Custom property:", item:getData("customProperty"))
-        end
-    end
-    ```
+        ```
 ]]
 function lia.item.getInstancedItemByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
@@ -346,38 +349,39 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get item data
-    local data = lia.item.getItemDataByID(123)
-    if data then
-        print("Item has data")
-    end
-    ```
+        ```lua
+        -- Simple: Get item data
+        local data = lia.item.getItemDataByID(123)
+        if data then
+            print("Item has data")
+        end
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get item data and access specific fields
-    local data = lia.item.getItemDataByID(456)
-    if data then
-        if data.x and data.y then
-            print("Item position:", data.x, data.y)
+        ```lua
+        -- Medium: Get item data and access specific fields
+        local data = lia.item.getItemDataByID(456)
+        if data then
+            if data.x and data.y then
+                print("Item position:", data.x, data.y)
+            end
+            if data.rotated then
+                print("Item is rotated")
+            end
         end
-        if data.rotated then
-            print("Item is rotated")
-        end
-    end
-    ```
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get item data and perform complex operations
-    local data = lia.item.getItemDataByID(789)
-    if data then
-        local customData = data.customData or {}
-        for key, value in pairs(customData) do
-            if type(value) == "table" then
-                print("Complex data for", key, ":", util.TableToJSON(value))
+        ```lua
+        -- High: Get item data and perform complex operations
+        local data = lia.item.getItemDataByID(789)
+        if data then
+            local customData = data.customData or {}
+            for key, value in pairs(customData) do
+                if type(value) == "table" then
+                    print("Complex data for", key, ":", util.TableToJSON(value))
                 else
                     print("Simple data for", key, ":", value)
                 end
@@ -388,7 +392,7 @@ end
                 print("Item last used", timeDiff, "seconds ago")
             end
         end
-    ```
+        ```
 ]]
 function lia.item.getItemDataByID(itemID)
     assert(isnumber(itemID), L("itemIDNumberRequired"))
@@ -414,24 +418,25 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Load a basic item file
-    lia.item.load("lilia/gamemode/items/weapon_pistol.lua")
-    ```
+        ```lua
+        -- Simple: Load a basic item file
+        lia.item.load("lilia/gamemode/items/weapon_pistol.lua")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Load item with base inheritance
-    lia.item.load("lilia/gamemode/items/custom_rifle.lua", "base_weapons")
-    ```
+        ```lua
+        -- Medium: Load item with base inheritance
+        lia.item.load("lilia/gamemode/items/custom_rifle.lua", "base_weapons")
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Load base item and derived items
-    lia.item.load("lilia/gamemode/items/base/weapons.lua", nil, true)
-    lia.item.load("lilia/gamemode/items/weapons/assault_rifle.lua", "base_weapons")
-    ```
+        ```lua
+        -- High: Load base item and derived items
+        lia.item.load("lilia/gamemode/items/base/weapons.lua", nil, true)
+        lia.item.load("lilia/gamemode/items/weapons/assault_rifle.lua", "base_weapons")
+        ```
 ]]
 function lia.item.load(path, baseID, isBaseItem)
     local uniqueID = path:match("sh_([_%w]+)%.lua") or path:match("([_%w]+)%.lua")
@@ -463,40 +468,41 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Check if object is an item
-    if lia.item.isItem(someObject) then
-        print("This is an item!")
-    end
-    ```
+        ```lua
+        -- Simple: Check if object is an item
+        if lia.item.isItem(someObject) then
+            print("This is an item!")
+        end
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Validate item before operations
-    local function processItem(item)
-        if not lia.item.isItem(item) then
-            print("Invalid item provided")
-            return false
+        ```lua
+        -- Medium: Validate item before operations
+        local function processItem(item)
+            if not lia.item.isItem(item) then
+                print("Invalid item provided")
+                return false
+            end
+            print("Processing item:", item.name)
+            return true
         end
-        print("Processing item:", item.name)
-        return true
-    end
-    ```
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Check multiple objects and filter items
-    local function filterItems(objects)
-        local items = {}
-        for _, obj in ipairs(objects) do
-            if lia.item.isItem(obj) then
-                table.insert(items, obj)
+        ```lua
+        -- High: Check multiple objects and filter items
+        local function filterItems(objects)
+            local items = {}
+            for _, obj in ipairs(objects) do
+                if lia.item.isItem(obj) then
+                    table.insert(items, obj)
+                end
             end
+            return items
         end
-        return items
-    end
-    ```
+        ```
 ]]
 function lia.item.isItem(object)
     return istable(object) and object.isItem
@@ -519,32 +525,33 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Get inventory by ID
-    local inv = lia.item.getInv(123)
-    ```
+        ```lua
+        -- Simple: Get inventory by ID
+        local inv = lia.item.getInv(123)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Get inventory and check if valid
-    local inv = lia.item.getInv(456)
-    if inv then
-        print("Inventory size:", inv:getWidth(), "x", inv:getHeight())
-    end
-    ```
+        ```lua
+        -- Medium: Get inventory and check if valid
+        local inv = lia.item.getInv(456)
+        if inv then
+            print("Inventory size:", inv:getWidth(), "x", inv:getHeight())
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Get inventory and perform operations
-    local inv = lia.item.getInv(789)
-    if inv then
-        local items = inv:getItems()
-        for _, item in pairs(items) do
-            print("Item in inventory:", item.name)
+        ```lua
+        -- High: Get inventory and perform operations
+        local inv = lia.item.getInv(789)
+        if inv then
+            local items = inv:getItems()
+            for _, item in pairs(items) do
+                print("Item in inventory:", item.name)
+            end
         end
-    end
-    ```
+        ```
 ]]
 function lia.item.getInv(invID)
     return lia.inventory.instances[invID]
@@ -567,37 +574,38 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Register a basic item
-    lia.item.register("my_item", "base_stackable")
-    ```
+        ```lua
+        -- Simple: Register a basic item
+        lia.item.register("my_item", "base_stackable")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Register item with custom properties
-    local ITEM = lia.item.register("custom_weapon", "base_weapons")
-    ITEM.name = "Custom Weapon"
-    ITEM.desc = "A custom weapon"
-    ITEM.model = "models/weapons/w_pistol.mdl"
-    ```
+        ```lua
+        -- Medium: Register item with custom properties
+        local ITEM = lia.item.register("custom_weapon", "base_weapons")
+        ITEM.name = "Custom Weapon"
+        ITEM.desc = "A custom weapon"
+        ITEM.model = "models/weapons/w_pistol.mdl"
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Register complex item with inheritance
-    local ITEM = lia.item.register("advanced_rifle", "base_weapons", false, nil, true)
-    ITEM.name = "Advanced Rifle"
-    ITEM.desc = "A high-tech assault rifle"
-    ITEM.model = "models/weapons/w_rif_ak47.mdl"
-    ITEM.width = 3
-    ITEM.height = 1
-    ITEM.category = "weapons"
-    ITEM.functions = table.Copy(ITEM.functions)
-    ITEM.functions.customAction = {
-    name = "Custom Action",
-    onRun = function(item) print("Custom action executed") end
-    }
-    ```
+        ```lua
+        -- High: Register complex item with inheritance
+        local ITEM = lia.item.register("advanced_rifle", "base_weapons", false, nil, true)
+        ITEM.name = "Advanced Rifle"
+        ITEM.desc = "A high-tech assault rifle"
+        ITEM.model = "models/weapons/w_rif_ak47.mdl"
+        ITEM.width = 3
+        ITEM.height = 1
+        ITEM.category = "weapons"
+        ITEM.functions = table.Copy(ITEM.functions)
+        ITEM.functions.customAction = {
+            name   = "Custom Action",
+            onRun  = function(item) print("Custom action executed") end
+        }
+        ```
 ]]
 function lia.item.register(uniqueID, baseID, isBaseItem, path, luaGenerated)
     assert(isstring(uniqueID), L("itemUniqueIDString"))
@@ -684,33 +692,34 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Load items from default directory
-    lia.item.loadFromDir("lilia/gamemode/items")
-    ```
+        ```lua
+        -- Simple: Load items from default directory
+        lia.item.loadFromDir("lilia/gamemode/items")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Load items from custom directory
-    lia.item.loadFromDir("addons/myaddon/items")
-    ```
+        ```lua
+        -- Medium: Load items from custom directory
+        lia.item.loadFromDir("addons/myaddon/items")
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Load items from multiple directories
-    local itemDirs = {
-    "lilia/gamemode/items",
-    "addons/customitems/items",
-    "gamemodes/mygamemode/items"
-    }
+        ```lua
+        -- High: Load items from multiple directories
+        local itemDirs = {
+            "lilia/gamemode/items",
+            "addons/customitems/items",
+            "gamemodes/mygamemode/items"
+        }
 
-    for _, dir in ipairs(itemDirs) do
-        if file.Exists(dir, "LUA") then
-            lia.item.loadFromDir(dir)
+        for _, dir in ipairs(itemDirs) do
+            if file.Exists(dir, "LUA") then
+                lia.item.loadFromDir(dir)
+            end
         end
-    end
-    ```
+        ```
 ]]
 function lia.item.loadFromDir(directory)
     local files, folders
@@ -751,33 +760,34 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Create a new item instance
-    local item = lia.item.new("weapon_pistol", 123)
-    ```
+        ```lua
+        -- Simple: Create a new item instance
+        local item = lia.item.new("weapon_pistol", 123)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Create item with validation
-    local item = lia.item.new("custom_rifle", 456)
-    if item then
-        print("Created item:", item.name)
-        print("Item ID:", item.id)
-    end
-    ```
+        ```lua
+        -- Medium: Create item with validation
+        local item = lia.item.new("custom_rifle", 456)
+        if item then
+            print("Created item:", item.name)
+            print("Item ID:", item.id)
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Create item and set up initial data
-    local item = lia.item.new("stackable_item", 789)
-    if item then
-        item.data.customProperty = "initial_value"
-        item.data.createdBy = "system"
-        item.data.createdAt = os.time()
-        print("Item created with custom data")
-    end
-    ```
+        ```lua
+        -- High: Create item and set up initial data
+        local item = lia.item.new("stackable_item", 789)
+        if item then
+            item.data.customProperty = "initial_value"
+            item.data.createdBy      = "system"
+            item.data.createdAt      = os.time()
+            print("Item created with custom data")
+        end
+        ```
 ]]
 function lia.item.new(uniqueID, id)
     id = id and tonumber(id) or id
@@ -818,31 +828,32 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Register a basic inventory type
-    lia.item.registerInv("player", 5, 4)
-    ```
+        ```lua
+        -- Simple: Register a basic inventory type
+        lia.item.registerInv("player", 5, 4)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Register inventory with custom properties
-    lia.item.registerInv("storage_box", 8, 6)
-    ```
+        ```lua
+        -- Medium: Register inventory with custom properties
+        lia.item.registerInv("storage_box", 8, 6)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Register multiple inventory types
-    local inventoryTypes = {
-    {type = "player", w = 5, h = 4},
-    {type = "storage", w = 10, h = 8},
-    {type = "vehicle", w = 6, h = 3}
-    }
+        ```lua
+        -- High: Register multiple inventory types
+        local inventoryTypes = {
+            {type = "player", w = 5, h = 4},
+            {type = "storage", w = 10, h = 8},
+            {type = "vehicle", w = 6, h = 3}
+        }
 
-    for _, inv in ipairs(inventoryTypes) do
-        lia.item.registerInv(inv.type, inv.w, inv.h)
-    end
-    ```
+        for _, inv in ipairs(inventoryTypes) do
+            lia.item.registerInv(inv.type, inv.w, inv.h)
+        end
+        ```
 ]]
 function lia.item.registerInv(invType, w, h)
     local GridInv = FindMetaTable("GridInv")
@@ -877,30 +888,31 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Create inventory for player
-    lia.item.newInv(player:getChar():getID(), "player")
-    ```
+        ```lua
+        -- Simple: Create inventory for player
+        lia.item.newInv(player:getChar():getID(), "player")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Create inventory with callback
-    lia.item.newInv(charID, "storage", function(inv)
-    print("Inventory created:", inv.id)
-    end)
-    ```
+        ```lua
+        -- Medium: Create inventory with callback
+        lia.item.newInv(charID, "storage", function(inv)
+            print("Inventory created:", inv.id)
+        end)
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Create inventory and populate with items
-    lia.item.newInv(charID, "player", function(inv)
-    -- Add starting items
-    lia.item.instance(inv.id, "weapon_pistol", {}, 1, 1)
-    lia.item.instance(inv.id, "ammo_pistol", {}, 2, 1)
-    print("Player inventory created and populated")
-    end)
-    ```
+        ```lua
+        -- High: Create inventory and populate with items
+        lia.item.newInv(charID, "player", function(inv)
+            -- Add starting items
+            lia.item.instance(inv.id, "weapon_pistol", {}, 1, 1)
+            lia.item.instance(inv.id, "ammo_pistol", {}, 2, 1)
+            print("Player inventory created and populated")
+        end)
+        ```
 ]]
 function lia.item.newInv(owner, invType, callback)
     lia.inventory.instance(invType, {
@@ -937,33 +949,34 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Create basic inventory
-    local inv = lia.item.createInv(5, 4, 123)
-    ```
+        ```lua
+        -- Simple: Create basic inventory
+        local inv = lia.item.createInv(5, 4, 123)
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Create inventory and validate
-    local inv = lia.item.createInv(8, 6, 456)
-    if inv then
-        print("Created inventory:", inv.id)
-        print("Size:", inv:getWidth(), "x", inv:getHeight())
-    end
-    ```
+        ```lua
+        -- Medium: Create inventory and validate
+        local inv = lia.item.createInv(8, 6, 456)
+        if inv then
+            print("Created inventory:", inv.id)
+            print("Size:", inv:getWidth(), "x", inv:getHeight())
+        end
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Create inventory and set up data
-    local inv = lia.item.createInv(10, 8, 789)
-    if inv then
-        inv:setData("name", "Custom Storage")
-        inv:setData("owner", "system")
-        inv:setData("createdAt", os.time())
-        print("Custom inventory created with metadata")
-    end
-    ```
+        ```lua
+        -- High: Create inventory and set up data
+        local inv = lia.item.createInv(10, 8, 789)
+        if inv then
+            inv:setData("name", "Custom Storage")
+            inv:setData("owner", "system")
+            inv:setData("createdAt", os.time())
+            print("Custom inventory created with metadata")
+        end
+        ```
 ]]
 function lia.item.createInv(w, h, id)
     local GridInv = FindMetaTable("GridInv")
@@ -1059,51 +1072,52 @@ lia.item.holdTypeSizeMapping = {
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Override weapon name
-    lia.item.addWeaponOverride("weapon_pistol", {
-    name = "Custom Pistol"
-    })
-    ```
+        ```lua
+        -- Simple: Override weapon name
+        lia.item.addWeaponOverride("weapon_pistol", {
+            name = "Custom Pistol"
+        })
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Override multiple weapon properties
-    lia.item.addWeaponOverride("weapon_ak47", {
-    name = "AK-47 Assault Rifle",
-    desc = "A powerful assault rifle",
-    model = "models/weapons/w_rif_ak47.mdl",
-    category = "assault_rifles"
-    })
-    ```
+        ```lua
+        -- Medium: Override multiple weapon properties
+        lia.item.addWeaponOverride("weapon_ak47", {
+            name     = "AK-47 Assault Rifle",
+            desc     = "A powerful assault rifle",
+            model    = "models/weapons/w_rif_ak47.mdl",
+            category = "assault_rifles"
+        })
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Override multiple weapons with custom properties
-    local weaponOverrides = {
-    ["weapon_pistol"] = {
-    name = "Combat Pistol",
-    desc = "A reliable sidearm",
-    model = "models/weapons/w_pistol.mdl",
-    width = 1,
-    height = 1,
-    weaponCategory = "sidearm"
-    },
-    ["weapon_ak47"] = {
-    name = "AK-47",
-    desc = "Soviet assault rifle",
-    model = "models/weapons/w_rif_ak47.mdl",
-    width = 3,
-    height = 1,
-    weaponCategory = "primary"
-    }
-    }
+        ```lua
+        -- High: Override multiple weapons with custom properties
+        local weaponOverrides = {
+            ["weapon_pistol"] = {
+                name          = "Combat Pistol",
+                desc          = "A reliable sidearm",
+                model         = "models/weapons/w_pistol.mdl",
+                width         = 1,
+                height        = 1,
+                weaponCategory = "sidearm"
+            },
+            ["weapon_ak47"] = {
+                name          = "AK-47",
+                desc          = "Soviet assault rifle",
+                model         = "models/weapons/w_rif_ak47.mdl",
+                width         = 3,
+                height        = 1,
+                weaponCategory = "primary"
+            }
+        }
 
-    for className, data in pairs(weaponOverrides) do
-        lia.item.addWeaponOverride(className, data)
-    end
-    ```
+        for className, data in pairs(weaponOverrides) do
+            lia.item.addWeaponOverride(className, data)
+        end
+        ```
 ]]
 function lia.item.addWeaponOverride(className, data)
     lia.item.WeaponOverrides[className] = data
@@ -1126,35 +1140,36 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Blacklist a single weapon
-    lia.item.addWeaponToBlacklist("weapon_crowbar")
-    ```
+        ```lua
+        -- Simple: Blacklist a single weapon
+        lia.item.addWeaponToBlacklist("weapon_crowbar")
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Blacklist multiple weapons
-    lia.item.addWeaponToBlacklist("weapon_crowbar")
-    lia.item.addWeaponToBlacklist("weapon_physcannon")
-    lia.item.addWeaponToBlacklist("weapon_physgun")
-    ```
+        ```lua
+        -- Medium: Blacklist multiple weapons
+        lia.item.addWeaponToBlacklist("weapon_crowbar")
+        lia.item.addWeaponToBlacklist("weapon_physcannon")
+        lia.item.addWeaponToBlacklist("weapon_physgun")
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Blacklist weapons based on conditions
-    local weaponsToBlacklist = {
-    "weapon_crowbar",
-    "weapon_physcannon",
-    "weapon_physgun",
-    "weapon_tool",
-    "weapon_camera"
-    }
+        ```lua
+        -- High: Blacklist weapons based on conditions
+        local weaponsToBlacklist = {
+            "weapon_crowbar",
+            "weapon_physcannon",
+            "weapon_physgun",
+            "weapon_tool",
+            "weapon_camera"
+        }
 
-    for _, weaponClass in ipairs(weaponsToBlacklist) do
-        lia.item.addWeaponToBlacklist(weaponClass)
-    end
-    ```
+        for _, weaponClass in ipairs(weaponsToBlacklist) do
+            lia.item.addWeaponToBlacklist(weaponClass)
+        end
+        ```
 ]]
 function lia.item.addWeaponToBlacklist(className)
     lia.item.WeaponsBlackList[className] = true
@@ -1177,46 +1192,47 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Generate all weapons
-    lia.item.generateWeapons()
-    ```
+        ```lua
+        -- Simple: Generate all weapons
+        lia.item.generateWeapons()
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Generate weapons with custom overrides
-    lia.item.addWeaponOverride("weapon_pistol", {
-    name = "Custom Pistol",
-    desc = "A modified pistol"
-    })
-    lia.item.generateWeapons()
-    ```
+        ```lua
+        -- Medium: Generate weapons with custom overrides
+        lia.item.addWeaponOverride("weapon_pistol", {
+            name = "Custom Pistol",
+            desc = "A modified pistol"
+        })
+        lia.item.generateWeapons()
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Generate weapons with blacklist and overrides
-    local blacklistedWeapons = {
-    "weapon_crowbar",
-    "weapon_physcannon",
-    "weapon_physgun"
-    }
+        ```lua
+        -- High: Generate weapons with blacklist and overrides
+        local blacklistedWeapons = {
+            "weapon_crowbar",
+            "weapon_physcannon",
+            "weapon_physgun"
+        }
 
-    for _, weapon in ipairs(blacklistedWeapons) do
-        lia.item.addWeaponToBlacklist(weapon)
-    end
+        for _, weapon in ipairs(blacklistedWeapons) do
+            lia.item.addWeaponToBlacklist(weapon)
+        end
 
-    local weaponOverrides = {
-    ["weapon_pistol"] = {name = "Combat Pistol"},
-    ["weapon_ak47"] = {name = "AK-47", width = 3}
-    }
+        local weaponOverrides = {
+            ["weapon_pistol"] = {name = "Combat Pistol"},
+            ["weapon_ak47"]   = {name = "AK-47", width = 3}
+        }
 
-    for className, data in pairs(weaponOverrides) do
-        lia.item.addWeaponOverride(className, data)
-    end
+        for className, data in pairs(weaponOverrides) do
+            lia.item.addWeaponOverride(className, data)
+        end
 
-    lia.item.generateWeapons()
-    ```
+        lia.item.generateWeapons()
+        ```
 ]]
 function lia.item.generateWeapons()
     for _, wep in ipairs(weapons.GetList()) do
@@ -1260,46 +1276,47 @@ end
         Shared
 
     Example Usage:
+
     Low Complexity:
-    ```lua
-    -- Simple: Generate all ammunition items
-    lia.item.generateAmmo()
-    ```
+        ```lua
+        -- Simple: Generate all ammunition items
+        lia.item.generateAmmo()
+        ```
 
     Medium Complexity:
-    ```lua
-    -- Medium: Generate ammunition with custom overrides
-    lia.item.addWeaponOverride("arc9_ammo_9mm", {
-    name = "9mm Ammunition",
-    desc = "Standard pistol ammunition"
-    })
-    lia.item.generateAmmo()
-    ```
+        ```lua
+        -- Medium: Generate ammunition with custom overrides
+        lia.item.addWeaponOverride("arc9_ammo_9mm", {
+            name = "9mm Ammunition",
+            desc = "Standard pistol ammunition"
+        })
+        lia.item.generateAmmo()
+        ```
 
     High Complexity:
-    ```lua
-    -- High: Generate ammunition with filtering and overrides
-    local ammoOverrides = {
-    ["arc9_ammo_9mm"] = {
-    name = "9mm Rounds",
-    desc = "Standard pistol ammunition",
-    width = 2,
-    height = 1
-    },
-    ["arccw_ammo_rifle"] = {
-    name = "Rifle Ammunition",
-    desc = "High-powered rifle rounds",
-    width = 3,
-    height = 1
-    }
-    }
+        ```lua
+        -- High: Generate ammunition with filtering and overrides
+        local ammoOverrides = {
+            ["arc9_ammo_9mm"] = {
+                name   = "9mm Rounds",
+                desc   = "Standard pistol ammunition",
+                width  = 2,
+                height = 1
+            },
+            ["arccw_ammo_rifle"] = {
+                name   = "Rifle Ammunition",
+                desc   = "High-powered rifle rounds",
+                width  = 3,
+                height = 1
+            }
+        }
 
-    for className, data in pairs(ammoOverrides) do
-        lia.item.addWeaponOverride(className, data)
-    end
+        for className, data in pairs(ammoOverrides) do
+            lia.item.addWeaponOverride(className, data)
+        end
 
-    lia.item.generateAmmo()
-    ```
+        lia.item.generateAmmo()
+        ```
 ]]
 function lia.item.generateAmmo()
     local entityList = {}
@@ -1346,34 +1363,35 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Set item data
         lia.item.setItemDataByID(123, "customProperty", "value")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Set item data with validation
         local success, error = lia.item.setItemDataByID(456, "lastUsed", os.time())
         if success then
             print("Item data updated successfully")
-            else
-                print("Failed to update item data:", error)
-            end
+        else
+            print("Failed to update item data:", error)
+        end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Set item data with custom sync and save options
         local function updateItemData(itemID, data, players)
             local success, error = lia.item.setItemDataByID(
-            itemID,
-            "customData",
-            data,
-            players,
-            false, -- Save to database
-            true   -- Skip entity check
+                itemID,
+                "customData",
+                data,
+                players,
+                false, -- Save to database
+                true   -- Skip entity check
             )
             return success, error
         end
@@ -1405,35 +1423,36 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Create item in inventory
         lia.item.instance(invID, "weapon_pistol")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Create item with position and callback
         lia.item.instance(invID, "weapon_pistol", {}, 1, 1, function(item)
-        print("Created item:", item.name)
+            print("Created item:", item.name)
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Create item with complex data and error handling
         local promise = lia.item.instance(charID, "custom_item", {
-        customProperty = "value",
-        createdBy = "admin",
-        createdAt = os.time()
+            customProperty = "value",
+            createdBy      = "admin",
+            createdAt       = os.time()
         }, 2, 3, function(item)
-        print("Item created with ID:", item.id)
+            print("Item created with ID:", item.id)
         end)
 
         promise:next(function(item)
-        print("Successfully created item")
+            print("Successfully created item")
         end):catch(function(error)
-        print("Failed to create item:", error)
+            print("Failed to create item:", error)
         end)
         ```
     ]]
@@ -1504,13 +1523,14 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Delete an item
         lia.item.deleteByID(123)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Delete item with validation
         local item = lia.item.getInstancedItemByID(456)
@@ -1520,7 +1540,7 @@ if SERVER then
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Delete multiple items with error handling
         local function deleteItems(itemIDs)
@@ -1529,11 +1549,11 @@ if SERVER then
                 if item then
                     print("Deleting item:", item.name, "ID:", id)
                     lia.item.deleteByID(id)
-                    else
-                        print("Item not found:", id)
-                    end
+                else
+                    print("Item not found:", id)
                 end
             end
+        end
         ```
     ]]
     function lia.item.deleteByID(id)
@@ -1561,19 +1581,20 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Load a single item
         lia.item.loadItemByID(123)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Load multiple items
         lia.item.loadItemByID({123, 456, 789})
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Load items with validation and error handling
         local function loadPlayerItems(player)
@@ -1583,16 +1604,16 @@ if SERVER then
                 if inv then
                     -- Load all items for this character
                     lia.db.query("SELECT itemID FROM lia_items WHERE invID = " .. inv.id, function(results)
-                    if results then
-                        local itemIDs = {}
-                        for _, row in ipairs(results) do
-                            table.insert(itemIDs, tonumber(row.itemID))
+                        if results then
+                            local itemIDs = {}
+                            for _, row in ipairs(results) do
+                                table.insert(itemIDs, tonumber(row.itemID))
+                            end
+                            lia.item.loadItemByID(itemIDs)
                         end
-                        lia.item.loadItemByID(itemIDs)
-                    end
-                end)
+                    end)
+                end
             end
-        end
         end
         ```
     ]]
@@ -1642,38 +1663,39 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Spawn item at position
         lia.item.spawn("weapon_pistol", Vector(0, 0, 0))
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Spawn item with angles and callback
         lia.item.spawn("weapon_pistol", Vector(100, 200, 50), function(item)
-        print("Spawned item:", item.name)
+            print("Spawned item:", item.name)
         end, Angle(0, 90, 0))
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Spawn item with complex data and error handling
         local promise = lia.item.spawn("custom_item", Vector(0, 0, 0), function(item)
-        if item then
-            item:setData("spawnedBy", "admin")
-            item:setData("spawnTime", os.time())
-            print("Item spawned successfully")
-        end
+            if item then
+                item:setData("spawnedBy", "admin")
+                item:setData("spawnTime", os.time())
+                print("Item spawned successfully")
+            end
         end, Angle(0, 0, 0), {
-        customProperty = "value",
-        durability = 100
+            customProperty = "value",
+            durability     = 100
         })
 
         promise:next(function(item)
-        print("Item spawned at:", item.entity:GetPos())
+            print("Item spawned at:", item.entity:GetPos())
         end):catch(function(error)
-        print("Failed to spawn item:", error)
+            print("Failed to spawn item:", error)
         end)
         ```
     ]]
@@ -1723,35 +1745,36 @@ if SERVER then
             Server
 
         Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Restore inventory
         lia.item.restoreInv(123, 5, 4)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Restore inventory with callback
         lia.item.restoreInv(456, 8, 6, function(inv)
-        print("Restored inventory:", inv.id)
+            print("Restored inventory:", inv.id)
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Restore multiple inventories with error handling
         local function restorePlayerInventories(player)
             local char = player:getChar()
             if char then
                 local inventories = {
-                {id = char:getInv().id, w = 5, h = 4},
-                {id = char:getStorage().id, w = 10, h = 8}
+                    {id = char:getInv().id, w = 5, h = 4},
+                    {id = char:getStorage().id, w = 10, h = 8}
                 }
 
                 for _, invData in ipairs(inventories) do
                     lia.item.restoreInv(invData.id, invData.w, invData.h, function(inv)
-                    if inv then
-                        print("Restored inventory:", inv.id)
+                        if inv then
+                            print("Restored inventory:", inv.id)
                         else
                             print("Failed to restore inventory:", invData.id)
                         end
@@ -1780,7 +1803,9 @@ hook.Add("InitializedModules", "liaItems", function()
         if item.base == "base_entities" then lia.item.itemEntities[item.uniqueID] = {item.entityid, item.data} end
     end
 
-    for _, item in pairs(lia.item.list) do
-        item.CanBeDestroyed = true
+    if lia.config.get("ItemsCanBeDestroyed", true) then
+        for _, item in pairs(lia.item.list) do
+            item.CanBeDestroyed = true
+        end
     end
 end)

@@ -68,7 +68,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Create a basic context menu
         lia.menu.add({
@@ -166,7 +167,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Called automatically by the framework
         -- This function is typically called from hooks like HUDPaint
@@ -262,7 +264,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Check if player is hovering over a menu
         local menuIndex, callback = lia.menu.getActiveMenu()
@@ -348,7 +351,8 @@ end
         Client
 
     Example Usage:
-        Low Complexity:
+
+    Low Complexity:
         ```lua
         -- Simple: Remove menu and execute callback
         local menuIndex = 1
