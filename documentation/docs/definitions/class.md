@@ -11,10 +11,15 @@ Classes represent specific roles or professions that characters can assume withi
 hierarchical structure where factions serve as parent containers for classes.
 
 **Faction-Class Relationship:**
+
 - **Factions** are the main organizational units (Citizens, Police, Medical, etc.)
+
 - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
+
 - Each character belongs to exactly ONE faction and ONE class within that faction
+
 - Classes inherit all properties from their parent faction by default
+
 - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
 over the same property in the parent faction.
 

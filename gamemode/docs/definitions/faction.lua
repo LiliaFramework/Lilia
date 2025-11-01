@@ -31,7 +31,7 @@
     Each character belongs to exactly ONE faction and can have multiple classes within that faction.
 
     **Faction-Class Relationship:**
-    
+
     - **Factions** are the main organizational units (Citizens, Police, Medical, Staff)
 
     - **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
