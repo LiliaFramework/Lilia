@@ -47,7 +47,7 @@ classwhitelists to control which classes a character has access to.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -66,7 +66,7 @@ CLASS.name = "Police Officer"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -85,7 +85,7 @@ CLASS.desc = "A law enforcement officer responsible for maintaining order"
 
 ---
 
-### Purpose:
+### faction
 
 **Purpose**
 
@@ -104,7 +104,7 @@ CLASS.faction = FACTION_POLICE
 
 ---
 
-### Purpose:
+### limit
 
 **Purpose**
 
@@ -124,7 +124,7 @@ CLASS.limit = 0  -- Unlimited players
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -143,7 +143,7 @@ CLASS.model = "models/player/barney.mdl"
 
 ---
 
-### Purpose:
+### isWhitelisted
 
 **Purpose**
 
@@ -167,7 +167,7 @@ CLASS.isWhitelisted = true  -- Requires whitelist permission to join
 
 ---
 
-### Purpose:
+### isDefault
 
 **Purpose**
 
@@ -186,7 +186,7 @@ CLASS.isDefault = true
 
 ---
 
-### Purpose:
+### scoreboardHidden
 
 **Purpose**
 
@@ -205,7 +205,7 @@ CLASS.scoreboardHidden = true  -- Class will not appear in scoreboard categories
 
 ---
 
-### Purpose:
+### pay
 
 **Purpose**
 
@@ -224,7 +224,7 @@ CLASS.pay = 100  -- $100 salary
 
 ---
 
-### Purpose:
+### uniqueID
 
 **Purpose**
 
@@ -248,7 +248,7 @@ name = "Police Officer",
 
 ---
 
-### Purpose:
+### index
 
 **Purpose**
 
@@ -271,7 +271,7 @@ name = "Police Officer",
 
 ---
 
-### Purpose:
+### Color
 
 **Purpose**
 
@@ -290,7 +290,7 @@ CLASS.Color = Color(0, 100, 255)  -- Blue color for police
 
 ---
 
-### Purpose:
+### health
 
 **Purpose**
 
@@ -309,7 +309,7 @@ CLASS.health = 150  -- Police officers have 150 max health
 
 ---
 
-### Purpose:
+### armor
 
 **Purpose**
 
@@ -328,7 +328,7 @@ CLASS.armor = 50  -- Police officers have 50 armor
 
 ---
 
-### Purpose:
+### weapons
 
 **Purpose**
 
@@ -348,7 +348,7 @@ CLASS.weapons = "weapon_crowbar"  -- Single weapon string
 
 ---
 
-### Purpose:
+### scale
 
 **Purpose**
 
@@ -367,7 +367,7 @@ CLASS.scale = 1.1  -- Slightly larger model
 
 ---
 
-### Purpose:
+### runSpeed
 
 **Purpose**
 
@@ -388,7 +388,7 @@ CLASS.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### Purpose:
+### walkSpeed
 
 **Purpose**
 
@@ -409,7 +409,7 @@ CLASS.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### Purpose:
+### jumpPower
 
 **Purpose**
 
@@ -430,7 +430,7 @@ CLASS.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### Purpose:
+### NPCRelations
 
 **Purpose**
 
@@ -452,7 +452,7 @@ CLASS.NPCRelations = {
 
 ---
 
-### Purpose:
+### bloodcolor
 
 **Purpose**
 
@@ -472,7 +472,7 @@ CLASS.bloodcolor = BLOOD_COLOR_YELLOW  -- Yellow blood for aliens
 
 ---
 
-### Purpose:
+### runSpeedMultiplier
 
 **Purpose**
 
@@ -492,7 +492,7 @@ CLASS.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### Purpose:
+### walkSpeedMultiplier
 
 **Purpose**
 
@@ -512,7 +512,7 @@ CLASS.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### Purpose:
+### jumpPowerMultiplier
 
 **Purpose**
 
@@ -532,7 +532,7 @@ CLASS.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -579,7 +579,7 @@ function CLASS:OnCanBe(client)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -608,7 +608,7 @@ function CLASS:OnSet(client)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -640,7 +640,7 @@ function CLASS:OnTransferred(client, oldClass)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -671,7 +671,7 @@ function CLASS:OnSpawn(client)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 

@@ -4,7 +4,7 @@ Medical aid item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Medical Kit"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.desc = "A medical kit that restores health"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.model = "models/weapons/w_package.mdl"
 
 ---
 
-### Purpose:
+### width
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Purpose**
 
@@ -99,7 +99,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### health
 
 **Purpose**
 
@@ -113,23 +113,6 @@ During item definition (used in use functions)
 
 ```lua
 ITEM.health = 25  -- Restores 25 health points
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Medical Kit"                    -- Display name shown to players
-ITEM.desc = "A medical kit that restores 25 health points"  -- Description text
-ITEM.model = "models/items/medkit.mdl"       -- 3D model for the item
-ITEM.width = 1                               -- Inventory width (1 slot)
-ITEM.height = 1                              -- Inventory height (1 slot)
-ITEM.health = 25                             -- Health amount restored when used
 
 ```
 

@@ -4,7 +4,7 @@ Grenade item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Fragmentation Grenade"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.desc = "A deadly fragmentation grenade"
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.category = "itemCatGrenades"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
 ---
 
-### Purpose:
+### class
 
 **Purpose**
 
@@ -99,7 +99,7 @@ ITEM.class = "weapon_frag"
 
 ---
 
-### Purpose:
+### width
 
 **Purpose**
 
@@ -118,7 +118,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Purpose**
 
@@ -137,7 +137,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### DropOnDeath
 
 **Purpose**
 
@@ -151,24 +151,6 @@ During item definition
 
 ```lua
 ITEM.DropOnDeath = true  -- Drops on death
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players
-ITEM.desc = "A deadly fragmentation grenade"           -- Description text
-ITEM.category = "itemCatGrenades"                      -- Category for inventory sorting
-ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"     -- 3D model for the grenade
-ITEM.class = "weapon_frag"                             -- Weapon class to give when used
-ITEM.width = 1                                         -- Inventory width (1 slot)
-ITEM.height = 1                                        -- Inventory height (1 slot)
 
 ```
 

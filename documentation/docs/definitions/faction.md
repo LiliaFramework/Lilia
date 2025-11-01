@@ -50,7 +50,7 @@ classwhitelists to control which classes a character has access to within the fa
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -69,7 +69,7 @@ FACTION.name = "Police Department"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -88,7 +88,7 @@ FACTION.desc = "Law enforcement officers responsible for maintaining order and p
 
 ---
 
-### Purpose:
+### color
 
 **Purpose**
 
@@ -107,7 +107,7 @@ FACTION.color = Color(0, 100, 255)  -- Blue color for police
 
 ---
 
-### Purpose:
+### models
 
 **Purpose**
 
@@ -137,7 +137,7 @@ FACTION.models = {
 
 ---
 
-### Purpose:
+### weapons
 
 **Purpose**
 
@@ -157,7 +157,7 @@ FACTION.weapons = "weapon_crowbar"  -- Single weapon string
 
 ---
 
-### Purpose:
+### isDefault
 
 **Purpose**
 
@@ -177,7 +177,7 @@ FACTION.isDefault = false  -- Requires special permission or whitelist
 
 ---
 
-### Purpose:
+### uniqueID
 
 **Purpose**
 
@@ -206,7 +206,7 @@ name = "Police Department",
 
 ---
 
-### Purpose:
+### index
 
 **Purpose**
 
@@ -231,7 +231,7 @@ FACTION.index = 2  -- Will use team index 2
 
 ---
 
-### Purpose:
+### health
 
 **Purpose**
 
@@ -250,7 +250,7 @@ FACTION.health = 120  -- Police officers have 120 max health
 
 ---
 
-### Purpose:
+### armor
 
 **Purpose**
 
@@ -269,7 +269,7 @@ FACTION.armor = 50  -- Standard police armor
 
 ---
 
-### Purpose:
+### scale
 
 **Purpose**
 
@@ -288,7 +288,7 @@ FACTION.scale = 1.1  -- Slightly larger model
 
 ---
 
-### Purpose:
+### runSpeed
 
 **Purpose**
 
@@ -309,7 +309,7 @@ FACTION.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### Purpose:
+### walkSpeed
 
 **Purpose**
 
@@ -330,7 +330,7 @@ FACTION.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### Purpose:
+### jumpPower
 
 **Purpose**
 
@@ -351,7 +351,7 @@ FACTION.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### Purpose:
+### NPCRelations
 
 **Purpose**
 
@@ -373,7 +373,7 @@ FACTION.NPCRelations = {
 
 ---
 
-### Purpose:
+### bloodcolor
 
 **Purpose**
 
@@ -393,7 +393,7 @@ FACTION.bloodcolor = BLOOD_COLOR_YELLOW  -- Yellow blood for aliens
 
 ---
 
-### Purpose:
+### runSpeedMultiplier
 
 **Purpose**
 
@@ -413,7 +413,7 @@ FACTION.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### Purpose:
+### walkSpeedMultiplier
 
 **Purpose**
 
@@ -433,7 +433,7 @@ FACTION.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### Purpose:
+### jumpPowerMultiplier
 
 **Purpose**
 
@@ -453,7 +453,7 @@ FACTION.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### Purpose:
+### items
 
 **Purpose**
 
@@ -472,7 +472,7 @@ FACTION.items = {"item_police_badge", "item_handcuffs"}  -- Starting items for p
 
 ---
 
-### Purpose:
+### oneCharOnly
 
 **Purpose**
 
@@ -492,7 +492,7 @@ FACTION.oneCharOnly = false  -- Players can have multiple characters in this fac
 
 ---
 
-### Purpose:
+### limit
 
 **Purpose**
 
@@ -513,7 +513,7 @@ FACTION.limit = 0.1  -- 10% of total server players
 
 ---
 
-### Purpose:
+### NameTemplate
 
 **Purpose**
 
@@ -535,7 +535,7 @@ function FACTION:NameTemplate(info, client)
 
 ---
 
-### Purpose:
+### GetDefaultName
 
 **Purpose**
 
@@ -556,7 +556,7 @@ function FACTION:GetDefaultName(client)
 
 ---
 
-### Purpose:
+### GetDefaultDesc
 
 **Purpose**
 
@@ -577,7 +577,7 @@ function FACTION:GetDefaultDesc(client)
 
 ---
 
-### Purpose:
+### OnCheckLimitReached
 
 **Purpose**
 
@@ -614,7 +614,7 @@ function FACTION:OnCheckLimitReached(character, client)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -645,7 +645,7 @@ function FACTION:OnTransferred(client)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 

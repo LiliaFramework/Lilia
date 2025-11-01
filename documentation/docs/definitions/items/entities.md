@@ -4,7 +4,7 @@ Entity placement item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Chair"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.desc = "A comfortable chair for sitting"
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.category = "entities"
 
 ---
 
-### Purpose:
+### entityid
 
 **Purpose**
 
@@ -94,22 +94,6 @@ During item definition (used in Place function)
 
 ```lua
 ITEM.entityid = "prop_physics"
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Chair"                                          -- Display name shown to players
-ITEM.model = "models/props_c17/FurnitureChair001a.mdl"       -- 3D model for the item
-ITEM.desc = "A comfortable chair for sitting"                -- Description text
-ITEM.category = "entities"                                   -- Category for inventory sorting
-ITEM.entityid = "prop_physics"                               -- Entity class to spawn when placed
 
 ```
 

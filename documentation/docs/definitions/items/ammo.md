@@ -4,7 +4,7 @@ Ammunition item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Pistol Ammo"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.model = "models/props_c17/SuitCase001a.mdl"
 
 ---
 
-### Purpose:
+### width
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### ammo
 
 **Purpose**
 
@@ -100,7 +100,7 @@ ITEM.ammo = "smg1"    -- SMG ammunition type
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -114,23 +114,6 @@ During item definition
 
 ```lua
 ITEM.category = "itemCatAmmunition"
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Pistol Ammo"                    -- Display name shown to players
-ITEM.model = "models/items/boxsrounds.mdl"   -- 3D model for the ammo box
-ITEM.width = 1                               -- Inventory width (1 slot)
-ITEM.height = 1                              -- Inventory height (1 slot)
-ITEM.ammo = "pistol"                         -- Ammo type (matches weapon ammo type)
-ITEM.category = "itemCatAmmunition"          -- Category for inventory sorting
 
 ```
 

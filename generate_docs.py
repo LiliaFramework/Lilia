@@ -664,32 +664,40 @@ def parse_definition_property_blocks(file_path: Path, entity_prefixes: Tuple[str
 
     Returns list of entries with keys: name, parsed_comment
     """
-    comment_blocks, _, overview_section = find_comment_blocks_in_file(file_path)
+    text = _read_file_text(file_path)
+    if not text:
+        return []
+
     entries: List[Dict[str, object]] = []
 
-    for block in comment_blocks:
-        # Clean block markers and pull first meaningful line
-        inner = re.sub(r'^\s*--\[\[', '', block.strip())
-        inner = re.sub(r'\]\]\s*$', '', inner)
-        first_line = ''
-        for raw in inner.split('\n'):
-            s = re.sub(r'^\s*--\s*', '', raw).strip()
-            if s:
-                first_line = s
+    # Find all comment blocks with their positions
+    for match in re.finditer(r'--\[\[.*?\]\]', text, re.DOTALL):
+        block_text = match.group(0)
+        # Only process structured comment blocks
+        if not any(header in block_text for header in ['Purpose:', 'When Called:', 'When Used:', 'Parameters:', 'Returns:', 'Realm:', 'Explanation of Panel:', 'Example Usage:', 'Example Item:']):
+            continue
+
+        # Find the property name from the line immediately following this comment block
+        tail = text[match.end():]
+        prop_name = None
+        for ln in tail.splitlines():
+            s = ln.strip()
+            if not s:
+                continue
+            if s.startswith('--'):
+                continue
+            # Extract property name from patterns like CLASS.name, ITEM.name, etc.
+            for prefix in entity_prefixes:
+                m = re.match(rf'{prefix}\.([A-Za-z_][\w]*)', s)
+                if m:
+                    prop_name = m.group(1)  # Only the property name (suffix)
+                    break
+            if prop_name:
                 break
 
-        prop_name = ''
-        for prefix in entity_prefixes:
-            m = re.match(rf'{prefix}\.([A-Za-z_][\w]*)', first_line)
-            if m:
-                prop_name = m.group(1)  # Only the property name (suffix)
-                break
-
-        parsed = parse_comment_block(block)
-        if not prop_name:
-            prop_name = first_line or 'Unnamed'
-
-        entries.append({'name': prop_name, 'parsed': parsed})
+        if prop_name:
+            parsed = parse_comment_block(block_text)
+            entries.append({'name': prop_name, 'parsed': parsed})
 
     return entries
 

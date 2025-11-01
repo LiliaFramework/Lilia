@@ -4,7 +4,7 @@ Outfit item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Police Uniform"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.desc = "A standard police uniform"
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.category = "outfit"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl"
 
 ---
 
-### Purpose:
+### width
 
 **Purpose**
 
@@ -99,7 +99,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Purpose**
 
@@ -118,7 +118,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### outfitCategory
 
 **Purpose**
 
@@ -137,7 +137,7 @@ ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
 
 ---
 
-### Purpose:
+### pacData
 
 **Purpose**
 
@@ -156,7 +156,7 @@ ITEM.pacData = {}  -- PAC attachment data
 
 ---
 
-### Purpose:
+### isOutfit
 
 **Purpose**
 
@@ -175,7 +175,7 @@ ITEM.isOutfit = true
 
 ---
 
-### ITEM:paintOver(item, w, h)
+### name
 
 **Purpose**
 
@@ -199,7 +199,7 @@ end
 
 ---
 
-### ITEM:removeOutfit(client)
+### name
 
 **Purpose**
 
@@ -220,7 +220,7 @@ end
 
 ---
 
-### ITEM:wearOutfit(client, isForLoadout)
+### name
 
 **Purpose**
 
@@ -241,7 +241,7 @@ end
 
 ---
 
-### ITEM:OnCanBeTransfered(_, newInventory)
+### name
 
 **Purpose**
 
@@ -263,7 +263,7 @@ end
 
 ---
 
-### ITEM:onLoadout()
+### name
 
 **Purpose**
 
@@ -284,7 +284,7 @@ end
 
 ---
 
-### ITEM:onRemoved()
+### name
 
 **Purpose**
 
@@ -305,7 +305,7 @@ end
 
 ---
 
-### ITEM:hook("drop", function(item) ... end)
+### name
 
 **Purpose**
 
@@ -319,24 +319,6 @@ When item is dropped
 
 ```lua
 ITEM:hook("drop", function(item) if item:getData("equip") then item:removeOutfit(item.player) end end)
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Police Uniform"                        -- Display name shown to players
-ITEM.desc = "A standard police uniform"             -- Description text
-ITEM.category = "outfit"                            -- Category for inventory sorting
-ITEM.model = "models/props_c17/BriefCase001a.mdl"   -- 3D model for the item
-ITEM.width = 1                                      -- Inventory width (1 slot)
-ITEM.height = 1                                     -- Inventory height (1 slot)
-ITEM.outfitCategory = "model"                       -- Outfit category for conflict checking
 
 ```
 

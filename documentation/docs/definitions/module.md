@@ -10,7 +10,7 @@ The module system provides comprehensive functionality for defining modules with
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -26,7 +26,7 @@ MODULE.name = "Inventory System"
 
 ---
 
-### Purpose:
+### author
 
 **Purpose**
 
@@ -42,7 +42,7 @@ MODULE.author = "Samael"
 
 ---
 
-### Purpose:
+### discord
 
 **Purpose**
 
@@ -58,7 +58,7 @@ MODULE.discord = "@liliaplayer"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -74,7 +74,7 @@ MODULE.desc = "A comprehensive inventory management system"
 
 ---
 
-### Purpose:
+### version
 
 **Purpose**
 
@@ -90,7 +90,7 @@ MODULE.version = 1.0
 
 ---
 
-### Purpose:
+### versionID
 
 **Purpose**
 
@@ -106,7 +106,7 @@ MODULE.versionID = "private_inventory"
 
 ---
 
-### Purpose:
+### uniqueID
 
 **Purpose**
 
@@ -127,7 +127,7 @@ Note: This property is internal and should not be modified directly
 
 ---
 
-### Purpose:
+### Privileges
 
 **Purpose**
 
@@ -148,7 +148,7 @@ Min = 1
 
 ---
 
-### Purpose:
+### Dependencies
 
 **Purpose**
 
@@ -169,7 +169,7 @@ Type = "shared"
 
 ---
 
-### Purpose:
+### NetworkStrings
 
 **Purpose**
 
@@ -185,7 +185,7 @@ MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
 
 ---
 
-### Purpose:
+### WorkshopContent
 
 **Purpose**
 
@@ -202,7 +202,7 @@ MODULE.WorkshopContent = {"1234567890", "0987654321"}
 
 ---
 
-### Purpose:
+### WebSounds
 
 **Purpose**
 
@@ -220,7 +220,7 @@ MODULE.WebSounds = {
 
 ---
 
-### Purpose:
+### WebImages
 
 **Purpose**
 
@@ -238,7 +238,7 @@ MODULE.WebImages = {
 
 ---
 
-### Purpose:
+### enabled
 
 **Purpose**
 
@@ -254,7 +254,7 @@ MODULE.enabled = true
 
 ---
 
-### Purpose:
+### folder
 
 **Purpose**
 
@@ -264,7 +264,7 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
-### Purpose:
+### path
 
 **Purpose**
 
@@ -274,7 +274,7 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
-### Purpose:
+### variable
 
 **Purpose**
 
@@ -284,43 +284,13 @@ Internal Variable: This is set automatically by the module system
 
 ---
 
-### Purpose:
+### loading
 
 **Purpose**
 
 Sets whether the module is currently loading
 Internal Variable: This is set automatically by the module system
 ]]
-
----
-
-### Purpose:
-
-**Purpose**
-
-Called when the module is fully loaded
-
-**When Called**
-
-After all module files have been loaded and initialized
-
-**Realm**
-
-Shared (called on both server and client)
-
-**Returns**
-
-* None
-
-**Example Usage**
-
-```lua
--- Called after all module files are loaded
-function MODULE:OnLoaded()
-    print("Module loaded successfully!")
-    end
-
-```
 
 ---
 

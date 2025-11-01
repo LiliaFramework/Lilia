@@ -4,7 +4,7 @@ Weapon item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Pistol"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.desc = "A standard issue pistol"
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.category = "weapons"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.model = "models/weapons/w_pistol.mdl"
 
 ---
 
-### Purpose:
+### class
 
 **Purpose**
 
@@ -99,7 +99,7 @@ ITEM.class = "weapon_pistol"
 
 ---
 
-### Purpose:
+### width
 
 **Purpose**
 
@@ -118,7 +118,7 @@ ITEM.width = 2  -- Takes 2 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Purpose**
 
@@ -137,7 +137,7 @@ ITEM.height = 2  -- Takes 2 slot height
 
 ---
 
-### Purpose:
+### isWeapon
 
 **Purpose**
 
@@ -156,7 +156,7 @@ ITEM.isWeapon = true
 
 ---
 
-### Purpose:
+### RequiredSkillLevels
 
 **Purpose**
 
@@ -175,7 +175,7 @@ ITEM.RequiredSkillLevels = {}  -- No skill requirements
 
 ---
 
-### Purpose:
+### DropOnDeath
 
 **Purpose**
 
@@ -194,7 +194,7 @@ ITEM.DropOnDeath = true  -- Drops on death
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -220,7 +220,7 @@ function ITEM.postHooks:drop()
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -247,7 +247,7 @@ if not client or not IsValid(client) then return false end
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -269,7 +269,7 @@ function ITEM:OnCanBeTransfered(_, newInventory)
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -300,7 +300,7 @@ function ITEM:onLoadout()
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -324,7 +324,7 @@ function ITEM:OnSave()
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -342,24 +342,6 @@ function ITEM:getName()
     if weapon and weapon.PrintName then return language.GetPhrase(weapon.PrintName) end
         return self.name
         end
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Pistol"                              -- Display name shown to players
-ITEM.desc = "A standard issue pistol"             -- Description text
-ITEM.category = "weapons"                         -- Category for inventory sorting
-ITEM.model = "models/weapons/w_pistol.mdl"        -- 3D model for the weapon
-ITEM.class = "weapon_pistol"                      -- Weapon class to give when equipped
-ITEM.width = 2                                    -- Inventory width (2 slots)
-ITEM.height = 2                                   -- Inventory height (2 slots)
 
 ```
 

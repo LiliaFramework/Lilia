@@ -4,7 +4,7 @@ Literature item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ ITEM.name = "Medical Journal"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.desc = "A medical journal containing important information"
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.category = "itemCatLiterature"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 
 ---
 
-### Purpose:
+### contents
 
 **Purpose**
 
@@ -94,22 +94,6 @@ During item definition (used in Read function)
 
 ```lua
 ITEM.contents = "<h1>Chapter 1</h1><p>This is the content...</p>"
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Medical Journal"                                    -- Display name shown to players
-ITEM.desc = "A medical journal containing important information" -- Description text
-ITEM.category = "itemCatLiterature"                              -- Category for inventory sorting
-ITEM.model = "models/props_lab/bindergraylabel01b.mdl"           -- 3D model for the book
-ITEM.contents = "<h1>Chapter 1: Basic Medicine</h1><p>This journal contains essential medical knowledge...</p>"  -- HTML content displayed when reading
 
 ```
 

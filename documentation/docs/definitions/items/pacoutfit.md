@@ -4,7 +4,7 @@ PAC outfit item system for the Lilia framework.
 
 ---
 
-### if not pac then return end
+### name
 
 **Purpose**
 
@@ -23,7 +23,7 @@ if not pac then return end
 
 ---
 
-### Purpose:
+### name
 
 **Purpose**
 
@@ -42,7 +42,7 @@ ITEM.name = "Hat"
 
 ---
 
-### Purpose:
+### desc
 
 **Purpose**
 
@@ -61,7 +61,7 @@ ITEM.desc = "A stylish hat"
 
 ---
 
-### Purpose:
+### category
 
 **Purpose**
 
@@ -80,7 +80,7 @@ ITEM.category = "outfit"
 
 ---
 
-### Purpose:
+### model
 
 **Purpose**
 
@@ -99,7 +99,7 @@ ITEM.model = "models/Gibs/HGIBS.mdl"
 
 ---
 
-### Purpose:
+### width
 
 **Purpose**
 
@@ -118,7 +118,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Purpose**
 
@@ -137,7 +137,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### outfitCategory
 
 **Purpose**
 
@@ -156,7 +156,7 @@ ITEM.outfitCategory = "hat"  -- Prevents multiple items of same category
 
 ---
 
-### Purpose:
+### pacData
 
 **Purpose**
 
@@ -175,7 +175,7 @@ ITEM.pacData = {}  -- PAC attachment data
 
 ---
 
-### ITEM:paintOver(item, w, h)
+### name
 
 **Purpose**
 
@@ -199,7 +199,7 @@ function ITEM:paintOver(item, w, h)
 
 ---
 
-### ITEM:removePart(client)
+### name
 
 **Purpose**
 
@@ -223,7 +223,7 @@ function ITEM:removePart(client)
 
 ---
 
-### ITEM:onCanBeTransfered(_, newInventory)
+### name
 
 **Purpose**
 
@@ -245,7 +245,7 @@ function ITEM:onCanBeTransfered(_, newInventory)
 
 ---
 
-### ITEM:onLoadout()
+### name
 
 **Purpose**
 
@@ -266,7 +266,7 @@ function ITEM:onLoadout()
 
 ---
 
-### ITEM:onRemoved()
+### name
 
 **Purpose**
 
@@ -289,7 +289,7 @@ function ITEM:onRemoved()
 
 ---
 
-### ITEM:hook("drop", function(item) ... end)
+### name
 
 **Purpose**
 
@@ -306,24 +306,6 @@ ITEM:hook("drop", function(item)
 local client = item.player
 if item:getData("equip") then item:removePart(client) end
     end)
-
-```
-
----
-
-### Example Item:
-
-**Example Usage**
-
-```lua
--- Basic item identification
-ITEM.name = "Hat"                               -- Display name shown to players
-ITEM.desc = "A stylish hat"                     -- Description text
-ITEM.category = "outfit"                        -- Category for inventory sorting
-ITEM.model = "models/Gibs/HGIBS.mdl"            -- 3D model for the item
-ITEM.width = 1                                  -- Inventory width (1 slot)
-ITEM.height = 1                                 -- Inventory height (1 slot)
-ITEM.outfitCategory = "hat"                     -- Outfit category for conflict checking
 
 ```
 
