@@ -41,12 +41,12 @@ Shared
 ```lua
 -- Simple: Add a basic keybind with table configuration
 lia.keybind.add("openInventory", {
-    keyBind = KEY_I,
-    desc = "openInventoryDesc",
-    onPress = function()
-        local f1Menu = vgui.Create("liaMenu")
-        f1Menu:setActiveTab(L("inv"))
-    end
+keyBind = KEY_I,
+desc = "openInventoryDesc",
+onPress = function()
+local f1Menu = vgui.Create("liaMenu")
+f1Menu:setActiveTab(L("inv"))
+end
 })
 
 ```
@@ -55,17 +55,17 @@ lia.keybind.add("openInventory", {
 ```lua
 -- Medium: Add keybind with conditional execution and server-only flag
 lia.keybind.add("adminMode", {
-    keyBind = KEY_F1,
-    desc = "adminModeDesc",
-    serverOnly = true,
-    onPress = function(client)
-        if not IsValid(client) then return end
-        client:ChatPrint(L("adminModeToggle"))
-        -- Admin mode logic here
-    end,
-    shouldRun = function(client)
-        return client:IsAdmin()
-    end
+keyBind = KEY_F1,
+desc = "adminModeDesc",
+serverOnly = true,
+onPress = function(client)
+if not IsValid(client) then return end
+    client:ChatPrint(L("adminModeToggle"))
+    -- Admin mode logic here
+end,
+shouldRun = function(client)
+return client:IsAdmin()
+end
 })
 
 ```
@@ -74,21 +74,21 @@ lia.keybind.add("adminMode", {
 ```lua
 -- High: Add keybind with multiple callbacks and complex validation
 lia.keybind.add("convertEntity", {
-    keyBind = KEY_E,
-    desc = "convertEntityDesc",
-    onPress = function(client)
-        if not IsValid(client) or not client:getChar() then return end
-        local trace = client:GetEyeTrace()
-        local targetEntity = trace.Entity
-        -- Complex entity conversion logic
-    end,
-    onRelease = function(client)
-        -- Handle key release if needed
-    end,
-    shouldRun = function(client)
-        return client:getChar() ~= nil and client:GetEyeTrace().Entity:IsValid()
-    end,
-    serverOnly = true
+keyBind = KEY_E,
+desc = "convertEntityDesc",
+onPress = function(client)
+if not IsValid(client) or not client:getChar() then return end
+    local trace = client:GetEyeTrace()
+    local targetEntity = trace.Entity
+    -- Complex entity conversion logic
+end,
+onRelease = function(client)
+-- Handle key release if needed
+end,
+shouldRun = function(client)
+return client:getChar() ~= nil and client:GetEyeTrace().Entity:IsValid()
+end,
+serverOnly = true
 })
 
 ```
@@ -134,9 +134,9 @@ print("Inventory key:", inventoryKey)
 local adminKey = lia.keybind.get("adminMode", KEY_F1)
 if adminKey == KEY_NONE then
     print("Admin mode not bound to any key")
-else
-    print("Admin mode bound to:", input.GetKeyName(adminKey))
-end
+    else
+        print("Admin mode bound to:", input.GetKeyName(adminKey))
+    end
 
 ```
 
@@ -149,8 +149,8 @@ for _, action in ipairs(keybinds) do
     local key = lia.keybind.get(action, KEY_NONE)
     if key ~= KEY_NONE then
         boundKeys[action] = {
-            key = key,
-            name = input.GetKeyName(key) or "Unknown"
+        key = key,
+        name = input.GetKeyName(key) or "Unknown"
         }
     end
 end
@@ -192,10 +192,10 @@ lia.keybind.save()
 -- Medium: Save keybinds with validation
 local function saveKeybindsSafely()
     local success = pcall(function()
-        lia.keybind.save()
-    end)
-    if success then
-        print("Keybinds saved successfully")
+    lia.keybind.save()
+end)
+if success then
+    print("Keybinds saved successfully")
     else
         print("Failed to save keybinds")
     end
@@ -217,15 +217,15 @@ local function saveKeybindsWithBackup()
     end
     -- Save new settings
     local success = pcall(function()
-        lia.keybind.save()
-    end)
-    if not success then
-        -- Restore from backup if save failed
-        if file.Exists(backupPath, "DATA") then
-            local backupData = file.Read(backupPath, "DATA")
-            file.Write(currentPath, backupData)
-        end
+    lia.keybind.save()
+end)
+if not success then
+    -- Restore from backup if save failed
+    if file.Exists(backupPath, "DATA") then
+        local backupData = file.Read(backupPath, "DATA")
+        file.Write(currentPath, backupData)
     end
+end
 end
 saveKeybindsWithBackup()
 
@@ -265,11 +265,11 @@ lia.keybind.load()
 -- Medium: Load keybinds with validation and fallback
 local function loadKeybindsSafely()
     local success = pcall(function()
-        lia.keybind.load()
-    end)
-    if success then
-        print("Keybinds loaded successfully")
-        hook.Run("KeybindsLoaded")
+    lia.keybind.load()
+end)
+if success then
+    print("Keybinds loaded successfully")
+    hook.Run("KeybindsLoaded")
     else
         print("Failed to load keybinds, using defaults")
         -- Reset to default keybinds
@@ -300,30 +300,30 @@ local function loadKeybindsWithMigration()
     end
     -- Load with error handling
     local success = pcall(function()
-        lia.keybind.load()
-    end)
-    if not success then
-        -- Create default keybind file
-        local defaultKeybinds = {}
-        for action, data in pairs(lia.keybind.stored) do
-            if istable(data) and data.default then
-                defaultKeybinds[action] = data.default
-            end
-        end
-        local json = util.TableToJSON(defaultKeybinds, true)
-        if json then
-            file.Write(keybindPath, json)
-            lia.keybind.load()
-        end
-    end
-    -- Validate loaded keybinds
+    lia.keybind.load()
+end)
+if not success then
+    -- Create default keybind file
+    local defaultKeybinds = {}
     for action, data in pairs(lia.keybind.stored) do
-        if istable(data) and data.value then
-            if not KeybindKeys[data.value] and data.value ~= KEY_NONE then
-                data.value = data.default or KEY_NONE
-            end
+        if istable(data) and data.default then
+            defaultKeybinds[action] = data.default
         end
     end
+    local json = util.TableToJSON(defaultKeybinds, true)
+    if json then
+        file.Write(keybindPath, json)
+        lia.keybind.load()
+    end
+end
+-- Validate loaded keybinds
+for action, data in pairs(lia.keybind.stored) do
+    if istable(data) and data.value then
+        if not KeybindKeys[data.value] and data.value ~= KEY_NONE then
+            data.value = data.default or KEY_NONE
+        end
+    end
+end
 end
 loadKeybindsWithMigration()
 

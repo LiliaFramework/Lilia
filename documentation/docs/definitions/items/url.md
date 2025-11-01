@@ -4,7 +4,15 @@ URL item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
+
+**Purpose**
+
+Sets the display name of the URL item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -15,7 +23,15 @@ ITEM.name = "Website Link"
 
 ---
 
-### desc
+### Purpose:
+
+**Purpose**
+
+Sets the description of the URL item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -26,7 +42,15 @@ ITEM.desc = "A link to an external website"
 
 ---
 
-### model
+### Purpose:
+
+**Purpose**
+
+Sets the 3D model for the URL item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -37,7 +61,15 @@ ITEM.model = "models/props_interiors/pot01a.mdl"
 
 ---
 
-### url
+### Purpose:
+
+**Purpose**
+
+Sets the URL to open when the item is used
+
+**When Called**
+
+During item definition (used in use function)
 
 **Example Usage**
 

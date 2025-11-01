@@ -48,8 +48,8 @@ lia.webimage.download("logo", "https://example.com/logo.png")
 ```lua
 -- Medium: Download with callback and custom flags
 lia.webimage.download("avatar", "https://example.com/avatar.jpg", function(material, fromCache)
-    if material then
-        print("Image downloaded successfully")
+if material then
+    print("Image downloaded successfully")
     else
         print("Failed to download image")
     end
@@ -61,16 +61,16 @@ end, "noclamp smooth")
 ```lua
 -- High: Batch download with error handling and progress tracking
 local images = {
-    {name = "banner", url = "https://example.com/banner.png"},
-    {name = "icon", url = "https://example.com/icon.jpg"},
-    {name = "background", url = "https://example.com/bg.png"}
+{name = "banner", url = "https://example.com/banner.png"},
+{name = "icon", url = "https://example.com/icon.jpg"},
+{name = "background", url = "https://example.com/bg.png"}
 }
 local completed = 0
 for _, img in ipairs(images) do
     lia.webimage.download(img.name, img.url, function(material, fromCache, error)
-        completed = completed + 1
-        if material then
-            print("Downloaded: " .. img.name)
+    completed = completed + 1
+    if material then
+        print("Downloaded: " .. img.name)
         else
             print("Failed to download " .. img.name .. ": " .. (error or "unknown error"))
         end
@@ -122,10 +122,10 @@ lia.webimage.register("logo", "https://example.com/logo.png")
 ```lua
 -- Medium: Register with callback for UI updates
 lia.webimage.register("avatar", "https://example.com/avatar.jpg", function(material)
-    if material and not material:IsError() then
-        -- Update UI with the new avatar
-        avatarPanel:SetImage("data/lilia/webimages/avatar")
-    end
+if material and not material:IsError() then
+    -- Update UI with the new avatar
+    avatarPanel:SetImage("data/lilia/webimages/avatar")
+end
 end)
 
 ```
@@ -134,21 +134,21 @@ end)
 ```lua
 -- High: Register multiple images with progress tracking
 local imageConfigs = {
-    {name = "banner", url = "https://example.com/banner.png", flags = "noclamp"},
-    {name = "icon", url = "https://example.com/icon.jpg", flags = "smooth"},
-    {name = "background", url = "https://example.com/bg.png"}
+{name = "banner", url = "https://example.com/banner.png", flags = "noclamp"},
+{name = "icon", url = "https://example.com/icon.jpg", flags = "smooth"},
+{name = "background", url = "https://example.com/bg.png"}
 }
 local registered = 0
 for _, config in ipairs(imageConfigs) do
     lia.webimage.register(config.name, config.url, function(material)
-        registered = registered + 1
-        if material then
-            print("Registered: " .. config.name)
-        end
-        if registered == #imageConfigs then
-            print("All images registered successfully")
-        end
-    end, config.flags)
+    registered = registered + 1
+    if material then
+        print("Registered: " .. config.name)
+    end
+    if registered == #imageConfigs then
+        print("All images registered successfully")
+    end
+end, config.flags)
 end
 
 ```
@@ -197,9 +197,9 @@ end
 local avatar = lia.webimage.get("avatar", "noclamp smooth")
 if avatar and not avatar:IsError() then
     avatarPanel:SetMaterial(avatar)
-else
-    avatarPanel:SetImage("icon16/user.png") -- fallback
-end
+    else
+        avatarPanel:SetImage("icon16/user.png") -- fallback
+    end
 
 ```
 
@@ -213,17 +213,17 @@ for _, name in ipairs(imageNames) do
     if material and not material:IsError() then
         materials[name] = material
         print("Retrieved material: " .. name)
-    else
-        print("Failed to get material: " .. name)
-        -- Trigger re-download if needed
-        lia.webimage.download(name)
+        else
+            print("Failed to get material: " .. name)
+            -- Trigger re-download if needed
+            lia.webimage.download(name)
+        end
     end
-end
--- Use materials for rendering
-for name, material in pairs(materials) do
-    surface.SetMaterial(material)
-    surface.DrawTexturedRect(0, 0, 200, 200)
-end
+    -- Use materials for rendering
+    for name, material in pairs(materials) do
+        surface.SetMaterial(material)
+        surface.DrawTexturedRect(0, 0, 200, 200)
+    end
 
 ```
 
@@ -271,9 +271,9 @@ end
 local avatar = lia.webimage.get("avatar", "noclamp smooth")
 if avatar and not avatar:IsError() then
     avatarPanel:SetMaterial(avatar)
-else
-    avatarPanel:SetImage("icon16/user.png") -- fallback
-end
+    else
+        avatarPanel:SetImage("icon16/user.png") -- fallback
+    end
 
 ```
 
@@ -287,17 +287,17 @@ for _, name in ipairs(imageNames) do
     if material and not material:IsError() then
         materials[name] = material
         print("Retrieved material: " .. name)
-    else
-        print("Failed to get material: " .. name)
-        -- Trigger re-download if needed
-        lia.webimage.download(name)
+        else
+            print("Failed to get material: " .. name)
+            -- Trigger re-download if needed
+            lia.webimage.download(name)
+        end
     end
-end
--- Use materials for rendering
-for name, material in pairs(materials) do
-    surface.SetMaterial(material)
-    surface.DrawTexturedRect(0, 0, 200, 200)
-end
+    -- Use materials for rendering
+    for name, material in pairs(materials) do
+        surface.SetMaterial(material)
+        surface.DrawTexturedRect(0, 0, 200, 200)
+    end
 
 ```
 
@@ -345,9 +345,9 @@ end
 local avatar = lia.webimage.get("avatar", "noclamp smooth")
 if avatar and not avatar:IsError() then
     avatarPanel:SetMaterial(avatar)
-else
-    avatarPanel:SetImage("icon16/user.png") -- fallback
-end
+    else
+        avatarPanel:SetImage("icon16/user.png") -- fallback
+    end
 
 ```
 
@@ -361,17 +361,17 @@ for _, name in ipairs(imageNames) do
     if material and not material:IsError() then
         materials[name] = material
         print("Retrieved material: " .. name)
-    else
-        print("Failed to get material: " .. name)
-        -- Trigger re-download if needed
-        lia.webimage.download(name)
+        else
+            print("Failed to get material: " .. name)
+            -- Trigger re-download if needed
+            lia.webimage.download(name)
+        end
     end
-end
--- Use materials for rendering
-for name, material in pairs(materials) do
-    surface.SetMaterial(material)
-    surface.DrawTexturedRect(0, 0, 200, 200)
-end
+    -- Use materials for rendering
+    for name, material in pairs(materials) do
+        surface.SetMaterial(material)
+        surface.DrawTexturedRect(0, 0, 200, 200)
+    end
 
 ```
 
@@ -469,9 +469,9 @@ local function createStatsDashboard()
     refreshBtn:SetSize(100, 30)
     refreshBtn:SetPos(150, 250)
     refreshBtn.DoClick = function()
-        dashboard:Close()
-        createStatsDashboard() -- Refresh
-    end
+    dashboard:Close()
+    createStatsDashboard() -- Refresh
+end
 end
 createStatsDashboard()
 

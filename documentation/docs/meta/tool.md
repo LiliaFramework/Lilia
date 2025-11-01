@@ -52,8 +52,8 @@ tool.Stage = 1
 local tool = toolGunMeta:create()
 tool.Mode = "advanced_builder"
 tool.ClientConVar = {
-    ["build_size"] = "1",
-    ["build_material"] = "wood"
+["build_size"] = "1",
+["build_material"] = "wood"
 }
 tool.Objects = {}
 tool.Stage = 0
@@ -105,9 +105,9 @@ tool:createConVars()
 local tool = toolGunMeta:create()
 tool.Mode = "advanced_builder"
 tool.ClientConVar = {
-    ["build_size"] = "1",
-    ["build_material"] = "wood",
-    ["auto_align"] = "1"
+["build_size"] = "1",
+["build_material"] = "wood",
+["auto_align"] = "1"
 }
 tool:createConVars()
 
@@ -810,6 +810,10 @@ Retrieves server-side ConVar information for the current tool mode
 
 When the tool needs to access server configuration values
 
+**Parameters**
+
+* `property` (*string*): The name of the ConVar property to retrieve
+
 **Returns**
 
 * ConVar - The server ConVar object for the specified property
@@ -906,7 +910,7 @@ for name, default in pairs(convars) do
         validatedConfig[name] = value
     else
         validatedConfig[name] = default
-        print("Invalid ConVar value for " .. name .. ", using default")
+        -- Invalid ConVar value for " .. name .. ", using default
     end
 end
 self:ApplyConfiguration(validatedConfig)
@@ -924,6 +928,10 @@ Retrieves client-side ConVar information for the current tool mode
 **When Called**
 
 When the tool needs to access client configuration values from the owner
+
+**Parameters**
+
+* `property` (*string*): The name of the ConVar property to retrieve
 
 **Returns**
 
@@ -1019,9 +1027,9 @@ end
 ```lua
 -- High: Advanced numeric configuration with validation
 local numericConfig = {
-    ["build_size"] = {default = 1, min = 0.1, max = 10},
-    ["build_speed"] = {default = 1, min = 0.1, max = 5},
-    ["max_objects"] = {default = 50, min = 1, max = 1000}
+["build_size"] = {default = 1, min = 0.1, max = 10},
+["build_speed"] = {default = 1, min = 0.1, max = 5},
+["max_objects"] = {default = 50, min = 1, max = 1000}
 }
 local validatedNumbers = {}
 for prop, config in pairs(numericConfig) do
@@ -1311,9 +1319,9 @@ local mode = tool:getMode()
 local mode = tool:getMode()
 if mode == "builder" then
     tool:EnableBuildMode()
-elseif mode == "remover" then
-    tool:EnableRemoveMode()
-end
+    elseif mode == "remover" then
+        tool:EnableRemoveMode()
+    end
 
 ```
 
@@ -1391,11 +1399,11 @@ local isReloading = swep:IsReloading()
 -- Perform weapon-specific operations
 if weaponClass == "weapon_physgun" then
     self:HandlePhysgunSpecificLogic(swep)
-elseif weaponClass == "weapon_physcannon" then
-    self:HandleGravityGunSpecificLogic(swep)
-end
--- Update tool state based on weapon
-self.LastWeaponCheck = CurTime()
+    elseif weaponClass == "weapon_physcannon" then
+        self:HandleGravityGunSpecificLogic(swep)
+    end
+    -- Update tool state based on weapon
+    self.LastWeaponCheck = CurTime()
 
 ```
 
@@ -1458,7 +1466,7 @@ local steamID = owner:SteamID()
 local team = owner:Team()
 -- Log tool usage
 print(string.format("Player %s (Team %d) used tool %s",
-      owner:Name(), team, tool:getMode()))
+owner:Name(), team, tool:getMode()))
 -- Apply team-based restrictions
 if self:HasTeamRestrictions(team) then
     tool.Message = "Your team cannot use this tool"
@@ -1528,15 +1536,15 @@ if weaponClass == "weapon_physgun" then
     if IsValid(heldEntity) then
         self:HandleHeldEntity(heldEntity)
     end
-elseif weaponClass == "weapon_toolgun" then
-    -- Handle tool gun specific logic
-    local toolMode = self:getMode()
-    if toolMode == "builder" then
-        self:UpdateGhostEntity()
+    elseif weaponClass == "weapon_toolgun" then
+        -- Handle tool gun specific logic
+        local toolMode = self:getMode()
+        if toolMode == "builder" then
+            self:UpdateGhostEntity()
+        end
     end
-end
--- Update tool state based on weapon
-self.LastWeaponUpdate = CurTime()
+    -- Update tool state based on weapon
+    self.LastWeaponUpdate = CurTime()
 
 ```
 
@@ -1961,8 +1969,12 @@ function tool:rightClick()
     -- Handle different target types
     if trace.HitWorld then
         -- World click - show position info
-        self.Message = string.format("World: %.2f, %.2f, %.2f",
-            trace.HitPos.x, trace.HitPos.y, trace.HitPos.z)
+        self.Message = string.format(
+            "World: %.2f, %.2f, %.2f",
+            trace.HitPos.x,
+            trace.HitPos.y,
+            trace.HitPos.z
+        )
         return true
     elseif IsValid(hitEntity) then
         -- Entity click - show context menu or manipulate
@@ -2052,8 +2064,12 @@ function tool:rightClick()
     -- Handle different target types
     if trace.HitWorld then
         -- World click - show position info
-        self.Message = string.format("World: %.2f, %.2f, %.2f",
-            trace.HitPos.x, trace.HitPos.y, trace.HitPos.z)
+        self.Message = string.format(
+            "World: %.2f, %.2f, %.2f",
+            trace.HitPos.x,
+            trace.HitPos.y,
+            trace.HitPos.z
+        )
         return true
     elseif IsValid(hitEntity) then
         -- Entity click - show context menu or manipulate
@@ -2143,8 +2159,12 @@ function tool:rightClick()
     -- Handle different target types
     if trace.HitWorld then
         -- World click - show position info
-        self.Message = string.format("World: %.2f, %.2f, %.2f",
-            trace.HitPos.x, trace.HitPos.y, trace.HitPos.z)
+        self.Message = string.format(
+            "World: %.2f, %.2f, %.2f",
+            trace.HitPos.x,
+            trace.HitPos.y,
+            trace.HitPos.z
+        )
         return true
     elseif IsValid(hitEntity) then
         -- Entity click - show context menu or manipulate
@@ -2234,8 +2254,12 @@ function tool:rightClick()
     -- Handle different target types
     if trace.HitWorld then
         -- World click - show position info
-        self.Message = string.format("World: %.2f, %.2f, %.2f",
-            trace.HitPos.x, trace.HitPos.y, trace.HitPos.z)
+        self.Message = string.format(
+            "World: %.2f, %.2f, %.2f",
+            trace.HitPos.x,
+            trace.HitPos.y,
+            trace.HitPos.z
+        )
         return true
     elseif IsValid(hitEntity) then
         -- Entity click - show context menu or manipulate
@@ -2308,8 +2332,7 @@ function tool:reload()
     self:clearObjects()
     self.Message = string.format("Cleared %d objects", count)
     if SERVER then
-        print(string.format("Player %s cleared %d objects",
-            self:GetOwner():Name(), count))
+        print("Player " .. self:GetOwner():Name() .. " cleared " .. count .. " objects")
     end
 end
 
@@ -2351,8 +2374,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        print(string.format("Player %s cleared %d tool objects",
-            owner:Name(), clearedCount))
+        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
     end
 end
 
@@ -2402,8 +2424,7 @@ function tool:reload()
     self:clearObjects()
     self.Message = string.format("Cleared %d objects", count)
     if SERVER then
-        print(string.format("Player %s cleared %d objects",
-            self:GetOwner():Name(), count))
+        print("Player " .. self:GetOwner():Name() .. " cleared " .. count .. " objects")
     end
 end
 
@@ -2445,8 +2466,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        print(string.format("Player %s cleared %d tool objects",
-            owner:Name(), clearedCount))
+        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
     end
 end
 
@@ -2496,8 +2516,7 @@ function tool:reload()
     self:clearObjects()
     self.Message = string.format("Cleared %d objects", count)
     if SERVER then
-        print(string.format("Player %s cleared %d objects",
-            self:GetOwner():Name(), count))
+        print("Player " .. self:GetOwner():Name() .. " cleared " .. count .. " objects")
     end
 end
 
@@ -2539,8 +2558,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        print(string.format("Player %s cleared %d tool objects",
-            owner:Name(), clearedCount))
+        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
     end
 end
 
@@ -2590,8 +2608,7 @@ function tool:reload()
     self:clearObjects()
     self.Message = string.format("Cleared %d objects", count)
     if SERVER then
-        print(string.format("Player %s cleared %d objects",
-            self:GetOwner():Name(), count))
+        print("Player " .. self:GetOwner():Name() .. " cleared " .. count .. " objects")
     end
 end
 
@@ -2633,8 +2650,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        print(string.format("Player %s cleared %d tool objects",
-            owner:Name(), clearedCount))
+        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
     end
 end
 
@@ -2723,8 +2739,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    print(string.format("Player %s deployed %s tool",
-        owner:Name(), mode))
+    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
 end
 
 ```
@@ -2812,8 +2827,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    print(string.format("Player %s deployed %s tool",
-        owner:Name(), mode))
+    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
 end
 
 ```
@@ -2901,8 +2915,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    print(string.format("Player %s deployed %s tool",
-        owner:Name(), mode))
+    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
 end
 
 ```
@@ -2990,8 +3003,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    print(string.format("Player %s deployed %s tool",
-        owner:Name(), mode))
+    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
 end
 
 ```
@@ -3072,8 +3084,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    print(string.format("Player %s holstered %s tool",
-        owner:Name(), self:getMode()))
+    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
 end
 
 ```
@@ -3154,8 +3165,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    print(string.format("Player %s holstered %s tool",
-        owner:Name(), self:getMode()))
+    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
 end
 
 ```
@@ -3236,8 +3246,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    print(string.format("Player %s holstered %s tool",
-        owner:Name(), self:getMode()))
+    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
 end
 
 ```
@@ -3318,8 +3327,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    print(string.format("Player %s holstered %s tool",
-        owner:Name(), self:getMode()))
+    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
 end
 
 ```
@@ -3787,8 +3795,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            print(string.format("Player %s had %d invalid tool objects cleaned up",
-                owner:Name(), removedCount))
+            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
         end
     end
     -- Update cleanup timestamp
@@ -3896,8 +3903,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            print(string.format("Player %s had %d invalid tool objects cleaned up",
-                owner:Name(), removedCount))
+            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
         end
     end
     -- Update cleanup timestamp
@@ -4005,8 +4011,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            print(string.format("Player %s had %d invalid tool objects cleaned up",
-                owner:Name(), removedCount))
+            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
         end
     end
     -- Update cleanup timestamp
@@ -4114,8 +4119,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            print(string.format("Player %s had %d invalid tool objects cleaned up",
-                owner:Name(), removedCount))
+            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
         end
     end
     -- Update cleanup timestamp
@@ -4195,8 +4199,7 @@ function tool:clearObjects()
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
         -- Log the clearing action
-        print(string.format("Player %s cleared all %d tool objects",
-            owner:Name(), clearedCount))
+        print("Player " .. owner:Name() .. " cleared all " .. clearedCount .. " tool objects")
         -- Save state after clearing
         self:SaveToolState()
     end
@@ -4279,8 +4282,7 @@ function tool:clearObjects()
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
         -- Log the clearing action
-        print(string.format("Player %s cleared all %d tool objects",
-            owner:Name(), clearedCount))
+        print("Player " .. owner:Name() .. " cleared all " .. clearedCount .. " tool objects")
         -- Save state after clearing
         self:SaveToolState()
     end
@@ -4363,8 +4365,7 @@ function tool:clearObjects()
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
         -- Log the clearing action
-        print(string.format("Player %s cleared all %d tool objects",
-            owner:Name(), clearedCount))
+        print("Player " .. owner:Name() .. " cleared all " .. clearedCount .. " tool objects")
         -- Save state after clearing
         self:SaveToolState()
     end
@@ -4434,10 +4435,10 @@ function tool:releaseGhostEntity()
         -- Store ghost entity data before removal (if needed)
         if self:getClientInfo("preserve_ghost_data") == "1" then
             self.LastGhostData = {
-                Model = self.GhostEntity:GetModel(),
-                Pos = self.GhostEntity:GetPos(),
-                Ang = self.GhostEntity:GetAngles(),
-                Time = CurTime()
+            Model = self.GhostEntity:GetModel(),
+            Pos = self.GhostEntity:GetPos(),
+            Ang = self.GhostEntity:GetAngles(),
+            Time = CurTime()
             }
         end
         -- Clean up associated effects and particles
@@ -4457,13 +4458,13 @@ function tool:releaseGhostEntity()
             net.Broadcast()
             -- Log ghost entity removal
             print(string.format("Player %s removed ghost entity for %s tool",
-                owner:Name(), self:getMode()))
-        else
-            -- Client-side cleanup confirmation
-            self:ResetGhostMaterials()
+            owner:Name(), self:getMode()))
+            else
+                -- Client-side cleanup confirmation
+                self:ResetGhostMaterials()
+            end
         end
     end
-end
 
 ```
 
@@ -4525,10 +4526,10 @@ function tool:releaseGhostEntity()
         -- Store ghost entity data before removal (if needed)
         if self:getClientInfo("preserve_ghost_data") == "1" then
             self.LastGhostData = {
-                Model = self.GhostEntity:GetModel(),
-                Pos = self.GhostEntity:GetPos(),
-                Ang = self.GhostEntity:GetAngles(),
-                Time = CurTime()
+            Model = self.GhostEntity:GetModel(),
+            Pos = self.GhostEntity:GetPos(),
+            Ang = self.GhostEntity:GetAngles(),
+            Time = CurTime()
             }
         end
         -- Clean up associated effects and particles
@@ -4548,13 +4549,13 @@ function tool:releaseGhostEntity()
             net.Broadcast()
             -- Log ghost entity removal
             print(string.format("Player %s removed ghost entity for %s tool",
-                owner:Name(), self:getMode()))
-        else
-            -- Client-side cleanup confirmation
-            self:ResetGhostMaterials()
+            owner:Name(), self:getMode()))
+            else
+                -- Client-side cleanup confirmation
+                self:ResetGhostMaterials()
+            end
         end
     end
-end
 
 ```
 
@@ -4616,10 +4617,10 @@ function tool:releaseGhostEntity()
         -- Store ghost entity data before removal (if needed)
         if self:getClientInfo("preserve_ghost_data") == "1" then
             self.LastGhostData = {
-                Model = self.GhostEntity:GetModel(),
-                Pos = self.GhostEntity:GetPos(),
-                Ang = self.GhostEntity:GetAngles(),
-                Time = CurTime()
+            Model = self.GhostEntity:GetModel(),
+            Pos = self.GhostEntity:GetPos(),
+            Ang = self.GhostEntity:GetAngles(),
+            Time = CurTime()
             }
         end
         -- Clean up associated effects and particles
@@ -4639,13 +4640,13 @@ function tool:releaseGhostEntity()
             net.Broadcast()
             -- Log ghost entity removal
             print(string.format("Player %s removed ghost entity for %s tool",
-                owner:Name(), self:getMode()))
-        else
-            -- Client-side cleanup confirmation
-            self:ResetGhostMaterials()
+            owner:Name(), self:getMode()))
+            else
+                -- Client-side cleanup confirmation
+                self:ResetGhostMaterials()
+            end
         end
     end
-end
 
 ```
 

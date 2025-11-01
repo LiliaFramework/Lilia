@@ -4,7 +4,15 @@ Medical aid item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
+
+**Purpose**
+
+Sets the display name of the aid item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -15,7 +23,15 @@ ITEM.name = "Medical Kit"
 
 ---
 
-### desc
+### Purpose:
+
+**Purpose**
+
+Sets the description of the aid item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -26,7 +42,15 @@ ITEM.desc = "A medical kit that restores health"
 
 ---
 
-### model
+### Purpose:
+
+**Purpose**
+
+Sets the 3D model for the aid item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -37,7 +61,15 @@ ITEM.model = "models/weapons/w_package.mdl"
 
 ---
 
-### width
+### Purpose:
+
+**Purpose**
+
+Sets the inventory width of the aid item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -48,7 +80,15 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### height
+### Purpose:
+
+**Purpose**
+
+Sets the inventory height of the aid item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -59,7 +99,15 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### health
+### Purpose:
+
+**Purpose**
+
+Sets the amount of health restored by the aid item
+
+**When Called**
+
+During item definition (used in use functions)
 
 **Example Usage**
 

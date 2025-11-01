@@ -60,10 +60,10 @@ local players = player.GetAll()
 for _, ply in ipairs(players) do
     if ply:IsAdmin() then
         lia.notices.notify(ply, "Admin panel updated", "info")
-    else
-        lia.notices.notify(ply, "Welcome to the server!", "success")
+        else
+            lia.notices.notify(ply, "Welcome to the server!", "success")
+        end
     end
-end
 
 ```
 
@@ -98,7 +98,7 @@ Server
 **Low Complexity:**
 ```lua
 -- Simple: Send localized notification to all players
-lia.notices.notifyLocalized(nil, "server.restart", "info")
+lia.notices.notifyInfoLocalized(nil, "server.restart")
 
 ```
 
@@ -106,7 +106,7 @@ lia.notices.notifyLocalized(nil, "server.restart", "info")
 ```lua
 -- Medium: Send localized notification with one parameter
 local player = Player(1)
-lia.notices.notifyLocalized(player, "player.welcome", "success", player:Name())
+lia.notices.notifySuccessLocalized(player, "player.welcome", player:Name())
 
 ```
 
@@ -116,8 +116,8 @@ lia.notices.notifyLocalized(player, "player.welcome", "success", player:Name())
 local players = player.GetAll()
 for _, ply in ipairs(players) do
     local timeLeft = math.max(0, 300 - CurTime())
-    lia.notices.notifyLocalized(ply, "server.restart.time", "warning",
-        ply:Name(), math.floor(timeLeft / 60), timeLeft % 60)
+    lia.notices.notifyWarningLocalized(ply, "server.restart.time",
+    ply:Name(), math.floor(timeLeft / 60), timeLeft % 60)
 end
 
 ```
@@ -155,9 +155,9 @@ Client
 ```lua
 -- Medium: Custom network receiver with additional processing
 net.Receive("liaNotificationData", function()
-    lia.notices.receiveNotify()
-    -- Additional custom processing here
-    print("Notification received from server")
+lia.notices.receiveNotify()
+-- Additional custom processing here
+print("Notification received from server")
 end)
 
 ```
@@ -167,15 +167,15 @@ end)
 -- High: Override default behavior with custom notification handling
 local originalReceiveNotify = lia.notices.receiveNotify
 lia.notices.receiveNotify = function()
-    local msg = net.ReadString() or ""
-    local ntype = net.ReadString() or "default"
-    -- Custom processing before creating notice
-    if ntype == "error" then
-        -- Log errors to file
-        file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
-    end
-    -- Call original function
-    originalReceiveNotify()
+local msg = net.ReadString() or ""
+local ntype = net.ReadString() or "default"
+-- Custom processing before creating notice
+if ntype == "error" then
+    -- Log errors to file
+    file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
+end
+-- Call original function
+originalReceiveNotify()
 end
 
 ```
@@ -213,9 +213,9 @@ Client
 ```lua
 -- Medium: Custom network receiver with additional processing
 net.Receive("liaNotificationData", function()
-    lia.notices.receiveNotify()
-    -- Additional custom processing here
-    print("Notification received from server")
+lia.notices.receiveNotify()
+-- Additional custom processing here
+print("Notification received from server")
 end)
 
 ```
@@ -225,15 +225,15 @@ end)
 -- High: Override default behavior with custom notification handling
 local originalReceiveNotify = lia.notices.receiveNotify
 lia.notices.receiveNotify = function()
-    local msg = net.ReadString() or ""
-    local ntype = net.ReadString() or "default"
-    -- Custom processing before creating notice
-    if ntype == "error" then
-        -- Log errors to file
-        file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
-    end
-    -- Call original function
-    originalReceiveNotify()
+local msg = net.ReadString() or ""
+local ntype = net.ReadString() or "default"
+-- Custom processing before creating notice
+if ntype == "error" then
+    -- Log errors to file
+    file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
+end
+-- Call original function
+originalReceiveNotify()
 end
 
 ```
@@ -271,9 +271,9 @@ Client
 ```lua
 -- Medium: Custom network receiver with additional processing
 net.Receive("liaNotifyLocal", function()
-    lia.notices.receiveNotifyL()
-    -- Additional custom processing here
-    print("Localized notification received from server")
+lia.notices.receiveNotifyL()
+-- Additional custom processing here
+print("Localized notification received from server")
 end)
 
 ```
@@ -283,20 +283,20 @@ end)
 -- High: Override default behavior with custom localized notification handling
 local originalReceiveNotifyL = lia.notices.receiveNotifyL
 lia.notices.receiveNotifyL = function()
-    local key = net.ReadString() or ""
-    local argc = net.ReadUInt(8) or 0
-    local args = {}
-    for i = 1, argc do
-        args[i] = net.ReadString()
-    end
-    -- Custom processing before creating notice
-    local msg = L(key, unpack(args))
-    if string.find(msg, "error") then
-        -- Log errors to file
-        file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
-    end
-    -- Call original function
-    originalReceiveNotifyL()
+local key = net.ReadString() or ""
+local argc = net.ReadUInt(8) or 0
+local args = {}
+for i = 1, argc do
+    args[i] = net.ReadString()
+end
+-- Custom processing before creating notice
+local msg = L(key, unpack(args))
+if string.find(msg, "error") then
+    -- Log errors to file
+    file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
+end
+-- Call original function
+originalReceiveNotifyL()
 end
 
 ```
@@ -334,9 +334,9 @@ Client
 ```lua
 -- Medium: Custom network receiver with additional processing
 net.Receive("liaNotifyLocal", function()
-    lia.notices.receiveNotifyL()
-    -- Additional custom processing here
-    print("Localized notification received from server")
+lia.notices.receiveNotifyL()
+-- Additional custom processing here
+print("Localized notification received from server")
 end)
 
 ```
@@ -346,20 +346,20 @@ end)
 -- High: Override default behavior with custom localized notification handling
 local originalReceiveNotifyL = lia.notices.receiveNotifyL
 lia.notices.receiveNotifyL = function()
-    local key = net.ReadString() or ""
-    local argc = net.ReadUInt(8) or 0
-    local args = {}
-    for i = 1, argc do
-        args[i] = net.ReadString()
-    end
-    -- Custom processing before creating notice
-    local msg = L(key, unpack(args))
-    if string.find(msg, "error") then
-        -- Log errors to file
-        file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
-    end
-    -- Call original function
-    originalReceiveNotifyL()
+local key = net.ReadString() or ""
+local argc = net.ReadUInt(8) or 0
+local args = {}
+for i = 1, argc do
+    args[i] = net.ReadString()
+end
+-- Custom processing before creating notice
+local msg = L(key, unpack(args))
+if string.find(msg, "error") then
+    -- Log errors to file
+    file.Append("notifications.log", os.date() .. ": " .. msg .. "\n")
+end
+-- Call original function
+originalReceiveNotifyL()
 end
 
 ```
@@ -413,11 +413,11 @@ lia.notices.notify(nil, "Welcome back, " .. playerName .. "!", "info")
 local player = LocalPlayer()
 if player:GetNWInt("health") < 25 then
     lia.notices.notify(nil, "Health critical! Find medical attention!", "error")
-elseif player:GetNWInt("health") < 50 then
-    lia.notices.notify(nil, "Health low - be careful!", "warning")
-else
-    lia.notices.notify(nil, "Health status: Good", "success")
-end
+    elseif player:GetNWInt("health") < 50 then
+        lia.notices.notify(nil, "Health low - be careful!", "warning")
+        else
+            lia.notices.notify(nil, "Health status: Good", "success")
+        end
 
 ```
 
@@ -452,7 +452,7 @@ Client
 **Low Complexity:**
 ```lua
 -- Simple: Display localized notification
-lia.notices.notifyLocalized(nil, "ui.settings.saved", "success")
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
 
 ```
 
@@ -460,7 +460,7 @@ lia.notices.notifyLocalized(nil, "ui.settings.saved", "success")
 ```lua
 -- Medium: Display localized notification with one parameter
 local playerName = LocalPlayer():Name()
-lia.notices.notifyLocalized(nil, "ui.welcome.back", "info", playerName)
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
 
 ```
 
@@ -472,15 +472,393 @@ local health = player:GetNWInt("health")
 local maxHealth = player:GetMaxHealth()
 local healthPercent = math.floor((health / maxHealth) * 100)
 if health < 25 then
-    lia.notices.notifyLocalized(nil, "ui.health.critical", "error",
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
         health, maxHealth, healthPercent)
-elseif health < 50 then
-    lia.notices.notifyLocalized(nil, "ui.health.low", "warning",
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
+
+```
+
+---
+
+### notifyInfoLocalized
+
+**Purpose**
+
+Creates and displays a localized notification message directly on the client
+
+**When Called**
+
+When client needs to display a localized notification without server communication
+
+**Parameters**
+
+* `client` (*any*): Ignored parameter (for compatibility with server version)
+* `key` (*string*): Localization key for the message
+* `notifType` (*string|nil*): Type of notification ("default", "error", "success", "info", etc.)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display localized notification
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Display localized notification with one parameter
+local playerName = LocalPlayer():Name()
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Display localized notifications with multiple parameters
+local player = LocalPlayer()
+local health = player:GetNWInt("health")
+local maxHealth = player:GetMaxHealth()
+local healthPercent = math.floor((health / maxHealth) * 100)
+if health < 25 then
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
         health, maxHealth, healthPercent)
-else
-    lia.notices.notifyLocalized(nil, "ui.health.good", "success",
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
+
+```
+
+---
+
+### notifyWarningLocalized
+
+**Purpose**
+
+Creates and displays a localized notification message directly on the client
+
+**When Called**
+
+When client needs to display a localized notification without server communication
+
+**Parameters**
+
+* `client` (*any*): Ignored parameter (for compatibility with server version)
+* `key` (*string*): Localization key for the message
+* `notifType` (*string|nil*): Type of notification ("default", "error", "success", "info", etc.)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display localized notification
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Display localized notification with one parameter
+local playerName = LocalPlayer():Name()
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Display localized notifications with multiple parameters
+local player = LocalPlayer()
+local health = player:GetNWInt("health")
+local maxHealth = player:GetMaxHealth()
+local healthPercent = math.floor((health / maxHealth) * 100)
+if health < 25 then
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
         health, maxHealth, healthPercent)
-end
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
+
+```
+
+---
+
+### notifyErrorLocalized
+
+**Purpose**
+
+Creates and displays a localized notification message directly on the client
+
+**When Called**
+
+When client needs to display a localized notification without server communication
+
+**Parameters**
+
+* `client` (*any*): Ignored parameter (for compatibility with server version)
+* `key` (*string*): Localization key for the message
+* `notifType` (*string|nil*): Type of notification ("default", "error", "success", "info", etc.)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display localized notification
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Display localized notification with one parameter
+local playerName = LocalPlayer():Name()
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Display localized notifications with multiple parameters
+local player = LocalPlayer()
+local health = player:GetNWInt("health")
+local maxHealth = player:GetMaxHealth()
+local healthPercent = math.floor((health / maxHealth) * 100)
+if health < 25 then
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
+        health, maxHealth, healthPercent)
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
+
+```
+
+---
+
+### notifySuccessLocalized
+
+**Purpose**
+
+Creates and displays a localized notification message directly on the client
+
+**When Called**
+
+When client needs to display a localized notification without server communication
+
+**Parameters**
+
+* `client` (*any*): Ignored parameter (for compatibility with server version)
+* `key` (*string*): Localization key for the message
+* `notifType` (*string|nil*): Type of notification ("default", "error", "success", "info", etc.)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display localized notification
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Display localized notification with one parameter
+local playerName = LocalPlayer():Name()
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Display localized notifications with multiple parameters
+local player = LocalPlayer()
+local health = player:GetNWInt("health")
+local maxHealth = player:GetMaxHealth()
+local healthPercent = math.floor((health / maxHealth) * 100)
+if health < 25 then
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
+        health, maxHealth, healthPercent)
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
+
+```
+
+---
+
+### notifyMoneyLocalized
+
+**Purpose**
+
+Creates and displays a localized notification message directly on the client
+
+**When Called**
+
+When client needs to display a localized notification without server communication
+
+**Parameters**
+
+* `client` (*any*): Ignored parameter (for compatibility with server version)
+* `key` (*string*): Localization key for the message
+* `notifType` (*string|nil*): Type of notification ("default", "error", "success", "info", etc.)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display localized notification
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Display localized notification with one parameter
+local playerName = LocalPlayer():Name()
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Display localized notifications with multiple parameters
+local player = LocalPlayer()
+local health = player:GetNWInt("health")
+local maxHealth = player:GetMaxHealth()
+local healthPercent = math.floor((health / maxHealth) * 100)
+if health < 25 then
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
+        health, maxHealth, healthPercent)
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
+
+```
+
+---
+
+### notifyAdminLocalized
+
+**Purpose**
+
+Creates and displays a localized notification message directly on the client
+
+**When Called**
+
+When client needs to display a localized notification without server communication
+
+**Parameters**
+
+* `client` (*any*): Ignored parameter (for compatibility with server version)
+* `key` (*string*): Localization key for the message
+* `notifType` (*string|nil*): Type of notification ("default", "error", "success", "info", etc.)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display localized notification
+lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Display localized notification with one parameter
+local playerName = LocalPlayer():Name()
+lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Display localized notifications with multiple parameters
+local player = LocalPlayer()
+local health = player:GetNWInt("health")
+local maxHealth = player:GetMaxHealth()
+local healthPercent = math.floor((health / maxHealth) * 100)
+if health < 25 then
+    lia.notices.notifyErrorLocalized(nil, "ui.health.critical",
+    health, maxHealth, healthPercent)
+    elseif health < 50 then
+        lia.notices.notifyWarningLocalized(nil, "ui.health.low",
+        health, maxHealth, healthPercent)
+        else
+            lia.notices.notifySuccessLocalized(nil, "ui.health.good",
+            health, maxHealth, healthPercent)
+        end
 
 ```
 
@@ -533,15 +911,15 @@ notification.AddLegacy(message, typeId)
 -- High: Override legacy notification with custom handling
 local originalAddLegacy = notification.AddLegacy
 notification.AddLegacy = function(text, typeId)
-    local map = {[0] = "info", [1] = "error", [2] = "success"}
-    local notifType = map[tonumber(typeId) or -1] or "default"
-    -- Custom processing
-    if notifType == "error" then
-        -- Log errors to file
-        file.Append("legacy_notifications.log", os.date() .. ": " .. text .. "\n")
-    end
-    -- Call original function
-    originalAddLegacy(text, typeId)
+local map = {[0] = "info", [1] = "error", [2] = "success"}
+local notifType = map[tonumber(typeId) or -1] or "default"
+-- Custom processing
+if notifType == "error" then
+    -- Log errors to file
+    file.Append("legacy_notifications.log", os.date() .. ": " .. text .. "\n")
+end
+-- Call original function
+originalAddLegacy(text, typeId)
 end
 
 ```
@@ -595,15 +973,15 @@ notification.AddLegacy(message, typeId)
 -- High: Override legacy notification with custom handling
 local originalAddLegacy = notification.AddLegacy
 notification.AddLegacy = function(text, typeId)
-    local map = {[0] = "info", [1] = "error", [2] = "success"}
-    local notifType = map[tonumber(typeId) or -1] or "default"
-    -- Custom processing
-    if notifType == "error" then
-        -- Log errors to file
-        file.Append("legacy_notifications.log", os.date() .. ": " .. text .. "\n")
-    end
-    -- Call original function
-    originalAddLegacy(text, typeId)
+local map = {[0] = "info", [1] = "error", [2] = "success"}
+local notifType = map[tonumber(typeId) or -1] or "default"
+-- Custom processing
+if notifType == "error" then
+    -- Log errors to file
+    file.Append("legacy_notifications.log", os.date() .. ": " .. text .. "\n")
+end
+-- Call original function
+originalAddLegacy(text, typeId)
 end
 
 ```
@@ -652,18 +1030,18 @@ OrganizeNotices() -- Ensure proper positioning
 -- High: Custom notice organization with different positioning
 local originalOrganizeNotices = OrganizeNotices
 OrganizeNotices = function()
-    local scale = ScrH() / 1080
-    local baseY = ScrH() - 300 * scale -- Different base position
-    local spacing = 8 * scale -- Different spacing
-    local y = baseY
-    for _, v in ipairs(lia.notices) do
-        if IsValid(v) then
-            v.targetY = y
-            -- Add custom animation
-            v:MoveTo(v:GetX(), y, 0.3, 0, 0.5)
-            y = y - (v:GetTall() + spacing)
-        end
+local scale = ScrH() / 1080
+local baseY = ScrH() - 300 * scale -- Different base position
+local spacing = 8 * scale -- Different spacing
+local y = baseY
+for _, v in ipairs(lia.notices) do
+    if IsValid(v) then
+        v.targetY = y
+        -- Add custom animation
+        v:MoveTo(v:GetX(), y, 0.3, 0, 0.5)
+        y = y - (v:GetTall() + spacing)
     end
+end
 end
 
 ```

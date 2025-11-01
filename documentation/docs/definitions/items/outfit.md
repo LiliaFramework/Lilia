@@ -4,7 +4,15 @@ Outfit item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
+
+**Purpose**
+
+Sets the display name of the outfit item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -15,7 +23,15 @@ ITEM.name = "Police Uniform"
 
 ---
 
-### desc
+### Purpose:
+
+**Purpose**
+
+Sets the description of the outfit item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -26,7 +42,15 @@ ITEM.desc = "A standard police uniform"
 
 ---
 
-### category
+### Purpose:
+
+**Purpose**
+
+Sets the category for the outfit item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -37,7 +61,15 @@ ITEM.category = "outfit"
 
 ---
 
-### model
+### Purpose:
+
+**Purpose**
+
+Sets the 3D model for the outfit item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -48,7 +80,15 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl"
 
 ---
 
-### width
+### Purpose:
+
+**Purpose**
+
+Sets the inventory width of the outfit item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -59,7 +99,15 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### height
+### Purpose:
+
+**Purpose**
+
+Sets the inventory height of the outfit item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -70,7 +118,15 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### outfitCategory
+### Purpose:
+
+**Purpose**
+
+Sets the outfit category for conflict checking
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -81,7 +137,15 @@ ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
 
 ---
 
-### pacData
+### Purpose:
+
+**Purpose**
+
+Sets the PAC data for the outfit
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -92,7 +156,15 @@ ITEM.pacData = {}  -- PAC attachment data
 
 ---
 
-### isOutfit
+### Purpose:
+
+**Purpose**
+
+Marks the item as an outfit
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -104,6 +176,14 @@ ITEM.isOutfit = true
 ---
 
 ### ITEM:paintOver(item, w, h)
+
+**Purpose**
+
+Custom paint function to show equipped status
+
+**When Called**
+
+When rendering the item in inventory (CLIENT only)
 
 **Example Usage**
 
@@ -121,6 +201,14 @@ end
 
 ### ITEM:removeOutfit(client)
 
+**Purpose**
+
+Removes the outfit from the player
+
+**When Called**
+
+When unequipping the outfit
+
 **Example Usage**
 
 ```lua
@@ -133,6 +221,14 @@ end
 ---
 
 ### ITEM:wearOutfit(client, isForLoadout)
+
+**Purpose**
+
+Applies the outfit to the player
+
+**When Called**
+
+When equipping the outfit
 
 **Example Usage**
 
@@ -147,13 +243,21 @@ end
 
 ### ITEM:OnCanBeTransfered(_, newInventory)
 
+**Purpose**
+
+Prevents transfer of equipped outfits
+
+**When Called**
+
+When attempting to transfer the item
+
 **Example Usage**
 
 ```lua
 function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
-        return true
-    end
+    return true
+end
 
 ```
 
@@ -161,12 +265,20 @@ function ITEM:OnCanBeTransfered(_, newInventory)
 
 ### ITEM:onLoadout()
 
+**Purpose**
+
+Handles outfit loading on player spawn
+
+**When Called**
+
+When player spawns with equipped outfit
+
 **Example Usage**
 
 ```lua
 function ITEM:onLoadout()
     if self:getData("equip") then self:wearOutfit(self.player, true) end
-    end
+end
 
 ```
 
@@ -174,18 +286,34 @@ function ITEM:onLoadout()
 
 ### ITEM:onRemoved()
 
+**Purpose**
+
+Handles outfit removal when item is removed
+
+**When Called**
+
+When item is removed from inventory
+
 **Example Usage**
 
 ```lua
 function ITEM:onRemoved()
     if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
-    end
+end
 
 ```
 
 ---
 
 ### ITEM:hook("drop", function(item) ... end)
+
+**Purpose**
+
+Handles outfit removal when item is dropped
+
+**When Called**
+
+When item is dropped
 
 **Example Usage**
 

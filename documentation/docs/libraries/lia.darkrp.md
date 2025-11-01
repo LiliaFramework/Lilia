@@ -251,9 +251,9 @@ label:SetFont(font)
 ```lua
 -- High: Dynamic text wrapping with multiple paragraphs
 local paragraphs = {
-    "First paragraph with lots of text that needs wrapping",
-    "Second paragraph with different content",
-    "Third paragraph with even more content"
+"First paragraph with lots of text that needs wrapping",
+"Second paragraph with different content",
+"Third paragraph with even more content"
 }
 local font = "liaFont"
 local maxWidth = 400
@@ -361,8 +361,8 @@ Shared
 ```lua
 -- Simple: Create a basic entity
 lia.darkrp.createEntity("Chair", {
-    model = "models/props_c17/FurnitureChair001a.mdl",
-    price = 50
+model = "models/props_c17/FurnitureChair001a.mdl",
+price = 50
 })
 
 ```
@@ -371,12 +371,12 @@ lia.darkrp.createEntity("Chair", {
 ```lua
 -- Medium: Create entity with full configuration
 lia.darkrp.createEntity("Advanced Computer", {
-    cmd = "computer",
-    model = "models/props_lab/monitor01b.mdl",
-    desc = "A high-tech computer for advanced operations",
-    category = "Electronics",
-    ent = "prop_physics",
-    price = 200
+cmd = "computer",
+model = "models/props_lab/monitor01b.mdl",
+desc = "A high-tech computer for advanced operations",
+category = "Electronics",
+ent = "prop_physics",
+price = 200
 })
 
 ```
@@ -385,26 +385,26 @@ lia.darkrp.createEntity("Advanced Computer", {
 ```lua
 -- High: Create multiple entities from configuration table
 local entities = {
-    {
-        name = "Office Desk",
-        data = {
-            cmd = "desk",
-            model = "models/props_c17/FurnitureTable002a.mdl",
-            desc = "A sturdy office desk",
-            category = "Furniture",
-            price = 100
-        }
-    },
-    {
-        name = "Filing Cabinet",
-        data = {
-            cmd = "cabinet",
-            model = "models/props_c17/FurnitureDrawer001a.mdl",
-            desc = "Store important documents",
-            category = "Furniture",
-            price = 75
-        }
-    }
+{
+name = "Office Desk",
+data = {
+cmd = "desk",
+model = "models/props_c17/FurnitureTable002a.mdl",
+desc = "A sturdy office desk",
+category = "Furniture",
+price = 100
+}
+},
+{
+name = "Filing Cabinet",
+data = {
+cmd = "cabinet",
+model = "models/props_c17/FurnitureDrawer001a.mdl",
+desc = "Store important documents",
+category = "Furniture",
+price = 75
+}
+}
 }
 for _, entity in ipairs(entities) do
     lia.darkrp.createEntity(entity.name, entity.data)

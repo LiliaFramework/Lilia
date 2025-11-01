@@ -216,12 +216,18 @@ jobs:
           mkdir -p documentation/docs/versioning
           echo "{\"version\":\"${VERSION}\"}" > documentation/docs/versioning/lilia.json
       - run: |
-          python3 remove_comments.py gamemode
+          # Clean existing documentation before regenerating
+          rm -rf documentation/docs/meta
+          rm -rf documentation/docs/libraries
+          rm -rf documentation/docs/definitions
+          rm -rf documentation/docs/hooks
       - run: |
           python3 generate_docs.py meta
           python3 generate_docs.py library
           python3 generate_docs.py definitions
           python3 generate_docs.py hooks
+      - run: |
+          python3 remove_comments.py gamemode
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist
@@ -382,12 +388,18 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y rsync wget
       - run: |
-          python3 remove_comments.py gamemode
+          # Clean existing documentation before regenerating
+          rm -rf documentation/docs/meta
+          rm -rf documentation/docs/libraries
+          rm -rf documentation/docs/definitions
+          rm -rf documentation/docs/hooks
       - run: |
           python3 generate_docs.py meta
           python3 generate_docs.py library
           python3 generate_docs.py definitions
           python3 generate_docs.py hooks
+      - run: |
+          python3 remove_comments.py gamemode
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist

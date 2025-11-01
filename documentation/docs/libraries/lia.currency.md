@@ -6,7 +6,10 @@ In-game currency formatting, display, and management system for the Lilia framew
 
 ## Overview
 
-The currency library provides comprehensive functionality for managing in-game currency within the Lilia framework. It handles currency formatting, display, and physical money entity spawning. The library operates on both server and client sides, with the server handling money entity creation and spawning, while the client handles currency display formatting. It includes localization support for currency names and symbols, ensuring proper pluralization and formatting based on amount values. The library integrates with the configuration system to allow customizable currency symbols and names.
+The currency library provides comprehensive functionality for managing in-game currency within the Lilia framework. It handles currency formatting, display, and physical money entity spawning.
+The library operates on both server and client sides, with the server handling money entity creation and spawning, while the client handles currency display formatting.
+It includes localization support for currency names and symbols, ensuring proper pluralization and formatting based on amount values.
+The library integrates with the configuration system to allow customizable currency symbols and names.
 
 ---
 
@@ -14,15 +17,16 @@ The currency library provides comprehensive functionality for managing in-game c
 
 **Purpose**
 
-Formats a currency amount with proper symbol, singular/plural form, and localization
+Formats a currency amount with the proper symbol, singular/plural form, and localization.
 
 **When Called**
 
-When displaying currency amounts in UI, chat messages, or any text output
+When displaying currency amounts in UI, chat messages, or any text output.
 
 **Returns**
 
-* string - Formatted currency string with symbol and proper singular/plural form
+* string
+Formatted currency string with symbol and proper singular/plural form.
 
 **Realm**
 
@@ -69,21 +73,16 @@ end
 
 **Purpose**
 
-Creates and spawns a physical money entity at the specified position with the given amount
+Creates and spawns a physical money entity at the specified position with the given amount.
 
 **When Called**
 
-When spawning money drops, creating money rewards, or placing currency in the world
-
-**Parameters**
-
-* `pos` (*Vector*): The position where the money entity should be spawned
-* `amount` (*number*): The amount of money the entity should contain (will be rounded and made positive)
-* `angle` (*Angle, optional*): The rotation angle for the money entity (defaults to angle_zero)
+When spawning money drops, creating money rewards, or placing currency in the world.
 
 **Returns**
 
-* Entity - The created money entity if successful, nil if parameters are invalid
+* Entity
+The created money entity if successful, nil if parameters are invalid.
 
 **Realm**
 
@@ -117,9 +116,9 @@ end
 ```lua
 -- High: Spawn multiple money entities with advanced positioning
 local spawnPositions = {
-    {pos = Vector(100, 200, 50), amount = 500, angle = Angle(0, 45, 0)},
-    {pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
-    {pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
+{pos = Vector(100, 200, 50), amount = 500, angle = Angle(0, 45, 0)},
+{pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
+{pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
 }
 for _, data in ipairs(spawnPositions) do
     local money = lia.currency.spawn(data.pos, data.amount, data.angle)

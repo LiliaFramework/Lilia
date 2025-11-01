@@ -40,8 +40,8 @@ Client
 ```lua
 -- Simple: Create a basic context menu
 lia.menu.add({
-    ["Use"] = function() print("Used item") end,
-    ["Drop"] = function() print("Dropped item") end
+["Use"] = function() print("Used item") end,
+["Drop"] = function() print("Dropped item") end
 })
 
 ```
@@ -51,9 +51,9 @@ lia.menu.add({
 -- Medium: Create menu attached to an entity
 local ent = Entity(1)
 lia.menu.add({
-    ["Open"] = function() ent:Use() end,
-    ["Examine"] = function() print("Examining entity") end,
-    ["Destroy"] = function() ent:Remove() end
+["Open"] = function() ent:Use() end,
+["Examine"] = function() print("Examining entity") end,
+["Destroy"] = function() ent:Remove() end
 }, ent)
 
 ```
@@ -62,18 +62,18 @@ lia.menu.add({
 ```lua
 -- High: Create menu with custom position and cleanup
 local menuData = {
-    ["Option 1"] = function()
-        RunConsoleCommand("say", "Selected option 1")
-    end,
-    ["Option 2"] = function()
-        RunConsoleCommand("say", "Selected option 2")
-    end,
-    ["Cancel"] = function()
-        print("Menu cancelled")
-    end
+["Option 1"] = function()
+RunConsoleCommand("say", "Selected option 1")
+end,
+["Option 2"] = function()
+RunConsoleCommand("say", "Selected option 2")
+end,
+["Cancel"] = function()
+print("Menu cancelled")
+end
 }
 local cleanupFunc = function()
-    print("Menu was removed")
+print("Menu was removed")
 end
 local menuIndex = lia.menu.add(menuData, Vector(100, 200, 50), cleanupFunc)
 
@@ -113,7 +113,7 @@ hook.Add("HUDPaint", "MenuDraw", lia.menu.drawAll)
 ```lua
 -- Medium: Custom rendering with additional checks
 hook.Add("HUDPaint", "CustomMenuDraw", function()
-    if not LocalPlayer():Alive() then return end
+if not LocalPlayer():Alive() then return end
     lia.menu.drawAll()
 end)
 
@@ -124,8 +124,8 @@ end)
 -- High: Conditional rendering with performance optimization
 local lastDrawTime = 0
 hook.Add("HUDPaint", "OptimizedMenuDraw", function()
-    local currentTime = RealTime()
-    if currentTime - lastDrawTime < 0.016 then return end -- Limit to ~60fps
+local currentTime = RealTime()
+if currentTime - lastDrawTime < 0.016 then return end -- Limit to ~60fps
     if #lia.menu.list > 0 then
         lia.menu.drawAll()
         lastDrawTime = currentTime
@@ -170,13 +170,13 @@ end
 ```lua
 -- Medium: Handle menu interaction with validation
 hook.Add("PlayerButtonDown", "MenuInteraction", function(ply, button)
-    if button == MOUSE_LEFT then
-        local menuIndex, callback = lia.menu.getActiveMenu()
-        if callback then
-            callback()
-            print("Menu item activated")
-        end
+if button == MOUSE_LEFT then
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if callback then
+        callback()
+        print("Menu item activated")
     end
+end
 end)
 
 ```
@@ -186,9 +186,9 @@ end)
 -- High: Advanced menu interaction with cooldown and logging
 local lastMenuTime = 0
 hook.Add("PlayerButtonDown", "AdvancedMenuInteraction", function(ply, button)
-    if button == MOUSE_LEFT then
-        local currentTime = RealTime()
-        if currentTime - lastMenuTime < 0.1 then return end -- Prevent spam
+if button == MOUSE_LEFT then
+    local currentTime = RealTime()
+    if currentTime - lastMenuTime < 0.1 then return end -- Prevent spam
         local menuIndex, callback = lia.menu.getActiveMenu()
         if callback then
             lastMenuTime = currentTime
@@ -233,7 +233,7 @@ Client
 -- Simple: Remove menu and execute callback
 local menuIndex = 1
 local success = lia.menu.onButtonPressed(menuIndex, function()
-    print("Menu button pressed!")
+print("Menu button pressed!")
 end)
 
 ```
@@ -242,15 +242,15 @@ end)
 ```lua
 -- Medium: Handle menu interaction with validation
 hook.Add("PlayerButtonDown", "MenuButtonPress", function(ply, button)
-    if button == MOUSE_LEFT then
-        local menuIndex, callback = lia.menu.getActiveMenu()
-        if menuIndex and callback then
-            local success = lia.menu.onButtonPressed(menuIndex, callback)
-            if success then
-                print("Menu interaction successful")
-            end
+if button == MOUSE_LEFT then
+    local menuIndex, callback = lia.menu.getActiveMenu()
+    if menuIndex and callback then
+        local success = lia.menu.onButtonPressed(menuIndex, callback)
+        if success then
+            print("Menu interaction successful")
         end
     end
+end
 end)
 
 ```
@@ -268,12 +268,12 @@ local function handleMenuPress(menuIndex, callback)
         return false
     end
     local success = lia.menu.onButtonPressed(menuIndex, function()
-        local success, err = pcall(callback)
-        if not success then
-            print("Menu callback error: " .. tostring(err))
-        end
-    end)
-    return success
+    local success, err = pcall(callback)
+    if not success then
+        print("Menu callback error: " .. tostring(err))
+    end
+end)
+return success
 end
 -- Usage
 local menuIndex, callback = lia.menu.getActiveMenu()

@@ -20,6 +20,10 @@ Converts complex data types (vectors, angles, colors, tables) into database-stor
 
 Automatically called during data serialization before database storage
 
+**Parameters**
+
+* `value` (*any*): The value to encode (vector, angle, color table, or regular table)
+
 **Returns**
 
 * table or any - Encoded representation suitable for JSON serialization
@@ -51,10 +55,10 @@ local encoded = lia.data.encodetable(color)
 ```lua
 -- High: Encode nested table with mixed data types
 local complexData = {
-    position = Vector(0, 0, 0),
-    rotation = Angle(0, 90, 0),
-    color = Color(255, 0, 0),
-    settings = {enabled = true, count = 5}
+position = Vector(0, 0, 0),
+rotation = Angle(0, 90, 0),
+color = Color(255, 0, 0),
+settings = {enabled = true, count = 5}
 }
 local encoded = lia.data.encodetable(complexData)
 -- Returns: {position = {0, 0, 0}, rotation = {0, 90, 0}, color = {255, 0, 0, 255}, settings = {enabled = true, count = 5}}
@@ -72,6 +76,10 @@ Converts encoded data back to original complex data types (vectors, angles, colo
 **When Called**
 
 Automatically called during data deserialization after database retrieval
+
+**Parameters**
+
+* `value` (*any*): The encoded value to decode (table, string, or raw data)
 
 **Returns**
 
@@ -104,10 +112,10 @@ local decoded = lia.data.decode(encodedAngle)
 ```lua
 -- High: Decode complex nested data structure
 local encodedData = {
-    position = {100, 200, 300},
-    rotation = {0, 90, 0},
-    color = {255, 0, 0, 255},
-    settings = {enabled = true, count = 5}
+position = {100, 200, 300},
+rotation = {0, 90, 0},
+color = {255, 0, 0, 255},
+settings = {enabled = true, count = 5}
 }
 local decoded = lia.data.decode(encodedData)
 -- Returns: {position = Vector(100, 200, 300), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
@@ -125,6 +133,10 @@ Converts any data structure into a JSON string suitable for database storage
 **When Called**
 
 Called before storing data in the database to ensure proper serialization
+
+**Parameters**
+
+* `value` (*any*): The data to serialize (tables, vectors, angles, colors, etc.)
 
 **Returns**
 
@@ -156,10 +168,10 @@ local serialized = lia.data.serialize(Vector(100, 200, 300))
 ```lua
 -- High: Serialize complex nested data with mixed types
 local complexData = {
-    position = Vector(0, 0, 0),
-    rotation = Angle(0, 90, 0),
-    color = Color(255, 0, 0),
-    settings = {enabled = true, count = 5}
+position = Vector(0, 0, 0),
+rotation = Angle(0, 90, 0),
+color = Color(255, 0, 0),
+settings = {enabled = true, count = 5}
 }
 local serialized = lia.data.serialize(complexData)
 -- Returns: JSON string with all data properly encoded
@@ -177,6 +189,10 @@ Converts serialized data (JSON strings or tables) back to original data structur
 **When Called**
 
 Called after retrieving data from database to restore original data types
+
+**Parameters**
+
+* `raw` (*string|table*): Serialized data from database (JSON string or table)
 
 **Returns**
 
@@ -226,6 +242,10 @@ Specifically decodes vector data from various formats (JSON, strings, tables)
 
 Called when specifically needing to decode vector data from database or serialized format
 
+**Parameters**
+
+* `raw` (*any*): Raw data that should contain vector information
+
 **Returns**
 
 * Vector or any - Decoded Vector object, or original data if not vector format
@@ -273,6 +293,10 @@ Specifically decodes angle data from various formats (JSON, strings, tables)
 **When Called**
 
 Called when specifically needing to decode angle data from database or serialized format
+
+**Parameters**
+
+* `raw` (*any*): Raw data that should contain angle information
 
 **Returns**
 
@@ -322,6 +346,10 @@ Stores data in the database with gamemode and map-specific scoping
 
 Called when storing persistent data that should survive server restarts
 
+**Parameters**
+
+* `key` (*string*): Unique identifier for the data, value (any) - Data to store, global (boolean, optional) - Store globally across all gamemodes/maps, ignoreMap (boolean, optional) - Store for all maps in current gamemode
+
 **Returns**
 
 * string - Database path where data was stored
@@ -352,9 +380,9 @@ lia.data.set("serverVersion", "1.0.0", true)
 ```lua
 -- High: Store complex data with custom scoping
 local playerData = {
-    position = Vector(100, 200, 300),
-    inventory = {weapon = "pistol", ammo = 50},
-    settings = {volume = 0.8, graphics = "high"}
+position = Vector(100, 200, 300),
+inventory = {weapon = "pistol", ammo = 50},
+settings = {volume = 0.8, graphics = "high"}
 }
 lia.data.set("player_" .. player:SteamID64(), playerData, false, true)
 -- Stores player data for current gamemode but all maps
@@ -372,6 +400,10 @@ Removes data from the database with gamemode and map-specific scoping
 **When Called**
 
 Called when removing persistent data that should no longer be stored
+
+**Parameters**
+
+* `key` (*string*): Unique identifier for the data to delete, global (boolean, optional) - Delete from global scope, ignoreMap (boolean, optional) - Delete from all maps in current gamemode
 
 **Returns**
 
@@ -490,9 +522,9 @@ lia.data.loadPersistence()
 ```lua
 -- Medium: Load persistence with error handling
 lia.data.loadPersistence():next(function()
-    print("Persistence schema loaded successfully")
+print("Persistence schema loaded successfully")
 end):catch(function(err)
-    print("Failed to load persistence schema: " .. err)
+print("Failed to load persistence schema: " .. err)
 end)
 
 ```
@@ -501,12 +533,12 @@ end)
 ```lua
 -- High: Load persistence as part of initialization sequence
 lia.data.loadPersistence():next(function()
-    return lia.data.loadPersistenceData(function(entities)
-        -- Process loaded entities
-        for _, ent in ipairs(entities) do
-            -- Spawn entities or process data
-        end
-    end)
+return lia.data.loadPersistenceData(function(entities)
+-- Process loaded entities
+for _, ent in ipairs(entities) do
+    -- Spawn entities or process data
+end
+end)
 end)
 
 ```
@@ -523,6 +555,10 @@ Saves entity data to database for persistence across server restarts
 
 Called during server shutdown or periodic saves to persist entity states
 
+**Parameters**
+
+* `entities` (*table*): Array of entity data tables to save
+
 **Returns**
 
 * None
@@ -537,7 +573,7 @@ Server
 ```lua
 -- Simple: Save basic entity data
 local entities = {
-    {class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
+{class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
 }
 lia.data.savePersistence(entities)
 
@@ -547,14 +583,14 @@ lia.data.savePersistence(entities)
 ```lua
 -- Medium: Save entities with custom properties
 local entities = {
-    {
-        class = "lia_vendor",
-        pos = Vector(100, 200, 0),
-        angles = Angle(0, 90, 0),
-        model = "models/player.mdl",
-        name = "Weapon Vendor",
-        items = {"weapon_pistol", "weapon_shotgun"}
-    }
+{
+class = "lia_vendor",
+pos = Vector(100, 200, 0),
+angles = Angle(0, 90, 0),
+model = "models/player.mdl",
+name = "Weapon Vendor",
+items = {"weapon_pistol", "weapon_shotgun"}
+}
 }
 lia.data.savePersistence(entities)
 
@@ -567,13 +603,13 @@ local entities = {}
 for _, ent in ipairs(ents.GetAll()) do
     if ent:GetClass() == "lia_item" then
         table.insert(entities, {
-            class = ent:GetClass(),
-            pos = ent:GetPos(),
-            angles = ent:GetAngles(),
-            model = ent:GetModel(),
-            itemID = ent:GetItemID(),
-            amount = ent:GetAmount(),
-            data = ent:GetData()
+        class = ent:GetClass(),
+        pos = ent:GetPos(),
+        angles = ent:GetAngles(),
+        model = ent:GetModel(),
+        itemID = ent:GetItemID(),
+        amount = ent:GetAmount(),
+        data = ent:GetData()
         })
     end
 end
@@ -592,6 +628,10 @@ Loads persisted entity data from database and optionally executes callback
 **When Called**
 
 Called during server startup to restore persisted entities
+
+**Parameters**
+
+* `callback` (*function, optional*): Function to call with loaded entity data
 
 **Returns**
 
@@ -615,10 +655,10 @@ lia.data.loadPersistenceData()
 ```lua
 -- Medium: Load persistence data with callback
 lia.data.loadPersistenceData(function(entities)
-    print("Loaded " .. #entities .. " entities")
-    for _, ent in ipairs(entities) do
-        print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
-    end
+print("Loaded " .. #entities .. " entities")
+for _, ent in ipairs(entities) do
+    print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
+end
 end)
 
 ```
@@ -627,21 +667,21 @@ end)
 ```lua
 -- High: Load persistence data with entity spawning
 lia.data.loadPersistenceData(function(entities)
-    for _, entData in ipairs(entities) do
-        local ent = ents.Create(entData.class)
-        if IsValid(ent) then
-            ent:SetPos(entData.pos)
-            ent:SetAngles(entData.angles)
-            ent:SetModel(entData.model)
-            ent:Spawn()
-            -- Restore custom properties
-            for k, v in pairs(entData) do
-                if not defaultCols[k] then
-                    ent:SetNWVar(k, v)
-                end
+for _, entData in ipairs(entities) do
+    local ent = ents.Create(entData.class)
+    if IsValid(ent) then
+        ent:SetPos(entData.pos)
+        ent:SetAngles(entData.angles)
+        ent:SetModel(entData.model)
+        ent:Spawn()
+        -- Restore custom properties
+        for k, v in pairs(entData) do
+            if not defaultCols[k] then
+                ent:SetNWVar(k, v)
             end
         end
     end
+end
 end)
 
 ```
@@ -657,6 +697,10 @@ Retrieves stored data from memory cache with automatic deserialization
 **When Called**
 
 Called when accessing stored persistent data
+
+**Parameters**
+
+* `key` (*string*): Unique identifier for the data, default (any, optional) - Default value if key not found
 
 **Returns**
 
@@ -680,8 +724,8 @@ local playerCount = lia.data.get("playerCount", 0)
 ```lua
 -- Medium: Get data with default fallback
 local serverSettings = lia.data.get("serverSettings", {
-    maxPlayers = 32,
-    mapRotation = {"gm_flatgrass", "gm_construct"}
+maxPlayers = 32,
+mapRotation = {"gm_flatgrass", "gm_construct"}
 })
 -- Returns stored settings or default configuration
 

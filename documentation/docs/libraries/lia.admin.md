@@ -8,6 +8,11 @@ Comprehensive user group and privilege management system for the Lilia framework
 
 The administrator library provides comprehensive functionality for managing user groups, privileges, and administrative permissions in the Lilia framework. It handles the creation, modification, and deletion of user groups with inheritance-based privilege systems. The library operates on both server and client sides, with the server managing privilege storage and validation while the client provides user interface elements for administrative management. It includes integration with CAMI (Comprehensive Administration Management Interface) for compatibility with other administrative systems. The library ensures proper privilege inheritance, automatic privilege registration for tools and properties, and comprehensive logging of administrative actions. It supports both console-based and GUI-based administrative command execution with proper permission checking and validation.
 
+Setting Superadmin:
+To set yourself as superadmin in the console, use: plysetgroup <your_steam_name> superadmin
+The system has three default user groups with inheritance levels: user (level 1), admin (level 2), and superadmin (level 3).
+Superadmin automatically has all privileges and cannot be restricted by any permission checks.
+
 ---
 
 ### applyPunishment
@@ -58,9 +63,9 @@ lia.administrator.applyPunishment(player, "RDM", false, true, 60, "kickedForRDM"
 ```lua
 -- High: Apply punishment based on infraction severity
 local punishments = {
-    ["RDM"] = {kick = true, ban = false, time = 0},
-    ["Cheating"] = {kick = true, ban = true, time = 0},
-    ["Spam"] = {kick = true, ban = false, time = 30}
+["RDM"] = {kick = true, ban = false, time = 0},
+["Cheating"] = {kick = true, ban = true, time = 0},
+["Spam"] = {kick = true, ban = false, time = 30}
 }
 local punishment = punishments[infractionType]
 if punishment then
@@ -181,13 +186,13 @@ lia.administrator.save() -- Final save with sync
 -- High: Batch save with error handling
 local function safeSave(noNetwork)
     local success, err = pcall(function()
-        lia.administrator.save(noNetwork)
-    end)
-    if not success then
-        lia.log.add(nil, "adminSaveError", err)
-        return false
-    end
-    return true
+    lia.administrator.save(noNetwork)
+end)
+if not success then
+    lia.log.add(nil, "adminSaveError", err)
+    return false
+end
+return true
 end
 if safeSave(true) then
     print("Administrator data saved successfully")
@@ -229,9 +234,9 @@ Shared
 ```lua
 -- Simple: Register a basic privilege
 lia.administrator.registerPrivilege({
-    ID = "accessAdminPanel",
-    Name = "Access Admin Panel",
-    MinAccess = "admin"
+ID = "accessAdminPanel",
+Name = "Access Admin Panel",
+MinAccess = "admin"
 })
 
 ```
@@ -240,10 +245,10 @@ lia.administrator.registerPrivilege({
 ```lua
 -- Medium: Register privilege with category
 lia.administrator.registerPrivilege({
-    ID = "managePlayers",
-    Name = "Manage Players",
-    MinAccess = "moderator",
-    Category = "Player Management"
+ID = "managePlayers",
+Name = "Manage Players",
+MinAccess = "moderator",
+Category = "Player Management"
 })
 
 ```
@@ -252,9 +257,9 @@ lia.administrator.registerPrivilege({
 ```lua
 -- High: Register multiple privileges from module
 local modulePrivileges = {
-    {ID = "module_feature1", Name = "Feature 1", MinAccess = "user", Category = "Module"},
-    {ID = "module_feature2", Name = "Feature 2", MinAccess = "admin", Category = "Module"},
-    {ID = "module_feature3", Name = "Feature 3", MinAccess = "superadmin", Category = "Module"}
+{ID = "module_feature1", Name = "Feature 1", MinAccess = "user", Category = "Module"},
+{ID = "module_feature2", Name = "Feature 2", MinAccess = "admin", Category = "Module"},
+{ID = "module_feature3", Name = "Feature 3", MinAccess = "superadmin", Category = "Module"}
 }
 for _, privilege in ipairs(modulePrivileges) do
     lia.administrator.registerPrivilege(privilege)
@@ -407,7 +412,7 @@ lia.administrator.load()
 -- Medium: Load with callback handling
 lia.administrator.load()
 hook.Add("OnAdminSystemLoaded", "MyModule", function(groups, privileges)
-    print("Admin system loaded with " .. table.Count(groups) .. " groups")
+print("Admin system loaded with " .. table.Count(groups) .. " groups")
 end)
 
 ```
@@ -417,25 +422,25 @@ end)
 -- High: Load with error handling and validation
 local function safeLoad()
     local success, err = pcall(function()
-        lia.administrator.load()
-    end)
-    if not success then
-        lia.log.add(nil, "adminLoadError", err)
-        -- Fallback to default groups
-        lia.administrator.groups = {
-            user = {_info = {inheritance = "user", types = {}}},
-            admin = {_info = {inheritance = "admin", types = {"Staff"}}},
-            superadmin = {_info = {inheritance = "superadmin", types = {"Staff"}}}
-        }
-        return false
-    end
-    return true
+    lia.administrator.load()
+end)
+if not success then
+    lia.log.add(nil, "adminLoadError", err)
+    -- Fallback to default groups
+    lia.administrator.groups = {
+    user = {_info = {inheritance = "user", types = {}}},
+    admin = {_info = {inheritance = "admin", types = {"Staff"}}},
+    superadmin = {_info = {inheritance = "superadmin", types = {"Staff"}}}
+    }
+    return false
+end
+return true
 end
 if safeLoad() then
     print("Administrator system loaded successfully")
-else
-    print("Failed to load administrator system, using defaults")
-end
+    else
+        print("Failed to load administrator system, using defaults")
+    end
 
 ```
 
@@ -478,10 +483,10 @@ lia.administrator.createGroup("moderator")
 ```lua
 -- Medium: Create group with inheritance
 lia.administrator.createGroup("helper", {
-    _info = {
-        inheritance = "user",
-        types = {"Staff"}
-    }
+_info = {
+inheritance = "user",
+types = {"Staff"}
+}
 })
 
 ```
@@ -490,16 +495,16 @@ lia.administrator.createGroup("helper", {
 ```lua
 -- High: Create multiple groups with different configurations
 local groupConfigs = {
-    {name = "moderator", inherit = "admin", types = {"Staff"}},
-    {name = "helper", inherit = "user", types = {"Staff"}},
-    {name = "vip", inherit = "user", types = {"VIP"}}
+{name = "moderator", inherit = "admin", types = {"Staff"}},
+{name = "helper", inherit = "user", types = {"Staff"}},
+{name = "vip", inherit = "user", types = {"VIP"}}
 }
 for _, config in ipairs(groupConfigs) do
     lia.administrator.createGroup(config.name, {
-        _info = {
-            inheritance = config.inherit,
-            types = config.types
-        }
+    _info = {
+    inheritance = config.inherit,
+    types = config.types
+    }
     })
 end
 
@@ -557,10 +562,10 @@ for _, groupName in ipairs(groupsToRemove) do
     if lia.administrator.groups[groupName] and not lia.administrator.DefaultGroups[groupName] then
         lia.administrator.removeGroup(groupName)
         lia.log.add(nil, "groupRemoved", groupName)
-    else
-        print("Cannot remove group: " .. groupName)
+        else
+            print("Cannot remove group: " .. groupName)
+        end
     end
-end
 
 ```
 
@@ -613,18 +618,18 @@ end
 ```lua
 -- High: Batch rename with error handling
 local renameOperations = {
-    {old = "oldHelper", new = "helper"},
-    {old = "oldVIP", new = "vip"},
-    {old = "tempMod", new = "moderator"}
+{old = "oldHelper", new = "helper"},
+{old = "oldVIP", new = "vip"},
+{old = "tempMod", new = "moderator"}
 }
 for _, operation in ipairs(renameOperations) do
     if lia.administrator.groups[operation.old] and not lia.administrator.groups[operation.new] then
         lia.administrator.renameGroup(operation.old, operation.new)
         lia.log.add(nil, "groupRenamed", operation.old, operation.new)
-    else
-        print("Cannot rename " .. operation.old .. " to " .. operation.new)
+        else
+            print("Cannot rename " .. operation.old .. " to " .. operation.new)
+        end
     end
-end
 
 ```
 
@@ -658,8 +663,8 @@ Server
 ```lua
 -- Simple: Notify admins about an event
 lia.administrator.notifyAdmin({
-    text = "Player kicked for cheating",
-    type = "warning"
+text = "Player kicked for cheating",
+type = "warning"
 })
 
 ```
@@ -668,9 +673,9 @@ lia.administrator.notifyAdmin({
 ```lua
 -- Medium: Notify with specific privilege requirement
 lia.administrator.notifyAdmin({
-    text = "Suspicious activity detected",
-    type = "alert",
-    privilege = "canSeeAltingNotifications"
+text = "Suspicious activity detected",
+type = "alert",
+privilege = "canSeeAltingNotifications"
 })
 
 ```
@@ -679,9 +684,9 @@ lia.administrator.notifyAdmin({
 ```lua
 -- High: Batch notifications with different privilege levels
 local notifications = {
-    {text = "Server restart in 5 minutes", privilege = "admin"},
-    {text = "New player joined", privilege = "moderator"},
-    {text = "VIP player online", privilege = "vip"}
+{text = "Server restart in 5 minutes", privilege = "admin"},
+{text = "New player joined", privilege = "moderator"},
+{text = "VIP player online", privilege = "vip"}
 }
 for _, notification in ipairs(notifications) do
     lia.administrator.notifyAdmin(notification)
@@ -846,13 +851,13 @@ local function safeSync(client)
         return false
     end
     local success, err = pcall(function()
-        lia.administrator.sync(client)
-    end)
-    if not success then
-        lia.log.add(nil, "syncError", err)
-        return false
-    end
-    return true
+    lia.administrator.sync(client)
+end)
+if not success then
+    lia.log.add(nil, "syncError", err)
+    return false
+end
+return true
 end
 if safeSync(player) then
     print("Administrator data synced successfully")
@@ -906,9 +911,9 @@ lia.administrator.setPlayerUsergroup(player, "admin", "MyModule")
 ```lua
 -- High: Batch group changes with validation
 local groupChanges = {
-    {player = player1, group = "moderator", source = "promotion"},
-    {player = player2, group = "helper", source = "demotion"},
-    {player = player3, group = "vip", source = "donation"}
+{player = player1, group = "moderator", source = "promotion"},
+{player = player2, group = "helper", source = "demotion"},
+{player = player3, group = "vip", source = "donation"}
 }
 for _, change in ipairs(groupChanges) do
     if IsValid(change.player) then
@@ -965,9 +970,9 @@ lia.administrator.setSteamIDUsergroup("STEAM_0:1:123456789", "admin", "WebPanel"
 ```lua
 -- High: Batch Steam ID group changes with validation
 local steamGroupChanges = {
-    {steamid = "STEAM_0:1:123456789", group = "moderator", source = "promotion"},
-    {steamid = "STEAM_0:1:987654321", group = "helper", source = "demotion"},
-    {steamid = "STEAM_0:1:555555555", group = "vip", source = "donation"}
+{steamid = "STEAM_0:1:123456789", group = "moderator", source = "promotion"},
+{steamid = "STEAM_0:1:987654321", group = "helper", source = "demotion"},
+{steamid = "STEAM_0:1:555555555", group = "vip", source = "donation"}
 }
 for _, change in ipairs(steamGroupChanges) do
     if change.steamid and change.steamid ~= "" then
@@ -1026,17 +1031,17 @@ lia.administrator.serverExecCommand("ban", player, 60, "RDM", admin)
 ```lua
 -- High: Execute multiple commands with validation
 local commands = {
-    {cmd = "kick", target = player1, reason = "Cheating"},
-    {cmd = "ban", target = player2, duration = 30, reason = "RDM"},
-    {cmd = "mute", target = player3, duration = 10, reason = "Spam"}
+{cmd = "kick", target = player1, reason = "Cheating"},
+{cmd = "ban", target = player2, duration = 30, reason = "RDM"},
+{cmd = "mute", target = player3, duration = 10, reason = "Spam"}
 }
 for _, command in ipairs(commands) do
     local success = lia.administrator.serverExecCommand(
-        command.cmd,
-        command.target,
-        command.duration,
-        command.reason,
-        admin
+    command.cmd,
+    command.target,
+    command.duration,
+    command.reason,
+    admin
     )
     if success then
         print("Command executed: " .. command.cmd)
@@ -1092,16 +1097,16 @@ lia.administrator.execCommand("ban", player, 60, "RDM")
 ```lua
 -- High: Execute multiple commands with validation
 local commands = {
-    {cmd = "kick", target = player1, reason = "Cheating"},
-    {cmd = "ban", target = player2, duration = 30, reason = "RDM"},
-    {cmd = "mute", target = player3, duration = 10, reason = "Spam"}
+{cmd = "kick", target = player1, reason = "Cheating"},
+{cmd = "ban", target = player2, duration = 30, reason = "RDM"},
+{cmd = "mute", target = player3, duration = 10, reason = "Spam"}
 }
 for _, command in ipairs(commands) do
     local success = lia.administrator.execCommand(
-        command.cmd,
-        command.target,
-        command.duration,
-        command.reason
+    command.cmd,
+    command.target,
+    command.duration,
+    command.reason
     )
     if success then
         print("Command sent: " .. command.cmd)
@@ -1114,13 +1119,13 @@ end
 ```lua
 -- Custom admin system hook
 hook.Add("RunAdminSystemCommand", "MyAdminSystem", function(cmd, victim, dur, reason)
-    if cmd == "kick" then
-        MyAdminSystem:KickPlayer(victim, reason)
-        return true, function()
-            print("Player kicked via MyAdminSystem")
-        end
-    end
-    return false -- Don't handle other commands
+if cmd == "kick" then
+    MyAdminSystem:KickPlayer(victim, reason)
+    return true, function()
+    print("Player kicked via MyAdminSystem")
+end
+end
+return false -- Don't handle other commands
 end)
 
 ```

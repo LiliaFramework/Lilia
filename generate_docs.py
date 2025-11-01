@@ -77,6 +77,25 @@ def parse_comment_block(comment_text):
     current_section = None
     current_example = None
     example_complexity = None
+    section_content = []
+
+    def finalize_current_section():
+        """Finalize the current section by joining accumulated content."""
+        if current_section and section_content:
+            content = '\n'.join(section_content).strip()
+            if current_section == 'purpose':
+                parsed['purpose'] = content
+            elif current_section == 'when_called':
+                parsed['when_called'] = content
+            elif current_section == 'when_used':
+                parsed['when_used'] = content
+            elif current_section == 'explanation':
+                parsed['explanation'] = content
+            elif current_section == 'returns':
+                parsed['returns'] = content
+            elif current_section == 'realm':
+                parsed['realm'] = content
+        section_content.clear()
 
     for line in lines:
         original_line = line
@@ -88,16 +107,26 @@ def parse_comment_block(comment_text):
 
         # Check for section headers
         if line.startswith('Purpose:'):
+            finalize_current_section()
             current_section = 'purpose'
-            parsed['purpose'] = line[8:].strip()
+            inline_content = line[8:].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('When Called:'):
+            finalize_current_section()
             current_section = 'when_called'
-            parsed['when_called'] = line[12:].strip()
+            inline_content = line[12:].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('When Used:'):
             # Alias used in panels/definitions
+            finalize_current_section()
             current_section = 'when_used'
-            parsed['when_used'] = line[10:].strip()
+            inline_content = line[10:].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('Parameters:'):
+            finalize_current_section()
             current_section = 'parameters'
             # Handle inline parameter on same line (e.g., "Parameters: name (Type): Description")
             inline = line[len('Parameters:'):].strip()
@@ -118,11 +147,17 @@ def parse_comment_block(comment_text):
             if line.strip() and not line.startswith('--'):
                 # First check if this is a new section header (even if indented)
                 if line.startswith('Returns:'):
+                    finalize_current_section()
                     current_section = 'returns'
-                    parsed['returns'] = line[8:].strip()
+                    inline_content = line[8:].strip()
+                    if inline_content:
+                        section_content.append(inline_content)
                 elif line.startswith('Realm:'):
+                    finalize_current_section()
                     current_section = 'realm'
-                    parsed['realm'] = line[6:].strip()
+                    inline_content = line[6:].strip()
+                    if inline_content:
+                        section_content.append(inline_content)
                 elif line.startswith('Example Usage:'):
                     current_section = 'examples'
                 # Check if this line is indented (parameter) or a new section header
@@ -141,11 +176,17 @@ def parse_comment_block(comment_text):
                     current_section = None
                     # Continue processing this line as a potential new section
                     if line.startswith('Returns:'):
+                        finalize_current_section()
                         current_section = 'returns'
-                        parsed['returns'] = line[8:].strip()
+                        inline_content = line[8:].strip()
+                        if inline_content:
+                            section_content.append(inline_content)
                     elif line.startswith('Realm:'):
+                        finalize_current_section()
                         current_section = 'realm'
-                        parsed['realm'] = line[6:].strip()
+                        inline_content = line[6:].strip()
+                        if inline_content:
+                            section_content.append(inline_content)
                     elif line.startswith('Example Usage:'):
                         current_section = 'examples'
                 # If still in parameters section, try other formats
@@ -175,21 +216,33 @@ def parse_comment_block(comment_text):
                                     if m:
                                         parsed['parameters'].append({'name': m.group(1).strip(), 'type': 'unknown', 'description': m.group(2).strip()})
         elif line.startswith('Returns:'):
+            finalize_current_section()
             current_section = 'returns'
-            # Extract returns info (format varies)
-            returns_text = line[8:].strip()
-            if returns_text:
-                parsed['returns'] = returns_text
+            inline_content = line[8:].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('Realm:'):
+            finalize_current_section()
             current_section = 'realm'
-            parsed['realm'] = line[6:].strip()
+            inline_content = line[6:].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('Explanation of Panel:'):
+            finalize_current_section()
             current_section = 'explanation'
-            parsed['explanation'] = line[len('Explanation of Panel:'):].strip()
+            inline_content = line[len('Explanation of Panel:'):].strip()
+            if inline_content:
+                section_content.append(inline_content)
         elif line.startswith('Example Usage:'):
+            finalize_current_section()
             current_section = 'examples'
         elif line.startswith('Example Item:'):
+            finalize_current_section()
             current_section = 'examples'
+        elif current_section in ['purpose', 'when_called', 'when_used', 'returns', 'realm', 'explanation']:
+            # Accumulate content for multi-line sections
+            if line.strip():
+                section_content.append(line)
         elif current_section == 'examples':
             # Handle example sections - but only if we're not inside a code block
             complexity_match = None
@@ -238,6 +291,9 @@ def parse_comment_block(comment_text):
                 # but preserve the relative indentation within the code block
                 # Strip only trailing whitespace, keep leading indentation
                 current_example['code'].append(original_line.rstrip())
+
+    # Finalize any remaining section
+    finalize_current_section()
 
     # Add final example if exists
     if current_example:

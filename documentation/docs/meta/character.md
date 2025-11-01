@@ -68,6 +68,10 @@ Compares two character objects for equality based on their IDs
 
 When checking if two character references point to the same character
 
+**Parameters**
+
+* `other` (*character*): The other character object to compare with
+
 **Returns**
 
 * boolean - True if both characters have the same ID, false otherwise
@@ -228,6 +232,10 @@ Gets the display name for a character based on recognition system
 
 When displaying character names to other players
 
+**Parameters**
+
+* `client` (*Player*): The client who is viewing the character
+
 **Returns**
 
 * string - The name to display (real name, fake name, or "unknown")
@@ -277,6 +285,10 @@ Checks if the character has enough money for a transaction
 
 Before processing purchases, payments, or money transfers
 
+**Parameters**
+
+* `amount` (*number*): The amount of money to check for
+
 **Returns**
 
 * boolean - True if character has sufficient funds, false otherwise
@@ -316,9 +328,9 @@ local char = player:getChar()
 local totalCost = calculateTotalCost(items)
 if char:hasMoney(totalCost) then
     processTransaction(char, items, totalCost)
-else
-    showInsufficientFundsError(char, totalCost)
-end
+    else
+        showInsufficientFundsError(char, totalCost)
+    end
 
 ```
 
@@ -333,6 +345,10 @@ Checks if the character has any of the specified flags
 **When Called**
 
 When checking permissions or access rights for a character
+
+**Parameters**
+
+* `flagStr` (*string*): String containing flags to check for
 
 **Returns**
 
@@ -372,9 +388,9 @@ local char = player:getChar()
 local requiredFlags = "adm"
 if char:hasFlags(requiredFlags) then
     showAdminPanel(player)
-else
-    showAccessDenied(player)
-end
+    else
+        showAccessDenied(player)
+    end
 
 ```
 
@@ -389,6 +405,10 @@ Checks if the character has a weapon item equipped
 **When Called**
 
 When validating weapon usage or checking equipped items
+
+**Parameters**
+
+* `requireEquip` (*boolean*): Whether to check if item is equipped (default: true)
 
 **Returns**
 
@@ -428,9 +448,9 @@ local char = player:getChar()
 local hasWeapon = char:getItemWeapon(requireEquip)
 if hasWeapon then
     processWeaponAction(char, action)
-else
-    showWeaponRequiredError(char)
-end
+    else
+        showWeaponRequiredError(char)
+    end
 
 ```
 
@@ -445,6 +465,11 @@ Gets the value of a character attribute including boosts
 **When Called**
 
 When checking character stats or calculating bonuses
+
+**Parameters**
+
+* `key` (*string*): The attribute key to retrieve
+* `default` (*number*): Default value if attribute doesn't exist (default: 0)
 
 **Returns**
 
@@ -499,6 +524,10 @@ Gets the boost table for a specific attribute
 
 When checking or modifying attribute boosts
 
+**Parameters**
+
+* `attribID` (*string*): The attribute ID to get boosts for
+
 **Returns**
 
 * table - Table containing boost values for the attribute
@@ -530,6 +559,10 @@ Checks if the character recognizes another character by ID
 
 When determining if one character knows another character's identity
 
+**Parameters**
+
+* `id` (*number|character*): Character ID or character object to check recognition for
+
 **Returns**
 
 * boolean - True if character recognizes the other, false otherwise
@@ -558,9 +591,9 @@ local char = player:getChar()
 local targetID = target:getChar():getID()
 if char:doesRecognize(targetID) then
     showRealName(char, target)
-else
-    showUnknownName(char, target)
-end
+    else
+        showUnknownName(char, target)
+    end
 
 ```
 
@@ -587,6 +620,10 @@ Checks if the character has fake recognition of another character
 **When Called**
 
 When determining if character knows a fake name for another character
+
+**Parameters**
+
+* `id` (*number|character*): Character ID or character object to check fake recognition for
 
 **Returns**
 
@@ -616,9 +653,9 @@ local char = player:getChar()
 local targetID = target:getChar():getID()
 if char:doesFakeRecognize(targetID) then
     showFakeName(char, target)
-else
-    showUnknownName(char, target)
-end
+    else
+        showUnknownName(char, target)
+    end
 
 ```
 
@@ -645,6 +682,13 @@ Sets character data and optionally syncs it to database and clients
 **When Called**
 
 When storing character-specific data that needs persistence
+
+**Parameters**
+
+* `k` (*string|table*): Key to set or table of key-value pairs
+* `v` (*any*): Value to set (ignored if k is table)
+* `noReplication` (*boolean*): Skip client replication (default: false)
+* `receiver` (*Player*): Specific client to send to (default: character owner)
 
 **Returns**
 
@@ -691,6 +735,11 @@ Retrieves character data by key or returns all data
 **When Called**
 
 When accessing stored character-specific data
+
+**Parameters**
+
+* `key` (*string*): The data key to retrieve (optional)
+* `default` (*any*): Default value if key doesn't exist (optional)
 
 **Returns**
 
@@ -799,6 +848,11 @@ Makes the character recognize another character (with optional fake name)
 
 When establishing recognition between characters
 
+**Parameters**
+
+* `character` (*number|character*): Character ID or character object to recognize
+* `name` (*string*): Optional fake name to assign (default: nil)
+
 **Returns**
 
 * boolean - True if recognition was successful
@@ -851,6 +905,11 @@ Makes the character join a specific class (faction job)
 
 When changing character class or job within their faction
 
+**Parameters**
+
+* `class` (*string*): The class name to join
+* `isForced` (*boolean*): Whether to force the class change (default: false)
+
 **Returns**
 
 * boolean - True if class change was successful, false otherwise
@@ -887,9 +946,9 @@ local newClass = determineClass(char, player)
 if char:joinClass(newClass) then
     updateCharacterUI(player)
     notifyClassChange(player, newClass)
-else
-    showClassChangeError(player, newClass)
-end
+    else
+        showClassChangeError(player, newClass)
+    end
 
 ```
 
@@ -957,6 +1016,11 @@ Updates a character attribute by adding to the current value
 
 When modifying character stats through gameplay or admin actions
 
+**Parameters**
+
+* `key` (*string*): The attribute key to update
+* `value` (*number*): The amount to add to the current attribute value
+
 **Returns**
 
 * None
@@ -1008,6 +1072,11 @@ Sets a character attribute to a specific value
 **When Called**
 
 When setting character stats to exact values
+
+**Parameters**
+
+* `key` (*string*): The attribute key to set
+* `value` (*number*): The exact value to set the attribute to
 
 **Returns**
 
@@ -1061,6 +1130,12 @@ Adds a temporary boost to a character attribute
 
 When applying temporary stat bonuses from items, spells, or effects
 
+**Parameters**
+
+* `boostID` (*string*): Unique identifier for this boost
+* `attribID` (*string*): The attribute to boost
+* `boostAmount` (*number*): The amount to boost the attribute by
+
 **Returns**
 
 * boolean - True if boost was added successfully
@@ -1112,6 +1187,11 @@ Removes a temporary boost from a character attribute
 **When Called**
 
 When removing temporary stat bonuses from items, spells, or effects
+
+**Parameters**
+
+* `boostID` (*string*): Unique identifier for the boost to remove
+* `attribID` (*string*): The attribute the boost was applied to
 
 **Returns**
 
@@ -1165,6 +1245,10 @@ Sets the character flags to a specific string
 
 When changing character permissions or access rights
 
+**Parameters**
+
+* `flags` (*string*): The flags string to set
+
 **Returns**
 
 * None
@@ -1214,6 +1298,10 @@ Adds flags to the character without removing existing ones
 **When Called**
 
 When granting additional permissions to a character
+
+**Parameters**
+
+* `flags` (*string*): The flags to add to the character
 
 **Returns**
 
@@ -1265,6 +1353,10 @@ Removes flags from the character
 
 When revoking permissions or access rights from a character
 
+**Parameters**
+
+* `flags` (*string*): The flags to remove from the character
+
 **Returns**
 
 * None
@@ -1315,6 +1407,10 @@ Saves the character data to the database
 
 When persisting character changes to the database
 
+**Parameters**
+
+* `callback` (*function*): Optional callback function to execute after save
+
 **Returns**
 
 * None
@@ -1338,7 +1434,7 @@ char:save()
 -- Medium: Save with callback
 local char = player:getChar()
 char:save(function()
-    print("Character saved successfully")
+print("Character saved successfully")
 end)
 
 ```
@@ -1348,9 +1444,9 @@ end)
 -- High: Use in save system
 local char = player:getChar()
 char:save(function()
-    updateCharacterCache(char)
-    notifySaveComplete(player)
-    logCharacterSave(char)
+updateCharacterCache(char)
+notifySaveComplete(player)
+logCharacterSave(char)
 end)
 
 ```
@@ -1366,6 +1462,10 @@ Synchronizes character data with clients
 **When Called**
 
 When updating character information on client side
+
+**Parameters**
+
+* `receiver` (*Player*): Specific client to sync to (default: all players)
 
 **Returns**
 
@@ -1414,6 +1514,10 @@ Sets up the character for the player (model, team, inventory, etc.)
 **When Called**
 
 When loading a character for a player
+
+**Parameters**
+
+* `noNetworking` (*boolean*): Skip networking setup (default: false)
 
 **Returns**
 
@@ -1511,6 +1615,10 @@ Bans the character for a specified time or permanently
 **When Called**
 
 When applying a ban to a character
+
+**Parameters**
+
+* `time` (*number*): Ban duration in seconds (nil for permanent ban)
 
 **Returns**
 
@@ -1658,6 +1766,10 @@ Gives money to the character
 
 When adding money to a character's account
 
+**Parameters**
+
+* `amount` (*number*): The amount of money to give
+
 **Returns**
 
 * boolean - True if money was given successfully
@@ -1706,6 +1818,10 @@ Takes money from the character
 **When Called**
 
 When removing money from a character's account
+
+**Parameters**
+
+* `amount` (*number*): The amount of money to take
 
 **Returns**
 

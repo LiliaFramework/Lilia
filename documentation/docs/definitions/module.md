@@ -10,7 +10,11 @@ The module system provides comprehensive functionality for defining modules with
 
 ---
 
-### name
+### Purpose:
+
+**Purpose**
+
+Sets the display name of the module
 
 **Example Usage**
 
@@ -22,7 +26,11 @@ MODULE.name = "Inventory System"
 
 ---
 
-### author
+### Purpose:
+
+**Purpose**
+
+Sets the author of the module
 
 **Example Usage**
 
@@ -34,7 +42,11 @@ MODULE.author = "Samael"
 
 ---
 
-### discord
+### Purpose:
+
+**Purpose**
+
+Sets the Discord contact for the module author
 
 **Example Usage**
 
@@ -46,7 +58,11 @@ MODULE.discord = "@liliaplayer"
 
 ---
 
-### desc
+### Purpose:
+
+**Purpose**
+
+Sets the description of the module
 
 **Example Usage**
 
@@ -58,7 +74,11 @@ MODULE.desc = "A comprehensive inventory management system"
 
 ---
 
-### version
+### Purpose:
+
+**Purpose**
+
+Sets the version number of the module
 
 **Example Usage**
 
@@ -70,7 +90,11 @@ MODULE.version = 1.0
 
 ---
 
-### versionID
+### Purpose:
+
+**Purpose**
+
+Sets the unique version identifier for the module
 
 **Example Usage**
 
@@ -82,7 +106,16 @@ MODULE.versionID = "private_inventory"
 
 ---
 
-### uniqueID
+### Purpose:
+
+**Purpose**
+
+Unique identifier for the module (INTERNAL - set automatically when loaded)
+
+**When Called**
+
+Set automatically during module loading
+Note: This property is internal and should not be modified directly
 
 **Example Usage**
 
@@ -94,41 +127,53 @@ MODULE.versionID = "private_inventory"
 
 ---
 
-### Privileges
+### Purpose:
+
+**Purpose**
+
+Sets the privileges required for this module
 
 **Example Usage**
 
 ```lua
 -- Define required privileges for module access
 MODULE.Privileges = {
-    {
-        Name = "canManageInventory",
-        Min = 1
-    }
+{
+Name = "canManageInventory",
+Min = 1
+}
 }
 
 ```
 
 ---
 
-### Dependencies
+### Purpose:
+
+**Purpose**
+
+Sets the file dependencies for this module
 
 **Example Usage**
 
 ```lua
 -- Define required files for this module
 MODULE.Dependencies = {
-    {
-        File = "gridinv.lua",
-        Type = "shared"
-    }
+{
+File = "gridinv.lua",
+Type = "shared"
+}
 }
 
 ```
 
 ---
 
-### NetworkStrings
+### Purpose:
+
+**Purpose**
+
+Sets the network strings used by this module
 
 **Example Usage**
 
@@ -140,7 +185,11 @@ MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
 
 ---
 
-### WorkshopContent
+### Purpose:
+
+**Purpose**
+
+Sets the Workshop content IDs required by this module
 
 **Example Usage**
 
@@ -153,35 +202,47 @@ MODULE.WorkshopContent = {"1234567890", "0987654321"}
 
 ---
 
-### WebSounds
+### Purpose:
+
+**Purpose**
+
+Sets the web-hosted sound files used by this module
 
 **Example Usage**
 
 ```lua
 -- Define web-hosted sound files for the module
 MODULE.WebSounds = {
-    ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
+["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
 }
 
 ```
 
 ---
 
-### WebImages
+### Purpose:
+
+**Purpose**
+
+Sets the web-hosted image files used by this module
 
 **Example Usage**
 
 ```lua
 -- Define web-hosted image files for the module
 MODULE.WebImages = {
-    ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
+["icons/inventory.png"] = "https://example.com/icons/inventory.png"
 }
 
 ```
 
 ---
 
-### enabled
+### Purpose:
+
+**Purpose**
+
+Sets whether the module is enabled by default
 
 **Example Usage**
 
@@ -193,23 +254,63 @@ MODULE.enabled = true
 
 ---
 
-### folder
+### Purpose:
+
+**Purpose**
+
+Sets the folder path for the module
+Internal Variable: This is set automatically by the module system
+]]
 
 ---
 
-### path
+### Purpose:
+
+**Purpose**
+
+Sets the file path for the module
+Internal Variable: This is set automatically by the module system
+]]
 
 ---
 
-### variable
+### Purpose:
+
+**Purpose**
+
+Sets the variable name for the module
+Internal Variable: This is set automatically by the module system
+]]
 
 ---
 
-### loading
+### Purpose:
+
+**Purpose**
+
+Sets whether the module is currently loading
+Internal Variable: This is set automatically by the module system
+]]
 
 ---
 
-### OnLoaded
+### Purpose:
+
+**Purpose**
+
+Called when the module is fully loaded
+
+**When Called**
+
+After all module files have been loaded and initialized
+
+**Realm**
+
+Shared (called on both server and client)
+
+**Returns**
+
+* None
 
 **Example Usage**
 
@@ -217,7 +318,7 @@ MODULE.enabled = true
 -- Called after all module files are loaded
 function MODULE:OnLoaded()
     print("Module loaded successfully!")
-end
+    end
 
 ```
 

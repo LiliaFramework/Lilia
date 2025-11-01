@@ -20,6 +20,10 @@ Generates a human-readable syntax string from command argument definitions
 
 Automatically called by lia.command.add when registering commands
 
+**Parameters**
+
+* `args` (*table*): Array of argument definition tables with type, name, and optional properties
+
 **Returns**
 
 * string - Formatted syntax string showing argument types and names
@@ -34,8 +38,8 @@ Shared
 ```lua
 -- Simple: Generate syntax for basic arguments
 local args = {
-    {type = "string", name = "target"},
-    {type = "player", name = "player"}
+{type = "string", name = "target"},
+{type = "player", name = "player"}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[string target] [player player]"
@@ -46,8 +50,8 @@ local syntax = lia.command.buildSyntaxFromArguments(args)
 ```lua
 -- Medium: Generate syntax with optional arguments
 local args = {
-    {type = "string", name = "message"},
-    {type = "bool", name = "silent", optional = true}
+{type = "string", name = "message"},
+{type = "bool", name = "silent", optional = true}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[string message] [bool silent optional]"
@@ -58,10 +62,10 @@ local syntax = lia.command.buildSyntaxFromArguments(args)
 ```lua
 -- High: Generate syntax for complex command with multiple argument types
 local args = {
-    {type = "player", name = "target"},
-    {type = "string", name = "reason"},
-    {type = "number", name = "duration", optional = true},
-    {type = "bool", name = "notify", optional = true}
+{type = "player", name = "target"},
+{type = "string", name = "reason"},
+{type = "number", name = "duration", optional = true},
+{type = "bool", name = "notify", optional = true}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[player target] [string reason] [number duration optional] [bool notify optional]"
@@ -80,6 +84,10 @@ Registers a new command with the command system, handling privileges, aliases, a
 
 When registering commands during gamemode initialization or module loading
 
+**Parameters**
+
+* `command` (*string*): The command name, data (table) - Command configuration including onRun, arguments, privilege, etc.
+
 **Returns**
 
 * void
@@ -94,10 +102,10 @@ Shared
 ```lua
 -- Simple: Register a basic command
 lia.command.add("hello", {
-    onRun = function(client, arguments)
-        client:notify("Hello, " .. client:Name() .. "!")
-    end,
-    desc = "Say hello"
+onRun = function(client, arguments)
+client:notify("Hello, " .. client:Name() .. "!")
+end,
+desc = "Say hello"
 })
 
 ```
@@ -106,18 +114,18 @@ lia.command.add("hello", {
 ```lua
 -- Medium: Register command with arguments and admin privilege
 lia.command.add("kick", {
-    arguments = {
-        {type = "player", name = "target"},
-        {type = "string", name = "reason", optional = true}
-    },
-    onRun = function(client, arguments)
-        local target = arguments[1]
-        local reason = arguments[2] or "No reason provided"
-        target:Kick(reason)
-        client:notify("Kicked " .. target:Name())
-    end,
-    adminOnly = true,
-    desc = "Kick a player from the server"
+arguments = {
+{type = "player", name = "target"},
+{type = "string", name = "reason", optional = true}
+},
+onRun = function(client, arguments)
+local target = arguments[1]
+local reason = arguments[2] or "No reason provided"
+target:Kick(reason)
+client:notify("Kicked " .. target:Name())
+end,
+adminOnly = true,
+desc = "Kick a player from the server"
 })
 
 ```
@@ -126,23 +134,23 @@ lia.command.add("kick", {
 ```lua
 -- High: Register complex command with aliases, custom access check, and privilege
 lia.command.add("ban", {
-    arguments = {
-        {type = "player", name = "target"},
-        {type = "string", name = "reason"},
-        {type = "number", name = "duration", optional = true}
-    },
-    alias = {"tempban", "tban"},
-    onRun = function(client, arguments)
-        local target = arguments[1]
-        local reason = arguments[2]
-        local duration = arguments[3] or 0
-        -- Ban logic here
-    end,
-    onCheckAccess = function(client, command, data)
-        return client:IsSuperAdmin() or client:hasPrivilege("moderation")
-    end,
-    privilege = "moderation",
-    desc = "Ban a player temporarily or permanently"
+arguments = {
+{type = "player", name = "target"},
+{type = "string", name = "reason"},
+{type = "number", name = "duration", optional = true}
+},
+alias = {"tempban", "tban"},
+onRun = function(client, arguments)
+local target = arguments[1]
+local reason = arguments[2]
+local duration = arguments[3] or 0
+-- Ban logic here
+end,
+onCheckAccess = function(client, command, data)
+return client:IsSuperAdmin() or client:hasPrivilege("moderation")
+end,
+privilege = "moderation",
+desc = "Ban a player temporarily or permanently"
 })
 
 ```
@@ -158,6 +166,10 @@ Checks if a client has access to execute a specific command based on privileges,
 **When Called**
 
 Before command execution to verify player permissions
+
+**Parameters**
+
+* `client` (*Player*): The player attempting to use the command, command (string) - Command name, data (table, optional) - Command data table
 
 **Returns**
 
@@ -200,12 +212,12 @@ if hasAccess then
     local faction = lia.faction.indices[char:getFaction()]
     if faction and faction.commands and faction.commands["arrest"] then
         client:notify("Faction command access granted!")
-    elseif client:hasPrivilege(privilege) then
-        client:notify("Privilege-based access granted!")
-    end
-else
-    client:notifyError("Access denied: " .. privilege)
-end
+        elseif client:hasPrivilege(privilege) then
+            client:notify("Privilege-based access granted!")
+        end
+        else
+            client:notifyError("Access denied: " .. privilege)
+        end
 
 ```
 
@@ -220,6 +232,10 @@ Parses command text and extracts individual arguments, handling quoted strings a
 **When Called**
 
 When parsing command input to separate arguments for command execution
+
+**Parameters**
+
+* `text` (*string*): The command text to parse (excluding the command name)
 
 **Returns**
 
@@ -272,6 +288,10 @@ Executes a registered command for a client with proper error handling and result
 
 When a command needs to be executed after parsing and access validation
 
+**Parameters**
+
+* `client` (*Player*): The player executing the command, command (string) - Command name, arguments (table) - Command arguments
+
 **Returns**
 
 * void
@@ -309,9 +329,9 @@ local hasAccess = lia.command.hasAccess(client, command)
 if hasAccess then
     lia.command.run(client, command, args)
     lia.log.add(client, "command", "/" .. command .. " " .. table.concat(args, " "))
-else
-    client:notifyError("Access denied!")
-end
+    else
+        client:notifyError("Access denied!")
+    end
 
 ```
 
@@ -326,6 +346,10 @@ Parses command text input, validates arguments, and executes commands with prope
 **When Called**
 
 When processing player chat input or console commands that start with "/"
+
+**Parameters**
+
+* `client` (*Player*): The player executing the command, text (string) - Full command text, realCommand (string, optional) - Pre-parsed command name, arguments (table, optional) - Pre-parsed arguments
 
 **Returns**
 
@@ -365,10 +389,10 @@ local success = lia.command.parse(client, text)
 if success then
     -- If arguments are missing, client will be prompted
     -- If arguments are valid, PM command will execute
-else
-    -- Not a command, treat as regular chat
-    lia.chatbox.add(client, text)
-end
+    else
+        -- Not a command, treat as regular chat
+        lia.chatbox.add(client, text)
+    end
 
 ```
 
@@ -383,6 +407,10 @@ Creates a GUI prompt for users to input missing command arguments with validatio
 **When Called**
 
 When a command is executed with missing required arguments
+
+**Parameters**
+
+* `cmdKey` (*string*): Command name, missing (table) - Array of missing argument names, prefix (table) - Already provided arguments
 
 **Returns**
 
@@ -434,6 +462,10 @@ Creates a GUI prompt for users to input missing command arguments with validatio
 
 When a command is executed with missing required arguments
 
+**Parameters**
+
+* `cmdKey` (*string*): Command name, missing (table) - Array of missing argument names, prefix (table) - Already provided arguments
+
 **Returns**
 
 * void
@@ -483,6 +515,10 @@ Creates a GUI prompt for users to input missing command arguments with validatio
 **When Called**
 
 When a command is executed with missing required arguments
+
+**Parameters**
+
+* `cmdKey` (*string*): Command name, missing (table) - Array of missing argument names, prefix (table) - Already provided arguments
 
 **Returns**
 
@@ -534,6 +570,10 @@ Creates a GUI prompt for users to input missing command arguments with validatio
 
 When a command is executed with missing required arguments
 
+**Parameters**
+
+* `cmdKey` (*string*): Command name, missing (table) - Array of missing argument names, prefix (table) - Already provided arguments
+
 **Returns**
 
 * void
@@ -584,6 +624,10 @@ Creates a GUI prompt for users to input missing command arguments with validatio
 
 When a command is executed with missing required arguments
 
+**Parameters**
+
+* `cmdKey` (*string*): Command name, missing (table) - Array of missing argument names, prefix (table) - Already provided arguments
+
 **Returns**
 
 * void
@@ -633,6 +677,10 @@ Sends a command execution request from client to server via network
 **When Called**
 
 When client needs to execute a command on the server
+
+**Parameters**
+
+* `command` (*string*): Command name, ... (vararg) - Command arguments
 
 **Returns**
 

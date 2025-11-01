@@ -897,9 +897,9 @@ end
 local trace = player:getTrace(150)
 if trace.Hit and trace.HitWorld then
     player:notify("Looking at world surface")
-elseif trace.Hit and IsValid(trace.Entity) then
-    player:notify("Looking at: " .. trace.Entity:GetClass())
-end
+    elseif trace.Hit and IsValid(trace.Entity) then
+        player:notify("Looking at: " .. trace.Entity:GetClass())
+    end
 
 ```
 
@@ -1031,11 +1031,11 @@ player:notify("Health is low!", "warning")
 local health = player:Health()
 if health < 25 then
     player:notify("Critical health! Seek medical attention!", "error")
-elseif health < 50 then
-    player:notify("Health is low", "warning")
-else
-    player:notify("Health is good", "success")
-end
+    elseif health < 50 then
+        player:notify("Health is low", "warning")
+        else
+            player:notify("Health is good", "success")
+        end
 
 ```
 
@@ -1137,8 +1137,8 @@ end
 ```lua
 -- High: Complex error handling with logging
 local success, err = pcall(function()
-    -- Some risky operation
-    player:SetHealth(100)
+-- Some risky operation
+player:SetHealth(100)
 end)
 if not success then
     player:notifyError("Failed to heal player: " .. tostring(err))
@@ -1196,9 +1196,9 @@ local health = player:Health()
 local armor = player:Armor()
 if health < 50 and armor < 25 then
     player:notifyWarning("You are vulnerable! Health: " .. health .. ", Armor: " .. armor)
-elseif health < 25 then
-    player:notifyWarning("Critical health! Seek medical attention immediately!")
-end
+    elseif health < 25 then
+        player:notifyWarning("Critical health! Seek medical attention immediately!")
+    end
 
 ```
 
@@ -1458,13 +1458,13 @@ player:notifyErrorLocalized("error_permission_denied")
 local char = player:getChar()
 if not char then
     player:notifyErrorLocalized("error_no_character")
-else
-    local money = char:getData("money", 0)
-    local required = 1000
-    if money < required then
-        player:notifyErrorLocalized("error_insufficient_funds")
+    else
+        local money = char:getData("money", 0)
+        local required = 1000
+        if money < required then
+            player:notifyErrorLocalized("error_insufficient_funds")
+        end
     end
-end
 
 ```
 
@@ -1517,10 +1517,10 @@ if char then
     local armor = player:Armor()
     if health < 25 then
         player:notifyWarningLocalized("warning_critical_health")
-    elseif health < 50 and armor < 25 then
-        player:notifyWarningLocalized("warning_vulnerable")
+        elseif health < 50 and armor < 25 then
+            player:notifyWarningLocalized("warning_vulnerable")
+        end
     end
-end
 
 ```
 
@@ -1773,9 +1773,9 @@ end
 -- Medium: Conditional vendor editing with feedback
 if player:canEditVendor(vendor) then
     player:notify("You can edit this vendor")
-else
-    player:notifyError("You don't have permission to edit this vendor")
-end
+    else
+        player:notifyError("You don't have permission to edit this vendor")
+    end
 
 ```
 
@@ -1787,10 +1787,10 @@ if player:canEditVendor(vendor) then
     if vendorData.owner == player:SteamID() or player:hasPrivilege("admin") then
         -- Allow editing
         player:notifySuccess("Vendor edit access granted")
-    else
-        player:notifyError("You don't own this vendor")
+        else
+            player:notifyError("You don't own this vendor")
+        end
     end
-end
 
 ```
 
@@ -1830,9 +1830,9 @@ end
 -- Medium: Staff-only feature access
 if player:isStaff() then
     player:notify("Welcome, staff member!")
-else
-    player:notifyError("This feature is for staff only")
-end
+    else
+        player:notifyError("This feature is for staff only")
+    end
 
 ```
 
@@ -1843,12 +1843,12 @@ if player:isStaff() then
     local userGroup = player:GetUserGroup()
     if userGroup == "superadmin" then
         player:notify("Full admin access granted")
-    elseif userGroup == "admin" then
-        player:notify("Admin access granted")
-    else
-        player:notify("Staff access granted")
-    end
-end
+        elseif userGroup == "admin" then
+            player:notify("Admin access granted")
+            else
+                player:notify("Staff access granted")
+            end
+        end
 
 ```
 
@@ -1888,9 +1888,9 @@ end
 -- Medium: VIP-only feature access
 if player:isVIP() then
     player:notify("Welcome, VIP member!")
-else
-    player:notifyError("This feature is for VIP members only")
-end
+    else
+        player:notifyError("This feature is for VIP members only")
+    end
 
 ```
 
@@ -1945,9 +1945,9 @@ end
 -- Medium: Duty-based feature access
 if player:isStaffOnDuty() then
     player:notify("Staff tools available")
-else
-    player:notifyError("You must be on duty to use this")
-end
+    else
+        player:notifyError("You must be on duty to use this")
+    end
 
 ```
 
@@ -1959,9 +1959,9 @@ if player:isStaffOnDuty() then
     local currentTime = os.time()
     local dutyDuration = currentTime - dutyTime
     player:notifyInfo("On duty for " .. math.floor(dutyDuration / 60) .. " minutes")
-else
-    player:notify("You are not currently on duty")
-end
+    else
+        player:notify("You are not currently on duty")
+    end
 
 ```
 
@@ -2005,9 +2005,9 @@ end
 -- Medium: Faction selection with whitelist check
 if player:hasWhitelist("police") then
     player:notify("You can join the police faction")
-else
-    player:notifyError("You don't have whitelist for police faction")
-end
+    else
+        player:notifyError("You don't have whitelist for police faction")
+    end
 
 ```
 
@@ -2020,9 +2020,9 @@ if player:hasWhitelist(faction) then
     if factionData and not factionData.isDefault then
         player:notifySuccess("Whitelist access granted for " .. factionData.name)
     end
-else
-    player:notifyError("Whitelist required for " .. faction)
-end
+    else
+        player:notifyError("Whitelist required for " .. faction)
+    end
 
 ```
 
@@ -2183,9 +2183,9 @@ local cost = 1000
 local money = player:getMoney()
 if money >= cost then
     player:notify("You can afford this purchase!")
-else
-    player:notifyError("You need $" .. (cost - money) .. " more")
-end
+    else
+        player:notifyError("You need $" .. (cost - money) .. " more")
+    end
 
 ```
 
@@ -2243,9 +2243,9 @@ end
 local cost = 500
 if player:canAfford(cost) then
     player:notify("You can afford this purchase!")
-else
-    player:notifyError("You need $" .. (cost - player:getMoney()) .. " more")
-end
+    else
+        player:notifyError("You need $" .. (cost - player:getMoney()) .. " more")
+    end
 
 ```
 
@@ -2260,9 +2260,9 @@ if player:canAfford(cost) then
         local remaining = currentMoney - cost
         player:notifySuccess("Purchase successful! Remaining: $" .. remaining)
     end
-else
-    player:notifyError("Insufficient funds for this purchase")
-end
+    else
+        player:notifyError("Insufficient funds for this purchase")
+    end
 
 ```
 
@@ -2307,9 +2307,9 @@ end
 -- Medium: Skill-based feature access
 if player:hasSkillLevel("engineering", 10) then
     player:notify("You can use advanced engineering tools")
-else
-    player:notifyError("You need engineering level 10 for this")
-end
+    else
+        player:notifyError("You need engineering level 10 for this")
+    end
 
 ```
 
@@ -2317,8 +2317,8 @@ end
 ```lua
 -- High: Complex skill system with multiple requirements
 local requiredSkills = {
-    {skill = "strength", level = 5},
-    {skill = "intelligence", level = 8}
+{skill = "strength", level = 5},
+{skill = "intelligence", level = 8}
 }
 local canUse = true
 for _, req in ipairs(requiredSkills) do
@@ -2375,9 +2375,9 @@ end
 local requirements = {engineering = 10, strength = 8, intelligence = 6}
 if player:meetsRequiredSkills(requirements) then
     player:notify("You can use the advanced workshop!")
-else
-    player:notifyError("You don't meet the skill requirements")
-end
+    else
+        player:notifyError("You don't meet the skill requirements")
+    end
 
 ```
 
@@ -2387,15 +2387,15 @@ end
 local requirements = {engineering = 10, strength = 8, intelligence = 6}
 if player:meetsRequiredSkills(requirements) then
     player:notifySuccess("All skill requirements met!")
-else
-    local missing = {}
-    for skill, level in pairs(requirements) do
-        if not player:hasSkillLevel(skill, level) then
-            table.insert(missing, skill .. "(" .. level .. ")")
+    else
+        local missing = {}
+        for skill, level in pairs(requirements) do
+            if not player:hasSkillLevel(skill, level) then
+                table.insert(missing, skill .. "(" .. level .. ")")
+            end
         end
+        player:notifyError("Missing skills: " .. table.concat(missing, ", "))
     end
-    player:notifyError("Missing skills: " .. table.concat(missing, ", "))
-end
 
 ```
 
@@ -2439,7 +2439,7 @@ player:forceSequence("sit")
 ```lua
 -- Medium: Play sequence with callback
 player:forceSequence("wave", function()
-    player:notify("Animation completed!")
+player:notify("Animation completed!")
 end)
 
 ```
@@ -2450,8 +2450,8 @@ end)
 local sequenceName = "salute"
 local duration = 3.0
 local callback = function()
-    player:notifySuccess("Salute completed!")
-    player:setData("lastSalute", os.time())
+player:notifySuccess("Salute completed!")
+player:setData("lastSalute", os.time())
 end
 player:forceSequence(sequenceName, callback, duration, false)
 
@@ -2713,8 +2713,8 @@ player:networkAnimation(true, boneData)
 ```lua
 -- Medium: Network animation with multiple bones
 local boneData = {
-    ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
-    ValveBiped.Bip01_Spine2 = Angle(0, 0, 0)
+ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
+ValveBiped.Bip01_Spine2 = Angle(0, 0, 0)
 }
 player:networkAnimation(true, boneData)
 
@@ -2724,15 +2724,15 @@ player:networkAnimation(true, boneData)
 ```lua
 -- High: Complex animation system with timing
 local boneData = {
-    ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
-    ValveBiped.Bip01_Spine2 = Angle(0, 0, 0),
-    ValveBiped.Bip01_L_Hand = Angle(0, 0, 0)
+ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
+ValveBiped.Bip01_Spine2 = Angle(0, 0, 0),
+ValveBiped.Bip01_L_Hand = Angle(0, 0, 0)
 }
 player:networkAnimation(true, boneData)
 timer.Simple(5, function()
-    if IsValid(player) then
-        player:networkAnimation(false, boneData)
-    end
+if IsValid(player) then
+    player:networkAnimation(false, boneData)
+end
 end)
 
 ```
@@ -2840,8 +2840,8 @@ local waypointName = "Mission Objective"
 local waypointPos = Vector(1000, 2000, 100)
 local waypointIcon = "icon16/flag.png"
 local onReach = function()
-    player:notifySuccess("Objective reached!")
-    player:setData("missionComplete", true)
+player:notifySuccess("Objective reached!")
+player:setData("missionComplete", true)
 end
 player:setWaypoint(waypointName, waypointPos, waypointIcon, onReach)
 
@@ -3008,9 +3008,9 @@ end
 -- Medium: Time-based feature access
 if player:playTimeGreaterThan(7200) then
     player:notify("You can access veteran features!")
-else
-    player:notifyError("You need 2 hours of play time for this feature")
-end
+    else
+        player:notifyError("You need 2 hours of play time for this feature")
+    end
 
 ```
 
@@ -3069,7 +3069,7 @@ player:requestOptions("Choose Action", "What do you want to do?", {"Option 1", "
 -- Medium: Request with callback
 local options = {"Yes", "No", "Maybe"}
 local callback = function(selected)
-    player:notify("You selected: " .. table.concat(selected, ", "))
+player:notify("You selected: " .. table.concat(selected, ", "))
 end
 player:requestOptions("Confirmation", "Do you want to continue?", options, 1, callback)
 
@@ -3083,13 +3083,13 @@ local subTitle = "Choose your character's background"
 local options = {"Warrior", "Mage", "Rogue", "Healer"}
 local limit = 1
 local callback = function(selected)
-    if #selected > 0 then
-        local char = player:getChar()
-        if char then
-            char:setData("class", selected[1])
-            player:notifySuccess("Character class set to: " .. selected[1])
-        end
+if #selected > 0 then
+    local char = player:getChar()
+    if char then
+        char:setData("class", selected[1])
+        player:notifySuccess("Character class set to: " .. selected[1])
     end
+end
 end
 player:requestOptions(title, subTitle, options, limit, callback)
 
@@ -3128,7 +3128,7 @@ Shared
 ```lua
 -- Simple: Request string input
 player:requestString("Enter Name", "What is your name?", function(name)
-    print("Player entered:", name)
+print("Player entered:", name)
 end)
 
 ```
@@ -3137,7 +3137,7 @@ end)
 ```lua
 -- Medium: Request with default value
 player:requestString("Enter Message", "Type your message:", function(message)
-    player:notify("You said: " .. message)
+player:notify("You said: " .. message)
 end, "Hello World")
 
 ```
@@ -3148,12 +3148,12 @@ end, "Hello World")
 local title = "Character Name"
 local subTitle = "Enter your character's name (3-20 characters)"
 local callback = function(name)
-    if name and #name >= 3 and #name <= 20 then
-        local char = player:getChar()
-        if char then
-            char:setData("name", name)
-            player:notifySuccess("Character name set to: " .. name)
-        end
+if name and #name >= 3 and #name <= 20 then
+    local char = player:getChar()
+    if char then
+        char:setData("name", name)
+        player:notifySuccess("Character name set to: " .. name)
+    end
     else
         player:notifyError("Name must be 3-20 characters long")
     end
@@ -3195,7 +3195,7 @@ Shared
 -- Simple: Request basic arguments
 local argTypes = {{type = "string", name = "Name"}, {type = "number", name = "Age"}}
 player:requestArguments("Enter Info", argTypes, function(args)
-    print("Name:", args[1], "Age:", args[2])
+print("Name:", args[1], "Age:", args[2])
 end)
 
 ```
@@ -3204,11 +3204,11 @@ end)
 ```lua
 -- Medium: Request with validation
 local argTypes = {
-    {type = "string", name = "Item Name", required = true},
-    {type = "number", name = "Quantity", min = 1, max = 100}
+{type = "string", name = "Item Name", required = true},
+{type = "number", name = "Quantity", min = 1, max = 100}
 }
 player:requestArguments("Create Item", argTypes, function(args)
-    player:notify("Created " .. args[2] .. "x " .. args[1])
+player:notify("Created " .. args[2] .. "x " .. args[1])
 end)
 
 ```
@@ -3217,20 +3217,20 @@ end)
 ```lua
 -- High: Complex argument system with multiple types
 local argTypes = {
-    {type = "string", name = "Character Name", required = true},
-    {type = "number", name = "Level", min = 1, max = 100},
-    {type = "boolean", name = "Is VIP", default = false},
-    {type = "string", name = "Faction", options = {"police", "citizen", "criminal"}}
+{type = "string", name = "Character Name", required = true},
+{type = "number", name = "Level", min = 1, max = 100},
+{type = "boolean", name = "Is VIP", default = false},
+{type = "string", name = "Faction", options = {"police", "citizen", "criminal"}}
 }
 local callback = function(args)
-    local char = player:getChar()
-    if char then
-        char:setData("name", args[1])
-        char:setData("level", args[2])
-        char:setData("isVIP", args[3])
-        char:setData("faction", args[4])
-        player:notifySuccess("Character updated!")
-    end
+local char = player:getChar()
+if char then
+    char:setData("name", args[1])
+    char:setData("level", args[2])
+    char:setData("isVIP", args[3])
+    char:setData("faction", args[4])
+    player:notifySuccess("Character updated!")
+end
 end
 player:requestArguments("Character Setup", argTypes, callback)
 
@@ -3277,8 +3277,8 @@ player:binaryQuestion("Do you want to continue?", "Yes", "No")
 ```lua
 -- Medium: Ask with callback
 player:binaryQuestion("Delete this item?", "Delete", "Cancel", true, function(choice)
-    if choice == 1 then
-        player:notify("Item deleted!")
+if choice == 1 then
+    player:notify("Item deleted!")
     else
         player:notify("Deletion cancelled")
     end
@@ -3293,12 +3293,12 @@ local question = "Are you sure you want to reset your character? This cannot be 
 local option1 = "Yes, Reset"
 local option2 = "No, Keep Character"
 local callback = function(choice)
-    if choice == 1 then
-        local char = player:getChar()
-        if char then
-            char:delete()
-            player:notifySuccess("Character reset successfully!")
-        end
+if choice == 1 then
+    local char = player:getChar()
+    if char then
+        char:delete()
+        player:notifySuccess("Character reset successfully!")
+    end
     else
         player:notifyInfo("Character reset cancelled")
     end
@@ -3338,8 +3338,8 @@ Shared
 ```lua
 -- Simple: Request basic buttons
 local buttons = {
-    {text = "Option 1", callback = function() print("Option 1 selected") end},
-    {text = "Option 2", callback = function() print("Option 2 selected") end}
+{text = "Option 1", callback = function() print("Option 1 selected") end},
+{text = "Option 2", callback = function() print("Option 2 selected") end}
 }
 player:requestButtons("Choose Action", buttons)
 
@@ -3349,9 +3349,9 @@ player:requestButtons("Choose Action", buttons)
 ```lua
 -- Medium: Request with different actions
 local buttons = {
-    {text = "Heal", callback = function() player:SetHealth(100) end},
-    {text = "Give Money", callback = function() player:notify("Money given!") end},
-    {text = "Cancel", callback = function() player:notify("Cancelled") end}
+{text = "Heal", callback = function() player:SetHealth(100) end},
+{text = "Give Money", callback = function() player:notify("Money given!") end},
+{text = "Cancel", callback = function() player:notify("Cancelled") end}
 }
 player:requestButtons("Player Actions", buttons)
 
@@ -3362,21 +3362,21 @@ player:requestButtons("Player Actions", buttons)
 -- High: Complex button system with validation
 local title = "Character Management"
 local buttons = {
-    {text = "Reset Character", callback = function()
-        player:binaryQuestion("Reset character?", "Yes", "No", true, function(choice)
-            if choice == 1 then
-                local char = player:getChar()
-                if char then char:delete() end
-            end
-        end)
-    end},
-    {text = "Change Name", callback = function()
-        player:requestString("New Name", "Enter new character name:", function(name)
-            local char = player:getChar()
-            if char then char:setData("name", name) end
-        end)
-    end},
-    {text = "Cancel", callback = function() player:notify("Cancelled") end}
+{text = "Reset Character", callback = function()
+player:binaryQuestion("Reset character?", "Yes", "No", true, function(choice)
+if choice == 1 then
+    local char = player:getChar()
+    if char then char:delete() end
+    end
+end)
+end},
+{text = "Change Name", callback = function()
+player:requestString("New Name", "Enter new character name:", function(name)
+local char = player:getChar()
+if char then char:setData("name", name) end
+end)
+end},
+{text = "Cancel", callback = function() player:notify("Cancelled") end}
 }
 player:requestButtons(title, buttons)
 
@@ -3424,7 +3424,7 @@ player:requestDropdown("Choose Option", "Select an option:", options)
 -- Medium: Request with callback
 local options = {"Red", "Green", "Blue", "Yellow"}
 local callback = function(selected)
-    player:notify("You selected: " .. selected)
+player:notify("You selected: " .. selected)
 end
 player:requestDropdown("Choose Color", "Select your favorite color:", options, callback)
 
@@ -3437,13 +3437,13 @@ local title = "Character Class"
 local subTitle = "Choose your character's class"
 local options = {"Warrior", "Mage", "Rogue", "Healer", "Paladin"}
 local callback = function(selected)
-    local char = player:getChar()
-    if char then
-        char:setData("class", selected)
-        player:notifySuccess("Character class set to: " .. selected)
-        -- Apply class-specific bonuses
-        if selected == "Warrior" then
-            char:setData("strength", 15)
+local char = player:getChar()
+if char then
+    char:setData("class", selected)
+    player:notifySuccess("Character class set to: " .. selected)
+    -- Apply class-specific bonuses
+    if selected == "Warrior" then
+        char:setData("strength", 15)
         elseif selected == "Mage" then
             char:setData("intelligence", 15)
         end
@@ -3508,14 +3508,14 @@ local invalidParts = {}
 for partID, _ in pairs(parts) do
     if lia.pac.isValidPart(partID) then
         table.insert(validParts, partID)
-    else
-        table.insert(invalidParts, partID)
-        player:removePart(partID)
+        else
+            table.insert(invalidParts, partID)
+            player:removePart(partID)
+        end
     end
-end
-if #invalidParts > 0 then
-    player:notifyError("Removed " .. #invalidParts .. " invalid parts")
-end
+    if #invalidParts > 0 then
+        player:notifyError("Removed " .. #invalidParts .. " invalid parts")
+    end
 
 ```
 
@@ -3543,14 +3543,14 @@ Server
 
 **Low Complexity:**
 ```lua
--- Low: Basic part synchronization
+-- Basic part synchronization
 player:syncParts()
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Sync parts after validation
+-- Sync parts after validation
 local parts = player:getParts()
 local validParts = {}
 for partID, _ in pairs(parts) do
@@ -3565,7 +3565,7 @@ player:syncParts()
 
 **High Complexity:**
 ```lua
--- High: Complex synchronization with logging and validation
+-- Complex synchronization with logging and validation
 local parts = player:getParts()
 local syncCount = 0
 local removedParts = {}
@@ -3573,15 +3573,15 @@ for partID, _ in pairs(parts) do
     if not lia.pac.isValidPart(partID) then
         table.insert(removedParts, partID)
         parts[partID] = nil
-    else
-        syncCount = syncCount + 1
+        else
+            syncCount = syncCount + 1
+        end
     end
-end
-player:setNetVar("parts", parts)
-player:syncParts()
-if #removedParts > 0 then
-    lia.log.add("Player " .. player:Name() .. " had " .. #removedParts .. " invalid parts removed")
-end
+    player:setNetVar("parts", parts)
+    player:syncParts()
+    if #removedParts > 0 then
+        lia.log.add("Player " .. player:Name() .. " had " .. #removedParts .. " invalid parts removed")
+    end
 
 ```
 
@@ -3613,14 +3613,14 @@ Server
 
 **Low Complexity:**
 ```lua
--- Low: Basic part addition
+-- Basic part addition
 player:addPart("hat_001")
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Part addition with validation and limits
+-- Part addition with validation and limits
 local parts = player:getParts()
 local partCount = 0
 for _, _ in pairs(parts) do
@@ -3629,15 +3629,15 @@ end
 if partCount < 10 and lia.pac.isValidPart(partID) then
     player:addPart(partID)
     player:notifySuccess("Part equipped: " .. partID)
-else
-    player:notifyError("Cannot equip more parts or invalid part ID")
-end
+    else
+        player:notifyError("Cannot equip more parts or invalid part ID")
+    end
 
 ```
 
 **High Complexity:**
 ```lua
--- High: Complex part system with permissions and effects
+-- Complex part system with permissions and effects
 local partID = "premium_hat_001"
 local char = player:getChar()
 if char and char:hasFlags("P") then
@@ -3650,15 +3650,15 @@ if char and char:hasFlags("P") then
             -- Apply special effects
             player:setData("premiumPartEquipped", true)
             player:notifyInfo("Premium effects activated!")
-        else
-            player:notifyWarning("Part already equipped")
-        end
-    else
-        player:notifyError("Invalid part ID")
-    end
-else
-    player:notifyError("Insufficient permissions for this part")
-end
+            else
+                player:notifyWarning("Part already equipped")
+            end
+            else
+                player:notifyError("Invalid part ID")
+            end
+            else
+                player:notifyError("Insufficient permissions for this part")
+            end
 
 ```
 
@@ -3690,29 +3690,29 @@ Server
 
 **Low Complexity:**
 ```lua
--- Low: Basic part removal
+-- Basic part removal
 player:removePart("hat_001")
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Part removal with validation and cleanup
+-- Part removal with validation and cleanup
 local parts = player:getParts()
 if parts[partID] then
     player:removePart(partID)
     player:notifySuccess("Part removed: " .. partID)
     -- Clean up related data
     player:setData("part_" .. partID .. "_equipped", false)
-else
-    player:notifyWarning("Part not equipped")
-end
+    else
+        player:notifyWarning("Part not equipped")
+    end
 
 ```
 
 **High Complexity:**
 ```lua
--- High: Complex part removal with effects and logging
+-- Complex part removal with effects and logging
 local partID = "premium_hat_001"
 local parts = player:getParts()
 if parts[partID] then
@@ -3735,9 +3735,9 @@ if parts[partID] then
     if not hasPremiumParts then
         player:notifyWarning("No premium parts remaining")
     end
-else
-    player:notifyError("Part not found")
-end
+    else
+        player:notifyError("Part not found")
+    end
 
 ```
 
@@ -3765,14 +3765,14 @@ Server
 
 **Low Complexity:**
 ```lua
--- Low: Basic parts reset
+-- Basic parts reset
 player:resetParts()
 
 ```
 
 **Medium Complexity:**
 ```lua
--- Medium: Reset parts with validation and notification
+-- Reset parts with validation and notification
 local parts = player:getParts()
 local partCount = 0
 for _, _ in pairs(parts) do
@@ -3781,15 +3781,15 @@ end
 if partCount > 0 then
     player:resetParts()
     player:notifySuccess("All parts removed (" .. partCount .. " parts)")
-else
-    player:notifyInfo("No parts to remove")
-end
+    else
+        player:notifyInfo("No parts to remove")
+    end
 
 ```
 
 **High Complexity:**
 ```lua
--- High: Complex parts reset with logging and cleanup
+-- Complex parts reset with logging and cleanup
 local parts = player:getParts()
 local removedParts = {}
 local premiumParts = 0
@@ -3810,14 +3810,14 @@ if #removedParts > 0 then
     -- Notify with details
     if premiumParts > 0 then
         player:notifyWarning("Reset " .. #removedParts .. " parts including " .. premiumParts .. " premium items")
-    else
-        player:notifySuccess("Reset " .. #removedParts .. " parts")
-    end
-    -- Trigger cleanup hooks
-    hook.Run("OnPlayerResetParts", player, removedParts)
-else
-    player:notifyInfo("No parts to reset")
-end
+        else
+            player:notifySuccess("Reset " .. #removedParts .. " parts")
+        end
+        -- Trigger cleanup hooks
+        hook.Run("OnPlayerResetParts", player, removedParts)
+        else
+            player:notifyInfo("No parts to reset")
+        end
 
 ```
 
@@ -3920,9 +3920,9 @@ local currentStamina = player:getNetVar("stamina", 100)
 if currentStamina >= cost then
     player:consumeStamina(cost)
     player:notify("Stamina used: " .. cost)
-else
-    player:notifyError("Not enough stamina!")
-end
+    else
+        player:notifyError("Not enough stamina!")
+    end
 
 ```
 
@@ -4042,9 +4042,9 @@ local cost = 100
 if player:canAfford(cost) then
     player:takeMoney(cost)
     player:notify("You paid $" .. cost)
-else
-    player:notifyError("You can't afford this!")
-end
+    else
+        player:notifyError("You can't afford this!")
+    end
 
 ```
 
@@ -4060,10 +4060,10 @@ if char then
         local newMoney = char:getMoney()
         player:notifyWarning("Money taken: $" .. amount .. " (Remaining: $" .. newMoney .. ")")
         lia.log.add("Player " .. player:Name() .. " lost $" .. amount)
-    else
-        player:notifyError("Insufficient funds!")
+        else
+            player:notifyError("Insufficient funds!")
+        end
     end
-end
 
 ```
 
@@ -4104,7 +4104,7 @@ player:loadLiliaData()
 ```lua
 -- Medium: Load data with callback
 player:loadLiliaData(function(data)
-    player:notify("Data loaded with " .. table.Count(data) .. " entries")
+player:notify("Data loaded with " .. table.Count(data) .. " entries")
 end)
 
 ```
@@ -4113,16 +4113,16 @@ end)
 ```lua
 -- High: Complex data loading with validation
 player:loadLiliaData(function(data)
-    if data then
-        local settings = data.settings or {}
-        local level = data.level or 1
-        local experience = data.experience or 0
-        player:notifyInfo("Welcome back! Level: " .. level .. ", XP: " .. experience)
-        -- Apply saved settings
-        if settings.theme then
-            player:setData("theme", settings.theme)
-        end
+if data then
+    local settings = data.settings or {}
+    local level = data.level or 1
+    local experience = data.experience or 0
+    player:notifyInfo("Welcome back! Level: " .. level .. ", XP: " .. experience)
+    -- Apply saved settings
+    if settings.theme then
+        player:setData("theme", settings.theme)
     end
+end
 end)
 
 ```
@@ -4334,11 +4334,11 @@ player:setAction("Crafting item...", 5)
 local actionText = "Repairing weapon..."
 local duration = 10
 local callback = function(ply)
-    ply:notifySuccess("Weapon repaired!")
-    local weapon = ply:GetActiveWeapon()
-    if IsValid(weapon) then
-        weapon:SetHealth(100)
-    end
+ply:notifySuccess("Weapon repaired!")
+local weapon = ply:GetActiveWeapon()
+if IsValid(weapon) then
+    weapon:SetHealth(100)
+end
 end
 player:setAction(actionText, duration, callback)
 
@@ -4395,14 +4395,14 @@ player:doStaredAction(ent, function() player:notify("Action completed") end, 5, 
 local entity = player:getTracedEntity()
 if IsValid(entity) then
     local callback = function()
-        player:notifySuccess("Examination complete!")
-        local data = entity:getData("examinationData", {})
-        player:notifyInfo("Entity data: " .. table.Count(data) .. " entries")
-    end
-    local onCancel = function()
-        player:notifyWarning("Examination interrupted")
-    end
-    player:doStaredAction(entity, callback, 10, onCancel, 150)
+    player:notifySuccess("Examination complete!")
+    local data = entity:getData("examinationData", {})
+    player:notifyInfo("Entity data: " .. table.Count(data) .. " entries")
+end
+local onCancel = function()
+player:notifyWarning("Examination interrupted")
+end
+player:doStaredAction(entity, callback, 10, onCancel, 150)
 end
 
 ```
@@ -4505,9 +4505,9 @@ local days = math.floor(hours / 24)
 if days >= 7 then
     player:notifySuccess("Veteran player! " .. days .. " days played")
     player:giveFlags("v")
-elseif hours >= 24 then
-    player:notifyInfo("Experienced player! " .. hours .. " hours played")
-end
+    elseif hours >= 24 then
+        player:notifyInfo("Experienced player! " .. hours .. " hours played")
+    end
 
 ```
 
@@ -4722,12 +4722,12 @@ local varCount = 0
 for entity, data in pairs(lia.net) do
     if entity == "globals" then
         varCount = varCount + table.Count(data)
-    elseif IsValid(entity) then
-        varCount = varCount + table.Count(data)
+        elseif IsValid(entity) then
+            varCount = varCount + table.Count(data)
+        end
     end
-end
-player:syncVars()
-lia.log.add("Synced " .. varCount .. " variables to " .. player:Name())
+    player:syncVars()
+    lia.log.add("Synced " .. varCount .. " variables to " .. player:Name())
 
 ```
 
@@ -4737,11 +4737,11 @@ lia.log.add("Synced " .. varCount .. " variables to " .. player:Name())
 
 **Purpose**
 
-Sets a network variable for the player that synchronizes to the client
+Sets a network variable for the player that synchronizes to all clients
 
 **When Called**
 
-When updating player state, implementing networked properties, or client-server communication
+When updating player state, implementing networked properties, or when other players need to see the change (like handcuff status)
 
 **Parameters**
 
@@ -4755,6 +4755,7 @@ When updating player state, implementing networked properties, or client-server 
 **Realm**
 
 Server (only called on server side)
+Notes: Broadcasts to all clients so other players can see the player's state changes
 
 **Example Usage**
 
@@ -4821,9 +4822,9 @@ end
 -- Medium: Conditional view override
 if player:canOverrideView() then
     player:notify("Third person mode available")
-else
-    player:notify("Third person mode disabled")
-end
+    else
+        player:notify("Third person mode disabled")
+    end
 
 ```
 
@@ -4878,9 +4879,9 @@ end
 -- Medium: Conditional third person handling
 if player:isInThirdPerson() then
     player:notify("Third person mode active")
-else
-    player:notify("First person mode active")
-end
+    else
+        player:notify("First person mode active")
+    end
 
 ```
 
@@ -4944,9 +4945,9 @@ local hours = math.floor(playTime / 3600)
 local days = math.floor(hours / 24)
 if days >= 7 then
     player:notifySuccess("Veteran player! " .. days .. " days played")
-elseif hours >= 24 then
-    player:notifyInfo("Experienced player! " .. hours .. " hours played")
-end
+    elseif hours >= 24 then
+        player:notifyInfo("Experienced player! " .. hours .. " hours played")
+    end
 
 ```
 

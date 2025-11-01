@@ -54,11 +54,11 @@ Server
 ```lua
 -- Simple: Add basic door preset for a map
 lia.doors.addPreset("rp_downtown_v4c_v2", {
-    [123] = {
-        name = "Police Station Door",
-        price = 1000,
-        locked = true
-    }
+[123] = {
+name = "Police Station Door",
+price = 1000,
+locked = true
+}
 })
 
 ```
@@ -67,18 +67,18 @@ lia.doors.addPreset("rp_downtown_v4c_v2", {
 ```lua
 -- Medium: Add preset with faction restrictions
 lia.doors.addPreset("rp_downtown_v4c_v2", {
-    [123] = {
-        name = "Police Station",
-        price = 5000,
-        locked = false,
-        factions = {"police", "mayor"}
-    },
-    [124] = {
-        name = "Evidence Room",
-        price = 0,
-        locked = true,
-        factions = {"police"}
-    }
+[123] = {
+name = "Police Station",
+price = 5000,
+locked = false,
+factions = {"police", "mayor"}
+},
+[124] = {
+name = "Evidence Room",
+price = 0,
+locked = true,
+factions = {"police"}
+}
 })
 
 ```
@@ -87,26 +87,26 @@ lia.doors.addPreset("rp_downtown_v4c_v2", {
 ```lua
 -- High: Complex preset with multiple doors and restrictions
 local policeDoors = {
-    [123] = {
-        name = "Police Station Main",
-        price = 10000,
-        locked = false,
-        factions = {"police", "mayor", "chief"}
-    },
-    [124] = {
-        name = "Evidence Room",
-        price = 0,
-        locked = true,
-        factions = {"police"},
-        classes = {"detective", "chief"}
-    },
-    [125] = {
-        name = "Interrogation Room",
-        price = 0,
-        locked = true,
-        factions = {"police"},
-        classes = {"detective", "chief", "officer"}
-    }
+[123] = {
+name = "Police Station Main",
+price = 10000,
+locked = false,
+factions = {"police", "mayor", "chief"}
+},
+[124] = {
+name = "Evidence Room",
+price = 0,
+locked = true,
+factions = {"police"},
+classes = {"detective", "chief"}
+},
+[125] = {
+name = "Interrogation Room",
+price = 0,
+locked = true,
+factions = {"police"},
+classes = {"detective", "chief", "officer"}
+}
 }
 lia.doors.addPreset("rp_downtown_v4c_v2", policeDoors)
 
@@ -218,9 +218,9 @@ lia.doors.verifyDatabaseSchema()
 ```lua
 -- Medium: Verify schema with custom handling
 hook.Add("InitPostEntity", "VerifyDoorSchema", function()
-    timer.Simple(5, function()
-        lia.doors.verifyDatabaseSchema()
-    end)
+timer.Simple(5, function()
+lia.doors.verifyDatabaseSchema()
+end)
 end)
 
 ```
@@ -232,7 +232,7 @@ function customSchemaCheck()
     lia.doors.verifyDatabaseSchema()
     -- Check for missing columns and add them
     local missingColumns = {
-        door_group = "text"
+    door_group = "text"
     }
     for column, type in pairs(missingColumns) do
         lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. column .. " " .. type)
@@ -274,9 +274,9 @@ lia.doors.verifyDatabaseSchema()
 ```lua
 -- Medium: Verify schema with custom handling
 hook.Add("InitPostEntity", "VerifyDoorSchema", function()
-    timer.Simple(5, function()
-        lia.doors.verifyDatabaseSchema()
-    end)
+timer.Simple(5, function()
+lia.doors.verifyDatabaseSchema()
+end)
 end)
 
 ```
@@ -288,7 +288,7 @@ function customSchemaCheck()
     lia.doors.verifyDatabaseSchema()
     -- Check for missing columns and add them
     local missingColumns = {
-        door_group = "text"
+    door_group = "text"
     }
     for column, type in pairs(missingColumns) do
         lia.db.query("ALTER TABLE lia_doors ADD COLUMN " .. column .. " " .. type)
@@ -330,9 +330,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -348,9 +348,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -388,9 +388,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -406,9 +406,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -446,9 +446,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -464,9 +464,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -504,9 +504,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -522,9 +522,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -562,9 +562,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -580,9 +580,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -620,9 +620,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -638,9 +638,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -678,9 +678,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -696,9 +696,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -736,9 +736,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -754,9 +754,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -794,9 +794,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -812,9 +812,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -852,9 +852,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -870,9 +870,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -910,9 +910,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -928,9 +928,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```
@@ -968,9 +968,9 @@ lia.doors.cleanupCorruptedData()
 ```lua
 -- Medium: Schedule cleanup with delay
 hook.Add("InitPostEntity", "CleanupDoorData", function()
-    timer.Simple(2, function()
-        lia.doors.cleanupCorruptedData()
-    end)
+timer.Simple(2, function()
+lia.doors.cleanupCorruptedData()
+end)
 end)
 
 ```
@@ -986,9 +986,9 @@ function advancedDoorCleanup()
     local map = game.GetMap()
     local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
-        local count = res.results[1].count
-        lia.information("Door cleanup completed. Total doors in database: " .. count)
-    end)
+    local count = res.results[1].count
+    lia.information("Door cleanup completed. Total doors in database: " .. count)
+end)
 end
 
 ```

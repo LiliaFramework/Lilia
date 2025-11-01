@@ -4,7 +4,15 @@ Literature item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
+
+**Purpose**
+
+Sets the display name of the book item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -15,7 +23,15 @@ ITEM.name = "Medical Journal"
 
 ---
 
-### desc
+### Purpose:
+
+**Purpose**
+
+Sets the description of the book item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -26,7 +42,15 @@ ITEM.desc = "A medical journal containing important information"
 
 ---
 
-### category
+### Purpose:
+
+**Purpose**
+
+Sets the category for the book item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -37,7 +61,15 @@ ITEM.category = "itemCatLiterature"
 
 ---
 
-### model
+### Purpose:
+
+**Purpose**
+
+Sets the 3D model for the book item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -48,7 +80,15 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 
 ---
 
-### contents
+### Purpose:
+
+**Purpose**
+
+Sets the HTML content to display when reading the book
+
+**When Called**
+
+During item definition (used in Read function)
 
 **Example Usage**
 

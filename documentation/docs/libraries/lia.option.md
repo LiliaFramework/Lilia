@@ -43,8 +43,8 @@ Shared
 ```lua
 -- Simple: Add a boolean toggle option
 lia.option.add("showHUD", "Show HUD", "Toggle HUD visibility", true, nil, {
-    category = "categoryGeneral",
-    isQuick = true
+category = "categoryGeneral",
+isQuick = true
 })
 
 ```
@@ -53,12 +53,12 @@ lia.option.add("showHUD", "Show HUD", "Toggle HUD visibility", true, nil, {
 ```lua
 -- Medium: Add a numeric slider with callback
 lia.option.add("volume", "Volume", "Master volume level", 0.8, function(oldVal, newVal)
-    RunConsoleCommand("volume", tostring(newVal))
+RunConsoleCommand("volume", tostring(newVal))
 end, {
-    category = "categoryAudio",
-    min = 0,
-    max = 1,
-    decimals = 2
+category = "categoryAudio",
+min = 0,
+max = 1,
+decimals = 2
 })
 
 ```
@@ -67,12 +67,12 @@ end, {
 ```lua
 -- High: Add a color picker with visibility condition and networking
 lia.option.add("espColor", "ESP Color", "Color for ESP display", Color(255, 0, 0), nil, {
-    category = "categoryESP",
-    visible = function()
-        return LocalPlayer():isStaffOnDuty()
-    end,
-    shouldNetwork = true,
-    type = "Color"
+category = "categoryESP",
+visible = function()
+return LocalPlayer():isStaffOnDuty()
+end,
+shouldNetwork = true,
+type = "Color"
 })
 
 ```
@@ -132,9 +132,9 @@ if #options > 0 then
             teamCombo:AddChoice(option, option)
         end
     end
-else
-    teamCombo:AddChoice("No teams available", "")
-end
+    else
+        teamCombo:AddChoice("No teams available", "")
+    end
 
 ```
 
@@ -184,9 +184,9 @@ lia.option.set("volume", 0.5)
 ```lua
 -- High: Set multiple options with validation
 local optionsToSet = {
-    {"showHUD", true},
-    {"volume", 0.8},
-    {"espColor", Color(255, 0, 0)}
+{"showHUD", true},
+{"volume", 0.8},
+{"espColor", Color(255, 0, 0)}
 }
 for _, optionData in ipairs(optionsToSet) do
     local key, value = optionData[1], optionData[2]
@@ -246,9 +246,9 @@ RunConsoleCommand("volume", tostring(volume))
 ```lua
 -- High: Get multiple options with validation and type checking
 local config = {
-    showHUD = lia.option.get("showHUD", true),
-    volume = lia.option.get("volume", 0.8),
-    espColor = lia.option.get("espColor", Color(255, 0, 0))
+showHUD = lia.option.get("showHUD", true),
+volume = lia.option.get("volume", 0.8),
+espColor = lia.option.get("espColor", Color(255, 0, 0))
 }
 -- Validate and apply configuration
 if type(config.showHUD) == "boolean" then
@@ -319,11 +319,11 @@ local function batchSaveOptions()
     local savedData = file.Read("lilia/options.json", "DATA")
     if savedData then
         print("Options saved successfully")
-    else
-        print("Failed to save options")
+        else
+            print("Failed to save options")
+        end
     end
-end
-batchSaveOptions()
+    batchSaveOptions()
 
 ```
 
@@ -391,22 +391,22 @@ local function loadOptionsWithMigration()
                         -- Type validation
                         if option.type == "Boolean" and type(value) ~= "boolean" then
                             value = tobool(value)
-                        elseif option.type == "Int" and type(value) ~= "number" then
-                            value = tonumber(value) or option.default
+                            elseif option.type == "Int" and type(value) ~= "number" then
+                                value = tonumber(value) or option.default
+                            end
+                            option.value = value
                         end
-                        option.value = value
                     end
                 end
             end
+            else
+                -- No saved options, use defaults
+                lia.option.load()
+            end
+            -- Trigger initialization hook
+            hook.Run("InitializedOptions")
         end
-    else
-        -- No saved options, use defaults
-        lia.option.load()
-    end
-    -- Trigger initialization hook
-    hook.Run("InitializedOptions")
-end
-loadOptionsWithMigration()
+        loadOptionsWithMigration()
 
 ```
 

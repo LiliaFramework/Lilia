@@ -65,6 +65,566 @@ menu:AddOption("Inspect", function() inspectItem(item) end)
 
 ---
 
+### optionsMenu
+
+**Purpose**
+
+Creates a generic options menu that can display interaction/action menus or arbitrary option lists
+
+**When Called**
+
+When displaying a menu with selectable options (interactions, actions, or custom options)
+
+**Parameters**
+
+* `rawOptions` (*table*): Options to display. Can be:
+* `config` (*table, optional*): Configuration options including:
+* `mode` (*string, optional*): "interaction", "action", or "custom" (defaults to "custom")
+* `title` (*string, optional*): Menu title text
+* `closeKey` (*number, optional*): Key code that closes menu when released
+* `netMsg` (*string, optional*): Network message name for server-only options
+* `preFiltered` (*boolean, optional*): Whether options are already filtered (defaults to false)
+* `entity` (*Entity, optional*): Target entity for interaction mode
+* `resolveEntity` (*boolean, optional*): Whether to resolve traced entity (defaults to true for non-custom modes)
+* `emitHooks` (*boolean, optional*): Whether to emit InteractionMenuOpened/Closed hooks (defaults to true for non-custom modes)
+* `registryKey` (*string, optional*): Key for storing menu in lia.gui (defaults to "InteractionMenu" or "OptionsMenu")
+* `fadeSpeed` (*number, optional*): Animation fade speed in seconds (defaults to 0.05)
+* `frameW` (*number, optional*): Frame width in pixels (defaults to 450)
+* `frameH` (*number, optional*): Frame height in pixels (auto-calculated if not provided)
+* `entryH` (*number, optional*): Height of each option button (defaults to 30)
+* `maxHeight` (*number, optional*): Maximum frame height (defaults to 60% of screen height)
+* `titleHeight` (*number, optional*): Title label height (defaults to 36 or 16 based on mode)
+* `titleOffsetY` (*number, optional*): Y offset for title (defaults to 2)
+* `verticalGap` (*number, optional*): Vertical spacing between title and scroll area (defaults to 24)
+* `screenPadding` (*number, optional*): Screen padding for frame positioning (defaults to 15% of screen width)
+* `x` (*number, optional*): Custom X position (auto-calculated if not provided)
+* `y` (*number, optional*): Custom Y position (auto-calculated if not provided)
+* `titleFont` (*string, optional*): Font for title text (defaults to "liaSmallFont")
+* `titleColor` (*Color, optional*): Color for title text (defaults to color_white)
+* `buttonFont` (*string, optional*): Font for option buttons (defaults to "liaSmallFont")
+* `buttonTextColor` (*Color, optional*): Color for button text (defaults to color_white)
+* `closeOnSelect` (*boolean, optional*): Whether to close menu when option is selected (defaults to true)
+* `timerName` (*string, optional*): Name for auto-close timer
+* `autoCloseDelay` (*number, optional*): Seconds until auto-close (defaults to 30, 0 to disable)
+
+**Returns**
+
+* Panel - The created menu frame, or nil if no valid options or invalid client
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display a basic custom options menu
+lia.derma.optionsMenu({
+{name = "Option 1", callback = function() print("Selected 1") end},
+{name = "Option 2", callback = function() print("Selected 2") end}
+})
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Custom menu with descriptions and custom positioning
+lia.derma.optionsMenu({
+{
+name = "Save Game",
+description = "Save your current progress",
+callback = function() saveGame() end
+},
+{
+name = "Load Game",
+description = "Load a previously saved game",
+callback = function() loadGame() end
+},
+{
+name = "Settings",
+description = "Open game settings",
+callback = function() openSettings() end
+}
+}, {
+title = "Main Menu",
+x = ScrW() / 2 - 225,
+y = ScrH() / 2 - 150,
+frameW = 450,
+closeOnSelect = false
+})
+
+```
+
+**High Complexity:**
+```lua
+-- High: Advanced menu with custom callbacks and network messaging
+lia.derma.optionsMenu({
+{
+name = "Radio Preset 1",
+description = "Switch to preset frequency 1",
+callback = function(client, entity, entry, frame)
+-- Custom callback with context
+lia.radio.setFrequency(100.0)
+client:notify("Switched to radio preset 1")
+end,
+passContext = true -- Pass client, entity, entry, frame to callback
+},
+{
+name = "Radio Preset 2",
+description = "Switch to preset frequency 2",
+serverOnly = true,
+netMessage = "liaRadioSetPreset",
+networkID = "preset2"
+},
+{
+name = "Custom Frequency",
+description = "Enter a custom frequency",
+callback = function()
+-- Open frequency input dialog
+lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+local numFreq = tonumber(freq)
+if numFreq and numFreq >= 80 and numFreq <= 200 then
+    lia.radio.setFrequency(numFreq)
+    client:notify("Frequency set to " .. freq .. " MHz")
+    else
+        client:notify("Invalid frequency range (80-200 MHz)")
+    end
+end)
+end
+}
+}, {
+title = "Radio Presets",
+mode = "custom",
+closeKey = KEY_R,
+fadeSpeed = 0.1,
+autoCloseDelay = 60
+})
+
+```
+
+---
+
+### lia.frame:Paint
+
+**Purpose**
+
+Creates a generic options menu that can display interaction/action menus or arbitrary option lists
+
+**When Called**
+
+When displaying a menu with selectable options (interactions, actions, or custom options)
+
+**Parameters**
+
+* `rawOptions` (*table*): Options to display. Can be:
+* `config` (*table, optional*): Configuration options including:
+* `mode` (*string, optional*): "interaction", "action", or "custom" (defaults to "custom")
+* `title` (*string, optional*): Menu title text
+* `closeKey` (*number, optional*): Key code that closes menu when released
+* `netMsg` (*string, optional*): Network message name for server-only options
+* `preFiltered` (*boolean, optional*): Whether options are already filtered (defaults to false)
+* `entity` (*Entity, optional*): Target entity for interaction mode
+* `resolveEntity` (*boolean, optional*): Whether to resolve traced entity (defaults to true for non-custom modes)
+* `emitHooks` (*boolean, optional*): Whether to emit InteractionMenuOpened/Closed hooks (defaults to true for non-custom modes)
+* `registryKey` (*string, optional*): Key for storing menu in lia.gui (defaults to "InteractionMenu" or "OptionsMenu")
+* `fadeSpeed` (*number, optional*): Animation fade speed in seconds (defaults to 0.05)
+* `frameW` (*number, optional*): Frame width in pixels (defaults to 450)
+* `frameH` (*number, optional*): Frame height in pixels (auto-calculated if not provided)
+* `entryH` (*number, optional*): Height of each option button (defaults to 30)
+* `maxHeight` (*number, optional*): Maximum frame height (defaults to 60% of screen height)
+* `titleHeight` (*number, optional*): Title label height (defaults to 36 or 16 based on mode)
+* `titleOffsetY` (*number, optional*): Y offset for title (defaults to 2)
+* `verticalGap` (*number, optional*): Vertical spacing between title and scroll area (defaults to 24)
+* `screenPadding` (*number, optional*): Screen padding for frame positioning (defaults to 15% of screen width)
+* `x` (*number, optional*): Custom X position (auto-calculated if not provided)
+* `y` (*number, optional*): Custom Y position (auto-calculated if not provided)
+* `titleFont` (*string, optional*): Font for title text (defaults to "liaSmallFont")
+* `titleColor` (*Color, optional*): Color for title text (defaults to color_white)
+* `buttonFont` (*string, optional*): Font for option buttons (defaults to "liaSmallFont")
+* `buttonTextColor` (*Color, optional*): Color for button text (defaults to color_white)
+* `closeOnSelect` (*boolean, optional*): Whether to close menu when option is selected (defaults to true)
+* `timerName` (*string, optional*): Name for auto-close timer
+* `autoCloseDelay` (*number, optional*): Seconds until auto-close (defaults to 30, 0 to disable)
+
+**Returns**
+
+* Panel - The created menu frame, or nil if no valid options or invalid client
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display a basic custom options menu
+lia.derma.optionsMenu({
+{name = "Option 1", callback = function() print("Selected 1") end},
+{name = "Option 2", callback = function() print("Selected 2") end}
+})
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Custom menu with descriptions and custom positioning
+lia.derma.optionsMenu({
+{
+name = "Save Game",
+description = "Save your current progress",
+callback = function() saveGame() end
+},
+{
+name = "Load Game",
+description = "Load a previously saved game",
+callback = function() loadGame() end
+},
+{
+name = "Settings",
+description = "Open game settings",
+callback = function() openSettings() end
+}
+}, {
+title = "Main Menu",
+x = ScrW() / 2 - 225,
+y = ScrH() / 2 - 150,
+frameW = 450,
+closeOnSelect = false
+})
+
+```
+
+**High Complexity:**
+```lua
+-- High: Advanced menu with custom callbacks and network messaging
+lia.derma.optionsMenu({
+{
+name = "Radio Preset 1",
+description = "Switch to preset frequency 1",
+callback = function(client, entity, entry, frame)
+-- Custom callback with context
+lia.radio.setFrequency(100.0)
+client:notify("Switched to radio preset 1")
+end,
+passContext = true -- Pass client, entity, entry, frame to callback
+},
+{
+name = "Radio Preset 2",
+description = "Switch to preset frequency 2",
+serverOnly = true,
+netMessage = "liaRadioSetPreset",
+networkID = "preset2"
+},
+{
+name = "Custom Frequency",
+description = "Enter a custom frequency",
+callback = function()
+-- Open frequency input dialog
+lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+local numFreq = tonumber(freq)
+if numFreq and numFreq >= 80 and numFreq <= 200 then
+    lia.radio.setFrequency(numFreq)
+    client:notify("Frequency set to " .. freq .. " MHz")
+    else
+        client:notify("Invalid frequency range (80-200 MHz)")
+    end
+end)
+end
+}
+}, {
+title = "Radio Presets",
+mode = "custom",
+closeKey = KEY_R,
+fadeSpeed = 0.1,
+autoCloseDelay = 60
+})
+
+```
+
+---
+
+### lia.frame:OnRemove
+
+**Purpose**
+
+Creates a generic options menu that can display interaction/action menus or arbitrary option lists
+
+**When Called**
+
+When displaying a menu with selectable options (interactions, actions, or custom options)
+
+**Parameters**
+
+* `rawOptions` (*table*): Options to display. Can be:
+* `config` (*table, optional*): Configuration options including:
+* `mode` (*string, optional*): "interaction", "action", or "custom" (defaults to "custom")
+* `title` (*string, optional*): Menu title text
+* `closeKey` (*number, optional*): Key code that closes menu when released
+* `netMsg` (*string, optional*): Network message name for server-only options
+* `preFiltered` (*boolean, optional*): Whether options are already filtered (defaults to false)
+* `entity` (*Entity, optional*): Target entity for interaction mode
+* `resolveEntity` (*boolean, optional*): Whether to resolve traced entity (defaults to true for non-custom modes)
+* `emitHooks` (*boolean, optional*): Whether to emit InteractionMenuOpened/Closed hooks (defaults to true for non-custom modes)
+* `registryKey` (*string, optional*): Key for storing menu in lia.gui (defaults to "InteractionMenu" or "OptionsMenu")
+* `fadeSpeed` (*number, optional*): Animation fade speed in seconds (defaults to 0.05)
+* `frameW` (*number, optional*): Frame width in pixels (defaults to 450)
+* `frameH` (*number, optional*): Frame height in pixels (auto-calculated if not provided)
+* `entryH` (*number, optional*): Height of each option button (defaults to 30)
+* `maxHeight` (*number, optional*): Maximum frame height (defaults to 60% of screen height)
+* `titleHeight` (*number, optional*): Title label height (defaults to 36 or 16 based on mode)
+* `titleOffsetY` (*number, optional*): Y offset for title (defaults to 2)
+* `verticalGap` (*number, optional*): Vertical spacing between title and scroll area (defaults to 24)
+* `screenPadding` (*number, optional*): Screen padding for frame positioning (defaults to 15% of screen width)
+* `x` (*number, optional*): Custom X position (auto-calculated if not provided)
+* `y` (*number, optional*): Custom Y position (auto-calculated if not provided)
+* `titleFont` (*string, optional*): Font for title text (defaults to "liaSmallFont")
+* `titleColor` (*Color, optional*): Color for title text (defaults to color_white)
+* `buttonFont` (*string, optional*): Font for option buttons (defaults to "liaSmallFont")
+* `buttonTextColor` (*Color, optional*): Color for button text (defaults to color_white)
+* `closeOnSelect` (*boolean, optional*): Whether to close menu when option is selected (defaults to true)
+* `timerName` (*string, optional*): Name for auto-close timer
+* `autoCloseDelay` (*number, optional*): Seconds until auto-close (defaults to 30, 0 to disable)
+
+**Returns**
+
+* Panel - The created menu frame, or nil if no valid options or invalid client
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display a basic custom options menu
+lia.derma.optionsMenu({
+{name = "Option 1", callback = function() print("Selected 1") end},
+{name = "Option 2", callback = function() print("Selected 2") end}
+})
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Custom menu with descriptions and custom positioning
+lia.derma.optionsMenu({
+{
+name = "Save Game",
+description = "Save your current progress",
+callback = function() saveGame() end
+},
+{
+name = "Load Game",
+description = "Load a previously saved game",
+callback = function() loadGame() end
+},
+{
+name = "Settings",
+description = "Open game settings",
+callback = function() openSettings() end
+}
+}, {
+title = "Main Menu",
+x = ScrW() / 2 - 225,
+y = ScrH() / 2 - 150,
+frameW = 450,
+closeOnSelect = false
+})
+
+```
+
+**High Complexity:**
+```lua
+-- High: Advanced menu with custom callbacks and network messaging
+lia.derma.optionsMenu({
+{
+name = "Radio Preset 1",
+description = "Switch to preset frequency 1",
+callback = function(client, entity, entry, frame)
+-- Custom callback with context
+lia.radio.setFrequency(100.0)
+client:notify("Switched to radio preset 1")
+end,
+passContext = true -- Pass client, entity, entry, frame to callback
+},
+{
+name = "Radio Preset 2",
+description = "Switch to preset frequency 2",
+serverOnly = true,
+netMessage = "liaRadioSetPreset",
+networkID = "preset2"
+},
+{
+name = "Custom Frequency",
+description = "Enter a custom frequency",
+callback = function()
+-- Open frequency input dialog
+lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+local numFreq = tonumber(freq)
+if numFreq and numFreq >= 80 and numFreq <= 200 then
+    lia.radio.setFrequency(numFreq)
+    client:notify("Frequency set to " .. freq .. " MHz")
+    else
+        client:notify("Invalid frequency range (80-200 MHz)")
+    end
+end)
+end
+}
+}, {
+title = "Radio Presets",
+mode = "custom",
+closeKey = KEY_R,
+fadeSpeed = 0.1,
+autoCloseDelay = 60
+})
+
+```
+
+---
+
+### lia.frame:Think
+
+**Purpose**
+
+Creates a generic options menu that can display interaction/action menus or arbitrary option lists
+
+**When Called**
+
+When displaying a menu with selectable options (interactions, actions, or custom options)
+
+**Parameters**
+
+* `rawOptions` (*table*): Options to display. Can be:
+* `config` (*table, optional*): Configuration options including:
+* `mode` (*string, optional*): "interaction", "action", or "custom" (defaults to "custom")
+* `title` (*string, optional*): Menu title text
+* `closeKey` (*number, optional*): Key code that closes menu when released
+* `netMsg` (*string, optional*): Network message name for server-only options
+* `preFiltered` (*boolean, optional*): Whether options are already filtered (defaults to false)
+* `entity` (*Entity, optional*): Target entity for interaction mode
+* `resolveEntity` (*boolean, optional*): Whether to resolve traced entity (defaults to true for non-custom modes)
+* `emitHooks` (*boolean, optional*): Whether to emit InteractionMenuOpened/Closed hooks (defaults to true for non-custom modes)
+* `registryKey` (*string, optional*): Key for storing menu in lia.gui (defaults to "InteractionMenu" or "OptionsMenu")
+* `fadeSpeed` (*number, optional*): Animation fade speed in seconds (defaults to 0.05)
+* `frameW` (*number, optional*): Frame width in pixels (defaults to 450)
+* `frameH` (*number, optional*): Frame height in pixels (auto-calculated if not provided)
+* `entryH` (*number, optional*): Height of each option button (defaults to 30)
+* `maxHeight` (*number, optional*): Maximum frame height (defaults to 60% of screen height)
+* `titleHeight` (*number, optional*): Title label height (defaults to 36 or 16 based on mode)
+* `titleOffsetY` (*number, optional*): Y offset for title (defaults to 2)
+* `verticalGap` (*number, optional*): Vertical spacing between title and scroll area (defaults to 24)
+* `screenPadding` (*number, optional*): Screen padding for frame positioning (defaults to 15% of screen width)
+* `x` (*number, optional*): Custom X position (auto-calculated if not provided)
+* `y` (*number, optional*): Custom Y position (auto-calculated if not provided)
+* `titleFont` (*string, optional*): Font for title text (defaults to "liaSmallFont")
+* `titleColor` (*Color, optional*): Color for title text (defaults to color_white)
+* `buttonFont` (*string, optional*): Font for option buttons (defaults to "liaSmallFont")
+* `buttonTextColor` (*Color, optional*): Color for button text (defaults to color_white)
+* `closeOnSelect` (*boolean, optional*): Whether to close menu when option is selected (defaults to true)
+* `timerName` (*string, optional*): Name for auto-close timer
+* `autoCloseDelay` (*number, optional*): Seconds until auto-close (defaults to 30, 0 to disable)
+
+**Returns**
+
+* Panel - The created menu frame, or nil if no valid options or invalid client
+
+**Realm**
+
+Client
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Display a basic custom options menu
+lia.derma.optionsMenu({
+{name = "Option 1", callback = function() print("Selected 1") end},
+{name = "Option 2", callback = function() print("Selected 2") end}
+})
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Custom menu with descriptions and custom positioning
+lia.derma.optionsMenu({
+{
+name = "Save Game",
+description = "Save your current progress",
+callback = function() saveGame() end
+},
+{
+name = "Load Game",
+description = "Load a previously saved game",
+callback = function() loadGame() end
+},
+{
+name = "Settings",
+description = "Open game settings",
+callback = function() openSettings() end
+}
+}, {
+title = "Main Menu",
+x = ScrW() / 2 - 225,
+y = ScrH() / 2 - 150,
+frameW = 450,
+closeOnSelect = false
+})
+
+```
+
+**High Complexity:**
+```lua
+-- High: Advanced menu with custom callbacks and network messaging
+lia.derma.optionsMenu({
+{
+name = "Radio Preset 1",
+description = "Switch to preset frequency 1",
+callback = function(client, entity, entry, frame)
+-- Custom callback with context
+lia.radio.setFrequency(100.0)
+client:notify("Switched to radio preset 1")
+end,
+passContext = true -- Pass client, entity, entry, frame to callback
+},
+{
+name = "Radio Preset 2",
+description = "Switch to preset frequency 2",
+serverOnly = true,
+netMessage = "liaRadioSetPreset",
+networkID = "preset2"
+},
+{
+name = "Custom Frequency",
+description = "Enter a custom frequency",
+callback = function()
+-- Open frequency input dialog
+lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+local numFreq = tonumber(freq)
+if numFreq and numFreq >= 80 and numFreq <= 200 then
+    lia.radio.setFrequency(numFreq)
+    client:notify("Frequency set to " .. freq .. " MHz")
+    else
+        client:notify("Invalid frequency range (80-200 MHz)")
+    end
+end)
+end
+}
+}, {
+title = "Radio Presets",
+mode = "custom",
+closeKey = KEY_R,
+fadeSpeed = 0.1,
+autoCloseDelay = 60
+})
+
+```
+
+---
+
 ### colorPicker
 
 **Purpose**
@@ -94,7 +654,7 @@ Client
 ```lua
 -- Simple: Open color picker with callback
 lia.derma.colorPicker(function(color)
-    print("Selected color:", color.r, color.g, color.b)
+print("Selected color:", color.r, color.g, color.b)
 end)
 
 ```
@@ -104,7 +664,7 @@ end)
 -- Medium: Open color picker with default color
 local defaultColor = Color(255, 0, 0)
 lia.derma.colorPicker(function(color)
-    myPanel:SetColor(color)
+myPanel:SetColor(color)
 end, defaultColor)
 
 ```
@@ -114,11 +674,11 @@ end, defaultColor)
 -- High: Color picker with validation and multiple callbacks
 local currentColor = settings:GetColor("theme_color")
 lia.derma.colorPicker(function(color)
-    if color:Distance(currentColor) > 50 then
-        settings:SetColor("theme_color", color)
-        updateTheme(color)
-        notify("Theme color updated!")
-    end
+if color:Distance(currentColor) > 50 then
+    settings:SetColor("theme_color", color)
+    updateTheme(color)
+    notify("Theme color updated!")
+end
 end, currentColor)
 
 ```
@@ -177,10 +737,10 @@ menu:AddOption("Copy", function() copyItem() end, "icon16/copy.png", "Copy this 
 ```lua
 -- High: Create radial menu with custom options and submenus
 local options = {
-    radius = 320,
-    inner_radius = 120,
-    hover_sound = "ui/buttonclick.wav",
-    scale_animation = true
+radius = 320,
+inner_radius = 120,
+hover_sound = "ui/buttonclick.wav",
+scale_animation = true
 }
 local menu = lia.derma.radialMenu(options)
 -- Add main options
@@ -224,7 +784,7 @@ Client
 ```lua
 -- Simple: Open player selector with callback
 lia.derma.playerSelector(function(player)
-    print("Selected player:", player:Name())
+print("Selected player:", player:Name())
 end)
 
 ```
@@ -233,9 +793,9 @@ end)
 ```lua
 -- Medium: Player selector with validation
 lia.derma.playerSelector(function(player)
-    if IsValid(player) and player:IsPlayer() then
-        sendMessage(player, "Hello!")
-    end
+if IsValid(player) and player:IsPlayer() then
+    sendMessage(player, "Hello!")
+end
 end)
 
 ```
@@ -244,7 +804,7 @@ end)
 ```lua
 -- High: Player selector with admin checks and multiple actions
 lia.derma.playerSelector(function(player)
-    if not IsValid(player) then return end
+if not IsValid(player) then return end
     local menu = lia.derma.dermaMenu()
     menu:AddOption("Teleport", function() teleportToPlayer(player) end)
     menu:AddOption("Spectate", function() spectatePlayer(player) end)
@@ -288,7 +848,7 @@ Client
 ```lua
 -- Simple: Open text input dialog
 lia.derma.textBox("Enter Name", "Type your name here", function(text)
-    print("Entered:", text)
+print("Entered:", text)
 end)
 
 ```
@@ -297,8 +857,8 @@ end)
 ```lua
 -- Medium: Text input with validation
 lia.derma.textBox("Set Password", "Enter new password", function(text)
-    if string.len(text) >= 6 then
-        setPassword(text)
+if string.len(text) >= 6 then
+    setPassword(text)
     else
         notify("Password too short!")
     end
@@ -310,7 +870,7 @@ end)
 ```lua
 -- High: Text input with multiple validations and processing
 lia.derma.textBox("Create Item", "Enter item name", function(text)
-    if not text or text == "" then return end
+if not text or text == "" then return end
     local cleanText = string.Trim(text)
     if string.len(cleanText) < 3 then
         notify("Name too short!")
@@ -358,7 +918,7 @@ Client
 ```lua
 -- Simple: Open text input dialog
 lia.derma.textBox("Enter Name", "Type your name here", function(text)
-    print("Entered:", text)
+print("Entered:", text)
 end)
 
 ```
@@ -367,8 +927,8 @@ end)
 ```lua
 -- Medium: Text input with validation
 lia.derma.textBox("Set Password", "Enter new password", function(text)
-    if string.len(text) >= 6 then
-        setPassword(text)
+if string.len(text) >= 6 then
+    setPassword(text)
     else
         notify("Password too short!")
     end
@@ -380,7 +940,7 @@ end)
 ```lua
 -- High: Text input with multiple validations and processing
 lia.derma.textBox("Create Item", "Enter item name", function(text)
-    if not text or text == "" then return end
+if not text or text == "" then return end
     local cleanText = string.Trim(text)
     if string.len(cleanText) < 3 then
         notify("Name too short!")
@@ -428,7 +988,7 @@ Client
 ```lua
 -- Simple: Open text input dialog
 lia.derma.textBox("Enter Name", "Type your name here", function(text)
-    print("Entered:", text)
+print("Entered:", text)
 end)
 
 ```
@@ -437,8 +997,8 @@ end)
 ```lua
 -- Medium: Text input with validation
 lia.derma.textBox("Set Password", "Enter new password", function(text)
-    if string.len(text) >= 6 then
-        setPassword(text)
+if string.len(text) >= 6 then
+    setPassword(text)
     else
         notify("Password too short!")
     end
@@ -450,7 +1010,7 @@ end)
 ```lua
 -- High: Text input with multiple validations and processing
 lia.derma.textBox("Create Item", "Enter item name", function(text)
-    if not text or text == "" then return end
+if not text or text == "" then return end
     local cleanText = string.Trim(text)
     if string.len(cleanText) < 3 then
         notify("Name too short!")
@@ -697,10 +1257,10 @@ local mat = getMaterialForState(currentState)
 if mat and mat:IsValid() then
     local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
     lia.derma.drawMaterial(radius, x, y, w, h, color, mat, flags)
-else
-    -- Fallback to solid color
-    lia.derma.draw(radius, x, y, w, h, fallbackColor, flags)
-end
+    else
+        -- Fallback to solid color
+        lia.derma.draw(radius, x, y, w, h, fallbackColor, flags)
+    end
 
 ```
 
@@ -926,10 +1486,10 @@ local mat = getMaterialForState(currentState)
 if mat and mat:IsValid() then
     local color = isActive and Color(255, 255, 255) or Color(150, 150, 150)
     lia.derma.drawCircleMaterial(x, y, radius, color, mat, flags)
-else
-    -- Fallback to solid color circle
-    lia.derma.drawCircle(x, y, radius, fallbackColor, flags)
-end
+    else
+        -- Fallback to solid color circle
+        lia.derma.drawCircle(x, y, radius, fallbackColor, flags)
+    end
 
 ```
 
@@ -1212,10 +1772,10 @@ lia.derma.rect(100, 100, 200, 100):Color(Color(255, 0, 0)):Draw()
 ```lua
 -- Medium: Create rectangle with multiple properties
 lia.derma.rect(50, 50, 300, 150)
-    :Color(Color(0, 255, 0, 200))
-    :Rad(12)
-    :Shape(lia.derma.SHAPE_IOS)
-    :Draw()
+:Color(Color(0, 255, 0, 200))
+:Rad(12)
+:Shape(lia.derma.SHAPE_IOS)
+:Draw()
 
 ```
 
@@ -1223,11 +1783,11 @@ lia.derma.rect(50, 50, 300, 150)
 ```lua
 -- High: Complex rectangle with shadows and clipping
 lia.derma.rect(x, y, w, h)
-    :Color(backgroundColor)
-    :Radii(16, 8, 16, 8)
-    :Shadow(20, 25)
-    :Clip(parentPanel)
-    :Draw()
+:Color(backgroundColor)
+:Radii(16, 8, 16, 8)
+:Shadow(20, 25)
+:Clip(parentPanel)
+:Draw()
 
 ```
 
@@ -1270,9 +1830,9 @@ lia.derma.circle(100, 100, 50):Color(Color(255, 0, 0)):Draw()
 ```lua
 -- Medium: Create circle with multiple properties
 lia.derma.circle(200, 200, 75)
-    :Color(Color(0, 255, 0, 200))
-    :Outline(2)
-    :Draw()
+:Color(Color(0, 255, 0, 200))
+:Outline(2)
+:Draw()
 
 ```
 
@@ -1280,11 +1840,11 @@ lia.derma.circle(200, 200, 75)
 ```lua
 -- High: Complex circle with shadows and textures
 lia.derma.circle(x, y, radius)
-    :Color(circleColor)
-    :Texture(circleTexture)
-    :Shadow(15, 20)
-    :Blur(1.5)
-    :Draw()
+:Color(circleColor)
+:Texture(circleTexture)
+:Shadow(15, 20)
+:Blur(1.5)
+:Draw()
 
 ```
 
@@ -1327,9 +1887,9 @@ lia.derma.circle(100, 100, 50):Color(Color(255, 0, 0)):Draw()
 ```lua
 -- Medium: Create circle with multiple properties
 lia.derma.circle(200, 200, 75)
-    :Color(Color(0, 255, 0, 200))
-    :Outline(2)
-    :Draw()
+:Color(Color(0, 255, 0, 200))
+:Outline(2)
+:Draw()
 
 ```
 
@@ -1337,11 +1897,11 @@ lia.derma.circle(200, 200, 75)
 ```lua
 -- High: Complex circle with shadows and textures
 lia.derma.circle(x, y, radius)
-    :Color(circleColor)
-    :Texture(circleTexture)
-    :Shadow(15, 20)
-    :Blur(1.5)
-    :Draw()
+:Color(circleColor)
+:Texture(circleTexture)
+:Shadow(15, 20)
+:Blur(1.5)
+:Draw()
 
 ```
 
@@ -1384,9 +1944,9 @@ lia.derma.circle(100, 100, 50):Color(Color(255, 0, 0)):Draw()
 ```lua
 -- Medium: Create circle with multiple properties
 lia.derma.circle(200, 200, 75)
-    :Color(Color(0, 255, 0, 200))
-    :Outline(2)
-    :Draw()
+:Color(Color(0, 255, 0, 200))
+:Outline(2)
+:Draw()
 
 ```
 
@@ -1394,11 +1954,11 @@ lia.derma.circle(200, 200, 75)
 ```lua
 -- High: Complex circle with shadows and textures
 lia.derma.circle(x, y, radius)
-    :Color(circleColor)
-    :Texture(circleTexture)
-    :Shadow(15, 20)
-    :Blur(1.5)
-    :Draw()
+:Color(circleColor)
+:Texture(circleTexture)
+:Shadow(15, 20)
+:Blur(1.5)
+:Draw()
 
 ```
 
@@ -1849,12 +2409,12 @@ local targetX = isHovered and hoverX or normalX
 local targetY = isHovered and hoverY or normalY
 local targetScale = isHovered and 1.1 or 1.0
 panel:SetPos(
-    lia.derma.approachExp(panel:GetPos(), targetX, 6, dt),
-    lia.derma.approachExp(panel:GetPos(), targetY, 6, dt)
+lia.derma.approachExp(panel:GetPos(), targetX, 6, dt),
+lia.derma.approachExp(panel:GetPos(), targetY, 6, dt)
 )
 panel:SetSize(
-    lia.derma.approachExp(panel:GetWide(), targetW * targetScale, 4, dt),
-    lia.derma.approachExp(panel:GetTall(), targetH * targetScale, 4, dt)
+lia.derma.approachExp(panel:GetWide(), targetW * targetScale, 4, dt),
+lia.derma.approachExp(panel:GetTall(), targetH * targetScale, 4, dt)
 )
 
 ```
@@ -1908,12 +2468,12 @@ panel:SetPos(startX + (endX - startX) * eased, startY + (endY - startY) * eased)
 local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
 local eased = lia.derma.easeOutCubic(progress)
 panel:SetPos(
-    startX + (endX - startX) * eased,
-    startY + (endY - startY) * eased
+startX + (endX - startX) * eased,
+startY + (endY - startY) * eased
 )
 panel:SetSize(
-    startW + (endW - startW) * eased,
-    startH + (endH - startH) * eased
+startW + (endW - startW) * eased,
+startH + (endH - startH) * eased
 )
 panel:SetAlpha(startAlpha + (endAlpha - startAlpha) * eased)
 
@@ -1970,12 +2530,12 @@ local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
 local eased = lia.derma.easeInOutCubic(progress)
 -- Animate position, size, and rotation
 panel:SetPos(
-    startX + (endX - startX) * eased,
-    startY + (endY - startY) * eased
+startX + (endX - startX) * eased,
+startY + (endY - startY) * eased
 )
 panel:SetSize(
-    startW + (endW - startW) * eased,
-    startH + (endH - startH) * eased
+startW + (endW - startW) * eased,
+startH + (endH - startH) * eased
 )
 panel:SetRotation(startRotation + (endRotation - startRotation) * eased)
 
@@ -2024,7 +2584,7 @@ lia.derma.animateAppearance(myPanel, 300, 200)
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-    print("Animation completed!")
+print("Animation completed!")
 end)
 
 ```
@@ -2038,10 +2598,10 @@ if IsValid(panel) then
     local duration = isExpanded and 0.25 or 0.15
     local scaleFactor = isExpanded and 0.9 or 0.7
     lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-        if IsValid(animPanel) then
-            onAnimationComplete(animPanel)
-        end
-    end, scaleFactor)
+    if IsValid(animPanel) then
+        onAnimationComplete(animPanel)
+    end
+end, scaleFactor)
 end
 
 ```
@@ -2089,7 +2649,7 @@ lia.derma.animateAppearance(myPanel, 300, 200)
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-    print("Animation completed!")
+print("Animation completed!")
 end)
 
 ```
@@ -2103,10 +2663,10 @@ if IsValid(panel) then
     local duration = isExpanded and 0.25 or 0.15
     local scaleFactor = isExpanded and 0.9 or 0.7
     lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-        if IsValid(animPanel) then
-            onAnimationComplete(animPanel)
-        end
-    end, scaleFactor)
+    if IsValid(animPanel) then
+        onAnimationComplete(animPanel)
+    end
+end, scaleFactor)
 end
 
 ```
@@ -2154,7 +2714,7 @@ lia.derma.animateAppearance(myPanel, 300, 200)
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-    print("Animation completed!")
+print("Animation completed!")
 end)
 
 ```
@@ -2168,10 +2728,10 @@ if IsValid(panel) then
     local duration = isExpanded and 0.25 or 0.15
     local scaleFactor = isExpanded and 0.9 or 0.7
     lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-        if IsValid(animPanel) then
-            onAnimationComplete(animPanel)
-        end
-    end, scaleFactor)
+    if IsValid(animPanel) then
+        onAnimationComplete(animPanel)
+    end
+end, scaleFactor)
 end
 
 ```
@@ -2219,7 +2779,7 @@ lia.derma.animateAppearance(myPanel, 300, 200)
 ```lua
 -- Medium: Animate with custom duration and callback
 lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-    print("Animation completed!")
+print("Animation completed!")
 end)
 
 ```
@@ -2233,10 +2793,10 @@ if IsValid(panel) then
     local duration = isExpanded and 0.25 or 0.15
     local scaleFactor = isExpanded and 0.9 or 0.7
     lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-        if IsValid(animPanel) then
-            onAnimationComplete(animPanel)
-        end
-    end, scaleFactor)
+    if IsValid(animPanel) then
+        onAnimationComplete(animPanel)
+    end
+end, scaleFactor)
 end
 
 ```
@@ -2440,14 +3000,14 @@ Client
 ```lua
 -- Simple: Request basic arguments
 local argTypes = {
-    name = "string",
-    age = "number",
-    isActive = "boolean"
+name = "string",
+age = "number",
+isActive = "boolean"
 }
 lia.derma.requestArguments("User Info", argTypes, function(success, results)
-    if success then
-        print("Name:", results.name, "Age:", results.age)
-    end
+if success then
+    print("Name:", results.name, "Age:", results.age)
+end
 end)
 
 ```
@@ -2456,9 +3016,9 @@ end)
 ```lua
 -- Medium: Request with dropdown and defaults
 local argTypes = {
-    {name = "player", type = "player"},
-    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
-    {name = "reason", type = "string"}
+{name = "player", type = "player"},
+{name = "action", type = "table", data = {"kick", "ban", "mute"}},
+{name = "reason", type = "string"}
 }
 local defaults = {reason = "No reason provided"}
 lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
@@ -2469,15 +3029,15 @@ lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
 ```lua
 -- High: Complex argument validation with ordered fields
 local argTypes = {
-    {name = "itemName", type = "string"},
-    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-    {name = "quantity", type = "number"},
-    {name = "isStackable", type = "boolean"}
+{name = "itemName", type = "string"},
+{name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+{name = "quantity", type = "number"},
+{name = "isStackable", type = "boolean"}
 }
 lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-    if success and validateItemData(results) then
-        createItem(results)
-    end
+if success and validateItemData(results) then
+    createItem(results)
+end
 end)
 
 ```
@@ -2515,14 +3075,14 @@ Client
 ```lua
 -- Simple: Request basic arguments
 local argTypes = {
-    name = "string",
-    age = "number",
-    isActive = "boolean"
+name = "string",
+age = "number",
+isActive = "boolean"
 }
 lia.derma.requestArguments("User Info", argTypes, function(success, results)
-    if success then
-        print("Name:", results.name, "Age:", results.age)
-    end
+if success then
+    print("Name:", results.name, "Age:", results.age)
+end
 end)
 
 ```
@@ -2531,9 +3091,9 @@ end)
 ```lua
 -- Medium: Request with dropdown and defaults
 local argTypes = {
-    {name = "player", type = "player"},
-    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
-    {name = "reason", type = "string"}
+{name = "player", type = "player"},
+{name = "action", type = "table", data = {"kick", "ban", "mute"}},
+{name = "reason", type = "string"}
 }
 local defaults = {reason = "No reason provided"}
 lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
@@ -2544,15 +3104,15 @@ lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
 ```lua
 -- High: Complex argument validation with ordered fields
 local argTypes = {
-    {name = "itemName", type = "string"},
-    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-    {name = "quantity", type = "number"},
-    {name = "isStackable", type = "boolean"}
+{name = "itemName", type = "string"},
+{name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+{name = "quantity", type = "number"},
+{name = "isStackable", type = "boolean"}
 }
 lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-    if success and validateItemData(results) then
-        createItem(results)
-    end
+if success and validateItemData(results) then
+    createItem(results)
+end
 end)
 
 ```
@@ -2590,14 +3150,14 @@ Client
 ```lua
 -- Simple: Request basic arguments
 local argTypes = {
-    name = "string",
-    age = "number",
-    isActive = "boolean"
+name = "string",
+age = "number",
+isActive = "boolean"
 }
 lia.derma.requestArguments("User Info", argTypes, function(success, results)
-    if success then
-        print("Name:", results.name, "Age:", results.age)
-    end
+if success then
+    print("Name:", results.name, "Age:", results.age)
+end
 end)
 
 ```
@@ -2606,9 +3166,9 @@ end)
 ```lua
 -- Medium: Request with dropdown and defaults
 local argTypes = {
-    {name = "player", type = "player"},
-    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
-    {name = "reason", type = "string"}
+{name = "player", type = "player"},
+{name = "action", type = "table", data = {"kick", "ban", "mute"}},
+{name = "reason", type = "string"}
 }
 local defaults = {reason = "No reason provided"}
 lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
@@ -2619,15 +3179,15 @@ lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
 ```lua
 -- High: Complex argument validation with ordered fields
 local argTypes = {
-    {name = "itemName", type = "string"},
-    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-    {name = "quantity", type = "number"},
-    {name = "isStackable", type = "boolean"}
+{name = "itemName", type = "string"},
+{name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+{name = "quantity", type = "number"},
+{name = "isStackable", type = "boolean"}
 }
 lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-    if success and validateItemData(results) then
-        createItem(results)
-    end
+if success and validateItemData(results) then
+    createItem(results)
+end
 end)
 
 ```
@@ -2723,7 +3283,7 @@ Client
 -- Simple: Request dropdown selection
 local options = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestDropdown("Choose Option", options, function(selected)
-    print("Selected:", selected)
+print("Selected:", selected)
 end)
 
 ```
@@ -2732,12 +3292,12 @@ end)
 ```lua
 -- Medium: Request with data values and default
 local options = {
-    {"Kick Player", "kick"},
-    {"Ban Player", "ban"},
-    {"Mute Player", "mute"}
+{"Kick Player", "kick"},
+{"Ban Player", "ban"},
+{"Mute Player", "mute"}
 }
 lia.derma.requestDropdown("Admin Action", options, function(text, data)
-    performAction(data)
+performAction(data)
 end, "kick")
 
 ```
@@ -2752,9 +3312,9 @@ for _, player in pairs(player.GetAll()) do
     end
 end
 lia.derma.requestDropdown("Select Player", options, function(name, steamid)
-    if steamid and steamid ~= "" then
-        processPlayerSelection(steamid)
-    end
+if steamid and steamid ~= "" then
+    processPlayerSelection(steamid)
+end
 end)
 
 ```
@@ -2793,9 +3353,9 @@ Client
 ```lua
 -- Simple: Request text input
 lia.derma.requestString("Enter Name", "Type your name:", function(text)
-    if text and text ~= "" then
-        print("Name:", text)
-    end
+if text and text ~= "" then
+    print("Name:", text)
+end
 end)
 
 ```
@@ -2804,9 +3364,9 @@ end)
 ```lua
 -- Medium: Request with default value and max length
 lia.derma.requestString("Set Password", "Enter new password:", function(password)
-    if string.len(password) >= 6 then
-        setPassword(password)
-    end
+if string.len(password) >= 6 then
+    setPassword(password)
+end
 end, "", 20)
 
 ```
@@ -2815,7 +3375,7 @@ end, "", 20)
 ```lua
 -- High: Request with validation and processing
 lia.derma.requestString("Create Item", "Enter item name:", function(name)
-    if not name or name == "" then return end
+if not name or name == "" then return end
     local cleanName = string.Trim(name)
     if string.len(cleanName) < 3 then
         notify("Name too short!")
@@ -2864,7 +3424,7 @@ Client
 -- Simple: Request multiple selections
 local options = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestOptions("Choose Options", options, function(selected)
-    print("Selected:", table.concat(selected, ", "))
+print("Selected:", table.concat(selected, ", "))
 end)
 
 ```
@@ -2873,13 +3433,13 @@ end)
 ```lua
 -- Medium: Request with data values and defaults
 local options = {
-    {"Admin", "admin"},
-    {"Moderator", "moderator"},
-    {"VIP", "vip"}
+{"Admin", "admin"},
+{"Moderator", "moderator"},
+{"VIP", "vip"}
 }
 local defaults = {"admin"}
 lia.derma.requestOptions("Select Roles", options, function(selected)
-    assignRoles(selected)
+assignRoles(selected)
 end, defaults)
 
 ```
@@ -2892,8 +3452,8 @@ for _, permission in pairs(availablePermissions) do
     table.insert(options, {permission.displayName, permission.id})
 end
 lia.derma.requestOptions("Select Permissions", options, function(selected)
-    if #selected > 0 then
-        validateAndAssignPermissions(selected)
+if #selected > 0 then
+    validateAndAssignPermissions(selected)
     else
         notify("Please select at least one permission!")
     end
@@ -2935,8 +3495,8 @@ Client
 ```lua
 -- Simple: Request confirmation
 lia.derma.requestBinaryQuestion("Confirm", "Are you sure?", function(result)
-    if result then
-        print("User confirmed")
+if result then
+    print("User confirmed")
     else
         print("User cancelled")
     end
@@ -2948,9 +3508,9 @@ end)
 ```lua
 -- Medium: Request with custom button text
 lia.derma.requestBinaryQuestion("Delete Item", "Delete this item permanently?", function(result)
-    if result then
-        deleteItem(item)
-    end
+if result then
+    deleteItem(item)
+end
 end, "Delete", "Cancel")
 
 ```
@@ -2959,10 +3519,10 @@ end, "Delete", "Cancel")
 ```lua
 -- High: Request with validation and logging
 lia.derma.requestBinaryQuestion("Admin Action", "Execute admin command: " .. command .. "?", function(result)
-    if result then
-        if validateAdminCommand(command) then
-            executeAdminCommand(command)
-            logAdminAction(command)
+if result then
+    if validateAdminCommand(command) then
+        executeAdminCommand(command)
+        logAdminAction(command)
         else
             notify("Invalid command!")
         end
@@ -3005,7 +3565,7 @@ Client
 -- Simple: Request button selection
 local buttons = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestButtons("Choose Action", buttons, function(index, text)
-    print("Selected:", text)
+print("Selected:", text)
 end)
 
 ```
@@ -3014,9 +3574,9 @@ end)
 ```lua
 -- Medium: Request with custom callbacks and icons
 local buttons = {
-    {text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
-    {text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
-    {text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
+{text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
+{text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
+{text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
 }
 lia.derma.requestButtons("Item Actions", buttons, nil, "Choose an action for this item")
 
@@ -3034,7 +3594,7 @@ if item:CanEdit() then
 end
 table.insert(buttons, {text = "View", callback = function() viewItem(item) end})
 lia.derma.requestButtons("Item Options", buttons, function(index, text)
-    logAction("Button clicked: " .. text)
+logAction("Button clicked: " .. text)
 end, "Available actions for " .. item:GetName())
 
 ```
@@ -3073,7 +3633,7 @@ Client
 -- Simple: Request button selection
 local buttons = {"Option 1", "Option 2", "Option 3"}
 lia.derma.requestButtons("Choose Action", buttons, function(index, text)
-    print("Selected:", text)
+print("Selected:", text)
 end)
 
 ```
@@ -3082,9 +3642,9 @@ end)
 ```lua
 -- Medium: Request with custom callbacks and icons
 local buttons = {
-    {text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
-    {text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
-    {text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
+{text = "Edit", callback = function() editItem() end, icon = "icon16/pencil.png"},
+{text = "Delete", callback = function() deleteItem() end, icon = "icon16/delete.png"},
+{text = "Copy", callback = function() copyItem() end, icon = "icon16/copy.png"}
 }
 lia.derma.requestButtons("Item Actions", buttons, nil, "Choose an action for this item")
 
@@ -3102,7 +3662,7 @@ if item:CanEdit() then
 end
 table.insert(buttons, {text = "View", callback = function() viewItem(item) end})
 lia.derma.requestButtons("Item Options", buttons, function(index, text)
-    logAction("Button clicked: " .. text)
+logAction("Button clicked: " .. text)
 end, "Available actions for " .. item:GetName())
 
 ```

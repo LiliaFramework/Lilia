@@ -4,7 +4,15 @@ Entity placement item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
+
+**Purpose**
+
+Sets the display name of the entity item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -15,7 +23,15 @@ ITEM.name = "Chair"
 
 ---
 
-### model
+### Purpose:
+
+**Purpose**
+
+Sets the 3D model for the entity item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -26,7 +42,15 @@ ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
 
 ---
 
-### desc
+### Purpose:
+
+**Purpose**
+
+Sets the description of the entity item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -37,7 +61,15 @@ ITEM.desc = "A comfortable chair for sitting"
 
 ---
 
-### category
+### Purpose:
+
+**Purpose**
+
+Sets the category for the entity item
+
+**When Called**
+
+During item definition
 
 **Example Usage**
 
@@ -48,7 +80,15 @@ ITEM.category = "entities"
 
 ---
 
-### entityid
+### Purpose:
+
+**Purpose**
+
+Sets the entity class name to spawn
+
+**When Called**
+
+During item definition (used in Place function)
 
 **Example Usage**
 
