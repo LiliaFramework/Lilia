@@ -4,7 +4,7 @@ Tool gun management system for the Lilia framework.
 
 ---
 
-## Overview
+Overview
 
 The tool gun meta table provides comprehensive functionality for managing tool gun instances, tool operations, and tool-specific functionality in the Lilia framework. It handles tool creation, configuration, object management, and tool-specific operations. The meta table operates on both server and client sides, with the server managing tool validation and data while the client provides tool interaction and display. It includes integration with the Garry's Mod tool system for tool functionality, object system for tool objects, network system for tool synchronization, and permission system for tool access control. The meta table ensures proper tool instance management, object handling, tool synchronization, and comprehensive tool lifecycle management from creation to destruction.
 

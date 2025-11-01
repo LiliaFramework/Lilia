@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.931 (November 01, 2025)
+
+### Changes
+
+- More Docs
+- Successfully updated workshop Lilia to 6.929
+- Docs
+- Successfully updated workshop Lilia to 6.927
+- Update item.lua
+- docs
+- Successfully updated workshop Lilia to 6.924
+- liaTable and liaTabs  automatically adjust sizing
+- Successfully updated workshop Lilia to 6.922
+- Update net.lua
+- Docs Overhaul
+- Successfully updated workshop Lilia to 6.919
+- Documented Item Meta
+- Optimizations
+- Successfully updated workshop Lilia to 6.916
+- New Docs Format
+- Successfully updated workshop Lilia to 6.914
+- Way too many changes lel
+- Spacing
+- Successfully updated workshop Lilia to 6.911
+
 ## Version 6.929 (November 01, 2025)
 
 ### Changes

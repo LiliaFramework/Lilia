@@ -4,7 +4,7 @@ Character class definition system for the Lilia framework.
 
 ---
 
-## Overview
+Overview
 
 The class system provides comprehensive functionality for defining character classes within the Lilia framework.
 Classes represent specific roles or professions that characters can assume within factions, creating a
@@ -14,44 +14,22 @@ hierarchical structure where factions serve as parent containers for classes.
 
 - **Factions** are the main organizational units (Citizens, Police, Medical, etc.)
 
-- **Classes** are sub-factions that can function as regiments, divisions, or specialized units within larger factions
+- **Classes** are sub-divisions within factions (Officer, Detective, Captain within Police)
 
-- Each character belongs to exactly ONE faction and optionally ONE class within that faction
+- Each character belongs to exactly ONE faction and ONE class within that faction
 
 - Classes inherit all properties from their parent faction by default
 
 - **CLASS settings overpower FACTION settings** - any property defined in a class takes precedence
 over the same property in the parent faction.
 
-**Example Hierarchies:**
-
-**Law Enforcement Hierarchy:**
+**Example Hierarchy:**
 ```
 Faction: Police Department
-├── Class: Police Officer (standard patrol officer)
-├── Class: Police Detective (investigative unit)
-├── Class: Police Captain (command staff)
-└── Class: SWAT Officer (tactical response team)
-```
-
-**Military Hierarchy (Regiments):**
-```
-Faction: United States Army
-├── Class: Infantry Soldier (basic rifleman)
-├── Class: Sniper (marksman regiment)
-├── Class: Medic (medical corps)
-├── Class: Engineer (combat engineer)
-└── Class: Tank Commander (armored regiment)
-```
-
-**Sci-Fi Empire Hierarchy:**
-```
-Faction: Galactic Empire
-├── Class: Stormtrooper (basic infantry)
-├── Class: Scout Trooper (reconnaissance)
-├── Class: Imperial Officer (command staff)
-├── Class: Dark Trooper (elite heavy infantry)
-└── Class: Imperial Guard (emperor's personal guard)
+├── Class: Police Officer (inherits police models, weapons, color)
+├── Class: Police Detective (inherits police properties, overrides with detective-specific items)
+├── Class: Police Captain (inherits police properties, overrides with command-specific permissions)
+└── Class: SWAT Officer (inherits police properties, overrides with tactical gear)
 ```
 
 Classes are defined using the CLASS table structure, which includes properties for identification,

@@ -4,7 +4,7 @@ Server-side hook system for the Lilia framework.
 
 ---
 
-## Overview
+Overview
 
 Server-side hooks in the Lilia framework handle game logic, data persistence, player management, and other server-specific functionality. All server hooks follow the standard Garry's Mod hook system and can be overridden or extended by addons and modules.
 

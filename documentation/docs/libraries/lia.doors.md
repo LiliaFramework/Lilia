@@ -4,7 +4,7 @@ Server-side door management and configuration system for the Lilia framework.
 
 ---
 
-## Overview
+Overview
 
 The doors library server component provides comprehensive door management functionality including
 preset configuration, database schema verification, and data cleanup operations. It handles
