@@ -284,9 +284,9 @@ Modules are plugins that add new features to your server.
 
 ### Installing a Module
 
-1. Visit [Lilia Modules](https://github.com/LiliaFramework/Modules)
-2. Find the module you want
-3. Click "Code" → "Download ZIP"
+1. Browse the modules at [Lilia Modules Documentation](https://liliaframework.github.io/modules/)
+2. Find the module you want and click on it to go to its "About" page
+3. Click the "DOWNLOAD HERE" link to download the specific module ZIP
 4. Extract the ZIP file
 5. Upload the module folder to `garrysmod/gamemodes/YOUR_SCHEMA/modules/`
 6. Restart your server
