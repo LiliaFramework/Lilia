@@ -4,7 +4,7 @@ Grenade item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Fragmentation Grenade"
 
 ---
 
-### Purpose:
+### desc
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.desc = "A deadly fragmentation grenade"
 
 ---
 
-### Purpose:
+### category
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.category = "itemCatGrenades"
 
 ---
 
-### Purpose:
+### model
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
 ---
 
-### Purpose:
+### class
 
 **Example Usage**
 
@@ -59,7 +59,7 @@ ITEM.class = "weapon_frag"
 
 ---
 
-### Purpose:
+### width
 
 **Example Usage**
 
@@ -70,7 +70,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Example Usage**
 
@@ -81,7 +81,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### DropOnDeath
 
 **Example Usage**
 

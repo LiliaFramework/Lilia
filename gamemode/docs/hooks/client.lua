@@ -1139,7 +1139,7 @@ end
     When Called:
         When the character selection menu is closed
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -1385,7 +1385,7 @@ end
     When Called:
         When new text is displayed in the chatbox
 
-    Parameters:
+    Parameters: 
         ... (vararg) - Variable arguments containing the text data
 
     Returns:
@@ -1587,7 +1587,7 @@ end
     When Called:
         When the chat UI is being initialized
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -2296,7 +2296,7 @@ end
     When Called:
         When a player closes a storage container
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -2365,7 +2365,7 @@ end
     When Called:
         When the F1 character information menu is closed
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -3302,7 +3302,7 @@ end
     When Called:
         When the keybind system has finished loading
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -3381,7 +3381,7 @@ end
     When Called:
         When the option system has finished loading
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -3467,7 +3467,7 @@ end
     When Called:
         When the interaction menu UI is closed
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -4333,7 +4333,7 @@ end
     When Called:
         When character data needs to be loaded
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -4525,7 +4525,7 @@ end
     When Called:
         When the admin stick context menu is closed
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -6181,7 +6181,7 @@ end
     When Called:
         Before the physgun beam is rendered
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -6254,7 +6254,7 @@ end
     When Called:
         When the font system needs to be refreshed
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -6389,7 +6389,7 @@ end
     When Called:
         When the character panel needs to be refreshed
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -6695,7 +6695,7 @@ end
     When Called:
         When configuring PAC3 data based on equipped items
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -6780,7 +6780,7 @@ end
     When Called:
         When the context menu (right-click menu) is opened
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -7558,7 +7558,7 @@ end
     When Called:
         When the bar system is about to render
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -7904,7 +7904,7 @@ end
     When Called:
         When a player dies
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -9115,7 +9115,7 @@ end
     When Called:
         When a player closes a vendor
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -9325,7 +9325,7 @@ end
     When Called:
         When cycling through weapons
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:
@@ -9390,7 +9390,7 @@ end
     When Called:
         When selecting a weapon
 
-    Parameters:
+    Parameters: 
         None
 
     Returns:

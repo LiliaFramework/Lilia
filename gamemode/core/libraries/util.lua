@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Utility Library
 
     Common operations and helper functions for the Lilia framework.

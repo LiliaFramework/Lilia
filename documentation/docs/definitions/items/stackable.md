@@ -4,7 +4,7 @@ Stackable item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Ammo Box"
 
 ---
 
-### Purpose:
+### model
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.model = "models/props_junk/cardboard_box001a.mdl"
 
 ---
 
-### Purpose:
+### width
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### isStackable
 
 **Example Usage**
 
@@ -59,7 +59,7 @@ ITEM.isStackable = true
 
 ---
 
-### Purpose:
+### maxQuantity
 
 **Example Usage**
 
@@ -70,12 +70,63 @@ ITEM.maxQuantity = 10  -- Maximum 10 items per stack
 
 ---
 
-### Purpose:
+### canSplit
 
 **Example Usage**
 
 ```lua
 ITEM.canSplit = true  -- Allows splitting the stack
+
+```
+
+---
+
+### ITEM:getDesc()
+
+**Example Usage**
+
+```lua
+function ITEM:getDesc()
+    return L("stackableDesc", self:getQuantity())
+end
+
+```
+
+---
+
+### ITEM:paintOver(item)
+
+**Example Usage**
+
+```lua
+function ITEM:paintOver(item)
+    local quantity = item:getQuantity()
+    lia.util.drawText(quantity, 8, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, "LiliaFont.16")
+end
+
+```
+
+---
+
+### ITEM:onCombine(other)
+
+**Example Usage**
+
+```lua
+function ITEM:onCombine(other)
+    if other.uniqueID ~= self.uniqueID then return end
+        local combined = self:getQuantity() + other:getQuantity()
+        if combined <= self.maxQuantity then
+            self:setQuantity(combined)
+            other:remove()
+            else
+                self:setQuantity(self.maxQuantity)
+                other:setQuantity(combined - self.maxQuantity)
+            end
+            return true
+        end
+    end
+end
 
 ```
 

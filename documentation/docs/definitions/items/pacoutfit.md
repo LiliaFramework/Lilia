@@ -15,7 +15,7 @@ if not pac then return end
 
 ---
 
-### Purpose:
+### name
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.name = "Hat"
 
 ---
 
-### Purpose:
+### desc
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.desc = "A stylish hat"
 
 ---
 
-### Purpose:
+### category
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.category = "outfit"
 
 ---
 
-### Purpose:
+### model
 
 **Example Usage**
 
@@ -59,7 +59,7 @@ ITEM.model = "models/Gibs/HGIBS.mdl"
 
 ---
 
-### Purpose:
+### width
 
 **Example Usage**
 
@@ -70,7 +70,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Example Usage**
 
@@ -81,7 +81,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### Purpose:
+### outfitCategory
 
 **Example Usage**
 
@@ -92,7 +92,7 @@ ITEM.outfitCategory = "hat"  -- Prevents multiple items of same category
 
 ---
 
-### Purpose:
+### pacData
 
 **Example Usage**
 
@@ -112,8 +112,8 @@ function ITEM:paintOver(item, w, h)
     if item:getData("equip") then
         surface.SetDrawColor(110, 255, 110, 100)
         surface.DrawRect(w - 14, h - 14, 8, 8)
-        end
     end
+end
 
 ```
 
@@ -129,7 +129,7 @@ function ITEM:removePart(client)
     self:setData("equip", false)
     if client.removePart then client:removePart(self.uniqueID) end
         -- Remove attribute boosts
-        end
+    end
 
 ```
 
@@ -143,7 +143,7 @@ function ITEM:removePart(client)
 function ITEM:onCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
         return true
-        end
+    end
 
 ```
 
@@ -156,7 +156,7 @@ function ITEM:onCanBeTransfered(_, newInventory)
 ```lua
 function ITEM:onLoadout()
     if self:getData("equip") and self.player.addPart then self.player:addPart(self.uniqueID) end
-        end
+    end
 
 ```
 
@@ -171,7 +171,7 @@ function ITEM:onRemoved()
     local inv = lia.item.inventories[self.invID]
     local receiver = inv.getReceiver and inv:getReceiver()
     if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removePart(receiver) end
-        end
+    end
 
 ```
 
@@ -185,7 +185,7 @@ function ITEM:onRemoved()
 ITEM:hook("drop", function(item)
 local client = item.player
 if item:getData("equip") then item:removePart(client) end
-    end)
+end)
 
 ```
 

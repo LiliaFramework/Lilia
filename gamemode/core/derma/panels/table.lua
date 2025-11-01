@@ -32,8 +32,10 @@ function PANEL:AddColumn(name, width, align, sortable)
         width = width or 100,
         align = align or TEXT_ALIGN_LEFT,
         sortable = sortable or false,
-        autoSize = width == nil
+        autoSize = true
     })
+
+    self:RebuildRows()
 end
 
 function PANEL:AddItem(...)
@@ -170,7 +172,6 @@ function PANEL:CreateRow(rowIndex, rowData)
 end
 
 function PANEL:CalculateColumnWidths()
-    if #self.rows == 0 then return end
     if not self.font or not self.rowFont then return end
     local autoSizeColumns = {}
     for colIndex, column in ipairs(self.columns) do
@@ -239,7 +240,7 @@ function PANEL:RebuildRows()
 end
 
 function PANEL:RecalculateColumnWidths()
-    if #self.rows == 0 or self.isRebuilding then return end
+    if self.isRebuilding then return end
     if not self.font or not self.rowFont then return end
     local oldWidths = {}
     for i, column in ipairs(self.columns) do

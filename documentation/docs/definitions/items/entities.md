@@ -4,7 +4,7 @@ Entity placement item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Chair"
 
 ---
 
-### Purpose:
+### model
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.model = "models/props_c17/FurnitureChair001a.mdl"
 
 ---
 
-### Purpose:
+### desc
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.desc = "A comfortable chair for sitting"
 
 ---
 
-### Purpose:
+### category
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.category = "entities"
 
 ---
 
-### Purpose:
+### entityid
 
 **Example Usage**
 

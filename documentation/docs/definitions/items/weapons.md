@@ -4,7 +4,7 @@ Weapon item system for the Lilia framework.
 
 ---
 
-### Purpose:
+### name
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Pistol"
 
 ---
 
-### Purpose:
+### desc
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.desc = "A standard issue pistol"
 
 ---
 
-### Purpose:
+### category
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.category = "weapons"
 
 ---
 
-### Purpose:
+### model
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.model = "models/weapons/w_pistol.mdl"
 
 ---
 
-### Purpose:
+### class
 
 **Example Usage**
 
@@ -59,7 +59,7 @@ ITEM.class = "weapon_pistol"
 
 ---
 
-### Purpose:
+### width
 
 **Example Usage**
 
@@ -70,7 +70,7 @@ ITEM.width = 2  -- Takes 2 slot width
 
 ---
 
-### Purpose:
+### height
 
 **Example Usage**
 
@@ -81,7 +81,7 @@ ITEM.height = 2  -- Takes 2 slot height
 
 ---
 
-### Purpose:
+### isWeapon
 
 **Example Usage**
 
@@ -92,7 +92,7 @@ ITEM.isWeapon = true
 
 ---
 
-### Purpose:
+### RequiredSkillLevels
 
 **Example Usage**
 
@@ -103,7 +103,7 @@ ITEM.RequiredSkillLevels = {}  -- No skill requirements
 
 ---
 
-### Purpose:
+### DropOnDeath
 
 **Example Usage**
 
@@ -114,7 +114,7 @@ ITEM.DropOnDeath = true  -- Drops on death
 
 ---
 
-### Purpose:
+### postHooks
 
 **Example Usage**
 
@@ -125,14 +125,14 @@ function ITEM.postHooks:drop()
         if client:HasWeapon(self.class) then
             client:notifyErrorLocalized("invalidWeapon")
             client:StripWeapon(self.class)
-            end
         end
+    end
 
 ```
 
 ---
 
-### Purpose:
+### ITEM:hook("drop", function(item) ... end)
 
 **Example Usage**
 
@@ -143,15 +143,15 @@ if not client or not IsValid(client) then return false end
     if IsValid(client:getNetVar("ragdoll")) then
         client:notifyErrorLocalized("noRagdollAction")
         return false
-        end
+    end
     -- Handle equipped weapon removal
-    end)
+end)
 
 ```
 
 ---
 
-### Purpose:
+### ITEM:OnCanBeTransfered(_, newInventory)
 
 **Example Usage**
 
@@ -159,13 +159,13 @@ if not client or not IsValid(client) then return false end
 function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
         return true
-        end
+    end
 
 ```
 
 ---
 
-### Purpose:
+### ITEM:onLoadout()
 
 **Example Usage**
 
@@ -178,8 +178,8 @@ function ITEM:onLoadout()
             if IsValid(weapon) then
                 client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
                 weapon:SetClip1(self:getData("ammo", 0))
-            else
-                lia.error(L("weaponDoesNotExist", self.class))
+                else
+                    lia.error(L("weaponDoesNotExist", self.class))
                 end
             end
         end
@@ -188,7 +188,7 @@ function ITEM:onLoadout()
 
 ---
 
-### Purpose:
+### ITEM:OnSave()
 
 **Example Usage**
 
@@ -198,13 +198,13 @@ function ITEM:OnSave()
     if not client or not IsValid(client) then return end
         local weapon = client:GetWeapon(self.class)
         if IsValid(weapon) then self:setData("ammo", weapon:Clip1()) end
-            end
+        end
 
 ```
 
 ---
 
-### Purpose:
+### ITEM:getName()
 
 **Example Usage**
 
@@ -213,7 +213,7 @@ function ITEM:getName()
     local weapon = weapons.GetStored(self.class)
     if weapon and weapon.PrintName then return language.GetPhrase(weapon.PrintName) end
         return self.name
-        end
+    end
 
 ```
 

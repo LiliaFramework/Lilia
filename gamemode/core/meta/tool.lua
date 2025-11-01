@@ -840,7 +840,7 @@ end
         ```
 ]]
 function toolGunMeta:GetOwner()
-    return self:getSWEP().Owner or self.Owner
+    return self:getSWEP().Owner or self:GetOwner()
 end
 
 --[[
