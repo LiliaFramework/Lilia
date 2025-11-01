@@ -635,7 +635,7 @@ def generate_documentation_for_file(file_path, output_dir, is_library=False):
 
         # Add Overview section with overview content if available
         if overview_section:
-            f.write('## Overview\n\n')
+            f.write('Overview\n\n')
             # Parse the overview section (remove "Overview:" and format)
             overview_content = parse_overview_section(overview_section)
             f.write(overview_content)
@@ -710,7 +710,7 @@ def generate_markdown_for_definition_entries(title: str, subtitle: str, overview
     md_parts.append('---\n\n')
 
     if overview_section:
-        md_parts.append('## Overview\n\n')
+        md_parts.append('Overview\n\n')
         md_parts.append(parse_overview_section(overview_section) + '\n\n')
         md_parts.append('---\n\n')
 
@@ -901,7 +901,7 @@ def generate_documentation_for_hooks_file(file_path: Path, output_dir: Path) -> 
         f.write(subtitle + '\n\n')
         f.write('---\n\n')
         if overview_section:
-            f.write('## Overview\n\n')
+            f.write('Overview\n\n')
             f.write(parse_overview_section(overview_section) + '\n\n')
             f.write('---\n\n')
         for section in sections:

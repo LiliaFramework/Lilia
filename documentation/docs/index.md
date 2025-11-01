@@ -10,7 +10,7 @@ Lilia is an advanced roleplay framework for Garry's Mod. Inspired by Lillia from
 
 ## Server Owners
 
-If you're looking to get your Lilia server up and running as soon as possible, check out the [Installation Tutorial](./installation.md) guide in the manual.
+If you're looking to get your Lilia server up and running as soon as possible, check out the [Getting Started Guide](./gettingstarted.md) for a complete walkthrough including installation, configuration, and customization.
 
 ## Community
 
