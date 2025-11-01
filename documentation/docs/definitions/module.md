@@ -10,7 +10,7 @@ The module system provides comprehensive functionality for defining modules with
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -22,7 +22,7 @@ MODULE.name = "Inventory System"
 
 ---
 
-### author
+### Purpose:
 
 **Example Usage**
 
@@ -34,7 +34,7 @@ MODULE.author = "Samael"
 
 ---
 
-### discord
+### Purpose:
 
 **Example Usage**
 
@@ -46,7 +46,7 @@ MODULE.discord = "@liliaplayer"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -58,7 +58,7 @@ MODULE.desc = "A comprehensive inventory management system"
 
 ---
 
-### version
+### Purpose:
 
 **Example Usage**
 
@@ -70,7 +70,7 @@ MODULE.version = 1.0
 
 ---
 
-### versionID
+### Purpose:
 
 **Example Usage**
 
@@ -82,7 +82,7 @@ MODULE.versionID = "private_inventory"
 
 ---
 
-### uniqueID
+### Purpose:
 
 **Example Usage**
 
@@ -94,41 +94,41 @@ MODULE.versionID = "private_inventory"
 
 ---
 
-### Privileges
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- Define required privileges for module access
 MODULE.Privileges = {
-    {
-        Name = "canManageInventory",
-        Min = 1
-    }
+{
+Name = "canManageInventory",
+Min = 1
+}
 }
 
 ```
 
 ---
 
-### Dependencies
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- Define required files for this module
 MODULE.Dependencies = {
-    {
-        File = "gridinv.lua",
-        Type = "shared"
-    }
+{
+File = "gridinv.lua",
+Type = "shared"
+}
 }
 
 ```
 
 ---
 
-### NetworkStrings
+### Purpose:
 
 **Example Usage**
 
@@ -140,7 +140,7 @@ MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
 
 ---
 
-### WorkshopContent
+### Purpose:
 
 **Example Usage**
 
@@ -153,35 +153,35 @@ MODULE.WorkshopContent = {"1234567890", "0987654321"}
 
 ---
 
-### WebSounds
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- Define web-hosted sound files for the module
 MODULE.WebSounds = {
-    ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
+["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
 }
 
 ```
 
 ---
 
-### WebImages
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- Define web-hosted image files for the module
 MODULE.WebImages = {
-    ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
+["icons/inventory.png"] = "https://example.com/icons/inventory.png"
 }
 
 ```
 
 ---
 
-### enabled
+### Purpose:
 
 **Example Usage**
 
@@ -193,23 +193,23 @@ MODULE.enabled = true
 
 ---
 
-### folder
+### Purpose:
 
 ---
 
-### path
+### Purpose:
 
 ---
 
-### variable
+### Purpose:
 
 ---
 
-### loading
+### Purpose:
 
 ---
 
-### OnLoaded
+### Purpose:
 
 **Example Usage**
 
@@ -217,7 +217,7 @@ MODULE.enabled = true
 -- Called after all module files are loaded
 function MODULE:OnLoaded()
     print("Module loaded successfully!")
-end
+    end
 
 ```
 

@@ -4,7 +4,7 @@ Literature item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Medical Journal"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.desc = "A medical journal containing important information"
 
 ---
 
-### category
+### Purpose:
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.category = "itemCatLiterature"
 
 ---
 
-### model
+### Purpose:
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.model = "models/props_lab/bindergraylabel01b.mdl"
 
 ---
 
-### contents
+### Purpose:
 
 **Example Usage**
 

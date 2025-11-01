@@ -50,7 +50,7 @@ classwhitelists to control which classes a character has access to within the fa
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -61,7 +61,7 @@ FACTION.name = "Police Department"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -72,7 +72,7 @@ FACTION.desc = "Law enforcement officers responsible for maintaining order and p
 
 ---
 
-### color
+### Purpose:
 
 **Example Usage**
 
@@ -83,41 +83,41 @@ FACTION.color = Color(0, 100, 255)  -- Blue color for police
 
 ---
 
-### models
+### Purpose:
 
 **Example Usage**
 
 ```lua
 FACTION.models = {"models/player/police.mdl", "models/player/swat.mdl"}
-    -- Advanced: Complex model data with bodygroups
-    FACTION.models = {
-        "male" = {
-            {"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
-                {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-                    },
-                    "female" = {
-                        {"models/player/police_female.mdl", "Female Officer", {1, 2}},
-                            {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
-                            }
-                        }
+-- Advanced: Complex model data with bodygroups
+FACTION.models = {
+"male" = {
+{"models/player/police_male.mdl", "Male Officer", {1, 2, 3}},
+{"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+},
+"female" = {
+{"models/player/police_female.mdl", "Female Officer", {1, 2}},
+{"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+}
+}
 
 ```
 
 ---
 
-### weapons
+### Purpose:
 
 **Example Usage**
 
 ```lua
 FACTION.weapons = {"weapon_pistol", "weapon_stunstick"}  -- Table of weapons
-    FACTION.weapons = "weapon_crowbar"  -- Single weapon string
+FACTION.weapons = "weapon_crowbar"  -- Single weapon string
 
 ```
 
 ---
 
-### isDefault
+### Purpose:
 
 **Example Usage**
 
@@ -129,43 +129,43 @@ FACTION.isDefault = false  -- Requires special permission or whitelist
 
 ---
 
-### uniqueID
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- This is set automatically when you register the faction
 lia.faction.register("police", {
-    name = "Police Department",
-    -- uniqueID will be "police"
-    })
-    -- For faction files, uniqueID is set to the filename
-    -- File: factions/police.lua -> uniqueID = "police"
-    -- File: factions/sh_police.lua -> uniqueID = "police" (sh_ prefix removed)
-    -- File: factions/citizen.lua -> uniqueID = "citizen"
+name = "Police Department",
+-- uniqueID will be "police"
+})
+-- For faction files, uniqueID is set to the filename
+-- File: factions/police.lua -> uniqueID = "police"
+-- File: factions/sh_police.lua -> uniqueID = "police" (sh_ prefix removed)
+-- File: factions/citizen.lua -> uniqueID = "citizen"
 
 ```
 
 ---
 
-### index
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- This is set automatically when you register the faction
 lia.faction.register("police", {
-    name = "Police Department",
-    -- index will be assigned based on registration order
-    })
-    -- Or manually specify the team index
-    FACTION.index = 2  -- Will use team index 2
+name = "Police Department",
+-- index will be assigned based on registration order
+})
+-- Or manually specify the team index
+FACTION.index = 2  -- Will use team index 2
 
 ```
 
 ---
 
-### health
+### Purpose:
 
 **Example Usage**
 
@@ -176,7 +176,7 @@ FACTION.health = 120  -- Police officers have 120 max health
 
 ---
 
-### armor
+### Purpose:
 
 **Example Usage**
 
@@ -187,7 +187,7 @@ FACTION.armor = 50  -- Standard police armor
 
 ---
 
-### scale
+### Purpose:
 
 **Example Usage**
 
@@ -198,7 +198,7 @@ FACTION.scale = 1.1  -- Slightly larger model
 
 ---
 
-### runSpeed
+### Purpose:
 
 **Example Usage**
 
@@ -211,7 +211,7 @@ FACTION.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### walkSpeed
+### Purpose:
 
 **Example Usage**
 
@@ -224,7 +224,7 @@ FACTION.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### jumpPower
+### Purpose:
 
 **Example Usage**
 
@@ -237,21 +237,21 @@ FACTION.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### NPCRelations
+### Purpose:
 
 **Example Usage**
 
 ```lua
 FACTION.NPCRelations = {
-    ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-    ["npc_citizen"] = D_NU       -- Neutral to citizens
+["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
+["npc_citizen"] = D_NU       -- Neutral to citizens
 }
 
 ```
 
 ---
 
-### bloodcolor
+### Purpose:
 
 **Example Usage**
 
@@ -263,7 +263,7 @@ FACTION.bloodcolor = BLOOD_COLOR_YELLOW  -- Yellow blood for aliens
 
 ---
 
-### runSpeedMultiplier
+### Purpose:
 
 **Example Usage**
 
@@ -275,7 +275,7 @@ FACTION.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### walkSpeedMultiplier
+### Purpose:
 
 **Example Usage**
 
@@ -287,7 +287,7 @@ FACTION.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### jumpPowerMultiplier
+### Purpose:
 
 **Example Usage**
 
@@ -299,7 +299,7 @@ FACTION.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### items
+### Purpose:
 
 **Example Usage**
 
@@ -310,7 +310,7 @@ FACTION.items = {"item_police_badge", "item_handcuffs"}  -- Starting items for p
 
 ---
 
-### oneCharOnly
+### Purpose:
 
 **Example Usage**
 
@@ -322,7 +322,7 @@ FACTION.oneCharOnly = false  -- Players can have multiple characters in this fac
 
 ---
 
-### limit
+### Purpose:
 
 **Example Usage**
 
@@ -335,7 +335,7 @@ FACTION.limit = 0.1  -- 10% of total server players
 
 ---
 
-### NameTemplate
+### Purpose:
 
 **Example Usage**
 
@@ -343,39 +343,39 @@ FACTION.limit = 0.1  -- 10% of total server players
 function FACTION:NameTemplate(info, client)
     local index = math.random(1000, 9999)
     return "CP-" .. index  -- Returns "CP-1234" style names for Civil Protection
-end
+    end
 
 ```
 
 ---
 
-### GetDefaultName
+### Purpose:
 
 **Example Usage**
 
 ```lua
 function FACTION:GetDefaultName(client)
     return "Citizen " .. math.random(1000, 9999)
-end
+    end
 
 ```
 
 ---
 
-### GetDefaultDesc
+### Purpose:
 
 **Example Usage**
 
 ```lua
 function FACTION:GetDefaultDesc(client)
     return "A citizen of the city"
-end
+    end
 
 ```
 
 ---
 
-### OnCheckLimitReached
+### Purpose:
 
 **Parameters**
 
@@ -391,16 +391,16 @@ function FACTION:OnCheckLimitReached(character, client)
     -- Check if player has special permission to bypass limits
     if client:hasFlags("L") then
         return false  -- Allow admins to bypass limits
-    end
+        end
     -- Use default limit checking
     return self:CheckFactionLimitReached(character, client)
-end
+    end
 
 ```
 
 ---
 
-### OnTransferred
+### Purpose:
 
 **Parameters**
 
@@ -413,13 +413,13 @@ function FACTION:OnTransferred(client)
     client:notify("Welcome to the " .. self.name)
     -- Set up faction-specific data
     -- Could trigger department assignment or training
-end
+    end
 
 ```
 
 ---
 
-### OnSpawn
+### Purpose:
 
 **Parameters**
 
@@ -433,7 +433,7 @@ function FACTION:OnSpawn(client)
     client:Give("weapon_stunstick")
     client:SetHealth(self.health or 100)
     client:SetArmor(self.armor or 0)
-end
+    end
 
 ```
 

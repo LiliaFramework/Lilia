@@ -4,7 +4,7 @@ Ammunition item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Pistol Ammo"
 
 ---
 
-### model
+### Purpose:
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.model = "models/props_c17/SuitCase001a.mdl"
 
 ---
 
-### width
+### Purpose:
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### height
+### Purpose:
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### ammo
+### Purpose:
 
 **Example Usage**
 
@@ -60,7 +60,7 @@ ITEM.ammo = "smg1"    -- SMG ammunition type
 
 ---
 
-### category
+### Purpose:
 
 **Example Usage**
 
