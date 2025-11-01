@@ -4,7 +4,7 @@ URL item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Website Link"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.desc = "A link to an external website"
 
 ---
 
-### model
+### Purpose:
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.model = "models/props_interiors/pot01a.mdl"
 
 ---
 
-### url
+### Purpose:
 
 **Example Usage**
 

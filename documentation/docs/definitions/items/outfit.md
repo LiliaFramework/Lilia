@@ -4,7 +4,7 @@ Outfit item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Police Uniform"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.desc = "A standard police uniform"
 
 ---
 
-### category
+### Purpose:
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.category = "outfit"
 
 ---
 
-### model
+### Purpose:
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl"
 
 ---
 
-### width
+### Purpose:
 
 **Example Usage**
 
@@ -59,7 +59,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### height
+### Purpose:
 
 **Example Usage**
 
@@ -70,7 +70,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### outfitCategory
+### Purpose:
 
 **Example Usage**
 
@@ -81,7 +81,7 @@ ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
 
 ---
 
-### pacData
+### Purpose:
 
 **Example Usage**
 
@@ -92,7 +92,7 @@ ITEM.pacData = {}  -- PAC attachment data
 
 ---
 
-### isOutfit
+### Purpose:
 
 **Example Usage**
 
@@ -152,8 +152,8 @@ end
 ```lua
 function ITEM:OnCanBeTransfered(_, newInventory)
     if newInventory and self:getData("equip") then return false end
-        return true
-    end
+    return true
+end
 
 ```
 
@@ -166,7 +166,7 @@ function ITEM:OnCanBeTransfered(_, newInventory)
 ```lua
 function ITEM:onLoadout()
     if self:getData("equip") then self:wearOutfit(self.player, true) end
-    end
+end
 
 ```
 
@@ -179,7 +179,7 @@ function ITEM:onLoadout()
 ```lua
 function ITEM:onRemoved()
     if IsValid(receiver) and receiver:IsPlayer() and self:getData("equip") then self:removeOutfit(receiver) end
-    end
+end
 
 ```
 

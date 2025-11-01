@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Character Library
 
     Comprehensive character creation, management, and persistence system for the Lilia framework.

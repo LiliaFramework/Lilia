@@ -4,7 +4,7 @@ Medical aid item system for the Lilia framework.
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -15,7 +15,7 @@ ITEM.name = "Medical Kit"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -26,7 +26,7 @@ ITEM.desc = "A medical kit that restores health"
 
 ---
 
-### model
+### Purpose:
 
 **Example Usage**
 
@@ -37,7 +37,7 @@ ITEM.model = "models/weapons/w_package.mdl"
 
 ---
 
-### width
+### Purpose:
 
 **Example Usage**
 
@@ -48,7 +48,7 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ---
 
-### height
+### Purpose:
 
 **Example Usage**
 
@@ -59,7 +59,7 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ---
 
-### health
+### Purpose:
 
 **Example Usage**
 

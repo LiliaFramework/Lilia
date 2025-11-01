@@ -47,7 +47,7 @@ classwhitelists to control which classes a character has access to.
 
 ---
 
-### name
+### Purpose:
 
 **Example Usage**
 
@@ -58,7 +58,7 @@ CLASS.name = "Police Officer"
 
 ---
 
-### desc
+### Purpose:
 
 **Example Usage**
 
@@ -69,7 +69,7 @@ CLASS.desc = "A law enforcement officer responsible for maintaining order"
 
 ---
 
-### faction
+### Purpose:
 
 **Example Usage**
 
@@ -80,7 +80,7 @@ CLASS.faction = FACTION_POLICE
 
 ---
 
-### limit
+### Purpose:
 
 **Example Usage**
 
@@ -92,7 +92,7 @@ CLASS.limit = 0  -- Unlimited players
 
 ---
 
-### model
+### Purpose:
 
 **Example Usage**
 
@@ -103,7 +103,7 @@ CLASS.model = "models/player/barney.mdl"
 
 ---
 
-### isWhitelisted
+### Purpose:
 
 **Example Usage**
 
@@ -119,7 +119,7 @@ CLASS.isWhitelisted = true  -- Requires whitelist permission to join
 
 ---
 
-### isDefault
+### Purpose:
 
 **Example Usage**
 
@@ -130,7 +130,7 @@ CLASS.isDefault = true
 
 ---
 
-### scoreboardHidden
+### Purpose:
 
 **Example Usage**
 
@@ -141,7 +141,7 @@ CLASS.scoreboardHidden = true  -- Class will not appear in scoreboard categories
 
 ---
 
-### pay
+### Purpose:
 
 **Example Usage**
 
@@ -152,37 +152,37 @@ CLASS.pay = 100  -- $100 salary
 
 ---
 
-### uniqueID
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- This is set automatically when you register the class
 lia.class.register("police_officer", {
-    name = "Police Officer",
-    -- uniqueID will be "police_officer"
-    })
+name = "Police Officer",
+-- uniqueID will be "police_officer"
+})
 
 ```
 
 ---
 
-### index
+### Purpose:
 
 **Example Usage**
 
 ```lua
 -- This is set automatically when you register the class
 lia.class.register("police_officer", {
-    name = "Police Officer",
-    -- index will be assigned based on registration order
-    })
+name = "Police Officer",
+-- index will be assigned based on registration order
+})
 
 ```
 
 ---
 
-### Color
+### Purpose:
 
 **Example Usage**
 
@@ -193,7 +193,7 @@ CLASS.Color = Color(0, 100, 255)  -- Blue color for police
 
 ---
 
-### health
+### Purpose:
 
 **Example Usage**
 
@@ -204,7 +204,7 @@ CLASS.health = 150  -- Police officers have 150 max health
 
 ---
 
-### armor
+### Purpose:
 
 **Example Usage**
 
@@ -215,19 +215,19 @@ CLASS.armor = 50  -- Police officers have 50 armor
 
 ---
 
-### weapons
+### Purpose:
 
 **Example Usage**
 
 ```lua
 CLASS.weapons = {"weapon_pistol", "weapon_stunstick"}  -- Table of weapons
-    CLASS.weapons = "weapon_crowbar"  -- Single weapon string
+CLASS.weapons = "weapon_crowbar"  -- Single weapon string
 
 ```
 
 ---
 
-### scale
+### Purpose:
 
 **Example Usage**
 
@@ -238,7 +238,7 @@ CLASS.scale = 1.1  -- Slightly larger model
 
 ---
 
-### runSpeed
+### Purpose:
 
 **Example Usage**
 
@@ -251,7 +251,7 @@ CLASS.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### walkSpeed
+### Purpose:
 
 **Example Usage**
 
@@ -264,7 +264,7 @@ CLASS.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### jumpPower
+### Purpose:
 
 **Example Usage**
 
@@ -277,21 +277,21 @@ CLASS.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### NPCRelations
+### Purpose:
 
 **Example Usage**
 
 ```lua
 CLASS.NPCRelations = {
-    ["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
-    ["npc_citizen"] = D_NU       -- Neutral to citizens
+["npc_metropolice"] = D_LI,  -- Police are liked by metropolice
+["npc_citizen"] = D_NU       -- Neutral to citizens
 }
 
 ```
 
 ---
 
-### bloodcolor
+### Purpose:
 
 **Example Usage**
 
@@ -303,7 +303,7 @@ CLASS.bloodcolor = BLOOD_COLOR_YELLOW  -- Yellow blood for aliens
 
 ---
 
-### runSpeedMultiplier
+### Purpose:
 
 **Example Usage**
 
@@ -315,7 +315,7 @@ CLASS.runSpeed = 1.2  -- 20% faster than default
 
 ---
 
-### walkSpeedMultiplier
+### Purpose:
 
 **Example Usage**
 
@@ -327,7 +327,7 @@ CLASS.walkSpeed = 1.1  -- 10% faster than default
 
 ---
 
-### jumpPowerMultiplier
+### Purpose:
 
 **Example Usage**
 
@@ -339,7 +339,7 @@ CLASS.jumpPower = 1.3  -- 30% higher jump
 
 ---
 
-### OnCanBe
+### Purpose:
 
 **Parameters**
 
@@ -355,26 +355,26 @@ function CLASS:OnCanBe(client)
         if char:getAttrib("str", 0) < 10 then
             client:notify("You need at least 10 strength to join this class.")
             return false
-        end
+            end
         -- Check permissions (use framework permission system)
         if not client:hasFlags("P") then  -- Example permission flag
             client:notify("You don't have permission to join this class.")
             return false
-        end
+            end
         -- Check custom conditions
         if char:getData("banned_from_class", false) then
             client:notify("You are banned from this class.")
             return false
+            end
         end
-    end
     return true
-end
+    end
 
 ```
 
 ---
 
-### OnSet
+### Purpose:
 
 **Parameters**
 
@@ -385,13 +385,13 @@ end
 ```lua
 function CLASS:OnSet(client)
     client:notify("Welcome to " .. self.name)
-end
+    end
 
 ```
 
 ---
 
-### OnTransferred
+### Purpose:
 
 **Parameters**
 
@@ -404,14 +404,14 @@ end
 function CLASS:OnTransferred(client, oldClass)
     if oldClass then
         client:notify("Switched from " .. oldClass.name .. " to " .. self.name)
+        end
     end
-end
 
 ```
 
 ---
 
-### OnSpawn
+### Purpose:
 
 **Parameters**
 
@@ -424,13 +424,13 @@ function CLASS:OnSpawn(client)
     client:Give("weapon_stunstick")
     client:SetHealth(150)
     client:SetArmor(50)
-end
+    end
 
 ```
 
 ---
 
-### OnLeave
+### Purpose:
 
 **Parameters**
 
@@ -441,7 +441,7 @@ end
 ```lua
 function CLASS:OnLeave(client)
     client:StripWeapon("weapon_stunstick")
-end
+    end
 
 ```
 
