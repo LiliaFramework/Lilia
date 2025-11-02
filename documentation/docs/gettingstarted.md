@@ -1,4 +1,4 @@
-# Getting Started with Lilia
+# Getting Started
 
 This step-by-step guide will help you set up your first Lilia roleplay server. We'll start with the basics and build up to advanced features. Each section includes simple instructions and examples.
 
