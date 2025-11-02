@@ -30,7 +30,7 @@ During gamemode initialization or when manually loading language files
 
 **Realm**
 
-Server/Client
+Shared
 
 **Example Usage**
 
@@ -89,7 +89,7 @@ When manually adding language strings or when modules need to register their own
 
 **Realm**
 
-Server/Client
+Shared
 
 **Example Usage**
 
@@ -149,7 +149,7 @@ When building language selection menus or when checking available languages
 
 **Realm**
 
-Server/Client
+Shared
 
 **Example Usage**
 
@@ -217,7 +217,7 @@ When displaying text to users or when any localized string is needed
 
 **Realm**
 
-Server/Client
+Shared
 
 **Example Usage**
 

@@ -40,9 +40,9 @@ Shared
 ```lua
 -- Simple: Register a basic faction
 lia.faction.register("citizen", {
-name = "Citizen",
-desc = "A regular citizen",
-color = Color(150, 150, 150)
+    name  = "Citizen",
+    desc  = "A regular citizen",
+    color = Color(150, 150, 150)
 })
 
 ```
@@ -51,12 +51,12 @@ color = Color(150, 150, 150)
 ```lua
 -- Medium: Register faction with custom models and weapons
 lia.faction.register("police", {
-name = "Police Officer",
-desc = "Law enforcement officer",
-color = Color(0, 0, 255),
-models = {"models/player/police.mdl"},
-weapons = {"weapon_pistol", "weapon_stunstick"},
-isDefault = false
+    name      = "Police Officer",
+    desc      = "Law enforcement officer",
+    color     = Color(0, 0, 255),
+    models    = {"models/player/police.mdl"},
+    weapons   = {"weapon_pistol", "weapon_stunstick"},
+    isDefault = false
 })
 
 ```
@@ -65,22 +65,22 @@ isDefault = false
 ```lua
 -- High: Register faction with complex model data and bodygroups
 lia.faction.register("medic", {
-name = "Medical Staff",
-desc = "Emergency medical personnel",
-color = Color(255, 0, 0),
-models = {
-"male" = {
-{"models/player/medic_male.mdl", "Male Medic", {1, 2, 3}},
-{"models/player/doctor_male.mdl", "Male Doctor", {0, 1, 2}}
-},
-"female" = {
-{"models/player/medic_female.mdl", "Female Medic", {1, 2}},
-{"models/player/doctor_female.mdl", "Female Doctor", {0, 1}}
-}
-},
-weapons = {"weapon_medkit", "weapon_defibrillator"},
-isDefault = false,
-index = 5
+    name  = "Medical Staff",
+    desc  = "Emergency medical personnel",
+    color = Color(255, 0, 0),
+    models = {
+        male = {
+            {"models/player/medic_male.mdl", "Male Medic", {1, 2, 3}},
+            {"models/player/doctor_male.mdl", "Male Doctor", {0, 1, 2}}
+        },
+        female = {
+            {"models/player/medic_female.mdl", "Female Medic", {1, 2}},
+            {"models/player/doctor_female.mdl", "Female Doctor", {0, 1}}
+        }
+    },
+    weapons   = {"weapon_medkit", "weapon_defibrillator"},
+    isDefault = false,
+    index   = 5
 })
 
 ```
@@ -122,9 +122,9 @@ lia.faction.cacheModels({"models/player/police.mdl", "models/player/swat.mdl"})
 ```lua
 -- Medium: Cache mixed model data types
 local models = {
-"models/player/police.mdl",
-{"models/player/swat.mdl", "SWAT Officer"},
-{"models/player/fbi.mdl", "FBI Agent", {1, 2, 3}}
+    "models/player/police.mdl",
+    {"models/player/swat.mdl", "SWAT Officer"},
+    {"models/player/fbi.mdl", "FBI Agent", {1, 2, 3}}
 }
 lia.faction.cacheModels(models)
 
@@ -134,14 +134,14 @@ lia.faction.cacheModels(models)
 ```lua
 -- High: Cache categorized models with bodygroup data
 local models = {
-"male" = {
-{"models/player/police_male.mdl", "Male Officer", {1, 2}},
-{"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
-},
-"female" = {
-{"models/player/police_female.mdl", "Female Officer", {1}},
-{"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
-}
+    male = {
+        {"models/player/police_male.mdl", "Male Officer", {1, 2}},
+        {"models/player/swat_male.mdl", "Male SWAT", {0, 1, 2, 3}}
+    },
+    female = {
+        {"models/player/police_female.mdl", "Female Officer", {1}},
+        {"models/player/swat_female.mdl", "Female SWAT", {0, 1, 2}}
+    }
 }
 lia.faction.cacheModels(models)
 
@@ -194,9 +194,9 @@ end
 ```lua
 -- High: Load factions from multiple directories with validation
 local factionDirs = {
-"gamemode/factions",
-"gamemode/modules/customfactions/factions",
-"gamemode/schema/factions"
+    "gamemode/factions",
+    "gamemode/modules/customfactions/factions",
+    "gamemode/schema/factions"
 }
 for _, dir in ipairs(factionDirs) do
     if file.Exists(dir, "LUA") then
@@ -250,9 +250,9 @@ local factionIndex = 1
 local faction = lia.faction.get(factionIndex)
 if faction then
     print("Faction: " .. faction.name .. " (Index: " .. faction.index .. ")")
-    else
-        print("Faction not found")
-    end
+else
+    print("Faction not found")
+end
 
 ```
 
@@ -264,13 +264,13 @@ local function getFactionSafely(identifier)
     if not faction then
         if isnumber(identifier) then
             error("Faction with index " .. identifier .. " not found")
-            else
-                error("Faction with ID '" .. identifier .. "' not found")
-            end
+        else
+            error("Faction with ID '" .. identifier .. "' not found")
         end
-        return faction
     end
-    local faction = getFactionSafely("police")
+    return faction
+end
+local faction = getFactionSafely("police")
 
 ```
 
@@ -317,9 +317,9 @@ local factionID = "police"
 local index = lia.faction.getIndex(factionID)
 if index then
     print("Faction '" .. factionID .. "' has index: " .. index)
-    else
-        print("Faction '" .. factionID .. "' not found")
-    end
+else
+    print("Faction '" .. factionID .. "' not found")
+end
 
 ```
 
@@ -332,11 +332,11 @@ for _, id in ipairs(factionIDs) do
     local index = lia.faction.getIndex(id)
     if index then
         indices[id] = index
-        else
-            print("Warning: Faction '" .. id .. "' not found")
-        end
+    else
+        print("Warning: Faction '" .. id .. "' not found")
     end
-    return indices
+end
+return indices
 
 ```
 
@@ -384,9 +384,9 @@ if #classes > 0 then
     for _, class in ipairs(classes) do
         print("- " .. class.name)
     end
-    else
-        print("No classes found for " .. factionID)
-    end
+else
+    print("No classes found for " .. factionID)
+end
 
 ```
 
@@ -403,9 +403,9 @@ local function getFactionClasses(factionID)
     for _, class in ipairs(classes) do
         if class.isDefault or not class.isDefault then -- Include all classes
             table.insert(result, {
-            name = class.name,
-            desc = class.desc,
-            isDefault = class.isDefault
+                name      = class.name,
+                desc      = class.desc,
+                isDefault = class.isDefault
             })
         end
     end
@@ -459,9 +459,9 @@ if #players > 0 then
     for _, ply in ipairs(players) do
         print("- " .. ply:Name())
     end
-    else
-        print("No players in " .. factionID)
-    end
+else
+    print("No players in " .. factionID)
+end
 
 ```
 
@@ -475,11 +475,11 @@ local function getFactionPlayers(factionID)
         local char = ply:getChar()
         if char then
             table.insert(result, {
-            player = ply,
-            name = ply:Name(),
-            charName = char:getName(),
-            steamID = ply:SteamID(),
-            isAlive = ply:Alive()
+                player   = ply,
+                name     = ply:Name(),
+                charName = char:getName(),
+                steamID  = ply:SteamID(),
+                isAlive  = ply:Alive()
             })
         end
     end
@@ -530,9 +530,9 @@ local factionID = "police"
 local count = lia.faction.getPlayerCount(factionID)
 if count > 0 then
     print("There are " .. count .. " players in " .. factionID)
-    else
-        print("No players in " .. factionID)
-    end
+else
+    print("No players in " .. factionID)
+end
 
 ```
 
@@ -599,9 +599,9 @@ local medicalFactions = {"medic", "doctor", "paramedic"}
 local factionID = "medic"
 if lia.faction.isFactionCategory(factionID, medicalFactions) then
     print(factionID .. " is a medical faction")
-    else
-        print(factionID .. " is not a medical faction")
-    end
+else
+    print(factionID .. " is not a medical faction")
+end
 
 ```
 
@@ -610,9 +610,9 @@ if lia.faction.isFactionCategory(factionID, medicalFactions) then
 -- High: Check multiple factions against multiple categories
 local function categorizeFactions(factionIDs)
     local categories = {
-    lawEnforcement = {"police", "swat", "fbi", "security"},
-    medical = {"medic", "doctor", "paramedic", "nurse"},
-    civilian = {"citizen", "businessman", "unemployed"}
+        lawEnforcement = {"police", "swat", "fbi", "security"},
+        medical        = {"medic", "doctor", "paramedic", "nurse"},
+        civilian       = {"citizen", "businessman", "unemployed"}
     }
     local results = {}
     for _, factionID in ipairs(factionIDs) do
@@ -681,9 +681,9 @@ local faction = lia.faction.jobGenerate(2, "Police", Color(0, 0, 255), false, mo
 -- High: Generate faction with complex model data
 local function generateCustomFaction(index, name, color, isDefault)
     local models = {
-    {"models/player/police_male.mdl", "Male Officer", {1, 2}},
-    {"models/player/police_female.mdl", "Female Officer", {1}},
-    {"models/player/swat.mdl", "SWAT Officer", {0, 1, 2, 3}}
+        {"models/player/police_male.mdl", "Male Officer", {1, 2}},
+        {"models/player/police_female.mdl", "Female Officer", {1}},
+        {"models/player/swat.mdl", "SWAT Officer", {0, 1, 2, 3}}
     }
     local faction = lia.faction.jobGenerate(index, name, color, isDefault, models)
     faction.uniqueID = string.lower(name:gsub(" ", "_"))
@@ -744,12 +744,12 @@ local function formatFactionModels()
     local success, err = pcall(lia.faction.formatModelData)
     if success then
         print("Successfully formatted model data for all factions")
-        else
-            print("Error formatting model data: " .. tostring(err))
-        end
-        return success
+    else
+        print("Error formatting model data: " .. tostring(err))
     end
-    local success = formatFactionModels()
+    return success
+end
+local success = formatFactionModels()
 
 ```
 
@@ -797,9 +797,9 @@ if #categories > 0 then
     for _, category in ipairs(categories) do
         print("- " .. category)
     end
-    else
-        print("No categories found for " .. factionID)
-    end
+else
+    print("No categories found for " .. factionID)
+end
 
 ```
 
@@ -813,9 +813,9 @@ local function getFactionCategories(factionIDs)
         if faction then
             local categories = lia.faction.getCategories(factionID)
             results[factionID] = {
-            name = faction.name,
-            categories = categories,
-            categoryCount = #categories
+                name          = faction.name,
+                categories    = categories,
+                categoryCount = #categories
             }
         end
     end
@@ -871,9 +871,9 @@ if table.Count(models) > 0 then
     for index, model in pairs(models) do
         print("- " .. index .. ": " .. tostring(model))
     end
-    else
-        print("No models found in " .. category .. " category for " .. factionID)
-    end
+else
+    print("No models found in " .. category .. " category for " .. factionID)
+end
 
 ```
 
@@ -888,9 +888,9 @@ local function getFactionModelsByCategory(factionID, categories)
             results[category] = {}
             for index, model in pairs(models) do
                 table.insert(results[category], {
-                index = index,
-                model = model,
-                modelPath = istable(model) and model[1] or model
+                    index    = index,
+                    model    = model,
+                    modelPath = istable(model) and model[1] or model
                 })
             end
         end
@@ -945,9 +945,9 @@ local defaultClass = lia.faction.getDefaultClass(factionID)
 if defaultClass then
     print("Default class for " .. factionID .. ": " .. defaultClass.name)
     print("Description: " .. defaultClass.desc)
-    else
-        print("No default class found for " .. factionID)
-    end
+else
+    print("No default class found for " .. factionID)
+end
 
 ```
 
@@ -960,26 +960,26 @@ local function getDefaultClasses(factionIDs)
         local defaultClass = lia.faction.getDefaultClass(factionID)
         if defaultClass then
             results[factionID] = {
-            name = defaultClass.name,
-            desc = defaultClass.desc,
-            class = defaultClass
+                name  = defaultClass.name,
+                desc  = defaultClass.desc,
+                class = defaultClass
             }
-            else
-                -- Fallback to first available class
-                local classes = lia.faction.getClasses(factionID)
-                if #classes > 0 then
-                    results[factionID] = {
-                    name = classes[1].name,
-                    desc = classes[1].desc,
-                    class = classes[1],
+        else
+            -- Fallback to first available class
+            local classes = lia.faction.getClasses(factionID)
+            if #classes > 0 then
+                results[factionID] = {
+                    name      = classes[1].name,
+                    desc      = classes[1].desc,
+                    class     = classes[1],
                     isFallback = true
-                    }
-                end
+                }
             end
         end
-        return results
     end
-    local defaultClasses = getDefaultClasses({"citizen", "police", "medic"})
+    return results
+end
+local defaultClasses = getDefaultClasses({"citizen", "police", "medic"})
 
 ```
 

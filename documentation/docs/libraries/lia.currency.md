@@ -30,7 +30,7 @@ Formatted currency string with symbol and proper singular/plural form.
 
 **Realm**
 
-Shared (works on both client and server)
+Shared
 
 **Example Usage**
 
@@ -86,7 +86,7 @@ The created money entity if successful, nil if parameters are invalid.
 
 **Realm**
 
-Server only
+Server
 
 **Example Usage**
 
@@ -116,9 +116,9 @@ end
 ```lua
 -- High: Spawn multiple money entities with advanced positioning
 local spawnPositions = {
-{pos = Vector(100, 200, 50), amount = 500, angle = Angle(0, 45, 0)},
-{pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
-{pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
+    {pos = Vector(100, 200, 50), amount = 500, angle = Angle(0, 45, 0)},
+    {pos = Vector(-100, 200, 50), amount = 250, angle = Angle(0, 90, 0)},
+    {pos = Vector(0, 0, 100), amount = 1000, angle = Angle(0, 180, 0)}
 }
 for _, data in ipairs(spawnPositions) do
     local money = lia.currency.spawn(data.pos, data.amount, data.angle)

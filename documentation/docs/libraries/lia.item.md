@@ -256,15 +256,15 @@ if data then
     for key, value in pairs(customData) do
         if type(value) == "table" then
             print("Complex data for", key, ":", util.TableToJSON(value))
-            else
-                print("Simple data for", key, ":", value)
-            end
-        end
-        if data.lastUsed then
-            local timeDiff = os.time() - data.lastUsed
-            print("Item last used", timeDiff, "seconds ago")
+        else
+            print("Simple data for", key, ":", value)
         end
     end
+    if data.lastUsed then
+        local timeDiff = os.time() - data.lastUsed
+        print("Item last used", timeDiff, "seconds ago")
+    end
+end
 
 ```
 
@@ -491,8 +491,8 @@ ITEM.height = 1
 ITEM.category = "weapons"
 ITEM.functions = table.Copy(ITEM.functions)
 ITEM.functions.customAction = {
-name = "Custom Action",
-onRun = function(item) print("Custom action executed") end
+    name   = "Custom Action",
+    onRun  = function(item) print("Custom action executed") end
 }
 
 ```
@@ -541,9 +541,9 @@ lia.item.loadFromDir("addons/myaddon/items")
 ```lua
 -- High: Load items from multiple directories
 local itemDirs = {
-"lilia/gamemode/items",
-"addons/customitems/items",
-"gamemodes/mygamemode/items"
+    "lilia/gamemode/items",
+    "addons/customitems/items",
+    "gamemodes/mygamemode/items"
 }
 for _, dir in ipairs(itemDirs) do
     if file.Exists(dir, "LUA") then
@@ -603,8 +603,8 @@ end
 local item = lia.item.new("stackable_item", 789)
 if item then
     item.data.customProperty = "initial_value"
-    item.data.createdBy = "system"
-    item.data.createdAt = os.time()
+    item.data.createdBy      = "system"
+    item.data.createdAt      = os.time()
     print("Item created with custom data")
 end
 
@@ -654,9 +654,9 @@ lia.item.registerInv("storage_box", 8, 6)
 ```lua
 -- High: Register multiple inventory types
 local inventoryTypes = {
-{type = "player", w = 5, h = 4},
-{type = "storage", w = 10, h = 8},
-{type = "vehicle", w = 6, h = 3}
+    {type = "player", w = 5, h = 4},
+    {type = "storage", w = 10, h = 8},
+    {type = "vehicle", w = 6, h = 3}
 }
 for _, inv in ipairs(inventoryTypes) do
     lia.item.registerInv(inv.type, inv.w, inv.h)
@@ -708,9 +708,9 @@ lia.item.registerInv("storage_box", 8, 6)
 ```lua
 -- High: Register multiple inventory types
 local inventoryTypes = {
-{type = "player", w = 5, h = 4},
-{type = "storage", w = 10, h = 8},
-{type = "vehicle", w = 6, h = 3}
+    {type = "player", w = 5, h = 4},
+    {type = "storage", w = 10, h = 8},
+    {type = "vehicle", w = 6, h = 3}
 }
 for _, inv in ipairs(inventoryTypes) do
     lia.item.registerInv(inv.type, inv.w, inv.h)
@@ -762,9 +762,9 @@ lia.item.registerInv("storage_box", 8, 6)
 ```lua
 -- High: Register multiple inventory types
 local inventoryTypes = {
-{type = "player", w = 5, h = 4},
-{type = "storage", w = 10, h = 8},
-{type = "vehicle", w = 6, h = 3}
+    {type = "player", w = 5, h = 4},
+    {type = "storage", w = 10, h = 8},
+    {type = "vehicle", w = 6, h = 3}
 }
 for _, inv in ipairs(inventoryTypes) do
     lia.item.registerInv(inv.type, inv.w, inv.h)
@@ -809,7 +809,7 @@ lia.item.newInv(player:getChar():getID(), "player")
 ```lua
 -- Medium: Create inventory with callback
 lia.item.newInv(charID, "storage", function(inv)
-print("Inventory created:", inv.id)
+    print("Inventory created:", inv.id)
 end)
 
 ```
@@ -818,10 +818,10 @@ end)
 ```lua
 -- High: Create inventory and populate with items
 lia.item.newInv(charID, "player", function(inv)
--- Add starting items
-lia.item.instance(inv.id, "weapon_pistol", {}, 1, 1)
-lia.item.instance(inv.id, "ammo_pistol", {}, 2, 1)
-print("Player inventory created and populated")
+    -- Add starting items
+    lia.item.instance(inv.id, "weapon_pistol", {}, 1, 1)
+    lia.item.instance(inv.id, "ammo_pistol", {}, 2, 1)
+    print("Player inventory created and populated")
 end)
 
 ```
@@ -913,7 +913,7 @@ Shared
 ```lua
 -- Simple: Override weapon name
 lia.item.addWeaponOverride("weapon_pistol", {
-name = "Custom Pistol"
+    name = "Custom Pistol"
 })
 
 ```
@@ -922,10 +922,10 @@ name = "Custom Pistol"
 ```lua
 -- Medium: Override multiple weapon properties
 lia.item.addWeaponOverride("weapon_ak47", {
-name = "AK-47 Assault Rifle",
-desc = "A powerful assault rifle",
-model = "models/weapons/w_rif_ak47.mdl",
-category = "assault_rifles"
+    name     = "AK-47 Assault Rifle",
+    desc     = "A powerful assault rifle",
+    model    = "models/weapons/w_rif_ak47.mdl",
+    category = "assault_rifles"
 })
 
 ```
@@ -934,22 +934,22 @@ category = "assault_rifles"
 ```lua
 -- High: Override multiple weapons with custom properties
 local weaponOverrides = {
-["weapon_pistol"] = {
-name = "Combat Pistol",
-desc = "A reliable sidearm",
-model = "models/weapons/w_pistol.mdl",
-width = 1,
-height = 1,
-weaponCategory = "sidearm"
-},
-["weapon_ak47"] = {
-name = "AK-47",
-desc = "Soviet assault rifle",
-model = "models/weapons/w_rif_ak47.mdl",
-width = 3,
-height = 1,
-weaponCategory = "primary"
-}
+    ["weapon_pistol"] = {
+        name          = "Combat Pistol",
+        desc          = "A reliable sidearm",
+        model         = "models/weapons/w_pistol.mdl",
+        width         = 1,
+        height        = 1,
+        weaponCategory = "sidearm"
+    },
+    ["weapon_ak47"] = {
+        name          = "AK-47",
+        desc          = "Soviet assault rifle",
+        model         = "models/weapons/w_rif_ak47.mdl",
+        width         = 3,
+        height        = 1,
+        weaponCategory = "primary"
+    }
 }
 for className, data in pairs(weaponOverrides) do
     lia.item.addWeaponOverride(className, data)
@@ -1003,11 +1003,11 @@ lia.item.addWeaponToBlacklist("weapon_physgun")
 ```lua
 -- High: Blacklist weapons based on conditions
 local weaponsToBlacklist = {
-"weapon_crowbar",
-"weapon_physcannon",
-"weapon_physgun",
-"weapon_tool",
-"weapon_camera"
+    "weapon_crowbar",
+    "weapon_physcannon",
+    "weapon_physgun",
+    "weapon_tool",
+    "weapon_camera"
 }
 for _, weaponClass in ipairs(weaponsToBlacklist) do
     lia.item.addWeaponToBlacklist(weaponClass)
@@ -1048,8 +1048,8 @@ lia.item.generateWeapons()
 ```lua
 -- Medium: Generate weapons with custom overrides
 lia.item.addWeaponOverride("weapon_pistol", {
-name = "Custom Pistol",
-desc = "A modified pistol"
+    name = "Custom Pistol",
+    desc = "A modified pistol"
 })
 lia.item.generateWeapons()
 
@@ -1059,16 +1059,16 @@ lia.item.generateWeapons()
 ```lua
 -- High: Generate weapons with blacklist and overrides
 local blacklistedWeapons = {
-"weapon_crowbar",
-"weapon_physcannon",
-"weapon_physgun"
+    "weapon_crowbar",
+    "weapon_physcannon",
+    "weapon_physgun"
 }
 for _, weapon in ipairs(blacklistedWeapons) do
     lia.item.addWeaponToBlacklist(weapon)
 end
 local weaponOverrides = {
-["weapon_pistol"] = {name = "Combat Pistol"},
-["weapon_ak47"] = {name = "AK-47", width = 3}
+    ["weapon_pistol"] = {name = "Combat Pistol"},
+    ["weapon_ak47"]   = {name = "AK-47", width = 3}
 }
 for className, data in pairs(weaponOverrides) do
     lia.item.addWeaponOverride(className, data)
@@ -1110,8 +1110,8 @@ lia.item.generateAmmo()
 ```lua
 -- Medium: Generate ammunition with custom overrides
 lia.item.addWeaponOverride("arc9_ammo_9mm", {
-name = "9mm Ammunition",
-desc = "Standard pistol ammunition"
+    name = "9mm Ammunition",
+    desc = "Standard pistol ammunition"
 })
 lia.item.generateAmmo()
 
@@ -1121,18 +1121,18 @@ lia.item.generateAmmo()
 ```lua
 -- High: Generate ammunition with filtering and overrides
 local ammoOverrides = {
-["arc9_ammo_9mm"] = {
-name = "9mm Rounds",
-desc = "Standard pistol ammunition",
-width = 2,
-height = 1
-},
-["arccw_ammo_rifle"] = {
-name = "Rifle Ammunition",
-desc = "High-powered rifle rounds",
-width = 3,
-height = 1
-}
+    ["arc9_ammo_9mm"] = {
+        name   = "9mm Rounds",
+        desc   = "Standard pistol ammunition",
+        width  = 2,
+        height = 1
+    },
+    ["arccw_ammo_rifle"] = {
+        name   = "Rifle Ammunition",
+        desc   = "High-powered rifle rounds",
+        width  = 3,
+        height = 1
+    }
 }
 for className, data in pairs(ammoOverrides) do
     lia.item.addWeaponOverride(className, data)
@@ -1180,9 +1180,9 @@ lia.item.setItemDataByID(123, "customProperty", "value")
 local success, error = lia.item.setItemDataByID(456, "lastUsed", os.time())
 if success then
     print("Item data updated successfully")
-    else
-        print("Failed to update item data:", error)
-    end
+else
+    print("Failed to update item data:", error)
+end
 
 ```
 
@@ -1191,12 +1191,12 @@ if success then
 -- High: Set item data with custom sync and save options
 local function updateItemData(itemID, data, players)
     local success, error = lia.item.setItemDataByID(
-    itemID,
-    "customData",
-    data,
-    players,
-    false, -- Save to database
-    true   -- Skip entity check
+        itemID,
+        "customData",
+        data,
+        players,
+        false, -- Save to database
+        true   -- Skip entity check
     )
     return success, error
 end
@@ -1240,7 +1240,7 @@ lia.item.instance(invID, "weapon_pistol")
 ```lua
 -- Medium: Create item with position and callback
 lia.item.instance(invID, "weapon_pistol", {}, 1, 1, function(item)
-print("Created item:", item.name)
+    print("Created item:", item.name)
 end)
 
 ```
@@ -1249,16 +1249,16 @@ end)
 ```lua
 -- High: Create item with complex data and error handling
 local promise = lia.item.instance(charID, "custom_item", {
-customProperty = "value",
-createdBy = "admin",
-createdAt = os.time()
+    customProperty = "value",
+    createdBy      = "admin",
+    createdAt       = os.time()
 }, 2, 3, function(item)
-print("Item created with ID:", item.id)
+    print("Item created with ID:", item.id)
 end)
 promise:next(function(item)
-print("Successfully created item")
+    print("Successfully created item")
 end):catch(function(error)
-print("Failed to create item:", error)
+    print("Failed to create item:", error)
 end)
 
 ```
@@ -1316,11 +1316,11 @@ local function deleteItems(itemIDs)
         if item then
             print("Deleting item:", item.name, "ID:", id)
             lia.item.deleteByID(id)
-            else
-                print("Item not found:", id)
-            end
+        else
+            print("Item not found:", id)
         end
     end
+end
 
 ```
 
@@ -1374,16 +1374,16 @@ local function loadPlayerItems(player)
         if inv then
             -- Load all items for this character
             lia.db.query("SELECT itemID FROM lia_items WHERE invID = " .. inv.id, function(results)
-            if results then
-                local itemIDs = {}
-                for _, row in ipairs(results) do
-                    table.insert(itemIDs, tonumber(row.itemID))
+                if results then
+                    local itemIDs = {}
+                    for _, row in ipairs(results) do
+                        table.insert(itemIDs, tonumber(row.itemID))
+                    end
+                    lia.item.loadItemByID(itemIDs)
                 end
-                lia.item.loadItemByID(itemIDs)
-            end
-        end)
+            end)
+        end
     end
-end
 end
 
 ```
@@ -1425,7 +1425,7 @@ lia.item.spawn("weapon_pistol", Vector(0, 0, 0))
 ```lua
 -- Medium: Spawn item with angles and callback
 lia.item.spawn("weapon_pistol", Vector(100, 200, 50), function(item)
-print("Spawned item:", item.name)
+    print("Spawned item:", item.name)
 end, Angle(0, 90, 0))
 
 ```
@@ -1434,19 +1434,19 @@ end, Angle(0, 90, 0))
 ```lua
 -- High: Spawn item with complex data and error handling
 local promise = lia.item.spawn("custom_item", Vector(0, 0, 0), function(item)
-if item then
-    item:setData("spawnedBy", "admin")
-    item:setData("spawnTime", os.time())
-    print("Item spawned successfully")
-end
+    if item then
+        item:setData("spawnedBy", "admin")
+        item:setData("spawnTime", os.time())
+        print("Item spawned successfully")
+    end
 end, Angle(0, 0, 0), {
-customProperty = "value",
-durability = 100
+    customProperty = "value",
+    durability     = 100
 })
 promise:next(function(item)
-print("Item spawned at:", item.entity:GetPos())
+    print("Item spawned at:", item.entity:GetPos())
 end):catch(function(error)
-print("Failed to spawn item:", error)
+    print("Failed to spawn item:", error)
 end)
 
 ```
@@ -1488,7 +1488,7 @@ lia.item.restoreInv(123, 5, 4)
 ```lua
 -- Medium: Restore inventory with callback
 lia.item.restoreInv(456, 8, 6, function(inv)
-print("Restored inventory:", inv.id)
+    print("Restored inventory:", inv.id)
 end)
 
 ```
@@ -1500,13 +1500,13 @@ local function restorePlayerInventories(player)
     local char = player:getChar()
     if char then
         local inventories = {
-        {id = char:getInv().id, w = 5, h = 4},
-        {id = char:getStorage().id, w = 10, h = 8}
+            {id = char:getInv().id, w = 5, h = 4},
+            {id = char:getStorage().id, w = 10, h = 8}
         }
         for _, invData in ipairs(inventories) do
             lia.item.restoreInv(invData.id, invData.w, invData.h, function(inv)
-            if inv then
-                print("Restored inventory:", inv.id)
+                if inv then
+                    print("Restored inventory:", inv.id)
                 else
                     print("Failed to restore inventory:", invData.id)
                 end

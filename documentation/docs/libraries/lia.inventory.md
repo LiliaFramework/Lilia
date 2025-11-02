@@ -39,9 +39,9 @@ Shared
 ```lua
 -- Simple: Register a basic inventory type
 lia.inventory.newType("player", {
-className = "PlayerInventory",
-typeID = "player",
-config = {w = 10, h = 5}
+    className = "PlayerInventory",
+    typeID    = "player",
+    config    = {w = 10, h = 5}
 })
 
 ```
@@ -50,12 +50,12 @@ config = {w = 10, h = 5}
 ```lua
 -- Medium: Register inventory type with custom methods
 local playerInvType = {
-className = "PlayerInventory",
-typeID = "player",
-config = {w = 10, h = 5},
-add = function(self, item) -- custom add method
--- custom logic here
-end
+    className = "PlayerInventory",
+    typeID    = "player",
+    config    = {w = 10, h = 5},
+    add       = function(self, item) -- custom add method
+        -- custom logic here
+    end
 }
 lia.inventory.newType("player", playerInvType)
 
@@ -65,22 +65,23 @@ lia.inventory.newType("player", playerInvType)
 ```lua
 -- High: Register complex inventory type with validation
 local complexInvType = {
-className = "ComplexInventory",
-typeID = "complex",
-config = {
-w = 20, h = 10,
-maxWeight = 100,
-restrictions = {"weapons", "drugs"}
-},
-add = function(self, item)
-if self:canAddItem(item) then
-    return self:doAddItem(item)
-end
-return false
-end,
-remove = function(self, item)
-return self:doRemoveItem(item)
-end
+    className = "ComplexInventory",
+    typeID    = "complex",
+    config    = {
+        w            = 20,
+        h            = 10,
+        maxWeight    = 100,
+        restrictions = {"weapons", "drugs"}
+    },
+    add    = function(self, item)
+        if self:canAddItem(item) then
+            return self:doAddItem(item)
+        end
+        return false
+    end,
+    remove = function(self, item)
+        return self:doRemoveItem(item)
+    end
 }
 lia.inventory.newType("complex", complexInvType)
 
@@ -170,7 +171,7 @@ Server
 ```lua
 -- Simple: Load inventory by ID
 lia.inventory.loadByID(123):next(function(inv)
-print("Loaded inventory:", inv.id)
+    print("Loaded inventory:", inv.id)
 end)
 
 ```
@@ -179,11 +180,11 @@ end)
 ```lua
 -- Medium: Load inventory with error handling
 lia.inventory.loadByID(123):next(function(inv)
-if inv then
-    print("Successfully loaded inventory:", inv.id)
-end
+    if inv then
+        print("Successfully loaded inventory:", inv.id)
+    end
 end):catch(function(err)
-print("Failed to load inventory:", err)
+    print("Failed to load inventory:", err)
 end)
 
 ```
@@ -193,15 +194,15 @@ end)
 -- High: Load inventory with cache bypass and validation
 local function loadInventorySafely(id)
     return lia.inventory.loadByID(id, true):next(function(inv)
-    if not inv then
-        return deferred.reject("Inventory not found")
-    end
-    -- Validate inventory data
-    if not inv.data or not inv.items then
-        return deferred.reject("Invalid inventory data")
-    end
-    return inv
-end)
+        if not inv then
+            return deferred.reject("Inventory not found")
+        end
+        -- Validate inventory data
+        if not inv.data or not inv.items then
+            return deferred.reject("Invalid inventory data")
+        end
+        return inv
+    end)
 end
 
 ```
@@ -237,7 +238,7 @@ Server
 ```lua
 -- Simple: Load inventory from default storage
 lia.inventory.loadFromDefaultStorage(123):next(function(inv)
-print("Loaded from database:", inv.id)
+    print("Loaded from database:", inv.id)
 end)
 
 ```
@@ -246,9 +247,9 @@ end)
 ```lua
 -- Medium: Load with cache bypass
 lia.inventory.loadFromDefaultStorage(123, true):next(function(inv)
-if inv then
-    print("Fresh load from database:", inv.id)
-end
+    if inv then
+        print("Fresh load from database:", inv.id)
+    end
 end)
 
 ```
@@ -258,22 +259,22 @@ end)
 -- High: Load with comprehensive error handling and validation
 local function loadFromDatabase(id)
     return lia.inventory.loadFromDefaultStorage(id, true):next(function(inv)
-    if not inv then
-        lia.error("Failed to load inventory " .. id .. " from database")
-        return deferred.reject("Inventory not found in database")
-    end
-    -- Validate inventory structure
-    if not inv.data or not inv.items then
-        lia.error("Invalid inventory structure for ID: " .. id)
-        return deferred.reject("Corrupted inventory data")
-    end
-    -- Log successful load
-    lia.log("Successfully loaded inventory " .. id .. " from database")
-    return inv
-end):catch(function(err)
-lia.error("Database load error for inventory " .. id .. ": " .. tostring(err))
-return deferred.reject(err)
-end)
+        if not inv then
+            lia.error("Failed to load inventory " .. id .. " from database")
+            return deferred.reject("Inventory not found in database")
+        end
+        -- Validate inventory structure
+        if not inv.data or not inv.items then
+            lia.error("Invalid inventory structure for ID: " .. id)
+            return deferred.reject("Corrupted inventory data")
+        end
+        -- Log successful load
+        lia.log("Successfully loaded inventory " .. id .. " from database")
+        return inv
+    end):catch(function(err)
+        lia.error("Database load error for inventory " .. id .. ": " .. tostring(err))
+        return deferred.reject(err)
+    end)
 end
 
 ```
@@ -309,7 +310,7 @@ Server
 ```lua
 -- Simple: Create a new inventory instance
 lia.inventory.instance("player"):next(function(inv)
-print("Created inventory:", inv.id)
+    print("Created inventory:", inv.id)
 end)
 
 ```
@@ -319,8 +320,8 @@ end)
 -- Medium: Create inventory with initial data
 local initialData = {owner = "player123", maxWeight = 50}
 lia.inventory.instance("storage", initialData):next(function(inv)
-print("Created storage inventory:", inv.id)
-print("Owner:", inv.data.owner)
+    print("Created storage inventory:", inv.id)
+    print("Owner:", inv.data.owner)
 end)
 
 ```
@@ -333,19 +334,19 @@ local function createInventorySafely(typeID, data)
         return deferred.reject("Invalid inventory type: " .. typeID)
     end
     return lia.inventory.instance(typeID, data):next(function(inv)
-    if not inv or not inv.id then
-        return deferred.reject("Failed to create inventory instance")
-    end
-    -- Validate created inventory
-    if not inv.data or not inv.items then
-        return deferred.reject("Invalid inventory structure")
-    end
-    lia.log("Successfully created inventory " .. inv.id .. " of type " .. typeID)
-    return inv
-end):catch(function(err)
-lia.error("Failed to create inventory: " .. tostring(err))
-return deferred.reject(err)
-end)
+        if not inv or not inv.id then
+            return deferred.reject("Failed to create inventory instance")
+        end
+        -- Validate created inventory
+        if not inv.data or not inv.items then
+            return deferred.reject("Invalid inventory structure")
+        end
+        lia.log("Successfully created inventory " .. inv.id .. " of type " .. typeID)
+        return inv
+    end):catch(function(err)
+        lia.error("Failed to create inventory: " .. tostring(err))
+        return deferred.reject(err)
+    end)
 end
 
 ```
@@ -380,7 +381,7 @@ Server
 ```lua
 -- Simple: Load all inventories for a character
 lia.inventory.loadAllFromCharID(123):next(function(inventories)
-print("Loaded", #inventories, "inventories")
+    print("Loaded", #inventories, "inventories")
 end)
 
 ```
@@ -389,14 +390,14 @@ end)
 ```lua
 -- Medium: Load inventories with error handling
 lia.inventory.loadAllFromCharID(123):next(function(inventories)
-if inventories and #inventories > 0 then
-    print("Successfully loaded", #inventories, "inventories")
-    for _, inv in ipairs(inventories) do
-        print("Inventory ID:", inv.id, "Type:", inv.data.invType)
+    if inventories and #inventories > 0 then
+        print("Successfully loaded", #inventories, "inventories")
+        for _, inv in ipairs(inventories) do
+            print("Inventory ID:", inv.id, "Type:", inv.data.invType)
+        end
     end
-end
 end):catch(function(err)
-print("Failed to load character inventories:", err)
+    print("Failed to load character inventories:", err)
 end)
 
 ```
@@ -406,15 +407,15 @@ end)
 -- High: Load inventories with validation and processing
 local function loadCharacterInventories(charID)
     return lia.inventory.loadAllFromCharID(charID):next(function(inventories)
-    if not inventories then
-        return deferred.reject("No inventories found for character " .. charID)
-    end
-    local validInventories = {}
-    for _, inv in ipairs(inventories) do
-        if inv and inv.id and inv.data then
-            -- Validate inventory structure
-            if inv.items and inv.config then
-                table.insert(validInventories, inv)
+        if not inventories then
+            return deferred.reject("No inventories found for character " .. charID)
+        end
+        local validInventories = {}
+        for _, inv in ipairs(inventories) do
+            if inv and inv.id and inv.data then
+                -- Validate inventory structure
+                if inv.items and inv.config then
+                    table.insert(validInventories, inv)
                 else
                     lia.warning("Invalid inventory structure for ID: " .. inv.id)
                 end
@@ -423,9 +424,9 @@ local function loadCharacterInventories(charID)
         lia.log("Loaded " .. #validInventories .. " valid inventories for character " .. charID)
         return validInventories
     end):catch(function(err)
-    lia.error("Failed to load inventories for character " .. charID .. ": " .. tostring(err))
-    return deferred.reject(err)
-end)
+        lia.error("Failed to load inventories for character " .. charID .. ": " .. tostring(err))
+        return deferred.reject(err)
+    end)
 end
 
 ```
@@ -487,26 +488,26 @@ local function deleteInventorySafely(id)
     end
     -- Check if inventory exists before deletion
     return lia.inventory.loadByID(id):next(function(inv)
-    if not inv then
-        lia.warning("Attempted to delete non-existent inventory: " .. id)
-        return false
-    end
-    -- Clean up any items in the inventory
-    if inv.items then
-        for _, item in pairs(inv.items) do
-            if item and item.destroy then
-                item:destroy()
+        if not inv then
+            lia.warning("Attempted to delete non-existent inventory: " .. id)
+            return false
+        end
+        -- Clean up any items in the inventory
+        if inv.items then
+            for _, item in pairs(inv.items) do
+                if item and item.destroy then
+                    item:destroy()
+                end
             end
         end
-    end
-    -- Delete from database
-    lia.inventory.deleteByID(id)
-    lia.log("Successfully deleted inventory " .. id .. " and all associated data")
-    return true
-end):catch(function(err)
-lia.error("Failed to delete inventory " .. id .. ": " .. tostring(err))
-return false
-end)
+        -- Delete from database
+        lia.inventory.deleteByID(id)
+        lia.log("Successfully deleted inventory " .. id .. " and all associated data")
+        return true
+    end):catch(function(err)
+        lia.error("Failed to delete inventory " .. id .. ": " .. tostring(err))
+        return false
+    end)
 end
 
 ```
@@ -676,9 +677,9 @@ Server
 ```lua
 -- Simple: Register a basic storage container
 lia.inventory.registerStorage("models/props_c17/lockers001a.mdl", {
-name = "Locker",
-invType = "storage",
-invData = {w = 5, h = 3}
+    name    = "Locker",
+    invType = "storage",
+    invData = {w = 5, h = 3}
 })
 
 ```
@@ -687,14 +688,14 @@ invData = {w = 5, h = 3}
 ```lua
 -- Medium: Register storage with custom configuration
 local storageData = {
-name = "Medical Cabinet",
-invType = "medical",
-invData = {
-w = 8,
-h = 4,
-maxWeight = 30,
-restrictions = {"medical", "drugs"}
-}
+    name    = "Medical Cabinet",
+    invType = "medical",
+    invData = {
+        w            = 8,
+        h            = 4,
+        maxWeight    = 30,
+        restrictions = {"medical", "drugs"}
+    }
 }
 lia.inventory.registerStorage("models/props_c17/furnituremedicinecabinet001a.mdl", storageData)
 
@@ -705,22 +706,22 @@ lia.inventory.registerStorage("models/props_c17/furnituremedicinecabinet001a.mdl
 -- High: Register multiple storage types with validation
 local function registerStorageContainers()
     local storages = {
-    {
-    model = "models/props_c17/lockers001a.mdl",
-    data = {
-    name = "Security Locker",
-    invType = "security",
-    invData = {w = 6, h = 4, maxWeight = 50, restricted = true}
-    }
-    },
-    {
-    model = "models/props_c17/furnituremedicinecabinet001a.mdl",
-    data = {
-    name = "Medical Cabinet",
-    invType = "medical",
-    invData = {w = 8, h = 4, maxWeight = 30, medicalOnly = true}
-    }
-    }
+        {
+            model = "models/props_c17/lockers001a.mdl",
+            data  = {
+                name    = "Security Locker",
+                invType = "security",
+                invData = {w = 6, h = 4, maxWeight = 50, restricted = true}
+            }
+        },
+        {
+            model = "models/props_c17/furnituremedicinecabinet001a.mdl",
+            data  = {
+                name    = "Medical Cabinet",
+                invType = "medical",
+                invData = {w = 8, h = 4, maxWeight = 30, medicalOnly = true}
+            }
+        }
     }
     for _, storage in ipairs(storages) do
         if storage.model and storage.data then
@@ -778,9 +779,9 @@ local function getStorageInfo(model)
     local storageData = lia.inventory.getStorage(model)
     if storageData then
         return {
-        name = storageData.name,
-        type = storageData.invType,
-        size = storageData.invData.w * storageData.invData.h
+            name = storageData.name,
+            type = storageData.invType,
+            size = storageData.invData.w * storageData.invData.h
         }
     end
     return nil
@@ -808,13 +809,13 @@ local function getStorageConfiguration(model)
     end
     -- Process and return validated data
     return {
-    name = storageData.name,
-    type = storageData.invType,
-    width = storageData.invData.w or 5,
-    height = storageData.invData.h or 3,
-    maxWeight = storageData.invData.maxWeight,
-    restrictions = storageData.invData.restrictions,
-    isTrunk = storageData.isTrunk or false
+        name         = storageData.name,
+        type         = storageData.invType,
+        width        = storageData.invData.w or 5,
+        height       = storageData.invData.h or 3,
+        maxWeight    = storageData.invData.maxWeight,
+        restrictions = storageData.invData.restrictions,
+        isTrunk      = storageData.isTrunk or false
     }
 end
 
@@ -851,9 +852,9 @@ Server
 ```lua
 -- Simple: Register a basic vehicle trunk
 lia.inventory.registerTrunk("prop_vehicle_jeep", {
-name = "Jeep Trunk",
-invType = "trunk",
-invData = {w = 8, h = 3}
+    name    = "Jeep Trunk",
+    invType = "trunk",
+    invData = {w = 8, h = 3}
 })
 
 ```
@@ -862,15 +863,15 @@ invData = {w = 8, h = 3}
 ```lua
 -- Medium: Register trunk with custom configuration
 local trunkData = {
-name = "Police Car Trunk",
-invType = "police_trunk",
-invData = {
-w = 10,
-h = 4,
-maxWeight = 100,
-restricted = true,
-allowedItems = {"weapons", "evidence"}
-}
+    name    = "Police Car Trunk",
+    invType = "police_trunk",
+    invData = {
+        w            = 10,
+        h            = 4,
+        maxWeight    = 100,
+        restricted   = true,
+        allowedItems = {"weapons", "evidence"}
+    }
 }
 lia.inventory.registerTrunk("prop_vehicle_police", trunkData)
 
@@ -881,30 +882,30 @@ lia.inventory.registerTrunk("prop_vehicle_police", trunkData)
 -- High: Register multiple vehicle trunks with validation
 local function registerVehicleTrunks()
     local vehicles = {
-    {
-    class = "prop_vehicle_jeep",
-    data = {
-    name = "Civilian Vehicle Trunk",
-    invType = "civilian_trunk",
-    invData = {w = 8, h = 3, maxWeight = 50}
-    }
-    },
-    {
-    class = "prop_vehicle_police",
-    data = {
-    name = "Police Vehicle Trunk",
-    invType = "police_trunk",
-    invData = {w = 10, h = 4, maxWeight = 100, restricted = true}
-    }
-    },
-    {
-    class = "prop_vehicle_ambulance",
-    data = {
-    name = "Ambulance Storage",
-    invType = "medical_trunk",
-    invData = {w = 12, h = 5, maxWeight = 75, medicalOnly = true}
-    }
-    }
+        {
+            class = "prop_vehicle_jeep",
+            data  = {
+                name    = "Civilian Vehicle Trunk",
+                invType = "civilian_trunk",
+                invData = {w = 8, h = 3, maxWeight = 50}
+            }
+        },
+        {
+            class = "prop_vehicle_police",
+            data  = {
+                name    = "Police Vehicle Trunk",
+                invType = "police_trunk",
+                invData = {w = 10, h = 4, maxWeight = 100, restricted = true}
+            }
+        },
+        {
+            class = "prop_vehicle_ambulance",
+            data  = {
+                name    = "Ambulance Storage",
+                invType = "medical_trunk",
+                invData = {w = 12, h = 5, maxWeight = 75, medicalOnly = true}
+            }
+        }
     }
     for _, vehicle in ipairs(vehicles) do
         if vehicle.class and vehicle.data then
@@ -962,10 +963,10 @@ local function getVehicleTrunk(vehicleClass)
     local trunkData = lia.inventory.getTrunk(vehicleClass)
     if trunkData then
         return {
-        name = trunkData.name,
-        type = trunkData.invType,
-        size = trunkData.invData.w * trunkData.invData.h,
-        maxWeight = trunkData.invData.maxWeight
+            name      = trunkData.name,
+            type      = trunkData.invType,
+            size      = trunkData.invData.w * trunkData.invData.h,
+            maxWeight = trunkData.invData.maxWeight
         }
     end
     return nil
@@ -993,14 +994,14 @@ local function getVehicleTrunkConfiguration(vehicleClass)
     end
     -- Process and return validated data
     return {
-    name = trunkData.name,
-    type = trunkData.invType,
-    width = trunkData.invData.w or 10,
-    height = trunkData.invData.h or 2,
-    maxWeight = trunkData.invData.maxWeight,
-    restrictions = trunkData.invData.restrictions,
-    isTrunk = trunkData.isTrunk or true,
-    trunkKey = trunkData.trunkKey
+        name         = trunkData.name,
+        type         = trunkData.invType,
+        width        = trunkData.invData.w or 10,
+        height       = trunkData.invData.h or 2,
+        maxWeight    = trunkData.invData.maxWeight,
+        restrictions = trunkData.invData.restrictions,
+        isTrunk      = trunkData.isTrunk or true,
+        trunkKey     = trunkData.trunkKey
     }
 end
 
@@ -1050,9 +1051,9 @@ local function getAllTrunkInfo()
     local trunkList = {}
     for vehicleClass, trunkData in pairs(trunks) do
         table.insert(trunkList, {
-        vehicleClass = vehicleClass,
-        name = trunkData.name,
-        size = trunkData.invData.w * trunkData.invData.h
+            vehicleClass = vehicleClass,
+            name         = trunkData.name,
+            size         = trunkData.invData.w * trunkData.invData.h
         })
     end
     return trunkList
@@ -1066,10 +1067,10 @@ end
 local function getCategorizedTrunks()
     local trunks = lia.inventory.getAllTrunks()
     local categorized = {
-    civilian = {},
-    emergency = {},
-    military = {},
-    other = {}
+        civilian  = {},
+        emergency = {},
+        military  = {},
+        other     = {}
     }
     for vehicleClass, trunkData in pairs(trunks) do
         if not trunkData or not trunkData.name or not trunkData.invData then
@@ -1078,12 +1079,12 @@ local function getCategorizedTrunks()
         end
         local trunkInfo = {
             vehicleClass = vehicleClass,
-            name = trunkData.name,
-            type = trunkData.invType,
-            width = trunkData.invData.w,
-            height = trunkData.invData.h,
-            maxWeight = trunkData.invData.maxWeight,
-            restricted = trunkData.invData.restricted or false
+            name         = trunkData.name,
+            type         = trunkData.invType,
+            width        = trunkData.invData.w,
+            height       = trunkData.invData.h,
+            maxWeight    = trunkData.invData.maxWeight,
+            restricted   = trunkData.invData.restricted or false
         }
         -- Categorize based on vehicle class
         local lowerClass = vehicleClass:lower()
@@ -1100,20 +1101,76 @@ local function getCategorizedTrunks()
     end
     return categorized
 end
-function lia.inventory.getAllTrunks()
-    local trunks = {}
-    for key, data in pairs(lia.inventory.storage) do
-        if data.isTrunk then trunks[key] = data end
-    end
-    return trunks
+
+```
+
+**Low Complexity:**
+```lua
+-- Simple: Get all storage (including trunks)
+local allStorage = lia.inventory.getAllStorage()
+for key, data in pairs(allStorage) do
+    print("Storage:", key, "Name:", data.name)
 end
-Low Complexity:
 
-Medium Complexity:
+```
 
-High Complexity:
+**Medium Complexity:**
+```lua
+-- Medium: Get storage excluding trunks
+local function getStorageContainers()
+    local storageOnly = lia.inventory.getAllStorage(false)
+    local containers = {}
+    for model, data in pairs(storageOnly) do
+        table.insert(containers, {
+        model = model,
+        name = data.name,
+        type = data.invType,
+        size = data.invData.w * data.invData.h
+        })
+    end
+    return containers
+end
 
-]]
+```
+
+**High Complexity:**
+```lua
+-- High: Get storage with comprehensive categorization and validation
+local function getCategorizedStorage(includeTrunks)
+    local allStorage = lia.inventory.getAllStorage(includeTrunks)
+    local categorized = {
+    containers = {},
+    trunks = {},
+    invalid = {}
+    }
+    for key, data in pairs(allStorage) do
+        if not data or not data.name or not data.invData then
+            table.insert(categorized.invalid, {key = key, reason = "Invalid data structure"})
+            goto continue
+        end
+        local storageInfo = {
+        key = key,
+        name = data.name,
+        type = data.invType,
+        width = data.invData.w,
+        height = data.invData.h,
+        maxWeight = data.invData.maxWeight,
+        isTrunk = data.isTrunk or false
+        }
+        if data.isTrunk then
+            table.insert(categorized.trunks, storageInfo)
+            else
+                table.insert(categorized.containers, storageInfo)
+            end
+            ::continue::
+        end
+        lia.log("Categorized " .. #categorized.containers .. " containers and " .. #categorized.trunks .. " trunks")
+        if #categorized.invalid > 0 then
+            lia.warning("Found " .. #categorized.invalid .. " invalid storage entries")
+        end
+        return categorized
+    end
+
 ```
 
 ---
@@ -1160,9 +1217,9 @@ local function getAllTrunkInfo()
     local trunkList = {}
     for vehicleClass, trunkData in pairs(trunks) do
         table.insert(trunkList, {
-        vehicleClass = vehicleClass,
-        name = trunkData.name,
-        size = trunkData.invData.w * trunkData.invData.h
+            vehicleClass = vehicleClass,
+            name         = trunkData.name,
+            size         = trunkData.invData.w * trunkData.invData.h
         })
     end
     return trunkList
@@ -1176,10 +1233,10 @@ end
 local function getCategorizedTrunks()
     local trunks = lia.inventory.getAllTrunks()
     local categorized = {
-    civilian = {},
-    emergency = {},
-    military = {},
-    other = {}
+        civilian  = {},
+        emergency = {},
+        military  = {},
+        other     = {}
     }
     for vehicleClass, trunkData in pairs(trunks) do
         if not trunkData or not trunkData.name or not trunkData.invData then
@@ -1188,12 +1245,12 @@ local function getCategorizedTrunks()
         end
         local trunkInfo = {
             vehicleClass = vehicleClass,
-            name = trunkData.name,
-            type = trunkData.invType,
-            width = trunkData.invData.w,
-            height = trunkData.invData.h,
-            maxWeight = trunkData.invData.maxWeight,
-            restricted = trunkData.invData.restricted or false
+            name         = trunkData.name,
+            type         = trunkData.invType,
+            width        = trunkData.invData.w,
+            height       = trunkData.invData.h,
+            maxWeight    = trunkData.invData.maxWeight,
+            restricted   = trunkData.invData.restricted or false
         }
         -- Categorize based on vehicle class
         local lowerClass = vehicleClass:lower()
@@ -1210,20 +1267,76 @@ local function getCategorizedTrunks()
     end
     return categorized
 end
-function lia.inventory.getAllTrunks()
-    local trunks = {}
-    for key, data in pairs(lia.inventory.storage) do
-        if data.isTrunk then trunks[key] = data end
-    end
-    return trunks
+
+```
+
+**Low Complexity:**
+```lua
+-- Simple: Get all storage (including trunks)
+local allStorage = lia.inventory.getAllStorage()
+for key, data in pairs(allStorage) do
+    print("Storage:", key, "Name:", data.name)
 end
-Low Complexity:
 
-Medium Complexity:
+```
 
-High Complexity:
+**Medium Complexity:**
+```lua
+-- Medium: Get storage excluding trunks
+local function getStorageContainers()
+    local storageOnly = lia.inventory.getAllStorage(false)
+    local containers = {}
+    for model, data in pairs(storageOnly) do
+        table.insert(containers, {
+        model = model,
+        name = data.name,
+        type = data.invType,
+        size = data.invData.w * data.invData.h
+        })
+    end
+    return containers
+end
 
-]]
+```
+
+**High Complexity:**
+```lua
+-- High: Get storage with comprehensive categorization and validation
+local function getCategorizedStorage(includeTrunks)
+    local allStorage = lia.inventory.getAllStorage(includeTrunks)
+    local categorized = {
+    containers = {},
+    trunks = {},
+    invalid = {}
+    }
+    for key, data in pairs(allStorage) do
+        if not data or not data.name or not data.invData then
+            table.insert(categorized.invalid, {key = key, reason = "Invalid data structure"})
+            goto continue
+        end
+        local storageInfo = {
+        key = key,
+        name = data.name,
+        type = data.invType,
+        width = data.invData.w,
+        height = data.invData.h,
+        maxWeight = data.invData.maxWeight,
+        isTrunk = data.isTrunk or false
+        }
+        if data.isTrunk then
+            table.insert(categorized.trunks, storageInfo)
+            else
+                table.insert(categorized.containers, storageInfo)
+            end
+            ::continue::
+        end
+        lia.log("Categorized " .. #categorized.containers .. " containers and " .. #categorized.trunks .. " trunks")
+        if #categorized.invalid > 0 then
+            lia.warning("Found " .. #categorized.invalid .. " invalid storage entries")
+        end
+        return categorized
+    end
+
 ```
 
 ---

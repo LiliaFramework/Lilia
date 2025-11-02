@@ -64,10 +64,10 @@ for _, id in ipairs(barIdentifiers) do
     if bar then
         bar.lifeTime = CurTime() + 10
         print("Extended lifetime for " .. id .. " bar")
-        else
-            print("Bar " .. id .. " not found")
-        end
+    else
+        print("Bar " .. id .. " not found")
     end
+end
 
 ```
 
@@ -104,7 +104,7 @@ Client
 ```lua
 -- Simple: Add a basic health bar
 lia.bar.add(function()
-return LocalPlayer():Health() / LocalPlayer():GetMaxHealth()
+    return LocalPlayer():Health() / LocalPlayer():GetMaxHealth()
 end, Color(255, 0, 0), 1, "health")
 
 ```
@@ -113,8 +113,8 @@ end, Color(255, 0, 0), 1, "health")
 ```lua
 -- Medium: Add a custom stamina bar with validation
 lia.bar.add(function()
-local ply = LocalPlayer()
-if not IsValid(ply) then return 0 end
+    local ply = LocalPlayer()
+    if not IsValid(ply) then return 0 end
     return ply:GetNWFloat("stamina", 100) / 100
 end, Color(0, 255, 0), 2, "stamina")
 
@@ -126,20 +126,20 @@ end, Color(0, 255, 0), 2, "stamina")
 local function createConditionalBar(condition, getValue, color, priority, id)
     if condition then
         return lia.bar.add(function()
-        local ply = LocalPlayer()
-        if not IsValid(ply) then return 0 end
+            local ply = LocalPlayer()
+            if not IsValid(ply) then return 0 end
             return getValue(ply)
         end, color, priority, id)
     end
     return nil
 end
 createConditionalBar(
-true,
-function(ply) return ply:Armor() / ply:GetMaxArmor() end,
+    true,
+    function(ply) return ply:Armor() / ply:GetMaxArmor() end,
     Color(0, 0, 255),
     3,
     "armor"
-    )
+)
 
 ```
 
@@ -257,7 +257,7 @@ local function drawCustomBar(x, y, w, h, value, maxValue, color, condition)
     end
 end
 drawCustomBar(10, 10, 200, 20, player:Health(), player:GetMaxHealth(),
-Color(255, 0, 0), player:Alive())
+    Color(255, 0, 0), player:Alive())
 
 ```
 
@@ -310,16 +310,16 @@ local function showActionProgress(actionType, duration, data)
     local text = ""
     if actionType == "heal" then
         text = "Healing for " .. (data.amount or 25) .. " HP"
-        elseif actionType == "repair" then
-            text = "Repairing " .. (data.item or "item")
-            elseif actionType == "craft" then
-                text = "Crafting " .. (data.item or "item")
-            end
-            if text ~= "" then
-                lia.bar.drawAction(text, duration)
-            end
-        end
-        showActionProgress("heal", 2.5, {amount = 75})
+    elseif actionType == "repair" then
+        text = "Repairing " .. (data.item or "item")
+    elseif actionType == "craft" then
+        text = "Crafting " .. (data.item or "item")
+    end
+    if text ~= "" then
+        lia.bar.drawAction(text, duration)
+    end
+end
+showActionProgress("heal", 2.5, {amount = 75})
 
 ```
 
@@ -356,9 +356,9 @@ lia.bar.drawAll()
 ```lua
 -- Medium: Custom rendering with conditions
 hook.Add("HUDPaint", "CustomBarRender", function()
-if not hook.Run("ShouldHideBars") then
-    lia.bar.drawAll()
-end
+    if not hook.Run("ShouldHideBars") then
+        lia.bar.drawAll()
+    end
 end)
 
 ```
@@ -368,11 +368,11 @@ end)
 -- High: Advanced rendering with custom positioning and filtering
 local function customDrawAll()
     if hook.Run("ShouldHideBars") then return end
-        -- Custom positioning logic
-        local baseX, baseY = 10, 10
-        local barSpacing = 18
-        -- Sort bars by priority
-        table.sort(lia.bar.list, function(a, b)
+    -- Custom positioning logic
+    local baseX, baseY = 10, 10
+    local barSpacing = 18
+    -- Sort bars by priority
+    table.sort(lia.bar.list, function(a, b)
         if a.priority == b.priority then
             return (a.order or 0) < (b.order or 0)
         end

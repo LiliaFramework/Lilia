@@ -168,9 +168,9 @@ panel:setScaledPos(x, y)
 -- High: Position multiple panels with responsive layout
 local panels = {mainPanel, sidePanel, footerPanel}
 local positions = {
-{ScrW() * 0.1, ScrH() * 0.1},
-{ScrW() * 0.7, ScrH() * 0.1},
-{ScrW() * 0.1, ScrH() * 0.8}
+    {ScrW() * 0.1, ScrH() * 0.1},
+    {ScrW() * 0.7, ScrH() * 0.1},
+    {ScrW() * 0.1, ScrH() * 0.8}
 }
 for i, pnl in ipairs(panels) do
     if IsValid(pnl) then
@@ -230,9 +230,9 @@ panel:setScaledSize(w, h)
 -- High: Set sizes for multiple panels with responsive layout
 local panels = {mainPanel, sidePanel, footerPanel}
 local sizes = {
-{ScrW() * 0.7, ScrH() * 0.6},
-{ScrW() * 0.25, ScrH() * 0.6},
-{ScrW() * 0.95, ScrH() * 0.1}
+    {ScrW() * 0.7, ScrH() * 0.6},
+    {ScrW() * 0.25, ScrH() * 0.6},
+    {ScrW() * 0.95, ScrH() * 0.1}
 }
 for i, pnl in ipairs(panels) do
     if IsValid(pnl) then

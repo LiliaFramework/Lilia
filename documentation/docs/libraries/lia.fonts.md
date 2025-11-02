@@ -26,7 +26,7 @@ Called during initialization after font registration and during font refresh ope
 
 **Realm**
 
-Client-side only
+Client
 
 **Example Usage**
 
@@ -41,7 +41,7 @@ lia.font.loadFonts()
 ```lua
 -- Medium: Load fonts after a delay to ensure config is ready
 timer.Simple(0.2, function()
-lia.font.loadFonts()
+    lia.font.loadFonts()
 end)
 
 ```
@@ -50,13 +50,13 @@ end)
 ```lua
 -- High: Refresh fonts when configuration changes
 hook.Add("ConfigUpdated", "ReloadFonts", function(key)
-if key == "Font" then
-    lia.font.registerFonts()
-    timer.Simple(0.1, function()
-    lia.font.loadFonts()
-    hook.Run("RefreshFonts")
-end)
-end
+    if key == "Font" then
+        lia.font.registerFonts()
+        timer.Simple(0.1, function()
+            lia.font.loadFonts()
+            hook.Run("RefreshFonts")
+        end)
+    end
 end)
 
 ```
@@ -84,7 +84,7 @@ Called when defining new fonts for UI elements or during font initialization
 
 **Realm**
 
-Shared (server stores metadata, client creates actual font)
+Shared
 
 **Example Usage**
 
@@ -92,8 +92,8 @@ Shared (server stores metadata, client creates actual font)
 ```lua
 -- Simple: Register a basic font
 lia.font.register("MyFont", {
-font = "Roboto",
-size = 16
+    font = "Roboto",
+    size = 16
 })
 
 ```
@@ -102,11 +102,11 @@ size = 16
 ```lua
 -- Medium: Register a font with multiple properties
 lia.font.register("MyCustomFont", {
-font = "Arial",
-size = 20,
-weight = 600,
-antialias = true,
-extended = true
+    font     = "Arial",
+    size     = 20,
+    weight   = 600,
+    antialias = true,
+    extended = true
 })
 
 ```
@@ -115,17 +115,17 @@ extended = true
 ```lua
 -- High: Register multiple fonts with different styles
 local fontConfig = {
-{name = "MenuTitle", size = 32, weight = 700},
-{name = "MenuText", size = 18, weight = 400},
-{name = "MenuSmall", size = 14, weight = 300}
+    {name = "MenuTitle", size = 32, weight = 700},
+    {name = "MenuText", size = 18, weight = 400},
+    {name = "MenuSmall", size = 14, weight = 300}
 }
 for _, config in ipairs(fontConfig) do
     lia.font.register(config.name, {
-    font = "Montserrat",
-    size = config.size,
-    weight = config.weight,
-    extended = true,
-    antialias = true
+        font      = "Montserrat",
+        size      = config.size,
+        weight    = config.weight,
+        extended  = true,
+        antialias = true
     })
 end
 
@@ -238,15 +238,15 @@ local sizes = {14, 18, 24, 32}
 for _, size in ipairs(sizes) do
     -- Normal variant
     lia.font.register("CustomFont" .. size, {
-    font = baseFontName,
-    size = size,
-    weight = 500
+        font   = baseFontName,
+        size   = size,
+        weight = 500
     })
     -- Bold variant
     lia.font.register("CustomFont" .. size .. "Bold", {
-    font = lia.font.getBoldFontName(baseFontName),
-    size = size,
-    weight = 700
+        font   = lia.font.getBoldFontName(baseFontName),
+        size   = size,
+        weight = 700
     })
 end
 
@@ -297,16 +297,16 @@ lia.font.registerFonts("Roboto")
 -- High: Register fonts and hook into completion
 lia.font.registerFonts("Montserrat Medium")
 hook.Add("PostLoadFonts", "MyFontHook", function(mainFont, configuredFont)
-print("Fonts loaded with: " .. mainFont)
--- Perform additional font-related setup
-for i = 10, 50, 2 do
-    lia.font.register("MyCustomFont" .. i, {
-    font = mainFont,
-    size = i,
-    extended = true,
-    antialias = true
-    })
-end
+    print("Fonts loaded with: " .. mainFont)
+    -- Perform additional font-related setup
+    for i = 10, 50, 2 do
+        lia.font.register("MyCustomFont" .. i, {
+            font      = mainFont,
+            size      = i,
+            extended  = true,
+            antialias = true
+        })
+    end
 end)
 
 ```
@@ -356,16 +356,16 @@ lia.font.registerFonts("Roboto")
 -- High: Register fonts and hook into completion
 lia.font.registerFonts("Montserrat Medium")
 hook.Add("PostLoadFonts", "MyFontHook", function(mainFont, configuredFont)
-print("Fonts loaded with: " .. mainFont)
--- Perform additional font-related setup
-for i = 10, 50, 2 do
-    lia.font.register("MyCustomFont" .. i, {
-    font = mainFont,
-    size = i,
-    extended = true,
-    antialias = true
-    })
-end
+    print("Fonts loaded with: " .. mainFont)
+    -- Perform additional font-related setup
+    for i = 10, 50, 2 do
+        lia.font.register("MyCustomFont" .. i, {
+            font      = mainFont,
+            size      = i,
+            extended  = true,
+            antialias = true
+        })
+    end
 end)
 
 ```

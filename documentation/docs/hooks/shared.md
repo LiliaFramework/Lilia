@@ -70,7 +70,7 @@ hook.Add("AdjustStaminaOffset", "AdvancedStamina", function(client, offset)
     if not char then return end
     local modifiers = {
         regeneration = 1.0,
-        drain = 1.0
+        drain       = 1.0
     }
     -- Constitution bonus
     local con = char:getAttrib("con", 0)
@@ -607,7 +607,7 @@ end)
 -- High: Complex gender detection
 hook.Add("GetModelGender", "AdvancedGenderDetection", function(model)
     -- Check for female keywords
-    local femaleKeywords = {"female", "woman", "girl", "alyx"}
+    local femaleKeywords = {"female", "woman", "girl", "alyx" }
     for _, keyword in ipairs(femaleKeywords) do
         if string.find(string.lower(model), keyword) then
             return "female"
@@ -615,8 +615,8 @@ hook.Add("GetModelGender", "AdvancedGenderDetection", function(model)
     end
     -- Check specific models
     local femaleModels = {
-        ["models/player/alyx.mdl"] = true,
-        ["models/player/mossman.mdl"] = true
+        ["models/player/alyx.mdl"]    = true,
+        ["models/player/mossman.mdl"]  = true
     }
     if femaleModels[model] then
         return "female"
@@ -673,10 +673,10 @@ end)
 hook.Add("InitializedConfig", "AdvancedConfigInit", function()
     -- Add custom configuration options
     local configOptions = {
-        {key = "myAddonEnabled", default = true, description = "Enable My Addon", type = "boolean"},
-        {key = "myAddonValue", default = 100, description = "My Addon Value", type = "number"},
-        {key = "myAddonString", default = "default", description = "My Addon String", type = "string"},
-        {key = "myAddonColor", default = Color(255, 255, 255), description = "My Addon Color", type = "color"}
+        {key = "myAddonEnabled", default = true,              description = "Enable My Addon", type = "boolean"},
+        {key = "myAddonValue",   default = 100,               description = "My Addon Value",  type = "number" },
+        {key = "myAddonString",  default = "default",         description = "My Addon String", type = "string" },
+        {key = "myAddonColor",   default = Color(255, 255, 255), description = "My Addon Color", type = "color" }
     }
     for _, option in ipairs(configOptions) do
         lia.config.add(option.key, option.default, option.description)
@@ -691,6 +691,107 @@ hook.Add("InitializedConfig", "AdvancedConfigInit", function()
         print("My Addon enabled: " .. tostring(value))
     end)
     print("Configuration system initialized with " .. #configOptions .. " options")
+end)
+
+```
+
+---
+
+### OnConfigUpdated
+
+**Purpose**
+
+Called when a configuration value is updated
+
+**When Called**
+
+After a configuration option value changes through lia.config.set() or lia.config.forceSet()
+
+**Parameters**
+
+* `key` (*string*): The configuration key that was updated
+* `oldValue` (*any*): The previous value of the configuration
+* `value` (*any*): The new value of the configuration
+
+**Returns**
+
+* None
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Log configuration changes
+hook.Add("OnConfigUpdated", "MyAddon", function(key, oldValue, value)
+    print("Config " .. key .. " changed from " .. tostring(oldValue) .. " to " .. tostring(value))
+end)
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: React to specific configuration changes
+hook.Add("OnConfigUpdated", "ConfigReactor", function(key, oldValue, value)
+    if key == "WalkSpeed" then
+        -- Update all players' walk speed
+        for _, ply in ipairs(player.GetAll()) do
+            if IsValid(ply) and ply:Alive() then
+                ply:SetWalkSpeed(value)
+            end
+        end
+    elseif key == "Theme" then
+        -- Reload UI theme
+        lia.color.applyTheme(value, true)
+    end
+end)
+
+```
+
+**High Complexity:**
+```lua
+-- High: Complex configuration change handler with validation and rollback
+hook.Add("OnConfigUpdated", "AdvancedConfigHandler", function(key, oldValue, value)
+    local config = lia.config.stored[key]
+    if not config then return end
+    -- Validate value based on config type
+    if config.data and config.data.type == "Number" then
+        if type(value) ~= "number" then
+            print("Warning: Invalid type for " .. key .. ", reverting")
+            lia.config.forceSet(key, oldValue)
+            return
+        end
+        -- Check min/max constraints
+        if config.data.min and value < config.data.min then
+            lia.config.forceSet(key, config.data.min)
+            return
+        end
+        if config.data.max and value > config.data.max then
+            lia.config.forceSet(key, config.data.max)
+            return
+        end
+    end
+    -- Track configuration changes
+    if not lia.config.changeHistory then
+        lia.config.changeHistory = {}
+    end
+    table.insert(lia.config.changeHistory, {
+        key = key,
+        oldValue = oldValue,
+        newValue = value,
+        time = os.time()
+    })
+    -- Notify admins of critical changes
+    if config.data and config.data.critical then
+        for _, ply in ipairs(player.GetAll()) do
+            if ply:IsAdmin() then
+                ply:ChatPrint("[CONFIG] " .. key .. " changed by " .. (config.changedBy or "system"))
+            end
+        end
+    end
 end)
 
 ```
@@ -757,22 +858,22 @@ hook.Add("InitializedItems", "AdvancedItemInit", function()
     -- Register custom items
     local customItems = {
         {
-            uniqueID = "my_weapon",
-            name = "My Weapon",
-            model = "models/weapons/w_pistol.mdl",
+            uniqueID  = "my_weapon",
+            name      = "My Weapon",
+            model     = "models/weapons/w_pistol.mdl",
             description = "A custom weapon",
-            category = "weapons",
-            weight = 2,
-            price = 100
+            category  = "weapons",
+            weight    = 2,
+            price     = 100
         },
         {
-            uniqueID = "my_medkit",
-            name = "My Medkit",
-            model = "models/items/medkit.mdl",
+            uniqueID  = "my_medkit",
+            name      = "My Medkit",
+            model     = "models/items/medkit.mdl",
             description = "A custom medkit",
-            category = "medical",
-            weight = 1,
-            price = 50
+            category  = "medical",
+            weight    = 1,
+            price     = 50
         }
     }
     for _, itemData in ipairs(customItems) do
@@ -839,19 +940,19 @@ hook.Add("InitializedModules", "AdvancedModuleInit", function()
     -- Register custom modules
     local modules = {
         {
-            uniqueID = "my_module",
-            name = "My Module",
+            uniqueID    = "my_module",
+            name        = "My Module",
             description = "A custom module",
-            author = "Me",
-            version = "1.0.0",
+            author      = "Me",
+            version     = "1.0.0",
             dependencies = {"base"}
         },
         {
-            uniqueID = "my_other_module",
-            name = "My Other Module",
+            uniqueID    = "my_other_module",
+            name        = "My Other Module",
             description = "Another custom module",
-            author = "Me",
-            version = "1.0.0",
+            author      = "Me",
+            version     = "1.0.0",
             dependencies = {"my_module"}
         }
     }
@@ -922,15 +1023,15 @@ end)
 hook.Add("InitializedSchema", "AdvancedSchemaInit", function()
     -- Set up custom schema data
     local schemaData = {
-        version = "1.0.0",
-        name = "My Custom Schema",
+        version     = "1.0.0",
+        name        = "My Custom Schema",
         description = "A custom schema for my addon",
-        author = "Me",
-        enabled = true,
-        settings = {
-            maxPlayers = 32,
+        author      = "Me",
+        enabled     = true,
+        settings    = {
+            maxPlayers  = 32,
             respawnTime = 5,
-            roundTime = 600
+            roundTime   = 600
         }
     }
     for key, value in pairs(schemaData) do
@@ -1415,7 +1516,7 @@ end)
 ```lua
 -- Medium: Multiple chat types require recognition
 hook.Add("IsRecognizedChatType", "RecognizedChatTypes", function(chatType)
-    local recognizedTypes = {"ic", "w", "y"}
+    local recognizedTypes = {"ic", "w", "y" }
     return table.HasValue(recognizedTypes, chatType)
 end)
 
@@ -1426,12 +1527,12 @@ end)
 -- High: Complex recognition requirements
 hook.Add("IsRecognizedChatType", "AdvancedChatRecognition", function(chatType)
     -- OOC and admin chats never require recognition
-    local noRecognitionTypes = {"ooc", "looc", "admin"}
+    local noRecognitionTypes = {"ooc", "looc", "admin" }
     if table.HasValue(noRecognitionTypes, chatType) then
         return false
     end
     -- IC and whisper chats require recognition
-    local recognitionTypes = {"ic", "w", "y", "me", "it"}
+    local recognitionTypes = {"ic", "w", "y", "me", "it" }
     if table.HasValue(recognitionTypes, chatType) then
         return true
     end
@@ -1631,8 +1732,8 @@ Shared
 -- Simple: Return basic functions
 hook.Add("ItemDefaultFunctions", "MyAddon", function(item)
     return {
-        use = {name = "Use", icon = "icon16/accept.png"},
-        drop = {name = "Drop", icon = "icon16/bin.png"}
+        use  = {name = "Use",  icon = "icon16/accept.png"},
+        drop = {name = "Drop", icon = "icon16/bin.png" }
     }
 end)
 
@@ -1643,8 +1744,8 @@ end)
 -- Medium: Conditional functions
 hook.Add("ItemDefaultFunctions", "ConditionalItemFunctions", function(item)
     local functions = {
-        use = {name = "Use", icon = "icon16/accept.png"},
-        drop = {name = "Drop", icon = "icon16/bin.png"}
+        use  = {name = "Use",  icon = "icon16/accept.png"},
+        drop = {name = "Drop", icon = "icon16/bin.png" }
     }
     if not item:getData("equipped", false) then
         functions.equip = {name = "Equip", icon = "icon16/add.png"}
@@ -1885,7 +1986,7 @@ Shared
 ```lua
 -- Simple: Log framework load
 hook.Add("LiliaLoaded", "MyAddon", function()
-print("Lilia framework loaded")
+    print("Lilia framework loaded")
 end)
 
 ```
@@ -1894,8 +1995,8 @@ end)
 ```lua
 -- Medium: Initialize addon systems
 hook.Add("LiliaLoaded", "InitializeAddon", function()
-MyAddon.Initialize()
-print("MyAddon initialized")
+    MyAddon.Initialize()
+    print("MyAddon initialized")
 end)
 
 ```
@@ -1909,7 +2010,7 @@ hook.Add("LiliaLoaded", "AdvancedFrameworkInit", function()
     -- Register custom chat commands
     lia.command.add("mycmd", {
         description = "My custom command",
-        onRun = function(client, arguments)
+        onRun       = function(client, arguments)
             client:ChatPrint("Command executed!")
         end
     })
@@ -1957,7 +2058,7 @@ Shared
 ```lua
 -- Simple: Log netvar changes
 hook.Add("NetVarChanged", "MyAddon", function(entity, key, oldValue, value)
-print("NetVar changed: " .. key .. " = " .. tostring(value))
+    print("NetVar changed: " .. key .. " = " .. tostring(value))
 end)
 
 ```
@@ -2031,7 +2132,7 @@ Shared
 ```lua
 -- Simple: Log item registration
 hook.Add("OnItemRegistered", "MyAddon", function(ITEM)
-print("Item registered: " .. ITEM.name)
+    print("Item registered: " .. ITEM.name)
 end)
 
 ```
@@ -2040,12 +2141,12 @@ end)
 ```lua
 -- Medium: Track registered items
 hook.Add("OnItemRegistered", "TrackItems", function(ITEM)
-MyAddon.registeredItems = MyAddon.registeredItems or {}
-MyAddon.registeredItems[ITEM.uniqueID] = {
-name = ITEM.name,
-model = ITEM.model,
-registered = os.time()
-}
+    MyAddon.registeredItems = MyAddon.registeredItems or {}
+    MyAddon.registeredItems[ITEM.uniqueID] = {
+        name       = ITEM.name,
+        model      = ITEM.model,
+        registered = os.time()
+    }
 end)
 
 ```
@@ -2056,9 +2157,9 @@ end)
 hook.Add("OnItemRegistered", "AdvancedItemRegistration", function(ITEM)
     -- Log item registration
     lia.log.write("item_registered", {
-        uniqueID = ITEM.uniqueID,
-        name = ITEM.name,
-        model = ITEM.model,
+        uniqueID  = ITEM.uniqueID,
+        name      = ITEM.name,
+        model     = ITEM.model,
         timestamp = os.time()
     })
     -- Validate item data
@@ -2105,7 +2206,7 @@ Shared
 ```lua
 -- Simple: Log framework loaded
 hook.Add("OnLoaded", "MyAddon", function()
-print("Lilia framework has finished loading")
+    print("Lilia framework has finished loading")
 end)
 
 ```
@@ -2180,7 +2281,7 @@ Shared
 ```lua
 -- Simple: Log privilege registration
 hook.Add("OnPrivilegeRegistered", "MyAddon", function(privilege, name, access, category)
-print("Privilege registered: " .. name)
+    print("Privilege registered: " .. name)
 end)
 
 ```
@@ -2189,12 +2290,12 @@ end)
 ```lua
 -- Medium: Track privileges
 hook.Add("OnPrivilegeRegistered", "TrackPrivileges", function(privilege, name, access, category)
-MyAddon.privileges = MyAddon.privileges or {}
-MyAddon.privileges[privilege] = {
-name = name,
-access = access,
-category = category
-}
+    MyAddon.privileges = MyAddon.privileges or {}
+    MyAddon.privileges[privilege] = {
+        name     = name,
+        access   = access,
+        category = category
+    }
 end)
 
 ```
@@ -2207,9 +2308,9 @@ hook.Add("OnPrivilegeRegistered", "AdvancedPrivilegeManagement", function(privil
     if SERVER then
         lia.data.get("privileges", {}, function(data)
             data[privilege] = {
-                name = name,
-                access = access,
-                category = category,
+                name       = name,
+                access     = access,
+                category   = category,
                 registered = os.time()
             }
             lia.data.set("privileges", data)
@@ -2256,7 +2357,7 @@ Shared
 ```lua
 -- Simple: Log privilege removal
 hook.Add("OnPrivilegeUnregistered", "MyAddon", function(privilege, name)
-print("Privilege unregistered: " .. name)
+    print("Privilege unregistered: " .. name)
 end)
 
 ```
@@ -2325,7 +2426,7 @@ Shared
 ```lua
 -- Simple: Log when options are added
 hook.Add("OptionAdded", "MyAddon", function(key, option)
-print("Option " .. key .. " was added")
+    print("Option " .. key .. " was added")
 end)
 
 ```
@@ -2334,8 +2435,8 @@ end)
 ```lua
 -- Medium: Track added options
 hook.Add("OptionAdded", "TrackOptions", function(key, option)
-MyAddon.addedOptions = MyAddon.addedOptions or {}
-MyAddon.addedOptions[key] = option
+    MyAddon.addedOptions = MyAddon.addedOptions or {}
+    MyAddon.addedOptions[key] = option
 end)
 
 ```
@@ -2346,9 +2447,9 @@ end)
 hook.Add("OptionAdded", "AdvancedOptionHandler", function(key, option)
     -- Log option addition
     lia.log.write("option_added", {
-        key = key,
-        type = option.type,
-        default = option.default,
+        key       = key,
+        type      = option.type,
+        default   = option.default,
         timestamp = os.time()
     })
     -- Handle special option types
@@ -2361,8 +2462,8 @@ hook.Add("OptionAdded", "AdvancedOptionHandler", function(key, option)
         MyAddon.numberOptions = MyAddon.numberOptions or {}
         MyAddon.numberOptions[key] = {
             value = option.default or 0,
-            min = option.min or 0,
-            max = option.max or 100
+            min   = option.min or 0,
+            max   = option.max or 100
         }
     end
     -- Notify clients if needed
@@ -2408,7 +2509,7 @@ Shared
 ```lua
 -- Simple: Log option changes
 hook.Add("OptionChanged", "MyAddon", function(key, old, value)
-print("Option " .. key .. " changed from " .. tostring(old) .. " to " .. tostring(value))
+    print("Option " .. key .. " changed from " .. tostring(old) .. " to " .. tostring(value))
 end)
 
 ```
@@ -2417,13 +2518,13 @@ end)
 ```lua
 -- Medium: Track option changes
 hook.Add("OptionChanged", "TrackOptions", function(key, old, value)
-MyAddon.optionHistory = MyAddon.optionHistory or {}
-table.insert(MyAddon.optionHistory, {
-key = key,
-old = old,
-new = value,
-time = os.time()
-})
+    MyAddon.optionHistory = MyAddon.optionHistory or {}
+    table.insert(MyAddon.optionHistory, {
+        key  = key,
+        old  = old,
+        new  = value,
+        time = os.time()
+    })
 end)
 
 ```
@@ -2434,9 +2535,9 @@ end)
 hook.Add("OptionChanged", "AdvancedOptionChange", function(key, old, value)
     -- Log option change
     lia.log.write("option_changed", {
-        key = key,
-        old = tostring(old),
-        new = tostring(value),
+        key       = key,
+        old       = tostring(old),
+        new       = tostring(value),
         timestamp = os.time()
     })
     -- Handle specific option changes
@@ -2487,7 +2588,7 @@ Shared
 ```lua
 -- Simple: Add prefix to description
 hook.Add("OverrideFactionDesc", "MyAddon", function(uniqueID, description)
-return "[FACTION] " .. description
+    return "[FACTION] " .. description
 end)
 
 ```
@@ -2631,7 +2732,7 @@ Shared
 ```lua
 -- Simple: Add prefix to name
 hook.Add("OverrideFactionName", "MyAddon", function(uniqueID, name)
-return "[" .. uniqueID:upper() .. "] " .. name
+    return "[" .. uniqueID:upper() .. "] " .. name
 end)
 
 ```
@@ -2640,12 +2741,12 @@ end)
 ```lua
 -- Medium: Localize faction names
 hook.Add("OverrideFactionName", "LocalizeFactionNames", function(uniqueID, name)
-local localizedNames = {
-citizen = "Citoyen",
-police = "Police",
-medic = "Médecin"
-}
-return localizedNames[uniqueID] or name
+    local localizedNames = {
+        citizen = "Citoyen",
+        police  = "Police",
+        medic   = "Médecin"
+    }
+    return localizedNames[uniqueID] or name
 end)
 
 ```
@@ -2704,7 +2805,7 @@ Shared
 ```lua
 -- Simple: Log stamina gain
 hook.Add("PlayerStaminaGained", "MyAddon", function(self)
-print(self:Name() .. " gained stamina")
+    print(self:Name() .. " gained stamina")
 end)
 
 ```
@@ -2776,7 +2877,7 @@ Shared
 ```lua
 -- Simple: Log stamina loss
 hook.Add("PlayerStaminaLost", "MyAddon", function(self)
-print(self:Name() .. " lost stamina")
+    print(self:Name() .. " lost stamina")
 end)
 
 ```
@@ -2842,7 +2943,7 @@ Shared
 ```lua
 -- Simple: Log pre-load
 hook.Add("PreLiliaLoaded", "MyAddon", function()
-print("Lilia is about to load")
+    print("Lilia is about to load")
 end)
 
 ```
@@ -2851,8 +2952,8 @@ end)
 ```lua
 -- Medium: Initialize addon systems
 hook.Add("PreLiliaLoaded", "InitializeAddon", function()
-MyAddon.PreInitialize()
-print("Addon pre-initialized")
+    MyAddon.PreInitialize()
+    print("Addon pre-initialized")
 end)
 
 ```
@@ -2866,114 +2967,12 @@ hook.Add("PreLiliaLoaded", "AdvancedPreLoadInit", function()
     -- Set up configuration
     MyAddon.config = MyAddon.config or {}
     MyAddon.config.enabled = true
-    MyAddon.config.debug = false
+    MyAddon.config.debug  = false
     -- Register custom hooks
     hook.Add("PlayerInitialSpawn", "MyAddonSpawn", MyAddon.OnPlayerSpawn)
     print("Advanced pre-load initialization completed")
 end)
 
-```
-
----
-
-### OnConfigUpdated
-
-**Purpose**
-
-Called when a configuration value is updated
-
-**When Called**
-
-After a configuration option value changes through `lia.config.set()` or `lia.config.forceSet()`
-
-**Parameters**
-
-* `key` (*string*): The configuration key that was updated
-* `oldValue` (*any*): The previous value of the configuration
-* `value` (*any*): The new value of the configuration
-
-**Returns**
-
-* None
-
-**Realm**
-
-Shared
-
-**Example Usage**
-
-**Low Complexity:**
-```lua
--- Simple: Log configuration changes
-hook.Add("OnConfigUpdated", "MyAddon", function(key, oldValue, value)
-    print("Config " .. key .. " changed from " .. tostring(oldValue) .. " to " .. tostring(value))
-end)
-```
-
-**Medium Complexity:**
-```lua
--- Medium: React to specific configuration changes
-hook.Add("OnConfigUpdated", "ConfigReactor", function(key, oldValue, value)
-    if key == "WalkSpeed" then
-        -- Update all players' walk speed
-        for _, ply in ipairs(player.GetAll()) do
-            if IsValid(ply) and ply:Alive() then
-                ply:SetWalkSpeed(value)
-            end
-        end
-    elseif key == "Theme" then
-        -- Reload UI theme
-        lia.color.applyTheme(value, true)
-    end
-end)
-```
-
-**High Complexity:**
-```lua
--- High: Complex configuration change handler with validation and rollback
-hook.Add("OnConfigUpdated", "AdvancedConfigHandler", function(key, oldValue, value)
-    local config = lia.config.stored[key]
-    if not config then return end
-    
-    -- Validate value based on config type
-    if config.data and config.data.type == "Number" then
-        if type(value) ~= "number" then
-            print("Warning: Invalid type for " .. key .. ", reverting")
-            lia.config.forceSet(key, oldValue)
-            return
-        end
-        
-        -- Check min/max constraints
-        if config.data.min and value < config.data.min then
-            lia.config.forceSet(key, config.data.min)
-            return
-        end
-        if config.data.max and value > config.data.max then
-            lia.config.forceSet(key, config.data.max)
-            return
-        end
-    end
-    
-    -- Track configuration changes
-    if not lia.config.changeHistory then
-        lia.config.changeHistory = {}
-    end
-    table.insert(lia.config.changeHistory, {
-        key = key,
-        oldValue = oldValue,
-        newValue = value,
-        time = os.time()
-    })
-    
-    -- Notify admins of critical changes
-    if config.data and config.data.critical then
-        for _, ply in ipairs(player.GetAll()) do
-            if ply:IsAdmin() then
-                ply:ChatPrint("[CONFIG] " .. key .. " changed by " .. (config.changedBy or "system"))
-            end
-        end
-    end
-end)
 ```
 
 ---
@@ -3006,7 +3005,7 @@ Shared
 ```lua
 -- Simple: Return default stamina change
 hook.Add("calcStaminaChange", "MyAddon", function(client)
-return 1
+    return 1
 end)
 
 ```
@@ -3098,7 +3097,7 @@ Shared
 ```lua
 -- Simple: Get data with default
 hook.Add("getData", "MyAddon", function(default)
-return default
+    return default
 end)
 
 ```
@@ -3135,7 +3134,7 @@ hook.Add("getData", "AdvancedDataGet", function(default)
     end
     -- Cache the result
     cache[key] = {
-        value = data,
+        value  = data,
         expiry = CurTime() + 60
     }
     lia.data.cache = cache
@@ -3179,6 +3178,7 @@ function MODULE:setData(value, global, ignoreMap)
     -- Default implementation stores data with module's uniqueID
     lia.data.set(self.uniqueID, value, global, ignoreMap)
 end
+
 ```
 
 **Medium Complexity:**
@@ -3199,15 +3199,14 @@ function MODULE:setData(value, global, ignoreMap)
             end
             return maxDepth
         end
-        
         if getDepth(value) > 5 then
             print("Warning: Data table too deeply nested")
             return
         end
     end
-    
     lia.data.set(self.uniqueID, value, global, ignoreMap)
 end
+
 ```
 
 **High Complexity:**
@@ -3227,26 +3226,329 @@ function MODULE:setData(value, global, ignoreMap)
         end
         processedValue._encrypted = true
     end
-    
     -- Add versioning metadata
     if type(processedValue) == "table" then
         processedValue._version = self.dataVersion or 1
         processedValue._timestamp = os.time()
     end
-    
     -- Store with module identifier
     lia.data.set(self.uniqueID, processedValue, global, ignoreMap)
-    
     -- Trigger module-specific callback
     if self.OnDataChanged then
         self:OnDataChanged(value, global, ignoreMap)
     end
-    
     -- Log data changes for debugging
     if self.debug then
         print("[MODULE] " .. self.uniqueID .. " data updated: " .. util.TableToJSON(processedValue, true))
     end
 end
+
+```
+
+---
+
+### setData
+
+**Purpose**
+
+Called to set persistent data for modules
+
+**When Called**
+
+When setting module-specific persistent data through the module system
+
+**Parameters**
+
+* `value` (*any*): The value to set
+* `global` (*boolean*): Whether this is global data (accessible across all gamemodes/maps)
+* `ignoreMap` (*boolean*): Whether to ignore map-specific data (accessible across all maps in current gamemode)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Set module data
+function MODULE:setData(value, global, ignoreMap)
+    -- Default implementation stores data with module's uniqueID
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Set data with validation
+function MODULE:setData(value, global, ignoreMap)
+    -- Validate data before setting
+    if type(value) == "table" then
+        -- Check for excessive nesting
+        local function getDepth(t, depth)
+            depth = depth or 0
+            if depth > 10 then return depth end
+            local maxDepth = depth
+            for k, v in pairs(t) do
+                if type(v) == "table" then
+                    maxDepth = math.max(maxDepth, getDepth(v, depth + 1))
+                end
+            end
+            return maxDepth
+        end
+        if getDepth(value) > 5 then
+            print("Warning: Data table too deeply nested")
+            return
+        end
+    end
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+
+```
+
+**High Complexity:**
+```lua
+-- High: Complex data setting with encryption and versioning
+function MODULE:setData(value, global, ignoreMap)
+    -- Encrypt sensitive data
+    local processedValue = value
+    if self.encrypted and type(value) == "table" then
+        processedValue = {}
+        for k, v in pairs(value) do
+            if self.sensitiveFields and self.sensitiveFields[k] then
+                processedValue[k] = lia.util.encrypt(tostring(v))
+            else
+                processedValue[k] = v
+            end
+        end
+        processedValue._encrypted = true
+    end
+    -- Add versioning metadata
+    if type(processedValue) == "table" then
+        processedValue._version = self.dataVersion or 1
+        processedValue._timestamp = os.time()
+    end
+    -- Store with module identifier
+    lia.data.set(self.uniqueID, processedValue, global, ignoreMap)
+    -- Trigger module-specific callback
+    if self.OnDataChanged then
+        self:OnDataChanged(value, global, ignoreMap)
+    end
+    -- Log data changes for debugging
+    if self.debug then
+        print("[MODULE] " .. self.uniqueID .. " data updated: " .. util.TableToJSON(processedValue, true))
+    end
+end
+
+```
+
+---
+
+### setData
+
+**Purpose**
+
+Called to set persistent data for modules
+
+**When Called**
+
+When setting module-specific persistent data through the module system
+
+**Parameters**
+
+* `value` (*any*): The value to set
+* `global` (*boolean*): Whether this is global data (accessible across all gamemodes/maps)
+* `ignoreMap` (*boolean*): Whether to ignore map-specific data (accessible across all maps in current gamemode)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Set module data
+function MODULE:setData(value, global, ignoreMap)
+    -- Default implementation stores data with module's uniqueID
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Set data with validation
+function MODULE:setData(value, global, ignoreMap)
+    -- Validate data before setting
+    if type(value) == "table" then
+        -- Check for excessive nesting
+        local function getDepth(t, depth)
+            depth = depth or 0
+            if depth > 10 then return depth end
+            local maxDepth = depth
+            for k, v in pairs(t) do
+                if type(v) == "table" then
+                    maxDepth = math.max(maxDepth, getDepth(v, depth + 1))
+                end
+            end
+            return maxDepth
+        end
+        if getDepth(value) > 5 then
+            print("Warning: Data table too deeply nested")
+            return
+        end
+    end
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+
+```
+
+**High Complexity:**
+```lua
+-- High: Complex data setting with encryption and versioning
+function MODULE:setData(value, global, ignoreMap)
+    -- Encrypt sensitive data
+    local processedValue = value
+    if self.encrypted and type(value) == "table" then
+        processedValue = {}
+        for k, v in pairs(value) do
+            if self.sensitiveFields and self.sensitiveFields[k] then
+                processedValue[k] = lia.util.encrypt(tostring(v))
+            else
+                processedValue[k] = v
+            end
+        end
+        processedValue._encrypted = true
+    end
+    -- Add versioning metadata
+    if type(processedValue) == "table" then
+        processedValue._version = self.dataVersion or 1
+        processedValue._timestamp = os.time()
+    end
+    -- Store with module identifier
+    lia.data.set(self.uniqueID, processedValue, global, ignoreMap)
+    -- Trigger module-specific callback
+    if self.OnDataChanged then
+        self:OnDataChanged(value, global, ignoreMap)
+    end
+    -- Log data changes for debugging
+    if self.debug then
+        print("[MODULE] " .. self.uniqueID .. " data updated: " .. util.TableToJSON(processedValue, true))
+    end
+end
+
+```
+
+---
+
+### setData
+
+**Purpose**
+
+Called to set persistent data for modules
+
+**When Called**
+
+When setting module-specific persistent data through the module system
+
+**Parameters**
+
+* `value` (*any*): The value to set
+* `global` (*boolean*): Whether this is global data (accessible across all gamemodes/maps)
+* `ignoreMap` (*boolean*): Whether to ignore map-specific data (accessible across all maps in current gamemode)
+
+**Returns**
+
+* None
+
+**Realm**
+
+Shared
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+-- Simple: Set module data
+function MODULE:setData(value, global, ignoreMap)
+    -- Default implementation stores data with module's uniqueID
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+
+```
+
+**Medium Complexity:**
+```lua
+-- Medium: Set data with validation
+function MODULE:setData(value, global, ignoreMap)
+    -- Validate data before setting
+    if type(value) == "table" then
+        -- Check for excessive nesting
+        local function getDepth(t, depth)
+            depth = depth or 0
+            if depth > 10 then return depth end
+            local maxDepth = depth
+            for k, v in pairs(t) do
+                if type(v) == "table" then
+                    maxDepth = math.max(maxDepth, getDepth(v, depth + 1))
+                end
+            end
+            return maxDepth
+        end
+        if getDepth(value) > 5 then
+            print("Warning: Data table too deeply nested")
+            return
+        end
+    end
+    lia.data.set(self.uniqueID, value, global, ignoreMap)
+end
+
+```
+
+**High Complexity:**
+```lua
+-- High: Complex data setting with encryption and versioning
+function MODULE:setData(value, global, ignoreMap)
+    -- Encrypt sensitive data
+    local processedValue = value
+    if self.encrypted and type(value) == "table" then
+        processedValue = {}
+        for k, v in pairs(value) do
+            if self.sensitiveFields and self.sensitiveFields[k] then
+                processedValue[k] = lia.util.encrypt(tostring(v))
+            else
+                processedValue[k] = v
+            end
+        end
+        processedValue._encrypted = true
+    end
+    -- Add versioning metadata
+    if type(processedValue) == "table" then
+        processedValue._version = self.dataVersion or 1
+        processedValue._timestamp = os.time()
+    end
+    -- Store with module identifier
+    lia.data.set(self.uniqueID, processedValue, global, ignoreMap)
+    -- Trigger module-specific callback
+    if self.OnDataChanged then
+        self:OnDataChanged(value, global, ignoreMap)
+    end
+    -- Log data changes for debugging
+    if self.debug then
+        print("[MODULE] " .. self.uniqueID .. " data updated: " .. util.TableToJSON(processedValue, true))
+    end
+end
+
 ```
 
 ---

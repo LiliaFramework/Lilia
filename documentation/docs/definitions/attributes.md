@@ -134,11 +134,11 @@ Server
 function ATTRIBUTE:OnSetup(client, value)
     local char = client:getChar()
     if not char then return end
-        -- Set default attribute value if not already set
-        if value == 0 then
-            char:setAttrib(self.uniqueID, 10)
-            end
-        end
+    -- Set default attribute value if not already set
+    if value == 0 then
+        char:setAttrib(self.uniqueID, 10)
+    end
+end
 
 ```
 

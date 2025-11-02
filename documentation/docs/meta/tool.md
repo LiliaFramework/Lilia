@@ -52,8 +52,8 @@ tool.Stage = 1
 local tool = toolGunMeta:create()
 tool.Mode = "advanced_builder"
 tool.ClientConVar = {
-["build_size"] = "1",
-["build_material"] = "wood"
+    ["build_size"]     = "1",
+    ["build_material"] = "wood"
 }
 tool.Objects = {}
 tool.Stage = 0
@@ -78,7 +78,7 @@ During tool initialization to set up configurable options for the tool
 
 **Realm**
 
-Shared (different behavior on client vs server)
+Shared
 
 **Example Usage**
 
@@ -105,9 +105,9 @@ tool:createConVars()
 local tool = toolGunMeta:create()
 tool.Mode = "advanced_builder"
 tool.ClientConVar = {
-["build_size"] = "1",
-["build_material"] = "wood",
-["auto_align"] = "1"
+    ["build_size"]     = "1",
+    ["build_material"] = "wood",
+    ["auto_align"]     = "1"
 }
 tool:createConVars()
 
@@ -131,7 +131,7 @@ During tool operation to refresh data or synchronize with server/client state
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -186,7 +186,7 @@ During tool operation to refresh data or synchronize with server/client state
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -241,7 +241,7 @@ During tool operation to refresh data or synchronize with server/client state
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -296,7 +296,7 @@ When the tool needs to restrict player movement for precise operations
 
 **Realm**
 
-Client (affects local player movement)
+Client
 
 **Example Usage**
 
@@ -358,7 +358,7 @@ When the tool needs to restrict player movement for precise operations
 
 **Realm**
 
-Client (affects local player movement)
+Client
 
 **Example Usage**
 
@@ -420,7 +420,7 @@ When the tool needs to restrict player movement for precise operations
 
 **Realm**
 
-Client (affects local player movement)
+Client
 
 **Example Usage**
 
@@ -482,7 +482,7 @@ When the tool needs to restrict player movement for precise operations
 
 **Realm**
 
-Client (affects local player movement)
+Client
 
 **Example Usage**
 
@@ -544,7 +544,7 @@ Every frame when the tool gun is active and HUD should be displayed
 
 **Realm**
 
-Client (HUD rendering only occurs on client)
+Client
 
 **Example Usage**
 
@@ -612,7 +612,7 @@ Every frame when the tool gun is active and HUD should be displayed
 
 **Realm**
 
-Client (HUD rendering only occurs on client)
+Client
 
 **Example Usage**
 
@@ -680,7 +680,7 @@ Every frame when the tool gun is active and HUD should be displayed
 
 **Realm**
 
-Client (HUD rendering only occurs on client)
+Client
 
 **Example Usage**
 
@@ -748,7 +748,7 @@ Every frame when the tool gun is active and HUD should be displayed
 
 **Realm**
 
-Client (HUD rendering only occurs on client)
+Client
 
 **Example Usage**
 
@@ -820,7 +820,7 @@ When the tool needs to access server configuration values
 
 **Realm**
 
-Server (accesses server-side console variables)
+Server
 
 **Example Usage**
 
@@ -875,7 +875,7 @@ When the tool needs to provide a list of available ConVars for UI or configurati
 
 **Realm**
 
-Shared (can be used on both client and server)
+Shared
 
 **Example Usage**
 
@@ -910,7 +910,7 @@ for name, default in pairs(convars) do
         validatedConfig[name] = value
     else
         validatedConfig[name] = default
-        -- Invalid ConVar value for " .. name .. ", using default
+        print("Invalid ConVar value for " .. name .. ", using default")
     end
 end
 self:ApplyConfiguration(validatedConfig)
@@ -939,7 +939,7 @@ When the tool needs to access client configuration values from the owner
 
 **Realm**
 
-Shared (accesses client-side data through the owner)
+Shared
 
 **Example Usage**
 
@@ -1000,7 +1000,7 @@ When the tool needs numeric client configuration values with fallback defaults
 
 **Realm**
 
-Shared (accesses client-side data through the owner)
+Shared
 
 **Example Usage**
 
@@ -1027,9 +1027,9 @@ end
 ```lua
 -- High: Advanced numeric configuration with validation
 local numericConfig = {
-["build_size"] = {default = 1, min = 0.1, max = 10},
-["build_speed"] = {default = 1, min = 0.1, max = 5},
-["max_objects"] = {default = 50, min = 1, max = 1000}
+    ["build_size"]  = {default = 1,   min = 0.1, max = 10},
+    ["build_speed"] = {default = 1,   min = 0.1, max = 5},
+    ["max_objects"] = {default = 50,  min = 1,   max = 1000}
 }
 local validatedNumbers = {}
 for prop, config in pairs(numericConfig) do
@@ -1059,7 +1059,7 @@ Before performing tool operations to verify permissions
 
 **Realm**
 
-Shared (client always returns true, server checks ConVar)
+Shared
 
 **Example Usage**
 
@@ -1087,7 +1087,8 @@ end
 if not tool:allowed() then
     local playerName = tool:GetOwner():Name()
     local toolMode = tool:getMode()
-    print(string.format("Player %s attempted to use %s but was denied", playerName, toolMode))
+    print(string.format("Player %s attempted to use %s but was denied",
+        playerName, toolMode))
     if SERVER then
         tool:GetOwner():ChatPrint("Tool usage is currently disabled")
     end
@@ -1116,7 +1117,7 @@ When the tool gun is first created or deployed
 
 **Realm**
 
-Shared (can be overridden for specific tool initialization)
+Shared
 
 **Example Usage**
 
@@ -1178,7 +1179,7 @@ When the tool gun is first created or deployed
 
 **Realm**
 
-Shared (can be overridden for specific tool initialization)
+Shared
 
 **Example Usage**
 
@@ -1240,7 +1241,7 @@ When the tool gun is first created or deployed
 
 **Realm**
 
-Shared (can be overridden for specific tool initialization)
+Shared
 
 **Example Usage**
 
@@ -1319,9 +1320,9 @@ local mode = tool:getMode()
 local mode = tool:getMode()
 if mode == "builder" then
     tool:EnableBuildMode()
-    elseif mode == "remover" then
-        tool:EnableRemoveMode()
-    end
+elseif mode == "remover" then
+    tool:EnableRemoveMode()
+end
 
 ```
 
@@ -1399,11 +1400,11 @@ local isReloading = swep:IsReloading()
 -- Perform weapon-specific operations
 if weaponClass == "weapon_physgun" then
     self:HandlePhysgunSpecificLogic(swep)
-    elseif weaponClass == "weapon_physcannon" then
-        self:HandleGravityGunSpecificLogic(swep)
-    end
-    -- Update tool state based on weapon
-    self.LastWeaponCheck = CurTime()
+elseif weaponClass == "weapon_physcannon" then
+    self:HandleGravityGunSpecificLogic(swep)
+end
+-- Update tool state based on weapon
+self.LastWeaponCheck = CurTime()
 
 ```
 
@@ -1466,7 +1467,7 @@ local steamID = owner:SteamID()
 local team = owner:Team()
 -- Log tool usage
 print(string.format("Player %s (Team %d) used tool %s",
-owner:Name(), team, tool:getMode()))
+    owner:Name(), team, tool:getMode()))
 -- Apply team-based restrictions
 if self:HasTeamRestrictions(team) then
     tool.Message = "Your team cannot use this tool"
@@ -1536,15 +1537,15 @@ if weaponClass == "weapon_physgun" then
     if IsValid(heldEntity) then
         self:HandleHeldEntity(heldEntity)
     end
-    elseif weaponClass == "weapon_toolgun" then
-        -- Handle tool gun specific logic
-        local toolMode = self:getMode()
-        if toolMode == "builder" then
-            self:UpdateGhostEntity()
-        end
+elseif weaponClass == "weapon_toolgun" then
+    -- Handle tool gun specific logic
+    local toolMode = self:getMode()
+    if toolMode == "builder" then
+        self:UpdateGhostEntity()
     end
-    -- Update tool state based on weapon
-    self.LastWeaponUpdate = CurTime()
+end
+-- Update tool state based on weapon
+self.LastWeaponUpdate = CurTime()
 
 ```
 
@@ -1566,7 +1567,7 @@ When the player left-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -1656,7 +1657,7 @@ When the player left-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -1746,7 +1747,7 @@ When the player left-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -1836,7 +1837,7 @@ When the player left-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -1926,7 +1927,7 @@ When the player right-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2021,7 +2022,7 @@ When the player right-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2116,7 +2117,7 @@ When the player right-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2211,7 +2212,7 @@ When the player right-clicks while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2306,7 +2307,7 @@ When the player presses the reload key (default R) while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2374,7 +2375,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
+        print("Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects")
     end
 end
 
@@ -2398,7 +2399,7 @@ When the player presses the reload key (default R) while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2466,7 +2467,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
+        print("Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects")
     end
 end
 
@@ -2490,7 +2491,7 @@ When the player presses the reload key (default R) while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2558,7 +2559,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
+        print("Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects")
     end
 end
 
@@ -2582,7 +2583,7 @@ When the player presses the reload key (default R) while holding the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2650,7 +2651,7 @@ function tool:reload()
         net.Start("tool_objects_cleared")
         net.WriteUInt(clearedCount, 16)
         net.Send(owner)
-        -- Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects
+        print("Player " .. owner:Name() .. " cleared " .. clearedCount .. " tool objects")
     end
 end
 
@@ -2674,7 +2675,7 @@ When the player switches to or initially equips the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2739,7 +2740,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
+    print("Player " .. owner:Name() .. " deployed " .. mode .. " tool")
 end
 
 ```
@@ -2762,7 +2763,7 @@ When the player switches to or initially equips the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2827,7 +2828,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
+    print("Player " .. owner:Name() .. " deployed " .. mode .. " tool")
 end
 
 ```
@@ -2850,7 +2851,7 @@ When the player switches to or initially equips the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -2915,7 +2916,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
+    print("Player " .. owner:Name() .. " deployed " .. mode .. " tool")
 end
 
 ```
@@ -2938,7 +2939,7 @@ When the player switches to or initially equips the tool gun
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3003,7 +3004,7 @@ function tool:deploy()
     self.Stage = 0
     self.LastDeploy = CurTime()
     self.Message = string.format("%s tool ready", mode)
-    -- Player " .. owner:Name() .. " deployed " .. mode .. " tool
+    print("Player " .. owner:Name() .. " deployed " .. mode .. " tool")
 end
 
 ```
@@ -3026,7 +3027,7 @@ When the player switches away from the tool gun or puts it away
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3084,7 +3085,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
+    print("Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool")
 end
 
 ```
@@ -3107,7 +3108,7 @@ When the player switches away from the tool gun or puts it away
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3165,7 +3166,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
+    print("Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool")
 end
 
 ```
@@ -3188,7 +3189,7 @@ When the player switches away from the tool gun or puts it away
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3246,7 +3247,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
+    print("Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool")
 end
 
 ```
@@ -3269,7 +3270,7 @@ When the player switches away from the tool gun or puts it away
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3327,7 +3328,7 @@ function tool:holster()
         self:ResetClientState()
     end
     -- Log holster action
-    -- Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool
+    print("Player " .. owner:Name() .. " holstered " .. self:getMode() .. " tool")
 end
 
 ```
@@ -3350,7 +3351,7 @@ Every frame/tick while the tool gun is deployed and active
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3441,7 +3442,7 @@ Every frame/tick while the tool gun is deployed and active
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3532,7 +3533,7 @@ Every frame/tick while the tool gun is deployed and active
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3623,7 +3624,7 @@ Every frame/tick while the tool gun is deployed and active
 
 **Realm**
 
-Shared (can be overridden for specific tool behavior)
+Shared
 
 **Example Usage**
 
@@ -3769,7 +3770,7 @@ function tool:checkObjects()
         elseif SERVER and obj.Ent:GetPos():Distance(owner:GetPos()) > 5000 then
             -- Server-side distance check
             isValid = false
-        elseif CLIENT and not obj.Ent:GetNoDraw() == false then
+        elseif CLIENT and obj.Ent:GetNoDraw() then
             -- Client-side visibility check
             isValid = false
         end
@@ -3795,7 +3796,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
+            print("Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up")
         end
     end
     -- Update cleanup timestamp
@@ -3877,7 +3878,7 @@ function tool:checkObjects()
         elseif SERVER and obj.Ent:GetPos():Distance(owner:GetPos()) > 5000 then
             -- Server-side distance check
             isValid = false
-        elseif CLIENT and not obj.Ent:GetNoDraw() == false then
+        elseif CLIENT and obj.Ent:GetNoDraw() then
             -- Client-side visibility check
             isValid = false
         end
@@ -3903,7 +3904,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
+            print("Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up")
         end
     end
     -- Update cleanup timestamp
@@ -3985,7 +3986,7 @@ function tool:checkObjects()
         elseif SERVER and obj.Ent:GetPos():Distance(owner:GetPos()) > 5000 then
             -- Server-side distance check
             isValid = false
-        elseif CLIENT and not obj.Ent:GetNoDraw() == false then
+        elseif CLIENT and obj.Ent:GetNoDraw() then
             -- Client-side visibility check
             isValid = false
         end
@@ -4011,7 +4012,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
+            print("Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up")
         end
     end
     -- Update cleanup timestamp
@@ -4093,7 +4094,7 @@ function tool:checkObjects()
         elseif SERVER and obj.Ent:GetPos():Distance(owner:GetPos()) > 5000 then
             -- Server-side distance check
             isValid = false
-        elseif CLIENT and not obj.Ent:GetNoDraw() == false then
+        elseif CLIENT and obj.Ent:GetNoDraw() then
             -- Client-side visibility check
             isValid = false
         end
@@ -4119,7 +4120,7 @@ function tool:checkObjects()
             net.WriteUInt(removedCount, 8)
             net.Broadcast()
             -- Log cleanup action
-            -- Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up
+            print("Player " .. owner:Name() .. " had " .. removedCount .. " invalid tool objects cleaned up")
         end
     end
     -- Update cleanup timestamp
@@ -4435,10 +4436,10 @@ function tool:releaseGhostEntity()
         -- Store ghost entity data before removal (if needed)
         if self:getClientInfo("preserve_ghost_data") == "1" then
             self.LastGhostData = {
-            Model = self.GhostEntity:GetModel(),
-            Pos = self.GhostEntity:GetPos(),
-            Ang = self.GhostEntity:GetAngles(),
-            Time = CurTime()
+                Model = self.GhostEntity:GetModel(),
+                Pos   = self.GhostEntity:GetPos(),
+                Ang   = self.GhostEntity:GetAngles(),
+                Time  = CurTime()
             }
         end
         -- Clean up associated effects and particles
@@ -4458,13 +4459,13 @@ function tool:releaseGhostEntity()
             net.Broadcast()
             -- Log ghost entity removal
             print(string.format("Player %s removed ghost entity for %s tool",
-            owner:Name(), self:getMode()))
-            else
-                -- Client-side cleanup confirmation
-                self:ResetGhostMaterials()
-            end
+                owner:Name(), self:getMode()))
+        else
+            -- Client-side cleanup confirmation
+            self:ResetGhostMaterials()
         end
     end
+end
 
 ```
 
@@ -4526,10 +4527,10 @@ function tool:releaseGhostEntity()
         -- Store ghost entity data before removal (if needed)
         if self:getClientInfo("preserve_ghost_data") == "1" then
             self.LastGhostData = {
-            Model = self.GhostEntity:GetModel(),
-            Pos = self.GhostEntity:GetPos(),
-            Ang = self.GhostEntity:GetAngles(),
-            Time = CurTime()
+                Model = self.GhostEntity:GetModel(),
+                Pos   = self.GhostEntity:GetPos(),
+                Ang   = self.GhostEntity:GetAngles(),
+                Time  = CurTime()
             }
         end
         -- Clean up associated effects and particles
@@ -4549,13 +4550,13 @@ function tool:releaseGhostEntity()
             net.Broadcast()
             -- Log ghost entity removal
             print(string.format("Player %s removed ghost entity for %s tool",
-            owner:Name(), self:getMode()))
-            else
-                -- Client-side cleanup confirmation
-                self:ResetGhostMaterials()
-            end
+                owner:Name(), self:getMode()))
+        else
+            -- Client-side cleanup confirmation
+            self:ResetGhostMaterials()
         end
     end
+end
 
 ```
 
@@ -4617,10 +4618,10 @@ function tool:releaseGhostEntity()
         -- Store ghost entity data before removal (if needed)
         if self:getClientInfo("preserve_ghost_data") == "1" then
             self.LastGhostData = {
-            Model = self.GhostEntity:GetModel(),
-            Pos = self.GhostEntity:GetPos(),
-            Ang = self.GhostEntity:GetAngles(),
-            Time = CurTime()
+                Model = self.GhostEntity:GetModel(),
+                Pos   = self.GhostEntity:GetPos(),
+                Ang   = self.GhostEntity:GetAngles(),
+                Time  = CurTime()
             }
         end
         -- Clean up associated effects and particles
@@ -4640,13 +4641,13 @@ function tool:releaseGhostEntity()
             net.Broadcast()
             -- Log ghost entity removal
             print(string.format("Player %s removed ghost entity for %s tool",
-            owner:Name(), self:getMode()))
-            else
-                -- Client-side cleanup confirmation
-                self:ResetGhostMaterials()
-            end
+                owner:Name(), self:getMode()))
+        else
+            -- Client-side cleanup confirmation
+            self:ResetGhostMaterials()
         end
     end
+end
 
 ```
 

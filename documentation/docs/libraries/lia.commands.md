@@ -38,8 +38,8 @@ Shared
 ```lua
 -- Simple: Generate syntax for basic arguments
 local args = {
-{type = "string", name = "target"},
-{type = "player", name = "player"}
+    {type = "string", name = "target"},
+    {type = "player", name = "player"}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[string target] [player player]"
@@ -50,8 +50,8 @@ local syntax = lia.command.buildSyntaxFromArguments(args)
 ```lua
 -- Medium: Generate syntax with optional arguments
 local args = {
-{type = "string", name = "message"},
-{type = "bool", name = "silent", optional = true}
+    {type = "string", name = "message"},
+    {type = "bool", name = "silent", optional = true}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[string message] [bool silent optional]"
@@ -62,10 +62,10 @@ local syntax = lia.command.buildSyntaxFromArguments(args)
 ```lua
 -- High: Generate syntax for complex command with multiple argument types
 local args = {
-{type = "player", name = "target"},
-{type = "string", name = "reason"},
-{type = "number", name = "duration", optional = true},
-{type = "bool", name = "notify", optional = true}
+    {type = "player", name = "target"},
+    {type = "string", name = "reason"},
+    {type = "number", name = "duration", optional = true},
+    {type = "bool", name = "notify", optional = true}
 }
 local syntax = lia.command.buildSyntaxFromArguments(args)
 -- Returns: "[player target] [string reason] [number duration optional] [bool notify optional]"
@@ -102,10 +102,10 @@ Shared
 ```lua
 -- Simple: Register a basic command
 lia.command.add("hello", {
-onRun = function(client, arguments)
-client:notify("Hello, " .. client:Name() .. "!")
-end,
-desc = "Say hello"
+    onRun = function(client, arguments)
+        client:notify("Hello, " .. client:Name() .. "!")
+    end,
+    desc = "Say hello"
 })
 
 ```
@@ -114,18 +114,18 @@ desc = "Say hello"
 ```lua
 -- Medium: Register command with arguments and admin privilege
 lia.command.add("kick", {
-arguments = {
-{type = "player", name = "target"},
-{type = "string", name = "reason", optional = true}
-},
-onRun = function(client, arguments)
-local target = arguments[1]
-local reason = arguments[2] or "No reason provided"
-target:Kick(reason)
-client:notify("Kicked " .. target:Name())
-end,
-adminOnly = true,
-desc = "Kick a player from the server"
+    arguments = {
+        {type = "player", name = "target"},
+        {type = "string", name = "reason", optional = true}
+    },
+    onRun = function(client, arguments)
+        local target = arguments[1]
+        local reason = arguments[2] or "No reason provided"
+        target:Kick(reason)
+        client:notify("Kicked " .. target:Name())
+    end,
+    adminOnly = true,
+    desc = "Kick a player from the server"
 })
 
 ```
@@ -134,23 +134,23 @@ desc = "Kick a player from the server"
 ```lua
 -- High: Register complex command with aliases, custom access check, and privilege
 lia.command.add("ban", {
-arguments = {
-{type = "player", name = "target"},
-{type = "string", name = "reason"},
-{type = "number", name = "duration", optional = true}
-},
-alias = {"tempban", "tban"},
-onRun = function(client, arguments)
-local target = arguments[1]
-local reason = arguments[2]
-local duration = arguments[3] or 0
--- Ban logic here
-end,
-onCheckAccess = function(client, command, data)
-return client:IsSuperAdmin() or client:hasPrivilege("moderation")
-end,
-privilege = "moderation",
-desc = "Ban a player temporarily or permanently"
+    arguments = {
+        {type = "player", name = "target"},
+        {type = "string", name = "reason"},
+        {type = "number", name = "duration", optional = true}
+    },
+    alias = {"tempban", "tban"},
+    onRun = function(client, arguments)
+        local target = arguments[1]
+        local reason = arguments[2]
+        local duration = arguments[3] or 0
+        -- Ban logic here
+    end,
+    onCheckAccess = function(client, command, data)
+        return client:IsSuperAdmin() or client:hasPrivilege("moderation")
+    end,
+    privilege = "moderation",
+    desc = "Ban a player temporarily or permanently"
 })
 
 ```
@@ -212,12 +212,12 @@ if hasAccess then
     local faction = lia.faction.indices[char:getFaction()]
     if faction and faction.commands and faction.commands["arrest"] then
         client:notify("Faction command access granted!")
-        elseif client:hasPrivilege(privilege) then
-            client:notify("Privilege-based access granted!")
-        end
-        else
-            client:notifyError("Access denied: " .. privilege)
-        end
+    elseif client:hasPrivilege(privilege) then
+        client:notify("Privilege-based access granted!")
+    end
+else
+    client:notifyError("Access denied: " .. privilege)
+end
 
 ```
 
@@ -329,9 +329,9 @@ local hasAccess = lia.command.hasAccess(client, command)
 if hasAccess then
     lia.command.run(client, command, args)
     lia.log.add(client, "command", "/" .. command .. " " .. table.concat(args, " "))
-    else
-        client:notifyError("Access denied!")
-    end
+else
+    client:notifyError("Access denied!")
+end
 
 ```
 
@@ -389,10 +389,10 @@ local success = lia.command.parse(client, text)
 if success then
     -- If arguments are missing, client will be prompted
     -- If arguments are valid, PM command will execute
-    else
-        -- Not a command, treat as regular chat
-        lia.chatbox.add(client, text)
-    end
+else
+    -- Not a command, treat as regular chat
+    lia.chatbox.add(client, text)
+end
 
 ```
 

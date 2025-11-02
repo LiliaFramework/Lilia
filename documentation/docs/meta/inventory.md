@@ -33,7 +33,7 @@ Whenever inventory data needs to be accessed with a safe default value
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -55,9 +55,9 @@ end
 **High Complexity:**
 ```lua
 local settings = {
-autoSave = inventory:getData("autoSave", true),
-maxSlots = inventory:getData("maxSlots", 50),
-permissions = inventory:getData("permissions", {})
+    autoSave    = inventory:getData("autoSave", true),
+    maxSlots    = inventory:getData("maxSlots", 50),
+    permissions = inventory:getData("permissions", {})
 }
 for setting, value in pairs(settings) do
     print(setting .. ": " .. tostring(value))
@@ -88,7 +88,7 @@ During inventory type registration to create specialized inventory types
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -139,7 +139,7 @@ During inventory type registration to create specialized inventory types
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -185,7 +185,7 @@ During inventory type registration, allows customization of inventory behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -212,8 +212,8 @@ function AdvancedInventory:configure()
     self.config.data["permissions"] = {default = {}}
     self.config.data["settings"] = {default = {}}
     self:addDataProxy("permissions", function(old, new)
-    print("Permissions changed from", old, "to", new)
-end)
+        print("Permissions changed from", old, "to", new)
+    end)
 end
 
 ```
@@ -236,7 +236,7 @@ During inventory type registration, allows customization of inventory behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -263,8 +263,8 @@ function AdvancedInventory:configure()
     self.config.data["permissions"] = {default = {}}
     self.config.data["settings"] = {default = {}}
     self:addDataProxy("permissions", function(old, new)
-    print("Permissions changed from", old, "to", new)
-end)
+        print("Permissions changed from", old, "to", new)
+    end)
 end
 
 ```
@@ -287,7 +287,7 @@ During inventory type registration, allows customization of inventory behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -314,8 +314,8 @@ function AdvancedInventory:configure()
     self.config.data["permissions"] = {default = {}}
     self.config.data["settings"] = {default = {}}
     self:addDataProxy("permissions", function(old, new)
-    print("Permissions changed from", old, "to", new)
-end)
+        print("Permissions changed from", old, "to", new)
+    end)
 end
 
 ```
@@ -338,7 +338,7 @@ During inventory type registration, allows customization of inventory behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -365,8 +365,8 @@ function AdvancedInventory:configure()
     self.config.data["permissions"] = {default = {}}
     self.config.data["settings"] = {default = {}}
     self:addDataProxy("permissions", function(old, new)
-    print("Permissions changed from", old, "to", new)
-end)
+        print("Permissions changed from", old, "to", new)
+    end)
 end
 
 ```
@@ -396,14 +396,14 @@ During inventory configuration to set up data change callbacks
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
 **Low Complexity:**
 ```lua
 inventory:addDataProxy("money", function(old, new)
-print("Money changed from", old, "to", new)
+    print("Money changed from", old, "to", new)
 end)
 
 ```
@@ -411,9 +411,9 @@ end)
 **Medium Complexity:**
 ```lua
 inventory:addDataProxy("level", function(old, new)
-if new > old then
-    lia.chat.send(nil, "Level up!", player)
-end
+    if new > old then
+        lia.chat.send(nil, "Level up!", player)
+    end
 end)
 
 ```
@@ -455,7 +455,7 @@ When you need to find all instances of a particular item type
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -510,7 +510,7 @@ During inventory type definition to make it available for use
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -555,7 +555,7 @@ When you need to create a new inventory of this type
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -599,7 +599,7 @@ For debugging, logging, or display purposes
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -642,7 +642,7 @@ When you need to access type-specific settings or behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -697,7 +697,7 @@ Automatically when setData is called and data changes
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -724,14 +724,14 @@ end
 function AdvancedInventory:onDataChanged(key, old, new)
     if key == "permissions" then
         hook.Run("OnPermissionsChanged", self, old, new)
-        elseif key == "settings" then
-            for setting, value in pairs(new) do
-                if old[setting] ~= value then
-                    print("Setting " .. setting .. " changed")
-                end
+    elseif key == "settings" then
+        for setting, value in pairs(new) do
+            if old[setting] ~= value then
+                print("Setting " .. setting .. " changed")
             end
         end
     end
+end
 
 ```
 
@@ -762,7 +762,7 @@ Automatically when setData is called and data changes
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -789,14 +789,14 @@ end
 function AdvancedInventory:onDataChanged(key, old, new)
     if key == "permissions" then
         hook.Run("OnPermissionsChanged", self, old, new)
-        elseif key == "settings" then
-            for setting, value in pairs(new) do
-                if old[setting] ~= value then
-                    print("Setting " .. setting .. " changed")
-                end
+    elseif key == "settings" then
+        for setting, value in pairs(new) do
+            if old[setting] ~= value then
+                print("Setting " .. setting .. " changed")
             end
         end
     end
+end
 
 ```
 
@@ -827,7 +827,7 @@ Automatically when setData is called and data changes
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -854,14 +854,14 @@ end
 function AdvancedInventory:onDataChanged(key, old, new)
     if key == "permissions" then
         hook.Run("OnPermissionsChanged", self, old, new)
-        elseif key == "settings" then
-            for setting, value in pairs(new) do
-                if old[setting] ~= value then
-                    print("Setting " .. setting .. " changed")
-                end
+    elseif key == "settings" then
+        for setting, value in pairs(new) do
+            if old[setting] ~= value then
+                print("Setting " .. setting .. " changed")
             end
         end
     end
+end
 
 ```
 
@@ -883,7 +883,7 @@ When you need to iterate through all inventory items
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -940,7 +940,7 @@ When you need items of a particular type for processing
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -995,7 +995,7 @@ When you need any single item of a type (efficiency over getting all)
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1053,7 +1053,7 @@ For quick boolean checks before performing actions
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1108,7 +1108,7 @@ When you need to know how many of a particular item type exist
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1157,7 +1157,7 @@ When you need to reference this specific inventory instance
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1181,8 +1181,7 @@ local function transferItems(fromInv, toInv, itemType)
         fromInv:removeItem(item:getID())
         toInv:addItem(item)
     end
-    print("Transferred", #items, "items between inventories",
-    fromInv:getID(), "and", toInv:getID())
+    print("Transferred", #items, "items between inventories", fromInv:getID(), "and", toInv:getID())
 end
 
 ```
@@ -1385,8 +1384,8 @@ deferred:next(function(id) print("Created inventory:", id) end)
 **Medium Complexity:**
 ```lua
 local initialData = {
-char = player:getCharacter():getID(),
-permissions = {"read", "write"}
+    char        = player:getCharacter():getID(),
+    permissions = {"read", "write"}
 }
 inventory:initializeStorage(initialData)
 
@@ -1397,10 +1396,10 @@ inventory:initializeStorage(initialData)
 local function createGuildInventory(guildData)
     local inventory = lia.inventory.new("guild_storage")
     local initialData = {
-    char = guildData.leaderID,
-    guildID = guildData.id,
-    accessLevel = "member",
-    maxSlots = guildData.tier * 50
+        char        = guildData.leaderID,
+        guildID     = guildData.id,
+        accessLevel = "member",
+        maxSlots    = guildData.tier * 50
     }
     return inventory:initializeStorage(initialData)
 end
@@ -1821,10 +1820,10 @@ if canAdd then inventory:addItem(item) end
 ```lua
 local function checkInventoryPermissions(inv, player, action)
     local context = {
-    client = player,
-    itemType = "weapon",
-    quantity = 1,
-    time = os.time()
+        client   = player,
+        itemType = "weapon",
+        quantity = 1,
+        time     = os.time()
     }
     local allowed, reason = inv:canAccess(action, context)
     if not allowed then
@@ -1868,7 +1867,7 @@ Server
 **Low Complexity:**
 ```lua
 inventory:addAccessRule(function(inv, action, context)
-if action == "repl" then return true end
+    if action == "repl" then return true end
 end)
 
 ```
@@ -1876,9 +1875,9 @@ end)
 **Medium Complexity:**
 ```lua
 inventory:addAccessRule(function(inv, action, context)
-if context.client == inv:getOwner() then
-    return true, "Owner access"
-end
+    if context.client == inv:getOwner() then
+        return true, "Owner access"
+    end
 end)
 
 ```
@@ -1888,22 +1887,22 @@ end)
 local function complexAccessRule(inv, action, context)
     local client = context.client
     if not client then return false, "No client provided" end
-        -- Check if client is admin
-        if client:isAdmin() then return true, "Admin access" end
-            -- Check time-based restrictions
-            local currentHour = os.date("%H", os.time())
-            if action == "remove" and currentHour < 6 then
-                return false, "Withdrawals not allowed before 6 AM"
-            end
-            -- Check item-specific rules
-            if context.itemType == "weapon" then
-                if not client:hasFlag("can_carry_weapons") then
-                    return false, "No weapon permit"
-                end
-            end
-            return true
+    -- Check if client is admin
+    if client:isAdmin() then return true, "Admin access" end
+    -- Check time-based restrictions
+    local currentHour = os.date("%H", os.time())
+    if action == "remove" and currentHour < 6 then
+        return false, "Withdrawals not allowed before 6 AM"
+    end
+    -- Check item-specific rules
+    if context.itemType == "weapon" then
+        if not client:hasFlag("can_carry_weapons") then
+            return false, "No weapon permit"
         end
-        inventory:addAccessRule(complexAccessRule)
+    end
+    return true
+end
+inventory:addAccessRule(complexAccessRule)
 
 ```
 
@@ -2053,8 +2052,8 @@ end
 ```lua
 function PlayerInventory:onInstanced()
     self:addAccessRule(function(inv, action, context)
-    return context.client == inv:getOwner()
-end)
+        return context.client == inv:getOwner()
+    end)
 end
 
 ```
@@ -2068,15 +2067,15 @@ function SecureInventory:onInstanced()
     self.failedAttempts = 0
     -- Set up monitoring
     self:addAccessRule(function(inv, action, context)
-    if action == "remove" and inv.securityLevel > 3 then
-        table.insert(inv.accessLog, {
-        client = context.client,
-        action = action,
-        time = os.time()
-        })
-    end
-    return true
-end)
+        if action == "remove" and inv.securityLevel > 3 then
+            table.insert(inv.accessLog, {
+                client = context.client,
+                action = action,
+                time   = os.time()
+            })
+        end
+        return true
+    end)
 end
 
 ```
@@ -2116,8 +2115,8 @@ end
 ```lua
 function PlayerInventory:onInstanced()
     self:addAccessRule(function(inv, action, context)
-    return context.client == inv:getOwner()
-end)
+        return context.client == inv:getOwner()
+    end)
 end
 
 ```
@@ -2131,15 +2130,15 @@ function SecureInventory:onInstanced()
     self.failedAttempts = 0
     -- Set up monitoring
     self:addAccessRule(function(inv, action, context)
-    if action == "remove" and inv.securityLevel > 3 then
-        table.insert(inv.accessLog, {
-        client = context.client,
-        action = action,
-        time = os.time()
-        })
-    end
-    return true
-end)
+        if action == "remove" and inv.securityLevel > 3 then
+            table.insert(inv.accessLog, {
+                client = context.client,
+                action = action,
+                time   = os.time()
+            })
+        end
+        return true
+    end)
 end
 
 ```
@@ -2179,8 +2178,8 @@ end
 ```lua
 function PlayerInventory:onInstanced()
     self:addAccessRule(function(inv, action, context)
-    return context.client == inv:getOwner()
-end)
+        return context.client == inv:getOwner()
+    end)
 end
 
 ```
@@ -2194,15 +2193,15 @@ function SecureInventory:onInstanced()
     self.failedAttempts = 0
     -- Set up monitoring
     self:addAccessRule(function(inv, action, context)
-    if action == "remove" and inv.securityLevel > 3 then
-        table.insert(inv.accessLog, {
-        client = context.client,
-        action = action,
-        time = os.time()
-        })
-    end
-    return true
-end)
+        if action == "remove" and inv.securityLevel > 3 then
+            table.insert(inv.accessLog, {
+                client = context.client,
+                action = action,
+                time   = os.time()
+            })
+        end
+        return true
+    end)
 end
 
 ```
@@ -2242,8 +2241,8 @@ end
 ```lua
 function PlayerInventory:onInstanced()
     self:addAccessRule(function(inv, action, context)
-    return context.client == inv:getOwner()
-end)
+        return context.client == inv:getOwner()
+    end)
 end
 
 ```
@@ -2257,15 +2256,15 @@ function SecureInventory:onInstanced()
     self.failedAttempts = 0
     -- Set up monitoring
     self:addAccessRule(function(inv, action, context)
-    if action == "remove" and inv.securityLevel > 3 then
-        table.insert(inv.accessLog, {
-        client = context.client,
-        action = action,
-        time = os.time()
-        })
-    end
-    return true
-end)
+        if action == "remove" and inv.securityLevel > 3 then
+            table.insert(inv.accessLog, {
+                client = context.client,
+                action = action,
+                time   = os.time()
+            })
+        end
+        return true
+    end)
 end
 
 ```
@@ -2523,7 +2522,7 @@ Server
 **Low Complexity:**
 ```lua
 inventory:loadItems():next(function(items)
-print("Loaded", #items, "items")
+    print("Loaded", #items, "items")
 end)
 
 ```
@@ -2531,11 +2530,11 @@ end)
 **Medium Complexity:**
 ```lua
 playerInventory:loadItems():next(function(items)
-for _, item in pairs(items) do
-    if item.uniqueID == "weapon" then
-        player:giveWeapon(item.data.weaponClass)
+    for _, item in pairs(items) do
+        if item.uniqueID == "weapon" then
+            player:giveWeapon(item.data.weaponClass)
+        end
     end
-end
 end)
 
 ```
@@ -2544,12 +2543,12 @@ end)
 ```lua
 local function loadInventoryWithValidation(inv)
     return inv:loadItems():next(function(items)
-    -- Validate loaded items
-    local validItems = {}
-    local invalidCount = 0
-    for _, item in pairs(items) do
-        if inv:validateItem(item) then
-            table.insert(validItems, item)
+        -- Validate loaded items
+        local validItems = {}
+        local invalidCount = 0
+        for _, item in pairs(items) do
+            if inv:validateItem(item) then
+                table.insert(validItems, item)
             else
                 invalidCount = invalidCount + 1
                 lia.log.add(nil, "invalid_item", item:getID(), inv:getID())
@@ -2877,8 +2876,8 @@ local inventory = MyInventory:instance({char = playerID})
 **Medium Complexity:**
 ```lua
 local bank = BankInventory:instance({
-char = characterID,
-accessLevel = "premium"
+    char        = characterID,
+    accessLevel = "premium"
 })
 
 ```
@@ -2887,26 +2886,26 @@ accessLevel = "premium"
 ```lua
 local function createComplexInventory(typeClass, config)
     local inventory = typeClass:instance({
-    char = config.ownerID,
-    permissions = config.permissions,
-    settings = config.settings,
-    maxSlots = config.maxSlots or 50
+        char        = config.ownerID,
+        permissions = config.permissions,
+        settings    = config.settings,
+        maxSlots    = config.maxSlots or 50
     })
     -- Configure based on type
     if config.secure then
         inventory:addAccessRule(function(inv, action, context)
-        if action == "remove" and not context.client:isAdmin() then
-            return false, "Secure inventory - admin access required"
-        end
-        return true
-    end)
-end
-return inventory
+            if action == "remove" and not context.client:isAdmin() then
+                return false, "Secure inventory - admin access required"
+            end
+            return true
+        end)
+    end
+    return inventory
 end
 local secureBank = createComplexInventory(BankInventory, {
-ownerID = playerID,
-secure = true,
-maxSlots = 100
+    ownerID = playerID,
+    secure  = true,
+    maxSlots = 100
 })
 
 ```
@@ -3193,11 +3192,11 @@ local function createCustomInventoryUI(inv)
     sortButton:Dock(BOTTOM)
     sortButton:SetText("Sort Items")
     sortButton.DoClick = function()
-    net.Start("InventorySort")
-    net.WriteType(inv:getID())
-    net.SendToServer()
-end
-return frame
+        net.Start("InventorySort")
+        net.WriteType(inv:getID())
+        net.SendToServer()
+    end
+    return frame
 end
 local ui = createCustomInventoryUI(playerInventory)
 ui:MakePopup()

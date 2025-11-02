@@ -53,9 +53,9 @@ lia.color.register("semitransparent", {255, 255, 255, 128})
 ```lua
 -- High: Register multiple colors from configuration
 local colorConfig = {
-primary = {100, 150, 200},
-secondary = {200, 100, 150},
-accent = {150, 200, 100}
+    primary   = {100, 150, 200},
+    secondary = {200, 100, 150},
+    accent    = {150, 200, 100}
 }
 for name, color in pairs(colorConfig) do
     lia.color.register(name, color)
@@ -115,10 +115,10 @@ local darker = lia.color.adjust(baseColor, -30, -30, -30)
 local function adjustColorForTime(color, timeOfDay)
     local multiplier = math.sin(timeOfDay * math.pi / 12) * 0.3
     return lia.color.adjust(color,
-    multiplier * 50,
-    multiplier * 30,
-    multiplier * 20,
-    multiplier * 100
+        multiplier * 50,
+        multiplier * 30,
+        multiplier * 20,
+        multiplier * 100
     )
 end
 
@@ -221,8 +221,8 @@ end
 local function getThemeSpecificColor(colorName)
     local theme = lia.color.getCurrentTheme()
     local themeColors = {
-    dark = {primary = Color(100, 100, 100)},
-    light = {primary = Color(200, 200, 200)}
+        dark  = {primary = Color(100, 100, 100)},
+        light = {primary = Color(200, 200, 200)}
     }
     return themeColors[theme] and themeColors[theme][colorName] or Color(255, 255, 255)
 end
@@ -332,10 +332,10 @@ end
 local function generateColorScheme()
     local mainColor = lia.color.getMainColor()
     return {
-    primary = mainColor,
-    secondary = lia.color.adjust(mainColor, -50, -50, -50),
-    accent = lia.color.adjust(mainColor, 50, 50, 50),
-    background = lia.color.darken(mainColor, 0.8)
+        primary    = mainColor,
+        secondary  = lia.color.adjust(mainColor, -50, -50, -50),
+        accent     = lia.color.adjust(mainColor, 50, 50, 50),
+        background = lia.color.darken(mainColor, 0.8)
     }
 end
 
@@ -449,11 +449,11 @@ local themeQueue = {}
 local function queueThemeChange(themeName)
     if lia.color.isTransitionActive() then
         table.insert(themeQueue, themeName)
-        else
-            lia.color.applyTheme(themeName, true)
-        end
+    else
+        lia.color.applyTheme(themeName, true)
     end
-    hook.Add("OnThemeChanged", "ProcessThemeQueue", function()
+end
+hook.Add("OnThemeChanged", "ProcessThemeQueue", function()
     if #themeQueue > 0 and not lia.color.isTransitionActive() then
         local nextTheme = table.remove(themeQueue, 1)
         lia.color.applyTheme(nextTheme, true)
@@ -501,8 +501,8 @@ lia.color.testThemeTransition("dark")
 local function previewTheme(themeName)
     lia.color.testThemeTransition(themeName)
     timer.Simple(2, function()
-    lia.color.applyTheme(lia.color.getCurrentTheme(), true)
-end)
+        lia.color.applyTheme(lia.color.getCurrentTheme(), true)
+    end)
 end
 
 ```
@@ -514,11 +514,11 @@ local previewThemes = {"dark", "light", "blue", "red"}
 local currentPreview = 1
 local function cycleThemePreview()
     if lia.color.isTransitionActive() then return end
-        local theme = previewThemes[currentPreview]
-        lia.color.testThemeTransition(theme)
-        currentPreview = (currentPreview % #previewThemes) + 1
-        timer.Simple(3, cycleThemePreview)
-    end
+    local theme = previewThemes[currentPreview]
+    lia.color.testThemeTransition(theme)
+    currentPreview = (currentPreview % #previewThemes) + 1
+    timer.Simple(3, cycleThemePreview)
+end
 
 ```
 
@@ -579,12 +579,12 @@ local function customThemeTransition(themeName, callback)
     local function checkProgress()
         if not lia.color.isTransitionActive() then
             if callback then callback() end
-                return
-            end
-            timer.Simple(0.1, checkProgress)
+            return
         end
-        checkProgress()
+        timer.Simple(0.1, checkProgress)
     end
+    checkProgress()
+end
 
 ```
 
@@ -629,10 +629,10 @@ end
 local function processColorData(data)
     if lia.color.isColor(data) then
         return data
-        else
-            return Color(255, 255, 255)
-        end
+    else
+        return Color(255, 255, 255)
     end
+end
 
 ```
 
@@ -647,13 +647,13 @@ local function validateThemeData(themeData)
                     error("Invalid color at " .. key .. "[" .. i .. "]")
                 end
             end
-            elseif lia.color.isColor(value) then
-                -- Valid color
-                else
-                    error("Invalid color at " .. key)
-                end
-            end
+        elseif lia.color.isColor(value) then
+            -- Valid color
+        else
+            error("Invalid color at " .. key)
         end
+    end
+end
 
 ```
 
@@ -695,10 +695,10 @@ local function createThemedPanel()
     local panel = vgui.Create("DPanel")
     panel:SetBackgroundColor(colors.background)
     panel.Paint = function(self, w, h)
-    draw.RoundedBox(4, 0, 0, w, h, colors.background)
-    draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
-end
-return panel
+        draw.RoundedBox(4, 0, 0, w, h, colors.background)
+        draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
+    end
+    return panel
 end
 
 ```
@@ -709,13 +709,13 @@ end
 local function createAdvancedUI()
     local colors = lia.color.returnMainAdjustedColors()
     local ui = {
-    background = colors.background,
-    primary = colors.accent,
-    secondary = colors.sidebar,
-    text = colors.text,
-    hover = colors.hover,
-    border = colors.border,
-    highlight = colors.highlight
+        background = colors.background,
+        primary    = colors.accent,
+        secondary  = colors.sidebar,
+        text       = colors.text,
+        hover      = colors.hover,
+        border     = colors.border,
+        highlight  = colors.highlight
     }
     -- Apply colors to multiple UI elements
     for _, element in ipairs(uiElements) do
@@ -768,14 +768,14 @@ local blendedColor = lia.color.lerp(5, Color(255, 0, 0), Color(0, 255, 0))
 local function fadeBetweenColors(startColor, endColor, duration)
     local startTime = CurTime()
     hook.Add("Think", "ColorFade", function()
-    local elapsed = CurTime() - startTime
-    local progress = math.min(elapsed / duration, 1)
-    if progress >= 1 then
-        hook.Remove("Think", "ColorFade")
-    end
-    local currentColor = lia.color.lerp(10, startColor, endColor)
-    -- Use currentColor for UI elements
-end)
+        local elapsed = CurTime() - startTime
+        local progress = math.min(elapsed / duration, 1)
+        if progress >= 1 then
+            hook.Remove("Think", "ColorFade")
+        end
+        local currentColor = lia.color.lerp(10, startColor, endColor)
+        -- Use currentColor for UI elements
+    end)
 end
 
 ```
@@ -838,14 +838,14 @@ local blendedColor = lia.color.lerp(5, Color(255, 0, 0), Color(0, 255, 0))
 local function fadeBetweenColors(startColor, endColor, duration)
     local startTime = CurTime()
     hook.Add("Think", "ColorFade", function()
-    local elapsed = CurTime() - startTime
-    local progress = math.min(elapsed / duration, 1)
-    if progress >= 1 then
-        hook.Remove("Think", "ColorFade")
-    end
-    local currentColor = lia.color.lerp(10, startColor, endColor)
-    -- Use currentColor for UI elements
-end)
+        local elapsed = CurTime() - startTime
+        local progress = math.min(elapsed / duration, 1)
+        if progress >= 1 then
+            hook.Remove("Think", "ColorFade")
+        end
+        local currentColor = lia.color.lerp(10, startColor, endColor)
+        -- Use currentColor for UI elements
+    end)
 end
 
 ```
@@ -898,9 +898,9 @@ Shared
 ```lua
 -- Simple: Register a basic theme
 lia.color.registerTheme("MyTheme", {
-maincolor = Color(100, 150, 200),
-background = Color(20, 20, 20),
-text = Color(255, 255, 255)
+    maincolor   = Color(100, 150, 200),
+    background  = Color(20, 20, 20),
+    text        = Color(255, 255, 255)
 })
 
 ```
@@ -909,12 +909,12 @@ text = Color(255, 255, 255)
 ```lua
 -- Medium: Register theme with full color set
 lia.color.registerTheme("CustomDark", {
-header = Color(40, 40, 40),
-background = Color(25, 25, 25),
-button = Color(54, 54, 54),
-maincolor = Color(106, 108, 197),
-text = Color(255, 255, 255),
-accent = Color(106, 108, 197)
+    header     = Color(40, 40, 40),
+    background = Color(25, 25, 25),
+    button     = Color(54, 54, 54),
+    maincolor  = Color(106, 108, 197),
+    text       = Color(255, 255, 255),
+    accent     = Color(106, 108, 197)
 })
 
 ```
@@ -924,15 +924,15 @@ accent = Color(106, 108, 197)
 -- High: Dynamic theme generation
 local function generateThemeFromConfig(config)
     local themeData = {
-    maincolor = Color(config.primary.r, config.primary.g, config.primary.b),
-    background = Color(config.background.r, config.background.g, config.background.b),
-    text = Color(config.text.r, config.text.g, config.text.b),
-    accent = Color(config.accent.r, config.accent.g, config.accent.b),
-    panel = {
-    Color(config.panel1.r, config.panel1.g, config.panel1.b),
-    Color(config.panel2.r, config.panel2.g, config.panel2.b),
-    Color(config.panel3.r, config.panel3.g, config.panel3.b)
-    }
+        maincolor  = Color(config.primary.r, config.primary.g, config.primary.b),
+        background = Color(config.background.r, config.background.g, config.background.b),
+        text       = Color(config.text.r, config.text.g, config.text.b),
+        accent     = Color(config.accent.r, config.accent.g, config.accent.b),
+        panel      = {
+            Color(config.panel1.r, config.panel1.g, config.panel1.b),
+            Color(config.panel2.r, config.panel2.g, config.panel2.b),
+            Color(config.panel3.r, config.panel3.g, config.panel3.b)
+        }
     }
     lia.color.registerTheme(config.name, themeData)
 end
@@ -979,9 +979,9 @@ local function createThemeMenu()
         local button = vgui.Create("DButton", menu)
         button:SetText(themeName)
         button.DoClick = function()
-        lia.color.applyTheme(themeName, true)
+            lia.color.applyTheme(themeName, true)
+        end
     end
-end
 end
 
 ```
@@ -996,15 +996,15 @@ local function validateAndManageThemes()
         local themeData = lia.color.themes[themeName]
         if themeData and themeData.maincolor then
             table.insert(validThemes, {
-            name = themeName,
-            displayName = themeName:gsub("_", " "):gsub("(%a)([%w]*)", function(first, rest)
-            return first:upper() .. rest:lower()
-        end),
-        mainColor = themeData.maincolor
-        })
+                name        = themeName,
+                displayName = themeName:gsub("_", " "):gsub("(%a)([%w]*)", function(first, rest)
+                    return first:upper() .. rest:lower()
+                end),
+                mainColor   = themeData.maincolor
+            })
+        end
     end
-end
-return validThemes
+    return validThemes
 end
 
 ```

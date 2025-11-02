@@ -267,9 +267,10 @@ chat.AddText(Color(255, 255, 255), displayName .. ": " .. message)
 **High Complexity:**
 ```lua
 -- High: Use in UI display system
-local char = character:getDisplayedName(client)
-local nameColor = char == "unknown" and Color(128, 128, 128) or Color(255, 255, 255)
-draw.SimpleText(char, "DermaDefault", x, y, nameColor)
+local char = target:getChar()
+local displayName = char:getDisplayedName(client)
+local nameColor = displayName == "unknown" and Color(128, 128, 128) or Color(255, 255, 255)
+draw.SimpleText(displayName, "DermaDefault", x, y, nameColor)
 
 ```
 
@@ -328,9 +329,9 @@ local char = player:getChar()
 local totalCost = calculateTotalCost(items)
 if char:hasMoney(totalCost) then
     processTransaction(char, items, totalCost)
-    else
-        showInsufficientFundsError(char, totalCost)
-    end
+else
+    showInsufficientFundsError(char, totalCost)
+end
 
 ```
 
@@ -388,9 +389,9 @@ local char = player:getChar()
 local requiredFlags = "adm"
 if char:hasFlags(requiredFlags) then
     showAdminPanel(player)
-    else
-        showAccessDenied(player)
-    end
+else
+    showAccessDenied(player)
+end
 
 ```
 
@@ -448,9 +449,9 @@ local char = player:getChar()
 local hasWeapon = char:getItemWeapon(requireEquip)
 if hasWeapon then
     processWeaponAction(char, action)
-    else
-        showWeaponRequiredError(char)
-    end
+else
+    showWeaponRequiredError(char)
+end
 
 ```
 
@@ -540,11 +541,37 @@ Shared
 
 **Low Complexity:**
 ```lua
-        Medium Complexity:
+-- Simple: Get strength boosts
+local char = player:getChar()
+local strBoosts = char:getBoost("str")
+if strBoosts then
+    print("Has strength boosts")
+end
 
-        High Complexity:
+```
 
-]]
+**Medium Complexity:**
+```lua
+-- Medium: Check specific boost
+local char = player:getChar()
+local boosts = char:getBoost("int")
+if boosts and boosts["item_boost"] then
+    print("Has item intelligence boost")
+end
+
+```
+
+**High Complexity:**
+```lua
+-- High: Use in boost management system
+local char = player:getChar()
+local boosts = char:getBoost(attribID)
+if boosts then
+    for boostID, value in pairs(boosts) do
+        processBoost(char, attribID, boostID, value)
+    end
+end
+
 ```
 
 ---
@@ -591,9 +618,9 @@ local char = player:getChar()
 local targetID = target:getChar():getID()
 if char:doesRecognize(targetID) then
     showRealName(char, target)
-    else
-        showUnknownName(char, target)
-    end
+else
+    showUnknownName(char, target)
+end
 
 ```
 
@@ -653,9 +680,9 @@ local char = player:getChar()
 local targetID = target:getChar():getID()
 if char:doesFakeRecognize(targetID) then
     showFakeName(char, target)
-    else
-        showUnknownName(char, target)
-    end
+else
+    showUnknownName(char, target)
+end
 
 ```
 
@@ -710,18 +737,27 @@ char:setData("lastLogin", os.time())
 
 **Medium Complexity:**
 ```lua
+-- Medium: Set multiple values
+local char = player:getChar()
+char:setData({
+    ["level"]      = 5,
+    ["experience"] = 1000,
+    ["class"]      = "warrior"
+})
 
 ```
 
-**Char Complexity:**
+**High Complexity:**
 ```lua
-High Complexity:
+-- High: Use in data management system
+local char = player:getChar()
+local dataToSet = {
+    ["inventory"] = serializeInventory(inventory),
+    ["position"]  = player:GetPos(),
+    ["health"]    = player:Health()
+}
+char:setData(dataToSet, nil, false, specificPlayer)
 
-```
-
-**Char Complexity:**
-```lua
-]]
 ```
 
 ---
@@ -946,9 +982,9 @@ local newClass = determineClass(char, player)
 if char:joinClass(newClass) then
     updateCharacterUI(player)
     notifyClassChange(player, newClass)
-    else
-        showClassChangeError(player, newClass)
-    end
+else
+    showClassChangeError(player, newClass)
+end
 
 ```
 
@@ -1434,7 +1470,7 @@ char:save()
 -- Medium: Save with callback
 local char = player:getChar()
 char:save(function()
-print("Character saved successfully")
+    print("Character saved successfully")
 end)
 
 ```
@@ -1444,9 +1480,9 @@ end)
 -- High: Use in save system
 local char = player:getChar()
 char:save(function()
-updateCharacterCache(char)
-notifySaveComplete(player)
-logCharacterSave(char)
+    updateCharacterCache(char)
+    notifySaveComplete(player)
+    logCharacterSave(char)
 end)
 
 ```

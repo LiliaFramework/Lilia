@@ -98,10 +98,10 @@ Below is a comprehensive example showing how to define a complete item with all 
         ITEM.url = "https://example.com"
 
 -- Basic item identification
-ITEM.name = "Website Link"                        -- Display name shown to players
-ITEM.desc = "A link to an external website"       -- Description text
-ITEM.model = "models/props_interiors/pot01a.mdl"  -- 3D model for the item
-ITEM.url = "https://example.com"                  -- URL to open when used
+    ITEM.name = "Website Link"                        -- Display name shown to players
+    ITEM.desc = "A link to an external website"       -- Description text
+    ITEM.model = "models/props_interiors/pot01a.mdl"  -- 3D model for the item
+    ITEM.url = "https://example.com"                  -- URL to open when used
 
 ```
 

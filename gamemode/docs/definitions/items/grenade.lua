@@ -111,16 +111,16 @@ ITEM.height = 1
 --[[
     Purpose:
         Sets the health value for the item when it's dropped as an entity in the world
-        
+
     When Called:
         During item definition (used when item is spawned as entity)
-        
+
     Notes:
         - Defaults to 100 if not specified
         - When the item entity takes damage, its health decreases
         - Item is destroyed when health reaches 0
         - Only applies if ITEM.CanBeDestroyed is true (controlled by config)
-        
+
     Example Usage:
         ```lua
         ITEM.health = 250  -- Item can take 250 damage before being destroyed

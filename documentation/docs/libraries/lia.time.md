@@ -30,7 +30,7 @@ When displaying relative timestamps, such as "last seen" times, message timestam
 
 **Realm**
 
-Shared (works on both client and server)
+Shared
 
 **Example Usage**
 
@@ -87,7 +87,7 @@ When converting date strings to structured data for further processing or valida
 
 **Realm**
 
-Shared (works on both client and server)
+Shared
 
 **Example Usage**
 
@@ -141,7 +141,7 @@ When displaying current date/time in UI elements, logs, or status displays
 
 **Realm**
 
-Shared (works on both client and server)
+Shared
 
 **Example Usage**
 
@@ -206,7 +206,7 @@ When displaying durations, cooldowns, or time remaining in UI elements
 
 **Realm**
 
-Shared (works on both client and server)
+Shared
 
 **Example Usage**
 
@@ -243,9 +243,9 @@ local function formatMultipleDurations(durations)
     return table.concat(results, ", ")
 end
 local durations = {
-cooldown = 3600,
-banTime = 86400,
-muteTime = 1800
+    cooldown = 3600,
+    banTime  = 86400,
+    muteTime = 1800
 }
 print(formatMultipleDurations(durations))
 
@@ -269,7 +269,7 @@ When displaying current hour in UI elements, time-based events, or hour-specific
 
 **Realm**
 
-Shared (works on both client and server)
+Shared
 
 **Example Usage**
 
@@ -291,21 +291,21 @@ if lia.config.get("AmericanTimeStamps", false) then
     local hourNum = tonumber(hour:match("%d+"))
     if hourNum >= 6 and hourNum < 12 then
         greeting = "Good morning!"
-        elseif hourNum >= 12 and hourNum < 18 then
-            greeting = "Good afternoon!"
-            else
-                greeting = "Good evening!"
-            end
-            else
-                -- 24-hour format returns number
-                if hour >= 6 and hour < 12 then
-                    greeting = "Good morning!"
-                    elseif hour >= 12 and hour < 18 then
-                        greeting = "Good afternoon!"
-                        else
-                            greeting = "Good evening!"
-                        end
-                    end
+    elseif hourNum >= 12 and hourNum < 18 then
+        greeting = "Good afternoon!"
+    else
+        greeting = "Good evening!"
+    end
+else
+    -- 24-hour format returns number
+    if hour >= 6 and hour < 12 then
+        greeting = "Good morning!"
+    elseif hour >= 12 and hour < 18 then
+        greeting = "Good afternoon!"
+    else
+        greeting = "Good evening!"
+    end
+end
 
 ```
 
@@ -322,24 +322,24 @@ local function getServerEvents()
         local isPM = hour:find("pm")
         if isPM and hourNum ~= 12 then
             hourNum = hourNum + 12
-            elseif not isPM and hourNum == 12 then
-                hourNum = 0
-            end
-            else
-                hourNum = hour
-            end
-            -- Schedule events based on hour
-            if hourNum >= 0 and hourNum < 6 then
-                table.insert(events, "Night shift bonus active")
-                elseif hourNum >= 6 and hourNum < 12 then
-                    table.insert(events, "Morning rush hour")
-                    elseif hourNum >= 12 and hourNum < 18 then
-                        table.insert(events, "Afternoon activities")
-                        else
-                            table.insert(events, "Evening events")
-                        end
-                        return events
-                    end
+        elseif not isPM and hourNum == 12 then
+            hourNum = 0
+        end
+    else
+        hourNum = hour
+    end
+    -- Schedule events based on hour
+    if hourNum >= 0 and hourNum < 6 then
+        table.insert(events, "Night shift bonus active")
+    elseif hourNum >= 6 and hourNum < 12 then
+        table.insert(events, "Morning rush hour")
+    elseif hourNum >= 12 and hourNum < 18 then
+        table.insert(events, "Afternoon activities")
+    else
+        table.insert(events, "Evening events")
+    end
+    return events
+end
 
 ```
 

@@ -60,10 +60,10 @@ local players = player.GetAll()
 for _, ply in ipairs(players) do
     if ply:IsAdmin() then
         lia.notices.notify(ply, "Admin panel updated", "info")
-        else
-            lia.notices.notify(ply, "Welcome to the server!", "success")
-        end
+    else
+        lia.notices.notify(ply, "Welcome to the server!", "success")
     end
+end
 
 ```
 

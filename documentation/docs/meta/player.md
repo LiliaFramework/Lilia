@@ -306,7 +306,7 @@ When cleaning up player ragdoll after respawn, revival, or state changes
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -897,9 +897,9 @@ end
 local trace = player:getTrace(150)
 if trace.Hit and trace.HitWorld then
     player:notify("Looking at world surface")
-    elseif trace.Hit and IsValid(trace.Entity) then
-        player:notify("Looking at: " .. trace.Entity:GetClass())
-    end
+elseif trace.Hit and IsValid(trace.Entity) then
+    player:notify("Looking at: " .. trace.Entity:GetClass())
+end
 
 ```
 
@@ -1031,11 +1031,11 @@ player:notify("Health is low!", "warning")
 local health = player:Health()
 if health < 25 then
     player:notify("Critical health! Seek medical attention!", "error")
-    elseif health < 50 then
-        player:notify("Health is low", "warning")
-        else
-            player:notify("Health is good", "success")
-        end
+elseif health < 50 then
+    player:notify("Health is low", "warning")
+else
+    player:notify("Health is good", "success")
+end
 
 ```
 
@@ -1137,8 +1137,8 @@ end
 ```lua
 -- High: Complex error handling with logging
 local success, err = pcall(function()
--- Some risky operation
-player:SetHealth(100)
+    -- Some risky operation
+    player:SetHealth(100)
 end)
 if not success then
     player:notifyError("Failed to heal player: " .. tostring(err))
@@ -1196,9 +1196,9 @@ local health = player:Health()
 local armor = player:Armor()
 if health < 50 and armor < 25 then
     player:notifyWarning("You are vulnerable! Health: " .. health .. ", Armor: " .. armor)
-    elseif health < 25 then
-        player:notifyWarning("Critical health! Seek medical attention immediately!")
-    end
+elseif health < 25 then
+    player:notifyWarning("Critical health! Seek medical attention immediately!")
+end
 
 ```
 
@@ -1458,13 +1458,13 @@ player:notifyErrorLocalized("error_permission_denied")
 local char = player:getChar()
 if not char then
     player:notifyErrorLocalized("error_no_character")
-    else
-        local money = char:getData("money", 0)
-        local required = 1000
-        if money < required then
-            player:notifyErrorLocalized("error_insufficient_funds")
-        end
+else
+    local money = char:getData("money", 0)
+    local required = 1000
+    if money < required then
+        player:notifyErrorLocalized("error_insufficient_funds")
     end
+end
 
 ```
 
@@ -1517,10 +1517,10 @@ if char then
     local armor = player:Armor()
     if health < 25 then
         player:notifyWarningLocalized("warning_critical_health")
-        elseif health < 50 and armor < 25 then
-            player:notifyWarningLocalized("warning_vulnerable")
-        end
+    elseif health < 50 and armor < 25 then
+        player:notifyWarningLocalized("warning_vulnerable")
     end
+end
 
 ```
 
@@ -1773,9 +1773,9 @@ end
 -- Medium: Conditional vendor editing with feedback
 if player:canEditVendor(vendor) then
     player:notify("You can edit this vendor")
-    else
-        player:notifyError("You don't have permission to edit this vendor")
-    end
+else
+    player:notifyError("You don't have permission to edit this vendor")
+end
 
 ```
 
@@ -1787,10 +1787,10 @@ if player:canEditVendor(vendor) then
     if vendorData.owner == player:SteamID() or player:hasPrivilege("admin") then
         -- Allow editing
         player:notifySuccess("Vendor edit access granted")
-        else
-            player:notifyError("You don't own this vendor")
-        end
+    else
+        player:notifyError("You don't own this vendor")
     end
+end
 
 ```
 
@@ -1830,9 +1830,9 @@ end
 -- Medium: Staff-only feature access
 if player:isStaff() then
     player:notify("Welcome, staff member!")
-    else
-        player:notifyError("This feature is for staff only")
-    end
+else
+    player:notifyError("This feature is for staff only")
+end
 
 ```
 
@@ -1843,12 +1843,12 @@ if player:isStaff() then
     local userGroup = player:GetUserGroup()
     if userGroup == "superadmin" then
         player:notify("Full admin access granted")
-        elseif userGroup == "admin" then
-            player:notify("Admin access granted")
-            else
-                player:notify("Staff access granted")
-            end
-        end
+    elseif userGroup == "admin" then
+        player:notify("Admin access granted")
+    else
+        player:notify("Staff access granted")
+    end
+end
 
 ```
 
@@ -1888,9 +1888,9 @@ end
 -- Medium: VIP-only feature access
 if player:isVIP() then
     player:notify("Welcome, VIP member!")
-    else
-        player:notifyError("This feature is for VIP members only")
-    end
+else
+    player:notifyError("This feature is for VIP members only")
+end
 
 ```
 
@@ -1945,9 +1945,9 @@ end
 -- Medium: Duty-based feature access
 if player:isStaffOnDuty() then
     player:notify("Staff tools available")
-    else
-        player:notifyError("You must be on duty to use this")
-    end
+else
+    player:notifyError("You must be on duty to use this")
+end
 
 ```
 
@@ -1959,9 +1959,9 @@ if player:isStaffOnDuty() then
     local currentTime = os.time()
     local dutyDuration = currentTime - dutyTime
     player:notifyInfo("On duty for " .. math.floor(dutyDuration / 60) .. " minutes")
-    else
-        player:notify("You are not currently on duty")
-    end
+else
+    player:notify("You are not currently on duty")
+end
 
 ```
 
@@ -2005,9 +2005,9 @@ end
 -- Medium: Faction selection with whitelist check
 if player:hasWhitelist("police") then
     player:notify("You can join the police faction")
-    else
-        player:notifyError("You don't have whitelist for police faction")
-    end
+else
+    player:notifyError("You don't have whitelist for police faction")
+end
 
 ```
 
@@ -2020,9 +2020,9 @@ if player:hasWhitelist(faction) then
     if factionData and not factionData.isDefault then
         player:notifySuccess("Whitelist access granted for " .. factionData.name)
     end
-    else
-        player:notifyError("Whitelist required for " .. faction)
-    end
+else
+    player:notifyError("Whitelist required for " .. faction)
+end
 
 ```
 
@@ -2183,9 +2183,9 @@ local cost = 1000
 local money = player:getMoney()
 if money >= cost then
     player:notify("You can afford this purchase!")
-    else
-        player:notifyError("You need $" .. (cost - money) .. " more")
-    end
+else
+    player:notifyError("You need $" .. (cost - money) .. " more")
+end
 
 ```
 
@@ -2243,9 +2243,9 @@ end
 local cost = 500
 if player:canAfford(cost) then
     player:notify("You can afford this purchase!")
-    else
-        player:notifyError("You need $" .. (cost - player:getMoney()) .. " more")
-    end
+else
+    player:notifyError("You need $" .. (cost - player:getMoney()) .. " more")
+end
 
 ```
 
@@ -2260,9 +2260,9 @@ if player:canAfford(cost) then
         local remaining = currentMoney - cost
         player:notifySuccess("Purchase successful! Remaining: $" .. remaining)
     end
-    else
-        player:notifyError("Insufficient funds for this purchase")
-    end
+else
+    player:notifyError("Insufficient funds for this purchase")
+end
 
 ```
 
@@ -2307,9 +2307,9 @@ end
 -- Medium: Skill-based feature access
 if player:hasSkillLevel("engineering", 10) then
     player:notify("You can use advanced engineering tools")
-    else
-        player:notifyError("You need engineering level 10 for this")
-    end
+else
+    player:notifyError("You need engineering level 10 for this")
+end
 
 ```
 
@@ -2317,8 +2317,8 @@ if player:hasSkillLevel("engineering", 10) then
 ```lua
 -- High: Complex skill system with multiple requirements
 local requiredSkills = {
-{skill = "strength", level = 5},
-{skill = "intelligence", level = 8}
+    {skill = "strength",      level = 5},
+    {skill = "intelligence", level = 8}
 }
 local canUse = true
 for _, req in ipairs(requiredSkills) do
@@ -2375,9 +2375,9 @@ end
 local requirements = {engineering = 10, strength = 8, intelligence = 6}
 if player:meetsRequiredSkills(requirements) then
     player:notify("You can use the advanced workshop!")
-    else
-        player:notifyError("You don't meet the skill requirements")
-    end
+else
+    player:notifyError("You don't meet the skill requirements")
+end
 
 ```
 
@@ -2387,15 +2387,15 @@ if player:meetsRequiredSkills(requirements) then
 local requirements = {engineering = 10, strength = 8, intelligence = 6}
 if player:meetsRequiredSkills(requirements) then
     player:notifySuccess("All skill requirements met!")
-    else
-        local missing = {}
-        for skill, level in pairs(requirements) do
-            if not player:hasSkillLevel(skill, level) then
-                table.insert(missing, skill .. "(" .. level .. ")")
-            end
+else
+    local missing = {}
+    for skill, level in pairs(requirements) do
+        if not player:hasSkillLevel(skill, level) then
+            table.insert(missing, skill .. "(" .. level .. ")")
         end
-        player:notifyError("Missing skills: " .. table.concat(missing, ", "))
     end
+    player:notifyError("Missing skills: " .. table.concat(missing, ", "))
+end
 
 ```
 
@@ -2439,7 +2439,7 @@ player:forceSequence("sit")
 ```lua
 -- Medium: Play sequence with callback
 player:forceSequence("wave", function()
-player:notify("Animation completed!")
+    player:notify("Animation completed!")
 end)
 
 ```
@@ -2450,8 +2450,8 @@ end)
 local sequenceName = "salute"
 local duration = 3.0
 local callback = function()
-player:notifySuccess("Salute completed!")
-player:setData("lastSalute", os.time())
+    player:notifySuccess("Salute completed!")
+    player:setData("lastSalute", os.time())
 end
 player:forceSequence(sequenceName, callback, duration, false)
 
@@ -2713,8 +2713,8 @@ player:networkAnimation(true, boneData)
 ```lua
 -- Medium: Network animation with multiple bones
 local boneData = {
-ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
-ValveBiped.Bip01_Spine2 = Angle(0, 0, 0)
+    ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
+    ValveBiped.Bip01_Spine2 = Angle(0, 0, 0)
 }
 player:networkAnimation(true, boneData)
 
@@ -2724,15 +2724,15 @@ player:networkAnimation(true, boneData)
 ```lua
 -- High: Complex animation system with timing
 local boneData = {
-ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
-ValveBiped.Bip01_Spine2 = Angle(0, 0, 0),
-ValveBiped.Bip01_L_Hand = Angle(0, 0, 0)
+    ValveBiped.Bip01_Head1 = Angle(0, 0, 0),
+    ValveBiped.Bip01_Spine2 = Angle(0, 0, 0),
+    ValveBiped.Bip01_L_Hand = Angle(0, 0, 0)
 }
 player:networkAnimation(true, boneData)
 timer.Simple(5, function()
-if IsValid(player) then
-    player:networkAnimation(false, boneData)
-end
+    if IsValid(player) then
+        player:networkAnimation(false, boneData)
+    end
 end)
 
 ```
@@ -2840,8 +2840,8 @@ local waypointName = "Mission Objective"
 local waypointPos = Vector(1000, 2000, 100)
 local waypointIcon = "icon16/flag.png"
 local onReach = function()
-player:notifySuccess("Objective reached!")
-player:setData("missionComplete", true)
+    player:notifySuccess("Objective reached!")
+    player:setData("missionComplete", true)
 end
 player:setWaypoint(waypointName, waypointPos, waypointIcon, onReach)
 
@@ -3195,7 +3195,7 @@ Shared
 -- Simple: Request basic arguments
 local argTypes = {{type = "string", name = "Name"}, {type = "number", name = "Age"}}
 player:requestArguments("Enter Info", argTypes, function(args)
-print("Name:", args[1], "Age:", args[2])
+    print("Name:", args[1], "Age:", args[2])
 end)
 
 ```
@@ -3204,11 +3204,11 @@ end)
 ```lua
 -- Medium: Request with validation
 local argTypes = {
-{type = "string", name = "Item Name", required = true},
-{type = "number", name = "Quantity", min = 1, max = 100}
+    {type = "string", name = "Item Name", required = true},
+    {type = "number", name = "Quantity",  min = 1,      max = 100}
 }
 player:requestArguments("Create Item", argTypes, function(args)
-player:notify("Created " .. args[2] .. "x " .. args[1])
+    player:notify("Created " .. args[2] .. "x " .. args[1])
 end)
 
 ```
@@ -3217,20 +3217,20 @@ end)
 ```lua
 -- High: Complex argument system with multiple types
 local argTypes = {
-{type = "string", name = "Character Name", required = true},
-{type = "number", name = "Level", min = 1, max = 100},
-{type = "boolean", name = "Is VIP", default = false},
-{type = "string", name = "Faction", options = {"police", "citizen", "criminal"}}
+    {type = "string",  name = "Character Name", required = true},
+    {type = "number",  name = "Level",          min = 1,          max = 100},
+    {type = "boolean", name = "Is VIP",          default = false},
+    {type = "string",  name = "Faction",         options = {"police", "citizen", "criminal"}}
 }
 local callback = function(args)
-local char = player:getChar()
-if char then
-    char:setData("name", args[1])
-    char:setData("level", args[2])
-    char:setData("isVIP", args[3])
-    char:setData("faction", args[4])
-    player:notifySuccess("Character updated!")
-end
+    local char = player:getChar()
+    if char then
+        char:setData("name", args[1])
+        char:setData("level", args[2])
+        char:setData("isVIP", args[3])
+        char:setData("faction", args[4])
+        player:notifySuccess("Character updated!")
+    end
 end
 player:requestArguments("Character Setup", argTypes, callback)
 
@@ -3338,8 +3338,8 @@ Shared
 ```lua
 -- Simple: Request basic buttons
 local buttons = {
-{text = "Option 1", callback = function() print("Option 1 selected") end},
-{text = "Option 2", callback = function() print("Option 2 selected") end}
+    {text = "Option 1", callback = function() print("Option 1 selected") end},
+    {text = "Option 2", callback = function() print("Option 2 selected") end}
 }
 player:requestButtons("Choose Action", buttons)
 
@@ -3349,9 +3349,9 @@ player:requestButtons("Choose Action", buttons)
 ```lua
 -- Medium: Request with different actions
 local buttons = {
-{text = "Heal", callback = function() player:SetHealth(100) end},
-{text = "Give Money", callback = function() player:notify("Money given!") end},
-{text = "Cancel", callback = function() player:notify("Cancelled") end}
+    {text = "Heal",       callback = function() player:SetHealth(100) end},
+    {text = "Give Money", callback = function() player:notify("Money given!") end},
+    {text = "Cancel",     callback = function() player:notify("Cancelled") end}
 }
 player:requestButtons("Player Actions", buttons)
 
@@ -3362,21 +3362,21 @@ player:requestButtons("Player Actions", buttons)
 -- High: Complex button system with validation
 local title = "Character Management"
 local buttons = {
-{text = "Reset Character", callback = function()
-player:binaryQuestion("Reset character?", "Yes", "No", true, function(choice)
-if choice == 1 then
-    local char = player:getChar()
-    if char then char:delete() end
-    end
-end)
-end},
-{text = "Change Name", callback = function()
-player:requestString("New Name", "Enter new character name:", function(name)
-local char = player:getChar()
-if char then char:setData("name", name) end
-end)
-end},
-{text = "Cancel", callback = function() player:notify("Cancelled") end}
+    {text = "Reset Character", callback = function()
+        player:binaryQuestion("Reset character?", "Yes", "No", true, function(choice)
+            if choice == 1 then
+                local char = player:getChar()
+                if char then char:delete() end
+            end
+        end)
+    end},
+    {text = "Change Name", callback = function()
+        player:requestString("New Name", "Enter new character name:", function(name)
+            local char = player:getChar()
+            if char then char:setData("name", name) end
+        end)
+    end},
+    {text = "Cancel", callback = function() player:notify("Cancelled") end}
 }
 player:requestButtons(title, buttons)
 
@@ -3432,18 +3432,18 @@ player:requestDropdown("Choose Color", "Select your favorite color:", options, c
 
 **High Complexity:**
 ```lua
--- High: Complex dropdown system with validation
-local title = "Character Class"
-local subTitle = "Choose your character's class"
-local options = {"Warrior", "Mage", "Rogue", "Healer", "Paladin"}
-local callback = function(selected)
-local char = player:getChar()
-if char then
-    char:setData("class", selected)
-    player:notifySuccess("Character class set to: " .. selected)
-    -- Apply class-specific bonuses
-    if selected == "Warrior" then
-        char:setData("strength", 15)
+    -- High: Complex dropdown system with validation
+    local title = "Character Class"
+    local subTitle = "Choose your character's class"
+    local options = {"Warrior", "Mage", "Rogue", "Healer", "Paladin"}
+    local callback = function(selected)
+    local char = player:getChar()
+    if char then
+        char:setData("class", selected)
+        player:notifySuccess("Character class set to: " .. selected)
+        -- Apply class-specific bonuses
+        if selected == "Warrior" then
+            char:setData("strength", 15)
         elseif selected == "Mage" then
             char:setData("intelligence", 15)
         end
@@ -3843,7 +3843,7 @@ When implementing stamina recovery, rest systems, or character healing for the p
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -3901,7 +3901,7 @@ When implementing stamina usage, movement costs, or action requirements for the 
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -3965,7 +3965,7 @@ When implementing economic systems, rewards, or financial transactions for the p
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4024,7 +4024,7 @@ When implementing economic systems, penalties, or financial transactions for the
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4089,7 +4089,7 @@ When initializing player data, loading saved information, or database operations
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4145,7 +4145,7 @@ When saving player data, updating database information, or data persistence for 
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4203,7 +4203,7 @@ When storing player data, implementing data management, or updating player infor
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4256,7 +4256,7 @@ When implementing administrative actions, moderation systems, or player punishme
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4310,7 +4310,7 @@ When implementing player actions, progress bars, or timed activities for the pla
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4370,7 +4370,7 @@ When implementing interaction systems, examination mechanics, or focused actions
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4425,7 +4425,7 @@ When interrupting player actions, implementing action cancellation, or cleaning 
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4586,7 +4586,7 @@ When implementing death systems, ragdoll creation, or player state changes
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4646,7 +4646,7 @@ When implementing knockdown systems, unconsciousness, or player state management
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4694,7 +4694,7 @@ When initializing player connection, updating network state, or ensuring client-
 
 **Realm**
 
-Server (only called on server side)
+Server
 
 **Example Usage**
 
@@ -4754,7 +4754,7 @@ When updating player state, implementing networked properties, or when other pla
 
 **Realm**
 
-Server (only called on server side)
+Server
 Notes: Broadcasts to all clients so other players can see the player's state changes
 
 **Example Usage**
@@ -4804,7 +4804,7 @@ When implementing camera systems, view controls, or third person functionality f
 
 **Realm**
 
-Client (only called on client side)
+Client
 
 **Example Usage**
 
@@ -4861,7 +4861,7 @@ When implementing camera systems, view controls, or third person functionality f
 
 **Realm**
 
-Client (only called on client side)
+Client
 
 **Example Usage**
 
@@ -4916,7 +4916,7 @@ When calculating play time, implementing time-based features, or displaying play
 
 **Realm**
 
-Client (only called on client side)
+Client
 
 **Example Usage**
 

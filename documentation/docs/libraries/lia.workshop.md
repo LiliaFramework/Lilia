@@ -169,9 +169,9 @@ local function sendToPlayer(ply)
     end
 end
 hook.Add("PlayerInitialSpawn", "CustomWorkshopSend", function(ply)
-timer.Simple(5, function()
-sendToPlayer(ply)
-end)
+    timer.Simple(5, function()
+        sendToPlayer(ply)
+    end)
 end)
 
 ```
@@ -230,15 +230,15 @@ local function checkDownloads()
         btn:SetText("Download Now")
         btn:Dock(BOTTOM)
         btn.DoClick = function()
-        lia.workshop.mountContent()
-        frame:Close()
+            lia.workshop.mountContent()
+            frame:Close()
+        end
     end
 end
-end
 hook.Add("OnEntityCreated", "CheckWorkshopDownloads", function(ent)
-if ent == LocalPlayer() then
-    timer.Simple(1, checkDownloads)
-end
+    if ent == LocalPlayer() then
+        timer.Simple(1, checkDownloads)
+    end
 end)
 
 ```
@@ -277,10 +277,10 @@ lia.workshop.mountContent()
 -- Medium: Mount content with custom callback
 lia.workshop.mountContent()
 hook.Add("Think", "CheckMountComplete", function()
-if not lia.workshop.hasContentToDownload() then
-    print("All workshop content mounted successfully")
-    hook.Remove("Think", "CheckMountComplete")
-end
+    if not lia.workshop.hasContentToDownload() then
+        print("All workshop content mounted successfully")
+        hook.Remove("Think", "CheckMountComplete")
+    end
 end)
 
 ```
@@ -313,9 +313,9 @@ local function mountWithProgress()
     end
 end
 hook.Add("PlayerInitialSpawn", "MountWorkshopContent", function(ply)
-if ply == LocalPlayer() then
-    timer.Simple(3, mountWithProgress)
-end
+    if ply == LocalPlayer() then
+        timer.Simple(3, mountWithProgress)
+    end
 end)
 
 ```

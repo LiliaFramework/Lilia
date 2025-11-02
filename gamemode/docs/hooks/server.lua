@@ -1993,7 +1993,7 @@ end
 
         local inventory = char:getInv()
         local doorID = door:getNetVar("doorID", 0)
-        
+
         -- Check if player has a key for this door
         for _, item in pairs(inventory:getItems()) do
             if item.uniqueID == "door_key" and item:getData("doorID") == doorID then
@@ -3006,7 +3006,7 @@ end
 
         local inventory = char:getInv()
         local doorID = door:getNetVar("doorID", 0)
-        
+
         -- Check if player has a key for this door
         for _, item in pairs(inventory:getItems()) do
             if item.uniqueID == "door_key" and item:getData("doorID") == doorID then
@@ -3060,7 +3060,7 @@ end
         if door:getNetVar("hasAlarm", false) then
             local alarmCode = door:getNetVar("alarmCode", "")
             local enteredCode = client:getLiliaData("enteredAlarmCode", "")
-            
+
             if alarmCode ~= "" and enteredCode ~= alarmCode then
                 client:notify("Incorrect security code!")
                 hook.Run("OnAlarmTriggered", door, client)
@@ -3312,7 +3312,7 @@ end
 
         local doorID = door:getNetVar("doorID", 0)
         local inventory = char:getInv()
-        
+
         for _, item in pairs(inventory:getItems()) do
             if item.uniqueID == "door_key" and item:getData("doorID") == doorID then
                 return true
@@ -3603,7 +3603,7 @@ end
             -- Check for corrupted data
             local items = inventory:getItems()
             local itemCount = table.Count(items)
-            
+
             if itemCount > 1000 then
                 lia.log.add(nil, "save_blocked_large_inventory", itemCount)
                 return false
@@ -3658,7 +3658,7 @@ end
         -- Remove temporary data
         character:setData("tempData", nil)
         character:setData("sessionData", nil)
-        
+
         -- Save final statistics
         local playtime = character:getPlayTime() or 0
         lia.log.add(nil, "char_cleanup", character:getID(), playtime)
@@ -3742,13 +3742,13 @@ end
     hook.Add("CharDeleted", "CleanupData", function(client, character)
         if character then
             local charID = character:getID()
-            
+
             -- Delete related warnings
             lia.db.query("DELETE FROM warnings WHERE charID = " .. lia.db.convertDataType(charID))
-            
+
             -- Delete related logs
             lia.db.query("DELETE FROM logs WHERE charID = " .. lia.db.convertDataType(charID))
-            
+
             lia.log.add(client, "char_deleted_cleanup", charID)
         end
     end)
@@ -3762,7 +3762,7 @@ end
 
         local charID = character:getID()
         local charName = character:getName()
-        
+
         -- Archive character data before cleanup
         local archiveData = {
             name = charName,
@@ -4425,7 +4425,7 @@ end
         -- Anti-spam check
         local lastMessage = client:getLiliaData("lastChatMessage", "")
         local lastMessageTime = client:getLiliaData("lastChatTime", 0)
-        
+
         if message == lastMessage and CurTime() - lastMessageTime < 5 then
             client:notify("Please don't spam messages!")
             return
@@ -4490,7 +4490,7 @@ end
     hook.Add("CheckFactionLimitReached", "BasicLimit", function(faction, character, client)
         local currentMembers = faction.members or 0
         local maxMembers = faction.maxMembers or 50
-        
+
         return currentMembers >= maxMembers
     end)
     ```
@@ -4505,7 +4505,7 @@ end
         end)
 
         local maxMembers = faction.maxMembers or 50
-        
+
         -- Increase limit for VIP players
         if client:hasPrivilege("vip") then
             maxMembers = maxMembers + 10
@@ -4755,14 +4755,14 @@ end
             -- Send notification to all staff
             for _, staff in ipairs(player.GetAll()) do
                 if staff:hasPrivilege("canSeeConfigChanges") then
-                    staff:notify("[CRITICAL] " .. client:Nick() .. " changed " .. key .. 
+                    staff:notify("[CRITICAL] " .. client:Nick() .. " changed " .. key ..
                         " from " .. tostring(oldValue) .. " to " .. tostring(value))
                 end
             end
         end
 
         -- Save to database
-        lia.db.query("UPDATE config SET value = " .. lia.db.convertDataType(value) .. 
+        lia.db.query("UPDATE config SET value = " .. lia.db.convertDataType(value) ..
             " WHERE key = " .. lia.db.convertDataType(key))
 
         -- Log change
@@ -4846,7 +4846,7 @@ end
         -- Validate character limit
         local charCount = client:getCharCount()
         local maxChars = lia.config.get("maxCharacters", 5)
-        
+
         if charCount >= maxChars then
             client:notify("You have reached the maximum character limit!")
             return
@@ -4864,7 +4864,7 @@ end
         end
 
         -- Check for duplicate names
-        lia.db.selectOne({"COUNT(*) as count"}, "characters", 
+        lia.db.selectOne({"COUNT(*) as count"}, "characters",
             "name = " .. lia.db.convertDataType(data.name)):next(function(result)
             if result and result.count > 0 then
                 client:notify("This name is already taken!")
@@ -4932,7 +4932,7 @@ end
         if not inventory then return end
 
         local faction = character:getFaction()
-        
+
         -- Common items for all
         inventory:add("flashlight")
         inventory:add("radio")
@@ -5054,7 +5054,7 @@ end
         end
 
         local salaryInterval = lia.config.get("salaryInterval", 600)
-        
+
         -- Create main salary timer
         timer.Create("liaSalaryTimer", salaryInterval, 0, function()
             for _, ply in ipairs(player.GetAll()) do
@@ -5064,11 +5064,11 @@ end
                 -- Check if player can earn salary
                 if hook.Run("CanPlayerEarnSalary", ply, char) then
                     local faction = lia.faction.indices[char:getFaction()]
-                    
+
                     if faction and faction.pay then
                         -- Calculate salary
                         local salary = faction.pay
-                        
+
                         -- Apply bonuses
                         if ply:hasPrivilege("vip") then
                             salary = salary * 1.5 -- 50% bonus for VIP
@@ -5150,9 +5150,7 @@ end
 
     High Complexity:
     ```lua
-    -- High: Advanced database initialization
     hook.Add("DatabaseConnected", "AdvancedInit", function()
-        -- Verify database integrity
         lia.db.query("PRAGMA integrity_check"):next(function(result)
             if result and result.integrity_check == "ok" then
                 print("Database integrity check passed!")
@@ -5162,9 +5160,8 @@ end
             end
         end)
 
-        -- Create or update database schema
         local schemaVersion = lia.config.get("databaseSchemaVersion", 1)
-        
+
         lia.db.query([[
             CREATE TABLE IF NOT EXISTS schema_version (
                 version INTEGER PRIMARY KEY,
@@ -5172,16 +5169,12 @@ end
             )
         ]])
 
-        -- Check current schema version
         lia.db.selectOne({"version"}, "schema_version", "version = " .. schemaVersion):next(function(result)
             if not result then
-                -- Run migrations
                 print("Running database migrations...")
-                
-                -- Migration 1: Add new columns
+
                 lia.db.query("ALTER TABLE characters ADD COLUMN lastLogin INTEGER DEFAULT 0")
-                
-                -- Update schema version
+
                 lia.db.insertTable({
                     version = schemaVersion,
                     updated_at = os.time()
@@ -5191,14 +5184,12 @@ end
             end
         end)
 
-        -- Initialize statistics
         lia.db.select({"COUNT(*) as count"}, "characters"):next(function(result)
             if result then
                 print("Total characters in database: " .. result.count)
             end
         end)
 
-        -- Start background tasks
         timer.Create("liaDatabaseMaintenance", 3600, 0, function()
             hook.Run("DatabaseMaintenance")
         end)
@@ -5242,10 +5233,10 @@ end
     hook.Add("DeleteCharacter", "CleanupData", function(id)
         -- Delete related warnings
         lia.db.query("DELETE FROM warnings WHERE charID = " .. lia.db.convertDataType(id))
-        
+
         -- Delete related logs
         lia.db.query("DELETE FROM logs WHERE charID = " .. lia.db.convertDataType(id))
-        
+
         lia.log.add(nil, "character_deletion_cleanup", id)
     end)
     ```
@@ -5272,7 +5263,7 @@ end
             lia.db.query("DELETE FROM warnings WHERE charID = " .. lia.db.convertDataType(id))
             lia.db.query("DELETE FROM logs WHERE charID = " .. lia.db.convertDataType(id))
             lia.db.query("DELETE FROM character_data WHERE charID = " .. lia.db.convertDataType(id))
-            
+
             -- Delete inventory items
             lia.db.query("DELETE FROM items WHERE charID = " .. lia.db.convertDataType(id))
 
@@ -5426,7 +5417,7 @@ end
 
         -- Enable message queuing
         SetGlobalBool("DiscordQueueEnabled", true)
-        
+
         lia.log.add(nil, "discord_relay_unavailable", os.time())
     end)
     ```
@@ -5599,13 +5590,13 @@ end
     -- Medium: Notify and log state changes
     hook.Add("DoorEnabledToggled", "NotifyToggle", function(client, door, newState)
         local state = newState and "enabled" or "disabled"
-        
+
         -- Notify the player
         client:notify("Door has been " .. state)
-        
+
         -- Log to database
         lia.log.add(client, "door_toggled", door:EntIndex(), newState)
-        
+
         -- Notify nearby players
         for _, ply in ipairs(player.GetAll()) do
             if ply:GetPos():Distance(door:GetPos()) < 500 then
@@ -5697,12 +5688,12 @@ end
     -- Medium: Notify and log visibility changes
     hook.Add("DoorHiddenToggled", "NotifyToggle", function(client, entity, newState)
         local state = newState and "hidden" or "visible"
-        
+
         client:notify("Door has been made " .. state)
-        
+
         -- Update door data
         entity:setNetVar("hidden", newState)
-        
+
         -- Log change
         lia.log.add(client, "door_hidden_toggled", entity:EntIndex(), newState)
     end)
@@ -5782,15 +5773,15 @@ end
     -- Medium: Notify and update door lock state
     hook.Add("DoorLockToggled", "NotifyToggle", function(client, door, state)
         local lockState = state and "locked" or "unlocked"
-        
+
         client:notify("Door has been " .. lockState)
-        
+
         -- Update door lock state
         door:setNetVar("locked", state)
-        
+
         -- Play sound effect
         door:EmitSound(state and "doors/door_latch3.wav" or "doors/door_unlock1.wav")
-        
+
         lia.log.add(client, "door_lock_toggled", door:EntIndex(), state)
     end)
     ```
@@ -5804,7 +5795,7 @@ end
         -- Check permissions
         local doorOwner = door:getNetVar("owner")
         local char = client:getChar()
-        
+
         -- Owner or admin can lock/unlock
         if doorOwner and doorOwner ~= client:SteamID() and not client:IsAdmin() then
             -- Check if player has key
@@ -5937,7 +5928,7 @@ end
                         local char = owner:getChar()
                         if char then
                             char:giveMoney(purchasePrice)
-                            owner:notify("You received a refund of " .. lia.currency.get(purchasePrice) .. 
+                            owner:notify("You received a refund of " .. lia.currency.get(purchasePrice) ..
                                 " for door that is no longer ownable")
                         end
                     end
@@ -6073,7 +6064,7 @@ end
         if math.abs(price - oldPrice) > 1000 then
             for _, ply in ipairs(player.GetAll()) do
                 if ply:GetPos():Distance(door:GetPos()) < 300 then
-                    ply:notify("Door price changed from " .. lia.currency.get(oldPrice) .. 
+                    ply:notify("Door price changed from " .. lia.currency.get(oldPrice) ..
                         " to " .. lia.currency.get(price))
                 end
             end
@@ -6151,7 +6142,7 @@ end
 
         -- Validate and sanitize name
         name = string.Trim(name or "")
-        
+
         -- Check length
         local maxLength = lia.config.get("maxDoorTitleLength", 50)
         if string.len(name) > maxLength then
@@ -6386,7 +6377,7 @@ end
 
             ply:SetNWString("FakeName", fakeName)
             ply:SetNWBool("UsingFakeName", true)
-            
+
             -- Log fake name usage for admin tracking
             lia.log.add(ply, "fake_name_used", fakeName, char:getName())
         else
@@ -6421,7 +6412,7 @@ end
 
                             -- Notify player
                             local displayName = fakeName or char:getName()
-                            other:notify("You recognize " .. displayName .. " (" .. 
+                            other:notify("You recognize " .. displayName .. " (" ..
                                 math.floor(distance) .. " units away)")
                         end
                     end
@@ -6493,7 +6484,7 @@ end
     -- High: Advanced case claims retrieval
     hook.Add("GetAllCaseClaims", "AdvancedClaims", function()
         local allClaims = {}
-        
+
         -- Get all claims from database
         lia.db.select({"*"}, "case_claims"):next(function(results)
             if not results then return end
@@ -6524,11 +6515,11 @@ end
                         -- Add metadata
                         claim.isOnline = IsValid(player.GetBySteamID(claim.claimedBy))
                         claim.timeRemaining = claim.expiryTime and (claim.expiryTime - os.time()) or nil
-                        
+
                         table.insert(allClaims, claim)
                     else
                         -- Mark as expired
-                        lia.db.query("UPDATE case_claims SET active = 0 WHERE id = " .. 
+                        lia.db.query("UPDATE case_claims SET active = 0 WHERE id = " ..
                             lia.db.convertDataType(claim.id))
                     end
                 end
@@ -6587,7 +6578,7 @@ end
             agility = 80,
             intelligence = 120
         }
-        
+
         return maxValues[attrKey] or 100
     end)
     ```
@@ -6692,7 +6683,7 @@ end
             agility = 45,
             intelligence = 55
         }
-        
+
         return startingMax[k] or 50
     end)
     ```
@@ -6728,7 +6719,7 @@ end
 
         -- Clamp to reasonable values
         startingMax = math.min(startingMax, 80) -- Max starting value
-        
+
         return startingMax
     end)
     ```
@@ -6903,7 +6894,7 @@ end
                 if item:getData("equip") and item.armor then
                     local armorData = item.armor
                     local protection = armorData[hitgroup] or armorData.overall or 0
-                    
+
                     -- Reduce damage based on armor protection
                     local protectionPercent = protection / 100
                     baseMultiplier = baseMultiplier * (1 - protectionPercent)
@@ -7056,7 +7047,7 @@ end
 
         local firstName = firstNames[math.random(#firstNames)]
         local lastName = lastNames[math.random(#lastNames)]
-        
+
         return firstName .. " " .. lastName
     end)
     ```
@@ -7066,7 +7057,7 @@ end
     -- High: Advanced name generation with uniqueness checks
     hook.Add("GetDefaultCharName", "AdvancedName", function(client, factionIndex, context)
         local faction = lia.faction.indices[factionIndex]
-        
+
         -- Faction-specific name pools
         local namePools = {
             [FACTION_POLICE] = {
@@ -7086,13 +7077,13 @@ end
         local pool = namePools[factionIndex] or namePools[FACTION_CITIZEN]
         local firstName = pool.first[math.random(#pool.first)]
         local lastName = pool.last[math.random(#pool.last)]
-        
+
         local generatedName = firstName .. " " .. lastName
 
         -- Check for uniqueness
         local attemptCount = 0
         while attemptCount < 10 do
-            lia.db.selectOne({"COUNT(*) as count"}, "characters", 
+            lia.db.selectOne({"COUNT(*) as count"}, "characters",
                 "name = " .. lia.db.convertDataType(generatedName)):next(function(result)
                 if result and result.count > 0 then
                     -- Name exists, regenerate
@@ -7150,13 +7141,13 @@ end
     -- Medium: Faction-based inventory sizes
     hook.Add("GetDefaultInventorySize", "FactionSize", function(client, char)
         local faction = lia.faction.indices[char:getFaction()]
-        
+
         if factionIndex == FACTION_POLICE then
             return 5, 5 -- Police get larger inventory
         elseif factionIndex == FACTION_MEDIC then
             return 6, 4 -- Medics get wider inventory
         end
-        
+
         return 4, 4 -- Default size
     end)
     ```
@@ -7193,7 +7184,7 @@ end
         -- Hard limits
         local maxWidth = lia.config.get("maxInventoryWidth", 10)
         local maxHeight = lia.config.get("maxInventoryHeight", 10)
-        
+
         baseWidth = math.min(baseWidth, maxWidth)
         baseHeight = math.min(baseHeight, maxHeight)
 
@@ -7239,13 +7230,13 @@ end
     -- Medium: Faction-based inventory types
     hook.Add("GetDefaultInventoryType", "FactionType", function(character)
         local faction = lia.faction.indices[character:getFaction()]
-        
+
         if factionIndex == FACTION_POLICE then
             return "police_inventory"
         elseif factionIndex == FACTION_MEDIC then
             return "medic_inventory"
         end
-        
+
         return "default"
     end)
     ```
@@ -7256,7 +7247,7 @@ end
     hook.Add("GetDefaultInventoryType", "AdvancedType", function(character)
         local client = character:getPlayer()
         local faction = lia.faction.indices[character:getFaction()]
-        
+
         -- Default type
         local invType = "default"
 
@@ -7751,7 +7742,7 @@ end
 
             -- Add item to stack
             table.insert(stacks[key].items, item)
-            
+
             -- Calculate total quantity
             local quantity = item:getData("quantity", 1)
             stacks[key].totalQuantity = stacks[key].totalQuantity + quantity
@@ -7813,11 +7804,11 @@ end
     -- Medium: VIP-based limits
     hook.Add("GetMaxPlayerChar", "VIPLimit", function(client)
         local baseLimit = lia.config.get("maxCharacters", 5)
-        
+
         if client:hasPrivilege("vip") then
             return baseLimit + 3 -- VIP gets 3 extra slots
         end
-        
+
         return baseLimit
     end)
     ```
@@ -7893,11 +7884,11 @@ end
     -- Medium: VIP bonus points
     hook.Add("GetMaxStartingAttributePoints", "VIPPoints", function(client, count)
         local basePoints = count or 100
-        
+
         if client:hasPrivilege("vip") then
             return basePoints + 20 -- VIP gets 20 extra points
         end
-        
+
         return basePoints
     end)
     ```
@@ -7994,7 +7985,7 @@ end
     -- High: Advanced money model selection
     hook.Add("GetMoneyModel", "AdvancedModel", function(amount)
         local currency = lia.config.get("currency", "$")
-        
+
         -- Determine denomination based on amount
         if amount >= 10000 then
             return "models/props_c17/BriefCase001a.mdl" -- Briefcase for large amounts
@@ -8048,7 +8039,7 @@ end
         if speaker:IsAdmin() then
             return 2 -- Admins have shorter delay
         end
-        
+
         return 5 -- Default delay for regular players
     end)
     ```
@@ -8074,7 +8065,7 @@ end
         -- Check for spam (recent messages)
         local lastOOC = speaker:getLiliaData("lastOOCTime", 0)
         local recentOOC = CurTime() - lastOOC
-        
+
         if recentOOC < 10 then
             -- Sent OOC recently, increase delay
             baseDelay = baseDelay * 2
@@ -8132,9 +8123,9 @@ end
     -- Medium: Total account playtime
     hook.Add("GetPlayTime", "TotalPlaytime", function(client)
         local totalTime = 0
-        
+
         -- Sum all character playtimes
-        lia.db.select({"playtime"}, "characters", 
+        lia.db.select({"playtime"}, "characters",
             "steamID = " .. lia.db.convertDataType(client:SteamID())):next(function(results)
             if results then
                 for _, char in ipairs(results) do
@@ -8142,7 +8133,7 @@ end
                 end
             end
         end)
-        
+
         return totalTime
     end)
     ```
@@ -8157,7 +8148,7 @@ end
         -- Get stored playtime from character
         if char then
             totalTime = char:getPlayTime() or 0
-            
+
             -- Add current session time
             local loginTime = char:getLoginTime()
             if loginTime and loginTime > 0 then
@@ -8166,12 +8157,12 @@ end
         end
 
         -- Get total playtime across all characters
-        lia.db.select({"SUM(playtime) as total"}, "characters", 
+        lia.db.select({"SUM(playtime) as total"}, "characters",
             "steamID = " .. lia.db.convertDataType(client:SteamID())):next(function(result)
             if result and result.total then
                 -- Use database total if available (more accurate)
                 totalTime = result.total
-                
+
                 -- Add current session if character exists
                 if char then
                     local loginTime = char:getLoginTime()
@@ -8324,7 +8315,7 @@ end
 
         local gender = isFemale and "female" or "male"
         local type = paintype or "medium"
-        
+
         return sounds[gender][type] or sounds[gender].medium
     end)
     ```
@@ -8616,7 +8607,7 @@ end
         -- Vendor-specific pricing
         if IsValid(self) then
             local vendorType = self:getNetVar("vendorType", "")
-            
+
             -- Specialized vendors pay more for their specialty
             if vendorType == "weapon_dealer" and itemTable.category == "weapon" then
                 if isSellingToVendor then
@@ -8783,13 +8774,13 @@ end
     -- Medium: Bonus pay based on playtime
     hook.Add("GetSalaryAmount", "PlaytimeBonus", function(client, faction, class)
         local basePay = (class and class.pay) or (faction and faction.pay) or 0
-        
+
         local char = client:getChar()
         if not char then return basePay end
 
         local playtime = hook.Run("GetPlayTime", client) or 0
         local hours = playtime / 3600
-        
+
         -- Bonus pay for experienced players
         if hours > 100 then
             basePay = basePay * 1.5 -- 50% bonus for 100+ hours
@@ -8806,7 +8797,7 @@ end
     -- High: Advanced salary calculation system
     hook.Add("GetSalaryAmount", "AdvancedPay", function(client, faction, class)
         local basePay = (class and class.pay) or (faction and faction.pay) or 0
-        
+
         local char = client:getChar()
         if not char then return basePay end
 
@@ -8923,7 +8914,7 @@ end
                 -- Count resolved vs pending
                 if ticket.admin and ticket.admin ~= "" then
                     stats.resolved = stats.resolved + 1
-                    
+
                     -- Track which admins handled tickets
                     if ticket.adminSteamID then
                         stats.byAdmin[ticket.adminSteamID] = (stats.byAdmin[ticket.adminSteamID] or 0) + 1
@@ -9372,9 +9363,9 @@ end
     hook.Add("HandleItemTransferRequest", "LogTransfers", function(client, itemID, x, y, invID)
         local item = lia.item.instances[itemID]
         local targetInv = lia.inventory.instances[invID]
-        
+
         if item and targetInv then
-            print(string.format("[Transfer] %s transferring %s to inventory %d", 
+            print(string.format("[Transfer] %s transferring %s to inventory %d",
                 client:Name(), item.name or item.uniqueID, invID))
         end
 
@@ -9392,7 +9383,7 @@ end
     hook.Add("HandleItemTransferRequest", "AdvancedTransfer", function(client, itemID, x, y, invID)
         local item = lia.item.instances[itemID]
         local targetInv = lia.inventory.instances[invID]
-        
+
         if not item then
             return deferred.reject("Item not found")
         end
@@ -9497,7 +9488,7 @@ end
                     [VEHICLE_CLASS_SUV] = {w = 5, h = 5},
                     [VEHICLE_CLASS_TRUCK] = {w = 6, h = 6}
                 }
-                
+
                 local size = sizes[vehicleClass] or {w = 4, h = 4}
                 inventory:setSize(size.w, size.h)
             end
@@ -9601,7 +9592,7 @@ end
     -- Medium: Clean up related data
     hook.Add("InventoryDeleted", "CleanupData", function(instance)
         local invID = instance:getID()
-        
+
         -- Remove any cached data for this inventory
         if lia.inventoryCache then
             lia.inventoryCache[invID] = nil
@@ -9618,7 +9609,7 @@ end
     -- High: Advanced cleanup and item handling
     hook.Add("InventoryDeleted", "AdvancedCleanup", function(instance)
         local invID = instance:getID()
-        
+
         -- Handle items in deleted inventory
         local items = instance:getItems()
         for _, item in pairs(items) do
@@ -9711,7 +9702,7 @@ end
                             local maxStack = existingItem:getData("maxStack", 99)
                             local currentQty = existingItem:getData("quantity", 1)
                             local newQty = item:getData("quantity", 1)
-                            
+
                             if currentQty + newQty <= maxStack then
                                 existingItem:setData("quantity", currentQty + newQty)
                                 item:remove()
@@ -9738,7 +9729,7 @@ end
             if character then
                 local currentWeight = inventory:getWeight()
                 local maxWeight = hook.Run("GetMaxInventoryWeight", character) or 100
-                
+
                 if currentWeight > maxWeight then
                     -- Notify player of overweight
                     local client = character:getPlayer()
@@ -9815,7 +9806,7 @@ end
     ```lua
     -- Simple: Log item removals
     hook.Add("InventoryItemRemoved", "LogRemovals", function(self, instance, preserveItem)
-        print(string.format("Item %s removed from inventory %d (preserved: %s)", 
+        print(string.format("Item %s removed from inventory %d (preserved: %s)",
             instance.name or instance.uniqueID, self:getID(), tostring(preserveItem)))
     end)
     ```
@@ -9873,7 +9864,7 @@ end
                     if IsValid(client) then
                         -- Call item-specific unequip
                         instance:call("onUnequip", client, character)
-                        
+
                         -- Remove visual effects
                         if instance.removeOnUnequip then
                             hook.Run("RemoveItemVisuals", client, instance)
@@ -9996,7 +9987,7 @@ end
                     [VEHICLE_CLASS_COUPE] = true,
                     [VEHICLE_CLASS_STATION_WAGON] = true
                 }
-                
+
                 if allowedClasses[vehicleClass] then
                     return true
                 end
@@ -10069,7 +10060,7 @@ end
             local maxStack = item:getData("maxStack", 99)
             local currentQty = target:getData("quantity", 1)
             local newQty = item:getData("quantity", 1)
-            
+
             if currentQty + newQty <= maxStack then
                 target:setData("quantity", currentQty + newQty)
                 item:remove()
@@ -10077,7 +10068,7 @@ end
                 return true -- Handled
             end
         end
-        
+
         return false -- Let default handle
     end)
     ```
@@ -10129,7 +10120,7 @@ end
             local maxStack = item:getData("maxStack", 99)
             local targetQty = target:getData("quantity", 1)
             local itemQty = item:getData("quantity", 1)
-            
+
             if targetQty + itemQty <= maxStack then
                 target:setData("quantity", targetQty + itemQty)
                 item:remove()
@@ -10181,7 +10172,7 @@ end
     -- Medium: Clean up related data
     hook.Add("ItemDeleted", "CleanupData", function(instance)
         local itemID = instance:getID()
-        
+
         -- Remove from any tracking systems
         if lia.itemTracker then
             lia.itemTracker[itemID] = nil
@@ -10342,7 +10333,7 @@ end
                 if IsValid(spawnedEntity) then
                     -- Set owner for pickup restrictions
                     spawnedEntity:setNetVar("owner", char:getID())
-                    
+
                     -- Apply custom physics
                     if item:getData("customPhysics", false) then
                         hook.Run("OnItemDropped", client, item, spawnedEntity)
@@ -10447,7 +10438,7 @@ end
             if durability > 0 then
                 local loss = self.durabilityLoss or 1
                 self:setData("durability", math.max(0, durability - loss))
-                
+
                 if durability - loss <= 0 then
                     client:notifyError("Item broke from use!")
                     hook.Run("OnItemBroke", client, self)
@@ -10511,7 +10502,7 @@ end
     ```lua
     -- Simple: Log successful transfers
     hook.Add("ItemTransfered", "LogTransfers", function(context)
-        print(string.format("Item %s transferred from inventory %d to %d", 
+        print(string.format("Item %s transferred from inventory %d to %d",
             context.item:getName(), context.from:getID(), context.to:getID()))
     end)
     ```
@@ -10530,9 +10521,9 @@ end
         char:setData("transferStats", stats)
 
         -- Log transfer
-        lia.log.add(context.client, "itemTransfer", 
-            context.item:getName(), 
-            tostring(context.from:getID()), 
+        lia.log.add(context.client, "itemTransfer",
+            context.item:getName(),
+            tostring(context.from:getID()),
             tostring(context.to:getID()))
     end)
     ```
@@ -10563,7 +10554,7 @@ end
         if fromOwner and toOwner and fromOwner ~= toOwner then
             local fromChar = lia.char.loaded[fromOwner]
             local toChar = lia.char.loaded[toOwner]
-            
+
             if fromChar and toChar then
                 local toClient = toChar:getPlayer()
                 if IsValid(toClient) then
@@ -10650,7 +10641,7 @@ end
         if entity:isDoor() then
             local doorName = entity:getNetVar("title", "Door")
             owner:notifyInfo(string.format("You locked %s", doorName))
-            
+
             -- Log the action
             lia.log.add(owner, "doorLock", doorName)
         end
@@ -10686,7 +10677,7 @@ end
         -- Check entity type and handle accordingly
         if entity:isDoor() then
             local doorName = entity:getNetVar("title", "Door")
-            
+
             -- Check door ownership/access
             if not entity:checkDoorAccess(owner) and entity:GetCreator() ~= owner and not owner:isStaffOnDuty() then
                 owner:notifyError("You do not have access to lock this door!")
@@ -10769,7 +10760,7 @@ end
         if entity:isDoor() then
             local doorName = entity:getNetVar("title", "Door")
             owner:notifyInfo(string.format("You unlocked %s", doorName))
-            
+
             -- Log the action
             lia.log.add(owner, "doorUnlock", doorName)
         end
@@ -10805,7 +10796,7 @@ end
         -- Check entity type and handle accordingly
         if entity:isDoor() then
             local doorName = entity:getNetVar("title", "Door")
-            
+
             -- Check door ownership/access
             if not entity:checkDoorAccess(owner) and entity:GetCreator() ~= owner and not owner:isStaffOnDuty() then
                 owner:notifyError("You do not have access to unlock this door!")
@@ -11383,7 +11374,7 @@ end
     ```lua
     -- Simple: Log character creation
     hook.Add("OnCharCreated", "LogCreation", function(client, character, originalData)
-        print(string.format("%s created character: %s (ID: %d)", 
+        print(string.format("%s created character: %s (ID: %d)",
             client:Name(), character:getName(), character:getID()))
     end)
     ```
@@ -11409,7 +11400,7 @@ end
         character:setData("playtime", 0)
         character:setData("created", os.time())
 
-        client:notifyInfo(string.format("Welcome, %s! You have been given $%d and starter items.", 
+        client:notifyInfo(string.format("Welcome, %s! You have been given $%d and starter items.",
             character:getName(), startMoney))
     end)
     ```
@@ -11432,7 +11423,7 @@ end
             local starterItems = hook.Run("GetDefaultInventoryItems", client) or {
                 "backpack", "radio", "flashlight"
             }
-            
+
             for _, itemID in ipairs(starterItems) do
                 inventory:add(itemID, 1)
             end
@@ -11632,7 +11623,7 @@ end
                 if IsValid(client) then
                     for _, admin in pairs(player.GetAll()) do
                         if admin:isAdmin() and admin ~= client then
-                            admin:notifyInfo(string.format("%s deleted character: %s (ID: %d)", 
+                            admin:notifyInfo(string.format("%s deleted character: %s (ID: %d)",
                                 client:Name(), charName, id))
                         end
                     end
@@ -11684,7 +11675,7 @@ end
     ```lua
     -- Simple: Log disconnections
     hook.Add("OnCharDisconnect", "LogDisconnects", function(client, character)
-        print(string.format("%s disconnected with character %s (ID: %d)", 
+        print(string.format("%s disconnected with character %s (ID: %d)",
             client:Name(), character:getName(), character:getID()))
     end)
     ```
@@ -11695,7 +11686,7 @@ end
     hook.Add("OnCharDisconnect", "SaveData", function(client, character)
         -- Update last disconnect time
         character:setData("lastDisconnect", os.time())
-        
+
         -- Save playtime
         local sessionTime = character:getData("sessionStart", 0)
         if sessionTime > 0 then
@@ -11955,7 +11946,7 @@ end
     -- Simple: Log flag additions
     hook.Add("OnCharFlagsGiven", "LogFlags", function(ply, self, addedFlags)
         local giverName = IsValid(ply) and ply:Name() or "System"
-        print(string.format("%s gave flags '%s' to character %s", 
+        print(string.format("%s gave flags '%s' to character %s",
             giverName, addedFlags, self:getName()))
     end)
     ```
@@ -12091,7 +12082,7 @@ end
     -- Simple: Log flag removals
     hook.Add("OnCharFlagsTaken", "LogFlags", function(ply, self, removedFlags)
         local removerName = IsValid(ply) and ply:Name() or "System"
-        print(string.format("%s removed flags '%s' from character %s", 
+        print(string.format("%s removed flags '%s' from character %s",
             removerName, removedFlags, self:getName()))
     end)
     ```
@@ -12156,7 +12147,7 @@ end
 
         -- Notify character
         if IsValid(client) then
-            client:notifyWarning(string.format("Your flags were removed: %s (Removed by: %s)", 
+            client:notifyWarning(string.format("Your flags were removed: %s (Removed by: %s)",
                 removedFlags, removerName))
         end
 
@@ -12216,7 +12207,7 @@ end
         if not char then return end
 
         local stamina = char:getAttrib("stamina", 100)
-        
+
         -- Cost stamina to get up
         if stamina >= 10 then
             char:updateAttrib("stamina", -10)
@@ -12289,7 +12280,7 @@ end
         if health < 50 then
             target:setWalkSpeed(target:GetWalkSpeed() * 0.7)
             target:setRunSpeed(target:GetRunSpeed() * 0.7)
-            
+
             -- Remove penalty after recovery
             timer.Simple(10, function()
                 if IsValid(target) then
@@ -12342,7 +12333,7 @@ end
     -- Simple: Log character kicks
     hook.Add("OnCharKick", "LogKicks", function(self, client)
         local playerName = IsValid(client) and client:Name() or "Offline"
-        print(string.format("Character %s (ID: %d) kicked. Player: %s", 
+        print(string.format("Character %s (ID: %d) kicked. Player: %s",
             self:getName(), self:getID(), playerName))
     end)
     ```
@@ -12397,12 +12388,12 @@ end
         if isBanned then
             local banTime = self:getData("bannedUntil", 0)
             local banReason = self:getData("banReason", "No reason given")
-            
+
             if IsValid(client) then
                 if banTime and banTime > os.time() then
                     local timeRemaining = banTime - os.time()
                     local days = math.floor(timeRemaining / 86400)
-                    client:notifyError(string.format("Your character is banned for %d more days. Reason: %s", 
+                    client:notifyError(string.format("Your character is banned for %d more days. Reason: %s",
                         days, banReason))
                 else
                     client:notifyError(string.format("Your character is permanently banned. Reason: %s", banReason))
@@ -12434,7 +12425,7 @@ end
         -- Notify admins
         for _, admin in pairs(player.GetAll()) do
             if admin:isAdmin() and admin ~= client then
-                admin:notifyInfo(string.format("Character %s (ID: %d) was kicked", 
+                admin:notifyInfo(string.format("Character %s (ID: %d) was kicked",
                     self:getName(), charID))
             end
         end
@@ -12469,7 +12460,7 @@ end
     ```lua
     -- Simple: Log network variable changes
     hook.Add("OnCharNetVarChanged", "LogChanges", function(character, key, oldVar, value)
-        print(string.format("Character %s: %s changed from %s to %s", 
+        print(string.format("Character %s: %s changed from %s to %s",
             character:getName(), key, tostring(oldVar), tostring(value)))
     end)
     ```
@@ -12532,7 +12523,7 @@ end
                 if math.abs(diff) > 10000 then
                     lia.log.add(client, "large_money_change", oldVar, value, diff)
                 end
-                
+
                 -- Clamp to valid range
                 value = math.max(0, math.min(value, 999999999))
                 character:getVar()[key] = value
@@ -12561,7 +12552,7 @@ end
         end
 
         -- Trigger variable-specific hooks
-        hook.Run("OnChar" .. string.gsub(string.upper(string.sub(key, 1, 1)) .. string.sub(key, 2), "(%u)", function(c) return c end) .. "Changed", 
+        hook.Run("OnChar" .. string.gsub(string.upper(string.sub(key, 1, 1)) .. string.sub(key, 2), "(%u)", function(c) return c end) .. "Changed",
             character, oldVar, value)
 
         -- Log significant changes
@@ -12604,7 +12595,7 @@ end
     -- Simple: Log permanent kills
     hook.Add("OnCharPermakilled", "LogKills", function(character, client)
         local playerName = IsValid(client) and client:Name() or "Offline"
-        print(string.format("Character %s (ID: %d) permanently killed. Player: %s", 
+        print(string.format("Character %s (ID: %d) permanently killed. Player: %s",
             character:getName(), character:getID(), playerName))
     end)
     ```
@@ -12619,14 +12610,14 @@ end
 
         -- Notify the player
         if IsValid(client) then
-            client:notifyError(string.format("Your character '%s' has been permanently killed. Reason: %s", 
+            client:notifyError(string.format("Your character '%s' has been permanently killed. Reason: %s",
                 charName, banReason))
         end
 
         -- Notify admins
         for _, admin in pairs(player.GetAll()) do
             if admin:isAdmin() then
-                admin:notifyInfo(string.format("Character %s (ID: %d) was permanently killed", 
+                admin:notifyInfo(string.format("Character %s (ID: %d) was permanently killed",
                     charName, charID))
             end
         end
@@ -12664,10 +12655,10 @@ end
         if IsValid(client) then
             if time then
                 local days = math.floor(time / 86400)
-                client:notifyError(string.format("Your character '%s' has been permanently killed for %d days. Reason: %s", 
+                client:notifyError(string.format("Your character '%s' has been permanently killed for %d days. Reason: %s",
                     charName, days, banReason))
             else
-                client:notifyError(string.format("Your character '%s' has been permanently killed. Reason: %s", 
+                client:notifyError(string.format("Your character '%s' has been permanently killed. Reason: %s",
                     charName, banReason))
             end
         end
@@ -12683,7 +12674,7 @@ end
         -- Notify all admins
         for _, admin in pairs(player.GetAll()) do
             if admin:isAdmin() then
-                admin:notifyInfo(string.format("Character %s (ID: %d) was permanently killed by %s. Reason: %s", 
+                admin:notifyInfo(string.format("Character %s (ID: %d) was permanently killed by %s. Reason: %s",
                     charName, charID, bannedBy, banReason))
             end
         end
@@ -12867,7 +12858,7 @@ end
         local action = isSellingToVendor and "sold" or "bought"
         local vendorName = vendor:getNetVar("name", "Unknown Vendor")
         local itemName = item and item:getName() or itemType
-        print(string.format("%s %s %s from/to %s (Failed: %s)", 
+        print(string.format("%s %s %s from/to %s (Failed: %s)",
             client:Name(), action, itemName, vendorName, tostring(isFailed)))
     end)
     ```
@@ -13171,7 +13162,7 @@ end
         -- Notify all admins
         for _, admin in pairs(player.GetAll()) do
             if admin:isAdmin() then
-                admin:notifyError(string.format("CHEATER DETECTED: %s (%s)", 
+                admin:notifyError(string.format("CHEATER DETECTED: %s (%s)",
                     client:Name(), steamID))
             end
         end
@@ -13242,7 +13233,7 @@ end
     -- Simple: Log status changes
     hook.Add("OnCheaterStatusChanged", "LogStatus", function(client, target, status)
         local action = status and "marked" or "unmarked"
-        print(string.format("%s %s %s as cheater", 
+        print(string.format("%s %s %s as cheater",
             client:Name(), action, target:Name()))
     end)
     ```
@@ -13291,7 +13282,7 @@ end
                 markedByAdmin = client:Name(),
                 charID = targetChar and targetChar:getID() or nil
             }
-            
+
             -- Add warning to character
             if targetChar then
                 local adminModule = lia.module.get("administration")
@@ -13333,7 +13324,7 @@ end
         for _, admin in pairs(player.GetAll()) do
             if admin:isAdmin() and admin ~= client then
                 local action = status and "marked" or "unmarked"
-                admin:notifyInfo(string.format("%s %s %s as cheater", 
+                admin:notifyInfo(string.format("%s %s %s as cheater",
                     client:Name(), action, target:Name()))
             end
         end
@@ -13392,7 +13383,7 @@ end
             -- Set ragdoll model to match player
             entity:SetModel(self:GetModel())
             entity:SetSkin(self:GetSkin())
-            
+
             -- Set ragdoll color
             entity:SetColor(self:GetColor())
 
@@ -13427,7 +13418,7 @@ end
         if isDead then
             -- Set death time
             char:setData("deathTime", os.time())
-            
+
             -- Create blood effects
             local pos = entity:GetPos()
             local effectdata = EffectData()
@@ -13606,7 +13597,7 @@ end
         end
 
         -- Trigger data-specific hooks
-        hook.Run("OnData" .. string.gsub(string.upper(string.sub(key, 1, 1)) .. string.sub(key, 2), "(%u)", function(c) return c end) .. "Set", 
+        hook.Run("OnData" .. string.gsub(string.upper(string.sub(key, 1, 1)) .. string.sub(key, 2), "(%u)", function(c) return c end) .. "Set",
             value, gamemode, map)
     end)
     ```
@@ -13697,16 +13688,12 @@ end
         end)
     end
 
-    -- Setup database maintenance
     timer.Create("DatabaseMaintenance", 3600, 0, function()
-        -- Clean up old temporary data
         lia.db.query("DELETE FROM items WHERE data LIKE '%\"temp\":true%' AND created < " .. (os.time() - 86400))
-        -- Optimize database
         lia.db.query("VACUUM")
         print("Database maintenance completed")
     end)
 
-    -- Initialize server statistics
     local serverStats = lia.data.get("serverStats", nil, false, "global")
     if not serverStats then
         serverStats = {
@@ -13718,7 +13705,6 @@ end
         lia.data.set("serverStats", serverStats, false, "global")
     end
 
-    -- Update server uptime
     serverStats.lastLoadTime = os.time()
     lia.data.set("serverStats", serverStats, false, "global")
 
@@ -14541,9 +14527,7 @@ end
 
     High Complexity:
     ```lua
-    -- High: Advanced table management and migration
     hook.Add("OnLoadTables", "AdvancedTables", function()
-        -- Verify all required tables exist
         local requiredTables = {
             "lia_players",
             "lia_characters",
@@ -14564,7 +14548,6 @@ end
                 end
             end
 
-            -- Check for missing tables
             local missingTables = {}
             for _, reqTable in ipairs(requiredTables) do
                 if not table.HasValue(existingTables, reqTable) then
@@ -14578,7 +14561,6 @@ end
                 print("All required tables verified!")
             end
 
-            -- Run table migrations if needed
             local schemaVersion = lia.config.get("SchemaVersion", 0)
             local targetVersion = 2
 
@@ -14587,7 +14569,6 @@ end
                 hook.Run("OnDatabaseMigration", schemaVersion, targetVersion)
             end
 
-            -- Initialize custom tables
             lia.db.query([[
                 CREATE TABLE IF NOT EXISTS custom_stats (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -14603,7 +14584,6 @@ end
                 end
             end)
 
-            -- Set ready flag
             lia.db.isReady = true
             hook.Run("OnDatabaseReady")
         end)
@@ -14677,7 +14657,7 @@ end
         local delay = hook.Run("GetOOCDelay", client) or 10
         if CurTime() - lastMessage < delay then
             local remaining = delay - (CurTime() - lastMessage)
-            client:notifyError(string.format("Please wait %d more seconds before sending another OOC message!", 
+            client:notifyError(string.format("Please wait %d more seconds before sending another OOC message!",
                 math.ceil(remaining)))
             return
         end
@@ -14739,7 +14719,7 @@ end
                 -- Notify admins
                 for _, admin in pairs(player.GetAll()) do
                     if admin:isAdmin() then
-                        admin:notifyWarning(string.format("%s sent a suspicious OOC message: %s", 
+                        admin:notifyWarning(string.format("%s sent a suspicious OOC message: %s",
                             client:Name(), message))
                     end
                 end
@@ -15591,7 +15571,7 @@ end
 
             -- Notify player
             if oldClass then
-                client:notifyInfo(string.format("You changed from %s to %s", 
+                client:notifyInfo(string.format("You changed from %s to %s",
                     oldClassData and oldClassData.name or "Unknown", classData.name))
             else
                 client:notifyInfo(string.format("You are now a %s", classData.name))
@@ -16673,7 +16653,7 @@ end
     ```lua
     -- Simple: Log salary payments
     hook.Add("OnSalaryGiven", "LogSalary", function(client, char, pay, faction, class)
-        print(string.format("%s received $%d salary (%s %s)", 
+        print(string.format("%s received $%d salary (%s %s)",
             client:Name(), pay, faction, class))
     end)
     ```
@@ -16752,7 +16732,7 @@ end
             -- Maybe put excess in a savings account
             local savings = char:getData("salarySavings", 0) + excess
             char:setData("salarySavings", savings)
-            client:notifyInfo(string.format("Salary capped at $%s. Excess $%s saved.", 
+            client:notifyInfo(string.format("Salary capped at $%s. Excess $%s saved.",
                 lia.currency.get(salaryCap), lia.currency.get(excess)))
         end
 
@@ -18934,20 +18914,20 @@ end
         local steamID = client:SteamID()
         local detectionCount = client:getLiliaData("cheatDetections", 0) + 1
         client:setLiliaData("cheatDetections", detectionCount)
-        
+
         -- First offense: warning only
         if detectionCount == 1 then
             client:ChatPrint("Warning: Cheat detection triggered. Further violations will result in a ban.")
             return true -- Suppress default punishment
         end
-        
+
         -- Log to external system
         lia.log.write("cheat_detected", {
             player = steamID,
             count = detectionCount,
             timestamp = os.time()
         })
-        
+
         -- Allow default punishment for repeat offenders
     end)
     ```
@@ -21093,7 +21073,6 @@ end
                 description = "Transfer item between inventories"
             },
 
-            -- Economic tracking
             {
                 name = "getEconomyStats",
                 query = [[
@@ -21108,7 +21087,6 @@ end
                 description = "Get economy statistics for period"
             },
 
-            -- Audit and logging
             {
                 name = "getAuditTrail",
                 query = [[
@@ -21127,7 +21105,6 @@ end
         local registered = 0
         local failed = 0
 
-        -- Register all statements with error handling
         for _, stmt in ipairs(statements) do
             local success = lia.db.prepare(stmt.name, stmt.query)
             if success then
@@ -21140,15 +21117,12 @@ end
             end
         end
 
-        -- Performance optimization statements
         if lia.db.getType() == "sqlite" then
-            -- SQLite-specific optimizations
             lia.db.prepare("optimizeDatabase", "PRAGMA optimize")
             lia.db.prepare("analyzeTables", "ANALYZE")
             print("✓ Registered SQLite-specific optimization statements")
         end
 
-        -- Cache prepared statement metadata
         local statementMetadata = {}
         for _, stmt in ipairs(statements) do
             statementMetadata[stmt.name] = {
@@ -21160,7 +21134,6 @@ end
 
         lia.data.set("preparedStatementMetadata", statementMetadata)
 
-        -- Update server statistics
         local stats = lia.data.get("databaseStats", {})
         stats.preparedStatements = (stats.preparedStatements or 0) + registered
         stats.lastStatementRegistration = os.time()

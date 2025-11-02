@@ -804,19 +804,14 @@ else
     end)
 
     lia.net.readBigTable("liaPlayerInteractCategories", function(data) if istable(data) then lia.playerinteract.categories = data end end)
-    -- Clean up VGUI panels and GUI references on reload to prevent accumulation
     timer.Simple(0.1, function()
-        -- Clean up GUI table references
         if lia.gui then
             for key, panel in pairs(lia.gui) do
-                if IsValid(panel) and panel.Remove then
-                    panel:Remove()
-                end
+                if IsValid(panel) and panel.Remove then panel:Remove() end
                 lia.gui[key] = nil
             end
         end
 
-        -- Clean up VGUI panels (exclude critical system panels)
         local world = vgui.GetWorldPanel()
         if IsValid(world) then
             local children = world:GetChildren()
@@ -824,16 +819,12 @@ else
                 if IsValid(panel) then
                     local initInfo = panel.Init and debug.getinfo(panel.Init, "Sln")
                     local src = initInfo and initInfo.short_src or ""
-                    -- Exclude chatbox, spawnmenu, and other critical system panels
-                    if not (src:find("chatbox") or src:find("spawnmenu") or src:find("creationmenu") or src:find("controlpanel")) then
-                        panel:Remove()
-                    end
+                    if not (src:find("chatbox") or src:find("spawnmenu") or src:find("creationmenu") or src:find("controlpanel")) then panel:Remove() end
                 end
             end
         end
     end)
 
-    -- Clear stored tables
     if lia.playerinteract.stored then table.Empty(lia.playerinteract.stored) end
     if lia.playerinteract.categories then table.Empty(lia.playerinteract.categories) end
 end

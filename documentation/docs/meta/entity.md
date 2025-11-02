@@ -328,13 +328,13 @@ end
 if door:checkDoorAccess(ply, DOOR_GUEST) then
     if door:isDoorLocked() then
         ply:notify("The door is locked")
-        else
-            door:Fire("Open")
-            ply:notify("Door opened")
-        end
-        else
-            ply:notify("You don't have access to this door")
-        end
+    else
+        door:Fire("Open")
+        ply:notify("Door opened")
+    end
+else
+    ply:notify("You don't have access to this door")
+end
 
 ```
 
@@ -388,9 +388,9 @@ if ply:getChar():getMoney() >= vehiclePrice then
     ply:getChar():takeMoney(vehiclePrice)
     vehicle:keysOwn(ply)
     ply:notify("Vehicle purchased for $" .. vehiclePrice)
-    else
-        ply:notify("Insufficient funds")
-    end
+else
+    ply:notify("Insufficient funds")
+end
 
 ```
 
@@ -439,11 +439,11 @@ end
 if vehicle:keysOwn(ply) and not vehicle:isLocked() then
     vehicle:keysLock()
     ply:notify("Vehicle locked")
-    elseif not vehicle:keysOwn(ply) then
-        ply:notify("You don't own this vehicle")
-        else
-            ply:notify("Vehicle is already locked")
-        end
+elseif not vehicle:keysOwn(ply) then
+    ply:notify("You don't own this vehicle")
+else
+    ply:notify("Vehicle is already locked")
+end
 
 ```
 
@@ -492,11 +492,11 @@ end
 if vehicle:keysOwn(ply) and vehicle:isLocked() then
     vehicle:keysUnLock()
     ply:notify("Vehicle unlocked")
-    elseif not vehicle:keysOwn(ply) then
-        ply:notify("You don't own this vehicle")
-        else
-            ply:notify("Vehicle is already unlocked")
-        end
+elseif not vehicle:keysOwn(ply) then
+    ply:notify("You don't own this vehicle")
+else
+    ply:notify("Vehicle is already unlocked")
+end
 
 ```
 
@@ -592,9 +592,9 @@ end
 -- Medium: Use in interaction logic
 if entity:isLocked() then
     ply:notify("This is locked")
-    else
-        entity:Use(ply)
-    end
+else
+    entity:Use(ply)
+end
 
 ```
 
@@ -603,10 +603,10 @@ if entity:isLocked() then
 -- High: Use in security system
 if entity:isLocked() and not ply:hasFlags("A") then
     ply:notify("Access denied - locked")
-    elseif entity:isLocked() and ply:hasFlags("A") then
-        entity:setLocked(false)
-        ply:notify("Unlocked with admin access")
-    end
+elseif entity:isLocked() and ply:hasFlags("A") then
+    entity:setLocked(false)
+    ply:notify("Unlocked with admin access")
+end
 
 ```
 
@@ -646,9 +646,9 @@ end
 -- Medium: Use in door interaction
 if door:isDoorLocked() then
     ply:notify("The door is locked")
-    else
-        door:Fire("Open")
-    end
+else
+    door:Fire("Open")
+end
 
 ```
 
@@ -657,10 +657,10 @@ if door:isDoorLocked() then
 -- High: Use in door access system
 if door:isDoorLocked() and not door:checkDoorAccess(ply, DOOR_OWNER) then
     ply:notify("Door is locked and you don't have access")
-    elseif door:isDoorLocked() and door:checkDoorAccess(ply, DOOR_OWNER) then
-        door:setLocked(false)
-        ply:notify("Door unlocked with your key")
-    end
+elseif door:isDoorLocked() and door:checkDoorAccess(ply, DOOR_OWNER) then
+    door:setLocked(false)
+    ply:notify("Door unlocked with your key")
+end
 
 ```
 
@@ -712,9 +712,9 @@ item:SetAngles(ang)
 -- High: Use in item dropping system
 local pos, ang = entity:getEntItemDropPos(offset)
 local tr = util.TraceLine({
-start = pos,
-endpos = pos + Vector(0, 0, -50),
-mask = MASK_SOLID_BRUSHONLY
+    start  = pos,
+    endpos = pos + Vector(0, 0, -50),
+    mask   = MASK_SOLID_BRUSHONLY
 })
 if tr.Hit then
     pos = tr.HitPos + tr.HitNormal * 5
@@ -762,9 +762,9 @@ end
 -- Medium: Use in character customization
 if entity:isFemale() then
     entity:SetBodygroup(1, 1) -- Set female bodygroup
-    else
-        entity:SetBodygroup(1, 0) -- Set male bodygroup
-    end
+else
+    entity:SetBodygroup(1, 0) -- Set male bodygroup
+end
 
 ```
 
@@ -832,10 +832,10 @@ end
 if entity:isNearEntity(100, ply) then
     if entity:isItem() then
         ply:notify("Press E to pick up " .. entity:GetItemData().name)
-        elseif entity:isMoney() then
-            ply:notify("Press E to collect $" .. entity:GetAmount())
-        end
+    elseif entity:isMoney() then
+        ply:notify("Press E to collect $" .. entity:GetAmount())
     end
+end
 
 ```
 
@@ -889,11 +889,11 @@ local partner = door:getDoorPartner()
 if IsValid(partner) then
     if door:isDoorLocked() then
         partner:setLocked(true)
-        else
-            partner:setLocked(false)
-        end
-        door:setNetVar("partnerID", partner:EntIndex())
+    else
+        partner:setLocked(false)
     end
+    door:setNetVar("partnerID", partner:EntIndex())
+end
 
 ```
 
@@ -1016,7 +1016,7 @@ When you need to clear all door access permissions and close related UIs
 
 **Realm**
 
-Server (can only be called on server)
+Server
 
 **Example Usage**
 
@@ -1323,7 +1323,7 @@ When you need to determine if an entity is a door on the client
 
 **Realm**
 
-Client (can only be called on client)
+Client
 
 **Example Usage**
 
@@ -1379,7 +1379,7 @@ When you need to retrieve synchronized data from an entity on the client
 
 **Realm**
 
-Client (can only be called on client)
+Client
 
 **Example Usage**
 
@@ -1439,7 +1439,7 @@ When you need to play a sound that moves with an entity
 
 **Realm**
 
-Client (can only be called on client)
+Client
 
 **Example Usage**
 

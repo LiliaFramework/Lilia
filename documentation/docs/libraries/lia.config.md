@@ -42,9 +42,9 @@ Shared
 ```lua
 -- Simple: Add a basic boolean configuration
 lia.config.add("EnableFeature", "Enable Feature", true, nil, {
-desc = "Enable or disable this feature",
-category = "general",
-type = "Boolean"
+    desc      = "Enable or disable this feature",
+    category  = "general",
+    type      = "Boolean"
 })
 
 ```
@@ -53,15 +53,15 @@ type = "Boolean"
 ```lua
 -- Medium: Add configuration with callback and constraints
 lia.config.add("WalkSpeed", "Walk Speed", 130, function(_, newValue)
-for _, client in player.Iterator() do
-    client:SetWalkSpeed(newValue)
-end
+    for _, client in player.Iterator() do
+        client:SetWalkSpeed(newValue)
+    end
 end, {
-desc = "Player walking speed",
-category = "character",
-type = "Int",
-min = 50,
-max = 300
+    desc      = "Player walking speed",
+    category  = "character",
+    type      = "Int",
+    min       = 50,
+    max       = 300
 })
 
 ```
@@ -70,16 +70,16 @@ max = 300
 ```lua
 -- High: Add configuration with dynamic options and complex validation
 lia.config.add("Language", "Language", "English", nil, {
-desc = "Select your preferred language",
-category = "general",
-type = "Table",
-options = function()
-local languages = {}
-for code, data in pairs(lia.lang.getLanguages()) do
-    languages[data.name] = code
-end
-return languages
-end
+    desc      = "Select your preferred language",
+    category  = "general",
+    type      = "Table",
+    options   = function()
+        local languages = {}
+        for code, data in pairs(lia.lang.getLanguages()) do
+            languages[data.name] = code
+        end
+        return languages
+    end
 })
 
 ```
@@ -194,9 +194,9 @@ lia.config.setDefault("MaxCharacters", maxChars)
 -- High: Update multiple defaults based on module availability
 local function updateModuleDefaults()
     local defaults = {
-    MaxCharacters = lia.module.get("characters") and 5 or 1,
-    AllowPMs = lia.module.get("chatbox") and true or false,
-    WalkSpeed = lia.module.get("attributes") and 130 or 100
+        MaxCharacters = lia.module.get("characters") and 5 or 1,
+        AllowPMs      = lia.module.get("chatbox") and true or false,
+        WalkSpeed     = lia.module.get("attributes") and 130 or 100
     }
     for key, value in pairs(defaults) do
         lia.config.setDefault(key, value)
@@ -303,10 +303,10 @@ lia.config.set("WalkSpeed", 150)
 local function setConfigWithValidation(key, value, min, max)
     if type(value) == "number" and value >= min and value <= max then
         lia.config.set(key, value)
-        else
-            print("Invalid value for " .. key)
-        end
+    else
+        print("Invalid value for " .. key)
     end
+end
 
 ```
 
@@ -320,10 +320,10 @@ local function batchConfigUpdate(updates)
         lia.config.set(key, value)
     end
     return function()
-    for key, value in pairs(originalValues) do
-        lia.config.set(key, value)
+        for key, value in pairs(originalValues) do
+            lia.config.set(key, value)
+        end
     end
-end
 end
 
 ```
@@ -370,10 +370,10 @@ local function getConfigValue(key, expectedType, fallback)
     local value = lia.config.get(key, fallback)
     if type(value) == expectedType then
         return value
-        else
-            return fallback
-        end
+    else
+        return fallback
     end
+end
 
 ```
 
@@ -383,9 +383,9 @@ local function getConfigValue(key, expectedType, fallback)
 local function getPlayerSettings()
     local settings = {}
     local configs = {
-    walkSpeed = {"WalkSpeed", "number", 130},
-    runSpeed = {"RunSpeed", "number", 275},
-    maxChars = {"MaxCharacters", "number", 5}
+        walkSpeed = {"WalkSpeed", "number", 130},
+        runSpeed  = {"RunSpeed", "number", 275},
+        maxChars  = {"MaxCharacters", "number", 5}
     }
     for setting, data in pairs(configs) do
         local key, expectedType, fallback = data[1], data[2], data[3]
@@ -431,8 +431,8 @@ lia.config.load()
 -- Medium: Load configurations with callback
 lia.config.load()
 hook.Add("InitializedConfig", "MyModule", function()
-print("Configurations loaded successfully")
--- Initialize module with loaded configs
+    print("Configurations loaded successfully")
+    -- Initialize module with loaded configs
 end)
 
 ```
@@ -507,10 +507,10 @@ local function exportChangedConfigs(filterFunc)
         local config = lia.config.stored[key]
         if config and (not filterFunc or filterFunc(key, value, config)) then
             filtered[key] = {
-            value = value,
-            name = config.name,
-            category = config.category,
-            type = config.data.type
+                value    = value,
+                name     = config.name,
+                category = config.category,
+                type     = config.data.type
             }
         end
     end
@@ -556,11 +556,11 @@ lia.config.send()
 ```lua
 -- Medium: Send configurations to specific client on connect
 hook.Add("PlayerInitialSpawn", "SendConfigs", function(client)
-timer.Simple(1, function()
-if IsValid(client) then
-    lia.config.send(client)
-end
-end)
+    timer.Simple(1, function()
+        if IsValid(client) then
+            lia.config.send(client)
+        end
+    end)
 end)
 
 ```
@@ -636,16 +636,16 @@ end
 local function saveConfigsWithBackup()
     local changed = lia.config.getChangedValues()
     if table.Count(changed) == 0 then return end
-        -- Create backup
-        local backup = util.TableToJSON(changed)
-        file.Write("config_backup_" .. os.time() .. ".json", backup)
-        -- Save with validation
-        local success, err = pcall(lia.config.save)
-        if not success then
-            print("Save failed, restoring from backup")
-            -- Restore from backup logic
-        end
+    -- Create backup
+    local backup = util.TableToJSON(changed)
+    file.Write("config_backup_" .. os.time() .. ".json", backup)
+    -- Save with validation
+    local success, err = pcall(lia.config.save)
+    if not success then
+        print("Save failed, restoring from backup")
+        -- Restore from backup logic
     end
+end
 
 ```
 

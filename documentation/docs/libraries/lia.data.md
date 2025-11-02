@@ -55,10 +55,10 @@ local encoded = lia.data.encodetable(color)
 ```lua
 -- High: Encode nested table with mixed data types
 local complexData = {
-position = Vector(0, 0, 0),
-rotation = Angle(0, 90, 0),
-color = Color(255, 0, 0),
-settings = {enabled = true, count = 5}
+    position = Vector(0, 0, 0),
+    rotation = Angle(0, 90, 0),
+    color   = Color(255, 0, 0),
+    settings = {enabled = true, count = 5}
 }
 local encoded = lia.data.encodetable(complexData)
 -- Returns: {position = {0, 0, 0}, rotation = {0, 90, 0}, color = {255, 0, 0, 255}, settings = {enabled = true, count = 5}}
@@ -112,10 +112,10 @@ local decoded = lia.data.decode(encodedAngle)
 ```lua
 -- High: Decode complex nested data structure
 local encodedData = {
-position = {100, 200, 300},
-rotation = {0, 90, 0},
-color = {255, 0, 0, 255},
-settings = {enabled = true, count = 5}
+    position = {100, 200, 300},
+    rotation = {0, 90, 0},
+    color    = {255, 0, 0, 255},
+    settings = {enabled = true, count = 5}
 }
 local decoded = lia.data.decode(encodedData)
 -- Returns: {position = Vector(100, 200, 300), rotation = Angle(0, 90, 0), color = Color(255, 0, 0, 255), settings = {enabled = true, count = 5}}
@@ -168,10 +168,10 @@ local serialized = lia.data.serialize(Vector(100, 200, 300))
 ```lua
 -- High: Serialize complex nested data with mixed types
 local complexData = {
-position = Vector(0, 0, 0),
-rotation = Angle(0, 90, 0),
-color = Color(255, 0, 0),
-settings = {enabled = true, count = 5}
+    position = Vector(0, 0, 0),
+    rotation = Angle(0, 90, 0),
+    color    = Color(255, 0, 0),
+    settings = {enabled = true, count = 5}
 }
 local serialized = lia.data.serialize(complexData)
 -- Returns: JSON string with all data properly encoded
@@ -380,9 +380,9 @@ lia.data.set("serverVersion", "1.0.0", true)
 ```lua
 -- High: Store complex data with custom scoping
 local playerData = {
-position = Vector(100, 200, 300),
-inventory = {weapon = "pistol", ammo = 50},
-settings = {volume = 0.8, graphics = "high"}
+    position  = Vector(100, 200, 300),
+    inventory = {weapon = "pistol", ammo = 50},
+    settings  = {volume = 0.8, graphics = "high"}
 }
 lia.data.set("player_" .. player:SteamID64(), playerData, false, true)
 -- Stores player data for current gamemode but all maps
@@ -522,9 +522,9 @@ lia.data.loadPersistence()
 ```lua
 -- Medium: Load persistence with error handling
 lia.data.loadPersistence():next(function()
-print("Persistence schema loaded successfully")
+    print("Persistence schema loaded successfully")
 end):catch(function(err)
-print("Failed to load persistence schema: " .. err)
+    print("Failed to load persistence schema: " .. err)
 end)
 
 ```
@@ -533,12 +533,12 @@ end)
 ```lua
 -- High: Load persistence as part of initialization sequence
 lia.data.loadPersistence():next(function()
-return lia.data.loadPersistenceData(function(entities)
--- Process loaded entities
-for _, ent in ipairs(entities) do
-    -- Spawn entities or process data
-end
-end)
+    return lia.data.loadPersistenceData(function(entities)
+        -- Process loaded entities
+        for _, ent in ipairs(entities) do
+            -- Spawn entities or process data
+        end
+    end)
 end)
 
 ```
@@ -573,7 +573,7 @@ Server
 ```lua
 -- Simple: Save basic entity data
 local entities = {
-{class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
+    {class = "prop_physics", pos = Vector(0, 0, 0), angles = Angle(0, 0, 0), model = "models/props_c17/FurnitureTable001a.mdl"}
 }
 lia.data.savePersistence(entities)
 
@@ -583,14 +583,14 @@ lia.data.savePersistence(entities)
 ```lua
 -- Medium: Save entities with custom properties
 local entities = {
-{
-class = "lia_vendor",
-pos = Vector(100, 200, 0),
-angles = Angle(0, 90, 0),
-model = "models/player.mdl",
-name = "Weapon Vendor",
-items = {"weapon_pistol", "weapon_shotgun"}
-}
+    {
+        class   = "lia_vendor",
+        pos     = Vector(100, 200, 0),
+        angles  = Angle(0, 90, 0),
+        model   = "models/player.mdl",
+        name    = "Weapon Vendor",
+        items   = {"weapon_pistol", "weapon_shotgun"}
+    }
 }
 lia.data.savePersistence(entities)
 
@@ -603,13 +603,13 @@ local entities = {}
 for _, ent in ipairs(ents.GetAll()) do
     if ent:GetClass() == "lia_item" then
         table.insert(entities, {
-        class = ent:GetClass(),
-        pos = ent:GetPos(),
-        angles = ent:GetAngles(),
-        model = ent:GetModel(),
-        itemID = ent:GetItemID(),
-        amount = ent:GetAmount(),
-        data = ent:GetData()
+            class   = ent:GetClass(),
+            pos     = ent:GetPos(),
+            angles  = ent:GetAngles(),
+            model   = ent:GetModel(),
+            itemID  = ent:GetItemID(),
+            amount  = ent:GetAmount(),
+            data    = ent:GetData()
         })
     end
 end
@@ -655,10 +655,10 @@ lia.data.loadPersistenceData()
 ```lua
 -- Medium: Load persistence data with callback
 lia.data.loadPersistenceData(function(entities)
-print("Loaded " .. #entities .. " entities")
-for _, ent in ipairs(entities) do
-    print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
-end
+    print("Loaded " .. #entities .. " entities")
+    for _, ent in ipairs(entities) do
+        print("Entity: " .. ent.class .. " at " .. tostring(ent.pos))
+    end
 end)
 
 ```
@@ -667,21 +667,21 @@ end)
 ```lua
 -- High: Load persistence data with entity spawning
 lia.data.loadPersistenceData(function(entities)
-for _, entData in ipairs(entities) do
-    local ent = ents.Create(entData.class)
-    if IsValid(ent) then
-        ent:SetPos(entData.pos)
-        ent:SetAngles(entData.angles)
-        ent:SetModel(entData.model)
-        ent:Spawn()
-        -- Restore custom properties
-        for k, v in pairs(entData) do
-            if not defaultCols[k] then
-                ent:SetNWVar(k, v)
+    for _, entData in ipairs(entities) do
+        local ent = ents.Create(entData.class)
+        if IsValid(ent) then
+            ent:SetPos(entData.pos)
+            ent:SetAngles(entData.angles)
+            ent:SetModel(entData.model)
+            ent:Spawn()
+            -- Restore custom properties
+            for k, v in pairs(entData) do
+                if not defaultCols[k] then
+                    ent:SetNWVar(k, v)
+                end
             end
         end
     end
-end
 end)
 
 ```
@@ -724,8 +724,8 @@ local playerCount = lia.data.get("playerCount", 0)
 ```lua
 -- Medium: Get data with default fallback
 local serverSettings = lia.data.get("serverSettings", {
-maxPlayers = 32,
-mapRotation = {"gm_flatgrass", "gm_construct"}
+    maxPlayers  = 32,
+    mapRotation = {"gm_flatgrass", "gm_construct"}
 })
 -- Returns stored settings or default configuration
 

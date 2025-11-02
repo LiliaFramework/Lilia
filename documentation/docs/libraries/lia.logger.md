@@ -40,7 +40,7 @@ Server
 ```lua
 -- Simple: Add a basic custom log type
 lia.log.addType("customAction", function(client, action)
-return client:Name() .. " performed " .. action
+    return client:Name() .. " performed " .. action
 end, "Custom")
 
 ```
@@ -49,7 +49,7 @@ end, "Custom")
 ```lua
 -- Medium: Add log type with validation and localization
 lia.log.addType("moduleEvent", function(client, moduleName, event, data)
-if not IsValid(client) then return "System: " .. moduleName .. " - " .. event end
+    if not IsValid(client) then return "System: " .. moduleName .. " - " .. event end
     return L("logModuleEvent", client:Name(), moduleName, event, data or "")
 end, "Modules")
 
@@ -59,11 +59,11 @@ end, "Modules")
 ```lua
 -- High: Add complex log type with multiple parameters and error handling
 lia.log.addType("advancedAction", function(client, target, action, amount, reason)
-local clientName = IsValid(client) and client:Name() or "Console"
-local targetName = IsValid(target) and target:Name() or tostring(target)
-local timestamp = os.date("%H:%M:%S")
-return string.format("[%s] %s %s %s (Amount: %s, Reason: %s)",
-timestamp, clientName, action, targetName, amount or "N/A", reason or "None")
+    local clientName = IsValid(client) and client:Name() or "Console"
+    local targetName = IsValid(target) and target:Name() or tostring(target)
+    local timestamp = os.date("%H:%M:%S")
+    return string.format("[%s] %s %s %s (Amount: %s, Reason: %s)",
+        timestamp, clientName, action, targetName, amount or "N/A", reason or "None")
 end, "Advanced")
 
 ```
@@ -123,11 +123,11 @@ local function safeGetLogString(client, logType, ...)
     local success, message, category = pcall(lia.log.getString, client, logType, ...)
     if success and message then
         return message, category
-        else
-            return "Failed to generate log: " .. tostring(logType), "Error"
-        end
+    else
+        return "Failed to generate log: " .. tostring(logType), "Error"
     end
-    local message, category = safeGetLogString(client, "adminAction", target, action, reason)
+end
+local message, category = safeGetLogString(client, "adminAction", target, action, reason)
 
 ```
 
@@ -181,10 +181,10 @@ local function logAdminAction(client, target, action, reason, amount)
     local logType = "adminAction"
     local params = {target, action}
     if reason then table.insert(params, reason) end
-        if amount then table.insert(params, amount) end
-            lia.log.add(client, logType, unpack(params))
-        end
-        logAdminAction(client, target, "kick", "Rule violation", nil)
+    if amount then table.insert(params, amount) end
+    lia.log.add(client, logType, unpack(params))
+end
+logAdminAction(client, target, "kick", "Rule violation", nil)
 
 ```
 

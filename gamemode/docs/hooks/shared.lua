@@ -751,7 +751,7 @@ end
     hook.Add("OnConfigUpdated", "AdvancedConfigHandler", function(key, oldValue, value)
         local config = lia.config.stored[key]
         if not config then return end
-        
+
         -- Validate value based on config type
         if config.data and config.data.type == "Number" then
             if type(value) ~= "number" then
@@ -759,7 +759,7 @@ end
                 lia.config.forceSet(key, oldValue)
                 return
             end
-            
+
             -- Check min/max constraints
             if config.data.min and value < config.data.min then
                 lia.config.forceSet(key, config.data.min)
@@ -770,7 +770,7 @@ end
                 return
             end
         end
-        
+
         -- Track configuration changes
         if not lia.config.changeHistory then
             lia.config.changeHistory = {}
@@ -781,7 +781,7 @@ end
             newValue = value,
             time = os.time()
         })
-        
+
         -- Notify admins of critical changes
         if config.data and config.data.critical then
             for _, ply in ipairs(player.GetAll()) do
@@ -3160,13 +3160,13 @@ end
                 end
                 return maxDepth
             end
-            
+
             if getDepth(value) > 5 then
                 print("Warning: Data table too deeply nested")
                 return
             end
         end
-        
+
         lia.data.set(self.uniqueID, value, global, ignoreMap)
     end
     ```
@@ -3189,21 +3189,21 @@ end
             end
             processedValue._encrypted = true
         end
-        
+
         -- Add versioning metadata
         if type(processedValue) == "table" then
             processedValue._version = self.dataVersion or 1
             processedValue._timestamp = os.time()
         end
-        
+
         -- Store with module identifier
         lia.data.set(self.uniqueID, processedValue, global, ignoreMap)
-        
+
         -- Trigger module-specific callback
         if self.OnDataChanged then
             self:OnDataChanged(value, global, ignoreMap)
         end
-        
+
         -- Log data changes for debugging
         if self.debug then
             print("[MODULE] " .. self.uniqueID .. " data updated: " .. util.TableToJSON(processedValue, true))

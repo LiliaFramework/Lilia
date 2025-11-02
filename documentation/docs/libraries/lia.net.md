@@ -31,7 +31,7 @@ During initialization or when setting up network message handlers
 
 **Realm**
 
-Shared (works on both server and client)
+Shared
 
 **Example Usage**
 
@@ -94,7 +94,7 @@ When you need to send data from server to client(s) or client to server
 
 **Realm**
 
-Shared (works on both server and client)
+Shared
 
 **Example Usage**
 
@@ -125,9 +125,9 @@ for _, ply in ipairs(player.GetAll()) do
     end
 end
 lia.net.send("adminNotification", admins, {
-type = "warning",
-message = "Server restart in 5 minutes",
-timestamp = os.time()
+    type      = "warning",
+    message   = "Server restart in 5 minutes",
+    timestamp = os.time()
 })
 
 ```
@@ -155,7 +155,7 @@ During initialization to set up handlers for receiving large data transfers
 
 **Realm**
 
-Shared (works on both server and client)
+Shared
 
 **Example Usage**
 
@@ -234,7 +234,7 @@ When you need to send large amounts of data that exceed normal network limits
 
 **Realm**
 
-Server only
+Server
 
 **Example Usage**
 
@@ -243,7 +243,7 @@ Server only
 -- Simple: Send large table to all players
 local largeData = {}
 for i = 1, 1000 do
-    largeData[i] = { id = i, name = "Item " .. i }
+    largeData[i] = {id = i, name = "Item " .. i}
 end
 lia.net.writeBigTable(nil, "largeData", largeData)
 
@@ -255,7 +255,7 @@ lia.net.writeBigTable(nil, "largeData", largeData)
 local playerData = {}
 for _, ply in ipairs(player.GetAll()) do
     playerData[ply:SteamID()] = {
-        name = ply:Name(),
+        name  = ply:Name(),
         health = ply:Health(),
         armor = ply:Armor()
     }
@@ -281,15 +281,15 @@ local function sendInventoryData(targets)
             local inv = char:GetInventory()
             if inv then
                 inventoryData[ply:SteamID()] = {
-                    items = {},
-                    slots = inv:GetSlots(),
+                    items  = {},
+                    slots  = inv:GetSlots(),
                     weight = inv:GetWeight()
                 }
                 for _, item in ipairs(inv:GetItems()) do
                     table.insert(inventoryData[ply:SteamID()].items, {
                         uniqueID = item.uniqueID,
-                        id = item.id,
-                        data = item.data
+                        id       = item.id,
+                        data     = item.data
                     })
                 end
             end
@@ -330,7 +330,7 @@ When you need to send large amounts of data that exceed normal network limits
 
 **Realm**
 
-Server only
+Server
 
 **Example Usage**
 
@@ -339,7 +339,7 @@ Server only
 -- Simple: Send large table to all players
 local largeData = {}
 for i = 1, 1000 do
-    largeData[i] = { id = i, name = "Item " .. i }
+    largeData[i] = {id = i, name = "Item " .. i}
 end
 lia.net.writeBigTable(nil, "largeData", largeData)
 
@@ -351,7 +351,7 @@ lia.net.writeBigTable(nil, "largeData", largeData)
 local playerData = {}
 for _, ply in ipairs(player.GetAll()) do
     playerData[ply:SteamID()] = {
-        name = ply:Name(),
+        name  = ply:Name(),
         health = ply:Health(),
         armor = ply:Armor()
     }
@@ -377,15 +377,15 @@ local function sendInventoryData(targets)
             local inv = char:GetInventory()
             if inv then
                 inventoryData[ply:SteamID()] = {
-                    items = {},
-                    slots = inv:GetSlots(),
+                    items  = {},
+                    slots  = inv:GetSlots(),
                     weight = inv:GetWeight()
                 }
                 for _, item in ipairs(inv:GetItems()) do
                     table.insert(inventoryData[ply:SteamID()].items, {
                         uniqueID = item.uniqueID,
-                        id = item.id,
-                        data = item.data
+                        id       = item.id,
+                        data     = item.data
                     })
                 end
             end
@@ -426,7 +426,7 @@ When you need to send large amounts of data that exceed normal network limits
 
 **Realm**
 
-Server only
+Server
 
 **Example Usage**
 
@@ -435,7 +435,7 @@ Server only
 -- Simple: Send large table to all players
 local largeData = {}
 for i = 1, 1000 do
-    largeData[i] = { id = i, name = "Item " .. i }
+    largeData[i] = {id = i, name = "Item " .. i}
 end
 lia.net.writeBigTable(nil, "largeData", largeData)
 
@@ -447,7 +447,7 @@ lia.net.writeBigTable(nil, "largeData", largeData)
 local playerData = {}
 for _, ply in ipairs(player.GetAll()) do
     playerData[ply:SteamID()] = {
-        name = ply:Name(),
+        name  = ply:Name(),
         health = ply:Health(),
         armor = ply:Armor()
     }
@@ -473,15 +473,15 @@ local function sendInventoryData(targets)
             local inv = char:GetInventory()
             if inv then
                 inventoryData[ply:SteamID()] = {
-                    items = {},
-                    slots = inv:GetSlots(),
+                    items  = {},
+                    slots  = inv:GetSlots(),
                     weight = inv:GetWeight()
                 }
                 for _, item in ipairs(inv:GetItems()) do
                     table.insert(inventoryData[ply:SteamID()].items, {
                         uniqueID = item.uniqueID,
-                        id = item.id,
-                        data = item.data
+                        id       = item.id,
+                        data     = item.data
                     })
                 end
             end
@@ -522,7 +522,7 @@ When you need to send large amounts of data that exceed normal network limits
 
 **Realm**
 
-Server only
+Server
 
 **Example Usage**
 
@@ -531,7 +531,7 @@ Server only
 -- Simple: Send large table to all players
 local largeData = {}
 for i = 1, 1000 do
-    largeData[i] = { id = i, name = "Item " .. i }
+    largeData[i] = {id = i, name = "Item " .. i}
 end
 lia.net.writeBigTable(nil, "largeData", largeData)
 
@@ -543,7 +543,7 @@ lia.net.writeBigTable(nil, "largeData", largeData)
 local playerData = {}
 for _, ply in ipairs(player.GetAll()) do
     playerData[ply:SteamID()] = {
-        name = ply:Name(),
+        name  = ply:Name(),
         health = ply:Health(),
         armor = ply:Armor()
     }
@@ -569,15 +569,15 @@ local function sendInventoryData(targets)
             local inv = char:GetInventory()
             if inv then
                 inventoryData[ply:SteamID()] = {
-                    items = {},
-                    slots = inv:GetSlots(),
+                    items  = {},
+                    slots  = inv:GetSlots(),
                     weight = inv:GetWeight()
                 }
                 for _, item in ipairs(inv:GetItems()) do
                     table.insert(inventoryData[ply:SteamID()].items, {
                         uniqueID = item.uniqueID,
-                        id = item.id,
-                        data = item.data
+                        id       = item.id,
+                        data     = item.data
                     })
                 end
             end
@@ -618,7 +618,7 @@ When you need to send large amounts of data that exceed normal network limits
 
 **Realm**
 
-Server only
+Server
 
 **Example Usage**
 
@@ -627,7 +627,7 @@ Server only
 -- Simple: Send large table to all players
 local largeData = {}
 for i = 1, 1000 do
-    largeData[i] = { id = i, name = "Item " .. i }
+    largeData[i] = {id = i, name = "Item " .. i}
 end
 lia.net.writeBigTable(nil, "largeData", largeData)
 
@@ -639,7 +639,7 @@ lia.net.writeBigTable(nil, "largeData", largeData)
 local playerData = {}
 for _, ply in ipairs(player.GetAll()) do
     playerData[ply:SteamID()] = {
-        name = ply:Name(),
+        name  = ply:Name(),
         health = ply:Health(),
         armor = ply:Armor()
     }
@@ -665,15 +665,15 @@ local function sendInventoryData(targets)
             local inv = char:GetInventory()
             if inv then
                 inventoryData[ply:SteamID()] = {
-                    items = {},
-                    slots = inv:GetSlots(),
+                    items  = {},
+                    slots  = inv:GetSlots(),
                     weight = inv:GetWeight()
                 }
                 for _, item in ipairs(inv:GetItems()) do
                     table.insert(inventoryData[ply:SteamID()].items, {
                         uniqueID = item.uniqueID,
-                        id = item.id,
-                        data = item.data
+                        id       = item.id,
+                        data     = item.data
                     })
                 end
             end

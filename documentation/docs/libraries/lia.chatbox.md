@@ -96,9 +96,9 @@ Shared
 ```lua
 -- Simple: Register basic IC chat
 lia.chat.register("ic", {
-prefix = "/",
-color = Color(255, 255, 255),
-radius = 200
+    prefix = "/",
+    color  = Color(255, 255, 255),
+    radius = 200
 })
 
 ```
@@ -107,11 +107,11 @@ radius = 200
 ```lua
 -- Medium: Register whisper chat with custom properties
 lia.chat.register("whisper", {
-prefix = {"/w", "/whisper"},
-color = Color(150, 150, 255),
-radius = 50,
-format = "whisperFormat",
-desc = "Whisper to nearby players"
+    prefix = {"/w", "/whisper"},
+    color  = Color(150, 150, 255),
+    radius = 50,
+    format = "whisperFormat",
+    desc   = "Whisper to nearby players"
 })
 
 ```
@@ -120,19 +120,19 @@ desc = "Whisper to nearby players"
 ```lua
 -- High: Register admin chat with complex validation
 lia.chat.register("admin", {
-prefix = "/a",
-color = Color(255, 100, 100),
-onCanSay = function(speaker)
-return speaker:IsAdmin()
-end,
-onCanHear = function(speaker, listener)
-return listener:IsAdmin()
-end,
-format = "adminFormat",
-arguments = {
-{type = "string", name = "message"}
-},
-desc = "Admin-only communication channel"
+    prefix    = "/a",
+    color     = Color(255, 100, 100),
+    onCanSay  = function(speaker)
+        return speaker:IsAdmin()
+    end,
+    onCanHear = function(speaker, listener)
+        return listener:IsAdmin()
+    end,
+    format    = "adminFormat",
+    arguments = {
+        {type = "string", name = "message"}
+    },
+    desc      = "Admin-only communication channel"
 })
 
 ```

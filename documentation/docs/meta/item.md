@@ -26,7 +26,7 @@ When determining item dimensions or display orientation
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -76,7 +76,7 @@ When determining item grid space requirements or display size
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -125,7 +125,7 @@ When determining item grid space requirements or display size
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -174,7 +174,7 @@ When checking how many of this item exist, for display or validation
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -225,7 +225,7 @@ For logging, debugging, or console output
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -245,10 +245,10 @@ lia.information("Processing " .. item:tostring())
 ```lua
 local function logItemTransaction(item, action, player)
     local logEntry = string.format("[%s] %s performed %s on %s",
-    os.date("%H:%M:%S"),
-    player:GetName(),
-    action,
-    item:tostring()
+        os.date("%H:%M:%S"),
+        player:GetName(),
+        action,
+        item:tostring()
     )
     file.Append("item_transactions.txt", logEntry .. "\n")
 end
@@ -274,7 +274,7 @@ When you need to reference this specific item instance
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -324,7 +324,7 @@ When displaying the item or creating item entities
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -376,7 +376,7 @@ When setting up item display or entity appearance
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -426,7 +426,7 @@ When setting up item display or entity appearance
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -454,12 +454,12 @@ local function applyBodygroups(entity, bodygroups)
             if id ~= -1 then
                 entity:SetBodygroup(id, bodygroupValue)
             end
-            else
-                entity:SetBodygroup(bodygroupID, bodygroupValue)
-            end
+        else
+            entity:SetBodygroup(bodygroupID, bodygroupValue)
         end
     end
-    applyBodygroups(myEntity, item:getBodygroups())
+end
+applyBodygroups(myEntity, item:getBodygroups())
 
 ```
 
@@ -481,7 +481,7 @@ When selling, trading, or displaying item value
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -546,7 +546,7 @@ When executing item functions that need player/entity context
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -573,12 +573,12 @@ local function executeItemAction(item, action, player, entity, ...)
         local result = {item:call("on" .. action, player, entity, ...)}
         hook.Run("OnItem" .. action, item, player, entity, unpack(result))
         return true, unpack(result)
-        else
-            player:notifyError(reason or "Cannot perform action")
-            return false
-        end
+    else
+        player:notifyError(reason or "Cannot perform action")
+        return false
     end
-    local success, data = executeItemAction(myItem, "Use", player, nil, target)
+end
+local success, data = executeItemAction(myItem, "Use", player, nil, target)
 
 ```
 
@@ -600,7 +600,7 @@ When you need to determine item ownership or permissions
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -623,20 +623,20 @@ end
 local function canPlayerAccessItem(player, item)
     local owner = item:getOwner()
     if not owner then return false end
-        -- Check if player is the owner
-        if owner == player then return true end
-            -- Check if player has admin permissions
-            if player:isAdmin() then return true end
-                -- Check if item is in shared inventory
-                local inventory = lia.inventory.instances[item.invID]
-                if inventory and inventory:getData("shared") then
-                    return inventory:canAccess("view", {client = player})
-                end
-                return false
-            end
-            if canPlayerAccessItem(client, myItem) then
-                -- Allow access
-            end
+    -- Check if player is the owner
+    if owner == player then return true end
+    -- Check if player has admin permissions
+    if player:isAdmin() then return true end
+    -- Check if item is in shared inventory
+    local inventory = lia.inventory.instances[item.invID]
+    if inventory and inventory:getData("shared") then
+        return inventory:canAccess("view", {client = player})
+    end
+    return false
+end
+if canPlayerAccessItem(client, myItem) then
+    -- Allow access
+end
 
 ```
 
@@ -665,7 +665,7 @@ When accessing item-specific data or configuration
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -721,7 +721,7 @@ When you need a complete view of all item data
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -782,14 +782,14 @@ During item configuration to add custom behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
 **Low Complexity:**
 ```lua
 item:hook("use", function(item)
-print("Item used!")
+    print("Item used!")
 end)
 
 ```
@@ -797,9 +797,9 @@ end)
 **Medium Complexity:**
 ```lua
 item:hook("drop", function(item)
-if item:getData("soulbound") then
-    return false -- Prevent dropping
-end
+    if item:getData("soulbound") then
+        return false -- Prevent dropping
+    end
 end)
 
 ```
@@ -807,17 +807,17 @@ end)
 **High Complexity:**
 ```lua
 item:hook("use", function(item)
--- Check cooldown
-local lastUsed = item:getData("lastUsed", 0)
-local cooldown = item:getData("cooldown", 60)
-if CurTime() - lastUsed < cooldown then
-    item.player:notifyError("Item is on cooldown")
-    return false
-end
--- Update last used time
-item:setData("lastUsed", CurTime())
--- Apply custom effects
-applyItemEffect(item.player, item.uniqueID)
+    -- Check cooldown
+    local lastUsed = item:getData("lastUsed", 0)
+    local cooldown = item:getData("cooldown", 60)
+    if CurTime() - lastUsed < cooldown then
+        item.player:notifyError("Item is on cooldown")
+        return false
+    end
+    -- Update last used time
+    item:setData("lastUsed", CurTime())
+    -- Apply custom effects
+    applyItemEffect(item.player, item.uniqueID)
 end)
 
 ```
@@ -847,14 +847,14 @@ During item configuration to add cleanup or follow-up behavior
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
 **Low Complexity:**
 ```lua
 item:postHook("use", function(item)
-print("Item use completed")
+    print("Item use completed")
 end)
 
 ```
@@ -862,7 +862,7 @@ end)
 **Medium Complexity:**
 ```lua
 item:postHook("drop", function(item)
-lia.log.add(item.player, "item_dropped", item:getName())
+    lia.log.add(item.player, "item_dropped", item:getName())
 end)
 
 ```
@@ -870,18 +870,18 @@ end)
 **High Complexity:**
 ```lua
 item:postHook("use", function(item, result)
--- Log usage statistics
-local stats = lia.data.get("item_usage_stats", {})
-stats[item.uniqueID] = (stats[item.uniqueID] or 0) + 1
-lia.data.set("item_usage_stats", stats)
--- Apply post-use effects
-if result == true and item:getData("consumable") then
-    item:addQuantity(-1)
-end
--- Trigger achievements
-if stats[item.uniqueID] >= 100 then
-    item.player:unlockAchievement("frequent_user")
-end
+    -- Log usage statistics
+    local stats = lia.data.get("item_usage_stats", {})
+    stats[item.uniqueID] = (stats[item.uniqueID] or 0) + 1
+    lia.data.set("item_usage_stats", stats)
+    -- Apply post-use effects
+    if result == true and item:getData("consumable") then
+        item:addQuantity(-1)
+    end
+    -- Trigger achievements
+    if stats[item.uniqueID] >= 100 then
+        item.player:unlockAchievement("frequent_user")
+    end
 end)
 
 ```
@@ -904,7 +904,7 @@ Automatically during item registration
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -969,7 +969,7 @@ Automatically during item registration
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1034,7 +1034,7 @@ Automatically during item registration
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1099,7 +1099,7 @@ Automatically during item registration
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1169,7 +1169,7 @@ For debugging or logging item state
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1215,7 +1215,7 @@ For detailed debugging of item data
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1267,7 +1267,7 @@ When displaying item names in UI or chat
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1290,10 +1290,10 @@ local function formatItemName(item)
     local quality = item:getData("quality")
     if quality then
         local colors = {
-        common = Color(255, 255, 255),
-        rare = Color(0, 255, 255),
-        epic = Color(255, 0, 255),
-        legendary = Color(255, 165, 0)
+            common     = Color(255, 255, 255),
+            rare        = Color(0, 255, 255),
+            epic        = Color(255, 0, 255),
+            legendary   = Color(255, 165, 0)
         }
         return colors[quality], name
     end
@@ -1321,7 +1321,7 @@ When displaying item details or tooltips
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -1392,7 +1392,7 @@ item:removeFromInventory()
 **Medium Complexity:**
 ```lua
 item:removeFromInventory(true):next(function()
-print("Item removed but preserved")
+    print("Item removed but preserved")
 end)
 
 ```
@@ -1401,11 +1401,11 @@ end)
 ```lua
 local function transferItem(item, fromInv, toInv)
     return item:removeFromInventory(true):next(function()
-    return toInv:add(item)
-end):next(function()
-lia.log.add(nil, "item_transferred",
-item:getID(), fromInv:getID(), toInv:getID())
-end)
+        return toInv:add(item)
+    end):next(function()
+        lia.log.add(nil, "item_transferred",
+            item:getID(), fromInv:getID(), toInv:getID())
+    end)
 end
 transferItem(myItem, playerInv, bankInv)
 
@@ -1452,16 +1452,16 @@ end)
 local function safelyDeleteExpiredItems()
     local expiredItems = lia.db.select("*", "items", "expiry_date < " .. os.time())
     expiredItems:next(function(results)
-    for _, row in ipairs(results.results or {}) do
-        local item = lia.item.instances[tonumber(row.itemID)]
-        if item then
-            -- Log deletion reason
-            lia.log.add(nil, "expired_item_deleted", row.itemID, row.uniqueID)
-            -- Delete the item
-            item:delete()
+        for _, row in ipairs(results.results or {}) do
+            local item = lia.item.instances[tonumber(row.itemID)]
+            if item then
+                -- Log deletion reason
+                lia.log.add(nil, "expired_item_deleted", row.itemID, row.uniqueID)
+                -- Delete the item
+                item:delete()
+            end
         end
-    end
-end)
+    end)
 end
 safelyDeleteExpiredItems()
 
@@ -1512,19 +1512,19 @@ local function consumeItemWithEffects(item, player)
     end
     -- Remove the item
     return item:remove():next(function()
-    -- Post-consumption effects
-    if item:getData("reusable") then
-        -- Create a new instance if reusable
-        local newItem = lia.item.new(item.uniqueID, 1)
-        player:getInventory():add(newItem)
-    end
-    -- Trigger achievements
-    local consumedCount = player:getData("items_consumed", 0) + 1
-    player:setData("items_consumed", consumedCount)
-    if consumedCount >= 100 then
-        player:unlockAchievement("consumptive")
-    end
-end)
+        -- Post-consumption effects
+        if item:getData("reusable") then
+            -- Create a new instance if reusable
+            local newItem = lia.item.new(item.uniqueID, 1)
+            player:getInventory():add(newItem)
+        end
+        -- Trigger achievements
+        local consumedCount = player:getData("items_consumed", 0) + 1
+        player:setData("items_consumed", consumedCount)
+        if consumedCount >= 100 then
+            player:unlockAchievement("consumptive")
+        end
+    end)
 end
 consumeItemWithEffects(myItem, player)
 
@@ -1893,12 +1893,12 @@ local function teleportItemToPlayer(item, player)
     if entity then
         -- Remove from inventory first
         item:removeFromInventory(true):next(function()
-        -- Teleport entity to player
-        entity:SetPos(player:GetPos() + Vector(0, 0, 50))
-        entity:SetVelocity(Vector(0, 0, 0))
-        -- Log the action
-        lia.log.add(player, "item_teleported", item:getID(), item:getName())
-    end)
+            -- Teleport entity to player
+            entity:SetPos(player:GetPos() + Vector(0, 0, 50))
+            entity:SetVelocity(Vector(0, 0, 0))
+            -- Log the action
+            lia.log.add(player, "item_teleported", item:getID(), item:getName())
+        end)
     else
         player:notifyError("Item has no physical entity")
     end
@@ -2022,20 +2022,20 @@ local function tradeItems(player1, player2, itemID, payment)
         if player2:getMoney() < payment then
             return false, "Insufficient funds"
         end
-        -- Transfer item
-        if item:transfer(player2:getInventory()) then
-            -- Handle payment
-            player2:addMoney(-payment)
-            player1:addMoney(payment)
-            -- Log the trade
-            lia.log.add(nil, "item_trade",
+    -- Transfer item
+    if item:transfer(player2:getInventory()) then
+        -- Handle payment
+        player2:addMoney(-payment)
+        player1:addMoney(payment)
+        -- Log the trade
+        lia.log.add(nil, "item_trade",
             item:getID(), player1:GetName(), player2:GetName(), payment)
-            return true
-            else
-                return false, "Transfer failed"
-            end
-        end
-        local success, reason = tradeItems(seller, buyer, itemID, 500)
+        return true
+    else
+        return false, "Transfer failed"
+    end
+end
+local success, reason = tradeItems(seller, buyer, itemID, 500)
 
 ```
 
@@ -2089,82 +2089,17 @@ function ITEM:onInstanced()
     -- Register with item tracking system
     local trackingData = lia.data.get("item_tracking", {})
     trackingData[self:getID()] = {
-    uniqueID = self.uniqueID,
-    created = os.time(),
-    owner = self:getOwner() and self:getOwner():GetName() or "unknown"
+        uniqueID = self.uniqueID,
+        created  = os.time(),
+        owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
     }
     lia.data.set("item_tracking", trackingData)
     -- Apply category-specific initialization
     if self.category == "weapons" then
         self:setData("ammo", self:getData("maxAmmo", 30))
-        elseif self.category == "armor" then
-            self:setData("protection", self:getData("maxProtection", 50))
-        end
+    elseif self.category == "armor" then
+        self:setData("protection", self:getData("maxProtection", 50))
     end
-
-```
-
----
-
-### onInstanced
-
-**Purpose**
-
-Called when the item instance is first created
-
-**When Called**
-
-Automatically when item instances are created
-
-**Returns**
-
-* Nothing
-
-**Realm**
-
-Server
-
-**Example Usage**
-
-**Low Complexity:**
-```lua
-function ITEM:onInstanced()
-    print("New item instance created")
-end
-
-```
-
-**Medium Complexity:**
-```lua
-function ITEM:onInstanced()
-    -- Set default data for new instances
-    if not self:getData("created") then
-        self:setData("created", os.time())
-    end
-end
-
-```
-
-**High Complexity:**
-```lua
-function ITEM:onInstanced()
-    -- Initialize complex item state
-    self:setData("durability", self:getData("maxDurability", 100))
-    self:setData("serialNumber", "SN-" .. self:getID())
-    -- Register with item tracking system
-    local trackingData = lia.data.get("item_tracking", {})
-    trackingData[self:getID()] = {
-    uniqueID = self.uniqueID,
-    created = os.time(),
-    owner = self:getOwner() and self:getOwner():GetName() or "unknown"
-    }
-    lia.data.set("item_tracking", trackingData)
-    -- Apply category-specific initialization
-    if self.category == "weapons" then
-        self:setData("ammo", self:getData("maxAmmo", 30))
-        elseif self.category == "armor" then
-            self:setData("protection", self:getData("maxProtection", 50))
-        end
     end
 
 ```
@@ -2219,17 +2154,17 @@ function ITEM:onInstanced()
     -- Register with item tracking system
     local trackingData = lia.data.get("item_tracking", {})
     trackingData[self:getID()] = {
-    uniqueID = self.uniqueID,
-    created = os.time(),
-    owner = self:getOwner() and self:getOwner():GetName() or "unknown"
+        uniqueID = self.uniqueID,
+        created  = os.time(),
+        owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
     }
     lia.data.set("item_tracking", trackingData)
     -- Apply category-specific initialization
     if self.category == "weapons" then
         self:setData("ammo", self:getData("maxAmmo", 30))
-        elseif self.category == "armor" then
-            self:setData("protection", self:getData("maxProtection", 50))
-        end
+    elseif self.category == "armor" then
+        self:setData("protection", self:getData("maxProtection", 50))
+    end
     end
 
 ```
@@ -2284,17 +2219,82 @@ function ITEM:onInstanced()
     -- Register with item tracking system
     local trackingData = lia.data.get("item_tracking", {})
     trackingData[self:getID()] = {
-    uniqueID = self.uniqueID,
-    created = os.time(),
-    owner = self:getOwner() and self:getOwner():GetName() or "unknown"
+        uniqueID = self.uniqueID,
+        created  = os.time(),
+        owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
     }
     lia.data.set("item_tracking", trackingData)
     -- Apply category-specific initialization
     if self.category == "weapons" then
         self:setData("ammo", self:getData("maxAmmo", 30))
-        elseif self.category == "armor" then
-            self:setData("protection", self:getData("maxProtection", 50))
-        end
+    elseif self.category == "armor" then
+        self:setData("protection", self:getData("maxProtection", 50))
+    end
+    end
+
+```
+
+---
+
+### onInstanced
+
+**Purpose**
+
+Called when the item instance is first created
+
+**When Called**
+
+Automatically when item instances are created
+
+**Returns**
+
+* Nothing
+
+**Realm**
+
+Server
+
+**Example Usage**
+
+**Low Complexity:**
+```lua
+function ITEM:onInstanced()
+    print("New item instance created")
+end
+
+```
+
+**Medium Complexity:**
+```lua
+function ITEM:onInstanced()
+    -- Set default data for new instances
+    if not self:getData("created") then
+        self:setData("created", os.time())
+    end
+end
+
+```
+
+**High Complexity:**
+```lua
+function ITEM:onInstanced()
+    -- Initialize complex item state
+    self:setData("durability", self:getData("maxDurability", 100))
+    self:setData("serialNumber", "SN-" .. self:getID())
+    -- Register with item tracking system
+    local trackingData = lia.data.get("item_tracking", {})
+    trackingData[self:getID()] = {
+        uniqueID = self.uniqueID,
+        created  = os.time(),
+        owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
+    }
+    lia.data.set("item_tracking", trackingData)
+    -- Apply category-specific initialization
+    if self.category == "weapons" then
+        self:setData("ammo", self:getData("maxAmmo", 30))
+    elseif self.category == "armor" then
+        self:setData("protection", self:getData("maxProtection", 50))
+    end
     end
 
 ```
@@ -2917,15 +2917,15 @@ function ITEM:onRestored(inventory)
         if expiryTime and expiryTime < os.time() then
             -- Item has expired, schedule removal
             timer.Simple(0, function()
-            if IsValid(self) then
-                self:remove()
-                lia.log.add(nil, "expired_item_removed_on_restore", itemID)
-            end
-        end)
+                if IsValid(self) then
+                    self:remove()
+                    lia.log.add(nil, "expired_item_removed_on_restore", itemID)
+                end
+            end)
+        end
     end
-end
--- Trigger restoration hooks
-hook.Run("OnItemRestored", self, inventory)
+    -- Trigger restoration hooks
+    hook.Run("OnItemRestored", self, inventory)
 end
 
 ```
@@ -2996,15 +2996,15 @@ function ITEM:onRestored(inventory)
         if expiryTime and expiryTime < os.time() then
             -- Item has expired, schedule removal
             timer.Simple(0, function()
-            if IsValid(self) then
-                self:remove()
-                lia.log.add(nil, "expired_item_removed_on_restore", itemID)
-            end
-        end)
+                if IsValid(self) then
+                    self:remove()
+                    lia.log.add(nil, "expired_item_removed_on_restore", itemID)
+                end
+            end)
+        end
     end
-end
--- Trigger restoration hooks
-hook.Run("OnItemRestored", self, inventory)
+    -- Trigger restoration hooks
+    hook.Run("OnItemRestored", self, inventory)
 end
 
 ```
@@ -3075,15 +3075,15 @@ function ITEM:onRestored(inventory)
         if expiryTime and expiryTime < os.time() then
             -- Item has expired, schedule removal
             timer.Simple(0, function()
-            if IsValid(self) then
-                self:remove()
-                lia.log.add(nil, "expired_item_removed_on_restore", itemID)
-            end
-        end)
+                if IsValid(self) then
+                    self:remove()
+                    lia.log.add(nil, "expired_item_removed_on_restore", itemID)
+                end
+            end)
+        end
     end
-end
--- Trigger restoration hooks
-hook.Run("OnItemRestored", self, inventory)
+    -- Trigger restoration hooks
+    hook.Run("OnItemRestored", self, inventory)
 end
 
 ```
@@ -3154,15 +3154,15 @@ function ITEM:onRestored(inventory)
         if expiryTime and expiryTime < os.time() then
             -- Item has expired, schedule removal
             timer.Simple(0, function()
-            if IsValid(self) then
-                self:remove()
-                lia.log.add(nil, "expired_item_removed_on_restore", itemID)
-            end
-        end)
+                if IsValid(self) then
+                    self:remove()
+                    lia.log.add(nil, "expired_item_removed_on_restore", itemID)
+                end
+            end)
+        end
     end
-end
--- Trigger restoration hooks
-hook.Run("OnItemRestored", self, inventory)
+    -- Trigger restoration hooks
+    hook.Run("OnItemRestored", self, inventory)
 end
 
 ```
@@ -3213,16 +3213,16 @@ local function syncItemToGroup(item, players)
     for _, player in ipairs(players) do
         if player:canAccessItem(item) then
             item:sync(player)
-            else
-                -- Send limited data
-                net.Start("liaItemLimited")
-                net.WriteUInt(item:getID(), 32)
-                net.WriteString(item:getName())
-                net.Send(player)
-            end
+        else
+            -- Send limited data
+            net.Start("liaItemLimited")
+            net.WriteUInt(item:getID(), 32)
+            net.WriteString(item:getName())
+            net.Send(player)
         end
     end
-    syncItemToGroup(myItem, nearbyPlayers)
+end
+syncItemToGroup(myItem, nearbyPlayers)
 
 ```
 
@@ -3352,17 +3352,17 @@ local function combineStacks(item1, item2)
             item1:setQuantity(combinedQuantity)
             item2:remove()
             return true, "Items combined successfully"
-            else
-                -- Fill first stack and adjust second
-                local overflow = combinedQuantity - maxStack
-                item1:setQuantity(maxStack)
-                item2:setQuantity(overflow)
-                return true, "Items partially combined"
-            end
+        else
+            -- Fill first stack and adjust second
+            local overflow = combinedQuantity - maxStack
+            item1:setQuantity(maxStack)
+            item2:setQuantity(overflow)
+            return true, "Items partially combined"
         end
-        return false, "Items cannot be combined"
     end
-    local success, message = combineStacks(stack1, stack2)
+    return false, "Items cannot be combined"
+end
+local success, message = combineStacks(stack1, stack2)
 
 ```
 
@@ -3530,7 +3530,7 @@ When displaying or organizing items by category
 
 **Realm**
 
-Both
+Shared
 
 **Example Usage**
 
@@ -3561,9 +3561,9 @@ local function organizeItemsByCategory(items)
     local sortedCategories = {}
     for categoryName, categoryItems in pairs(categories) do
         table.insert(sortedCategories, {
-        name = categoryName,
-        items = categoryItems,
-        count = #categoryItems
+            name  = categoryName,
+            items = categoryItems,
+            count = #categoryItems
         })
     end
     table.sort(sortedCategories, function(a, b) return a.name < b.name end)

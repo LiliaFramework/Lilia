@@ -31,7 +31,7 @@ When you need to find players in a specific rectangular area for operations like
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -56,8 +56,8 @@ end
 ```lua
 -- High: Create a dynamic zone system with multiple areas
 local zones = {
-{mins = Vector(0, 0, 0), maxs = Vector(100, 100, 100), name = "Safe Zone"},
-{mins = Vector(200, 200, 0), maxs = Vector(300, 300, 100), name = "Combat Zone"}
+    {mins = Vector(0, 0, 0),     maxs = Vector(100, 100, 100), name = "Safe Zone"  },
+    {mins = Vector(200, 200, 0), maxs = Vector(300, 300, 100), name = "Combat Zone"}
 }
 for _, zone in ipairs(zones) do
     local players = lia.util.findPlayersInBox(zone.mins, zone.maxs)
@@ -90,7 +90,7 @@ When you need to locate a specific player using their Steam identification for o
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -122,9 +122,9 @@ for _, steamID in ipairs(steamIDs) do
     local player = lia.util.getBySteamID(steamID)
     if IsValid(player) then
         foundPlayers[#foundPlayers + 1] = {
-        steamID = steamID,
-        player = player,
-        charName = player:getChar():getName()
+            steamID  = steamID,
+            player   = player,
+            charName = player:getChar():getName()
         }
     end
 end
@@ -154,7 +154,7 @@ When you need to find players in a circular area for proximity-based operations 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -181,9 +181,9 @@ end
 ```lua
 -- High: Create a zone system with multiple overlapping spheres
 local zones = {
-{center = Vector(0, 0, 0), radius = 200, type = "safe"},
-{center = Vector(500, 0, 0), radius = 150, type = "danger"},
-{center = Vector(250, 250, 0), radius = 100, type = "neutral"}
+    {center = Vector(0, 0, 0),      radius = 200, type = "safe"   },
+    {center = Vector(500, 0, 0),    radius = 150, type = "danger" },
+    {center = Vector(250, 250, 0),  radius = 100, type = "neutral"}
 }
 for _, player in player.GetAll() do
     local playerPos = player:GetPos()
@@ -225,7 +225,7 @@ When you need to locate a specific player using flexible identification methods 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -296,7 +296,7 @@ When you need to locate dropped items or spawned entities created by a particula
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -331,6 +331,7 @@ local function managePlayerItems(player, action)
             print("Item: " .. item:getNetVar("id") .. " at " .. tostring(item:GetPos()))
         end
     end
+end
 
 ```
 
@@ -359,7 +360,7 @@ When you need to locate specific types of items created by a player for targeted
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -424,7 +425,7 @@ When you need to locate entities spawned by a player for management, cleanup, or
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -455,16 +456,16 @@ local function managePlayerEntities(player, action, classFilter)
         if action == "remove" then
             entity:Remove()
             results.removed = results.removed + 1
-            elseif action == "freeze" then
-                local phys = entity:GetPhysicsObject()
-                if IsValid(phys) then
-                    phys:EnableMotion(false)
-                    results.modified = results.modified + 1
-                end
+        elseif action == "freeze" then
+            local phys = entity:GetPhysicsObject()
+            if IsValid(phys) then
+                phys:EnableMotion(false)
+                results.modified = results.modified + 1
             end
         end
-        return results
     end
+    return results
+end
 
 ```
 
@@ -493,7 +494,7 @@ When you need to compare strings with flexible matching for search functionality
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -521,9 +522,9 @@ local function advancedStringSearch(text, searchTerms)
     for _, term in ipairs(searchTerms) do
         if lia.util.stringMatches(text, term) then
             results[#results + 1] = {
-            text = text,
-            matchedTerm = term,
-            matchType = "partial"
+                text        = text,
+                matchedTerm = term,
+                matchType   = "partial"
             }
         end
     end
@@ -552,7 +553,7 @@ When you need to identify staff members for admin-only operations, notifications
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -582,10 +583,10 @@ local function getActiveAdmins()
     for _, admin in ipairs(admins) do
         if admin:isStaff() and admin:getChar() then
             activeAdmins[#activeAdmins + 1] = {
-            player = admin,
-            steamID = admin:SteamID(),
-            name = admin:Name(),
-            lastSeen = CurTime()
+                player   = admin,
+                steamID  = admin:SteamID(),
+                name     = admin:Name(),
+                lastSeen = CurTime()
             }
         end
     end
@@ -619,7 +620,7 @@ When you need to locate a player using their Steam ID 64 for database operations
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -649,9 +650,9 @@ for _, steamID64 in ipairs(steamID64s) do
     local player = lia.util.findPlayerBySteamID64(steamID64)
     if IsValid(player) then
         onlinePlayers[#onlinePlayers + 1] = {
-        steamID64 = steamID64,
-        player = player,
-        character = player:getChar():getName()
+            steamID64 = steamID64,
+            player    = player,
+            character = player:getChar():getName()
         }
     end
 end
@@ -681,7 +682,7 @@ When you need to locate a player using their Steam ID for admin actions, bans, o
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -709,19 +710,19 @@ local function trackPlayerActivity(steamID)
     local player = lia.util.findPlayerBySteamID(steamID)
     if IsValid(player) then
         return {
-        steamID = steamID,
-        name = player:Name(),
-        character = player:getChar():getName(),
-        position = player:GetPos(),
-        status = "online"
+            steamID   = steamID,
+            name      = player:Name(),
+            character = player:getChar():getName(),
+            position  = player:GetPos(),
+            status    = "online"
         }
-        else
-            return {
+    else
+        return {
             steamID = steamID,
-            status = "offline"
-            }
-        end
+            status  = "offline"
+        }
     end
+end
 
 ```
 
@@ -754,7 +755,7 @@ When you need to validate if an entity can be placed at a location for spawning,
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -784,9 +785,9 @@ local function findValidPlacement(centerPos, entitySize, attempts)
     local validPositions = {}
     for i = 1, attempts do
         local randomOffset = Vector(
-        math.random(-100, 100),
-        math.random(-100, 100),
-        0
+            math.random(-100, 100),
+            math.random(-100, 100),
+            0
         )
         local testPos = centerPos + randomOffset
         if lia.util.canFit(testPos, entitySize.mins, entitySize.maxs) then
@@ -825,7 +826,7 @@ When you need to find players in a circular area for proximity-based operations 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -852,9 +853,9 @@ end
 ```lua
 -- High: Create a zone management system with multiple areas
 local zones = {
-{center = Vector(0, 0, 0), radius = 150, type = "safe"},
-{center = Vector(400, 0, 0), radius = 100, type = "combat"},
-{center = Vector(200, 200, 0), radius = 80, type = "neutral"}
+    {center = Vector(0, 0, 0),     radius = 150, type = "safe"   },
+    {center = Vector(400, 0, 0),  radius = 100, type = "combat" },
+    {center = Vector(200, 200, 0), radius = 80,  type = "neutral"}
 }
 for _, player in player.GetAll() do
     local playerPos = player:GetPos()
@@ -866,10 +867,10 @@ for _, player in player.GetAll() do
     end
     if zonesIn.combat and not zonesIn.safe then
         player:setNetVar("inCombat", true)
-        else
-            player:setNetVar("inCombat", false)
-        end
+    else
+        player:setNetVar("inCombat", false)
     end
+end
 
 ```
 
@@ -897,7 +898,7 @@ When you need to format strings with named parameters for localization, templati
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -921,10 +922,10 @@ local message = lia.util.formatStringNamed("Player {name} scored {score} points!
 -- High: Create a templating system with complex data structures
 local template = "Player {name} from {faction} has {health} HP and {money} credits"
 local playerData = {
-name = "Bob",
-faction = "Security",
-health = 85,
-money = 2500
+    name    = "Bob",
+    faction = "Security",
+    health  = 85,
+    money   = 2500
 }
 local function formatPlayerInfo(template, data)
     local formatted = template
@@ -964,7 +965,7 @@ When you need to load and cache materials for rendering, UI elements, or visual 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -1033,7 +1034,7 @@ When you need to locate faction information for player assignment, permissions, 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -1066,16 +1067,16 @@ local function managePlayerFaction(admin, targetPlayer, factionName, action)
     if action == "assign" then
         targetPlayer:setFaction(faction.index)
         return true, "Player assigned to " .. faction.name
-        elseif action == "check" then
-            return true, "Player is in faction: " .. (targetPlayer:getFaction() == faction.index and faction.name or "Different faction")
-            elseif action == "info" then
-                return true, string.format("Faction: %s, Color: %s, Models: %d",
-                faction.name, tostring(faction.color), #faction.models)
-            end
-            return false, "Invalid action"
-        end
-        -- Usage
-        local success, message = managePlayerFaction(admin, target, "Citizen", "assign")
+    elseif action == "check" then
+        return true, "Player is in faction: " .. (targetPlayer:getFaction() == faction.index and faction.name or "Different faction")
+    elseif action == "info" then
+        return true, string.format("Faction: %s, Color: %s, Models: %d",
+            faction.name, tostring(faction.color), #faction.models)
+    end
+    return false, "Invalid action"
+end
+-- Usage
+local success, message = managePlayerFaction(admin, target, "Citizen", "assign")
 
 ```
 
@@ -1104,7 +1105,7 @@ When you need to locate faction information for player assignment, permissions, 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -1137,16 +1138,16 @@ local function managePlayerFaction(admin, targetPlayer, factionName, action)
     if action == "assign" then
         targetPlayer:setFaction(faction.index)
         return true, "Player assigned to " .. faction.name
-        elseif action == "check" then
-            return true, "Player is in faction: " .. (targetPlayer:getFaction() == faction.index and faction.name or "Different faction")
-            elseif action == "info" then
-                return true, string.format("Faction: %s, Color: %s, Models: %d",
-                faction.name, tostring(faction.color), #faction.models)
-            end
-            return false, "Invalid action"
-        end
-        -- Usage
-        local success, message = managePlayerFaction(admin, target, "Citizen", "assign")
+    elseif action == "check" then
+        return true, "Player is in faction: " .. (targetPlayer:getFaction() == faction.index and faction.name or "Different faction")
+    elseif action == "info" then
+        return true, string.format("Faction: %s, Color: %s, Models: %d",
+            faction.name, tostring(faction.color), #faction.models)
+    end
+    return false, "Invalid action"
+end
+-- Usage
+local success, message = managePlayerFaction(admin, target, "Citizen", "assign")
 
 ```
 
@@ -1175,7 +1176,7 @@ When you need to create random character names for NPCs, testing, or procedural 
 
 **Realm**
 
-Both (Universal)
+Shared
 
 **Example Usage**
 
@@ -1199,14 +1200,14 @@ local fantasyName = lia.util.generateRandomName(fantasyFirstNames, fantasyLastNa
 ```lua
 -- High: Create a name generation system with cultural variations
 local nameCultures = {
-western = {
-first = {"John", "Jane", "Michael", "Sarah"},
-last = {"Smith", "Johnson", "Williams", "Brown"}
-},
-eastern = {
-first = {"Hiroshi", "Yuki", "Kenji", "Sakura"},
-last = {"Tanaka", "Suzuki", "Yamamoto", "Watanabe"}
-}
+    western = {
+        first = {"John", "Jane", "Michael", "Sarah"},
+        last  = {"Smith", "Johnson", "Williams", "Brown"}
+    },
+    eastern = {
+        first = {"Hiroshi", "Yuki", "Kenji", "Sakura"},
+        last  = {"Tanaka", "Suzuki", "Yamamoto", "Watanabe"}
+    }
 }
 local function generateCulturalName(culture)
     local cultureData = nameCultures[culture]
@@ -1262,8 +1263,8 @@ Server
 ```lua
 -- Simple: Send basic player list
 local columns = {
-{name = "Name", width = 150},
-{name = "Steam ID", width = 200}
+    {name = "Name",    width = 150},
+    {name = "Steam ID", width = 200}
 }
 local players = player.GetAll()
 local data = {}
@@ -1278,13 +1279,13 @@ lia.util.sendTableUI(client, "Player List", columns, data)
 ```lua
 -- Medium: Send inventory with action options
 local columns = {
-{name = "Item", width = 150},
-{name = "Quantity", width = 80},
-{name = "Value", width = 100}
+    {name = "Item",     width = 150},
+    {name = "Quantity", width = 80 },
+    {name = "Value",    width = 100}
 }
 local options = {
-{name = "Drop", net = "liaDropItem"},
-{name = "Use", net = "liaUseItem"}
+    {name = "Drop", net = "liaDropItem"},
+    {name = "Use",  net = "liaUseItem" }
 }
 lia.util.sendTableUI(client, "Inventory", columns, inventoryData, options, characterID)
 
@@ -1295,25 +1296,25 @@ lia.util.sendTableUI(client, "Inventory", columns, inventoryData, options, chara
 -- High: Create a comprehensive admin panel with multiple data types
 local function sendAdminPanel(admin, targetPlayer)
     local columns = {
-    {name = "Property", width = 150},
-    {name = "Value", width = 200},
-    {name = "Actions", width = 100}
+        {name = "Property", width = 150},
+        {name = "Value",    width = 200},
+        {name = "Actions",  width = 100}
     }
     local playerData = {
-    {"Name", targetPlayer:Name()},
-    {"Steam ID", targetPlayer:SteamID()},
-    {"Health", targetPlayer:Health()},
-    {"Armor", targetPlayer:Armor()},
-    {"Money", targetPlayer:getMoney()},
-    {"Faction", targetPlayer:getFaction()},
+        {"Name",     targetPlayer:Name()},
+        {"Steam ID", targetPlayer:SteamID()},
+        {"Health",   targetPlayer:Health()},
+        {"Armor",    targetPlayer:Armor()},
+        {"Money",    targetPlayer:getMoney()},
+        {"Faction",  targetPlayer:getFaction()}
     }
     local options = {
-    {name = "Kick", net = "liaKickPlayer"},
-    {name = "Ban", net = "liaBanPlayer"},
-    {name = "Teleport", net = "liaTeleportPlayer"}
+        {name = "Kick",     net = "liaKickPlayer"   },
+        {name = "Ban",      net = "liaBanPlayer"    },
+        {name = "Teleport", net = "liaTeleportPlayer"}
     }
     lia.util.sendTableUI(admin, "Player Info: " .. targetPlayer:Name(),
-    columns, playerData, options, targetPlayer:getChar() and targetPlayer:getChar():getID())
+        columns, playerData, options, targetPlayer:getChar() and targetPlayer:getChar():getID())
 end
 
 ```
@@ -1368,10 +1369,10 @@ local emptySpaces = lia.util.findEmptySpace(someEntity)
 local spawnPositions = lia.util.findEmptySpace(player, player, 64, 5, 72, 10)
 for _, pos in ipairs(spawnPositions) do
     if #spawnPositions >= 3 then break end -- Limit to 3 NPCs
-        local npc = ents.Create("npc_zombie")
-        npc:SetPos(pos)
-        npc:Spawn()
-    end
+    local npc = ents.Create("npc_zombie")
+    npc:SetPos(pos)
+    npc:Spawn()
+end
 
 ```
 
@@ -1387,9 +1388,9 @@ local function spawnEntitiesInArea(centerEntity, entityType, count, spacing)
             entity:SetPos(pos)
             -- Add some randomization to position
             local randomOffset = Vector(
-            math.random(-16, 16),
-            math.random(-16, 16),
-            0
+                math.random(-16, 16),
+                math.random(-16, 16),
+                0
             )
             entity:SetPos(pos + randomOffset)
             entity:Spawn()
@@ -1459,39 +1460,40 @@ local frame = vgui.Create("DFrame")
 frame:SetSize(400, 300)
 frame:Center()
 lia.util.animateAppearance(frame, 400, 300, 0.3, 0.2, function(panel)
-print("Animation completed!")
-panel:MakePopup()
+    print("Animation completed!")
+    panel:MakePopup()
 end)
 
 ```
 
 **High Complexity:**
 ```lua
--- High: Create a complex UI system with staggered animations
-local function createAnimatedMenu(title, options)
-    local frame = vgui.Create("DFrame")
-    frame:SetTitle(title)
-    frame:SetSize(300, 200)
-    frame:Center()
-    -- Animate main frame
-    lia.util.animateAppearance(frame, 300, 200, 0.25, 0.15)
-    -- Create animated buttons with delays
-    for i, option in ipairs(options) do
-        local button = vgui.Create("DButton", frame)
-        button:SetText(option.text)
-        button:Dock(TOP)
-        button:DockMargin(10, 5, 10, 5)
-        -- Stagger animation timing
-        timer.Simple(i * 0.05, function()
-        if IsValid(button) then
-            button:SetAlpha(0)
-            lia.util.animateAppearance(button, button:GetWide(), button:GetTall(), 0.15, 0.1)
+    -- High: Create a complex UI system with staggered animations
+    local function createAnimatedMenu(title, options)
+        local frame = vgui.Create("DFrame")
+        frame:SetTitle(title)
+        frame:SetSize(300, 200)
+        frame:Center()
+        -- Animate main frame
+        lia.util.animateAppearance(frame, 300, 200, 0.25, 0.15)
+        -- Create animated buttons with delays
+        for i, option in ipairs(options) do
+            local button = vgui.Create("DButton", frame)
+            button:SetText(option.text)
+            button:Dock(TOP)
+            button:DockMargin(10, 5, 10, 5)
+            -- Stagger animation timing
+            timer.Simple(i * 0.05, function()
+                if IsValid(button) then
+                    button:SetAlpha(0)
+                    lia.util.animateAppearance(button, button:GetWide(), button:GetTall(), 0.15, 0.1)
+                end
+            end)
         end
-    end)
-end
-return frame
-end
+        return frame
+    end
 
+]]
 ```
 
 ---
@@ -1538,7 +1540,7 @@ frame:SetSize(200, 150)
 frame:SetDraggable(true)
 -- Clamp position when dragging ends
 frame.OnMouseReleased = function()
-lia.util.clampMenuPosition(frame)
+    lia.util.clampMenuPosition(frame)
 end
 
 ```
@@ -1563,36 +1565,36 @@ local function positionPanelsSmartly(panels)
             local otherX, otherY = otherPanel:GetPos()
             local otherW, otherH = otherPanel:GetSize()
             if x < otherX + otherW + margin and x + w + margin > otherX and
-            y < otherY + otherH + margin and y + h + margin > otherY then
-            needsReposition = true
-            break
-        end
-    end
-    if needsReposition then
-        -- Find best available position
-        local bestX, bestY = margin, margin
-        local minDistance = math.huge
-        for testY = margin, screenH - h - margin, 20 do
-            for testX = margin, screenW - w - margin, 20 do
-                local distance = 0
-                -- Calculate distance from other panels
-                for _, otherPanel in ipairs(panels) do
-                    if otherPanel ~= panel then
-                        local otherX, otherY = otherPanel:GetPos()
-                        local dx = testX - otherX
-                        local dy = testY - otherY
-                        distance = distance + (dx * dx + dy * dy)
-                    end
-                end
-                if distance < minDistance then
-                    minDistance = distance
-                    bestX, bestY = testX, testY
-                end
+               y < otherY + otherH + margin and y + h + margin > otherY then
+                needsReposition = true
+                break
             end
         end
-        panel:SetPos(bestX, bestY)
+        if needsReposition then
+            -- Find best available position
+            local bestX, bestY = margin, margin
+            local minDistance = math.huge
+            for testY = margin, screenH - h - margin, 20 do
+                for testX = margin, screenW - w - margin, 20 do
+                    local distance = 0
+                    -- Calculate distance from other panels
+                    for _, otherPanel in ipairs(panels) do
+                        if otherPanel ~= panel then
+                            local otherX, otherY = otherPanel:GetPos()
+                            local dx = testX - otherX
+                            local dy = testY - otherY
+                            distance = distance + (dx * dx + dy * dy)
+                        end
+                    end
+                    if distance < minDistance then
+                        minDistance = distance
+                        bestX, bestY = testX, testY
+                    end
+                end
+            end
+            panel:SetPos(bestX, bestY)
+        end
     end
-end
 end
 
 ```
@@ -1650,7 +1652,7 @@ lia.util.drawGradient(100, 100, 200, 150, 2, Color(0, 0, 0, 150))
 -- Medium: Create a gradient panel background
 local panel = vgui.Create("DPanel")
 panel.Paint = function(self, w, h)
-lia.util.drawGradient(0, 0, w, h, 2, Color(50, 50, 50, 200), 8)
+    lia.util.drawGradient(0, 0, w, h, 2, Color(50, 50, 50, 200), 8)
 end
 
 ```
@@ -1659,10 +1661,10 @@ end
 ```lua
 -- High: Create animated gradient backgrounds
 local gradients = {
-{dir = 1, color = Color(255, 100, 100, 150)},
-{dir = 2, color = Color(100, 255, 100, 150)},
-{dir = 3, color = Color(100, 100, 255, 150)},
-{dir = 4, color = Color(255, 255, 100, 150)}
+    {dir = 1, color = Color(255, 100, 100, 150)},
+    {dir = 2, color = Color(100, 255, 100, 150)},
+    {dir = 3, color = Color(100, 100, 255, 150)},
+    {dir = 4, color = Color(255, 255, 100, 150)}
 }
 local currentGradient = 1
 local function drawAnimatedGradient(x, y, w, h)
@@ -1676,7 +1678,7 @@ end
 -- Usage in panel
 local panel = vgui.Create("DPanel")
 panel.Paint = function(self, w, h)
-drawAnimatedGradient(0, 0, w, h)
+    drawAnimatedGradient(0, 0, w, h)
 end
 
 ```
@@ -1756,13 +1758,13 @@ local function createResponsiveTextPanel(text, maxWidth, fontBase)
     local panel = vgui.Create("DPanel")
     panel:SetSize(maxWidth, #lines * (tonumber(finalFont:match("%d+")) or 16))
     panel.Paint = function(self, w, h)
-    surface.SetFont(finalFont)
-    for i, line in ipairs(lines) do
-        surface.SetTextPos(0, (i-1) * (h / #lines))
-        surface.DrawText(line)
+        surface.SetFont(finalFont)
+        for i, line in ipairs(lines) do
+            surface.SetTextPos(0, (i-1) * (h / #lines))
+            surface.DrawText(line)
+        end
     end
-end
-return panel
+    return panel
 end
 -- Usage
 local textPanel = createResponsiveTextPanel("Very long text that needs to fit in a small area", 250, "liaFont.")
@@ -1818,8 +1820,8 @@ frame:SetTitle("Important Message")
 frame:SetSize(400, 200)
 frame:Center()
 frame.Paint = function(self, w, h)
-lia.util.drawBlur(self, 8, nil, 180)
-draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 150))
+    lia.util.drawBlur(self, 8, nil, 180)
+    draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 150))
 end
 
 ```
@@ -1838,22 +1840,22 @@ local function createBlurredMenu(title, options)
     frame:SetSize(300, 400)
     frame:Center()
     frame.Paint = function(self, w, h)
-    drawDynamicBlur(self)
-    draw.RoundedBox(12, 0, 0, w, h, Color(20, 20, 20, 200))
-end
-for i, option in ipairs(options) do
-    local button = vgui.Create("DButton", frame)
-    button:SetText(option.text)
-    button:Dock(TOP)
-    button:DockMargin(20, 10, 20, 10)
-    button.Paint = function(self, w, h)
-    if self:IsHovered() then
-        lia.util.drawBlur(self, 3, nil, 150)
+        drawDynamicBlur(self)
+        draw.RoundedBox(12, 0, 0, w, h, Color(20, 20, 20, 200))
     end
-    draw.RoundedBox(6, 0, 0, w, h, Color(60, 60, 60, 200))
-end
-button.DoClick = option.callback
-end
+    for i, option in ipairs(options) do
+        local button = vgui.Create("DButton", frame)
+        button:SetText(option.text)
+        button:Dock(TOP)
+        button:DockMargin(20, 10, 20, 10)
+        button.Paint = function(self, w, h)
+            if self:IsHovered() then
+                lia.util.drawBlur(self, 3, nil, 150)
+            end
+            draw.RoundedBox(6, 0, 0, w, h, Color(60, 60, 60, 200))
+        end
+        button.DoClick = option.callback
+    end
 return frame
 end
 
@@ -1921,9 +1923,9 @@ end
 -- High: Create an adaptive blur system based on context
 local function drawContextualBlur(panel, context)
     local settings = {
-    menu = {amount = 6, passes = 5, alpha = 255, darkAlpha = 220},
-    dialog = {amount = 8, passes = 7, alpha = 255, darkAlpha = 240},
-    overlay = {amount = 4, passes = 3, alpha = 200, darkAlpha = 180}
+        menu    = {amount = 6,   passes = 5, alpha = 255, darkAlpha = 220},
+        dialog  = {amount = 8,   passes = 7, alpha = 255, darkAlpha = 240},
+        overlay = {amount = 4,   passes = 3, alpha = 200, darkAlpha = 180}
     }
     local config = settings[context] or settings.menu
     lia.util.drawBlackBlur(panel, config.amount, config.passes, config.alpha, config.darkAlpha)
@@ -1934,9 +1936,9 @@ local function createContextualUI(context, title)
     frame:SetSize(400, 250)
     frame:Center()
     frame.Paint = function(self, w, h)
-    drawContextualBlur(self, context)
-    draw.RoundedBox(8, 0, 0, w, h, Color(10, 10, 10, 200))
-end
+        drawContextualBlur(self, context)
+        draw.RoundedBox(8, 0, 0, w, h, Color(10, 10, 10, 200))
+    end
 return frame
 end
 -- Usage for different contexts
@@ -2067,8 +2069,8 @@ local frame, listView = lia.util.createTableUI("Player List", columns, playerDat
 ```lua
 -- Medium: Create table with action options
 local options = {
-{name = "Teleport", net = "liaTeleportTo"},
-{name = "Kick", net = "liaKickPlayer"}
+    {name = "Teleport", net = "liaTeleportTo"},
+    {name = "Kick",     net = "liaKickPlayer"}
 }
 local frame, listView = lia.util.createTableUI("Admin Panel", columns, data, options, charID)
 
@@ -2079,14 +2081,14 @@ local frame, listView = lia.util.createTableUI("Admin Panel", columns, data, opt
 -- High: Create comprehensive data management interface
 local function createDataManager(dataType)
     local columns = {
-    {name = "ID", field = "id", width = 80},
-    {name = "Name", field = "name", width = 200},
-    {name = "Status", field = "status", width = 120}
+        {name = "ID",     field = "id",     width = 80 },
+        {name = "Name",   field = "name",   width = 200},
+        {name = "Status", field = "status", width = 120}
     }
     local options = {
-    {name = "Edit", net = "liaEdit" .. dataType},
-    {name = "Delete", net = "liaDelete" .. dataType},
-    {name = "View Details", net = "liaView" .. dataType}
+        {name = "Edit",        net = "liaEdit" .. dataType  },
+        {name = "Delete",      net = "liaDelete" .. dataType},
+        {name = "View Details", net = "liaView" .. dataType }
     }
     return lia.util.createTableUI(dataType .. " Management", columns, getData(dataType), options)
 end
@@ -2136,9 +2138,9 @@ local frame = lia.util.openOptionsMenu("Choose Action", {
 ```lua
 -- Medium: Create contextual options menu
 local options = {
-["Heal Player"] = function() healTargetPlayer(target) end,
-["Teleport"] = function() teleportToTarget(target) end,
-["Give Item"] = function() openGiveItemMenu(target) end
+    ["Heal Player"] = function() healTargetPlayer(target) end,
+    ["Teleport"]    = function() teleportToTarget(target) end,
+    ["Give Item"]   = function() openGiveItemMenu(target) end
 }
 lia.util.openOptionsMenu("Player Actions", options)
 
@@ -2152,9 +2154,9 @@ local function createCategorizedOptions(categories)
     for categoryName, categoryOptions in pairs(categories) do
         -- Add category header (disabled button)
         allOptions[#allOptions + 1] = {
-        name = categoryName,
-        callback = function() end, -- No action for headers
-        disabled = true
+            name     = categoryName,
+            callback = function() end, -- No action for headers
+            disabled = true
         }
         -- Add category options
         for _, option in ipairs(categoryOptions) do
@@ -2162,9 +2164,9 @@ local function createCategorizedOptions(categories)
         end
         -- Add spacer
         allOptions[#allOptions + 1] = {
-        name = "",
-        callback = function() end,
-        separator = true
+            name      = "",
+            callback  = function() end,
+            separator = true
         }
     end
     return lia.util.openOptionsMenu("Categorized Options", allOptions)
@@ -2219,10 +2221,10 @@ local function drawEntityInfo(ent)
     if ent:isItem() then
         local itemName = ent:getNetVar("id", "Unknown Item")
         lia.util.drawEntText(ent, itemName, 20)
-        elseif ent:IsPlayer() then
-            lia.util.drawEntText(ent, ent:Name(), 30)
-        end
+    elseif ent:IsPlayer() then
+        lia.util.drawEntText(ent, ent:Name(), 30)
     end
+end
 
 ```
 
@@ -2233,27 +2235,26 @@ local function drawSmartEntityLabels()
     local entities = ents.FindInSphere(LocalPlayer():GetPos(), 500)
     for _, ent in ipairs(entities) do
         if not IsValid(ent) then continue end
-            local text = ""
-            local offset = 0
-            local alpha = nil
-            if ent:IsPlayer() then
-                text = ent:Name()
-                offset = 40
-            elseif ent:isItem() then
-                    text = ent:getNetVar("id", "Item")
-                    offset = 25
-                    alpha = 200 -- Slightly transparent for items
-                    elseif ent:GetClass() == "prop_physics" then
-                        text = "Interactive Object"
-                        offset = 30
-                    end
-                    if text ~= "" then
-                        lia.util.drawEntText(ent, text, offset, alpha)
-                    end
-                end
-            end
-            -- Call in HUDPaint or Think hook
-            hook.Add("HUDPaint", "DrawEntityLabels", drawSmartEntityLabels)
+        local text = ""
+        local offset = 0
+        local alpha = nil
+        if ent:IsPlayer() then
+            text = ent:Name()
+            offset = 40
+        elseif ent:isItem() then
+            text = ent:getNetVar("id", "Item")
+            offset = 25
+            alpha = 200 -- Slightly transparent for items
+        elseif ent:GetClass() == "prop_physics" then
+            text = "Interactive Object"
+            offset = 30
+        end
+        if text ~= "" then
+            lia.util.drawEntText(ent, text, offset, alpha)
+        end
+    end
+    -- Call in HUDPaint or Think hook
+    hook.Add("HUDPaint", "DrawEntityLabels", drawSmartEntityLabels)
 
 ```
 
@@ -2313,32 +2314,32 @@ end
 -- High: Create an interactive world information system
 local function drawContextualWorldInfo()
     local trace = util.TraceLine({
-    start = EyePos(),
-endpos = EyePos() + EyeAngles():Forward() * 200,
-filter = LocalPlayer()
-})
-if trace.Hit and trace.HitPos:Distance(EyePos()) <= 200 then
-    local hitPos = trace.HitPos
-    local hitEntity = trace.Entity
-    if IsValid(hitEntity) then
-        if hitEntity:IsPlayer() then
-            lia.util.drawLookText("Player: " .. hitEntity:Name(), 30)
-        elseif hitEntity:isItem() then
+        start   = EyePos(),
+        endpos  = EyePos() + EyeAngles():Forward() * 200,
+        filter  = LocalPlayer()
+    })
+    if trace.Hit and trace.HitPos:Distance(EyePos()) <= 200 then
+        local hitPos = trace.HitPos
+        local hitEntity = trace.Entity
+        if IsValid(hitEntity) then
+            if hitEntity:IsPlayer() then
+                lia.util.drawLookText("Player: " .. hitEntity:Name(), 30)
+            elseif hitEntity:isItem() then
                 local itemName = hitEntity:getNetVar("id", "Unknown Item")
                 lia.util.drawLookText("Item: " .. itemName, 25)
-                else
-                    lia.util.drawLookText("Entity: " .. hitEntity:GetClass(), 20)
-                end
-                else
-                    -- Show world position information
-                    local posText = string.format("X: %d, Y: %d, Z: %d",
-                    math.Round(hitPos.x), math.Round(hitPos.y), math.Round(hitPos.z))
-                    lia.util.drawLookText("Position: " .. posText, 15)
-                end
+            else
+                lia.util.drawLookText("Entity: " .. hitEntity:GetClass(), 20)
             end
+        else
+            -- Show world position information
+            local posText = string.format("X: %d, Y: %d, Z: %d",
+                math.Round(hitPos.x), math.Round(hitPos.y), math.Round(hitPos.z))
+            lia.util.drawLookText("Position: " .. posText, 15)
         end
-        -- Call in HUDPaint hook
-        hook.Add("HUDPaint", "DrawWorldInfo", drawContextualWorldInfo)
+    end
+end
+-- Call in HUDPaint hook
+hook.Add("HUDPaint", "DrawWorldInfo", drawContextualWorldInfo)
 
 ```
 
