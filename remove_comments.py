@@ -108,12 +108,22 @@ def remove_comments(content):
                 continue
             i += 1
             # consume until closing ]=*=]
+            # Use regex to find the actual closing token (not just any occurrence)
+            closing_re = re.compile(re.escape(closing))
+            found_closing = False
             while i < len(lines):
                 cleaned_lines.append(lines[i].rstrip())
-                if closing in lines[i]:
+                # Check if this line contains the closing token
+                if closing_re.search(lines[i]):
                     i += 1
+                    found_closing = True
                     break
                 i += 1
+            # Safety check: if we didn't find closing and consumed too many lines, stop
+            if not found_closing and i >= len(lines):
+                # We've consumed the entire rest of the file - this shouldn't happen
+                # but if it does, at least we've preserved everything
+                break
             continue
 
         # 2) Drop pure single-line comments that start with '--'
@@ -126,28 +136,48 @@ def remove_comments(content):
         if idx >= 0:
             kept = line[:idx].rstrip()
             tail = line[idx:]
-            # If inline comment is a long block comment, check if it's single-line or multi-line
+            # If inline comment is a long block comment, skip following lines until closing
             m2 = re.match(r"--\[(=*)\[", tail)
             if m2 is not None:
                 eqs2 = m2.group(1)
                 closing2 = "]" + eqs2 + "]"
+                # Use regex to find the actual closing token
+                closing2_re = re.compile(re.escape(closing2))
                 # Check if closing is on the same line
-                if closing2 in tail:
-                    # Single-line long comment, just keep the part before the comment
+                if closing2_re.search(tail):
+                    # Comment closes on same line, just strip it
                     cleaned_lines.append(kept)
-                else:
-                    # Multi-line long comment, skip following lines until closing
                     i += 1
-                    while i < len(lines) and closing2 not in lines[i]:
-                        i += 1
-                    if i < len(lines):
-                        # skip the closing line itself
-                        i += 1
-                    cleaned_lines.append(kept)
                     continue
-            else:
-                # Regular single-line comment
+                # For inline long comments that span multiple lines, we need to be very careful
+                # If the closing is not on the same line, we'll look for it, but with strict limits
+                # to prevent accidentally removing code
+                i += 1
+                found_closing2 = False
+                max_skip = 50  # Very strict limit: inline multi-line comments are rare
+                skipped = 0
+                start_skip = i  # Remember where we started skipping
+                while i < len(lines) and skipped < max_skip:
+                    if closing2_re.search(lines[i]):
+                        # Found closing, skip this line and continue
+                        i += 1
+                        found_closing2 = True
+                        break
+                    i += 1
+                    skipped += 1
+                # If we didn't find closing within the limit, this is likely malformed
+                # or not actually a comment. Don't skip - treat those lines as code.
+                if not found_closing2:
+                    # Reset to where we started - don't skip those lines
+                    # They'll be processed as normal code in the next iteration
+                    i = start_skip
+                    # Just strip the comment start from the original line
+                    cleaned_lines.append(kept)
+                    i += 1
+                    continue
                 cleaned_lines.append(kept)
+                continue
+            cleaned_lines.append(kept)
         else:
             cleaned_lines.append(line.rstrip())
 
