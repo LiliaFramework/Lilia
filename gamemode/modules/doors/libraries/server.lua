@@ -380,21 +380,31 @@ end
         When setting up predefined door configurations for maps
 
     Parameters:
-        - mapName (string): The name of the map to apply the preset to
-        - presetData (table): Table containing door configuration data with the following structure:
+        mapName (string)
+            The name of the map to apply the preset to
+        presetData (table)
+            Table containing door configuration data with the following structure:
             [doorID] = {
-                name (string, optional) - Custom name for the door
-                price (number, optional) - Price to purchase the door
-                locked (boolean, optional) - Whether the door starts locked
-                disabled (boolean, optional) - Whether the door is disabled
-                hidden (boolean, optional) - Whether the door info is hidden
-                noSell (boolean, optional) - Whether the door cannot be sold
-                factions (table, optional) - Array of faction uniqueIDs that can access the door
-                classes (table, optional) - Array of class uniqueIDs that can access the door
+                name (string, optional)
+                    Custom name for the door
+                price (number, optional)
+                    Price to purchase the door
+                locked (boolean, optional)
+                    Whether the door starts locked
+                disabled (boolean, optional)
+                    Whether the door is disabled
+                hidden (boolean, optional)
+                    Whether the door info is hidden
+                noSell (boolean, optional)
+                    Whether the door cannot be sold
+                factions (table, optional)
+                    Array of faction uniqueIDs that can access the door
+                classes (table, optional)
+                    Array of class uniqueIDs that can access the door
             }
 
     Returns:
-        None
+        nil
 
     Realm:
         Server
@@ -478,7 +488,8 @@ end
         When loading door data or checking for existing presets
 
     Parameters:
-        - mapName (string): The name of the map to get the preset for
+        mapName (string)
+            The name of the map to get the preset for
 
     Returns:
         Table or nil - The preset data table if found, nil otherwise
@@ -549,7 +560,7 @@ end
         None
 
     Returns:
-        None
+        nil
 
     Realm:
         Server
@@ -675,7 +686,7 @@ end
         None
 
     Returns:
-        None
+        nil
 
     Realm:
         Server

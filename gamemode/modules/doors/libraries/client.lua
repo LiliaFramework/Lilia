@@ -278,7 +278,7 @@ function MODULE:AddToAdminStickHUD(_, target, information)
                 local label = doorLabels[key] or key
                 local displayValue = value
                 if value == nil then displayValue = defaultValue end
-                if type(displayValue) == "boolean" then
+                if isbool(displayValue) then
                     local booleanLabels = {
                         locked = function(val) return val and L("locked") or L("unlocked") end,
                         disabled = function(val) return val and L("disabled") or L("enabled") end,
@@ -292,11 +292,11 @@ function MODULE:AddToAdminStickHUD(_, target, information)
                     else
                         displayValue = displayValue and L("yes") or L("no")
                     end
-                elseif type(displayValue) == "number" and key == "price" then
+                elseif isnumber(displayValue) and key == "price" then
                     displayValue = lia.currency.get(displayValue)
-                elseif type(displayValue) == "table" then
+                elseif istable(displayValue) then
                     displayValue = util.TableToJSON(displayValue)
-                elseif type(displayValue) == "string" and displayValue == "" then
+                elseif isstring(displayValue) and displayValue == "" then
                     displayValue = "(none)"
                 end
 
