@@ -1075,7 +1075,9 @@ do
     local rtCache = _G.RNDX_RT_CACHE or {}
     _G.RNDX_RT_CACHE = rtCache
     if not rtCache[BLUR_RT_NAME] then
-        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8), 0, IMAGE_FORMAT_BGRA8888)
+        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8),
+            0, IMAGE_FORMAT_BGRA8888)
+
         print("[RNDX] Created blur render target: " .. BLUR_RT_NAME)
     else
         print("[RNDX] Reusing cached blur render target: " .. BLUR_RT_NAME)
