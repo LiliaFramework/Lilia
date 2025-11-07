@@ -972,7 +972,7 @@ Client
 
 ---
 
-### lia.derma.drawShadowsEx
+### lia.derma.draw_shadowsEx
 
 #### 📋 Purpose
 Draws shadows for rounded rectangles with extensive customization
@@ -1017,14 +1017,14 @@ Client
 #### 🔰 Low Complexity
 ```lua
     -- Simple: Draw basic shadow
-    lia.derma.drawShadowsEx(100, 100, 200, 100, Color(0, 0, 0, 100))
+    lia.derma.draw_shadowsEx(100, 100, 200, 100, Color(0, 0, 0, 100))
 
 ```
 
 #### 📊 Medium Complexity
 ```lua
     -- Medium: Draw with custom spread and intensity
-    lia.derma.drawShadowsEx(50, 50, 300, 150, Color(0, 0, 0, 150), flags, 12, 12, 12, 12, 20, 25)
+    lia.derma.draw_shadowsEx(50, 50, 300, 150, Color(0, 0, 0, 150), flags, 12, 12, 12, 12, 20, 25)
 
 ```
 
@@ -1033,7 +1033,7 @@ Client
     -- High: Dynamic shadow with different corner radii
     local spread = isHovered and 40 or 20
     local intensity = spread * 1.5
-    lia.derma.drawShadowsEx(x, y, w, h, shadowColor, flags, tl, tr, bl, br, spread, intensity, thickness)
+    lia.derma.draw_shadowsEx(x, y, w, h, shadowColor, flags, tl, tr, bl, br, spread, intensity, thickness)
 
 ```
 
@@ -1095,7 +1095,7 @@ Client
 
 ---
 
-### lia.derma.drawShadowsOutlined
+### lia.derma.draw_shadowsOutlined
 
 #### 📋 Purpose
 Draws outlined shadows for rounded rectangles with uniform corner radius
@@ -1129,14 +1129,14 @@ Client
 #### 🔰 Low Complexity
 ```lua
     -- Simple: Draw outlined shadow
-    lia.derma.drawShadowsOutlined(8, 100, 100, 200, 100, Color(0, 0, 0, 100), 2)
+    lia.derma.draw_shadowsOutlined(8, 100, 100, 200, 100, Color(0, 0, 0, 100), 2)
 
 ```
 
 #### 📊 Medium Complexity
 ```lua
     -- Medium: Draw with custom thickness and spread
-    lia.derma.drawShadowsOutlined(12, 50, 50, 300, 150, Color(0, 0, 0, 150), 3, 20, 25)
+    lia.derma.draw_shadowsOutlined(12, 50, 50, 300, 150, Color(0, 0, 0, 150), 3, 20, 25)
 
 ```
 
@@ -1146,7 +1146,7 @@ Client
     local thickness = isHovered and 3 or 1
     local spread = isHovered and 40 or 20
     local intensity = spread * 1.5
-    lia.derma.drawShadowsOutlined(radius, x, y, w, h, shadowColor, thickness, spread, intensity, flags)
+    lia.derma.draw_shadowsOutlined(radius, x, y, w, h, shadowColor, thickness, spread, intensity, flags)
 
 ```
 
