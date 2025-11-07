@@ -1050,7 +1050,7 @@ do
         if not file.Exists("data/" .. gma_filename, "GAME") then
             local DECODED_SHADERS_GMA = util.Base64Decode(SHADERS_GMA)
             if not DECODED_SHADERS_GMA or #DECODED_SHADERS_GMA == 0 then
-                print("[RNDX] Failed to load shaders!")
+                print("[RNDX] Failed to load shaders!") -- this shouldn't happen
                 return
             end
 
@@ -1075,7 +1075,266 @@ do
     local rtCache = _G.RNDX_RT_CACHE or {}
     _G.RNDX_RT_CACHE = rtCache
     if not rtCache[BLUR_RT_NAME] then
-        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8),
+        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8), --[[4, 8 is clamp_s + clamp-t]]
+            0, IMAGE_FORMAT_BGRA8888)
+
+        print("[RNDX] Created blur render target: " .. BLUR_RT_NAME)
+    else
+        print("[RNDX] Reusing cached blur render target: " .. BLUR_RT_NAME)
+    end
+
+    BLUR_RT = rtCache[BLUR_RT_NAME]
+end
+
+local NEW_FLAG
+do
+    local flags_n = -1
+    function NEW_FLAG()
+        flags_n = flags_n + 1
+        return 2 ^ flags_n
+    end
+end
+
+local NO_TL, NO_TR, NO_BL, NO_BR = NEW_FLAG(), NEW_FLAG(), NEW_FLAG(), NEW_FLAG()
+local SHAPE_CIRCLE, SHAPE_FIGMA, SHAPE_IOS = NEW_FLAG(), NEW_FLAG(), NEW_FLAG()
+local BLUR = NEW_FLAG()
+local shader_mat = [==[
+screenspace_general
+{
+	$pixshader ""
+	$vertexshader ""
+	$basetexture ""
+	$texture1    ""
+	$texture2    ""
+	$texture3    ""
+	$ignorez            1
+	$vertexcolor        1
+	$vertextransform    1
+	"<dx90"
+	{
+		$no_draw 1
+	}
+	$copyalpha                 0
+	$alpha_blend_color_overlay 0
+	$alpha_blend               1
+	$linearwrite               1
+	$linearread_basetexture    1
+	$linearread_texture1       1
+	$linearread_texture2       1
+	$linearread_texture3       1
+}
+]==]
+local MATRIXES = {}
+local MATERIAL_CACHE = {}
+local function create_shader_mat(name, opts)
+    assert(name and isstring(name), "create_shader_mat: tex must be a string")
+    local mat_name = "rndx_shaders1" .. name .. SHADERS_VERSION
+    -- Check cache first
+    if MATERIAL_CACHE[mat_name] then return MATERIAL_CACHE[mat_name] end
+    -- Try to get existing material from engine
+    local existing_mat = Material(mat_name)
+    if existing_mat and not existing_mat:IsError() then
+        MATERIAL_CACHE[mat_name] = existing_mat
+        if not MATRIXES[existing_mat] then MATRIXES[existing_mat] = Matrix() end
+        return existing_mat
+    end
+
+    -- Create new material
+    local key_values = util.KeyValuesToTable(shader_mat, false, true)
+    if opts then
+        for k, v in pairs(opts) do
+            key_values[k] = v
+        end
+    end
+
+    local mat = CreateMaterial(mat_name, "screenspace_general", key_values)
+    MATRIXES[mat] = Matrix()
+    MATERIAL_CACHE[mat_name] = mat
+    return mat
+end
+
+local ROUNDED_MAT = create_shader_mat("rounded", {
+    ["$pixshader"] = GET_SHADER("rndx_rounded_ps30"),
+    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+})
+
+local ROUNDED_TEXTURE_MAT = create_shader_mat("rounded_texture", {
+    ["$pixshader"] = GET_SHADER("rndx_rounded_ps30"),
+    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+    ["$basetexture"] = "loveyoumom", -- if there is no base texture, you can't change it later
+})
+
+local BLUR_VERTICAL = "$c0_x"
+local ROUNDED_BLUR_MAT = create_shader_mat("blur_horizontal", {
+    ["$pixshader"] = GET_SHADER("rndx_rounded_blur_ps30"),
+    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+    ["$basetexture"] = BLUR_RT:GetName(),
+    ["$texture1"] = "_rt_FullFrameFB",
+})
+
+local SHADOWS_MAT = create_shader_mat("rounded_shadows", {
+    ["$pixshader"] = GET_SHADER("rndx_shadows_ps30"),
+    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+})
+
+local SHADOWS_BLUR_MAT = create_shader_mat("shadows_blur_horizontal", {
+    ["$pixshader"] = GET_SHADER("rndx_shadows_blur_ps30"),
+    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+    ["$basetexture"] = BLUR_RT:GetName(),
+    ["$texture1"] = "_rt_FullFrameFB",
+})
+
+local SHAPES = {
+    [SHAPE_CIRCLE] = 2,
+    [SHAPE_FIGMA] = 2.2,
+    [SHAPE_IOS] = 4,
+}
+
+local DEFAULT_SHAPE = SHAPE_FIGMA
+local MATERIAL_SetTexture = ROUNDED_MAT.SetTexture
+local MATERIAL_SetMatrix = ROUNDED_MAT.SetMatrix
+local MATERIAL_SetFloat = ROUNDED_MAT.SetFloat
+local MATRIX_SetUnpacked = Matrix().SetUnpacked
+local MAT
+local X, Y, W, H
+local TL, TR, BL, BR
+local TEXTURE
+local USING_BLUR, BLUR_INTENSITY
+local COL_R, COL_G, COL_B, COL_A
+local SHAPE, OUTLINE_THICKNESS
+local START_ANGLE, END_ANGLE, ROTATION
+local CLIP_PANEL
+local SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY
+local function RESET_PARAMS()
+    MAT = nil
+    X, Y, W, H = 0, 0, 0, 0
+    TL, TR, BL, BR = 0, 0, 0, 0
+    TEXTURE = nil
+    USING_BLUR, BLUR_INTENSITY = false, 1.0
+    COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
+    SHAPE, OUTLINE_THICKNESS = SHAPES[DEFAULT_SHAPE], -1
+    START_ANGLE, END_ANGLE, ROTATION = 0, 360, 0
+    CLIP_PANEL = nil
+    SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY = false, 0, 0
+end
+
+do
+    local HUGE = math.huge
+    local function nzr(x)
+        if x ~= x or x < 0 then return 0 end
+        local lim = math_min(W, H)
+        if x == HUGE then return lim end
+        return x
+    end
+
+    local function clamp0(x)
+        return x < 0 and 0 or x
+    end
+
+    function normalize_corner_radii()
+        local tl, tr, bl, br = nzr(TL), nzr(TR), nzr(BL), nzr(BR)
+        local k = math_max(1, (tl + tr) / W, (bl + br) / W, (tl + bl) / H, (tr + br) / H)
+        if k > 1 then
+            local inv = 1 / k
+            tl, tr, bl, br = tl * inv, tr * inv, bl * inv, br * inv
+        end
+        return clamp0(tl), clamp0(tr), clamp0(bl), clamp0(br)
+    end
+end
+
+local function SetupDraw()
+    local ntl, ntr, nbl, nbr = normalize_corner_radii()
+    local matrix = MATRIXES[MAT]
+    MATRIX_SetUnpacked(matrix, nbl, W, OUTLINE_THICKNESS or -1, END_ANGLE, nbr, H, SHADOW_INTENSITY, ROTATION, ntr, SHAPE, BLUR_INTENSITY or 1.0, 0, ntl, TEXTURE and 1 or 0, START_ANGLE, 0)
+    MATERIAL_SetMatrix(MAT, "$viewprojmat", matrix)
+    if COL_R then surface_SetDrawColor(COL_R, COL_G, COL_B, COL_A) end
+    surface_SetMaterial(MAT)
+end
+
+local MANUAL_COLOR = NEW_FLAG()
+local DEFAULT_DRAW_FLAGS = DEFAULT_SHAPE
+local function draw_rounded(x, y, w, h, col, flags, tl, tr, bl, br, texture, thickness)
+    if col and col.a == 0 then return end
+    RESET_PARAMS()
+    if not flags then flags = DEFAULT_DRAW_FLAGS end
+    local using_blur = bit_band(flags, BLUR) ~= 0
+    if using_blur then return lia.derma.drawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness) end
+    MAT = ROUNDED_MAT
+    if texture then
+        MAT = ROUNDED_TEXTURE_MAT
+        MATERIAL_SetTexture(MAT, "$basetexture", texture)
+        TEXTURE = texture
+    end
+
+    W, H = w, h
+    TL, TR, BL, BR = bit_band(flags, NO_TL) == 0 and tl or 0, bit_band(flags, NO_TR) == 0 and tr or 0, bit_band(flags, NO_BL) == 0 and bl or 0, bit_band(flags, NO_BR) == 0 and br or 0
+    SHAPE = SHAPES[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or SHAPES[DEFAULT_SHAPE]
+    OUTLINE_THICKNESS = thickness
+    if bit_band(flags, MANUAL_COLOR) ~= 0 then
+        COL_R = nil
+    elseif col then
+        COL_R, COL_G, COL_B, COL_A = col.r, col.g, col.b, col.a
+    else
+        COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
+    end
+
+    SetupDraw()
+    return surface_DrawTexturedRectUV(x, y, w, h, -0.015625, -0.015625, 1.015625, 1.015625)
+end
+
+--[[
+    Purpose:
+        Draws a rounded rectangle with specified parameters
+
+    When Called:
+        When rendering UI elements that need rounded corners
+
+    Parameters:
+        radius (number)
+            Corner radius for all corners
+        x (number)
+            X position
+        y (number)
+            Y position
+        w (number)
+            Width
+        h (number)
+            Height
+        col (Color, optional)
+            Color to draw with
+        flags (number, optional)
+            Drawing flags for customization
+
+    Returns:
+        boolean - Success status
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+    ```lua
+    -- Simple: Draw a basic rounded rectangle
+    lia.derma.draw(8, 100, 100, 200, 100, Color(255, 0, 0))
+    ```
+
+    Medium Complexity:
+    ```lua
+    -- Medium: Draw with custom flags and color
+    local flags = lia.derma.SHAPE_IOS
+    lia.derma.draw(12, 50, 50, 300, 150, Color(0, 255, 0, 200), flags)
+    ```
+
+    High Complexity:
+    ```lua
+    -- High: Dynamic drawing with conditions
+    local radius = isHovered and 16 or 8
+    local color = isSelected and Color(255, 255, 0) or Color(100, 100, 100)
+    local flags = bit.bor(lia.derma.SHAPE_FIGMA, lia.derma.BLUR)
+    lia.derma.draw(radius, x, y, w, h, color, flags)
+    ```
+]]
 function lia.derma.draw(radius, x, y, w, h, col, flags)
     return draw_rounded(x, y, w, h, col, flags, radius, radius, radius, radius)
 end
@@ -1874,13 +2133,17 @@ local BASE_FUNCS = {
     end,
     Flags = function(self, flags)
         flags = flags or 0
+        -- Corner flags
         if bit_band(flags, NO_TL) ~= 0 then TL = 0 end
         if bit_band(flags, NO_TR) ~= 0 then TR = 0 end
         if bit_band(flags, NO_BL) ~= 0 then BL = 0 end
         if bit_band(flags, NO_BR) ~= 0 then BR = 0 end
+        -- Shape flags
         local shape_flag = bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)
         if shape_flag ~= 0 then SHAPE = SHAPES[shape_flag] or SHAPES[DEFAULT_SHAPE] end
+        -- Blur flag
         if bit_band(flags, BLUR) ~= 0 then BASE_FUNCS.Blur(self) end
+        -- Manual color flag
         if bit_band(flags, MANUAL_COLOR) ~= 0 then COL_R = nil end
         return self
     end,
