@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.972 (November 07, 2025)
+
+### Changes
+
+- Update commands.lua
+- Successfully updated workshop Lilia to 6.970
+- Update commands.lua
+- Successfully updated workshop Lilia to 6.968
+- Update creation.lua
+- Successfully updated workshop Lilia to 6.966
+- Fixing Error
+- Critical Workflow Error
+- Successfully updated workshop Lilia to 6.963
+- Update derma.lua
+- Revert "Successfully updated workshop Lilia to 6.960"
+- Successfully updated workshop Lilia to 6.960
+- No more derma break
+- Revert "Ignore The Derma.lua"
+- Revert "Successfully updated workshop Lilia to 6.956"
+- Successfully updated workshop Lilia to 6.956
+- Ignore The Derma.lua
+- Update derma.lua
+- Revert "Successfully updated workshop Lilia to 6.952"
+- Successfully updated workshop Lilia to 6.952
+
 ## Version 6.970 (November 07, 2025)
 
 ### Changes
