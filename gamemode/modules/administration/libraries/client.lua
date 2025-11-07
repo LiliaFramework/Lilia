@@ -776,12 +776,12 @@ function MODULE:PopulateAdminTabs(pages)
                         if propType == "boolean" then
                             valueControl = propPanel:Add("DCheckBox")
                             valueControl:SetValue(value or false)
-                            valueControl.OnChange = function(s, val) SetNestedValue(weaponData, key, val) end
+                            valueControl.OnChange = function(_, val) SetNestedValue(weaponData, key, val) end
                         elseif propType == "number" then
                             valueControl = propPanel:Add("DNumberWang")
                             valueControl:SetValue(value or 0)
                             valueControl:SetMinMax(-999999, 999999)
-                            valueControl.OnValueChanged = function(s, val) SetNestedValue(weaponData, key, val) end
+                            valueControl.OnValueChanged = function(_, val) SetNestedValue(weaponData, key, val) end
                         elseif propType == "vector" then
                             valueControl = propPanel:Add("DTextEntry")
                             valueControl:SetText(displayValue)
@@ -870,12 +870,12 @@ function MODULE:PopulateAdminTabs(pages)
 
                     resetAllBtn.DoClick = function()
                         if not selectedWeapon then return end
-                        for _, weaponData in pairs(weapons.GetList()) do
-                            if weaponData and weaponData.ClassName then
-                                lia.swepeditor.NetworkData[weaponData.ClassName] = nil
-                                local stored = weapons.GetStored(weaponData.ClassName)
-                                if stored and lia.swepeditor.DefaultSweps[weaponData.ClassName] then
-                                    for k, v in pairs(lia.swepeditor.DefaultSweps[weaponData.ClassName]) do
+                        for _, weaponInfo in pairs(weapons.GetList()) do
+                            if weaponInfo and weaponInfo.ClassName then
+                                lia.swepeditor.NetworkData[weaponInfo.ClassName] = nil
+                                local stored = weapons.GetStored(weaponInfo.ClassName)
+                                if stored and lia.swepeditor.DefaultSweps[weaponInfo.ClassName] then
+                                    for k, v in pairs(lia.swepeditor.DefaultSweps[weaponInfo.ClassName]) do
                                         stored[k] = v
                                     end
                                 end

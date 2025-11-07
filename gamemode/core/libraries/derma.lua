@@ -1238,9 +1238,9 @@ do
 end
 
 local function SetupDraw()
-    local TL, TR, BL, BR = normalize_corner_radii()
+    local tl, tr, bl, br = normalize_corner_radii()
     local matrix = MATRIXES[MAT]
-    MATRIX_SetUnpacked(matrix, BL, W, OUTLINE_THICKNESS or -1, END_ANGLE, BR, H, SHADOW_INTENSITY, ROTATION, TR, SHAPE, BLUR_INTENSITY or 1.0, 0, TL, TEXTURE and 1 or 0, START_ANGLE, 0)
+    MATRIX_SetUnpacked(matrix, bl, W, OUTLINE_THICKNESS or -1, END_ANGLE, br, H, SHADOW_INTENSITY, ROTATION, tr, SHAPE, BLUR_INTENSITY or 1.0, 0, tl, TEXTURE and 1 or 0, START_ANGLE, 0)
     MATERIAL_SetMatrix(MAT, "$viewprojmat", matrix)
     if COL_R then surface_SetDrawColor(COL_R, COL_G, COL_B, COL_A) end
     surface_SetMaterial(MAT)
