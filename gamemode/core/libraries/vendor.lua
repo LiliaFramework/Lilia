@@ -141,10 +141,13 @@ end
         During initialization or when defining custom item rarities for vendors
 
     Parameters:
-        name (string) - The name of the rarity (e.g., "common", "rare", "legendary"), color (Color) - The color associated with this rarity
+        name (string)
+            The name of the rarity (e.g., "common", "rare", "legendary")
+        color (Color)
+            The color associated with this rarity
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -194,10 +197,13 @@ end
         During initialization or when defining vendor templates with specific item sets
 
     Parameters:
-        name (string) - The name of the preset, items (table) - Table containing item types as keys and their configuration as values
+        name (string)
+            The name of the preset
+        items (table)
+            Table containing item types as keys and their configuration as values
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -256,7 +262,8 @@ end
         When applying presets to vendors or checking if a preset exists
 
     Parameters:
-        name (string) - The name of the preset to retrieve
+        name (string)
+            The name of the preset to retrieve
 
     Returns:
         table or nil - The preset data table if found, nil otherwise
