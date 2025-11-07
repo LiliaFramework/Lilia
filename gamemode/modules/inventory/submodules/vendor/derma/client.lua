@@ -32,22 +32,14 @@ function PANEL:Init()
     self.vendorPanel.items = self.vendorPanel:Add("liaScrollPanel")
     self.vendorPanel.items:Dock(FILL)
     self.vendorPanel.items:DockPadding(8, 8, 8, 8)
-    self.vendorPanel.Paint = function(_, w, h)
-        -- Draw main panel background with rounded corners
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw()
-    end
-
+    self.vendorPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw() end
     self.mePanel = self:Add("liaSemiTransparentDPanel")
     self.mePanel:SetSize(self.panelW, panelH)
     self.mePanel:SetPos(sw * 0.5 + 16, self.y0)
     self.mePanel.items = self.mePanel:Add("liaScrollPanel")
     self.mePanel.items:Dock(FILL)
     self.mePanel.items:DockPadding(8, 8, 8, 8)
-    self.mePanel.Paint = function(_, w, h)
-        -- Draw main panel background with rounded corners
-        lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw()
-    end
-
+    self.mePanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 240)):Draw() end
     self:listenForChanges()
     self:liaListenForInventoryChanges(ply:getChar():getInv())
     self.items = {
@@ -63,9 +55,7 @@ function PANEL:Init()
     lbl:SetContentAlignment(5)
     lbl:SizeToContents()
     lbl:SetPos(self.mePanel.x + self.mePanel:GetWide() * 0.5 - lbl:GetWide() * 0.5, self.y0 - lbl:GetTall() - 12)
-    lbl.Paint = function(s, w, h)
-        draw.SimpleText(s:GetText(), s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    lbl.Paint = function(s, w, h) draw.SimpleText(s:GetText(), s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     local lbl2 = self:Add("DLabel")
     local vendorName = IsValid(liaVendorEnt) and liaVendorEnt:getName() or L("vendorItemsTitle")
     local vendorItemsText = vendorName and (vendorName .. "'s " .. L("items")) or L("vendorItemsTitle")
@@ -75,20 +65,14 @@ function PANEL:Init()
     lbl2:SetContentAlignment(5)
     lbl2:SizeToContents()
     lbl2:SetPos(self.vendorPanel.x + self.vendorPanel:GetWide() * 0.5 - lbl2:GetWide() * 0.5, self.y0 - lbl2:GetTall() - 12)
-    lbl2.Paint = function(s, w, h)
-        draw.SimpleText(s:GetText(), s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-    -- Store reference to update label when vendor name changes
+    lbl2.Paint = function(s, w, h) draw.SimpleText(s:GetText(), s:GetFont(), w * 0.5, h * 0.5, s:GetTextColor(), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     self.vendorItemsLabel = lbl2
-    -- Try to populate immediately, but also set up to repopulate when sync arrives
     self:populateItems()
     self:createCategoryDropdown()
-    -- If items weren't populated, wait a bit for sync to arrive
     timer.Simple(0.1, function()
         if IsValid(self) and IsValid(liaVendorEnt) then
             local itemCount = liaVendorEnt.items and table.Count(liaVendorEnt.items) or 0
             if itemCount > 0 then
-                -- Check if items are already visible
                 local vendorChildren = IsValid(self.vendorPanel.items) and #self.vendorPanel.items:GetChildren() or 0
                 local meChildren = IsValid(self.mePanel.items) and #self.mePanel.items:GetChildren() or 0
                 if vendorChildren == 0 and meChildren == 0 then self:populateItems() end
@@ -103,9 +87,7 @@ function PANEL:Init()
         btn:SetPos(sw * 0.88, sh * 0.82)
         btn:SetText(L("vendorEditorButton"))
         btn:SetFont("LiliaFont.18")
-        btn.DoClick = function()
-            vgui.Create("liaVendorEditor"):SetZPos(99)
-        end
+        btn.DoClick = function() vgui.Create("liaVendorEditor"):SetZPos(99) end
     end
 
     local leave = self:Add("liaButton")
@@ -113,9 +95,7 @@ function PANEL:Init()
     leave:SetPos(sw * 0.88, sh - 64 - sh * 0.05)
     leave:SetText(L("leave"))
     leave:SetFont("LiliaFont.18")
-    leave.DoClick = function()
-        self:Remove()
-    end
+    leave.DoClick = function() self:Remove() end
 end
 
 function PANEL:createCategoryDropdown()
@@ -143,9 +123,7 @@ function PANEL:createCategoryDropdown()
         menu = vgui.Create("liaSemiTransparentDPanel", self)
         menu:SetSize(btn:GetWide(), math.min(#sorted * 32 + 8, sh * 0.4))
         menu:SetPos(btn.x, btn.y + btn:GetTall() + 4)
-        menu.Paint = function(_, w, h)
-            lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 250)):Draw()
-        end
+        menu.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.background_alpha or Color(34, 34, 34, 250)):Draw() end
         local scroll = menu:Add("liaScrollPanel")
         scroll:Dock(FILL)
         scroll:DockPadding(4, 4, 4, 4)
@@ -215,48 +193,39 @@ function PANEL:populateItems()
         end
     end
 
-    -- Force layout update
     if IsValid(self.vendorPanel.items) then
-        -- Check if there's a canvas and resize it
         local canvas = self.vendorPanel.items.Canvas or self.vendorPanel.items:GetCanvas()
         if canvas then
             local canvasChildren = canvas:GetChildren()
-            -- Force canvas to resize to fit children (set dimensions manually)
             local panelWidth = self.vendorPanel:GetWide()
             local totalHeight = 0
             for _, child in ipairs(canvasChildren) do
                 if IsValid(child) then totalHeight = totalHeight + child:GetTall() end
             end
 
-            -- Set canvas dimensions directly (account for padding and scrollbar)
             canvas:SetWide(panelWidth - 24)
             canvas:SetTall(math.max(totalHeight, 140))
         end
 
         self.vendorPanel.items:InvalidateLayout()
-        -- Force scroll panel to update
         timer.Simple(0, function() if IsValid(self) and IsValid(self.vendorPanel.items) then self.vendorPanel.items:InvalidateLayout() end end)
     end
 
     if IsValid(self.mePanel.items) then
-        -- Check if there's a canvas and resize it
         local canvas = self.mePanel.items.Canvas or self.mePanel.items:GetCanvas()
         if canvas then
             local canvasChildren = canvas:GetChildren()
-            -- Force canvas to resize to fit children (set dimensions manually)
             local panelWidth = self.mePanel:GetWide()
             local totalHeight = 0
             for _, child in ipairs(canvasChildren) do
                 if IsValid(child) then totalHeight = totalHeight + child:GetTall() end
             end
 
-            -- Set canvas dimensions directly (account for padding and scrollbar)
             canvas:SetWide(panelWidth - 24)
             canvas:SetTall(math.max(totalHeight, 140))
         end
 
         self.mePanel.items:InvalidateLayout()
-        -- Force scroll panel to update
         timer.Simple(0, function() if IsValid(self) and IsValid(self.mePanel.items) then self.mePanel.items:InvalidateLayout() end end)
     end
 end
@@ -282,7 +251,6 @@ function PANEL:updateItem(id, which, qty)
     if not IsValid(parent.items) then return end
     local pnl = container[id]
     if not IsValid(pnl) then
-        -- Check if scroll panel has a canvas/content area
         local targetParent = parent.items
         if parent.items.Canvas then
             targetParent = parent.items.Canvas
@@ -291,37 +259,28 @@ function PANEL:updateItem(id, which, qty)
         end
 
         pnl = targetParent:Add("liaVendorItem")
-        -- Set size BEFORE setting item type and docking (order matters!)
         local panelWidth = parent:GetWide()
-        pnl:SetWide(panelWidth - 24) -- Account for scrollbar and padding
+        pnl:SetWide(panelWidth - 24)
         pnl:SetTall(140)
-        -- Now set item type and selling status
         pnl:setItemType(id)
         pnl:setIsSelling(which == "me")
-        -- Dock AFTER setting size
         pnl:Dock(TOP)
         pnl:DockMargin(0, 0, 0, 8)
         container[id] = pnl
-        -- Force canvas to resize to fit children (but preserve proper dimensions)
-        -- Calculate proper dimensions manually instead of relying on SizeToChildren
         local totalHeight = 0
         for _, child in ipairs(targetParent:GetChildren()) do
             if IsValid(child) then totalHeight = totalHeight + child:GetTall() end
         end
 
-        -- Set canvas dimensions directly
         targetParent:SetWide(panelWidth - 24)
         targetParent:SetTall(math.max(totalHeight, 140))
     end
 
     if not isnumber(qty) then qty = which == "me" and LocalPlayer():getChar():getInv():getItemCount(id) or (IsValid(liaVendorEnt) and liaVendorEnt:getStock(id) or 0) end
     pnl:setQuantity(qty)
-    -- Ensure panel is visible and properly sized
     if IsValid(pnl) then
         pnl:SetVisible(true)
-        if pnl:GetTall() <= 0 then
-            pnl:SetTall(160) -- Default height from Init
-        end
+        if pnl:GetTall() <= 0 then pnl:SetTall(160) end
     end
     return pnl
 end
@@ -403,7 +362,6 @@ end
 function PANEL:onVendorPropEdited(_, key)
     if not IsValid(liaVendorEnt) then return end
     if key == "name" then
-        -- Update vendor items label with new name
         if IsValid(self.vendorItemsLabel) then
             local vendorName = liaVendorEnt:getName()
             local vendorItemsText = vendorName and (vendorName .. "'s " .. L("items")) or L("vendorItemsTitle")
@@ -450,7 +408,6 @@ function PANEL:onVendorSynchronized(vendor)
     if vendor ~= liaVendorEnt then return end
     self:populateItems()
     self:applyCategoryFilter()
-    -- Force layout refresh
     timer.Simple(0, function()
         if IsValid(self) then
             if IsValid(self.vendorPanel.items) then self.vendorPanel.items:InvalidateLayout() end
@@ -460,7 +417,6 @@ function PANEL:onVendorSynchronized(vendor)
 end
 
 function PANEL:Paint()
-    -- Blur removed
 end
 
 function PANEL:OnRemove()
@@ -502,13 +458,10 @@ function PANEL:Init()
     self.background = self:Add("DPanel")
     self.background:Dock(FILL)
     self.background.Paint = function(_, w, h)
-        -- Draw rounded background with hover effect
         local theme = lia.color.theme
         local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
         local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
-
         lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
-
         if self:IsHovered() then
             self.hoverAlpha = math.min(self.hoverAlpha + FrameTime() * 5, 1)
         else
@@ -520,39 +473,32 @@ function PANEL:Init()
             lia.derma.rect(0, 0, w, h):Rad(8):Color(hoverCol):Draw()
         end
 
-        -- Draw subtle border
         surface.SetDrawColor(theme and theme.panel and theme.panel[2] or Color(80, 80, 80, 100))
         surface.DrawOutlinedRect(0, 0, w, h)
     end
 
-    -- Icon section
     self.iconFrame = self.background:Add("DPanel")
     self.iconFrame:SetSize(100, 100)
     self.iconFrame:Dock(LEFT)
     self.iconFrame:DockMargin(10, 10, 10, 10)
     self.iconFrame.ExtraPaint = function() end
     self.iconFrame.Paint = function(_, w, h)
-        -- Draw icon frame background with subtle shadow
         lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.panel and lia.color.theme.panel[2] or Color(30, 30, 30, 200)):Draw()
         self.iconFrame:ExtraPaint(w, h)
     end
+
     self.icon = self.iconFrame:Add("liaItemIcon")
     self.icon:SetSize(100, 100)
     self.icon:Dock(FILL)
     self.icon.Paint = function() end
-
-    -- Main content area
     self.contentArea = self.background:Add("DPanel")
     self.contentArea:Dock(FILL)
     self.contentArea:DockMargin(0, 10, 10, 10)
     self.contentArea:SetPaintBackground(false)
-
-    -- Top row: Name and Price
     self.topRow = self.contentArea:Add("DPanel")
     self.topRow:Dock(TOP)
     self.topRow:SetTall(36)
     self.topRow:SetPaintBackground(false)
-
     self.name = self.topRow:Add("DLabel")
     self.name:SetFont("LiliaFont.22b")
     self.name:SetExpensiveShadow(1, color_black)
@@ -562,8 +508,6 @@ function PANEL:Init()
     self.name:SetWrap(true)
     self.name:SetAutoStretchVertical(true)
     self.name:SetText("")
-
-    -- Price badge
     self.priceBadge = self.topRow:Add("DPanel")
     self.priceBadge:Dock(RIGHT)
     self.priceBadge:SetWide(120)
@@ -575,14 +519,13 @@ function PANEL:Init()
         surface.SetDrawColor(ColorAlpha(priceColor, 100))
         surface.DrawOutlinedRect(0, 0, w, h)
     end
+
     self.priceLabel = self.priceBadge:Add("DLabel")
     self.priceLabel:SetFont("LiliaFont.18b")
     self.priceLabel:Dock(FILL)
     self.priceLabel:SetContentAlignment(5)
     self.priceLabel:SetTextColor(lia.color.theme.text or color_white)
     self.priceLabel:SetText("")
-
-    -- Quantity/Stock indicator
     self.quantityBadge = self.topRow:Add("DPanel")
     self.quantityBadge:Dock(RIGHT)
     self.quantityBadge:SetWide(60)
@@ -593,14 +536,13 @@ function PANEL:Init()
         local qtyColor = theme and theme.panel and theme.panel[2] or Color(60, 60, 60, 150)
         lia.derma.rect(0, 0, w, h):Rad(4):Color(qtyColor):Draw()
     end
+
     self.quantityLabel = self.quantityBadge:Add("DLabel")
     self.quantityLabel:SetFont("LiliaFont.16")
     self.quantityLabel:Dock(FILL)
     self.quantityLabel:SetContentAlignment(5)
     self.quantityLabel:SetTextColor(lia.color.theme.text or color_white)
     self.quantityLabel:SetText("")
-
-    -- Description
     self.description = self.contentArea:Add("DLabel")
     self.description:SetFont("LiliaFont.14")
     self.description:SetTextColor(lia.color.theme.text and ColorAlpha(lia.color.theme.text, 180) or Color(180, 180, 180))
@@ -610,23 +552,18 @@ function PANEL:Init()
     self.description:SetContentAlignment(7)
     self.description:SetAutoStretchVertical(true)
     self.description:SetText("")
-
-    -- Bottom row: Spacer and action button
     self.bottomRow = self.contentArea:Add("DPanel")
     self.bottomRow:Dock(BOTTOM)
     self.bottomRow:SetTall(36)
     self.bottomRow:SetPaintBackground(false)
-
     self.spacer = self.bottomRow:Add("DPanel")
     self.spacer:Dock(FILL)
     self.spacer:SetPaintBackground(false)
-
     self.action = self.bottomRow:Add("liaButton")
     self.action:SetWide(140)
     self.action:SetHeight(36)
     self.action:Dock(RIGHT)
     self.action:SetFont("LiliaFont.16")
-
     self.isSelling = false
     self.suffix = ""
     self.currentPrice = 0
@@ -665,8 +602,6 @@ function PANEL:updateAction()
 
     local price = liaVendorEnt:getPrice(self.item.uniqueID, self.isSelling)
     self.currentPrice = price
-
-    -- Update price display
     local priceText
     if price == 0 then
         priceText = L("vendorFree")
@@ -676,11 +611,7 @@ function PANEL:updateAction()
         priceText = string.format("%s %s", price, lia.currency.singular)
     end
 
-    if IsValid(self.priceLabel) then
-        self.priceLabel:SetText(priceText)
-    end
-
-    -- Update action button text (shorter version)
+    if IsValid(self.priceLabel) then self.priceLabel:SetText(priceText) end
     self.action:SetText(self.isSelling and L("sell") or L("buy"))
     self.action.DoClick = function()
         if self.isSelling then
@@ -694,22 +625,16 @@ end
 function PANEL:setQuantity(quantity, skipUpdate)
     if not self.item then return end
     if quantity then
-        -- Only remove panel if it's a "me" item with 0 quantity (player sold all items)
-        -- Vendor items should always show, even with 0 stock
         if quantity <= 0 and self.isSelling then
             self:Remove()
             return
         end
 
         self.currentQuantity = quantity
-
-        -- Update quantity badge
         if IsValid(self.quantityLabel) then
             if self.isSelling then
-                -- For player items, show quantity
                 self.quantityLabel:SetText(tostring(quantity))
             else
-                -- For vendor items, show stock if available
                 if IsValid(liaVendorEnt) then
                     local current, max = liaVendorEnt:getStock(self.item.uniqueID)
                     if max then
@@ -723,7 +648,6 @@ function PANEL:setQuantity(quantity, skipUpdate)
             end
         end
 
-        -- For vendor items (buying), show quantity even if 0
         if quantity > 0 or not self.isSelling then
             self.suffix = L("vendorItemQuantity", quantity)
         else
@@ -731,16 +655,11 @@ function PANEL:setQuantity(quantity, skipUpdate)
         end
     else
         self.currentQuantity = 0
-        if IsValid(self.quantityLabel) then
-            self.quantityLabel:SetText("")
-        end
+        if IsValid(self.quantityLabel) then self.quantityLabel:SetText("") end
         self.suffix = ""
     end
 
-    -- Only call updateLabel if not called from updateLabel itself
-    if not skipUpdate then
-        self:updateLabel()
-    end
+    if not skipUpdate then self:updateLabel() end
 end
 
 function PANEL:setItemType(itemType)
@@ -773,17 +692,10 @@ end
 
 function PANEL:updateLabel()
     if not self.item then return end
-    -- Update name (without quantity suffix, as it's shown separately)
     self.name:SetText(self.item:getName())
     self.description:SetText(self.item:getDesc() or L("noDesc"))
-
-    -- Update price and action
     self:updateAction()
-
-    -- Update quantity display (skip updateLabel call to prevent recursion)
-    if self.currentQuantity > 0 or not self.isSelling then
-        self:setQuantity(self.currentQuantity, true)
-    end
+    if self.currentQuantity > 0 or not self.isSelling then self:setQuantity(self.currentQuantity, true) end
 end
 
 vgui.Register("liaVendorItem", PANEL, "DPanel")
