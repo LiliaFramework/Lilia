@@ -1417,7 +1417,6 @@ else
             for _, child in ipairs(children) do
                 if IsValid(child) then
                     count = count + 1
-                    -- Recursively enumerate subpanels
                     count = count + enumeratePanels(child, depth + 1)
                 end
             end
@@ -1436,7 +1435,6 @@ else
                         hiddenPanelTypes[panelType] = (hiddenPanelTypes[panelType] or 0) + 1
                     end
 
-                    -- Recursively collect data from subpanels
                     collectPanelData(child, panelTypes, hiddenPanelTypes, depth + 1)
                 end
             end
@@ -1448,7 +1446,6 @@ else
         local panelTypes = {}
         local hiddenPanelTypes = {}
         collectPanelData(worldPanel, panelTypes, hiddenPanelTypes)
-        -- Count visible panels
         for _, count in pairs(panelTypes) do
             visiblePanels = visiblePanels + count
         end
