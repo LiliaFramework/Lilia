@@ -192,7 +192,7 @@ function MODULE:PlayerInitialSpawn(client)
     lia.log.add(client, "playerInitialSpawn")
 end
 
-function MODULE:PlayerDisconnect(client)
+function MODULE:PlayerDisconnected(client)
     lia.log.add(client, "playerDisconnected")
 end
 
