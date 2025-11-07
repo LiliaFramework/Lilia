@@ -126,21 +126,28 @@ def remove_comments(content):
         if idx >= 0:
             kept = line[:idx].rstrip()
             tail = line[idx:]
-            # If inline comment is a long block comment, skip following lines until closing
+            # If inline comment is a long block comment, check if it's single-line or multi-line
             m2 = re.match(r"--\[(=*)\[", tail)
             if m2 is not None:
                 eqs2 = m2.group(1)
                 closing2 = "]" + eqs2 + "]"
-                # skip lines until closing token
-                i += 1
-                while i < len(lines) and closing2 not in lines[i]:
+                # Check if closing is on the same line
+                if closing2 in tail:
+                    # Single-line long comment, just keep the part before the comment
+                    cleaned_lines.append(kept)
+                else:
+                    # Multi-line long comment, skip following lines until closing
                     i += 1
-                if i < len(lines):
-                    # skip the closing line itself
-                    i += 1
+                    while i < len(lines) and closing2 not in lines[i]:
+                        i += 1
+                    if i < len(lines):
+                        # skip the closing line itself
+                        i += 1
+                    cleaned_lines.append(kept)
+                    continue
+            else:
+                # Regular single-line comment
                 cleaned_lines.append(kept)
-                continue
-            cleaned_lines.append(kept)
         else:
             cleaned_lines.append(line.rstrip())
 

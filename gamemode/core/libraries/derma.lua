@@ -1050,7 +1050,7 @@ do
         if not file.Exists("data/" .. gma_filename, "GAME") then
             local DECODED_SHADERS_GMA = util.Base64Decode(SHADERS_GMA)
             if not DECODED_SHADERS_GMA or #DECODED_SHADERS_GMA == 0 then
-                print("[RNDX] Failed to load shaders!") -- this shouldn't happen
+                print("[RNDX] Failed to load shaders!")
                 return
             end
 
@@ -1075,7 +1075,7 @@ do
     local rtCache = _G.RNDX_RT_CACHE or {}
     _G.RNDX_RT_CACHE = rtCache
     if not rtCache[BLUR_RT_NAME] then
-        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8), --[[4, 8 is clamp_s + clamp-t]]
+        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8),
             0, IMAGE_FORMAT_BGRA8888)
 
         print("[RNDX] Created blur render target: " .. BLUR_RT_NAME)
@@ -1129,9 +1129,7 @@ local MATERIAL_CACHE = {}
 local function create_shader_mat(name, opts)
     assert(name and isstring(name), "create_shader_mat: tex must be a string")
     local mat_name = "rndx_shaders1" .. name .. SHADERS_VERSION
-    -- Check cache first
     if MATERIAL_CACHE[mat_name] then return MATERIAL_CACHE[mat_name] end
-    -- Try to get existing material from engine
     local existing_mat = Material(mat_name)
     if existing_mat and not existing_mat:IsError() then
         MATERIAL_CACHE[mat_name] = existing_mat
@@ -1139,7 +1137,6 @@ local function create_shader_mat(name, opts)
         return existing_mat
     end
 
-    -- Create new material
     local key_values = util.KeyValuesToTable(shader_mat, false, true)
     if opts then
         for k, v in pairs(opts) do
@@ -1161,7 +1158,7 @@ local ROUNDED_MAT = create_shader_mat("rounded", {
 local ROUNDED_TEXTURE_MAT = create_shader_mat("rounded_texture", {
     ["$pixshader"] = GET_SHADER("rndx_rounded_ps30"),
     ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
-    ["$basetexture"] = "loveyoumom", -- if there is no base texture, you can't change it later
+    ["$basetexture"] = "loveyoumom",
 })
 
 local BLUR_VERTICAL = "$c0_x"
@@ -2133,17 +2130,13 @@ local BASE_FUNCS = {
     end,
     Flags = function(self, flags)
         flags = flags or 0
-        -- Corner flags
         if bit_band(flags, NO_TL) ~= 0 then TL = 0 end
         if bit_band(flags, NO_TR) ~= 0 then TR = 0 end
         if bit_band(flags, NO_BL) ~= 0 then BL = 0 end
         if bit_band(flags, NO_BR) ~= 0 then BR = 0 end
-        -- Shape flags
         local shape_flag = bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)
         if shape_flag ~= 0 then SHAPE = SHAPES[shape_flag] or SHAPES[DEFAULT_SHAPE] end
-        -- Blur flag
         if bit_band(flags, BLUR) ~= 0 then BASE_FUNCS.Blur(self) end
-        -- Manual color flag
         if bit_band(flags, MANUAL_COLOR) ~= 0 then COL_R = nil end
         return self
     end,
