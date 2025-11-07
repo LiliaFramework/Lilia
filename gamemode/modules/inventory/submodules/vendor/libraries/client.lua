@@ -11,6 +11,7 @@ end
 net.Receive("liaVendorSync", function()
     local vendor = net.ReadEntity()
     if not IsValid(vendor) then return end
+
     local count = net.ReadUInt(16)
     vendor.items = {}
     for _ = 1, count do
