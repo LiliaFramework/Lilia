@@ -1171,7 +1171,6 @@ if SERVER then
 
         lia.db.wipeTables(function()
             lia.information(L("dbWiped"))
-            -- Change to current map to recreate tables
             RunConsoleCommand("changelevel", game.GetMap())
         end)
     end)
