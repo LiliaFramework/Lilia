@@ -3913,7 +3913,6 @@ function MODULE:PopulateConfigurationButtons(pages)
                         propPanel.propertyValue = newValue
                     end
 
-                    -- Auto-save: immediately save the property change
                     if selectedWeapon then
                         net.Start("liaSwepeditorUpdate")
                         net.WriteTable({
@@ -3993,7 +3992,6 @@ function MODULE:PopulateConfigurationButtons(pages)
                             propPanel.lastChange = CurTime()
                             modifiedValues[key] = checked
                             propPanel.propertyValue = checked
-                            -- Auto-save: immediately save the property change
                             if selectedWeapon then
                                 net.Start("liaSwepeditorUpdate")
                                 net.WriteTable({
@@ -4033,7 +4031,6 @@ function MODULE:PopulateConfigurationButtons(pages)
                             if newValue ~= nil then
                                 modifiedValues[key] = newValue
                                 propPanel.propertyValue = newValue
-                                -- Auto-save: immediately save the property change
                                 if selectedWeapon then
                                     net.Start("liaSwepeditorUpdate")
                                     net.WriteTable({

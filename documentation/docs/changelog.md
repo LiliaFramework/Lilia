@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.947 (November 07, 2025)
+
+### Changes
+
+- Docs
+- Vendor Overhaul
+- Swep Editor
+- Better Var Name
+- missing ed
+- Successfully updated workshop Lilia to 6.941
+- Successfully updated workshop Lilia to 6.939
+- Update gettingstarted.md
+- Update mkdocs.yml
+- Successfully updated workshop Lilia to 6.937
+- Docs
+- Successfully updated workshop Lilia to 6.935
+- Update gettingstarted.md
+- Successfully updated workshop Lilia to 6.933
+- Yeah More Docs lmfao
+- Successfully updated workshop Lilia to 6.931
+- More Docs
+- Successfully updated workshop Lilia to 6.929
+- Docs
+- Successfully updated workshop Lilia to 6.927
+
 ## Version 6.941 (November 02, 2025)
 
 ### Changes
