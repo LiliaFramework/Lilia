@@ -1,7 +1,5 @@
 ﻿local animDuration = 0.3
--- Cache gradient material to avoid recreating on every paint/reload
 local GRADIENT_MAT = Material("vgui/gradient-d")
--- Cache default button shadow color
 local DEFAULT_BUTTON_SHADOW = Color(18, 32, 32, 35)
 local PANEL = {}
 function PANEL:Init()
