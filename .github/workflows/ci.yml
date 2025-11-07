@@ -227,7 +227,7 @@ jobs:
           python3 generate_docs.py definitions
           python3 generate_docs.py hooks
       - run: |
-          python3 remove_comments.py gamemode --ignore gamemode/core/libraries/derma.lua
+          python3 remove_comments.py gamemode
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist
@@ -399,7 +399,7 @@ jobs:
           python3 generate_docs.py definitions
           python3 generate_docs.py hooks
       - run: |
-          python3 remove_comments.py gamemode --ignore gamemode/core/libraries/derma.lua
+          python3 remove_comments.py gamemode
       - run: |
           echo "=== Fetching Modules Documentation ==="
           # Create modules directory if it doesn't exist

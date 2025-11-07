@@ -5,20 +5,12 @@ Preserves long comment blocks that start at the beginning of a line ("--[[ ... ]
 Removes:
 - Pure single-line comments that start with "--" (with any leading whitespace)
 - Inline comments introduced by "--" that appear after code, while respecting strings
-
-Usage:
-    python remove_comments.py [target] [--ignore file1.lua] [--ignore file2.lua]
-
-Arguments:
-    target: Target directory or file (default: current directory)
-    --ignore: Files or patterns to ignore (can be used multiple times)
 """
 
 import os
 import re
 import sys
 import subprocess
-import argparse
 
 def remove_comments(content):
     """Remove Lua single-line and inline comments, preserve top-of-line long blocks."""
@@ -194,62 +186,26 @@ def process_file(filepath):
         return False
 
 def main():
-    parser = argparse.ArgumentParser(description='Remove comments from Lua files.')
-    parser.add_argument('target', nargs='?', default='.',
-                       help='Target directory or file (default: current directory)')
-    parser.add_argument('--ignore', action='append', default=[],
-                       help='Files or patterns to ignore (can be used multiple times)')
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+    else:
+        target = "."
 
-    args = parser.parse_args()
-
-    # Convert ignore patterns to absolute paths for comparison
-    ignore_patterns = []
-    for pattern in args.ignore:
-        # If pattern contains path separators, treat as path relative to target
-        if os.sep in pattern or (os.altsep and os.altsep in pattern):
-            ignore_patterns.append(os.path.abspath(os.path.join(args.target, pattern)))
-        else:
-            # If just filename, match against basename
-            ignore_patterns.append(pattern)
-
-    def should_ignore(filepath):
-        """Check if file should be ignored based on patterns."""
-        abs_path = os.path.abspath(filepath)
-        basename = os.path.basename(filepath)
-
-        for pattern in ignore_patterns:
-            if os.path.isabs(pattern):
-                # Absolute path pattern - check if file matches
-                if abs_path == pattern:
-                    return True
-            else:
-                # Filename pattern - check if basename matches
-                if basename == pattern:
-                    return True
-        return False
-
-    if os.path.isfile(args.target) and args.target.endswith('.lua'):
+    if os.path.isfile(target) and target.endswith('.lua'):
         # Single file
-        if not should_ignore(args.target):
-            process_file(args.target)
-        else:
-            print(f"Ignored: {args.target}")
+        process_file(target)
     else:
         # Directory - first remove comments from all files
         count = 0
-        for root, dirs, files in os.walk(args.target):
+        for root, dirs, files in os.walk(target):
             for file in files:
                 if file.endswith('.lua'):
-                    filepath = os.path.join(root, file)
-                    if should_ignore(filepath):
-                        print(f"Ignored: {filepath}")
-                        continue
-                    if process_file(filepath):
+                    if process_file(os.path.join(root, file)):
                         count += 1
         print(f"Processed {count} files")
 
         # Then run glualint pretty-print if available
-        run_glualint_pretty_print(args.target)
+        run_glualint_pretty_print(target)
 
 if __name__ == '__main__':
     main()
