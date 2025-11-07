@@ -35,9 +35,28 @@ function MODULE:HUDPaint()
     lia.util.drawText(L(txtKey), x, y, Color(255, 255, 255, ceil(shadowFade * 255)), 0, 0, "liaHugeFont")
     if not hideKey then
         surface.SetFont("liaMediumFont")
-        local dw = select(1, surface.GetTextSize(L("respawnIn", left)))
+        local text
+        if left <= 0 then
+            text = L("pressAnyKeyToRespawn")
+        else
+            text = L("respawnIn", left)
+        end
+
+        local dw = select(1, surface.GetTextSize(text))
         local dx, dy = (ScrW() - dw) / 2, y + h + 10
-        lia.util.drawText(L("respawnIn", left), dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, "liaMediumFont")
-        lia.util.drawText(L("respawnIn", left), dx, dy, Color(255, 255, 255, 255), 0, 0, "liaMediumFont")
+        lia.util.drawText(text, dx + 1, dy + 1, Color(0, 0, 0, 255), 0, 0, "liaMediumFont")
+        lia.util.drawText(text, dx, dy, Color(255, 255, 255, 255), 0, 0, "liaMediumFont")
     end
+end
+
+function MODULE:PlayerButtonDown(client, key)
+    if key ~= IN_JUMP then return end
+    if client:Alive() then return end
+    local baseTime = lia.config.get("SpawnTime", 5)
+    baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
+    local lastDeath = client:getNetVar("lastDeathTime", os.time())
+    local left = math.Clamp(baseTime - (os.time() - lastDeath), 0, baseTime)
+    if left > 0 then return end
+    net.Start("liaPlayerRespawn")
+    net.SendToServer()
 end

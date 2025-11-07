@@ -17,8 +17,10 @@ lia.class.list = lia.class.list or {}
         During gamemode initialization or when dynamically creating classes
 
     Parameters:
-        - uniqueID (string): Unique identifier for the class
-        - data (table): Table containing class properties (name, desc, limit, faction, etc.)
+        uniqueID (string)
+            Unique identifier for the class
+        data (table)
+            Table containing class properties (name, desc, limit, faction, etc.)
 
     Returns:
         The registered class table
@@ -116,10 +118,11 @@ end
         During gamemode initialization to load classes from files
 
     Parameters:
-        - directory (string): Path to directory containing class files
+        directory (string)
+            Path to directory containing class files
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -131,7 +134,7 @@ end
         lia.class.loadFromDir("gamemodes/lilia/classes")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local classDir = "gamemodes/lilia/modules/custom_classes/classes"
         if file.Exists(classDir, "LUA") then
@@ -202,8 +205,10 @@ end
         When a player attempts to join a class or when checking class availability
 
     Parameters:
-        - client (Player): The player attempting to join the class
-        - class (number): The class index to check
+        client (Player)
+            The player attempting to join the class
+        class (number)
+            The class index to check
 
     Returns:
         boolean, string - Whether the player can join and reason if they cannot
@@ -284,7 +289,8 @@ end
         When needing to access class information or properties
 
     Parameters:
-        - identifier (number/string): Class index or uniqueID to retrieve
+        identifier (number/string)
+            Class index or uniqueID to retrieve
 
     Returns:
         table - The class data table or nil if not found
@@ -356,7 +362,8 @@ end
         When needing to find players in a particular class or check class population
 
     Parameters:
-        - class (number): The class index to get players for
+        class (number)
+            The class index to get players for
 
     Returns:
         table - Array of player entities in the specified class
@@ -372,7 +379,7 @@ end
         print("Players in class 1: " .. #players)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function getClassMembers(className)
             local classIndex = lia.class.retrieveClass(className)
@@ -440,7 +447,8 @@ end
         When needing to check class population without retrieving player objects
 
     Parameters:
-        - class (number): The class index to count players for
+        class (number)
+            The class index to count players for
 
     Returns:
         number - Number of players in the specified class
@@ -456,7 +464,7 @@ end
         print("Players in class: " .. count)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function checkClassAvailability(classIndex)
             local class = lia.class.get(classIndex)
@@ -516,7 +524,8 @@ end
         When needing to find a class by name or partial identifier
 
     Parameters:
-        - class (string): String to match against class uniqueID or name
+        class (string)
+            String to match against class uniqueID or name
 
     Returns:
         number - The class index if found, nil otherwise
@@ -534,7 +543,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function findClassByName(searchTerm)
             local classIndex = lia.class.retrieveClass(searchTerm)
@@ -586,7 +595,8 @@ end
         When checking if a class requires special permissions or whitelist access
 
     Parameters:
-        - class (number): The class index to check for whitelist
+        class (number)
+            The class index to check for whitelist
 
     Returns:
         boolean - True if the class has whitelist restrictions, false otherwise
@@ -604,7 +614,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function checkClassAccess(client, classIndex)
             local class = lia.class.get(classIndex)
@@ -622,7 +632,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getWhitelistClasses()
             local whitelistClasses = {}
@@ -631,25 +641,25 @@ end
             for i, class in ipairs(lia.class.list) do
                 if lia.class.hasWhitelist(i) then
                     table.insert(whitelistClasses, {
-                    index = i,
-                    class = class,
-                    requiredPermissions = class.requiredPermissions or {}
+                        index = i,
+                        class = class,
+                        requiredPermissions = class.requiredPermissions or {}
                     })
-                    else
-                        table.insert(regularClasses, {
+                else
+                    table.insert(regularClasses, {
                         index = i,
                         class = class
-                        })
-                    end
+                    })
                 end
+            end
 
-                return {
+            return {
                 whitelist = whitelistClasses,
                 regular = regularClasses,
                 totalWhitelist = #whitelistClasses,
                 totalRegular = #regularClasses
-                }
-            end
+            }
+        end
         ```
 ]]
 function lia.class.hasWhitelist(class)
@@ -668,7 +678,8 @@ end
         When displaying available classes to a player or checking joinable options
 
     Parameters:
-        - client (Player): The player to check joinable classes for (optional, defaults to LocalPlayer on client)
+        client (Player)
+            The player to check joinable classes for (optional, defaults to LocalPlayer on client)
 
     Returns:
         table - Array of class tables that the client can join
@@ -684,7 +695,7 @@ end
         print("Player can join " .. #joinableClasses .. " classes")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         local function getJoinableClassNames(client)
             local joinableClasses = lia.class.retrieveJoinable(client)
@@ -698,7 +709,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         local function getDetailedJoinableClasses(client)
             local joinableClasses = lia.class.retrieveJoinable(client)
@@ -709,24 +720,24 @@ end
                 local isFull = class.limit > 0 and playerCount >= class.limit
 
                 table.insert(detailedClasses, {
-                class = class,
-                playerCount = playerCount,
-                limit = class.limit,
-                isFull = isFull,
-                availability = isFull and "Full" or "Available",
-                requiresWhitelist = lia.class.hasWhitelist(class.index)
+                    class = class,
+                    playerCount = playerCount,
+                    limit = class.limit,
+                    isFull = isFull,
+                    availability = isFull and "Full" or "Available",
+                    requiresWhitelist = lia.class.hasWhitelist(class.index)
                 })
             end
 
             -- Sort by availability and name
             table.sort(detailedClasses, function(a, b)
-            if a.isFull ~= b.isFull then
-                return not a.isFull -- Available classes first
-            end
-            return a.class.name < b.class.name
-        end)
+                if a.isFull ~= b.isFull then
+                    return not a.isFull -- Available classes first
+                end
+                return a.class.name < b.class.name
+            end)
 
-        return detailedClasses
+            return detailedClasses
         end
         ```
 ]]

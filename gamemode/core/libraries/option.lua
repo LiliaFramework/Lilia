@@ -17,12 +17,18 @@ lia.option.stored = lia.option.stored or {}
         During module initialization or when adding new user-configurable settings
 
     Parameters:
-        - key (string): Unique identifier for the option
-        - name (string): Display name for the option (can be localized)
-        - desc (string): Description text for the option (can be localized)
-        - default (any): Default value for the option
-        - callback (function, optional): Function called when option value changes (oldValue, newValue)
-        - data (table): Configuration data containing type, category, min/max values, etc.
+        key (string)
+            Unique identifier for the option
+        name (string)
+            Display name for the option (can be localized)
+        desc (string)
+            Description text for the option (can be localized)
+        default (any)
+            Default value for the option
+        callback (function, optional)
+            Function called when option value changes (oldValue, newValue)
+        data (table)
+            Configuration data containing type, category, min/max values, etc.
 
     Returns:
         None
@@ -115,7 +121,8 @@ end
         When rendering dropdown options in the UI or when modules need to access option choices
 
     Parameters:
-        - key (string): The option key to get choices for
+        key (string)
+            The option key to get choices for
 
     Returns:
         table - Array of available option choices (localized strings)
@@ -133,7 +140,7 @@ end
         -- Returns: {"Left", "Right", "Center"}
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Use options in UI creation
         local combo = vgui.Create("liaComboBox")
@@ -143,7 +150,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Dynamic options with validation
         local options = lia.option.getOptions("teamSelection")
@@ -185,8 +192,10 @@ end
         When user changes an option value through UI or when programmatically updating option values
 
     Parameters:
-        - key (string): The option key to set
-        - value (any): The new value to set for the option
+        key (string)
+            The option key to set
+        value (any)
+            The new value to set for the option
 
     Returns:
         None
@@ -245,8 +254,10 @@ end
         When modules need to read option values for configuration or when UI needs to display current values
 
     Parameters:
-        - key (string): The option key to retrieve
-        - default (any, optional): Fallback value if option doesn't exist or has no value
+        key (string)
+            The option key to retrieve
+        default (any, optional)
+            Fallback value if option doesn't exist or has no value
 
     Returns:
         any - The current option value, default value, or provided fallback
@@ -282,11 +293,11 @@ end
         }
 
         -- Validate and apply configuration
-        if type(config.showHUD) == "boolean" then
+        if isbool(config.showHUD) then
             hook.Run("HUDVisibilityChanged", config.showHUD)
         end
 
-        if type(config.volume) == "number" and config.volume >= 0 and config.volume <= 1 then
+        if isnumber(config.volume) and config.volume >= 0 and config.volume <= 1 then
             RunConsoleCommand("volume", tostring(config.volume))
         end
         ```
@@ -429,9 +440,9 @@ end
                             if lia.option.stored[key] then
                                 local option = lia.option.stored[key]
                                 -- Type validation
-                                if option.type == "Boolean" and type(value) ~= "boolean" then
+                                if option.type == "Boolean" and not isbool(value) then
                                     value = tobool(value)
-                                elseif option.type == "Int" and type(value) ~= "number" then
+                                elseif option.type == "Int" and not isnumber(value) then
                                     value = tonumber(value) or option.default
                                 end
                                 option.value = value

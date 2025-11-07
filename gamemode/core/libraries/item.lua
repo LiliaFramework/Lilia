@@ -25,6 +25,7 @@ lia.item.WeaponsBlackList = lia.item.WeaponsBlackList or {
     lia_keys = true
 }
 
+lia.item.pendingOverrides = lia.item.pendingOverrides or {}
 local DefaultFunctions = {
     drop = {
         tip = "dropTip",
@@ -156,7 +157,8 @@ lia.meta.item.height = 1
         When you need to get an item definition for registration, instantiation, or reference
 
     Parameters:
-        identifier (string) - The unique identifier of the item to retrieve
+        identifier (string)
+            The unique identifier of the item to retrieve
 
     Returns:
         table - The item definition table, or nil if not found
@@ -203,7 +205,8 @@ end
         When you need to find an item instance and know where it's located (inventory or world)
 
     Parameters:
-        itemID (number) - The unique ID of the item instance
+        itemID (number)
+            The unique ID of the item instance
 
     Returns:
         table - Contains 'item' (the item instance) and 'location' (string: "inventory", "world", or "unknown"), or nil, error message
@@ -277,7 +280,8 @@ end
         When you only need the item instance and don't care about its location
 
     Parameters:
-        itemID (number) - The unique ID of the item instance
+        itemID (number)
+            The unique ID of the item instance
 
     Returns:
         table - The item instance, or nil, error message
@@ -340,7 +344,8 @@ end
         When you need to access the custom data stored in an item instance
 
     Parameters:
-        itemID (number) - The unique ID of the item instance
+        itemID (number)
+            The unique ID of the item instance
 
     Returns:
         table - The item's data table, or nil, error message
@@ -380,7 +385,7 @@ end
         if data then
             local customData = data.customData or {}
             for key, value in pairs(customData) do
-                if type(value) == "table" then
+                if istable(value) then
                     print("Complex data for", key, ":", util.TableToJSON(value))
                 else
                     print("Simple data for", key, ":", value)
@@ -409,7 +414,12 @@ end
         During item loading process, typically called by lia.item.loadFromDir
 
     Parameters:
-        path (string) - The file path to the item definition, baseID (string, optional) - Base item to inherit from, isBaseItem (boolean, optional) - Whether this is a base item
+        path (string)
+            The file path to the item definition
+        baseID (string, optional)
+            Base item to inherit from
+        isBaseItem (boolean, optional)
+            Whether this is a base item
 
     Returns:
         void
@@ -459,7 +469,8 @@ end
         When you need to validate that an object is an item before performing operations
 
     Parameters:
-        object (any) - The object to check
+        object (any)
+            The object to check
 
     Returns:
         boolean - True if the object is an item, false otherwise
@@ -516,7 +527,8 @@ end
         When you need to access an inventory instance for item operations
 
     Parameters:
-        invID (number) - The unique ID of the inventory
+        invID (number)
+            The unique ID of the inventory
 
     Returns:
         table - The inventory instance, or nil if not found
@@ -565,7 +577,16 @@ end
         During item loading or when creating custom items programmatically
 
     Parameters:
-        uniqueID (string) - Unique identifier for the item, baseID (string, optional) - Base item to inherit from, isBaseItem (boolean, optional) - Whether this is a base item, path (string, optional) - File path for loading, luaGenerated (boolean, optional) - Whether this is generated from Lua code
+        uniqueID (string)
+            Unique identifier for the item
+        baseID (string, optional)
+            Base item to inherit from
+        isBaseItem (boolean, optional)
+            Whether this is a base item
+        path (string, optional)
+            File path for loading
+        luaGenerated (boolean, optional)
+            Whether this is generated from Lua code
 
     Returns:
         table - The registered item definition
@@ -677,13 +698,88 @@ end
 
 --[[
     Purpose:
+        Overrides functions or properties of an existing item definition
+
+    When Called:
+        When you need to modify an existing item's behavior without modifying core files
+
+    Parameters:
+        uniqueID (string)
+            The unique identifier of the item to override
+        overrides (table)
+            Table containing function/property overrides
+
+    Returns:
+        table - The item definition with overrides applied
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        lia.item.overrideItem("base_weapons", {
+            paintOver = function(item, w, h)
+                surface.DrawRect(0, 0, w, h)
+            end
+        })
+        ```
+
+    Medium Complexity:
+        ```lua
+        lia.item.overrideItem("base_weapons", {
+            paintOver = function(item, w, h)
+                if item:getData("equip") then
+                    surface.SetDrawColor(110, 255, 110, 100)
+                    surface.DrawRect(w - 14, h - 14, 8, 8)
+                end
+            end,
+            getDesc = function(item)
+                return item:getData("desc") or item.desc
+            end
+        })
+        ```
+
+    High Complexity:
+        ```lua
+        lia.item.overrideItem("base_weapons", {
+            paintOver = function(item, w, h)
+                -- Custom rendering logic
+            end,
+            getDesc = function(item)
+                -- Custom description logic
+            end,
+            functions = {
+                customAction = {
+                    name = "Custom Action",
+                    onRun = function(item)
+                        -- Custom action logic
+                    end
+                }
+            }
+        })
+        ```
+]]
+function lia.item.overrideItem(uniqueID, overrides)
+    assert(isstring(uniqueID), L("itemUniqueIDString"))
+    assert(istable(overrides), "overrides must be a table")
+    if not lia.item.pendingOverrides[uniqueID] then lia.item.pendingOverrides[uniqueID] = {} end
+    for key, value in pairs(overrides) do
+        lia.item.pendingOverrides[uniqueID][key] = value
+    end
+end
+
+--[[
+    Purpose:
         Loads all item definitions from a directory structure
 
     When Called:
         During gamemode initialization to load all items from the items directory
 
     Parameters:
-        directory (string) - The directory path to load items from
+        directory (string)
+            The directory path to load items from
 
     Returns:
         void
@@ -751,7 +847,10 @@ end
         When you need to create a specific instance of an item with a unique ID
 
     Parameters:
-        uniqueID (string) - The unique identifier of the item definition, id (number) - The unique ID for this item instance
+        uniqueID (string)
+            The unique identifier of the item definition
+        id (number)
+            The unique ID for this item instance
 
     Returns:
         table - The new item instance, or error if item definition not found
@@ -819,7 +918,12 @@ end
         During initialization to register custom inventory types
 
     Parameters:
-        invType (string) - The inventory type identifier, w (number) - Width of the inventory, h (number) - Height of the inventory
+        invType (string)
+            The inventory type identifier
+        w (number)
+            Width of the inventory
+        h (number)
+            Height of the inventory
 
     Returns:
         void
@@ -879,7 +983,12 @@ end
         When you need to create a new inventory instance for a player or entity
 
     Parameters:
-        owner (number) - The character ID of the owner, invType (string) - The inventory type, callback (function, optional) - Function to call when inventory is created
+        owner (number)
+            The character ID of the owner
+        invType (string)
+            The inventory type
+        callback (function, optional)
+            Function to call when inventory is created
 
     Returns:
         void
@@ -940,7 +1049,12 @@ end
         When you need to create a custom inventory with specific dimensions
 
     Parameters:
-        w (number) - Width of the inventory, h (number) - Height of the inventory, id (number) - The ID for the inventory
+        w (number)
+            Width of the inventory
+        h (number)
+            Height of the inventory
+        id (number)
+            The ID for the inventory
 
     Returns:
         table - The created inventory instance
@@ -1063,7 +1177,10 @@ lia.item.holdTypeSizeMapping = {
         Before calling lia.item.generateWeapons to customize weapon properties
 
     Parameters:
-        className (string) - The weapon class name, data (table) - Override data containing name, desc, model, etc.
+        className (string)
+            The weapon class name
+        data (table)
+            Override data containing name, desc, model, etc.
 
     Returns:
         void
@@ -1131,7 +1248,8 @@ end
         Before calling lia.item.generateWeapons to exclude specific weapons
 
     Parameters:
-        className (string) - The weapon class name to blacklist
+        className (string)
+            The weapon class name to blacklist
 
     Returns:
         void
@@ -1322,11 +1440,11 @@ function lia.item.generateAmmo()
     local entityList = {}
     local scriptedEntities = scripted_ents.GetList()
     for className, _ in pairs(scriptedEntities) do
-        if type(className) == "string" and className then entityList[className] = true end
+        if isstring(className) and className then entityList[className] = true end
     end
 
     for className, _ in pairs(entityList) do
-        if not className or type(className) ~= "string" then continue end
+        if not className or not isstring(className) then continue end
         local isArc9Ammo = className:find("^arc9_ammo_")
         local isArccwAmmo = className:find("^arccw_ammo_")
         if not (isArc9Ammo or isArccwAmmo) then continue end
@@ -1347,22 +1465,33 @@ end
 
 if SERVER then
     --[[
-        Purpose:
-            Sets data for an item instance by its ID on the server
+    Purpose:
+        Sets data for an item instance by its ID on the server
 
-        When Called:
-            When you need to modify item data from server-side code
+    When Called:
+        When you need to modify item data from server-side code
 
-        Parameters:
-            itemID (number) - The unique ID of the item instance, key (string) - The data key to set, value (any) - The value to set, receivers (table, optional) - Players to sync to, noSave (boolean, optional) - Whether to skip database save, noCheckEntity (boolean, optional) - Whether to skip entity validation
+    Parameters:
+        itemID (number)
+            The unique ID of the item instance
+        key (string)
+            The data key to set
+        value (any)
+            The value to set
+        receivers (table, optional)
+            Players to sync to
+        noSave (boolean, optional)
+            Whether to skip database save
+        noCheckEntity (boolean, optional)
+            Whether to skip entity validation
 
-        Returns:
-            boolean, string - Success status and error message if failed
+    Returns:
+        boolean, string - Success status and error message if failed
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1407,22 +1536,33 @@ if SERVER then
     end
 
     --[[
-        Purpose:
-            Creates a new item instance in a specific inventory with database persistence
+    Purpose:
+        Creates a new item instance in a specific inventory with database persistence
 
-        When Called:
-            When you need to create a new item instance that will be saved to the database
+    When Called:
+        When you need to create a new item instance that will be saved to the database
 
-        Parameters:
-            index (string/number) - Inventory ID or character ID, uniqueID (string) - Item definition ID, itemData (table, optional) - Initial item data, x (number, optional) - X position in inventory, y (number, optional) - Y position in inventory, callback (function, optional) - Function to call when item is created
+    Parameters:
+        index (string/number)
+            Inventory ID or character ID
+        uniqueID (string)
+            Item definition ID
+        itemData (table, optional)
+            Initial item data
+        x (number, optional)
+            X position in inventory
+        y (number, optional)
+            Y position in inventory
+        callback (function, optional)
+            Function to call when item is created
 
-        Returns:
-            Promise - Resolves with the created item instance
+    Returns:
+        Promise - Resolves with the created item instance
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1507,22 +1647,23 @@ if SERVER then
     end
 
     --[[
-        Purpose:
-            Deletes an item instance by its ID from both memory and database
+    Purpose:
+        Deletes an item instance by its ID from both memory and database
 
-        When Called:
-            When you need to permanently remove an item from the game
+    When Called:
+        When you need to permanently remove an item from the game
 
-        Parameters:
-            id (number) - The unique ID of the item instance to delete
+    Parameters:
+        id (number)
+            The unique ID of the item instance to delete
 
-        Returns:
-            void
+    Returns:
+        void
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1565,22 +1706,23 @@ if SERVER then
     end
 
     --[[
-        Purpose:
-            Loads item instances from the database by their IDs
+    Purpose:
+        Loads item instances from the database by their IDs
 
-        When Called:
-            During server startup or when specific items need to be restored from database
+    When Called:
+        During server startup or when specific items need to be restored from database
 
-        Parameters:
-            itemIndex (number/table) - Single item ID or table of item IDs to load
+    Parameters:
+        itemIndex (number/table)
+            Single item ID or table of item IDs to load
 
-        Returns:
-            void
+    Returns:
+        void
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1647,22 +1789,31 @@ if SERVER then
     end
 
     --[[
-        Purpose:
-            Spawns an item entity in the world at a specific position
+    Purpose:
+        Spawns an item entity in the world at a specific position
 
-        When Called:
-            When you need to create an item that exists as a world entity
+    When Called:
+        When you need to create an item that exists as a world entity
 
-        Parameters:
-            uniqueID (string) - The item definition ID, position (Vector) - World position to spawn at, callback (function, optional) - Function to call when item is spawned, angles (Angle, optional) - Rotation angles for the entity, data (table, optional) - Initial item data
+    Parameters:
+        uniqueID (string)
+            The item definition ID
+        position (Vector)
+            World position to spawn at
+        callback (function, optional)
+            Function to call when item is spawned
+        angles (Angle, optional)
+            Rotation angles for the entity
+        data (table, optional)
+            Initial item data
 
-        Returns:
-            Promise - Resolves with the spawned item instance
+    Returns:
+        Promise - Resolves with the spawned item instance
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1729,22 +1880,29 @@ if SERVER then
     end
 
     --[[
-        Purpose:
-            Restores an inventory from the database with specified dimensions
+    Purpose:
+        Restores an inventory from the database with specified dimensions
 
-        When Called:
-            During server startup or when restoring inventories from database
+    When Called:
+        During server startup or when restoring inventories from database
 
-        Parameters:
-            invID (number) - The inventory ID to restore, w (number) - Width of the inventory, h (number) - Height of the inventory, callback (function, optional) - Function to call when inventory is restored
+    Parameters:
+        invID (number)
+            The inventory ID to restore
+        w (number)
+            Width of the inventory
+        h (number)
+            Height of the inventory
+        callback (function, optional)
+            Function to call when inventory is restored
 
-        Returns:
-            void
+    Returns:
+        void
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1808,4 +1966,42 @@ hook.Add("InitializedModules", "liaItems", function()
             item.CanBeDestroyed = true
         end
     end
+
+    for uniqueID, overrides in pairs(lia.item.pendingOverrides) do
+        local item = lia.item.get(uniqueID)
+        if item then
+            for key, value in pairs(overrides) do
+                if isfunction(value) then
+                    item[key] = value
+                elseif istable(value) then
+                    if key == "functions" then
+                        item.functions = item.functions or {}
+                        for funcName, funcData in pairs(value) do
+                            item.functions[funcName] = funcData
+                        end
+                    elseif key == "hooks" then
+                        item.hooks = item.hooks or {}
+                        for hookName, hookFunc in pairs(value) do
+                            item.hooks[hookName] = hookFunc
+                        end
+                    elseif key == "postHooks" then
+                        item.postHooks = item.postHooks or {}
+                        for hookName, hookFunc in pairs(value) do
+                            item.postHooks[hookName] = hookFunc
+                        end
+                    else
+                        item[key] = value
+                    end
+                else
+                    item[key] = value
+                end
+            end
+
+            hook.Run("OnItemOverridden", item, overrides)
+        else
+            lia.error("[Lilia] Cannot override item '" .. tostring(uniqueID) .. "': item not found\n")
+        end
+    end
+
+    lia.item.pendingOverrides = {}
 end)

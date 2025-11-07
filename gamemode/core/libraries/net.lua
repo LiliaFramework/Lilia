@@ -20,8 +20,10 @@ lia.net.registry = lia.net.registry or {}
         During initialization or when setting up network message handlers
 
     Parameters:
-        - name (string): The name identifier for the network message
-        - callback (function): Function to call when this message is received
+        name (string)
+            The name identifier for the network message
+        callback (function)
+            Function to call when this message is received
 
     Returns:
         boolean - true if registration successful, false if invalid arguments
@@ -84,9 +86,12 @@ end
         When you need to send data from server to client(s) or client to server
 
     Parameters:
-        - name (string): The registered message name to send
-        - target (Player/table/nil): Target player(s) - nil broadcasts to all, table sends to multiple players
-        - ... (variadic): Additional arguments to send with the message
+        name (string)
+            The registered message name to send
+        target (Player/table/nil)
+            Target player(s) - nil broadcasts to all, table sends to multiple players
+        ... (variadic)
+            Additional arguments to send with the message
 
     Returns:
         boolean - true if message sent successfully, false if invalid name or target
@@ -115,7 +120,7 @@ end
         ```lua
         -- High: Send message to multiple players with complex data
         local admins = {}
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 table.insert(admins, ply)
             end
@@ -168,11 +173,13 @@ end
         During initialization to set up handlers for receiving large data transfers
 
     Parameters:
-        - netStr (string): The network string identifier for the message
-        - callback (function): Function to call when all chunks are received and data is reconstructed
+        netStr (string)
+            The network string identifier for the message
+        callback (function)
+            Function to call when all chunks are received and data is reconstructed
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -353,13 +360,17 @@ if SERVER then
             When you need to send large amounts of data that exceed normal network limits
 
         Parameters:
-            - targets (Player/table/nil): Target player(s) - nil sends to all players
-            - netStr (string): The network string identifier for the message
-            - tbl (table): The table data to send
-            - chunkSize (number, optional): Size of each chunk in bytes (default: 2048, 512 during reload)
+            targets (Player/table/nil)
+                Target player(s) - nil sends to all players
+            netStr (string)
+                The network string identifier for the message
+            tbl (table)
+                The table data to send
+            chunkSize (number, optional)
+                Size of each chunk in bytes (default: 2048, 512 during reload)
 
         Returns:
-            None
+            nil
 
         Realm:
             Server
@@ -379,7 +390,7 @@ if SERVER then
         ```lua
         -- Medium: Send to specific players with custom chunk size
         local playerData = {}
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             playerData[ply:SteamID()] = {
                 name  = ply:Name(),
                 health = ply:Health(),
@@ -388,7 +399,7 @@ if SERVER then
         end
 
         local admins = {}
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 table.insert(admins, ply)
             end
@@ -403,7 +414,7 @@ if SERVER then
         local function sendInventoryData(targets)
             local inventoryData = {}
 
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 local char = ply:GetCharacter()
                 if char then
                     local inv = char:GetInventory()

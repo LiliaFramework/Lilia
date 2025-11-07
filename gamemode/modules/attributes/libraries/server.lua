@@ -86,7 +86,7 @@ if SERVER and not timer.Exists("liaGlobalStamina") then
     timer.Create("liaGlobalStamina", 0.25, 0, function()
         for client, _ in pairs(staminaPlayers) do
             if IsValid(client) then
-                MODULE:calcStaminaChange(client)
+                MODULE:CalcStaminaChange(client)
             else
                 staminaPlayers[client] = nil
             end

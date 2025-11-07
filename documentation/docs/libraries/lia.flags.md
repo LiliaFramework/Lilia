@@ -10,122 +10,118 @@ The flags library provides a comprehensive permission system for managing charac
 
 ---
 
-### add
+### lia.flag.add
 
-**Purpose**
-
+#### 📋 Purpose
 Adds a new flag to the flag system with optional description and callback function
 
-**When Called**
-
+#### ⏰ When Called
 During module initialization or when registering new permission flags
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `flag` (*string*): Single character flag identifier (e.g., "C", "p", "t")
-* `desc` (*string, optional*): Localized description key for the flag
-* `callback` (*function, optional*): Function to execute when flag is granted/removed
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `flag` | **string** | Single character flag identifier (e.g., "C", "p", "t") |
+| `desc` | **string, optional** | Localized description key for the flag |
+| `callback` | **function, optional** | Function to execute when flag is granted/removed |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Add a basic flag with description
-lia.flag.add("A", "flagAdmin")
+    -- Simple: Add a basic flag with description
+    lia.flag.add("A", "flagAdmin")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Add flag with callback for weapon management
-lia.flag.add("w", "flagWeapon", function(client, isGiven)
-if isGiven then
-    client:Give("weapon_pistol")
-    else
-        client:StripWeapon("weapon_pistol")
-    end
-end)
+    -- Medium: Add flag with callback for weapon management
+    lia.flag.add("w", "flagWeapon", function(client, isGiven)
+    if isGiven then
+        client:Give("weapon_pistol")
+        else
+            client:StripWeapon("weapon_pistol")
+        end
+    end)
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Add flag with complex callback and validation
-lia.flag.add("M", "flagModerator", function(client, isGiven)
-if isGiven then
-    client:SetNWBool("isModerator", true)
-    client:ChatPrint("Moderator privileges granted!")
-    -- Additional setup logic here
-    else
-        client:SetNWBool("isModerator", false)
-        client:ChatPrint("Moderator privileges revoked!")
-        -- Cleanup logic here
-    end
-end)
+    -- High: Add flag with complex callback and validation
+    lia.flag.add("M", "flagModerator", function(client, isGiven)
+    if isGiven then
+        client:SetNWBool("isModerator", true)
+        client:ChatPrint("Moderator privileges granted!")
+        -- Additional setup logic here
+        else
+            client:SetNWBool("isModerator", false)
+            client:ChatPrint("Moderator privileges revoked!")
+            -- Cleanup logic here
+        end
+    end)
 
 ```
 
 ---
 
-### onSpawn
+### lia.flag.onSpawn
 
-**Purpose**
-
+#### 📋 Purpose
 Processes and executes callbacks for all flags assigned to a character when they spawn
 
-**When Called**
-
+#### ⏰ When Called
 Automatically called when a character spawns on the server
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `client` (*Player*): The player whose character is spawning
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The player whose character is spawning |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Called automatically when player spawns
--- No direct usage needed - handled by framework
+    -- Simple: Called automatically when player spawns
+    -- No direct usage needed - handled by framework
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Manual flag processing for specific cases
-local client = Player(1)
-if client and client:IsValid() then
-    lia.flag.onSpawn(client)
-end
+    -- Medium: Manual flag processing for specific cases
+    local client = Player(1)
+    if client and client:IsValid() then
+        lia.flag.onSpawn(client)
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Custom spawn handling with flag validation
-hook.Add("PlayerSpawn", "CustomFlagHandler", function(client)
-if client:getChar() then
-    -- Custom pre-spawn logic
-    lia.flag.onSpawn(client)
-    -- Custom post-spawn logic
-end
-end)
+    -- High: Custom spawn handling with flag validation
+    hook.Add("PlayerSpawn", "CustomFlagHandler", function(client)
+    if client:getChar() then
+        -- Custom pre-spawn logic
+        lia.flag.onSpawn(client)
+        -- Custom post-spawn logic
+    end
+    end)
 
 ```
 

@@ -10,183 +10,176 @@ The languages library provides comprehensive internationalization (i18n) functio
 
 ---
 
-### loadFromDir
+### lia.lang.loadFromDir
 
-**Purpose**
-
+#### 📋 Purpose
 Loads language files from a specified directory and processes them into the language storage system
 
-**When Called**
-
+#### ⏰ When Called
 During gamemode initialization or when manually loading language files
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `directory` (*string*): The directory path containing language files
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `directory` | **string** | The directory path containing language files |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load languages from default directory
-lia.lang.loadFromDir("lilia/gamemode/languages")
+    -- Simple: Load languages from default directory
+    lia.lang.loadFromDir("lilia/gamemode/languages")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load languages from custom module directory
-local moduleDir = "lilia/gamemode/modules/mymodule/languages"
-if file.Exists(moduleDir, "LUA") then
-    lia.lang.loadFromDir(moduleDir)
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Load languages from multiple directories with validation
-local languageDirs = {
-"lilia/gamemode/languages",
-"lilia/gamemode/modules/custom/languages",
-"addons/mycustomaddon/languages"
-}
-for _, dir in ipairs(languageDirs) do
-    if file.Exists(dir, "LUA") then
-        lia.lang.loadFromDir(dir)
+    -- Medium: Load languages from custom module directory
+    local moduleDir = "lilia/gamemode/modules/mymodule/languages"
+    if file.Exists(moduleDir, "LUA") then
+        lia.lang.loadFromDir(moduleDir)
     end
-end
 
 ```
 
----
-
-### addTable
-
-**Purpose**
-
-Adds a custom language table to the language storage system
-
-**When Called**
-
-When manually adding language strings or when modules need to register their own translations
-
-**Parameters**
-
-* `name` (*string*): The language name/key, tbl (table) - Table containing key-value pairs of translations
-
-**Returns**
-
-* None
-
-**Realm**
-
-Shared
-
-**Example Usage**
-
-**Low Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- Simple: Add basic language strings
-lia.lang.addTable("english", {
-hello = "Hello",
-goodbye = "Goodbye"
-})
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Add module-specific language strings
-local moduleLang = {
-moduleTitle = "My Module",
-moduleDescription = "This is a custom module",
-moduleError = "An error occurred: %s"
-}
-lia.lang.addTable("english", moduleLang)
-
-```
-
-**High Complexity:**
-```lua
--- High: Add multiple language tables with validation
-local languages = {
-english = { title = "Title", desc = "Description" },
-spanish = { title = "Título", desc = "Descripción" },
-french = { title = "Titre", desc = "Description" }
-}
-for lang, strings in pairs(languages) do
-    if type(strings) == "table" then
-        lia.lang.addTable(lang, strings)
-    end
-end
-
-```
-
----
-
-### getLanguages
-
-**Purpose**
-
-Retrieves a sorted list of all available language names
-
-**When Called**
-
-When building language selection menus or when checking available languages
-
-**Returns**
-
-* table - Sorted array of language names with proper capitalization
-
-**Realm**
-
-Shared
-
-**Example Usage**
-
-**Low Complexity:**
-```lua
--- Simple: Get list of available languages
-local languages = lia.lang.getLanguages()
-print("Available languages:", table.concat(languages, ", "))
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Create language selection menu
-local languages = lia.lang.getLanguages()
-local menu = vgui.Create("DFrame")
-local combo = vgui.Create("DComboBox", menu)
-for _, lang in ipairs(languages) do
-    combo:AddChoice(lang)
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Validate language selection with fallback
-local function setLanguage(langName)
-    local languages = lia.lang.getLanguages()
-    local found = false
-    for _, lang in ipairs(languages) do
-        if lang:lower() == langName:lower() then
-            found = true
-            break
+    -- High: Load languages from multiple directories with validation
+    local languageDirs = {
+        "lilia/gamemode/languages",
+        "lilia/gamemode/modules/custom/languages",
+        "addons/mycustomaddon/languages"
+    }
+    for _, dir in ipairs(languageDirs) do
+        if file.Exists(dir, "LUA") then
+            lia.lang.loadFromDir(dir)
         end
     end
-    if found then
-        lia.config.set("Language", langName:lower())
+
+```
+
+---
+
+### lia.lang.addTable
+
+#### 📋 Purpose
+Adds a custom language table to the language storage system
+
+#### ⏰ When Called
+When manually adding language strings or when modules need to register their own translations
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | **string** | The language name/key |
+| `tbl` | **table** | Table containing key-value pairs of translations |
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Add basic language strings
+    lia.lang.addTable("english", {
+        hello = "Hello",
+        goodbye = "Goodbye"
+    })
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Add module-specific language strings
+    local moduleLang = {
+        moduleTitle = "My Module",
+        moduleDescription = "This is a custom module",
+        moduleError = "An error occurred: %s"
+    }
+    lia.lang.addTable("english", moduleLang)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Add multiple language tables with validation
+    local languages = {
+        english = { title = "Title", desc = "Description" },
+        spanish = { title = "Título", desc = "Descripción" },
+        french = { title = "Titre", desc = "Description" }
+    }
+    for lang, strings in pairs(languages) do
+        if istable(strings) then
+            lia.lang.addTable(lang, strings)
+        end
+    end
+
+```
+
+---
+
+### lia.lang.getLanguages
+
+#### 📋 Purpose
+Retrieves a sorted list of all available language names
+
+#### ⏰ When Called
+When building language selection menus or when checking available languages
+
+#### ↩️ Returns
+* table - Sorted array of language names with proper capitalization
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get list of available languages
+    local languages = lia.lang.getLanguages()
+    print("Available languages:", table.concat(languages, ", "))
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Create language selection menu
+    local languages = lia.lang.getLanguages()
+    local menu = vgui.Create("DFrame")
+    local combo = vgui.Create("DComboBox", menu)
+    for _, lang in ipairs(languages) do
+        combo:AddChoice(lang)
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Validate language selection with fallback
+    local function setLanguage(langName)
+        local languages = lia.lang.getLanguages()
+        local found = false
+        for _, lang in ipairs(languages) do
+            if lang:lower() == langName:lower() then
+                found = true
+                break
+            end
+        end
+        if found then
+            lia.config.set("Language", langName:lower())
         else
             lia.notice.add("Invalid language selected, using English", NOTIFY_ERROR)
             lia.config.set("Language", "english")
@@ -197,57 +190,55 @@ local function setLanguage(langName)
 
 ---
 
-### getLocalizedString
+### lia.lang.getLocalizedString
 
-**Purpose**
-
+#### 📋 Purpose
 Retrieves a localized string with parameter substitution and formatting
 
-**When Called**
-
+#### ⏰ When Called
 When displaying text to users or when any localized string is needed
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `key` (*string*): The language key to look up, ... (variadic) - Parameters for string formatting
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The language key to look up |
 
-**Returns**
-
+#### ↩️ Returns
 * string - The localized and formatted string, or the key if not found
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get basic localized string
-local message = lia.lang.getLocalizedString("hello")
-print(message) -- Outputs: "Hello" (in current language)
+    -- Simple: Get basic localized string
+    local message = lia.lang.getLocalizedString("hello")
+    print(message) -- Outputs: "Hello" (in current language)
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Get localized string with parameters
-local playerName = "John"
-local welcomeMsg = lia.lang.getLocalizedString("welcomePlayer", playerName)
-print(welcomeMsg) -- Outputs: "Welcome, John!" (if template is "Welcome, %s!")
+    -- Medium: Get localized string with parameters
+    local playerName = "John"
+    local welcomeMsg = lia.lang.getLocalizedString("welcomePlayer", playerName)
+    print(welcomeMsg) -- Outputs: "Welcome, John!" (if template is "Welcome, %s!")
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Complex localized string with multiple parameters and error handling
-local function displayItemInfo(itemName, quantity, price)
-    local lang = lia.config and lia.config.get("Language", "english") or "english"
-    local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
-    local template = langTable and langTable["itemInfo"] or "itemInfo"
-    if template then
-        local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
-        lia.notice.add(message, NOTIFY_GENERIC)
+    -- High: Complex localized string with multiple parameters and error handling
+    local function displayItemInfo(itemName, quantity, price)
+        local lang = lia.config and lia.config.get("Language", "english") or "english"
+        local langTable = lia.lang.stored and lia.lang.stored[lang:lower()]
+        local template = langTable and langTable["itemInfo"] or "itemInfo"
+        if template then
+            local message = lia.lang.getLocalizedString("itemInfo", itemName, "No description available")
+            lia.notice.add(message, NOTIFY_GENERIC)
         else
             lia.notice.add("Item: " .. itemName .. " x" .. quantity .. " - $" .. price, NOTIFY_GENERIC)
         end

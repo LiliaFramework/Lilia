@@ -17,7 +17,8 @@ lia.attribs.list = lia.attribs.list or {}
         During gamemode initialization or when loading attribute modules
 
     Parameters:
-        directory (string) - The directory path to search for attribute files
+        directory (string)
+            The directory path to search for attribute files
 
     Returns:
         None (modifies lia.attribs.list)
@@ -76,17 +77,18 @@ if SERVER then
             When a client spawns or when their character is created
 
         Parameters:
-            client (Player) - The client whose character attributes need to be set up
+            client (Player)
+                The client whose character attributes need to be set up
 
         Returns:
-            None
+            nil
 
         Realm:
             Server
 
         Example Usage:
 
-    Low Complexity:
+        Low Complexity:
             ```lua
             -- Simple: Setup attributes for a client
             lia.attribs.setup(client)

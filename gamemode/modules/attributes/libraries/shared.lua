@@ -1,4 +1,4 @@
-﻿function MODULE:calcStaminaChange(client)
+﻿function MODULE:CalcStaminaChange(client)
     local char = client:getChar()
     if not char then return 1 end
     local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())

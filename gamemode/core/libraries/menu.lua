@@ -57,9 +57,12 @@ end
         When you need to display a context menu with options for player interaction
 
     Parameters:
-        - opts (table): Table of menu options where keys are display text and values are callback functions
-        - pos (Vector|Entity, optional): World position or entity to attach menu to. If entity, menu attaches to entity's local position
-        - onRemove (function, optional): Callback function called when menu is removed
+        opts (table)
+            Table of menu options where keys are display text and values are callback functions
+        pos (Vector|Entity, optional)
+            World position or entity to attach menu to. If entity, menu attaches to entity's local position
+        onRemove (function, optional)
+            Callback function called when menu is removed
 
     Returns:
         (number) Index of the created menu in the menu list
@@ -78,7 +81,7 @@ end
         })
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Create menu attached to an entity
         local ent = Entity(1)
@@ -89,7 +92,7 @@ end
         }, ent)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Create menu with custom position and cleanup
         local menuData = {
@@ -175,7 +178,7 @@ end
         hook.Add("HUDPaint", "MenuDraw", lia.menu.drawAll)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Custom rendering with additional checks
         hook.Add("HUDPaint", "CustomMenuDraw", function()
@@ -184,7 +187,7 @@ end
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Conditional rendering with performance optimization
         local lastDrawTime = 0
@@ -274,7 +277,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Handle menu interaction with validation
         hook.Add("PlayerButtonDown", "MenuInteraction", function(ply, button)
@@ -288,7 +291,7 @@ end
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced menu interaction with cooldown and logging
         local lastMenuTime = 0
@@ -341,8 +344,10 @@ end
         When a menu item is clicked or activated by player input
 
     Parameters:
-        - id (number): Index of the menu to remove from the menu list
-        - cb (function, optional): Callback function to execute when button is pressed
+        id (number)
+            Index of the menu to remove from the menu list
+        cb (function, optional)
+            Callback function to execute when button is pressed
 
     Returns:
         (boolean) True if callback was executed, false otherwise
@@ -361,7 +366,7 @@ end
         end)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Handle menu interaction with validation
         hook.Add("PlayerButtonDown", "MenuButtonPress", function(ply, button)
@@ -377,7 +382,7 @@ end
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Advanced menu handling with error checking and logging
         local function handleMenuPress(menuIndex, callback)
@@ -386,7 +391,7 @@ end
                 return false
             end
 
-            if not callback or type(callback) ~= "function" then
+            if not callback or not isfunction(callback) then
                 print("Invalid callback function")
                 return false
             end

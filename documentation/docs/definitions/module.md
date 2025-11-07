@@ -12,15 +12,14 @@ The module system provides comprehensive functionality for defining modules with
 
 ### name
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the display name of the module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set the display name for the module
-MODULE.name = "Inventory System"
+    -- Set the display name for the module
+    MODULE.name = "Inventory System"
 
 ```
 
@@ -28,15 +27,14 @@ MODULE.name = "Inventory System"
 
 ### author
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the author of the module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set the module author
-MODULE.author = "Samael"
+    -- Set the module author
+    MODULE.author = "Samael"
 
 ```
 
@@ -44,15 +42,14 @@ MODULE.author = "Samael"
 
 ### discord
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the Discord contact for the module author
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set the Discord contact for support
-MODULE.discord = "@liliaplayer"
+    -- Set the Discord contact for support
+    MODULE.discord = "@liliaplayer"
 
 ```
 
@@ -60,15 +57,14 @@ MODULE.discord = "@liliaplayer"
 
 ### desc
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the description of the module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set a detailed description of what the module does
-MODULE.desc = "A comprehensive inventory management system"
+    -- Set a detailed description of what the module does
+    MODULE.desc = "A comprehensive inventory management system"
 
 ```
 
@@ -76,15 +72,14 @@ MODULE.desc = "A comprehensive inventory management system"
 
 ### version
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the version number of the module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set the module version number
-MODULE.version = 1.0
+    -- Set the module version number
+    MODULE.version = 1.0
 
 ```
 
@@ -92,15 +87,14 @@ MODULE.version = 1.0
 
 ### versionID
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the unique version identifier for the module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set a unique identifier for version tracking
-MODULE.versionID = "private_inventory"
+    -- Set a unique identifier for version tracking
+    MODULE.versionID = "private_inventory"
 
 ```
 
@@ -108,20 +102,18 @@ MODULE.versionID = "private_inventory"
 
 ### uniqueID
 
-**Purpose**
-
+#### 📋 Purpose
 Unique identifier for the module (INTERNAL - set automatically when loaded)
 
-**When Called**
-
+#### ⏰ When Called
 Set automatically during module loading
 Note: This property is internal and should not be modified directly
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- This is set automatically when the module is loaded from its folder name
--- Module in folder "inventory" will have uniqueID = "inventory"
+    -- This is set automatically when the module is loaded from its folder name
+    -- Module in folder "inventory" will have uniqueID = "inventory"
 
 ```
 
@@ -129,17 +121,16 @@ Note: This property is internal and should not be modified directly
 
 ### Privileges
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the privileges required for this module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Define required privileges for module access
-MODULE.Privileges = {
-    { Name = "canManageInventory", Min = 1 }
-}
+    -- Define required privileges for module access
+    MODULE.Privileges = {
+        { Name = "canManageInventory", Min = 1 }
+    }
 
 ```
 
@@ -147,17 +138,16 @@ MODULE.Privileges = {
 
 ### Dependencies
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the file dependencies for this module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Define required files for this module
-MODULE.Dependencies = {
-    { File = "gridinv.lua", Type = "shared" }
-}
+    -- Define required files for this module
+    MODULE.Dependencies = {
+        { File = "gridinv.lua", Type = "shared" }
+    }
 
 ```
 
@@ -165,15 +155,14 @@ MODULE.Dependencies = {
 
 ### NetworkStrings
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the network strings used by this module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Define network strings for client-server communication
-MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
+    -- Define network strings for client-server communication
+    MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
 
 ```
 
@@ -181,16 +170,15 @@ MODULE.NetworkStrings = {"liaInventoryOpen", "liaInventorySync"}
 
 ### WorkshopContent
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the Workshop content IDs required by this module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Set required Workshop content (single ID or table of IDs)
-MODULE.WorkshopContent = "1234567890"
-MODULE.WorkshopContent = {"1234567890", "0987654321"}
+    -- Set required Workshop content (single ID or table of IDs)
+    MODULE.WorkshopContent = "1234567890"
+    MODULE.WorkshopContent = {"1234567890", "0987654321"}
 
 ```
 
@@ -198,17 +186,16 @@ MODULE.WorkshopContent = {"1234567890", "0987654321"}
 
 ### WebSounds
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the web-hosted sound files used by this module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Define web-hosted sound files for the module
-MODULE.WebSounds = {
-    ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
-}
+    -- Define web-hosted sound files for the module
+    MODULE.WebSounds = {
+        ["sounds/beep.wav"] = "https://example.com/sounds/beep.wav"
+    }
 
 ```
 
@@ -216,17 +203,16 @@ MODULE.WebSounds = {
 
 ### WebImages
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the web-hosted image files used by this module
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Define web-hosted image files for the module
-MODULE.WebImages = {
-    ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
-}
+    -- Define web-hosted image files for the module
+    MODULE.WebImages = {
+        ["icons/inventory.png"] = "https://example.com/icons/inventory.png"
+    }
 
 ```
 
@@ -234,15 +220,14 @@ MODULE.WebImages = {
 
 ### enabled
 
-**Purpose**
-
+#### 📋 Purpose
 Sets whether the module is enabled by default
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Enable or disable the module by default
-MODULE.enabled = true
+    -- Enable or disable the module by default
+    MODULE.enabled = true
 
 ```
 
@@ -250,8 +235,7 @@ MODULE.enabled = true
 
 ### folder
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the folder path for the module
 Internal Variable: This is set automatically by the module system
 ]]
@@ -260,8 +244,7 @@ Internal Variable: This is set automatically by the module system
 
 ### path
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the file path for the module
 Internal Variable: This is set automatically by the module system
 ]]
@@ -270,8 +253,7 @@ Internal Variable: This is set automatically by the module system
 
 ### variable
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the variable name for the module
 Internal Variable: This is set automatically by the module system
 ]]
@@ -280,8 +262,7 @@ Internal Variable: This is set automatically by the module system
 
 ### loading
 
-**Purpose**
-
+#### 📋 Purpose
 Sets whether the module is currently loading
 Internal Variable: This is set automatically by the module system
 ]]
@@ -290,29 +271,25 @@ Internal Variable: This is set automatically by the module system
 
 ### OnLoaded
 
-**Purpose**
-
+#### 📋 Purpose
 Called when the module is fully loaded
 
-**When Called**
-
+#### ⏰ When Called
 After all module files have been loaded and initialized
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
--- Called after all module files are loaded
-function MODULE:OnLoaded()
-    print("Module loaded successfully!")
-end
+    -- Called after all module files are loaded
+    function MODULE:OnLoaded()
+        print("Module loaded successfully!")
+    end
 
 ```
 

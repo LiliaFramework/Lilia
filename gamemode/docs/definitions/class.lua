@@ -413,7 +413,8 @@ CLASS.jumpPowerMultiplier = false
         When a player attempts to join this class
 
     Parameters:
-        - client (Player): The player trying to join
+        client (Player)
+            The player trying to join
 
     Returns:
         true to allow, false to deny
@@ -458,7 +459,8 @@ end
         When a player is assigned to this class
 
     Parameters:
-        - client (Player): The player joining the class
+        client (Player)
+            The player joining the class
 
     Realm:
         Server
@@ -481,8 +483,10 @@ end
         When a player switches classes and this becomes the new class
 
     Parameters:
-        - client (Player): The player switching classes
-        - oldClass (table): The previous class data
+        client (Player)
+            The player switching classes
+        oldClass (table)
+            The previous class data
 
     Realm:
         Server
@@ -507,7 +511,8 @@ end
         When a player spawns with this class
 
     Parameters:
-        - client (Player): The player spawning
+        client (Player)
+            The player spawning
 
     Realm:
         Server
@@ -532,7 +537,8 @@ end
         When a player leaves this class
 
     Parameters:
-        - client (Player): The player leaving
+        client (Player)
+            The player leaving
 
     Realm:
         Server

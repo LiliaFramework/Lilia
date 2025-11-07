@@ -60,8 +60,10 @@ lia.db.query = lia.db.query or function(...) lia.db.queryQueue[#lia.db.queryQueu
         During server startup, module initialization, or when reconnecting to database
 
     Parameters:
-        - callback (function, optional): Function to call after successful connection
-        - reconnect (boolean, optional): Force reconnection even if already connected
+        callback (function, optional)
+            Function to call after successful connection
+        reconnect (boolean, optional)
+            Force reconnection even if already connected
 
     Returns:
         None
@@ -131,7 +133,8 @@ end
         During database reset operations, development testing, or administrative cleanup
 
     Parameters:
-        - callback (function, optional): Function to call after all tables are wiped
+        callback (function, optional)
+            Function to call after all tables are wiped
 
     Returns:
         None
@@ -428,6 +431,10 @@ CREATE TABLE IF NOT EXISTS lia_data (
     data text,
     PRIMARY KEY (gamemode, map)
 );
+CREATE TABLE IF NOT EXISTS lia_swepeditor (
+    class TEXT PRIMARY KEY,
+    data TEXT
+);
 ]], done)
     hook.Run("OnLoadTables")
 end
@@ -554,8 +561,10 @@ end
         Internally by database functions when preparing data for SQL queries
 
     Parameters:
-        - value (any): The value to convert to SQL format
-        - noEscape (boolean, optional): Skip escaping for raw SQL values
+        value (any)
+            The value to convert to SQL format
+        noEscape (boolean, optional)
+            Skip escaping for raw SQL values
 
     Returns:
         String representation of the value in SQL format
@@ -595,7 +604,7 @@ end
         local function safeConvert(value, fieldName)
             if value == nil then
                 return "NULL"
-            elseif type(value) == "table" then
+            elseif istable(value) then
                 local success, json = pcall(util.TableToJSON, value)
                 if success then
                     return "'" .. lia.db.escape(json) .. "'"
@@ -640,9 +649,12 @@ end
         When creating new database records for players, characters, items, etc.
 
     Parameters:
-        - value (table): Key-value pairs representing the data to insert
-        - callback (function, optional): Function to call after successful insertion
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
+        value (table)
+            Key-value pairs representing the data to insert
+        callback (function, optional)
+            Function to call after successful insertion
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'characters')
 
     Returns:
         Deferred promise object with results and lastID
@@ -722,10 +734,14 @@ end
         When modifying existing database records for players, characters, items, etc.
 
     Parameters:
-        - value (table): Key-value pairs representing the data to update
-        - callback (function, optional): Function to call after successful update
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
-        - condition (table/string, optional): WHERE clause conditions for the update
+        value (table)
+            Key-value pairs representing the data to update
+        callback (function, optional)
+            Function to call after successful update
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'characters')
+        condition (table/string, optional)
+            WHERE clause conditions for the update
 
     Returns:
         Deferred promise object with results and lastID
@@ -803,10 +819,14 @@ end
         When retrieving data from database tables for players, characters, items, etc.
 
     Parameters:
-        - fields (string/table): Field names to select (string or table of strings)
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
-        - condition (table/string, optional): WHERE clause conditions for the query
-        - limit (number, optional): Maximum number of records to return
+        fields (string/table)
+            Field names to select (string or table of strings)
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'characters')
+        condition (table/string, optional)
+            WHERE clause conditions for the query
+        limit (number, optional)
+            Maximum number of records to return
 
     Returns:
         Deferred promise object with results array
@@ -886,11 +906,16 @@ end
         When retrieving data with complex WHERE clauses and ORDER BY requirements
 
     Parameters:
-        - fields (string/table): Field names to select (string or table of strings)
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
-        - conditions (table/string, optional): WHERE clause conditions with operator support
-        - limit (number, optional): Maximum number of records to return
-        - orderBy (string, optional): ORDER BY clause for sorting results
+        fields (string/table)
+            Field names to select (string or table of strings)
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'characters')
+        conditions (table/string, optional)
+            WHERE clause conditions with operator support
+        limit (number, optional)
+            Maximum number of records to return
+        orderBy (string, optional)
+            ORDER BY clause for sorting results
 
     Returns:
         Deferred promise object with results array
@@ -1003,8 +1028,10 @@ end
         When checking record counts for statistics, validation, or pagination
 
     Parameters:
-        - dbTable (string): Table name without 'lia_' prefix
-        - condition (table/string, optional): WHERE clause conditions for counting
+        dbTable (string)
+            Table name without 'lia_' prefix
+        condition (table/string, optional)
+            WHERE clause conditions for counting
 
     Returns:
         Deferred promise object resolving to the count number
@@ -1090,14 +1117,14 @@ end
         lia.db.loadTables() -- This automatically calls addDatabaseFields()
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Add fields with logging
         lia.db.addDatabaseFields()
         lia.log.add("Database fields updated for character variables")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Add fields with validation and error handling
         local function ensureCharacterFields()
@@ -1147,8 +1174,10 @@ end
         When validating data existence before operations or for conditional logic
 
     Parameters:
-        - dbTable (string): Table name without 'lia_' prefix
-        - condition (table/string, optional): WHERE clause conditions for checking existence
+        dbTable (string)
+            Table name without 'lia_' prefix
+        condition (table/string, optional)
+            WHERE clause conditions for checking existence
 
     Returns:
         Deferred promise object resolving to boolean (true if records exist)
@@ -1217,9 +1246,12 @@ end
         When fetching unique records like player data, character info, or single items
 
     Parameters:
-        - fields (string/table): Field names to select (string or table of strings)
-        - dbTable (string): Table name without 'lia_' prefix
-        - condition (table/string, optional): WHERE clause conditions for the query
+        fields (string/table)
+            Field names to select (string or table of strings)
+        dbTable (string)
+            Table name without 'lia_' prefix
+        condition (table/string, optional)
+            WHERE clause conditions for the query
 
     Returns:
         Deferred promise object resolving to the first matching record or nil
@@ -1302,8 +1334,10 @@ end
         When inserting large amounts of data like inventory items, logs, or batch operations
 
     Parameters:
-        - dbTable (string): Table name without 'lia_' prefix
-        - rows (table): Array of tables containing the data to insert
+        dbTable (string)
+            Table name without 'lia_' prefix
+        rows (table)
+            Array of tables containing the data to insert
 
     Returns:
         Deferred promise object resolving when all records are inserted
@@ -1414,8 +1448,10 @@ end
         When synchronizing data that may already exist, like configuration updates or data imports
 
     Parameters:
-        - dbTable (string): Table name without 'lia_' prefix
-        - rows (table): Array of tables containing the data to upsert
+        dbTable (string)
+            Table name without 'lia_' prefix
+        rows (table)
+            Array of tables containing the data to upsert
 
     Returns:
         Deferred promise object resolving when all records are upserted
@@ -1529,8 +1565,10 @@ end
         When inserting data that may already exist, like unique configurations or duplicate-safe operations
 
     Parameters:
-        - value (table): Key-value pairs representing the data to insert
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
+        value (table)
+            Key-value pairs representing the data to insert
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'characters')
 
     Returns:
         Deferred promise object with results and lastID
@@ -1621,7 +1659,8 @@ end
         When validating table existence before operations or during schema validation
 
     Parameters:
-        - tbl (string): Table name to check for existence
+        tbl (string)
+            Table name to check for existence
 
     Returns:
         Deferred promise object resolving to boolean (true if table exists)
@@ -1703,8 +1742,10 @@ end
         When validating column existence before operations or during schema migrations
 
     Parameters:
-        - tbl (string): Table name to check
-        - field (string): Field/column name to check for existence
+        tbl (string)
+            Table name to check
+        field (string)
+            Field/column name to check for existence
 
     Returns:
         Deferred promise object resolving to boolean (true if field exists)
@@ -1880,7 +1921,8 @@ end
         When performing complex operations that must succeed or fail together
 
     Parameters:
-        - queries (table): Array of SQL query strings to execute in sequence
+        queries (table)
+            Array of SQL query strings to execute in sequence
 
     Returns:
         Deferred promise object resolving when all queries succeed or rejecting on failure
@@ -1984,7 +2026,8 @@ end
         Internally by database functions when building SQL queries with dynamic identifiers
 
     Parameters:
-        - id (string): Identifier to escape (table name, column name, etc.)
+        id (string)
+            Identifier to escape (table name, column name, etc.)
 
     Returns:
         Escaped identifier string wrapped in backticks
@@ -2023,7 +2066,7 @@ end
         local function safeEscapeIdentifiers(identifiers)
             local escaped = {}
             for _, id in ipairs(identifiers) do
-                if type(id) == "string" and id:match("^[a-zA-Z_][a-zA-Z0-9_]*$") then
+                if isstring(id) and id:match("^[a-zA-Z_][a-zA-Z0-9_]*$") then
                     table.insert(escaped, lia.db.escapeIdentifier(id))
                 else
                     lia.log.add("Invalid identifier: " .. tostring(id))
@@ -2046,8 +2089,10 @@ end
         When synchronizing data that may already exist, like configuration updates or data imports
 
     Parameters:
-        - value (table): Key-value pairs representing the data to upsert
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'characters')
+        value (table)
+            Key-value pairs representing the data to upsert
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'characters')
 
     Returns:
         Deferred promise object with results and lastID
@@ -2136,8 +2181,10 @@ end
         When removing data like deleted characters, expired items, or cleanup operations
 
     Parameters:
-        - dbTable (string, optional): Table name without 'lia_' prefix (defaults to 'character')
-        - condition (table/string, optional): WHERE clause conditions for the deletion
+        dbTable (string, optional)
+            Table name without 'lia_' prefix (defaults to 'character')
+        condition (table/string, optional)
+            WHERE clause conditions for the deletion
 
     Returns:
         Deferred promise object with results and lastID
@@ -2219,9 +2266,12 @@ end
         When setting up custom tables for modules or extending the database schema
 
     Parameters:
-        - dbName (string): Table name without 'lia_' prefix
-        - primaryKey (string, optional): Primary key column name
-        - schema (table): Array of column definitions with name, type, not_null, and default properties
+        dbName (string)
+            Table name without 'lia_' prefix
+        primaryKey (string, optional)
+            Primary key column name
+        schema (table)
+            Array of column definitions with name, type, not_null, and default properties
 
     Returns:
         Deferred promise object resolving to true on success
@@ -2337,10 +2387,14 @@ end
         When extending table schemas, adding new fields, or during database migrations
 
     Parameters:
-        - tableName (string): Table name without 'lia_' prefix
-        - columnName (string): Name of the new column to add
-        - columnType (string): SQL data type for the column
-        - defaultValue (any, optional): Default value for the column
+        tableName (string)
+            Table name without 'lia_' prefix
+        columnName (string)
+            Name of the new column to add
+        columnType (string)
+            SQL data type for the column
+        defaultValue (any, optional)
+            Default value for the column
 
     Returns:
         Deferred promise object resolving to true on success, false if column already exists
@@ -2446,7 +2500,8 @@ end
         When cleaning up unused tables, removing modules, or during database maintenance
 
     Parameters:
-        - tableName (string): Table name without 'lia_' prefix
+        tableName (string)
+            Table name without 'lia_' prefix
 
     Returns:
         Deferred promise object resolving to true on success, false if table doesn't exist
@@ -2537,8 +2592,10 @@ end
         When removing unused columns, cleaning up schemas, or during database migrations
 
     Parameters:
-        - tableName (string): Table name without 'lia_' prefix
-        - columnName (string): Name of the column to remove
+        tableName (string)
+            Table name without 'lia_' prefix
+        columnName (string)
+            Name of the column to remove
 
     Returns:
         Deferred promise object resolving to true on success, false if column doesn't exist
@@ -2670,7 +2727,8 @@ end
         When analyzing character table structure, generating reports, or during schema validation
 
     Parameters:
-        - callback (function): Function to call with the column information array
+        callback (function)
+            Function to call with the column information array
 
     Returns:
         None
@@ -2793,7 +2851,8 @@ end
         When backing up data before major operations, creating restore points, or archiving data
 
     Parameters:
-        - tableName (string): Table name without 'lia_' prefix
+        tableName (string)
+            Table name without 'lia_' prefix
 
     Returns:
         Deferred promise object resolving to snapshot information (file, path, records)
@@ -2812,7 +2871,7 @@ end
         end)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Create snapshot with validation
         local function backupTable(tableName)
@@ -2826,7 +2885,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Create snapshot with validation and error handling
         local function createBackupWithValidation(tableName)
@@ -2911,7 +2970,8 @@ end
         When restoring data from backups, recovering from errors, or migrating data
 
     Parameters:
-        - fileName (string): Name of the snapshot file to load
+        fileName (string)
+            Name of the snapshot file to load
 
     Returns:
         Deferred promise object resolving to restore information (table, records, timestamp)
@@ -2929,7 +2989,7 @@ end
         end)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Load snapshot with validation
         local function restoreTable(fileName)
@@ -2943,7 +3003,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Load snapshot with validation and error handling
         local function restoreWithValidation(fileName)

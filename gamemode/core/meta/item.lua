@@ -511,10 +511,14 @@ end
         When executing item functions that need player/entity context
 
     Parameters:
-        method - String name of the method to call
-        client - Player entity to set as context
-        entity - Entity to set as context
-        ... - Additional arguments to pass to the method
+        method (string)
+            String name of the method to call
+        client (Player)
+            Player entity to set as context
+        entity (Entity)
+            Entity to set as context
+        ... (any)
+            Additional arguments to pass to the method
 
     Returns:
         The return values from the called method
@@ -642,8 +646,10 @@ end
         When accessing item-specific data or configuration
 
     Parameters:
-        key - The data key to retrieve
-        default - Optional default value if key doesn't exist
+        key (string)
+            The data key to retrieve
+        default (any)
+            Optional default value if key doesn't exist
 
     Returns:
         The data value or default value if key doesn't exist
@@ -765,8 +771,10 @@ end
         During item configuration to add custom behavior
 
     Parameters:
-        name - String name of the hook (e.g., "use", "drop")
-        func - Function to call when the hook is triggered
+        name (string)
+            String name of the hook (e.g., "use", "drop")
+        func (function)
+            Function to call when the hook is triggered
 
     Returns:
         Nothing
@@ -821,8 +829,10 @@ end
         During item configuration to add cleanup or follow-up behavior
 
     Parameters:
-        name - String name of the hook (e.g., "use", "drop")
-        func - Function to call after the hook is triggered
+        name (string)
+            String name of the hook (e.g., "use", "drop")
+        func (function)
+            Function to call after the hook is triggered
 
     Returns:
         Nothing
@@ -942,7 +952,8 @@ end
         For debugging or logging item state
 
     Parameters:
-        detail - Optional boolean to show detailed information
+        detail (boolean)
+            Optional boolean to show detailed information
 
     Returns:
         Nothing
@@ -1139,47 +1150,48 @@ end
 
 if SERVER then
     --[[
-    Purpose:
-        Removes the item from its current inventory without deleting it
+        Purpose:
+            Removes the item from its current inventory without deleting it
 
-    When Called:
-        When transferring items between inventories or temporarily removing them
+        When Called:
+            When transferring items between inventories or temporarily removing them
 
-    Parameters:
-        preserveItem - Optional boolean to preserve item data in database
+        Parameters:
+            preserveItem (boolean)
+                Optional boolean to preserve item data in database
 
-    Returns:
-        Deferred object that resolves when removal is complete
+        Returns:
+            Deferred object that resolves when removal is complete
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        item:removeFromInventory()
-        ```
+        Low Complexity:
+            ```lua
+            item:removeFromInventory()
+            ```
 
-    Medium Complexity:
-        ```lua
-        item:removeFromInventory(true):next(function()
-            print("Item removed but preserved")
-        end)
-        ```
-
-    High Complexity:
-        ```lua
-        local function transferItem(item, fromInv, toInv)
-            return item:removeFromInventory(true):next(function()
-                return toInv:add(item)
-            end):next(function()
-                lia.log.add(nil, "item_transferred",
-                    item:getID(), fromInv:getID(), toInv:getID())
+        Medium Complexity:
+            ```lua
+            item:removeFromInventory(true):next(function()
+                print("Item removed but preserved")
             end)
-        end
-        transferItem(myItem, playerInv, bankInv)
-        ```
+            ```
+
+        High Complexity:
+            ```lua
+            local function transferItem(item, fromInv, toInv)
+                return item:removeFromInventory(true):next(function()
+                    return toInv:add(item)
+                end):next(function()
+                    lia.log.add(nil, "item_transferred",
+                        item:getID(), fromInv:getID(), toInv:getID())
+                end)
+            end
+            transferItem(myItem, playerInv, bankInv)
+            ```
     ]]
     function ITEM:removeFromInventory(preserveItem)
         local inventory = lia.inventory.instances[self.invID]
@@ -1206,20 +1218,21 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             item:delete()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             item:delete():next(function()
-            print("Item permanently deleted")
+                print("Item permanently deleted")
             end)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function safelyDeleteExpiredItems()
                 local expiredItems = lia.db.select("*", "items", "expiry_date < " .. os.time())
@@ -1244,62 +1257,62 @@ if SERVER then
     end
 
     --[[
-    Purpose:
-        Completely removes the item from the world, inventory, and database
+        Purpose:
+            Completely removes the item from the world, inventory, and database
 
-    When Called:
-        When an item is used up, destroyed, or needs to be completely eliminated
+        When Called:
+            When an item is used up, destroyed, or needs to be completely eliminated
 
-    Parameters:
-        None
+        Parameters:
+            None
 
-    Returns:
-        Deferred object that resolves when removal is complete
+        Returns:
+            Deferred object that resolves when removal is complete
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        item:remove()
-        ```
+        Low Complexity:
+            ```lua
+            item:remove()
+            ```
 
-    Medium Complexity:
-        ```lua
-        item:remove():next(function()
-        player:notify("Item consumed")
-        end)
-        ```
-
-    High Complexity:
-        ```lua
-        local function consumeItemWithEffects(item, player)
-            -- Apply item effects before removal
-            if item.onConsume then
-                item:call("onConsume", player)
-            end
-
-            -- Remove the item
-            return item:remove():next(function()
-                -- Post-consumption effects
-                if item:getData("reusable") then
-                    -- Create a new instance if reusable
-                    local newItem = lia.item.new(item.uniqueID, 1)
-                    player:getInventory():add(newItem)
-                end
-
-                -- Trigger achievements
-                local consumedCount = player:getData("items_consumed", 0) + 1
-                player:setData("items_consumed", consumedCount)
-                if consumedCount >= 100 then
-                    player:unlockAchievement("consumptive")
-                end
+        Medium Complexity:
+            ```lua
+            item:remove():next(function()
+                player:notify("Item consumed")
             end)
-        end
-        consumeItemWithEffects(myItem, player)
-        ```
+            ```
+
+        High Complexity:
+            ```lua
+            local function consumeItemWithEffects(item, player)
+                -- Apply item effects before removal
+                if item.onConsume then
+                    item:call("onConsume", player)
+                end
+
+                -- Remove the item
+                return item:remove():next(function()
+                    -- Post-consumption effects
+                    if item:getData("reusable") then
+                        -- Create a new instance if reusable
+                        local newItem = lia.item.new(item.uniqueID, 1)
+                        player:getInventory():add(newItem)
+                    end
+
+                    -- Trigger achievements
+                    local consumedCount = player:getData("items_consumed", 0) + 1
+                    player:setData("items_consumed", consumedCount)
+                    if consumedCount >= 100 then
+                        player:unlockAchievement("consumptive")
+                    end
+                end)
+            end
+            consumeItemWithEffects(myItem, player)
+            ```
     ]]
     function ITEM:remove()
         local d = deferred.new()
@@ -1312,58 +1325,58 @@ if SERVER then
     end
 
     --[[
-    Purpose:
-        Destroys the item instance and notifies all clients to remove it
+        Purpose:
+            Destroys the item instance and notifies all clients to remove it
 
-    When Called:
-        When an item needs to be removed from the game world immediately
+        When Called:
+            When an item needs to be removed from the game world immediately
 
-    Parameters:
-        None
+        Parameters:
+            None
 
-    Returns:
-        Nothing
+        Returns:
+            Nothing
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        item:destroy()
-        ```
-
-    Medium Complexity:
-        ```lua
-        if item:getData("temporary") then
+        Low Complexity:
+            ```lua
             item:destroy()
-        end
-        ```
+            ```
 
-    High Complexity:
-        ```lua
-        local function destroyItemsInRadius(position, radius)
-            local items = ents.FindInSphere(position, radius)
-            local destroyedCount = 0
+        Medium Complexity:
+            ```lua
+            if item:getData("temporary") then
+                item:destroy()
+            end
+            ```
 
-            for _, ent in ipairs(items) do
-                if ent:GetClass() == "lia_item" and ent.liaItemID then
-                    local item = lia.item.instances[ent.liaItemID]
-                    if item then
-                        -- Log destruction
-                        lia.log.add(nil, "area_destruction", item:getID(), item:getName())
-                        item:destroy()
-                        destroyedCount = destroyedCount + 1
+        High Complexity:
+            ```lua
+            local function destroyItemsInRadius(position, radius)
+                local items = ents.FindInSphere(position, radius)
+                local destroyedCount = 0
+
+                for _, ent in ipairs(items) do
+                    if ent:GetClass() == "lia_item" and ent.liaItemID then
+                        local item = lia.item.instances[ent.liaItemID]
+                        if item then
+                            -- Log destruction
+                            lia.log.add(nil, "area_destruction", item:getID(), item:getName())
+                            item:destroy()
+                            destroyedCount = destroyedCount + 1
+                        end
                     end
                 end
-            end
 
-            lia.chat.send(nil, "Destroyed " .. destroyedCount .. " items in area")
-            return destroyedCount
-        end
-        destroyItemsInRadius(explosionPos, 500)
-        ```
+                lia.chat.send(nil, "Destroyed " .. destroyedCount .. " items in area")
+                return destroyedCount
+            end
+            destroyItemsInRadius(explosionPos, 500)
+            ```
     ]]
     function ITEM:destroy()
         net.Start("liaItemDelete")
@@ -1374,119 +1387,119 @@ if SERVER then
     end
 
     --[[
-    Purpose:
-        Called when the item is disposed/destroyed
+        Purpose:
+            Called when the item is disposed/destroyed
 
-    When Called:
-        Automatically when destroy() is called
+        When Called:
+            Automatically when destroy() is called
 
-    Parameters:
-        None
+        Parameters:
+            None
 
-    Returns:
-        Nothing
+        Returns:
+            Nothing
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        function ITEM:onDisposed()
-            -- Cleanup code here
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        function ITEM:onDisposed()
-            -- Clean up associated entities
-            if self.associatedEntity then
-                SafeRemoveEntity(self.associatedEntity)
+        Low Complexity:
+            ```lua
+            function ITEM:onDisposed()
+                -- Cleanup code here
             end
-        end
-        ```
+            ```
 
-    High Complexity:
-        ```lua
-        function ITEM:onDisposed()
-            -- Comprehensive cleanup
-            if self.temporaryEntities then
-                for _, ent in ipairs(self.temporaryEntities) do
-                    SafeRemoveEntity(ent)
+        Medium Complexity:
+            ```lua
+            function ITEM:onDisposed()
+                -- Clean up associated entities
+                if self.associatedEntity then
+                    SafeRemoveEntity(self.associatedEntity)
                 end
-                self.temporaryEntities = nil
             end
+            ```
 
-            -- Remove from global item lists
-            if self.category then
-                local categoryItems = lia.data.get("category_items_" .. self.category, {})
-                categoryItems[self:getID()] = nil
-                lia.data.set("category_items_" .. self.category, categoryItems)
+        High Complexity:
+            ```lua
+            function ITEM:onDisposed()
+                -- Comprehensive cleanup
+                if self.temporaryEntities then
+                    for _, ent in ipairs(self.temporaryEntities) do
+                        SafeRemoveEntity(ent)
+                    end
+                    self.temporaryEntities = nil
+                end
+
+                -- Remove from global item lists
+                if self.category then
+                    local categoryItems = lia.data.get("category_items_" .. self.category, {})
+                    categoryItems[self:getID()] = nil
+                    lia.data.set("category_items_" .. self.category, categoryItems)
+                end
+
+                -- Log disposal
+                lia.log.add(nil, "item_disposed", self:getID(), self.uniqueID)
+
+                -- Trigger disposal hooks
+                hook.Run("OnItemDisposed", self)
             end
-
-            -- Log disposal
-            lia.log.add(nil, "item_disposed", self:getID(), self.uniqueID)
-
-            -- Trigger disposal hooks
-            hook.Run("OnItemDisposed", self)
-        end
-        ```
+            ```
     ]]
     function ITEM:onDisposed()
     end
 
     --[[
-    Purpose:
-        Gets the world entity associated with this item instance
+        Purpose:
+            Gets the world entity associated with this item instance
 
-    When Called:
-        When you need to manipulate the physical item entity in the world
+        When Called:
+            When you need to manipulate the physical item entity in the world
 
-    Parameters:
-        None
+        Parameters:
+            None
 
-    Returns:
-        Entity object if found, nil otherwise
+        Returns:
+            Entity object if found, nil otherwise
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        local entity = item:getEntity()
-        ```
+        Low Complexity:
+            ```lua
+            local entity = item:getEntity()
+            ```
 
-    Medium Complexity:
-        ```lua
-        local entity = item:getEntity()
-        if entity then
-            entity:SetPos(newPosition)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        local function teleportItemToPlayer(item, player)
+        Medium Complexity:
+            ```lua
             local entity = item:getEntity()
             if entity then
-                -- Remove from inventory first
-                item:removeFromInventory(true):next(function()
-                    -- Teleport entity to player
-                    entity:SetPos(player:GetPos() + Vector(0, 0, 50))
-                    entity:SetVelocity(Vector(0, 0, 0))
-                    -- Log the action
-                    lia.log.add(player, "item_teleported", item:getID(), item:getName())
-                end)
-            else
-                player:notifyError("Item has no physical entity")
+                entity:SetPos(newPosition)
             end
-        end
-        teleportItemToPlayer(myItem, player)
-        ```
+            ```
+
+        High Complexity:
+            ```lua
+            local function teleportItemToPlayer(item, player)
+                local entity = item:getEntity()
+                if entity then
+                    -- Remove from inventory first
+                    item:removeFromInventory(true):next(function()
+                        -- Teleport entity to player
+                        entity:SetPos(player:GetPos() + Vector(0, 0, 50))
+                        entity:SetVelocity(Vector(0, 0, 0))
+                        -- Log the action
+                        lia.log.add(player, "item_teleported", item:getID(), item:getName())
+                    end)
+                else
+                    player:notifyError("Item has no physical entity")
+                end
+            end
+            teleportItemToPlayer(myItem, player)
+            ```
     ]]
     function ITEM:getEntity()
         local id = self:getID()
@@ -1496,57 +1509,59 @@ if SERVER then
     end
 
     --[[
-    Purpose:
-        Creates a physical entity for the item in the world
+        Purpose:
+            Creates a physical entity for the item in the world
 
-    When Called:
-        When dropping items or spawning them in the world
+        When Called:
+            When dropping items or spawning them in the world
 
-    Parameters:
-        position - Position to spawn the item (Vector, table, or Player entity)
-        angles - Optional angles for the spawned item
+        Parameters:
+            position (Vector|table|Player)
+                Position to spawn the item (Vector, table, or Player entity)
+            angles (Angle)
+                Optional angles for the spawned item
 
-    Returns:
-        The created entity
+        Returns:
+            The created entity
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        item:spawn(Vector(0, 0, 0))
-        ```
+        Low Complexity:
+            ```lua
+            item:spawn(Vector(0, 0, 0))
+            ```
 
-    Medium Complexity:
-        ```lua
-        item:spawn(player:GetPos() + Vector(0, 0, 50), Angle(0, 0, 0))
-        ```
+        Medium Complexity:
+            ```lua
+            item:spawn(player:GetPos() + Vector(0, 0, 50), Angle(0, 0, 0))
+            ```
 
-    High Complexity:
-        ```lua
-        local function dropItemWithPhysics(item, player, force)
-            -- Remove from inventory
-            item:removeFromInventory(true):next(function()
-            -- Spawn with physics
-            local entity = item:spawn(player:GetPos() + Vector(0, 50, 0))
+        High Complexity:
+            ```lua
+            local function dropItemWithPhysics(item, player, force)
+                -- Remove from inventory
+                item:removeFromInventory(true):next(function()
+                    -- Spawn with physics
+                    local entity = item:spawn(player:GetPos() + Vector(0, 50, 0))
 
-            if entity and IsValid(entity:GetPhysicsObject()) then
-                -- Apply throw force
-                local phys = entity:GetPhysicsObject()
-                phys:ApplyForceCenter(player:GetAimVector() * force)
+                    if entity and IsValid(entity:GetPhysicsObject()) then
+                        -- Apply throw force
+                        local phys = entity:GetPhysicsObject()
+                        phys:ApplyForceCenter(player:GetAimVector() * force)
 
-                -- Add some spin
-                phys:AddAngleVelocity(VectorRand() * 100)
+                        -- Add some spin
+                        phys:AddAngleVelocity(VectorRand() * 100)
 
-                -- Log the drop
-                lia.log.add(player, "item_dropped", item:getID(), item:getName())
+                        -- Log the drop
+                        lia.log.add(player, "item_dropped", item:getID(), item:getName())
+                    end
+                end)
             end
-        end)
-        end
-        dropItemWithPhysics(myItem, player, 1000)
-        ```
+            dropItemWithPhysics(myItem, player, 1000)
+            ```
     ]]
     function ITEM:spawn(position, angles)
         local instance = lia.item.instances[self.id]
@@ -1606,64 +1621,66 @@ if SERVER then
     end
 
     --[[
-    Purpose:
-        Transfers the item from its current inventory to a new inventory
+        Purpose:
+            Transfers the item from its current inventory to a new inventory
 
-    When Called:
-        When moving items between inventories (trading, storing, etc.)
+        When Called:
+            When moving items between inventories (trading, storing, etc.)
 
-    Parameters:
-        newInventory - The inventory to transfer the item to
-        bBypass - Optional boolean to bypass access control checks
+        Parameters:
+            newInventory (Inventory)
+                The inventory to transfer the item to
+            bBypass (boolean)
+                Optional boolean to bypass access control checks
 
-    Returns:
-        Boolean indicating if transfer was successful
+        Returns:
+            Boolean indicating if transfer was successful
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        item:transfer(otherInventory)
-        ```
+        Low Complexity:
+            ```lua
+            item:transfer(otherInventory)
+            ```
 
-    Medium Complexity:
-        ```lua
-        if item:transfer(bankInventory) then
-            player:notify("Item stored in bank")
-        end
-        ```
+        Medium Complexity:
+            ```lua
+            if item:transfer(bankInventory) then
+                player:notify("Item stored in bank")
+            end
+            ```
 
-    High Complexity:
-        ```lua
-        local function tradeItems(player1, player2, itemID, payment)
-            local item = player1:getInventory():getItems()[itemID]
-            if not item then return false, "Item not found" end
+        High Complexity:
+            ```lua
+            local function tradeItems(player1, player2, itemID, payment)
+                local item = player1:getInventory():getItems()[itemID]
+                if not item then return false, "Item not found" end
 
                 -- Check if player2 has enough money
                 if player2:getMoney() < payment then
                     return false, "Insufficient funds"
                 end
 
-            -- Transfer item
-            if item:transfer(player2:getInventory()) then
-                -- Handle payment
-                player2:addMoney(-payment)
-                player1:addMoney(payment)
+                -- Transfer item
+                if item:transfer(player2:getInventory()) then
+                    -- Handle payment
+                    player2:addMoney(-payment)
+                    player1:addMoney(payment)
 
-                -- Log the trade
-                lia.log.add(nil, "item_trade",
-                    item:getID(), player1:GetName(), player2:GetName(), payment)
+                    -- Log the trade
+                    lia.log.add(nil, "item_trade",
+                        item:getID(), player1:GetName(), player2:GetName(), payment)
 
-                return true
-            else
-                return false, "Transfer failed"
+                    return true
+                else
+                    return false, "Transfer failed"
+                end
             end
-        end
-        local success, reason = tradeItems(seller, buyer, itemID, 500)
-        ```
+            local success, reason = tradeItems(seller, buyer, itemID, 500)
+            ```
     ]]
     function ITEM:transfer(newInventory, bBypass)
         if not bBypass and not newInventory:canAccess("transfer") then return false end
@@ -1673,64 +1690,64 @@ if SERVER then
     end
 
     --[[
-    Purpose:
-        Called when the item instance is first created
+        Purpose:
+            Called when the item instance is first created
 
-    When Called:
-        Automatically when item instances are created
+        When Called:
+            Automatically when item instances are created
 
-    Parameters:
-        None
+        Parameters:
+            None
 
-    Returns:
-        Nothing
+        Returns:
+            Nothing
 
-    Realm:
-        Server
+        Realm:
+            Server
 
-    Example Usage:
+        Example Usage:
 
-    Low Complexity:
-        ```lua
-        function ITEM:onInstanced()
-            print("New item instance created")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        function ITEM:onInstanced()
-            -- Set default data for new instances
-            if not self:getData("created") then
-                self:setData("created", os.time())
+        Low Complexity:
+            ```lua
+            function ITEM:onInstanced()
+                print("New item instance created")
             end
-        end
-        ```
+            ```
 
-    High Complexity:
-        ```lua
-        function ITEM:onInstanced()
-            -- Initialize complex item state
-            self:setData("durability", self:getData("maxDurability", 100))
-            self:setData("serialNumber", "SN-" .. self:getID())
-
-            -- Register with item tracking system
-            local trackingData = lia.data.get("item_tracking", {})
-            trackingData[self:getID()] = {
-                uniqueID = self.uniqueID,
-                created  = os.time(),
-                owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
-            }
-            lia.data.set("item_tracking", trackingData)
-
-            -- Apply category-specific initialization
-            if self.category == "weapons" then
-                self:setData("ammo", self:getData("maxAmmo", 30))
-            elseif self.category == "armor" then
-                self:setData("protection", self:getData("maxProtection", 50))
+        Medium Complexity:
+            ```lua
+            function ITEM:onInstanced()
+                -- Set default data for new instances
+                if not self:getData("created") then
+                    self:setData("created", os.time())
+                end
             end
+            ```
+
+        High Complexity:
+            ```lua
+            function ITEM:onInstanced()
+                -- Initialize complex item state
+                self:setData("durability", self:getData("maxDurability", 100))
+                self:setData("serialNumber", "SN-" .. self:getID())
+
+                -- Register with item tracking system
+                local trackingData = lia.data.get("item_tracking", {})
+                trackingData[self:getID()] = {
+                    uniqueID = self.uniqueID,
+                    created  = os.time(),
+                    owner    = self:getOwner() and self:getOwner():GetName() or "unknown"
+                }
+                lia.data.set("item_tracking", trackingData)
+
+                -- Apply category-specific initialization
+                if self.category == "weapons" then
+                    self:setData("ammo", self:getData("maxAmmo", 30))
+                elseif self.category == "armor" then
+                    self:setData("protection", self:getData("maxProtection", 50))
+                end
             end
-        ```
+            ```
     ]]
     function ITEM:onInstanced()
     end
@@ -1743,7 +1760,8 @@ if SERVER then
             Automatically when item data is sent to clients
 
         Parameters:
-            recipient - Optional specific client to sync to
+            recipient (Player)
+                Optional specific client to sync to
 
         Returns:
             Nothing
@@ -1751,7 +1769,8 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             function ITEM:onSync(recipient)
@@ -1759,7 +1778,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function ITEM:onSync(recipient)
                 -- Send additional data to specific client
@@ -1772,7 +1791,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function ITEM:onSync(recipient)
                 -- Advanced sync with filtering
@@ -1781,21 +1800,21 @@ if SERVER then
                 -- Only send sensitive data to item owner
                 if recipient == self:getOwner() then
                     dataToSend = self:getAllData()
-                    else
-                        -- Filter out sensitive data for other players
-                        for key, value in pairs(self:getAllData()) do
-                            if not self.sensitiveDataKeys[key] then
-                                dataToSend[key] = value
-                            end
+                else
+                    -- Filter out sensitive data for other players
+                    for key, value in pairs(self:getAllData()) do
+                        if not self.sensitiveDataKeys[key] then
+                            dataToSend[key] = value
                         end
                     end
-
-                    -- Send filtered data
-                    net.Start("FilteredItemData")
-                    net.WriteType(self:getID())
-                    net.WriteTable(dataToSend)
-                    net.Send(recipient)
                 end
+
+                -- Send filtered data
+                net.Start("FilteredItemData")
+                net.WriteType(self:getID())
+                net.WriteTable(dataToSend)
+                net.Send(recipient)
+            end
             ```
     ]]
     function ITEM:onSync()
@@ -1817,7 +1836,8 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             function ITEM:onRemoved()
@@ -1825,7 +1845,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function ITEM:onRemoved()
                 -- Clean up references
@@ -1833,7 +1853,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function ITEM:onRemoved()
                 -- Comprehensive cleanup
@@ -1872,7 +1892,8 @@ if SERVER then
             Automatically when item data is restored from storage
 
         Parameters:
-            inventory - The inventory this item belongs to
+            inventory (Inventory)
+                The inventory this item belongs to
 
         Returns:
             Nothing
@@ -1880,7 +1901,8 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             function ITEM:onRestored(inventory)
@@ -1888,7 +1910,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function ITEM:onRestored(inventory)
                 -- Validate restored data
@@ -1898,7 +1920,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function ITEM:onRestored(inventory)
                 -- Comprehensive restoration logic
@@ -1945,7 +1967,8 @@ if SERVER then
             When item data needs to be sent to clients
 
         Parameters:
-            recipient - Optional specific client to sync to, broadcasts if nil
+            recipient (Player)
+                Optional specific client to sync to, broadcasts if nil
 
         Returns:
             Nothing
@@ -1953,18 +1976,19 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             item:sync()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             item:sync(specificPlayer)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function syncItemToGroup(item, players)
                 -- Send different data based on player permissions
@@ -2007,11 +2031,16 @@ if SERVER then
             When item data needs to be updated and persisted
 
         Parameters:
-            key - The data key to set
-            value - The value to set
-            receivers - Optional specific clients to notify
-            noSave - Optional boolean to skip database saving
-            noCheckEntity - Optional boolean to skip entity data sync
+            key (string)
+                The data key to set
+            value (any)
+                The value to set
+            receivers (table)
+                Optional specific clients to notify
+            noSave (boolean)
+                Optional boolean to skip database saving
+            noCheckEntity (boolean)
+                Optional boolean to skip entity data sync
 
         Returns:
             Nothing
@@ -2019,19 +2048,20 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             item:setData("durability", 50)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             item:setData("owner", player:GetName())
             item:setData("acquired", os.time())
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function applyDamageToItem(item, damage)
                 local currentDurability = item:getData("durability", 100)
@@ -2104,9 +2134,12 @@ if SERVER then
             When increasing item stack size
 
         Parameters:
-            quantity - Amount to add to the quantity
-            receivers - Optional specific clients to notify
-            noCheckEntity - Optional boolean to skip entity sync
+            quantity (number)
+                Amount to add to the quantity
+            receivers (table)
+                Optional specific clients to notify
+            noCheckEntity (boolean)
+                Optional boolean to skip entity sync
 
         Returns:
             Nothing
@@ -2114,18 +2147,19 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             item:addQuantity(5)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             item:addQuantity(1, player) -- Notify specific player
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function combineStacks(item1, item2)
                 if item1.uniqueID == item2.uniqueID then
@@ -2162,9 +2196,12 @@ if SERVER then
             When changing item stack size or count
 
         Parameters:
-            quantity - New quantity value
-            receivers - Optional specific clients to notify
-            noCheckEntity - Optional boolean to skip entity sync
+            quantity (number)
+                New quantity value
+            receivers (table)
+                Optional specific clients to notify
+            noCheckEntity (boolean)
+                Optional boolean to skip entity sync
 
         Returns:
             Nothing
@@ -2172,18 +2209,19 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             item:setQuantity(10)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             item:setQuantity(0) -- Remove all items from stack
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function splitStack(item, splitAmount)
                 local currentQuantity = item:getQuantity()
@@ -2243,10 +2281,14 @@ if SERVER then
             When a player attempts to interact with an item
 
         Parameters:
-            action - The interaction action (e.g., "use", "drop")
-            client - The player performing the action
-            entity - Optional entity involved in the interaction
-            data - Optional additional data for the interaction
+            action (string)
+                The interaction action (e.g., "use", "drop")
+            client (Player)
+                The player performing the action
+            entity (Entity)
+                Optional entity involved in the interaction
+            data (any)
+                Optional additional data for the interaction
 
         Returns:
             Boolean indicating if the interaction was successful
@@ -2254,18 +2296,19 @@ if SERVER then
         Realm:
             Server
 
-    Example Usage:
+        Example Usage:
+
         Low Complexity:
             ```lua
             item:interact("use", player)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             item:interact("drop", player, nil, {position = dropPos})
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function handleComplexInteraction(item, action, player, entity, data)
                 -- Pre-interaction validation

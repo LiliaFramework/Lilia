@@ -47,7 +47,7 @@ function PANEL:makeFactionComboBox()
 
     combo.OnSelect = function(_, _, data)
         local factionID = nil
-        if data and type(data) == "string" then
+        if data and isstring(data) then
             for id, fac in pairs(lia.faction.teams) do
                 if L(fac.name) == data then
                     factionID = id

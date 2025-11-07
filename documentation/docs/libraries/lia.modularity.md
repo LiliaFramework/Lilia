@@ -10,51 +10,49 @@ The modularity library provides comprehensive functionality for managing modules
 
 ---
 
-### load
+### lia.module.load
 
-**Purpose**
-
+#### 📋 Purpose
 Loads a module from the specified path with the given unique identifier
 
-**When Called**
-
+#### ⏰ When Called
 Called during module initialization, when loading modules from directories, or when manually loading specific modules
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `uniqueID` (*string*): Unique identifier for the module
-* `path` (*string*): File system path to the module directory
-* `variable` (*string, optional*): Global variable name to use (defaults to "MODULE")
-* `skipSubmodules` (*boolean, optional*): Whether to skip loading submodules
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Unique identifier for the module |
+| `path` | **string** | File system path to the module directory |
+| `variable` | **string, optional** | Global variable name to use (defaults to "MODULE") |
+| `skipSubmodules` | **boolean, optional** | Whether to skip loading submodules |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load a basic module
-lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+    -- Simple: Load a basic module
+    lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load module with custom variable name
-lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+    -- Medium: Load module with custom variable name
+    lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Load module with submodule skipping
-lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+    -- High: Load module with submodule skipping
+    lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
 
 ```
 
@@ -62,49 +60,47 @@ lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODU
 
 ### lia.MODULE:IsValid
 
-**Purpose**
-
+#### 📋 Purpose
 Loads a module from the specified path with the given unique identifier
 
-**When Called**
-
+#### ⏰ When Called
 Called during module initialization, when loading modules from directories, or when manually loading specific modules
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `uniqueID` (*string*): Unique identifier for the module
-* `path` (*string*): File system path to the module directory
-* `variable` (*string, optional*): Global variable name to use (defaults to "MODULE")
-* `skipSubmodules` (*boolean, optional*): Whether to skip loading submodules
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Unique identifier for the module |
+| `path` | **string** | File system path to the module directory |
+| `variable` | **string, optional** | Global variable name to use (defaults to "MODULE") |
+| `skipSubmodules` | **boolean, optional** | Whether to skip loading submodules |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load a basic module
-lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+    -- Simple: Load a basic module
+    lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load module with custom variable name
-lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+    -- Medium: Load module with custom variable name
+    lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Load module with submodule skipping
-lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+    -- High: Load module with submodule skipping
+    lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
 
 ```
 
@@ -112,49 +108,47 @@ lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODU
 
 ### lia.MODULE:setData
 
-**Purpose**
-
+#### 📋 Purpose
 Loads a module from the specified path with the given unique identifier
 
-**When Called**
-
+#### ⏰ When Called
 Called during module initialization, when loading modules from directories, or when manually loading specific modules
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `uniqueID` (*string*): Unique identifier for the module
-* `path` (*string*): File system path to the module directory
-* `variable` (*string, optional*): Global variable name to use (defaults to "MODULE")
-* `skipSubmodules` (*boolean, optional*): Whether to skip loading submodules
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Unique identifier for the module |
+| `path` | **string** | File system path to the module directory |
+| `variable` | **string, optional** | Global variable name to use (defaults to "MODULE") |
+| `skipSubmodules` | **boolean, optional** | Whether to skip loading submodules |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load a basic module
-lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+    -- Simple: Load a basic module
+    lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load module with custom variable name
-lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+    -- Medium: Load module with custom variable name
+    lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Load module with submodule skipping
-lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+    -- High: Load module with submodule skipping
+    lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
 
 ```
 
@@ -162,205 +156,195 @@ lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODU
 
 ### lia.MODULE:getData
 
-**Purpose**
-
+#### 📋 Purpose
 Loads a module from the specified path with the given unique identifier
 
-**When Called**
-
+#### ⏰ When Called
 Called during module initialization, when loading modules from directories, or when manually loading specific modules
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `uniqueID` (*string*): Unique identifier for the module
-* `path` (*string*): File system path to the module directory
-* `variable` (*string, optional*): Global variable name to use (defaults to "MODULE")
-* `skipSubmodules` (*boolean, optional*): Whether to skip loading submodules
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `uniqueID` | **string** | Unique identifier for the module |
+| `path` | **string** | File system path to the module directory |
+| `variable` | **string, optional** | Global variable name to use (defaults to "MODULE") |
+| `skipSubmodules` | **boolean, optional** | Whether to skip loading submodules |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load a basic module
-lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
+    -- Simple: Load a basic module
+    lia.module.load("mymodule", "gamemodes/lilia/modules/mymodule")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load module with custom variable name
-lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
+    -- Medium: Load module with custom variable name
+    lia.module.load("custommodule", "gamemodes/lilia/modules/custom", "CUSTOM_MODULE")
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Load module with submodule skipping
-lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
+    -- High: Load module with submodule skipping
+    lia.module.load("singlemode", "gamemodes/lilia/modules/singlemode", "SINGLE_MODULE", true)
 
 ```
 
 ---
 
-### initialize
+### lia.module.initialize
 
-**Purpose**
-
+#### 📋 Purpose
 Initializes the entire module system, loading schemas, preload modules, and regular modules in proper order
 
-**When Called**
-
+#### ⏰ When Called
 Called during gamemode initialization to set up the complete module ecosystem
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Initialize modules (typically called automatically)
-lia.module.initialize()
+    -- Simple: Initialize modules (typically called automatically)
+    lia.module.initialize()
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Initialize with custom schema path
-local schemaPath = "gamemodes/mygamemode"
-lia.module.load("schema", schemaPath .. "/schema", false, "schema")
-lia.module.initialize()
+    -- Medium: Initialize with custom schema path
+    local schemaPath = "gamemodes/mygamemode"
+    lia.module.load("schema", schemaPath .. "/schema", false, "schema")
+    lia.module.initialize()
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Initialize with custom module loading order
-lia.module.initialize()
--- Custom post-initialization logic
-for id, mod in pairs(lia.module.list) do
-    if mod.PostInitialize then
-        mod:PostInitialize()
+    -- High: Initialize with custom module loading order
+    lia.module.initialize()
+    -- Custom post-initialization logic
+    for id, mod in pairs(lia.module.list) do
+        if mod.PostInitialize then
+            mod:PostInitialize()
+        end
     end
-end
 
 ```
 
 ---
 
-### loadFromDir
+### lia.module.loadFromDir
 
-**Purpose**
-
+#### 📋 Purpose
 Loads all modules from a specified directory
 
-**When Called**
-
+#### ⏰ When Called
 Called during module initialization to load multiple modules from a directory, or when manually loading modules from a specific folder
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `directory` (*string*): Path to the directory containing modules
-* `group` (*string*): Type of module group ("module", "schema", etc.)
-* `skip` (*table, optional*): Table of module IDs to skip loading
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `directory` | **string** | Path to the directory containing modules |
+| `group` | **string** | Type of module group ("module", "schema", etc.) |
+| `skip` | **table, optional** | Table of module IDs to skip loading |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load all modules from a directory
-lia.module.loadFromDir("gamemodes/lilia/modules", "module")
+    -- Simple: Load all modules from a directory
+    lia.module.loadFromDir("gamemodes/lilia/modules", "module")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load modules with specific group type
-lia.module.loadFromDir("gamemodes/mygamemode/modules", "module")
+    -- Medium: Load modules with specific group type
+    lia.module.loadFromDir("gamemodes/mygamemode/modules", "module")
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Load modules with skip list
-local skipModules = {["disabledmodule"] = true, ["testmodule"] = true}
-lia.module.loadFromDir("gamemodes/lilia/modules", "module", skipModules)
+    -- High: Load modules with skip list
+    local skipModules = {["disabledmodule"] = true, ["testmodule"] = true}
+    lia.module.loadFromDir("gamemodes/lilia/modules", "module", skipModules)
 
 ```
 
 ---
 
-### get
+### lia.module.get
 
-**Purpose**
-
+#### 📋 Purpose
 Retrieves a loaded module by its unique identifier
 
-**When Called**
-
+#### ⏰ When Called
 Called when you need to access a specific module's data or functions, or to check if a module is loaded
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `identifier` (*string*): Unique identifier of the module to retrieve
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `identifier` | **string** | Unique identifier of the module to retrieve |
 
-**Returns**
-
+#### ↩️ Returns
 * Module table or nil if not found
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get a module
-local myModule = lia.module.get("mymodule")
+    -- Simple: Get a module
+    local myModule = lia.module.get("mymodule")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Check if module exists and use it
-local module = lia.module.get("inventory")
-if module and module.GetItem then
-    local item = module:GetItem("weapon_pistol")
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Iterate through all modules and perform operations
-for id, module in pairs(lia.module.list) do
-    local mod = lia.module.get(id)
-    if mod and mod.OnPlayerSpawn then
-        mod:OnPlayerSpawn(player)
+    -- Medium: Check if module exists and use it
+    local module = lia.module.get("inventory")
+    if module and module.GetItem then
+        local item = module:GetItem("weapon_pistol")
     end
-end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Iterate through all modules and perform operations
+    for id, module in pairs(lia.module.list) do
+        local mod = lia.module.get(id)
+        if mod and mod.OnPlayerSpawn then
+            mod:OnPlayerSpawn(player)
+        end
+    end
 
 ```
 

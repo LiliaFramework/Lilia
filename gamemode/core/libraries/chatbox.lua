@@ -17,7 +17,8 @@ lia.chat.classes = lia.chat.classes or {}
         Automatically called when displaying chat messages if timestamps are enabled
 
     Parameters:
-        ooc (boolean) - Whether this is an OOC message (affects spacing format)
+        ooc (boolean)
+            Whether this is an OOC message (affects spacing format)
 
     Returns:
         string - Formatted timestamp string or empty string if timestamps disabled
@@ -68,11 +69,13 @@ end
         During module initialization to register custom chat types (IC, OOC, whisper, etc.)
 
     Parameters:
-        chatType (string) - Unique identifier for the chat type
-        data (table) - Configuration table containing chat type properties
+        chatType (string)
+            Unique identifier for the chat type
+        data (table)
+            Configuration table containing chat type properties
 
     Returns:
-        void
+        nil
 
     Realm:
         Shared
@@ -205,9 +208,12 @@ end
         When a player sends a chat message, either from client input or server processing
 
     Parameters:
-        client (Player) - The player who sent the message
-        message (string) - The raw message text to parse
-        noSend (boolean, optional) - If true, prevents sending the message to other players
+        client (Player)
+            The player who sent the message
+        message (string)
+            The raw message text to parse
+        noSend (boolean, optional)
+            If true, prevents sending the message to other players
 
     Returns:
         chatType (string), message (string), anonymous (boolean)
@@ -306,14 +312,19 @@ end
         Server-side when distributing parsed chat messages to players
 
     Parameters:
-        speaker (Player) - The player who sent the message
-        chatType (string) - The type of chat message (ic, ooc, whisper, etc.)
-        text (string) - The message content to send
-        anonymous (boolean, optional) - Whether to hide the speaker's identity
-        receivers (table, optional) - Specific list of players to send to
+        speaker (Player)
+            The player who sent the message
+        chatType (string)
+            The type of chat message (ic, ooc, whisper, etc.)
+        text (string)
+            The message content to send
+        anonymous (boolean, optional)
+            Whether to hide the speaker's identity
+        receivers (table, optional)
+            Specific list of players to send to
 
     Returns:
-        void
+        nil
 
     Realm:
         Server
@@ -341,7 +352,7 @@ end
             local receivers = {}
 
             -- Collect admin players
-            for _, player in pairs(player.GetAll()) do
+            for _, player in player.Iterator() do
                 if player:IsAdmin() and (not options.excludeSelf or player ~= speaker) then
                     table.insert(receivers, player)
                 end

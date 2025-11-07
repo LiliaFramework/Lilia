@@ -24,13 +24,20 @@ local validClasses = {
         When an entity needs to play a sound effect or audio
 
     Parameters:
-        - soundName (string): The sound file path, URL, or websound identifier
-        - soundLevel (number, optional): Sound level/distance (default: 100)
-        - pitchPercent (number, optional): Pitch adjustment percentage
-        - volume (number, optional): Volume level (default: 100)
-        - channel (number, optional): Sound channel
-        - flags (number, optional): Sound flags
-        - dsp (number, optional): DSP effect
+        soundName (string)
+            The sound file path, URL, or websound identifier
+        soundLevel (number, optional)
+            Sound level/distance (default: 100)
+        pitchPercent (number, optional)
+            Pitch adjustment percentage
+        volume (number, optional)
+            Volume level (default: 100)
+        channel (number, optional)
+            Sound channel
+        flags (number, optional)
+            Sound flags
+        dsp (number, optional)
+            DSP effect
 
     Returns:
         boolean - True if sound was played successfully
@@ -315,8 +322,10 @@ end
         When you need to verify if a player can access a door
 
     Parameters:
-        - client (Player): The player to check access for
-        - access (number, optional): The required access level (default: DOOR_GUEST)
+        client (Player)
+            The player to check access for
+        access (number, optional)
+            The required access level (default: DOOR_GUEST)
 
     Returns:
         boolean - True if the client has access, false otherwise
@@ -374,7 +383,8 @@ end
         When a player becomes the owner of a vehicle
 
     Parameters:
-        - client (Player): The player to set as the owner
+        client (Player)
+            The player to set as the owner
 
     Returns:
         None
@@ -689,7 +699,8 @@ end
         When an entity needs to drop an item at a specific location
 
     Parameters:
-        - offset (number, optional): Distance to trace forward from entity (default: 64)
+        offset (number, optional)
+            Distance to trace forward from entity (default: 64)
 
     Returns:
         Vector, Angle - The drop position and angle
@@ -805,8 +816,10 @@ end
         When you need to check proximity between entities
 
     Parameters:
-        - radius (number, optional): Search radius in units (default: 96)
-        - otherEntity (Entity, optional): Specific entity to check for proximity
+        radius (number, optional)
+            Search radius in units (default: 96)
+        otherEntity (Entity, optional)
+            Specific entity to check for proximity
 
     Returns:
         boolean - True if near another entity, false otherwise
@@ -931,8 +944,10 @@ if SERVER then
         When you need to synchronize entity data with clients
 
     Parameters:
-        - key (string): The network variable key to send
-        - receiver (Player, optional): Specific player to send to, or nil for all players
+        key (string)
+            The network variable key to send
+        receiver (Player, optional)
+            Specific player to send to, or nil for all players
 
     Returns:
         None
@@ -984,7 +999,8 @@ if SERVER then
         When you need to remove all network data from an entity
 
     Parameters:
-        - receiver (Player, optional): Specific player to notify, or nil for all players
+        receiver (Player, optional)
+            Specific player to notify, or nil for all players
 
     Returns:
         None
@@ -1090,7 +1106,8 @@ if SERVER then
         When you need to lock or unlock an entity
 
     Parameters:
-        - state (boolean): True to lock, false to unlock
+        state (boolean)
+            True to lock, false to unlock
 
     Returns:
         None
@@ -1134,7 +1151,8 @@ if SERVER then
         When you need to make a vehicle non-ownable or ownable
 
     Parameters:
-        - state (boolean): True to make non-ownable, false to make ownable
+        state (boolean)
+            True to make non-ownable, false to make ownable
 
     Returns:
         None
@@ -1233,9 +1251,12 @@ if SERVER then
         When you need to store and sync data on an entity
 
     Parameters:
-        - key (string): The network variable key
-        - value (any): The value to store
-        - receiver (Player, optional): Specific player to send to, or nil for all players
+        key (string)
+            The network variable key
+        value (any)
+            The value to store
+        receiver (Player, optional)
+            Specific player to send to, or nil for all players
 
     Returns:
         None
@@ -1284,8 +1305,10 @@ if SERVER then
         When you need to retrieve synchronized data from an entity on the server
 
     Parameters:
-        - key (string): The network variable key to retrieve
-        - default (any, optional): Default value if the key doesn't exist
+        key (string)
+            The network variable key to retrieve
+        default (any, optional)
+            Default value if the key doesn't exist
 
     Returns:
         any - The network variable value or default
@@ -1382,8 +1405,10 @@ else
         When you need to retrieve synchronized data from an entity on the client
 
     Parameters:
-        - key (string): The network variable key to retrieve
-        - default (any, optional): Default value if the key doesn't exist
+        key (string)
+            The network variable key to retrieve
+        default (any, optional)
+            Default value if the key doesn't exist
 
     Returns:
         any - The network variable value or default
@@ -1431,15 +1456,24 @@ else
         When you need to play a sound that moves with an entity
 
     Parameters:
-        - soundPath (string): Path to the sound file or URL
-        - volume (number, optional): Volume level (0-1, default: 1)
-        - shouldFollow (boolean, optional): Whether sound should follow entity (default: true)
-        - maxDistance (number, optional): Maximum audible distance (default: 1200)
-        - startDelay (number, optional): Delay before playing (default: 0)
-        - minDistance (number, optional): Minimum distance for full volume (default: 0)
-        - pitch (number, optional): Pitch multiplier (default: 1)
-        - _ (any, optional): Unused parameter
-        - dsp (number, optional): DSP effect ID (default: 0)
+        soundPath (string)
+            Path to the sound file or URL
+        volume (number, optional)
+            Volume level (0-1, default: 1)
+        shouldFollow (boolean, optional)
+            Whether sound should follow entity (default: true)
+        maxDistance (number, optional)
+            Maximum audible distance (default: 1200)
+        startDelay (number, optional)
+            Delay before playing (default: 0)
+        minDistance (number, optional)
+            Minimum distance for full volume (default: 0)
+        pitch (number, optional)
+            Pitch multiplier (default: 1)
+        _ (any, optional)
+            Unused parameter
+        dsp (number, optional)
+            DSP effect ID (default: 0)
 
     Returns:
         None

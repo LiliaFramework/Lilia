@@ -1,4 +1,21 @@
-﻿net.Receive("liaStringRequest", function(_, client)
+﻿net.Receive("liaPlayerRespawn", function(_, client)
+    if not IsValid(client) or client:Alive() then return end
+
+    local char = client:getChar()
+    if not char then return end
+
+    local baseTime = lia.config.get("SpawnTime", 5)
+    baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
+    local lastDeath = client:getNetVar("lastDeathTime", os.time())
+    local timePassed = os.time() - lastDeath
+
+    -- Only allow respawning if spawn time has elapsed
+    if timePassed >= baseTime then
+        client:Spawn()
+    end
+end)
+
+net.Receive("liaStringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
     if client.liaStrReqs and client.liaStrReqs[id] then

@@ -21,8 +21,10 @@ Inventory.id = -1
         Whenever inventory data needs to be accessed with a safe default value
 
     Parameters:
-        key - The data key to retrieve
-        default - Optional default value if key doesn't exist
+        key (string)
+            The data key to retrieve
+        default (any)
+            Optional default value if key doesn't exist
 
     Returns:
         The data value or default value if key doesn't exist
@@ -71,7 +73,8 @@ end
         During inventory type registration to create specialized inventory types
 
     Parameters:
-        className - The name of the class to extend
+        className (string)
+            The name of the class to extend
 
     Returns:
         The extended class with Inventory functionality
@@ -166,8 +169,10 @@ end
         During inventory configuration to set up data change callbacks
 
     Parameters:
-        key - The data key to monitor for changes
-        onChange - Function to call when the data changes (oldValue, newValue)
+        key (string)
+            The data key to monitor for changes
+        onChange (function)
+            Function to call when the data changes (oldValue, newValue)
 
     Returns:
         Nothing
@@ -218,8 +223,10 @@ end
         When you need to find all instances of a particular item type
 
     Parameters:
-        uniqueID - The uniqueID of the item type to find
-        onlyMain - Optional boolean to only return items in main inventory slots
+        uniqueID (string)
+            The uniqueID of the item type to find
+        onlyMain (boolean)
+            Optional boolean to only return items in main inventory slots
 
     Returns:
         Table of items matching the uniqueID
@@ -270,7 +277,8 @@ end
         During inventory type definition to make it available for use
 
     Parameters:
-        typeID - String identifier for this inventory type
+        typeID (string)
+            String identifier for this inventory type
 
     Returns:
         Nothing
@@ -451,9 +459,12 @@ end
         Automatically when setData is called and data changes
 
     Parameters:
-        key - The data key that changed
-        oldValue - The previous value
-        newValue - The new value
+        key (string)
+            The data key that changed
+        oldValue (any)
+            The previous value
+        newValue (any)
+            The new value
 
     Returns:
         Nothing
@@ -560,7 +571,8 @@ end
         When you need items of a particular type for processing
 
     Parameters:
-        itemType - The uniqueID of the item type to find
+        itemType (string)
+            The uniqueID of the item type to find
 
     Returns:
         Table of items matching the specified type
@@ -611,7 +623,8 @@ end
         When you need any single item of a type (efficiency over getting all)
 
     Parameters:
-        itemType - The uniqueID of the item type to find
+        itemType (string)
+            The uniqueID of the item type to find
 
     Returns:
         The first item found of the specified type, or nil if none found
@@ -663,7 +676,8 @@ end
         For quick boolean checks before performing actions
 
     Parameters:
-        itemType - The uniqueID of the item type to check for
+        itemType (string)
+            The uniqueID of the item type to check for
 
     Returns:
         Boolean indicating if the item type exists in inventory
@@ -713,7 +727,8 @@ end
         When you need to know how many of a particular item type exist
 
     Parameters:
-        itemType - Optional uniqueID of item type to count, nil for all items
+        itemType (string)
+            Optional uniqueID of item type to count, nil for all items
 
     Returns:
         Number representing total quantity of specified item type
@@ -808,8 +823,10 @@ if SERVER then
             When items need to be added to an inventory instance
 
         Parameters:
-            item - The item instance to add
-            noReplicate - Optional boolean to skip network synchronization
+            item (Item)
+                The item instance to add
+            noReplicate (boolean)
+                Optional boolean to skip network synchronization
 
         Returns:
             The inventory instance for method chaining
@@ -818,18 +835,19 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:addItem(myItem)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local weapon = lia.item.new("weapon_pistol", 1)
             player:getInventory():addItem(weapon)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function addItemsToInventory(inv, itemList)
                 for _, itemData in ipairs(itemList) do
@@ -864,7 +882,8 @@ if SERVER then
             Alternative method name for adding items
 
         Parameters:
-            item - The item instance to add
+            item (Item)
+                The item instance to add
 
         Returns:
             The inventory instance for method chaining
@@ -873,17 +892,18 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:add(myItem)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             playerInventory:add(lia.item.new("food_apple", 1))
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local items = {weapon = "weapon_pistol", armor = "armor_helmet"}
             for slot, uniqueID in pairs(items) do
@@ -904,7 +924,8 @@ if SERVER then
             Automatically called when items are added to inventory
 
         Parameters:
-            item - The item that was added
+            item (Item)
+                The item that was added
 
         Returns:
             Nothing
@@ -913,20 +934,21 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             -- Usually called automatically by addItem
             inventory:syncItemAdded(item)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local item = lia.item.new("weapon_sniper", 1)
             inventory:addItem(item)
             -- syncItemAdded is called automatically
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function batchAddItems(inv, items)
                 for _, item in ipairs(items) do
@@ -958,7 +980,8 @@ if SERVER then
             When creating new persistent inventories
 
         Parameters:
-            initialData - Initial data to store with the inventory
+            initialData (table)
+                Initial data to store with the inventory
 
         Returns:
             Deferred object that resolves when storage is initialized
@@ -967,13 +990,14 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             local deferred = inventory:initializeStorage({char = characterID})
             deferred:next(function(id) print("Created inventory:", id) end)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local initialData = {
                 char        = player:getCharacter():getID(),
@@ -982,7 +1006,7 @@ if SERVER then
             inventory:initializeStorage(initialData)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function createGuildInventory(guildData)
                 local inventory = lia.inventory.new("guild_storage")
@@ -1040,6 +1064,7 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             -- Override in subclass for custom restoration logic
@@ -1048,7 +1073,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function SecureInventory:restoreFromStorage()
                 -- Load encryption keys, permissions, etc.
@@ -1056,7 +1081,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function AdvancedInventory:restoreFromStorage()
                 -- Restore complex state from multiple data sources
@@ -1077,8 +1102,10 @@ if SERVER then
             When items need to be removed from inventory
 
         Parameters:
-            itemID - The ID of the item to remove
-            preserveItem - Optional boolean to preserve item data in database
+            itemID (number)
+                The ID of the item to remove
+            preserveItem (boolean)
+                Optional boolean to preserve item data in database
 
         Returns:
             Deferred object that resolves when removal is complete
@@ -1087,18 +1114,19 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:removeItem(12345)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local itemID = playerInventory:getFirstItemOfType("food_apple"):getID()
             inventory:removeItem(itemID)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function removeItemsByType(inv, itemType, preserve)
                 local items = inv:getItemsOfType(itemType)
@@ -1144,7 +1172,8 @@ if SERVER then
             Alternative method name for removing items
 
         Parameters:
-            itemID - The ID of the item to remove
+            itemID (number)
+                The ID of the item to remove
 
         Returns:
             Deferred object that resolves when removal is complete
@@ -1153,18 +1182,19 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:remove(12345)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local item = inventory:getFirstItemOfType("weapon_knife")
             if item then inventory:remove(item:getID()) end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function clearInventoryOfType(inv, itemType)
                 local items = inv:getItemsOfType(itemType)
@@ -1187,8 +1217,10 @@ if SERVER then
             When inventory data needs to be updated
 
         Parameters:
-            key - The data key to set
-            value - The value to set for the key
+            key (string)
+                The data key to set
+            value (any)
+                The value to set for the key
 
         Returns:
             The inventory instance for method chaining
@@ -1197,17 +1229,18 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:setData("money", 1000)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             inventory:setData("permissions", {"read", "write", "admin"})
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function updateInventoryStats(inv, stats)
                 for statName, statValue in pairs(stats) do
@@ -1252,8 +1285,10 @@ if SERVER then
             Before performing actions that require access control
 
         Parameters:
-            action - The action to check (e.g., "repl", "add", "remove")
-            context - Optional context table with additional information
+            action (string)
+                The action to check (e.g., "repl", "add", "remove")
+            context (table)
+                Optional context table with additional information
 
         Returns:
             Boolean indicating if action is allowed, and optional reason string
@@ -1262,19 +1297,20 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             local canAccess, reason = inventory:canAccess("repl")
             if not canAccess then print("Access denied:", reason) end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local canAdd, reason = inventory:canAccess("add", {client = player})
             if canAdd then inventory:addItem(item) end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function checkInventoryPermissions(inv, player, action)
                 local context = {
@@ -1309,8 +1345,10 @@ if SERVER then
             During inventory configuration to set up access control
 
         Parameters:
-            rule - Function that takes (inventory, action, context) and returns bool, string
-            priority - Optional priority number for rule evaluation order
+            rule (function)
+                Function that takes (inventory, action, context) and returns bool, string
+            priority (number)
+                Optional priority number for rule evaluation order
 
         Returns:
             The inventory instance for method chaining
@@ -1319,6 +1357,7 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:addAccessRule(function(inv, action, context)
@@ -1326,7 +1365,7 @@ if SERVER then
             end)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             inventory:addAccessRule(function(inv, action, context)
                 if context.client == inv:getOwner() then
@@ -1335,7 +1374,7 @@ if SERVER then
             end)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function complexAccessRule(inv, action, context)
                 local client = context.client
@@ -1379,7 +1418,8 @@ if SERVER then
             When access rules need to be removed or updated
 
         Parameters:
-            rule - The rule function to remove
+            rule (function)
+                The rule function to remove
 
         Returns:
             The inventory instance for method chaining
@@ -1388,12 +1428,13 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:removeAccessRule(myRule)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local rules = inventory.config.accessRules
             for i, rule in ipairs(rules) do
@@ -1404,7 +1445,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function cleanupAccessRules(inv)
                 local rules = inv.config.accessRules
@@ -1443,12 +1484,13 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             local recipients = inventory:getRecipients()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local players = inventory:getRecipients()
             for _, client in ipairs(players) do
@@ -1456,7 +1498,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function sendCustomNotification(inv, message)
                 local recipients = inv:getRecipients()
@@ -1496,6 +1538,7 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             -- Override in subclass for custom initialization
@@ -1504,7 +1547,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function PlayerInventory:onInstanced()
                 self:addAccessRule(function(inv, action, context)
@@ -1513,7 +1556,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function SecureInventory:onInstanced()
                 -- Initialize security features
@@ -1555,6 +1598,7 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             function MyInventory:onLoaded()
@@ -1562,7 +1606,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function PlayerInventory:onLoaded()
                 -- Restore character-specific settings
@@ -1573,7 +1617,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function AdvancedInventory:onLoaded()
                 -- Validate inventory integrity
@@ -1608,6 +1652,7 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:loadItems():next(function(items)
@@ -1615,7 +1660,7 @@ if SERVER then
             end)
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             playerInventory:loadItems():next(function(items)
                 for _, item in pairs(items) do
@@ -1626,7 +1671,7 @@ if SERVER then
             end)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function loadInventoryWithValidation(inv)
                 return inv:loadItems():next(function(items)
@@ -1691,7 +1736,8 @@ if SERVER then
             Automatically after loadItems completes successfully
 
         Parameters:
-            items - Table of loaded items
+            items (table)
+                Table of loaded items
 
         Returns:
             Nothing
@@ -1700,6 +1746,7 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             function MyInventory:onItemsLoaded(items)
@@ -1707,7 +1754,7 @@ if SERVER then
             end
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             function PlayerInventory:onItemsLoaded(items)
                 for _, item in pairs(items) do
@@ -1718,7 +1765,7 @@ if SERVER then
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             function AdvancedInventory:onItemsLoaded(items)
                 -- Categorize items
@@ -1752,7 +1799,8 @@ if SERVER then
             When creating configured inventory instances
 
         Parameters:
-            initialData - Initial data for the inventory instance
+            initialData (table)
+                Initial data for the inventory instance
 
         Returns:
             New inventory instance
@@ -1761,12 +1809,13 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             local inventory = MyInventory:instance({char = playerID})
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local bank = BankInventory:instance({
                 char        = characterID,
@@ -1774,7 +1823,7 @@ if SERVER then
             })
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function createComplexInventory(typeClass, config)
                 local inventory = typeClass:instance({
@@ -1815,8 +1864,10 @@ if SERVER then
             When inventory data changes and needs to be replicated
 
         Parameters:
-            key - The data key that changed
-            recipients - Optional specific clients to send to, defaults to all recipients
+            key (string)
+                The data key that changed
+            recipients (table)
+                Optional specific clients to send to, defaults to all recipients
 
         Returns:
             Nothing
@@ -1825,18 +1876,19 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:syncData("money")
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             inventory:setData("level", 5)
             -- syncData is called automatically
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function updateInventoryData(inv, updates)
                 local recipients = inv:getRecipients()
@@ -1868,7 +1920,8 @@ if SERVER then
             When clients need full inventory state (initial load, resync)
 
         Parameters:
-            recipients - Optional specific clients to send to, defaults to all recipients
+            recipients (table)
+                Optional specific clients to send to, defaults to all recipients
 
         Returns:
             Nothing
@@ -1877,18 +1930,19 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:sync()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local recipients = inventory:getRecipients()
             inventory:sync(recipients)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function fullInventorySync(inv, targetClients)
                 -- Send full inventory state
@@ -1950,19 +2004,20 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:delete()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             if inventory:getItemCount() == 0 then
                 inventory:delete()
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function safelyDeleteInventory(inv)
                 -- Archive inventory data first
@@ -2003,19 +2058,20 @@ if SERVER then
             Server
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:destroy()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             if shouldDestroy then
                 inventory:destroy()
             end
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function cleanupPlayerInventory(player)
                 local inventory = player:getInventory()
@@ -2059,7 +2115,8 @@ else
             When player opens inventory interface
 
         Parameters:
-            parent - Optional parent panel for the inventory UI
+            parent (Panel)
+                Optional parent panel for the inventory UI
 
         Returns:
             The created inventory panel
@@ -2068,17 +2125,18 @@ else
             Client
 
         Example Usage:
+
         Low Complexity:
             ```lua
             inventory:show()
             ```
 
-            Medium Complexity:
+        Medium Complexity:
             ```lua
             local panel = inventory:show(myCustomParent)
             ```
 
-            High Complexity:
+        High Complexity:
             ```lua
             local function createCustomInventoryUI(inv)
                 local frame = vgui.Create("DFrame")

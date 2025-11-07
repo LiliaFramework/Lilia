@@ -270,7 +270,7 @@ function PANEL:UpdateActiveTabVisual()
 end
 
 function PANEL:SetActiveTab(tab)
-    if type(tab) == "number" then
+    if isnumber(tab) then
         if not self.tabs[tab] then return end
         if self.tabs[self.active_id] and IsValid(self.tabs[self.active_id].pan) then self.tabs[self.active_id].pan:SetVisible(false) end
         if IsValid(self.tabs[tab].pan) then self.tabs[tab].pan:SetVisible(true) end
@@ -294,7 +294,7 @@ end
 
 function PANEL:CloseTab(tab)
     local id
-    if type(tab) == "number" then
+    if isnumber(tab) then
         id = tab
     else
         for k, data in ipairs(self.tabs) do

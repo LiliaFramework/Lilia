@@ -79,8 +79,10 @@ end
         Called when defining new fonts for UI elements or during font initialization
 
     Parameters:
-        - fontName (string): The unique identifier for the font
-        - fontData (table): Font configuration table containing font properties (font, size, weight, etc.)
+        fontName (string)
+            The unique identifier for the font
+        fontData (table)
+            Font configuration table containing font properties (font, size, weight, etc.)
 
     Returns:
         None (calls lia.error if parameters are invalid)
@@ -151,7 +153,8 @@ end
         None
 
     Returns:
-        - list (table): An alphabetically sorted table of font name strings
+        list (table)
+            An alphabetically sorted table of font name strings
 
     Realm:
         Shared
@@ -208,10 +211,12 @@ end
         Used when registering bold font variants or dynamically generating bold fonts
 
     Parameters:
-        - fontName (string): The base font name to convert to bold
+        fontName (string)
+            The base font name to convert to bold
 
     Returns:
-        - (string): The bold variant of the font name
+        (string)
+            The bold variant of the font name
 
     Realm:
         Shared
@@ -273,7 +278,8 @@ end
         Called during initialization and when the font configuration changes
 
     Parameters:
-        - fontName (string, optional): The base font name to use. If not provided, uses the configured font setting
+        fontName (string, optional)
+            The base font name to use. If not provided, uses the configured font setting
 
     Returns:
         None

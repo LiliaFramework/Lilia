@@ -16,7 +16,8 @@ lia.time = lia.time or {}
         When displaying relative timestamps, such as "last seen" times, message timestamps, or activity logs
 
     Parameters:
-        strTime (string|number) - Either a timestamp number or a date string in "YYYY-MM-DD" format
+        strTime (string|number)
+            Either a timestamp number or a date string in "YYYY-MM-DD" format
 
     Returns:
         string - Localized string indicating time elapsed (e.g., "5 minutes ago", "2 hours ago", "3 days ago")
@@ -93,7 +94,8 @@ end
         When converting date strings to structured data for further processing or validation
 
     Parameters:
-        str (string, optional) - Date string in "YYYY-MM-DD HH:MM:SS" format, defaults to current time if nil
+        str (string, optional)
+            Date string in "YYYY-MM-DD HH:MM:SS" format, defaults to current time if nil
 
     Returns:
         table - Table containing year, month, day, hour, min, sec as numbers
@@ -193,7 +195,7 @@ end
             end
 
             -- Send to admin chat
-            for _, admin in ipairs(player.GetAll()) do
+            for _, admin in player.Iterator() do
                 if admin:IsAdmin() then
                     admin:ChatPrint(logEntry)
                 end
@@ -223,7 +225,8 @@ end
         When displaying durations, cooldowns, or time remaining in UI elements
 
     Parameters:
-        seconds (number, optional) - Duration in seconds to format, defaults to 0 if nil
+        seconds (number, optional)
+            Duration in seconds to format, defaults to 0 if nil
 
     Returns:
         string - Localized string showing days, hours, and minutes (e.g., "2 days, 5 hours, 30 minutes")
@@ -344,7 +347,7 @@ end
 
             -- Parse hour for both formats
             local hourNum
-            if type(hour) == "string" then
+            if isstring(hour) then
                 hourNum = tonumber(hour:match("%d+"))
                 local isPM = hour:find("pm")
                 if isPM and hourNum ~= 12 then

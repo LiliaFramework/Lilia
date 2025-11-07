@@ -12,52 +12,50 @@ The entity meta table provides comprehensive functionality for extending Garry's
 
 ### EmitSound
 
-**Purpose**
-
+#### 📋 Purpose
 Emits a sound from the entity, with support for web sounds and URL-based audio
 
-**When Called**
-
+#### ⏰ When Called
 When an entity needs to play a sound effect or audio
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `soundName` (*string*): The sound file path, URL, or websound identifier
-* `soundLevel` (*number, optional*): Sound level/distance (default: 100)
-* `pitchPercent` (*number, optional*): Pitch adjustment percentage
-* `volume` (*number, optional*): Volume level (default: 100)
-* `channel` (*number, optional*): Sound channel
-* `flags` (*number, optional*): Sound flags
-* `dsp` (*number, optional*): DSP effect
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `soundName` | **string** | The sound file path, URL, or websound identifier |
+| `soundLevel` | **number, optional** | Sound level/distance (default: 100) |
+| `pitchPercent` | **number, optional** | Pitch adjustment percentage |
+| `volume` | **number, optional** | Volume level (default: 100) |
+| `channel` | **number, optional** | Sound channel |
+| `flags` | **number, optional** | Sound flags |
+| `dsp` | **number, optional** | DSP effect |
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if sound was played successfully
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Play a basic sound
-entity:EmitSound("buttons/button15.wav")
+    -- Simple: Play a basic sound
+    entity:EmitSound("buttons/button15.wav")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Play sound with custom volume and distance
-entity:EmitSound("ambient/atmosphere/city_hum_loop.wav", 200, 100, 0.5)
+    -- Medium: Play sound with custom volume and distance
+    entity:EmitSound("ambient/atmosphere/city_hum_loop.wav", 200, 100, 0.5)
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Play web sound with full parameters
-entity:EmitSound("https://example.com/sound.mp3", 300, 100, 0.8, CHAN_AUTO, 0, 0)
+    -- High: Play web sound with full parameters
+    entity:EmitSound("https://example.com/sound.mp3", 300, 100, 0.8, CHAN_AUTO, 0, 0)
 
 ```
 
@@ -65,49 +63,45 @@ entity:EmitSound("https://example.com/sound.mp3", 300, 100, 0.8, CHAN_AUTO, 0, 0
 
 ### isProp
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is a physics prop
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine if an entity is a prop_physics object
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is a prop_physics, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is a prop
-if entity:isProp() then
-    print("This is a physics prop")
-end
+    -- Simple: Check if entity is a prop
+    if entity:isProp() then
+        print("This is a physics prop")
+    end
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in conditional logic
-if entity:isProp() and entity:GetPhysicsObject():IsValid() then
-    entity:GetPhysicsObject():Wake()
-end
+    -- Medium: Use in conditional logic
+    if entity:isProp() and entity:GetPhysicsObject():IsValid() then
+        entity:GetPhysicsObject():Wake()
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Combine with other checks for complex logic
-if entity:isProp() and entity:GetModel():find("wood") then
-    -- Handle wooden prop specifically
-    entity:SetMaterial("models/wood")
-end
+    -- High: Combine with other checks for complex logic
+    if entity:isProp() and entity:GetModel():find("wood") then
+        -- Handle wooden prop specifically
+        entity:SetMaterial("models/wood")
+    end
 
 ```
 
@@ -115,53 +109,49 @@ end
 
 ### isItem
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is a Lilia item entity
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine if an entity is a lia_item object
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is a lia_item, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is an item
-if entity:isItem() then
-    print("This is a Lilia item")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Use in item handling logic
-if entity:isItem() and entity:GetItemData() then
-    local itemData = entity:GetItemData()
-    print("Item name:", itemData.name)
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Combine with inventory system
-if entity:isItem() and IsValid(ply) then
-    local itemData = entity:GetItemData()
-    if itemData and ply:getChar():getInv():canFit(itemData) then
-        ply:getChar():getInv():add(itemData)
-        entity:Remove()
+    -- Simple: Check if entity is an item
+    if entity:isItem() then
+        print("This is a Lilia item")
     end
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in item handling logic
+    if entity:isItem() and entity:GetItemData() then
+        local itemData = entity:GetItemData()
+        print("Item name:", itemData.name)
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Combine with inventory system
+    if entity:isItem() and IsValid(ply) then
+        local itemData = entity:GetItemData()
+        if itemData and ply:getChar():getInv():canFit(itemData) then
+            ply:getChar():getInv():add(itemData)
+            entity:Remove()
+        end
+    end
 
 ```
 
@@ -169,56 +159,52 @@ end
 
 ### isMoney
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is a Lilia money entity
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine if an entity is a lia_money object
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is a lia_money, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is money
-if entity:isMoney() then
-    print("This is money")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Use in money handling logic
-if entity:isMoney() and IsValid(ply) then
-    local amount = entity:GetAmount() or 0
-    ply:getChar():giveMoney(amount)
-    entity:Remove()
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Combine with economy system
-if entity:isMoney() and IsValid(ply) then
-    local amount = entity:GetAmount() or 0
-    local char = ply:getChar()
-    if char:getMoney() + amount <= char:getMaxMoney() then
-        char:giveMoney(amount)
-        entity:Remove()
-        ply:notify("You picked up $" .. amount)
+    -- Simple: Check if entity is money
+    if entity:isMoney() then
+        print("This is money")
     end
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in money handling logic
+    if entity:isMoney() and IsValid(ply) then
+        local amount = entity:GetAmount() or 0
+        ply:getChar():giveMoney(amount)
+        entity:Remove()
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Combine with economy system
+    if entity:isMoney() and IsValid(ply) then
+        local amount = entity:GetAmount() or 0
+        local char = ply:getChar()
+        if char:getMoney() + amount <= char:getMaxMoney() then
+            char:giveMoney(amount)
+            entity:Remove()
+            ply:notify("You picked up $" .. amount)
+        end
+    end
 
 ```
 
@@ -226,54 +212,50 @@ end
 
 ### isSimfphysCar
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is a Simfphys vehicle or LVS vehicle
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine if an entity is a vehicle from Simfphys or LVS
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is a supported vehicle, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is a vehicle
-if entity:isSimfphysCar() then
-    print("This is a vehicle")
-end
+    -- Simple: Check if entity is a vehicle
+    if entity:isSimfphysCar() then
+        print("This is a vehicle")
+    end
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in vehicle handling logic
-if entity:isSimfphysCar() and IsValid(ply) then
-    if entity:GetDriver() == ply then
-        ply:notify("You are driving this vehicle")
+    -- Medium: Use in vehicle handling logic
+    if entity:isSimfphysCar() and IsValid(ply) then
+        if entity:GetDriver() == ply then
+            ply:notify("You are driving this vehicle")
+        end
     end
-end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Combine with vehicle systems
-if entity:isSimfphysCar() and IsValid(ply) then
-    local char = ply:getChar()
-    if char:hasFlags("v") then
-        entity:SetDriver(ply)
-        entity:SetNetVar("owner", char:getID())
+    -- High: Combine with vehicle systems
+    if entity:isSimfphysCar() and IsValid(ply) then
+        local char = ply:getChar()
+        if char:hasFlags("v") then
+            entity:SetDriver(ply)
+            entity:SetNetVar("owner", char:getID())
+        end
     end
-end
 
 ```
 
@@ -281,60 +263,58 @@ end
 
 ### checkDoorAccess
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if a client has access to a door with the specified access level
 
-**When Called**
-
+#### ⏰ When Called
 When you need to verify if a player can access a door
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `client` (*Player*): The player to check access for
-* `access` (*number, optional*): The required access level (default: DOOR_GUEST)
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The player to check access for |
+| `access` | **number, optional** | The required access level (default: DOOR_GUEST) |
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the client has access, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check basic door access
-if door:checkDoorAccess(ply) then
-    door:Fire("Open")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Check specific access level
-if door:checkDoorAccess(ply, DOOR_OWNER) then
-    ply:notify("You own this door")
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in door interaction system
-if door:checkDoorAccess(ply, DOOR_GUEST) then
-    if door:isDoorLocked() then
-        ply:notify("The door is locked")
-    else
+    -- Simple: Check basic door access
+    if door:checkDoorAccess(ply) then
         door:Fire("Open")
-        ply:notify("Door opened")
     end
-else
-    ply:notify("You don't have access to this door")
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check specific access level
+    if door:checkDoorAccess(ply, DOOR_OWNER) then
+        ply:notify("You own this door")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in door interaction system
+    if door:checkDoorAccess(ply, DOOR_GUEST) then
+        if door:isDoorLocked() then
+            ply:notify("The door is locked")
+        else
+            door:Fire("Open")
+            ply:notify("Door opened")
+        end
+    else
+        ply:notify("You don't have access to this door")
+    end
 
 ```
 
@@ -342,55 +322,53 @@ end
 
 ### keysOwn
 
-**Purpose**
-
+#### 📋 Purpose
 Sets a client as the owner of a vehicle and updates ownership data
 
-**When Called**
-
+#### ⏰ When Called
 When a player becomes the owner of a vehicle
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `client` (*Player*): The player to set as the owner
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The player to set as the owner |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Set vehicle owner
-vehicle:keysOwn(ply)
+    -- Simple: Set vehicle owner
+    vehicle:keysOwn(ply)
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Set owner with validation
-if IsValid(ply) and ply:getChar() then
-    vehicle:keysOwn(ply)
-    ply:notify("You now own this vehicle")
-end
+    -- Medium: Set owner with validation
+    if IsValid(ply) and ply:getChar() then
+        vehicle:keysOwn(ply)
+        ply:notify("You now own this vehicle")
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in vehicle purchase system
-if ply:getChar():getMoney() >= vehiclePrice then
-    ply:getChar():takeMoney(vehiclePrice)
-    vehicle:keysOwn(ply)
-    ply:notify("Vehicle purchased for $" .. vehiclePrice)
-else
-    ply:notify("Insufficient funds")
-end
+    -- High: Use in vehicle purchase system
+    if ply:getChar():getMoney() >= vehiclePrice then
+        ply:getChar():takeMoney(vehiclePrice)
+        vehicle:keysOwn(ply)
+        ply:notify("Vehicle purchased for $" .. vehiclePrice)
+    else
+        ply:notify("Insufficient funds")
+    end
 
 ```
 
@@ -398,52 +376,48 @@ end
 
 ### keysLock
 
-**Purpose**
-
+#### 📋 Purpose
 Locks a vehicle if it is a valid vehicle entity
 
-**When Called**
-
+#### ⏰ When Called
 When a player wants to lock their vehicle
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Lock vehicle
-vehicle:keysLock()
+    -- Simple: Lock vehicle
+    vehicle:keysLock()
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Lock with validation
-if IsValid(vehicle) and vehicle:IsVehicle() then
-    vehicle:keysLock()
-    ply:notify("Vehicle locked")
-end
+    -- Medium: Lock with validation
+    if IsValid(vehicle) and vehicle:IsVehicle() then
+        vehicle:keysLock()
+        ply:notify("Vehicle locked")
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in vehicle interaction system
-if vehicle:keysOwn(ply) and not vehicle:isLocked() then
-    vehicle:keysLock()
-    ply:notify("Vehicle locked")
-elseif not vehicle:keysOwn(ply) then
-    ply:notify("You don't own this vehicle")
-else
-    ply:notify("Vehicle is already locked")
-end
+    -- High: Use in vehicle interaction system
+    if vehicle:keysOwn(ply) and not vehicle:isLocked() then
+        vehicle:keysLock()
+        ply:notify("Vehicle locked")
+    elseif not vehicle:keysOwn(ply) then
+        ply:notify("You don't own this vehicle")
+    else
+        ply:notify("Vehicle is already locked")
+    end
 
 ```
 
@@ -451,52 +425,48 @@ end
 
 ### keysUnLock
 
-**Purpose**
-
+#### 📋 Purpose
 Unlocks a vehicle if it is a valid vehicle entity
 
-**When Called**
-
+#### ⏰ When Called
 When a player wants to unlock their vehicle
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Unlock vehicle
-vehicle:keysUnLock()
+    -- Simple: Unlock vehicle
+    vehicle:keysUnLock()
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Unlock with validation
-if IsValid(vehicle) and vehicle:IsVehicle() then
-    vehicle:keysUnLock()
-    ply:notify("Vehicle unlocked")
-end
+    -- Medium: Unlock with validation
+    if IsValid(vehicle) and vehicle:IsVehicle() then
+        vehicle:keysUnLock()
+        ply:notify("Vehicle unlocked")
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in vehicle interaction system
-if vehicle:keysOwn(ply) and vehicle:isLocked() then
-    vehicle:keysUnLock()
-    ply:notify("Vehicle unlocked")
-elseif not vehicle:keysOwn(ply) then
-    ply:notify("You don't own this vehicle")
-else
-    ply:notify("Vehicle is already unlocked")
-end
+    -- High: Use in vehicle interaction system
+    if vehicle:keysOwn(ply) and vehicle:isLocked() then
+        vehicle:keysUnLock()
+        ply:notify("Vehicle unlocked")
+    elseif not vehicle:keysOwn(ply) then
+        ply:notify("You don't own this vehicle")
+    else
+        ply:notify("Vehicle is already unlocked")
+    end
 
 ```
 
@@ -504,55 +474,51 @@ end
 
 ### getDoorOwner
 
-**Purpose**
-
+#### 📋 Purpose
 Gets the owner of a door entity
 
-**When Called**
-
+#### ⏰ When Called
 When you need to retrieve the owner of a door
 
-**Returns**
-
+#### ↩️ Returns
 * Player or nil - The door owner if it's a vehicle with CPPI, nil otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get door owner
-local owner = door:getDoorOwner()
-if IsValid(owner) then
-    print("Door owner:", owner:Name())
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Check ownership for access control
-local owner = door:getDoorOwner()
-if IsValid(owner) and owner == ply then
-    ply:notify("You own this door")
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in door management system
-local owner = door:getDoorOwner()
-if IsValid(owner) then
-    local char = owner:getChar()
-    if char then
-        door:setNetVar("ownerName", char:getName())
-        door:setNetVar("ownerID", char:getID())
+    -- Simple: Get door owner
+    local owner = door:getDoorOwner()
+    if IsValid(owner) then
+        print("Door owner:", owner:Name())
     end
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check ownership for access control
+    local owner = door:getDoorOwner()
+    if IsValid(owner) and owner == ply then
+        ply:notify("You own this door")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in door management system
+    local owner = door:getDoorOwner()
+    if IsValid(owner) then
+        local char = owner:getChar()
+        if char then
+            door:setNetVar("ownerName", char:getName())
+            door:setNetVar("ownerID", char:getID())
+        end
+    end
 
 ```
 
@@ -560,53 +526,49 @@ end
 
 ### isLocked
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is locked using network variables
 
-**When Called**
-
+#### ⏰ When Called
 When you need to check if an entity is in a locked state
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is locked, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is locked
-if entity:isLocked() then
-    print("Entity is locked")
-end
+    -- Simple: Check if entity is locked
+    if entity:isLocked() then
+        print("Entity is locked")
+    end
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in interaction logic
-if entity:isLocked() then
-    ply:notify("This is locked")
-else
-    entity:Use(ply)
-end
+    -- Medium: Use in interaction logic
+    if entity:isLocked() then
+        ply:notify("This is locked")
+    else
+        entity:Use(ply)
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in security system
-if entity:isLocked() and not ply:hasFlags("A") then
-    ply:notify("Access denied - locked")
-elseif entity:isLocked() and ply:hasFlags("A") then
-    entity:setLocked(false)
-    ply:notify("Unlocked with admin access")
-end
+    -- High: Use in security system
+    if entity:isLocked() and not ply:hasFlags("A") then
+        ply:notify("Access denied - locked")
+    elseif entity:isLocked() and ply:hasFlags("A") then
+        entity:setLocked(false)
+        ply:notify("Unlocked with admin access")
+    end
 
 ```
 
@@ -614,53 +576,49 @@ end
 
 ### isDoorLocked
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if a door entity is locked using internal variables or custom properties
 
-**When Called**
-
+#### ⏰ When Called
 When you need to check if a door is in a locked state
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the door is locked, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if door is locked
-if door:isDoorLocked() then
-    print("Door is locked")
-end
+    -- Simple: Check if door is locked
+    if door:isDoorLocked() then
+        print("Door is locked")
+    end
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in door interaction
-if door:isDoorLocked() then
-    ply:notify("The door is locked")
-else
-    door:Fire("Open")
-end
+    -- Medium: Use in door interaction
+    if door:isDoorLocked() then
+        ply:notify("The door is locked")
+    else
+        door:Fire("Open")
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in door access system
-if door:isDoorLocked() and not door:checkDoorAccess(ply, DOOR_OWNER) then
-    ply:notify("Door is locked and you don't have access")
-elseif door:isDoorLocked() and door:checkDoorAccess(ply, DOOR_OWNER) then
-    door:setLocked(false)
-    ply:notify("Door unlocked with your key")
-end
+    -- High: Use in door access system
+    if door:isDoorLocked() and not door:checkDoorAccess(ply, DOOR_OWNER) then
+        ply:notify("Door is locked and you don't have access")
+    elseif door:isDoorLocked() and door:checkDoorAccess(ply, DOOR_OWNER) then
+        door:setLocked(false)
+        ply:notify("Door unlocked with your key")
+    end
 
 ```
 
@@ -668,61 +626,59 @@ end
 
 ### getEntItemDropPos
 
-**Purpose**
-
+#### 📋 Purpose
 Calculates the position and angle for dropping items from an entity
 
-**When Called**
-
+#### ⏰ When Called
 When an entity needs to drop an item at a specific location
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `offset` (*number, optional*): Distance to trace forward from entity (default: 64)
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `offset` | **number, optional** | Distance to trace forward from entity (default: 64) |
 
-**Returns**
-
+#### ↩️ Returns
 * Vector, Angle - The drop position and angle
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get drop position
-local pos, ang = entity:getEntItemDropPos()
+    -- Simple: Get drop position
+    local pos, ang = entity:getEntItemDropPos()
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use with custom offset
-local pos, ang = entity:getEntItemDropPos(100)
-local item = ents.Create("lia_item")
-item:SetPos(pos)
-item:SetAngles(ang)
+    -- Medium: Use with custom offset
+    local pos, ang = entity:getEntItemDropPos(100)
+    local item = ents.Create("lia_item")
+    item:SetPos(pos)
+    item:SetAngles(ang)
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in item dropping system
-local pos, ang = entity:getEntItemDropPos(offset)
-local tr = util.TraceLine({
-    start  = pos,
-    endpos = pos + Vector(0, 0, -50),
-    mask   = MASK_SOLID_BRUSHONLY
-})
-if tr.Hit then
-    pos = tr.HitPos + tr.HitNormal * 5
-end
-local item = ents.Create("lia_item")
-item:SetPos(pos)
-item:SetAngles(ang)
-item:Spawn()
+    -- High: Use in item dropping system
+    local pos, ang = entity:getEntItemDropPos(offset)
+    local tr = util.TraceLine({
+        start  = pos,
+        endpos = pos + Vector(0, 0, -50),
+        mask   = MASK_SOLID_BRUSHONLY
+    })
+    if tr.Hit then
+        pos = tr.HitPos + tr.HitNormal * 5
+    end
+    local item = ents.Create("lia_item")
+    item:SetPos(pos)
+    item:SetAngles(ang)
+    item:Spawn()
 
 ```
 
@@ -730,54 +686,50 @@ item:Spawn()
 
 ### isFemale
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity's model represents a female character
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine the gender of a character entity
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is female, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is female
-if entity:isFemale() then
-    print("This is a female character")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Use in character customization
-if entity:isFemale() then
-    entity:SetBodygroup(1, 1) -- Set female bodygroup
-else
-    entity:SetBodygroup(1, 0) -- Set male bodygroup
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in roleplay system
-if entity:isFemale() then
-    local char = entity:getChar()
-    if char then
-        char:setData("gender", "female")
-        char:setData("pronouns", {"she", "her", "hers"})
+    -- Simple: Check if entity is female
+    if entity:isFemale() then
+        print("This is a female character")
     end
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in character customization
+    if entity:isFemale() then
+        entity:SetBodygroup(1, 1) -- Set female bodygroup
+    else
+        entity:SetBodygroup(1, 0) -- Set male bodygroup
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in roleplay system
+    if entity:isFemale() then
+        local char = entity:getChar()
+        if char then
+            char:setData("gender", "female")
+            char:setData("pronouns", {"she", "her", "hers"})
+        end
+    end
 
 ```
 
@@ -785,57 +737,55 @@ end
 
 ### isNearEntity
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is near another entity within a specified radius
 
-**When Called**
-
+#### ⏰ When Called
 When you need to check proximity between entities
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `radius` (*number, optional*): Search radius in units (default: 96)
-* `otherEntity` (*Entity, optional*): Specific entity to check for proximity
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `radius` | **number, optional** | Search radius in units (default: 96) |
+| `otherEntity` | **Entity, optional** | Specific entity to check for proximity |
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if near another entity, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is near any other entity
-if entity:isNearEntity() then
-    print("Entity is near something")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Check proximity to specific entity
-if entity:isNearEntity(150, targetEntity) then
-    print("Entity is near target")
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in interaction system
-if entity:isNearEntity(100, ply) then
-    if entity:isItem() then
-        ply:notify("Press E to pick up " .. entity:GetItemData().name)
-    elseif entity:isMoney() then
-        ply:notify("Press E to collect $" .. entity:GetAmount())
+    -- Simple: Check if entity is near any other entity
+    if entity:isNearEntity() then
+        print("Entity is near something")
     end
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check proximity to specific entity
+    if entity:isNearEntity(150, targetEntity) then
+        print("Entity is near target")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in interaction system
+    if entity:isNearEntity(100, ply) then
+        if entity:isItem() then
+            ply:notify("Press E to pick up " .. entity:GetItemData().name)
+        elseif entity:isMoney() then
+            ply:notify("Press E to collect $" .. entity:GetAmount())
+        end
+    end
 
 ```
 
@@ -843,57 +793,53 @@ end
 
 ### getDoorPartner
 
-**Purpose**
-
+#### 📋 Purpose
 Gets the partner door entity for double doors
 
-**When Called**
-
+#### ⏰ When Called
 When you need to find the paired door in a double door setup
 
-**Returns**
-
+#### ↩️ Returns
 * Entity or nil - The partner door if found, nil otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get door partner
-local partner = door:getDoorPartner()
-if IsValid(partner) then
-    print("Found door partner")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Use in door synchronization
-local partner = door:getDoorPartner()
-if IsValid(partner) then
-    partner:Fire("Open")
-    door:Fire("Open")
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in door management system
-local partner = door:getDoorPartner()
-if IsValid(partner) then
-    if door:isDoorLocked() then
-        partner:setLocked(true)
-    else
-        partner:setLocked(false)
+    -- Simple: Get door partner
+    local partner = door:getDoorPartner()
+    if IsValid(partner) then
+        print("Found door partner")
     end
-    door:setNetVar("partnerID", partner:EntIndex())
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in door synchronization
+    local partner = door:getDoorPartner()
+    if IsValid(partner) then
+        partner:Fire("Open")
+        door:Fire("Open")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in door management system
+    local partner = door:getDoorPartner()
+    if IsValid(partner) then
+        if door:isDoorLocked() then
+            partner:setLocked(true)
+        else
+            partner:setLocked(false)
+        end
+        door:setNetVar("partnerID", partner:EntIndex())
+    end
 
 ```
 
@@ -901,50 +847,48 @@ end
 
 ### sendNetVar
 
-**Purpose**
-
+#### 📋 Purpose
 Sends a network variable to clients via network message
 
-**When Called**
-
+#### ⏰ When Called
 When you need to synchronize entity data with clients
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `key` (*string*): The network variable key to send
-* `receiver` (*Player, optional*): Specific player to send to, or nil for all players
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The network variable key to send |
+| `receiver` | **Player, optional** | Specific player to send to, or nil for all players |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Send network variable to all clients
-entity:sendNetVar("health")
+    -- Simple: Send network variable to all clients
+    entity:sendNetVar("health")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Send to specific player
-entity:sendNetVar("owner", ply)
+    -- Medium: Send to specific player
+    entity:sendNetVar("owner", ply)
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in data synchronization system
-if entity:getNetVar("dirty") then
-    entity:sendNetVar("data", nil)
-    entity:setNetVar("dirty", false)
-end
+    -- High: Use in data synchronization system
+    if entity:getNetVar("dirty") then
+        entity:sendNetVar("data", nil)
+        entity:setNetVar("dirty", false)
+    end
 
 ```
 
@@ -952,49 +896,47 @@ end
 
 ### clearNetVars
 
-**Purpose**
-
+#### 📋 Purpose
 Clears all network variables for the entity and notifies clients
 
-**When Called**
-
+#### ⏰ When Called
 When you need to remove all network data from an entity
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `receiver` (*Player, optional*): Specific player to notify, or nil for all players
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `receiver` | **Player, optional** | Specific player to notify, or nil for all players |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Clear all network variables
-entity:clearNetVars()
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Clear for specific player
-entity:clearNetVars(ply)
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in entity cleanup system
-if entity:IsValid() then
+    -- Simple: Clear all network variables
     entity:clearNetVars()
-    entity:Remove()
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Clear for specific player
+    entity:clearNetVars(ply)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in entity cleanup system
+    if entity:IsValid() then
+        entity:clearNetVars()
+        entity:Remove()
+    end
 
 ```
 
@@ -1002,48 +944,44 @@ end
 
 ### removeDoorAccessData
 
-**Purpose**
-
+#### 📋 Purpose
 Removes all door access data and notifies clients to close door menus
 
-**When Called**
-
+#### ⏰ When Called
 When you need to clear all door access permissions and close related UIs
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Remove door access data
-door:removeDoorAccessData()
+    -- Simple: Remove door access data
+    door:removeDoorAccessData()
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in door cleanup
-if door:IsValid() then
-    door:removeDoorAccessData()
-    door:Remove()
-end
+    -- Medium: Use in door cleanup
+    if door:IsValid() then
+        door:removeDoorAccessData()
+        door:Remove()
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in door management system
-if ply:hasFlags("A") then
-    door:removeDoorAccessData()
-    ply:notify("Door access data cleared")
-end
+    -- High: Use in door management system
+    if ply:hasFlags("A") then
+        door:removeDoorAccessData()
+        ply:notify("Door access data cleared")
+    end
 
 ```
 
@@ -1051,49 +989,47 @@ end
 
 ### setLocked
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the locked state of an entity using network variables
 
-**When Called**
-
+#### ⏰ When Called
 When you need to lock or unlock an entity
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `state` (*boolean*): True to lock, false to unlock
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `state` | **boolean** | True to lock, false to unlock |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Lock entity
-entity:setLocked(true)
+    -- Simple: Lock entity
+    entity:setLocked(true)
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Toggle lock state
-entity:setLocked(not entity:isLocked())
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in security system
-if ply:hasFlags("A") then
+    -- Medium: Toggle lock state
     entity:setLocked(not entity:isLocked())
-    ply:notify("Entity " .. (entity:isLocked() and "locked" or "unlocked"))
-end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in security system
+    if ply:hasFlags("A") then
+        entity:setLocked(not entity:isLocked())
+        ply:notify("Entity " .. (entity:isLocked() and "locked" or "unlocked"))
+    end
 
 ```
 
@@ -1101,49 +1037,47 @@ end
 
 ### setKeysNonOwnable
 
-**Purpose**
-
+#### 📋 Purpose
 Sets whether a vehicle can be owned or sold
 
-**When Called**
-
+#### ⏰ When Called
 When you need to make a vehicle non-ownable or ownable
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `state` (*boolean*): True to make non-ownable, false to make ownable
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `state` | **boolean** | True to make non-ownable, false to make ownable |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Make vehicle non-ownable
-vehicle:setKeysNonOwnable(true)
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Toggle ownable state
-vehicle:setKeysNonOwnable(not vehicle:getNetVar("noSell", false))
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in vehicle management system
-if ply:hasFlags("A") then
+    -- Simple: Make vehicle non-ownable
     vehicle:setKeysNonOwnable(true)
-    ply:notify("Vehicle made non-ownable")
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Toggle ownable state
+    vehicle:setKeysNonOwnable(not vehicle:getNetVar("noSell", false))
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in vehicle management system
+    if ply:hasFlags("A") then
+        vehicle:setKeysNonOwnable(true)
+        ply:notify("Vehicle made non-ownable")
+    end
 
 ```
 
@@ -1151,51 +1085,47 @@ end
 
 ### isDoor
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is a door by examining its class name
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine if an entity is a door
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is a door, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is a door
-if entity:isDoor() then
-    print("This is a door")
-end
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Use in door interaction
-if entity:isDoor() and entity:checkDoorAccess(ply) then
-    entity:Fire("Open")
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Use in door management system
-if entity:isDoor() then
-    local partner = entity:getDoorPartner()
-    if IsValid(partner) then
-        partner:setLocked(entity:isDoorLocked())
+    -- Simple: Check if entity is a door
+    if entity:isDoor() then
+        print("This is a door")
     end
-end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in door interaction
+    if entity:isDoor() and entity:checkDoorAccess(ply) then
+        entity:Fire("Open")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in door management system
+    if entity:isDoor() then
+        local partner = entity:getDoorPartner()
+        if IsValid(partner) then
+            partner:setLocked(entity:isDoorLocked())
+        end
+    end
 
 ```
 
@@ -1203,51 +1133,49 @@ end
 
 ### setNetVar
 
-**Purpose**
-
+#### 📋 Purpose
 Sets a network variable for the entity and synchronizes it with clients
 
-**When Called**
-
+#### ⏰ When Called
 When you need to store and sync data on an entity
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `key` (*string*): The network variable key
-* `value` (*any*): The value to store
-* `receiver` (*Player, optional*): Specific player to send to, or nil for all players
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The network variable key |
+| `value` | **any** | The value to store |
+| `receiver` | **Player, optional** | Specific player to send to, or nil for all players |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Set a network variable
-entity:setNetVar("health", 100)
+    -- Simple: Set a network variable
+    entity:setNetVar("health", 100)
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Set with specific receiver
-entity:setNetVar("owner", ply, ply)
+    -- Medium: Set with specific receiver
+    entity:setNetVar("owner", ply, ply)
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in data management system
-if entity:getNetVar("dirty") then
-    entity:setNetVar("lastUpdate", CurTime())
-    entity:setNetVar("dirty", false)
-end
+    -- High: Use in data management system
+    if entity:getNetVar("dirty") then
+        entity:setNetVar("lastUpdate", CurTime())
+        entity:setNetVar("dirty", false)
+    end
 
 ```
 
@@ -1255,53 +1183,51 @@ end
 
 ### getNetVar
 
-**Purpose**
-
+#### 📋 Purpose
 Gets a network variable from the entity (server-side)
 
-**When Called**
-
+#### ⏰ When Called
 When you need to retrieve synchronized data from an entity on the server
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `key` (*string*): The network variable key to retrieve
-* `default` (*any, optional*): Default value if the key doesn't exist
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The network variable key to retrieve |
+| `default` | **any, optional** | Default value if the key doesn't exist |
 
-**Returns**
-
+#### ↩️ Returns
 * any - The network variable value or default
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get a network variable
-local health = entity:getNetVar("health", 100)
+    -- Simple: Get a network variable
+    local health = entity:getNetVar("health", 100)
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in server-side logic
-local owner = entity:getNetVar("owner")
-if owner and IsValid(owner) then
-    print("Entity owner:", owner:Name())
-end
+    -- Medium: Use in server-side logic
+    local owner = entity:getNetVar("owner")
+    if owner and IsValid(owner) then
+        print("Entity owner:", owner:Name())
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in server-side data management
-local data = entity:getNetVar("data", {})
-if data.lastUpdate and CurTime() - data.lastUpdate > 300 then
-    entity:setNetVar("data", {lastUpdate = CurTime()})
-end
+    -- High: Use in server-side data management
+    local data = entity:getNetVar("data", {})
+    if data.lastUpdate and CurTime() - data.lastUpdate > 300 then
+        entity:setNetVar("data", {lastUpdate = CurTime()})
+    end
 
 ```
 
@@ -1309,50 +1235,46 @@ end
 
 ### isDoor
 
-**Purpose**
-
+#### 📋 Purpose
 Checks if the entity is a door by examining its class name (client-side)
 
-**When Called**
-
+#### ⏰ When Called
 When you need to determine if an entity is a door on the client
 
-**Returns**
-
+#### ↩️ Returns
 * boolean - True if the entity is a door, false otherwise
 
-**Realm**
-
+#### 🌐 Realm
 Client
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Check if entity is a door
-if entity:isDoor() then
-    print("This is a door")
-end
+    -- Simple: Check if entity is a door
+    if entity:isDoor() then
+        print("This is a door")
+    end
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in client-side door interaction
-if entity:isDoor() and entity:isNearEntity(100, LocalPlayer()) then
-    draw.DrawText("Press E to open door", "DermaDefault", ScrW()/2, ScrH()/2)
-end
+    -- Medium: Use in client-side door interaction
+    if entity:isDoor() and entity:isNearEntity(100, LocalPlayer()) then
+        draw.DrawText("Press E to open door", "DermaDefault", ScrW()/2, ScrH()/2)
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in client-side door management
-if entity:isDoor() then
-    local locked = entity:getNetVar("locked", false)
-    local color = locked and Color(255, 0, 0) or Color(0, 255, 0)
-    draw.DrawText(locked and "Locked" or "Unlocked", "DermaDefault", ScrW()/2, ScrH()/2, color)
-end
+    -- High: Use in client-side door management
+    if entity:isDoor() then
+        local locked = entity:getNetVar("locked", false)
+        local color = locked and Color(255, 0, 0) or Color(0, 255, 0)
+        draw.DrawText(locked and "Locked" or "Unlocked", "DermaDefault", ScrW()/2, ScrH()/2, color)
+    end
 
 ```
 
@@ -1360,52 +1282,50 @@ end
 
 ### getNetVar
 
-**Purpose**
-
+#### 📋 Purpose
 Gets a network variable from the entity (client-side)
 
-**When Called**
-
+#### ⏰ When Called
 When you need to retrieve synchronized data from an entity on the client
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `key` (*string*): The network variable key to retrieve
-* `default` (*any, optional*): Default value if the key doesn't exist
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The network variable key to retrieve |
+| `default` | **any, optional** | Default value if the key doesn't exist |
 
-**Returns**
-
+#### ↩️ Returns
 * any - The network variable value or default
 
-**Realm**
-
+#### 🌐 Realm
 Client
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Get a network variable
-local health = entity:getNetVar("health", 100)
+    -- Simple: Get a network variable
+    local health = entity:getNetVar("health", 100)
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Use in client-side logic
-local owner = entity:getNetVar("owner")
-if owner and owner == LocalPlayer() then
-    print("You own this entity")
-end
+    -- Medium: Use in client-side logic
+    local owner = entity:getNetVar("owner")
+    if owner and owner == LocalPlayer() then
+        print("You own this entity")
+    end
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Use in client-side rendering
-local locked = entity:getNetVar("locked", false)
-local color = locked and Color(255, 0, 0) or Color(0, 255, 0)
-draw.DrawText(locked and "Locked" or "Unlocked", "DermaDefault", x, y, color)
+    -- High: Use in client-side rendering
+    local locked = entity:getNetVar("locked", false)
+    local color = locked and Color(255, 0, 0) or Color(0, 255, 0)
+    draw.DrawText(locked and "Locked" or "Unlocked", "DermaDefault", x, y, color)
 
 ```
 
@@ -1413,54 +1333,52 @@ draw.DrawText(locked and "Locked" or "Unlocked", "DermaDefault", x, y, color)
 
 ### playFollowingSound
 
-**Purpose**
-
+#### 📋 Purpose
 Plays a sound that follows the entity with 3D positioning and distance attenuation
 
-**When Called**
-
+#### ⏰ When Called
 When you need to play a sound that moves with an entity
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `soundPath` (*string*): Path to the sound file or URL
-* `volume` (*number, optional*): Volume level (0-1, default: 1)
-* `shouldFollow` (*boolean, optional*): Whether sound should follow entity (default: true)
-* `maxDistance` (*number, optional*): Maximum audible distance (default: 1200)
-* `startDelay` (*number, optional*): Delay before playing (default: 0)
-* `minDistance` (*number, optional*): Minimum distance for full volume (default: 0)
-* `pitch` (*number, optional*): Pitch multiplier (default: 1)
-* `_` (*any, optional*): Unused parameter
-* `dsp` (*number, optional*): DSP effect ID (default: 0)
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `soundPath` | **string** | Path to the sound file or URL |
+| `volume` | **number, optional** | Volume level (0-1, default: 1) |
+| `shouldFollow` | **boolean, optional** | Whether sound should follow entity (default: true) |
+| `maxDistance` | **number, optional** | Maximum audible distance (default: 1200) |
+| `startDelay` | **number, optional** | Delay before playing (default: 0) |
+| `minDistance` | **number, optional** | Minimum distance for full volume (default: 0) |
+| `pitch` | **number, optional** | Pitch multiplier (default: 1) |
+| `_` | **any, optional** | Unused parameter |
+| `dsp` | **number, optional** | DSP effect ID (default: 0) |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Realm**
-
+#### 🌐 Realm
 Client
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Play following sound
-entity:playFollowingSound("ambient/atmosphere/city_hum_loop.wav")
+    -- Simple: Play following sound
+    entity:playFollowingSound("ambient/atmosphere/city_hum_loop.wav")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Play with custom volume and distance
-entity:playFollowingSound("buttons/button15.wav", 0.5, true, 500)
+    -- Medium: Play with custom volume and distance
+    entity:playFollowingSound("buttons/button15.wav", 0.5, true, 500)
 
 ```
 
-**High Complexity:**
+#### ⚙️ High Complexity
 ```lua
--- High: Play web sound with full parameters
-entity:playFollowingSound("https://example.com/sound.mp3", 0.8, true, 1000, 0.5, 100, 1.2, nil, 1)
+    -- High: Play web sound with full parameters
+    entity:playFollowingSound("https://example.com/sound.mp3", 0.8, true, 1000, 0.5, 100, 1.2, nil, 1)
 
 ```
 

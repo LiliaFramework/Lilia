@@ -16,7 +16,8 @@ local panelMeta = FindMetaTable("Panel")
         When a UI panel needs to respond to inventory modifications, typically during panel initialization
 
     Parameters:
-        inventory - The inventory object to listen for changes on
+        inventory (Inventory)
+            The inventory object to listen for changes on
 
     Returns:
         Nothing
@@ -97,7 +98,8 @@ end
         When a panel no longer needs to listen to inventory changes, during cleanup, or when switching inventories
 
     Parameters:
-        id (optional) - The specific inventory ID to remove hooks for, or nil to remove all hooks
+        id (number)
+            The specific inventory ID to remove hooks for, or nil to remove all hooks
 
     Returns:
         Nothing
@@ -163,8 +165,10 @@ end
         When positioning UI elements that need to adapt to different screen resolutions
 
     Parameters:
-        x - The horizontal position value to be scaled
-        y - The vertical position value to be scaled
+        x (number)
+            The horizontal position value to be scaled
+        y (number)
+            The vertical position value to be scaled
 
     Returns:
         Nothing
@@ -223,8 +227,10 @@ end
         When sizing UI elements that need to adapt to different screen resolutions
 
     Parameters:
-        w - The width value to be scaled
-        h - The height value to be scaled
+        w (number)
+            The width value to be scaled
+        h (number)
+            The height value to be scaled
 
     Returns:
         Nothing

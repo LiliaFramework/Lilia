@@ -184,9 +184,12 @@ end
         When triggering player animations for roleplay, emotes, or visual effects
 
     Parameters:
-        - a (number): Gesture slot (0-15)
-        - b (number): Gesture weight (0-255)
-        - c (boolean): Whether to restart the gesture
+        a (number)
+            Gesture slot (0-15)
+        b (number)
+            Gesture weight (0-255)
+        c (boolean)
+            Whether to restart the gesture
 
     Returns:
         None
@@ -241,7 +244,8 @@ end
         When validating player permissions for commands, features, or access control
 
     Parameters:
-        - privilegeName (string): The name of the privilege to check
+        privilegeName (string)
+            The name of the privilege to check
 
     Returns:
         boolean - True if player has the privilege, false otherwise
@@ -404,8 +408,10 @@ end
         When implementing proximity-based features, interaction systems, or distance validation
 
     Parameters:
-        - radius (number): The maximum distance to check
-        - entity (Entity): The entity to check distance against
+        radius (number)
+            The maximum distance to check
+        entity (Entity)
+            The entity to check distance against
 
     Returns:
         boolean - True if player is within radius, false otherwise
@@ -457,8 +463,10 @@ end
         When implementing area-of-effect systems, proximity detection, or entity scanning
 
     Parameters:
-        - radius (number): The radius to search within
-        - playerOnly (boolean, optional): If true, only returns player entities
+        radius (number)
+            The radius to search within
+        playerOnly (boolean, optional)
+            If true, only returns player entities
 
     Returns:
         table - Array of entities within the radius
@@ -515,7 +523,10 @@ end
         None
 
     Returns:
-        weapon (Entity|nil), item (table|nil) - The weapon entity and item data if found
+        weapon (Entity|nil)
+            The weapon entity and item data if found
+        item (table|nil)
+            The weapon entity and item data if found
 
     Realm:
         Shared
@@ -809,7 +820,8 @@ end
         When implementing interaction systems, targeting, or line-of-sight detection
 
     Parameters:
-        - distance (number, optional): Maximum trace distance (default: 96)
+        distance (number, optional)
+            Maximum trace distance (default: 96)
 
     Returns:
         Entity|nil - The traced entity if found, nil otherwise
@@ -870,7 +882,8 @@ end
         When implementing collision detection, surface analysis, or spatial queries
 
     Parameters:
-        - distance (number, optional): Maximum trace distance (default: 200)
+        distance (number, optional)
+            Maximum trace distance (default: 200)
 
     Returns:
         table - Trace result containing hit information, position, and entity data
@@ -937,7 +950,8 @@ end
         When implementing precise targeting, interaction systems, or line-of-sight detection
 
     Parameters:
-        - distance (number, optional): Maximum distance to check (default: 150)
+        distance (number, optional)
+            Maximum distance to check (default: 150)
 
     Returns:
         Entity|nil - The entity if within distance, nil otherwise
@@ -994,8 +1008,10 @@ end
         When displaying messages, alerts, or status updates to the player
 
     Parameters:
-        - message (string): The message to display
-        - notifType (string, optional): The type of notification (default: "default")
+        message (string)
+            The message to display
+        notifType (string, optional)
+            The type of notification (default: "default")
 
     Returns:
         None
@@ -1047,9 +1063,12 @@ end
         When displaying translated messages, alerts, or status updates to the player
 
     Parameters:
-        - message (string): The localization key for the message
-        - notifType (string, optional): The type of notification (default: "default")
-        - ... (vararg): Arguments to format into the localized string
+        message (string)
+            The localization key for the message
+        notifType (string, optional)
+            The type of notification (default: "default")
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1097,7 +1116,8 @@ end
         When displaying error messages, failures, or critical alerts to the player
 
     Parameters:
-        - message (string): The error message to display
+        message (string)
+            The error message to display
 
     Returns:
         None
@@ -1150,7 +1170,8 @@ end
         When displaying warning messages, cautions, or important alerts to the player
 
     Parameters:
-        - message (string): The warning message to display
+        message (string)
+            The warning message to display
 
     Returns:
         None
@@ -1202,7 +1223,8 @@ end
         When displaying informational messages, tips, or general updates to the player
 
     Parameters:
-        message (string) - The informational message to display
+        message (string)
+            The informational message to display
 
     Returns:
         None
@@ -1251,7 +1273,8 @@ end
         When displaying success messages, achievements, or positive feedback to the player
 
     Parameters:
-        message (string) - The success message to display
+        message (string)
+            The success message to display
 
     Returns:
         None
@@ -1301,7 +1324,8 @@ end
         When displaying financial transactions, currency changes, or economic updates to the player
 
     Parameters:
-        message (string) - The money-related message to display
+        message (string)
+            The money-related message to display
 
     Returns:
         None
@@ -1352,7 +1376,8 @@ end
         When displaying administrative messages, system alerts, or admin-specific information to the player
 
     Parameters:
-        message (string) - The admin message to display
+        message (string)
+            The admin message to display
 
     Returns:
         None
@@ -1400,8 +1425,10 @@ end
         When displaying translated error messages, failures, or critical alerts to the player
 
     Parameters:
-        key (string) - The localization key for the error message
-        ... (vararg) - Arguments to format into the localized string
+        key (string)
+            The localization key for the error message
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1454,8 +1481,10 @@ end
         When displaying translated warning messages, cautions, or important alerts to the player
 
     Parameters:
-        key (string) - The localization key for the warning message
-        ... (vararg) - Arguments to format into the localized string
+        key (string)
+            The localization key for the warning message
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1508,8 +1537,10 @@ end
         When displaying translated informational messages, tips, or general updates to the player
 
     Parameters:
-        key (string) - The localization key for the informational message
-        ... (vararg) - Arguments to format into the localized string
+        key (string)
+            The localization key for the informational message
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1558,8 +1589,10 @@ end
         When displaying translated success messages, achievements, or positive feedback to the player
 
     Parameters:
-        key (string) - The localization key for the success message
-        ... (vararg) - Arguments to format into the localized string
+        key (string)
+            The localization key for the success message
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1609,8 +1642,10 @@ end
         When displaying translated financial transactions, currency changes, or economic updates to the player
 
     Parameters:
-        key (string) - The localization key for the money-related message
-        ... (vararg) - Arguments to format into the localized string
+        key (string)
+            The localization key for the money-related message
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1660,8 +1695,10 @@ end
         When displaying translated administrative messages, system alerts, or admin-specific information to the player
 
     Parameters:
-        key (string) - The localization key for the admin message
-        ... (vararg) - Arguments to format into the localized string
+        key (string)
+            The localization key for the admin message
+        ... (vararg)
+            Arguments to format into the localized string
 
     Returns:
         None
@@ -1709,7 +1746,8 @@ end
         When validating vendor editing permissions, implementing vendor management systems, or access control
 
     Parameters:
-        vendor (Entity) - The vendor entity to check edit permissions for
+        vendor (Entity)
+            The vendor entity to check edit permissions for
 
     Returns:
         boolean - True if player can edit the vendor, false otherwise
@@ -1945,7 +1983,8 @@ end
         When validating faction access, implementing whitelist systems, or character creation restrictions
 
     Parameters:
-        faction (string) - The faction unique ID to check whitelist for
+        faction (string)
+            The faction unique ID to check whitelist for
 
     Returns:
         boolean - True if player has whitelist access, false otherwise
@@ -2067,7 +2106,8 @@ end
         When implementing DarkRP compatibility, accessing player money, or legacy system integration
 
     Parameters:
-        var (string) - The variable name to get (currently only "money" is supported)
+        var (string)
+            The variable name to get (currently only "money" is supported)
 
     Returns:
         number|nil - The money amount if var is "money", nil otherwise
@@ -2179,7 +2219,8 @@ end
         When validating purchases, implementing economic systems, or checking financial capacity
 
     Parameters:
-        amount (number) - The amount of money to check if player can afford
+        amount (number)
+            The amount of money to check if player can afford
 
     Returns:
         boolean - True if player can afford the amount, false otherwise
@@ -2237,8 +2278,10 @@ end
         When validating skill requirements, implementing skill-based features, or character progression systems
 
     Parameters:
-        skill (string) - The skill name to check
-        level (number) - The minimum skill level required
+        skill (string)
+            The skill name to check
+        level (number)
+            The minimum skill level required
 
     Returns:
         boolean - True if player has the required skill level, false otherwise
@@ -2298,7 +2341,8 @@ end
         When validating complex skill requirements, implementing multi-skill features, or character progression systems
 
     Parameters:
-        requiredSkillLevels (table) - Table of skill names and required levels {skill = level, ...}
+        requiredSkillLevels (table)
+            Table of skill names and required levels {skill = level, ...}
 
     Returns:
         boolean - True if player meets all requirements, false otherwise
@@ -2361,10 +2405,14 @@ end
         When implementing cutscenes, animations, or scripted sequences for the player
 
     Parameters:
-        sequenceName (string) - The name of the animation sequence to play
-        callback (function, optional) - Function to call when sequence completes
-        time (number, optional) - Duration of the sequence (default: sequence duration)
-        noFreeze (boolean, optional) - Whether to freeze the player during sequence
+        sequenceName (string)
+            The name of the animation sequence to play
+        callback (function, optional)
+            Function to call when sequence completes
+        time (number, optional)
+            Duration of the sequence (default: sequence duration)
+        noFreeze (boolean, optional)
+            Whether to freeze the player during sequence
 
     Returns:
         None
@@ -2544,7 +2592,8 @@ end
         When granting character flags, implementing flag-based permissions, or character management
 
     Parameters:
-        flags (string) - The flags to give to the character
+        flags (string)
+            The flags to give to the character
 
     Returns:
         None
@@ -2596,7 +2645,8 @@ end
         When removing character flags, implementing flag-based permissions, or character management
 
     Parameters:
-        flags (string) - The flags to take from the character
+        flags (string)
+            The flags to take from the character
 
     Returns:
         None
@@ -2648,8 +2698,10 @@ end
         When implementing custom animations, bone manipulation, or visual effects for the player
 
     Parameters:
-        active (boolean) - Whether the animation is active
-        boneData (table) - Table of bone names and angles {boneName = angle, ...}
+        active (boolean)
+            Whether the animation is active
+        boneData (table)
+            Table of bone names and angles {boneName = angle, ...}
 
     Returns:
         None
@@ -2771,10 +2823,14 @@ end
         When implementing navigation systems, quest objectives, or location guidance for the player
 
     Parameters:
-        name (string) - The name of the waypoint
-        vector (Vector) - The position of the waypoint
-        logo (string, optional) - The material path for the waypoint icon
-        onReach (function, optional) - Function to call when waypoint is reached
+        name (string)
+            The name of the waypoint
+        vector (Vector)
+            The position of the waypoint
+        logo (string, optional)
+            The material path for the waypoint icon
+        onReach (function, optional)
+            Function to call when waypoint is reached
 
     Returns:
         None
@@ -2897,8 +2953,10 @@ end
         When accessing player data storage, implementing data management, or retrieving stored values
 
     Parameters:
-        key (string) - The data key to retrieve
-        default (any, optional) - The default value to return if key doesn't exist
+        key (string)
+            The data key to retrieve
+        default (any, optional)
+            The default value to return if key doesn't exist
 
     Returns:
         any - The data value or default if not found
@@ -2960,7 +3018,8 @@ end
         When validating flag-based permissions, implementing access control, or character management
 
     Parameters:
-        flags (string) - The flags to check for (any one flag will return true)
+        flags (string)
+            The flags to check for (any one flag will return true)
 
     Returns:
         boolean - True if player has any of the specified flags, false otherwise
@@ -3019,7 +3078,8 @@ end
         When implementing time-based features, veteran rewards, or play time validation
 
     Parameters:
-        time (number) - The minimum play time required in seconds
+        time (number)
+            The minimum play time required in seconds
 
     Returns:
         boolean - True if player's play time is greater than the specified time, false otherwise
@@ -3073,11 +3133,16 @@ end
         When implementing interactive menus, choice systems, or user input dialogs for the player
 
     Parameters:
-        title (string) - The title of the options dialog
-        subTitle (string) - The subtitle or description of the options
-        options (table) - Array of option strings to choose from
-        limit (number, optional) - Maximum number of options that can be selected (default: 1)
-        callback (function, optional) - Function to call when player makes a selection
+        title (string)
+            The title of the options dialog
+        subTitle (string)
+            The subtitle or description of the options
+        options (table)
+            Array of option strings to choose from
+        limit (number, optional)
+            Maximum number of options that can be selected (default: 1)
+        callback (function, optional)
+            Function to call when player makes a selection
 
     Returns:
         None
@@ -3151,10 +3216,14 @@ end
         When implementing text input systems, name entry, or string-based user input for the player
 
     Parameters:
-        title (string) - The title of the string input dialog
-        subTitle (string) - The subtitle or description of the input
-        callback (function) - Function to call when player submits the string
-        default (string, optional) - Default value to pre-fill in the input field
+        title (string)
+            The title of the string input dialog
+        subTitle (string)
+            The subtitle or description of the input
+        callback (function)
+            Function to call when player submits the string
+        default (string, optional)
+            Default value to pre-fill in the input field
 
     Returns:
         deferred|nil - A deferred object if no callback provided, nil otherwise
@@ -3231,9 +3300,12 @@ end
         When implementing complex input systems, command interfaces, or multi-parameter user input for the player
 
     Parameters:
-        title (string) - The title of the arguments input dialog
-        argTypes (table) - Array of argument type specifications
-        callback (function) - Function to call when player submits the arguments
+        title (string)
+            The title of the arguments input dialog
+        argTypes (table)
+            Array of argument type specifications
+        callback (function)
+            Function to call when player submits the arguments
 
     Returns:
         deferred|nil - A deferred object if no callback provided, nil otherwise
@@ -3320,11 +3392,16 @@ end
         When implementing yes/no dialogs, confirmation prompts, or binary choice systems for the player
 
     Parameters:
-        question (string) - The question to ask the player
-        option1 (string) - The first option (usually "Yes" or "Accept")
-        option2 (string) - The second option (usually "No" or "Cancel")
-        manualDismiss (boolean, optional) - Whether the player can manually dismiss the dialog
-        callback (function, optional) - Function to call when player makes a choice
+        question (string)
+            The question to ask the player
+        option1 (string)
+            The first option (usually "Yes" or "Accept")
+        option2 (string)
+            The second option (usually "No" or "Cancel")
+        manualDismiss (boolean, optional)
+            Whether the player can manually dismiss the dialog
+        callback (function, optional)
+            Function to call when player makes a choice
 
     Returns:
         None
@@ -3396,8 +3473,10 @@ end
         When implementing custom action menus, button interfaces, or interactive dialogs for the player
 
     Parameters:
-        title (string) - The title of the button dialog
-        buttons (table) - Array of button data {text = "Button Text", callback = function() end} or {text, callback}
+        title (string)
+            The title of the button dialog
+        buttons (table)
+            Array of button data {text = "Button Text", callback = function() end} or {text, callback}
 
     Returns:
         None
@@ -3485,10 +3564,14 @@ end
         When implementing selection menus, choice systems, or dropdown interfaces for the player
 
     Parameters:
-        title (string) - The title of the dropdown dialog
-        subTitle (string) - The subtitle or description of the selection
-        options (table) - Array of option strings to choose from
-        callback (function, optional) - Function to call when player makes a selection
+        title (string)
+            The title of the dropdown dialog
+        subTitle (string)
+            The subtitle or description of the selection
+        options (table)
+            Array of option strings to choose from
+        callback (function, optional)
+            Function to call when player makes a selection
 
     Returns:
         None
@@ -3575,6 +3658,8 @@ end
         Shared
 
     Example Usage:
+
+    Low Complexity:
         ```lua
         -- Low: Basic part checking
         local parts = player:getParts()
@@ -3697,7 +3782,8 @@ if SERVER then
         When a player equips a new PAC accessory
 
     Parameters:
-        - partID (string): The unique identifier of the PAC part to add
+        partID (string)
+            The unique identifier of the PAC part to add
 
     Returns:
         None
@@ -3777,7 +3863,8 @@ if SERVER then
         When a player unequips a PAC accessory
 
     Parameters:
-        - partID (string): The unique identifier of the PAC part to remove
+        partID (string)
+            The unique identifier of the PAC part to remove
 
     Returns:
         None
@@ -3948,7 +4035,8 @@ if SERVER then
         When implementing stamina recovery, rest systems, or character healing for the player
 
     Parameters:
-        amount (number) - The amount of stamina to restore
+        amount (number)
+            The amount of stamina to restore
 
     Returns:
         None
@@ -4007,7 +4095,8 @@ if SERVER then
         When implementing stamina usage, movement costs, or action requirements for the player
 
     Parameters:
-        amount (number) - The amount of stamina to consume
+        amount (number)
+            The amount of stamina to consume
 
     Returns:
         None
@@ -4071,7 +4160,8 @@ if SERVER then
         When implementing economic systems, rewards, or financial transactions for the player
 
     Parameters:
-        amount (number) - The amount of money to add
+        amount (number)
+            The amount of money to add
 
     Returns:
         boolean - True if money was added successfully, false otherwise
@@ -4129,7 +4219,8 @@ if SERVER then
         When implementing economic systems, penalties, or financial transactions for the player
 
     Parameters:
-        amount (number) - The amount of money to take
+        amount (number)
+            The amount of money to take
 
     Returns:
         None
@@ -4188,7 +4279,8 @@ if SERVER then
         When initializing player data, loading saved information, or database operations for the player
 
     Parameters:
-        callback (function, optional) - Function to call when data is loaded
+        callback (function, optional)
+            Function to call when data is loaded
 
     Returns:
         None
@@ -4339,10 +4431,14 @@ if SERVER then
         When storing player data, implementing data management, or updating player information
 
     Parameters:
-        key (string) - The data key to set
-        value (any) - The value to store
-        noNetworking (boolean, optional) - Whether to skip networking the change
-        noSave (boolean, optional) - Whether to skip saving to database
+        key (string)
+            The data key to set
+        value (any)
+            The value to store
+        noNetworking (boolean, optional)
+            Whether to skip networking the change
+        noSave (boolean, optional)
+            Whether to skip saving to database
 
     Returns:
         None
@@ -4395,9 +4491,12 @@ if SERVER then
         When implementing administrative actions, moderation systems, or player punishment for the player
 
     Parameters:
-        reason (string, optional) - The reason for the ban (default: generic reason)
-        duration (number, optional) - The duration of the ban in seconds (0 for permanent)
-        banner (Player, optional) - The player who issued the ban
+        reason (string, optional)
+            The reason for the ban (default: generic reason)
+        duration (number, optional)
+            The duration of the ban in seconds (0 for permanent)
+        banner (Player, optional)
+            The player who issued the ban
 
     Returns:
         None
@@ -4453,9 +4552,12 @@ if SERVER then
         When implementing player actions, progress bars, or timed activities for the player
 
     Parameters:
-        text (string) - The action text to display
-        time (number, optional) - The duration of the action in seconds
-        callback (function, optional) - Function to call when action completes
+        text (string)
+            The action text to display
+        time (number, optional)
+            The duration of the action in seconds
+        callback (function, optional)
+            Function to call when action completes
 
     Returns:
         None
@@ -4523,11 +4625,16 @@ if SERVER then
         When implementing interaction systems, examination mechanics, or focused actions for the player
 
     Parameters:
-        entity (Entity) - The entity to stare at
-        callback (function) - Function to call when action completes
-        time (number) - The duration to stare at the entity
-        onCancel (function, optional) - Function to call if action is cancelled
-        distance (number, optional) - Maximum distance to check (default: 96)
+        entity (Entity)
+            The entity to stare at
+        callback (function)
+            Function to call when action completes
+        time (number)
+            The duration to stare at the entity
+        onCancel (function, optional)
+            Function to call if action is cancelled
+        distance (number, optional)
+            Maximum distance to check (default: 96)
 
     Returns:
         None
@@ -4757,8 +4864,10 @@ if SERVER then
         When implementing death systems, ragdoll creation, or player state changes
 
     Parameters:
-        freeze (boolean, optional) - Whether to freeze the ragdoll
-        isDead (boolean, optional) - Whether the player is dead (affects ragdoll storage)
+        freeze (boolean, optional)
+            Whether to freeze the ragdoll
+        isDead (boolean, optional)
+            Whether the player is dead (affects ragdoll storage)
 
     Returns:
         Entity - The created ragdoll entity
@@ -4844,10 +4953,14 @@ if SERVER then
         When implementing knockdown systems, unconsciousness, or player state management
 
     Parameters:
-        state (boolean) - Whether to ragdoll the player (true) or stand them up (false)
-        baseTime (number, optional) - Base time for ragdoll duration (default: 10)
-        getUpGrace (number, optional) - Grace period for getting up
-        getUpMessage (string, optional) - Message to display when getting up (default: "Waking up")
+        state (boolean)
+            Whether to ragdoll the player (true) or stand them up (false)
+        baseTime (number, optional)
+            Base time for ragdoll duration (default: 10)
+        getUpGrace (number, optional)
+            Grace period for getting up
+        getUpMessage (string, optional)
+            Message to display when getting up (default: "Waking up")
 
     Returns:
         None
@@ -5058,8 +5171,10 @@ if SERVER then
         When updating player state, implementing networked properties, or when other players need to see the change (like handcuff status)
 
     Parameters:
-        key (string) - The network variable key
-        value (any) - The value to set
+        key (string)
+            The network variable key
+        value (any)
+            The value to set
 
     Returns:
         None

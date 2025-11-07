@@ -19,12 +19,16 @@ local DefaultModels = {"models/player/group01/male_01.mdl", "models/player/group
         During faction initialization, module loading, or when creating custom factions
 
     Parameters:
-        - uniqueID (string): Unique identifier for the faction
-        - data (table): Faction data containing name, desc, color, models, etc.
+        uniqueID (string)
+            Unique identifier for the faction
+        data (table)
+            Faction data containing name, desc, color, models, etc.
 
     Returns:
-        - index (number): The faction's team index
-        - faction (table): The complete faction data table
+        index (number)
+            The faction's team index
+        faction (table)
+            The complete faction data table
 
     Realm:
         Shared
@@ -123,10 +127,11 @@ end
         Automatically called during faction registration, or manually when adding models
 
     Parameters:
-        - models (table): Table of model data (strings or tables with model paths)
+        models (table)
+            Table of model data (strings or tables with model paths)
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -184,10 +189,11 @@ end
         During gamemode initialization to load faction files from modules or custom directories
 
     Parameters:
-        - directory (string): Path to the directory containing faction files
+        directory (string)
+            Path to the directory containing faction files
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -285,10 +291,12 @@ end
         When you need to get faction data by either team index or unique ID
 
     Parameters:
-        - identifier (number/string): Either the faction's team index or unique ID
+        identifier (number/string)
+            Either the faction's team index or unique ID
 
     Returns:
-        - faction (table): The faction data table, or nil if not found
+        faction (table)
+            The faction data table, or nil if not found
 
     Realm:
         Shared
@@ -346,10 +354,12 @@ end
         When you need to convert a faction's unique ID to its team index
 
     Parameters:
-        - uniqueID (string): The faction's unique identifier
+        uniqueID (string)
+            The faction's unique identifier
 
     Returns:
-        - index (number): The faction's team index, or nil if not found
+        index (number)
+            The faction's team index, or nil if not found
 
     Realm:
         Shared
@@ -407,10 +417,12 @@ end
         When you need to retrieve all classes associated with a faction
 
     Parameters:
-        - faction (string/number): The faction's unique ID or team index
+        faction (string/number)
+            The faction's unique ID or team index
 
     Returns:
-        - classes (table): Table of class objects belonging to the faction
+        classes (table)
+            Table of class objects belonging to the faction
 
     Realm:
         Shared
@@ -483,10 +495,12 @@ end
         When you need to retrieve all players belonging to a faction
 
     Parameters:
-        - faction (string/number): The faction's unique ID or team index
+        faction (string/number)
+            The faction's unique ID or team index
 
     Returns:
-        - players (table): Table of player entities in the faction
+        players (table)
+            Table of player entities in the faction
 
     Realm:
         Shared
@@ -558,10 +572,12 @@ end
         When you need to know how many players are in a faction without getting the actual player objects
 
     Parameters:
-        - faction (string/number): The faction's unique ID or team index
+        faction (string/number)
+            The faction's unique ID or team index
 
     Returns:
-        - count (number): Number of players in the faction
+        count (number)
+            Number of players in the faction
 
     Realm:
         Shared
@@ -626,11 +642,14 @@ end
         When you need to check if a faction is part of a group of related factions
 
     Parameters:
-        - faction (string/number): The faction's unique ID or team index
-        - categoryFactions (table): Table of faction identifiers to check against
+        faction (string/number)
+            The faction's unique ID or team index
+        categoryFactions (table)
+            Table of faction identifiers to check against
 
     Returns:
-        - isCategory (boolean): True if the faction is in the category, false otherwise
+        isCategory (boolean)
+            True if the faction is in the category, false otherwise
 
     Realm:
         Shared
@@ -700,14 +719,20 @@ end
         For backward compatibility with older faction systems or when creating simple factions
 
     Parameters:
-        - index (number): The team index for the faction
-        - name (string): The faction's display name
-        - color (Color): The faction's team color
-        - default (boolean): Whether this is a default faction
-        - models (table): Optional table of models for the faction
+        index (number)
+            The team index for the faction
+        name (string)
+            The faction's display name
+        color (Color)
+            The faction's team color
+        default (boolean)
+            Whether this is a default faction
+        models (table)
+            Optional table of models for the faction
 
     Returns:
-        - faction (table): The generated faction data table
+        faction (table)
+            The generated faction data table
 
     Realm:
         Shared
@@ -823,7 +848,7 @@ end
         None
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -897,10 +922,12 @@ end
         When you need to retrieve the model categories available for a faction
 
     Parameters:
-        - teamName (string): The faction's unique ID
+        teamName (string)
+            The faction's unique ID
 
     Returns:
-        - categories (table): Table of category names for the faction's models
+        categories (table)
+            Table of category names for the faction's models
 
     Realm:
         Shared
@@ -973,11 +1000,14 @@ end
         When you need to retrieve models from a specific category of a faction
 
     Parameters:
-        - teamName (string): The faction's unique ID
-        - category (string): The category name to get models from
+        teamName (string)
+            The faction's unique ID
+        category (string)
+            The category name to get models from
 
     Returns:
-        - models (table): Table of models in the specified category
+        models (table)
+            Table of models in the specified category
 
     Realm:
         Shared
@@ -1053,10 +1083,12 @@ end
         When you need to find the default class that players spawn as in a faction
 
     Parameters:
-        - id (string/number): The faction's unique ID or team index
+        id (string/number)
+            The faction's unique ID or team index
 
     Returns:
-        - defaultClass (table): The default class object, or nil if not found
+        defaultClass (table)
+            The default class object, or nil if not found
 
     Realm:
         Shared
@@ -1148,10 +1180,12 @@ FACTION_STAFF = lia.faction.register("staff", {
         When checking if a player can access a faction based on whitelist status
 
     Parameters:
-        - faction (string/number): The faction's unique ID or team index
+        faction (string/number)
+            The faction's unique ID or team index
 
     Returns:
-        - hasWhitelist (boolean): True if the faction has whitelist restrictions, false otherwise
+        hasWhitelist (boolean)
+            True if the faction has whitelist restrictions, false otherwise
 
     Realm:
         Client
@@ -1226,10 +1260,12 @@ if CLIENT then
         When checking if a faction has whitelist restrictions on the server
 
     Parameters:
-        - faction (string/number): The faction's unique ID or team index
+        faction (string/number)
+            The faction's unique ID or team index
 
     Returns:
-        - hasWhitelist (boolean): True if the faction has whitelist restrictions, false otherwise
+        hasWhitelist (boolean)
+            True if the faction has whitelist restrictions, false otherwise
 
     Realm:
         Server

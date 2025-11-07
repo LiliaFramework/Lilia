@@ -12,18 +12,16 @@ The attribute system provides functionality for defining character attributes wi
 
 ### name
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the display name of the attribute
 
-**When Called**
-
+#### ⏰ When Called
 During attribute definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ATTRIBUTE.name = "Strength"
+    ATTRIBUTE.name = "Strength"
 
 ```
 
@@ -31,18 +29,16 @@ ATTRIBUTE.name = "Strength"
 
 ### desc
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the description of the attribute that appears in tooltips and UI
 
-**When Called**
-
+#### ⏰ When Called
 During attribute definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
+    ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and carrying capacity."
 
 ```
 
@@ -50,18 +46,16 @@ ATTRIBUTE.desc = "Physical power and muscle strength. Affects melee damage and c
 
 ### maxValue
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the maximum value this attribute can reach
 
-**When Called**
-
+#### ⏰ When Called
 During attribute definition (used by GetAttributeMax hook)
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ATTRIBUTE.maxValue = 50
+    ATTRIBUTE.maxValue = 50
 
 ```
 
@@ -69,18 +63,16 @@ ATTRIBUTE.maxValue = 50
 
 ### startingMax
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the maximum value this attribute can have during character creation
 
-**When Called**
-
+#### ⏰ When Called
 During attribute definition (used by GetAttributeStartingMax hook)
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ATTRIBUTE.startingMax = 20
+    ATTRIBUTE.startingMax = 20
 
 ```
 
@@ -88,18 +80,16 @@ ATTRIBUTE.startingMax = 20
 
 ### noStartBonus
 
-**Purpose**
-
+#### 📋 Purpose
 Prevents this attribute from appearing in character creation attribute allocation
 
-**When Called**
-
+#### ⏰ When Called
 During attribute definition (checked in character creation UI)
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ATTRIBUTE.noStartBonus = true
+    ATTRIBUTE.noStartBonus = true
 
 ```
 
@@ -107,38 +97,36 @@ ATTRIBUTE.noStartBonus = true
 
 ### OnSetup
 
-**Purpose**
-
+#### 📋 Purpose
 Hook function called when setting up attributes for a character
 
-**When Called**
-
+#### ⏰ When Called
 When a character spawns or when their attributes are initialized
 
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `client` (*Player*): The client whose character is being set up
-* `value` (*number*): The current attribute value
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The client whose character is being set up |
+| `value` | **number** | The current attribute value |
 
-**Returns**
-
+#### ↩️ Returns
 * None
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-function ATTRIBUTE:OnSetup(client, value)
-    local char = client:getChar()
-    if not char then return end
-    -- Set default attribute value if not already set
-    if value == 0 then
-        char:setAttrib(self.uniqueID, 10)
+    function ATTRIBUTE:OnSetup(client, value)
+        local char = client:getChar()
+        if not char then return end
+        -- Set default attribute value if not already set
+        if value == 0 then
+            char:setAttrib(self.uniqueID, 10)
+        end
     end
-end
 
 ```
 

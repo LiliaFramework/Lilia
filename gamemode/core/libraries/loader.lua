@@ -141,6 +141,10 @@ local FilesToLoad = {
         realm = "client"
     },
     {
+        path = "lilia/gamemode/core/libraries/swepeditor.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/currency.lua",
         realm = "shared"
     },
@@ -287,8 +291,10 @@ local ConditionalFiles = {
         During framework initialization, module loading, or when manually including files
 
     Parameters:
-        - path (string): The file path to include (e.g., "lilia/gamemode/core/libraries/util.lua")
-        - realm (string, optional): The realm to load the file in ("client", "server", "shared")
+        path (string)
+            The file path to include (e.g., "lilia/gamemode/core/libraries/util.lua")
+        realm (string, optional)
+            The realm to load the file in ("client", "server", "shared")
 
     Returns:
         None
@@ -303,12 +309,14 @@ local ConditionalFiles = {
     -- Simple: Include a shared library file
     lia.loader.include("lilia/gamemode/core/libraries/util.lua")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Include a file with explicit realm specification
     lia.loader.include("lilia/gamemode/core/libraries/logger.lua", "server")
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Include files based on conditions with error handling
     local filesToLoad = {
@@ -365,10 +373,14 @@ end
         During framework initialization to load entire directories of files
 
     Parameters:
-        - dir (string): The directory path to scan for Lua files
-        - raw (boolean, optional): If true, uses the exact path; if false, resolves relative to gamemode/schema
-        - deep (boolean, optional): If true, recursively searches subdirectories
-        - realm (string, optional): The realm to load files in ("client", "server", "shared")
+        dir (string)
+            The directory path to scan for Lua files
+        raw (boolean, optional)
+            If true, uses the exact path; if false, resolves relative to gamemode/schema
+        deep (boolean, optional)
+            If true, recursively searches subdirectories
+        realm (string, optional)
+            The realm to load files in ("client", "server", "shared")
 
     Returns:
         None
@@ -383,12 +395,14 @@ end
     -- Simple: Include all files in a directory
     lia.loader.includeDir("lilia/gamemode/core/libraries")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Include files with specific realm and deep search
     lia.loader.includeDir("lilia/gamemode/modules", false, true, "shared")
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Include multiple directories with different settings
     local dirsToLoad = {
@@ -426,10 +440,14 @@ end
         During framework initialization to load files with automatic realm detection
 
     Parameters:
-        - dir (string): The directory path to scan for Lua files
-        - raw (boolean, optional): If true, uses the exact path; if false, resolves relative to gamemode/schema
-        - recursive (boolean, optional): If true, recursively searches subdirectories
-        - forceRealm (string, optional): Forces all files to be loaded in this realm instead of auto-detection
+        dir (string)
+            The directory path to scan for Lua files
+        raw (boolean, optional)
+            If true, uses the exact path; if false, resolves relative to gamemode/schema
+        recursive (boolean, optional)
+            If true, recursively searches subdirectories
+        forceRealm (string, optional)
+            Forces all files to be loaded in this realm instead of auto-detection
 
     Returns:
         None
@@ -444,12 +462,14 @@ end
     -- Simple: Include files with automatic realm detection
     lia.loader.includeGroupedDir("lilia/gamemode/core/libraries")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Include files recursively with forced realm
     lia.loader.includeGroupedDir("lilia/gamemode/modules", false, true, "shared")
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Include multiple directories with different settings and error handling
     local dirsToLoad = {
@@ -556,7 +576,8 @@ local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
     -- Simple: Check for updates during server startup
     lia.loader.checkForUpdates()
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Check for updates with custom error handling
     local function safeUpdateCheck()
@@ -567,7 +588,8 @@ local versionURL = "https://liliaframework.github.io/versioning/lilia.json"
     end
     safeUpdateCheck()
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Check for updates with custom timing and logging
     local function scheduledUpdateCheck()
@@ -710,7 +732,8 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
         When critical errors occur during framework operation or module loading
 
     Parameters:
-        - msg (string): The error message to display
+        msg (string)
+            The error message to display
 
     Returns:
         None
@@ -725,7 +748,8 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
     -- Simple: Display a basic error message
     lia.error("Failed to load module")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Display error with context information
     local function loadConfig()
@@ -737,7 +761,8 @@ lia.loader.include("lilia/gamemode/core/libraries/data.lua", "server")
     end
     end
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Display detailed error with stack trace and context
     local function safeModuleLoad(moduleName)
@@ -769,7 +794,8 @@ end
         When non-critical issues occur that should be brought to attention
 
     Parameters:
-        - msg (string): The warning message to display
+        msg (string)
+            The warning message to display
 
     Returns:
         None
@@ -784,7 +810,8 @@ end
     -- Simple: Display a basic warning message
     lia.warning("Module version mismatch detected")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Display warning with context information
     local function checkModuleCompatibility(module)
@@ -793,7 +820,8 @@ end
         end
     end
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Display warning with detailed information and conditional logic
     local function validateModuleDependencies(module)
@@ -827,7 +855,8 @@ end
         When providing general information about framework operations or status updates
 
     Parameters:
-        - msg (string): The informational message to display
+        msg (string)
+            The informational message to display
 
     Returns:
         None
@@ -842,14 +871,16 @@ end
     -- Simple: Display a basic information message
     lia.information("Framework initialized successfully")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Display information with context
     local function reportModuleStatus(module)
         lia.information("Module '" .. module.name .. "' loaded successfully")
     end
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Display detailed information with statistics
     local function reportFrameworkStatus()
@@ -881,8 +912,10 @@ end
         During framework initialization to report progress of different bootstrap phases
 
     Parameters:
-        - section (string): The bootstrap section name (e.g., "Database", "Modules", "HotReload")
-        - msg (string): The bootstrap message to display
+        section (string)
+            The bootstrap section name (e.g., "Database", "Modules", "HotReload")
+        msg (string)
+            The bootstrap message to display
 
     Returns:
         None
@@ -897,14 +930,16 @@ end
     -- Simple: Display a basic bootstrap message
     lia.bootstrap("Database", "Connection established")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Display bootstrap progress with context
     local function reportModuleLoading(moduleName, status)
         lia.bootstrap("Modules", "Loading " .. moduleName .. ": " .. status)
     end
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Display detailed bootstrap progress with timing and statistics
     local function reportBootstrapProgress(section, current, total, startTime)
@@ -935,7 +970,8 @@ end
         When logging important events or sending notifications to Discord channels
 
     Parameters:
-        - embed (table): Discord embed object containing message data (title, description, color, fields, etc.)
+        embed (table)
+            Discord embed object containing message data (title, description, color, fields, etc.)
 
     Returns:
         None
@@ -953,7 +989,8 @@ end
     description = "The server has been initialized successfully"
     })
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Send a detailed Discord message with custom formatting
     local function notifyPlayerJoin(player)
@@ -968,7 +1005,8 @@ end
         })
     end
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Send complex Discord message with error handling and custom logic
     local function sendServerStatus()
@@ -1048,7 +1086,8 @@ end
         During framework initialization to register all custom entities, weapons, and tools
 
     Parameters:
-        - path (string): The base path containing entity folders (e.g., "lilia/gamemode/entities")
+        path (string)
+            The base path containing entity folders (e.g., "lilia/gamemode/entities")
 
     Returns:
         None
@@ -1063,7 +1102,8 @@ end
     -- Simple: Include entities from the default gamemode path
     lia.loader.includeEntities("lilia/gamemode/entities")
     ```
-        Medium Complexity:
+
+    Medium Complexity:
     ```lua
     -- Medium: Include entities from multiple paths with error handling
     local entityPaths = {
@@ -1078,7 +1118,8 @@ end
             end
         end
     ```
-        High Complexity:
+
+    High Complexity:
     ```lua
     -- High: Include entities with custom registration and validation
     local function safeEntityInclusion(path)
@@ -1177,8 +1218,6 @@ function lia.loader.includeEntities(path)
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
 
-lia.loader.includeEntities("lilia/gamemode/entities")
-lia.loader.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
 if SERVER then
     local function SetupDatabase()
         hook.Run("SetupDatabase")
@@ -1217,12 +1256,87 @@ else
 end
 
 local hasInitializedModules = false
+--[[
+    Purpose:
+        Initializes or re-initializes the Lilia gamemode, including modules, config, factions, and compatibility files
+
+    When Called:
+        Called during initial gamemode startup (GM:Initialize) or during hot reloads (GM:OnReloaded)
+
+    Parameters:
+        isReload (boolean)
+            true if this is a hot reload, false if this is initial gamemode startup
+
+    Returns:
+        void
+
+    Realm:
+        Shared
+
+    Example Usage:
+    ```lua
+    -- Initial gamemode startup
+    lia.loader.initializeGamemode(false)
+
+    -- Hot reload
+    lia.loader.initializeGamemode(true)
+    ```
+]]
+function lia.loader.initializeGamemode(isReload)
+    if isReload then
+        lia.reloadInProgress = true
+        lia.lastReloadTime = CurTime()
+    end
+
+    if isReload or not hasInitializedModules then
+        lia.module.initialize()
+        if not isReload then hasInitializedModules = true end
+    end
+
+    lia.config.load()
+    lia.faction.formatModelData()
+    if SERVER then
+        if isReload then
+            local adminHasChanges = lia.administrator.hasChanges()
+            local playerInteractHasChanges = lia.playerinteract.hasChanges()
+            timer.Simple(0.5, function() lia.config.send() end)
+            timer.Simple(2.0, function() if adminHasChanges then lia.administrator.sync() end end)
+            timer.Simple(3.5, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
+            timer.Simple(5.0, function() lia.reloadInProgress = false end)
+        else
+            lia.config.send()
+            lia.administrator.sync()
+            lia.playerinteract.sync()
+        end
+    end
+
+    local loadedCompatibility = {}
+    for _, compatFile in ipairs(ConditionalFiles) do
+        local shouldLoad = false
+        if isfunction(compatFile.condition) then
+            local ok, result = pcall(compatFile.condition)
+            if ok then
+                shouldLoad = result
+            else
+                lia.error(L("compatibilityConditionError", tostring(result)))
+            end
+        elseif compatFile.global then
+            shouldLoad = _G[compatFile.global] ~= nil
+        end
+
+        if shouldLoad then
+            lia.loader.include(compatFile.path, compatFile.realm or "shared")
+            loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
+        end
+    end
+
+    if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
+    if isReload then lia.bootstrap("HotReload", L("gamemodeHotreloadedSuccessfully")) end
+end
+
 function GM:Initialize()
     if engine.ActiveGamemode() == "lilia" then lia.error(L("noSchemaLoaded")) end
-    if not hasInitializedModules then
-        lia.module.initialize()
-        hasInitializedModules = true
-    end
+    lia.loader.initializeGamemode(false)
 end
 
 function GM:OnReloaded()
@@ -1239,43 +1353,7 @@ function GM:OnReloaded()
         return
     end
 
-    lia.reloadInProgress = true
-    lia.lastReloadTime = currentTime
-    lia.module.initialize()
-    lia.config.load()
-    lia.faction.formatModelData()
-    if SERVER then
-        timer.Simple(0.5, function() lia.config.send() end)
-        timer.Simple(2.0, function() lia.administrator.sync() end)
-        timer.Simple(3.5, function() lia.playerinteract.syncToClients() end)
-        timer.Simple(5.0, function()
-            lia.bootstrap("HotReload", L("gamemodeHotreloadedSuccessfully"))
-            lia.reloadInProgress = false
-        end)
-    else
-        chat.AddText(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), L("gamemodeHotreloadedSuccessfully"))
-    end
+    lia.loader.initializeGamemode(true)
 end
 
-local loadedCompatibility = {}
-for _, compatFile in ipairs(ConditionalFiles) do
-    local shouldLoad = false
-    if isfunction(compatFile.condition) then
-        local ok, result = pcall(compatFile.condition)
-        if ok then
-            shouldLoad = result
-        else
-            lia.error(L("compatibilityConditionError", tostring(result)))
-        end
-    elseif compatFile.global then
-        shouldLoad = _G[compatFile.global] ~= nil
-    end
-
-    if shouldLoad then
-        lia.loader.include(compatFile.path, compatFile.realm or "shared")
-        loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
-    end
-end
-
-if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end

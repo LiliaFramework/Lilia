@@ -1,6 +1,6 @@
 ﻿SWEP.Base = "weapon_base"
 SWEP.PrintName = L("distanceTool")
-SWEP.Author = "Samael"
+SWEP.Author = "liliaplayer"
 SWEP.Contact = "@liliaplayer"
 SWEP.Purpose = L("measureDistanceBetweenTwoPoints")
 SWEP.Category = "Lilia"

@@ -1,4 +1,8 @@
 ﻿local animDuration = 0.3
+-- Cache gradient material to avoid recreating on every paint/reload
+local GRADIENT_MAT = Material("vgui/gradient-d")
+-- Cache default button shadow color
+local DEFAULT_BUTTON_SHADOW = Color(18, 32, 32, 35)
 local PANEL = {}
 function PANEL:Init()
     self._activeShadowTimer = 0
@@ -11,8 +15,8 @@ function PANEL:Init()
     self.icon = ""
     self.icon_size = 16
     self.text = L("button")
-    self.col = lia.color.theme.panel[1]
-    self.col_hov = lia.color.theme.button_hovered
+    self.col = (lia.color.theme and lia.color.theme.panel and lia.color.theme.panel[1]) or Color(34, 62, 62)
+    self.col_hov = (lia.color.theme and lia.color.theme.button_hovered) or Color(70, 140, 140)
     self.bool_gradient = true
     self.click_alpha = 0
     self.click_x = 0
@@ -66,11 +70,11 @@ function PANEL:GetText()
 end
 
 function PANEL:SetColor(col)
-    self.col = col
+    self.col = col or (lia.color.theme and lia.color.theme.panel and lia.color.theme.panel[1]) or Color(34, 62, 62)
 end
 
 function PANEL:SetColorHover(col)
-    self.col_hov = col
+    self.col_hov = col or (lia.color.theme and lia.color.theme.button_hovered) or Color(70, 140, 140)
 end
 
 function PANEL:SetGradient(is_grad)
@@ -115,8 +119,9 @@ function PANEL:Paint(w, h)
 
     draw.RoundedBox(self.radius, 0, 0, w, h, self.col)
     if self.bool_gradient then
-        surface.SetDrawColor(lia.color.theme.button_shadow)
-        surface.SetMaterial(Material("vgui/gradient-d"))
+        local shadowCol = (lia.color.theme and lia.color.theme.button_shadow) or DEFAULT_BUTTON_SHADOW
+        surface.SetDrawColor(shadowCol)
+        surface.SetMaterial(GRADIENT_MAT)
         surface.DrawTexturedRect(0, 0, w, h)
     end
 
@@ -134,7 +139,7 @@ function PANEL:Paint(w, h)
 
     local iconSize = self.icon_size or 16
     if self.text ~= "" then
-        draw.SimpleText(self.text, self.font, w * 0.5 + (self.icon and self.icon ~= "" and iconSize * 0.5 + 2 or 0), h * 0.5, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self.text, self.font, w * 0.5 + (self.icon and self.icon ~= "" and iconSize * 0.5 + 2 or 0), h * 0.5, (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         if self.icon and self.icon ~= "" then
             surface.SetFont(self.font)
             local posX = (w - surface.GetTextSize(self.text) - iconSize) * 0.5 - 2

@@ -67,7 +67,7 @@ local function validateSoundFile(filePath, fileData)
 end
 
 local function validateURL(url)
-    if not url or type(url) ~= "string" then return false, L("urlNotValidString") end
+    if not url or not isstring(url) then return false, L("urlNotValidString") end
     if not url:find("^https?://") then return false, L("urlMustStartWithHttp") end
     local domain = url:match("^https?://([^/]+)")
     if not domain then return false, L("urlNoValidDomain") end
@@ -98,9 +98,12 @@ end
         When a sound needs to be downloaded from a web URL, either directly or through other websound functions
 
     Parameters:
-        - name (string): The name/path for the sound file (will be normalized)
-        - url (string, optional): The HTTP/HTTPS URL to download from (uses stored URL if not provided)
-        - cb (function, optional): Callback function called with (path, fromCache, error) parameters
+        name (string)
+            The name/path for the sound file (will be normalized)
+        url (string, optional)
+            The HTTP/HTTPS URL to download from (uses stored URL if not provided)
+        cb (function, optional)
+            Callback function called with (path, fromCache, error) parameters
 
     Returns:
         None (uses callback for results)
@@ -247,9 +250,12 @@ end
         When registering a new sound file that should be available for playback
 
     Parameters:
-        - name (string): The name/path for the sound file (will be normalized)
-        - url (string): The HTTP/HTTPS URL to download from
-        - cb (function, optional): Callback function called with (path, fromCache, error) parameters
+        name (string)
+            The name/path for the sound file (will be normalized)
+        url (string)
+            The HTTP/HTTPS URL to download from
+        cb (function, optional)
+            Callback function called with (path, fromCache, error) parameters
 
     Returns:
         None (uses callback for results)
@@ -331,7 +337,8 @@ end
         When checking if a sound file is available locally or getting its path for playback
 
     Parameters:
-        - name (string): The name/path of the sound file to retrieve (will be normalized)
+        name (string)
+            The name/path of the sound file to retrieve (will be normalized)
 
     Returns:
         string or nil - The local file path if found, nil if not cached
@@ -734,8 +741,10 @@ end
         When a button is clicked and needs to play a sound
 
     Parameters:
-        - customSound (string, optional): Custom sound to play instead of default
-        - callback (function, optional): Callback function called with (success) parameter
+        customSound (string, optional)
+            Custom sound to play instead of default
+        callback (function, optional)
+            Callback function called with (success) parameter
 
     Returns:
         None (uses callback for results)

@@ -10,6 +10,8 @@
 lia.playerinteract = lia.playerinteract or {}
 lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
+lia.playerinteract._lastSyncInteractionCount = lia.playerinteract._lastSyncInteractionCount or 0
+lia.playerinteract._lastSyncCategoryCount = lia.playerinteract._lastSyncCategoryCount or 0
 --[[
     Purpose:
         Checks if a client is within interaction range of an entity
@@ -18,9 +20,12 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
         Called when determining if an interaction should be available to a player
 
     Parameters:
-        - client (Player): The player attempting the interaction
-        - entity (Entity): The target entity to check distance against
-        - customRange (number, optional): Custom range override (defaults to 250 units)
+        client (Player)
+            The player attempting the interaction
+        entity (Entity)
+            The target entity to check distance against
+        customRange (number, optional)
+            Custom range override (defaults to 250 units)
 
     Returns:
         boolean - true if within range, false otherwise
@@ -36,7 +41,7 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     if lia.playerinteract.isWithinRange(client, targetEntity) then
         -- Player is within 250 units
     end
-    ```
+        ```
 
     Medium Complexity:
     ```lua
@@ -45,7 +50,7 @@ lia.playerinteract.categories = lia.playerinteract.categories or {}
     if lia.playerinteract.isWithinRange(client, targetEntity, customRange) then
         -- Player is within 100 units for close-range interaction
     end
-    ```
+        ```
 
     High Complexity:
     ```lua
@@ -72,7 +77,8 @@ end
         Called when opening interaction menu or checking available interactions
 
     Parameters:
-        - client (Player, optional): The player to get interactions for (defaults to LocalPlayer())
+        client (Player, optional)
+            The player to get interactions for (defaults to LocalPlayer())
 
     Returns:
         table - Dictionary of available interactions indexed by interaction name
@@ -89,7 +95,7 @@ end
     for name, interaction in pairs(interactions) do
         print("Available interaction:", name)
     end
-    ```
+        ```
 
     Medium Complexity:
     ```lua
@@ -102,7 +108,7 @@ end
             -- Player has interactions available
         end
     end
-    ```
+        ```
 
     High Complexity:
     ```lua
@@ -141,7 +147,8 @@ end
         Called when opening personal actions menu or checking available actions
 
     Parameters:
-        - client (Player, optional): The player to get actions for (defaults to LocalPlayer())
+        client (Player, optional)
+            The player to get actions for (defaults to LocalPlayer())
 
     Returns:
         table - Dictionary of available actions indexed by action name
@@ -158,7 +165,7 @@ end
     for name, action in pairs(actions) do
         print("Available action:", name)
     end
-    ```
+        ```
 
     Medium Complexity:
     ```lua
@@ -171,7 +178,7 @@ end
             -- Player has actions available
         end
     end
-    ```
+        ```
 
     High Complexity:
     ```lua
@@ -204,7 +211,8 @@ end
         Called when preparing options for display in the interaction menu
 
     Parameters:
-        - options (table): Dictionary of options to prepare
+        options (table)
+            Dictionary of options to prepare
 
     Returns:
         table - Array of options for flat display
@@ -222,7 +230,7 @@ end
     for _, option in pairs(optionsList) do
         print("Option:", option.name)
     end
-    ```
+        ```
 
     Medium Complexity:
     ```lua
@@ -233,7 +241,7 @@ end
     if count > 0 then
         -- Options are ready for display
     end
-    ```
+        ```
 
     High Complexity:
     ```lua
@@ -265,18 +273,30 @@ if SERVER then
             Called during module initialization or when registering custom interactions
 
         Parameters:
-            - name (string): Unique identifier for the interaction
-            - data (table): Interaction configuration table containing:
-                - serverOnly (boolean, optional): Whether interaction runs server-side only
-                - shouldShow (function, optional): Function to determine if interaction should be visible
-                - onRun (function): Function to execute when interaction is triggered
-                - range (number, optional): Interaction range in units (defaults to 250)
-                - category (string, optional): Category for UI organization
-                - target (string, optional): Target type - "player", "entity", or "any" (defaults to "player")
-                - timeToComplete (number, optional): Time in seconds for timed interactions
-                - actionText (string, optional): Text shown to performing player during timed action
-                - targetActionText (string, optional): Text shown to target player during timed action
-                - categoryColor (Color, optional): Color for category display
+            name (string)
+                Unique identifier for the interaction
+            data (table)
+                Interaction configuration table containing:
+                serverOnly (boolean, optional)
+                    Whether interaction runs server-side only
+                shouldShow (function, optional)
+                    Function to determine if interaction should be visible
+                onRun (function)
+                    Function to execute when interaction is triggered
+                range (number, optional)
+                    Interaction range in units (defaults to 250)
+                category (string, optional)
+                    Category for UI organization
+                target (string, optional)
+                    Target type - "player", "entity", or "any" (defaults to "player")
+                timeToComplete (number, optional)
+                    Time in seconds for timed interactions
+                actionText (string, optional)
+                    Text shown to performing player during timed action
+                targetActionText (string, optional)
+                    Text shown to target player during timed action
+                categoryColor (Color, optional)
+                    Color for category display
 
         Returns:
             void
@@ -297,9 +317,9 @@ if SERVER then
             -- Give money logic here
         end
     })
-    ```
+        ```
 
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     -- Medium: Add timed interaction with progress indicators
     lia.playerinteract.addInteraction("healPlayer", {
@@ -316,9 +336,9 @@ if SERVER then
             client:notify("Player healed successfully!")
         end
     })
-    ```
+        ```
 
-        High Complexity:
+    High Complexity:
     ```lua
     -- High: Complex interaction with validation and server-side processing
     lia.playerinteract.addInteraction("arrestPlayer", {
@@ -385,17 +405,28 @@ if SERVER then
             Called during module initialization or when registering custom personal actions
 
         Parameters:
-            - name (string): Unique identifier for the action
-            - data (table): Action configuration table containing:
-                - serverOnly (boolean, optional): Whether action runs server-side only
-                - shouldShow (function, optional): Function to determine if action should be visible
-                - onRun (function): Function to execute when action is triggered
-                - range (number, optional): Action range in units (defaults to 250)
-                - category (string, optional): Category for UI organization
-                - timeToComplete (number, optional): Time in seconds for timed actions
-                - actionText (string, optional): Text shown to performing player during timed action
-                - targetActionText (string, optional): Text shown to target player during timed action
-                - categoryColor (Color, optional): Color for category display
+            name (string)
+                Unique identifier for the action
+            data (table)
+                Action configuration table containing:
+                serverOnly (boolean, optional)
+                    Whether action runs server-side only
+                shouldShow (function, optional)
+                    Function to determine if action should be visible
+                onRun (function)
+                    Function to execute when action is triggered
+                range (number, optional)
+                    Action range in units (defaults to 250)
+                category (string, optional)
+                    Category for UI organization
+                timeToComplete (number, optional)
+                    Time in seconds for timed actions
+                actionText (string, optional)
+                    Text shown to performing player during timed action
+                targetActionText (string, optional)
+                    Text shown to target player during timed action
+                categoryColor (Color, optional)
+                    Color for category display
 
         Returns:
             void
@@ -419,9 +450,9 @@ if SERVER then
             client:notifyInfoLocalized("voiceModeSet", L("whispering"))
         end
     })
-    ```
+        ```
 
-        Medium Complexity:
+    Medium Complexity:
     ```lua
     -- Medium: Add timed personal action with progress indicator
     lia.playerinteract.addAction("meditate", {
@@ -443,9 +474,9 @@ if SERVER then
             end)
         end
     })
-    ```
+        ```
 
-        High Complexity:
+    High Complexity:
     ```lua
     -- High: Complex personal action with multiple conditions and effects
     lia.playerinteract.addAction("emergencyCall", {
@@ -477,7 +508,7 @@ if SERVER then
                 client:GetPos()
             )
 
-            for _, ply in ipairs(player.GetAll()) do
+            for _, ply in player.Iterator() do
                 if ply:getChar() and ply:getChar():getFaction() == FACTION_POLICE then
                     ply:notify(emergencyMsg)
                 end
@@ -522,7 +553,8 @@ if SERVER then
             Called when interactions/actions are added or when clients connect
 
         Parameters:
-            - client (Player, optional): Specific client to sync to (if nil, syncs to all players)
+            client (Player, optional)
+                Specific client to sync to (if nil, syncs to all players)
 
         Returns:
             void
@@ -535,8 +567,8 @@ if SERVER then
     Low Complexity:
     ```lua
     -- Simple: Sync all interactions to all clients
-    lia.playerinteract.syncToClients()
-    ```
+    lia.playerinteract.sync ()
+        ```
 
     Medium Complexity:
     ```lua
@@ -544,13 +576,13 @@ if SERVER then
     hook.Add("PlayerInitialSpawn", "SyncInteractions", function(client)
         timer.Simple(2, function() -- Wait for client to fully load
             if IsValid(client) then
-                lia.playerinteract.syncToClients(client)
+                lia.playerinteract.sync (client)
             end
         end)
     end)
-    ```
+        ```
 
-        High Complexity:
+    High Complexity:
     ```lua
     -- High: Conditional sync with validation and error handling
     function syncInteractionsToClient(client)
@@ -588,7 +620,7 @@ if SERVER then
     end
     ```
     ]]
-    function lia.playerinteract.syncToClients(client)
+    function lia.playerinteract.sync(client)
         local filteredData = {}
         for name, data in pairs(lia.playerinteract.stored) do
             filteredData[name] = {
@@ -608,6 +640,8 @@ if SERVER then
             lia.net.writeBigTable(client, "liaPlayerInteractSync", filteredData)
             lia.net.writeBigTable(client, "liaPlayerInteractCategories", lia.playerinteract.categories)
         else
+            lia.playerinteract._lastSyncInteractionCount = table.Count(lia.playerinteract.stored)
+            lia.playerinteract._lastSyncCategoryCount = table.Count(lia.playerinteract.categories)
             local players = player.GetAll()
             local batchSize = 3
             local delay = 0
@@ -627,6 +661,37 @@ if SERVER then
                 delay = delay + 0.15
             end
         end
+    end
+
+    --[[
+    Purpose:
+        Checks if player interaction data has changed since the last sync operation
+
+    When Called:
+        Called during hot reload to determine if interaction data needs to be re-synced
+
+    Parameters:
+        None
+
+    Returns:
+        boolean
+            true if interactions or categories have changed since last sync, false otherwise
+
+    Realm:
+        Server
+
+    Example Usage:
+    ```lua
+    -- Check if interaction data needs syncing
+    if lia.playerinteract.hasChanges() then
+        lia.playerinteract.sync()
+    end
+    ```
+    ]]
+    function lia.playerinteract.hasChanges()
+        local currentInteractionCount = table.Count(lia.playerinteract.stored)
+        local currentCategoryCount = table.Count(lia.playerinteract.categories)
+        return currentInteractionCount ~= lia.playerinteract._lastSyncInteractionCount or currentCategoryCount ~= lia.playerinteract._lastSyncCategoryCount
     end
 
     lia.playerinteract.addInteraction("giveMoney", {
@@ -706,18 +771,25 @@ else
             Called when player presses interaction keybind or requests menu
 
         Parameters:
-            - options (table): Dictionary of available options to display
-            - isInteraction (boolean): Whether this is an interaction menu (true) or action menu (false)
-            - titleText (string): Title text to display at top of menu
-            - closeKey (number): Key code that closes the menu when released
-            - netMsg (string): Network message name for server-only interactions
-            - preFiltered (boolean, optional): Whether options are already filtered (defaults to false)
+            options (table)
+                Dictionary of available options to display
+            isInteraction (boolean)
+                Whether this is an interaction menu (true) or action menu (false)
+            titleText (string)
+                Title text to display at top of menu
+            closeKey (number)
+                Key code that closes the menu when released
+            netMsg (string)
+                Network message name for server-only interactions
+            preFiltered (boolean, optional)
+                Whether options are already filtered (defaults to false)
 
         Returns:
             Panel - The created menu frame (returns from lia.derma.optionsMenu)
 
         Realm:
             Client
+
         Note: This function is now a thin wrapper around lia.derma.optionsMenu for backwards compatibility.
 
         Example Usage:
@@ -727,16 +799,16 @@ else
     -- Simple: Open basic interaction menu
     local interactions = lia.playerinteract.getInteractions()
     lia.playerinteract.openMenu(interactions, true, "Interactions", KEY_TAB, "liaRequestInteractOptions")
-    ```
+        ```
 
     Medium Complexity:
     ```lua
     -- Medium: Open action menu with custom title and key
     local actions = lia.playerinteract.getActions()
     lia.playerinteract.openMenu(actions, false, "Personal Actions", KEY_G, "liaRequestInteractOptions")
-    ```
+        ```
 
-        High Complexity:
+    High Complexity:
     ```lua
     -- High: Custom menu with pre-filtered options and validation
     local client = LocalPlayer()

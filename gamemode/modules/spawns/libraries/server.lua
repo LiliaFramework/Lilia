@@ -158,6 +158,8 @@ function MODULE:PlayerDeath(client, _, attacker)
         client:setNetVar("IsDeadRestricted", true)
         client:setNetVar("lastDeathTime", deathTime)
         timer.Simple(0.1, function() if IsValid(client) and client:getChar() and not client:Alive() then client:setNetVar("lastDeathTime", deathTime) end end)
+    else
+        -- Bots still auto-respawn after spawn time
         local spawnTime = lia.config.get("SpawnTime", 5)
         timer.Simple(spawnTime, function() if IsValid(client) and client:getChar() and not client:Alive() then client:Spawn() end end)
     end

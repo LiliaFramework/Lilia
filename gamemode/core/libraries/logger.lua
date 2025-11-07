@@ -258,9 +258,12 @@ end
         When modules or external systems need to add custom log types
 
     Parameters:
-        - logType (string): Unique identifier for the log type
-        - func (function): Function that formats the log message, receives client and additional parameters
-        - category (string): Category name for organizing log entries
+        logType (string)
+            Unique identifier for the log type
+        func (function)
+            Function that formats the log message, receives client and additional parameters
+        category (string)
+            Category name for organizing log entries
 
     Returns:
         None
@@ -314,13 +317,18 @@ end
         Internally by lia.log.add() or when manually retrieving log messages
 
     Parameters:
-        - client (Player): The player who triggered the log event (can be nil for system events)
-        - logType (string): The log type identifier to format
-        - ... (vararg): Additional parameters passed to the log type's formatting function
+        client (Player)
+            The player who triggered the log event (can be nil for system events)
+        logType (string)
+            The log type identifier to format
+        ... (vararg)
+            Additional parameters passed to the log type's formatting function
 
     Returns:
-        - result (string): The formatted log message, or nil if log type doesn't exist or function fails
-        - category (string): The category of the log type, or nil if log type doesn't exist
+        result (string)
+            The formatted log message, or nil if log type doesn't exist or function fails
+        category (string)
+            The category of the log type, or nil if log type doesn't exist
 
     Realm:
         Server
@@ -377,9 +385,12 @@ end
         When any significant player action or system event occurs that needs logging
 
     Parameters:
-        - client (Player): The player who triggered the log event (can be nil for system events)
-        - logType (string): The log type identifier to use for formatting
-        - ... (vararg): Additional parameters passed to the log type's formatting function
+        client (Player)
+            The player who triggered the log event (can be nil for system events)
+        logType (string)
+            The log type identifier to use for formatting
+        ... (vararg)
+            Additional parameters passed to the log type's formatting function
 
     Returns:
         None

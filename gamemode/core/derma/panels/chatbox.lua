@@ -405,13 +405,6 @@ function PANEL:Think()
     end
 end
 
-function PANEL:Update()
-    if IsValid(self) then
-        self:Remove()
-        vgui.Create("liaChatBox")
-    end
-end
-
 function PANEL:OnThemeChanged()
     if not IsValid(self) then return end
     if IsValid(self.commandList) then

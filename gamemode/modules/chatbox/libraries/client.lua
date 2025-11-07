@@ -2,6 +2,11 @@
 chat.liaAddText = chat.liaAddText or chat.AddText
 function MODULE:CreateChat()
     if IsValid(self.panel) then return end
+    if IsValid(lia.gui.chat) then
+        self.panel = lia.gui.chat
+        return
+    end
+
     self.panel = vgui.Create("liaChatBox")
     hook.Run("ChatboxPanelCreated", self.panel)
 end
@@ -11,7 +16,12 @@ function MODULE:InitPostEntity()
 end
 
 local function RegenChat()
-    if IsValid(MODULE.panel) then MODULE.panel:Remove() end
+    for _, panel in ipairs(vgui.GetAll()) do
+        if IsValid(panel) and panel:GetName() == "liaChatBox" then panel:Remove() end
+    end
+
+    MODULE.panel = nil
+    lia.gui.chat = nil
     MODULE:CreateChat()
 end
 

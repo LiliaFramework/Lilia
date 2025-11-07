@@ -102,8 +102,10 @@ ATTRIBUTE.noStartBonus = false
         When a character spawns or when their attributes are initialized
 
     Parameters:
-        - client (Player): The client whose character is being set up
-        - value (number): The current attribute value
+        client (Player)
+            The client whose character is being set up
+        value (number)
+            The current attribute value
 
     Returns:
         None

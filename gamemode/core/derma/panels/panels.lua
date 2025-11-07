@@ -224,14 +224,23 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
 end
 
 function QuickPanel:addCheck(text, cb, checked)
-    local btn = self:addButton(text)
-    local chk = vgui.Create("liaCheckbox", btn)
+    local row = self.scroll:Add("DPanel")
+    row:SetTall(36)
+    row:Dock(TOP)
+    row:DockMargin(0, 1, 0, 0)
+    row.Paint = function(_, _, h)
+        local theme = lia.color.theme
+        local textColor = theme and theme.text or Color(255, 255, 255)
+        draw.SimpleText(text, "LiliaFont.20", 8, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    end
+
+    local chk = vgui.Create("liaCheckbox", row)
     chk:SetChecked(checked)
     chk:SetSize(22, 22)
-    chk.OnChange = function(_, v) if cb then cb(btn, v) end end
-    btn.DoClick = function() chk:SetChecked(not chk:GetChecked()) end
-    btn.PerformLayout = function(_, w, h) chk:SetPos(w - chk:GetWide() - 8, math.floor((h - chk:GetTall()) * 0.5)) end
-    return btn
+    chk.OnChange = function(_, v) if cb then cb(row, v) end end
+    row.PerformLayout = function(_, w, h) chk:SetPos(w - chk:GetWide() - 8, math.floor((h - chk:GetTall()) * 0.5)) end
+    self.items[#self.items + 1] = row
+    return row
 end
 
 function QuickPanel:setIcon(ch)

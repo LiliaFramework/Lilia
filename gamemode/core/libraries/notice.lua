@@ -17,9 +17,12 @@ if SERVER then
             When server needs to display a notification to player(s)
 
         Parameters:
-            - client (Player|nil): Target player to send notification to, or nil for all players
-            - message (string): The notification message text to display
-            - notifType (string|nil): Type of notification ("default", "error", "success", "info", etc.)
+            client (Player|nil)
+                Target player to send notification to, or nil for all players
+            message (string)
+                The notification message text to display
+            notifType (string|nil)
+                Type of notification ("default", "error", "success", "info", etc.)
 
         Returns:
             None
@@ -76,10 +79,14 @@ if SERVER then
             When server needs to display a localized notification with parameter substitution
 
         Parameters:
-            - client (Player|nil): Target player to send notification to, or nil for all players
-            - key (string): Localization key for the message
-            - notifType (string|nil): Type of notification ("default", "error", "success", "info", etc.)
-            - ... (any): Variable arguments to substitute into the localized message
+            client (Player|nil)
+                Target player to send notification to, or nil for all players
+            key (string)
+                Localization key for the message
+            notifType (string|nil)
+                Type of notification ("default", "error", "success", "info", etc.)
+            ... (any)
+                Variable arguments to substitute into the localized message
 
         Returns:
             None
@@ -102,7 +109,7 @@ if SERVER then
         lia.notices.notifySuccessLocalized(player, "player.welcome", player:Name())
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Send localized notifications with multiple parameters
         local players = player.GetAll()
@@ -159,7 +166,7 @@ else
         -- No direct usage needed - handled by network receiver
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Custom network receiver with additional processing
         net.Receive("liaNotificationData", function()
@@ -169,7 +176,7 @@ else
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Override default behavior with custom notification handling
         local originalReceiveNotify = lia.notices.receiveNotify
@@ -228,7 +235,7 @@ else
         -- No direct usage needed - handled by network receiver
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Custom network receiver with additional processing
         net.Receive("liaNotifyLocal", function()
@@ -238,7 +245,7 @@ else
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Override default behavior with custom localized notification handling
         local originalReceiveNotifyL = lia.notices.receiveNotifyL
@@ -293,9 +300,12 @@ else
             When client needs to display a notification without server communication
 
         Parameters:
-            - _ (any): Ignored parameter (for compatibility with server version)
-            - message (string): The notification message text to display
-            - notifType (string|nil): Type of notification ("default", "error", "success", "info", etc.)
+            _ (any)
+                Ignored parameter (for compatibility with server version)
+            message (string)
+                The notification message text to display
+            notifType (string|nil)
+                Type of notification ("default", "error", "success", "info", etc.)
 
         Returns:
             None
@@ -311,14 +321,14 @@ else
         lia.notices.notify(nil, "Settings saved!", "success")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Display notification with dynamic content
         local playerName = LocalPlayer():Name()
         lia.notices.notify(nil, "Welcome back, " .. playerName .. "!", "info")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Display notifications based on conditions
         local player = LocalPlayer()
@@ -352,10 +362,14 @@ else
             When client needs to display a localized notification without server communication
 
         Parameters:
-            - client (any): Ignored parameter (for compatibility with server version)
-            - key (string): Localization key for the message
-            - notifType (string|nil): Type of notification ("default", "error", "success", "info", etc.)
-            - ... (any): Variable arguments to substitute into the localized message
+            client (any)
+                Ignored parameter (for compatibility with server version)
+            key (string)
+                Localization key for the message
+            notifType (string|nil)
+                Type of notification ("default", "error", "success", "info", etc.)
+            ... (any)
+                Variable arguments to substitute into the localized message
 
         Returns:
             None
@@ -371,14 +385,14 @@ else
         lia.notices.notifySuccessLocalized(nil, "ui.settings.saved")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Display localized notification with one parameter
         local playerName = LocalPlayer():Name()
         lia.notices.notifyInfoLocalized(nil, "ui.welcome.back", playerName)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Display localized notifications with multiple parameters
         local player = LocalPlayer()
@@ -434,8 +448,10 @@ else
             When legacy notification functions are used (e.g., notification.AddLegacy)
 
         Parameters:
-            - text (string): The notification message text to display
-            - typeId (number): Legacy notification type ID (0=info, 1=error, 2=success)
+            text (string)
+                The notification message text to display
+            typeId (number)
+                Legacy notification type ID (0=info, 1=error, 2=success)
 
         Returns:
             None
@@ -451,7 +467,7 @@ else
         notification.AddLegacy("Server restarting!", 0)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Convert legacy notifications to new system
         local legacyTypes = {[0] = "info", [1] = "error", [2] = "success"}
@@ -460,7 +476,7 @@ else
         notification.AddLegacy(message, typeId)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Override legacy notification with custom handling
         local originalAddLegacy = notification.AddLegacy

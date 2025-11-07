@@ -10,115 +10,111 @@ The attributes library provides functionality for managing character attributes 
 
 ---
 
-### loadFromDir
+### lia.attribs.loadFromDir
 
-**Purpose**
-
+#### 📋 Purpose
 Loads attribute definitions from a specified directory and registers them in the attributes system
 
-**When Called**
-
+#### ⏰ When Called
 During gamemode initialization or when loading attribute modules
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `directory` (*string*): The directory path to search for attribute files
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `directory` | **string** | The directory path to search for attribute files |
 
-**Returns**
-
+#### ↩️ Returns
 * None (modifies lia.attribs.list)
 
-**Realm**
-
+#### 🌐 Realm
 Shared
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Load attributes from a single directory
-lia.attribs.loadFromDir("gamemode/attributes")
+    -- Simple: Load attributes from a single directory
+    lia.attribs.loadFromDir("gamemode/attributes")
 
 ```
 
-**Medium Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- Medium: Load attributes with conditional directory checking
-local attrDir = "gamemode/attributes"
-if file.Exists(attrDir, "LUA") then
-    lia.attribs.loadFromDir(attrDir)
-end
-
-```
-
-**High Complexity:**
-```lua
--- High: Load attributes from multiple directories with error handling
-local attributeDirs = {"gamemode/attributes", "modules/attributes", "plugins/attributes"}
-for _, dir in ipairs(attributeDirs) do
-    if file.Exists(dir, "LUA") then
-        lia.attribs.loadFromDir(dir)
-    else
-        print("Warning: Attribute directory not found: " .. dir)
+    -- Medium: Load attributes with conditional directory checking
+    local attrDir = "gamemode/attributes"
+    if file.Exists(attrDir, "LUA") then
+        lia.attribs.loadFromDir(attrDir)
     end
-end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Load attributes from multiple directories with error handling
+    local attributeDirs = {"gamemode/attributes", "modules/attributes", "plugins/attributes"}
+    for _, dir in ipairs(attributeDirs) do
+        if file.Exists(dir, "LUA") then
+            lia.attribs.loadFromDir(dir)
+        else
+            print("Warning: Attribute directory not found: " .. dir)
+        end
+    end
 
 ```
 
 ---
 
-### setup
+### lia.attribs.setup
 
-**Purpose**
-
+#### 📋 Purpose
 Sets up attributes for a client's character by calling OnSetup hooks for each registered attribute
 
-**When Called**
-
+#### ⏰ When Called
 When a client spawns or when their character is created
 
-**Parameters**
+#### ⚙️ Parameters
 
-* `client` (*Player*): The client whose character attributes need to be set up
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `client` | **Player** | The client whose character attributes need to be set up |
 
-**Returns**
+#### ↩️ Returns
+* nil
 
-* None
-
-**Realm**
-
+#### 🌐 Realm
 Server
 
-**Example Usage**
+#### 💡 Example Usage
 
-**Low Complexity:**
+#### 🔰 Low Complexity
 ```lua
--- Simple: Setup attributes for a client
-lia.attribs.setup(client)
-
-```
-
-**Medium Complexity:**
-```lua
--- Medium: Setup attributes with validation
-if IsValid(client) and client:IsPlayer() then
+    -- Simple: Setup attributes for a client
     lia.attribs.setup(client)
-end
 
 ```
 
-**High Complexity:**
+#### 📊 Medium Complexity
 ```lua
--- High: Setup attributes with custom logic and error handling
-hook.Add("PlayerSpawn", "SetupAttributes", function(client)
-    if not client:getChar() then return end
-    timer.Simple(0.1, function()
-        if IsValid(client) then
-            lia.attribs.setup(client)
-            print("Attributes set up for " .. client:Name())
-        end
+    -- Medium: Setup attributes with validation
+    if IsValid(client) and client:IsPlayer() then
+        lia.attribs.setup(client)
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Setup attributes with custom logic and error handling
+    hook.Add("PlayerSpawn", "SetupAttributes", function(client)
+        if not client:getChar() then return end
+        timer.Simple(0.1, function()
+            if IsValid(client) then
+                lia.attribs.setup(client)
+                print("Attributes set up for " .. client:Name())
+            end
+        end)
     end)
-end)
 
 ```
 

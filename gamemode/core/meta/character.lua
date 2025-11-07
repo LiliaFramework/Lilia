@@ -64,7 +64,8 @@ end
         When checking if two character references point to the same character
 
     Parameters:
-        other (character) - The other character object to compare with
+        other (character)
+            The other character object to compare with
 
     Returns:
         boolean - True if both characters have the same ID, false otherwise
@@ -229,7 +230,8 @@ end
         When displaying character names to other players
 
     Parameters:
-        client (Player) - The client who is viewing the character
+        client (Player)
+            The client who is viewing the character
 
     Returns:
         string - The name to display (real name, fake name, or "unknown")
@@ -286,7 +288,8 @@ end
         Before processing purchases, payments, or money transfers
 
     Parameters:
-        amount (number) - The amount of money to check for
+        amount (number)
+            The amount of money to check for
 
     Returns:
         boolean - True if character has sufficient funds, false otherwise
@@ -342,7 +345,8 @@ end
         When checking permissions or access rights for a character
 
     Parameters:
-        flagStr (string) - String containing flags to check for
+        flagStr (string)
+            String containing flags to check for
 
     Returns:
         boolean - True if character has any of the specified flags, false otherwise
@@ -400,7 +404,8 @@ end
         When validating weapon usage or checking equipped items
 
     Parameters:
-        requireEquip (boolean) - Whether to check if item is equipped (default: true)
+        requireEquip (boolean)
+            Whether to check if item is equipped (default: true)
 
     Returns:
         boolean - True if character has the weapon item, false otherwise
@@ -462,10 +467,10 @@ end
         When checking character stats or calculating bonuses
 
     Parameters:
-        key (string) - The attribute key to retrieve
-
-    Parameters:
-        default (number) - Default value if attribute doesn't exist (default: 0)
+        key (string)
+            The attribute key to retrieve
+        default (number)
+            Default value if attribute doesn't exist (default: 0)
 
     Returns:
         number - The attribute value with boosts applied
@@ -522,7 +527,8 @@ end
         When checking or modifying attribute boosts
 
     Parameters:
-        attribID (string) - The attribute ID to get boosts for
+        attribID (string)
+            The attribute ID to get boosts for
 
     Returns:
         table - Table containing boost values for the attribute
@@ -577,7 +583,8 @@ end
         When determining if one character knows another character's identity
 
     Parameters:
-        id (number|character) - Character ID or character object to check recognition for
+        id (number|character)
+            Character ID or character object to check recognition for
 
     Returns:
         boolean - True if character recognizes the other, false otherwise
@@ -633,7 +640,8 @@ end
         When determining if character knows a fake name for another character
 
     Parameters:
-        id (number|character) - Character ID or character object to check fake recognition for
+        id (number|character)
+            Character ID or character object to check fake recognition for
 
     Returns:
         boolean - True if character has fake recognition, false otherwise
@@ -689,16 +697,14 @@ end
         When storing character-specific data that needs persistence
 
     Parameters:
-        k (string|table) - Key to set or table of key-value pairs
-
-    Parameters:
-        v (any) - Value to set (ignored if k is table)
-
-    Parameters:
-        noReplication (boolean) - Skip client replication (default: false)
-
-    Parameters:
-        receiver (Player) - Specific client to send to (default: character owner)
+        k (string|table)
+            Key to set or table of key-value pairs
+        v (any)
+            Value to set (ignored if k is table)
+        noReplication (boolean)
+            Skip client replication (default: false)
+        receiver (Player)
+            Specific client to send to (default: character owner)
 
     Returns:
         None
@@ -805,10 +811,10 @@ end
         When accessing stored character-specific data
 
     Parameters:
-        key (string) - The data key to retrieve (optional)
-
-    Parameters:
-        default (any) - Default value if key doesn't exist (optional)
+        key (string)
+            The data key to retrieve
+        default (any)
+            Default value if key doesn't exist
 
     Returns:
         any - The data value, all data table, or default value
@@ -914,10 +920,10 @@ if SERVER then
         When establishing recognition between characters
 
     Parameters:
-        character (number|character) - Character ID or character object to recognize
-
-    Parameters:
-        name (string) - Optional fake name to assign (default: nil)
+        character (number|character)
+            Character ID or character object to recognize
+        name (string)
+            Optional fake name to assign (default: nil)
 
     Returns:
         boolean - True if recognition was successful
@@ -981,10 +987,10 @@ if SERVER then
         When changing character class or job within their faction
 
     Parameters:
-        class (string) - The class name to join
-
-    Parameters:
-        isForced (boolean) - Whether to force the class change (default: false)
+        class (string)
+            The class name to join
+        isForced (boolean)
+            Whether to force the class change (default: false)
 
     Returns:
         boolean - True if class change was successful, false otherwise
@@ -1123,10 +1129,10 @@ if SERVER then
         When modifying character stats through gameplay or admin actions
 
     Parameters:
-        key (string) - The attribute key to update
-
-    Parameters:
-        value (number) - The amount to add to the current attribute value
+        key (string)
+            The attribute key to update
+        value (number)
+            The amount to add to the current attribute value
 
     Returns:
         None
@@ -1189,10 +1195,10 @@ if SERVER then
         When setting character stats to exact values
 
     Parameters:
-        key (string) - The attribute key to set
-
-    Parameters:
-        value (number) - The exact value to set the attribute to
+        key (string)
+            The attribute key to set
+        value (number)
+            The exact value to set the attribute to
 
     Returns:
         None
@@ -1254,13 +1260,12 @@ if SERVER then
         When applying temporary stat bonuses from items, spells, or effects
 
     Parameters:
-        boostID (string) - Unique identifier for this boost
-
-    Parameters:
-        attribID (string) - The attribute to boost
-
-    Parameters:
-        boostAmount (number) - The amount to boost the attribute by
+        boostID (string)
+            Unique identifier for this boost
+        attribID (string)
+            The attribute to boost
+        boostAmount (number)
+            The amount to boost the attribute by
 
     Returns:
         boolean - True if boost was added successfully
@@ -1313,10 +1318,10 @@ if SERVER then
         When removing temporary stat bonuses from items, spells, or effects
 
     Parameters:
-        boostID (string) - Unique identifier for the boost to remove
-
-    Parameters:
-        attribID (string) - The attribute the boost was applied to
+        boostID (string)
+            Unique identifier for the boost to remove
+        attribID (string)
+            The attribute the boost was applied to
 
     Returns:
         boolean - True if boost was removed successfully
@@ -1369,7 +1374,8 @@ if SERVER then
         When changing character permissions or access rights
 
     Parameters:
-        flags (string) - The flags string to set
+        flags (string)
+            The flags string to set
 
     Returns:
         None
@@ -1440,7 +1446,8 @@ if SERVER then
         When granting additional permissions to a character
 
     Parameters:
-        flags (string) - The flags to add to the character
+        flags (string)
+            The flags to add to the character
 
     Returns:
         None
@@ -1501,7 +1508,8 @@ if SERVER then
         When revoking permissions or access rights from a character
 
     Parameters:
-        flags (string) - The flags to remove from the character
+        flags (string)
+            The flags to remove from the character
 
     Returns:
         None
@@ -1563,7 +1571,8 @@ if SERVER then
         When persisting character changes to the database
 
     Parameters:
-        callback (function) - Optional callback function to execute after save
+        callback (function)
+            Optional callback function to execute after save
 
     Returns:
         None
@@ -1624,7 +1633,8 @@ if SERVER then
         When updating character information on client side
 
     Parameters:
-        receiver (Player) - Specific client to sync to (default: all players)
+        receiver (Player)
+            Specific client to sync to (default: all players)
 
     Returns:
         None
@@ -1716,7 +1726,8 @@ if SERVER then
         When loading a character for a player
 
     Parameters:
-        noNetworking (boolean) - Skip networking setup (default: false)
+        noNetworking (boolean)
+            Skip networking setup (default: false)
 
     Returns:
         None
@@ -1856,7 +1867,8 @@ if SERVER then
         When applying a ban to a character
 
     Parameters:
-        time (number) - Ban duration in seconds (nil for permanent ban)
+        time (number)
+            Ban duration in seconds (nil for permanent ban)
 
     Returns:
         None
@@ -2005,7 +2017,8 @@ if SERVER then
         When adding money to a character's account
 
     Parameters:
-        amount (number) - The amount of money to give
+        amount (number)
+            The amount of money to give
 
     Returns:
         boolean - True if money was given successfully
@@ -2053,7 +2066,8 @@ if SERVER then
         When removing money from a character's account
 
     Parameters:
-        amount (number) - The amount of money to take
+        amount (number)
+            The amount of money to take
 
     Returns:
         boolean - True if money was taken successfully

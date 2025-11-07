@@ -15,8 +15,10 @@
         When you need to find players in a specific rectangular area for operations like area-of-effect abilities or zone management
 
     Parameters:
-        - mins (Vector): The minimum corner coordinates of the box
-        - maxs (Vector): The maximum corner coordinates of the box
+        mins (Vector)
+            The minimum corner coordinates of the box
+        maxs (Vector)
+            The maximum corner coordinates of the box
 
     Returns:
         Table of player entities found within the box area
@@ -74,7 +76,8 @@ end
         When you need to locate a specific player using their Steam identification for operations like bans, whitelists, or data retrieval
 
     Parameters:
-        - steamID (string): The Steam ID (STEAM_0:0:123456) or Steam ID 64 to search for
+        steamID (string)
+            The Steam ID (STEAM_0:0:123456) or Steam ID 64 to search for
 
     Returns:
         Player entity if found with a valid character, nil otherwise
@@ -136,8 +139,10 @@ end
         When you need to find players in a circular area for proximity-based operations like damage, effects, or notifications
 
     Parameters:
-        - origin (Vector): The center point of the sphere
-        - radius (number): The radius of the sphere in units
+        origin (Vector)
+            The center point of the sphere
+        radius (number)
+            The radius of the sphere in units
 
     Returns:
         Table of player entities found within the spherical area
@@ -207,8 +212,10 @@ end
         When you need to locate a specific player using flexible identification methods for commands, admin actions, or interactions
 
     Parameters:
-        client - Player: The player requesting the search (for notifications and special selectors)
-        identifier - String: The identifier to search for (Steam ID, Steam ID 64, player name, "^" for self, "@" for looked-at player)
+        client (Player)
+            The player requesting the search (for notifications and special selectors)
+        identifier (string)
+            The identifier to search for (Steam ID, Steam ID 64, player name, "^" for self, "@" for looked-at player)
 
     Returns:
         Player entity if found, nil otherwise with appropriate error notifications
@@ -312,7 +319,8 @@ end
         When you need to locate dropped items or spawned entities created by a particular player for cleanup, tracking, or management
 
     Parameters:
-        client - Player: The player whose created items should be found
+        client (Player)
+            The player whose created items should be found
 
     Returns:
         Table of item entities created by the specified player
@@ -371,8 +379,10 @@ end
         When you need to locate specific types of items created by a player for targeted operations like weapon cleanup or resource management
 
     Parameters:
-        client - Player: The player whose created items should be found
-        class - String: The item class/type to filter by (e.g., "weapon_ar2", "item_healthkit")
+        client (Player)
+            The player whose created items should be found
+        class (string)
+            The item class/type to filter by (e.g., "weapon_ar2", "item_healthkit")
 
     Returns:
         Table of item entities of the specified class created by the player
@@ -434,8 +444,10 @@ end
         When you need to locate entities spawned by a player for management, cleanup, or tracking purposes
 
     Parameters:
-        client - Player: The player whose entities should be found
-        class - String: Optional class name to filter entities (e.g., "prop_physics", "npc_zombie")
+        client (Player)
+            The player whose entities should be found
+        class (string)
+            Optional class name to filter entities (e.g., "prop_physics", "npc_zombie")
 
     Returns:
         Table of entities created by or associated with the specified player
@@ -500,8 +512,10 @@ end
         When you need to compare strings with flexible matching for search functionality, name validation, or text processing
 
     Parameters:
-        a - String: The first string to compare
-        b - String: The second string to compare (the search pattern)
+        a (string)
+            The first string to compare
+        b (string)
+            The second string to compare (the search pattern)
 
     Returns:
         Boolean indicating if the strings match using any of the comparison methods
@@ -634,7 +648,8 @@ end
         When you need to locate a player using their Steam ID 64 for database operations or external integrations
 
     Parameters:
-        SteamID64 - String: The Steam ID 64 to search for
+        SteamID64 (string)
+            The Steam ID 64 to search for
 
     Returns:
         Player entity if found, nil otherwise
@@ -691,7 +706,8 @@ end
         When you need to locate a player using their Steam ID for admin actions, bans, or data retrieval
 
     Parameters:
-        SteamID - String: The Steam ID to search for (STEAM_0:0:123456 format)
+        SteamID (string)
+            The Steam ID to search for (STEAM_0:0:123456 format)
 
     Returns:
         Player entity if found, nil otherwise
@@ -754,10 +770,14 @@ end
         When you need to validate if an entity can be placed at a location for spawning, teleportation, or collision detection
 
     Parameters:
-        pos - Vector: The position to check for entity placement
-        mins - Vector: Optional minimum bounding box coordinates (defaults to Vector(16, 16, 0))
-        maxs - Vector: Optional maximum bounding box coordinates (defaults to mins value)
-        filter - Entity/Table: Optional entity or table of entities to ignore in collision detection
+        pos (Vector)
+            The position to check for entity placement
+        mins (Vector)
+            Optional minimum bounding box coordinates (defaults to Vector(16, 16, 0))
+        maxs (Vector)
+            Optional maximum bounding box coordinates (defaults to mins value)
+        filter (Entity/Table)
+            Optional entity or table of entities to ignore in collision detection
 
     Returns:
         Boolean indicating if the position is clear (true) or obstructed (false)
@@ -831,8 +851,10 @@ end
         When you need to find players in a circular area for proximity-based operations like damage, effects, or area management
 
     Parameters:
-        pos - Vector: The center position to check from
-        dist - Number: The radius distance to check within
+        pos (Vector)
+            The center position to check from
+        dist (number)
+            The radius distance to check within
 
     Returns:
         Table of player entities found within the specified radius
@@ -904,8 +926,10 @@ end
         When you need to format strings with named parameters for localization, templating, or dynamic text generation
 
     Parameters:
-        format - String: The format string containing {placeholder} patterns
-        ... - Mixed: Either a table with named keys or individual arguments to replace placeholders
+        format (string)
+            The format string containing {placeholder} patterns
+        ... (mixed)
+            Either a table with named keys or individual arguments to replace placeholders
 
     Returns:
         String with placeholders replaced by provided values
@@ -981,8 +1005,10 @@ end
         When you need to load and cache materials for rendering, UI elements, or visual effects to improve performance
 
     Parameters:
-        materialPath - String: The file path to the material (e.g., "materials/effects/blur.vmt")
-        materialParameters - String: Optional parameters for material creation
+        materialPath (string)
+            The file path to the material (e.g., "materials/effects/blur.vmt")
+        materialParameters (string)
+            Optional parameters for material creation
 
     Returns:
         IMaterial object for the specified material path
@@ -1046,8 +1072,10 @@ end
         When you need to locate faction information for player assignment, permissions, or faction-based operations
 
     Parameters:
-        client - Player: The player requesting the faction (for error notifications)
-        name - String: The faction name or unique ID to search for
+        client (Player)
+            The player requesting the faction (for error notifications)
+        name (string)
+            The faction name or unique ID to search for
 
     Returns:
         Faction table if found, nil otherwise with error notification
@@ -1189,8 +1217,10 @@ end
         When you need to create random character names for NPCs, testing, or procedural content generation
 
     Parameters:
-        firstNames - Table: Optional table of first names to choose from
-        lastNames - Table: Optional table of last names to choose from
+        firstNames (table)
+            Optional table of first names to choose from
+        lastNames (table)
+            Optional table of last names to choose from
 
     Returns:
         String containing a randomly generated full name (FirstName LastName)
@@ -1255,27 +1285,33 @@ end
 
 if SERVER then
     --[[
-        Purpose:
-            Send a table-based user interface to a specific client for displaying data in a structured format
+    Purpose:
+        Send a table-based user interface to a specific client for displaying data in a structured format
 
-        When Called:
-            When you need to display tabular data to a player, such as inventories, player lists, or administrative information
+    When Called:
+        When you need to display tabular data to a player, such as inventories, player lists, or administrative information
 
-        Parameters:
-            client - Player: The player to send the table UI to
-            title - String: The title of the table window
-            columns - Table: Array of column definitions with name, width, and other properties
-            data - Table: Array of row data to display in the table
-            options - Table: Optional configuration options for the table UI
-            characterID - Number: Optional character ID for character-specific data
+    Parameters:
+        client (Player)
+            The player to send the table UI to
+        title (string)
+            The title of the table window
+        columns (table)
+            Array of column definitions with name, width, and other properties
+        data (table)
+            Array of row data to display in the table
+        options (table)
+            Optional configuration options for the table UI
+        characterID (number)
+            Optional character ID for character-specific data
 
-        Returns:
-            Nothing (sends network message to client)
+    Returns:
+        Nothing (sends network message to client)
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1336,7 +1372,7 @@ if SERVER then
                 columns, playerData, options, targetPlayer:getChar() and targetPlayer:getChar():getID())
         end
         ```
-    ]]
+]]
     function lia.util.sendTableUI(client, title, columns, data, options, characterID)
         if not IsValid(client) or not client:IsPlayer() then return end
         local localizedColumns = {}
@@ -1358,27 +1394,33 @@ if SERVER then
     end
 
     --[[
-        Purpose:
-            Find empty spaces around an entity for spawning or placement purposes
+    Purpose:
+        Find empty spaces around an entity for spawning or placement purposes
 
-        When Called:
-            When you need to find valid locations to spawn entities, NPCs, or items around a central position
+    When Called:
+        When you need to find valid locations to spawn entities, NPCs, or items around a central position
 
-        Parameters:
-            entity - Entity: The central entity to search around
-            filter - Entity/Table: Optional entity or table of entities to ignore in collision detection
-            spacing - Number: Distance between each tested position (default: 32)
-            size - Number: Grid size to search in (default: 3, meaning -3 to +3 in both x and y)
-            height - Number: Height of the area to check for collisions (default: 36)
-            tolerance - Number: Additional clearance above ground (default: 5)
+    Parameters:
+        entity (Entity)
+            The central entity to search around
+        filter (Entity/Table)
+            Optional entity or table of entities to ignore in collision detection
+        spacing (number)
+            Distance between each tested position (default: 32)
+        size (number)
+            Grid size to search in (default: 3, meaning -3 to +3 in both x and y)
+        height (number)
+            Height of the area to check for collisions (default: 36)
+        tolerance (number)
+            Additional clearance above ground (default: 5)
 
-        Returns:
-            Table of valid Vector positions sorted by distance from the entity
+    Returns:
+        Table of valid Vector positions sorted by distance from the entity
 
-        Realm:
-            Server
+    Realm:
+        Server
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1429,7 +1471,7 @@ if SERVER then
             return #validPositions
         end
         ```
-    ]]
+]]
     function lia.util.findEmptySpace(entity, filter, spacing, size, height, tolerance)
         spacing = spacing or 32
         size = size or 3
@@ -1469,28 +1511,35 @@ else
     lia.util.easeOutCubic = lia.derma.easeOutCubic
     lia.util.easeInOutCubic = lia.derma.easeInOutCubic
     --[[
-        Purpose:
-            Animate a panel's appearance with scaling, positioning, and alpha transitions
+    Purpose:
+        Animate a panel's appearance with scaling, positioning, and alpha transitions
 
-        When Called:
-            When you need to create smooth entrance animations for UI panels, menus, or dialog boxes
+    When Called:
+        When you need to create smooth entrance animations for UI panels, menus, or dialog boxes
 
-        Parameters:
-            panel - Panel: The DPanel to animate
-            target_w - Number: Target width for the animation
-            target_h - Number: Target height for the animation
-            duration - Number: Duration of size/position animation in seconds (default: 0.18)
-            alpha_dur - Number: Duration of alpha animation in seconds (default: same as duration)
-            callback - Function: Optional callback function to execute when animation completes
-            scale_factor - Number: Scale factor for initial size (default: 0.8)
+    Parameters:
+        panel (Panel)
+            The DPanel to animate
+        target_w (number)
+            Target width for the animation
+        target_h (number)
+            Target height for the animation
+        duration (number)
+            Duration of size/position animation in seconds (default: 0.18)
+        alpha_dur (number)
+            Duration of alpha animation in seconds (default: same as duration)
+        callback (function)
+            Optional callback function to execute when animation completes
+        scale_factor (number)
+            Scale factor for initial size (default: 0.8)
 
-        Returns:
-            Nothing (modifies panel directly)
+    Returns:
+        Nothing (modifies panel directly)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1544,8 +1593,7 @@ else
             return frame
         end
         ```
-        ```
-    ]]
+]]
     function lia.util.animateAppearance(panel, target_w, target_h, duration, alpha_dur, callback, scale_factor)
         local scaleFactor = 0.8
         if not IsValid(panel) then return end
@@ -1591,22 +1639,23 @@ else
     end
 
     --[[
-        Purpose:
-            Clamp a panel's position to stay within screen boundaries while avoiding UI overlap
+    Purpose:
+        Clamp a panel's position to stay within screen boundaries while avoiding UI overlap
 
-        When Called:
-            When you need to ensure menus and panels stay visible and don't overlap with important UI elements like logos
+    When Called:
+        When you need to ensure menus and panels stay visible and don't overlap with important UI elements like logos
 
-        Parameters:
-            panel - Panel: The DPanel whose position should be clamped
+    Parameters:
+        panel (Panel)
+            The DPanel whose position should be clamped
 
-        Returns:
-            Nothing (modifies panel position directly)
+    Returns:
+        Nothing (modifies panel position directly)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1691,7 +1740,7 @@ else
             end
         end
         ```
-    ]]
+]]
     function lia.util.clampMenuPosition(panel)
         if not IsValid(panel) then return end
         local x, y = panel:GetPos()
@@ -1723,29 +1772,37 @@ else
     end
 
     --[[
-        Purpose:
-            Draw a gradient background using predefined gradient materials
+    Purpose:
+        Draw a gradient background using predefined gradient materials
 
-        When Called:
-            When you need to create gradient backgrounds for UI elements, panels, or visual effects
+    When Called:
+        When you need to create gradient backgrounds for UI elements, panels, or visual effects
 
-        Parameters:
-            _x - Number: X position to draw the gradient
-            _y - Number: Y position to draw the gradient
-            _w - Number: Width of the gradient area
-            _h - Number: Height of the gradient area
-            direction - Number: Gradient direction (1=up, 2=down, 3=left, 4=right)
-            color_shadow - Color: Color for the gradient shadow effect
-            radius - Number: Corner radius for rounded gradients (default: 0)
-            flags - Number: Material flags for rendering
+    Parameters:
+        _x (number)
+            X position to draw the gradient
+        _y (number)
+            Y position to draw the gradient
+        _w (number)
+            Width of the gradient area
+        _h (number)
+            Height of the gradient area
+        direction (number)
+            Gradient direction (1=up, 2=down, 3=left, 4=right)
+        color_shadow (Color)
+            Color for the gradient shadow effect
+        radius (number)
+            Corner radius for rounded gradients (default: 0)
+        flags (number)
+            Material flags for rendering
 
-        Returns:
-            Nothing (draws directly to screen)
+    Returns:
+        Nothing (draws directly to screen)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1789,7 +1846,7 @@ else
             drawAnimatedGradient(0, 0, w, h)
         end
         ```
-    ]]
+]]
     function lia.util.drawGradient(_x, _y, _w, _h, direction, color_shadow, radius, flags)
         local listGradients = {Material("vgui/gradient_up"), Material("vgui/gradient_down"), Material("vgui/gradient-l"), Material("vgui/gradient-r")}
         radius = radius and radius or 0
@@ -1797,24 +1854,27 @@ else
     end
 
     --[[
-        Purpose:
-            Wrap text to fit within a specified width, breaking it into multiple lines
+    Purpose:
+        Wrap text to fit within a specified width, breaking it into multiple lines
 
-        When Called:
-            When you need to display text that might be too long for a UI element, ensuring it wraps properly
+    When Called:
+        When you need to display text that might be too long for a UI element, ensuring it wraps properly
 
-        Parameters:
-            text - String: The text to wrap
-            width - Number: Maximum width in pixels for the text
-            font - String: Font to use for text measurement (default: "LiliaFont.16")
+    Parameters:
+        text (string)
+            The text to wrap
+        width (number)
+            Maximum width in pixels for the text
+        font (string)
+            Font to use for text measurement (default: "LiliaFont.16")
 
-        Returns:
-            Table of wrapped text lines, Number: Maximum width of any line
+    Returns:
+        Table of wrapped text lines, Number: Maximum width of any line
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1877,7 +1937,7 @@ else
         -- Usage
         local textPanel = createResponsiveTextPanel("Very long text that needs to fit in a small area", 250, "liaFont.")
         ```
-    ]]
+]]
     function lia.util.wrapText(text, width, font)
         font = font or "LiliaFont.16"
         surface.SetFont(font)
@@ -1907,25 +1967,29 @@ else
     end
 
     --[[
-        Purpose:
-            Draw a blur effect behind a panel using screen-space blurring
+    Purpose:
+        Draw a blur effect behind a panel using screen-space blurring
 
-        When Called:
-            When you need to create a blurred background effect for UI elements like menus or dialogs
+    When Called:
+        When you need to create a blurred background effect for UI elements like menus or dialogs
 
-        Parameters:
-            panel - Panel: The panel to draw blur behind
-            amount - Number: Intensity of the blur effect (default: 5)
-            _ - Any: Unused parameter (legacy)
-            alpha - Number: Alpha transparency of the blur effect (default: 255)
+    Parameters:
+        panel (Panel)
+            The panel to draw blur behind
+        amount (number)
+            Intensity of the blur effect (default: 5)
+        _ (any)
+            Unused parameter (legacy)
+        alpha (number)
+            Alpha transparency of the blur effect (default: 255)
 
-        Returns:
-            Nothing (draws directly to screen)
+    Returns:
+        Nothing (draws directly to screen)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -1988,7 +2052,7 @@ else
         return frame
         end
         ```
-    ]]
+]]
     function lia.util.drawBlur(panel, amount, _, alpha)
         amount = amount or 5
         alpha = alpha or 255
@@ -2007,26 +2071,31 @@ else
     end
 
     --[[
-        Purpose:
-            Draw a black blur effect with enhanced darkness behind a panel
+    Purpose:
+        Draw a black blur effect with enhanced darkness behind a panel
 
-        When Called:
-            When you need to create a darker, more opaque blurred background effect for UI elements
+    When Called:
+        When you need to create a darker, more opaque blurred background effect for UI elements
 
-        Parameters:
-            panel - Panel: The panel to draw blur behind
-            amount - Number: Intensity of the blur effect (default: 6)
-            passes - Number: Number of blur passes for quality (default: 5, minimum: 1)
-            alpha - Number: Alpha transparency of the blur effect (default: 255)
-            darkAlpha - Number: Alpha transparency of the dark overlay (default: 220)
+    Parameters:
+        panel (Panel)
+            The panel to draw blur behind
+        amount (number)
+            Intensity of the blur effect (default: 6)
+        passes (number)
+            Number of blur passes for quality (default: 5, minimum: 1)
+        alpha (number)
+            Alpha transparency of the blur effect (default: 255)
+        darkAlpha (number)
+            Alpha transparency of the dark overlay (default: 220)
 
-        Returns:
-            Nothing (draws directly to screen)
+    Returns:
+        Nothing (draws directly to screen)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -2082,7 +2151,7 @@ else
         local dialogUI = createContextualUI("dialog", "Important Dialog")
         local overlayUI = createContextualUI("overlay", "HUD Overlay")
         ```
-    ]]
+]]
     function lia.util.drawBlackBlur(panel, amount, passes, alpha, darkAlpha)
         if not IsValid(panel) then return end
         amount = amount or 6
@@ -2109,28 +2178,35 @@ else
     end
 
     --[[
-        Purpose:
-            Draw a blur effect at specific screen coordinates
+    Purpose:
+        Draw a blur effect at specific screen coordinates
 
-        When Called:
-            When you need to apply blur effects to specific screen areas for HUD elements or overlays
+    When Called:
+        When you need to apply blur effects to specific screen areas for HUD elements or overlays
 
-        Parameters:
-            x - Number: X position to draw the blur
-            y - Number: Y position to draw the blur
-            w - Number: Width of the blur area
-            h - Number: Height of the blur area
-            amount - Number: Intensity of the blur effect (default: 5)
-            passes - Number: Number of blur passes (default: 0.2)
-            alpha - Number: Alpha transparency of the blur effect (default: 255)
+    Parameters:
+        x (number)
+            X position to draw the blur
+        y (number)
+            Y position to draw the blur
+        w (number)
+            Width of the blur area
+        h (number)
+            Height of the blur area
+        amount (number)
+            Intensity of the blur effect (default: 5)
+        passes (number)
+            Number of blur passes (default: 0.2)
+        alpha (number)
+            Alpha transparency of the blur effect (default: 255)
 
-        Returns:
-            Nothing (draws directly to screen)
+    Returns:
+        Nothing (draws directly to screen)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -2167,7 +2243,7 @@ else
             surface.DrawRect(mapX + mapW/2 - 2, mapY + mapH/2 - 2, 4, 4)
         end
         ```
-    ]]
+]]
     function lia.util.drawBlurAt(x, y, w, h, amount, passes, alpha)
         amount = amount or 5
         alpha = alpha or 255
@@ -2185,26 +2261,31 @@ else
 
     lia.util.requestArguments = lia.derma.requestArguments
     --[[
-        Purpose:
-            Create a complete table-based UI window for displaying data with interactive features
+    Purpose:
+        Create a complete table-based UI window for displaying data with interactive features
 
-        When Called:
-            When you need to display tabular data with sorting, actions, and interactive options
+    When Called:
+        When you need to display tabular data with sorting, actions, and interactive options
 
-        Parameters:
-            title - String: Title for the table window
-            columns - Table: Array of column definitions
-            data - Table: Array of row data to display
-            options - Table: Optional action buttons and configurations
-            charID - Number: Character ID for character-specific data
+    Parameters:
+        title (string)
+            Title for the table window
+        columns (table)
+            Array of column definitions
+        data (table)
+            Array of row data to display
+        options (table)
+            Optional action buttons and configurations
+        charID (number)
+            Character ID for character-specific data
 
-        Returns:
-            Frame, ListView: The created frame and list view objects
+    Returns:
+        Frame, ListView: The created frame and list view objects
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -2241,7 +2322,7 @@ else
             return lia.util.createTableUI(dataType .. " Management", columns, getData(dataType), options)
         end
         ```
-    ]]
+]]
     function lia.util.createTableUI(title, columns, data, options, charID)
         local frameWidth, frameHeight = ScrW() * 0.8, ScrH() * 0.8
         local frame = vgui.Create("liaFrame")
@@ -2396,23 +2477,25 @@ else
     end
 
     --[[
-        Purpose:
-            Create and display an options menu with interactive buttons
+    Purpose:
+        Create and display an options menu with interactive buttons
 
-        When Called:
-            When you need to present a list of options or actions to the user in a popup menu
+    When Called:
+        When you need to present a list of options or actions to the user in a popup menu
 
-        Parameters:
-            title - String: Title for the options menu
-            options - Table: Array of option objects or key-value pairs with name and callback properties
+    Parameters:
+        title (string)
+            Title for the options menu
+        options (table)
+            Array of option objects or key-value pairs with name and callback properties
 
-        Returns:
-            Frame: The created options menu frame
+    Returns:
+        Frame: The created options menu frame
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -2464,7 +2547,7 @@ else
             return lia.util.openOptionsMenu("Categorized Options", allOptions)
         end
         ```
-    ]]
+]]
     function lia.util.openOptionsMenu(title, options)
         if not istable(options) then return end
         local entries = {}
@@ -2573,25 +2656,29 @@ else
 
     lia.util.entsScales = lia.util.entsScales or {}
     --[[
-        Purpose:
-            Draw floating text above an entity with distance-based fade effects
+    Purpose:
+        Draw floating text above an entity with distance-based fade effects
 
-        When Called:
-            When you need to display information or labels above entities in the 3D world
+    When Called:
+        When you need to display information or labels above entities in the 3D world
 
-        Parameters:
-            ent - Entity: The entity to draw text above
-            text - String: The text to display
-            posY - Number: Vertical offset for text positioning (default: 0)
-            alphaOverride - Number: Optional alpha override for manual control
+    Parameters:
+        ent (Entity)
+            The entity to draw text above
+        text (string)
+            The text to display
+        posY (number)
+            Vertical offset for text positioning (default: 0)
+        alphaOverride (number)
+            Optional alpha override for manual control
 
-        Returns:
-            Nothing (draws directly to screen)
+    Returns:
+        Nothing (draws directly to screen)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -2645,7 +2732,7 @@ else
             -- Call in HUDPaint or Think hook
             hook.Add("HUDPaint", "DrawEntityLabels", drawSmartEntityLabels)
         ```
-    ]]
+]]
     function lia.util.drawEntText(ent, text, posY, alphaOverride)
         if not (IsValid(ent) and text and text ~= "") then return end
         posY = posY or 0
@@ -2702,25 +2789,29 @@ else
     end
 
     --[[
-        Purpose:
-            Draw floating text at the player's look position with distance-based fade effects
+    Purpose:
+        Draw floating text at the player's look position with distance-based fade effects
 
-        When Called:
-            When you need to display contextual information at the location the player is looking at
+    When Called:
+        When you need to display contextual information at the location the player is looking at
 
-        Parameters:
-            text - String: The text to display
-            posY - Number: Vertical offset for text positioning (default: 0)
-            alphaOverride - Number: Optional alpha override for manual control
-            maxDist - Number: Maximum distance to display text (default: 380)
+    Parameters:
+        text (string)
+            The text to display
+        posY (number)
+            Vertical offset for text positioning (default: 0)
+        alphaOverride (number)
+            Optional alpha override for manual control
+        maxDist (number)
+            Maximum distance to display text (default: 380)
 
-        Returns:
-            Nothing (draws directly to screen)
+    Returns:
+        Nothing (draws directly to screen)
 
-        Realm:
-            Client
+    Realm:
+        Client
 
-        Example Usage:
+    Example Usage:
 
     Low Complexity:
         ```lua
@@ -2773,7 +2864,7 @@ else
         -- Call in HUDPaint hook
         hook.Add("HUDPaint", "DrawWorldInfo", drawContextualWorldInfo)
         ```
-    ]]
+]]
     function lia.util.drawLookText(text, posY, alphaOverride, maxDist)
         if not (text and text ~= "") then return end
         posY = posY or 0

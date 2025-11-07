@@ -6,18 +6,16 @@ Outfit item system for the Lilia framework.
 
 ### name
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the display name of the outfit item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.name = "Police Uniform"
+    ITEM.name = "Police Uniform"
 
 ```
 
@@ -25,18 +23,16 @@ ITEM.name = "Police Uniform"
 
 ### desc
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the description of the outfit item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.desc = "A standard police uniform"
+    ITEM.desc = "A standard police uniform"
 
 ```
 
@@ -44,18 +40,16 @@ ITEM.desc = "A standard police uniform"
 
 ### category
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the category for the outfit item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.category = "outfit"
+    ITEM.category = "outfit"
 
 ```
 
@@ -63,18 +57,16 @@ ITEM.category = "outfit"
 
 ### model
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the 3D model for the outfit item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.model = "models/props_c17/BriefCase001a.mdl"
+    ITEM.model = "models/props_c17/BriefCase001a.mdl"
 
 ```
 
@@ -82,18 +74,16 @@ ITEM.model = "models/props_c17/BriefCase001a.mdl"
 
 ### width
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the inventory width of the outfit item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.width = 1  -- Takes 1 slot width
+    ITEM.width = 1  -- Takes 1 slot width
 
 ```
 
@@ -101,18 +91,16 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ### height
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the inventory height of the outfit item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.height = 1  -- Takes 1 slot height
+    ITEM.height = 1  -- Takes 1 slot height
 
 ```
 
@@ -120,18 +108,16 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ### outfitCategory
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the outfit category for conflict checking
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
+    ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
 
 ```
 
@@ -139,18 +125,16 @@ ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
 
 ### pacData
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the PAC data for the outfit
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.pacData = {}  -- PAC attachment data
+    ITEM.pacData = {}  -- PAC attachment data
 
 ```
 
@@ -158,18 +142,16 @@ ITEM.pacData = {}  -- PAC attachment data
 
 ### isOutfit
 
-**Purpose**
-
+#### 📋 Purpose
 Marks the item as an outfit
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.isOutfit = true
+    ITEM.isOutfit = true
 
 ```
 
@@ -184,32 +166,32 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-        ITEM.name = "Police Uniform"
+            ITEM.name = "Police Uniform"
 
-        ITEM.desc = "A standard police uniform"
+            ITEM.desc = "A standard police uniform"
 
-        ITEM.category = "outfit"
+            ITEM.category = "outfit"
 
-        ITEM.model = "models/props_c17/BriefCase001a.mdl"
+            ITEM.model = "models/props_c17/BriefCase001a.mdl"
 
-        ITEM.width = 1  -- Takes 1 slot width
+            ITEM.width = 1  -- Takes 1 slot width
 
-        ITEM.height = 1  -- Takes 1 slot height
+            ITEM.height = 1  -- Takes 1 slot height
 
-        ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
+            ITEM.outfitCategory = "model"  -- Prevents multiple items of same category
 
-        ITEM.pacData = {}  -- PAC attachment data
+            ITEM.pacData = {}  -- PAC attachment data
 
-        ITEM.isOutfit = true
+            ITEM.isOutfit = true
 
--- Basic item identification
-    ITEM.name = "Police Uniform"                        -- Display name shown to players
-    ITEM.desc = "A standard police uniform"             -- Description text
-    ITEM.category = "outfit"                            -- Category for inventory sorting
-    ITEM.model = "models/props_c17/BriefCase001a.mdl"   -- 3D model for the item
-    ITEM.width = 1                                      -- Inventory width (1 slot)
-    ITEM.height = 1                                     -- Inventory height (1 slot)
-    ITEM.outfitCategory = "model"                       -- Outfit category for conflict checking
+    -- Basic item identification
+        ITEM.name = "Police Uniform"                        -- Display name shown to players
+        ITEM.desc = "A standard police uniform"             -- Description text
+        ITEM.category = "outfit"                            -- Category for inventory sorting
+        ITEM.model = "models/props_c17/BriefCase001a.mdl"   -- 3D model for the item
+        ITEM.width = 1                                      -- Inventory width (1 slot)
+        ITEM.height = 1                                     -- Inventory height (1 slot)
+        ITEM.outfitCategory = "model"                       -- Outfit category for conflict checking
 
 ```
 

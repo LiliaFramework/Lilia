@@ -408,7 +408,7 @@ do
     end
 
     function Decoder.decode_with_max_size(str, max_size)
-        if type(max_size) ~= "number" then return nil, L("sfsMaxSizeNotNumber"), max_size end
+        if not isnumber(max_size) then return nil, L("sfsMaxSizeNotNumber"), max_size end
         if max_size < 0 then return nil, L("sfsMaxSizeInvalid"), max_size end
         context[1] = 1
         context[2] = str

@@ -17,7 +17,8 @@ lia.data.stored = lia.data.stored or {}
         Automatically called during data serialization before database storage
 
     Parameters:
-        value (any) - The value to encode (vector, angle, color table, or regular table)
+        value (any)
+            The value to encode (vector, angle, color table, or regular table)
 
     Returns:
         table or any - Encoded representation suitable for JSON serialization
@@ -220,7 +221,8 @@ end
         Automatically called during data deserialization after database retrieval
 
     Parameters:
-        value (any) - The encoded value to decode (table, string, or raw data)
+        value (any)
+            The encoded value to decode (table, string, or raw data)
 
     Returns:
         any - Decoded value with proper data types restored
@@ -273,7 +275,8 @@ end
         Called before storing data in the database to ensure proper serialization
 
     Parameters:
-        value (any) - The data to serialize (tables, vectors, angles, colors, etc.)
+        value (any)
+            The data to serialize (tables, vectors, angles, colors, etc.)
 
     Returns:
         string - JSON string representation of the encoded data
@@ -331,7 +334,8 @@ end
         Called after retrieving data from database to restore original data types
 
     Parameters:
-        raw (string|table) - Serialized data from database (JSON string or table)
+        raw (string|table)
+            Serialized data from database (JSON string or table)
 
     Returns:
         any - Deserialized data with proper types restored, or nil if invalid
@@ -395,7 +399,8 @@ end
         Called when specifically needing to decode vector data from database or serialized format
 
     Parameters:
-        raw (any) - Raw data that should contain vector information
+        raw (any)
+            Raw data that should contain vector information
 
     Returns:
         Vector or any - Decoded Vector object, or original data if not vector format
@@ -458,7 +463,8 @@ end
         Called when specifically needing to decode angle data from database or serialized format
 
     Parameters:
-        raw (any) - Raw data that should contain angle information
+        raw (any)
+            Raw data that should contain angle information
 
     Returns:
         Angle or any - Decoded Angle object, or original data if not angle format
@@ -527,7 +533,14 @@ end
         Called when storing persistent data that should survive server restarts
 
     Parameters:
-        key (string) - Unique identifier for the data, value (any) - Data to store, global (boolean, optional) - Store globally across all gamemodes/maps, ignoreMap (boolean, optional) - Store for all maps in current gamemode
+        key (string)
+            Unique identifier for the data
+        value (any)
+            Data to store
+        global (boolean, optional)
+            Store globally across all gamemodes/maps
+        ignoreMap (boolean, optional)
+            Store for all maps in current gamemode
 
     Returns:
         string - Database path where data was stored
@@ -598,7 +611,12 @@ end
         Called when removing persistent data that should no longer be stored
 
     Parameters:
-        key (string) - Unique identifier for the data to delete, global (boolean, optional) - Delete from global scope, ignoreMap (boolean, optional) - Delete from all maps in current gamemode
+        key (string)
+            Unique identifier for the data to delete
+        global (boolean, optional)
+            Delete from global scope
+        ignoreMap (boolean, optional)
+            Delete from all maps in current gamemode
 
     Returns:
         boolean - Always returns true
@@ -807,7 +825,8 @@ end
         Called during server shutdown or periodic saves to persist entity states
 
     Parameters:
-        entities (table) - Array of entity data tables to save
+        entities (table)
+            Array of entity data tables to save
 
     Returns:
         None
@@ -918,7 +937,8 @@ end
         Called during server startup to restore persisted entities
 
     Parameters:
-        callback (function, optional) - Function to call with loaded entity data
+        callback (function, optional)
+            Function to call with loaded entity data
 
     Returns:
         Promise - Database operation promise
@@ -1002,7 +1022,10 @@ end
         Called when accessing stored persistent data
 
     Parameters:
-        key (string) - Unique identifier for the data, default (any, optional) - Default value if key not found
+        key (string)
+            Unique identifier for the data
+        default (any, optional)
+            Default value if key not found
 
     Returns:
         any - Stored data or default value if not found
@@ -1017,7 +1040,7 @@ end
         -- Simple: Get basic data
         local playerCount = lia.data.get("playerCount", 0)
         -- Returns stored player count or 0 if not found
-    ```
+        ```
 
     Medium Complexity:
         ```lua

@@ -130,7 +130,7 @@ if SERVER then
                         for k, v in pairs(saveData) do
                             lia.swepeditor.adjustValue(weaponClass, k, v)
                         end
-                        hook.Run("DWeaponsValueUpdated", weaponClass, saveData)
+                        hook.Run("SWEPEditorValueUpdated", weaponClass, saveData)
                     else
                         print("[SWEP Editor] Failed to parse data for " .. weaponClass)
                     end
@@ -152,7 +152,7 @@ if SERVER then
                         lia.swepeditor.adjustValue(class, k, v)
                     end
 
-                    hook.Run("DWeaponsValueUpdated", class, saveData)
+                    hook.Run("SWEPEditorValueUpdated", class, saveData)
                     lia.swepeditor.NetworkData[class] = saveData
                 end
             end

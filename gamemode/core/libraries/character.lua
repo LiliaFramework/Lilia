@@ -20,9 +20,12 @@ lia.char.pendingRequests = lia.char.pendingRequests or {}
         When a character needs to be accessed by ID, either from server or client
 
     Parameters:
-        - charID (number): The unique identifier of the character
-        - client (Player): The player requesting the character (optional)
-        - callback (function): Function to call when character is loaded (optional)
+        charID (number)
+            The unique identifier of the character
+        client (Player)
+            The player requesting the character (optional)
+        callback (function)
+            Function to call when character is loaded (optional)
 
     Returns:
         Character object if found/loaded, nil otherwise
@@ -171,7 +174,8 @@ end
         Before attempting to access a character to avoid unnecessary loading
 
     Parameters:
-        - charID (number): The unique identifier of the character to check
+        charID (number)
+            The unique identifier of the character to check
 
     Returns:
         Boolean - true if character is loaded, false otherwise
@@ -234,11 +238,13 @@ end
         When a character is loaded from database or created, to make it available in memory
 
     Parameters:
-        - id (number): The unique identifier of the character
-        - character (Character): The character object to add to cache
+        id (number)
+            The unique identifier of the character
+        character (Character)
+            The character object to add to cache
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -252,7 +258,7 @@ end
         lia.char.addCharacter(123, character)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Add character and handle pending requests
         local charID = 123
@@ -267,7 +273,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Batch character loading with callback management
         local characters = {}
@@ -301,10 +307,11 @@ end
         When a character needs to be unloaded from memory (cleanup, deletion, etc.)
 
     Parameters:
-        - id (number): The unique identifier of the character to remove
+        id (number)
+            The unique identifier of the character to remove
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -317,7 +324,7 @@ end
         lia.char.removeCharacter(123)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Remove character with validation
         local charID = 123
@@ -331,7 +338,7 @@ end
         end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Batch character cleanup with error handling
         local charIDs = {123, 456, 789}
@@ -365,10 +372,14 @@ end
         When creating a new character instance from database data or character creation
 
     Parameters:
-        - data (table): Character data containing all character variables
-        - id (number): The unique identifier for the character (optional)
-        - client (Player): The player who owns this character (optional)
-        - steamID (string): Steam ID of the character owner (optional, used when client is invalid)
+        data (table)
+            Character data containing all character variables
+        id (number)
+            The unique identifier for the character (optional)
+        client (Player)
+            The player who owns this character (optional)
+        steamID (string)
+            Steam ID of the character owner (optional, used when client is invalid)
 
     Returns:
         Character object with proper metatable and initialized variables
@@ -470,12 +481,15 @@ end
         When you need to add custom behavior when a character variable changes
 
     Parameters:
-        - varName (string): The name of the character variable to hook
-        - hookName (string): The name/identifier for this hook
-        - func (function): The function to call when the variable changes
+        varName (string)
+            The name of the character variable to hook
+        hookName (string)
+            The name/identifier for this hook
+        func (function)
+            The function to call when the variable changes
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -556,11 +570,13 @@ end
         During gamemode initialization to define character variables and their behavior
 
     Parameters:
-        - key (string): The unique identifier for the character variable
-        - data (table): Configuration table containing variable properties and callbacks
+        key (string)
+            The unique identifier for the character variable
+        data (table)
+            Configuration table containing variable properties and callbacks
 
     Returns:
-        None
+        nil
 
     Realm:
         Shared
@@ -1091,8 +1107,10 @@ lia.char.registerVar("banned", {
         When you need to access character data directly from the database
 
     Parameters:
-        - charID (number): The unique identifier of the character
-        - key (string): Specific data key to retrieve (optional)
+        charID (number)
+            The unique identifier of the character
+        key (string)
+            Specific data key to retrieve (optional)
 
     Returns:
         Table of character data or specific value if key provided
@@ -1166,8 +1184,10 @@ end
         When you need unprocessed character data or want to handle decoding manually
 
     Parameters:
-        - charID (number): The unique identifier of the character
-        - key (string): Specific data key to retrieve (optional)
+        charID (number)
+            The unique identifier of the character
+        key (string)
+            Specific data key to retrieve (optional)
 
     Returns:
         Raw decoded data or specific value if key provided
@@ -1249,7 +1269,8 @@ end
         When you need to find which player is using a specific character
 
     Parameters:
-        - ID (number): The unique identifier of the character
+        ID (number)
+            The unique identifier of the character
 
     Returns:
         Player object if found, nil otherwise
@@ -1318,7 +1339,8 @@ end
         When you need to find a character using the player's Steam ID
 
     Parameters:
-        - steamID (string): Steam ID of the character owner (supports both formats)
+        steamID (string)
+            Steam ID of the character owner (supports both formats)
 
     Returns:
         Character object if found, nil otherwise
@@ -1337,7 +1359,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Find character with Steam ID conversion
         local steamID64 = "76561198000000000"
@@ -1390,7 +1412,8 @@ end
         When you need to determine the appropriate color for a player's team/class
 
     Parameters:
-        - client (Player): The player to get the team color for
+        client (Player)
+            The player to get the team color for
 
     Returns:
         Color object representing the team/class color
@@ -1460,11 +1483,13 @@ if SERVER then
         When a player creates a new character through character creation
 
     Parameters:
-        - data (table): Character data containing name, description, faction, model, etc.
-        - callback (function): Function to call when character creation is complete
+        data (table)
+            Character data containing name, description, faction, model, etc.
+        callback (function)
+            Function to call when character creation is complete
 
     Returns:
-        None (uses callback for result)
+        nil (uses callback for result)
 
     Realm:
         Server
@@ -1606,12 +1631,15 @@ if SERVER then
         When a player connects and needs their characters loaded
 
     Parameters:
-        - client (Player): The player to restore characters for
-        - callback (function): Function to call when restoration is complete
-        - id (number): Specific character ID to restore (optional)
+        client (Player)
+            The player to restore characters for
+        callback (function)
+            Function to call when restoration is complete
+        id (number)
+            Specific character ID to restore (optional)
 
     Returns:
-        None (uses callback for result)
+        nil (uses callback for result)
 
     Realm:
         Server
@@ -1802,10 +1830,11 @@ if SERVER then
         When a player disconnects to free up memory and save data
 
     Parameters:
-        - client (Player): The player to clean up characters for
+        client (Player)
+            The player to clean up characters for
 
     Returns:
-        None
+        nil
 
     Realm:
         Server
@@ -1894,11 +1923,13 @@ if SERVER then
         When a character needs to be permanently removed (admin action, etc.)
 
     Parameters:
-        - id (number): The unique identifier of the character to delete
-        - client (Player): The player who owns the character (optional)
+        id (number)
+            The unique identifier of the character to delete
+        client (Player)
+            The player who owns the character (optional)
 
     Returns:
-        None
+        nil
 
     Realm:
         Server
@@ -2025,7 +2056,8 @@ if SERVER then
         When you need to check if a character is banned
 
     Parameters:
-        - charID (number): The unique identifier of the character
+        charID (number)
+            The unique identifier of the character
 
     Returns:
         Number representing ban timestamp (0 if not banned)
@@ -2100,9 +2132,12 @@ if SERVER then
         When character data needs to be saved to the database
 
     Parameters:
-        - charID (number): The unique identifier of the character
-        - field (string): The field name to set
-        - value (any): The value to set for the field
+        charID (number)
+            The unique identifier of the character
+        field (string)
+            The field name to set
+        value (any)
+            The value to set for the field
 
     Returns:
         Boolean indicating success
@@ -2280,7 +2315,8 @@ if SERVER then
         When a character needs to be removed from memory to free up resources
 
     Parameters:
-        - charID (number): The unique identifier of the character to unload
+        charID (number)
+            The unique identifier of the character to unload
 
     Returns:
         Boolean indicating success
@@ -2392,8 +2428,10 @@ if SERVER then
         When a player switches characters or to free up memory
 
     Parameters:
-        - client (Player): The player to unload unused characters for
-        - activeCharID (number): The ID of the character to keep loaded
+        client (Player)
+            The player to unload unused characters for
+        activeCharID (number)
+            The ID of the character to keep loaded
 
     Returns:
         Number of characters unloaded
@@ -2473,12 +2511,15 @@ if SERVER then
         When a specific character needs to be loaded on demand
 
     Parameters:
-        - charID (number): The unique identifier of the character to load
-        - client (Player): The player requesting the character (optional)
-        - callback (function): Function to call when loading is complete
+        charID (number)
+            The unique identifier of the character to load
+        client (Player)
+            The player requesting the character (optional)
+        callback (function)
+            Function to call when loading is complete
 
     Returns:
-        None (uses callback for result)
+        nil (uses callback for result)
 
     Realm:
         Server

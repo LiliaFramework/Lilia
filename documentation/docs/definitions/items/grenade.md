@@ -6,18 +6,16 @@ Grenade item system for the Lilia framework.
 
 ### name
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the display name of the grenade item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.name = "Fragmentation Grenade"
+    ITEM.name = "Fragmentation Grenade"
 
 ```
 
@@ -25,18 +23,16 @@ ITEM.name = "Fragmentation Grenade"
 
 ### desc
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the description of the grenade item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.desc = "A deadly fragmentation grenade"
+    ITEM.desc = "A deadly fragmentation grenade"
 
 ```
 
@@ -44,18 +40,16 @@ ITEM.desc = "A deadly fragmentation grenade"
 
 ### category
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the category for the grenade item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.category = "itemCatGrenades"
+    ITEM.category = "itemCatGrenades"
 
 ```
 
@@ -63,18 +57,16 @@ ITEM.category = "itemCatGrenades"
 
 ### model
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the 3D model for the grenade item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
+    ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
 ```
 
@@ -82,18 +74,16 @@ ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
 ### class
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the weapon class name for the grenade
 
-**When Called**
-
+#### ⏰ When Called
 During item definition (used in Use function)
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.class = "weapon_frag"
+    ITEM.class = "weapon_frag"
 
 ```
 
@@ -101,18 +91,16 @@ ITEM.class = "weapon_frag"
 
 ### width
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the inventory width of the grenade item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.width = 1  -- Takes 1 slot width
+    ITEM.width = 1  -- Takes 1 slot width
 
 ```
 
@@ -120,18 +108,16 @@ ITEM.width = 1  -- Takes 1 slot width
 
 ### height
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the inventory height of the grenade item
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.height = 1  -- Takes 1 slot height
+    ITEM.height = 1  -- Takes 1 slot height
 
 ```
 
@@ -139,12 +125,10 @@ ITEM.height = 1  -- Takes 1 slot height
 
 ### health
 
-**Purpose**
-
+#### 📋 Purpose
 Sets the health value for the item when it's dropped as an entity in the world
 
-**When Called**
-
+#### ⏰ When Called
 During item definition (used when item is spawned as entity)
 Notes:
 - Defaults to 100 if not specified
@@ -152,10 +136,10 @@ Notes:
 - Item is destroyed when health reaches 0
 - Only applies if ITEM.CanBeDestroyed is true (controlled by config)
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.health = 250  -- Item can take 250 damage before being destroyed
+    ITEM.health = 250  -- Item can take 250 damage before being destroyed
 
 ```
 
@@ -163,18 +147,16 @@ ITEM.health = 250  -- Item can take 250 damage before being destroyed
 
 ### DropOnDeath
 
-**Purpose**
-
+#### 📋 Purpose
 Sets whether the grenade drops when player dies
 
-**When Called**
-
+#### ⏰ When Called
 During item definition
 
-**Example Usage**
+#### 💡 Example Usage
 
 ```lua
-ITEM.DropOnDeath = true  -- Drops on death
+    ITEM.DropOnDeath = true  -- Drops on death
 
 ```
 
@@ -189,34 +171,34 @@ The following examples demonstrate how to use all the properties and methods tog
 Below is a comprehensive example showing how to define a complete item with all available properties and methods.
 
 ```lua
-        ITEM.name = "Fragmentation Grenade"
+            ITEM.name = "Fragmentation Grenade"
 
-        ITEM.desc = "A deadly fragmentation grenade"
+            ITEM.desc = "A deadly fragmentation grenade"
 
-        ITEM.category = "itemCatGrenades"
+            ITEM.category = "itemCatGrenades"
 
-        ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
+            ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"
 
-        ITEM.class = "weapon_frag"
+            ITEM.class = "weapon_frag"
 
-        ITEM.width = 1  -- Takes 1 slot width
+            ITEM.width = 1  -- Takes 1 slot width
 
-        ITEM.height = 1  -- Takes 1 slot height
+            ITEM.height = 1  -- Takes 1 slot height
 
-        ITEM.health = 250  -- Item can take 250 damage before being destroyed
+            ITEM.health = 250  -- Item can take 250 damage before being destroyed
 
-        ITEM.DropOnDeath = true  -- Drops on death
+            ITEM.DropOnDeath = true  -- Drops on death
 
--- Basic item identification
-    ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players
-    ITEM.desc = "A deadly fragmentation grenade"           -- Description text
-    ITEM.category = "itemCatGrenades"                      -- Category for inventory sorting
-    ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"     -- 3D model for the grenade
-    ITEM.class = "weapon_frag"                             -- Weapon class to give when used
-    ITEM.width = 1                                         -- Inventory width (1 slot)
-    ITEM.height = 1                                        -- Inventory height (1 slot)
-    ITEM.health = 100                                      -- Health when dropped (default: 100)
-    ITEM.DropOnDeath = true                                -- Drops on death
+    -- Basic item identification
+        ITEM.name = "Fragmentation Grenade"                    -- Display name shown to players
+        ITEM.desc = "A deadly fragmentation grenade"           -- Description text
+        ITEM.category = "itemCatGrenades"                      -- Category for inventory sorting
+        ITEM.model = "models/weapons/w_eq_fraggrenade.mdl"     -- 3D model for the grenade
+        ITEM.class = "weapon_frag"                             -- Weapon class to give when used
+        ITEM.width = 1                                         -- Inventory width (1 slot)
+        ITEM.height = 1                                        -- Inventory height (1 slot)
+        ITEM.health = 100                                      -- Health when dropped (default: 100)
+        ITEM.DropOnDeath = true                                -- Drops on death
 
 ```
 

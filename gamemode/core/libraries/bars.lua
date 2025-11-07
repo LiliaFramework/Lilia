@@ -27,7 +27,8 @@ end
         When you need to access or modify an existing bar's properties
 
     Parameters:
-        identifier (string) - The unique identifier of the bar to retrieve
+        identifier (string)
+            The unique identifier of the bar to retrieve
 
     Returns:
         table|nil - The bar object if found, nil otherwise
@@ -85,10 +86,14 @@ end
         When creating custom bars or adding new progress indicators to the HUD
 
     Parameters:
-        getValue (function) - Function that returns the current value (0-1) for the bar
-        color (Color) - Color of the bar fill (optional, defaults to random color)
-        priority (number) - Display priority, lower numbers appear first (optional)
-        identifier (string) - Unique identifier for the bar (optional)
+        getValue (function)
+            Function that returns the current value (0-1) for the bar
+        color (Color)
+            Color of the bar fill (optional, defaults to random color)
+        priority (number)
+            Display priority, lower numbers appear first (optional)
+        identifier (string)
+            Unique identifier for the bar (optional)
 
     Returns:
         number - The priority assigned to the bar
@@ -166,10 +171,11 @@ end
         When you need to remove a specific bar from the HUD or clean up bars
 
     Parameters:
-        identifier (string) - The unique identifier of the bar to remove
+        identifier (string)
+            The unique identifier of the bar to remove
 
     Returns:
-        void
+        nil
 
     Realm:
         Client
@@ -223,16 +229,23 @@ end
         Internally by the bars system or when manually drawing custom bars
 
     Parameters:
-        x (number) - X coordinate for the bar position
-        y (number) - Y coordinate for the bar position
-        w (number) - Width of the bar
-        h (number) - Height of the bar
-        pos (number) - Current progress value (0-max)
-        max (number) - Maximum value for the bar
-        color (Color) - Color of the bar fill
+        x (number)
+            X coordinate for the bar position
+        y (number)
+            Y coordinate for the bar position
+        w (number)
+            Width of the bar
+        h (number)
+            Height of the bar
+        pos (number)
+            Current progress value (0-max)
+        max (number)
+            Maximum value for the bar
+        color (Color)
+            Color of the bar fill
 
     Returns:
-        void
+        nil
 
     Realm:
         Client
@@ -284,11 +297,13 @@ end
         When displaying progress for actions like reloading, healing, or other timed activities
 
     Parameters:
-        text (string) - Text to display above the progress bar
-        duration (number) - Duration in seconds for the action to complete
+        text (string)
+            Text to display above the progress bar
+        duration (number)
+            Duration in seconds for the action to complete
 
     Returns:
-        void
+        nil
 
     Realm:
         Client
@@ -365,7 +380,7 @@ end
         None
 
     Returns:
-        void
+        nil
 
     Realm:
         Client

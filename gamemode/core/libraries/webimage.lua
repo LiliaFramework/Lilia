@@ -42,7 +42,7 @@ local function buildMaterial(p, flags)
 end
 
 local function validateURL(url)
-    if not url or type(url) ~= "string" then return false, L("urlNotValidString") end
+    if not url or not isstring(url) then return false, L("urlNotValidString") end
     if not url:find("^https?://") then return false, L("urlMustStartWithHttp") end
     local domain = url:match("^https?://([^/]+)")
     if not domain then return false, L("urlNoValidDomain") end
@@ -73,10 +73,14 @@ end
         When you need to fetch an image from the internet and store it locally
 
     Parameters:
-        - n (string): Name/identifier for the image
-        - u (string, optional): URL to download from (uses stored URL if not provided)
-        - cb (function, optional): Callback function called when download completes
-        - flags (string, optional): Material flags for the downloaded image
+        n (string)
+            Name/identifier for the image
+        u (string, optional)
+            URL to download from (uses stored URL if not provided)
+        cb (function, optional)
+            Callback function called when download completes
+        flags (string, optional)
+            Material flags for the downloaded image
 
     Returns:
         None (uses callback for results)
@@ -92,7 +96,7 @@ end
         lia.webimage.download("logo", "https://example.com/logo.png")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Download with callback and custom flags
         lia.webimage.download("avatar", "https://example.com/avatar.jpg", function(material, fromCache)
@@ -104,7 +108,7 @@ end
         end, "noclamp smooth")
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Batch download with error handling and progress tracking
         local images = {
@@ -222,10 +226,14 @@ end
         When you want to store an image URL and download it for later use
 
     Parameters:
-        - n (string): Name/identifier for the image
-        - u (string): URL to download from
-        - cb (function, optional): Callback function called when download completes
-        - flags (string, optional): Material flags for the downloaded image
+        n (string)
+            Name/identifier for the image
+        u (string)
+            URL to download from
+        cb (function, optional)
+            Callback function called when download completes
+        flags (string, optional)
+            Material flags for the downloaded image
 
     Returns:
         None
@@ -241,7 +249,7 @@ end
         lia.webimage.register("logo", "https://example.com/logo.png")
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Register with callback for UI updates
         lia.webimage.register("avatar", "https://example.com/avatar.jpg", function(material)
@@ -252,7 +260,7 @@ end
         end)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Register multiple images with progress tracking
         local imageConfigs = {
@@ -293,8 +301,10 @@ end
         When you need to get a material that has already been downloaded and cached
 
     Parameters:
-        - n (string): Name/identifier of the image or URL
-        - flags (string, optional): Material flags to apply to the material
+        n (string)
+            Name/identifier of the image or URL
+        flags (string, optional)
+            Material flags to apply to the material
 
     Returns:
         Material object if found, nil otherwise
@@ -314,7 +324,7 @@ end
         end
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Get material with custom flags and fallback
         local avatar = lia.webimage.get("avatar", "noclamp smooth")
@@ -325,7 +335,7 @@ end
             end
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Batch retrieval with validation and error handling
         local imageNames = {"banner", "icon", "background", "logo"}
@@ -464,7 +474,7 @@ end
         print("Stored images: " .. stats.stored)
         ```
 
-        Medium Complexity:
+    Medium Complexity:
         ```lua
         -- Medium: Display statistics in a panel
         local stats = lia.webimage.getStats()
@@ -484,7 +494,7 @@ end
         resetLabel:SetPos(10, 50)
         ```
 
-        High Complexity:
+    High Complexity:
         ```lua
         -- High: Create a comprehensive statistics dashboard
         local function createStatsDashboard()
