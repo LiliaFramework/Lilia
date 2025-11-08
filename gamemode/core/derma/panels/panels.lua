@@ -3,8 +3,11 @@ local function PaintPanel(_, w, h)
     local radius = 6
     local shadowIntensity = 8
     local shadowBlur = 12
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.background_alpha):Draw()
+    local theme = lia.color.theme
+    local windowShadow = theme and theme.window_shadow or Color(0, 0, 0, 100)
+    local backgroundAlpha = theme and theme.background_alpha or Color(34, 34, 34, 210)
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(windowShadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(backgroundAlpha):Draw()
 end
 
 local function PaintFrame(pnl, w, h)
@@ -26,8 +29,11 @@ local function PaintFrame(pnl, w, h)
     local radius = 6
     local shadowIntensity = 8
     local shadowBlur = 12
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.window_shadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
-    lia.derma.rect(0, 0, w, h):Rad(radius):Color(lia.color.theme.background_alpha):Draw()
+    local theme = lia.color.theme
+    local windowShadow = theme and theme.window_shadow or Color(0, 0, 0, 100)
+    local backgroundAlpha = theme and theme.background_alpha or Color(34, 34, 34, 210)
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(windowShadow):Shadow(shadowIntensity, shadowBlur):Shape(lia.derma.SHAPE_IOS):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(radius):Color(backgroundAlpha):Draw()
 end
 
 local BlurredDFrame = {}
