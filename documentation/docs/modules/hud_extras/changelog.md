@@ -1,8 +1,4 @@
 # Changelog
-### Version 1.4
-
-- Added comprehensive configuration documentation
-- **Changed**: Configuration updates and improvements
 
 ### Version 1.3
 
