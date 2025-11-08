@@ -2730,3 +2730,123 @@ Shared
 
 ---
 
+### print
+
+#### 📋 Purpose
+Called when localization system has finished loading all language files
+
+#### ⏰ When Called
+After all language files have been loaded and the localization system is ready
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log when localization is loaded
+    hook.Add("OnLocalizationLoaded", "MyAddon", function()
+        print("Localization system loaded")
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Initialize addon with localization
+    hook.Add("OnLocalizationLoaded", "InitWithLocalization", function()
+        -- Now safe to use L() function
+        print(L("addonLoaded", "MyAddon"))
+        -- Register custom language strings
+        lia.lang.Add("english", "myCustomString", "My Custom String")
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex localization initialization
+    hook.Add("OnLocalizationLoaded", "AdvancedLocalizationInit", function()
+        -- Load custom language files
+        lia.lang.loadFromDir("myaddon/languages")
+        -- Register dynamic language strings
+        local customStrings = {
+            {key = "myAddonWelcome", english = "Welcome to My Addon"},
+            {key = "myAddonGoodbye", english = "Goodbye from My Addon"}
+        }
+        for _, str in ipairs(customStrings) do
+            lia.lang.Add("english", str.key, str.english)
+        end
+        -- Initialize addon systems that depend on localization
+        MyAddon.Initialize()
+        print(L("addonInitialized", "MyAddon"))
+    end)
+
+```
+
+---
+
+### OnLocalizationLoaded
+
+#### 📋 Purpose
+Called when localization system has finished loading all language files
+
+#### ⏰ When Called
+After all language files have been loaded and the localization system is ready
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log when localization is loaded
+    hook.Add("OnLocalizationLoaded", "MyAddon", function()
+        print("Localization system loaded")
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Initialize addon with localization
+    hook.Add("OnLocalizationLoaded", "InitWithLocalization", function()
+        -- Now safe to use L() function
+        print(L("addonLoaded", "MyAddon"))
+        -- Register custom language strings
+        lia.lang.Add("english", "myCustomString", "My Custom String")
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex localization initialization
+    hook.Add("OnLocalizationLoaded", "AdvancedLocalizationInit", function()
+        -- Load custom language files
+        lia.lang.loadFromDir("myaddon/languages")
+        -- Register dynamic language strings
+        local customStrings = {
+            {key = "myAddonWelcome", english = "Welcome to My Addon"},
+            {key = "myAddonGoodbye", english = "Goodbye from My Addon"}
+        }
+        for _, str in ipairs(customStrings) do
+            lia.lang.Add("english", str.key, str.english)
+        end
+        -- Initialize addon systems that depend on localization
+        MyAddon.Initialize()
+        print(L("addonInitialized", "MyAddon"))
+    end)
+
+```
+
+---
+

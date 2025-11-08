@@ -25410,7 +25410,7 @@ end
 
         -- Store with custom scoping
         lia.data.set(self.uniqueID, value, global, ignoreMap)
-        
+
         -- Log data change
         lia.log.add("Module " .. self.uniqueID .. " data updated", FLAG_NORMAL)
     end

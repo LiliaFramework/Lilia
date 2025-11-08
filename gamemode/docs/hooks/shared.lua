@@ -3047,7 +3047,7 @@ end
     hook.Add("OnLocalizationLoaded", "InitWithLocalization", function()
         -- Now safe to use L() function
         print(L("addonLoaded", "MyAddon"))
-        
+
         -- Register custom language strings
         lia.lang.Add("english", "myCustomString", "My Custom String")
     end)
@@ -3060,20 +3060,20 @@ end
     hook.Add("OnLocalizationLoaded", "AdvancedLocalizationInit", function()
         -- Load custom language files
         lia.lang.loadFromDir("myaddon/languages")
-        
+
         -- Register dynamic language strings
         local customStrings = {
             {key = "myAddonWelcome", english = "Welcome to My Addon"},
             {key = "myAddonGoodbye", english = "Goodbye from My Addon"}
         }
-        
+
         for _, str in ipairs(customStrings) do
             lia.lang.Add("english", str.key, str.english)
         end
-        
+
         -- Initialize addon systems that depend on localization
         MyAddon.Initialize()
-        
+
         print(L("addonInitialized", "MyAddon"))
     end)
     ```
