@@ -300,6 +300,14 @@ net.Receive("liaCharCreate", function(_, client)
                 table.insert(client.liaCharList, id)
                 lia.module.get("mainmenu"):SyncCharList(client)
                 hook.Run("OnCharCreated", client, character, originalData)
+                local currentChar = client:getChar()
+                if currentChar then currentChar:save() end
+                local unloadedCount = lia.char.unloadUnusedCharacters(client, id)
+                if unloadedCount > 0 then lia.information(L("unloadedUnusedCharacters") .. " " .. unloadedCount .. " " .. L("forPlayer") .. " " .. client:Name()) end
+                hook.Run("PrePlayerLoadedChar", client, character, currentChar)
+                character:setup()
+                hook.Run("PlayerLoadedChar", client, character, currentChar)
+                hook.Run("PostPlayerLoadedChar", client, character, currentChar)
                 response(id)
             end)
         end
