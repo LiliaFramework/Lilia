@@ -1041,32 +1041,24 @@ local math_max = math.max
 local DisableClipping = DisableClipping
 local SHADERS_VERSION = "1761484375"
 local SHADERS_GMA = [========[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]========]
+-- Initialize GMA file only once
 do
     local mountedVersions = _G.RNDX_GMA_MOUNTED or {}
     _G.RNDX_GMA_MOUNTED = mountedVersions
     if not mountedVersions[SHADERS_VERSION] then
         local gma_filename = "rndx_shaders_" .. SHADERS_VERSION .. ".gma"
-        print("[RNDX] Mounting shader GMA for version: " .. SHADERS_VERSION)
         if not file.Exists("data/" .. gma_filename, "GAME") then
             local DECODED_SHADERS_GMA = util.Base64Decode(SHADERS_GMA)
-            if not DECODED_SHADERS_GMA or #DECODED_SHADERS_GMA == 0 then
-                print("[RNDX] Failed to load shaders!")
-                return
-            end
-
+            if not DECODED_SHADERS_GMA or #DECODED_SHADERS_GMA == 0 then return end
             file.Write(gma_filename, DECODED_SHADERS_GMA)
-            print("[RNDX] Wrote shader GMA file: " .. gma_filename)
         end
 
         game.MountGMA("data/" .. gma_filename)
         mountedVersions[SHADERS_VERSION] = true
-        print("[RNDX] Successfully mounted shader GMA: " .. gma_filename)
-    else
-        print("[RNDX] Shader GMA already mounted for version: " .. SHADERS_VERSION .. " (skipping remount)")
     end
 end
 
-local function GET_SHADER(name)
+local function getShader(name)
     return SHADERS_VERSION:gsub("%.", "_") .. "_" .. name
 end
 
@@ -1075,10 +1067,8 @@ do
     local rtCache = _G.RNDX_RT_CACHE or {}
     _G.RNDX_RT_CACHE = rtCache
     if not rtCache[BLUR_RT_NAME] then
-        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8), 0, IMAGE_FORMAT_BGRA8888)
-        print("[RNDX] Created blur render target: " .. BLUR_RT_NAME)
-    else
-        print("[RNDX] Reusing cached blur render target: " .. BLUR_RT_NAME)
+        rtCache[BLUR_RT_NAME] = GetRenderTargetEx(BLUR_RT_NAME, 1024, 1024, RT_SIZE_LITERAL, MATERIAL_RT_DEPTH_SEPARATE, bit.bor(2, 256, 4, 8), --[[4, 8 is clamp_s + clamp-t]]
+            0, IMAGE_FORMAT_BGRA8888)
     end
 
     BLUR_RT = rtCache[BLUR_RT_NAME]
@@ -1122,19 +1112,22 @@ screenspace_general
 	$linearread_texture3       1
 }
 ]==]
-local MATRIXES = {}
+local matrixes = {}
 local MATERIAL_CACHE = {}
-local function create_shader_mat(name, opts)
-    assert(name and isstring(name), "create_shader_mat: tex must be a string")
+local function createShaderMat(name, opts)
+    assert(name and isstring(name), "createShaderMat: tex must be a string")
     local mat_name = "rndx_shaders1" .. name .. SHADERS_VERSION
+    -- Check cache first
     if MATERIAL_CACHE[mat_name] then return MATERIAL_CACHE[mat_name] end
+    -- Try to get existing material from engine
     local existing_mat = Material(mat_name)
     if existing_mat and not existing_mat:IsError() then
         MATERIAL_CACHE[mat_name] = existing_mat
-        if not MATRIXES[existing_mat] then MATRIXES[existing_mat] = Matrix() end
+        if not matrixes[existing_mat] then matrixes[existing_mat] = Matrix() end
         return existing_mat
     end
 
+    -- Create new material
     local key_values = util.KeyValuesToTable(shader_mat, false, true)
     if opts then
         for k, v in pairs(opts) do
@@ -1143,53 +1136,53 @@ local function create_shader_mat(name, opts)
     end
 
     local mat = CreateMaterial(mat_name, "screenspace_general", key_values)
-    MATRIXES[mat] = Matrix()
+    matrixes[mat] = Matrix()
     MATERIAL_CACHE[mat_name] = mat
     return mat
 end
 
-local ROUNDED_MAT = create_shader_mat("rounded", {
-    ["$pixshader"] = GET_SHADER("rndx_rounded_ps30"),
-    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+local roundedMat = createShaderMat("rounded", {
+    ["$pixshader"] = getShader("rndx_rounded_ps30"),
+    ["$vertexshader"] = getShader("rndx_vertex_vs30"),
 })
 
-local ROUNDED_TEXTURE_MAT = create_shader_mat("rounded_texture", {
-    ["$pixshader"] = GET_SHADER("rndx_rounded_ps30"),
-    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
-    ["$basetexture"] = "loveyoumom",
+local roundedTextureMat = createShaderMat("rounded_texture", {
+    ["$pixshader"] = getShader("rndx_rounded_ps30"),
+    ["$vertexshader"] = getShader("rndx_vertex_vs30"),
+    ["$basetexture"] = "vgui/white",
 })
 
-local BLUR_VERTICAL = "$c0_x"
-local ROUNDED_BLUR_MAT = create_shader_mat("blur_horizontal", {
-    ["$pixshader"] = GET_SHADER("rndx_rounded_blur_ps30"),
-    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+local blurVertical = "$c0_x"
+local roundedBlurMat = createShaderMat("blur_horizontal", {
+    ["$pixshader"] = getShader("rndx_rounded_blur_ps30"),
+    ["$vertexshader"] = getShader("rndx_vertex_vs30"),
     ["$basetexture"] = BLUR_RT:GetName(),
     ["$texture1"] = "_rt_FullFrameFB",
 })
 
-local SHADOWS_MAT = create_shader_mat("rounded_shadows", {
-    ["$pixshader"] = GET_SHADER("rndx_shadows_ps30"),
-    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+local shadowsMat = createShaderMat("rounded_shadows", {
+    ["$pixshader"] = getShader("rndx_shadows_ps30"),
+    ["$vertexshader"] = getShader("rndx_vertex_vs30"),
 })
 
-local SHADOWS_BLUR_MAT = create_shader_mat("shadows_blur_horizontal", {
-    ["$pixshader"] = GET_SHADER("rndx_shadows_blur_ps30"),
-    ["$vertexshader"] = GET_SHADER("rndx_vertex_vs30"),
+local shadowsBlurMat = createShaderMat("shadows_blur_horizontal", {
+    ["$pixshader"] = getShader("rndx_shadows_blur_ps30"),
+    ["$vertexshader"] = getShader("rndx_vertex_vs30"),
     ["$basetexture"] = BLUR_RT:GetName(),
     ["$texture1"] = "_rt_FullFrameFB",
 })
 
-local SHAPES = {
+local shapes = {
     [SHAPE_CIRCLE] = 2,
     [SHAPE_FIGMA] = 2.2,
     [SHAPE_IOS] = 4,
 }
 
-local DEFAULT_SHAPE = SHAPE_FIGMA
-local MATERIAL_SetTexture = ROUNDED_MAT.SetTexture
-local MATERIAL_SetMatrix = ROUNDED_MAT.SetMatrix
-local MATERIAL_SetFloat = ROUNDED_MAT.SetFloat
-local MATRIX_SetUnpacked = Matrix().SetUnpacked
+local defaultShape = SHAPE_FIGMA
+local materialSetTexture = roundedMat.SetTexture
+local materialSetMatrix = roundedMat.SetMatrix
+local materialSetFloat = roundedMat.SetFloat
+local matrixSetUnpacked = Matrix().SetUnpacked
 local MAT
 local X, Y, W, H
 local TL, TR, BL, BR
@@ -1200,14 +1193,14 @@ local SHAPE, OUTLINE_THICKNESS
 local START_ANGLE, END_ANGLE, ROTATION
 local CLIP_PANEL
 local SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY
-local function RESET_PARAMS()
+local function resetParams()
     MAT = nil
     X, Y, W, H = 0, 0, 0, 0
     TL, TR, BL, BR = 0, 0, 0, 0
     TEXTURE = nil
     USING_BLUR, BLUR_INTENSITY = false, 1.0
     COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
-    SHAPE, OUTLINE_THICKNESS = SHAPES[DEFAULT_SHAPE], -1
+    SHAPE, OUTLINE_THICKNESS = shapes[defaultShape], -1
     START_ANGLE, END_ANGLE, ROTATION = 0, 360, 0
     CLIP_PANEL = nil
     SHADOW_ENABLED, SHADOW_SPREAD, SHADOW_INTENSITY = false, 0, 0
@@ -1226,7 +1219,7 @@ do
         return x < 0 and 0 or x
     end
 
-    function normalize_corner_radii()
+    function normalizeCornerRadii()
         local tl, tr, bl, br = nzr(TL), nzr(TR), nzr(BL), nzr(BR)
         local k = math_max(1, (tl + tr) / W, (bl + br) / W, (tl + bl) / H, (tr + br) / H)
         if k > 1 then
@@ -1237,33 +1230,33 @@ do
     end
 end
 
-local function SetupDraw()
-    local tl, tr, bl, br = normalize_corner_radii()
-    local matrix = MATRIXES[MAT]
-    MATRIX_SetUnpacked(matrix, bl, W, OUTLINE_THICKNESS or -1, END_ANGLE, br, H, SHADOW_INTENSITY, ROTATION, tr, SHAPE, BLUR_INTENSITY or 1.0, 0, tl, TEXTURE and 1 or 0, START_ANGLE, 0)
-    MATERIAL_SetMatrix(MAT, "$viewprojmat", matrix)
+local function setupDraw()
+    local tl, tr, bl, br = normalizeCornerRadii()
+    local matrix = matrixes[MAT]
+    matrixSetUnpacked(matrix, bl, W, OUTLINE_THICKNESS or -1, END_ANGLE, br, H, SHADOW_INTENSITY, ROTATION, tr, SHAPE, BLUR_INTENSITY or 1.0, 0, tl, TEXTURE and 1 or 0, START_ANGLE, 0)
+    materialSetMatrix(MAT, "$viewprojmat", matrix)
     if COL_R then surface_SetDrawColor(COL_R, COL_G, COL_B, COL_A) end
     surface_SetMaterial(MAT)
 end
 
 local MANUAL_COLOR = NEW_FLAG()
-local DEFAULT_DRAW_FLAGS = DEFAULT_SHAPE
-local function draw_rounded(x, y, w, h, col, flags, tl, tr, bl, br, texture, thickness)
+local defaultDrawFlags = defaultShape
+local function drawRounded(x, y, w, h, col, flags, tl, tr, bl, br, texture, thickness)
     if col and col.a == 0 then return end
-    RESET_PARAMS()
-    if not flags then flags = DEFAULT_DRAW_FLAGS end
+    resetParams()
+    if not flags then flags = defaultDrawFlags end
     local using_blur = bit_band(flags, BLUR) ~= 0
     if using_blur then return lia.derma.drawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness) end
-    MAT = ROUNDED_MAT
+    MAT = roundedMat
     if texture then
-        MAT = ROUNDED_TEXTURE_MAT
-        MATERIAL_SetTexture(MAT, "$basetexture", texture)
+        MAT = roundedTextureMat
+        materialSetTexture(MAT, "$basetexture", texture)
         TEXTURE = texture
     end
 
     W, H = w, h
     TL, TR, BL, BR = bit_band(flags, NO_TL) == 0 and tl or 0, bit_band(flags, NO_TR) == 0 and tr or 0, bit_band(flags, NO_BL) == 0 and bl or 0, bit_band(flags, NO_BR) == 0 and br or 0
-    SHAPE = SHAPES[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or SHAPES[DEFAULT_SHAPE]
+    SHAPE = shapes[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or shapes[defaultShape]
     OUTLINE_THICKNESS = thickness
     if bit_band(flags, MANUAL_COLOR) ~= 0 then
         COL_R = nil
@@ -1273,7 +1266,7 @@ local function draw_rounded(x, y, w, h, col, flags, tl, tr, bl, br, texture, thi
         COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
     end
 
-    SetupDraw()
+    setupDraw()
     return surface_DrawTexturedRectUV(x, y, w, h, -0.015625, -0.015625, 1.015625, 1.015625)
 end
 
@@ -1331,7 +1324,7 @@ end
     ```
 ]]
 function lia.derma.draw(radius, x, y, w, h, col, flags)
-    return draw_rounded(x, y, w, h, col, flags, radius, radius, radius, radius)
+    return drawRounded(x, y, w, h, col, flags, radius, radius, radius, radius)
 end
 
 --[[
@@ -1389,7 +1382,7 @@ end
     ```
 ]]
 function lia.derma.drawOutlined(radius, x, y, w, h, col, thickness, flags)
-    return draw_rounded(x, y, w, h, col, flags, radius, radius, radius, radius, nil, thickness or 1)
+    return drawRounded(x, y, w, h, col, flags, radius, radius, radius, radius, nil, thickness or 1)
 end
 
 --[[
@@ -1449,7 +1442,7 @@ end
     ```
 ]]
 function lia.derma.drawTexture(radius, x, y, w, h, col, texture, flags)
-    return draw_rounded(x, y, w, h, col, flags, radius, radius, radius, radius, texture)
+    return drawRounded(x, y, w, h, col, flags, radius, radius, radius, radius, texture)
 end
 
 --[[
@@ -1743,21 +1736,21 @@ function lia.derma.drawCircleMaterial(x, y, radius, col, mat, flags)
     return lia.derma.drawMaterial(radius / 2, x - radius / 2, y - radius / 2, radius, radius, col, mat, (flags or 0) + SHAPE_CIRCLE)
 end
 
-local USE_SHADOWS_BLUR = false
-local function draw_blur()
-    if USE_SHADOWS_BLUR then
-        MAT = SHADOWS_BLUR_MAT
+local useShadowsBlur = false
+local function drawBlur()
+    if useShadowsBlur then
+        MAT = shadowsBlurMat
     else
-        MAT = ROUNDED_BLUR_MAT
+        MAT = roundedBlurMat
     end
 
     COL_R, COL_G, COL_B, COL_A = 255, 255, 255, 255
-    SetupDraw()
+    setupDraw()
     render_CopyRenderTargetToTexture(BLUR_RT)
-    MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 0)
+    materialSetFloat(MAT, blurVertical, 0)
     surface_DrawTexturedRect(X, Y, W, H)
     render_CopyRenderTargetToTexture(BLUR_RT)
-    MATERIAL_SetFloat(MAT, BLUR_VERTICAL, 1)
+    materialSetFloat(MAT, blurVertical, 1)
     surface_DrawTexturedRect(X, Y, W, H)
 end
 
@@ -1822,17 +1815,17 @@ end
     ```
 ]]
 function lia.derma.drawBlur(x, y, w, h, flags, tl, tr, bl, br, thickness)
-    RESET_PARAMS()
-    if not flags then flags = DEFAULT_DRAW_FLAGS end
+    resetParams()
+    if not flags then flags = defaultDrawFlags end
     X, Y = x, y
     W, H = w, h
     TL, TR, BL, BR = bit_band(flags, NO_TL) == 0 and tl or 0, bit_band(flags, NO_TR) == 0 and tr or 0, bit_band(flags, NO_BL) == 0 and bl or 0, bit_band(flags, NO_BR) == 0 and br or 0
-    SHAPE = SHAPES[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or SHAPES[DEFAULT_SHAPE]
+    SHAPE = shapes[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or shapes[defaultShape]
     OUTLINE_THICKNESS = thickness
-    draw_blur()
+    drawBlur()
 end
 
-local function setup_shadows()
+local function setupShadows()
     X = X - SHADOW_SPREAD
     Y = Y - SHADOW_SPREAD
     W = W + (SHADOW_SPREAD * 2)
@@ -1843,21 +1836,21 @@ local function setup_shadows()
     BR = BR + (SHADOW_SPREAD * 2)
 end
 
-local function draw_shadows(r, g, b, a)
+local function drawShadows(r, g, b, a)
     if USING_BLUR then
-        USE_SHADOWS_BLUR = true
-        draw_blur()
-        USE_SHADOWS_BLUR = false
+        useShadowsBlur = true
+        drawBlur()
+        useShadowsBlur = false
     end
 
-    MAT = SHADOWS_MAT
+    MAT = shadowsMat
     if r == false then
         COL_R = nil
     else
         COL_R, COL_G, COL_B, COL_A = r, g, b, a
     end
 
-    SetupDraw()
+    setupDraw()
     surface_DrawTexturedRectUV(X, Y, W, H, -0.015625, -0.015625, 1.015625, 1.015625)
 end
 
@@ -1907,13 +1900,13 @@ end
     Low Complexity:
     ```lua
     -- Simple: Draw basic shadow
-    lia.derma.draw_shadowsEx(100, 100, 200, 100, Color(0, 0, 0, 100))
+    lia.derma.drawShadowsEx(100, 100, 200, 100, Color(0, 0, 0, 100))
     ```
 
     Medium Complexity:
     ```lua
     -- Medium: Draw with custom spread and intensity
-    lia.derma.draw_shadowsEx(50, 50, 300, 150, Color(0, 0, 0, 150), flags, 12, 12, 12, 12, 20, 25)
+    lia.derma.drawShadowsEx(50, 50, 300, 150, Color(0, 0, 0, 150), flags, 12, 12, 12, 12, 20, 25)
     ```
 
     High Complexity:
@@ -1921,24 +1914,24 @@ end
     -- High: Dynamic shadow with different corner radii
     local spread = isHovered and 40 or 20
     local intensity = spread * 1.5
-    lia.derma.draw_shadowsEx(x, y, w, h, shadowColor, flags, tl, tr, bl, br, spread, intensity, thickness)
+    lia.derma.drawShadowsEx(x, y, w, h, shadowColor, flags, tl, tr, bl, br, spread, intensity, thickness)
     ```
 ]]
-function lia.derma.draw_shadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread, intensity, thickness)
+function lia.derma.drawShadowsEx(x, y, w, h, col, flags, tl, tr, bl, br, spread, intensity, thickness)
     if col and col.a == 0 then return end
     local OLD_CLIPPING_STATE = DisableClipping(true)
-    RESET_PARAMS()
-    if not flags then flags = DEFAULT_DRAW_FLAGS end
+    resetParams()
+    if not flags then flags = defaultDrawFlags end
     X, Y = x, y
     W, H = w, h
     SHADOW_SPREAD = spread or 30
     SHADOW_INTENSITY = intensity or SHADOW_SPREAD * 1.2
     TL, TR, BL, BR = bit_band(flags, NO_TL) == 0 and tl or 0, bit_band(flags, NO_TR) == 0 and tr or 0, bit_band(flags, NO_BL) == 0 and bl or 0, bit_band(flags, NO_BR) == 0 and br or 0
-    SHAPE = SHAPES[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or SHAPES[DEFAULT_SHAPE]
+    SHAPE = shapes[bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)] or shapes[defaultShape]
     OUTLINE_THICKNESS = thickness
-    setup_shadows()
+    setupShadows()
     USING_BLUR = bit_band(flags, BLUR) ~= 0
-    if bit_band(flags, MANUAL_COLOR) == 0 then draw_shadows(col and col.r or 0, col and col.g or 0, col and col.b or 0, col and col.a or 255) end
+    if bit_band(flags, MANUAL_COLOR) == 0 then drawShadows(col and col.r or 0, col and col.g or 0, col and col.b or 0, col and col.a or 255) end
     DisableClipping(OLD_CLIPPING_STATE)
 end
 
@@ -1999,7 +1992,7 @@ end
     ```
 ]]
 function lia.derma.drawShadows(radius, x, y, w, h, col, spread, intensity, flags)
-    return lia.derma.draw_shadowsEx(x, y, w, h, col, flags, radius, radius, radius, radius, spread, intensity)
+    return lia.derma.drawShadowsEx(x, y, w, h, col, flags, radius, radius, radius, radius, spread, intensity)
 end
 
 --[[
@@ -2042,13 +2035,13 @@ end
     Low Complexity:
     ```lua
     -- Simple: Draw outlined shadow
-    lia.derma.draw_shadowsOutlined(8, 100, 100, 200, 100, Color(0, 0, 0, 100), 2)
+    lia.derma.drawShadowsOutlined(8, 100, 100, 200, 100, Color(0, 0, 0, 100), 2)
     ```
 
     Medium Complexity:
     ```lua
     -- Medium: Draw with custom thickness and spread
-    lia.derma.draw_shadowsOutlined(12, 50, 50, 300, 150, Color(0, 0, 0, 150), 3, 20, 25)
+    lia.derma.drawShadowsOutlined(12, 50, 50, 300, 150, Color(0, 0, 0, 150), 3, 20, 25)
     ```
 
     High Complexity:
@@ -2057,14 +2050,14 @@ end
     local thickness = isHovered and 3 or 1
     local spread = isHovered and 40 or 20
     local intensity = spread * 1.5
-    lia.derma.draw_shadowsOutlined(radius, x, y, w, h, shadowColor, thickness, spread, intensity, flags)
+    lia.derma.drawShadowsOutlined(radius, x, y, w, h, shadowColor, thickness, spread, intensity, flags)
     ```
 ]]
-function lia.derma.draw_shadowsOutlined(radius, x, y, w, h, col, thickness, spread, intensity, flags)
-    return lia.derma.draw_shadowsEx(x, y, w, h, col, flags, radius, radius, radius, radius, spread, intensity, thickness or 1)
+function lia.derma.drawShadowsOutlined(radius, x, y, w, h, col, thickness, spread, intensity, flags)
+    return lia.derma.drawShadowsEx(x, y, w, h, col, flags, radius, radius, radius, radius, spread, intensity, thickness or 1)
 end
 
-local BASE_FUNCS = {
+lia.derma.baseFuncs = {
     Rad = function(self, rad)
         TL, TR, BL, BR = rad, rad, rad, rad
         return self
@@ -2089,16 +2082,14 @@ local BASE_FUNCS = {
         return self
     end,
     Shape = function(self, shape)
-        SHAPE = SHAPES[shape] or 2.2
+        SHAPE = shapes[shape] or 2.2
         return self
     end,
     Color = function(self, col_or_r, g, b, a)
         if isnumber(col_or_r) then
             COL_R, COL_G, COL_B, COL_A = col_or_r, g or 255, b or 255, a or 255
-        elseif col_or_r and IsColor(col_or_r) then
-            COL_R, COL_G, COL_B, COL_A = col_or_r.r, col_or_r.g, col_or_r.b, col_or_r.a
         else
-            COL_R, COL_G, COL_B, COL_A = 34, 34, 34, 240
+            COL_R, COL_G, COL_B, COL_A = col_or_r.r, col_or_r.g, col_or_r.b, col_or_r.a
         end
         return self
     end,
@@ -2135,29 +2126,28 @@ local BASE_FUNCS = {
         if bit_band(flags, NO_BL) ~= 0 then BL = 0 end
         if bit_band(flags, NO_BR) ~= 0 then BR = 0 end
         local shape_flag = bit_band(flags, SHAPE_CIRCLE + SHAPE_FIGMA + SHAPE_IOS)
-        if shape_flag ~= 0 then SHAPE = SHAPES[shape_flag] or SHAPES[DEFAULT_SHAPE] end
-        if bit_band(flags, BLUR) ~= 0 then BASE_FUNCS.Blur(self) end
+        if shape_flag ~= 0 then SHAPE = shapes[shape_flag] or shapes[defaultShape] end
+        if bit_band(flags, BLUR) ~= 0 then USING_BLUR, BLUR_INTENSITY = true, 1.0 end
         if bit_band(flags, MANUAL_COLOR) ~= 0 then COL_R = nil end
         return self
     end,
 }
 
-lia.derma.baseFuncs = BASE_FUNCS
-local RECT = {
-    Rad = BASE_FUNCS.Rad,
-    Radii = BASE_FUNCS.Radii,
-    Texture = BASE_FUNCS.Texture,
-    Material = BASE_FUNCS.Material,
-    Outline = BASE_FUNCS.Outline,
-    Shape = BASE_FUNCS.Shape,
-    Color = BASE_FUNCS.Color,
-    Blur = BASE_FUNCS.Blur,
-    Rotation = BASE_FUNCS.Rotation,
-    StartAngle = BASE_FUNCS.StartAngle,
-    EndAngle = BASE_FUNCS.EndAngle,
-    Clip = BASE_FUNCS.Clip,
-    Shadow = BASE_FUNCS.Shadow,
-    Flags = BASE_FUNCS.Flags,
+lia.derma.Rect = {
+    Rad = lia.derma.baseFuncs.Rad,
+    Radii = lia.derma.baseFuncs.Radii,
+    Texture = lia.derma.baseFuncs.Texture,
+    Material = lia.derma.baseFuncs.Material,
+    Outline = lia.derma.baseFuncs.Outline,
+    Shape = lia.derma.baseFuncs.Shape,
+    Color = lia.derma.baseFuncs.Color,
+    Blur = lia.derma.baseFuncs.Blur,
+    Rotation = lia.derma.baseFuncs.Rotation,
+    StartAngle = lia.derma.baseFuncs.StartAngle,
+    EndAngle = lia.derma.baseFuncs.EndAngle,
+    Clip = lia.derma.baseFuncs.Clip,
+    Shadow = lia.derma.baseFuncs.Shadow,
+    Flags = lia.derma.baseFuncs.Flags,
     Draw = function()
         if START_ANGLE == END_ANGLE then return end
         local OLD_CLIPPING_STATE
@@ -2169,17 +2159,17 @@ local RECT = {
         end
 
         if SHADOW_ENABLED then
-            setup_shadows()
-            draw_shadows(COL_R, COL_G, COL_B, COL_A)
+            setupShadows()
+            drawShadows(COL_R, COL_G, COL_B, COL_A)
         elseif USING_BLUR then
-            draw_blur()
+            drawBlur()
         else
             if TEXTURE then
-                MAT = ROUNDED_TEXTURE_MAT
-                MATERIAL_SetTexture(MAT, "$basetexture", TEXTURE)
+                MAT = roundedTextureMat
+                materialSetTexture(MAT, "$basetexture", TEXTURE)
             end
 
-            SetupDraw()
+            setupDraw()
             surface_DrawTexturedRectUV(X, Y, W, H, -0.015625, -0.015625, 1.015625, 1.015625)
         end
 
@@ -2189,48 +2179,46 @@ local RECT = {
     GetMaterial = function()
         if SHADOW_ENABLED or USING_BLUR then error(L("shadowedBlurredRectangleError")) end
         if TEXTURE then
-            MAT = ROUNDED_TEXTURE_MAT
-            MATERIAL_SetTexture(MAT, "$basetexture", TEXTURE)
+            MAT = roundedTextureMat
+            materialSetTexture(MAT, "$basetexture", TEXTURE)
         end
 
-        SetupDraw()
+        setupDraw()
         return MAT
     end,
 }
 
-lia.derma.Rect = RECT
-local CIRCLE = {
-    Texture = BASE_FUNCS.Texture,
-    Material = BASE_FUNCS.Material,
-    Outline = BASE_FUNCS.Outline,
-    Color = BASE_FUNCS.Color,
-    Blur = BASE_FUNCS.Blur,
-    Rotation = BASE_FUNCS.Rotation,
-    StartAngle = BASE_FUNCS.StartAngle,
-    EndAngle = BASE_FUNCS.EndAngle,
-    Clip = BASE_FUNCS.Clip,
-    Shadow = BASE_FUNCS.Shadow,
-    Flags = BASE_FUNCS.Flags,
-    Draw = RECT.Draw,
-    GetMaterial = RECT.GetMaterial,
+lia.derma.Circle = {
+    Texture = lia.derma.baseFuncs.Texture,
+    Material = lia.derma.baseFuncs.Material,
+    Outline = lia.derma.baseFuncs.Outline,
+    Color = lia.derma.baseFuncs.Color,
+    Blur = lia.derma.baseFuncs.Blur,
+    Rotation = lia.derma.baseFuncs.Rotation,
+    StartAngle = lia.derma.baseFuncs.StartAngle,
+    EndAngle = lia.derma.baseFuncs.EndAngle,
+    Clip = lia.derma.baseFuncs.Clip,
+    Shadow = lia.derma.baseFuncs.Shadow,
+    Flags = lia.derma.baseFuncs.Flags,
+    Draw = lia.derma.Rect.Draw,
+    GetMaterial = lia.derma.Rect.GetMaterial,
 }
 
-lia.derma.Circle = CIRCLE
 lia.derma.Types = {
     Rect = function(x, y, w, h)
-        RESET_PARAMS()
-        MAT = ROUNDED_MAT
+        resetParams()
+        MAT = roundedMat
         X, Y, W, H = x, y, w, h
-        return RECT
+        return lia.derma.Rect
     end,
     Circle = function(x, y, r)
-        RESET_PARAMS()
-        MAT = ROUNDED_MAT
-        SHAPE = SHAPES[SHAPE_CIRCLE]
+        resetParams()
+        MAT = roundedMat
+        SHAPE = shapes[SHAPE_CIRCLE]
         X, Y, W, H = x - r / 2, y - r / 2, r, r
         r = r / 2
         TL, TR, BL, BR = r, r, r, r
-        return CIRCLE
+        return lia.derma.Circle
     end
 }
 
@@ -2362,8 +2350,8 @@ function lia.derma.setFlag(flags, flag, bool)
 end
 
 function lia.derma.setDefaultShape(shape)
-    DEFAULT_SHAPE = shape or SHAPE_FIGMA
-    DEFAULT_DRAW_FLAGS = DEFAULT_SHAPE
+    defaultShape = shape or SHAPE_FIGMA
+    defaultDrawFlags = defaultShape
 end
 
 --[[
@@ -4619,3 +4607,21 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     lia.gui.menuRequestButtons = frame
     return frame, buttonPanels
 end
+
+timer.Simple(0, function()
+    if IsValid(lia.gui.menuDermaMenu) then lia.gui.menuDermaMenu:Remove() end
+    if IsValid(lia.gui.menuTextBox) then lia.gui.menuTextBox:Remove() end
+    if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
+    if IsValid(lia.gui.menu_radial) then lia.gui.menu_radial:Remove() end
+    if IsValid(lia.gui.menuPlayerSelector) then lia.gui.menuPlayerSelector:Remove() end
+    if IsValid(lia.gui.menuRequestDropdown) then lia.gui.menuRequestDropdown:Remove() end
+    if IsValid(lia.gui.menuRequestString) then lia.gui.menuRequestString:Remove() end
+    if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
+    if IsValid(lia.gui.menuRequestBinary) then lia.gui.menuRequestBinary:Remove() end
+    if IsValid(lia.gui.menuRequestButtons) then lia.gui.menuRequestButtons:Remove() end
+    if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
+    if IsValid(lia.gui.menuTableUI) then lia.gui.menuTableUI:Remove() end
+    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
+    if IsValid(lia.gui.InteractionMenu) then lia.gui.InteractionMenu:Remove() end
+    if IsValid(lia.gui.OptionsMenu) then lia.gui.OptionsMenu:Remove() end
+end)
