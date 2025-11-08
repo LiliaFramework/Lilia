@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.985 (November 08, 2025)
+
+### Changes
+
+- Update derma.lua
+- Update server.lua
+- Successfully updated workshop Lilia to 6.982
+- Update server.lua
+- Successfully updated workshop Lilia to 6.980
+- Update derma.lua
+- Work around?
+- Successfully updated workshop Lilia to 6.977
+- Update derma.lua
+- More  docs
+- Successfully updated workshop Lilia to 6.974
+- Fixed SWEP Editor and Spawning
+- Successfully updated workshop Lilia to 6.972
+- Update commands.lua
+- Successfully updated workshop Lilia to 6.970
+- Update commands.lua
+- Successfully updated workshop Lilia to 6.968
+- Update creation.lua
+- Successfully updated workshop Lilia to 6.966
+- Fixing Error
+
 ## Version 6.982 (November 08, 2025)
 
 ### Changes
