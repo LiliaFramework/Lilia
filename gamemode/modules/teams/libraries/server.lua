@@ -81,7 +81,7 @@ local function applyAttributes(client, attr)
     if not attr then return end
     if attr.NPCRelations then
         for _, entity in ents.Iterator() do
-            if entity:IsNPC() and relations[entity:GetClass()] then entity:AddEntityRelationship(client, relations[entity:GetClass()], 0) end
+            if entity:IsNPC() and attr.NPCRelations[entity:GetClass()] then entity:AddEntityRelationship(client, attr.NPCRelations[entity:GetClass()], 0) end
         end
     else
         for _, entity in ents.Iterator() do
