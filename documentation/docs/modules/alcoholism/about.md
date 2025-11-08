@@ -9,10 +9,10 @@ Adds drinkable alcohol that increases a player's intoxication level. High BAC bl
 
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
-- Adds alcohol items that raise BAC and gradually wear off
+- Adds alcohol items that raise BAC (Blood Alcohol Content) and gradually wear off
 - Adds screen blur and movement effects that scale with intoxication
 - Adds player notification when reaching DrunkNotifyThreshold
-- Adds configurable BAC settings like AlcoholTickTime
-- Adds multiple drink items with varying strength
+- Adds configurable BAC settings and degradation rates
+- Adds multiple drink items with varying strength (vodka, whiskey, wine, beer, etc.)
 
 <p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/alcoholism.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>

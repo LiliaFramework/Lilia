@@ -10,8 +10,8 @@ Adds a loyalty tier system for players, the /partytier command access, permissio
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds a loyalty tier system for players
-- Adds the /partytier command access
-- Adds permission control through flags
+- Adds the /partytier command for tier management
+- Adds permission control through T flag
 - Adds automatic tier progression
 - Adds customizable rewards per tier
 

@@ -10,7 +10,7 @@ Spawns a bodygroup closet where players can edit their model's bodygroups. Admin
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds a spawnable closet entity for editing bodygroups
-- Adds the ability to customize its model via BodyGrouperModel
+- Adds the ability to customize its model via BodyGrouperModel configuration
 - Adds menu access that requires proximity or privilege
 - Adds an admin command to view another player's bodygroups
 - Adds a networked menu for editing bodygroups

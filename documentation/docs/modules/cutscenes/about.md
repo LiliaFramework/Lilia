@@ -10,9 +10,9 @@ Adds a framework for simple cutscene playback, scenes defined through tables, sy
 <h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds a framework for simple cutscene playback
-- Adds scenes defined through tables
+- Adds scenes defined through tables in config.lua
 - Adds syncing of camera movement across clients
-- Adds commands to trigger cutscenes
-- Adds the ability for players to skip
+- Adds admin commands to trigger cutscenes
+- Adds the ability for players to skip cutscenes
 
 <p align="center"><a href="https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/cutscenes.zip" style="display:inline-block;padding:12px 24px;font-size:1.5rem;font-weight:bold;text-decoration:none;color:#fff;background-color:var(--md-primary-fg-color,#007acc);border-radius:4px;">DOWNLOAD HERE</a></p>
