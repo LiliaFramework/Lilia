@@ -7,7 +7,7 @@ HUD Extras
 
 Adds extra HUD elements like an FPS counter, fonts configurable with FPSHudFont, hooks so other modules can extend, performance stats display, and toggles for individual HUD elements.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds extra HUD elements like an FPS counter
 - Adds fonts configurable with FPSHudFont

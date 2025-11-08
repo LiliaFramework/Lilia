@@ -561,6 +561,7 @@ LANGUAGE = {
     canNotAfford = "Du kannst dir diesen Gegenstand nicht leisten.",
     respawnKey = "Drcke %s zum Respawnen",
     respawnIn = "Automatisches Respawnen in %s Sekunden",
+    respawning = "Respawning...",
     pressAnyKeyToRespawn = "Drücke LEERTASTE zum Respawnen",
     youHaveDied = "Du bist gestorben",
     factionStaffName = "Team im Dienst",

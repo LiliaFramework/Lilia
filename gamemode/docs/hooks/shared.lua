@@ -10,18 +10,17 @@
 ]]
 --[[
     Purpose:
-        Formats a currency amount with the proper symbol, singular/plural form, and localization.
+        Allows modification of stamina regeneration/drain offset for a player
 
     When Called:
-        When displaying currency amounts in UI, chat messages, or any text output.
+        During stamina calculation, allowing custom stamina modifiers
 
     Parameters:
-        amount (number)
-            The numeric amount to format.
+        client (Player) - The player whose stamina is being calculated
+        offset (number) - The current stamina offset (positive for regen, negative for drain)
 
     Returns:
-        string
-            Formatted currency string with symbol and proper singular/plural form.
+        number - The modified stamina offset, or nil to use original offset
 
     Realm:
         Shared
@@ -29,508 +28,95 @@
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log when modules are initialized
-        function MODULE:InitializedModules()
-            print("Modules initialized")
+
+    ```lua
+    -- Simple: Increase stamina regeneration
+    hook.Add("AdjustStaminaOffset", "MyAddon", function(client, offset)
+        if offset > 0 then -- Only modify regeneration, not drain
+            return offset * 1.5 -- 50% faster regeneration
         end
-        ```
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize module-specific systems
-        function MODULE:InitializedModules()
-            -- Initialize custom data structures
-            self.customData = {}
 
-            -- Register custom hooks
-            self:RegisterCustomHooks()
+    ```lua
+    -- Medium: Modify stamina based on character attributes
+    hook.Add("AdjustStaminaOffset", "AttributeStamina", function(client, offset)
+        local char = client:getChar()
+        if not char then return end
 
-            -- Load module configurations
-            self:LoadModuleConfig()
-
-            lia.log.add("Custom modules initialized", FLAG_NORMAL)
+        local con = char:getAttrib("con", 0) -- Constitution attribute
+        if offset > 0 then -- Regeneration
+            return offset * (1 + con * 0.1) -- 10% bonus per constitution point
+        else -- Drain
+            return offset * (1 - con * 0.05) -- 5% less drain per constitution point
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced module initialization with validation and setup
-        function MODULE:InitializedModules()
-            -- Validate all modules
-            self:ValidateAllModules()
 
-            -- Initialize module dependencies
-            self:InitializeModuleDependencies()
+    ```lua
+    -- High: Complex stamina system with multiple factors
+    hook.Add("AdjustStaminaOffset", "AdvancedStamina", function(client, offset)
+        local char = client:getChar()
+        if not char then return end
 
-            -- Set up cross-module communication
-            self:SetupModuleCommunication()
+        local modifiers = {
+            regeneration = 1.0,
+            drain       = 1.0
+        }
 
-            -- Register module commands and hooks
-            self:RegisterModuleCommands()
-            self:RegisterModuleHooks()
+        -- Constitution bonus
+        local con = char:getAttrib("con", 0)
+        modifiers.regeneration = modifiers.regeneration + (con * 0.1)
+        modifiers.drain = modifiers.drain - (con * 0.05)
 
-            -- Load module configurations and data
-            self:LoadModuleConfigurations()
-            self:LoadModuleData()
-
-            -- Initialize module-specific systems
-            self:InitializeCustomSystems()
-
-            -- Set up module networking
-            self:SetupModuleNetworking()
-
-            -- Log comprehensive initialization
-            lia.log.add("All modules initialized successfully", FLAG_NORMAL)
+        -- Faction bonuses
+        local faction = char:getFaction()
+        if faction == "athlete" then
+            modifiers.regeneration = modifiers.regeneration + 0.3
+            modifiers.drain = modifiers.drain - 0.2
+        elseif faction == "elderly" then
+            modifiers.regeneration = modifiers.regeneration - 0.2
+            modifiers.drain = modifiers.drain + 0.3
         end
-        ```
-]]
-function InitializedModules()
-end
 
---[[
-    Purpose:
-        Allows adjusting character creation data before character creation.
-
-    When Called:
-        During character creation process.
-
-    Parameters:
-        client (Player)
-            The player creating the character.
-        data (table)
-            The character creation data.
-        newData (table)
-            The adjusted data.
-        originalData (table)
-            The original unmodified data.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add default values
-        function MODULE:AdjustCreationData(client, data, newData, originalData)
-            newData.playTime = 0
-            newData.created = os.time()
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Apply faction-based bonuses
-        function MODULE:AdjustCreationData(client, data, newData, originalData)
-            local faction = lia.faction.get(data.faction)
-            if faction then
-                -- Give starting money based on faction
-                if faction.startingMoney then
-                    newData.money = faction.startingMoney
-                end
-
-                -- Apply faction-specific attributes
-                if faction.startingAttributes then
-                    for attr, value in pairs(faction.startingAttributes) do
-                        newData[attr] = (newData[attr] or 0) + value
-                    end
-                end
+        -- Equipment bonuses
+        local items = char:getInv()
+        for _, item in pairs(items) do
+            if item.uniqueID == "stamina_boost" then
+                modifiers.regeneration = modifiers.regeneration + 0.5
+            elseif item.uniqueID == "heavy_armor" then
+                modifiers.drain = modifiers.drain + 0.3
             end
         end
-        ```
 
-    High Complexity:
-        ```lua
-        -- High: Complex character setup with validation and cross-module integration
-        function MODULE:AdjustCreationData(client, data, newData, originalData)
-            -- Set creation timestamp
-            newData.created = os.time()
-
-            -- Initialize default values
-            newData.playTime = 0
-            newData.lastPlayed = os.time()
-
-            -- Apply faction bonuses and restrictions
-            local faction = lia.faction.get(data.faction)
-            if faction then
-                -- Starting money
-                newData.money = faction.startingMoney or lia.config.get("DefaultMoney", 0)
-
-                -- Starting inventory
-                if faction.startingInventory then
-                    newData.inventory = table.Copy(faction.startingInventory)
-                end
-
-                -- Faction-specific attributes
-                if faction.startingAttributes then
-                    for attr, value in pairs(faction.startingAttributes) do
-                        local maxVal = hook.Run("GetAttributeMax", client, attr) or 100
-                        newData[attr] = math.min((newData[attr] or 0) + value, maxVal)
-                    end
-                end
-
-                -- Check faction limits
-                if hook.Run("CheckFactionLimitReached", faction.uniqueID, data, client) then
-                    client:notify("Faction limit reached for " .. faction.name)
-                    return false -- Cancel character creation
-                end
-            end
-
-            -- Apply class bonuses if selected
-            if data.class then
-                local class = lia.class.get(data.class)
-                if class and class.onCreated then
-                    class.onCreated(client, data, newData)
-                end
-            end
-
-            -- Initialize custom data tables
-            newData.data = newData.data or {}
-            newData.data.achievements = {}
-            newData.data.quests = {}
-            newData.data.flags = {}
-
-            -- Apply server-wide bonuses (holidays, events, etc.)
-            local currentDate = os.date("*t")
-            if currentDate.month == 12 and currentDate.day <= 25 then
-                newData.data.flags.christmasBonus = true
-                newData.money = newData.money + 500 -- Christmas bonus
-            end
-
-            -- Log character creation
-            lia.log.add(client:Name() .. " (" .. client:SteamID() .. ") created character: " .. data.name, FLAG_NORMAL)
+        -- Apply modifiers
+        if offset > 0 then
+            return offset * modifiers.regeneration
+        else
+            return offset * modifiers.drain
         end
-        ```
-]]
-function AdjustCreationData(client, data, newData, originalData)
-end
-
---[[
-    Purpose:
-        Allows adjusting PAC3 part data.
-
-    When Called:
-        When PAC3 part data is being processed.
-
-    Parameters:
-        wearer (Player)
-            The player wearing the PAC part.
-        id (string)
-            The PAC part ID.
-        data (table)
-            The PAC part data.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add a color tint to all PAC parts
-        function MODULE:AdjustPACPartData(wearer, id, data)
-            if data.model then
-                data.Color = Color(255, 200, 200) -- Light pink tint
-            end
-            return data
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Apply faction-specific modifications
-        function MODULE:AdjustPACPartData(wearer, id, data)
-            if not IsValid(wearer) then return data end
-
-            local char = wearer:getChar()
-            if not char then return data end
-
-            local faction = lia.faction.get(char:getFaction())
-            if faction then
-                -- Apply faction colors
-                if faction.color and data.model then
-                    data.Color = faction.color
-                end
-
-                -- Special modifications for certain factions
-                if faction.uniqueID == "police" and string.find(id, "hat") then
-                    data.Scale = data.Scale or Vector(1, 1, 1)
-                    data.Scale = data.Scale * 1.1 -- Make police hats slightly bigger
-                end
-            end
-
-            return data
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced PAC modifications with item-specific logic
-        function MODULE:AdjustPACPartData(wearer, id, data)
-            if not IsValid(wearer) then return data end
-
-            local char = wearer:getChar()
-            if not char then return data end
-
-            local item = lia.item.list[id]
-            if not item then return data end
-
-            -- Apply item-specific modifications
-            if item.pacAdjust then
-                local result = item:pacAdjust(data, wearer)
-                if result ~= nil then return result end
-            end
-
-            -- Weather-based modifications
-            if data.model and lia.config.get("DynamicWeatherEffects") then
-                local weather = game.GetMap():find("rain") and "rain" or "clear"
-                if weather == "rain" then
-                    -- Make clothing darker when raining
-                    data.Color = data.Color or Color(255, 255, 255)
-                    data.Color.r = math.max(0, data.Color.r - 30)
-                    data.Color.g = math.max(0, data.Color.g - 30)
-                    data.Color.b = math.max(0, data.Color.b - 30)
-                end
-            end
-
-            -- Time-based glow effects
-            local time = (CurTime() % 86400) / 3600 -- Hour of day
-            if time >= 20 or time <= 6 then -- Night time
-                if string.find(id, "jewelry") or string.find(id, "glow") then
-                    data.Glow = data.Glow or {}
-                    data.Glow.Color = Color(100, 150, 255)
-                    data.Glow.Brightness = 0.5
-                end
-            end
-
-            -- Health-based visual effects
-            local healthPercent = wearer:Health() / wearer:GetMaxHealth()
-            if healthPercent < 0.3 and data.model then
-                -- Make clothing appear damaged when health is low
-                data.Material = data.Material or ""
-                if data.Material == "" then
-                    data.Material = "models/debug/debugwhite"
-                    data.Color = Color(139, 69, 19) -- Brown/damaged color
-                end
-            end
-
-            -- Rank-based modifications for organizations
-            if char:getData("rank") then
-                local rank = char:getData("rank")
-                if rank == "leader" and string.find(id, "badge") then
-                    data.Scale = data.Scale or Vector(1, 1, 1)
-                    data.Scale = data.Scale * 1.2 -- Make leader badges bigger
-                    data.Glow = data.Glow or {}
-                    data.Glow.Color = Color(255, 215, 0) -- Gold glow
-                    data.Glow.Brightness = 1
-                end
-            end
-
-            -- Seasonal modifications
-            local currentDate = os.date("*t")
-            if currentDate.month == 12 and currentDate.day <= 25 then
-                -- Christmas effects
-                if string.find(id, "hat") then
-                    data.Skin = 1 -- Christmas skin if available
-                elseif string.find(id, "clothing") then
-                    -- Add subtle festive coloring
-                    data.Color = data.Color or Color(255, 255, 255)
-                    data.Color.g = math.min(255, data.Color.g + 20)
-                    data.Color.b = math.min(255, data.Color.b + 20)
-                end
-            end
-
-            return data
-        end
-        ```
-]]
-function AdjustPACPartData(wearer, id, data)
-end
-
---[[
-    Purpose:
-        Adjusts the stamina offset for a player.
-
-    When Called:
-        When calculating stamina changes.
-
-    Parameters:
-        client (Player)
-            The player whose stamina is being adjusted.
-        offset (number)
-            The stamina offset value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Reduce stamina regeneration at night
-        function MODULE:AdjustStaminaOffset(client, offset)
-            if offset > 0 then -- Only affect regeneration
-                local time = (CurTime() % 86400) / 3600 -- Hour of day
-                if time >= 22 or time <= 6 then -- Night time
-                    return offset * 0.5 -- Half regeneration at night
-                end
-            end
-            return offset
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Hunger-based stamina modification
-        function MODULE:AdjustStaminaOffset(client, offset)
-            if SERVER then
-                local hunger = client:getHunger() or 100
-                local hungerThreshold = lia.config.get("HungerThreshold", 10)
-
-                if hunger <= hungerThreshold then
-                    -- No stamina regeneration when starving
-                    if offset > 0 then
-                        return 0
-                    end
-                elseif hunger <= hungerThreshold * 2 then
-                    -- Reduced regeneration when hungry
-                    if offset > 0 then
-                        return offset * 0.5
-                    end
-                end
-            end
-
-            return offset
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Multi-factor stamina system with drugs, injuries, and environmental effects
-        function MODULE:AdjustStaminaOffset(client, offset)
-            if not IsValid(client) then return offset end
-
-            local char = client:getChar()
-            if not char then return offset end
-
-            local finalOffset = offset
-
-            -- Hunger effects (server-side)
-            if SERVER then
-                local hunger = client:getHunger() or 100
-                local hungerThreshold = lia.config.get("HungerThreshold", 10)
-
-                if hunger <= 0 then
-                    finalOffset = math.min(finalOffset, -2) -- Constant drain when starving
-                elseif hunger <= hungerThreshold then
-                    if finalOffset > 0 then
-                        finalOffset = 0 -- No regeneration when very hungry
-                    end
-                elseif hunger <= hungerThreshold * 2 then
-                    if finalOffset > 0 then
-                        finalOffset = finalOffset * 0.3 -- Severely reduced regeneration
-                    end
-                elseif hunger <= hungerThreshold * 4 then
-                    if finalOffset > 0 then
-                        finalOffset = finalOffset * 0.7 -- Moderately reduced regeneration
-                    end
-                end
-
-                -- Drug effects
-                local staminaMul = lia.drugs.getActiveMultiplier(client, "stamina_regen", 1)
-                if staminaMul ~= 1 and finalOffset > 0 then
-                    finalOffset = finalOffset * staminaMul
-                end
-
-                -- Injury effects
-                local healthPercent = client:Health() / client:GetMaxHealth()
-                if healthPercent < 0.5 then
-                    if finalOffset > 0 then
-                        finalOffset = finalOffset * (0.5 + healthPercent) -- Less regeneration when injured
-                    elseif finalOffset < 0 then
-                        finalOffset = finalOffset * (1.2 - healthPercent * 0.4) -- More drain when injured
-                    end
-                end
-            end
-
-            -- Environmental effects (shared)
-            if client:WaterLevel() > 1 then
-                finalOffset = finalOffset * 0.7 -- Reduced stamina underwater
-            end
-
-            -- Weather effects (if available)
-            if lia.config.get("WeatherAffectsStamina") then
-                -- This would depend on your weather system
-                local isRaining = false -- Replace with actual weather check
-                if isRaining then
-                    finalOffset = finalOffset * 0.9 -- Slight reduction in rain
-                end
-            end
-
-            -- Equipment effects
-            if SERVER then
-                local inventory = char:getInv()
-                if inventory then
-                    for _, item in pairs(inventory:getItems()) do
-                        if item:getData("equip") and item.staminaModifier then
-                            finalOffset = finalOffset * item.staminaModifier
-                        end
-                    end
-                end
-            end
-
-            -- Class/faction modifiers
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.staminaModifier then
-                finalOffset = finalOffset * faction.staminaModifier
-            end
-
-            local classID = char:getClass()
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.staminaModifier then
-                    finalOffset = finalOffset * class.staminaModifier
-                end
-            end
-
-            -- Temporary buffs/debuffs from character data
-            local staminaBuff = char:getData("staminaBuff", 1)
-            if staminaBuff ~= 1 then
-                finalOffset = finalOffset * staminaBuff
-            end
-
-            return finalOffset
-        end
-        ```
+    end)
+    ```
 ]]
 function AdjustStaminaOffset(client, offset)
 end
 
 --[[
     Purpose:
-        Called when a bag inventory is ready.
+        Called to check if an outfit can change model
 
     When Called:
-        When a bag inventory has been initialized.
+        When attempting to change a player's model via outfit
 
     Parameters:
-        bagItem (Item)
-            The bag item.
-        inventory (Inventory)
-            The bag's inventory.
+        self (Item) - The outfit item
 
     Returns:
-        nil
+        boolean - True to allow, false to deny
 
     Realm:
         Shared
@@ -538,4051 +124,220 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Basic bag inventory initialization
-        function MODULE:BagInventoryReady(bagItem, inventory)
-            print("Bag inventory ready for " .. bagItem.name)
-            -- Default bag initialization would happen here
-        end
-        ```
+
+    ```lua
+    -- Simple: Always allow
+    hook.Add("CanOutfitChangeModel", "MyAddon", function(self)
+        return true
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Add default items to specific bag types
-        function MODULE:BagInventoryReady(bagItem, inventory)
-            -- Add default items based on bag type
-            if bagItem.uniqueID == "backpack" then
-                -- Add some default items to backpacks
-                inventory:add("water", 2)
-                inventory:add("bread", 1)
-            elseif bagItem.uniqueID == "tool_belt" then
-                -- Add tools to tool belts
-                inventory:add("wrench", 1)
-                inventory:add("screwdriver", 1)
-            end
+
+    ```lua
+    -- Medium: Check faction restrictions
+    hook.Add("CanOutfitChangeModel", "OutfitModelCheck", function(self)
+        local client = self.player
+        if not client then return false end
+
+        local char = client:getChar()
+        if not char then return false end
+
+        local allowedFactions = self.allowedFactions
+        if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
+            return false
         end
-        ```
+
+        return true
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced bag system with persistence and restrictions
-        function MODULE:BagInventoryReady(bagItem, inventory)
-            if not bagItem or not inventory then return end
 
-            -- Load persistent bag data
-            local bagData = bagItem:getData("bagData", {})
-            if bagData.initialized then
-                -- Bag has been used before, restore previous state
-                for itemID, quantity in pairs(bagData.contents or {}) do
-                    if quantity > 0 then
-                        inventory:add(itemID, quantity)
-                    end
-                end
-            else
-                -- First time initialization
-                bagData.initialized = true
-                bagData.created = os.time()
+    ```lua
+    -- High: Complex outfit model system
+    hook.Add("CanOutfitChangeModel", "AdvancedOutfitModel", function(self)
+        local client = self.player
+        if not client then return false end
 
-                -- Add faction-specific starter items
-                local owner = bagItem:getOwner()
-                if IsValid(owner) then
-                    local char = owner:getChar()
-                    if char then
-                        local faction = lia.faction.get(char:getFaction())
-                        if faction and faction.bagStarterItems then
-                            for itemID, quantity in pairs(faction.bagStarterItems) do
-                                inventory:add(itemID, quantity)
-                                bagData.contents = bagData.contents or {}
-                                bagData.contents[itemID] = (bagData.contents[itemID] or 0) + quantity
-                            end
-                        end
-                    end
-                end
+        local char = client:getChar()
+        if not char then return false end
 
-                bagItem:setData("bagData", bagData)
+        -- Check faction restrictions
+        local allowedFactions = self.allowedFactions
+        if allowedFactions and not table.HasValue(allowedFactions, char:getFaction()) then
+            if SERVER then
+                client:ChatPrint("Your faction cannot wear this outfit")
             end
-
-            -- Apply bag-specific restrictions
-            if bagItem.maxWeight then
-                inventory:setMaxWeight(bagItem.maxWeight)
-            end
-
-            if bagItem.allowedItems then
-                -- Set up item type restrictions
-                inventory.allowedItems = bagItem.allowedItems
-            end
-
-            -- Log bag creation/access
-            lia.log.add("Bag inventory initialized: " .. bagItem.name .. " (ID: " .. bagItem.id .. ")", FLAG_NORMAL)
-
-            -- Send notification to owner
-            local owner = bagItem:getOwner()
-            if IsValid(owner) then
-                owner:notify("Your " .. bagItem.name .. " is ready for use!")
-            end
+            return false
         end
-        ```
+
+        -- Check level requirements
+        local requiredLevel = self.requiredLevel or 0
+        local charLevel = char:getData("level", 1)
+        if charLevel < requiredLevel then
+            if SERVER then
+                client:ChatPrint("You need to be level " .. requiredLevel .. " to wear this outfit")
+            end
+            return false
+        end
+
+        return true
+    end)
+    ```
 ]]
-function BagInventoryReady(bagItem, inventory)
+function CanOutfitChangeModel(self)
 end
 
 --[[
     Purpose:
-        Called when a bag inventory is removed.
+        Called when a command is added
 
     When Called:
-        When a bag inventory is being removed.
+        When a new command is registered to the framework
 
     Parameters:
-        bagItem (Item)
-            The bag item.
-        inventory (Inventory)
-            The bag's inventory.
+        command (string) - The command name
+        data (table) - The command data and properties
 
     Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Basic bag cleanup logging
-        function MODULE:BagInventoryRemoved(bagItem, inventory)
-            print("Bag inventory removed for " .. bagItem.name)
-            -- Default cleanup would happen here
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Save bag contents before removal
-        function MODULE:BagInventoryRemoved(bagItem, inventory)
-            if not bagItem or not inventory then return end
-
-            -- Save current contents for persistence
-            local bagData = bagItem:getData("bagData", {})
-            bagData.contents = {}
-
-            -- Store all items and their quantities
-            for _, item in pairs(inventory:getItems()) do
-                bagData.contents[item.uniqueID] = (bagData.contents[item.uniqueID] or 0) + item:getQuantity()
-            end
-
-            bagItem:setData("bagData", bagData)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced cleanup with notifications and effects
-        function MODULE:BagInventoryRemoved(bagItem, inventory)
-            if not bagItem or not inventory then return end
-
-            -- Save inventory state for persistence
-            local bagData = bagItem:getData("bagData", {})
-            bagData.lastAccessed = os.time()
-            bagData.contents = {}
-
-            local itemCount = 0
-            local totalValue = 0
-
-            -- Analyze inventory contents
-            for _, item in pairs(inventory:getItems()) do
-                local quantity = item:getQuantity()
-                bagData.contents[item.uniqueID] = (bagData.contents[item.uniqueID] or 0) + quantity
-                itemCount = itemCount + quantity
-
-                -- Calculate total value if items have prices
-                if item.price then
-                    totalValue = totalValue + (item.price * quantity)
-                end
-            end
-
-            bagData.itemCount = itemCount
-            bagData.totalValue = totalValue
-            bagItem:setData("bagData", bagData)
-
-            -- Handle special cleanup for certain bag types
-            if bagItem.uniqueID == "cooler_bag" then
-                -- Special handling for temperature-sensitive items
-                for _, item in pairs(inventory:getItems()) do
-                    if item.perishable then
-                        -- Items might spoil when removed from cooler
-                        if math.random() < 0.3 then -- 30% chance
-                            lia.log.add("Item spoiled: " .. item.name .. " in " .. bagItem.name, FLAG_WARNING)
-                        end
-                    end
-                end
-            end
-
-            -- Notify owner about bag removal
-            local owner = bagItem:getOwner()
-            if IsValid(owner) then
-                if itemCount > 0 then
-                    owner:notify("Your " .. bagItem.name .. " was closed with " .. itemCount .. " items inside.")
-                else
-                    owner:notify("Your empty " .. bagItem.name .. " was closed.")
-                end
-            end
-
-            -- Log bag removal
-            lia.log.add("Bag inventory removed: " .. bagItem.name ..
-                " (Items: " .. itemCount ..
-                ", Value: " .. lia.currency.get(totalValue) ..
-                ", Owner: " .. (IsValid(owner) and owner:Name() or "Unknown") .. ")", FLAG_NORMAL)
-
-            -- Trigger any bag-specific cleanup effects
-            if bagItem.onRemove then
-                bagItem:onRemove(owner, inventory)
-            end
-
-            -- Clean up any temporary data
-            bagItem:setData("tempData", nil)
-        end
-        ```
-]]
-function BagInventoryRemoved(bagItem, inventory)
-end
-
---[[
-    Purpose:
-        Determines if character information can be displayed.
-
-    When Called:
-        When attempting to display character information.
-
-    Parameters:
-        name (string)
-            The character name.
-
-    Returns:
-        boolean
-            Whether the character info can be displayed.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Block displaying specific character names
-        function MODULE:CanDisplayCharInfo(name)
-            local blockedNames = {
-                "Admin",
-                "Moderator",
-                "Server"
-            }
-
-            return not table.HasValue(blockedNames, name)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Hide character info based on faction relationships
-        function MODULE:CanDisplayCharInfo(client, name)
-            if not IsValid(client) then return true end
-
-            local clientChar = client:getChar()
-            if not clientChar then return true end
-
-            -- Find the character being viewed
-            for _, ply in player.Iterator() do
-                local char = ply:getChar()
-                if char and char:getName() == name then
-                    local targetFaction = char:getFaction()
-                    local clientFaction = clientChar:getFaction()
-
-                    -- Check if factions are hostile
-                    if self:IsFactionHostile(clientFaction, targetFaction) then
-                        return false -- Hide info from hostile factions
-                    end
-
-                    break
-                end
-            end
-
-            return true
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced visibility system with multiple conditions
-        function MODULE:CanDisplayCharInfo(client, name)
-            if not IsValid(client) then return false end
-
-            local clientChar = client:getChar()
-            if not clientChar then return false end
-
-            -- Find the target character
-            local targetPlayer = nil
-            local targetChar = nil
-
-            for _, ply in player.Iterator() do
-                local char = ply:getChar()
-                if char and char:getName() == name then
-                    targetPlayer = ply
-                    targetChar = char
-                    break
-                end
-            end
-
-            if not targetChar then return false end
-
-            -- Check admin permissions (admins can see everything)
-            if client:hasPrivilege("Staff Permissions") then
-                return true
-            end
-
-            -- Check if target is in stealth mode
-            if targetChar:getData("stealth", false) then
-                -- Only allies can see stealth characters
-                if not self:IsAlly(clientChar, targetChar) then
-                    return false
-                end
-            end
-
-            -- Check distance-based visibility
-            local maxDistance = lia.config.get("characterInfoMaxDistance", 500)
-            if client:GetPos():Distance(targetPlayer:GetPos()) > maxDistance then
-                return false
-            end
-
-            -- Check line of sight
-            if lia.config.get("requireLineOfSight", true) then
-                local trace = util.TraceLine({
-                    start = client:EyePos(),
-                    endpos = targetPlayer:EyePos(),
-                    filter = {client, targetPlayer}
-                })
-
-                if trace.Hit then
-                    return false -- No line of sight
-                end
-            end
-
-            -- Check faction relationships
-            local clientFaction = lia.faction.get(clientChar:getFaction())
-            local targetFaction = lia.faction.get(targetChar:getFaction())
-
-            if clientFaction and targetFaction then
-                -- Hidden factions
-                if targetFaction.hidden and not clientFaction.canSeeHidden then
-                    return false
-                end
-
-                -- Hostile factions with low reputation
-                if self:IsFactionHostile(clientFaction.uniqueID, targetFaction.uniqueID) then
-                    local reputation = clientChar:getData("faction_rep", {})[targetFaction.uniqueID] or 0
-                    if reputation < -50 then -- Very low reputation
-                        return false
-                    end
-                end
-            end
-
-            -- Check character flags
-            if targetChar:hasFlags("H") then -- Hidden flag
-                if not clientChar:hasFlags("I") then -- Investigator flag required
-                    return false
-                end
-            end
-
-            -- Check disguise status
-            if targetChar:getData("disguised", false) then
-                -- Only certain classes can see through disguises
-                local classID = clientChar:getClass()
-                if not classID or not lia.class.get(classID).canSeeDisguises then
-                    return false
-                end
-            end
-
-            -- Check time-based visibility (night time restrictions)
-            local currentTime = os.date("*t")
-            local hour = currentTime.hour
-            if hour >= 22 or hour <= 6 then -- Night time
-                if targetChar:getData("nightCamouflage", false) then
-                    return false -- Character is camouflaged at night
-                end
-            end
-
-            -- Log character info viewing for security
-            lia.log.add(client:Name() .. " viewed character info for: " .. name, FLAG_NORMAL)
-
-            return true
-        end
-        ```
-]]
-function CanDisplayCharInfo(name)
-end
-
---[[
-    Purpose:
-        Determines if a player can access a vendor.
-
-    When Called:
-        When a player attempts to access a vendor.
-
-    Parameters:
-        activator (Player)
-            The player attempting access.
-        vendor (Entity)
-            The vendor entity.
-
-    Returns:
-        boolean
-            Whether the player can access the vendor.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Basic vendor access check
-        function MODULE:CanPlayerAccessVendor(activator, vendor)
-            if not IsValid(activator) or not IsValid(vendor) then return false end
-
-            local char = activator:getChar()
-            return char ~= nil -- Allow access if player has a character
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Faction-based vendor access
-        function MODULE:CanPlayerAccessVendor(activator, vendor)
-            if not IsValid(activator) or not IsValid(vendor) then return false end
-
-            local char = activator:getChar()
-            if not char then return false end
-
-            local vendorFaction = vendor:getNetVar("faction")
-            if vendorFaction then
-                -- Check if player's faction matches vendor's faction
-                if char:getFaction() == vendorFaction then
-                    return true
-                end
-
-                -- Check for allied factions
-                local playerFaction = lia.faction.get(char:getFaction())
-                if playerFaction and playerFaction.allies then
-                    for _, allyFaction in ipairs(playerFaction.allies) do
-                        if allyFaction == vendorFaction then
-                            return true
-                        end
-                    end
-                end
-
-                return false -- Not in allowed faction
-            end
-
-            return true -- No faction restriction
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced vendor access with multiple restrictions
-        function MODULE:CanPlayerAccessVendor(activator, vendor)
-            if not IsValid(activator) or not IsValid(vendor) then return false end
-
-            local char = activator:getChar()
-            if not char then return false end
-
-            -- Check vendor ownership
-            local vendorOwner = vendor:getNetVar("owner")
-            if vendorOwner and vendorOwner ~= activator then
-                return false -- Only owner can access personal vendors
-            end
-
-            -- Check faction restrictions
-            local vendorFaction = vendor:getNetVar("faction")
-            if vendorFaction then
-                if char:getFaction() ~= vendorFaction then
-                    -- Check if factions are allied
-                    local playerFaction = lia.faction.get(char:getFaction())
-                    local targetFaction = lia.faction.get(vendorFaction)
-
-                    if not (playerFaction and targetFaction and
-                           playerFaction.allies and table.HasValue(playerFaction.allies, vendorFaction)) then
-                        return false
-                    end
-                end
-            end
-
-            -- Check class restrictions
-            local vendorClass = vendor:getNetVar("classRestriction")
-            if vendorClass then
-                local playerClass = char:getClass()
-                if playerClass ~= vendorClass then
-                    return false
-                end
-            end
-
-            -- Check flag requirements
-            local requiredFlags = vendor:getNetVar("requiredFlags")
-            if requiredFlags then
-                for _, flag in ipairs(requiredFlags) do
-                    if not char:hasFlags(flag) then
-                        return false
-                    end
-                end
-            end
-
-            -- Check reputation requirements
-            local minReputation = vendor:getNetVar("minReputation", 0)
-            if minReputation > 0 then
-                local playerRep = char:getData("reputation", 0)
-                if playerRep < minReputation then
-                    return false
-                end
-            end
-
-            -- Check wanted status
-            if vendor:getNetVar("noWanted", false) then
-                if char:getData("wanted", false) then
-                    return false -- Wanted players can't access
-                end
-            end
-
-            -- Check time restrictions
-            local timeRestriction = vendor:getNetVar("timeRestriction")
-            if timeRestriction then
-                local currentTime = os.date("*t")
-                local currentMinutes = currentTime.hour * 60 + currentTime.min
-
-                if currentMinutes < timeRestriction.start or currentMinutes > timeRestriction.end then
-                    return false
-                end
-            end
-
-            -- Check vendor capacity/distance
-            if vendor:getNetVar("maxDistance") then
-                local distance = activator:GetPos():Distance(vendor:GetPos())
-                if distance > vendor:getNetVar("maxDistance") then
-                    return false
-                end
-            end
-
-            -- Check if vendor is disabled
-            if vendor:getNetVar("disabled", false) then
-                return false
-            end
-
-            -- Check vendor maintenance mode
-            if vendor:getNetVar("maintenance", false) then
-                -- Only staff can access during maintenance
-                if not activator:hasPrivilege("Staff Permissions") then
-                    return false
-                end
-            end
-
-            -- Log vendor access for security
-            lia.log.add(activator:Name() .. " accessed vendor: " .. (vendor:getNetVar("name") or "Unknown"), FLAG_NORMAL)
-
-            return true
-        end
-        ```
-]]
-function CanPlayerAccessVendor(activator, vendor)
-end
-
---[[
-    Purpose:
-        Determines if a player can pick up money.
-
-    When Called:
-        When a player attempts to pick up money.
-
-    Parameters:
-        activator (Player)
-            The player attempting to pick up money.
-        moneyEntity (Entity)
-            The money entity.
-
-    Returns:
-        boolean
-            Whether the player can pick up the money.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Basic money pickup check
-        function MODULE:CanPickupMoney(activator, moneyEntity)
-            if not IsValid(activator) or not IsValid(moneyEntity) then return false end
-
-            local char = activator:getChar()
-            return char ~= nil -- Allow pickup if player has a character
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Distance and ownership checks
-        function MODULE:CanPickupMoney(activator, moneyEntity)
-            if not IsValid(activator) or not IsValid(moneyEntity) then return false end
-
-            local char = activator:getChar()
-            if not char then return false end
-
-            -- Check distance limit
-            local maxDistance = lia.config.get("moneyPickupDistance", 100)
-            if activator:GetPos():Distance(moneyEntity:GetPos()) > maxDistance then
-                return false
-            end
-
-            -- Check ownership (if money belongs to someone)
-            local moneyOwner = moneyEntity:getNetVar("owner")
-            if moneyOwner and moneyOwner ~= activator then
-                -- Check if player can pick up others' money
-                if not activator:hasPrivilege("Staff Permissions") then
-                    return false
-                end
-            end
-
-            return true
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced money pickup with multiple restrictions
-        function MODULE:CanPickupMoney(activator, moneyEntity)
-            if not IsValid(activator) or not IsValid(moneyEntity) then return false end
-
-            local char = activator:getChar()
-            if not char then return false end
-
-            -- Check if player is alive
-            if not activator:Alive() then
-                return false
-            end
-
-            -- Check distance with line of sight
-            local maxDistance = lia.config.get("moneyPickupDistance", 100)
-            local distance = activator:GetPos():Distance(moneyEntity:GetPos())
-
-            if distance > maxDistance then
-                return false
-            end
-
-            -- Check line of sight for close pickup only
-            if distance <= 50 then
-                local trace = util.TraceLine({
-                    start = activator:EyePos(),
-                    endpos = moneyEntity:GetPos() + Vector(0, 0, 10),
-                    filter = {activator, moneyEntity}
-                })
-
-                if trace.Hit then
-                    return false -- No line of sight
-                end
-            end
-
-            -- Check ownership and permissions
-            local moneyOwner = moneyEntity:getNetVar("owner")
-            if moneyOwner then
-                if moneyOwner == activator then
-                    return true -- Can always pick up own money
-                else
-                    -- Check if player can steal money
-                    if not char:hasFlags("T") then -- Thief flag required
-                        return false
-                    end
-
-                    -- Check if target is online and would notice
-                    local ownerPlayer = moneyOwner
-                    if IsValid(ownerPlayer) then
-                        local noticeDistance = lia.config.get("theftNoticeDistance", 300)
-                        if ownerPlayer:GetPos():Distance(activator:GetPos()) <= noticeDistance then
-                            -- Chance of being noticed
-                            if math.random() < 0.7 then
-                                ownerPlayer:notify("You notice someone trying to take your money!")
-                                activator:notify("You were noticed!")
-                                return false
-                            end
-                        end
-                    end
-                end
-            end
-
-            -- Check money amount limits
-            local moneyAmount = moneyEntity:getNetVar("amount", 0)
-            local maxPickupAmount = lia.config.get("maxMoneyPickup", 10000)
-
-            if moneyAmount > maxPickupAmount then
-                -- Only certain classes can pick up large amounts
-                local classID = char:getClass()
-                if not classID or not lia.class.get(classID).canPickupLargeMoney then
-                    activator:notify("This amount of money is too heavy to carry!")
-                    return false
-                end
-            end
-
-            -- Check inventory space (if money takes inventory space)
-            if lia.config.get("moneyTakesInventorySpace") then
-                local inventory = char:getInv()
-                if inventory and not inventory:add("money", moneyAmount, true) then
-                    activator:notify("You don't have enough inventory space!")
-                    return false
-                end
-            end
-
-            -- Check wanted status
-            if char:getData("wanted", false) and lia.config.get("wantedCantPickupMoney") then
-                activator:notify("Wanted criminals cannot pick up money!")
-                return false
-            end
-
-            -- Check faction restrictions
-            local moneyFaction = moneyEntity:getNetVar("faction")
-            if moneyFaction then
-                local playerFaction = char:getFaction()
-                if playerFaction ~= moneyFaction then
-                    -- Check if factions are hostile
-                    if self:IsFactionHostile(playerFaction, moneyFaction) then
-                        return false -- Can't pick up enemy faction money
-                    end
-                end
-            end
-
-            -- Check time restrictions (night time penalties)
-            local currentTime = os.date("*t")
-            if currentTime.hour >= 22 or currentTime.hour <= 6 then
-                -- Higher chance of being caught at night
-                if moneyOwner and moneyOwner ~= activator and math.random() < 0.4 then
-                    activator:notify("You feel like you're being watched...")
-                    -- Could trigger police alert here
-                end
-            end
-
-            -- Log money pickup for anti-cheat
-            lia.log.add(activator:Name() .. " picked up $" .. moneyAmount ..
-                (moneyOwner and moneyOwner ~= activator and " (stolen)" or ""), FLAG_NORMAL)
-
-            return true
-        end
-        ```
-]]
-function CanPickupMoney(activator, moneyEntity)
-end
-
---[[
-    Purpose:
-        Calculates stamina change for a player.
-
-    When Called:
-        When stamina values need to be calculated.
-
-    Parameters:
-        client (Player)
-            The player whose stamina is being calculated.
-
-    Returns:
-        number
-            The stamina change value.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return a fixed stamina change value
-        function MODULE:CalcStaminaChange(client)
-            return -1 -- Decrease stamina by 1
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Calculate stamina change based on player movement
-        function MODULE:CalcStaminaChange(client)
-            local change = 0
-
-            -- Reduce stamina when sprinting
-            if client:KeyDown(IN_SPEED) and client:GetVelocity():Length() > 100 then
-                change = change - 2
-            end
-
-            -- Reduce stamina when jumping
-            if client:KeyDown(IN_JUMP) then
-                change = change - 1
-            end
-
-            return change
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced stamina calculation with character stats and environmental factors
-        function MODULE:CalcStaminaChange(client)
-            local character = client:getChar()
-            if not character then return 0 end
-
-            local change = 0
-            local baseDrain = 1
-
-            -- Movement-based stamina drain
-            local velocity = client:GetVelocity()
-            local speed = velocity:Length()
-
-            if speed > 300 then -- Sprinting
-                change = change - (baseDrain * 2)
-            elseif speed > 100 then -- Walking
-                change = change - baseDrain
-            end
-
-            -- Action-based drain
-            if client:KeyDown(IN_JUMP) then
-                change = change - (baseDrain * 1.5)
-            end
-
-            -- Character attribute modifiers
-            local staminaAttr = character:getAttrib("stm", 0)
-            local enduranceAttr = character:getAttrib("end", 0)
-
-            -- Reduce drain with higher stamina/endurance
-            local drainMultiplier = math.max(0.3, 1 - (staminaAttr + enduranceAttr) / 200)
-            change = change * drainMultiplier
-
-            -- Environmental factors
-            if client:WaterLevel() > 0 then
-                change = change * 1.3 -- Increased drain when swimming
-            end
-
-            -- Equipment modifiers
-            local inventory = character:getInv()
-            if inventory then
-                local heavyItems = inventory:getItemsByBase("base_armor", true)
-                for _, item in ipairs(heavyItems) do
-                    if item:getData("equip") and item.staminaDrain then
-                        change = change - item.staminaDrain
-                    end
-                end
-            end
-
-            return change
-        end
-        ```
-]]
-function CalcStaminaChange(client)
-end
-
---[[
-    Purpose:
-        Called when configuration values are changed.
-
-    When Called:
-        When server configuration is modified through admin commands or interfaces.
-
-    Parameters:
-        key (string)
-            The configuration key that was changed.
-        value (any)
-            The new value.
-        oldValue (any)
-            The previous value.
-        client (Player)
-            The player who made the change (if applicable).
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log configuration changes
-        function MODULE:ConfigChanged(key, value, oldValue, client)
-            print("Config changed: " .. key .. " from " .. tostring(oldValue) .. " to " .. tostring(value))
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track configuration changes with validation
-        function MODULE:ConfigChanged(key, value, oldValue, client)
-            -- Log the change
-            local playerName = IsValid(client) and client:Name() or "System"
-            lia.log.add(playerName .. " changed config '" .. key .. "' from '" .. tostring(oldValue) .. "' to '" .. tostring(value) .. "'", FLAG_NORMAL)
-
-            -- Validate critical configuration changes
-            if self:IsCriticalConfig(key) and not self:ValidateConfigChange(key, value, client) then
-                lia.log.add("Invalid configuration change rejected: " .. key, FLAG_WARNING)
-                -- Note: The change has already happened, this is just for logging
-            end
-
-            -- Update cached configuration if needed
-            self:UpdateConfigCache(key, value)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Comprehensive configuration change tracking and validation
-        function MODULE:ConfigChanged(key, value, oldValue, client)
-            -- Record detailed change information
-            local changeRecord = {
-                key = key,
-                oldValue = oldValue,
-                newValue = value,
-                changedBy = IsValid(client) and client:SteamID() or "system",
-                changedByName = IsValid(client) and client:Name() or "System",
-                timestamp = os.time(),
-                sessionId = self.currentSessionId or "unknown"
-            }
-
-            -- Store in configuration change history
-            self.configChangeHistory = self.configChangeHistory or {}
-            table.insert(self.configChangeHistory, changeRecord)
-
-            -- Keep only last 1000 changes
-            if #self.configChangeHistory > 1000 then
-                table.remove(self.configChangeHistory, 1)
-            end
-
-            -- Validate configuration change
-            local validation = self:ValidateConfigurationChange(changeRecord)
-            if not validation.valid then
-                lia.log.add("Configuration change validation failed: " .. validation.error, FLAG_ERROR)
-
-                -- Send notification to admins
-                for _, admin in player.Iterator() do
-                    if admin:hasPrivilege("Server Config") then
-                        admin:notify("Warning: Invalid configuration change detected for '" .. key .. "'")
-                    end
-                end
-            end
-
-            -- Check for configuration conflicts
-            local conflicts = self:CheckConfigConflicts(key, value)
-            if #conflicts > 0 then
-                lia.log.add("Configuration conflicts detected for '" .. key .. "': " .. table.concat(conflicts, ", "), FLAG_WARNING)
-            end
-
-            -- Update dependent systems
-            self:UpdateDependentSystems(key, value, oldValue)
-
-            -- Broadcast change to clients if necessary
-            if self:IsClientRelevantConfig(key) then
-                net.Start("ConfigChanged")
-                    net.WriteString(key)
-                    net.WriteType(value)
-                net.Broadcast()
-            end
-
-            -- Trigger configuration change hooks
-            hook.Run("OnConfigValueChanged", key, value, oldValue, client)
-
-            -- Log comprehensive change information
-            lia.log.add(string.format("Configuration changed - Key: %s, Old: %s, New: %s, By: %s",
-                key,
-                self:FormatConfigValue(oldValue),
-                self:FormatConfigValue(value),
-                changeRecord.changedByName), FLAG_NORMAL)
-        end
-
-        -- Helper function to validate configuration changes
-        function MODULE:ValidateConfigurationChange(changeRecord)
-            local key = changeRecord.key
-            local value = changeRecord.newValue
-            local client = player.GetBySteamID(changeRecord.changedBy)
-
-            -- Check permission
-            if not self:HasConfigChangePermission(client, key) then
-                return {valid = false, error = "Insufficient permissions"}
-            end
-
-            -- Validate value type and range
-            local validation = self:ValidateConfigValue(key, value)
-            if not validation.valid then
-                return validation
-            end
-
-            return {valid = true}
-        end
-        ```
-]]
-function ConfigChanged(key, value, oldValue, client)
-end
-
---[[
-    Purpose:
-        Called when a chat message is parsed and processed.
-
-    When Called:
-        When chat messages are being processed before display.
-
-    Parameters:
-        client (Player)
-            The player sending the message.
-        chatType (string)
-            The type of chat message.
-        message (string)
-            The chat message content.
-        anonymous (boolean)
-            Whether the message is anonymous.
-
-    Returns:
-        string, string, boolean
-            Modified chatType, message, and anonymous values.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log chat messages
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            print(client:Name() .. " sent: " .. message)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Filter bad words
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            -- Simple word filter
-            message = string.gsub(message, "badword", "***")
-            return chatType, message, anonymous
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat parsing with commands, filters, and processing
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            -- Check for chat commands
-            if string.sub(message, 1, 1) == "!" then
-                local command = string.sub(message, 2)
-                if self:HandleChatCommand(client, command, chatType) then
-                    return chatType, "", anonymous -- Suppress command messages
-                end
-            end
-
-            -- Apply content filters
-            message = self:ApplyContentFilters(message, client)
-
-            -- Check message length limits
-            if #message > self.maxMessageLength then
-                message = string.sub(message, 1, self.maxMessageLength) .. "..."
-            end
-
-            -- Process mentions and formatting
-            message = self:ProcessMentions(message, client)
-
-            -- Apply chat type specific processing
-            if chatType == "ic" then
-                message = self:ProcessICMessage(message, client)
-            elseif chatType == "ooc" then
-                message = self:ProcessOOCMessage(message, client)
-            end
-
-            -- Check for spam
-            if self:IsSpamMessage(message, client) then
-                lia.log.add(client:Name() .. " triggered spam filter", FLAG_WARNING)
-                return chatType, "", anonymous
-            end
-
-            -- Log chat message
-            self:LogChatMessage(client, chatType, message, anonymous)
-
-            -- Apply character-specific formatting
-            if not anonymous and client:getChar() then
-                message = self:ApplyCharacterFormatting(message, client:getChar())
-            end
-
-            return chatType, message, anonymous
-        end
-
-        -- Helper function for content filtering
-        function MODULE:ApplyContentFilters(message, client)
-            -- Remove blocked words
-            for _, word in ipairs(self.blockedWords) do
-                message = string.gsub(message, word, string.rep("*", #word))
-            end
-
-            -- Apply character limits per word
-            local words = string.Explode(" ", message)
-            for i, word in ipairs(words) do
-                if #word > self.maxWordLength then
-                    words[i] = string.sub(word, 1, self.maxWordLength) .. "..."
-                end
-            end
-
-            return table.concat(words, " ")
-        end
-        ```
-]]
-function ChatParsed(client, chatType, message, anonymous)
-end
-
---[[
-    Purpose:
-        Handles chat messages being added to the chatbox.
-
-    When Called:
-        When text is added to the chatbox panel.
-
-    Parameters:
-        ... (varargs)
-            Chat message parameters.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log when text is added to chatbox
-        function MODULE:ChatboxTextAdded(...)
-            print("Text added to chatbox")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track chat message statistics
-        function MODULE:ChatboxTextAdded(...)
-            -- Increment message counter
-            self.chatMessageCount = (self.chatMessageCount or 0) + 1
-
-            -- Log occasional statistics
-            if self.chatMessageCount % 100 == 0 then
-                lia.log.add("Chat message count: " .. self.chatMessageCount, FLAG_NORMAL)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat analytics and processing
-        function MODULE:ChatboxTextAdded(...)
-            local args = {...}
-
-            -- Extract message information
-            local messageInfo = self:ParseChatMessageArgs(args)
-
-            -- Update chat analytics
-            self:UpdateChatAnalytics(messageInfo)
-
-            -- Process message for logging
-            self:ProcessMessageForLogging(messageInfo)
-
-            -- Check for automated responses
-            self:CheckForAutomatedResponses(messageInfo)
-
-            -- Update chat history
-            self:AddToChatHistory(messageInfo)
-
-            -- Handle special message types
-            if messageInfo.isSystemMessage then
-                self:ProcessSystemMessage(messageInfo)
-            elseif messageInfo.isPlayerMessage then
-                self:ProcessPlayerMessage(messageInfo)
-            end
-
-            -- Update UI indicators
-            self:UpdateChatIndicators(messageInfo)
-
-            -- Trigger chat events
-            hook.Run("OnChatMessageDisplayed", messageInfo)
-        end
-
-        -- Helper function to parse chat message arguments
-        function MODULE:ParseChatMessageArgs(args)
-            return {
-                timestamp = CurTime(),
-                sender = args[1], -- Usually the player or nil
-                message = args[2], -- The message text
-                isSystemMessage = type(args[1]) ~= "Player",
-                isPlayerMessage = type(args[1]) == "Player",
-                color = args[3], -- Message color if specified
-                args = args -- Store original args
-            }
-        end
-        ```
-]]
-function ChatboxTextAdded(...)
-end
-
---[[
-    Purpose:
-        Handles character list columns configuration.
-
-    When Called:
-        When setting up character list columns.
-
-    Parameters:
-        columns (table)
-            Table of column definitions.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add basic columns
-        function MODULE:CharListColumns(columns)
-            -- Add a custom column for character level
-            columns["level"] = {
-                name = "Level",
-                width = 60,
-                align = "center"
-            }
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Add multiple custom columns with formatting
-        function MODULE:CharListColumns(columns)
-            -- Add character level column
-            columns["level"] = {
-                name = "Level",
-                width = 60,
-                align = "center",
-                getValue = function(character)
-                    return character:getData("level", 1)
-                end
-            }
-
-            -- Add reputation column
-            columns["reputation"] = {
-                name = "Reputation",
-                width = 80,
-                align = "right",
-                getValue = function(character)
-                    return character:getData("reputation", 0)
-                end
-            }
-
-            -- Add money column
-            columns["money"] = {
-                name = "Money",
-                width = 100,
-                align = "right",
-                getValue = function(character)
-                    local money = character:getMoney()
-                    return lia.currency.getSymbol() .. string.Comma(money)
-                end
-            }
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced column system with dynamic formatting and icons
-        function MODULE:CharListColumns(columns)
-            -- Add character level with visual indicators
-            columns["level"] = {
-                name = "Level",
-                width = 80,
-                align = "center",
-                getValue = function(character)
-                    local level = character:getData("level", 1)
-                    local maxLevel = 100
-
-                    -- Add visual level indicator
-                    local stars = ""
-                    for i = 1, math.min(level, 5) do
-                        stars = stars .. "★"
-                    end
-
-                    return string.format("%d %s", level, stars)
-                end,
-                getColor = function(character)
-                    local level = character:getData("level", 1)
-                    if level >= 50 then
-                        return Color(255, 215, 0) -- Gold for high level
-                    elseif level >= 25 then
-                        return Color(192, 192, 192) -- Silver for medium level
-                    else
-                        return Color(205, 127, 50) -- Bronze for low level
-                    end
-                end
-            }
-
-            -- Add faction status with icons
-            columns["faction"] = {
-                name = "Faction",
-                width = 120,
-                align = "left",
-                getValue = function(character)
-                    local faction = lia.faction.get(character:getFaction())
-                    if faction then
-                        -- Add faction icon indicator
-                        local icon = self:GetFactionIcon(faction.uniqueID)
-                        return icon .. " " .. faction.name
-                    end
-                    return "No Faction"
-                end,
-                getColor = function(character)
-                    local faction = lia.faction.get(character:getFaction())
-                    return faction and faction.color or Color(128, 128, 128)
-                end
-            }
-
-            -- Add status indicators column
-            columns["status"] = {
-                name = "Status",
-                width = 100,
-                align = "center",
-                getValue = function(character)
-                    local status = ""
-
-                    -- Add wanted indicator
-                    if character:getData("wanted", false) then
-                        status = status .. "👮 "
-                    end
-
-                    -- Add arrest indicator
-                    if character:getData("arrested", false) then
-                        status = status .. "🔒 "
-                    end
-
-                    -- Add health indicator
-                    local health = character:getPlayer():Health()
-                    if health <= 25 then
-                        status = status .. "❤️ "
-                    elseif health <= 50 then
-                        status = status .. "💛 "
-                    end
-
-                    return status ~= "" and status or "✓"
-                end,
-                getColor = function(character)
-                    if character:getData("wanted", false) then
-                        return Color(255, 0, 0) -- Red for wanted
-                    elseif character:getData("arrested", false) then
-                        return Color(255, 165, 0) -- Orange for arrested
-                    else
-                        return Color(0, 255, 0) -- Green for normal
-                    end
-                end
-            }
-
-            -- Add playtime column with formatted display
-            columns["playtime"] = {
-                name = "Playtime",
-                width = 90,
-                align = "right",
-                getValue = function(character)
-                    local playtime = character:getPlayTime() or 0
-                    local hours = math.floor(playtime / 3600)
-                    local minutes = math.floor((playtime % 3600) / 60)
-
-                    if hours > 0 then
-                        return string.format("%dh %dm", hours, minutes)
-                    else
-                        return string.format("%dm", minutes)
-                    end
-                end,
-                getColor = function(character)
-                    local playtime = character:getPlayTime() or 0
-                    local hours = playtime / 3600
-
-                    if hours >= 100 then
-                        return Color(255, 215, 0) -- Gold for veteran players
-                    elseif hours >= 50 then
-                        return Color(192, 192, 192) -- Silver for experienced players
-                    elseif hours >= 10 then
-                        return Color(205, 127, 50) -- Bronze for regular players
-                    else
-                        return Color(128, 128, 128) -- Gray for new players
-                    end
-                end
-            }
-
-            -- Add sortable rank column
-            columns["rank"] = {
-                name = "Rank",
-                width = 80,
-                align = "center",
-                getValue = function(character)
-                    local rank = character:getData("rank", "Citizen")
-                    local rankConfig = self.Ranks[rank]
-                    return rankConfig and rankConfig.displayName or rank
-                end,
-                getColor = function(character)
-                    local rank = character:getData("rank", "Citizen")
-                    local rankConfig = self.Ranks[rank]
-                    return rankConfig and rankConfig.color or Color(255, 255, 255)
-                end,
-                sortable = true,
-                sortValue = function(character)
-                    local rank = character:getData("rank", "Citizen")
-                    local rankConfig = self.Ranks[rank]
-                    return rankConfig and rankConfig.sortOrder or 0
-                end
-            }
-        end
-
-        -- Helper function to get faction icons
-        function MODULE:GetFactionIcon(factionID)
-            local icons = {
-                ["police"] = "👮",
-                ["citizen"] = "👤",
-                ["medic"] = "🚑",
-                ["firefighter"] = "🚒",
-                ["criminal"] = "👹"
-            }
-            return icons[factionID] or "❓"
-        end
-        ```
-]]
-function CharListColumns(columns)
-end
-
---[[
-    Purpose:
-        Handles character list entry creation.
-
-    When Called:
-        When creating character list entries.
-
-    Parameters:
-        entry (table)
-            The character entry data.
-        row (Panel)
-            The row panel.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add basic styling to character list entries
-        function MODULE:CharListEntry(entry, row)
-            -- Add a border to the row
-            row:SetPaintBackground(true)
-            row:SetBackgroundColor(Color(50, 50, 50, 100))
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Add custom buttons and indicators to character entries
-        function MODULE:CharListEntry(entry, row)
-            -- Add a "View Details" button
-            local detailsBtn = vgui.Create("DButton", row)
-            detailsBtn:SetText("View Details")
-            detailsBtn:SetSize(80, 20)
-            detailsBtn:SetPos(row:GetWide() - 90, 5)
-            detailsBtn.DoClick = function()
-                self:ShowCharacterDetails(entry)
-            end
-
-            -- Add online status indicator
-            local statusIndicator = vgui.Create("DPanel", row)
-            statusIndicator:SetSize(10, 10)
-            statusIndicator:SetPos(5, 5)
-            statusIndicator:SetBackgroundColor(entry.isOnline and Color(0, 255, 0) or Color(255, 0, 0))
-
-            -- Add tooltip with character info
-            row:SetTooltip(string.format("Name: %s\nFaction: %s\nClass: %s\nMoney: %s",
-                entry.name,
-                entry.faction or "None",
-                entry.class or "None",
-                lia.currency.getSymbol() .. (entry.money or 0)))
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced character entry with dynamic content and interactions
-        function MODULE:CharListEntry(entry, row)
-            -- Add character avatar
-            local avatar = vgui.Create("AvatarImage", row)
-            avatar:SetSize(32, 32)
-            avatar:SetPos(10, 4)
-            avatar:SetPlayer(entry.player, 32)
-
-            -- Add character status icons
-            local iconX = 50
-            local iconY = 4
-
-            -- Wanted status icon
-            if entry.wanted then
-                local wantedIcon = vgui.Create("DImage", row)
-                wantedIcon:SetSize(16, 16)
-                wantedIcon:SetPos(iconX, iconY)
-                wantedIcon:SetImage("icon16/exclamation.png")
-                wantedIcon:SetTooltip("Wanted")
-                iconX = iconX + 20
-            end
-
-            -- Arrested status icon
-            if entry.arrested then
-                local arrestIcon = vgui.Create("DImage", row)
-                arrestIcon:SetSize(16, 16)
-                arrestIcon:SetPos(iconX, iconY)
-                arrestIcon:SetImage("icon16/lock.png")
-                arrestIcon:SetTooltip("Arrested")
-                iconX = iconX + 20
-            end
-
-            -- VIP status icon
-            if entry.isVIP then
-                local vipIcon = vgui.Create("DImage", row)
-                vipIcon:SetSize(16, 16)
-                vipIcon:SetPos(iconX, iconY)
-                vipIcon:SetImage("icon16/star.png")
-                vipIcon:SetTooltip("VIP Player")
-                iconX = iconX + 20
-            end
-
-            -- Add quick action buttons
-            local buttonY = row:GetTall() - 25
-            local buttonSpacing = 5
-            local buttonWidth = 60
-            local buttonHeight = 20
-
-            -- Message button
-            if entry.isOnline then
-                local msgBtn = vgui.Create("DButton", row)
-                msgBtn:SetText("Msg")
-                msgBtn:SetSize(buttonWidth, buttonHeight)
-                msgBtn:SetPos(row:GetWide() - buttonWidth - buttonSpacing, buttonY)
-                msgBtn.DoClick = function()
-                    RunConsoleCommand("say", "/pm " .. entry.name .. " ")
-                end
-                buttonSpacing = buttonSpacing + buttonWidth + 5
-            end
-
-            -- View Profile button
-            local profileBtn = vgui.Create("DButton", row)
-            profileBtn:SetText("Profile")
-            profileBtn:SetSize(buttonWidth, buttonHeight)
-            profileBtn:SetPos(row:GetWide() - buttonWidth - buttonSpacing, buttonY)
-            profileBtn.DoClick = function()
-                self:OpenPlayerProfile(entry.steamID)
-            end
-            buttonSpacing = buttonSpacing + buttonWidth + 5
-
-            -- Admin actions button (if player is admin)
-            if LocalPlayer():IsAdmin() then
-                local adminBtn = vgui.Create("DButton", row)
-                adminBtn:SetText("Admin")
-                adminBtn:SetSize(buttonWidth, buttonHeight)
-                adminBtn:SetPos(row:GetWide() - buttonWidth - buttonSpacing, buttonY)
-                adminBtn.DoClick = function()
-                    self:OpenAdminMenu(entry)
-                end
-            end
-
-            -- Add context menu on right-click
-            row.OnMousePressed = function(panel, mouseCode)
-                if mouseCode == MOUSE_RIGHT then
-                    local menu = DermaMenu()
-
-                    -- Basic options
-                    menu:AddOption("Copy SteamID", function()
-                        SetClipboardText(entry.steamID)
-                        notification.AddLegacy("SteamID copied to clipboard", NOTIFY_GENERIC, 3)
-                    end)
-
-                    menu:AddOption("View Steam Profile", function()
-                        gui.OpenURL("https://steamcommunity.com/profiles/" .. entry.steamID64)
-                    end)
-
-                    -- Social options (if online)
-                    if entry.isOnline then
-                        menu:AddSpacer()
-                        menu:AddOption("Send Message", function()
-                            RunConsoleCommand("say", "/pm " .. entry.name .. " ")
-                        end)
-
-                        menu:AddOption("Add Friend", function()
-                            RunConsoleCommand("say", "/friend " .. entry.name)
-                        end)
-                    end
-
-                    -- Admin options
-                    if LocalPlayer():IsAdmin() then
-                        menu:AddSpacer()
-                        menu:AddOption("Goto", function()
-                            RunConsoleCommand("ulx", "goto", entry.name)
-                        end)
-
-                        menu:AddOption("Bring", function()
-                            RunConsoleCommand("ulx", "bring", entry.name)
-                        end)
-
-                        local punishMenu = menu:AddSubMenu("Punish")
-                        punishMenu:AddOption("Warn", function()
-                            RunConsoleCommand("ulx", "warn", entry.name, "Warning from admin")
-                        end)
-                        punishMenu:AddOption("Kick", function()
-                            RunConsoleCommand("ulx", "kick", entry.name, "Kicked by admin")
-                        end)
-                        punishMenu:AddOption("Ban", function()
-                            RunConsoleCommand("ulx", "ban", entry.name, "10", "Banned by admin")
-                        end)
-                    end
-
-                    menu:Open()
-                end
-            end
-
-            -- Add hover effects
-            row.OnCursorEntered = function()
-                row:SetBackgroundColor(Color(70, 70, 70, 150))
-            end
-
-            row.OnCursorExited = function()
-                row:SetBackgroundColor(Color(50, 50, 50, 100))
-            end
-
-            -- Add double-click to select character (if applicable)
-            row.OnMouseDoublePressed = function(panel, mouseCode)
-                if mouseCode == MOUSE_LEFT then
-                    -- This would depend on your character selection system
-                    self:SelectCharacter(entry.id)
-                end
-            end
-        end
-        ```
-]]
-function CharListEntry(entry, row)
-end
-
---[[
-    Purpose:
-        Adds extra details to character list entries.
-
-    When Called:
-        When displaying character list information.
-
-    Parameters:
-        client (Player)
-            The player viewing the list.
-        entry (table)
-            The character entry.
-        stored (table)
-            Stored character data.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add basic extra details to character entries
-        function MODULE:CharListExtraDetails(client, entry, stored)
-            -- Add last seen information
-            entry.lastSeen = stored.lastSeen or "Never"
-
-            -- Add creation date
-            entry.created = stored.created or "Unknown"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Add calculated statistics and status information
-        function MODULE:CharListExtraDetails(client, entry, stored)
-            -- Add playtime statistics
-            local playtime = stored.playtime or 0
-            entry.totalPlaytime = string.format("%.1f hours", playtime / 3600)
-
-            -- Add character age (days since creation)
-            if stored.created then
-                local createdTime = stored.created
-                local currentTime = os.time()
-                local ageDays = math.floor((currentTime - createdTime) / 86400)
-                entry.characterAge = ageDays .. " days old"
-            end
-
-            -- Add reputation status
-            local reputation = stored.reputation or 0
-            if reputation >= 100 then
-                entry.reputationStatus = "Trusted"
-            elseif reputation >= 50 then
-                entry.reputationStatus = "Respected"
-            elseif reputation >= 0 then
-                entry.reputationStatus = "Neutral"
-            else
-                entry.reputationStatus = "Dishonorable"
-            end
-
-            -- Add activity status
-            local lastSeen = stored.lastSeen or 0
-            local daysSinceLastSeen = math.floor((os.time() - lastSeen) / 86400)
-
-            if daysSinceLastSeen == 0 then
-                entry.activityStatus = "Active Today"
-            elseif daysSinceLastSeen <= 7 then
-                entry.activityStatus = "Active This Week"
-            elseif daysSinceLastSeen <= 30 then
-                entry.activityStatus = "Active This Month"
-            else
-                entry.activityStatus = "Inactive"
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced character analysis and recommendations
-        function MODULE:CharListExtraDetails(client, entry, stored)
-            -- Analyze character performance metrics
-            local kills = stored.kills or 0
-            local deaths = stored.deaths or 0
-            local playtime = stored.playtime or 0
-
-            -- Calculate K/D ratio
-            local kdRatio = deaths > 0 and (kills / deaths) or kills
-            entry.kdRatio = string.format("%.2f", kdRatio)
-
-            -- Calculate playtime efficiency (actions per hour)
-            local totalActions = (stored.itemsUsed or 0) + (stored.doorsUsed or 0) + (stored.npcsInteracted or 0)
-            local actionsPerHour = playtime > 0 and (totalActions / (playtime / 3600)) or 0
-            entry.activityLevel = string.format("%.1f actions/hour", actionsPerHour)
-
-            -- Character progression analysis
-            local level = stored.level or 1
-            local xp = stored.xp or 0
-            local maxLevel = 100
-            local progressPercent = level < maxLevel and ((xp / self:GetXPForLevel(level + 1)) * 100) or 100
-            entry.progressionStatus = string.format("Level %d (%.1f%% to next)", level, progressPercent)
-
-            -- Social connections analysis
-            local friends = stored.friendCount or 0
-            local groups = stored.groupCount or 0
-            entry.socialConnections = string.format("%d friends, %d groups", friends, groups)
-
-            -- Economic status analysis
-            local totalEarned = stored.totalEarned or 0
-            local totalSpent = stored.totalSpent or 0
-            local netWorth = totalEarned - totalSpent
-            entry.economicStatus = netWorth >= 0 and
-                string.format("Net: %s", lia.currency.getSymbol() .. string.Comma(netWorth)) or
-                string.format("Debt: %s", lia.currency.getSymbol() .. string.Comma(math.abs(netWorth)))
-
-            -- Achievement analysis
-            local achievements = stored.achievements or {}
-            local totalAchievements = #achievements
-            local completionRate = self:GetTotalAchievements() > 0 and
-                (totalAchievements / self:GetTotalAchievements() * 100) or 0
-            entry.achievementStatus = string.format("%d/%d (%.1f%%)",
-                totalAchievements, self:GetTotalAchievements(), completionRate)
-
-            -- Performance rating (0-100)
-            local performanceScore = 0
-            performanceScore = performanceScore + math.min(kdRatio * 10, 30) -- Combat performance (max 30 points)
-            performanceScore = performanceScore + math.min(actionsPerHour / 10, 20) -- Activity (max 20 points)
-            performanceScore = performanceScore + math.min(progressPercent, 20) -- Progression (max 20 points)
-            performanceScore = performanceScore + math.min(completionRate / 5, 15) -- Achievements (max 15 points)
-            performanceScore = performanceScore + (netWorth >= 0 and 10 or 5) -- Economic stability (max 10 points)
-            performanceScore = performanceScore + math.min((friends + groups * 2), 5) -- Social factor (max 5 points)
-
-            entry.performanceRating = math.floor(performanceScore)
-
-            -- Character type classification
-            if kdRatio > 2 and actionsPerHour > 50 then
-                entry.characterType = "Combat-Focused"
-            elseif actionsPerHour > 100 and friends > 10 then
-                entry.characterType = "Social Butterfly"
-            elseif completionRate > 80 then
-                entry.characterType = "Achievement Hunter"
-            elseif netWorth > 100000 then
-                entry.characterType = "Economic Powerhouse"
-            elseif playtime > 86400 then -- 24+ hours
-                entry.characterType = "Dedicated Player"
-            else
-                entry.characterType = "Casual Player"
-            end
-
-            -- Recommendation system
-            local recommendations = {}
-
-            if kdRatio < 1 then
-                table.insert(recommendations, "Consider improving combat skills")
-            end
-
-            if actionsPerHour < 20 then
-                table.insert(recommendations, "Try to be more active in roleplay")
-            end
-
-            if netWorth < 0 then
-                table.insert(recommendations, "Focus on economic recovery")
-            end
-
-            if completionRate < 50 then
-                table.insert(recommendations, "Complete more achievements")
-            end
-
-            if friends < 3 then
-                table.insert(recommendations, "Build more social connections")
-            end
-
-            entry.recommendations = recommendations
-
-            -- Character health status (if applicable)
-            if stored.health then
-                if stored.health >= 90 then
-                    entry.healthStatus = "Excellent"
-                elseif stored.health >= 70 then
-                    entry.healthStatus = "Good"
-                elseif stored.health >= 50 then
-                    entry.healthStatus = "Fair"
-                elseif stored.health >= 25 then
-                    entry.healthStatus = "Poor"
-                else
-                    entry.healthStatus = "Critical"
-                end
-            end
-
-            -- Last activity timestamp formatting
-            if stored.lastActivity then
-                local lastActivityTime = stored.lastActivity
-                local timeDiff = os.time() - lastActivityTime
-
-                if timeDiff < 60 then
-                    entry.lastActivityFormatted = "Just now"
-                elseif timeDiff < 3600 then
-                    entry.lastActivityFormatted = string.format("%d minutes ago", math.floor(timeDiff / 60))
-                elseif timeDiff < 86400 then
-                    entry.lastActivityFormatted = string.format("%d hours ago", math.floor(timeDiff / 3600))
-                else
-                    entry.lastActivityFormatted = string.format("%d days ago", math.floor(timeDiff / 86400))
-                end
-            end
-
-            -- Add character notes/tags (if any)
-            entry.tags = stored.tags or {}
-
-            -- Calculate character score for sorting/ranking
-            entry.compositeScore = performanceScore + (completionRate * 0.5) + (level * 2) + (friends * 0.1)
-        end
-
-        -- Helper function to get XP required for a level
-        function MODULE:GetXPForLevel(level)
-            return level * level * 100 -- Example XP formula
-        end
-
-        -- Helper function to get total achievements
-        function MODULE:GetTotalAchievements()
-            return 50 -- Example total achievements
-        end
-        ```
-]]
-function CharListExtraDetails(client, entry, stored)
-end
-
---[[
-    Purpose:
-        Called when the character list has been loaded.
-
-    When Called:
-        After character list data is loaded.
-
-    Parameters:
-        newCharList (table)
-            The new character list.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log when character list is loaded
-        function MODULE:CharListLoaded(newCharList)
-            print("Character list loaded with " .. #newCharList .. " characters")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Process character list and cache data
-        function MODULE:CharListLoaded(newCharList)
-            -- Cache character data for quick access
-            self.cachedCharList = newCharList
-
-            -- Sort characters by creation date
-            table.sort(newCharList, function(a, b)
-                return (a.created or 0) > (b.created or 0)
-            end)
-
-            -- Log character statistics
-            local totalChars = #newCharList
-            local activeChars = 0
-            for _, char in ipairs(newCharList) do
-                if char.lastSeen and (os.time() - char.lastSeen) < 604800 then -- 7 days
-                    activeChars = activeChars + 1
-                end
-            end
-
-            lia.log.add("Character list loaded: " .. totalChars .. " total, " .. activeChars .. " active", FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced character list processing with validation and analytics
-        function MODULE:CharListLoaded(newCharList)
-            if not newCharList or #newCharList == 0 then
-                lia.log.add("Character list is empty", FLAG_WARNING)
-                return
-            end
-
-            -- Validate and clean character data
-            local validChars = {}
-            for i, char in ipairs(newCharList) do
-                if self:ValidateCharacterData(char) then
-                    table.insert(validChars, char)
-                else
-                    lia.log.add("Invalid character data found at index " .. i, FLAG_WARNING)
-                end
-            end
-
-            -- Cache processed list
-            self.cachedCharList = validChars
-            self.charListLoadTime = os.time()
-
-            -- Generate analytics
-            local analytics = self:GenerateCharacterAnalytics(validChars)
-
-            -- Update UI if on client
-            if CLIENT then
-                hook.Run("UpdateCharacterListUI", validChars, analytics)
-            end
-
-            -- Store analytics for admin panel
-            self.charListAnalytics = analytics
-
-            -- Check for data inconsistencies
-            self:CheckCharacterListConsistency(validChars)
-
-            -- Log comprehensive statistics
-            lia.log.add(string.format(
-                "Character list loaded: %d valid characters, %d active, %d total playtime: %.1f hours",
-                #validChars,
-                analytics.activeCount,
-                analytics.totalPlaytime / 3600
-            ), FLAG_NORMAL)
-        end
-
-        -- Helper function to validate character data
-        function MODULE:ValidateCharacterData(char)
-            return char and char.id and char.name and char.steamID
-        end
-
-        -- Helper function to generate analytics
-        function MODULE:GenerateCharacterAnalytics(charList)
-            local analytics = {
-                totalCount = #charList,
-                activeCount = 0,
-                totalPlaytime = 0,
-                factionDistribution = {},
-                classDistribution = {}
-            }
-
-            for _, char in ipairs(charList) do
-                -- Count active characters
-                if char.lastSeen and (os.time() - char.lastSeen) < 604800 then
-                    analytics.activeCount = analytics.activeCount + 1
-                end
-
-                -- Sum playtime
-                analytics.totalPlaytime = analytics.totalPlaytime + (char.playtime or 0)
-
-                -- Faction distribution
-                local faction = char.faction or "none"
-                analytics.factionDistribution[faction] = (analytics.factionDistribution[faction] or 0) + 1
-
-                -- Class distribution
-                local class = char.class or "none"
-                analytics.classDistribution[class] = (analytics.classDistribution[class] or 0) + 1
-            end
-
-            return analytics
-        end
-        ```
-]]
-function CharListLoaded(newCharList)
-end
-
---[[
-    Purpose:
-        Called when the character list is updated.
-
-    When Called:
-        When character list changes.
-
-    Parameters:
-        oldCharList (table)
-            The previous character list.
-        newCharList (table)
-            The new character list.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character list updates
-        function MODULE:CharListUpdated(oldCharList, newCharList)
-            print("Character list updated: " .. #(oldCharList or {}) .. " -> " .. #(newCharList or {}))
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track changes and notify relevant players
-        function MODULE:CharListUpdated(oldCharList, newCharList)
-            oldCharList = oldCharList or {}
-            newCharList = newCharList or {}
-
-            -- Find added characters
-            local added = {}
-            for _, newChar in ipairs(newCharList) do
-                local found = false
-                for _, oldChar in ipairs(oldCharList) do
-                    if oldChar.id == newChar.id then
-                        found = true
-                        break
-                    end
-                end
-                if not found then
-                    table.insert(added, newChar)
-                end
-            end
-
-            -- Find removed characters
-            local removed = {}
-            for _, oldChar in ipairs(oldCharList) do
-                local found = false
-                for _, newChar in ipairs(newCharList) do
-                    if newChar.id == oldChar.id then
-                        found = true
-                        break
-                    end
-                end
-                if not found then
-                    table.insert(removed, oldChar)
-                end
-            end
-
-            -- Log changes
-            if #added > 0 or #removed > 0 then
-                lia.log.add(string.format("Character list updated: %d added, %d removed", #added, #removed), FLAG_NORMAL)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced change detection with detailed analytics and notifications
-        function MODULE:CharListUpdated(oldCharList, newCharList)
-            oldCharList = oldCharList or {}
-            newCharList = newCharList or {}
-
-            -- Build lookup tables for efficient comparison
-            local oldCharMap = {}
-            for _, char in ipairs(oldCharList) do
-                oldCharMap[char.id] = char
-            end
-
-            local newCharMap = {}
-            for _, char in ipairs(newCharList) do
-                newCharMap[char.id] = char
-            end
-
-            -- Detect changes
-            local changes = {
-                added = {},
-                removed = {},
-                modified = {}
-            }
-
-            -- Find added and modified characters
-            for _, newChar in ipairs(newCharList) do
-                local oldChar = oldCharMap[newChar.id]
-                if not oldChar then
-                    table.insert(changes.added, newChar)
-                elseif self:HasCharacterChanged(oldChar, newChar) then
-                    table.insert(changes.modified, {
-                        old = oldChar,
-                        new = newChar,
-                        changes = self:GetCharacterChanges(oldChar, newChar)
-                    })
-                end
-            end
-
-            -- Find removed characters
-            for _, oldChar in ipairs(oldCharList) do
-                if not newCharMap[oldChar.id] then
-                    table.insert(changes.removed, oldChar)
-                end
-            end
-
-            -- Process changes
-            if #changes.added > 0 or #changes.removed > 0 or #changes.modified > 0 then
-                -- Update cached list
-                self.cachedCharList = newCharList
-
-                -- Notify relevant players
-                if SERVER then
-                    self:NotifyPlayersOfChanges(changes)
-                end
-
-                -- Update analytics
-                self:UpdateCharacterListAnalytics(changes)
-
-                -- Log detailed changes
-                local logMsg = string.format(
-                    "Character list updated: %d added, %d removed, %d modified",
-                    #changes.added,
-                    #changes.removed,
-                    #changes.modified
-                )
-                lia.log.add(logMsg, FLAG_NORMAL)
-
-                -- Store change history
-                self:StoreChangeHistory(changes)
-            end
-        end
-
-        -- Helper to check if character changed
-        function MODULE:HasCharacterChanged(oldChar, newChar)
-            return oldChar.name ~= newChar.name or
-                   oldChar.faction ~= newChar.faction or
-                   oldChar.class ~= newChar.class or
-                   (oldChar.money or 0) ~= (newChar.money or 0)
-        end
-
-        -- Helper to get specific changes
-        function MODULE:GetCharacterChanges(oldChar, newChar)
-            local changes = {}
-            if oldChar.name ~= newChar.name then
-                table.insert(changes, {type = "name", old = oldChar.name, new = newChar.name})
-            end
-            if oldChar.faction ~= newChar.faction then
-                table.insert(changes, {type = "faction", old = oldChar.faction, new = newChar.faction})
-            end
-            if oldChar.class ~= newChar.class then
-                table.insert(changes, {type = "class", old = oldChar.class, new = newChar.class})
-            end
-            return changes
-        end
-        ```
-]]
-function CharListUpdated(oldCharList, newCharList)
-end
-
---[[
-    Purpose:
-        Called when a character is loaded.
-
-    When Called:
-        After a character is loaded from the database.
-
-    Parameters:
-        characterID (number)
-            The ID of the loaded character.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log when a character is loaded
-        function MODULE:CharLoaded(characterID)
-            print("Character loaded: " .. characterID)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize character data and cache
-        function MODULE:CharLoaded(characterID)
-            -- Load character from database
-            lia.char.load(characterID):next(function(character)
-                if character then
-                    -- Cache character data
-                    self.loadedCharacters[characterID] = character
-
-                    -- Initialize character-specific systems
-                    self:InitializeCharacterSystems(character)
-
-                    -- Log character load
-                    lia.log.add("Character " .. characterID .. " loaded: " .. character:getName(), FLAG_NORMAL)
-                end
-            end)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced character loading with validation and analytics
-        function MODULE:CharLoaded(characterID)
-            if not characterID or characterID <= 0 then
-                lia.log.add("Invalid character ID provided to CharLoaded: " .. tostring(characterID), FLAG_ERROR)
-                return
-            end
-
-            -- Load character with promise
-            lia.char.load(characterID):next(function(character)
-                if not character then
-                    lia.log.add("Failed to load character: " .. characterID, FLAG_ERROR)
-                    return
-                end
-
-                -- Validate character data integrity
-                if not self:ValidateCharacterData(character) then
-                    lia.log.add("Character data validation failed for: " .. characterID, FLAG_WARNING)
-                    -- Attempt to repair character data
-                    self:RepairCharacterData(character)
-                end
-
-                -- Cache loaded character
-                self.loadedCharacters[characterID] = {
-                    character = character,
-                    loadTime = os.time(),
-                    data = character:getData()
-                }
-
-                -- Initialize character systems
-                self:InitializeCharacterSystems(character)
-
-                -- Update character statistics
-                self:UpdateCharacterStatistics(character)
-
-                -- Check for character-specific events
-                self:ProcessCharacterEvents(character)
-
-                -- Notify related systems
-                hook.Run("OnCharacterFullyLoaded", character)
-
-                -- Log comprehensive load information
-                local player = character:getPlayer()
-                lia.log.add(string.format(
-                    "Character loaded - ID: %d, Name: %s, Player: %s, Faction: %s, Class: %s",
-                    characterID,
-                    character:getName(),
-                    player and player:Name() or "Offline",
-                    character:getFaction(),
-                    character:getClass()
-                ), FLAG_NORMAL)
-            end):catch(function(err)
-                lia.log.add("Error loading character " .. characterID .. ": " .. tostring(err), FLAG_ERROR)
-            end)
-        end
-        ```
-]]
-function CharLoaded(characterID)
-end
-
---[[
-    Purpose:
-        Called when the character menu is closed.
-
-    When Called:
-        When the character selection menu is closed.
-
-    Parameters:
         None
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log when character menu is closed
-        function MODULE:CharMenuClosed()
-            print("Character menu closed")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log command additions
+    hook.Add("CommandAdded", "MyAddon", function(command, data)
+        print("Command added: " .. command)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Clean up and save state
-        function MODULE:CharMenuClosed()
-            -- Clear cached character data
-            if CLIENT then
-                self.cachedCharList = nil
-            end
 
-            -- Save menu state
-            self.lastMenuCloseTime = os.time()
-
-            -- Reset UI state
-            if self.charMenuPanel and IsValid(self.charMenuPanel) then
-                self.charMenuPanel:Remove()
-                self.charMenuPanel = nil
-            end
-        end
-        ```
+    ```lua
+    -- Medium: Track registered commands
+    hook.Add("CommandAdded", "CommandTracking", function(command, data)
+        lia.commandList = lia.commandList or {}
+        table.insert(lia.commandList, command)
+        print("Command " .. command .. " registered")
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced cleanup with state management and analytics
-        function MODULE:CharMenuClosed()
-            -- Track menu session duration
-            if self.menuOpenTime then
-                local sessionDuration = os.time() - self.menuOpenTime
-                self:RecordMenuSession(sessionDuration)
-                self.menuOpenTime = nil
-            end
 
-            -- Clean up UI elements
-            if CLIENT then
-                -- Clear cached data
-                self.cachedCharList = nil
-                self.selectedCharacter = nil
-
-                -- Remove menu panel
-                if self.charMenuPanel and IsValid(self.charMenuPanel) then
-                    self.charMenuPanel:Remove()
-                    self.charMenuPanel = nil
-                end
-
-                -- Clean up any temporary UI elements
-                self:CleanupMenuUI()
-
-                -- Save menu preferences
-                if self.menuPreferences then
-                    file.Write("lilia/charmenu_prefs.txt", util.TableToJSON(self.menuPreferences))
-                end
-            end
-
-            -- Log menu closure
-            lia.log.add("Character menu closed", FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnCharacterMenuClosed")
-        end
-        ```
-]]
-function CharMenuClosed()
-end
-
---[[
-    Purpose:
-        Called when the character menu is opened.
-
-    When Called:
-        When the character selection menu is opened.
-
-    Parameters:
-        panel (Panel)
-            The character menu panel.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log when character menu is opened
-        function MODULE:CharMenuOpened(panel)
-            print("Character menu opened")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize menu and load character data
-        function MODULE:CharMenuOpened(panel)
-            if CLIENT then
-                -- Store panel reference
-                self.charMenuPanel = panel
-
-                -- Track open time
-                self.menuOpenTime = os.time()
-
-                -- Load character list
-                hook.Run("FetchCharacterList")
-
-                -- Apply saved menu preferences
-                self:LoadMenuPreferences()
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced menu initialization with customization and analytics
-        function MODULE:CharMenuOpened(panel)
-            if not IsValid(panel) then
-                lia.log.add("Invalid panel provided to CharMenuOpened", FLAG_WARNING)
-                return
-            end
-
-            if CLIENT then
-                -- Store panel reference
-                self.charMenuPanel = panel
-                self.menuOpenTime = os.time()
-
-                -- Load character list with caching
-                if not self.cachedCharList or (os.time() - self.lastCharListUpdate) > 60 then
-                    hook.Run("FetchCharacterList")
-                    self.lastCharListUpdate = os.time()
-                else
-                    -- Use cached list
-                    hook.Run("UpdateCharacterListUI", self.cachedCharList)
-                end
-
-                -- Load and apply menu preferences
-                self:LoadMenuPreferences()
-                self:ApplyMenuPreferences(panel)
-
-                -- Initialize custom UI elements
-                self:InitializeCustomMenuElements(panel)
-
-                -- Track analytics
-                self:TrackMenuOpen()
-
-                -- Set up menu event handlers
-                self:SetupMenuEventHandlers(panel)
-            end
-
-            -- Log menu opening
-            if SERVER then
-                local client = panel:GetPlayer()
-                if IsValid(client) then
-                    lia.log.add(client:Name() .. " opened character menu", FLAG_NORMAL)
-                end
-            end
-
-            -- Notify other systems
-            hook.Run("OnCharacterMenuOpened", panel)
-        end
-        ```
-]]
-function CharMenuOpened(panel)
-end
-
---[[
-    Purpose:
-        Called before a character is saved.
-
-    When Called:
-        Before character data is saved to the database.
-
-    Parameters:
-        character (Character)
-            The character being saved.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log before character save
-        function MODULE:CharPreSave(character)
-            print("Preparing to save character: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Clean up and prepare data before save
-        function MODULE:CharPreSave(character)
-            -- Update last save timestamp
-            character:setData("lastSaved", os.time())
-
-            -- Clean up temporary data
-            character:setData("tempData", nil)
-
-            -- Validate character data
-            if not self:ValidateCharacterForSave(character) then
-                lia.log.add("Character validation failed before save: " .. character:getName(), FLAG_WARNING)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced pre-save validation and data preparation
-        function MODULE:CharPreSave(character)
-            if not character then
-                lia.log.add("CharPreSave called with invalid character", FLAG_ERROR)
-                return
-            end
-
-            -- Create save backup before modifications
-            local backupData = self:CreateCharacterBackup(character)
-            character:setData("lastBackup", backupData)
-
-            -- Validate all character data
-            local validation = self:ValidateCharacterData(character)
-            if not validation.valid then
-                lia.log.add("Character validation failed: " .. validation.error, FLAG_WARNING)
-                -- Attempt auto-repair
-                self:AutoRepairCharacterData(character, validation.errors)
-            end
-
-            -- Clean up temporary and expired data
-            self:CleanupCharacterData(character)
-
-            -- Update save timestamps
-            character:setData("lastSaved", os.time())
-            character:setData("saveCount", (character:getData("saveCount", 0) + 1))
-
-            -- Prepare statistics for save
-            self:PrepareCharacterStatistics(character)
-
-            -- Check for data consistency issues
-            local consistencyCheck = self:CheckDataConsistency(character)
-            if not consistencyCheck.consistent then
-                lia.log.add("Data consistency issues detected: " .. consistencyCheck.issues, FLAG_WARNING)
-            end
-
-            -- Log pre-save information
-            lia.log.add("Pre-save: " .. character:getName() .. " (ID: " .. character:getID() .. ")", FLAG_NORMAL)
-        end
-        ```
-]]
-function CharPreSave(character)
-end
-
---[[
-    Purpose:
-        Called after a character is saved.
-
-    When Called:
-        After character data is saved to the database.
-
-    Parameters:
-        character (Character)
-            The character that was saved.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log after character save
-        function MODULE:CharPostSave(character)
-            print("Character saved: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Update cache and notify after save
-        function MODULE:CharPostSave(character)
-            -- Update cached character data
-            self.loadedCharacters[character:getID()] = character
-
-            -- Notify player if online
-            local player = character:getPlayer()
-            if IsValid(player) then
-                player:notify("Character saved successfully")
-            end
-
-            -- Log save
-            lia.log.add("Character saved: " .. character:getName(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced post-save processing with analytics and notifications
-        function MODULE:CharPostSave(character)
-            if not character then
-                lia.log.add("CharPostSave called with invalid character", FLAG_ERROR)
-                return
-            end
-
-            -- Update cached character data
-            local charID = character:getID()
-            self.loadedCharacters[charID] = {
-                character = character,
-                lastSaved = os.time(),
-                data = character:getData()
-            }
-
-            -- Update save statistics
-            local saveCount = character:getData("saveCount", 0)
-            character:setData("saveCount", saveCount)
-
-            -- Record save analytics
-            self:RecordSaveAnalytics(character)
-
-            -- Notify player if online
-            local player = character:getPlayer()
-            if IsValid(player) then
-                -- Send save confirmation
-                player:notify("Character saved successfully")
-
-                -- Update player's character list if needed
-                if CLIENT then
-                    hook.Run("UpdateCharacterListUI")
-                end
-            end
-
-            -- Trigger post-save events
-            hook.Run("OnCharacterSaved", character)
-
-            -- Backup successful save
-            self:CreateSaveBackup(character)
-
-            -- Log comprehensive save information
-            lia.log.add(string.format(
-                "Character saved - ID: %d, Name: %s, Save Count: %d, Player: %s",
-                charID,
-                character:getName(),
-                saveCount,
-                player and player:Name() or "Offline"
-            ), FLAG_NORMAL)
-
-            -- Check for save issues
-            if saveCount > 1000 then
-                lia.log.add("High save count detected for character: " .. character:getName(), FLAG_WARNING)
-            end
-        end
-        ```
-]]
-function CharPostSave(character)
-end
-
---[[
-    Purpose:
-        Called when a character is restored.
-
-    When Called:
-        When a character is restored from a backup or previous state.
-
-    Parameters:
-        character (Character)
-            The restored character.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character restoration
-        function MODULE:CharRestored(character)
-            print("Character restored: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Restore character data and notify
-        function MODULE:CharRestored(character)
-            -- Log restoration
-            lia.log.add("Character restored: " .. character:getName(), FLAG_NORMAL)
-
-            -- Notify player if online
-            local player = character:getPlayer()
-            if IsValid(player) then
-                player:notify("Your character has been restored from backup")
-            end
-
-            -- Update restoration timestamp
-            character:setData("lastRestored", os.time())
-            character:setData("restoreCount", (character:getData("restoreCount", 0) + 1))
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced restoration with validation and recovery
-        function MODULE:CharRestored(character)
-            if not character then
-                lia.log.add("CharRestored called with invalid character", FLAG_ERROR)
-                return
-            end
-
-            -- Validate restored character data
-            local validation = self:ValidateRestoredCharacter(character)
-            if not validation.valid then
-                lia.log.add("Restored character validation failed: " .. validation.error, FLAG_WARNING)
-                -- Attempt to fix issues
-                self:FixRestoredCharacter(character, validation.errors)
-            end
-
-            -- Restore character statistics
-            self:RestoreCharacterStatistics(character)
-
-            -- Update restoration metadata
-            character:setData("lastRestored", os.time())
-            character:setData("restoreCount", (character:getData("restoreCount", 0) + 1))
-            character:setData("restoreSource", character:getData("restoreSource") or "backup")
-
-            -- Notify player
-            local player = character:getPlayer()
-            if IsValid(player) then
-                player:notify("Your character has been restored from backup")
-
-                -- Send restoration details
-                local restoreInfo = character:getData("restoreInfo", {})
-                if restoreInfo.timestamp then
-                    local restoreDate = os.date("%Y-%m-%d %H:%M:%S", restoreInfo.timestamp)
-                    player:notify("Restored from: " .. restoreDate)
-                end
-            end
-
-            -- Log comprehensive restoration
-            lia.log.add(string.format(
-                "Character restored - ID: %d, Name: %s, Restore Count: %d, Player: %s",
-                character:getID(),
-                character:getName(),
-                character:getData("restoreCount", 0),
-                player and player:Name() or "Offline"
-            ), FLAG_NORMAL)
-
-            -- Trigger restoration events
-            hook.Run("OnCharacterRestored", character)
-
-            -- Update character list
-            if CLIENT then
-                hook.Run("UpdateCharacterListUI")
-            end
-        end
-        ```
-]]
-function CharRestored(character)
-end
-
---[[
-    Purpose:
-        Handles chat text being added to the chat system.
-
-    When Called:
-        When text is added to the chat display.
-
-    Parameters:
-        markup (string)
-            The markup text to display.
-        ... (varargs)
-            Additional chat parameters.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add text to chat
-        function MODULE:ChatAddText(markup, ...)
-            chat.AddText(markup, ...)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Add formatted chat text with color
-        function MODULE:ChatAddText(markup, ...)
-            local color = Color(255, 255, 255)
-            chat.AddText(color, markup, ...)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat text handling with formatting and filtering
-        function MODULE:ChatAddText(markup, ...)
-            -- Process markup for custom formatting
-            markup = self:ProcessChatMarkup(markup)
-
-            -- Apply chat filters
-            if self:ShouldFilterChat(markup) then
-                return -- Don't add filtered text
-            end
-
-            -- Add timestamp if enabled
-            if lia.config.get("ShowChatTimestamps") then
-                local time = os.date("%H:%M:%S")
-                chat.AddText(Color(150, 150, 150), "[" .. time .. "] ", Color(255, 255, 255), markup, ...)
-            else
-                chat.AddText(Color(255, 255, 255), markup, ...)
-            end
-
-            -- Log chat message
-            lia.log.add("Chat text added: " .. tostring(markup), FLAG_NORMAL)
-        end
-        ```
-]]
-function ChatAddText(markup, ...)
-end
-
---[[
-    Purpose:
-        Called when chat is parsed on the client.
-
-    When Called:
-        When chat messages are processed.
-
-    Parameters:
-        client (Player)
-            The player who sent the message.
-        chatType (string)
-            The type of chat message.
-        message (string)
-            The chat message content.
-        anonymous (boolean)
-            Whether the message is anonymous.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log parsed chat messages
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            if IsValid(client) then
-                print(client:Name() .. " said: " .. message)
-            end
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Filter and process chat messages
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            if not IsValid(client) then return end
-
-            -- Apply word filter
-            message = self:FilterBadWords(message)
-
-            -- Check message length
-            if #message > 200 then
-                message = string.sub(message, 1, 200) .. "..."
-            end
-
-            -- Log chat message
-            lia.log.add(string.format("%s (%s): %s", client:Name(), chatType, message), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat parsing with validation and processing
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            if not IsValid(client) then return end
-
-            -- Validate message
-            if not message or not isstring(message) or #message == 0 then
-                return
-            end
-
-            -- Check for spam
-            if self:IsSpamMessage(client, message) then
-                lia.log.add("Spam detected from " .. client:Name(), FLAG_WARNING)
-                return
-            end
-
-            -- Apply content filters
-            message = self:ApplyContentFilters(message, client)
-
-            -- Process chat type specific rules
-            message = self:ProcessChatType(message, chatType, client)
-
-            -- Check for mentions
-            self:ProcessMentions(message, client)
-
-            -- Update chat statistics
-            self:UpdateChatStatistics(client, chatType, #message)
-
-            -- Log chat message
-            lia.log.add(string.format(
-                "Chat [%s] %s: %s",
-                chatType,
-                anonymous and "Anonymous" or client:Name(),
-                message
-            ), FLAG_NORMAL)
-        end
-        ```
-]]
-function ChatParsed(client, chatType, message, anonymous)
-end
-
---[[
-    Purpose:
-        Called when the chatbox panel is created.
-
-    When Called:
-        When the chatbox UI is initialized.
-
-    Parameters:
-        panel (Panel)
-            The chatbox panel.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log chatbox panel creation
-        function MODULE:ChatboxPanelCreated(panel)
-            print("Chatbox panel created")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize chatbox with custom settings
-        function MODULE:ChatboxPanelCreated(panel)
-            if CLIENT and IsValid(panel) then
-                -- Store panel reference
-                self.chatboxPanel = panel
-
-                -- Apply custom styling
-                panel:SetSize(600, 200)
-                panel:SetPos(10, ScrH() - 220)
-
-                -- Load chat preferences
-                self:LoadChatPreferences(panel)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chatbox initialization with customization
-        function MODULE:ChatboxPanelCreated(panel)
-            if not IsValid(panel) then
-                lia.log.add("Invalid panel provided to ChatboxPanelCreated", FLAG_WARNING)
-                return
-            end
-
-            if CLIENT then
-                -- Store panel reference
-                self.chatboxPanel = panel
-
-                -- Initialize chatbox settings
-                self:InitializeChatboxSettings(panel)
-
-                -- Load saved preferences
-                self:LoadChatPreferences(panel)
-
-                -- Set up custom UI elements
-                self:SetupChatboxUI(panel)
-
-                -- Apply theme
-                self:ApplyChatboxTheme(panel)
-
-                -- Set up event handlers
-                self:SetupChatboxHandlers(panel)
-
-                -- Initialize chat history
-                self:LoadChatHistory(panel)
-
-                -- Track panel creation
-                self.chatboxCreateTime = os.time()
-            end
-
-            -- Log creation
-            lia.log.add("Chatbox panel created", FLAG_NORMAL)
-        end
-        ```
-]]
-function ChatboxPanelCreated(panel)
-end
-
---[[
-    Purpose:
-        Handles chat text being added to the chat system.
-
-    When Called:
-        When text is added to the chat display.
-
-    Parameters:
-        markup (string)
-            The markup text to display.
-        ... (varargs)
-            Additional chat parameters.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Add text to chat
-        function MODULE:ChatAddText(markup, ...)
-            chat.AddText(markup, ...)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Add formatted chat text with color
-        function MODULE:ChatAddText(markup, ...)
-            local color = Color(255, 255, 255)
-            chat.AddText(color, markup, ...)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat text handling with formatting and filtering
-        function MODULE:ChatAddText(markup, ...)
-            -- Process markup for custom formatting
-            markup = self:ProcessChatMarkup(markup)
-
-            -- Apply chat filters
-            if self:ShouldFilterChat(markup) then
-                return -- Don't add filtered text
-            end
-
-            -- Add timestamp if enabled
-            if lia.config.get("ShowChatTimestamps") then
-                local time = os.date("%H:%M:%S")
-                chat.AddText(Color(150, 150, 150), "[" .. time .. "] ", Color(255, 255, 255), markup, ...)
-            else
-                chat.AddText(Color(255, 255, 255), markup, ...)
-            end
-
-            -- Log chat message
-            lia.log.add("Chat text added: " .. tostring(markup), FLAG_NORMAL)
-        end
-        ```
-]]
-function ChatAddText(markup, ...)
-end
-
---[[
-    Purpose:
-        Called when chat is parsed on the client.
-
-    When Called:
-        When chat messages are processed.
-
-    Parameters:
-        client (Player)
-            The player who sent the message.
-        chatType (string)
-            The type of chat message.
-        message (string)
-            The chat message content.
-        anonymous (boolean)
-            Whether the message is anonymous.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log parsed chat messages
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            if IsValid(client) then
-                print(client:Name() .. " said: " .. message)
-            end
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Filter and process chat messages
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            if not IsValid(client) then return end
-
-            -- Apply word filter
-            message = self:FilterBadWords(message)
-
-            -- Check message length
-            if #message > 200 then
-                message = string.sub(message, 1, 200) .. "..."
-            end
-
-            -- Log chat message
-            lia.log.add(string.format("%s (%s): %s", client:Name(), chatType, message), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat parsing with validation and processing
-        function MODULE:ChatParsed(client, chatType, message, anonymous)
-            if not IsValid(client) then return end
-
-            -- Validate message
-            if not message or not isstring(message) or #message == 0 then
-                return
-            end
-
-            -- Check for spam
-            if self:IsSpamMessage(client, message) then
-                lia.log.add("Spam detected from " .. client:Name(), FLAG_WARNING)
-                return
-            end
-
-            -- Apply content filters
-            message = self:ApplyContentFilters(message, client)
-
-            -- Process chat type specific rules
-            message = self:ProcessChatType(message, chatType, client)
-
-            -- Check for mentions
-            self:ProcessMentions(message, client)
-
-            -- Update chat statistics
-            self:UpdateChatStatistics(client, chatType, #message)
-
-            -- Log chat message
-            lia.log.add(string.format(
-                "Chat [%s] %s: %s",
-                chatType,
-                anonymous and "Anonymous" or client:Name(),
-                message
-            ), FLAG_NORMAL)
-        end
-        ```
-]]
-function ChatParsed(client, chatType, message, anonymous)
-end
-
---[[
-    Purpose:
-        Handles chat messages being added to the chatbox.
-
-    When Called:
-        When text is added to the chatbox panel.
-
-    Parameters:
-        ... (varargs)
-            Chat message parameters.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log when text is added to chatbox
-        function MODULE:ChatboxTextAdded(...)
-            print("Text added to chatbox")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track chat message statistics
-        function MODULE:ChatboxTextAdded(...)
-            -- Increment message counter
-            self.chatMessageCount = (self.chatMessageCount or 0) + 1
-
-            -- Log occasional statistics
-            if self.chatMessageCount % 100 == 0 then
-                lia.log.add("Chat message count: " .. self.chatMessageCount, FLAG_NORMAL)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced chat analytics and processing
-        function MODULE:ChatboxTextAdded(...)
-            local args = {...}
-
-            -- Extract message information
-            local messageInfo = self:ParseChatMessageArgs(args)
-
-            -- Update chat analytics
-            self:UpdateChatAnalytics(messageInfo)
-
-            -- Process message for logging
-            self:ProcessMessageForLogging(messageInfo)
-
-            -- Check for automated responses
-            self:CheckForAutomatedResponses(messageInfo)
-
-            -- Update chat history
-            self:AddToChatHistory(messageInfo)
-
-            -- Handle special message types
-            if messageInfo.isSystemMessage then
-                self:ProcessSystemMessage(messageInfo)
-            elseif messageInfo.isPlayerMessage then
-                self:ProcessPlayerMessage(messageInfo)
-            end
-
-            -- Update UI indicators
-            self:UpdateChatIndicators(messageInfo)
-
-            -- Trigger chat events
-            hook.Run("OnChatMessageDisplayed", messageInfo)
-        end
-        ```
-]]
-function ChatboxTextAdded(...)
-end
-
---[[
-    Purpose:
-        Called when a command is added.
-
-    When Called:
-        When a new command is registered.
-
-    Parameters:
-        command (string)
-            The command name.
-        data (table)
-            Command data and configuration.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log when a command is added
-        function MODULE:CommandAdded(command, data)
-            print("Command added: " .. command)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Validate and register command
-        function MODULE:CommandAdded(command, data)
-            -- Validate command name
-            if not command or command == "" then
-                lia.log.add("Invalid command name provided", FLAG_WARNING)
-                return
-            end
-
-            -- Store command data
-            self.commands[command] = data
-
-            -- Log command registration
-            lia.log.add("Command registered: " .. command, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced command registration with validation and hooks
-        function MODULE:CommandAdded(command, data)
-            if not command or not isstring(command) or command == "" then
-                lia.log.add("Invalid command name provided to CommandAdded", FLAG_ERROR)
-                return
-            end
-
-            -- Validate command data
-            if not data or not istable(data) then
-                lia.log.add("Invalid command data for: " .. command, FLAG_ERROR)
-                return
-            end
-
-            -- Check for duplicate commands
-            if self.commands[command] then
-                lia.log.add("Command already exists: " .. command .. ", overwriting", FLAG_WARNING)
-            end
-
-            -- Validate command structure
-            local validation = self:ValidateCommandData(command, data)
-            if not validation.valid then
-                lia.log.add("Command validation failed for " .. command .. ": " .. validation.error, FLAG_ERROR)
-                return
-            end
-
-            -- Store command with metadata
-            self.commands[command] = {
-                data = data,
-                registered = os.time(),
-                registeredBy = data.registeredBy or "System"
-            }
-
-            -- Set up command hooks
-            self:SetupCommandHooks(command, data)
-
-            -- Register command permissions
-            if data.permissions then
-                self:RegisterCommandPermissions(command, data.permissions)
-            end
-
-            -- Log command registration
-            lia.log.add(string.format(
-                "Command registered: %s (Category: %s, Permission: %s)",
-                command,
-                data.category or "default",
-                data.permission or "none"
-            ), FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnCommandRegistered", command, data)
-        end
-        ```
+    ```lua
+    -- High: Complex command registration tracking
+    hook.Add("CommandAdded", "AdvancedCommandTracking", function(command, data)
+        -- Track command registration
+        lia.commandList = lia.commandList or {}
+        table.insert(lia.commandList, {
+            name = command,
+            data = data,
+            registeredAt = os.time()
+        })
+
+        -- Log command details
+        print(string.format("Command registered: %s (Admin: %s, Syntax: %s)",
+            command,
+            tostring(data.adminOnly or false),
+            data.syntax or "N/A"))
+    end)
+    ```
 ]]
 function CommandAdded(command, data)
 end
 
 --[[
     Purpose:
-        Called when configuration values change.
+        Called when doing module includes
 
     When Called:
-        When config values are modified.
+        When a module is being loaded and files are being included
 
     Parameters:
-        key (string)
-            The configuration key.
-        value (any)
-            The new value.
-        oldValue (any)
-            The previous value.
-        client (Player)
-            The player who made the change (if applicable).
+        path (string) - The path being included
+        MODULE (table) - The module table
 
     Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log configuration changes
-        function MODULE:ConfigChanged(key, value, oldValue, client)
-            print("Config changed: " .. key .. " from " .. tostring(oldValue) .. " to " .. tostring(value))
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track configuration changes with validation
-        function MODULE:ConfigChanged(key, value, oldValue, client)
-            -- Log the change
-            local playerName = IsValid(client) and client:Name() or "System"
-            lia.log.add(playerName .. " changed config '" .. key .. "' from '" .. tostring(oldValue) .. "' to '" .. tostring(value) .. "'", FLAG_NORMAL)
-
-            -- Validate critical configuration changes
-            if self:IsCriticalConfig(key) and not self:ValidateConfigChange(key, value, client) then
-                lia.log.add("Invalid configuration change rejected: " .. key, FLAG_WARNING)
-            end
-
-            -- Update cached configuration if needed
-            self:UpdateConfigCache(key, value)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Comprehensive configuration change tracking and validation
-        function MODULE:ConfigChanged(key, value, oldValue, client)
-            -- Record detailed change information
-            local changeRecord = {
-                key = key,
-                oldValue = oldValue,
-                newValue = value,
-                changedBy = IsValid(client) and client:SteamID() or "System",
-                changedByName = IsValid(client) and client:Name() or "System",
-                timestamp = os.time()
-            }
-
-            -- Validate configuration change
-            local validation = self:ValidateConfigurationChange(changeRecord)
-            if not validation.valid then
-                lia.log.add("Configuration change validation failed: " .. validation.error, FLAG_WARNING)
-                -- Could potentially revert the change here
-            end
-
-            -- Check if this is a critical configuration
-            if self:IsCriticalConfig(key) then
-                -- Notify admins of critical changes
-                self:NotifyAdminsOfCriticalChange(changeRecord)
-            end
-
-            -- Update configuration cache
-            self:UpdateConfigCache(key, value)
-
-            -- Store change history
-            self:StoreConfigChangeHistory(changeRecord)
-
-            -- Trigger configuration change hooks
-            hook.Run("OnConfigValueChanged", key, value, oldValue, client)
-
-            -- Log comprehensive change information
-            lia.log.add(string.format("Configuration changed - Key: %s, Old: %s, New: %s, By: %s",
-                key,
-                self:FormatConfigValue(oldValue),
-                self:FormatConfigValue(value),
-                changeRecord.changedByName), FLAG_NORMAL)
-        end
-        ```
-]]
-function ConfigChanged(key, value, oldValue, client)
-end
-
---[[
-    Purpose:
-        Called when the database connection is established.
-
-    When Called:
-        After successful database connection.
-
-    Parameters:
         None
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log database connection
-        function MODULE:DatabaseConnected()
-            print("Database connected successfully")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log module includes
+    hook.Add("DoModuleIncludes", "MyAddon", function(path, MODULE)
+        print("Including: " .. path)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize systems after database connection
-        function MODULE:DatabaseConnected()
-            -- Load initial data
-            hook.Run("LoadData")
 
-            -- Initialize database tables if needed
-            self:InitializeDatabaseTables()
+    ```lua
+    -- Medium: Track module load times
+    hook.Add("DoModuleIncludes", "ModuleLoadTime", function(path, MODULE)
+        local startTime = SysTime()
 
-            -- Log successful connection
-            lia.log.add("Database connected successfully", FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced database initialization with validation and migrations
-        function MODULE:DatabaseConnected()
-            -- Verify database connection
-            if not lia.db.connected() then
-                lia.log.add("Database connection verification failed", FLAG_ERROR)
-                return
-            end
-
-            -- Run database migrations
-            self:RunDatabaseMigrations()
-
-            -- Initialize all database tables
-            self:InitializeDatabaseTables()
-
-            -- Validate database schema
-            local schemaValidation = self:ValidateDatabaseSchema()
-            if not schemaValidation.valid then
-                lia.log.add("Database schema validation failed: " .. schemaValidation.error, FLAG_ERROR)
-                -- Attempt to repair schema
-                self:RepairDatabaseSchema(schemaValidation.errors)
-            end
-
-            -- Load critical data
-            hook.Run("LoadData")
-
-            -- Initialize prepared statements
-            hook.Run("RegisterPreparedStatements")
-
-            -- Set up database maintenance tasks
-            self:SetupDatabaseMaintenance()
-
-            -- Log comprehensive connection information
-            local dbInfo = lia.db.getInfo()
-            lia.log.add(string.format(
-                "Database connected - Host: %s, Database: %s, Status: %s",
-                dbInfo.host or "Unknown",
-                dbInfo.database or "Unknown",
-                "Connected"
-            ), FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnDatabaseFullyInitialized")
-        end
-        ```
-]]
-function DatabaseConnected()
-end
-
---[[
-    Purpose:
-        Called when a character is loaded.
-
-    When Called:
-        After a character is loaded from the database.
-
-    Parameters:
-        characterID (number)
-            The ID of the loaded character.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character load
-        function MODULE:CharLoaded(characterID)
-            print("Character loaded: " .. characterID)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Process character after load
-        function MODULE:CharLoaded(characterID)
-            local character = lia.char.getCharacter(characterID)
-            if character then
-                -- Update last login time
-                character:setData("lastLogin", os.time())
-
-                -- Log character load
-                lia.log.add("Character loaded: " .. character:getName(), FLAG_NORMAL)
-            end
-        end
-        ```
+        timer.Simple(0, function()
+            local loadTime = SysTime() - startTime
+            print("Loaded " .. path .. " in " .. loadTime .. "s")
+        end)
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced character loading with validation and initialization
-        function MODULE:CharLoaded(characterID)
-            local character = lia.char.getCharacter(characterID)
-            if not character then return end
 
-            -- Validate character data
-            local validation = self:ValidateCharacterData(character)
-            if not validation.valid then
-                lia.log.add("Character validation failed: " .. validation.error, FLAG_WARNING)
-                self:FixCharacterData(character, validation.errors)
-            end
+    ```lua
+    -- High: Complex module loading system
+    hook.Add("DoModuleIncludes", "AdvancedModuleLoading", function(path, MODULE)
+        local startTime = SysTime()
 
-            -- Initialize character-specific systems
-            self:InitializeCharacterSystems(character)
+        -- Log module loading
+        print("Loading module: " .. (MODULE.name or "Unknown") .. " from " .. path)
 
-            -- Update statistics
-            character:setData("lastLogin", os.time())
-            character:setData("loginCount", (character:getData("loginCount", 0) + 1))
-
-            -- Load character inventory
-            self:LoadCharacterInventory(character)
-
-            -- Apply character buffs/debuffs
-            self:ApplyCharacterEffects(character)
-
-            -- Log comprehensive load
-            lia.log.add(string.format(
-                "Character loaded - ID: %d, Name: %s, Logins: %d",
-                characterID,
-                character:getName(),
-                character:getData("loginCount", 0)
-            ), FLAG_NORMAL)
-
-            -- Trigger post-load hooks
-            hook.Run("OnCharacterFullyLoaded", character)
+        -- Track dependencies
+        local dependencies = MODULE.dependencies or {}
+        for _, dep in ipairs(dependencies) do
+            print("  Dependency: " .. dep)
         end
-        ```
-]]
-function CharLoaded(characterID)
-end
 
---[[
-    Purpose:
-        Called after a character is saved.
-
-    When Called:
-        After character data is saved to the database.
-
-    Parameters:
-        character (Character)
-            The character that was saved.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character save
-        function MODULE:CharPostSave(character)
-            print("Character saved: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Update save statistics
-        function MODULE:CharPostSave(character)
-            -- Update save count
-            character:setData("saveCount", (character:getData("saveCount", 0) + 1))
-            character:setData("lastSaved", os.time())
-
-            -- Log save
-            lia.log.add("Character saved: " .. character:getName(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced post-save processing with validation and backup
-        function MODULE:CharPostSave(character)
-            if not character then return end
-
-            -- Update save statistics
-            local saveCount = (character:getData("saveCount", 0) + 1)
-            character:setData("saveCount", saveCount)
-            character:setData("lastSaved", os.time())
-
-            -- Create save backup
-            self:CreateSaveBackup(character)
-
-            -- Validate save was successful
-            local validation = self:ValidateCharacterSave(character)
-            if not validation.valid then
-                lia.log.add("Save validation failed: " .. validation.error, FLAG_WARNING)
-            end
-
-            -- Update related systems
-            self:UpdateCharacterSystems(character)
-
-            -- Log comprehensive save
-            local player = character:getPlayer()
-            lia.log.add(string.format(
-                "Character saved - ID: %d, Name: %s, Save Count: %d, Player: %s",
-                character:getID(),
-                character:getName(),
-                saveCount,
-                player and player:Name() or "Offline"
-            ), FLAG_NORMAL)
-
-            -- Trigger post-save events
-            hook.Run("OnCharacterFullySaved", character)
-        end
-        ```
-]]
-function CharPostSave(character)
-end
-
---[[
-    Purpose:
-        Called before a character is saved.
-
-    When Called:
-        Before character data is saved to the database.
-
-    Parameters:
-        character (Character)
-            The character being saved.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log pre-save
-        function MODULE:CharPreSave(character)
-            print("Saving character: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Prepare character data before save
-        function MODULE:CharPreSave(character)
-            -- Update timestamps
-            character:setData("lastSaved", os.time())
-
-            -- Clean up temporary data
-            character:setData("tempData", nil)
-
-            -- Log pre-save
-            lia.log.add("Pre-saving character: " .. character:getName(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced pre-save processing with validation and cleanup
-        function MODULE:CharPreSave(character)
-            if not character then return end
-
-            -- Validate character data before save
-            local validation = self:ValidateCharacterData(character)
-            if not validation.valid then
-                lia.log.add("Pre-save validation failed: " .. validation.error, FLAG_WARNING)
-                self:FixCharacterData(character, validation.errors)
-            end
-
-            -- Clean up temporary data
-            self:CleanupCharacterData(character)
-
-            -- Update save timestamps
-            character:setData("lastSaved", os.time())
-            character:setData("saveCount", (character:getData("saveCount", 0) + 1))
-
-            -- Prepare statistics for save
-            self:PrepareCharacterStatistics(character)
-
-            -- Check for data consistency
-            local consistencyCheck = self:CheckDataConsistency(character)
-            if not consistencyCheck.consistent then
-                lia.log.add("Data consistency issues: " .. consistencyCheck.issues, FLAG_WARNING)
-            end
-
-            -- Log pre-save information
-            lia.log.add("Pre-save: " .. character:getName() .. " (ID: " .. character:getID() .. ")", FLAG_NORMAL)
-        end
-        ```
-]]
-function CharPreSave(character)
-end
-
---[[
-    Purpose:
-        Called when a character is restored.
-
-    When Called:
-        When a character is restored from a backup or previous state.
-
-    Parameters:
-        character (Character)
-            The restored character.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character restoration
-        function MODULE:CharRestored(character)
-            print("Character restored: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Restore character data and notify
-        function MODULE:CharRestored(character)
-            -- Log restoration
-            lia.log.add("Character restored: " .. character:getName(), FLAG_NORMAL)
-
-            -- Notify player if online
-            local player = character:getPlayer()
-            if IsValid(player) then
-                player:notify("Your character has been restored from backup")
-            end
-
-            -- Update restoration timestamp
-            character:setData("lastRestored", os.time())
-            character:setData("restoreCount", (character:getData("restoreCount", 0) + 1))
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced restoration with validation and recovery
-        function MODULE:CharRestored(character)
-            if not character then
-                lia.log.add("CharRestored called with invalid character", FLAG_ERROR)
-                return
-            end
-
-            -- Validate restored character data
-            local validation = self:ValidateRestoredCharacter(character)
-            if not validation.valid then
-                lia.log.add("Restored character validation failed: " .. validation.error, FLAG_WARNING)
-                -- Attempt to fix issues
-                self:FixRestoredCharacter(character, validation.errors)
-            end
-
-            -- Restore character statistics
-            self:RestoreCharacterStatistics(character)
-
-            -- Update restoration metadata
-            character:setData("lastRestored", os.time())
-            character:setData("restoreCount", (character:getData("restoreCount", 0) + 1))
-            character:setData("restoreSource", character:getData("restoreSource") or "backup")
-
-            -- Notify player
-            local player = character:getPlayer()
-            if IsValid(player) then
-                player:notify("Your character has been restored from backup")
-
-                -- Send restoration details
-                local restoreInfo = character:getData("restoreInfo", {})
-                if restoreInfo.timestamp then
-                    local restoreDate = os.date("%Y-%m-%d %H:%M:%S", restoreInfo.timestamp)
-                    player:notify("Restored from: " .. restoreDate)
-                end
-            end
-
-            -- Log comprehensive restoration
-            lia.log.add(string.format(
-                "Character restored - ID: %d, Name: %s, Restore Count: %d, Player: %s",
-                character:getID(),
-                character:getName(),
-                character:getData("restoreCount", 0),
-                player and player:Name() or "Offline"
-            ), FLAG_NORMAL)
-
-            -- Trigger restoration events
-            hook.Run("OnCharacterRestored", character)
-
-            -- Update character list
-            if CLIENT then
-                hook.Run("UpdateCharacterListUI")
-            end
-        end
-        ```
-]]
-function CharRestored(character)
-end
-
---[[
-    Purpose:
-        Handles module includes during initialization.
-
-    When Called:
-        When modules are being loaded.
-
-    Parameters:
-        path (string)
-            The module path.
-        MODULE (table)
-            The module table.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log module includes
-        function MODULE:DoModuleIncludes(path, MODULE)
-            print("Including module: " .. path)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Process module includes with validation
-        function MODULE:DoModuleIncludes(path, MODULE)
-            -- Validate module structure
-            if not MODULE or not istable(MODULE) then
-                lia.log.add("Invalid module structure for: " .. path, FLAG_WARNING)
-                return
-            end
-
-            -- Add module metadata
-            MODULE.path = path
-            MODULE.loaded = os.time()
-
-            -- Log module inclusion
-            lia.log.add("Module included: " .. path, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced module inclusion with dependency checking and validation
-        function MODULE:DoModuleIncludes(path, MODULE)
-            if not path or not isstring(path) then
-                lia.log.add("Invalid module path provided to DoModuleIncludes", FLAG_ERROR)
-                return
-            end
-
-            if not MODULE or not istable(MODULE) then
-                lia.log.add("Invalid module structure for: " .. path, FLAG_ERROR)
-                return
-            end
-
-            -- Check for duplicate includes
-            if self.loadedModules[path] then
-                lia.log.add("Module already included: " .. path, FLAG_WARNING)
-                return
-            end
-
-            -- Validate module dependencies
-            if MODULE.dependencies then
-                local missingDeps = {}
-                for _, dep in ipairs(MODULE.dependencies) do
-                    if not self.loadedModules[dep] then
-                        table.insert(missingDeps, dep)
-                    end
-                end
-
-                if #missingDeps > 0 then
-                    lia.log.add("Module " .. path .. " missing dependencies: " .. table.concat(missingDeps, ", "), FLAG_ERROR)
-                    return
-                end
-            end
-
-            -- Add module metadata
-            MODULE.path = path
-            MODULE.loaded = os.time()
-            MODULE.loadedBy = "System"
-
-            -- Register module
-            self.loadedModules[path] = MODULE
-
-            -- Initialize module if it has an init function
-            if MODULE.OnLoaded then
-                local success, err = pcall(MODULE.OnLoaded, MODULE)
-                if not success then
-                    lia.log.add("Error in module OnLoaded for " .. path .. ": " .. tostring(err), FLAG_ERROR)
-                end
-            end
-
-            -- Log module inclusion
-            lia.log.add("Module included: " .. path, FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnModuleIncluded", path, MODULE)
-        end
-        ```
+        -- Measure load time
+        timer.Simple(0, function()
+            local loadTime = SysTime() - startTime
+            print("Loaded " .. (MODULE.name or "Unknown") .. " in " .. loadTime .. "s")
+
+            -- Store load statistics
+            lia.moduleLoadTimes = lia.moduleLoadTimes or {}
+            lia.moduleLoadTimes[MODULE.name or path] = loadTime
+        end)
+    end)
+    ```
 ]]
 function DoModuleIncludes(path, MODULE)
 end
 
 --[[
     Purpose:
-        Handles filtering character models during creation.
+        Called to get displayed description
 
     When Called:
-        When character models are being filtered for selection.
+        When showing a player's description
 
     Parameters:
-        client (Player)
-            The player selecting a character.
-        faction (table)
-            The faction data.
-        modelData (table)
-            The model data to filter.
-        index (number)
-            The model index.
+        ply (Player) - The player being described
+        description (string) - The current description
 
     Returns:
-        nil
+        string - The modified description
 
     Realm:
         Shared
@@ -4590,129 +345,73 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log model filtering
-        function MODULE:FilterCharModels(client, faction, modelData, index)
-            print("Filtering model for faction: " .. (faction.name or "Unknown"))
-        end
-        ```
+
+    ```lua
+    -- Simple: Return unchanged
+    hook.Add("GetDisplayedDescription", "MyAddon", function(ply, description)
+        return description
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Filter models based on faction restrictions
-        function MODULE:FilterCharModels(client, faction, modelData, index)
-            if not IsValid(client) or not faction or not modelData then return end
 
-            -- Remove restricted models for certain factions
-            if faction.uniqueID == "police" then
-                -- Police can only use specific models
-                local allowedModels = faction.models or {}
-                if not table.HasValue(allowedModels, modelData.model) then
-                    modelData.disabled = true
-                end
-            end
+    ```lua
+    -- Medium: Add faction prefix
+    hook.Add("GetDisplayedDescription", "FactionDescPrefix", function(ply, description)
+        local char = ply:getChar()
+        if char then
+            local faction = char:getFaction()
+            return "[" .. faction .. "] " .. description
         end
-        ```
+
+        return description
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced model filtering with multiple restrictions and validation
-        function MODULE:FilterCharModels(client, faction, modelData, index)
-            if not IsValid(client) or not faction or not modelData then return end
 
-            local char = client:getChar()
-            if not char then return end
+    ```lua
+    -- High: Complex description formatting
+    hook.Add("GetDisplayedDescription", "AdvancedDescDisplay", function(ply, description)
+        local char = ply:getChar()
+        if not char then return description end
 
-            -- Check faction-specific restrictions
-            if faction.modelRestrictions then
-                local restrictions = faction.modelRestrictions
+        -- Add faction and rank
+        local faction = char:getFaction()
+        local rank = char:getData("rank", 0)
+        local rankName = char:getData("rankName", "Recruit")
 
-                -- Check model whitelist
-                if restrictions.whitelist then
-                    if not table.HasValue(restrictions.whitelist, modelData.model) then
-                        modelData.disabled = true
-                        modelData.reason = "Model not whitelisted for this faction"
-                        return
-                    end
-                end
+        local prefix = string.format("[%s - %s] ", faction, rankName)
 
-                -- Check model blacklist
-                if restrictions.blacklist then
-                    if table.HasValue(restrictions.blacklist, modelData.model) then
-                        modelData.disabled = true
-                        modelData.reason = "Model blacklisted for this faction"
-                        return
-                    end
-                end
-            end
-
-            -- Check character level requirements
-            if modelData.requiredLevel then
-                local charLevel = char:getData("level", 1)
-                if charLevel < modelData.requiredLevel then
-                    modelData.disabled = true
-                    modelData.reason = "Requires level " .. modelData.requiredLevel
-                end
-            end
-
-            -- Check character flags
-            if modelData.requiredFlags then
-                for _, flag in ipairs(modelData.requiredFlags) do
-                    if not char:hasFlags(flag) then
-                        modelData.disabled = true
-                        modelData.reason = "Missing required flag: " .. flag
-                        break
-                    end
-                end
-            end
-
-            -- Check gender restrictions
-            if modelData.gender and modelData.gender ~= "neutral" then
-                local charGender = char:getData("gender", "male")
-                if charGender ~= modelData.gender and modelData.gender ~= "neutral" then
-                    modelData.disabled = true
-                    modelData.reason = "Gender mismatch"
-                end
-            end
-
-            -- Apply custom model modifications
-            if modelData.customModifications then
-                for key, value in pairs(modelData.customModifications) do
-                    modelData[key] = value
-                end
-            end
-
-            -- Log filtered models
-            if modelData.disabled then
-                lia.log.add(string.format(
-                    "Model filtered: %s for %s (Reason: %s)",
-                    modelData.model,
-                    client:Name(),
-                    modelData.reason or "Unknown"
-                ), FLAG_NORMAL)
-            end
+        -- Add status indicators
+        if char:getData("injured", false) then
+            prefix = prefix .. "[INJURED] "
         end
-        ```
+
+        if char:getData("wanted", false) then
+            prefix = prefix .. "[WANTED] "
+        end
+
+        return prefix .. description
+    end)
+    ```
 ]]
-function FilterCharModels(client, faction, modelData, index)
+function GetDisplayedDescription(ply, description)
 end
 
 --[[
     Purpose:
-        Gets adjusted PAC part data.
+        Called to get displayed name in chat
 
     When Called:
-        When PAC part data needs to be adjusted.
+        When showing a player's name in chat
 
     Parameters:
-        wearer (Player)
-            The player wearing the PAC part.
-        partID (string)
-            The PAC part ID.
+        speaker (Player) - The player speaking
+        chatType (string) - The chat type
 
     Returns:
-        table
-            The adjusted PAC part data.
+        string - The displayed name
 
     Realm:
         Shared
@@ -4720,1205 +419,82 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return unmodified part data
-        function MODULE:GetAdjustedPartData(wearer, partID)
-            -- Return default part data (would come from hook system)
-            return {}
-        end
-        ```
+
+    ```lua
+    -- Simple: Return character name
+    hook.Add("GetDisplayedName", "MyAddon", function(speaker, chatType)
+        local char = speaker:getChar()
+        return char and char:getName() or speaker:Name()
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Apply basic modifications to PAC part data
-        function MODULE:GetAdjustedPartData(wearer, partID)
-            if not IsValid(wearer) then return {} end
 
-            local char = wearer:getChar()
-            if not char then return {} end
+    ```lua
+    -- Medium: Chat type-specific names
+    hook.Add("GetDisplayedName", "ChatTypeNames", function(speaker, chatType)
+        local char = speaker:getChar()
+        if not char then return speaker:Name() end
 
-            -- Get base part data
-            local partData = hook.Run("GetBasePartData", partID) or {}
-
-            -- Apply faction-specific modifications
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.pacModifications then
-                for key, value in pairs(faction.pacModifications) do
-                    partData[key] = value
-                end
-            end
-
-            return partData
+        if chatType == "ooc" then
+            return speaker:Name()
+        else
+            return char:getName()
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced PAC part data adjustment with multiple systems
-        function MODULE:GetAdjustedPartData(wearer, partID)
-            if not IsValid(wearer) or not partID then return {} end
 
-            local char = wearer:getChar()
-            if not char then return {} end
+    ```lua
+    -- High: Complex name display system
+    hook.Add("GetDisplayedName", "AdvancedNameDisplay", function(speaker, chatType)
+        local char = speaker:getChar()
+        if not char then return speaker:Name() end
 
-            -- Get base part data
-            local partData = hook.Run("GetBasePartData", partID) or {}
-            local originalData = table.Copy(partData)
-
-            -- Apply faction-specific modifications
-            local faction = lia.faction.get(char:getFaction())
-            if faction then
-                if faction.pacModifications then
-                    for key, value in pairs(faction.pacModifications) do
-                        partData[key] = value
-                    end
-                end
-
-                -- Apply faction colors
-                if faction.color and partData.Color then
-                    partData.Color = faction.color
-                end
-            end
-
-            -- Apply class-specific modifications
-            local classID = char:getClass()
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.pacModifications then
-                    for key, value in pairs(class.pacModifications) do
-                        partData[key] = value
-                    end
-                end
-            end
-
-            -- Apply character data modifications
-            local charData = char:getData("pacModifications", {})
-            if charData[partID] then
-                for key, value in pairs(charData[partID]) do
-                    partData[key] = value
-                end
-            end
-
-            -- Apply item-based modifications
-            local inventory = char:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.pacPartID == partID then
-                        if item.pacData then
-                            for key, value in pairs(item.pacData) do
-                                partData[key] = value
-                            end
-                        end
-                    end
-                end
-            end
-
-            -- Validate part data
-            partData = self:ValidatePartData(partData, originalData)
-
-            -- Log modifications if significant
-            if self:HasSignificantChanges(partData, originalData) then
-                lia.log.add(string.format(
-                    "PAC part adjusted: %s for %s",
-                    partID,
-                    wearer:Name()
-                ), FLAG_NORMAL)
-            end
-
-            return partData
+        -- OOC shows Steam name
+        if chatType == "ooc" then
+            return speaker:Name()
         end
-        ```
-]]
-function GetAdjustedPartData(wearer, partID)
-end
 
---[[
-    Purpose:
-        Gets the maximum value for an attribute.
+        -- IC shows character name with title
+        local name = char:getName()
+        local faction = char:getFaction()
 
-    When Called:
-        When calculating attribute maximums.
-
-    Parameters:
-        target (Player)
-            The player whose attribute max to get.
-        attrKey (string)
-            The attribute key.
-
-    Returns:
-        number
-            The maximum attribute value.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default attribute maximum
-        function MODULE:GetAttributeMax(target, attrKey)
-            return 100 -- Default max
+        -- Add faction title
+        if faction == "police" then
+            local rank = char:getData("rankName", "Officer")
+            name = rank .. " " .. name
+        elseif faction == "medic" then
+            name = "Dr. " .. name
         end
-        ```
 
-    Medium Complexity:
-        ```lua
-        -- Medium: Return attribute max based on character data
-        function MODULE:GetAttributeMax(target, attrKey)
-            if not IsValid(target) then return 100 end
-
-            local char = target:getChar()
-            if not char then return 100 end
-
-            -- Get faction-specific max
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.attributeMaxes and faction.attributeMaxes[attrKey] then
-                return faction.attributeMaxes[attrKey]
-            end
-
-            -- Default max
-            return 100
+        -- Add status indicators
+        if speaker:IsAdmin() then
+            name = "[ADMIN] " .. name
         end
-        ```
 
-    High Complexity:
-        ```lua
-        -- High: Advanced attribute maximum calculation with multiple factors
-        function MODULE:GetAttributeMax(target, attrKey)
-            if not IsValid(target) then return 100 end
-
-            local char = target:getChar()
-            if not char then return 100 end
-
-            -- Base maximum from configuration
-            local baseMax = lia.config.get("attributeMaxes", {})[attrKey] or 100
-
-            -- Faction modifier
-            local faction = lia.faction.get(char:getFaction())
-            local factionModifier = 1
-            if faction and faction.attributeModifiers then
-                factionModifier = faction.attributeModifiers[attrKey] or 1
-            end
-
-            -- Class modifier
-            local classID = char:getClass()
-            local classModifier = 1
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.attributeModifiers then
-                    classModifier = class.attributeModifiers[attrKey] or 1
-                end
-            end
-
-            -- Character level modifier
-            local level = char:getData("level", 1)
-            local levelModifier = 1 + (level - 1) * 0.02 -- 2% increase per level
-
-            -- Item-based modifiers
-            local itemModifier = 1
-            local inventory = char:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.attributeModifiers then
-                        local modifier = item.attributeModifiers[attrKey] or 1
-                        itemModifier = itemModifier * modifier
-                    end
-                end
-            end
-
-            -- Calculate final maximum
-            local finalMax = baseMax * factionModifier * classModifier * levelModifier * itemModifier
-
-            -- Apply character-specific data
-            local charMax = char:getData("attributeMaxes", {})[attrKey]
-            if charMax then
-                finalMax = math.max(finalMax, charMax) -- Use character-specific if higher
-            end
-
-            -- Cap at absolute maximum
-            local absoluteMax = lia.config.get("absoluteAttributeMax", 200)
-            finalMax = math.min(finalMax, absoluteMax)
-
-            return math.floor(finalMax)
-        end
-        ```
-]]
-function GetAttributeMax(target, attrKey)
-end
-
---[[
-    Purpose:
-        Gets the starting maximum for an attribute.
-
-    When Called:
-        When initializing attribute values.
-
-    Parameters:
-        client (Player)
-            The player.
-        attribute (table)
-            The attribute data.
-
-    Returns:
-        number
-            The starting maximum value.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default starting max
-        function MODULE:GetAttributeStartingMax(client, attribute)
-            return 50 -- Default starting max
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return starting max based on attribute type
-        function MODULE:GetAttributeStartingMax(client, attribute)
-            if not attribute or not attribute.key then return 50 end
-
-            -- Different starting maxes for different attributes
-            local startingMaxes = {
-                strength = 60,
-                agility = 55,
-                intelligence = 50,
-                endurance = 65
-            }
-
-            return startingMaxes[attribute.key] or 50
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced starting max calculation with multiple factors
-        function MODULE:GetAttributeStartingMax(client, attribute)
-            if not IsValid(client) or not attribute then return 50 end
-
-            local attrKey = attribute.key or attribute
-            if not attrKey then return 50 end
-
-            -- Base starting max from configuration
-            local baseMax = lia.config.get("startingAttributeMaxes", {})[attrKey] or 50
-
-            -- Faction modifier
-            local faction = lia.faction.get(client:getChar() and client:getChar():getFaction() or nil)
-            local factionModifier = 1
-            if faction and faction.startingAttributeModifiers then
-                factionModifier = faction.startingAttributeModifiers[attrKey] or 1
-            end
-
-            -- Player playtime modifier
-            local playtime = hook.Run("GetPlayTime", client) or 0
-            local playtimeBonus = math.min(playtime / 3600 * 0.1, 10) -- Max 10 point bonus
-
-            -- Calculate final starting max
-            local finalMax = (baseMax * factionModifier) + playtimeBonus
-
-            -- Cap at maximum starting value
-            local maxStarting = lia.config.get("maxStartingAttribute", 75)
-            finalMax = math.min(finalMax, maxStarting)
-
-            return math.floor(finalMax)
-        end
-        ```
-]]
-function GetAttributeStartingMax(client, attribute)
-end
-
---[[
-    Purpose:
-        Gets the maximum stamina for a character.
-
-    When Called:
-        When calculating character stamina limits.
-
-    Parameters:
-        character (Character)
-            The character.
-
-    Returns:
-        number
-            The maximum stamina value.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default max stamina
-        function MODULE:GetCharMaxStamina(character)
-            return 100 -- Default max stamina
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return max stamina based on character attributes
-        function MODULE:GetCharMaxStamina(character)
-            if not character then return 100 end
-
-            -- Base stamina from endurance attribute
-            local endurance = character:getAttrib("endurance", 0)
-            local baseStamina = 50 + (endurance * 2)
-
-            -- Apply faction modifier
-            local faction = lia.faction.get(character:getFaction())
-            if faction and faction.staminaModifier then
-                baseStamina = baseStamina * faction.staminaModifier
-            end
-
-            return math.floor(baseStamina)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced stamina calculation with multiple modifiers
-        function MODULE:GetCharMaxStamina(character)
-            if not character then return 100 end
-
-            -- Base stamina from endurance
-            local endurance = character:getAttrib("endurance", 0)
-            local baseStamina = 50 + (endurance * 2)
-
-            -- Faction modifier
-            local faction = lia.faction.get(character:getFaction())
-            local factionModifier = 1
-            if faction then
-                factionModifier = faction.staminaModifier or 1
-                if faction.staminaBonus then
-                    baseStamina = baseStamina + faction.staminaBonus
-                end
-            end
-
-            -- Class modifier
-            local classID = character:getClass()
-            local classModifier = 1
-            if classID then
-                local class = lia.class.get(classID)
-                if class then
-                    classModifier = class.staminaModifier or 1
-                    if class.staminaBonus then
-                        baseStamina = baseStamina + class.staminaBonus
-                    end
-                end
-            end
-
-            -- Item-based modifiers
-            local inventory = character:getInv()
-            local itemModifier = 1
-            local itemBonus = 0
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") then
-                        if item.staminaModifier then
-                            itemModifier = itemModifier * item.staminaModifier
-                        end
-                        if item.staminaBonus then
-                            itemBonus = itemBonus + item.staminaBonus
-                        end
-                    end
-                end
-            end
-
-            -- Character level modifier
-            local level = character:getData("level", 1)
-            local levelBonus = (level - 1) * 2 -- 2 stamina per level
-
-            -- Calculate final stamina
-            local finalStamina = (baseStamina * factionModifier * classModifier * itemModifier) + itemBonus + levelBonus
-
-            -- Apply character-specific data
-            local charStamina = character:getData("maxStamina")
-            if charStamina then
-                finalStamina = math.max(finalStamina, charStamina)
-            end
-
-            -- Cap at absolute maximum
-            local absoluteMax = lia.config.get("absoluteMaxStamina", 500)
-            finalStamina = math.min(finalStamina, absoluteMax)
-
-            return math.floor(finalStamina)
-        end
-        ```
-]]
-function GetCharMaxStamina(character)
-end
-
---[[
-    Purpose:
-        Gets the damage scale for a hitgroup.
-
-    When Called:
-        When damage is being calculated.
-
-    Parameters:
-        hitgroup (number)
-            The hitgroup number.
-        dmgInfo (CTakeDamageInfo)
-            The damage info.
-        damageScale (number)
-            The current damage scale.
-
-    Returns:
-        number
-            The adjusted damage scale.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return unmodified damage scale
-        function MODULE:GetDamageScale(hitgroup, dmgInfo, damageScale)
-            return damageScale
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Adjust damage based on hitgroup
-        function MODULE:GetDamageScale(hitgroup, dmgInfo, damageScale)
-            -- Headshot multiplier
-            if hitgroup == HITGROUP_HEAD then
-                return damageScale * 2.0 -- Double damage to head
-            end
-
-            -- Limb damage reduction
-            if hitgroup == HITGROUP_LEFTARM or hitgroup == HITGROUP_RIGHTARM or
-               hitgroup == HITGROUP_LEFTLEG or hitgroup == HITGROUP_RIGHTLEG then
-                return damageScale * 0.5 -- Half damage to limbs
-            end
-
-            return damageScale
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced damage scaling with multiple factors
-        function MODULE:GetDamageScale(hitgroup, dmgInfo, damageScale)
-            if not dmgInfo then return damageScale end
-
-            local attacker = dmgInfo:GetAttacker()
-            local victim = dmgInfo:GetInflictor()
-
-            -- Base hitgroup multipliers
-            local hitgroupMultipliers = {
-                [HITGROUP_HEAD] = 2.0,
-                [HITGROUP_CHEST] = 1.0,
-                [HITGROUP_STOMACH] = 1.2,
-                [HITGROUP_LEFTARM] = 0.5,
-                [HITGROUP_RIGHTARM] = 0.5,
-                [HITGROUP_LEFTLEG] = 0.6,
-                [HITGROUP_RIGHTLEG] = 0.6
-            }
-
-            local baseMultiplier = hitgroupMultipliers[hitgroup] or 1.0
-            local finalScale = damageScale * baseMultiplier
-
-            -- Apply character-based modifiers
-            if IsValid(attacker) and IsValid(victim) then
-                local attackerChar = attacker:getChar()
-                local victimChar = victim:getChar()
-
-                -- Attacker damage modifiers
-                if attackerChar then
-                    local attackerStrength = attackerChar:getAttrib("strength", 0)
-                    local strengthBonus = 1 + (attackerStrength / 100) -- 1% per strength point
-                    finalScale = finalScale * strengthBonus
-                end
-
-                -- Victim defense modifiers
-                if victimChar then
-                    local victimEndurance = victimChar:getAttrib("endurance", 0)
-                    local enduranceReduction = 1 - (victimEndurance / 200) -- Max 50% reduction
-                    finalScale = finalScale * math.max(0.5, enduranceReduction)
-
-                    -- Armor modifiers
-                    local armor = victimChar:getData("armor", 0)
-                    if armor > 0 then
-                        local armorReduction = 1 - (armor / 100) -- Max 50% reduction
-                        finalScale = finalScale * math.max(0.5, armorReduction)
-                    end
-                end
-            end
-
-            -- Weapon-specific modifiers
-            local weapon = dmgInfo:GetWeapon()
-            if IsValid(weapon) then
-                local weaponClass = weapon:GetClass()
-                local weaponMultipliers = {
-                    weapon_pistol = 1.0,
-                    weapon_rifle = 1.2,
-                    weapon_shotgun = 1.5
-                }
-                finalScale = finalScale * (weaponMultipliers[weaponClass] or 1.0)
-            end
-
-            -- Cap damage scale
-            finalScale = math.max(0.1, math.min(finalScale, 5.0))
-
-            return finalScale
-        end
-        ```
-]]
-function GetDamageScale(hitgroup, dmgInfo, damageScale)
-end
-
---[[
-    Purpose:
-        Gets the default character description.
-
-    When Called:
-        When generating default character descriptions.
-
-    Parameters:
-        client (Player)
-            The player creating the character.
-        factionIndex (number)
-            The faction index.
-        context (table)
-            Additional context data.
-
-    Returns:
-        string
-            The default character description.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default description
-        function MODULE:GetDefaultCharDesc(client, factionIndex, context)
-            return "A citizen of the city."
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return faction-specific description
-        function MODULE:GetDefaultCharDesc(client, factionIndex, context)
-            local faction = lia.faction.get(factionIndex)
-            if faction and faction.defaultDescription then
-                return faction.defaultDescription
-            end
-
-            return "A citizen of the city."
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced description generation with multiple factors
-        function MODULE:GetDefaultCharDesc(client, factionIndex, context)
-            if not IsValid(client) then return "A citizen of the city." end
-
-            context = context or {}
-            local faction = lia.faction.get(factionIndex)
-
-            -- Base description templates
-            local descriptions = {
-                default = "A citizen of the city.",
-                police = "A member of the police force, dedicated to maintaining law and order.",
-                medic = "A medical professional, ready to help those in need.",
-                citizen = "An ordinary citizen trying to make their way in the city."
-            }
-
-            -- Get faction-specific description
-            local baseDesc = descriptions.default
-            if faction then
-                baseDesc = faction.defaultDescription or descriptions[faction.uniqueID] or descriptions.default
-            end
-
-            -- Add context-based modifications
-            if context.isNewPlayer then
-                baseDesc = baseDesc .. " New to the city."
-            end
-
-            if context.hasPlaytime then
-                local playtime = hook.Run("GetPlayTime", client) or 0
-                local hours = math.floor(playtime / 3600)
-                if hours > 100 then
-                    baseDesc = baseDesc .. " A veteran of the city."
-                elseif hours > 50 then
-                    baseDesc = baseDesc .. " Experienced in city life."
-                end
-            end
-
-            -- Personalize based on player data
-            local playerData = client:getData("charCreationData", {})
-            if playerData.background then
-                baseDesc = baseDesc .. " " .. playerData.background
-            end
-
-            -- Apply character name if available
-            if context.charName then
-                baseDesc = string.format("%s, known as %s.", baseDesc, context.charName)
-            end
-
-            return baseDesc
-        end
-        ```
-]]
-function GetDefaultCharDesc(client, factionIndex, context)
-end
-
---[[
-    Purpose:
-        Gets the default character name.
-
-    When Called:
-        When generating default character names.
-
-    Parameters:
-        client (Player)
-            The player creating the character.
-        factionIndex (number)
-            The faction index.
-        context (table)
-            Additional context data.
-
-    Returns:
-        string
-            The default character name.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default name
-        function MODULE:GetDefaultCharName(client, factionIndex, context)
-            return "John Doe"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Generate name based on faction
-        function MODULE:GetDefaultCharName(client, factionIndex, context)
-            local faction = lia.faction.get(factionIndex)
-            local firstName = self:GenerateFirstName()
-            local lastName = self:GenerateLastName(faction)
-
-            return firstName .. " " .. lastName
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced name generation with validation and personalization
-        function MODULE:GetDefaultCharName(client, factionIndex, context)
-            if not IsValid(client) then return "John Doe" end
-
-            context = context or {}
-            local faction = lia.faction.get(factionIndex)
-
-            -- Name pools by faction
-            local namePools = {
-                default = {
-                    first = {"John", "Jane", "Mike", "Sarah", "David", "Emily"},
-                    last = {"Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia"}
-                },
-                police = {
-                    first = {"James", "Robert", "Michael", "William", "Patricia", "Jennifer"},
-                    last = {"Anderson", "Martinez", "Taylor", "Thomas", "Jackson", "White"}
-                },
-                medic = {
-                    first = {"Dr. Sarah", "Dr. Michael", "Dr. Emily", "Dr. David"},
-                    last = {"Thompson", "Rodriguez", "Lee", "Walker"}
-                }
-            }
-
-            -- Select appropriate name pool
-            local pool = namePools.default
-            if faction and namePools[faction.uniqueID] then
-                pool = namePools[faction.uniqueID]
-            end
-
-            -- Generate name
-            local firstName = pool.first[math.random(#pool.first)]
-            local lastName = pool.last[math.random(#pool.last)]
-
-            -- Check if name already exists
-            local fullName = firstName .. " " .. lastName
-            local attempts = 0
-            while self:NameExists(fullName) and attempts < 10 do
-                firstName = pool.first[math.random(#pool.first)]
-                lastName = pool.last[math.random(#pool.last)]
-                fullName = firstName .. " " .. lastName
-                attempts = attempts + 1
-            end
-
-            -- Add context-based modifications
-            if context.gender then
-                -- Adjust name based on gender if needed
-                if context.gender == "female" and not string.find(firstName, "Dr.") then
-                    -- Use more feminine names
-                    local femaleNames = {"Sarah", "Emily", "Jessica", "Ashley", "Amanda"}
-                    firstName = femaleNames[math.random(#femaleNames)]
-                    fullName = firstName .. " " .. lastName
-                end
-            end
-
-            -- Store generated name for reference
-            if not context.generatedNames then
-                context.generatedNames = {}
-            end
-            table.insert(context.generatedNames, fullName)
-
-            return fullName
-        end
-        ```
-]]
-function GetDefaultCharName(client, factionIndex, context)
-end
-
---[[
-    Purpose:
-        Gets the default inventory size for a character.
-
-    When Called:
-        When setting up character inventories.
-
-    Parameters:
-        client (Player)
-            The player.
-        character (Character)
-            The character.
-
-    Returns:
-        number
-            The default inventory size.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default inventory size
-        function MODULE:GetDefaultInventorySize(client, character)
-            return 25 -- Default grid size
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return size based on character type
-        function MODULE:GetDefaultInventorySize(client, character)
-            if not character then return 25 end
-
-            -- Larger inventory for certain factions
-            local faction = lia.faction.get(character:getFaction())
-            if faction and faction.inventorySize then
-                return faction.inventorySize
-            end
-
-            return 25
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced inventory size calculation with multiple factors
-        function MODULE:GetDefaultInventorySize(client, character)
-            if not character then return 25 end
-
-            -- Base size from configuration
-            local baseSize = lia.config.get("defaultInventorySize", 25)
-
-            -- Faction modifier
-            local faction = lia.faction.get(character:getFaction())
-            local factionSize = baseSize
-            if faction then
-                factionSize = faction.inventorySize or baseSize
-                if faction.inventorySizeModifier then
-                    factionSize = baseSize * faction.inventorySizeModifier
-                end
-            end
-
-            -- Class modifier
-            local classID = character:getClass()
-            local classSize = factionSize
-            if classID then
-                local class = lia.class.get(classID)
-                if class then
-                    if class.inventorySize then
-                        classSize = class.inventorySize
-                    elseif class.inventorySizeModifier then
-                        classSize = factionSize * class.inventorySizeModifier
-                    end
-                end
-            end
-
-            -- Character level bonus
-            local level = character:getData("level", 1)
-            local levelBonus = math.floor((level - 1) / 5) * 2 -- +2 slots every 5 levels
-
-            -- Character data override
-            local charSize = character:getData("inventorySize")
-            if charSize then
-                classSize = math.max(classSize, charSize)
-            end
-
-            -- Calculate final size
-            local finalSize = classSize + levelBonus
-
-            -- Cap at maximum
-            local maxSize = lia.config.get("maxInventorySize", 100)
-            finalSize = math.min(finalSize, maxSize)
-
-            return math.floor(finalSize)
-        end
-        ```
-]]
-function GetDefaultInventorySize(client, character)
-end
-
---[[
-    Purpose:
-        Gets the default inventory type for a character.
-
-    When Called:
-        When determining inventory types.
-
-    Parameters:
-        character (Character)
-            The character.
-
-    Returns:
-        string
-            The default inventory type.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default inventory type
-        function MODULE:GetDefaultInventoryType(character)
-            return "default"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return type based on faction
-        function MODULE:GetDefaultInventoryType(character)
-            if not character then return "default" end
-
-            local faction = lia.faction.get(character:getFaction())
-            if faction and faction.inventoryType then
-                return faction.inventoryType
-            end
-
-            return "default"
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced inventory type determination with validation
-        function MODULE:GetDefaultInventoryType(character)
-            if not character then return "default" end
-
-            -- Check character-specific override
-            local charType = character:getData("inventoryType")
-            if charType and self:IsValidInventoryType(charType) then
-                return charType
-            end
-
-            -- Faction-based type
-            local faction = lia.faction.get(character:getFaction())
-            if faction then
-                if faction.inventoryType then
-                    return faction.inventoryType
-                end
-
-                -- Determine type based on faction role
-                if faction.uniqueID == "police" then
-                    return "police"
-                elseif faction.uniqueID == "medic" then
-                    return "medical"
-                elseif faction.uniqueID == "criminal" then
-                    return "criminal"
-                end
-            end
-
-            -- Class-based type
-            local classID = character:getClass()
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.inventoryType then
-                    return class.inventoryType
-                end
-            end
-
-            -- Default type
-            return "default"
-        end
-        ```
-]]
-function GetDefaultInventoryType(character)
-end
-
---[[
-    Purpose:
-        Gets the displayed description for a player.
-
-    When Called:
-        When displaying player descriptions.
-
-    Parameters:
-        client (Player)
-            The player.
-        isHUD (boolean)
-            Whether this is for HUD display.
-
-    Returns:
-        string
-            The displayed description.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return character description
-        function MODULE:GetDisplayedDescription(client, isHUD)
-            if not IsValid(client) then return "" end
-
-            local char = client:getChar()
-            return char and char:getDesc() or ""
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Format description based on context
-        function MODULE:GetDisplayedDescription(client, isHUD)
-            if not IsValid(client) then return "" end
-
-            local char = client:getChar()
-            if not char then return "" end
-
-            local desc = char:getDesc() or ""
-
-            -- Shorten for HUD display
-            if isHUD and #desc > 100 then
-                desc = string.sub(desc, 1, 100) .. "..."
-            end
-
-            return desc
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced description formatting with multiple context factors
-        function MODULE:GetDisplayedDescription(client, isHUD)
-            if not IsValid(client) then return "" end
-
-            local char = client:getChar()
-            if not char then return "" end
-
-            local desc = char:getDesc() or ""
-
-            -- Apply formatting based on display context
-            if isHUD then
-                -- HUD-specific formatting
-                if #desc > 80 then
-                    desc = string.sub(desc, 1, 80) .. "..."
-                end
-
-                -- Add status indicators
-                local status = self:GetCharacterStatus(client)
-                if status then
-                    desc = desc .. " [" .. status .. "]"
-                end
-            else
-                -- Full description display
-                -- Add character background info
-                local background = char:getData("background")
-                if background then
-                    desc = desc .. "\n\nBackground: " .. background
-                end
-
-                -- Add faction information
-                local faction = lia.faction.get(char:getFaction())
-                if faction then
-                    desc = desc .. "\nFaction: " .. faction.name
-                end
-            end
-
-            -- Apply custom formatting
-            desc = self:FormatDescription(desc, client, isHUD)
-
-            -- Check for sensitive information
-            if not client:getChar():getData("showFullDesc", false) then
-                desc = self:FilterSensitiveInfo(desc)
-            end
-
-            return desc
-        end
-        ```
-]]
-function GetDisplayedDescription(client, isHUD)
-end
-
---[[
-    Purpose:
-        Gets the displayed name for a speaker.
-
-    When Called:
-        When displaying speaker names in chat.
-
-    Parameters:
-        speaker (Player)
-            The speaker.
-        chatType (string)
-            The type of chat.
-
-    Returns:
-        string
-            The displayed name.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return character name
-        function MODULE:GetDisplayedName(speaker, chatType)
-            if not IsValid(speaker) then return "Unknown" end
-
-            local char = speaker:getChar()
-            return char and char:getName() or speaker:Name()
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Format name based on chat type
-        function MODULE:GetDisplayedName(speaker, chatType)
-            if not IsValid(speaker) then return "Unknown" end
-
-            local char = speaker:getChar()
-            if not char then return speaker:Name() end
-
-            local name = char:getName()
-
-            -- Add title for certain chat types
-            if chatType == "ic" then
-                local title = char:getData("title")
-                if title then
-                    name = title .. " " .. name
-                end
-            end
-
-            return name
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced name formatting with recognition and context
-        function MODULE:GetDisplayedName(speaker, chatType)
-            if not IsValid(speaker) then return "Unknown" end
-
-            local char = speaker:getChar()
-            if not char then return speaker:Name() end
-
-            local client = LocalPlayer()
-            local name = char:getName()
-
-            -- Check recognition
-            local isRecognized = hook.Run("IsCharRecognized", char, char:getID())
-
-            if not isRecognized then
-                -- Use fake name if not recognized
-                local fakeName = hook.Run("GetFakeName", char)
-                if fakeName then
-                    name = fakeName
-                else
-                    name = "Unknown Person"
-                end
-            end
-
-            -- Add context-based formatting
-            if chatType == "ic" then
-                -- Add title/rank
-                local title = char:getData("title")
-                if title then
-                    name = title .. " " .. name
-                end
-
-                -- Add faction prefix for recognized characters
-                if isRecognized then
-                    local faction = lia.faction.get(char:getFaction())
-                    if faction and faction.chatPrefix then
-                        name = faction.chatPrefix .. " " .. name
-                    end
-                end
-            elseif chatType == "ooc" then
-                -- OOC uses player name
-                name = speaker:Name()
-            elseif chatType == "looc" then
-                -- LOOC uses both
-                name = name .. " (" .. speaker:Name() .. ")"
-            end
-
-            -- Apply custom formatting
-            name = self:FormatName(name, speaker, chatType)
-
-            return name
-        end
-        ```
+        return name
+    end)
+    ```
 ]]
 function GetDisplayedName(speaker, chatType)
 end
 
 --[[
     Purpose:
-        Gets the attack speed for hands/fists.
+        Called to get door information
 
     When Called:
-        When calculating fist attack speed.
+        When retrieving door data
 
     Parameters:
-        client (Player)
-            The player.
-        defaultDelay (number)
-            The default attack delay.
+        entity (Entity) - The door entity
+        doorData (table) - The door data table
+        doorInfo (table) - The door info table
 
     Returns:
-        number
-            The adjusted attack delay.
+        table - The modified door info
 
     Realm:
         Shared
@@ -5926,112 +502,71 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return default delay
-        function MODULE:GetHandsAttackSpeed(client, defaultDelay)
-            return defaultDelay
-        end
-        ```
+
+    ```lua
+    -- Simple: Return unchanged
+    hook.Add("GetDoorInfo", "MyAddon", function(entity, doorData, doorInfo)
+        return doorInfo
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Adjust based on character attributes
-        function MODULE:GetHandsAttackSpeed(client, defaultDelay)
-            if not IsValid(client) then return defaultDelay end
 
-            local char = client:getChar()
-            if not char then return defaultDelay end
+    ```lua
+    -- Medium: Add custom door info
+    hook.Add("GetDoorInfo", "CustomDoorInfo", function(entity, doorData, doorInfo)
+        doorInfo.customField = "Custom Value"
+        doorInfo.price = entity:getNetVar("price", 0)
 
-            -- Faster attacks with higher agility
-            local agility = char:getAttrib("agility", 0)
-            local speedModifier = 1 - (agility / 200) -- Max 50% reduction
-
-            return defaultDelay * math.max(0.5, speedModifier)
-        end
-        ```
+        return doorInfo
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced attack speed calculation with multiple factors
-        function MODULE:GetHandsAttackSpeed(client, defaultDelay)
-            if not IsValid(client) then return defaultDelay end
 
-            local char = client:getChar()
-            if not char then return defaultDelay end
+    ```lua
+    -- High: Complex door info system
+    hook.Add("GetDoorInfo", "AdvancedDoorInfo", function(entity, doorData, doorInfo)
+        -- Add basic info
+        doorInfo.price = entity:getNetVar("price", 0)
+        doorInfo.title = entity:getNetVar("title", "Door")
+        doorInfo.owner = entity:getNetVar("owner")
+        doorInfo.locked = entity:getNetVar("locked", false)
 
-            -- Base delay
-            local finalDelay = defaultDelay
-
-            -- Agility modifier
-            local agility = char:getAttrib("agility", 0)
-            local agilityModifier = 1 - (agility / 200) -- Max 50% reduction
-            finalDelay = finalDelay * math.max(0.5, agilityModifier)
-
-            -- Strength modifier (affects attack speed slightly)
-            local strength = char:getAttrib("strength", 0)
-            local strengthModifier = 1 - (strength / 400) -- Max 25% reduction
-            finalDelay = finalDelay * math.max(0.75, strengthModifier)
-
-            -- Faction modifier
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.attackSpeedModifier then
-                finalDelay = finalDelay * faction.attackSpeedModifier
+        -- Add owner name
+        if doorInfo.owner then
+            local ownerChar = lia.char.loaded[doorInfo.owner]
+            if ownerChar then
+                doorInfo.ownerName = ownerChar:getName()
             end
-
-            -- Class modifier
-            local classID = char:getClass()
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.attackSpeedModifier then
-                    finalDelay = finalDelay * class.attackSpeedModifier
-                end
-            end
-
-            -- Item-based modifiers
-            local inventory = char:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.attackSpeedModifier then
-                        finalDelay = finalDelay * item.attackSpeedModifier
-                    end
-                end
-            end
-
-            -- Health modifier (slower when injured)
-            local health = client:Health()
-            local maxHealth = client:GetMaxHealth()
-            if maxHealth > 0 then
-                local healthPercent = health / maxHealth
-                if healthPercent < 0.5 then
-                    local injuryModifier = 1 + ((0.5 - healthPercent) * 0.5) -- Up to 25% slower
-                    finalDelay = finalDelay * injuryModifier
-                end
-            end
-
-            -- Cap delay
-            finalDelay = math.max(0.1, math.min(finalDelay, defaultDelay * 2))
-
-            return finalDelay
         end
-        ```
+
+        -- Add faction restrictions
+        local allowedFactions = entity:getNetVar("allowedFactions", {})
+        if #allowedFactions > 0 then
+            doorInfo.factionRestricted = true
+            doorInfo.allowedFactions = allowedFactions
+        end
+
+        return doorInfo
+    end)
+    ```
 ]]
-function GetHandsAttackSpeed(client, defaultDelay)
+function GetDoorInfo(entity, doorData, doorInfo)
 end
 
 --[[
     Purpose:
-        Gets the injured text for a player.
+        Called to get model gender
 
     When Called:
-        When displaying injury status.
+        When determining a model's gender
 
     Parameters:
-        client (Player)
-            The injured player.
+        model (string) - The model path
 
     Returns:
-        string
-            The injury text.
+        string - "male" or "female"
 
     Realm:
         Shared
@@ -6039,1497 +574,69 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return basic injury text
-        function MODULE:GetInjuredText(client)
-            if not IsValid(client) then return "" end
 
-            local health = client:Health()
-            if health < 50 then
-                return "Injured"
-            end
-            return ""
-        end
-        ```
+    ```lua
+    -- Simple: Return default gender
+    hook.Add("GetModelGender", "MyAddon", function(model)
+        return "male"
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Return text based on health level
-        function MODULE:GetInjuredText(client)
-            if not IsValid(client) then return "" end
 
-            local health = client:Health()
-            local maxHealth = client:GetMaxHealth()
-
-            if maxHealth <= 0 then return "" end
-
-            local healthPercent = health / maxHealth
-
-            if healthPercent < 0.25 then
-                return "Critically Injured"
-            elseif healthPercent < 0.5 then
-                return "Severely Injured"
-            elseif healthPercent < 0.75 then
-                return "Injured"
-            end
-
-            return ""
+    ```lua
+    -- Medium: Check model path
+    hook.Add("GetModelGender", "ModelGenderCheck", function(model)
+        if string.find(model, "female") then
+            return "female"
         end
-        ```
+
+        return "male"
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced injury text with detailed status
-        function MODULE:GetInjuredText(client)
-            if not IsValid(client) then return "" end
 
-            local char = client:getChar()
-            if not char then return "" end
-
-            local health = client:Health()
-            local maxHealth = client:GetMaxHealth()
-
-            if maxHealth <= 0 then return "" end
-
-            local healthPercent = health / maxHealth
-            local injuryText = ""
-
-            -- Base injury level
-            if healthPercent < 0.1 then
-                injuryText = "Near Death"
-            elseif healthPercent < 0.25 then
-                injuryText = "Critically Injured"
-            elseif healthPercent < 0.5 then
-                injuryText = "Severely Injured"
-            elseif healthPercent < 0.75 then
-                injuryText = "Injured"
-            elseif healthPercent < 0.9 then
-                injuryText = "Slightly Injured"
-            end
-
-            -- Add specific injury types from character data
-            local injuries = char:getData("injuries", {})
-            if #injuries > 0 then
-                local injuryTypes = {}
-                for _, injury in ipairs(injuries) do
-                    table.insert(injuryTypes, injury.type)
-                end
-                injuryText = injuryText .. " (" .. table.concat(injuryTypes, ", ") .. ")"
-            end
-
-            -- Add bleeding status
-            if char:getData("bleeding", false) then
-                injuryText = injuryText .. " [Bleeding]"
-            end
-
-            -- Add pain level
-            local pain = char:getData("pain", 0)
-            if pain > 70 then
-                injuryText = injuryText .. " [Extreme Pain]"
-            elseif pain > 40 then
-                injuryText = injuryText .. " [Pain]"
-            end
-
-            return injuryText
-        end
-        ```
-]]
-function GetInjuredText(client)
-end
-
---[[
-    Purpose:
-        Gets the drop model for an item.
-
-    When Called:
-        When determining what model to use for dropped items.
-
-    Parameters:
-        itemTable (table)
-            The item table.
-        itemEntity (Entity)
-            The item entity.
-
-    Returns:
-        string
-            The model path.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return item model
-        function MODULE:GetItemDropModel(itemTable, itemEntity)
-            if itemTable and itemTable.model then
-                return itemTable.model
-            end
-            return "models/props_junk/cardboard_box004a.mdl"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return model based on item type and quantity
-        function MODULE:GetItemDropModel(itemTable, itemEntity)
-            if not itemTable then
-                return "models/props_junk/cardboard_box004a.mdl"
-            end
-
-            -- Use item's model if available
-            if itemTable.model then
-                return itemTable.model
-            end
-
-            -- Use quantity-based models
-            if IsValid(itemEntity) then
-                local quantity = itemEntity:getQuantity() or 1
-                if quantity > 10 then
-                    return "models/props_junk/cardboard_box004a.mdl"
-                else
-                    return "models/props_junk/cardboard_box003a.mdl"
-                end
-            end
-
-            return "models/props_junk/cardboard_box004a.mdl"
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced model selection with multiple factors
-        function MODULE:GetItemDropModel(itemTable, itemEntity)
-            if not itemTable then
-                return "models/props_junk/cardboard_box004a.mdl"
-            end
-
-            -- Check for item-specific model override
-            if itemTable.dropModel then
-                return itemTable.dropModel
-            end
-
-            -- Use base model if available
-            if itemTable.model then
-                local baseModel = itemTable.model
-
-                -- Check for quantity-based variations
-                if IsValid(itemEntity) then
-                    local quantity = itemEntity:getQuantity() or 1
-
-                    -- Large quantity uses larger model
-                    if quantity > 50 and itemTable.largeDropModel then
-                        return itemTable.largeDropModel
-                    elseif quantity > 10 and itemTable.mediumDropModel then
-                        return itemTable.mediumDropModel
-                    end
-                end
-
-                return baseModel
-            end
-
-            -- Category-based default models
-            local categoryModels = {
-                weapon = "models/weapons/w_pistol.mdl",
-                food = "models/props_junk/garbage_glassbottle001a.mdl",
-                medical = "models/items/healthkit.mdl",
-                tool = "models/items/car_battery01.mdl",
-                ammo = "models/items/boxsrounds.mdl"
-            }
-
-            if itemTable.category and categoryModels[itemTable.category] then
-                return categoryModels[itemTable.category]
-            end
-
-            -- Default model
-            return "models/props_junk/cardboard_box004a.mdl"
-        end
-        ```
-]]
-function GetItemDropModel(itemTable, itemEntity)
-end
-
---[[
-    Purpose:
-        Gets the stack key for an item.
-
-    When Called:
-        When determining item stackability.
-
-    Parameters:
-        item (Item)
-            The item.
-
-    Returns:
-        string
-            The stack key.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return item uniqueID as stack key
-        function MODULE:GetItemStackKey(item)
-            if not item then return "" end
-            return item.uniqueID or ""
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return stack key based on item properties
-        function MODULE:GetItemStackKey(item)
-            if not item then return "" end
-
-            -- Use uniqueID as base
-            local key = item.uniqueID or ""
-
-            -- Add data if item has special stacking rules
-            if item.stackData then
-                for _, dataKey in ipairs(item.stackData) do
-                    local value = item:getData(dataKey)
-                    if value then
-                        key = key .. "_" .. tostring(value)
-                    end
-                end
-            end
-
-            return key
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced stack key generation with multiple factors
-        function MODULE:GetItemStackKey(item)
-            if not item then return "" end
-
-            local key = item.uniqueID or ""
-
-            -- Check if item is stackable
-            if not item.isStackable then
-                -- Non-stackable items use unique keys
-                return key .. "_" .. tostring(item.id)
-            end
-
-            -- Add quality/condition if applicable
-            if item.quality then
-                local quality = item:getData("quality", 100)
-                if quality ~= 100 then
-                    key = key .. "_q" .. tostring(math.floor(quality / 10) * 10)
-                end
-            end
-
-            -- Add stack data keys
-            if item.stackData then
-                for _, dataKey in ipairs(item.stackData) do
-                    local value = item:getData(dataKey)
-                    if value and value ~= item.stackDefaults[dataKey] then
-                        key = key .. "_" .. dataKey .. "_" .. tostring(value)
-                    end
-                end
-            end
-
-            -- Add metadata that affects stacking
-            local metadata = item:getData("stackMetadata", {})
-            if metadata and next(metadata) then
-                local metadataStr = util.TableToJSON(metadata)
-                key = key .. "_md" .. util.CRC(metadataStr)
-            end
-
-            -- Validate key length
-            if #key > 200 then
-                key = string.sub(key, 1, 200) .. "_" .. util.CRC(key)
-            end
-
-            return key
-        end
-        ```
-]]
-function GetItemStackKey(item)
-end
-
---[[
-    Purpose:
-        Gets item stacks from an inventory.
-
-    When Called:
-        When processing inventory stacks.
-
-    Parameters:
-        inventory (Inventory)
-            The inventory.
-
-    Returns:
-        table
-            Table of item stacks.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return empty stacks table
-        function MODULE:GetItemStacks(inventory)
-            return {}
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Group items by stack key
-        function MODULE:GetItemStacks(inventory)
-            if not inventory then return {} end
-
-            local stacks = {}
-            for _, item in pairs(inventory:getItems()) do
-                local stackKey = hook.Run("GetItemStackKey", item) or item.uniqueID
-                if not stacks[stackKey] then
-                    stacks[stackKey] = {
-                        items = {},
-                        totalQuantity = 0
-                    }
-                end
-
-                table.insert(stacks[stackKey].items, item)
-                stacks[stackKey].totalQuantity = stacks[stackKey].totalQuantity + (item:getQuantity() or 1)
-            end
-
-            return stacks
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced stack processing with validation and optimization
-        function MODULE:GetItemStacks(inventory)
-            if not inventory then return {} end
-
-            local stacks = {}
-            local processedItems = {}
-
-            -- Group items by stack key
-            for _, item in pairs(inventory:getItems()) do
-                if not processedItems[item.id] then
-                    local stackKey = hook.Run("GetItemStackKey", item) or item.uniqueID
-
-                    if not stacks[stackKey] then
-                        stacks[stackKey] = {
-                            key = stackKey,
-                            items = {},
-                            totalQuantity = 0,
-                            maxStackSize = item.maxStack or 999,
-                            uniqueID = item.uniqueID,
-                            canStack = item.isStackable ~= false
-                        }
-                    end
-
-                    table.insert(stacks[stackKey].items, item)
-                    stacks[stackKey].totalQuantity = stacks[stackKey].totalQuantity + (item:getQuantity() or 1)
-                    processedItems[item.id] = true
-                end
-            end
-
-            -- Validate and optimize stacks
-            for stackKey, stack in pairs(stacks) do
-                -- Check if stack exceeds max size
-                if stack.totalQuantity > stack.maxStackSize then
-                    stack.overflow = stack.totalQuantity - stack.maxStackSize
-                end
-
-                -- Calculate stack efficiency
-                local optimalStacks = math.ceil(stack.totalQuantity / stack.maxStackSize)
-                local actualStacks = #stack.items
-                stack.efficiency = optimalStacks > 0 and (optimalStacks / actualStacks) or 1
-
-                -- Sort items by quantity (largest first)
-                table.sort(stack.items, function(a, b)
-                    return (a:getQuantity() or 1) > (b:getQuantity() or 1)
-                end)
-            end
-
-            return stacks
-        end
-        ```
-]]
-function GetItemStacks(inventory)
-end
-
---[[
-    Purpose:
-        Gets the maximum starting attribute points.
-
-    When Called:
-        When calculating starting attribute limits.
-
-    Parameters:
-        client (Player)
-            The player.
-        count (number)
-            The current point count.
-
-    Returns:
-        number
-            The maximum starting points.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default max points
-        function MODULE:GetMaxStartingAttributePoints(client, count)
-            return 100 -- Default max
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return max based on configuration
-        function MODULE:GetMaxStartingAttributePoints(client, count)
-            local baseMax = lia.config.get("maxStartingAttributePoints", 100)
-
-            -- Add bonus for VIP players
-            if IsValid(client) and client:IsVIP() then
-                return baseMax + 20
-            end
-
-            return baseMax
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced point calculation with multiple factors
-        function MODULE:GetMaxStartingAttributePoints(client, count)
-            if not IsValid(client) then return 100 end
-
-            -- Base maximum from configuration
-            local baseMax = lia.config.get("maxStartingAttributePoints", 100)
-
-            -- Playtime bonus
-            local playtime = hook.Run("GetPlayTime", client) or 0
-            local playtimeBonus = math.floor(playtime / 3600 / 10) * 2 -- +2 points per 10 hours
-            playtimeBonus = math.min(playtimeBonus, 20) -- Cap at 20 bonus
-
-            -- VIP bonus
-            local vipBonus = 0
-            if client:IsVIP() then
-                vipBonus = lia.config.get("vipStartingPointsBonus", 15)
-            end
-
-            -- Donator bonus
-            local donatorBonus = 0
-            if client:getData("donator", false) then
-                donatorBonus = lia.config.get("donatorStartingPointsBonus", 10)
-            end
-
-            -- Faction bonus
-            local char = client:getChar()
-            local factionBonus = 0
-            if char then
-                local faction = lia.faction.get(char:getFaction())
-                if faction and faction.startingPointsBonus then
-                    factionBonus = faction.startingPointsBonus
-                end
-            end
-
-            -- Calculate final maximum
-            local finalMax = baseMax + playtimeBonus + vipBonus + donatorBonus + factionBonus
-
-            -- Cap at absolute maximum
-            local absoluteMax = lia.config.get("absoluteMaxStartingPoints", 150)
-            finalMax = math.min(finalMax, absoluteMax)
-
-            -- Validate against current count
-            if count and count > finalMax then
-                lia.log.add("Warning: Character has more points than maximum allowed", FLAG_WARNING)
-            end
-
-            return math.floor(finalMax)
-        end
-        ```
-]]
-function GetMaxStartingAttributePoints(client, count)
-end
-
---[[
-    Purpose:
-        Gets the gender of a model.
-
-    When Called:
-        When determining model gender.
-
-    Parameters:
-        model (string)
-            The model path.
-
-    Returns:
-        string
-            The gender ("male" or "female").
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default gender
-        function MODULE:GetModelGender(model)
-            return "male"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Detect gender from model path
-        function MODULE:GetModelGender(model)
-            if not model then return "male" end
-
-            -- Check for common female model indicators
-            if string.find(string.lower(model), "female") or
-               string.find(string.lower(model), "alyx") or
-               string.find(string.lower(model), "mossman") then
+    ```lua
+    -- High: Complex gender detection
+    hook.Add("GetModelGender", "AdvancedGenderDetection", function(model)
+        -- Check for female keywords
+        local femaleKeywords = {"female", "woman", "girl", "alyx" }
+        for _, keyword in ipairs(femaleKeywords) do
+            if string.find(string.lower(model), keyword) then
                 return "female"
             end
-
-            return "male"
         end
-        ```
 
-    High Complexity:
-        ```lua
-        -- High: Advanced gender detection with model database
-        function MODULE:GetModelGender(model)
-            if not model or model == "" then return "male" end
+        -- Check specific models
+        local femaleModels = {
+            ["models/player/alyx.mdl"]    = true,
+            ["models/player/mossman.mdl"]  = true
+        }
 
-            -- Check cached gender database
-            if self.modelGenderCache and self.modelGenderCache[model] then
-                return self.modelGenderCache[model]
-            end
-
-            local gender = "male"
-            local modelLower = string.lower(model)
-
-            -- Female model indicators
-            local femaleIndicators = {
-                "female", "alyx", "mossman", "chell", "zoey",
-                "models/player/group01/female", "models/player/group03/female"
-            }
-
-            for _, indicator in ipairs(femaleIndicators) do
-                if string.find(modelLower, indicator) then
-                    gender = "female"
-                    break
-                end
-            end
-
-            -- Check model player groups
-            if string.find(modelLower, "models/player") then
-                if string.find(modelLower, "/female") or
-                   string.find(modelLower, "group01") and string.find(modelLower, "02") then
-                    gender = "female"
-                end
-            end
-
-            -- Cache result
-            if not self.modelGenderCache then
-                self.modelGenderCache = {}
-            end
-            self.modelGenderCache[model] = gender
-
-            return gender
+        if femaleModels[model] then
+            return "female"
         end
-        ```
+
+        return "male"
+    end)
+    ```
 ]]
 function GetModelGender(model)
 end
 
 --[[
     Purpose:
-        Gets the money model for an amount.
+        Called when configuration is initialized
 
     When Called:
-        When determining what model to use for money entities.
-
-    Parameters:
-        amount (number)
-            The money amount.
-
-    Returns:
-        string
-            The model path.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default money model
-        function MODULE:GetMoneyModel(amount)
-            return "models/props/cs_assault/money.mdl"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return model based on amount
-        function MODULE:GetMoneyModel(amount)
-            amount = amount or 0
-
-            -- Different models for different amounts
-            if amount >= 10000 then
-                return "models/props/cs_assault/money.mdl" -- Large stack
-            elseif amount >= 1000 then
-                return "models/props_junk/cardboard_box004a.mdl" -- Medium stack
-            else
-                return "models/props/cs_assault/money.mdl" -- Small stack
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced model selection with visual representation
-        function MODULE:GetMoneyModel(amount)
-            amount = amount or 0
-
-            -- Model tiers based on amount
-            local modelTiers = {
-                {min = 100000, model = "models/props_junk/cardboard_box004a.mdl", scale = 1.5},
-                {min = 50000, model = "models/props_junk/cardboard_box003a.mdl", scale = 1.3},
-                {min = 10000, model = "models/props/cs_assault/money.mdl", scale = 1.2},
-                {min = 5000, model = "models/props/cs_assault/money.mdl", scale = 1.0},
-                {min = 1000, model = "models/props/cs_assault/money.mdl", scale = 0.8},
-                {min = 0, model = "models/props/cs_assault/money.mdl", scale = 0.6}
-            }
-
-            for _, tier in ipairs(modelTiers) do
-                if amount >= tier.min then
-                    -- Store scale for later use
-                    if IsValid(Entity(0)) then -- Check if we can store data
-                        hook.Run("SetMoneyModelScale", tier.scale)
-                    end
-                    return tier.model
-                end
-            end
-
-            return "models/props/cs_assault/money.mdl"
-        end
-        ```
-]]
-function GetMoneyModel(amount)
-end
-
---[[
-    Purpose:
-        Gets the OOC (Out of Character) delay.
-
-    When Called:
-        When calculating OOC chat delays.
-
-    Parameters:
-        speaker (Player)
-            The speaker.
-
-    Returns:
-        number
-            The delay time.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default OOC delay
-        function MODULE:GetOOCDelay(speaker)
-            return 5 -- 5 seconds default
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return delay based on player status
-        function MODULE:GetOOCDelay(speaker)
-            if not IsValid(speaker) then return 5 end
-
-            -- Admins have shorter delay
-            if speaker:IsAdmin() then
-                return 2
-            end
-
-            -- Default delay
-            return 5
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced delay calculation with multiple factors
-        function MODULE:GetOOCDelay(speaker)
-            if not IsValid(speaker) then return 5 end
-
-            -- Base delay from configuration
-            local baseDelay = lia.config.get("oocDelay", 5)
-
-            -- Admin modifier
-            if speaker:IsAdmin() then
-                baseDelay = baseDelay * 0.4 -- 60% reduction
-            end
-
-            -- VIP modifier
-            if speaker:IsVIP() then
-                baseDelay = baseDelay * 0.8 -- 20% reduction
-            end
-
-            -- Check for spam prevention
-            local lastOOC = speaker:getData("lastOOC", 0)
-            local timeSinceLastOOC = CurTime() - lastOOC
-
-            if timeSinceLastOOC < baseDelay then
-                -- Recent OOC message, increase delay
-                local spamMultiplier = 1 + ((baseDelay - timeSinceLastOOC) / baseDelay)
-                baseDelay = baseDelay * spamMultiplier
-            end
-
-            -- Character-based modifiers
-            local char = speaker:getChar()
-            if char then
-                -- Check character flags
-                if char:hasFlags("d") then -- Donator flag
-                    baseDelay = baseDelay * 0.9
-                end
-
-                -- Check character level (higher level = slightly faster)
-                local level = char:getData("level", 1)
-                if level > 50 then
-                    baseDelay = baseDelay * 0.95
-                end
-            end
-
-            -- Cap delay
-            baseDelay = math.max(0.5, math.min(baseDelay, 30))
-
-            return baseDelay
-        end
-        ```
-]]
-function GetOOCDelay(speaker)
-end
-
---[[
-    Purpose:
-        Gets the death sound for a player.
-
-    When Called:
-        When a player dies and needs a death sound.
-
-    Parameters:
-        client (Player)
-            The dying player.
-        isFemale (boolean)
-            Whether the player is female.
-
-    Returns:
-        string
-            The sound path.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default death sound
-        function MODULE:GetPlayerDeathSound(client, isFemale)
-            if isFemale then
-                return "vo/npc/female01/pain07.wav"
-            end
-            return "vo/npc/male01/pain07.wav"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return sound based on gender and character
-        function MODULE:GetPlayerDeathSound(client, isFemale)
-            if not IsValid(client) then return "" end
-
-            local char = client:getChar()
-            if not char then return "" end
-
-            -- Check for custom death sound
-            local customSound = char:getData("deathSound")
-            if customSound then
-                return customSound
-            end
-
-            -- Default sounds by gender
-            if isFemale then
-                return "vo/npc/female01/pain07.wav"
-            else
-                return "vo/npc/male01/pain07.wav"
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced death sound selection with multiple factors
-        function MODULE:GetPlayerDeathSound(client, isFemale)
-            if not IsValid(client) then return "" end
-
-            local char = client:getChar()
-            if not char then return "" end
-
-            -- Check for custom death sound
-            local customSound = char:getData("deathSound")
-            if customSound and file.Exists("sound/" .. customSound, "GAME") then
-                return customSound
-            end
-
-            -- Faction-specific sounds
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.deathSounds then
-                local sounds = isFemale and faction.deathSounds.female or faction.deathSounds.male
-                if sounds then
-                    local sound = sounds[math.random(#sounds)]
-                    if file.Exists("sound/" .. sound, "GAME") then
-                        return sound
-                    end
-                end
-            end
-
-            -- Class-specific sounds
-            local classID = char:getClass()
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.deathSounds then
-                    local sounds = isFemale and class.deathSounds.female or class.deathSounds.male
-                    if sounds then
-                        local sound = sounds[math.random(#sounds)]
-                        if file.Exists("sound/" .. sound, "GAME") then
-                            return sound
-                        end
-                    end
-                end
-            end
-
-            -- Default sounds by gender
-            local defaultSounds = {
-                male = {
-                    "vo/npc/male01/pain07.wav",
-                    "vo/npc/male01/pain08.wav",
-                    "vo/npc/male01/pain09.wav"
-                },
-                female = {
-                    "vo/npc/female01/pain07.wav",
-                    "vo/npc/female01/pain08.wav",
-                    "vo/npc/female01/pain09.wav"
-                }
-            }
-
-            local genderSounds = isFemale and defaultSounds.female or defaultSounds.male
-            return genderSounds[math.random(#genderSounds)]
-        end
-        ```
-]]
-function GetPlayerDeathSound(client, isFemale)
-end
-
---[[
-    Purpose:
-        Gets the pain sound for a player.
-
-    When Called:
-        When a player takes damage and needs a pain sound.
-
-    Parameters:
-        client (Player)
-            The damaged player.
-        paintype (string)
-            The type of pain.
-        isFemale (boolean)
-            Whether the player is female.
-
-    Returns:
-        string
-            The sound path.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default pain sound
-        function MODULE:GetPlayerPainSound(client, paintype, isFemale)
-            if isFemale then
-                return "vo/npc/female01/pain01.wav"
-            end
-            return "vo/npc/male01/pain01.wav"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return sound based on pain type and gender
-        function MODULE:GetPlayerPainSound(client, paintype, isFemale)
-            if not IsValid(client) then return "" end
-
-            -- Pain sounds by type
-            local painSounds = {
-                light = {
-                    male = "vo/npc/male01/pain01.wav",
-                    female = "vo/npc/female01/pain01.wav"
-                },
-                medium = {
-                    male = "vo/npc/male01/pain03.wav",
-                    female = "vo/npc/female01/pain03.wav"
-                },
-                heavy = {
-                    male = "vo/npc/male01/pain05.wav",
-                    female = "vo/npc/female01/pain05.wav"
-                }
-            }
-
-            local gender = isFemale and "female" or "male"
-            local painLevel = paintype or "light"
-
-            return painSounds[painLevel] and painSounds[painLevel][gender] or painSounds.light[gender]
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced pain sound selection with context
-        function MODULE:GetPlayerPainSound(client, paintype, isFemale)
-            if not IsValid(client) then return "" end
-
-            local char = client:getChar()
-            if not char then return "" end
-
-            -- Check for custom pain sound
-            local customSound = char:getData("painSound")
-            if customSound and file.Exists("sound/" .. customSound, "GAME") then
-                return customSound
-            end
-
-            -- Pain sounds by type and intensity
-            local painSounds = {
-                light = {
-                    male = {"vo/npc/male01/pain01.wav", "vo/npc/male01/pain02.wav"},
-                    female = {"vo/npc/female01/pain01.wav", "vo/npc/female01/pain02.wav"}
-                },
-                medium = {
-                    male = {"vo/npc/male01/pain03.wav", "vo/npc/male01/pain04.wav"},
-                    female = {"vo/npc/female01/pain03.wav", "vo/npc/female01/pain04.wav"}
-                },
-                heavy = {
-                    male = {"vo/npc/male01/pain05.wav", "vo/npc/male01/pain06.wav"},
-                    female = {"vo/npc/female01/pain05.wav", "vo/npc/female01/pain06.wav"}
-                },
-                critical = {
-                    male = {"vo/npc/male01/pain07.wav", "vo/npc/male01/pain08.wav"},
-                    female = {"vo/npc/female01/pain07.wav", "vo/npc/female01/pain08.wav"}
-                }
-            }
-
-            -- Determine pain level based on health
-            local health = client:Health()
-            local maxHealth = client:GetMaxHealth()
-            local healthPercent = maxHealth > 0 and (health / maxHealth) or 1
-
-            if not paintype then
-                if healthPercent < 0.25 then
-                    paintype = "critical"
-                elseif healthPercent < 0.5 then
-                    paintype = "heavy"
-                elseif healthPercent < 0.75 then
-                    paintype = "medium"
-                else
-                    paintype = "light"
-                end
-            end
-
-            -- Get gender
-            local gender = isFemale and "female" or "male"
-
-            -- Get sound pool
-            local soundPool = painSounds[paintype] and painSounds[paintype][gender] or painSounds.light[gender]
-
-            -- Random selection from pool
-            return soundPool[math.random(#soundPool)]
-        end
-        ```
-]]
-function GetPlayerPainSound(client, paintype, isFemale)
-end
-
---[[
-    Purpose:
-        Gets the punch damage for a player.
-
-    When Called:
-        When calculating fist damage.
-
-    Parameters:
-        client (Player)
-            The punching player.
-        damage (number)
-            The base damage.
-        context (table)
-            Additional context.
-
-    Returns:
-        number
-            The adjusted damage.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return unmodified damage
-        function MODULE:GetPlayerPunchDamage(client, damage, context)
-            return damage
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Adjust damage based on character attributes
-        function MODULE:GetPlayerPunchDamage(client, damage, context)
-            if not IsValid(client) then return damage end
-
-            local char = client:getChar()
-            if not char then return damage end
-
-            -- Increase damage based on strength
-            local strength = char:getAttrib("strength", 0)
-            local damageBonus = strength * 0.5 -- 0.5 damage per strength point
-
-            return damage + damageBonus
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced damage calculation with multiple modifiers
-        function MODULE:GetPlayerPunchDamage(client, damage, context)
-            if not IsValid(client) then return damage end
-
-            local char = client:getChar()
-            if not char then return damage end
-
-            context = context or {}
-
-            -- Base damage
-            local finalDamage = damage
-
-            -- Strength modifier
-            local strength = char:getAttrib("strength", 0)
-            local strengthBonus = strength * 0.5 -- 0.5 damage per strength point
-            finalDamage = finalDamage + strengthBonus
-
-            -- Agility modifier (affects accuracy/crit chance)
-            local agility = char:getAttrib("agility", 0)
-            if math.random() < (agility / 200) then -- Up to 50% crit chance
-                finalDamage = finalDamage * 1.5 -- Critical hit
-            end
-
-            -- Faction modifier
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.punchDamageModifier then
-                finalDamage = finalDamage * faction.punchDamageModifier
-            end
-
-            -- Class modifier
-            local classID = char:getClass()
-            if classID then
-                local class = lia.class.get(classID)
-                if class and class.punchDamageModifier then
-                    finalDamage = finalDamage * class.punchDamageModifier
-                end
-            end
-
-            -- Item-based modifiers
-            local inventory = char:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.punchDamageModifier then
-                        finalDamage = finalDamage * item.punchDamageModifier
-                    end
-                end
-            end
-
-            -- Context modifiers (target type, etc.)
-            if context.target then
-                local target = context.target
-                if IsValid(target) and target:IsPlayer() then
-                    local targetChar = target:getChar()
-                    if targetChar then
-                        -- Reduced damage against armored targets
-                        local armor = targetChar:getData("armor", 0)
-                        if armor > 0 then
-                            finalDamage = finalDamage * (1 - (armor / 100))
-                        end
-                    end
-                end
-            end
-
-            -- Cap damage
-            finalDamage = math.max(1, math.min(finalDamage, 100))
-
-            return math.floor(finalDamage)
-        end
-        ```
-]]
-function GetPlayerPunchDamage(client, damage, context)
-end
-
---[[
-    Purpose:
-        Gets the ragdoll time after being punched.
-
-    When Called:
-        When calculating punch ragdoll duration.
-
-    Parameters:
-        client (Player)
-            The punching player.
-        target (Player)
-            The target being punched.
-
-    Returns:
-        number
-            The ragdoll time.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return default ragdoll time
-        function MODULE:GetPlayerPunchRagdollTime(client, target)
-            return 3 -- 3 seconds default
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Adjust time based on punch strength
-        function MODULE:GetPlayerPunchRagdollTime(client, target)
-            if not IsValid(client) then return 3 end
-
-            local char = client:getChar()
-            if not char then return 3 end
-
-            -- Longer ragdoll with higher strength
-            local strength = char:getAttrib("strength", 0)
-            local baseTime = 3
-            local bonusTime = strength / 50 -- Up to 2 seconds bonus
-
-            return baseTime + bonusTime
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced ragdoll time calculation with multiple factors
-        function MODULE:GetPlayerPunchRagdollTime(client, target)
-            if not IsValid(client) then return 3 end
-
-            local char = client:getChar()
-            if not char then return 3 end
-
-            -- Base time
-            local baseTime = lia.config.get("punchRagdollTime", 3)
-
-            -- Strength modifier
-            local strength = char:getAttrib("strength", 0)
-            local strengthBonus = strength / 50 -- Up to 2 seconds bonus
-            baseTime = baseTime + strengthBonus
-
-            -- Target endurance modifier
-            if IsValid(target) and target:IsPlayer() then
-                local targetChar = target:getChar()
-                if targetChar then
-                    local endurance = targetChar:getAttrib("endurance", 0)
-                    local enduranceReduction = endurance / 100 -- Up to 1 second reduction
-                    baseTime = baseTime - enduranceReduction
-                end
-            end
-
-            -- Faction modifier
-            local faction = lia.faction.get(char:getFaction())
-            if faction and faction.punchRagdollModifier then
-                baseTime = baseTime * faction.punchRagdollModifier
-            end
-
-            -- Item-based modifiers
-            local inventory = char:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.punchRagdollModifier then
-                        baseTime = baseTime * item.punchRagdollModifier
-                    end
-                end
-            end
-
-            -- Cap time
-            baseTime = math.max(0.5, math.min(baseTime, 10))
-
-            return baseTime
-        end
-        ```
-]]
-function GetPlayerPunchRagdollTime(client, target)
-end
-
---[[
-    Purpose:
-        Gets the ragdoll time for an entity.
-
-    When Called:
-        When determining ragdoll duration.
-
-    Parameters:
-        entity (Entity)
-            The entity.
-        time (number)
-            The base time.
-
-    Returns:
-        number
-            The adjusted ragdoll time.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return unmodified time
-        function MODULE:GetRagdollTime(entity, time)
-            return time
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Adjust time based on entity type
-        function MODULE:GetRagdollTime(entity, time)
-            if not IsValid(entity) then return time end
-
-            -- Longer ragdoll for NPCs
-            if entity:IsNPC() then
-                return time * 1.5
-            end
-
-            -- Shorter for props
-            if entity:GetClass() == "prop_physics" then
-                return time * 0.5
-            end
-
-            return time
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced ragdoll time calculation with multiple factors
-        function MODULE:GetRagdollTime(entity, time)
-            if not IsValid(entity) then return time end
-
-            local finalTime = time
-
-            -- Entity type modifiers
-            if entity:IsPlayer() then
-                local char = entity:getChar()
-                if char then
-                    -- Character endurance affects ragdoll recovery
-                    local endurance = char:getAttrib("endurance", 0)
-                    local enduranceBonus = endurance / 100 -- Up to 1 second reduction
-                    finalTime = finalTime - enduranceBonus
-
-                    -- Character level bonus
-                    local level = char:getData("level", 1)
-                    if level > 50 then
-                        finalTime = finalTime * 0.9 -- 10% reduction for high level
-                    end
-                end
-            elseif entity:IsNPC() then
-                -- NPCs have longer ragdoll times
-                finalTime = finalTime * 1.5
-            elseif entity:GetClass() == "prop_physics" then
-                -- Props have shorter times
-                finalTime = finalTime * 0.5
-            end
-
-            -- Entity size modifier (larger = longer ragdoll)
-            local model = entity:GetModel()
-            if model then
-                local mins, maxs = entity:GetModelBounds()
-                local size = (maxs - mins):Length()
-                if size > 100 then
-                    finalTime = finalTime * 1.2
-                elseif size < 50 then
-                    finalTime = finalTime * 0.8
-                end
-            end
-
-            -- Damage source modifier
-            local lastDamage = entity:GetNWFloat("lastDamage", 0)
-            if lastDamage > 50 then
-                finalTime = finalTime * 1.3 -- Longer ragdoll for heavy damage
-            end
-
-            -- Cap time
-            finalTime = math.max(0.5, math.min(finalTime, 30))
-
-            return finalTime
-        end
-        ```
-]]
-function GetRagdollTime(entity, time)
-end
-
---[[
-    Purpose:
-        Gets the name of a weapon.
-
-    When Called:
-        When displaying weapon names.
-
-    Parameters:
-        weapon (string)
-            The weapon class.
-
-    Returns:
-        string
-            The weapon name.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return weapon class as name
-        function MODULE:GetWeaponName(weapon)
-            return weapon or "Unknown"
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Return formatted weapon name
-        function MODULE:GetWeaponName(weapon)
-            if not weapon then return "Unknown" end
-
-            -- Get weapon table
-            local weaponTable = weapons.Get(weapon)
-            if weaponTable and weaponTable.PrintName then
-                return weaponTable.PrintName
-            end
-
-            -- Format class name
-            return string.gsub(weapon, "weapon_", ""):gsub("_", " "):gsub("^%l", string.upper)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced weapon name formatting with localization
-        function MODULE:GetWeaponName(weapon)
-            if not weapon or weapon == "" then return "Unknown" end
-
-            -- Check cache
-            if self.weaponNameCache and self.weaponNameCache[weapon] then
-                return self.weaponNameCache[weapon]
-            end
-
-            local name = "Unknown"
-
-            -- Get weapon table
-            local weaponTable = weapons.Get(weapon)
-            if weaponTable then
-                -- Use print name if available
-                if weaponTable.PrintName then
-                    name = weaponTable.PrintName
-                elseif weaponTable.Name then
-                    name = weaponTable.Name
-                end
-            end
-
-            -- Check for custom weapon names
-            local customNames = lia.config.get("customWeaponNames", {})
-            if customNames[weapon] then
-                name = customNames[weapon]
-            end
-
-            -- Format class name if no name found
-            if name == "Unknown" then
-                name = string.gsub(weapon, "weapon_", "")
-                name = string.gsub(name, "_", " ")
-                name = string.gsub(name, "^%l", string.upper)
-            end
-
-            -- Apply localization if available
-            if lia.lang then
-                local localized = lia.lang.GetPhrase("weapon_" .. weapon)
-                if localized and localized ~= "" then
-                    name = localized
-                end
-            end
-
-            -- Cache result
-            if not self.weaponNameCache then
-                self.weaponNameCache = {}
-            end
-            self.weaponNameCache[weapon] = name
-
-            return name
-        end
-        ```
-]]
-function GetWeaponName(weapon)
-end
-
---[[
-    Purpose:
-        Called when configuration is initialized.
-
-    When Called:
-        After configuration loading is complete.
+        When the configuration system has finished loading
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -7537,80 +644,71 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log config initialization
-        function MODULE:InitializedConfig()
-            print("Configuration initialized")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log config initialization
+    hook.Add("InitializedConfig", "MyAddon", function()
+        print("Configuration initialized")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize custom config values
-        function MODULE:InitializedConfig()
-            -- Set default config values
-            lia.config.set("customSetting", "defaultValue")
 
-            -- Load custom config file
-            if file.Exists("lilia/custom_config.txt", "DATA") then
-                local configData = file.Read("lilia/custom_config.txt", "DATA")
-                if configData then
-                    local config = util.JSONToTable(configData)
-                    if config then
-                        for key, value in pairs(config) do
-                            lia.config.set(key, value)
-                        end
-                    end
-                end
-            end
-
-            lia.log.add("Configuration initialized", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Set up custom config values
+    hook.Add("InitializedConfig", "CustomConfig", function()
+        lia.config.add("myAddonEnabled", true, "Enable My Addon")
+        lia.config.add("myAddonValue", 100, "My Addon Value")
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced config initialization with validation and migration
-        function MODULE:InitializedConfig()
-            -- Validate all config values
-            self:ValidateAllConfigValues()
 
-            -- Load custom config files
-            self:LoadCustomConfigFiles()
+    ```lua
+    -- High: Complex configuration initialization
+    hook.Add("InitializedConfig", "AdvancedConfigInit", function()
+        -- Add custom configuration options
+        local configOptions = {
+            {key = "myAddonEnabled", default = true,              description = "Enable My Addon", type = "boolean"},
+            {key = "myAddonValue",   default = 100,               description = "My Addon Value",  type = "number" },
+            {key = "myAddonString",  default = "default",         description = "My Addon String", type = "string" },
+            {key = "myAddonColor",   default = Color(255, 255, 255), description = "My Addon Color", type = "color" }
+        }
 
-            -- Migrate old config values
-            self:MigrateConfigValues()
-
-            -- Set up config watchers
-            self:SetupConfigWatchers()
-
-            -- Initialize config-dependent systems
-            self:InitializeConfigDependentSystems()
-
-            -- Log initialization
-            local configCount = self:CountConfigValues()
-            lia.log.add("Configuration initialized with " .. configCount .. " values", FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnConfigFullyInitialized")
+        for _, option in ipairs(configOptions) do
+            lia.config.add(option.key, option.default, option.description)
         end
-        ```
+
+        -- Load saved configuration
+        local savedConfig = lia.data.get("myAddonConfig", {})
+        for key, value in pairs(savedConfig) do
+            lia.config.set(key, value)
+        end
+
+        -- Set up configuration callbacks
+        lia.config.addCallback("myAddonEnabled", function(value)
+            print("My Addon enabled: " .. tostring(value))
+        end)
+
+        print("Configuration system initialized with " .. #configOptions .. " options")
+    end)
+    ```
 ]]
 function InitializedConfig()
 end
 
 --[[
     Purpose:
-        Called when items are initialized.
+        Called when items are initialized
 
     When Called:
-        After item system initialization.
+        When the item system has finished loading
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -7618,94 +716,95 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log items initialization
-        function MODULE:InitializedItems()
-            print("Items initialized")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log item initialization
+    hook.Add("InitializedItems", "MyAddon", function()
+        print("Items initialized")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Process items after initialization
-        function MODULE:InitializedItems()
-            -- Validate all items
-            for uniqueID, item in pairs(lia.item.list) do
-                if not item.name or not item.desc then
-                    lia.log.add("Invalid item: " .. uniqueID, FLAG_WARNING)
-                end
-            end
 
-            -- Cache item data
-            self:CacheItemData()
-
-            lia.log.add("Items initialized: " .. table.Count(lia.item.list) .. " items", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Register custom items
+    hook.Add("InitializedItems", "CustomItems", function()
+        lia.item.register("my_custom_item", {
+            name = "My Custom Item",
+            model = "models/props_junk/cardboard_box004a.mdl",
+            description = "A custom item"
+        })
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced items initialization with validation and processing
-        function MODULE:InitializedItems()
-            -- Validate all items
-            local validItems = {}
-            local invalidItems = {}
 
-            for uniqueID, item in pairs(lia.item.list) do
-                local validation = self:ValidateItem(item, uniqueID)
-                if validation.valid then
-                    validItems[uniqueID] = item
-                else
-                    invalidItems[uniqueID] = validation.errors
-                    lia.log.add("Invalid item: " .. uniqueID .. " - " .. validation.errors, FLAG_ERROR)
-                end
-            end
+    ```lua
+    -- High: Complex item initialization system
+    hook.Add("InitializedItems", "AdvancedItemInit", function()
+        -- Register custom item categories
+        local categories = {
+            "weapons",
+            "medical",
+            "food",
+            "tools",
+            "misc"
+        }
 
-            -- Process valid items
-            for uniqueID, item in pairs(validItems) do
-                -- Set up item hooks
-                self:SetupItemHooks(item, uniqueID)
-
-                -- Register item permissions
-                if item.permissions then
-                    self:RegisterItemPermissions(uniqueID, item.permissions)
-                end
-            end
-
-            -- Cache item data for performance
-            self:CacheItemData(validItems)
-
-            -- Generate item statistics
-            local stats = self:GenerateItemStatistics(validItems)
-
-            -- Log comprehensive initialization
-            lia.log.add(string.format(
-                "Items initialized: %d valid, %d invalid, %d categories",
-                table.Count(validItems),
-                table.Count(invalidItems),
-                stats.categoryCount
-            ), FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnItemsFullyInitialized", validItems)
+        for _, category in ipairs(categories) do
+            lia.item.addCategory(category)
         end
-        ```
+
+        -- Register custom items
+        local customItems = {
+            {
+                uniqueID  = "my_weapon",
+                name      = "My Weapon",
+                model     = "models/weapons/w_pistol.mdl",
+                description = "A custom weapon",
+                category  = "weapons",
+                weight    = 2,
+                price     = 100
+            },
+            {
+                uniqueID  = "my_medkit",
+                name      = "My Medkit",
+                model     = "models/items/medkit.mdl",
+                description = "A custom medkit",
+                category  = "medical",
+                weight    = 1,
+                price     = 50
+            }
+        }
+
+        for _, itemData in ipairs(customItems) do
+            lia.item.register(itemData.uniqueID, itemData)
+        end
+
+        -- Set up item callbacks
+        lia.item.addCallback("my_weapon", "onUse", function(item, client)
+            client:ChatPrint("Used custom weapon!")
+        end)
+
+        print("Item system initialized with " .. #customItems .. " custom items")
+    end)
+    ```
 ]]
 function InitializedItems()
 end
 
 --[[
     Purpose:
-        Called when keybinds are initialized.
+        Called when modules are initialized
 
     When Called:
-        After keybind system initialization.
+        When the module system has finished loading
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -7713,167 +812,91 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log keybinds initialization
-        function MODULE:InitializedKeybinds()
-            print("Keybinds initialized")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log module initialization
+    hook.Add("InitializedModules", "MyAddon", function()
+        print("Modules initialized")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Register custom keybinds
-        function MODULE:InitializedKeybinds()
-            -- Register custom keybind
-            lia.command.add("testkey", {
-                description = "Test keybind",
-                onRun = function(client, arguments)
-                    client:ChatPrint("Keybind pressed!")
-                end
-            })
 
-            lia.log.add("Keybinds initialized", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Register custom modules
+    hook.Add("InitializedModules", "CustomModules", function()
+        lia.module.register("my_module", {
+            name = "My Module",
+            description = "A custom module",
+            author = "Me",
+            version = "1.0.0"
+        })
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced keybind initialization with validation
-        function MODULE:InitializedKeybinds()
-            -- Register multiple custom keybinds
-            local customKeybinds = {
-                {command = "quickuse", key = KEY_F1, description = "Quick use item"},
-                {command = "quickchat", key = KEY_F2, description = "Quick chat"},
-                {command = "emote", key = KEY_F3, description = "Emote menu"}
+
+    ```lua
+    -- High: Complex module initialization system
+    hook.Add("InitializedModules", "AdvancedModuleInit", function()
+        -- Register custom modules
+        local modules = {
+            {
+                uniqueID    = "my_module",
+                name        = "My Module",
+                description = "A custom module",
+                author      = "Me",
+                version     = "1.0.0",
+                dependencies = {"base"}
+            },
+            {
+                uniqueID    = "my_other_module",
+                name        = "My Other Module",
+                description = "Another custom module",
+                author      = "Me",
+                version     = "1.0.0",
+                dependencies = {"my_module"}
             }
+        }
 
-            for _, keybind in ipairs(customKeybinds) do
-                if not lia.command.list[keybind.command] then
-                    lia.command.add(keybind.command, {
-                        description = keybind.description,
-                        onRun = function(client, arguments)
-                            hook.Run("OnCustomKeybind", client, keybind.command)
-                        end
-                    })
-                end
-            end
-
-            -- Validate all keybinds
-            self:ValidateKeybinds()
-
-            -- Cache keybind data
-            self:CacheKeybindData()
-
-            lia.log.add("Keybinds initialized: " .. table.Count(lia.command.list) .. " commands", FLAG_NORMAL)
+        for _, moduleData in ipairs(modules) do
+            lia.module.register(moduleData.uniqueID, moduleData)
         end
-        ```
-]]
-function InitializedKeybinds()
-end
 
---[[
-    Purpose:
-        Called when modules are initialized.
+        -- Set up module callbacks
+        lia.module.addCallback("my_module", "onLoad", function()
+            print("My module loaded!")
+        end)
 
-    When Called:
-        After module loading is complete.
+        lia.module.addCallback("my_module", "onUnload", function()
+            print("My module unloaded!")
+        end)
 
-    Parameters:
-        None
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log modules initialization
-        function MODULE:InitializedModules()
-            print("Modules initialized")
+        -- Load module configurations
+        local moduleConfigs = lia.data.get("moduleConfigs", {})
+        for moduleID, config in pairs(moduleConfigs) do
+            lia.module.setConfig(moduleID, config)
         end
-        ```
 
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize custom systems after modules load
-        function MODULE:InitializedModules()
-            -- Initialize custom HUD elements
-            hook.Run("AddBarField", "Custom", "energy", "Energy",
-                function() return 0 end,
-                function() return 100 end,
-                function() return LocalPlayer():getEnergy() or 0 end)
-
-            -- Register custom fonts
-            if lia.config.get("CustomFonts") then
-                surface.CreateFont("CustomFont", {
-                    font = "Arial",
-                    size = 24,
-                    weight = 500
-                })
-            end
-
-            lia.log.add("Modules initialized", FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Comprehensive module initialization with validation
-        function MODULE:InitializedModules()
-            -- Validate module dependencies
-            if not lia.module.isLoaded("inventory") then
-                ErrorNoHalt("Required module 'inventory' not loaded")
-                return
-            end
-
-            -- Initialize multiple systems with configuration checks
-            if lia.config.get("CustomHUD") then
-                local sections = {
-                    {name = "Combat", color = Color(255, 0, 0), priority = 1},
-                    {name = "Status", color = Color(0, 255, 0), priority = 2},
-                    {name = "Social", color = Color(0, 0, 255), priority = 3}
-                }
-
-                for _, section in ipairs(sections) do
-                    hook.Run("AddSection", section.name, section.color, section.priority, 1)
-                end
-            end
-
-            -- Initialize custom fonts with fallbacks
-            self:InitializeCustomFonts()
-
-            -- Set up module-specific configurations
-            self:LoadModuleConfigurations()
-
-            -- Register custom commands
-            self:RegisterModuleCommands()
-
-            -- Initialize data structures
-            self:InitializeDataStructures()
-
-            lia.log.add("Custom modules initialized successfully", FLAG_NORMAL)
-        end
-        ```
+        print("Module system initialized with " .. #modules .. " custom modules")
+    end)
+    ```
 ]]
 function InitializedModules()
 end
 
 --[[
     Purpose:
-        Called when options are initialized.
+        Called when schema is initialized
 
     When Called:
-        After options system initialization.
+        When the schema system has finished loading
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -7881,162 +904,84 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log options initialization
-        function MODULE:InitializedOptions()
-            print("Options initialized")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log schema initialization
+    hook.Add("InitializedSchema", "MyAddon", function()
+        print("Schema initialized")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Register custom options
-        function MODULE:InitializedOptions()
-            -- Add custom option
-            lia.option.add("customSetting", "Custom Setting", "defaultValue", {
-                category = "Custom",
-                data = {0, 100}
-            })
 
-            lia.log.add("Options initialized", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Set up custom schema data
+    hook.Add("InitializedSchema", "CustomSchema", function()
+        lia.schema.set("myAddonVersion", "1.0.0")
+        lia.schema.set("myAddonEnabled", true)
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced options initialization with validation
-        function MODULE:InitializedOptions()
-            -- Register multiple custom options
-            local customOptions = {
-                {key = "customHUD", name = "Custom HUD", default = true, category = "UI"},
-                {key = "customSound", name = "Custom Sound", default = 0.5, category = "Audio", data = {0, 1}},
-                {key = "customGraphics", name = "Graphics Quality", default = "medium", category = "Graphics", data = {"low", "medium", "high"}}
+
+    ```lua
+    -- High: Complex schema initialization system
+    hook.Add("InitializedSchema", "AdvancedSchemaInit", function()
+        -- Set up custom schema data
+        local schemaData = {
+            version     = "1.0.0",
+            name        = "My Custom Schema",
+            description = "A custom schema for my addon",
+            author      = "Me",
+            enabled     = true,
+            settings    = {
+                maxPlayers  = 32,
+                respawnTime = 5,
+                roundTime   = 600
             }
+        }
 
-            for _, option in ipairs(customOptions) do
-                lia.option.add(option.key, option.name, option.default, {
-                    category = option.category,
-                    data = option.data
-                })
-            end
-
-            -- Validate all options
-            self:ValidateAllOptions()
-
-            -- Set up option change handlers
-            self:SetupOptionChangeHandlers()
-
-            lia.log.add("Options initialized: " .. table.Count(lia.option.list) .. " options", FLAG_NORMAL)
+        for key, value in pairs(schemaData) do
+            lia.schema.set(key, value)
         end
-        ```
-]]
-function InitializedOptions()
-end
 
---[[
-    Purpose:
-        Called when schema is initialized.
+        -- Set up schema callbacks
+        lia.schema.addCallback("onLoad", function()
+            print("Schema loaded!")
+        end)
 
-    When Called:
-        After schema loading is complete.
+        lia.schema.addCallback("onUnload", function()
+            print("Schema unloaded!")
+        end)
 
-    Parameters:
-        None
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log schema initialization
-        function MODULE:InitializedSchema()
-            print("Schema initialized")
+        -- Load saved schema settings
+        local savedSettings = lia.data.get("schemaSettings", {})
+        for key, value in pairs(savedSettings) do
+            lia.schema.set(key, value)
         end
-        ```
 
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize schema-specific systems
-        function MODULE:InitializedSchema()
-            -- Load schema-specific configuration
-            if file.Exists("schema/config.txt", "DATA") then
-                local config = file.Read("schema/config.txt", "DATA")
-                if config then
-                    local data = util.JSONToTable(config)
-                    if data then
-                        for key, value in pairs(data) do
-                            lia.config.set(key, value)
-                        end
-                    end
-                end
-            end
-
-            lia.log.add("Schema initialized", FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced schema initialization with comprehensive setup
-        function MODULE:InitializedSchema()
-            -- Load schema configuration
-            self:LoadSchemaConfig()
-
-            -- Initialize schema-specific factions
-            self:InitializeSchemaFactions()
-
-            -- Initialize schema-specific classes
-            self:InitializeSchemaClasses()
-
-            -- Initialize schema-specific items
-            self:InitializeSchemaItems()
-
-            -- Set up schema-specific hooks
-            self:SetupSchemaHooks()
-
-            -- Initialize database tables
-            self:InitializeSchemaDatabase()
-
-            -- Validate schema data
-            self:ValidateSchemaData()
-
-            -- Load schema-specific locales
-            self:LoadSchemaLocales()
-
-            lia.log.add("Schema fully initialized", FLAG_NORMAL)
-
-            -- Notify other systems
-            hook.Run("OnSchemaFullyInitialized")
-        end
-        ```
+        print("Schema system initialized with custom data")
+    end)
+    ```
 ]]
 function InitializedSchema()
 end
 
 --[[
     Purpose:
-        Called when inventory data changes.
+        Called when inventory data changes
 
     When Called:
-        When inventory data is modified.
+        When an inventory's data is modified
 
     Parameters:
-        instance (Inventory)
-            The inventory instance.
-        key (string)
-            The data key.
-        oldValue (any)
-            The old value.
-        value (any)
-            The new value.
+        instance (Inventory) - The inventory instance
+        key (string) - The data key that changed
+        oldValue (any) - The old value
+        value (any) - The new value
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -8044,97 +989,75 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log inventory data change
-        function MODULE:InventoryDataChanged(instance, key, oldValue, value)
-            print("Inventory data changed: " .. key)
-        end
-        ```
+
+    ```lua
+    -- Simple: Log data changes
+    hook.Add("InventoryDataChanged", "MyAddon", function(instance, key, oldValue, value)
+        print("Inventory data changed: " .. key .. " = " .. tostring(value))
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle specific data changes
-        function MODULE:InventoryDataChanged(instance, key, oldValue, value)
-            if not instance then return end
 
-            -- Sync important data changes to clients
-            if key == "name" or key == "type" then
-                if SERVER then
-                    netstream.Start(instance:getReceivers(), "inventoryDataChanged", instance:getID(), key, value)
-                end
-            end
-
-            -- Log significant changes
-            if oldValue ~= value then
-                lia.log.add("Inventory " .. instance:getID() .. " data changed: " .. key, FLAG_NORMAL)
-            end
+    ```lua
+    -- Medium: Track specific data changes
+    hook.Add("InventoryDataChanged", "TrackInventoryChanges", function(instance, key, oldValue, value)
+        if key == "weight" then
+            print("Inventory weight changed from " .. oldValue .. " to " .. value)
+        elseif key == "maxWeight" then
+            print("Max weight changed from " .. oldValue .. " to " .. value)
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced data change handling with validation and syncing
-        function MODULE:InventoryDataChanged(instance, key, oldValue, value)
-            if not instance then return end
 
-            -- Validate new value
-            local validation = self:ValidateInventoryData(key, value)
-            if not validation.valid then
-                lia.log.add("Invalid inventory data for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                instance:setData(key, oldValue) -- Revert
-                return
-            end
+    ```lua
+    -- High: Complex inventory data tracking
+    hook.Add("InventoryDataChanged", "AdvancedInventoryTracking", function(instance, key, oldValue, value)
+        if SERVER then
+            -- Log to database
+            lia.db.query("INSERT INTO inventory_logs (timestamp, invid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
+                os.time(), instance:getID(), key, tostring(oldValue), tostring(value))
+        end
 
-            -- Handle specific data keys
-            if key == "name" then
-                -- Update inventory display name
-                self:UpdateInventoryDisplayName(instance, value)
-            elseif key == "type" then
-                -- Change inventory type logic
-                self:HandleInventoryTypeChange(instance, oldValue, value)
-            elseif key == "locked" then
-                -- Handle lock state change
-                self:HandleInventoryLockChange(instance, value)
-            end
+        -- Track weight changes
+        if key == "weight" then
+            local maxWeight = instance:getData("maxWeight", 100)
+            local weightPercent = (value / maxWeight) * 100
 
-            -- Sync to clients if needed
-            if SERVER then
-                local shouldSync = self:ShouldSyncInventoryData(key)
-                if shouldSync then
-                    netstream.Start(instance:getReceivers(), "inventoryDataChanged", instance:getID(), key, value)
+            if weightPercent >= 90 then
+                if CLIENT then
+                    LocalPlayer():ChatPrint("Warning: Inventory is almost full!")
                 end
             end
-
-            -- Trigger hooks for specific changes
-            hook.Run("OnInventoryDataChanged", instance, key, oldValue, value)
-
-            -- Log change
-            lia.log.add(string.format(
-                "Inventory %s data changed: %s (%s -> %s)",
-                instance:getID(),
-                key,
-                tostring(oldValue),
-                tostring(value)
-            ), FLAG_NORMAL)
         end
-        ```
+
+        -- Notify owner of changes
+        if SERVER then
+            local owner = instance:getOwner()
+            if IsValid(owner) then
+                owner:ChatPrint("Inventory " .. key .. " changed to " .. tostring(value))
+            end
+        end
+    end)
+    ```
 ]]
 function InventoryDataChanged(instance, key, oldValue, value)
 end
 
 --[[
     Purpose:
-        Called when an inventory is deleted.
+        Called when an inventory is initialized
 
     When Called:
-        When an inventory is removed.
+        When an inventory is first created and set up
 
     Parameters:
-        instance (Inventory)
-            The inventory instance.
+        instance (Inventory) - The inventory being initialized
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -8142,209 +1065,90 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log inventory deletion
-        function MODULE:InventoryDeleted(instance)
-            if instance then
-                print("Inventory deleted: " .. tostring(instance:getID()))
-            end
-        end
-        ```
+
+    ```lua
+    -- Simple: Log inventory initialization
+    hook.Add("InventoryInitialized", "MyAddon", function(instance)
+        print("Inventory initialized: " .. instance:getID())
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Clean up inventory-related data
-        function MODULE:InventoryDeleted(instance)
-            if not instance then return end
 
-            local invID = instance:getID()
-
-            -- Clean up cached data
-            if self.inventoryCache and self.inventoryCache[invID] then
-                self.inventoryCache[invID] = nil
-            end
-
-            -- Notify clients
-            if SERVER then
-                netstream.Start(nil, "inventoryDeleted", invID)
-            end
-
-            lia.log.add("Inventory deleted: " .. invID, FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Set default inventory data
+    hook.Add("InventoryInitialized", "SetDefaultInventoryData", function(instance)
+        instance:setData("weight", 0)
+        instance:setData("maxWeight", 100)
+        instance:setData("created", os.time())
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced cleanup with comprehensive data management
-        function MODULE:InventoryDeleted(instance)
-            if not instance then return end
 
-            local invID = instance:getID()
+    ```lua
+    -- High: Complex inventory initialization
+    hook.Add("InventoryInitialized", "AdvancedInventoryInit", function(instance)
+        -- Set default data
+        instance:setData("weight", 0)
+        instance:setData("maxWeight", 100)
+        instance:setData("created", os.time())
+        instance:setData("lastAccessed", os.time())
 
-            -- Clean up cached data
-            if self.inventoryCache and self.inventoryCache[invID] then
-                self.inventoryCache[invID] = nil
-            end
+        if SERVER then
+            -- Log to database
+            lia.db.query("INSERT INTO inventory_logs (timestamp, invid, action) VALUES (?, ?, ?)",
+                os.time(), instance:getID(), "initialized")
 
-            -- Clean up inventory items (if needed)
-            if SERVER then
-                local items = instance:getItems()
-                for _, item in pairs(items) do
-                    -- Handle item deletion or transfer
-                    self:HandleInventoryItemCleanup(item, instance)
+            -- Set up owner-specific settings
+            local owner = instance:getOwner()
+            if IsValid(owner) then
+                local char = owner:getChar()
+                if char then
+                    -- Adjust max weight based on faction
+                    local faction = char:getFaction()
+                    if faction == "police" then
+                        instance:setData("maxWeight", 150)
+                    elseif faction == "medic" then
+                        instance:setData("maxWeight", 120)
+                    end
+
+                    -- Add starting items
+                    if instance:getData("isNew", true) then
+                        local startingItems = {"item_bandage", "item_water"}
+                        for _, itemID in ipairs(startingItems) do
+                            local item = lia.item.instance(itemID)
+                            if item then
+                                instance:add(item)
+                            end
+                        end
+                        instance:setData("isNew", false)
+                    end
                 end
             end
-
-            -- Remove from tracking systems
-            self:RemoveInventoryFromTracking(invID)
-
-            -- Clean up database references
-            if SERVER then
-                self:CleanupInventoryDatabase(invID)
-            end
-
-            -- Notify clients
-            if SERVER then
-                netstream.Start(nil, "inventoryDeleted", invID)
-            end
-
-            -- Remove from UI if on client
-            if CLIENT then
-                hook.Run("RemoveInventoryFromUI", invID)
-            end
-
-            -- Log deletion
-            lia.log.add("Inventory deleted: " .. invID, FLAG_NORMAL)
-
-            -- Trigger cleanup hook
-            hook.Run("OnInventoryDeleted", instance)
         end
-        ```
-]]
-function InventoryDeleted(instance)
-end
-
---[[
-    Purpose:
-        Called when an inventory is initialized.
-
-    When Called:
-        When an inventory is created and set up.
-
-    Parameters:
-        instance (Inventory)
-            The inventory instance.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log inventory initialization
-        function MODULE:InventoryInitialized(instance)
-            if instance then
-                print("Inventory initialized: " .. tostring(instance:getID()))
-            end
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Set up inventory defaults
-        function MODULE:InventoryInitialized(instance)
-            if not instance then return end
-
-            -- Set default data if not already set
-            if not instance:getData("name") then
-                instance:setData("name", "Inventory")
-            end
-
-            -- Cache inventory
-            if not self.inventoryCache then
-                self.inventoryCache = {}
-            end
-            self.inventoryCache[instance:getID()] = instance
-
-            lia.log.add("Inventory initialized: " .. instance:getID(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced initialization with validation and setup
-        function MODULE:InventoryInitialized(instance)
-            if not instance then return end
-
-            local invID = instance:getID()
-
-            -- Validate inventory
-            local validation = self:ValidateInventory(instance)
-            if not validation.valid then
-                lia.log.add("Invalid inventory initialized: " .. validation.error, FLAG_ERROR)
-                return
-            end
-
-            -- Set default data
-            self:SetInventoryDefaults(instance)
-
-            -- Initialize inventory size
-            self:InitializeInventorySize(instance)
-
-            -- Set up inventory type
-            self:SetupInventoryType(instance)
-
-            -- Cache inventory
-            if not self.inventoryCache then
-                self.inventoryCache = {}
-            end
-            self.inventoryCache[invID] = instance
-
-            -- Register with tracking system
-            self:RegisterInventoryTracking(instance)
-
-            -- Set up hooks
-            self:SetupInventoryHooks(instance)
-
-            -- Sync to clients if on server
-            if SERVER then
-                netstream.Start(instance:getReceivers(), "inventoryInitialized", invID)
-            end
-
-            -- Add to UI if on client
-            if CLIENT then
-                hook.Run("AddInventoryToUI", instance)
-            end
-
-            lia.log.add("Inventory initialized: " .. invID, FLAG_NORMAL)
-
-            -- Trigger initialization hook
-            hook.Run("OnInventoryFullyInitialized", instance)
-        end
-        ```
+    end)
+    ```
 ]]
 function InventoryInitialized(instance)
 end
 
 --[[
     Purpose:
-        Called when an item is added to an inventory.
+        Called when an item's data changes in an inventory
 
     When Called:
-        When items are added to inventories.
+        When an item's data is modified while in an inventory
 
     Parameters:
-        inventory (Inventory)
-            The inventory.
-        item (Item)
-            The item added.
+        item (Item) - The item whose data changed
+        key (string) - The data key that changed
+        oldValue (any) - The old value
+        newValue (any) - The new value
+        inventory (Inventory) - The inventory containing the item
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -8352,223 +1156,90 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log item addition
-        function MODULE:InventoryItemAdded(inventory, item)
-            if inventory and item then
-                print("Item added to inventory: " .. item:getName())
-            end
-        end
-        ```
+
+    ```lua
+    -- Simple: Log item data changes
+    hook.Add("InventoryItemDataChanged", "MyAddon", function(item, key, oldValue, newValue, inventory)
+        print("Item data changed: " .. key .. " = " .. tostring(newValue))
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle item addition with notifications
-        function MODULE:InventoryItemAdded(inventory, item)
-            if not inventory or not item then return end
 
-            -- Notify player if inventory belongs to character
-            local owner = inventory:getOwner()
-            if owner and owner:IsPlayer() then
-                owner:ChatPrint("You received: " .. item:getName())
+    ```lua
+    -- Medium: Track durability changes
+    hook.Add("InventoryItemDataChanged", "TrackDurability", function(item, key, oldValue, newValue, inventory)
+        if key == "durability" then
+            if newValue <= 0 then
+                print("Item " .. item.name .. " is broken!")
+            elseif newValue <= 20 then
+                print("Item " .. item.name .. " is almost broken!")
             end
-
-            -- Update inventory display
-            if CLIENT then
-                hook.Run("UpdateInventoryDisplay", inventory)
-            end
-
-            lia.log.add("Item added to inventory: " .. item:getName(), FLAG_NORMAL)
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced item addition handling with validation and effects
-        function MODULE:InventoryItemAdded(inventory, item)
-            if not inventory or not item then return end
 
-            -- Validate item addition
-            local validation = self:ValidateItemAddition(inventory, item)
-            if not validation.valid then
-                lia.log.add("Invalid item addition: " .. validation.error, FLAG_WARNING)
-                return
-            end
+    ```lua
+    -- High: Complex item data tracking
+    hook.Add("InventoryItemDataChanged", "AdvancedItemDataTracking", function(item, key, oldValue, newValue, inventory)
+        if SERVER then
+            -- Log to database
+            lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
+                os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
 
-            -- Check for special item effects
-            if item:getData("special") then
-                self:ApplySpecialItemEffects(inventory, item)
-            end
+            -- Handle durability changes
+            if key == "durability" then
+                if newValue <= 0 then
+                    -- Item is broken
+                    local owner = inventory:getOwner()
+                    if IsValid(owner) then
+                        owner:ChatPrint(item.name .. " is broken!")
+                    end
 
-            -- Update inventory weight
-            self:UpdateInventoryWeight(inventory)
-
-            -- Check for quest completion
-            self:CheckQuestItemAdded(inventory, item)
-
-            -- Notify owner
-            local owner = inventory:getOwner()
-            if owner and owner:IsPlayer() then
-                local char = owner:getChar()
-                if char then
-                    -- Chat notification
-                    owner:ChatPrint("You received: " .. item:getName())
-
-                    -- Sound notification
-                    owner:EmitSound("items/itempickup.wav")
-
-                    -- Check for achievements
-                    hook.Run("CheckItemAchievement", char, item)
+                    -- Remove item if it's broken
+                    timer.Simple(1, function()
+                        if IsValid(item) then
+                            item:remove()
+                        end
+                    end)
+                elseif newValue <= 20 then
+                    -- Item is almost broken
+                    local owner = inventory:getOwner()
+                    if IsValid(owner) then
+                        owner:ChatPrint("Warning: " .. item.name .. " is almost broken!")
+                    end
                 end
             end
 
-            -- Update UI
-            if CLIENT then
-                hook.Run("UpdateInventoryDisplay", inventory)
-            end
-
-            -- Sync to clients
-            if SERVER then
-                netstream.Start(inventory:getReceivers(), "inventoryItemAdded", inventory:getID(), item:getID())
-            end
-
-            -- Log addition
-            lia.log.add(string.format(
-                "Item %s added to inventory %s",
-                item:getName(),
-                inventory:getID()
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemAddedToInventory", inventory, item)
-        end
-        ```
-]]
-function InventoryItemAdded(inventory, item)
-end
-
---[[
-    Purpose:
-        Called when inventory item data changes.
-
-    When Called:
-        When item data in inventory is modified.
-
-    Parameters:
-        item (Item)
-            The item.
-        key (string)
-            The data key.
-        oldValue (any)
-            The old value.
-        newValue (any)
-            The new value.
-        inventory (Inventory)
-            The inventory.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item data change
-        function MODULE:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-            print("Item data changed: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle specific data changes
-        function MODULE:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-            if not item then return end
-
-            -- Sync important changes
-            if key == "quantity" or key == "equipped" then
-                if SERVER and inventory then
-                    netstream.Start(inventory:getReceivers(), "itemDataChanged", item:getID(), key, newValue)
+            -- Handle quality changes
+            if key == "quality" then
+                local owner = inventory:getOwner()
+                if IsValid(owner) then
+                    owner:ChatPrint(item.name .. " quality changed to " .. newValue)
                 end
             end
-
-            lia.log.add("Item data changed: " .. key, FLAG_NORMAL)
         end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced data change handling with validation
-        function MODULE:InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
-            if not item then return end
-
-            -- Validate new value
-            local validation = self:ValidateItemData(key, newValue)
-            if not validation.valid then
-                lia.log.add("Invalid item data for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                item:setData(key, oldValue) -- Revert
-                return
-            end
-
-            -- Handle specific keys
-            if key == "quantity" then
-                self:HandleItemQuantityChange(item, oldValue, newValue, inventory)
-            elseif key == "equipped" then
-                self:HandleItemEquipChange(item, newValue, inventory)
-            elseif key == "quality" then
-                self:HandleItemQualityChange(item, oldValue, newValue)
-            end
-
-            -- Update inventory display
-            if CLIENT and inventory then
-                hook.Run("UpdateInventoryDisplay", inventory)
-            end
-
-            -- Sync to clients
-            if SERVER and inventory then
-                local shouldSync = self:ShouldSyncItemData(key)
-                if shouldSync then
-                    netstream.Start(inventory:getReceivers(), "itemDataChanged", item:getID(), key, newValue)
-                end
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Item %s data changed: %s (%s -> %s)",
-                item:getName(),
-                key,
-                tostring(oldValue),
-                tostring(newValue)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemDataChanged", item, key, oldValue, newValue, inventory)
-        end
-        ```
+    end)
+    ```
 ]]
 function InventoryItemDataChanged(item, key, oldValue, newValue, inventory)
 end
 
 --[[
     Purpose:
-        Called when an item is removed from inventory.
+        Called to check if a character is fake recognized
 
     When Called:
-        When items are removed from inventories.
+        When checking if a character appears recognized but isn't truly
 
     Parameters:
-        inventory (Inventory)
-            The inventory.
-        item (Item)
-            The item removed.
-        preserveItem (boolean)
-            Whether the item should be preserved.
+        self (Character) - The character checking recognition
+        id (number) - The character ID being checked
 
     Returns:
-        nil
+        boolean - True if fake recognized, false otherwise
 
     Realm:
         Shared
@@ -8576,202 +1247,64 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log item removal
-        function MODULE:InventoryItemRemoved(inventory, item, preserveItem)
-            if item then
-                print("Item removed: " .. item:getName())
-            end
-        end
-        ```
+
+    ```lua
+    -- Simple: Always return false
+    hook.Add("IsCharFakeRecognized", "MyAddon", function(self, id)
+        return false
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle item removal with notifications
-        function MODULE:InventoryItemRemoved(inventory, item, preserveItem)
-            if not inventory or not item then return end
 
-            -- Notify owner
-            local owner = inventory:getOwner()
-            if owner and owner:IsPlayer() then
-                owner:ChatPrint("You lost: " .. item:getName())
-            end
-
-            -- Update inventory display
-            if CLIENT then
-                hook.Run("UpdateInventoryDisplay", inventory)
-            end
-
-            lia.log.add("Item removed from inventory: " .. item:getName(), FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Check fake recognition list
+    hook.Add("IsCharFakeRecognized", "FakeRecognitionCheck", function(self, id)
+        local fakeRecognized = self:getData("fakeRecognized", {})
+        return table.HasValue(fakeRecognized, id)
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced removal handling with cleanup and effects
-        function MODULE:InventoryItemRemoved(inventory, item, preserveItem)
-            if not inventory or not item then return end
 
-            -- Handle equipped items
-            if item:getData("equip") then
-                self:HandleItemUnequip(item, inventory)
-            end
+    ```lua
+    -- High: Complex fake recognition system
+    hook.Add("IsCharFakeRecognized", "AdvancedFakeRecognition", function(self, id)
+        local fakeRecognized = self:getData("fakeRecognized", {})
 
-            -- Check for special removal effects
-            if item:getData("removeEffect") then
-                self:ApplyItemRemovalEffect(item, inventory)
-            end
-
-            -- Update inventory weight
-            self:UpdateInventoryWeight(inventory)
-
-            -- Notify owner
-            local owner = inventory:getOwner()
-            if owner and owner:IsPlayer() then
-                local char = owner:getChar()
-                if char then
-                    owner:ChatPrint("You lost: " .. item:getName())
-
-                    -- Check for quest updates
-                    hook.Run("CheckQuestItemRemoved", char, item)
-                end
-            end
-
-            -- Update UI
-            if CLIENT then
-                hook.Run("UpdateInventoryDisplay", inventory)
-            end
-
-            -- Sync to clients
-            if SERVER then
-                netstream.Start(inventory:getReceivers(), "inventoryItemRemoved", inventory:getID(), item:getID())
-            end
-
-            -- Clean up item if not preserved
-            if not preserveItem and SERVER then
-                self:CleanupRemovedItem(item)
-            end
-
-            -- Log removal
-            lia.log.add(string.format(
-                "Item %s removed from inventory %s (preserved: %s)",
-                item:getName(),
-                inventory:getID(),
-                tostring(preserveItem)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemRemovedFromInventory", inventory, item, preserveItem)
-        end
-        ```
-]]
-function InventoryItemRemoved(inventory, item, preserveItem)
-end
-
---[[
-    Purpose:
-        Checks if a character is fake recognized.
-
-    When Called:
-        When checking fake character recognition.
-
-    Parameters:
-        character (Character)
-            The character checking recognition.
-        characterID (number)
-            The target character ID.
-
-    Returns:
-        boolean
-            Whether the character is fake recognized.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return false (no fake recognition)
-        function MODULE:IsCharFakeRecognized(character, characterID)
-            return false
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Check fake recognition data
-        function MODULE:IsCharFakeRecognized(character, characterID)
-            if not character then return false end
-
-            -- Check if character has fake recognition data
-            local fakeRecognition = character:getData("fakeRecognition", {})
-            return fakeRecognition[characterID] == true
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced fake recognition with multiple factors
-        function MODULE:IsCharFakeRecognized(character, characterID)
-            if not character or not characterID then return false end
-
-            -- Check direct fake recognition data
-            local fakeRecognition = character:getData("fakeRecognition", {})
-            if fakeRecognition[characterID] == true then
+        -- Check if in fake recognition list
+        if table.HasValue(fakeRecognized, id) then
+            -- Check if fake recognition has expired
+            local fakeRecognitionTime = self:getData("fakeRecognitionTime_" .. id, 0)
+            if os.time() - fakeRecognitionTime < 3600 then -- 1 hour
                 return true
+            else
+                -- Remove expired fake recognition
+                table.RemoveByValue(fakeRecognized, id)
+                self:setData("fakeRecognized", fakeRecognized)
             end
-
-            -- Check faction-based fake recognition
-            local targetChar = lia.char.loaded[characterID]
-            if targetChar then
-                local charFaction = character:getFaction()
-                local targetFaction = targetChar:getFaction()
-
-                -- Same faction members fake recognize each other
-                if charFaction == targetFaction and charFaction ~= 0 then
-                    local faction = lia.faction.get(charFaction)
-                    if faction and faction.autoFakeRecognize then
-                        return true
-                    end
-                end
-            end
-
-            -- Check for fake recognition items
-            local inventory = character:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.fakeRecognition then
-                        if item.fakeRecognition[characterID] or item.fakeRecognition.all then
-                            return true
-                        end
-                    end
-                end
-            end
-
-            return false
         end
-        ```
+
+        return false
+    end)
+    ```
 ]]
-function IsCharFakeRecognized(character, characterID)
+function IsCharFakeRecognized(self, id)
 end
 
 --[[
     Purpose:
-        Checks if a character is fake recognized.
+        Called to check if a character is recognized
 
     When Called:
-        When checking fake character recognition (disguises, etc.).
+        When checking if one character recognizes another
 
     Parameters:
-        character (Character)
-            The character checking recognition.
-        characterID (number)
-            The target character ID.
+        self (Character) - The character checking recognition
+        id (number) - The character ID being checked
 
     Returns:
-        boolean
-            Whether the character is fake recognized.
+        boolean - True if recognized, false otherwise
 
     Realm:
         Shared
@@ -8779,181 +1312,89 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return false (no fake recognition)
-        function MODULE:IsCharFakeRecognized(character, characterID)
-            return false
-        end
-        ```
+
+    ```lua
+    -- Simple: Check recognition list
+    hook.Add("IsCharRecognized", "MyAddon", function(self, id)
+        local recognized = self:getData("recognized", {})
+        return table.HasValue(recognized, id)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Check fake recognition data
-        function MODULE:IsCharFakeRecognized(character, characterID)
-            if not character then return false end
 
-            -- Check fake recognition data
-            local fakeRecognition = character:getData("fakeRecognition", {})
-            return fakeRecognition[characterID] == true
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced fake recognition with multiple factors
-        function MODULE:IsCharFakeRecognized(character, characterID)
-            if not character or not characterID then return false end
-
-            -- Check fake recognition data
-            local fakeRecognition = character:getData("fakeRecognition", {})
-            if fakeRecognition[characterID] then
-                return true
-            end
-
-            -- Check for faction-based fake recognition
-            local charFaction = character:getFaction()
-            local targetChar = lia.char.loaded[characterID]
-            if targetChar then
-                local targetFaction = targetChar:getFaction()
-                if charFaction == targetFaction and charFaction ~= 0 then
-                    local faction = lia.faction.get(charFaction)
-                    if faction and faction.autoFakeRecognize then
-                        return true
-                    end
-                end
-            end
-
-            -- Check for fake recognition items
-            local inventory = character:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.fakeRecognition then
-                        if item.fakeRecognition[characterID] or item.fakeRecognition.all then
-                            return true
-                        end
-                    end
-                end
-            end
-
-            return false
-        end
-        ```
-]]
-function IsCharRecognized(character, characterID)
-end
-
---[[
-    Purpose:
-        Checks if a character is recognized.
-
-    When Called:
-        When checking character recognition.
-
-    Parameters:
-        character (Character)
-            The character checking recognition.
-        characterID (number)
-            The target character ID.
-
-    Returns:
-        boolean
-            Whether the character is recognized.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Return true (always recognized)
-        function MODULE:IsCharRecognized(character, characterID)
+    ```lua
+    -- Medium: Check recognition with faction bonus
+    hook.Add("IsCharRecognized", "FactionRecognition", function(self, id)
+        local recognized = self:getData("recognized", {})
+        if table.HasValue(recognized, id) then
             return true
         end
-        ```
 
-    Medium Complexity:
-        ```lua
-        -- Medium: Check recognition data
-        function MODULE:IsCharRecognized(character, characterID)
-            if not character then return false end
-
-            -- Check recognition data
-            local recognition = character:getData("recognition", {})
-            return recognition[characterID] == true
+        -- Same faction members recognize each other
+        local targetChar = lia.char.loaded[id]
+        if targetChar and targetChar:getFaction() == self:getFaction() then
+            return true
         end
-        ```
+
+        return false
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced recognition with multiple factors
-        function MODULE:IsCharRecognized(character, characterID)
-            if not character or not characterID then return false end
 
-            -- Same character always recognizes themselves
-            if character:getID() == characterID then
-                return true
-            end
-
-            -- Check direct recognition data
-            local recognition = character:getData("recognition", {})
-            if recognition[characterID] == true then
-                return true
-            end
-
-            -- Check faction-based recognition
-            local targetChar = lia.char.loaded[characterID]
-            if targetChar then
-                local charFaction = character:getFaction()
-                local targetFaction = targetChar:getFaction()
-
-                -- Same faction members recognize each other
-                if charFaction == targetFaction and charFaction ~= 0 then
-                    local faction = lia.faction.get(charFaction)
-                    if faction and faction.autoRecognize then
-                        return true
-                    end
-                end
-            end
-
-            -- Check for recognition items
-            local inventory = character:getInv()
-            if inventory then
-                for _, item in pairs(inventory:getItems()) do
-                    if item:getData("equip") and item.recognition then
-                        if item.recognition[characterID] or item.recognition.all then
-                            return true
-                        end
-                    end
-                end
-            end
-
-            -- Check character flags
-            if character:hasFlags("r") then -- Recognition flag
-                return true
-            end
-
-            return false
+    ```lua
+    -- High: Complex recognition system
+    hook.Add("IsCharRecognized", "AdvancedRecognition", function(self, id)
+        local recognized = self:getData("recognized", {})
+        if table.HasValue(recognized, id) then
+            return true
         end
-        ```
+
+        local targetChar = lia.char.loaded[id]
+        if not targetChar then return false end
+
+        -- Same faction members recognize each other
+        if targetChar:getFaction() == self:getFaction() then
+            return true
+        end
+
+        -- Check if in same group/party
+        local myGroup = self:getData("group")
+        local targetGroup = targetChar:getData("group")
+        if myGroup and targetGroup and myGroup == targetGroup then
+            return true
+        end
+
+        -- Check proximity-based recognition
+        local myPlayer = self:getPlayer()
+        local targetPlayer = targetChar:getPlayer()
+        if IsValid(myPlayer) and IsValid(targetPlayer) then
+            local distance = myPlayer:GetPos():Distance(targetPlayer:GetPos())
+            if distance < 100 then -- Very close range
+                return true
+            end
+        end
+
+        return false
+    end)
+    ```
 ]]
-function IsCharRecognized(character, characterID)
+function IsCharRecognized(self, id)
 end
 
 --[[
     Purpose:
-        Checks if a chat type is recognized.
+        Called to check if a chat type requires recognition
 
     When Called:
-        When determining if chat requires recognition.
+        When determining if players need to be recognized to see names in chat
 
     Parameters:
-        chatType (string)
-            The chat type.
+        chatType (string) - The chat type being checked
 
     Returns:
-        boolean
-            Whether the chat type requires recognition.
+        boolean - True if recognition is required, false otherwise
 
     Realm:
         Shared
@@ -8961,73 +1402,66 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return false (no recognition required)
-        function MODULE:IsRecognizedChatType(chatType)
-            return false
-        end
-        ```
+
+    ```lua
+    -- Simple: Only IC chat requires recognition
+    hook.Add("IsRecognizedChatType", "MyAddon", function(chatType)
+        return chatType == "ic"
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Check specific chat types
-        function MODULE:IsRecognizedChatType(chatType)
-            -- IC chat requires recognition
-            local recognizedTypes = {"ic", "w", "y", "me", "it"}
-            for _, type in ipairs(recognizedTypes) do
-                if chatType == type then
-                    return true
-                end
-            end
-            return false
-        end
-        ```
+
+    ```lua
+    -- Medium: Multiple chat types require recognition
+    hook.Add("IsRecognizedChatType", "RecognizedChatTypes", function(chatType)
+        local recognizedTypes = {"ic", "w", "y" }
+        return table.HasValue(recognizedTypes, chatType)
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced recognition check with configuration
-        function MODULE:IsRecognizedChatType(chatType)
-            if not chatType then return false end
 
-            -- Get recognized chat types from config
-            local recognizedTypes = lia.config.get("recognizedChatTypes", {})
-            if recognizedTypes[chatType] ~= nil then
-                return recognizedTypes[chatType]
-            end
-
-            -- Default recognition types
-            local defaultRecognized = {
-                ic = true,
-                w = true,
-                y = true,
-                me = true,
-                it = true,
-                ooc = false,
-                looc = false,
-                pm = false
-            }
-
-            return defaultRecognized[chatType] or false
+    ```lua
+    -- High: Complex recognition requirements
+    hook.Add("IsRecognizedChatType", "AdvancedChatRecognition", function(chatType)
+        -- OOC and admin chats never require recognition
+        local noRecognitionTypes = {"ooc", "looc", "admin" }
+        if table.HasValue(noRecognitionTypes, chatType) then
+            return false
         end
-        ```
+
+        -- IC and whisper chats require recognition
+        local recognitionTypes = {"ic", "w", "y", "me", "it" }
+        if table.HasValue(recognitionTypes, chatType) then
+            return true
+        end
+
+        -- Radio and faction chats don't require recognition
+        if chatType == "radio" or chatType == "faction" then
+            return false
+        end
+
+        -- Default to requiring recognition
+        return true
+    end)
+    ```
 ]]
 function IsRecognizedChatType(chatType)
 end
 
 --[[
     Purpose:
-        Checks if a chat type requires recognition.
+        Called to validate an entity
 
     When Called:
-        When determining if chat messages require character recognition.
+        When checking if an entity reference is valid
 
     Parameters:
-        chatType (string)
-            The chat type to check.
+        None
 
     Returns:
-        boolean
-            Whether the chat type requires recognition.
+        boolean - True if valid, false otherwise
 
     Realm:
         Shared
@@ -9035,103 +1469,55 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Basic recognition check
-        function MODULE:IsRecognizedChatType(chatType)
-            -- Common recognized chat types
-            local recognizedTypes = {
-                ["ic"] = true,
-                ["yell"] = true,
-                ["whisper"] = true,
-                ["me"] = true,
-                ["it"] = true
-            }
 
-            return recognizedTypes[chatType] or false
-        end
-        ```
+    ```lua
+    -- Simple: Basic validation
+    hook.Add("IsValid", "MyAddon", function()
+        return true
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Recognition based on chat type configuration
-        function MODULE:IsRecognizedChatType(chatType)
-            if not chatType then return false end
 
-            -- Check custom configuration
-            local config = lia.config.get("recognizedChatTypes", {})
-            if config[chatType] ~= nil then
-                return config[chatType]
-            end
-
-            -- Default recognized types
-            local defaultRecognized = {
-                ["ic"] = true,
-                ["yell"] = true,
-                ["whisper"] = true,
-                ["radio"] = true,
-                ["department"] = true
-            }
-
-            return defaultRecognized[chatType] or false
-        end
-        ```
+    ```lua
+    -- Medium: Check entity state
+    hook.Add("IsValid", "EntityStateCheck", function()
+        -- This hook is typically not used directly
+        -- IsValid() is a built-in GMod function
+        return true
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced recognition with dynamic checks
-        function MODULE:IsRecognizedChatType(chatType)
-            if not chatType then return false end
 
-            -- Check custom configuration
-            local config = lia.config.get("recognizedChatTypes", {})
-            if config[chatType] ~= nil then
-                return config[chatType]
-            end
-
-            -- Dynamic recognition based on chat type properties
-            if string.find(chatType, "radio") then
-                -- Radio communications usually require recognition
-                return true
-            elseif string.find(chatType, "admin") or string.find(chatType, "ooc") then
-                -- Admin and OOC chats don't require recognition
-                return false
-            elseif string.find(chatType, "faction") then
-                -- Faction chats may require recognition within faction
-                return true
-            end
-
-            -- Default recognized types
-            local defaultRecognized = {
-                ["ic"] = true,
-                ["yell"] = true,
-                ["whisper"] = true,
-                ["me"] = true,
-                ["it"] = true,
-                ["looc"] = false,
-                ["advert"] = false
-            }
-
-            return defaultRecognized[chatType] or false
-        end
-        ```
+    ```lua
+    -- High: Complex validation
+    hook.Add("IsValid", "AdvancedValidation", function()
+        -- This hook is typically not used directly
+        -- IsValid() is a built-in GMod function
+        -- Custom validation logic would go here
+        return true
+    end)
+    ```
 ]]
-function IsSuitableForTrunk(entity)
+function IsValid()
 end
 
 --[[
     Purpose:
-        Checks if an entity is suitable for trunk storage.
+        Called when an item's data changes
 
     When Called:
-        When determining if vehicles can have trunk storage.
+        When an item's data is modified
 
     Parameters:
-        entity (Entity)
-            The entity to check.
+        item (Item) - The item whose data changed
+        key (string) - The data key that changed
+        oldValue (any) - The old value
+        newValue (any) - The new value
 
     Returns:
-        boolean
-            Whether the entity is suitable for trunk storage.
+        None
 
     Realm:
         Shared
@@ -9139,126 +1525,70 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Check if entity is a vehicle
-        function MODULE:IsSuitableForTrunk(entity)
-            if not IsValid(entity) then return false end
-            return entity:IsVehicle()
-        end
-        ```
+
+    ```lua
+    -- Simple: Log item data changes
+    hook.Add("ItemDataChanged", "MyAddon", function(item, key, oldValue, newValue)
+        print("Item data changed: " .. key .. " = " .. tostring(newValue))
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Check vehicle type and class
-        function MODULE:IsSuitableForTrunk(entity)
-            if not IsValid(entity) then return false end
 
-            if not entity:IsVehicle() then return false end
-
-            -- Check vehicle class
-            local vehicleClass = entity:GetVehicleClass()
-            local suitableClasses = {VEHICLE_CLASS_CAR, VEHICLE_CLASS_TRUCK}
-
-            for _, class in ipairs(suitableClasses) do
-                if vehicleClass == class then
-                    return true
-                end
+    ```lua
+    -- Medium: Track durability changes
+    hook.Add("ItemDataChanged", "TrackItemDurability", function(item, key, oldValue, newValue)
+        if key == "durability" then
+            if newValue <= 0 then
+                print("Item " .. item.name .. " is broken!")
+            elseif newValue <= 20 then
+                print("Item " .. item.name .. " is almost broken!")
             end
-
-            return false
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced suitability check with multiple factors
-        function MODULE:IsSuitableForTrunk(entity)
-            if not IsValid(entity) then return false end
 
-            -- Must be a vehicle
-            if not entity:IsVehicle() then return false end
+    ```lua
+    -- High: Complex item data tracking
+    hook.Add("ItemDataChanged", "AdvancedItemDataTracking", function(item, key, oldValue, newValue)
+        if SERVER then
+            -- Log to database
+            lia.db.query("INSERT INTO item_data_logs (timestamp, itemid, key, oldvalue, newvalue) VALUES (?, ?, ?, ?, ?)",
+                os.time(), item:getID(), key, tostring(oldValue), tostring(newValue))
 
-            -- Check vehicle class
-            local vehicleClass = entity:GetVehicleClass()
-            local suitableClasses = {VEHICLE_CLASS_CAR, VEHICLE_CLASS_TRUCK, VEHICLE_CLASS_SUBMARINE}
+            -- Handle durability changes
+            if key == "durability" then
+                if newValue <= 0 then
+                    -- Item is broken
+                    local owner = item:getOwner()
+                    if IsValid(owner) then
+                        owner:ChatPrint(item.name .. " is broken!")
+                    end
 
-            local isSuitableClass = false
-            for _, class in ipairs(suitableClasses) do
-                if vehicleClass == class then
-                    isSuitableClass = true
-                    break
+                    -- Remove item
+                    timer.Simple(1, function()
+                        if IsValid(item) then
+                            item:remove()
+                        end
+                    end)
+                elseif newValue <= 20 then
+                    -- Item is almost broken
+                    local owner = item:getOwner()
+                    if IsValid(owner) then
+                        owner:ChatPrint("Warning: " .. item.name .. " is almost broken!")
+                    end
                 end
             end
 
-            if not isSuitableClass then return false end
-
-            -- Check vehicle model
-            local model = entity:GetModel()
-            local restrictedModels = {
-                "models/vehicle/vehicle_jeep.mdl",
-                "models/vehicle/vehicle_airboat.mdl"
-            }
-
-            for _, restricted in ipairs(restrictedModels) do
-                if model == restricted then
-                    return false
+            -- Handle quality changes
+            if key == "quality" then
+                local owner = item:getOwner()
+                if IsValid(owner) then
+                    owner:ChatPrint(item.name .. " quality changed to " .. newValue)
                 end
             end
-
-            -- Check vehicle data
-            local hasTrunk = entity:GetNWBool("hasTrunk", true)
-            if not hasTrunk then return false end
-
-            -- Check vehicle size (must be large enough)
-            local mins, maxs = entity:GetModelBounds()
-            local size = (maxs - mins):Length()
-            if size < 100 then return false end
-
-            return true
-        end
-        ```
-]]
-function IsSuitableForTrunk(entity)
-end
-
---[[
-    Purpose:
-        Called when item data changes.
-
-    When Called:
-        When item data is modified.
-
-    Parameters:
-        item (Item)
-            The item.
-        key (string)
-            The data key.
-        oldValue (any)
-            The old value.
-        newValue (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item data change
-        function MODULE:ItemDataChanged(item, key, oldValue, newValue)
-            print("Item data changed: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle specific data changes
-        function MODULE:ItemDataChanged(item, key, oldValue, newValue)
-            if not item then return end
 
             -- Handle quantity changes
             if key == "quantity" then
@@ -9266,93 +1596,25 @@ end
                     item:remove()
                 end
             end
-
-            -- Handle quality changes
-            if key == "quality" and newValue < 50 then
-                item:setData("damaged", true)
-            end
-
-            lia.log.add("Item data changed: " .. key, FLAG_NORMAL)
         end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced data change handling with validation and effects
-        function MODULE:ItemDataChanged(item, key, oldValue, newValue)
-            if not item then return end
-
-            -- Validate new value
-            local validation = self:ValidateItemDataValue(key, newValue)
-            if not validation.valid then
-                lia.log.add("Invalid item data for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                item:setData(key, oldValue) -- Revert
-                return
-            end
-
-            -- Handle specific keys
-            if key == "quantity" then
-                self:HandleItemQuantityChange(item, oldValue, newValue)
-            elseif key == "quality" then
-                self:HandleItemQualityChange(item, oldValue, newValue)
-            elseif key == "equipped" then
-                self:HandleItemEquipStateChange(item, newValue)
-            elseif key == "durability" then
-                self:HandleItemDurabilityChange(item, oldValue, newValue)
-            end
-
-            -- Update item display
-            if CLIENT then
-                hook.Run("UpdateItemDisplay", item)
-            end
-
-            -- Sync to clients if on server
-            if SERVER then
-                local shouldSync = self:ShouldSyncItemData(key)
-                if shouldSync then
-                    local inventory = item:getInventory()
-                    if inventory then
-                        netstream.Start(inventory:getReceivers(), "itemDataChanged", item:getID(), key, newValue)
-                    end
-                end
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Item %s data changed: %s (%s -> %s)",
-                item:getName(),
-                key,
-                tostring(oldValue),
-                tostring(newValue)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemDataChanged", item, key, oldValue, newValue)
-        end
-        ```
+    end)
+    ```
 ]]
 function ItemDataChanged(item, key, oldValue, newValue)
 end
 
 --[[
     Purpose:
-        Called when item data changes.
+        Called to get default functions for an item
 
     When Called:
-        When item data keys are modified.
+        When building the default interaction functions for an item
 
     Parameters:
-        item (Item)
-            The item whose data changed.
-        key (string)
-            The data key that changed.
-        oldValue (any)
-            The old value.
-        newValue (any)
-            The new value.
+        item (Item) - The item to get functions for
 
     Returns:
-        nil
+        table - Table of default functions
 
     Realm:
         Shared
@@ -9360,93 +1622,89 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log item data change
-        function MODULE:ItemDataChanged(item, key, oldValue, newValue)
-            print("Item data changed: " .. key)
-        end
-        ```
+
+    ```lua
+    -- Simple: Return basic functions
+    hook.Add("ItemDefaultFunctions", "MyAddon", function(item)
+        return {
+            use  = {name = "Use",  icon = "icon16/accept.png"},
+            drop = {name = "Drop", icon = "icon16/bin.png" }
+        }
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle specific data changes
-        function MODULE:ItemDataChanged(item, key, oldValue, newValue)
-            if not item then return end
 
-            -- Handle durability changes
-            if key == "durability" then
-                if newValue <= 0 then
-                    -- Item broke
-                    hook.Run("OnItemBroke", item)
-                end
-            end
+    ```lua
+    -- Medium: Conditional functions
+    hook.Add("ItemDefaultFunctions", "ConditionalItemFunctions", function(item)
+        local functions = {
+            use  = {name = "Use",  icon = "icon16/accept.png"},
+            drop = {name = "Drop", icon = "icon16/bin.png" }
+        }
 
-            lia.log.add("Item data changed: " .. key, FLAG_NORMAL)
+        if not item:getData("equipped", false) then
+            functions.equip = {name = "Equip", icon = "icon16/add.png"}
+        else
+            functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
         end
-        ```
+
+        return functions
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced data change handling with validation
-        function MODULE:ItemDataChanged(item, key, oldValue, newValue)
-            if not item then return end
 
-            -- Validate data change
-            local validation = self:ValidateItemDataChange(item, key, oldValue, newValue)
-            if not validation.valid then
-                lia.log.add("Invalid item data change: " .. validation.error, FLAG_WARNING)
-                return
-            end
+    ```lua
+    -- High: Complex function system
+    hook.Add("ItemDefaultFunctions", "AdvancedItemFunctions", function(item)
+        local functions = {}
 
-            -- Handle specific data keys
-            if key == "durability" then
-                self:HandleItemDurabilityChange(item, oldValue, newValue)
-            elseif key == "quality" then
-                self:HandleItemQualityChange(item, oldValue, newValue)
-            elseif key == "customData" then
-                self:HandleItemCustomDataChange(item, oldValue, newValue)
-            end
+        -- Always add use function
+        functions.use = {name = "Use", icon = "icon16/accept.png"}
 
-            -- Update item display
-            if CLIENT then
-                hook.Run("UpdateItemDisplay", item)
-            end
-
-            -- Sync to server if needed
-            if SERVER then
-                netstream.Start(nil, "itemDataChanged", item.id, key, newValue)
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Item %s data changed: %s (%s -> %s)",
-                item.name or "Unknown",
-                key,
-                tostring(oldValue),
-                tostring(newValue)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemDataChanged", item, key, oldValue, newValue)
+        -- Add drop if not equipped
+        if not item:getData("equipped", false) then
+            functions.drop = {name = "Drop", icon = "icon16/bin.png"}
         end
-        ```
+
+        -- Add equip/unequip
+        if item.equipable then
+            if item:getData("equipped", false) then
+                functions.unequip = {name = "Unequip", icon = "icon16/delete.png"}
+            else
+                functions.equip = {name = "Equip", icon = "icon16/add.png"}
+            end
+        end
+
+        -- Add examine
+        functions.examine = {name = "Examine", icon = "icon16/magnifier.png"}
+
+        -- Add repair if damaged
+        local durability = item:getData("durability")
+        if durability and durability < 100 then
+            functions.repair = {name = "Repair", icon = "icon16/wrench.png"}
+        end
+
+        return functions
+    end)
+    ```
 ]]
-function ItemDefaultFunctions(functions)
+function ItemDefaultFunctions(item)
 end
 
 --[[
     Purpose:
-        Modifies default item functions.
+        Called when an item is initialized
 
     When Called:
-        When setting up item function defaults.
+        When an item is first created and set up
 
     Parameters:
-        functions (table)
-            The functions table.
+        item (Item) - The item being initialized
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -9454,493 +1712,80 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: No modifications
-        function MODULE:ItemDefaultFunctions(functions)
-            -- No changes
-        end
-        ```
+
+    ```lua
+    -- Simple: Log item initialization
+    hook.Add("ItemInitialized", "MyAddon", function(item)
+        print("Item initialized: " .. item.name)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Add custom function
-        function MODULE:ItemDefaultFunctions(functions)
-            -- Add custom function to all items
-            functions.customFunction = function(self)
-                return "Custom function called"
-            end
+
+    ```lua
+    -- Medium: Set default item data
+    hook.Add("ItemInitialized", "SetDefaultItemData", function(item)
+        if not item:getData("durability") then
+            item:setData("durability", 100)
         end
-        ```
+        if not item:getData("quality") then
+            item:setData("quality", "common")
+        end
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced function modifications with validation
-        function MODULE:ItemDefaultFunctions(functions)
-            -- Override existing function with logging
-            local originalRemove = functions.remove
-            functions.remove = function(self)
-                lia.log.add("Item removed: " .. self:getName(), FLAG_NORMAL)
-                if originalRemove then
-                    return originalRemove(self)
-                end
-            end
 
-            -- Add custom functions
-            functions.customUse = function(self, client)
-                if not IsValid(client) then return false end
-                client:ChatPrint("Custom use function called")
-                return true
-            end
-
-            functions.getCustomData = function(self)
-                return self:getData("customData", {})
-            end
-
-            -- Validate all functions
-            self:ValidateItemFunctions(functions)
+    ```lua
+    -- High: Complex item initialization
+    hook.Add("ItemInitialized", "AdvancedItemInit", function(item)
+        -- Set default data
+        if not item:getData("durability") then
+            item:setData("durability", 100)
         end
-        ```
-]]
-function ItemDefaultFunctions(functions)
-end
-
---[[
-    Purpose:
-        Called when an item is deleted.
-
-    When Called:
-        When an item instance is removed.
-
-    Parameters:
-        instance (Item)
-            The item instance.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item deletion
-        function MODULE:ItemDeleted(instance)
-            if instance then
-                print("Item deleted: " .. instance:getName())
-            end
+        if not item:getData("quality") then
+            item:setData("quality", "common")
         end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Clean up item-related data
-        function MODULE:ItemDeleted(instance)
-            if not instance then return end
-
-            local itemID = instance:getID()
-
-            -- Clean up cached data
-            if self.itemCache and self.itemCache[itemID] then
-                self.itemCache[itemID] = nil
-            end
-
-            lia.log.add("Item deleted: " .. instance:getName(), FLAG_NORMAL)
+        if not item:getData("created") then
+            item:setData("created", os.time())
         end
-        ```
 
-    High Complexity:
-        ```lua
-        -- High: Advanced cleanup with comprehensive data management
-        function MODULE:ItemDeleted(instance)
-            if not instance then return end
+        if SERVER then
+            -- Log to database
+            lia.db.query("INSERT INTO item_logs (timestamp, itemid, action) VALUES (?, ?, ?)",
+                os.time(), item:getID(), "initialized")
 
-            local itemID = instance:getID()
-
-            -- Clean up cached data
-            if self.itemCache and self.itemCache[itemID] then
-                self.itemCache[itemID] = nil
+            -- Set up item-specific data
+            if item.category == "weapon" then
+                item:setData("ammo", item.maxAmmo or 30)
+            elseif item.category == "armor" then
+                item:setData("defense", item.baseDefense or 10)
             end
 
-            -- Handle equipped items
-            if instance:getData("equip") then
-                self:HandleItemDeletionWhileEquipped(instance)
-            end
-
-            -- Clean up quest references
-            self:CleanupQuestItemReferences(instance)
-
-            -- Remove from tracking systems
-            self:RemoveItemFromTracking(itemID)
-
-            -- Clean up database references
-            if SERVER then
-                self:CleanupItemDatabase(itemID)
-            end
-
-            -- Remove from UI if on client
-            if CLIENT then
-                hook.Run("RemoveItemFromUI", instance)
-            end
-
-            -- Log deletion
-            lia.log.add("Item deleted: " .. instance:getName(), FLAG_NORMAL)
-
-            -- Trigger cleanup hook
-            hook.Run("OnItemDeleted", instance)
+            -- Add to item registry
+            lia.itemRegistry = lia.itemRegistry or {}
+            lia.itemRegistry[item:getID()] = item
         end
-        ```
-]]
-function ItemDeleted(instance)
-end
-
---[[
-    Purpose:
-        Called when an item is deleted.
-
-    When Called:
-        When items are removed from the game.
-
-    Parameters:
-        instance (Item)
-            The item being deleted.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item deletion
-        function MODULE:ItemDeleted(instance)
-            if instance then
-                print("Item deleted: " .. (instance.name or "Unknown"))
-            end
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Clean up item references
-        function MODULE:ItemDeleted(instance)
-            if not instance then return end
-
-            -- Remove from cached data
-            if self.itemCache and self.itemCache[instance.id] then
-                self.itemCache[instance.id] = nil
-            end
-
-            -- Log deletion
-            lia.log.add("Item deleted: " .. instance.name, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced deletion handling with comprehensive cleanup
-        function MODULE:ItemDeleted(instance)
-            if not instance then return end
-
-            -- Clean up all item references
-            self:CleanupItemReferences(instance)
-
-            -- Remove from inventory systems
-            self:RemoveItemFromInventories(instance)
-
-            -- Clean up database references
-            if SERVER then
-                self:CleanupItemDatabase(instance.id)
-            end
-
-            -- Remove from active item lists
-            if self.activeItems then
-                for i, item in ipairs(self.activeItems) do
-                    if item.id == instance.id then
-                        table.remove(self.activeItems, i)
-                        break
-                    end
-                end
-            end
-
-            -- Handle special item types
-            if instance.isWeapon then
-                self:HandleWeaponDeletion(instance)
-            elseif instance.isVehicle then
-                self:HandleVehicleDeletion(instance)
-            end
-
-            -- Notify clients
-            if SERVER then
-                netstream.Start(nil, "itemDeleted", instance.id)
-            end
-
-            -- Remove from UI
-            if CLIENT then
-                hook.Run("RemoveItemFromUI", instance.id)
-            end
-
-            -- Log comprehensive deletion
-            lia.log.add(string.format(
-                "Item deleted: %s (ID: %s, Type: %s)",
-                instance.name,
-                instance.id,
-                instance.uniqueID
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemFullyDeleted", instance)
-        end
-        ```
-]]
-function ItemFunctionCalled(item, method, client, entity, results)
-end
-
---[[
-    Purpose:
-        Called when an item function is executed.
-
-    When Called:
-        When item methods are called.
-
-    Parameters:
-        item (Item)
-            The item.
-        method (string)
-            The method name.
-        client (Player)
-            The player calling the method.
-        entity (Entity)
-            The entity involved.
-        results (any)
-            The method results.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log function calls
-        function MODULE:ItemFunctionCalled(item, method, client, entity, results)
-            print("Item function called: " .. method)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track function calls and log important ones
-        function MODULE:ItemFunctionCalled(item, method, client, entity, results)
-            if not item then return end
-
-            -- Log important methods
-            local importantMethods = {"use", "drop", "equip", "unequip"}
-            for _, important in ipairs(importantMethods) do
-                if method == important then
-                    lia.log.add(string.format(
-                        "Item %s function %s called by %s",
-                        item:getName(),
-                        method,
-                        IsValid(client) and client:Name() or "Unknown"
-                    ), FLAG_NORMAL)
-                end
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced function call tracking with validation and analytics
-        function MODULE:ItemFunctionCalled(item, method, client, entity, results)
-            if not item then return end
-
-            -- Track function call statistics
-            if not self.itemFunctionStats then
-                self.itemFunctionStats = {}
-            end
-
-            local itemID = item:getID()
-            if not self.itemFunctionStats[itemID] then
-                self.itemFunctionStats[itemID] = {}
-            end
-
-            self.itemFunctionStats[itemID][method] = (self.itemFunctionStats[itemID][method] or 0) + 1
-
-            -- Validate function call
-            local validation = self:ValidateItemFunctionCall(item, method, client)
-            if not validation.valid then
-                lia.log.add("Invalid item function call: " .. validation.error, FLAG_WARNING)
-                if IsValid(client) then
-                    client:ChatPrint("Cannot use this item: " .. validation.error)
-                end
-                return
-            end
-
-            -- Check for permission requirements
-            if IsValid(client) then
-                local char = client:getChar()
-                if char then
-                    local hasPermission = self:CheckItemFunctionPermission(item, method, char)
-                    if not hasPermission then
-                        client:ChatPrint("You don't have permission to use this function")
-                        return
-                    end
-                end
-            end
-
-            -- Log important function calls
-            local importantMethods = {"use", "drop", "equip", "unequip", "transfer"}
-            for _, important in ipairs(importantMethods) do
-                if method == important then
-                    lia.log.add(string.format(
-                        "Item %s function %s called by %s (results: %s)",
-                        item:getName(),
-                        method,
-                        IsValid(client) and client:Name() or "Unknown",
-                        tostring(results)
-                    ), FLAG_NORMAL)
-                end
-            end
-
-            -- Trigger analytics hook
-            hook.Run("OnItemFunctionCalled", item, method, client, entity, results)
-        end
-        ```
-]]
-function ItemFunctionCalled(item, method, client, entity, results)
-end
-
---[[
-    Purpose:
-        Called when an item is initialized.
-
-    When Called:
-        When an item instance is created and set up.
-
-    Parameters:
-        item (Item)
-            The item being initialized.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item initialization
-        function MODULE:ItemInitialized(item)
-            if item then
-                print("Item initialized: " .. item:getName())
-            end
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Set up item defaults
-        function MODULE:ItemInitialized(item)
-            if not item then return end
-
-            -- Set default data if not already set
-            if not item:getData("quantity") then
-                item:setData("quantity", 1)
-            end
-
-            if not item:getData("quality") then
-                item:setData("quality", 100)
-            end
-
-            -- Cache item
-            if not self.itemCache then
-                self.itemCache = {}
-            end
-            self.itemCache[item:getID()] = item
-
-            lia.log.add("Item initialized: " .. item:getName(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced initialization with validation and setup
-        function MODULE:ItemInitialized(item)
-            if not item then return end
-
-            local itemID = item:getID()
-
-            -- Validate item
-            local validation = self:ValidateItem(item)
-            if not validation.valid then
-                lia.log.add("Invalid item initialized: " .. validation.error, FLAG_ERROR)
-                return
-            end
-
-            -- Set default data
-            self:SetItemDefaults(item)
-
-            -- Initialize item-specific data
-            self:InitializeItemSpecificData(item)
-
-            -- Set up item hooks
-            self:SetupItemHooks(item)
-
-            -- Cache item
-            if not self.itemCache then
-                self.itemCache = {}
-            end
-            self.itemCache[itemID] = item
-
-            -- Register with tracking system
-            self:RegisterItemTracking(item)
-
-            -- Set up item display
-            if CLIENT then
-                hook.Run("SetupItemDisplay", item)
-            end
-
-            -- Sync to clients if on server
-            if SERVER then
-                local inventory = item:getInventory()
-                if inventory then
-                    netstream.Start(inventory:getReceivers(), "itemInitialized", itemID)
-                end
-            end
-
-            lia.log.add("Item initialized: " .. item:getName(), FLAG_NORMAL)
-
-            -- Trigger initialization hook
-            hook.Run("OnItemFullyInitialized", item)
-        end
-        ```
+    end)
+    ```
 ]]
 function ItemInitialized(item)
 end
 
 --[[
     Purpose:
-        Called when an item is initialized.
+        Called when an item's quantity changes
 
     When Called:
-        When items are first created and set up.
+        When the stack size of an item is modified
 
     Parameters:
-        item (Item)
-            The item being initialized.
+        item (Item) - The item whose quantity changed
+        oldValue (number) - The old quantity
+        quantity (number) - The new quantity
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -9948,577 +1793,86 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log item initialization
-        function MODULE:ItemInitialized(item)
-            if item then
-                print("Item initialized: " .. (item.name or "Unknown"))
-            end
-        end
-        ```
+
+    ```lua
+    -- Simple: Log quantity changes
+    hook.Add("ItemQuantityChanged", "MyAddon", function(item, oldValue, quantity)
+        print(item.name .. " quantity changed from " .. oldValue .. " to " .. quantity)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Set up default item properties
-        function MODULE:ItemInitialized(item)
-            if not item then return end
 
-            -- Set default data if missing
-            if not item:getData("durability") then
-                item:setData("durability", 100)
-            end
-
-            -- Cache item
-            if not self.itemCache then
-                self.itemCache = {}
-            end
-            self.itemCache[item.id] = item
-
-            lia.log.add("Item initialized: " .. item.name, FLAG_NORMAL)
+    ```lua
+    -- Medium: Remove item if quantity is zero
+    hook.Add("ItemQuantityChanged", "RemoveEmptyItems", function(item, oldValue, quantity)
+        if quantity <= 0 then
+            item:remove()
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced item initialization with comprehensive setup
-        function MODULE:ItemInitialized(item)
-            if not item then return end
 
-            -- Validate item structure
-            self:ValidateItemStructure(item)
+    ```lua
+    -- High: Complex quantity management
+    hook.Add("ItemQuantityChanged", "AdvancedQuantityManagement", function(item, oldValue, quantity)
+        if SERVER then
+            -- Log to database
+            lia.db.query("INSERT INTO item_quantity_logs (timestamp, itemid, oldquantity, newquantity) VALUES (?, ?, ?, ?)",
+                os.time(), item:getID(), oldValue, quantity)
 
-            -- Set up default properties
-            self:InitializeItemDefaults(item)
-
-            -- Load item-specific data
-            self:LoadItemSpecificData(item)
-
-            -- Set up item systems
-            self:SetupItemSystems(item)
-
-            -- Register with tracking systems
-            if not self.activeItems then
-                self.activeItems = {}
-            end
-            table.insert(self.activeItems, item)
-
-            -- Handle special item types
-            if item.isWeapon then
-                self:InitializeWeaponItem(item)
-            elseif item.isArmor then
-                self:InitializeArmorItem(item)
-            elseif item.isConsumable then
-                self:InitializeConsumableItem(item)
+            -- Remove item if quantity is zero or negative
+            if quantity <= 0 then
+                local owner = item:getOwner()
+                if IsValid(owner) then
+                    owner:ChatPrint(item.name .. " has been depleted")
+                end
+                item:remove()
+                return
             end
 
-            -- Set up networking
-            if SERVER then
-                self:SetupItemNetworking(item)
+            -- Notify owner of quantity change
+            local owner = item:getOwner()
+            if IsValid(owner) then
+                local change = quantity - oldValue
+                if change > 0 then
+                    owner:ChatPrint("+" .. change .. " " .. item.name)
+                else
+                    owner:ChatPrint(change .. " " .. item.name)
+                end
             end
 
-            -- Initialize UI components
-            if CLIENT then
-                self:SetupItemUI(item)
+            -- Check for achievements
+            if quantity >= 100 then
+                local owner = item:getOwner()
+                if IsValid(owner) then
+                    local char = owner:getChar()
+                    if char and not char:getData("achievement_hoarder_" .. item.uniqueID, false) then
+                        char:setData("achievement_hoarder_" .. item.uniqueID, true)
+                        owner:ChatPrint("Achievement unlocked: Hoarder of " .. item.name)
+                    end
+                end
             end
-
-            -- Register with database systems
-            if SERVER then
-                self:RegisterItemWithDatabase(item)
-            end
-
-            -- Apply item modifiers
-            self:ApplyItemModifiers(item)
-
-            -- Log initialization
-            lia.log.add(string.format(
-                "Item initialized: %s (ID: %s, Type: %s)",
-                item.name,
-                item.id,
-                item.uniqueID
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemFullyInitialized", item)
         end
-        ```
+    end)
+    ```
 ]]
 function ItemQuantityChanged(item, oldValue, quantity)
 end
 
 --[[
     Purpose:
-        Called when item quantity changes.
+        Called when Lilia framework is fully loaded
 
     When Called:
-        When item stack sizes are modified.
-
-    Parameters:
-        item (Item)
-            The item.
-        oldValue (number)
-            The old quantity.
-        quantity (number)
-            The new quantity.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log quantity change
-        function MODULE:ItemQuantityChanged(item, oldValue, quantity)
-            print("Item quantity changed: " .. oldValue .. " -> " .. quantity)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle quantity changes with validation
-        function MODULE:ItemQuantityChanged(item, oldValue, quantity)
-            if not item then return end
-
-            -- Remove item if quantity reaches zero
-            if quantity <= 0 then
-                item:remove()
-                return
-            end
-
-            -- Update item display
-            if CLIENT then
-                hook.Run("UpdateItemDisplay", item)
-            end
-
-            lia.log.add("Item quantity changed: " .. oldValue .. " -> " .. quantity, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced quantity change handling with validation and effects
-        function MODULE:ItemQuantityChanged(item, oldValue, quantity)
-            if not item then return end
-
-            -- Validate new quantity
-            local maxStack = item.maxStack or 999
-            if quantity > maxStack then
-                lia.log.add("Item quantity exceeds max stack: " .. quantity, FLAG_WARNING)
-                item:setData("quantity", maxStack)
-                quantity = maxStack
-            end
-
-            -- Remove item if quantity reaches zero
-            if quantity <= 0 then
-                item:remove()
-                return
-            end
-
-            -- Handle stack splitting/merging
-            if quantity < oldValue then
-                self:HandleItemStackReduction(item, oldValue, quantity)
-            elseif quantity > oldValue then
-                self:HandleItemStackIncrease(item, oldValue, quantity)
-            end
-
-            -- Update inventory weight
-            local inventory = item:getInventory()
-            if inventory then
-                self:UpdateInventoryWeight(inventory)
-            end
-
-            -- Update item display
-            if CLIENT then
-                hook.Run("UpdateItemDisplay", item)
-            end
-
-            -- Sync to clients
-            if SERVER and inventory then
-                netstream.Start(inventory:getReceivers(), "itemQuantityChanged", item:getID(), quantity)
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Item %s quantity changed: %d -> %d",
-                item:getName(),
-                oldValue,
-                quantity
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemQuantityChanged", item, oldValue, quantity)
-        end
-        ```
-]]
-function ItemQuantityChanged(item, oldValue, quantity)
-end
-
---[[
-    Purpose:
-        Called when an item is transferred.
-
-    When Called:
-        When items are moved between inventories.
-
-    Parameters:
-        context (table)
-            The transfer context.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item transfer
-        function MODULE:ItemTransfered(context)
-            print("Item transferred")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle transfer with notifications
-        function MODULE:ItemTransfered(context)
-            if not context then return end
-
-            local item = context.item
-            local fromInv = context.from
-            local toInv = context.to
-
-            -- Notify players
-            if SERVER then
-                local fromOwner = fromInv and fromInv:getOwner()
-                local toOwner = toInv and toInv:getOwner()
-
-                if IsValid(fromOwner) and fromOwner:IsPlayer() then
-                    fromOwner:ChatPrint("Item transferred: " .. item:getName())
-                end
-
-                if IsValid(toOwner) and toOwner:IsPlayer() and toOwner ~= fromOwner then
-                    toOwner:ChatPrint("You received: " .. item:getName())
-                end
-            end
-
-            lia.log.add("Item transferred: " .. item:getName(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced transfer handling with validation and effects
-        function MODULE:ItemTransfered(context)
-            if not context then return end
-
-            local item = context.item
-            local fromInv = context.from
-            local toInv = context.to
-            local quantity = context.quantity or item:getQuantity()
-
-            -- Validate transfer
-            local validation = self:ValidateItemTransfer(context)
-            if not validation.valid then
-                lia.log.add("Invalid item transfer: " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Update inventory weights
-            if fromInv then
-                self:UpdateInventoryWeight(fromInv)
-            end
-            if toInv then
-                self:UpdateInventoryWeight(toInv)
-            end
-
-            -- Handle special transfer effects
-            if item:getData("transferEffect") then
-                self:ApplyItemTransferEffect(item, fromInv, toInv)
-            end
-
-            -- Notify players
-            if SERVER then
-                local fromOwner = fromInv and fromInv:getOwner()
-                local toOwner = toInv and toInv:getOwner()
-
-                if IsValid(fromOwner) and fromOwner:IsPlayer() then
-                    local char = fromOwner:getChar()
-                    if char then
-                        fromOwner:ChatPrint("You transferred: " .. item:getName() .. " x" .. quantity)
-                        hook.Run("OnItemTransferredFrom", char, item, toInv)
-                    end
-                end
-
-                if IsValid(toOwner) and toOwner:IsPlayer() and toOwner ~= fromOwner then
-                    local char = toOwner:getChar()
-                    if char then
-                        toOwner:ChatPrint("You received: " .. item:getName() .. " x" .. quantity)
-                        hook.Run("OnItemTransferredTo", char, item, fromInv)
-                    end
-                end
-            end
-
-            -- Update UI
-            if CLIENT then
-                if fromInv then hook.Run("UpdateInventoryDisplay", fromInv) end
-                if toInv then hook.Run("UpdateInventoryDisplay", toInv) end
-            end
-
-            -- Log transfer
-            lia.log.add(string.format(
-                "Item %s x%d transferred from %s to %s",
-                item:getName(),
-                quantity,
-                fromInv and fromInv:getID() or "Unknown",
-                toInv and toInv:getID() or "Unknown"
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemTransferred", context)
-        end
-        ```
-]]
-function ItemTransfered(context)
-end
-
---[[
-    Purpose:
-        Called when an item is transferred.
-
-    When Called:
-        When items are moved between inventories or locations.
-
-    Parameters:
-        context (table)
-            The transfer context containing transfer details.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item transfer
-        function MODULE:ItemTransfered(context)
-            if context and context.item then
-                print("Item transferred: " .. (context.item.name or "Unknown"))
-            end
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle transfer logging and validation
-        function MODULE:ItemTransfered(context)
-            if not context or not context.item then return end
-
-            -- Log transfer
-            lia.log.add(string.format(
-                "Item transferred: %s from %s to %s",
-                context.item.name,
-                context.fromInventory or "unknown",
-                context.toInventory or "unknown"
-            ), FLAG_NORMAL)
-
-            -- Update transfer statistics
-            self:UpdateTransferStatistics(context)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced transfer handling with validation and effects
-        function MODULE:ItemTransfered(context)
-            if not context or not context.item then return end
-
-            -- Validate transfer
-            local validation = self:ValidateItemTransfer(context)
-            if not validation.valid then
-                lia.log.add("Invalid item transfer: " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Handle special transfer types
-            if context.transferType == "trade" then
-                self:HandleTradeTransfer(context)
-            elseif context.transferType == "loot" then
-                self:HandleLootTransfer(context)
-            elseif context.transferType == "admin" then
-                self:HandleAdminTransfer(context)
-            end
-
-            -- Update item ownership
-            self:UpdateItemOwnership(context)
-
-            -- Handle transfer effects
-            if context.fromCharacter and context.toCharacter then
-                self:HandleCharacterTransferEffects(context)
-            end
-
-            -- Update inventory displays
-            if CLIENT then
-                hook.Run("UpdateInventoryDisplay", context.fromInventory, context.toInventory)
-            end
-
-            -- Sync transfer to clients
-            if SERVER then
-                netstream.Start(nil, "itemTransferred", {
-                    itemID = context.item.id,
-                    fromInv = context.fromInventory,
-                    toInv = context.toInventory,
-                    transferType = context.transferType
-                })
-            end
-
-            -- Log comprehensive transfer
-            lia.log.add(string.format(
-                "Item transferred: %s (ID: %s) from %s to %s (Type: %s, Client: %s)",
-                context.item.name,
-                context.item.id,
-                context.fromInventory or "unknown",
-                context.toInventory or "unknown",
-                context.transferType or "unknown",
-                context.client and context.client:Name() or "unknown"
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemFullyTransferred", context)
-        end
-        ```
-]]
-function KickedFromChar(characterID, isCurrentChar)
-end
-
---[[
-    Purpose:
-        Called when a player is kicked from a character.
-
-    When Called:
-        When a player is forced out of a character.
-
-    Parameters:
-        characterID (number)
-            The character ID.
-        isCurrentChar (boolean)
-            Whether this was the current character.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character kick
-        function MODULE:KickedFromChar(characterID, isCurrentChar)
-            print("Kicked from character: " .. characterID)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle character kick with cleanup
-        function MODULE:KickedFromChar(characterID, isCurrentChar)
-            if SERVER then
-                -- Save character data
-                local char = lia.char.loaded[characterID]
-                if char then
-                    char:save()
-                end
-
-                -- Notify player
-                local client = char and char:getPlayer()
-                if IsValid(client) then
-                    client:ChatPrint("You were kicked from your character")
-                end
-            end
-
-            lia.log.add("Kicked from character: " .. characterID, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced kick handling with comprehensive cleanup
-        function MODULE:KickedFromChar(characterID, isCurrentChar)
-            if SERVER then
-                local char = lia.char.loaded[characterID]
-                if not char then return end
-
-                local client = char:getPlayer()
-
-                -- Save character data
-                char:save()
-
-                -- Clean up character inventory
-                local inventory = char:getInv()
-                if inventory then
-                    -- Save inventory state
-                    inventory:save()
-                end
-
-                -- Remove equipped items
-                if inventory then
-                    for _, item in pairs(inventory:getItems()) do
-                        if item:getData("equip") then
-                            item:setData("equip", false)
-                        end
-                    end
-                end
-
-                -- Notify player
-                if IsValid(client) then
-                    client:ChatPrint("You were kicked from your character")
-
-                    -- Show reason if available
-                    local reason = char:getData("kickReason")
-                    if reason then
-                        client:ChatPrint("Reason: " .. reason)
-                    end
-                end
-
-                -- Log kick
-                lia.log.add(string.format(
-                    "Player %s kicked from character %s (current: %s)",
-                    IsValid(client) and client:Name() or "Unknown",
-                    characterID,
-                    tostring(isCurrentChar)
-                ), FLAG_WARNING)
-
-                -- Trigger kick hook
-                hook.Run("OnKickedFromChar", char, isCurrentChar)
-            end
-        end
-        ```
-]]
-function KickedFromChar(characterID, isCurrentChar)
-end
-
---[[
-    Purpose:
-        Called when Lilia framework is loaded.
-
-    When Called:
-        After the Lilia framework initializes.
+        After all Lilia systems are initialized
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -10526,1390 +1880,216 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log Lilia load
-        function MODULE:LiliaLoaded()
-            print("Lilia framework loaded")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log framework load
+    hook.Add("LiliaLoaded", "MyAddon", function()
+        print("Lilia framework loaded")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize custom systems after Lilia loads
-        function MODULE:LiliaLoaded()
-            -- Set up custom configurations
-            lia.config.set("customSetting", "value")
-
-            -- Initialize custom libraries
-            self:InitializeCustomLibraries()
-
-            lia.log.add("Lilia framework loaded", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Initialize addon systems
+    hook.Add("LiliaLoaded", "InitializeAddon", function()
+        MyAddon.Initialize()
+        print("MyAddon initialized")
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced initialization with comprehensive setup
-        function MODULE:LiliaLoaded()
-            -- Validate Lilia core systems
-            self:ValidateLiliaSystems()
 
-            -- Initialize custom systems
-            self:InitializeCustomSystems()
+    ```lua
+    -- High: Complex framework initialization
+    hook.Add("LiliaLoaded", "AdvancedFrameworkInit", function()
+        -- Initialize custom systems
+        MyAddon.Initialize()
 
-            -- Load custom configurations
-            self:LoadCustomConfigurations()
-
-            -- Set up custom hooks
-            self:SetupCustomHooks()
-
-            -- Initialize database connections
-            if SERVER then
-                self:InitializeDatabaseConnections()
+        -- Register custom chat commands
+        lia.command.add("mycmd", {
+            description = "My custom command",
+            onRun       = function(client, arguments)
+                client:ChatPrint("Command executed!")
             end
+        })
 
-            -- Initialize UI systems
-            if CLIENT then
-                self:InitializeUISystems()
-            end
+        -- Register custom items
+        lia.item.register("my_item", {
+            name = "My Item",
+            desc = "A custom item",
+            model = "models/props_lab/box01a.mdl"
+        })
 
-            -- Register custom commands
-            self:RegisterCustomCommands()
-
-            -- Set up event handlers
-            self:SetupEventHandlers()
-
-            lia.log.add("Lilia framework fully loaded", FLAG_NORMAL)
-
-            -- Trigger load completion hook
-            hook.Run("OnLiliaFullyLoaded")
-        end
-        ```
+        print("MyAddon fully initialized with Lilia")
+    end)
+    ```
 ]]
 function LiliaLoaded()
 end
 
 --[[
     Purpose:
-        Called when Lilia framework is fully loaded.
+        Called when a network variable changes
 
     When Called:
-        After the Lilia framework initialization is complete.
+        When an entity's netvar is modified
 
     Parameters:
+        entity (Entity) - The entity whose netvar changed
+        key (string) - The netvar key
+        oldValue (any) - The old value
+        value (any) - The new value
+
+    Returns:
         None
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log framework load
-        function MODULE:LiliaLoaded()
-            print("Lilia framework loaded")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log netvar changes
+    hook.Add("NetVarChanged", "MyAddon", function(entity, key, oldValue, value)
+        print("NetVar changed: " .. key .. " = " .. tostring(value))
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize framework-dependent systems
-        function MODULE:LiliaLoaded()
-            -- Set up framework hooks
-            self:SetupFrameworkHooks()
 
-            -- Initialize custom systems
-            self:InitializeCustomSystems()
-
-            lia.log.add("Lilia framework loaded", FLAG_NORMAL)
+    ```lua
+    -- Medium: Track specific netvars
+    hook.Add("NetVarChanged", "TrackNetvars", function(entity, key, oldValue, value)
+        if key == "health" then
+            print("Health changed from " .. oldValue .. " to " .. value)
+        elseif key == "armor" then
+            print("Armor changed from " .. oldValue .. " to " .. value)
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced framework initialization with comprehensive setup
-        function MODULE:LiliaLoaded()
-            -- Validate framework components
-            self:ValidateFrameworkComponents()
 
-            -- Initialize all systems in correct order
-            self:InitializeCoreSystems()
-            self:InitializeDatabaseSystems()
-            self:InitializeNetworkSystems()
-            self:InitializeUISystems()
+    ```lua
+    -- High: Complex netvar tracking system
+    hook.Add("NetVarChanged", "AdvancedNetvarTracking", function(entity, key, oldValue, value)
+        if not IsValid(entity) then return end
 
-            -- Set up framework integrations
-            self:SetupFrameworkIntegrations()
+        -- Log to console
+        print(string.format("NetVar changed on %s: %s = %s (was %s)",
+            tostring(entity), key, tostring(value), tostring(oldValue)))
 
-            -- Initialize third-party modules
-            self:InitializeThirdPartyModules()
-
-            -- Load custom configurations
-            self:LoadCustomConfigurations()
-
-            -- Set up event handlers
-            self:SetupEventHandlers()
-
-            -- Initialize performance monitoring
-            self:InitializePerformanceMonitoring()
-
-            -- Validate all systems
-            self:ValidateSystemInitialization()
-
-            -- Log comprehensive load
-            local loadTime = SysTime() - (self.loadStartTime or SysTime())
-            lia.log.add(string.format(
-                "Lilia framework fully loaded in %.2f seconds",
-                loadTime
-            ), FLAG_NORMAL)
-
-            -- Trigger post-load events
-            hook.Run("OnLiliaFullyLoaded")
-
-            -- Notify administrators
-            if SERVER then
-                self:NotifyAdministratorsOfLoad()
+        -- Handle specific netvars
+        if key == "health" and entity:IsPlayer() then
+            if value < oldValue then
+                -- Player took damage
+                local damage = oldValue - value
+                print(entity:Name() .. " took " .. damage .. " damage")
+            elseif value > oldValue then
+                -- Player healed
+                local healing = value - oldValue
+                print(entity:Name() .. " healed " .. healing .. " HP")
             end
         end
-        ```
-]]
-function LiliaTablesLoaded()
-end
 
---[[
-    Purpose:
-        Called when Lilia database tables are loaded.
-
-    When Called:
-        After database schema is initialized.
-
-    Parameters:
-        None
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log tables loaded
-        function MODULE:LiliaTablesLoaded()
-            print("Lilia database tables loaded")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize custom database tables
-        function MODULE:LiliaTablesLoaded()
-            -- Create custom table
-            lia.db.query([[
-                CREATE TABLE IF NOT EXISTS custom_data (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    data TEXT
-                )
-            ]])
-
-            lia.log.add("Lilia database tables loaded", FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        function MODULE:LiliaTablesLoaded()
-            self:ValidateDatabaseTables()
-
-            local customTables = {
-                {
-                    name = "custom_data",
-                    schema = [[
-                        CREATE TABLE IF NOT EXISTS custom_data (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            player_id VARCHAR(64),
-                            data TEXT,
-                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-                        )
-                    ]]
-                },
-                {
-                    name = "custom_logs",
-                    schema = [[
-                        CREATE TABLE IF NOT EXISTS custom_logs (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            action TEXT,
-                            player_id VARCHAR(64),
-                            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-                        )
-                    ]]
-                }
-            }
-
-            for _, tableDef in ipairs(customTables) do
-                lia.db.query(tableDef.schema)
-                lia.log.add("Created table: " .. tableDef.name, FLAG_NORMAL)
-            end
-
-            self:CreateDatabaseIndexes()
-
-            self:MigrateDatabaseData()
-
-            lia.log.add("Lilia database tables fully loaded", FLAG_NORMAL)
-        end
-        ```
-]]
-function LiliaTablesLoaded()
-end
-
---[[
-    Purpose:
-        Called when network variables change.
-
-    When Called:
-        When entity NetVars are modified.
-
-    Parameters:
-        entity (Entity)
-            The entity.
-        key (string)
-            The NetVar key.
-        oldValue (any)
-            The old value.
-        value (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log NetVar change
-        function MODULE:NetVarChanged(entity, key, oldValue, value)
-            print("NetVar changed: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle specific NetVar changes
-        function MODULE:NetVarChanged(entity, key, oldValue, value)
-            if not IsValid(entity) then return end
-
-            -- Handle important NetVar changes
-            if key == "health" then
-                if value < oldValue then
-                    -- Health decreased
-                    hook.Run("OnEntityHealthDecreased", entity, oldValue, value)
-                end
-            end
-
-            lia.log.add("NetVar changed: " .. key, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced NetVar handling with validation and effects
-        function MODULE:NetVarChanged(entity, key, oldValue, value)
-            if not IsValid(entity) then return end
-
-            -- Validate value
-            local validation = self:ValidateNetVar(key, value)
-            if not validation.valid then
-                lia.log.add("Invalid NetVar value for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Handle specific NetVar keys
-            if key == "health" then
-                self:HandleHealthChange(entity, oldValue, value)
-            elseif key == "armor" then
-                self:HandleArmorChange(entity, oldValue, value)
-            elseif key == "money" then
-                self:HandleMoneyChange(entity, oldValue, value)
-            end
-
-            -- Update entity display
-            if CLIENT then
-                hook.Run("UpdateEntityDisplay", entity, key, value)
-            end
-
-            -- Sync to clients if needed
-            if SERVER then
-                local shouldSync = self:ShouldSyncNetVar(key)
-                if shouldSync then
-                    netstream.Start(nil, "netVarChanged", entity:EntIndex(), key, value)
-                end
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Entity %s NetVar changed: %s (%s -> %s)",
-                tostring(entity),
-                key,
-                tostring(oldValue),
-                tostring(value)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnNetVarChanged", entity, key, oldValue, value)
-        end
-        ```
+        -- Trigger custom events
+        hook.Run("CustomNetVarChanged_" .. key, entity, oldValue, value)
+    end)
+    ```
 ]]
 function NetVarChanged(entity, key, oldValue, value)
 end
 
 --[[
     Purpose:
-        Called when character attributes are boosted.
+        Called when an item is registered
 
     When Called:
-        When attribute boosts are applied.
+        When a new item is added to the item system
 
     Parameters:
-        client (Player)
-            The player.
-        character (Character)
-            The character.
-        attribID (string)
-            The attribute ID.
-        boostID (string)
-            The boost ID.
-        boostAmount (number)
-            The boost amount.
+        ITEM (table) - The item table being registered
 
     Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log attribute boost
-        function MODULE:OnCharAttribBoosted(client, character, attribID, boostID, boostAmount)
-            print("Attribute boosted: " .. attribID)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle attribute boost with notifications
-        function MODULE:OnCharAttribBoosted(client, character, attribID, boostID, boostAmount)
-            if not IsValid(client) or not character then return end
-
-            -- Notify player
-            client:ChatPrint("Your " .. attribID .. " was boosted by " .. boostAmount)
-
-            -- Update display
-            if CLIENT then
-                hook.Run("UpdateAttributeDisplay", character, attribID)
-            end
-
-            lia.log.add("Attribute boosted: " .. attribID, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced boost handling with validation and effects
-        function MODULE:OnCharAttribBoosted(client, character, attribID, boostID, boostAmount)
-            if not IsValid(client) or not character then return end
-
-            -- Validate boost
-            local validation = self:ValidateAttributeBoost(character, attribID, boostAmount)
-            if not validation.valid then
-                lia.log.add("Invalid attribute boost: " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Check for boost cap
-            local currentBoost = character:getData("attribBoosts", {})[attribID] or 0
-            local maxBoost = hook.Run("GetAttributeMaxBoost", character, attribID) or 50
-            if currentBoost + boostAmount > maxBoost then
-                boostAmount = maxBoost - currentBoost
-            end
-
-            -- Apply boost effects
-            self:ApplyAttributeBoostEffects(character, attribID, boostAmount)
-
-            -- Check for achievement
-            hook.Run("CheckAttributeBoostAchievement", character, attribID, boostAmount)
-
-            -- Notify player
-            if IsValid(client) then
-                client:ChatPrint(string.format(
-                    "Your %s was boosted by %d (from %s)",
-                    attribID,
-                    boostAmount,
-                    boostID
-                ))
-
-                -- Play sound
-                client:EmitSound("items/smallmedkit1.wav")
-            end
-
-            -- Update display
-            if CLIENT then
-                hook.Run("UpdateAttributeDisplay", character, attribID)
-            end
-
-            -- Log boost
-            lia.log.add(string.format(
-                "Character %s attribute %s boosted by %d (boostID: %s)",
-                character:getName(),
-                attribID,
-                boostAmount,
-                boostID
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnAttributeBoosted", client, character, attribID, boostID, boostAmount)
-        end
-        ```
-]]
-function OnCharAttribBoosted(client, character, attribID, boostID, boostAmount)
-end
-
---[[
-    Purpose:
-        Called when character attributes are updated.
-
-    When Called:
-        When character attributes change.
-
-    Parameters:
-        client (Player)
-            The player.
-        character (Character)
-            The character.
-        key (string)
-            The attribute key.
-        value (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log attribute update
-        function MODULE:OnCharAttribUpdated(client, character, key, value)
-            print("Attribute updated: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle attribute update with validation
-        function MODULE:OnCharAttribUpdated(client, character, key, value)
-            if not character then return end
-
-            -- Validate value
-            local maxValue = hook.Run("GetAttributeMax", client, key) or 100
-            if value > maxValue then
-                value = maxValue
-            end
-
-            -- Update display
-            if CLIENT then
-                hook.Run("UpdateAttributeDisplay", character, key)
-            end
-
-            lia.log.add("Attribute updated: " .. key, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced attribute update handling with validation and effects
-        function MODULE:OnCharAttribUpdated(client, character, key, value)
-            if not character then return end
-
-            -- Validate value
-            local maxValue = hook.Run("GetAttributeMax", client, key) or 100
-            local minValue = 0
-
-            if value > maxValue then
-                value = maxValue
-                lia.log.add("Attribute " .. key .. " capped at maximum", FLAG_WARNING)
-            elseif value < minValue then
-                value = minValue
-                lia.log.add("Attribute " .. key .. " set to minimum", FLAG_WARNING)
-            end
-
-            -- Check for attribute changes that trigger effects
-            local oldValue = character:getAttrib(key, 0)
-            if value ~= oldValue then
-                -- Apply attribute change effects
-                self:ApplyAttributeChangeEffects(character, key, oldValue, value)
-
-                -- Check for level ups
-                if value > oldValue then
-                    self:CheckAttributeLevelUp(character, key, oldValue, value)
-                end
-            end
-
-            -- Update related systems
-            if key == "strength" then
-                self:UpdateStrengthBasedSystems(character, value)
-            elseif key == "endurance" then
-                self:UpdateEnduranceBasedSystems(character, value)
-            elseif key == "agility" then
-                self:UpdateAgilityBasedSystems(character, value)
-            end
-
-            -- Update display
-            if CLIENT then
-                hook.Run("UpdateAttributeDisplay", character, key)
-            end
-
-            -- Sync to clients
-            if SERVER then
-                netstream.Start(nil, "attribUpdated", character:getID(), key, value)
-            end
-
-            -- Log update
-            lia.log.add(string.format(
-                "Character %s attribute %s updated to %d",
-                character:getName(),
-                key,
-                value
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnAttributeUpdated", client, character, key, value)
-        end
-        ```
-]]
-function OnCharAttribUpdated(client, character, key, value)
-end
-
---[[
-    Purpose:
-        Called when character NetVars change.
-
-    When Called:
-        When character network variables are modified.
-
-    Parameters:
-        character (Character)
-            The character.
-        key (string)
-            The NetVar key.
-        oldVar (any)
-            The old value.
-        value (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log NetVar change
-        function MODULE:OnCharNetVarChanged(character, key, oldVar, value)
-            print("Character NetVar changed: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle specific NetVar changes
-        function MODULE:OnCharNetVarChanged(character, key, oldVar, value)
-            if not character then return end
-
-            -- Handle important NetVar changes
-            if key == "name" then
-                -- Character name changed
-                hook.Run("OnCharacterNameChanged", character, oldVar, value)
-            elseif key == "model" then
-                -- Model changed, update entity
-                local client = character:getPlayer()
-                if IsValid(client) then
-                    client:SetModel(value)
-                end
-            end
-
-            lia.log.add("Character NetVar changed: " .. key, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced NetVar handling with validation and syncing
-        function MODULE:OnCharNetVarChanged(character, key, oldVar, value)
-            if not character then return end
-
-            -- Validate value
-            local validation = self:ValidateCharacterNetVar(key, value)
-            if not validation.valid then
-                lia.log.add("Invalid character NetVar for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Handle specific NetVar keys
-            if key == "name" then
-                self:HandleCharacterNameChange(character, oldVar, value)
-            elseif key == "model" then
-                self:HandleCharacterModelChange(character, oldVar, value)
-            elseif key == "faction" then
-                self:HandleCharacterFactionChange(character, oldVar, value)
-            elseif key == "class" then
-                self:HandleCharacterClassChange(character, oldVar, value)
-            end
-
-            -- Update character display
-            if CLIENT then
-                hook.Run("UpdateCharacterDisplay", character, key)
-            end
-
-            -- Sync to clients
-            if SERVER then
-                local client = character:getPlayer()
-                if IsValid(client) then
-                    netstream.Start(client, "charNetVarChanged", character:getID(), key, value)
-                end
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Character %s NetVar changed: %s (%s -> %s)",
-                character:getName(),
-                key,
-                tostring(oldVar),
-                tostring(value)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnCharacterNetVarChanged", character, key, oldVar, value)
-        end
-        ```
-]]
-function OnCharNetVarChanged(character, key, oldVar, value)
-end
-
---[[
-    Purpose:
-        Called when a character is recognized.
-
-    When Called:
-        When character recognition occurs.
-
-    Parameters:
-        client (Player)
-            The recognizing player.
-        charID (number)
-            The recognized character ID.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log recognition
-        function MODULE:OnCharRecognized(client, charID)
-            print("Character recognized: " .. charID)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle recognition with notifications
-        function MODULE:OnCharRecognized(client, charID)
-            if not IsValid(client) then return end
-
-            local char = lia.char.loaded[charID]
-            if char then
-                client:ChatPrint("You recognized: " .. char:getName())
-            end
-
-            lia.log.add("Character recognized: " .. charID, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced recognition handling with data management
-        function MODULE:OnCharRecognized(client, charID)
-            if not IsValid(client) then return end
-
-            local char = client:getChar()
-            if not char then return end
-
-            local targetChar = lia.char.loaded[charID]
-            if not targetChar then return end
-
-            -- Add to recognition data
-            local recognition = char:getData("recognition", {})
-            recognition[charID] = true
-            char:setData("recognition", recognition)
-
-            -- Check for fake recognition
-            local fakeRecognition = char:getData("fakeRecognition", {})
-            if fakeRecognition[charID] then
-                fakeRecognition[charID] = nil
-                char:setData("fakeRecognition", fakeRecognition)
-            end
-
-            -- Notify player
-            client:ChatPrint("You recognized: " .. targetChar:getName())
-
-            -- Update character display
-            if CLIENT then
-                hook.Run("UpdateCharacterDisplay", targetChar)
-            end
-
-            -- Check for achievements
-            hook.Run("CheckRecognitionAchievement", char, targetChar)
-
-            -- Log recognition
-            lia.log.add(string.format(
-                "Character %s recognized %s",
-                char:getName(),
-                targetChar:getName()
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnCharacterRecognized", client, char, targetChar)
-        end
-        ```
-]]
-function OnCharRecognized(client, charID)
-end
-
---[[
-    Purpose:
-        Called when character variables change.
-
-    When Called:
-        When character variables are modified.
-
-    Parameters:
-        character (Character)
-            The character.
-        varName (string)
-            The variable name.
-        oldVar (any)
-            The old value.
-        newVar (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log variable change
-        function MODULE:OnCharVarChanged(character, varName, oldVar, newVar)
-            print("Character variable changed: " .. varName)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle specific variable changes
-        function MODULE:OnCharVarChanged(character, varName, oldVar, newVar)
-            if not character then return end
-
-            -- Handle important variable changes
-            if varName == "money" then
-                local client = character:getPlayer()
-                if IsValid(client) then
-                    client:ChatPrint("Money changed: " .. oldVar .. " -> " .. newVar)
-                end
-            end
-
-            lia.log.add("Character variable changed: " .. varName, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced variable change handling with validation and effects
-        function MODULE:OnCharVarChanged(character, varName, oldVar, newVar)
-            if not character then return end
-
-            -- Validate new value
-            local validation = self:ValidateCharacterVar(varName, newVar)
-            if not validation.valid then
-                lia.log.add("Invalid character variable for " .. varName .. ": " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Handle specific variable keys
-            if varName == "money" then
-                self:HandleMoneyChange(character, oldVar, newVar)
-            elseif varName == "level" then
-                self:HandleLevelChange(character, oldVar, newVar)
-            elseif varName == "experience" then
-                self:HandleExperienceChange(character, oldVar, newVar)
-            end
-
-            -- Update character display
-            if CLIENT then
-                hook.Run("UpdateCharacterDisplay", character, varName)
-            end
-
-            -- Sync to clients
-            if SERVER then
-                local client = character:getPlayer()
-                if IsValid(client) then
-                    netstream.Start(client, "charVarChanged", character:getID(), varName, newVar)
-                end
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Character %s variable %s changed: %s -> %s",
-                character:getName(),
-                varName,
-                tostring(oldVar),
-                tostring(newVar)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnCharacterVarChanged", character, varName, oldVar, newVar)
-        end
-        ```
-]]
-function OnCharVarChanged(character, varName, oldVar, newVar)
-end
-
---[[
-    Purpose:
-        Called when character variables change.
-
-    When Called:
-        When character variables are modified.
-
-    Parameters:
-        character (Character)
-            The character whose variable changed.
-        varName (string)
-            The variable name.
-        oldVar (any)
-            The old value.
-        newVar (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log variable change
-        function MODULE:OnCharVarChanged(character, varName, oldVar, newVar)
-            print("Character variable changed: " .. varName)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle specific variable changes
-        function MODULE:OnCharVarChanged(character, varName, oldVar, newVar)
-            if not character then return end
-
-            -- Handle important variable changes
-            if varName == "money" then
-                -- Money changed, update displays
-                if CLIENT then
-                    hook.Run("UpdateMoneyDisplay", character)
-                end
-            elseif varName == "health" then
-                -- Health changed, update health systems
-                self:UpdateCharacterHealth(character, newVar)
-            end
-
-            lia.log.add("Character variable changed: " .. varName, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced variable change handling with validation and effects
-        function MODULE:OnCharVarChanged(character, varName, oldVar, newVar)
-            if not character then return end
-
-            -- Validate variable change
-            local validation = self:ValidateCharacterVarChange(character, varName, oldVar, newVar)
-            if not validation.valid then
-                lia.log.add("Invalid character variable change: " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Handle specific variable types
-            if varName == "money" then
-                self:HandleMoneyChange(character, oldVar, newVar)
-            elseif varName == "health" then
-                self:HandleHealthChange(character, oldVar, newVar)
-            elseif varName == "armor" then
-                self:HandleArmorChange(character, oldVar, newVar)
-            elseif varName == "faction" then
-                self:HandleFactionChange(character, oldVar, newVar)
-            elseif varName == "class" then
-                self:HandleClassChange(character, oldVar, newVar)
-            end
-
-            -- Update dependent systems
-            self:UpdateDependentSystems(character, varName, newVar)
-
-            -- Sync to clients if needed
-            if SERVER then
-                local shouldSync = self:ShouldSyncCharacterVar(varName)
-                if shouldSync then
-                    netstream.Start(nil, "charVarChanged", character:getID(), varName, newVar)
-                end
-            end
-
-            -- Update client-side displays
-            if CLIENT then
-                hook.Run("UpdateCharacterDisplay", character, varName)
-            end
-
-            -- Log comprehensive change
-            lia.log.add(string.format(
-                "Character %s variable %s changed: %s -> %s",
-                character:getName(),
-                varName,
-                tostring(oldVar),
-                tostring(newVar)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnCharacterVarFullyChanged", character, varName, oldVar, newVar)
-        end
-        ```
-]]
-function OnConfigUpdated(key, oldValue, value)
-end
-
---[[
-    Purpose:
-        Called when configuration is updated.
-
-    When Called:
-        When config values are changed.
-
-    Parameters:
-        key (string)
-            The config key.
-        oldValue (any)
-            The old value.
-        value (any)
-            The new value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log config update
-        function MODULE:OnConfigUpdated(key, oldValue, value)
-            print("Config updated: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle config updates with validation
-        function MODULE:OnConfigUpdated(key, oldValue, value)
-            -- Validate important config values
-            if key == "maxCharacters" then
-                if value < 1 or value > 10 then
-                    lia.log.add("Invalid maxCharacters value: " .. value, FLAG_WARNING)
-                    lia.config.set(key, oldValue) -- Revert
-                    return
-                end
-            end
-
-            lia.log.add("Config updated: " .. key, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced config update handling with validation and effects
-        function MODULE:OnConfigUpdated(key, oldValue, value)
-            -- Validate new value
-            local validation = self:ValidateConfigValue(key, value)
-            if not validation.valid then
-                lia.log.add("Invalid config value for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                lia.config.set(key, oldValue) -- Revert
-                return
-            end
-
-            -- Handle specific config keys
-            if key == "maxCharacters" then
-                self:HandleMaxCharactersChange(oldValue, value)
-            elseif key == "defaultInventorySize" then
-                self:HandleInventorySizeChange(oldValue, value)
-            elseif key == "defaultMoney" then
-                self:HandleDefaultMoneyChange(oldValue, value)
-            end
-
-            -- Update dependent systems
-            self:UpdateConfigDependentSystems(key, value)
-
-            -- Notify clients
-            if SERVER then
-                netstream.Start(nil, "configUpdated", key, value)
-            end
-
-            -- Log update
-            lia.log.add(string.format(
-                "Config %s updated: %s -> %s",
-                key,
-                tostring(oldValue),
-                tostring(value)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnConfigurationUpdated", key, oldValue, value)
-        end
-        ```
-]]
-function OnConfigUpdated(key, oldValue, value)
-end
-
---[[
-    Purpose:
-        Called when data is set.
-
-    When Called:
-        When map or gamemode data is set.
-
-    Parameters:
-        key (string)
-            The data key.
-        value (any)
-            The data value.
-        gamemode (string)
-            The gamemode.
-        map (string)
-            The map name.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log data set
-        function MODULE:OnDataSet(key, value, gamemode, map)
-            print("Data set: " .. key)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle data set with validation
-        function MODULE:OnDataSet(key, value, gamemode, map)
-            -- Validate data
-            if not key or not value then
-                lia.log.add("Invalid data set: missing key or value", FLAG_WARNING)
-                return
-            end
-
-            -- Cache data
-            if not self.dataCache then
-                self.dataCache = {}
-            end
-            self.dataCache[key] = value
-
-            lia.log.add("Data set: " .. key, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced data set handling with validation and storage
-        function MODULE:OnDataSet(key, value, gamemode, map)
-            -- Validate data
-            if not key or not value then
-                lia.log.add("Invalid data set: missing key or value", FLAG_WARNING)
-                return
-            end
-
-            local validation = self:ValidateDataValue(key, value)
-            if not validation.valid then
-                lia.log.add("Invalid data value for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Store data with context
-            local dataContext = {
-                key = key,
-                value = value,
-                gamemode = gamemode,
-                map = map,
-                timestamp = os.time()
-            }
-
-            -- Cache data
-            if not self.dataCache then
-                self.dataCache = {}
-            end
-            self.dataCache[key] = dataContext
-
-            -- Save to database if on server
-            if SERVER then
-                self:SaveDataToDatabase(dataContext)
-            end
-
-            -- Update dependent systems
-            self:UpdateDataDependentSystems(key, value)
-
-            -- Log set
-            lia.log.add(string.format(
-                "Data set: %s = %s (gamemode: %s, map: %s)",
-                key,
-                tostring(value),
-                gamemode or "unknown",
-                map or "unknown"
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnDataFullySet", key, value, gamemode, map)
-        end
-        ```
-]]
-function OnDataSet(key, value, gamemode, map)
-end
-
---[[
-    Purpose:
-        Called when the database is loaded.
-
-    When Called:
-        After database initialization is complete.
-
-    Parameters:
         None
 
-    Returns:
-        nil
-
     Realm:
         Shared
 
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log database load
-        function MODULE:OnDatabaseLoaded()
-            print("Database loaded")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log item registration
+    hook.Add("OnItemRegistered", "MyAddon", function(ITEM)
+        print("Item registered: " .. ITEM.name)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize database after load
-        function MODULE:OnDatabaseLoaded()
-            -- Verify database connection
-            if lia.db.isConnected() then
-                lia.log.add("Database connection verified", FLAG_NORMAL)
-            else
-                lia.log.add("Database connection failed", FLAG_ERROR)
-            end
-
-            lia.log.add("Database loaded", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Track registered items
+    hook.Add("OnItemRegistered", "TrackItems", function(ITEM)
+        MyAddon.registeredItems = MyAddon.registeredItems or {}
+        MyAddon.registeredItems[ITEM.uniqueID] = {
+            name       = ITEM.name,
+            model      = ITEM.model,
+            registered = os.time()
+        }
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced database initialization with validation
-        function MODULE:OnDatabaseLoaded()
-            -- Verify database connection
-            if not lia.db.isConnected() then
-                lia.log.add("Database connection failed", FLAG_ERROR)
-                return
-            end
 
-            -- Validate database schema
-            self:ValidateDatabaseSchema()
+    ```lua
+    -- High: Complex item registration handling
+    hook.Add("OnItemRegistered", "AdvancedItemRegistration", function(ITEM)
+        -- Log item registration
+        lia.log.write("item_registered", {
+            uniqueID  = ITEM.uniqueID,
+            name      = ITEM.name,
+            model     = ITEM.model,
+            timestamp = os.time()
+        })
 
-            -- Check database version
-            local dbVersion = self:GetDatabaseVersion()
-            local requiredVersion = self:GetRequiredDatabaseVersion()
-
-            if dbVersion < requiredVersion then
-                lia.log.add("Database migration required", FLAG_WARNING)
-                self:RunDatabaseMigration(dbVersion, requiredVersion)
-            end
-
-            -- Initialize database indexes
-            self:InitializeDatabaseIndexes()
-
-            -- Load cached data
-            self:LoadCachedData()
-
-            -- Set up database watchers
-            self:SetupDatabaseWatchers()
-
-            lia.log.add("Database fully loaded and initialized", FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnDatabaseFullyLoaded")
+        -- Validate item data
+        if not ITEM.uniqueID or not ITEM.name then
+            print("Warning: Invalid item data for " .. tostring(ITEM.uniqueID))
         end
-        ```
-]]
-function OnDatabaseLoaded()
-end
 
---[[
-    Purpose:
-        Called when an item is registered.
+        -- Add custom properties
+        ITEM.customProperty = "MyAddonValue"
 
-    When Called:
-        When item definitions are registered.
+        -- Register item in custom system
+        MyAddon.itemSystem:RegisterItem(ITEM)
 
-    Parameters:
-        ITEM (table)
-            The item definition table.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item registration
-        function MODULE:OnItemRegistered(ITEM)
-            print("Item registered: " .. (ITEM.uniqueID or "unknown"))
+        -- Notify clients if server
+        if SERVER then
+            net.Start("liaItemRegistered")
+            net.WriteString(ITEM.uniqueID)
+            net.Broadcast()
         end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Validate and process item registration
-        function MODULE:OnItemRegistered(ITEM)
-            if not ITEM or not ITEM.uniqueID then
-                lia.log.add("Invalid item registration: missing uniqueID", FLAG_WARNING)
-                return
-            end
-
-            -- Validate required fields
-            if not ITEM.name or not ITEM.desc then
-                lia.log.add("Item " .. ITEM.uniqueID .. " missing required fields", FLAG_WARNING)
-            end
-
-            lia.log.add("Item registered: " .. ITEM.uniqueID, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced item registration with validation and setup
-        function MODULE:OnItemRegistered(ITEM)
-            if not ITEM or not ITEM.uniqueID then
-                lia.log.add("Invalid item registration: missing uniqueID", FLAG_ERROR)
-                return
-            end
-
-            -- Validate item structure
-            local validation = self:ValidateItemStructure(ITEM)
-            if not validation.valid then
-                lia.log.add("Invalid item structure for " .. ITEM.uniqueID .. ": " .. validation.error, FLAG_ERROR)
-                return
-            end
-
-            -- Set default values
-            self:SetItemDefaults(ITEM)
-
-            -- Register item hooks
-            self:RegisterItemHooks(ITEM)
-
-            -- Register item permissions
-            if ITEM.permissions then
-                self:RegisterItemPermissions(ITEM.uniqueID, ITEM.permissions)
-            end
-
-            -- Cache item data
-            if not self.registeredItemsCache then
-                self.registeredItemsCache = {}
-            end
-            self.registeredItemsCache[ITEM.uniqueID] = ITEM
-
-            -- Generate item statistics
-            self:GenerateItemStatistics(ITEM)
-
-            lia.log.add("Item registered: " .. ITEM.uniqueID, FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnItemFullyRegistered", ITEM)
-        end
-        ```
+    end)
+    ```
 ]]
 function OnItemRegistered(ITEM)
 end
 
 --[[
     Purpose:
-        Called when database tables are loaded.
+        Called when the framework has finished loading
 
     When Called:
-        After database table loading is complete.
+        After all framework components have been initialized
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -11917,86 +2097,70 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log table load
-        function MODULE:OnLoadTables()
-            print("Database tables loaded")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log framework loaded
+    hook.Add("OnLoaded", "MyAddon", function()
+        print("Lilia framework has finished loading")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Validate tables after load
-        function MODULE:OnLoadTables()
-            -- Verify required tables exist
-            local requiredTables = {"lia_characters", "lia_items", "lia_inventories"}
-            for _, tableName in ipairs(requiredTables) do
-                if not lia.db.tableExists(tableName) then
-                    lia.log.add("Required table missing: " .. tableName, FLAG_ERROR)
-                end
-            end
 
-            lia.log.add("Database tables loaded", FLAG_NORMAL)
+    ```lua
+    -- Medium: Initialize addon after framework loads
+    hook.Add("OnLoaded", "InitMyAddon", function()
+        if SERVER then
+            -- Server-side initialization
+            print("Server addon initialized")
+        else
+            -- Client-side initialization
+            print("Client addon initialized")
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced table validation and setup
-        function MODULE:OnLoadTables()
-            -- Verify required tables exist
-            local requiredTables = {"lia_characters", "lia_items", "lia_inventories", "lia_data"}
-            local missingTables = {}
 
-            for _, tableName in ipairs(requiredTables) do
-                if not lia.db.tableExists(tableName) then
-                    table.insert(missingTables, tableName)
-                end
-            end
+    ```lua
+    -- High: Complex post-load initialization
+    hook.Add("OnLoaded", "AdvancedInit", function()
+        if SERVER then
+            -- Load saved data
+            lia.data.get("addonData", {}, function(data)
+                MyAddon.data = data
+                print("Addon data loaded")
+            end)
 
-            if #missingTables > 0 then
-                lia.log.add("Missing required tables: " .. table.concat(missingTables, ", "), FLAG_ERROR)
-                return
-            end
-
-            -- Validate table schemas
-            self:ValidateTableSchemas()
-
-            -- Check table row counts
-            self:CheckTableRowCounts()
-
-            -- Set up table indexes
-            self:SetupTableIndexes()
-
-            -- Migrate table data if needed
-            self:MigrateTableData()
-
-            -- Cache table metadata
-            self:CacheTableMetadata()
-
-            lia.log.add("Database tables fully loaded and validated", FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnTablesFullyLoaded")
+            -- Register custom network strings
+            util.AddNetworkString("MyAddonSync")
+        else
+            -- Setup client UI
+            hook.Add("HUDPaint", "MyAddonHUD", function()
+                -- Draw custom HUD elements
+            end)
         end
-        ```
+    end)
+    ```
 ]]
-function OnLoadTables()
+function OnLoaded()
 end
 
 --[[
     Purpose:
-        Called when PAC3 parts are transferred.
+        Called when a new privilege is registered
 
     When Called:
-        When PAC parts are transferred between players.
+        When a privilege is added to the system
 
     Parameters:
-        part (table)
-            The PAC part data.
+        privilege (string) - The privilege identifier
+        name (string) - The display name of the privilege
+        access (string) - The access level required
+        category (string) - The category the privilege belongs to
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -12004,86 +2168,70 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log PAC3 part transfer
-        function MODULE:OnPAC3PartTransfered(part)
-            print("PAC3 part transferred")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log privilege registration
+    hook.Add("OnPrivilegeRegistered", "MyAddon", function(privilege, name, access, category)
+        print("Privilege registered: " .. name)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle PAC3 part transfer with validation
-        function MODULE:OnPAC3PartTransfered(part)
-            if not part then return end
-
-            -- Validate part data
-            if not part.name or not part.data then
-                lia.log.add("Invalid PAC3 part transfer: missing data", FLAG_WARNING)
-                return
-            end
-
-            -- Log transfer
-            lia.log.add("PAC3 part transferred: " .. part.name, FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Track privileges
+    hook.Add("OnPrivilegeRegistered", "TrackPrivileges", function(privilege, name, access, category)
+        MyAddon.privileges = MyAddon.privileges or {}
+        MyAddon.privileges[privilege] = {
+            name     = name,
+            access   = access,
+            category = category
+        }
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced PAC3 part handling with validation and storage
-        function MODULE:OnPAC3PartTransfered(part)
-            if not part then return end
 
-            -- Validate part structure
-            local validation = self:ValidatePAC3Part(part)
-            if not validation.valid then
-                lia.log.add("Invalid PAC3 part: " .. validation.error, FLAG_WARNING)
-                return
-            end
-
-            -- Check for restricted parts
-            if self:IsPartRestricted(part) then
-                lia.log.add("Restricted PAC3 part transfer blocked: " .. part.name, FLAG_WARNING)
-                return
-            end
-
-            -- Store part data
-            self:StorePAC3Part(part)
-
-            -- Apply part to recipient
-            if part.recipient and IsValid(part.recipient) then
-                self:ApplyPAC3PartToPlayer(part.recipient, part)
-            end
-
-            -- Log transfer
-            lia.log.add(string.format(
-                "PAC3 part %s transferred from %s to %s",
-                part.name,
-                part.sender and part.sender:Name() or "Unknown",
-                part.recipient and part.recipient:Name() or "Unknown"
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnPAC3PartFullyTransfered", part)
+    ```lua
+    -- High: Complex privilege management
+    hook.Add("OnPrivilegeRegistered", "AdvancedPrivilegeManagement", function(privilege, name, access, category)
+        -- Store privilege data
+        if SERVER then
+            lia.data.get("privileges", {}, function(data)
+                data[privilege] = {
+                    name       = name,
+                    access     = access,
+                    category   = category,
+                    registered = os.time()
+                }
+                lia.data.set("privileges", data)
+            end)
         end
-        ```
+
+        -- Notify admins
+        for _, ply in ipairs(player.GetAll()) do
+            if ply:IsAdmin() then
+                ply:ChatPrint("New privilege registered: " .. name)
+            end
+        end
+    end)
+    ```
 ]]
-function OnPAC3PartTransfered(part)
+function OnPrivilegeRegistered(privilege, name, access, category)
 end
 
 --[[
     Purpose:
-        Called when a privilege is registered.
+        Called when a privilege is unregistered
 
     When Called:
-        When admin privileges are registered.
+        When a privilege is removed from the system
 
     Parameters:
-        privilege (table)
-            The privilege data.
+        privilege (string) - The privilege identifier
+        name (string) - The display name of the privilege
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -12091,92 +2239,64 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log privilege registration
-        function MODULE:OnPrivilegeRegistered(privilege)
-            print("Privilege registered: " .. (privilege.name or "unknown"))
-        end
-        ```
+
+    ```lua
+    -- Simple: Log privilege removal
+    hook.Add("OnPrivilegeUnregistered", "MyAddon", function(privilege, name)
+        print("Privilege unregistered: " .. name)
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Validate privilege registration
-        function MODULE:OnPrivilegeRegistered(privilege)
-            if not privilege or not privilege.name then
-                lia.log.add("Invalid privilege registration: missing name", FLAG_WARNING)
-                return
-            end
 
-            -- Check for duplicate privileges
-            if lia.priv.list[privilege.name] then
-                lia.log.add("Duplicate privilege registered: " .. privilege.name, FLAG_WARNING)
-            end
-
-            lia.log.add("Privilege registered: " .. privilege.name, FLAG_NORMAL)
+    ```lua
+    -- Medium: Clean up privilege data
+    hook.Add("OnPrivilegeUnregistered", "CleanupPrivilege", function(privilege, name)
+        if MyAddon.privileges and MyAddon.privileges[privilege] then
+            MyAddon.privileges[privilege] = nil
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced privilege registration with validation and setup
-        function MODULE:OnPrivilegeRegistered(privilege)
-            if not privilege or not privilege.name then
-                lia.log.add("Invalid privilege registration: missing name", FLAG_ERROR)
-                return
-            end
 
-            -- Validate privilege structure
-            local validation = self:ValidatePrivilegeStructure(privilege)
-            if not validation.valid then
-                lia.log.add("Invalid privilege structure for " .. privilege.name .. ": " .. validation.error, FLAG_ERROR)
-                return
-            end
-
-            -- Check for duplicate privileges
-            if lia.priv.list[privilege.name] then
-                lia.log.add("Duplicate privilege registered: " .. privilege.name, FLAG_WARNING)
-                return
-            end
-
-            -- Set default values
-            privilege.description = privilege.description or "No description"
-            privilege.category = privilege.category or "general"
-
-            -- Register privilege hooks
-            self:RegisterPrivilegeHooks(privilege)
-
-            -- Cache privilege data
-            if not self.registeredPrivilegesCache then
-                self.registeredPrivilegesCache = {}
-            end
-            self.registeredPrivilegesCache[privilege.name] = privilege
-
-            -- Set up privilege permissions
-            self:SetupPrivilegePermissions(privilege)
-
-            lia.log.add("Privilege registered: " .. privilege.name, FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnPrivilegeFullyRegistered", privilege)
+    ```lua
+    -- High: Complex privilege cleanup
+    hook.Add("OnPrivilegeUnregistered", "AdvancedPrivilegeCleanup", function(privilege, name)
+        -- Remove privilege data
+        if SERVER then
+            lia.data.get("privileges", {}, function(data)
+                data[privilege] = nil
+                lia.data.set("privileges", data)
+            end)
         end
-        ```
+
+        -- Revoke privilege from all players
+        for _, ply in ipairs(player.GetAll()) do
+            local char = ply:getChar()
+            if char and char:hasPrivilege(privilege) then
+                char:revokePrivilege(privilege)
+            end
+        end
+    end)
+    ```
 ]]
-function OnPrivilegeRegistered(privilege)
+function OnPrivilegeUnregistered(privilege, name)
 end
 
 --[[
     Purpose:
-        Called when a privilege is unregistered.
+        Called when an option is added to the options system
 
     When Called:
-        When admin privileges are removed.
+        When a new option is registered
 
     Parameters:
-        privilege (table)
-            The privilege data.
+        key (string) - The option key that was added
+        option (table) - The option data table containing all option properties
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -12184,172 +2304,78 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log privilege unregistration
-        function MODULE:OnPrivilegeUnregistered(privilege)
-            print("Privilege unregistered: " .. (privilege.name or "unknown"))
-        end
-        ```
+
+    ```lua
+    -- Simple: Log when options are added
+    hook.Add("OptionAdded", "MyAddon", function(key, option)
+        print("Option " .. key .. " was added")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle privilege unregistration with cleanup
-        function MODULE:OnPrivilegeUnregistered(privilege)
-            if not privilege or not privilege.name then return end
-
-            -- Remove from cache
-            if self.registeredPrivilegesCache and self.registeredPrivilegesCache[privilege.name] then
-                self.registeredPrivilegesCache[privilege.name] = nil
-            end
-
-            lia.log.add("Privilege unregistered: " .. privilege.name, FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Track added options
+    hook.Add("OptionAdded", "TrackOptions", function(key, option)
+        MyAddon.addedOptions = MyAddon.addedOptions or {}
+        MyAddon.addedOptions[key] = option
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced privilege cleanup with comprehensive management
-        function MODULE:OnPrivilegeUnregistered(privilege)
-            if not privilege or not privilege.name then return end
 
-            -- Remove from cache
-            if self.registeredPrivilegesCache and self.registeredPrivilegesCache[privilege.name] then
-                self.registeredPrivilegesCache[privilege.name] = nil
-            end
+    ```lua
+    -- High: Advanced option handling
+    hook.Add("OptionAdded", "AdvancedOptionHandler", function(key, option)
+        -- Log option addition
+        lia.log.write("option_added", {
+            key       = key,
+            type      = option.type,
+            default   = option.default,
+            timestamp = os.time()
+        })
 
-            -- Remove privilege hooks
-            self:RemovePrivilegeHooks(privilege)
-
-            -- Remove privilege permissions
-            self:RemovePrivilegePermissions(privilege.name)
-
-            -- Notify players with this privilege
-            if SERVER then
-                for _, client in player.Iterator() do
-                    if client:hasPrivilege(privilege.name) then
-                        client:ChatPrint("Your privilege '" .. privilege.name .. "' has been removed")
-                    end
-                end
-            end
-
-            -- Log unregistration
-            lia.log.add("Privilege unregistered: " .. privilege.name, FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnPrivilegeFullyUnregistered", privilege)
+        -- Handle special option types
+        if option.type == "boolean" then
+            -- Initialize boolean option handling
+            MyAddon.booleanOptions = MyAddon.booleanOptions or {}
+            MyAddon.booleanOptions[key] = option.default or false
+        elseif option.type == "number" then
+            -- Initialize number option handling
+            MyAddon.numberOptions = MyAddon.numberOptions or {}
+            MyAddon.numberOptions[key] = {
+                value = option.default or 0,
+                min   = option.min or 0,
+                max   = option.max or 100
+            }
         end
-        ```
-]]
-function OnPrivilegeUnregistered(privilege)
-end
 
---[[
-    Purpose:
-        Called when an option is added.
-
-    When Called:
-        When options are registered.
-
-    Parameters:
-        key (string)
-            The option key.
-        option (table)
-            The option data.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log option addition
-        function MODULE:OptionAdded(key, option)
-            print("Option added: " .. key)
+        -- Notify clients if needed
+        if SERVER and option.shouldNetwork then
+            net.Start("liaOptionAdded")
+            net.WriteString(key)
+            net.WriteTable(option)
+            net.Broadcast()
         end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Validate and process option addition
-        function MODULE:OptionAdded(key, option)
-            if not key or not option then
-                lia.log.add("Invalid option addition: missing key or option", FLAG_WARNING)
-                return
-            end
-
-            -- Validate required fields
-            if not option.name then
-                lia.log.add("Option " .. key .. " missing name", FLAG_WARNING)
-            end
-
-            lia.log.add("Option added: " .. key, FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced option registration with validation and setup
-        function MODULE:OptionAdded(key, option)
-            if not key or not option then
-                lia.log.add("Invalid option addition: missing key or option", FLAG_ERROR)
-                return
-            end
-
-            -- Validate option structure
-            local validation = self:ValidateOptionStructure(option)
-            if not validation.valid then
-                lia.log.add("Invalid option structure for " .. key .. ": " .. validation.error, FLAG_ERROR)
-                return
-            end
-
-            -- Set default values
-            option.name = option.name or key
-            option.category = option.category or "general"
-            option.data = option.data or {}
-
-            -- Register option hooks
-            self:RegisterOptionHooks(key, option)
-
-            -- Cache option data
-            if not self.optionsCache then
-                self.optionsCache = {}
-            end
-            self.optionsCache[key] = option
-
-            -- Set up option change handlers
-            self:SetupOptionChangeHandlers(key, option)
-
-            lia.log.add("Option added: " .. key, FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnOptionFullyAdded", key, option)
-        end
-        ```
+    end)
+    ```
 ]]
 function OptionAdded(key, option)
 end
 
 --[[
     Purpose:
-        Called when an option value changes.
+        Called when a configuration option is changed
 
     When Called:
-        When option values are modified.
+        When a configuration value is modified
 
     Parameters:
-        key (string)
-            The option key.
-        old (any)
-            The old value.
-        value (any)
-            The new value.
+        key (string) - The option key that was changed
+        old (any) - The old value
+        value (any) - The new value
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -12357,97 +2383,74 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log option change
-        function MODULE:OptionChanged(key, old, value)
-            print("Option changed: " .. key)
-        end
-        ```
+
+    ```lua
+    -- Simple: Log option changes
+    hook.Add("OptionChanged", "MyAddon", function(key, old, value)
+        print("Option " .. key .. " changed from " .. tostring(old) .. " to " .. tostring(value))
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Handle option change with validation
-        function MODULE:OptionChanged(key, old, value)
-            -- Validate important options
-            if key == "customHUD" then
-                if CLIENT then
-                    hook.Run("UpdateHUDDisplay")
-                end
-            end
-
-            lia.log.add("Option changed: " .. key, FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Track option changes
+    hook.Add("OptionChanged", "TrackOptions", function(key, old, value)
+        MyAddon.optionHistory = MyAddon.optionHistory or {}
+        table.insert(MyAddon.optionHistory, {
+            key  = key,
+            old  = old,
+            new  = value,
+            time = os.time()
+        })
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced option change handling with validation and effects
-        function MODULE:OptionChanged(key, old, value)
-            -- Validate new value
-            local option = lia.option.list[key]
-            if option then
-                local validation = self:ValidateOptionValue(key, value)
-                if not validation.valid then
-                    lia.log.add("Invalid option value for " .. key .. ": " .. validation.error, FLAG_WARNING)
-                    lia.option.set(key, old) -- Revert
-                    return
-                end
-            end
 
-            -- Handle specific option keys
-            if key == "customHUD" then
-                self:HandleHUDOptionChange(value)
-            elseif key == "customSound" then
-                self:HandleSoundOptionChange(value)
-            elseif key == "customGraphics" then
-                self:HandleGraphicsOptionChange(value)
-            end
+    ```lua
+    -- High: Complex option change handling
+    hook.Add("OptionChanged", "AdvancedOptionChange", function(key, old, value)
+        -- Log option change
+        lia.log.write("option_changed", {
+            key       = key,
+            old       = tostring(old),
+            new       = tostring(value),
+            timestamp = os.time()
+        })
 
-            -- Update dependent systems
-            self:UpdateOptionDependentSystems(key, value)
-
-            -- Save to client if on client
-            if CLIENT then
-                self:SaveClientOption(key, value)
-            end
-
-            -- Sync to server if needed
-            if SERVER then
-                netstream.Start(nil, "optionChanged", key, value)
-            end
-
-            -- Log change
-            lia.log.add(string.format(
-                "Option %s changed: %s -> %s",
-                key,
-                tostring(old),
-                tostring(value)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnOptionFullyChanged", key, old, value)
+        -- Handle specific option changes
+        if key == "serverName" then
+            SetHostName(value)
+        elseif key == "maxPlayers" then
+            game.SetMaxPlayers(value)
         end
-        ```
+
+        -- Notify clients of important changes
+        if SERVER then
+            net.Start("liaOptionChanged")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Broadcast()
+        end
+    end)
+    ```
 ]]
 function OptionChanged(key, old, value)
 end
 
 --[[
     Purpose:
-        Called to override faction description.
+        Called to override a faction's description
 
     When Called:
-        When faction descriptions need to be customized.
+        When a faction description needs to be modified
 
     Parameters:
-        uniqueID (string)
-            The faction unique ID.
-        currentDesc (string)
-            The current description.
+        uniqueID (string) - The faction's unique ID
+        description (string) - The current description
 
     Returns:
-        string
-            The overridden description.
+        string - The overridden description (or nil to use default)
 
     Realm:
         Shared
@@ -12455,93 +2458,62 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return unmodified description
-        function MODULE:OverrideFactionDesc(uniqueID, currentDesc)
-            return currentDesc
-        end
-        ```
+
+    ```lua
+    -- Simple: Add prefix to description
+    hook.Add("OverrideFactionDesc", "MyAddon", function(uniqueID, description)
+        return "[FACTION] " .. description
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Customize description for specific factions
-        function MODULE:OverrideFactionDesc(uniqueID, currentDesc)
-            -- Custom descriptions for specific factions
-            local customDescs = {
-                police = "Law enforcement faction dedicated to maintaining order.",
-                medic = "Medical professionals providing aid to citizens.",
-                criminal = "Underground organization with criminal activities."
-            }
 
-            return customDescs[uniqueID] or currentDesc
+    ```lua
+    -- Medium: Customize specific faction descriptions
+    hook.Add("OverrideFactionDesc", "CustomFactionDesc", function(uniqueID, description)
+        if uniqueID == "citizen" then
+            return "Citizens are the backbone of society."
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced description customization with context
-        function MODULE:OverrideFactionDesc(uniqueID, currentDesc)
-            -- Get faction data
-            local faction = lia.faction.get(uniqueID)
-            if not faction then return currentDesc end
 
-            -- Check for custom description override
-            local customDesc = faction.customDesc
-            if customDesc then
-                return customDesc
+    ```lua
+    -- High: Dynamic faction description
+    hook.Add("OverrideFactionDesc", "DynamicFactionDesc", function(uniqueID, description)
+        local faction = lia.faction.indices[uniqueID]
+        if not faction then return end
+
+        -- Add player count to description
+        local count = 0
+        for _, ply in ipairs(player.GetAll()) do
+            local char = ply:getChar()
+            if char and char:getFaction() == faction.index then
+                count = count + 1
             end
-
-            -- Generate dynamic description based on faction stats
-            local stats = self:GetFactionStats(uniqueID)
-            if stats then
-                local desc = currentDesc
-
-                -- Add member count
-                if stats.memberCount then
-                    desc = desc .. "\n\nMembers: " .. stats.memberCount
-                end
-
-                -- Add activity level
-                if stats.activityLevel then
-                    local activity = stats.activityLevel > 0.7 and "High" or
-                                   stats.activityLevel > 0.4 and "Medium" or "Low"
-                    desc = desc .. "\nActivity: " .. activity
-                end
-
-                return desc
-            end
-
-            -- Apply localization if available
-            if lia.lang then
-                local localized = lia.lang.GetPhrase("faction_" .. uniqueID .. "_desc")
-                if localized and localized ~= "" then
-                    return localized
-                end
-            end
-
-            return currentDesc
         end
-        ```
+
+        return description .. "\n\nCurrent Members: " .. count
+    end)
+    ```
 ]]
-function OverrideFactionDesc(uniqueID, currentDesc)
+function OverrideFactionDesc(uniqueID, description)
 end
 
 --[[
     Purpose:
-        Called to override faction models.
+        Called to override a faction's models
 
     When Called:
-        When faction models need to be customized.
+        When a faction's available models need to be modified
 
     Parameters:
-        uniqueID (string)
-            The faction unique ID.
-        currentModels (table)
-            The current models.
+        uniqueID (string) - The faction's unique ID
+        models (table) - The current models table
 
     Returns:
-        table
-            The overridden models.
+        table - The overridden models table (or nil to use default)
 
     Realm:
         Shared
@@ -12549,92 +2521,74 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return unmodified models
-        function MODULE:OverrideFactionModels(uniqueID, currentModels)
-            return currentModels
+
+    ```lua
+    -- Simple: Add a model to faction
+    hook.Add("OverrideFactionModels", "MyAddon", function(uniqueID, models)
+        if uniqueID == "citizen" then
+            table.insert(models, "models/player/group01/male_01.mdl")
+            return models
         end
-        ```
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Customize models for specific factions
-        function MODULE:OverrideFactionModels(uniqueID, currentModels)
-            -- Custom models for specific factions
-            local customModels = {
-                police = {
-                    "models/player/riot.mdl",
-                    "models/player/police.mdl"
-                },
-                medic = {
-                    "models/player/paramedic.mdl"
-                }
-            }
 
-            return customModels[uniqueID] or currentModels
+    ```lua
+    -- Medium: Replace faction models
+    hook.Add("OverrideFactionModels", "ReplaceFactionModels", function(uniqueID, models)
+        if uniqueID == "police" then
+            return {
+                "models/player/police.mdl",
+                "models/player/police_fem.mdl"
+            }
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced model customization with validation
-        function MODULE:OverrideFactionModels(uniqueID, currentModels)
-            -- Get faction data
-            local faction = lia.faction.get(uniqueID)
-            if not faction then return currentModels end
 
-            -- Check for custom models override
-            if faction.customModels then
-                return faction.customModels
-            end
+    ```lua
+    -- High: Dynamic faction models based on rank
+    hook.Add("OverrideFactionModels", "DynamicFactionModels", function(uniqueID, models)
+        local faction = lia.faction.indices[uniqueID]
+        if not faction then return end
 
-            -- Validate models exist
-            local validModels = {}
-            local modelsToCheck = currentModels or {}
-
-            for _, model in ipairs(modelsToCheck) do
-                if util.IsValidModel(model) then
-                    table.insert(validModels, model)
-                else
-                    lia.log.add("Invalid model for faction " .. uniqueID .. ": " .. model, FLAG_WARNING)
-                end
-            end
-
-            -- Add gender-specific models if available
-            if faction.genderModels then
-                for gender, models in pairs(faction.genderModels) do
-                    for _, model in ipairs(models) do
-                        if util.IsValidModel(model) then
-                            table.insert(validModels, model)
-                        end
-                    end
-                end
-            end
-
-            -- Return validated models or default
-            return #validModels > 0 and validModels or currentModels
+        -- Load models from configuration
+        local customModels = lia.config.get("faction_models_" .. uniqueID, {})
+        if table.Count(customModels) > 0 then
+            return customModels
         end
-        ```
+
+        -- Filter models based on gender setting
+        if lia.config.get("faction_gender_filter", false) then
+            local filtered = {}
+            for _, model in ipairs(models) do
+                if not string.find(model, "_fem") then
+                    table.insert(filtered, model)
+                end
+            end
+            return filtered
+        end
+    end)
+    ```
 ]]
-function OverrideFactionModels(uniqueID, currentModels)
+function OverrideFactionModels(uniqueID, models)
 end
 
 --[[
     Purpose:
-        Called to override faction name.
+        Called to override a faction's name
 
     When Called:
-        When faction names need to be customized.
+        When a faction name needs to be modified
 
     Parameters:
-        uniqueID (string)
-            The faction unique ID.
-        currentName (string)
-            The current name.
+        uniqueID (string) - The faction's unique ID
+        name (string) - The current name
 
     Returns:
-        string
-            The overridden name.
+        string - The overridden name (or nil to use default)
 
     Realm:
         Shared
@@ -12642,88 +2596,70 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return unmodified name
-        function MODULE:OverrideFactionName(uniqueID, currentName)
-            return currentName
-        end
-        ```
+
+    ```lua
+    -- Simple: Add prefix to name
+    hook.Add("OverrideFactionName", "MyAddon", function(uniqueID, name)
+        return "[" .. uniqueID:upper() .. "] " .. name
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Customize names for specific factions
-        function MODULE:OverrideFactionName(uniqueID, currentName)
-            -- Custom names for specific factions
-            local customNames = {
-                police = "Metropolitan Police Department",
-                medic = "Emergency Medical Services",
-                criminal = "The Syndicate"
-            }
+    ```lua
+    -- Medium: Localize faction names
+    hook.Add("OverrideFactionName", "LocalizeFactionNames", function(uniqueID, name)
+        local localizedNames = {
+            citizen = "Citoyen",
+            police  = "Police",
+            medic   = "Médecin"
+        }
 
-            return customNames[uniqueID] or currentName
-        end
-        ```
+        return localizedNames[uniqueID] or name
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced name customization with localization
-        function MODULE:OverrideFactionName(uniqueID, currentName)
-            -- Get faction data
-            local faction = lia.faction.get(uniqueID)
-            if not faction then return currentName end
 
-            -- Check for custom name override
-            if faction.customName then
-                return faction.customName
+    ```lua
+    -- High: Dynamic faction naming
+    hook.Add("OverrideFactionName", "DynamicFactionName", function(uniqueID, name)
+        local faction = lia.faction.indices[uniqueID]
+        if not faction then return end
+
+        -- Add member count to name
+        local count = 0
+        for _, ply in ipairs(player.GetAll()) do
+            local char = ply:getChar()
+            if char and char:getFaction() == faction.index then
+                count = count + 1
             end
-
-            -- Check for display name
-            if faction.displayName then
-                return faction.displayName
-            end
-
-            -- Apply localization if available
-            if lia.lang then
-                local localized = lia.lang.GetPhrase("faction_" .. uniqueID .. "_name")
-                if localized and localized ~= "" then
-                    return localized
-                end
-            end
-
-            -- Format name based on context
-            local formattedName = currentName
-
-            -- Add prefix/suffix if defined
-            if faction.namePrefix then
-                formattedName = faction.namePrefix .. " " .. formattedName
-            end
-            if faction.nameSuffix then
-                formattedName = formattedName .. " " .. faction.nameSuffix
-            end
-
-            return formattedName
         end
-        ```
+
+        -- Add status indicator
+        local status = ""
+        if lia.config.get("faction_recruiting_" .. uniqueID, false) then
+            status = " [RECRUITING]"
+        end
+
+        return name .. " (" .. count .. ")" .. status
+    end)
+    ```
 ]]
-function OverrideFactionName(uniqueID, currentName)
+function OverrideFactionName(uniqueID, name)
 end
 
 --[[
     Purpose:
-        Called to override spawn time.
+        Called when player gains stamina
 
     When Called:
-        When spawn times need to be customized.
+        When a player's stamina increases
 
     Parameters:
-        client (Player)
-            The player spawning.
-        respawnTime (number)
-            The base respawn time.
+        self (Player) - The player gaining stamina
 
     Returns:
-        number
-            The overridden respawn time.
+        None
 
     Realm:
         Shared
@@ -12731,105 +2667,68 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Return unmodified respawn time
-        function MODULE:OverrideSpawnTime(client, respawnTime)
-            return respawnTime
-        end
-        ```
+
+    ```lua
+    -- Simple: Log stamina gain
+    hook.Add("PlayerStaminaGained", "MyAddon", function(self)
+        print(self:Name() .. " gained stamina")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Adjust respawn time based on player status
-        function MODULE:OverrideSpawnTime(client, respawnTime)
-            if not IsValid(client) then return respawnTime end
 
-            -- Shorter respawn for admins
-            if client:IsAdmin() then
-                return respawnTime * 0.5
-            end
-
-            -- Longer respawn for VIPs
-            if client:IsVIP() then
-                return respawnTime * 0.8
-            end
-
-            return respawnTime
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced respawn time calculation with multiple factors
-        function MODULE:OverrideSpawnTime(client, respawnTime)
-            if not IsValid(client) then return respawnTime end
-
-            local finalTime = respawnTime
-
-            -- Admin modifier
-            if client:IsAdmin() then
-                finalTime = finalTime * 0.5 -- 50% reduction
-            end
-
-            -- VIP modifier
-            if client:IsVIP() then
-                finalTime = finalTime * 0.8 -- 20% reduction
-            end
-
-            -- Character modifier
-            local char = client:getChar()
+    ```lua
+    -- Medium: Track stamina gains
+    hook.Add("PlayerStaminaGained", "TrackStaminaGains", function(self)
+        if SERVER then
+            local char = self:getChar()
             if char then
-                -- Faction modifier
-                local faction = lia.faction.get(char:getFaction())
-                if faction and faction.respawnTimeModifier then
-                    finalTime = finalTime * faction.respawnTimeModifier
-                end
-
-                -- Class modifier
-                local classID = char:getClass()
-                if classID then
-                    local class = lia.class.get(classID)
-                    if class and class.respawnTimeModifier then
-                        finalTime = finalTime * class.respawnTimeModifier
-                    end
-                end
-
-                -- Character level modifier
-                local level = char:getData("level", 1)
-                if level > 50 then
-                    finalTime = finalTime * 0.9 -- 10% reduction for high level
-                end
+                local staminaGains = char:getData("staminaGains", 0)
+                char:setData("staminaGains", staminaGains + 1)
             end
-
-            -- Death count modifier (more deaths = longer respawn)
-            local deathCount = client:getData("deathCount", 0)
-            if deathCount > 5 then
-                finalTime = finalTime * (1 + (deathCount - 5) * 0.1) -- +10% per death above 5
-            end
-
-            -- Cap time
-            finalTime = math.max(1, math.min(finalTime, respawnTime * 2))
-
-            return finalTime
         end
-        ```
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex stamina gain tracking
+    hook.Add("PlayerStaminaGained", "AdvancedStaminaGain", function(self)
+        if SERVER then
+            local char = self:getChar()
+            if not char then return end
+
+            -- Track stamina gains
+            local staminaGains = char:getData("staminaGains", 0)
+            char:setData("staminaGains", staminaGains + 1)
+
+            -- Check for achievements
+            if staminaGains + 1 >= 1000 then
+                if not char:getData("achievement_marathonRunner", false) then
+                    char:setData("achievement_marathonRunner", true)
+                    self:ChatPrint("Achievement unlocked: Marathon Runner!")
+                end
+            end
+        end
+    end)
+    ```
 ]]
-function OverrideSpawnTime(client, respawnTime)
+function PlayerStaminaGained(self)
 end
 
 --[[
     Purpose:
-        Called when player Lilia data is loaded.
+        Called when player loses stamina
 
     When Called:
-        When player data is loaded from database.
+        When a player's stamina decreases
 
     Parameters:
-        client (Player)
-            The player whose data was loaded.
+        self (Player) - The player losing stamina
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -12837,301 +2736,66 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log data load
-        function MODULE:PlayerLiliaDataLoaded(client)
-            print("Player Lilia data loaded: " .. client:Name())
-        end
-        ```
+
+    ```lua
+    -- Simple: Log stamina loss
+    hook.Add("PlayerStaminaLost", "MyAddon", function(self)
+        print(self:Name() .. " lost stamina")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Initialize player data after load
-        function MODULE:PlayerLiliaDataLoaded(client)
-            if not IsValid(client) then return end
 
-            -- Set up default data if missing
-            if not client:getData("playtime") then
-                client:setData("playtime", 0)
+    ```lua
+    -- Medium: Track stamina loss
+    hook.Add("PlayerStaminaLost", "TrackStaminaLoss", function(self)
+        if SERVER then
+            local char = self:getChar()
+            if char then
+                local staminaLoss = char:getData("staminaLoss", 0)
+                char:setData("staminaLoss", staminaLoss + 1)
             end
-
-            -- Initialize UI on client
-            if CLIENT then
-                hook.Run("InitializePlayerUI", client)
-            end
-
-            lia.log.add("Player Lilia data loaded: " .. client:Name(), FLAG_NORMAL)
         end
-        ```
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced data initialization with validation and setup
-        function MODULE:PlayerLiliaDataLoaded(client)
-            if not IsValid(client) then return end
 
-            -- Validate loaded data
-            self:ValidatePlayerData(client)
+    ```lua
+    -- High: Complex stamina loss tracking
+    hook.Add("PlayerStaminaLost", "AdvancedStaminaLoss", function(self)
+        if SERVER then
+            local char = self:getChar()
+            if not char then return end
 
-            -- Initialize default data
-            self:InitializePlayerDefaults(client)
+            -- Track stamina loss
+            local staminaLoss = char:getData("staminaLoss", 0)
+            char:setData("staminaLoss", staminaLoss + 1)
 
-            -- Load cached data
-            self:LoadCachedPlayerData(client)
-
-            -- Set up player-specific systems
-            self:SetupPlayerSystems(client)
-
-            -- Initialize UI on client
-            if CLIENT then
-                hook.Run("InitializePlayerUI", client)
+            -- Check if stamina is critically low
+            local stamina = self:getNetVar("stamina", 100)
+            if stamina <= 10 then
+                self:ChatPrint("Warning: Stamina is critically low!")
             end
-
-            -- Sync important data to client
-            if SERVER then
-                netstream.Start(client, "playerDataLoaded")
-            end
-
-            lia.log.add("Player Lilia data loaded: " .. client:Name(), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnPlayerLiliaDataFullyLoaded", client)
         end
-        ```
+    end)
+    ```
 ]]
-function PlayerLiliaDataLoaded(client)
+function PlayerStaminaLost(self)
 end
 
 --[[
     Purpose:
-        Called when a character is loaded for a player.
+        Called before Lilia framework is loaded
 
     When Called:
-        When characters are loaded for players.
-
-    Parameters:
-        client (Player)
-            The player loading the character.
-        character (Character)
-            The loaded character.
-        currentChar (boolean)
-            Whether this is the current character.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log character load
-        function MODULE:PlayerLoadedChar(client, character, currentChar)
-            print("Player loaded character: " .. character:getName())
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Initialize character after load
-        function MODULE:PlayerLoadedChar(client, character, currentChar)
-            if not IsValid(client) or not character then return end
-
-            -- Set up character-specific data
-            if currentChar then
-                -- Initialize inventory
-                local inventory = character:getInv()
-                if inventory then
-                    inventory:sync()
-                end
-
-                -- Update client model
-                client:SetModel(character:getModel())
-            end
-
-            lia.log.add("Player loaded character: " .. character:getName(), FLAG_NORMAL)
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced character initialization with comprehensive setup
-        function MODULE:PlayerLoadedChar(client, character, currentChar)
-            if not IsValid(client) or not character then return end
-
-            -- Validate character data
-            self:ValidateCharacterData(character)
-
-            -- Initialize character-specific systems
-            self:InitializeCharacterSystems(character)
-
-            if currentChar then
-                -- Set up current character
-                client:SetModel(character:getModel())
-
-                -- Initialize inventory
-                local inventory = character:getInv()
-                if inventory then
-                    inventory:sync()
-                    self:SetupInventorySystems(inventory)
-                end
-
-                -- Load character attributes
-                self:LoadCharacterAttributes(character)
-
-                -- Set up character display
-                if CLIENT then
-                    hook.Run("SetupCharacterDisplay", character)
-                end
-
-                -- Sync character data to client
-                if SERVER then
-                    netstream.Start(client, "characterLoaded", character:getID())
-                end
-
-                -- Check for achievements
-                hook.Run("CheckCharacterLoadAchievements", character)
-            end
-
-            lia.log.add(string.format(
-                "Player %s loaded character %s (current: %s)",
-                client:Name(),
-                character:getName(),
-                tostring(currentChar)
-            ), FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnCharacterFullyLoaded", client, character, currentChar)
-        end
-        ```
-]]
-function PlayerLoadedChar(client, character, currentChar)
-end
-
---[[
-    Purpose:
-        Called after damage is scaled.
-
-    When Called:
-        After damage scaling calculations.
-
-    Parameters:
-        hitgroup (number)
-            The hitgroup number.
-        dmgInfo (CTakeDamageInfo)
-            The damage info.
-        damageScale (number)
-            The scaled damage value.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log damage scaling
-        function MODULE:PostScaleDamage(hitgroup, dmgInfo, damageScale)
-            print("Damage scaled: " .. damageScale)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Handle damage scaling with effects
-        function MODULE:PostScaleDamage(hitgroup, dmgInfo, damageScale)
-            if not dmgInfo then return end
-
-            local target = dmgInfo:GetAttacker()
-            if IsValid(target) and target:IsPlayer() then
-                -- Apply damage effects based on hitgroup
-                if hitgroup == HITGROUP_HEAD then
-                    -- Headshot multiplier
-                    dmgInfo:ScaleDamage(damageScale * 1.5)
-                end
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced damage scaling with multiple factors
-        function MODULE:PostScaleDamage(hitgroup, dmgInfo, damageScale)
-            if not dmgInfo then return end
-
-            local target = dmgInfo:GetAttacker()
-            local victim = dmgInfo:GetVictim()
-
-            if not IsValid(target) or not IsValid(victim) then return end
-
-            local finalScale = damageScale
-
-            -- Hitgroup-based scaling
-            local hitgroupMultipliers = {
-                [HITGROUP_HEAD] = 1.5,
-                [HITGROUP_CHEST] = 1.0,
-                [HITGROUP_STOMACH] = 0.9,
-                [HITGROUP_LEFTARM] = 0.7,
-                [HITGROUP_RIGHTARM] = 0.7,
-                [HITGROUP_LEFTLEG] = 0.6,
-                [HITGROUP_RIGHTLEG] = 0.6
-            }
-
-            finalScale = finalScale * (hitgroupMultipliers[hitgroup] or 1.0)
-
-            -- Character-based modifiers
-            if target:IsPlayer() then
-                local char = target:getChar()
-                if char then
-                    -- Strength affects damage
-                    local strength = char:getAttrib("strength", 0)
-                    finalScale = finalScale * (1 + strength / 200) -- Up to 50% increase
-                end
-            end
-
-            -- Victim armor/defense
-            if victim:IsPlayer() then
-                local victimChar = victim:getChar()
-                if victimChar then
-                    local armor = victimChar:getData("armor", 0)
-                    finalScale = finalScale * (1 - armor / 200) -- Up to 50% reduction
-                end
-            end
-
-            -- Apply final scale
-            dmgInfo:ScaleDamage(finalScale)
-
-            -- Log significant damage
-            if finalScale > 2.0 then
-                lia.log.add(string.format(
-                    "High damage scale: %.2fx (hitgroup: %d)",
-                    finalScale,
-                    hitgroup
-                ), FLAG_NORMAL)
-            end
-        end
-        ```
-]]
-function PostScaleDamage(hitgroup, dmgInfo, damageScale)
-end
-
---[[
-    Purpose:
-        Called before Lilia is loaded.
-
-    When Called:
-        Before framework initialization.
+        Before Lilia systems are initialized
 
     Parameters:
         None
 
     Returns:
-        nil
+        None
 
     Realm:
         Shared
@@ -13139,78 +2803,58 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log pre-load
-        function MODULE:PreLiliaLoaded()
-            print("Pre-Lilia load hook")
-        end
-        ```
+
+    ```lua
+    -- Simple: Log pre-load
+    hook.Add("PreLiliaLoaded", "MyAddon", function()
+        print("Lilia is about to load")
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Set up pre-load configurations
-        function MODULE:PreLiliaLoaded()
-            -- Set up temporary configurations
-            lia.config.set("tempSetting", "value")
-
-            -- Initialize pre-load systems
-            self:InitializePreLoadSystems()
-
-            lia.log.add("Pre-Lilia load hook executed", FLAG_NORMAL)
-        end
-        ```
+    ```lua
+    -- Medium: Initialize addon systems
+    hook.Add("PreLiliaLoaded", "InitializeAddon", function()
+        MyAddon.PreInitialize()
+        print("Addon pre-initialized")
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced pre-load setup with validation
-        function MODULE:PreLiliaLoaded()
-            -- Validate environment
-            self:ValidatePreLoadEnvironment()
 
-            -- Set up temporary configurations
-            self:SetupPreLoadConfigurations()
+    ```lua
+    -- High: Complex pre-load initialization
+    hook.Add("PreLiliaLoaded", "AdvancedPreLoadInit", function()
+        -- Initialize custom systems
+        MyAddon.PreInitialize()
 
-            -- Initialize pre-load systems
-            self:InitializePreLoadSystems()
+        -- Set up configuration
+        MyAddon.config = MyAddon.config or {}
+        MyAddon.config.enabled = true
+        MyAddon.config.debug  = false
 
-            -- Check for required dependencies
-            self:CheckPreLoadDependencies()
+        -- Register custom hooks
+        hook.Add("PlayerInitialSpawn", "MyAddonSpawn", MyAddon.OnPlayerSpawn)
 
-            -- Set up pre-load hooks
-            self:SetupPreLoadHooks()
-
-            -- Prepare database connections
-            if SERVER then
-                self:PrepareDatabaseConnections()
-            end
-
-            lia.log.add("Pre-Lilia load hook fully executed", FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnPreLiliaFullyLoaded")
-        end
-        ```
+        print("Advanced pre-load initialization completed")
+    end)
+    ```
 ]]
 function PreLiliaLoaded()
 end
 
 --[[
     Purpose:
-        Called before damage is scaled.
+        Called to calculate stamina change
 
     When Called:
-        Before damage scaling calculations.
+        When calculating how much stamina should change
 
     Parameters:
-        hitgroup (number)
-            The hitgroup number.
-        dmgInfo (CTakeDamageInfo)
-            The damage info.
-        damageScale (number)
-            The current damage scale.
+        client (Player) - The player whose stamina is changing
 
     Returns:
-        nil
+        number - The stamina change amount
 
     Realm:
         Shared
@@ -13218,98 +2862,93 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Log pre-scaling
-        function MODULE:PreScaleDamage(hitgroup, dmgInfo, damageScale)
-            print("Pre-scaling damage")
-        end
-        ```
+
+    ```lua
+    -- Simple: Return default stamina change
+    hook.Add("calcStaminaChange", "MyAddon", function(client)
+        return 1
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Modify damage scale before calculation
-        function MODULE:PreScaleDamage(hitgroup, dmgInfo, damageScale)
-            if not dmgInfo then return end
 
-            local target = dmgInfo:GetAttacker()
-            if IsValid(target) and target:IsPlayer() then
-                -- Adjust base scale
-                if target:IsAdmin() then
-                    dmgInfo:SetDamageScale(damageScale * 1.2)
-                end
-            end
-        end
-        ```
+    ```lua
+    -- Medium: Calculate based on character attributes
+    hook.Add("calcStaminaChange", "AttributeStamina", function(client)
+        local char = client:getChar()
+        if not char then return 1 end
+
+        local endurance = char:getAttrib("end", 0)
+        return 1 + (endurance * 0.1)
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced pre-scaling with validation and modifiers
-        function MODULE:PreScaleDamage(hitgroup, dmgInfo, damageScale)
-            if not dmgInfo then return end
 
-            local target = dmgInfo:GetAttacker()
-            local victim = dmgInfo:GetVictim()
+    ```lua
+    -- High: Complex stamina calculation system
+    hook.Add("calcStaminaChange", "AdvancedStaminaCalc", function(client)
+        local char = client:getChar()
+        if not char then return 1 end
 
-            if not IsValid(target) or not IsValid(victim) then return end
+        -- Base stamina change
+        local baseChange = 1
 
-            local baseScale = damageScale
+        -- Attribute bonus
+        local endurance = char:getAttrib("end", 0)
+        local strength = char:getAttrib("str", 0)
+        local attrBonus = (endurance * 0.1) + (strength * 0.05)
 
-            -- Validate damage info
-            local validation = self:ValidateDamageInfo(dmgInfo)
-            if not validation.valid then
-                lia.log.add("Invalid damage info: " .. validation.error, FLAG_WARNING)
-                return
-            end
+        -- Faction bonus
+        local faction = char:getFaction()
+        local factionBonuses = {
+            ["athlete"] = 0.5,
+            ["soldier"] = 0.3,
+            ["citizen"] = 0.0
+        }
+        local factionBonus = factionBonuses[faction] or 0.0
 
-            -- Apply pre-scaling modifiers
-            if target:IsPlayer() then
-                local char = target:getChar()
-                if char then
-                    -- Weapon-based modifiers
-                    local weapon = target:GetActiveWeapon()
-                    if IsValid(weapon) then
-                        local weaponModifier = weapon:GetNWFloat("damageModifier", 1.0)
-                        baseScale = baseScale * weaponModifier
-                    end
-
-                    -- Faction-based modifiers
-                    local faction = lia.faction.get(char:getFaction())
-                    if faction and faction.damageModifier then
-                        baseScale = baseScale * faction.damageModifier
-                    end
+        -- Item bonuses
+        local itemBonus = 0
+        local inv = char:getInv()
+        if inv then
+            for _, item in pairs(inv:getItems()) do
+                if item:getData("equipped", false) then
+                    itemBonus = itemBonus + (item.staminaBonus or 0)
                 end
             end
-
-            -- Set modified scale
-            dmgInfo:SetDamageScale(baseScale)
-
-            -- Log significant modifications
-            if math.abs(baseScale - damageScale) > 0.2 then
-                lia.log.add(string.format(
-                    "Damage scale modified: %.2f -> %.2f",
-                    damageScale,
-                    baseScale
-                ), FLAG_NORMAL)
-            end
         end
-        ```
+
+        -- Status effects
+        local statusPenalty = 0
+        if char:getData("injured", false) then
+            statusPenalty = statusPenalty - 0.5
+        end
+        if char:getData("exhausted", false) then
+            statusPenalty = statusPenalty - 0.3
+        end
+
+        -- Calculate final change
+        local finalChange = baseChange + attrBonus + factionBonus + itemBonus + statusPenalty
+        return math.max(0.1, finalChange)
+    end)
+    ```
 ]]
-function PreScaleDamage(hitgroup, dmgInfo, damageScale)
+function calcStaminaChange(client)
 end
 
 --[[
     Purpose:
-        Determines if data should be saved.
+        Called to get persistent data
 
     When Called:
-        When deciding whether to persist server data.
+        When retrieving stored data
 
     Parameters:
-        None
+        default (any) - The default value if data doesn't exist
 
     Returns:
-        boolean
-            Whether data should be saved.
+        any - The retrieved data or default value
 
     Realm:
         Shared
@@ -13317,635 +2956,59 @@ end
     Example Usage:
 
     Low Complexity:
-        ```lua
-        -- Simple: Always save data
-        function MODULE:ShouldDataBeSaved()
-            return true
-        end
-        ```
+
+    ```lua
+    -- Simple: Get data with default
+    hook.Add("getData", "MyAddon", function(default)
+        return default
+    end)
+    ```
 
     Medium Complexity:
-        ```lua
-        -- Medium: Conditionally save data
-        function MODULE:ShouldDataBeSaved()
-            -- Don't save during round transitions
-            if GetGlobalBool("RoundEnding", false) then
-                return false
-            end
 
-            return true
+    ```lua
+    -- Medium: Get data with validation
+    hook.Add("getData", "ValidateData", function(default)
+        local data = lia.data.get("someKey", default)
+        if type(data) ~= type(default) then
+            return default
         end
-        ```
+        return data
+    end)
+    ```
 
     High Complexity:
-        ```lua
-        -- High: Advanced data saving logic with multiple factors
-        function MODULE:ShouldDataBeSaved()
-            -- Check if server is shutting down
-            if game.IsDedicated() and GetConVar("sv_shutdown"):GetBool() then
-                return true -- Always save on shutdown
-            end
 
-            -- Don't save during round transitions
-            if GetGlobalBool("RoundEnding", false) then
-                return false
-            end
+    ```lua
+    -- High: Complex data retrieval system
+    hook.Add("getData", "AdvancedDataGet", function(default)
+        -- Try to get from cache first
+        local cache = lia.data.cache or {}
+        local key = "someKey"
 
-            -- Check save interval
-            local lastSave = GetGlobalFloat("lastDataSave", 0)
-            local saveInterval = lia.config.get("dataSaveInterval", 300) -- 5 minutes default
-            if CurTime() - lastSave < saveInterval then
-                return false
-            end
-
-            -- Check player count (save more frequently with more players)
-            local playerCount = #player.GetAll()
-            local adjustedInterval = saveInterval / math.max(1, playerCount / 10)
-            if CurTime() - lastSave < adjustedInterval then
-                return false
-            end
-
-            -- Check if there are pending changes
-            if not self:HasPendingDataChanges() then
-                return false
-            end
-
-            return true
+        if cache[key] and cache[key].expiry > CurTime() then
+            return cache[key].value
         end
-        ```
+
+        -- Get from storage
+        local data = lia.data.get(key, default)
+
+        -- Validate data type
+        if type(data) ~= type(default) then
+            print("Warning: Data type mismatch, using default")
+            data = default
+        end
+
+        -- Cache the result
+        cache[key] = {
+            value  = data,
+            expiry = CurTime() + 60
+        }
+        lia.data.cache = cache
+
+        return data
+    end)
+    ```
 ]]
-function ShouldDataBeSaved()
-end
-
---[[
-    Purpose:
-        Called when web images are downloaded.
-
-    When Called:
-        When web image downloads complete.
-
-    Parameters:
-        name (string)
-            The image name.
-        path (string)
-            The local file path.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log image download
-        function MODULE:WebImageDownloaded(name, path)
-            print("Web image downloaded: " .. name)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Process downloaded image
-        function MODULE:WebImageDownloaded(name, path)
-            if not name or not path then return end
-
-            -- Validate image file
-            if file.Exists(path, "DATA") then
-                -- Cache image path
-                if not self.imageCache then
-                    self.imageCache = {}
-                end
-                self.imageCache[name] = path
-
-                lia.log.add("Web image downloaded: " .. name, FLAG_NORMAL)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced image processing with validation and caching
-        function MODULE:WebImageDownloaded(name, path)
-            if not name or not path then return end
-
-            -- Validate file exists
-            if not file.Exists(path, "DATA") then
-                lia.log.add("Downloaded image file not found: " .. path, FLAG_ERROR)
-                return
-            end
-
-            -- Validate file size
-            local fileSize = file.Size(path, "DATA")
-            local maxSize = lia.config.get("maxImageSize", 10485760) -- 10MB default
-            if fileSize > maxSize then
-                lia.log.add("Image file too large: " .. name .. " (" .. fileSize .. " bytes)", FLAG_WARNING)
-                file.Delete(path, "DATA")
-                return
-            end
-
-            -- Validate image format
-            local isValid = self:ValidateImageFormat(path)
-            if not isValid then
-                lia.log.add("Invalid image format: " .. name, FLAG_WARNING)
-                file.Delete(path, "DATA")
-                return
-            end
-
-            -- Cache image data
-            if not self.imageCache then
-                self.imageCache = {}
-            end
-            self.imageCache[name] = {
-                path = path,
-                size = fileSize,
-                downloaded = os.time()
-            }
-
-            -- Update UI if on client
-            if CLIENT then
-                hook.Run("UpdateImageDisplay", name, path)
-            end
-
-            lia.log.add("Web image downloaded: " .. name .. " (" .. fileSize .. " bytes)", FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnWebImageFullyDownloaded", name, path)
-        end
-        ```
-]]
-function WebImageDownloaded(name, path)
-end
-
---[[
-    Purpose:
-        Called when web sounds are downloaded.
-
-    When Called:
-        When web sound downloads complete.
-
-    Parameters:
-        name (string)
-            The sound name.
-        path (string)
-            The local file path.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log sound download
-        function MODULE:WebSoundDownloaded(name, path)
-            print("Web sound downloaded: " .. name)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Process downloaded sound
-        function MODULE:WebSoundDownloaded(name, path)
-            if not name or not path then return end
-
-            -- Validate sound file
-            if file.Exists(path, "DATA") then
-                -- Cache sound path
-                if not self.soundCache then
-                    self.soundCache = {}
-                end
-                self.soundCache[name] = path
-
-                lia.log.add("Web sound downloaded: " .. name, FLAG_NORMAL)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced sound processing with validation and caching
-        function MODULE:WebSoundDownloaded(name, path)
-            if not name or not path then return end
-
-            -- Validate file exists
-            if not file.Exists(path, "DATA") then
-                lia.log.add("Downloaded sound file not found: " .. path, FLAG_ERROR)
-                return
-            end
-
-            -- Validate file size
-            local fileSize = file.Size(path, "DATA")
-            local maxSize = lia.config.get("maxSoundSize", 5242880) -- 5MB default
-            if fileSize > maxSize then
-                lia.log.add("Sound file too large: " .. name .. " (" .. fileSize .. " bytes)", FLAG_WARNING)
-                file.Delete(path, "DATA")
-                return
-            end
-
-            -- Validate sound format
-            local isValid = self:ValidateSoundFormat(path)
-            if not isValid then
-                lia.log.add("Invalid sound format: " .. name, FLAG_WARNING)
-                file.Delete(path, "DATA")
-                return
-            end
-
-            -- Cache sound data
-            if not self.soundCache then
-                self.soundCache = {}
-            end
-            self.soundCache[name] = {
-                path = path,
-                size = fileSize,
-                downloaded = os.time()
-            }
-
-            -- Precache sound on client
-            if CLIENT then
-                sound.PlayFile(path, "noplay", function(soundObj)
-                    if IsValid(soundObj) then
-                        self.soundPrecached[name] = true
-                    end
-                end)
-            end
-
-            lia.log.add("Web sound downloaded: " .. name .. " (" .. fileSize .. " bytes)", FLAG_NORMAL)
-
-            -- Trigger hook
-            hook.Run("OnWebSoundFullyDownloaded", name, path)
-        end
-        ```
-]]
-function WebSoundDownloaded(name, path)
-end
-
---[[
-    Purpose:
-        Called when module files are being included.
-
-    When Called:
-        When the framework loads and includes module files.
-
-    Parameters:
-        path (string)
-            The path to the module files.
-        MODULE (table)
-            The module table being loaded.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log module inclusion
-        function MODULE:DoModuleIncludes(path, MODULE)
-            print("Including module from: " .. path)
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track module loading
-        function MODULE:DoModuleIncludes(path, MODULE)
-            -- Initialize module tracking if needed
-            self.loadedModules = self.loadedModules or {}
-
-            -- Record module information
-            self.loadedModules[MODULE.name or path] = {
-                path = path,
-                loadedAt = CurTime(),
-                version = MODULE.version or "unknown"
-            }
-
-            -- Log module loading
-            lia.log.add("Module loaded from path: " .. path, FLAG_NORMAL)
-
-            -- Validate module structure
-            if not MODULE.name then
-                lia.log.add("Warning: Module loaded from " .. path .. " has no name", FLAG_WARNING)
-            end
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- High: Advanced module loading with dependency management
-        function MODULE:DoModuleIncludes(path, MODULE)
-            -- Validate module before loading
-            if not self:ValidateModuleStructure(MODULE, path) then
-                lia.log.add("Invalid module structure in: " .. path, FLAG_ERROR)
-                return
-            end
-
-            -- Check module dependencies
-            if not self:CheckModuleDependencies(MODULE) then
-                lia.log.add("Module dependency check failed for: " .. path, FLAG_ERROR)
-                return
-            end
-
-            -- Register module with framework
-            self:RegisterModule(MODULE, path)
-
-            -- Initialize module-specific systems
-            self:InitializeModuleSystems(MODULE)
-
-            -- Load module configuration
-            self:LoadModuleConfiguration(MODULE, path)
-
-            -- Set up module hooks and events
-            self:SetupModuleHooks(MODULE)
-
-            -- Register module commands
-            self:RegisterModuleCommands(MODULE)
-
-            -- Initialize module database tables if needed
-            self:InitializeModuleDatabase(MODULE)
-
-            -- Load module languages
-            self:LoadModuleLanguages(MODULE, path)
-
-            -- Set up module networking
-            self:SetupModuleNetworking(MODULE)
-
-            -- Initialize module permissions
-            self:InitializeModulePermissions(MODULE)
-
-            -- Log comprehensive module loading
-            lia.log.add(string.format("Module loaded successfully - Name: %s, Path: %s, Version: %s",
-                MODULE.name or "Unknown",
-                path,
-                MODULE.version or "Unknown"), FLAG_NORMAL)
-
-            -- Trigger post-module load hooks
-            hook.Run("OnModuleLoaded", MODULE, path)
-
-            -- Update module loading statistics
-            self:UpdateModuleStatistics(MODULE)
-        end
-
-        -- Helper function to validate module structure
-        function MODULE:ValidateModuleStructure(moduleTable, path)
-            -- Check for required fields
-            local required = {"name", "author"}
-            for _, field in ipairs(required) do
-                if not moduleTable[field] then
-                    lia.log.add("Module missing required field '" .. field .. "' in: " .. path, FLAG_ERROR)
-                    return false
-                end
-            end
-
-            -- Validate module name format
-            if not string.match(moduleTable.name, "^[a-zA-Z0-9_-]+$") then
-                lia.log.add("Invalid module name format in: " .. path, FLAG_ERROR)
-                return false
-            end
-
-            return true
-        end
-        ```
-]]
-function DoModuleIncludes(path, MODULE)
-end
-
---[=[
-    Purpose:
-        Called when an item is overridden with new properties or functions.
-
-    When Called:
-        After an item's properties, functions, or hooks have been overridden during module loading.
-
-    Parameters:
-        item (table)
-            The item table that was overridden.
-
-        overrides (table)
-            The table containing the override data that was applied.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Log item overrides
-        function MODULE:OnItemOverridden(item, overrides)
-            print("Item " .. item.name .. " was overridden")
-        end
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Track and validate item overrides
-        function MODULE:OnItemOverridden(item, overrides)
-            -- Log the override
-            lia.log.add("Item '" .. item.uniqueID .. "' overridden with " .. table.Count(overrides) .. " properties")
-
-            -- Validate critical overrides
-            if overrides.functions then
-                self:ValidateItemFunctions(item, overrides.functions)
-            end
-
-            -- Update item cache
-            self.itemCache = self.itemCache or {}
-            self.itemCache[item.uniqueID] = true
-        end
-        ```
-
-    High Complexity:
-        ```lua
-        -- Advanced: Handle complex item modifications and dependencies
-        function MODULE:OnItemOverridden(item, overrides)
-            -- Track override history
-            item.overrideHistory = item.overrideHistory or {}
-            table.insert(item.overrideHistory, {
-                timestamp = os.time(),
-                overrides = overrides,
-                source = self.name
-            })
-
-            -- Handle special override types
-            if overrides.functions then
-                self:ProcessFunctionOverrides(item, overrides.functions)
-            end
-
-            if overrides.hooks then
-                self:RegisterOverrideHooks(item, overrides.hooks)
-            end
-
-            if overrides.postHooks then
-                self:SetupPostHooks(item, overrides.postHooks)
-            end
-
-            -- Check for dependency conflicts
-            self:CheckOverrideConflicts(item, overrides)
-
-            -- Update dependent systems
-            self:UpdateItemDependencies(item)
-            self:RefreshItemUI(item.uniqueID)
-        end
-        ```
-]=]
-function OnItemOverridden(item, overrides)
-end
-
---[=[
-    Purpose:
-        Retrieves stored data for a module.
-
-    When Called:
-        When a module needs to access its persistent data.
-
-    Parameters:
-        default (any)
-            The default value to return if no data is found.
-
-    Returns:
-        any
-            The stored data value, or the default value if no data exists.
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Get module configuration
-        local config = self:getData({})
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Get module settings with fallback
-        function MODULE:GetSetting(key, fallback)
-            local data = self:getData({})
-            return data[key] or fallback
-        end
-
-        -- Usage
-        local maxPlayers = self:GetSetting("maxPlayers", 32)
-        ```
-
-    High Complexity:
-        ```lua
-        -- Advanced: Complex data retrieval with validation
-        function MODULE:GetValidatedData()
-            local data = self:getData({
-                enabled = true,
-                settings = {},
-                cache = {}
-            })
-
-            -- Validate data structure
-            if not istable(data.settings) then
-                data.settings = {}
-                self:setData(data)
-            end
-
-            -- Ensure cache exists
-            if not istable(data.cache) then
-                data.cache = {}
-                self:setData(data)
-            end
-
-            return data
-        end
-        ```
-]=]
 function getData(default)
-end
-
---[=[
-    Purpose:
-        Stores data persistently for a module.
-
-    When Called:
-        When a module needs to save persistent data across server restarts.
-
-    Parameters:
-        value (any)
-            The data value to store.
-
-        global (boolean)
-            Whether the data should be global across all maps.
-
-        ignoreMap (boolean)
-            Whether to ignore the current map when storing the data.
-
-    Returns:
-        nil
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-        ```lua
-        -- Simple: Save module configuration
-        self:setData({enabled = true, version = "1.0"})
-        ```
-
-    Medium Complexity:
-        ```lua
-        -- Medium: Save settings with map-specific data
-        function MODULE:SaveSettings(settings, global)
-            self:setData(settings, global, false)
-            lia.log.add("Settings saved for module: " .. self.name)
-        end
-
-        -- Usage
-        self:SaveSettings({maxPlayers = 64, debug = true}, false)
-        ```
-
-    High Complexity:
-        ```lua
-        -- Advanced: Complex data persistence with validation and backup
-        function MODULE:SaveComplexData(data, options)
-            options = options or {}
-
-            -- Validate data before saving
-            local validationResult = self:ValidateDataStructure(data)
-            if not validationResult.valid then
-                lia.log.add("Data validation failed: " .. validationResult.error, FLAG_ERROR)
-                return false
-            end
-
-            -- Create backup of current data
-            local currentData = self:getData()
-            if currentData then
-                self.backupData = table.Copy(currentData)
-            end
-
-            -- Save with specified options
-            self:setData(data, options.global or false, options.ignoreMap or false)
-
-            -- Log the save operation
-            lia.log.add("Complex data saved for " .. self.name ..
-                       " (global: " .. tostring(options.global) ..
-                       ", ignoreMap: " .. tostring(options.ignoreMap) .. ")")
-
-            -- Trigger post-save hooks
-            hook.Run("ModuleDataSaved", self.name, data, options)
-
-            return true
-        end
-        ```
-]=]
-function setData(value, global, ignoreMap)
 end

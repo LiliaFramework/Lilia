@@ -7,7 +7,7 @@ Chat Messages
 
 Periodically posts automated advert messages in chat on a timer. Keeps players informed with rotating tips even when staff are offline.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds periodic server adverts to chat
 - Adds interval control via ChatMessagesInterval

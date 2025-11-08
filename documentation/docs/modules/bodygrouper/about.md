@@ -7,7 +7,7 @@ Body Group Editor
 
 Spawns a bodygroup closet where players can edit their model's bodygroups. Admins may inspect others and configure the closet's model.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds a spawnable closet entity for editing bodygroups
 - Adds the ability to customize its model via BodyGrouperModel

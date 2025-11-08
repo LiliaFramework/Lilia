@@ -7,7 +7,7 @@ Word Filter
 
 Adds chat word filtering, blocking of banned phrases, an easy-to-extend list, and admin commands to modify the list.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds chat word filtering
 - Adds blocking of banned phrases

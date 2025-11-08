@@ -7,7 +7,7 @@ Climbing
 
 Adds the ability to climb ledges using movement keys, custom climbing animations, and hooks for climb attempts.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds the ability to climb ledges using movement keys
 - Adds custom climbing animations

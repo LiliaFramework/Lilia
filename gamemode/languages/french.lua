@@ -605,6 +605,7 @@ LANGUAGE = {
     canNotAfford = "Vous ne pouvez pas vous permettre cet objet.",
     respawnKey = "Appuyez sur %s pour rapparatre",
     respawnIn = "Rapparition automatique dans %s secondes",
+    respawning = "Réapparition...",
     pressAnyKeyToRespawn = "Appuyez sur ESPACE pour réapparaître",
     youHaveDied = "Vous tes mort",
     factionStaffName = "Staff en service",

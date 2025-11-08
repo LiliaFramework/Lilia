@@ -7,7 +7,7 @@ View Bob
 
 Adds camera bobbing while moving, adjustable intensity, hooks to modify view punch, and configuration for bobbing frequency.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds camera bobbing while moving
 - Adds adjustable intensity

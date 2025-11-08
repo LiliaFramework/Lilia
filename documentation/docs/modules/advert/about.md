@@ -7,7 +7,7 @@ Advertisements
 
 Implements a paid /advert command for server-wide announcements. Messages are colored, logged, and throttled by a cooldown to curb spam.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds a paid /advert command players can use
 - Adds a cooldown via AdvertCooldown to limit spam

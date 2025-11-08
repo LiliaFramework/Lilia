@@ -17,6 +17,7 @@ function MODULE:HUDPaint()
             hideKey = true
         end
     else
+        hideKey = false
         if shadowFade < 1 then
             fade = clamp(fade + ft * 4.0 / baseTime, 0, 1)
             if fade >= 0.1 then shadowFade = clamp(shadowFade + ft * 2.0 / baseTime, 0, 1) end
@@ -50,11 +51,12 @@ function MODULE:HUDPaint()
 end
 
 function MODULE:PlayerButtonDown(client, key)
-    if key ~= IN_JUMP then return end
-    if client:Alive() then return end
+    local ply = LocalPlayer()
+    local char = ply:getChar()
+    if key ~= KEY_SPACE or not IsFirstTimePredicted() or not IsValid(ply) or ply ~= client or ply:Alive() or not char then return end
     local baseTime = lia.config.get("SpawnTime", 5)
-    baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
-    local lastDeath = client:getNetVar("lastDeathTime", os.time())
+    baseTime = hook.Run("OverrideSpawnTime", ply, baseTime) or baseTime
+    local lastDeath = ply:getNetVar("lastDeathTime", os.time())
     local left = math.Clamp(baseTime - (os.time() - lastDeath), 0, baseTime)
     if left > 0 then return end
     net.Start("liaPlayerRespawn")

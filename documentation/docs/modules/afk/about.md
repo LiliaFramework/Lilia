@@ -7,7 +7,7 @@ AFK Protection
 
 Comprehensive AFK protection system that automatically detects inactive players and prevents exploitation of AFK players.
 
-<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Features</h2>
+<h2 style="text-align:center; font-size:1.5rem; font-weight:bold;">Main Features</h2>
 
 - Adds automatic AFK detection based on player activity
 - Adds protection against tying up, arresting, or stunning AFK players
