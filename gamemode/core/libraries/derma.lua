@@ -2093,7 +2093,7 @@ local BASE_FUNCS = {
         return self
     end,
     Color = function(self, col_or_r, g, b, a)
-        if type(col_or_r) == "number" then
+        if isnumber(col_or_r) then
             COL_R, COL_G, COL_B, COL_A = col_or_r, g or 255, b or 255, a or 255
         elseif col_or_r and IsColor(col_or_r) then
             COL_R, COL_G, COL_B, COL_A = col_or_r.r, col_or_r.g, col_or_r.b, col_or_r.a
@@ -4619,21 +4619,3 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     lia.gui.menuRequestButtons = frame
     return frame, buttonPanels
 end
-
-timer.Simple(0, function()
-    if IsValid(lia.gui.menuDermaMenu) then lia.gui.menuDermaMenu:Remove() end
-    if IsValid(lia.gui.menuTextBox) then lia.gui.menuTextBox:Remove() end
-    if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
-    if IsValid(lia.gui.menu_radial) then lia.gui.menu_radial:Remove() end
-    if IsValid(lia.gui.menuPlayerSelector) then lia.gui.menuPlayerSelector:Remove() end
-    if IsValid(lia.gui.menuRequestDropdown) then lia.gui.menuRequestDropdown:Remove() end
-    if IsValid(lia.gui.menuRequestString) then lia.gui.menuRequestString:Remove() end
-    if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
-    if IsValid(lia.gui.menuRequestBinary) then lia.gui.menuRequestBinary:Remove() end
-    if IsValid(lia.gui.menuRequestButtons) then lia.gui.menuRequestButtons:Remove() end
-    if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
-    if IsValid(lia.gui.menuTableUI) then lia.gui.menuTableUI:Remove() end
-    if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end
-    if IsValid(lia.gui.InteractionMenu) then lia.gui.InteractionMenu:Remove() end
-    if IsValid(lia.gui.OptionsMenu) then lia.gui.OptionsMenu:Remove() end
-end)
