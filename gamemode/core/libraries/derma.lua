@@ -2095,8 +2095,10 @@ local BASE_FUNCS = {
     Color = function(self, col_or_r, g, b, a)
         if type(col_or_r) == "number" then
             COL_R, COL_G, COL_B, COL_A = col_or_r, g or 255, b or 255, a or 255
-        else
+        elseif col_or_r and IsColor(col_or_r) then
             COL_R, COL_G, COL_B, COL_A = col_or_r.r, col_or_r.g, col_or_r.b, col_or_r.a
+        else
+            COL_R, COL_G, COL_B, COL_A = 34, 34, 34, 240
         end
         return self
     end,

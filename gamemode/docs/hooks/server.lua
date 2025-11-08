@@ -25363,3 +25363,98 @@ end
 ]]
 function DatabaseConnected()
 end
+
+--[[
+    Purpose:
+        Called to set persistent data for a module
+
+    When Called:
+        When storing module data that should persist across server restarts
+
+    Parameters:
+        value (any)
+            The data value to store
+        global (boolean, optional)
+            If true, store data globally across all gamemodes and maps
+        ignoreMap (boolean, optional)
+            If true, store data for all maps in the current gamemode
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Store basic module data
+    function MODULE:setData(value, global, ignoreMap)
+        -- Default behavior stores data for current gamemode and map
+        lia.data.set(self.uniqueID, value, global, ignoreMap)
+    end
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Store data with validation
+    function MODULE:setData(value, global, ignoreMap)
+        -- Validate data before storing
+        if type(value) ~= "table" then
+            print("Warning: Module data should be a table")
+            return
+        end
+
+        -- Store with custom scoping
+        lia.data.set(self.uniqueID, value, global, ignoreMap)
+        
+        -- Log data change
+        lia.log.add("Module " .. self.uniqueID .. " data updated", FLAG_NORMAL)
+    end
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex data storage with backup and validation
+    function MODULE:setData(value, global, ignoreMap)
+        -- Validate data structure
+        if not istable(value) then
+            print("Error: Module data must be a table")
+            return
+        end
+
+        -- Create backup of current data
+        local currentData = self:getData({})
+        if table.Count(currentData) > 0 then
+            local backupKey = self.uniqueID .. "_backup_" .. os.time()
+            lia.data.set(backupKey, currentData, global, ignoreMap)
+        end
+
+        -- Validate required fields
+        if value.requiredField == nil then
+            print("Warning: Required field missing, using default")
+            value.requiredField = "default"
+        end
+
+        -- Store validated data
+        lia.data.set(self.uniqueID, value, global, ignoreMap)
+
+        -- Notify dependent modules
+        hook.Run("ModuleDataChanged", self.uniqueID, value)
+
+        -- Log detailed change
+        lia.log.add(string.format(
+            "Module %s data updated (Global: %s, IgnoreMap: %s)",
+            self.uniqueID,
+            tostring(global or false),
+            tostring(ignoreMap or false)
+        ), FLAG_NORMAL)
+    end
+    ```
+]]
+function setData(value, global, ignoreMap)
+end
