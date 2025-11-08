@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 6.994 (November 08, 2025)
+
+### Changes
+
+- Update panels.lua
+- Update derma.lua
+- Successfully updated workshop Lilia to 6.991
+- Update panels.lua
+- Successfully updated workshop Lilia to 6.989
+- Update panels.lua
+- Successfully updated workshop Lilia to 6.987
+- Update panels.lua
+- Successfully updated workshop Lilia to 6.985
+- Update derma.lua
+- Update server.lua
+- Successfully updated workshop Lilia to 6.982
+- Update server.lua
+- Successfully updated workshop Lilia to 6.980
+- Update derma.lua
+- Work around?
+- Successfully updated workshop Lilia to 6.977
+- Update derma.lua
+- More  docs
+- Successfully updated workshop Lilia to 6.974
+
 ## Version 6.991 (November 08, 2025)
 
 ### Changes

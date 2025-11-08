@@ -115,8 +115,8 @@ Client
 ```lua
     -- Simple: Display a basic custom options menu
     lia.derma.optionsMenu({
-        {name = "Option 1", callback = function() print("Selected 1") end},
-        {name = "Option 2", callback = function() print("Selected 2") end}
+    {name = "Option 1", callback = function() print("Selected 1") end},
+    {name = "Option 2", callback = function() print("Selected 2") end}
     })
 
 ```
@@ -125,27 +125,27 @@ Client
 ```lua
     -- Medium: Custom menu with descriptions and custom positioning
     lia.derma.optionsMenu({
-        {
-            name = "Save Game",
-            description = "Save your current progress",
-            callback = function() saveGame() end
-        },
-        {
-            name = "Load Game",
-            description = "Load a previously saved game",
-            callback = function() loadGame() end
-        },
-        {
-            name = "Settings",
-            description = "Open game settings",
-            callback = function() openSettings() end
-        }
+    {
+    name = "Save Game",
+    description = "Save your current progress",
+    callback = function() saveGame() end
+    },
+    {
+    name = "Load Game",
+    description = "Load a previously saved game",
+    callback = function() loadGame() end
+    },
+    {
+    name = "Settings",
+    description = "Open game settings",
+    callback = function() openSettings() end
+    }
     }, {
-        title = "Main Menu",
-        x = ScrW() / 2 - 225,
-        y = ScrH() / 2 - 150,
-        frameW = 450,
-        closeOnSelect = false
+    title = "Main Menu",
+    x = ScrW() / 2 - 225,
+    y = ScrH() / 2 - 150,
+    frameW = 450,
+    closeOnSelect = false
     })
 
 ```
@@ -154,45 +154,45 @@ Client
 ```lua
     -- High: Advanced menu with custom callbacks and network messaging
     lia.derma.optionsMenu({
-        {
-            name = "Radio Preset 1",
-            description = "Switch to preset frequency 1",
-            callback = function(client, entity, entry, frame)
-                -- Custom callback with context
-                lia.radio.setFrequency(100.0)
-                client:notify("Switched to radio preset 1")
-            end,
-            passContext = true -- Pass client, entity, entry, frame to callback
-        },
-        {
-            name = "Radio Preset 2",
-            description = "Switch to preset frequency 2",
-            serverOnly = true,
-            netMessage = "liaRadioSetPreset",
-            networkID = "preset2"
-        },
-        {
-            name = "Custom Frequency",
-            description = "Enter a custom frequency",
-            callback = function()
-                -- Open frequency input dialog
-                lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
-                    local numFreq = tonumber(freq)
-                    if numFreq and numFreq >= 80 and numFreq <= 200 then
-                        lia.radio.setFrequency(numFreq)
-                        client:notify("Frequency set to " .. freq .. " MHz")
-                    else
-                        client:notify("Invalid frequency range (80-200 MHz)")
-                    end
-                end)
-            end
-        }
+    {
+    name = "Radio Preset 1",
+    description = "Switch to preset frequency 1",
+    callback = function(client, entity, entry, frame)
+    -- Custom callback with context
+    lia.radio.setFrequency(100.0)
+    client:notify("Switched to radio preset 1")
+    end,
+    passContext = true -- Pass client, entity, entry, frame to callback
+    },
+    {
+    name = "Radio Preset 2",
+    description = "Switch to preset frequency 2",
+    serverOnly = true,
+    netMessage = "liaRadioSetPreset",
+    networkID = "preset2"
+    },
+    {
+    name = "Custom Frequency",
+    description = "Enter a custom frequency",
+    callback = function()
+    -- Open frequency input dialog
+    lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+    local numFreq = tonumber(freq)
+    if numFreq and numFreq >= 80 and numFreq <= 200 then
+        lia.radio.setFrequency(numFreq)
+        client:notify("Frequency set to " .. freq .. " MHz")
+        else
+            client:notify("Invalid frequency range (80-200 MHz)")
+        end
+    end)
+    end
+    }
     }, {
-        title = "Radio Presets",
-        mode = "custom",
-        closeKey = KEY_R,
-        fadeSpeed = 0.1,
-        autoCloseDelay = 60
+    title = "Radio Presets",
+    mode = "custom",
+    closeKey = KEY_R,
+    fadeSpeed = 0.1,
+    autoCloseDelay = 60
     })
 
 ```
@@ -207,15 +207,8 @@ Opens a color picker dialog for selecting colors
 #### ⏰ When Called
 When user needs to select a color from a visual picker interface
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `func` | **function** | Callback function called when color is selected |
-| `color_standart` | **Color, optional** | Default color to display |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -226,7 +219,7 @@ Client
 ```lua
     -- Simple: Open color picker with callback
     lia.derma.colorPicker(function(color)
-        print("Selected color:", color.r, color.g, color.b)
+    print("Selected color:", color.r, color.g, color.b)
     end)
 
 ```
@@ -236,7 +229,7 @@ Client
     -- Medium: Open color picker with default color
     local defaultColor = Color(255, 0, 0)
     lia.derma.colorPicker(function(color)
-        myPanel:SetColor(color)
+    myPanel:SetColor(color)
     end, defaultColor)
 
 ```
@@ -246,11 +239,11 @@ Client
     -- High: Color picker with validation and multiple callbacks
     local currentColor = settings:GetColor("theme_color")
     lia.derma.colorPicker(function(color)
-        if color:Distance(currentColor) > 50 then
-            settings:SetColor("theme_color", color)
-            updateTheme(color)
-            notify("Theme color updated!")
-        end
+    if color:Distance(currentColor) > 50 then
+        settings:SetColor("theme_color", color)
+        updateTheme(color)
+        notify("Theme color updated!")
+    end
     end, currentColor)
 
 ```
@@ -264,17 +257,6 @@ Creates a radial menu interface with circular option selection
 
 #### ⏰ When Called
 When user needs to select from multiple options in a circular menu format
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `options` | **table, optional** | Configuration table with the following optional fields: |
-| `radius` | **number** | Outer radius of the radial menu (default: 280) |
-| `inner_radius` | **number** | Inner radius of the radial menu (default: 96) |
-| `disable_background` | **boolean** | Whether to disable the background overlay (default: false) |
-| `hover_sound` | **string** | Sound file to play on hover (default: "ratio_button.wav") |
-| `scale_animation` | **boolean** | Whether to enable scale animation on open (default: true) |
 
 #### ↩️ Returns
 * Panel - The created radial menu panel with methods for adding options
@@ -334,14 +316,8 @@ Opens a player selection dialog showing all connected players
 #### ⏰ When Called
 When user needs to select a player from a list
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `do_click` | **function** | Callback function called when player is selected |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -352,7 +328,7 @@ Client
 ```lua
     -- Simple: Open player selector with callback
     lia.derma.playerSelector(function(player)
-        print("Selected player:", player:Name())
+    print("Selected player:", player:Name())
     end)
 
 ```
@@ -361,9 +337,9 @@ Client
 ```lua
     -- Medium: Player selector with validation
     lia.derma.playerSelector(function(player)
-        if IsValid(player) and player:IsPlayer() then
-            sendMessage(player, "Hello!")
-        end
+    if IsValid(player) and player:IsPlayer() then
+        sendMessage(player, "Hello!")
+    end
     end)
 
 ```
@@ -372,7 +348,7 @@ Client
 ```lua
     -- High: Player selector with admin checks and multiple actions
     lia.derma.playerSelector(function(player)
-        if not IsValid(player) then return end
+    if not IsValid(player) then return end
         local menu = lia.derma.dermaMenu()
         menu:AddOption("Teleport", function() teleportToPlayer(player) end)
         menu:AddOption("Spectate", function() spectatePlayer(player) end)
@@ -394,16 +370,8 @@ Opens a text input dialog for user text entry
 #### ⏰ When Called
 When user needs to input text through a dialog
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string** | Title of the dialog window |
-| `desc` | **string** | Description/placeholder text for the input field |
-| `func` | **function** | Callback function called with the entered text |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -414,7 +382,7 @@ Client
 ```lua
     -- Simple: Open text input dialog
     lia.derma.textBox("Enter Name", "Type your name here", function(text)
-        print("Entered:", text)
+    print("Entered:", text)
     end)
 
 ```
@@ -423,8 +391,8 @@ Client
 ```lua
     -- Medium: Text input with validation
     lia.derma.textBox("Set Password", "Enter new password", function(text)
-        if string.len(text) >= 6 then
-            setPassword(text)
+    if string.len(text) >= 6 then
+        setPassword(text)
         else
             notify("Password too short!")
         end
@@ -436,7 +404,7 @@ Client
 ```lua
     -- High: Text input with multiple validations and processing
     lia.derma.textBox("Create Item", "Enter item name", function(text)
-        if not text or text == "" then return end
+    if not text or text == "" then return end
         local cleanText = string.Trim(text)
         if string.len(cleanText) < 3 then
             notify("Name too short!")
@@ -461,18 +429,6 @@ Draws a rounded rectangle with specified parameters
 
 #### ⏰ When Called
 When rendering UI elements that need rounded corners
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `radius` | **number** | Corner radius for all corners |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Color to draw with |
-| `flags` | **number, optional** | Drawing flags for customization |
 
 #### ↩️ Returns
 * boolean - Success status
@@ -517,19 +473,6 @@ Draws a rounded rectangle with an outline border
 #### ⏰ When Called
 When rendering UI elements that need outlined rounded corners
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `radius` | **number** | Corner radius for all corners |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Color to draw with |
-| `thickness` | **number, optional** | Outline thickness (default: 1) |
-| `flags` | **number, optional** | Drawing flags for customization |
-
 #### ↩️ Returns
 * boolean - Success status
 
@@ -571,19 +514,6 @@ Draws a rounded rectangle with a texture applied
 
 #### ⏰ When Called
 When rendering UI elements that need textured rounded backgrounds
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `radius` | **number** | Corner radius for all corners |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Color tint to apply |
-| `texture` | **ITexture** | Texture to draw |
-| `flags` | **number, optional** | Drawing flags for customization |
 
 #### ↩️ Returns
 * boolean - Success status
@@ -628,19 +558,6 @@ Draws a rounded rectangle with a material applied
 
 #### ⏰ When Called
 When rendering UI elements that need material-based rounded backgrounds
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `radius` | **number** | Corner radius for all corners |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Color tint to apply |
-| `mat` | **IMaterial** | Material to draw |
-| `flags` | **number, optional** | Drawing flags for customization |
 
 #### ↩️ Returns
 * boolean - Success status (if material has valid texture)
@@ -692,16 +609,6 @@ Draws a filled circle with specified parameters
 #### ⏰ When Called
 When rendering circular UI elements like buttons or indicators
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `radius` | **number** | Circle radius |
-| `col` | **Color, optional** | Color to draw with |
-| `flags` | **number, optional** | Drawing flags for customization |
-
 #### ↩️ Returns
 * boolean - Success status
 
@@ -744,17 +651,6 @@ Draws a circle with an outline border
 #### ⏰ When Called
 When rendering circular UI elements that need outlined borders
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `radius` | **number** | Circle radius |
-| `col` | **Color, optional** | Color to draw with |
-| `thickness` | **number, optional** | Outline thickness (default: 1) |
-| `flags` | **number, optional** | Drawing flags for customization |
-
 #### ↩️ Returns
 * boolean - Success status
 
@@ -796,17 +692,6 @@ Draws a circle with a texture applied
 
 #### ⏰ When Called
 When rendering circular UI elements that need textured backgrounds
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `radius` | **number** | Circle radius |
-| `col` | **Color, optional** | Color tint to apply |
-| `texture` | **ITexture** | Texture to draw |
-| `flags` | **number, optional** | Drawing flags for customization |
 
 #### ↩️ Returns
 * boolean - Success status
@@ -851,17 +736,6 @@ Draws a circle with a material applied
 
 #### ⏰ When Called
 When rendering circular UI elements that need material-based backgrounds
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `radius` | **number** | Circle radius |
-| `col` | **Color, optional** | Color tint to apply |
-| `mat` | **IMaterial** | Material to draw |
-| `flags` | **number, optional** | Drawing flags for customization |
 
 #### ↩️ Returns
 * boolean - Success status (if material has valid texture)
@@ -913,31 +787,8 @@ Draws a blurred rounded rectangle using custom shaders
 #### ⏰ When Called
 When rendering UI elements that need blur effects
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `flags` | **number, optional** | Drawing flags for customization |
-| `tl` | **number, optional** | Top-left corner radius |
-| `Top` | **unknown** | left corner radius |
-| `Top` | **unknown** | left corner radius |
-| `tr` | **number, optional** | Top-right corner radius |
-| `Top` | **unknown** | right corner radius |
-| `Top` | **unknown** | right corner radius |
-| `bl` | **number, optional** | Bottom-left corner radius |
-| `Bottom` | **unknown** | left corner radius |
-| `Bottom` | **unknown** | left corner radius |
-| `br` | **number, optional** | Bottom-right corner radius |
-| `Bottom` | **unknown** | right corner radius |
-| `Bottom` | **unknown** | right corner radius |
-| `thickness` | **number, optional** | Outline thickness |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -980,34 +831,8 @@ Draws shadows for rounded rectangles with extensive customization
 #### ⏰ When Called
 When rendering UI elements that need shadow effects
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Shadow color |
-| `flags` | **number, optional** | Drawing flags for customization |
-| `tl` | **number, optional** | Top-left corner radius |
-| `Top` | **unknown** | left corner radius |
-| `Top` | **unknown** | left corner radius |
-| `tr` | **number, optional** | Top-right corner radius |
-| `Top` | **unknown** | right corner radius |
-| `Top` | **unknown** | right corner radius |
-| `bl` | **number, optional** | Bottom-left corner radius |
-| `Bottom` | **unknown** | left corner radius |
-| `Bottom` | **unknown** | left corner radius |
-| `br` | **number, optional** | Bottom-right corner radius |
-| `Bottom` | **unknown** | right corner radius |
-| `Bottom` | **unknown** | right corner radius |
-| `spread` | **number, optional** | Shadow spread distance (default: 30) |
-| `intensity` | **number, optional** | Shadow intensity (default: spread * 1.2) |
-| `thickness` | **number, optional** | Outline thickness |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1047,22 +872,8 @@ Draws shadows for rounded rectangles with uniform corner radius
 #### ⏰ When Called
 When rendering UI elements that need shadow effects with same corner radius
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `radius` | **number** | Corner radius for all corners |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Shadow color |
-| `spread` | **number, optional** | Shadow spread distance (default: 30) |
-| `intensity` | **number, optional** | Shadow intensity (default: spread * 1.2) |
-| `flags` | **number, optional** | Drawing flags for customization |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1103,23 +914,8 @@ Draws outlined shadows for rounded rectangles with uniform corner radius
 #### ⏰ When Called
 When rendering UI elements that need outlined shadow effects
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `radius` | **number** | Corner radius for all corners |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-| `col` | **Color, optional** | Shadow color |
-| `thickness` | **number, optional** | Outline thickness (default: 1) |
-| `spread` | **number, optional** | Shadow spread distance (default: 30) |
-| `intensity` | **number, optional** | Shadow intensity (default: spread * 1.2) |
-| `flags` | **number, optional** | Drawing flags for customization |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1160,15 +956,6 @@ Creates a fluent rectangle drawing object for chained operations
 #### ⏰ When Called
 When creating complex UI elements with multiple drawing operations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width |
-| `h` | **number** | Height |
-
 #### ↩️ Returns
 * Table - Fluent drawing object with methods for chaining
 
@@ -1188,10 +975,10 @@ Client
 ```lua
     -- Medium: Create rectangle with multiple properties
     lia.derma.rect(50, 50, 300, 150)
-        :Color(Color(0, 255, 0, 200))
-        :Rad(12)
-        :Shape(lia.derma.SHAPE_IOS)
-        :Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Rad(12)
+    :Shape(lia.derma.SHAPE_IOS)
+    :Draw()
 
 ```
 
@@ -1199,11 +986,11 @@ Client
 ```lua
     -- High: Complex rectangle with shadows and clipping
     lia.derma.rect(x, y, w, h)
-        :Color(backgroundColor)
-        :Radii(16, 8, 16, 8)
-        :Shadow(20, 25)
-        :Clip(parentPanel)
-        :Draw()
+    :Color(backgroundColor)
+    :Radii(16, 8, 16, 8)
+    :Shadow(20, 25)
+    :Clip(parentPanel)
+    :Draw()
 
 ```
 
@@ -1217,14 +1004,6 @@ Creates a fluent circle drawing object for chained operations
 #### ⏰ When Called
 When creating complex circular UI elements with multiple drawing operations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `r` | **number** | Circle radius |
-
 #### ↩️ Returns
 * Table - Fluent drawing object with methods for chaining
 
@@ -1244,9 +1023,9 @@ Client
 ```lua
     -- Medium: Create circle with multiple properties
     lia.derma.circle(200, 200, 75)
-        :Color(Color(0, 255, 0, 200))
-        :Outline(2)
-        :Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Outline(2)
+    :Draw()
 
 ```
 
@@ -1254,11 +1033,11 @@ Client
 ```lua
     -- High: Complex circle with shadows and textures
     lia.derma.circle(x, y, radius)
-        :Color(circleColor)
-        :Texture(circleTexture)
-        :Shadow(15, 20)
-        :Blur(1.5)
-        :Draw()
+    :Color(circleColor)
+    :Texture(circleTexture)
+    :Shadow(15, 20)
+    :Blur(1.5)
+    :Draw()
 
 ```
 
@@ -1272,14 +1051,6 @@ Creates a fluent circle drawing object for chained operations
 #### ⏰ When Called
 When creating complex circular UI elements with multiple drawing operations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `r` | **number** | Circle radius |
-
 #### ↩️ Returns
 * Table - Fluent drawing object with methods for chaining
 
@@ -1299,9 +1070,9 @@ Client
 ```lua
     -- Medium: Create circle with multiple properties
     lia.derma.circle(200, 200, 75)
-        :Color(Color(0, 255, 0, 200))
-        :Outline(2)
-        :Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Outline(2)
+    :Draw()
 
 ```
 
@@ -1309,11 +1080,11 @@ Client
 ```lua
     -- High: Complex circle with shadows and textures
     lia.derma.circle(x, y, radius)
-        :Color(circleColor)
-        :Texture(circleTexture)
-        :Shadow(15, 20)
-        :Blur(1.5)
-        :Draw()
+    :Color(circleColor)
+    :Texture(circleTexture)
+    :Shadow(15, 20)
+    :Blur(1.5)
+    :Draw()
 
 ```
 
@@ -1327,14 +1098,6 @@ Creates a fluent circle drawing object for chained operations
 #### ⏰ When Called
 When creating complex circular UI elements with multiple drawing operations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | Center X position |
-| `y` | **number** | Center Y position |
-| `r` | **number** | Circle radius |
-
 #### ↩️ Returns
 * Table - Fluent drawing object with methods for chaining
 
@@ -1354,9 +1117,9 @@ Client
 ```lua
     -- Medium: Create circle with multiple properties
     lia.derma.circle(200, 200, 75)
-        :Color(Color(0, 255, 0, 200))
-        :Outline(2)
-        :Draw()
+    :Color(Color(0, 255, 0, 200))
+    :Outline(2)
+    :Draw()
 
 ```
 
@@ -1364,11 +1127,11 @@ Client
 ```lua
     -- High: Complex circle with shadows and textures
     lia.derma.circle(x, y, radius)
-        :Color(circleColor)
-        :Texture(circleTexture)
-        :Shadow(15, 20)
-        :Blur(1.5)
-        :Draw()
+    :Color(circleColor)
+    :Texture(circleTexture)
+    :Shadow(15, 20)
+    :Blur(1.5)
+    :Draw()
 
 ```
 
@@ -1382,22 +1145,8 @@ Draws text with a shadow effect for better readability
 #### ⏰ When Called
 When rendering text that needs to stand out against backgrounds
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to draw |
-| `font` | **string** | Font to use |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `colortext` | **Color** | Color of the main text |
-| `colorshadow` | **Color** | Color of the shadow |
-| `dist` | **number** | Shadow distance/offset |
-| `xalign` | **number, optional** | Horizontal text alignment |
-| `yalign` | **number, optional** | Vertical text alignment |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1437,21 +1186,8 @@ Draws text with an outline border for better visibility
 #### ⏰ When Called
 When rendering text that needs to stand out with outline effects
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to draw |
-| `font` | **string** | Font to use |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `colour` | **Color** | Color of the main text |
-| `xalign` | **number, optional** | Horizontal text alignment |
-| `outlinewidth` | **number** | Width of the outline |
-| `outlinecolour` | **Color** | Color of the outline |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1491,21 +1227,8 @@ Draws a tooltip-style speech bubble with text
 #### ⏰ When Called
 When rendering tooltips or help text in speech bubble format
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `w` | **number** | Width of the bubble |
-| `h` | **number** | Height of the bubble |
-| `text` | **string** | Text to display in the bubble |
-| `font` | **string** | Font to use for the text |
-| `textCol` | **Color** | Color of the text |
-| `outlineCol` | **Color** | Color of the bubble outline |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1547,21 +1270,8 @@ Draws text with automatic shadow effect for better readability
 #### ⏰ When Called
 When rendering text that needs consistent shadow styling
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to draw |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `color` | **Color, optional** | Color of the text (default: white) |
-| `alignX` | **number, optional** | Horizontal text alignment |
-| `alignY` | **number, optional** | Vertical text alignment |
-| `font` | **string, optional** | Font to use (default: "LiliaFont.16") |
-| `alpha` | **number, optional** | Alpha multiplier for shadow |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1601,21 +1311,8 @@ Draws text with automatic shadow effect for better readability
 #### ⏰ When Called
 When rendering text that needs consistent shadow styling
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to draw |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `color` | **Color, optional** | Color of the text (default: white) |
-| `alignX` | **number, optional** | Horizontal text alignment |
-| `alignY` | **number, optional** | Vertical text alignment |
-| `font` | **string, optional** | Font to use (default: "LiliaFont.16") |
-| `alpha` | **number, optional** | Alpha multiplier for shadow |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1655,21 +1352,8 @@ Draws text with automatic shadow effect for better readability
 #### ⏰ When Called
 When rendering text that needs consistent shadow styling
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to draw |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `color` | **Color, optional** | Color of the text (default: white) |
-| `alignX` | **number, optional** | Horizontal text alignment |
-| `alignY` | **number, optional** | Vertical text alignment |
-| `font` | **string, optional** | Font to use (default: "LiliaFont.16") |
-| `alpha` | **number, optional** | Alpha multiplier for shadow |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1709,21 +1393,8 @@ Draws text with automatic shadow effect for better readability
 #### ⏰ When Called
 When rendering text that needs consistent shadow styling
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | Text to draw |
-| `x` | **number** | X position |
-| `y` | **number** | Y position |
-| `color` | **Color, optional** | Color of the text (default: white) |
-| `alignX` | **number, optional** | Horizontal text alignment |
-| `alignY` | **number, optional** | Vertical text alignment |
-| `font` | **string, optional** | Font to use (default: "LiliaFont.16") |
-| `alpha` | **number, optional** | Alpha multiplier for shadow |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1763,15 +1434,6 @@ Performs exponential interpolation between current and target values
 #### ⏰ When Called
 When smooth animation transitions are needed
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `current` | **number** | Current value |
-| `target` | **number** | Target value to approach |
-| `speed` | **number** | Animation speed multiplier |
-| `dt` | **number** | Delta time (FrameTime()) |
-
 #### ↩️ Returns
 * number - New interpolated value
 
@@ -1803,12 +1465,12 @@ Client
     local targetY = isHovered and hoverY or normalY
     local targetScale = isHovered and 1.1 or 1.0
     panel:SetPos(
-        lia.derma.approachExp(panel:GetPos(), targetX, 6, dt),
-        lia.derma.approachExp(panel:GetPos(), targetY, 6, dt)
+    lia.derma.approachExp(panel:GetPos(), targetX, 6, dt),
+    lia.derma.approachExp(panel:GetPos(), targetY, 6, dt)
     )
     panel:SetSize(
-        lia.derma.approachExp(panel:GetWide(), targetW * targetScale, 4, dt),
-        lia.derma.approachExp(panel:GetTall(), targetH * targetScale, 4, dt)
+    lia.derma.approachExp(panel:GetWide(), targetW * targetScale, 4, dt),
+    lia.derma.approachExp(panel:GetTall(), targetH * targetScale, 4, dt)
     )
 
 ```
@@ -1822,12 +1484,6 @@ Applies cubic ease-out easing function to a normalized time value
 
 #### ⏰ When Called
 When smooth deceleration animations are needed
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `t` | **number** | Normalized time value (0 to 1) |
 
 #### ↩️ Returns
 * number - Eased value
@@ -1860,12 +1516,12 @@ Client
     local progress = math.Clamp((CurTime() - startTime) / duration, 0, 1)
     local eased = lia.derma.easeOutCubic(progress)
     panel:SetPos(
-        startX + (endX - startX) * eased,
-        startY + (endY - startY) * eased
+    startX + (endX - startX) * eased,
+    startY + (endY - startY) * eased
     )
     panel:SetSize(
-        startW + (endW - startW) * eased,
-        startH + (endH - startH) * eased
+    startW + (endW - startW) * eased,
+    startH + (endH - startH) * eased
     )
     panel:SetAlpha(startAlpha + (endAlpha - startAlpha) * eased)
 
@@ -1880,12 +1536,6 @@ Applies cubic ease-in-out easing function to a normalized time value
 
 #### ⏰ When Called
 When smooth acceleration and deceleration animations are needed
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `t` | **number** | Normalized time value (0 to 1) |
 
 #### ↩️ Returns
 * number - Eased value
@@ -1920,12 +1570,12 @@ Client
     local eased = lia.derma.easeInOutCubic(progress)
     -- Animate position, size, and rotation
     panel:SetPos(
-        startX + (endX - startX) * eased,
-        startY + (endY - startY) * eased
+    startX + (endX - startX) * eased,
+    startY + (endY - startY) * eased
     )
     panel:SetSize(
-        startW + (endW - startW) * eased,
-        startH + (endH - startH) * eased
+    startW + (endW - startW) * eased,
+    startH + (endH - startH) * eased
     )
     panel:SetRotation(startRotation + (endRotation - startRotation) * eased)
 
@@ -1941,20 +1591,8 @@ Animates panel appearance with scaling and fade effects
 #### ⏰ When Called
 When panels need smooth entrance animations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to animate |
-| `target_w` | **number** | Target width |
-| `target_h` | **number** | Target height |
-| `duration` | **number, optional** | Animation duration (default: 0.18) |
-| `alpha_dur` | **number, optional** | Alpha animation duration (default: same as duration) |
-| `callback` | **function, optional** | Callback function called when animation completes |
-| `scale_factor` | **number, optional** | Initial scale factor (default: 0.8) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -1972,7 +1610,7 @@ Client
 ```lua
     -- Medium: Animate with custom duration and callback
     lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-        print("Animation completed!")
+    print("Animation completed!")
     end)
 
 ```
@@ -1986,10 +1624,10 @@ Client
         local duration = isExpanded and 0.25 or 0.15
         local scaleFactor = isExpanded and 0.9 or 0.7
         lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-            if IsValid(animPanel) then
-                onAnimationComplete(animPanel)
-            end
-        end, scaleFactor)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
     end
 
 ```
@@ -2004,20 +1642,8 @@ Animates panel appearance with scaling and fade effects
 #### ⏰ When Called
 When panels need smooth entrance animations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to animate |
-| `target_w` | **number** | Target width |
-| `target_h` | **number** | Target height |
-| `duration` | **number, optional** | Animation duration (default: 0.18) |
-| `alpha_dur` | **number, optional** | Alpha animation duration (default: same as duration) |
-| `callback` | **function, optional** | Callback function called when animation completes |
-| `scale_factor` | **number, optional** | Initial scale factor (default: 0.8) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2035,7 +1661,7 @@ Client
 ```lua
     -- Medium: Animate with custom duration and callback
     lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-        print("Animation completed!")
+    print("Animation completed!")
     end)
 
 ```
@@ -2049,10 +1675,10 @@ Client
         local duration = isExpanded and 0.25 or 0.15
         local scaleFactor = isExpanded and 0.9 or 0.7
         lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-            if IsValid(animPanel) then
-                onAnimationComplete(animPanel)
-            end
-        end, scaleFactor)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
     end
 
 ```
@@ -2067,20 +1693,8 @@ Animates panel appearance with scaling and fade effects
 #### ⏰ When Called
 When panels need smooth entrance animations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to animate |
-| `target_w` | **number** | Target width |
-| `target_h` | **number** | Target height |
-| `duration` | **number, optional** | Animation duration (default: 0.18) |
-| `alpha_dur` | **number, optional** | Alpha animation duration (default: same as duration) |
-| `callback` | **function, optional** | Callback function called when animation completes |
-| `scale_factor` | **number, optional** | Initial scale factor (default: 0.8) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2098,7 +1712,7 @@ Client
 ```lua
     -- Medium: Animate with custom duration and callback
     lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-        print("Animation completed!")
+    print("Animation completed!")
     end)
 
 ```
@@ -2112,10 +1726,10 @@ Client
         local duration = isExpanded and 0.25 or 0.15
         local scaleFactor = isExpanded and 0.9 or 0.7
         lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-            if IsValid(animPanel) then
-                onAnimationComplete(animPanel)
-            end
-        end, scaleFactor)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
     end
 
 ```
@@ -2130,20 +1744,8 @@ Animates panel appearance with scaling and fade effects
 #### ⏰ When Called
 When panels need smooth entrance animations
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to animate |
-| `target_w` | **number** | Target width |
-| `target_h` | **number** | Target height |
-| `duration` | **number, optional** | Animation duration (default: 0.18) |
-| `alpha_dur` | **number, optional** | Alpha animation duration (default: same as duration) |
-| `callback` | **function, optional** | Callback function called when animation completes |
-| `scale_factor` | **number, optional** | Initial scale factor (default: 0.8) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2161,7 +1763,7 @@ Client
 ```lua
     -- Medium: Animate with custom duration and callback
     lia.derma.animateAppearance(myPanel, 400, 300, 0.3, 0.2, function(panel)
-        print("Animation completed!")
+    print("Animation completed!")
     end)
 
 ```
@@ -2175,10 +1777,10 @@ Client
         local duration = isExpanded and 0.25 or 0.15
         local scaleFactor = isExpanded and 0.9 or 0.7
         lia.derma.animateAppearance(panel, targetW, targetH, duration, duration * 0.8, function(animPanel)
-            if IsValid(animPanel) then
-                onAnimationComplete(animPanel)
-            end
-        end, scaleFactor)
+        if IsValid(animPanel) then
+            onAnimationComplete(animPanel)
+        end
+    end, scaleFactor)
     end
 
 ```
@@ -2193,17 +1795,8 @@ Draws blur effect behind a panel using screen space effects
 #### ⏰ When Called
 When rendering panel backgrounds that need blur effects
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to draw blur behind |
-| `amount` | **number, optional** | Blur intensity (default: 5) |
-| `passes` | **number, optional** | Number of blur passes (default: 0.2) |
-| `alpha` | **number, optional** | Blur alpha (default: 255) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2245,17 +1838,8 @@ Draws blur effect behind a panel using screen space effects
 #### ⏰ When Called
 When rendering panel backgrounds that need blur effects
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `panel` | **Panel** | Panel to draw blur behind |
-| `amount` | **number, optional** | Blur intensity (default: 5) |
-| `passes` | **number, optional** | Number of blur passes (default: 0.2) |
-| `alpha` | **number, optional** | Blur alpha (default: 255) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2297,20 +1881,8 @@ Draws blur effect at specific screen coordinates
 #### ⏰ When Called
 When rendering blur effects at specific screen positions
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `x` | **number** | X position on screen |
-| `y` | **number** | Y position on screen |
-| `w` | **number** | Width of blur area |
-| `h` | **number** | Height of blur area |
-| `amount` | **number, optional** | Blur intensity (default: 5) |
-| `passes` | **number, optional** | Number of blur passes (default: 0.2) |
-| `alpha` | **number, optional** | Blur alpha (default: 255) |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2353,17 +1925,8 @@ Creates a dialog for requesting multiple arguments from the user
 #### ⏰ When Called
 When user input is needed for multiple fields with different types
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `argTypes` | **table** | Table defining argument types and properties |
-| `onSubmit` | **function** | Callback function called with results |
-| `defaults` | **table, optional** | Default values for arguments |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2374,14 +1937,14 @@ Client
 ```lua
     -- Simple: Request basic arguments
     local argTypes = {
-        name = "string",
-        age = "number",
-        isActive = "boolean"
+    name = "string",
+    age = "number",
+    isActive = "boolean"
     }
     lia.derma.requestArguments("User Info", argTypes, function(success, results)
-        if success then
-            print("Name:", results.name, "Age:", results.age)
-        end
+    if success then
+        print("Name:", results.name, "Age:", results.age)
+    end
     end)
 
 ```
@@ -2390,9 +1953,9 @@ Client
 ```lua
     -- Medium: Request with dropdown and defaults
     local argTypes = {
-        {name = "player", type = "player"},
-        {name = "action", type = "table", data = {"kick", "ban", "mute"}},
-        {name = "reason", type = "string"}
+    {name = "player", type = "player"},
+    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
+    {name = "reason", type = "string"}
     }
     local defaults = {reason = "No reason provided"}
     lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
@@ -2403,15 +1966,15 @@ Client
 ```lua
     -- High: Complex argument validation with ordered fields
     local argTypes = {
-        {name = "itemName", type = "string"},
-        {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-        {name = "quantity", type = "number"},
-        {name = "isStackable", type = "boolean"}
+    {name = "itemName", type = "string"},
+    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+    {name = "quantity", type = "number"},
+    {name = "isStackable", type = "boolean"}
     }
     lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-        if success and validateItemData(results) then
-            createItem(results)
-        end
+    if success and validateItemData(results) then
+        createItem(results)
+    end
     end)
 
 ```
@@ -2426,17 +1989,8 @@ Creates a dialog for requesting multiple arguments from the user
 #### ⏰ When Called
 When user input is needed for multiple fields with different types
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `argTypes` | **table** | Table defining argument types and properties |
-| `onSubmit` | **function** | Callback function called with results |
-| `defaults` | **table, optional** | Default values for arguments |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2447,14 +2001,14 @@ Client
 ```lua
     -- Simple: Request basic arguments
     local argTypes = {
-        name = "string",
-        age = "number",
-        isActive = "boolean"
+    name = "string",
+    age = "number",
+    isActive = "boolean"
     }
     lia.derma.requestArguments("User Info", argTypes, function(success, results)
-        if success then
-            print("Name:", results.name, "Age:", results.age)
-        end
+    if success then
+        print("Name:", results.name, "Age:", results.age)
+    end
     end)
 
 ```
@@ -2463,9 +2017,9 @@ Client
 ```lua
     -- Medium: Request with dropdown and defaults
     local argTypes = {
-        {name = "player", type = "player"},
-        {name = "action", type = "table", data = {"kick", "ban", "mute"}},
-        {name = "reason", type = "string"}
+    {name = "player", type = "player"},
+    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
+    {name = "reason", type = "string"}
     }
     local defaults = {reason = "No reason provided"}
     lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
@@ -2476,15 +2030,15 @@ Client
 ```lua
     -- High: Complex argument validation with ordered fields
     local argTypes = {
-        {name = "itemName", type = "string"},
-        {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-        {name = "quantity", type = "number"},
-        {name = "isStackable", type = "boolean"}
+    {name = "itemName", type = "string"},
+    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+    {name = "quantity", type = "number"},
+    {name = "isStackable", type = "boolean"}
     }
     lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-        if success and validateItemData(results) then
-            createItem(results)
-        end
+    if success and validateItemData(results) then
+        createItem(results)
+    end
     end)
 
 ```
@@ -2499,17 +2053,8 @@ Creates a dialog for requesting multiple arguments from the user
 #### ⏰ When Called
 When user input is needed for multiple fields with different types
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `argTypes` | **table** | Table defining argument types and properties |
-| `onSubmit` | **function** | Callback function called with results |
-| `defaults` | **table, optional** | Default values for arguments |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2520,14 +2065,14 @@ Client
 ```lua
     -- Simple: Request basic arguments
     local argTypes = {
-        name = "string",
-        age = "number",
-        isActive = "boolean"
+    name = "string",
+    age = "number",
+    isActive = "boolean"
     }
     lia.derma.requestArguments("User Info", argTypes, function(success, results)
-        if success then
-            print("Name:", results.name, "Age:", results.age)
-        end
+    if success then
+        print("Name:", results.name, "Age:", results.age)
+    end
     end)
 
 ```
@@ -2536,9 +2081,9 @@ Client
 ```lua
     -- Medium: Request with dropdown and defaults
     local argTypes = {
-        {name = "player", type = "player"},
-        {name = "action", type = "table", data = {"kick", "ban", "mute"}},
-        {name = "reason", type = "string"}
+    {name = "player", type = "player"},
+    {name = "action", type = "table", data = {"kick", "ban", "mute"}},
+    {name = "reason", type = "string"}
     }
     local defaults = {reason = "No reason provided"}
     lia.derma.requestArguments("Admin Action", argTypes, onSubmit, defaults)
@@ -2549,15 +2094,15 @@ Client
 ```lua
     -- High: Complex argument validation with ordered fields
     local argTypes = {
-        {name = "itemName", type = "string"},
-        {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
-        {name = "quantity", type = "number"},
-        {name = "isStackable", type = "boolean"}
+    {name = "itemName", type = "string"},
+    {name = "itemType", type = "table", data = {{"Weapon", "weapon"}, {"Tool", "tool"}}},
+    {name = "quantity", type = "number"},
+    {name = "isStackable", type = "boolean"}
     }
     lia.derma.requestArguments("Create Item", argTypes, function(success, results)
-        if success and validateItemData(results) then
-            createItem(results)
-        end
+    if success and validateItemData(results) then
+        createItem(results)
+    end
     end)
 
 ```
@@ -2572,17 +2117,8 @@ Draws text above entities in 3D space with distance-based scaling
 #### ⏰ When Called
 When rendering entity labels or information in 3D space
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `ent` | **Entity** | Entity to draw text above |
-| `text` | **string** | Text to display |
-| `posY` | **number, optional** | Y offset from entity center (default: 0) |
-| `alphaOverride` | **number, optional** | Alpha override for the text |
-
 #### ↩️ Returns
-* nil
+* None
 
 #### 🌐 Realm
 Client
@@ -2627,15 +2163,6 @@ Creates a dropdown selection dialog for user choice
 #### ⏰ When Called
 When user needs to select from a list of options
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `options` | **table** | Array of options (strings or {text, data} tables) |
-| `callback` | **function** | Callback function called with selected option |
-| `defaultValue` | **string/table, optional** | Default selected value |
-
 #### ↩️ Returns
 * Panel - The created dialog frame
 
@@ -2672,7 +2199,7 @@ Client
 ```lua
     -- High: Dynamic options with validation
     local options = {}
-    for _, player in player.Iterator() do
+    for _, player in pairs(player.GetAll()) do
         if IsValid(player) then
             table.insert(options, {player:Name(), player:SteamID()})
         end
@@ -2694,16 +2221,6 @@ Creates a text input dialog for user string entry
 
 #### ⏰ When Called
 When user needs to input text through a dialog
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `description` | **string, optional** | Description text for the input |
-| `callback` | **function** | Callback function called with entered text |
-| `defaultValue` | **string, optional** | Default text value |
-| `maxLength` | **number, optional** | Maximum text length |
 
 #### ↩️ Returns
 * Panel - The created dialog frame
@@ -2763,15 +2280,6 @@ Creates a multi-select dialog for choosing multiple options
 
 #### ⏰ When Called
 When user needs to select multiple options from a list
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `options` | **table** | Array of options (strings or {text, data} tables) |
-| `callback` | **function** | Callback function called with selected options array |
-| `defaults` | **table, optional** | Array of default selected values |
 
 #### ↩️ Returns
 * Panel - The created dialog frame
@@ -2833,16 +2341,6 @@ Creates a yes/no confirmation dialog
 #### ⏰ When Called
 When user confirmation is needed for an action
 
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `question` | **string, optional** | Question text to display |
-| `callback` | **function** | Callback function called with boolean result |
-| `yesText` | **string, optional** | Text for yes button |
-| `noText` | **string, optional** | Text for no button |
-
 #### ↩️ Returns
 * Panel - The created dialog frame
 
@@ -2900,15 +2398,6 @@ Creates a dialog with multiple action buttons
 
 #### ⏰ When Called
 When user needs to choose from multiple actions
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `title` | **string, optional** | Title of the dialog |
-| `buttons` | **table** | Array of button definitions (strings or {text, callback, icon} tables) |
-| `callback` | **function, optional** | Default callback function |
-| `description` | **string, optional** | Description text for the dialog |
 
 #### ↩️ Returns
 * Panel, Table - The created dialog frame and button panels array
