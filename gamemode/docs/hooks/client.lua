@@ -2623,7 +2623,7 @@ end
             self.chatSettings = self.chatSettings or {
                 showTimestamps = true,
                 maxMessages = 100,
-                fontSize = "liaChatFont"
+                fontSize = "LiliaFont.14"
             }
 
             -- Apply settings to panel
@@ -3401,7 +3401,7 @@ end
             self.panel:SetPos(10, ScrH() - self.panel:GetTall() - 10)
 
             -- Set chat settings
-            self.panel:SetFont("liaChatFont")
+            self.panel:SetFont("LiliaFont.14")
             self.panel:SetMaxMessages(100)
             self.panel:SetFadeTime(15)
 
@@ -3463,7 +3463,7 @@ end
 
         -- Helper function to configure main chat panel
         function MODULE:ConfigureMainChatPanel(panel)
-            panel:SetFont(self.chatSettings.font or "liaChatFont")
+            panel:SetFont(self.chatSettings.font or "LiliaFont.14")
             panel:SetMaxMessages(self.chatSettings.maxMessages or 150)
             panel:SetFadeTime(self.chatSettings.fadeTime or 20)
 

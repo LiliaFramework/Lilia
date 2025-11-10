@@ -192,6 +192,11 @@ net.Receive("liaCharChoose", function(_, client)
 
     local id = net.ReadUInt(32)
     local currentChar = client:getChar()
+    if currentChar and currentChar:getID() == id then
+        response()
+        return
+    end
+
     if not lia.char.isLoaded(id) then
         if not table.HasValue(client.liaCharList or {}, id) then return response(false, "invalidChar") end
         lia.char.loadSingleCharacter(id, client, function(character)
@@ -316,13 +321,28 @@ end)
 
 net.Receive("liaCharDelete", function(_, client)
     local id = net.ReadUInt(32)
-    local character = lia.char.getCharacter(id)
     local steamID = client:SteamID()
-    if character and character.steamID == steamID then
-        hook.Run("CharDeleted", client, character)
-        character:delete()
-        timer.Simple(.5, function() lia.module.get("mainmenu"):SyncCharList(client) end)
+    local character = lia.char.loaded[id]
+    if character then
+        if character.steamID == steamID then
+            hook.Run("CharDeleted", client, character)
+            character:delete()
+            timer.Simple(.5, function() lia.module.get("mainmenu"):SyncCharList(client) end)
+        end
+        return
     end
+
+    lia.db.selectOne("*", "characters", "id = " .. id):next(function(result)
+        if not result then return end
+        if result.steamID ~= steamID then return end
+        if not table.HasValue(client.liaCharList or {}, id) then return end
+        lia.char.getCharacter(id, client, function(loadedChar)
+            if not loadedChar then return end
+            hook.Run("CharDeleted", client, loadedChar)
+            loadedChar:delete()
+            timer.Simple(.5, function() lia.module.get("mainmenu"):SyncCharList(client) end)
+        end)
+    end)
 end)
 
 net.Receive("liaMessageData", function(_, client)

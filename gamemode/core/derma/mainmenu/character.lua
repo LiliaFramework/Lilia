@@ -22,6 +22,12 @@ function PANEL:Init()
     self:MakePopup()
     self:SetAlpha(0)
     self:AlphaTo(255, 0.2)
+    self.charListUpdateHook = "liaCharacterCharListUpdate" .. tostring(self)
+    hook.Add("CharListUpdated", self.charListUpdateHook, function(oldCharList, newCharList)
+        if not IsValid(self) then return end
+        self:onCharListUpdated(oldCharList, newCharList)
+    end)
+
     self.tabs = self:Add("DPanel")
     self.tabs:Dock(TOP)
     self.tabs:DockMargin(64, 32, 64, 0)
@@ -591,12 +597,13 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
     self.deleteBtn:SetText(L("delete") .. " " .. L("character"))
     self.deleteBtn.DoClick = function()
-        if hook.Run("CanDeleteChar", character:getID()) == false then
+        local charID = character:getID()
+        if hook.Run("CanDeleteChar", charID) == false then
             LocalPlayer():notifyErrorLocalized("cannotDeleteChar")
             return
         end
 
-        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):DeleteCharacter(character:getID()) end)
+        vgui.Create("liaCharacterConfirm", self):setMessage(L("charDeletionAreYouSure") .. "\n" .. L("charDeletionCannotUndone")):onConfirm(function() lia.module.get("mainmenu"):DeleteCharacter(charID) end)
     end
 end
 
@@ -783,6 +790,36 @@ function PANEL:Update()
     end
 end
 
+function PANEL:onCharListUpdated(_, newCharList)
+    if not self.isLoadMode then return end
+    self.availableCharacters = {}
+    for _, charID in ipairs(newCharList or {}) do
+        local character = lia.char.getCharacter(charID)
+        if character and character:getFaction() ~= FACTION_STAFF then table.insert(self.availableCharacters, charID) end
+    end
+
+    if #self.availableCharacters == 0 then
+        self:backToMainMenu()
+    else
+        if self.currentIndex and self.currentIndex > #self.availableCharacters then self.currentIndex = #self.availableCharacters end
+        if not self.currentIndex or self.currentIndex < 1 then self.currentIndex = 1 end
+        self:updateSelectedCharacter()
+        if #self.availableCharacters > 1 and not IsValid(self.leftArrow) then
+            self:createArrows()
+        elseif #self.availableCharacters <= 1 and IsValid(self.leftArrow) then
+            if IsValid(self.leftArrow) then
+                self.leftArrow:Remove()
+                self.leftArrow = nil
+            end
+
+            if IsValid(self.rightArrow) then
+                self.rightArrow:Remove()
+                self.rightArrow = nil
+            end
+        end
+    end
+end
+
 function PANEL:OnRemove()
     if lia.gui.character == self then lia.gui.character = nil end
     hook.Run("CharMenuClosed")
@@ -791,6 +828,7 @@ function PANEL:OnRemove()
     hook.Remove("CalcView", "liaMainMenuCalcView")
     hook.Remove("PostDrawOpaqueRenderables", "liaMainMenuPostDrawOpaqueRenderables")
     hook.Remove("PreDrawPhysgunBeam", "liaMainMenuPreDrawPhysgunBeam")
+    if self.charListUpdateHook then hook.Remove("CharListUpdated", self.charListUpdateHook) end
     if render.oldDrawBeam then
         render.DrawBeam = render.oldDrawBeam
         render.oldDrawBeam = nil
