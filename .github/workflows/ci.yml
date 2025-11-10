@@ -243,6 +243,23 @@ jobs:
           # Copy the modules documentation to the correct location
           cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
           
+          # Copy versioning files from Modules repository if they exist
+          # Ensure the target directory exists (lilia.json was already created here)
+          mkdir -p documentation/docs/versioning
+          if [ -d "Modules-module-markdown/documentation/docs/versioning" ]; then
+            echo "Found Modules versioning directory, copying files to documentation/docs/versioning..."
+            ls -la Modules-module-markdown/documentation/docs/versioning/ || true
+            # Copy all files from Modules versioning, preserving existing lilia.json if Modules doesn't have one
+            cp -r Modules-module-markdown/documentation/docs/versioning/* documentation/docs/versioning/ 2>&1 || true
+            echo "Modules versioning files successfully placed in documentation/docs/versioning/"
+            ls -la documentation/docs/versioning/ || true
+          else
+            echo "Warning: Modules versioning directory not found at Modules-module-markdown/documentation/docs/versioning"
+            echo "Checking extracted structure..."
+            find Modules-module-markdown -type d -name "versioning" 2>/dev/null || echo "No versioning directories found"
+            echo "Note: lilia.json should already exist in documentation/docs/versioning/"
+          fi
+          
           # Clean up temporary files
           rm -rf modules_docs.zip Modules-module-markdown
           
@@ -414,6 +431,23 @@ jobs:
           
           # Copy the modules documentation to the correct location
           cp -r Modules-module-markdown/documentation/modules/* documentation/docs/modules/
+          
+          # Copy versioning files from Modules repository if they exist
+          # Ensure the target directory exists (lilia.json was already created here)
+          mkdir -p documentation/docs/versioning
+          if [ -d "Modules-module-markdown/documentation/docs/versioning" ]; then
+            echo "Found Modules versioning directory, copying files to documentation/docs/versioning..."
+            ls -la Modules-module-markdown/documentation/docs/versioning/ || true
+            # Copy all files from Modules versioning, preserving existing lilia.json if Modules doesn't have one
+            cp -r Modules-module-markdown/documentation/docs/versioning/* documentation/docs/versioning/ 2>&1 || true
+            echo "Modules versioning files successfully placed in documentation/docs/versioning/"
+            ls -la documentation/docs/versioning/ || true
+          else
+            echo "Warning: Modules versioning directory not found at Modules-module-markdown/documentation/docs/versioning"
+            echo "Checking extracted structure..."
+            find Modules-module-markdown -type d -name "versioning" 2>/dev/null || echo "No versioning directories found"
+            echo "Note: lilia.json should already exist in documentation/docs/versioning/"
+          fi
           
           # Clean up temporary files
           rm -rf modules_docs.zip Modules-module-markdown
