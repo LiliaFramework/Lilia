@@ -257,11 +257,40 @@ end
     ```
 ]]
 function lia.playerinteract.getCategorizedOptions(options)
-    local flatList = {}
+    local categorized = {}
+    local categories = {}
     for _, entry in pairs(options) do
-        flatList[#flatList + 1] = entry
+        local category = entry.opt and entry.opt.category or L("categoryUnsorted")
+        if not categories[category] then categories[category] = {} end
+        table.insert(categories[category], entry)
     end
-    return flatList
+
+    local sortedCategories = {}
+    for categoryName, _ in pairs(categories) do
+        table.insert(sortedCategories, categoryName)
+    end
+
+    table.sort(sortedCategories, function(a, b)
+        if a == L("categoryUnsorted") then return false end
+        if b == L("categoryUnsorted") then return true end
+        return a < b
+    end)
+
+    for _, categoryName in ipairs(sortedCategories) do
+        local categoryData = lia.playerinteract.categories[categoryName]
+        local categoryColor = categoryData and categoryData.color or Color(255, 255, 255, 255)
+        table.insert(categorized, {
+            isCategory = true,
+            name = categoryName,
+            color = categoryColor,
+            count = #categories[categoryName]
+        })
+
+        for _, entry in ipairs(categories[categoryName]) do
+            table.insert(categorized, entry)
+        end
+    end
+    return categorized
 end
 
 if SERVER then

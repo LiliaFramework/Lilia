@@ -302,14 +302,18 @@ function lia.derma.optionsMenu(rawOptions, config)
     local titleH = config.titleHeight or 16
     local titleY = config.titleOffsetY or 4
     local gap = config.verticalGap or 12
-    local baseH = entryH * #optionsList + titleH + titleY + gap + 14
+    local totalHeight = titleH + titleY + gap + 14
+    for _, entry in ipairs(optionsList) do
+        totalHeight = totalHeight + entryH + (entry.isCategory and 4 or 0)
+    end
+
     local frameH = config.frameH
     if not frameH then
         if mode == "interaction" then
-            frameH = baseH
+            frameH = totalHeight
         else
             local maxHeight = config.maxHeight or ScrH() * 0.6
-            frameH = math.min(baseH, maxHeight)
+            frameH = math.min(totalHeight, maxHeight)
         end
     end
 
@@ -385,74 +389,97 @@ function lia.derma.optionsMenu(rawOptions, config)
     local shouldCloseOnSelect = config.closeOnSelect
     if shouldCloseOnSelect == nil then shouldCloseOnSelect = true end
     for _, entry in ipairs(optionsList) do
-        local btn = vgui.Create("liaButton", layout)
-        btn:SetTall(entryH)
-        btn:Dock(TOP)
-        btn:DockMargin(2, 2, 2, 0)
-        local displayText = entry.label or entry.id or ""
-        if entry.opt and entry.opt.localized ~= false and L then
-            local localized = L(displayText)
-            if localized and localized ~= "" then displayText = localized end
-        end
-
-        btn:SetText(displayText)
-        btn:SetFont(buttonFont)
-        btn:SetTextColor(entry.opt and entry.opt.textColor or buttonTextColor)
-        btn:SetContentAlignment(5)
-        local description = entry.opt and (entry.opt.description or entry.opt.desc)
-        if isstring(description) and description ~= "" then
-            if entry.opt.localizedDescription ~= false and L then description = L(description) end
-            btn:SetTooltip(description)
-        end
-
-        btn.DoClick = function()
-            if shouldCloseOnSelect then frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Remove() end end) end
-            local optionData = entry.opt or {}
-            local callback = optionData.callback or optionData.onRun
-            local function runOptionCallback()
-                if not callback or optionData.serverOnly then return end
-                if mode == "interaction" then
-                    if not IsValid(ent) then return end
-                    local target = ent
-                    if ent:IsPlayer() and ent:IsBot() and client:Team() == FACTION_STAFF then target = client end
-                    callback(client, target)
-                    return
-                end
-
-                if mode == "action" then
-                    callback(client, ent)
-                    return
-                end
-
-                local passContext = optionData.passContext
-                if passContext == true then
-                    callback(client, ent, entry, frame)
-                    return
-                end
-
-                if istable(passContext) then
-                    callback(unpack(passContext))
-                    return
-                end
-
-                callback()
+        if entry.isCategory then
+            local categoryPanel = vgui.Create("DPanel", layout)
+            categoryPanel:SetTall(entryH)
+            categoryPanel:Dock(TOP)
+            categoryPanel:DockMargin(2, 4, 2, 2)
+            categoryPanel:SetPaintBackground(false)
+            function categoryPanel:Paint(w, h)
+                local theme = lia.color.theme
+                local bgColor = theme and theme.category_header or Color(45, 55, 65, 100)
+                local accentColor = entry.color or (theme and theme.category_accent or Color(100, 150, 200, 255))
+                local textColor = theme and theme.text or color_white
+                lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+                surface.SetDrawColor(accentColor)
+                surface.DrawRect(0, 0, 3, h)
+                local displayText = entry.name or ""
+                local localized = L(displayText)
+                if localized and localized ~= "" then displayText = localized end
+                draw.SimpleText(displayText, buttonFont, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
 
-            runOptionCallback()
-            local messageName = optionData.serverOnly and (optionData.netMessage or netMsg) or nil
-            if messageName then
-                net.Start(messageName)
-                net.WriteString(optionData.networkID or entry.id)
-                net.WriteBool(mode == "interaction")
-                net.WriteEntity(IsValid(ent) and ent or Entity(0))
-                if isfunction(optionData.writePayload) then optionData.writePayload() end
-                net.SendToServer()
+            layout:Add(categoryPanel)
+        else
+            local btn = vgui.Create("liaButton", layout)
+            btn:SetTall(entryH)
+            btn:Dock(TOP)
+            btn:DockMargin(6, 0, 6, 0)
+            local displayText = entry.label or entry.id or ""
+            if entry.opt and entry.opt.localized ~= false and L then
+                local localized = L(displayText)
+                if localized and localized ~= "" then displayText = localized end
             end
 
-            if isfunction(optionData.onSelect) then optionData.onSelect(client, ent, entry, frame) end
-        end
+            btn:SetText(displayText)
+            btn:SetFont(buttonFont)
+            btn:SetTextColor(entry.opt and entry.opt.textColor or buttonTextColor)
+            btn:SetContentAlignment(5)
+            local description = entry.opt and (entry.opt.description or entry.opt.desc)
+            if isstring(description) and description ~= "" then
+                if entry.opt.localizedDescription ~= false and L then description = L(description) end
+                btn:SetTooltip(description)
+            end
 
-        layout:Add(btn)
+            btn.DoClick = function()
+                if shouldCloseOnSelect then frame:AlphaTo(0, fadeSpeed, 0, function() if IsValid(frame) then frame:Remove() end end) end
+                local optionData = entry.opt or {}
+                local callback = optionData.callback or optionData.onRun
+                local function runOptionCallback()
+                    if not callback or optionData.serverOnly then return end
+                    if mode == "interaction" then
+                        if not IsValid(ent) then return end
+                        local target = ent
+                        if ent:IsPlayer() and ent:IsBot() and client:Team() == FACTION_STAFF then target = client end
+                        callback(client, target)
+                        return
+                    end
+
+                    if mode == "action" then
+                        callback(client, ent)
+                        return
+                    end
+
+                    local passContext = optionData.passContext
+                    if passContext == true then
+                        callback(client, ent, entry, frame)
+                        return
+                    end
+
+                    if istable(passContext) then
+                        callback(unpack(passContext))
+                        return
+                    end
+
+                    callback()
+                end
+
+                runOptionCallback()
+                local messageName = optionData.serverOnly and (optionData.netMessage or netMsg) or nil
+                if messageName then
+                    net.Start(messageName)
+                    net.WriteString(optionData.networkID or entry.id)
+                    net.WriteBool(mode == "interaction")
+                    net.WriteEntity(IsValid(ent) and ent or Entity(0))
+                    if isfunction(optionData.writePayload) then optionData.writePayload() end
+                    net.SendToServer()
+                end
+
+                if isfunction(optionData.onSelect) then optionData.onSelect(client, ent, entry, frame) end
+            end
+
+            layout:Add(btn)
+        end
     end
 
     if registryKey then lia.gui[registryKey] = frame end

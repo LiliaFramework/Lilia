@@ -203,6 +203,30 @@ function QuickPanel:addSpacer()
     return pnl
 end
 
+function QuickPanel:addCategoryHeader(categoryName, categoryColor, count)
+    local header = self.scroll:Add("DPanel")
+    header:SetTall(26)
+    header:Dock(TOP)
+    header:DockMargin(2, 4, 2, 2)
+    header:SetPaintBackground(false)
+    header.Paint = function(_, w, h)
+        local theme = lia.color.theme
+        local bgColor = theme and theme.category_header or Color(45, 55, 65, 100)
+        local accentColor = categoryColor or (theme and theme.category_accent or Color(100, 150, 200, 255))
+        local textColor = theme and theme.text or color_white
+        lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        surface.SetDrawColor(accentColor)
+        surface.DrawRect(0, 0, 3, h)
+        local displayText = categoryName
+        local localized = L(displayText)
+        if localized and localized ~= "" then displayText = localized end
+        draw.SimpleText(displayText, "liaSmallFont", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    self.items[#self.items + 1] = header
+    return header
+end
+
 function QuickPanel:addSlider(text, cb, val, min, max, dec)
     local s = self.scroll:Add("liaNumSlider")
     s:SetText(text)
@@ -313,40 +337,51 @@ function QuickPanel:populateOptions()
         return
     end
 
-    local groups = {
-        Boolean = {},
-        Int = {},
-        Float = {}
-    }
-
+    local categories = {}
     for _, info in ipairs(allOptions) do
         local opt = info.opt
         if not opt.visible or (isfunction(opt.visible) and opt.visible()) then
-            if opt.type == "Boolean" then
-                groups.Boolean[#groups.Boolean + 1] = info
-            elseif opt.type == "Int" then
-                groups.Int[#groups.Int + 1] = info
-            elseif opt.type == "Float" then
-                groups.Float[#groups.Float + 1] = info
-            end
+            local categoryName = (opt.data and opt.data.category) or L("categoryUnsorted")
+            if not categories[categoryName] then categories[categoryName] = {} end
+            table.insert(categories[categoryName], info)
         end
     end
 
-    for _, group in pairs(groups) do
-        table.sort(group, function(a, b)
-            local nameA = a.opt.name or a.key
-            local nameB = b.opt.name or b.key
-            return nameA < nameB
-        end)
+    local sortedCategories = {}
+    for categoryName, _ in pairs(categories) do
+        table.insert(sortedCategories, categoryName)
     end
 
-    local groupOrder = {"Boolean", "Int", "Float"}
+    table.sort(sortedCategories, function(a, b)
+        if a == L("categoryUnsorted") then return false end
+        if b == L("categoryUnsorted") then return true end
+        return a < b
+    end)
+
     local hasAddedItems = false
-    for _, groupType in ipairs(groupOrder) do
-        local group = groups[groupType]
-        if #group > 0 then
+    for _, categoryName in ipairs(sortedCategories) do
+        local categoryOptions = categories[categoryName]
+        if #categoryOptions > 0 then
+            table.sort(categoryOptions, function(a, b)
+                local nameA = a.opt.name or a.key
+                local nameB = b.opt.name or b.key
+                return nameA < nameB
+            end)
+
             if hasAddedItems then self:addSpacer() end
-            for j, info in ipairs(group) do
+            local categoryColor = Color(255, 255, 255, 255)
+            for _, info in ipairs(categoryOptions) do
+                local opt = info.opt
+                local data = opt.data or {}
+                if data.categoryColor then
+                    categoryColor = data.categoryColor
+                    break
+                end
+            end
+
+            local categoryHeader = self:addCategoryHeader(categoryName, categoryColor, #categoryOptions)
+            if categoryHeader then self.optionsCache[#self.optionsCache + 1] = categoryHeader end
+            for j, info in ipairs(categoryOptions) do
                 local key = info.key
                 local opt = info.opt
                 local data = opt.data or {}
@@ -359,7 +394,7 @@ function QuickPanel:populateOptions()
                 end
 
                 if item then self.optionsCache[#self.optionsCache + 1] = item end
-                if j < #group then self:addSpacer() end
+                if j < #categoryOptions then self:addSpacer() end
             end
 
             hasAddedItems = true
