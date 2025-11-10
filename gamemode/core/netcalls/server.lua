@@ -651,7 +651,7 @@ net.Receive("liaRequestInteractOptions", function(_, ply)
     local requestType = net.ReadString()
     local options = {}
     if requestType == "interaction" then
-        local ent = ply:getTracedEntity()
+        local ent = ply:getTracedEntity(250)
         if not IsValid(ent) then
             net.Start("liaProvideInteractOptions")
             net.WriteString(requestType)

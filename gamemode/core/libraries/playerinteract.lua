@@ -125,7 +125,7 @@ end
 ]]
 function lia.playerinteract.getInteractions(client)
     client = client or LocalPlayer()
-    local ent = client:getTracedEntity()
+    local ent = client:getTracedEntity(250)
     if not IsValid(ent) then return {} end
     local interactions = {}
     local isPlayerTarget = ent:IsPlayer()
@@ -842,7 +842,7 @@ else
     function lia.playerinteract.openMenu(options, isInteraction, titleText, closeKey, netMsg, preFiltered)
         local client = LocalPlayer()
         if not IsValid(client) then return end
-        local ent = isfunction(client.getTracedEntity) and client:getTracedEntity() or NULL
+        local ent = isfunction(client.getTracedEntity) and client:getTracedEntity(250) or NULL
         return lia.derma.optionsMenu(options, {
             mode = isInteraction and "interaction" or "action",
             title = titleText,

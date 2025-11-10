@@ -516,9 +516,8 @@ end
 local function liaScoreboardShow()
     local client = LocalPlayer()
     if hook.Run("CanPlayerOpenScoreboard", LocalPlayer()) == false then return false end
-    local interactions = lia.playerinteract.getInteractions(client)
-    local hasInteractions = not table.IsEmpty(interactions)
-    if not hasInteractions then
+    local tracedEntity = client:getTracedEntity(250)
+    if not IsValid(tracedEntity) or not tracedEntity:IsPlayer() then
         if IsValid(lia.gui.score) then
             if not lia.gui.score:IsVisible() then
                 lia.gui.score:SetVisible(true)
