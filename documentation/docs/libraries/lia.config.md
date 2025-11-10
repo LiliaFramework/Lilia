@@ -501,6 +501,31 @@ Server
 
 ---
 
+### lia.config.hasChanges
+
+#### 📋 Purpose
+Checks if there are any configuration changes that need to be synced to clients
+
+#### ⏰ When Called
+Before syncing configurations to determine if a sync is necessary
+
+#### ↩️ Returns
+* boolean - True if there are changed values that differ from defaults
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+```lua
+    if lia.config.hasChanges() then
+        lia.config.send()
+    end
+
+```
+
+---
+
 ### lia.config.send
 
 #### 📋 Purpose

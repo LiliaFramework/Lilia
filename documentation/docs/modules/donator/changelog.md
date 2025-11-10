@@ -11,7 +11,7 @@
 
 ### Version 1.2
 
-- **Changed**: Updated function naming convention from PascalCase to camelCase for consistency:
+- Updated function naming convention from PascalCase to camelCase for consistency:
   - `GetAdditionalCharSlots()` ? `getAdditionalCharSlots()`
   - `SetAdditionalCharSlots()` ? `setAdditionalCharSlots()`
   - `GiveAdditionalCharSlots()` ? `giveAdditionalCharSlots()`

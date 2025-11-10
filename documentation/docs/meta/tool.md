@@ -523,7 +523,7 @@ Client
     function tool:drawHUD()
         local scrW, scrH = ScrW(), ScrH()
         -- Draw tool name and stage
-        draw.SimpleText(self:getMode(), "liaGenericFont", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:getMode(), "LiliaFont.16", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
         -- Draw progress bar
         local progress = self.Stage / 3
         surface.SetDrawColor(0, 255, 0, 255)
@@ -541,7 +541,7 @@ Client
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(0, scrH - 150, scrW, 150)
         -- Draw tool name and status
-        draw.SimpleText(self:getMode():upper(), "liaGenericFont", 10, scrH - 140, color_white)
+        draw.SimpleText(self:getMode():upper(), "LiliaFont.16", 10, scrH - 140, color_white)
         -- Draw object list
         local y = scrH - 120
         for i, obj in ipairs(self.Objects) do
@@ -587,7 +587,7 @@ Client
     function tool:drawHUD()
         local scrW, scrH = ScrW(), ScrH()
         -- Draw tool name and stage
-        draw.SimpleText(self:getMode(), "liaGenericFont", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:getMode(), "LiliaFont.16", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
         -- Draw progress bar
         local progress = self.Stage / 3
         surface.SetDrawColor(0, 255, 0, 255)
@@ -605,7 +605,7 @@ Client
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(0, scrH - 150, scrW, 150)
         -- Draw tool name and status
-        draw.SimpleText(self:getMode():upper(), "liaGenericFont", 10, scrH - 140, color_white)
+        draw.SimpleText(self:getMode():upper(), "LiliaFont.16", 10, scrH - 140, color_white)
         -- Draw object list
         local y = scrH - 120
         for i, obj in ipairs(self.Objects) do
@@ -651,7 +651,7 @@ Client
     function tool:drawHUD()
         local scrW, scrH = ScrW(), ScrH()
         -- Draw tool name and stage
-        draw.SimpleText(self:getMode(), "liaGenericFont", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:getMode(), "LiliaFont.16", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
         -- Draw progress bar
         local progress = self.Stage / 3
         surface.SetDrawColor(0, 255, 0, 255)
@@ -669,7 +669,7 @@ Client
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(0, scrH - 150, scrW, 150)
         -- Draw tool name and status
-        draw.SimpleText(self:getMode():upper(), "liaGenericFont", 10, scrH - 140, color_white)
+        draw.SimpleText(self:getMode():upper(), "LiliaFont.16", 10, scrH - 140, color_white)
         -- Draw object list
         local y = scrH - 120
         for i, obj in ipairs(self.Objects) do
@@ -715,7 +715,7 @@ Client
     function tool:drawHUD()
         local scrW, scrH = ScrW(), ScrH()
         -- Draw tool name and stage
-        draw.SimpleText(self:getMode(), "liaGenericFont", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:getMode(), "LiliaFont.16", scrW/2, scrH - 100, color_white, TEXT_ALIGN_CENTER)
         -- Draw progress bar
         local progress = self.Stage / 3
         surface.SetDrawColor(0, 255, 0, 255)
@@ -733,7 +733,7 @@ Client
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(0, scrH - 150, scrW, 150)
         -- Draw tool name and status
-        draw.SimpleText(self:getMode():upper(), "liaGenericFont", 10, scrH - 140, color_white)
+        draw.SimpleText(self:getMode():upper(), "LiliaFont.16", 10, scrH - 140, color_white)
         -- Draw object list
         local y = scrH - 120
         for i, obj in ipairs(self.Objects) do

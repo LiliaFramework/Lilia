@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 1.4
+
+- Updated Angle method calls to use proper PascalCase naming (`up` → `Up`, `Forward` → `Forward`, `right` → `Right`, `rotateAroundAxis` → `RotateAroundAxis`)
+
 ### Version 1.3
 
 - Added comprehensive hooks documentation
@@ -7,7 +11,7 @@
 
 ### Version 1.2
 
-- **Changed**: Updated function naming convention from PascalCase to camelCase for consistency
+- Updated function naming convention from PascalCase to camelCase for consistency
 
 ### Version 1.1
 

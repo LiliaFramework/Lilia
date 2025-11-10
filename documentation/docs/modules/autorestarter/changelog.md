@@ -3,7 +3,7 @@
 ### Version 1.3
 
 - Added comprehensive configuration documentation
-- **Changed**: Configuration updates and improvements
+- Configuration updates and improvements
 
 ### Version 1.2
 

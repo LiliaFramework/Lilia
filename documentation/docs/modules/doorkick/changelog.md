@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 1.5
+
+- Updated Vector method calls to use proper PascalCase naming (`distance` → `Distance`)
+
 ### Version 1.4
 
 - Added comprehensive configuration documentation
@@ -11,7 +15,7 @@
 
 ### Version 1.2
 
-- **Changed**: Updated function naming convention from PascalCase to camelCase for consistency
+- Updated function naming convention from PascalCase to camelCase for consistency
 
 ### Version 1.1
 
