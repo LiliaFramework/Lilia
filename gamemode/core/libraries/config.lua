@@ -10,6 +10,7 @@
 local GM = GM or GAMEMODE
 lia.config = lia.config or {}
 lia.config.stored = lia.config.stored or {}
+lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
 --[[
     Purpose:
         Adds a new configuration option to the system with specified properties and validation
@@ -540,7 +541,20 @@ function lia.config.load()
                 end
             end
 
-            local finalize = function() hook.Run("InitializedConfig") end
+            local finalize = function()
+                for key, config in pairs(lia.config.stored) do
+                    if config.value ~= nil then
+                        if istable(config.value) then
+                            lia.config._lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
+                        else
+                            lia.config._lastSyncedValues[key] = config.value
+                        end
+                    end
+                end
+
+                hook.Run("InitializedConfig")
+            end
+
             if #inserts > 0 then
                 local ops = {}
                 for _, row in ipairs(inserts) do
@@ -619,12 +633,69 @@ if SERVER then
             end
             ```
     ]]
-    function lia.config.getChangedValues()
+    function lia.config.getChangedValues(includeDefaults)
         local data = {}
         for k, v in pairs(lia.config.stored) do
-            if v.default ~= v.value then data[k] = v.value end
+            local isDifferent
+            if includeDefaults or lia.config._lastSyncedValues[k] == nil then
+                if istable(v.default) and istable(v.value) then
+                    isDifferent = util.TableToJSON(v.default) ~= util.TableToJSON(v.value)
+                else
+                    isDifferent = v.default ~= v.value
+                end
+            else
+                local lastSynced = lia.config._lastSyncedValues[k]
+                if istable(lastSynced) and istable(v.value) then
+                    isDifferent = util.TableToJSON(lastSynced) ~= util.TableToJSON(v.value)
+                else
+                    isDifferent = lastSynced ~= v.value
+                end
+            end
+
+            if isDifferent then data[k] = v.value end
         end
         return data
+    end
+
+    --[[
+        Purpose:
+            Checks if there are any configuration changes that need to be synced to clients
+
+        When Called:
+            Before syncing configurations to determine if a sync is necessary
+
+        Parameters:
+            None
+
+        Returns:
+            boolean - True if there are changed values that differ from defaults
+
+        Realm:
+            Server
+
+        Example Usage:
+            ```lua
+            if lia.config.hasChanges() then
+                lia.config.send()
+            end
+            ```
+    ]]
+    function lia.config.hasChanges()
+        if table.Count(lia.config._lastSyncedValues) == 0 and table.Count(lia.config.stored) > 0 then
+            for key, config in pairs(lia.config.stored) do
+                if config.value ~= nil then
+                    if istable(config.value) then
+                        lia.config._lastSyncedValues[key] = util.TableToJSON(config.value) and util.JSONToTable(util.TableToJSON(config.value)) or config.value
+                    else
+                        lia.config._lastSyncedValues[key] = config.value
+                    end
+                end
+            end
+        end
+
+        local changed = lia.config.getChangedValues()
+        local count = table.Count(changed)
+        return count > 0
     end
 
     --[[
@@ -689,6 +760,7 @@ if SERVER then
     ]]
     function lia.config.send(client)
         local data = lia.config.getChangedValues()
+        if not client and table.Count(data) == 0 then return end
         local function getTargets()
             if IsValid(client) then return {client} end
             return player.GetHumans()
@@ -696,6 +768,14 @@ if SERVER then
 
         local targets = getTargets()
         if not istable(targets) or #targets == 0 then return end
+        for key, value in pairs(data) do
+            if istable(value) then
+                lia.config._lastSyncedValues[key] = util.TableToJSON(value) and util.JSONToTable(util.TableToJSON(value)) or value
+            else
+                lia.config._lastSyncedValues[key] = value
+            end
+        end
+
         local batchSize = 5
         local baseDelayPerBatch = 0.05
         local function sendTableStaggered(tbl, startDelay)

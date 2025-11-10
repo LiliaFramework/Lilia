@@ -682,8 +682,10 @@ if SERVER then
                     end
 
                     for _, ply in ipairs(batch) do
-                        lia.net.writeBigTable(ply, "liaPlayerInteractSync", filteredData)
-                        lia.net.writeBigTable(ply, "liaPlayerInteractCategories", lia.playerinteract.categories)
+                        if IsValid(ply) then
+                            lia.net.writeBigTable(ply, "liaPlayerInteractSync", filteredData)
+                            lia.net.writeBigTable(ply, "liaPlayerInteractCategories", lia.playerinteract.categories)
+                        end
                     end
                 end)
 

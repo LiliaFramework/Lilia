@@ -203,7 +203,7 @@ function QuickPanel:addSpacer()
     return pnl
 end
 
-function QuickPanel:addCategoryHeader(categoryName, categoryColor, count)
+function QuickPanel:addCategoryHeader(categoryName, categoryColor)
     local header = self.scroll:Add("DPanel")
     header:SetTall(26)
     header:Dock(TOP)
@@ -379,7 +379,7 @@ function QuickPanel:populateOptions()
                 end
             end
 
-            local categoryHeader = self:addCategoryHeader(categoryName, categoryColor, #categoryOptions)
+            local categoryHeader = self:addCategoryHeader(categoryName, categoryColor)
             if categoryHeader then self.optionsCache[#self.optionsCache + 1] = categoryHeader end
             for j, info in ipairs(categoryOptions) do
                 local key = info.key
