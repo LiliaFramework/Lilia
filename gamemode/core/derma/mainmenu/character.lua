@@ -82,7 +82,9 @@ function PANEL:loadBackground()
             local ent = self.modelEntity
             if not IsValid(ent) then return end
             local center = ent:GetPos() + Vector(0, 0, 60)
-            local desired = center + Vector(0, -70, 0)
+            local modelAngles = ent:GetAngles()
+            local forward = modelAngles:Forward()
+            local desired = center + forward * 70
             self.currentCamPos = self.currentCamPos and LerpVector(FrameTime() * 5, self.currentCamPos, desired) or desired
             return {
                 origin = self.currentCamPos,
@@ -620,8 +622,6 @@ function PANEL:updateModelEntity(character)
         ang = #spawns > 0 and spawns[1]:GetAngles() or Angle()
     end
 
-    ang.pitch, ang.roll = 0, 0
-    ang.yaw = 265
     self.modelEntity:SetPos(pos)
     self.modelEntity:SetAngles(ang)
     for _, seq in ipairs(self.modelEntity:GetSequenceList()) do
