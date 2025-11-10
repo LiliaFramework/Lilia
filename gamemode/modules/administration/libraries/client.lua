@@ -926,9 +926,15 @@ function MODULE:PopulateAdminTabs(pages)
                     propertyPanels = {}
                     originalValues = {}
                     modifiedValues = {}
-                    net.Start("liaSwepeditorLoad")
-                    net.WriteString(weaponClass)
-                    net.SendToServer()
+                    lia.swepeditor.NetworkData = lia.swepeditor.NetworkData or {}
+                    if lia.swepeditor.NetworkData[weaponClass] then
+                        LoadWeaponData(lia.swepeditor.NetworkData[weaponClass])
+                    else
+                        net.Start("liaSwepeditorLoad")
+                        net.WriteString(weaponClass)
+                        net.SendToServer()
+                    end
+
                     LoadWeaponProperties(weaponClass)
                 end
 
@@ -1042,9 +1048,13 @@ function MODULE:PopulateAdminTabs(pages)
                 net.Receive("liaSwepeditorLoad", function()
                     local data = net.ReadTable()
                     local class = net.ReadString()
+                    lia.swepeditor.NetworkData = lia.swepeditor.NetworkData or {}
+                    lia.swepeditor.NetworkData[class] = data
                     if selectedWeapon == class then LoadWeaponData(data) end
                 end)
 
+                net.Start("liaSwepeditorRequestAll")
+                net.SendToServer()
                 PopulateWeaponList()
             end,
         })

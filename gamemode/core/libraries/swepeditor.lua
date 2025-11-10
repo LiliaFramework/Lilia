@@ -237,21 +237,41 @@ if SERVER then
     function lia.swepeditor.sync(ply)
         lia.db.query("SELECT * FROM lia_swepeditor", function(results)
             if results then
+                local weaponsToSync = {}
                 for _, row in ipairs(results) do
                     local class = row.class
                     local saveData = util.JSONToTable(row.data)
                     if saveData and lia.swepeditor.NetworkData[class] then
-                        net.Start("liaSwepeditorLoad")
-                        net.WriteTable(lia.swepeditor.NetworkData[class])
-                        net.WriteString(class)
-                        local sendFunc = IsValid(ply) and net.Send or net.Broadcast
-                        local sendTarget = IsValid(ply) and ply or nil
-                        sendFunc(sendTarget)
+                        table.insert(weaponsToSync, {
+                            class = class,
+                            data = lia.swepeditor.NetworkData[class]
+                        })
                     end
                 end
+
+                local sendFunc = IsValid(ply) and net.Send or net.Broadcast
+                local sendTarget = IsValid(ply) and ply or nil
+                local currentIndex = 1
+                local function sendNextWeapon()
+                    if currentIndex > #weaponsToSync then return end
+                    local weaponData = weaponsToSync[currentIndex]
+                    net.Start("liaSwepeditorLoad")
+                    net.WriteTable(weaponData.data)
+                    net.WriteString(weaponData.class)
+                    sendFunc(sendTarget)
+                    currentIndex = currentIndex + 1
+                    if currentIndex <= #weaponsToSync then timer.Simple(0.1, sendNextWeapon) end
+                end
+
+                if #weaponsToSync > 0 then timer.Simple(0.1, sendNextWeapon) end
             end
         end)
     end
+
+    net.Receive("liaSwepeditorRequestAll", function(_, ply)
+        if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
+        lia.swepeditor.sync(ply)
+    end)
 
     net.Receive("liaSwepeditorLoad", function(_, ply)
         local weaponClass = net.ReadString()
