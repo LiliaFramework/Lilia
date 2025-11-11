@@ -18,8 +18,9 @@ function PANEL:Init()
     self.scrollPanel = vgui.Create("liaScrollPanel", self)
     self.scrollPanel:Dock(FILL)
     self.scrollPanel:DockMargin(0, 0, 0, 0)
-    self.content = vgui.Create("Panel", self.scrollPanel)
-    self.content:Dock(FILL)
+    self.content = vgui.Create("Panel", self.scrollPanel.pnlCanvas)
+    self.content:Dock(TOP)
+    self.content:DockMargin(0, 0, 0, 0)
     self.content.Paint = nil
     self.OnAction = function() end
     self.OnRightClick = function() end
@@ -226,8 +227,9 @@ function PANEL:RebuildRows()
         self:CreateRow(rowIndex, rowData)
     end
 
-    local panelWidth = self:GetWide()
-    self.content:SetSize(math.max(totalWidth, panelWidth), #self.rows * (self.rowHeight + 1))
+    local contentWidth = math.max(totalWidth, self.scrollPanel:GetWide())
+    local contentHeight = #self.rows * (self.rowHeight + 1)
+    self.content:SetSize(contentWidth, contentHeight)
     if not self.isRebuilding then
         self.isRebuilding = true
         timer.Simple(0.1, function()

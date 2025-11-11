@@ -785,8 +785,10 @@ end
 
 function PANEL:Update()
     if IsValid(self) then
+        local client = LocalPlayer()
+        local shouldRecreate = not IsValid(client) or not client:getChar()
         self:Remove()
-        vgui.Create("liaCharacter")
+        if shouldRecreate then vgui.Create("liaCharacter") end
     end
 end
 

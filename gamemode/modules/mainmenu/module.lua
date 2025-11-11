@@ -23,9 +23,9 @@ else
 
     function MODULE:ResetCharacterPanel()
         local charPanel = lia.gui.character
-        if IsValid(charPanel) and charPanel.isLoadMode and charPanel.availableCharacters then return end
-        if IsValid(charPanel) then charPanel:Remove() end
         local client = LocalPlayer()
+        if IsValid(charPanel) and charPanel.isLoadMode and charPanel.availableCharacters and #charPanel.availableCharacters > 0 then return end
+        if IsValid(charPanel) then charPanel:Remove() end
         if IsValid(client) and not client:getChar() then vgui.Create("liaCharacter") end
     end
 
@@ -94,6 +94,13 @@ else
 
     function MODULE:LiliaLoaded()
         vgui.Create("liaCharacter")
+    end
+
+    function MODULE:OnReloaded()
+        timer.Simple(0.1, function()
+            local client = LocalPlayer()
+            if IsValid(client) and not client:getChar() then if not IsValid(lia.gui.character) then vgui.Create("liaCharacter") end end
+        end)
     end
 
     function MODULE:KickedFromChar(_, isCurrentChar)

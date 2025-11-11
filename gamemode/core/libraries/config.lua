@@ -1443,12 +1443,6 @@ lia.config.add("ThrowForce", "throwForce", 100, nil, {
     max = 500
 })
 
-lia.config.add("AllowPush", "allowPush", true, nil, {
-    desc = "allowPushDesc",
-    category = "categoryGeneral",
-    type = "Boolean",
-})
-
 lia.config.add("PunchPlaytime", "punchPlaytimeProtection", 7200, nil, {
     desc = "punchPlaytimeProtectionDesc",
     category = "categoryGeneral",

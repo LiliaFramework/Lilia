@@ -343,13 +343,6 @@ function SWEP:SecondaryAttack()
             self:DoPunchAnimation()
             self:SetNextSecondaryFire(CurTime() + 0.4)
             self:SetNextPrimaryFire(CurTime() + 1)
-        elseif entity:IsPlayer() and lia.config.get("AllowPush", true) then
-            local direction = self:GetOwner():GetAimVector() * 300
-            direction.z = 0
-            entity:SetVelocity(direction)
-            self:GetOwner():EmitSound("Weapon_Crossbow.BoltHitBody")
-            self:SetNextSecondaryFire(CurTime() + 1.5)
-            self:SetNextPrimaryFire(CurTime() + 1.5)
         elseif not entity:IsNPC() and self:CanHoldObject(entity) then
             self:PickupObject(entity)
             self:PlayPickupSound(trace.SurfaceProps)

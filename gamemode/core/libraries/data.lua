@@ -906,7 +906,10 @@ function lia.data.savePersistence(entities)
         cols[#cols + 1] = c
     end
 
-    ensurePersistenceColumns(cols):next(function() return lia.db.delete("persistence", condition) end):next(function()
+    ensurePersistenceColumns(cols):next(function()
+        if #entities == 0 then return end
+        return lia.db.delete("persistence", condition)
+    end):next(function()
         local rows = {}
         for _, ent in ipairs(entities) do
             local row = {

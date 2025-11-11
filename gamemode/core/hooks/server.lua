@@ -667,8 +667,10 @@ function GM:SaveData()
         end
     end
 
-    lia.data.savePersistence(data)
-    lia.information(L("dataSaved"))
+    if #data > 0 then
+        lia.data.savePersistence(data)
+        lia.information(L("dataSaved"))
+    end
 end
 
 local function IsEntityNearby(pos, class)

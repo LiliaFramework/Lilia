@@ -109,10 +109,6 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
-        path = "lilia/gamemode/core/meta/tool.lua",
-        realm = "shared"
-    },
-    {
         path = "lilia/gamemode/core/libraries/item.lua",
         realm = "shared"
     },
@@ -1192,11 +1188,6 @@ function lia.loader.includeEntities(path)
         end
     end
 
-    local function RegisterTool(tool, className)
-        local gmodTool = weapons.GetStored("gmod_tool")
-        if gmodTool then gmodTool.Tool[className] = tool end
-    end
-
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
         Type = "anim",
         Base = "base_gmodentity",
@@ -1208,12 +1199,6 @@ function lia.loader.includeEntities(path)
         Secondary = {},
         Base = "weapon_base"
     })
-
-    HandleEntityInclusion("tools", "TOOL", RegisterTool, {}, false, function(className)
-        TOOL = lia.meta.tool:Create()
-        TOOL.Mode = className
-        TOOL:CreateConVars()
-    end)
 
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 end
@@ -1311,27 +1296,6 @@ function lia.loader.initializeGamemode(isReload)
         end
     end
 
-    local loadedCompatibility = {}
-    for _, compatFile in ipairs(ConditionalFiles) do
-        local shouldLoad = false
-        if isfunction(compatFile.condition) then
-            local ok, result = pcall(compatFile.condition)
-            if ok then
-                shouldLoad = result
-            else
-                lia.error(L("compatibilityConditionError", tostring(result)))
-            end
-        elseif compatFile.global then
-            shouldLoad = _G[compatFile.global] ~= nil
-        end
-
-        if shouldLoad then
-            lia.loader.include(compatFile.path, compatFile.realm or "shared")
-            loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
-        end
-    end
-
-    if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
     if isReload then lia.bootstrap("HotReload", L("gamemodeHotreloadedSuccessfully")) end
 end
 
@@ -1357,4 +1321,25 @@ function GM:OnReloaded()
     lia.loader.initializeGamemode(true)
 end
 
+local loadedCompatibility = {}
+for _, compatFile in ipairs(ConditionalFiles) do
+    local shouldLoad = false
+    if isfunction(compatFile.condition) then
+        local ok, result = pcall(compatFile.condition)
+        if ok then
+            shouldLoad = result
+        else
+            lia.error(L("compatibilityConditionError", tostring(result)))
+        end
+    elseif compatFile.global then
+        shouldLoad = _G[compatFile.global] ~= nil
+    end
+
+    if shouldLoad then
+        lia.loader.include(compatFile.path, compatFile.realm or "shared")
+        loadedCompatibility[#loadedCompatibility + 1] = compatFile.name
+    end
+end
+
+if #loadedCompatibility > 0 then lia.bootstrap(L("compatibility"), #loadedCompatibility == 1 and L("compatibilityLoadedSingle", loadedCompatibility[1]) or L("compatibilityLoadedMultiple", table.concat(loadedCompatibility, ", "))) end
 if game.IsDedicated() then concommand.Remove("gm_save") end
