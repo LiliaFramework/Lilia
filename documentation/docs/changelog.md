@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.06 (November 11, 2025)
+
+### Changes
+
+- Minor Bug Fixes
+- Successfully updated workshop Lilia to 7.04
+- Update ci.yml
+- Successfully updated workshop Lilia to 7.02
+- Config now only sends changed values
+- Minor Bug Fix
+- Optimized SWEP Editor
+- Added Categories to the Player Interact Library & LiaQuick
+- Incosistency w/  Scoreboard and Player Interact
+- Better Char Creation Angle
+- Missing Docs
+- Successfully updated workshop Lilia to 6.994
+- Update panels.lua
+- Update derma.lua
+- Successfully updated workshop Lilia to 6.991
+- Update panels.lua
+- Successfully updated workshop Lilia to 6.989
+- Update panels.lua
+- Successfully updated workshop Lilia to 6.987
+- Update panels.lua
+
 ## Version 7.04 (November 10, 2025)
 
 ### Changes
