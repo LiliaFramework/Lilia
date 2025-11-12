@@ -32,7 +32,7 @@ function PANEL:AddColumn(name, width, align, sortable)
         name = name,
         width = width or 100,
         align = align or TEXT_ALIGN_LEFT,
-        sortable = sortable ~= false, -- Default to true unless explicitly set to false
+        sortable = sortable ~= false,
         autoSize = true
     })
 
@@ -512,14 +512,11 @@ function PANEL:SortByColumn(columnIndex, desc)
     if not column or not column.sortable then return end
     self.sortColumn = columnIndex
     self.sortDesc = desc or false
-
     local function extractNumber(str)
         if not str then return nil end
         str = tostring(str)
-        -- Try direct conversion first
         local num = tonumber(str)
         if num then return num end
-        -- Extract first number from string (handles "5000 dollars" -> 5000)
         local match = string.match(str, "([%-%+]?%d+%.?%d*)")
         if match then
             num = tonumber(match)
@@ -529,23 +526,17 @@ function PANEL:SortByColumn(columnIndex, desc)
     end
 
     local function compareValues(a, b)
-        -- Convert to strings for comparison
         local strA = a ~= nil and tostring(a) or ""
         local strB = b ~= nil and tostring(b) or ""
-
-        -- Try to extract numbers from strings
         local numA = extractNumber(strA)
         local numB = extractNumber(strB)
-
         if numA and numB then
-            -- Both have extractable numbers, sort numerically
             if self.sortDesc then
                 return numA > numB
             else
                 return numA < numB
             end
         else
-            -- At least one doesn't have a number, sort as strings
             if self.sortDesc then
                 return strA > strB
             else

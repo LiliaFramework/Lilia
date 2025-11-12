@@ -42,7 +42,6 @@ function PANEL:Init()
 
     self.faction:FinishAddingOptions()
     self.faction:SetTall(70)
-    -- Prevent AutoSize from overriding our custom height
     local oldAutoSize = self.faction.AutoSize
     self.faction.AutoSize = function(pnl)
         if pnl.userSetHeight then return end

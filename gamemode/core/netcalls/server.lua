@@ -869,13 +869,10 @@ end)
 net.Receive("liaItemRotate", function(_, client)
     local itemID = net.ReadUInt(32)
     local rotated = net.ReadBool()
-
     local item = lia.item.instances[itemID]
     if not item then return end
-
     local inventory = lia.inventory.instances[item.invID]
     if not inventory then return end
-
     local canAccess = inventory:canAccess("item", {
         client = client,
         item = item,
@@ -883,7 +880,6 @@ net.Receive("liaItemRotate", function(_, client)
     })
 
     if not canAccess then return end
-
     item:setData("rotated", rotated)
     item.forceRender = true
 end)

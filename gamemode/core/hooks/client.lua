@@ -633,13 +633,10 @@ function GM:Think()
         local item = lia.item.held.itemTable
         local currentRotation = item:getData("rotated", false)
         local newRotation = not currentRotation
-        -- Update local client data for immediate visual feedback
         item.data = item.data or {}
         item.data.rotated = newRotation
         item.forceRender = true
-        -- Update the held item icon to reflect the rotation change
         if IsValid(lia.item.held) then lia.item.held:setItem(item) end
-        -- Notify server of the rotation change (server will set the data)
         net.Start("liaItemRotate")
         net.WriteUInt(item:getID(), 32)
         net.WriteBool(newRotation)

@@ -47,7 +47,7 @@ hook.Add("PreRegisterTOOL", "BetterDupeLoad", function(tool, class)
 
         local dupe = ply.CurrentDupe
         local pos = trace.HitPos
-        for _, v in pairs(dupe.Entities) do -- Dirt hack to fix wire stuff
+        for _, v in pairs(dupe.Entities) do
             if v.LocalPos then v.LocalPos = nil end
         end
 
