@@ -278,7 +278,7 @@ function lia.playerinteract.getCategorizedOptions(options)
 
     for _, categoryName in ipairs(sortedCategories) do
         local categoryData = lia.playerinteract.categories[categoryName]
-        local categoryColor = categoryData and categoryData.color or Color(255, 255, 255, 255)
+        local categoryColor = categoryData and categoryData.color or (lia.color.theme and lia.color.theme.category_accent or Color(100, 150, 200, 255))
         table.insert(categorized, {
             isCategory = true,
             name = categoryName,
@@ -421,7 +421,7 @@ if SERVER then
         if not lia.playerinteract.categories[data.category] then
             lia.playerinteract.categories[data.category] = {
                 name = data.category,
-                color = data.categoryColor or Color(255, 255, 255, 255)
+                color = data.categoryColor or (lia.color.theme and lia.color.theme.category_accent or Color(100, 150, 200, 255))
             }
         end
     end
@@ -569,7 +569,7 @@ if SERVER then
         if not lia.playerinteract.categories[data.category] then
             lia.playerinteract.categories[data.category] = {
                 name = data.category,
-                color = data.categoryColor or Color(255, 255, 255, 255)
+                color = data.categoryColor or (lia.color.theme and lia.color.theme.category_accent or Color(100, 150, 200, 255))
             }
         end
     end

@@ -55,6 +55,14 @@ else
         local payload = {}
         for key, charVar in pairs(lia.char.vars) do
             if charVar.noDisplay then continue end
+            -- Check if this variable should be shown in character creation
+            if hook.Run("ShouldShowCharVarInCreation", key) == false then
+                -- Use default value if hidden
+                local value = charVar.default
+                if istable(value) then value = table.Copy(value) end
+                payload[key] = value
+                continue
+            end
             local value = data[key]
             if isfunction(charVar.onValidate) then
                 local results = {charVar.onValidate(value, data, client)}

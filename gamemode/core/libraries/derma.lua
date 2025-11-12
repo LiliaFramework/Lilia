@@ -343,10 +343,12 @@ function lia.derma.optionsMenu(rawOptions, config)
     frame:SetAlpha(0)
     frame:AlphaTo(255, fadeSpeed)
     function frame:Paint(w, h)
-        local windowShadow = lia.color.theme and lia.color.theme.window_shadow or Color(18, 32, 32, 90)
-        local backgroundPanel = lia.color.theme and lia.color.theme.background_panelpopup or Color(20, 28, 28)
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(windowShadow):Shape(lia.derma.SHAPE_IOS):Shadow(10, 16):Draw()
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(backgroundPanel):Shape(lia.derma.SHAPE_IOS):Draw()
+        local theme = lia.color.theme
+        local bgColor = theme and theme.background_alpha or Color(34, 34, 34, 210)
+        local headerColor = theme and theme.header or Color(34, 34, 34, 210)
+        draw.RoundedBox(6, 0, 0, w, h, bgColor)
+        draw.RoundedBox(6, 0, 0, w, 24, headerColor)
+        if titleText and titleText ~= "" then draw.SimpleText(titleText, "LiliaFont.16", 6, 4, theme and theme.header_text or Color(255, 255, 255)) end
     end
 
     if emitHooks then hook.Run("InteractionMenuOpened", frame) end
@@ -372,16 +374,15 @@ function lia.derma.optionsMenu(rawOptions, config)
         timer.Create(timerName, autoCloseDelay, 1, function() if IsValid(frame) then frame:Remove() end end)
     end
 
-    local title = frame:Add("DLabel")
-    title:SetPos(0, titleY)
-    title:SetSize(frameW, titleH)
-    title:SetText(titleText)
-    title:SetFont(config.titleFont or "liaSmallFont")
-    title:SetColor(config.titleColor or color_white)
-    title:SetContentAlignment(5)
+    -- Title is now drawn in the Paint function to match liaQuick styling
     local scroll = frame:Add("liaScrollPanel")
-    scroll:SetPos(0, titleH + titleY + gap)
-    scroll:SetSize(frameW, frameH - titleH - titleY - gap)
+    scroll:SetPos(0, 24) -- Start below the header like liaQuick
+    scroll:SetSize(frameW, frameH - 24)
+    scroll.Paint = function(_, w, h)
+        local theme = lia.color.theme
+        local panelColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50)
+        draw.RoundedBox(8, 0, 0, w, h, panelColor)
+    end
     local layout = vgui.Create("DListLayout", scroll)
     layout:Dock(FILL)
     local buttonFont = config.buttonFont or "liaSmallFont"
@@ -391,22 +392,33 @@ function lia.derma.optionsMenu(rawOptions, config)
     for _, entry in ipairs(optionsList) do
         if entry.isCategory then
             local categoryPanel = vgui.Create("DPanel", layout)
-            categoryPanel:SetTall(entryH)
+            categoryPanel:SetTall(entryH + 4) -- Make categories taller for more prominence
             categoryPanel:Dock(TOP)
-            categoryPanel:DockMargin(2, 4, 2, 2)
+            categoryPanel:DockMargin(4, 8, 4, 6) -- Increase margins for better separation
             categoryPanel:SetPaintBackground(false)
             function categoryPanel:Paint(w, h)
                 local theme = lia.color.theme
-                local bgColor = theme and theme.category_header or Color(45, 55, 65, 100)
+                -- Make category background more opaque and distinct
+                local bgColor = theme and theme.category_header or Color(35, 45, 55, 180)
                 local accentColor = entry.color or (theme and theme.category_accent or Color(100, 150, 200, 255))
                 local textColor = theme and theme.text or color_white
-                lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+
+                -- Draw main background with more opacity
+                lia.derma.rect(0, 0, w, h):Rad(10):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+
+                -- Draw accent stripe (wider for more contrast)
                 surface.SetDrawColor(accentColor)
-                surface.DrawRect(0, 0, 3, h)
+                surface.DrawRect(0, 0, 4, h)
+
+                -- Add subtle border for more definition
+                surface.SetDrawColor(Color(255, 255, 255, 20))
+                surface.DrawOutlinedRect(0, 0, w, h, 1)
+
                 local displayText = entry.name or ""
                 local localized = L(displayText)
                 if localized and localized ~= "" then displayText = localized end
-                draw.SimpleText(displayText, buttonFont, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                -- Use a slightly different font weight for categories
+                draw.SimpleText(displayText, "liaSmallFont", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
 
             layout:Add(categoryPanel)
@@ -414,7 +426,7 @@ function lia.derma.optionsMenu(rawOptions, config)
             local btn = vgui.Create("liaButton", layout)
             btn:SetTall(entryH)
             btn:Dock(TOP)
-            btn:DockMargin(6, 0, 6, 0)
+            btn:DockMargin(8, 2, 8, 2) -- Add more horizontal margin and some vertical spacing
             local displayText = entry.label or entry.id or ""
             if entry.opt and entry.opt.localized ~= false and L then
                 local localized = L(displayText)

@@ -13,13 +13,14 @@ function PANEL:Init()
     self.factionLabel = makeLabel("faction")
     self.factionCombo = self:makeFactionComboBox()
     self.factionCombo:DockMargin(0, 8, 0, 12)
-    self.factionCombo:SetTall(48)
     self.nameLabel = makeLabel("name")
     self.nameEntry = self:makeTextEntry("name")
     self.nameEntry:DockMargin(0, 8, 0, 12)
-    self.descLabel = makeLabel("desc")
-    self.descEntry = self:makeTextEntry("desc")
-    self.descEntry:DockMargin(0, 8, 0, 12)
+    if hook.Run("ShouldShowCharVarInCreation", "desc") ~= false then
+        self.descLabel = makeLabel("desc")
+        self.descEntry = self:makeTextEntry("desc")
+        self.descEntry:DockMargin(0, 8, 0, 12)
+    end
     self:addAttributes()
 end
 
@@ -27,6 +28,9 @@ function PANEL:makeTextEntry(key)
     local entry = self:Add("liaEntry")
     entry:Dock(TOP)
     entry:DockMargin(0, 8, 0, 12)
+    entry:SetTall(40)
+    -- Use slightly smaller font than labels (liaMediumFont)
+    entry:SetFont("LiliaFont.18")
     entry.OnEnter = function() self:setContext(key, string.Trim(entry:GetValue())) end
     entry.OnLoseFocus = function() self:setContext(key, string.Trim(entry:GetValue())) end
     local saved = self:getContext(key)
@@ -39,7 +43,6 @@ function PANEL:makeFactionComboBox()
     combo:Dock(TOP)
     combo:PostInit()
     combo:DockMargin(0, 8, 0, 12)
-    combo:SetTall(48)
     combo.Paint = function(_, w, h)
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, 0, w, h)
@@ -73,6 +76,13 @@ function PANEL:makeFactionComboBox()
     end
 
     combo:FinishAddingOptions()
+    combo:SetTall(70)
+    -- Prevent AutoSize from overriding our custom height
+    local oldAutoSize = combo.AutoSize
+    combo.AutoSize = function(pnl)
+        if pnl.userSetHeight then return end
+        oldAutoSize(pnl)
+    end
     return combo
 end
 
@@ -116,8 +126,10 @@ end
 
 function PANEL:validate()
     for _, info in ipairs({{self.nameEntry, "name"}, {self.descEntry, "desc"}}) do
-        local val = string.Trim(info[1]:GetValue() or "")
-        if val == "" then return false, L("requiredFieldError", info[2]) end
+        if IsValid(info[1]) then
+            local val = string.Trim(info[1]:GetValue() or "")
+            if val == "" then return false, L("requiredFieldError", info[2]) end
+        end
     end
 
     local factionID = self.factionCombo:GetSelectedData()
@@ -150,7 +162,7 @@ function PANEL:updateNameAndDescForFaction(factionIndex)
         end
     end
 
-    if isstring(defaultDesc) and descOverride and IsValid(self.descEntry) then
+    if hook.Run("ShouldShowCharVarInCreation", "desc") ~= false and isstring(defaultDesc) and descOverride and IsValid(self.descEntry) then
         local currentDesc = string.Trim(self.descEntry:GetValue() or "")
         if currentDesc == "" or descOverride then
             timer.Simple(0.01, function()
@@ -165,7 +177,17 @@ end
 
 function PANEL:updateContext()
     if IsValid(self.nameEntry) then self:setContext("name", string.Trim(self.nameEntry:GetValue() or "")) end
-    if IsValid(self.descEntry) then self:setContext("desc", string.Trim(self.descEntry:GetValue() or "")) end
+    if hook.Run("ShouldShowCharVarInCreation", "desc") ~= false then
+        if IsValid(self.descEntry) then
+            self:setContext("desc", string.Trim(self.descEntry:GetValue() or ""))
+        end
+    else
+        -- Set default value when desc is hidden
+        local varData = lia.char.vars["desc"]
+        if varData and varData.default then
+            self:setContext("desc", varData.default)
+        end
+    end
     if IsValid(self.factionCombo) then
         local factionUniqueID = self.factionCombo:GetSelectedData()
         if factionUniqueID then
@@ -176,12 +198,13 @@ function PANEL:updateContext()
 end
 
 function PANEL:onDisplay()
-    local n, d = self.nameEntry:GetValue(), self.descEntry:GetValue()
+    local n = IsValid(self.nameEntry) and self.nameEntry:GetValue() or ""
+    local d = IsValid(self.descEntry) and self.descEntry:GetValue() or ""
     local f = self:getContext("faction")
     self:Clear()
     self:Init()
-    self.nameEntry:SetValue(n)
-    self.descEntry:SetValue(d)
+    if IsValid(self.nameEntry) then self.nameEntry:SetValue(n) end
+    if IsValid(self.descEntry) then self.descEntry:SetValue(d) end
     if f then
         self.factionCombo:ChooseOptionData(f)
         self:setContext("faction", f)

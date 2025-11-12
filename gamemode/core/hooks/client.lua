@@ -625,6 +625,30 @@ function GM:HUDDrawPickupHistory()
     return false
 end
 
+local lastRKeyState = false
+function GM:Think()
+    if not IsValid(lia.item.held) or not lia.item.held.itemTable then return end
+    local rKeyPressed = input.IsKeyDown(KEY_R)
+    if rKeyPressed and not lastRKeyState then
+        local item = lia.item.held.itemTable
+        local currentRotation = item:getData("rotated", false)
+        local newRotation = not currentRotation
+        -- Update local client data for immediate visual feedback
+        item.data = item.data or {}
+        item.data.rotated = newRotation
+        item.forceRender = true
+        -- Update the held item icon to reflect the rotation change
+        if IsValid(lia.item.held) then lia.item.held:setItem(item) end
+        -- Notify server of the rotation change (server will set the data)
+        net.Start("liaItemRotate")
+        net.WriteUInt(item:getID(), 32)
+        net.WriteBool(newRotation)
+        net.SendToServer()
+    end
+
+    lastRKeyState = rKeyPressed
+end
+
 function GM:HUDAmmoPickedUp()
     return false
 end

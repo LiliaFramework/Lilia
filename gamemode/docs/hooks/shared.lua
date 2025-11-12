@@ -3080,3 +3080,85 @@ end
 ]]
 function OnLocalizationLoaded()
 end
+
+--[[
+    Purpose:
+        Called to determine if a character variable should be shown in character creation
+
+    When Called:
+        When building the character creation UI to check if a specific character variable field should be displayed
+
+    Parameters:
+        varName (string) - The name of the character variable to check (e.g., "desc", "name", etc.)
+
+    Returns:
+        boolean or nil - Return false to hide the variable from character creation, true or nil to show it
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Hide description field from character creation
+    hook.Add("ShouldShowCharVarInCreation", "HideDesc", function(varName)
+        if varName == "desc" then
+            return false
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Hide multiple fields based on configuration
+    hook.Add("ShouldShowCharVarInCreation", "HideFields", function(varName)
+        local hiddenFields = lia.config.get("HiddenCharCreationFields", {})
+        if table.HasValue(hiddenFields, varName) then
+            return false
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex field visibility system
+    hook.Add("ShouldShowCharVarInCreation", "AdvancedFieldVisibility", function(varName)
+        local client = LocalPlayer()
+        if not IsValid(client) then return end
+
+        -- Hide desc for certain factions
+        if varName == "desc" then
+            local context = lia.gui.charCreate and lia.gui.charCreate.context or {}
+            local faction = context.faction
+            if faction then
+                local hiddenFactions = {"staff", "admin"}
+                local factionData = lia.faction.indices[faction]
+                if factionData and table.HasValue(hiddenFactions, factionData.uniqueID) then
+                    return false
+                end
+            end
+        end
+
+        -- Hide fields based on player permissions
+        if varName == "customField" and not client:IsAdmin() then
+            return false
+        end
+
+        -- Check module configuration
+        local module = lia.module.get("myModule")
+        if module and module.config and module.config.hideFields then
+            if table.HasValue(module.config.hideFields, varName) then
+                return false
+            end
+        end
+
+        return true
+    end)
+    ```
+]]]
+function ShouldShowCharVarInCreation(varName)
+end

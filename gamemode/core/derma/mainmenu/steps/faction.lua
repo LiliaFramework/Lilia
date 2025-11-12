@@ -5,7 +5,6 @@ function PANEL:Init()
     self.faction:Dock(TOP)
     self.faction:PostInit()
     self.faction:DockMargin(0, 4, 0, 0)
-    self.faction:SetTall(48)
     self.faction.Paint = function(p, w, h)
         lia.util.drawBlur(p)
         surface.SetDrawColor(0, 0, 0, 100)
@@ -42,6 +41,13 @@ function PANEL:Init()
     end
 
     self.faction:FinishAddingOptions()
+    self.faction:SetTall(70)
+    -- Prevent AutoSize from overriding our custom height
+    local oldAutoSize = self.faction.AutoSize
+    self.faction.AutoSize = function(pnl)
+        if pnl.userSetHeight then return end
+        oldAutoSize(pnl)
+    end
 end
 
 function PANEL:onDisplay()

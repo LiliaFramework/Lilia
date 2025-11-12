@@ -32,7 +32,7 @@ function PANEL:AddColumn(name, width, align, sortable)
         name = name,
         width = width or 100,
         align = align or TEXT_ALIGN_LEFT,
-        sortable = sortable or false,
+        sortable = sortable ~= false, -- Default to true unless explicitly set to false
         autoSize = true
     })
 
@@ -62,39 +62,6 @@ function PANEL:AddRow(...)
     return self:AddItem(...)
 end
 
-function PANEL:SortByColumn(columnIndex)
-    local column = self.columns[columnIndex]
-    if not column or not column.sortable then return end
-    self.sortColumn = columnIndex
-    local function getValueType(value)
-        if value == nil then return "nil" end
-        value = tostring(value)
-        return tonumber(value) and "number" or "string"
-    end
-
-    local function compareValues(a, b)
-        if a == nil and b == nil then return false end
-        if a == nil then return true end
-        if b == nil then return false end
-        local typeA = getValueType(a)
-        local typeB = getValueType(b)
-        if typeA ~= typeB then return typeA < typeB end
-        if typeA == "number" then
-            local numA = tonumber(a) or 0
-            local numB = tonumber(b) or 0
-            return numA > numB
-        else
-            local strA = tostring(a)
-            local strB = tostring(b)
-            return strA < strB
-        end
-    end
-
-    local success, _ = pcall(function() table.sort(self.rows, function(a, b) return compareValues(a[columnIndex], b[columnIndex]) end) end)
-    if not success then return end
-    self:RebuildRows()
-end
-
 function PANEL:CreateHeader()
     self.header:Clear()
     self.header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Radii(16, 16, 0, 0):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw() end
@@ -106,15 +73,15 @@ function PANEL:CreateHeader()
         label:SetPos(xPos, 0)
         label.Paint = function(s, w, h)
             local isHovered = s:IsHovered() and column.sortable
-            local isActive = self.sortColumn == i
             if isHovered then lia.derma.rect(0, 0, w, h):Radii(16, 16, 0, 0):Color(lia.color.theme.hover):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local textColor = isActive and lia.color.theme.theme or lia.color.theme.text
+            local textColor = lia.color.theme.text
             draw.SimpleText(column.name, self.font, w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
         if column.sortable then
             label.DoClick = function()
-                self:SortByColumn(i)
+                local desc = (self.sortColumn == i and not self.sortDesc) or false
+                self:SortByColumn(i, desc)
                 lia.websound.playButtonSound()
             end
         end
@@ -545,27 +512,45 @@ function PANEL:SortByColumn(columnIndex, desc)
     if not column or not column.sortable then return end
     self.sortColumn = columnIndex
     self.sortDesc = desc or false
-    local function getValueType(value)
-        if value == nil then return "nil" end
-        value = tostring(value)
-        return tonumber(value) and "number" or "string"
+
+    local function extractNumber(str)
+        if not str then return nil end
+        str = tostring(str)
+        -- Try direct conversion first
+        local num = tonumber(str)
+        if num then return num end
+        -- Extract first number from string (handles "5000 dollars" -> 5000)
+        local match = string.match(str, "([%-%+]?%d+%.?%d*)")
+        if match then
+            num = tonumber(match)
+            if num then return num end
+        end
+        return nil
     end
 
     local function compareValues(a, b)
-        if a == nil and b == nil then return not self.sortDesc end
-        if a == nil then return self.sortDesc end
-        if b == nil then return not self.sortDesc end
-        local typeA = getValueType(a)
-        local typeB = getValueType(b)
-        if typeA ~= typeB then return typeA < typeB end
-        if typeA == "number" then
-            local numA = tonumber(a) or 0
-            local numB = tonumber(b) or 0
-            return self.sortDesc and (numA < numB) or (numA > numB)
+        -- Convert to strings for comparison
+        local strA = a ~= nil and tostring(a) or ""
+        local strB = b ~= nil and tostring(b) or ""
+
+        -- Try to extract numbers from strings
+        local numA = extractNumber(strA)
+        local numB = extractNumber(strB)
+
+        if numA and numB then
+            -- Both have extractable numbers, sort numerically
+            if self.sortDesc then
+                return numA > numB
+            else
+                return numA < numB
+            end
         else
-            local strA = tostring(a)
-            local strB = tostring(b)
-            return self.sortDesc and (strA > strB) or (strA < strB)
+            -- At least one doesn't have a number, sort as strings
+            if self.sortDesc then
+                return strA > strB
+            else
+                return strA < strB
+            end
         end
     end
 
