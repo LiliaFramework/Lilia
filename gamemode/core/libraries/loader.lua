@@ -29,6 +29,10 @@ local FilesToLoad = {
         realm = "shared"
     },
     {
+        path = "lilia/gamemode/core/libraries/dialog.lua",
+        realm = "shared"
+    },
+    {
         path = "lilia/gamemode/core/libraries/admin.lua",
         realm = "shared"
     },
@@ -90,10 +94,6 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/commands.lua",
-        realm = "shared"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/dialog.lua",
         realm = "shared"
     },
     {
