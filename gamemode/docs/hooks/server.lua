@@ -25458,3 +25458,4975 @@ end
 ]]
 function setData(value, global, ignoreMap)
 end
+
+--[[
+    Purpose:
+        Allows modification of character creation data before the character is created
+
+    When Called:
+        During character creation, after validation but before database insertion
+
+    Parameters:
+        client (Player) - The client creating the character
+        data (table) - The current character data table
+        newData (table) - The new/modified data table
+        originalData (table) - The original unmodified data table
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Add default data
+    hook.Add("AdjustCreationData", "MyAddon", function(client, data, newData, originalData)
+        newData.customField = "defaultValue"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on faction
+    hook.Add("AdjustCreationData", "FactionBasedCreation", function(client, data, newData, originalData)
+        local faction = data.faction
+        if faction == "police" then
+            newData.startingMoney = 5000
+            newData.startingItems = {"police_badge", "police_radio"}
+        elseif faction == "medic" then
+            newData.startingMoney = 3000
+            newData.startingItems = {"medic_kit", "medic_radio"}
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex creation data modification
+    hook.Add("AdjustCreationData", "AdvancedCreation", function(client, data, newData, originalData)
+        local faction = data.faction
+        local factionData = lia.faction.indices[faction]
+
+        -- Apply faction-specific starting values
+        if factionData and factionData.startingData then
+            for key, value in pairs(factionData.startingData) do
+                newData[key] = value
+            end
+        end
+
+        -- Apply VIP bonuses
+        if client:IsVIP() then
+            newData.startingMoney = (newData.startingMoney or 0) + 1000
+            newData.startingItems = newData.startingItems or {}
+            table.insert(newData.startingItems, "vip_badge")
+        end
+
+        -- Apply playtime bonuses
+        local playtime = client:getPlayTime()
+        if playtime > 100 * 3600 then -- 100 hours
+            newData.startingMoney = (newData.startingMoney or 0) + 500
+        end
+
+        -- Validate and sanitize data
+        if newData.name then
+            newData.name = string.Trim(newData.name):sub(1, 70)
+        end
+
+        -- Log creation attempt
+        lia.log.add(client:Name() .. " creating character with faction " .. faction, FLAG_NORMAL)
+    end)
+    ```
+]]
+function AdjustCreationData(client, data, newData, originalData)
+end
+
+--[[
+    Purpose:
+        Called when AdvDupe finishes pasting a duplication
+
+    When Called:
+        After AdvDupe2 has finished pasting all entities from a duplication
+
+    Parameters:
+        tbl (table) - Table containing duplication data, with tbl[1].Player being the player who pasted
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log paste completion
+    hook.Add("AdvDupe_FinishPasting", "MyAddon", function(tbl)
+        local ply = tbl[1].Player
+        if IsValid(ply) then
+            print(ply:Name() .. " finished pasting")
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Restore player state
+    hook.Add("AdvDupe_FinishPasting", "RestoreState", function(tbl)
+        local ply = tbl[1].Player
+        if not IsValid(ply) or not ply.tempBetterDupe then return end
+
+        ply.AdvDupe2 = ply.tempBetterDupeAdvDupe2 or {}
+        ply.AdvDupe2.Pasting = false
+        ply.tempBetterDupeAdvDupe2 = nil
+        ply.tempBetterDupe = nil
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex paste handling with validation
+    hook.Add("AdvDupe_FinishPasting", "AdvancedPaste", function(tbl)
+        local ply = tbl[1].Player
+        if not IsValid(ply) then return end
+
+        -- Restore player state
+        if ply.tempBetterDupe then
+            ply.AdvDupe2 = ply.tempBetterDupeAdvDupe2 or {}
+            ply.AdvDupe2.Pasting = false
+            ply.tempBetterDupeAdvDupe2 = nil
+            ply.tempBetterDupe = nil
+        end
+
+        -- Count pasted entities
+        local entityCount = 0
+        for _, data in ipairs(tbl) do
+            if IsValid(data.Entity) then
+                entityCount = entityCount + 1
+            end
+        end
+
+        -- Log paste
+        lia.log.add(ply:Name() .. " pasted " .. entityCount .. " entities", FLAG_NORMAL)
+
+        -- Check for prop limits
+        local maxProps = lia.config.get("MaxPropsPerPlayer", 100)
+        if entityCount > maxProps then
+            ply:notify("Warning: You pasted " .. entityCount .. " props, limit is " .. maxProps)
+        end
+
+        -- Notify admins of large pastes
+        if entityCount > 50 then
+            for _, admin in player.Iterator() do
+                if admin:IsAdmin() then
+                    admin:notify(ply:Name() .. " pasted " .. entityCount .. " entities")
+                end
+            end
+        end
+    end)
+    ```
+]]
+function AdvDupe_FinishPasting(tbl)
+end
+
+--[[
+    Purpose:
+        Called when a bag inventory is ready and loaded
+
+    When Called:
+        After a bag item's inventory has been created or loaded
+
+    Parameters:
+        self (Item) - The bag item instance
+        inventory (Inventory) - The inventory instance that was created/loaded
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log bag creation
+    hook.Add("BagInventoryReady", "MyAddon", function(self, inventory)
+        print("Bag inventory ready:", inventory:getID())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Set up access rules
+    hook.Add("BagInventoryReady", "BagAccess", function(self, inventory)
+        hook.Run("SetupBagInventoryAccessRules", inventory)
+
+        -- Set custom access
+        inventory:setAccessRule(function(client)
+            local char = client:getChar()
+            if not char then return false end
+            return char:getFaction() == "police"
+        end)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex bag inventory setup
+    hook.Add("BagInventoryReady", "AdvancedBag", function(self, inventory)
+        -- Set up access rules
+        hook.Run("SetupBagInventoryAccessRules", inventory)
+
+        -- Add custom access based on item data
+        local ownerID = self:getData("ownerID")
+        if ownerID then
+            inventory:setAccessRule(function(client)
+                local char = client:getChar()
+                if not char then return false end
+
+                -- Owner can always access
+                if char:getID() == ownerID then
+                    return true
+                end
+
+                -- Check faction access
+                local allowedFactions = self:getData("allowedFactions", {})
+                if table.HasValue(allowedFactions, char:getFaction()) then
+                    return true
+                end
+
+                -- Check permission
+                if client:hasPrivilege("accessAllBags") then
+                    return true
+                end
+
+                return false
+            end)
+        end
+
+        -- Add default items if empty
+        if #inventory:getItems() == 0 then
+            local defaultItems = self:getData("defaultItems", {})
+            for _, itemID in ipairs(defaultItems) do
+                inventory:add(itemID)
+            end
+        end
+
+        -- Sync to owner
+        local owner = self:getPlayer()
+        if IsValid(owner) then
+            inventory:sync(owner)
+        end
+    end)
+    ```
+]]
+function BagInventoryReady(self, inventory)
+end
+
+--[[
+    Purpose:
+        Called when a bag inventory is removed or deleted
+
+    When Called:
+        When a bag item is removed and its inventory is being cleaned up
+
+    Parameters:
+        self (Item) - The bag item instance
+        inv (Inventory) - The inventory instance being removed
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log removal
+    hook.Add("BagInventoryRemoved", "MyAddon", function(self, inv)
+        print("Bag inventory removed:", inv:getID())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Drop items on removal
+    hook.Add("BagInventoryRemoved", "DropItems", function(self, inv)
+        local items = inv:getItems()
+        local pos = self:getPlayer() and self:getPlayer():GetPos() or Vector(0, 0, 0)
+
+        for _, item in pairs(items) do
+            item:spawn(pos)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex removal handling
+    hook.Add("BagInventoryRemoved", "AdvancedRemoval", function(self, inv)
+        local owner = self:getPlayer()
+        local items = inv:getItems()
+
+        -- Log removal
+        lia.log.add("Bag inventory removed: " .. inv:getID(), FLAG_NORMAL)
+
+        -- Handle items based on removal reason
+        local removalReason = self:getData("removalReason", "unknown")
+
+        if removalReason == "dropped" then
+            -- Drop items at owner position
+            local pos = owner and owner:GetPos() or Vector(0, 0, 0)
+            for _, item in pairs(items) do
+                item:spawn(pos)
+            end
+        elseif removalReason == "deleted" then
+            -- Delete items
+            for _, item in pairs(items) do
+                item:remove()
+            end
+        elseif removalReason == "transferred" then
+            -- Transfer to new owner
+            local newOwnerID = self:getData("newOwnerID")
+            if newOwnerID then
+                local newChar = lia.char.loaded[newOwnerID]
+                if newChar then
+                    local newInv = newChar:getInv()
+                    for _, item in pairs(items) do
+                        newInv:add(item:getID())
+                    end
+                end
+            end
+        end
+
+        -- Notify owner
+        if IsValid(owner) then
+            owner:notify("Your bag inventory has been removed")
+        end
+    end)
+    ```
+]]
+function BagInventoryRemoved(self, inv)
+end
+
+--[[
+    Purpose:
+        Calculates the stamina change offset for a player
+
+    When Called:
+        During stamina calculation to determine regeneration or drain rate
+
+    Parameters:
+        client (Player) - The player whose stamina is being calculated
+
+    Returns:
+        number - The stamina change offset (positive for regen, negative for drain)
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed offset
+    hook.Add("CalcStaminaChange", "MyAddon", function(client)
+        return 1 -- Always regenerate 1 point
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on character
+    hook.Add("CalcStaminaChange", "CharBasedStamina", function(client)
+        local char = client:getChar()
+        if not char then return 1 end
+
+        local con = char:getAttrib("con", 0)
+        return 1 + (con * 0.1) -- 0.1 bonus per constitution
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex stamina calculation
+    hook.Add("CalcStaminaChange", "AdvancedStamina", function(client)
+        local char = client:getChar()
+        if not char then return 1 end
+
+        local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
+        local offset
+        local draining = not (client:GetMoveType() == MOVETYPE_NOCLIP) and
+                        client:KeyDown(IN_SPEED) and
+                        (client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed or
+                         client:InVehicle() and not client:OnGround())
+
+        if draining then
+            offset = -lia.config.get("StaminaDrain")
+        else
+            offset = client:Crouching() and
+                    lia.config.get("StaminaCrouchRegeneration") or
+                    lia.config.get("StaminaRegeneration")
+        end
+
+        -- Apply attribute modifiers
+        local con = char:getAttrib("con", 0)
+        if offset > 0 then
+            offset = offset * (1 + con * 0.1) -- Faster regen
+        else
+            offset = offset * (1 - con * 0.05) -- Less drain
+        end
+
+        -- Apply item modifiers
+        local inv = char:getInv()
+        for _, item in pairs(inv:getItems()) do
+            if item:getData("equip", false) and item.staminaMod then
+                offset = offset + item.staminaMod
+            end
+        end
+
+        return offset
+    end)
+    ```
+]]
+function CalcStaminaChange(client)
+end
+
+--[[
+    Purpose:
+        Determines if a player can pick up money
+
+    When Called:
+        When a player attempts to pick up a money entity
+
+    Parameters:
+        activator (Player) - The player attempting to pick up the money
+        self (Entity) - The money entity
+
+    Returns:
+        boolean or nil - Return false to prevent pickup, true or nil to allow
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Always allow
+    hook.Add("CanPickupMoney", "MyAddon", function(activator, self)
+        return true
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Check character
+    hook.Add("CanPickupMoney", "CharCheck", function(activator, self)
+        local char = activator:getChar()
+        if not char then return false end
+
+        -- Check if money belongs to same character
+        if self.charID and char:getID() == self.charID then
+            return false -- Can't pick up own money
+        end
+
+        return true
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex pickup system
+    hook.Add("CanPickupMoney", "AdvancedPickup", function(activator, self)
+        local char = activator:getChar()
+        if not char then return false end
+
+        -- Check distance
+        local distance = activator:GetPos():Distance(self:GetPos())
+        if distance > 100 then
+            return false -- Too far away
+        end
+
+        -- Check if money belongs to same character
+        if self.charID and char:getID() == self.charID then
+            activator:notify("You cannot pick up your own dropped money")
+            return false
+        end
+
+        -- Check faction restrictions
+        local amount = self:getAmount()
+        if amount > 1000 then
+            local faction = char:getFaction()
+            if faction ~= "police" and faction ~= "medic" then
+                activator:notify("Only police and medics can pick up large amounts")
+                return false
+            end
+        end
+
+        -- Check cooldown
+        local lastPickup = activator:GetNWFloat("lastMoneyPickup", 0)
+        if CurTime() - lastPickup < 1 then
+            return false -- Too soon
+        end
+        activator:SetNWFloat("lastMoneyPickup", CurTime())
+
+        return true
+    end)
+    ```
+]]
+function CanPickupMoney(activator, self)
+end
+
+--[[
+    Purpose:
+        Determines if a player can access a vendor
+
+    When Called:
+        When a player attempts to interact with a vendor entity
+
+    Parameters:
+        activator (Player) - The player attempting to access the vendor
+        self (Entity) - The vendor entity
+
+    Returns:
+        boolean or nil - Return false to prevent access, true or nil to allow
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Always allow
+    hook.Add("CanPlayerAccessVendor", "MyAddon", function(activator, self)
+        return true
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Check faction
+    hook.Add("CanPlayerAccessVendor", "FactionCheck", function(activator, self)
+        local char = activator:getChar()
+        if not char then return false end
+
+        local allowedFactions = self:getNetVar("allowedFactions", {})
+        if #allowedFactions > 0 then
+            return table.HasValue(allowedFactions, char:getFaction())
+        end
+
+        return true
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex vendor access system
+    hook.Add("CanPlayerAccessVendor", "AdvancedAccess", function(activator, self)
+        local char = activator:getChar()
+        if not char then return false end
+
+        -- Check distance
+        local distance = activator:GetPos():Distance(self:GetPos())
+        if distance > 192 then
+            return false -- Too far away
+        end
+
+        -- Check faction restrictions
+        local allowedFactions = self:getNetVar("allowedFactions", {})
+        if #allowedFactions > 0 then
+            if not table.HasValue(allowedFactions, char:getFaction()) then
+                activator:notifyErrorLocalized("vendorMessageFormat",
+                    self:getNetVar("name"),
+                    L("vendorNoAccess", activator))
+                return false
+            end
+        end
+
+        -- Check time restrictions
+        local openTime = self:getNetVar("openTime", 0)
+        local closeTime = self:getNetVar("closeTime", 24)
+        local currentHour = tonumber(os.date("%H"))
+        if currentHour < openTime or currentHour >= closeTime then
+            activator:notify("Vendor is closed")
+            return false
+        end
+
+        -- Check permission
+        if self:getNetVar("requiresPermission") then
+            if not activator:hasPrivilege(self:getNetVar("requiredPermission")) then
+                return false
+            end
+        end
+
+        return true
+    end)
+    ```
+]]
+function CanPlayerAccessVendor(activator, self)
+end
+
+--[[
+    Purpose:
+        Allows customization of character list entries in the administration panel
+
+    When Called:
+        When each character entry is being created for the character list
+
+    Parameters:
+        entry (table) - The character entry data table
+        row (table) - The raw character data from the database
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Add a custom field
+    hook.Add("CharListEntry", "MyAddon", function(entry, row)
+        entry.customField = row.customField or "N/A"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Add formatted fields
+    hook.Add("CharListEntry", "FormattedEntry", function(entry, row)
+        entry.formattedMoney = lia.currency.get(row.money or 0)
+        entry.formattedPlaytime = string.NiceTime(row.playtime or 0)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex entry modification with validation
+    hook.Add("CharListEntry", "AdvancedEntry", function(entry, row)
+        -- Add formatted currency
+        entry.formattedMoney = lia.currency.get(row.money or 0)
+
+        -- Add playtime with status
+        local playtime = row.playtime or 0
+        local hours = playtime / 3600
+        entry.playtimeStatus = hours > 100 and "Veteran" or hours > 50 and "Experienced" or "New"
+
+        -- Add warning count if available
+        if row.warningCount then
+            entry.warningStatus = row.warningCount > 5 and "High" or row.warningCount > 2 and "Medium" or "Low"
+        end
+
+        -- Add faction display name
+        local faction = lia.faction.indices[row.faction]
+        entry.factionName = faction and faction.name or row.faction
+
+        -- Add last seen time
+        if row.lastSeen then
+            entry.lastSeenFormatted = os.date("%Y-%m-%d %H:%M", row.lastSeen)
+        end
+    end)
+    ```
+]]
+function CharListEntry(entry, row)
+end
+
+--[[
+    Purpose:
+        Allows adding extra details to character list entries
+
+    When Called:
+        When character list entries are being prepared for display
+
+    Parameters:
+        client (Player) - The admin viewing the character list
+        entry (table) - The character entry data table
+        stored (table) - The stored character data from database
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Add extra detail
+    hook.Add("CharListExtraDetails", "MyAddon", function(client, entry, stored)
+        entry.extraDetails = entry.extraDetails or {}
+        entry.extraDetails[#entry.extraDetails + 1] = "Custom Detail"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Add multiple details
+    hook.Add("CharListExtraDetails", "ExtraDetails", function(client, entry, stored)
+        entry.extraDetails = entry.extraDetails or {}
+
+        if stored.warningCount then
+            entry.extraDetails[#entry.extraDetails + 1] = "Warnings: " .. stored.warningCount
+        end
+
+        if stored.lastSeen then
+            entry.extraDetails[#entry.extraDetails + 1] = "Last Seen: " .. os.date("%Y-%m-%d", stored.lastSeen)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex detail system with permissions
+    hook.Add("CharListExtraDetails", "AdvancedDetails", function(client, entry, stored)
+        entry.extraDetails = entry.extraDetails or {}
+
+        -- Add warning count for admins
+        if client:IsAdmin() and stored.warningCount then
+            local color = stored.warningCount > 5 and "red" or stored.warningCount > 2 and "yellow" or "green"
+            entry.extraDetails[#entry.extraDetails + 1] = {
+                text = "Warnings: " .. stored.warningCount,
+                color = color
+            }
+        end
+
+        -- Add playtime details
+        if stored.playtime then
+            local hours = stored.playtime / 3600
+            entry.extraDetails[#entry.extraDetails + 1] = {
+                text = "Playtime: " .. string.NiceTime(stored.playtime),
+                tooltip = hours .. " hours"
+            }
+        end
+
+        -- Add faction-specific details
+        local faction = lia.faction.indices[stored.faction]
+        if faction and faction.extraDetails then
+            for _, detail in ipairs(faction.extraDetails) do
+                entry.extraDetails[#entry.extraDetails + 1] = detail
+            end
+        end
+
+        -- Add custom module details
+        local module = lia.module.get("myModule")
+        if module and module.getCharDetails then
+            local moduleDetails = module:getCharDetails(stored)
+            if moduleDetails then
+                for _, detail in ipairs(moduleDetails) do
+                    entry.extraDetails[#entry.extraDetails + 1] = detail
+                end
+            end
+        end
+    end)
+    ```
+]]
+function CharListExtraDetails(client, entry, stored)
+end
+
+--[[
+    Purpose:
+        Allows modification of parsed chat before it is sent
+
+    When Called:
+        After chat has been parsed but before it is sent to other players
+
+    Parameters:
+        client (Player) - The player who sent the chat
+        chatType (string) - The type of chat (e.g., "ic", "ooc", "looc")
+        message (string) - The parsed message text
+        anonymous (boolean) - Whether the message should be anonymous
+
+    Returns:
+        string, string, boolean or nil - Return newType, newMsg, newAnon, or nil to use original values
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Modify message
+    hook.Add("ChatParsed", "MyAddon", function(client, chatType, message, anonymous)
+        return chatType, message:upper(), anonymous
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Filter profanity
+    hook.Add("ChatParsed", "ProfanityFilter", function(client, chatType, message, anonymous)
+        local badWords = {"badword1", "badword2"}
+        for _, word in ipairs(badWords) do
+            message = message:gsub(word, "***")
+        end
+        return chatType, message, anonymous
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex chat processing
+    hook.Add("ChatParsed", "AdvancedChat", function(client, chatType, message, anonymous)
+        local char = client:getChar()
+        if not char then return end
+
+        -- Filter profanity
+        local badWords = lia.config.get("BadWords", {})
+        for _, word in ipairs(badWords) do
+            message = message:gsub(word, "***")
+        end
+
+        -- Check for command triggers
+        if message:sub(1, 1) == "!" then
+            local command = message:sub(2):match("^%S+")
+            if command and lia.command.list[command] then
+                return nil -- Don't send as chat
+            end
+        end
+
+        -- Apply faction prefixes
+        if chatType == "ic" then
+            local faction = char:getFaction()
+            local factionData = lia.faction.indices[faction]
+            if factionData and factionData.chatPrefix then
+                message = factionData.chatPrefix .. " " .. message
+            end
+        end
+
+        -- Check for admin chat override
+        if client:IsAdmin() and message:sub(1, 1) == "@" then
+            chatType = "admin"
+            message = message:sub(2)
+            anonymous = true
+        end
+
+        return chatType, message, anonymous
+    end)
+    ```
+]]
+function ChatParsed(client, chatType, message, anonymous)
+end
+
+--[[
+    Purpose:
+        Called when a configuration value is changed by a player
+
+    When Called:
+        When a player modifies a configuration value through the config system
+
+    Parameters:
+        key (string) - The configuration key that was changed
+        value (any) - The new value
+        oldValue (any) - The previous value
+        client (Player) - The player who changed the config
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log config changes
+    hook.Add("ConfigChanged", "MyAddon", function(key, value, oldValue, client)
+        print(client:Name() .. " changed " .. key .. " from " .. tostring(oldValue) .. " to " .. tostring(value))
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Validate and notify
+    hook.Add("ConfigChanged", "ConfigValidation", function(key, value, oldValue, client)
+        -- Validate certain configs
+        if key == "WalkSpeed" and (value < 100 or value > 500) then
+            client:notify("Invalid walk speed, reverting")
+            lia.config.set(key, oldValue)
+            return
+        end
+
+        -- Notify admins of important changes
+        if key == "MaxPlayers" then
+            for _, admin in player.Iterator() do
+                if admin:IsAdmin() then
+                    admin:notify(client:Name() .. " changed max players to " .. value)
+                end
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex config change handling
+    hook.Add("ConfigChanged", "AdvancedConfig", function(key, value, oldValue, client)
+        -- Log change
+        lia.log.add(client:Name() .. " changed config " .. key, FLAG_NORMAL)
+
+        -- Validate based on config type
+        local config = lia.config.stored[key]
+        if config then
+            if config.type == "Number" then
+                if isnumber(value) then
+                    if config.min and value < config.min then
+                        client:notify("Value too low, minimum is " .. config.min)
+                        lia.config.set(key, oldValue)
+                        return
+                    end
+                    if config.max and value > config.max then
+                        client:notify("Value too high, maximum is " .. config.max)
+                        lia.config.set(key, oldValue)
+                        return
+                    end
+                else
+                    client:notify("Invalid value type")
+                    lia.config.set(key, oldValue)
+                    return
+                end
+            end
+        end
+
+        -- Apply immediate effects for certain configs
+        if key == "WalkSpeed" then
+            for _, ply in player.Iterator() do
+                ply:SetWalkSpeed(value)
+            end
+        elseif key == "RunSpeed" then
+            for _, ply in player.Iterator() do
+                ply:SetRunSpeed(value)
+            end
+        end
+
+        -- Notify dependent modules
+        hook.Run("OnConfigUpdated", key, oldValue, value)
+    end)
+    ```
+]]
+function ConfigChanged(key, value, oldValue, client)
+end
+
+--[[
+    Purpose:
+        Gets the maximum value for an attribute
+
+    When Called:
+        When checking attribute limits or maximum values
+
+    Parameters:
+        target (Player) - The player whose attribute is being checked
+        attrKey (string) - The attribute key to check
+
+    Returns:
+        number or nil - Return the maximum value, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed max
+    hook.Add("GetAttributeMax", "MyAddon", function(target, attrKey)
+        if attrKey == "str" then
+            return 200
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on character
+    hook.Add("GetAttributeMax", "CharBasedMax", function(target, attrKey)
+        local char = target:getChar()
+        if not char then return end
+
+        local baseMax = lia.config.get("MaxAttributePoints", 100)
+        local faction = char:getFaction()
+
+        if faction == "athlete" and attrKey == "str" then
+            return baseMax * 1.5
+        end
+
+        return baseMax
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex attribute max system
+    hook.Add("GetAttributeMax", "AdvancedMax", function(target, attrKey)
+        local char = target:getChar()
+        if not char then return end
+
+        local attribTable = lia.attribs.list[attrKey]
+        if not attribTable then return lia.config.get("MaxAttributePoints") end
+
+        -- Get base max from attribute definition
+        local baseMax = attribTable.maxValue or lia.config.get("MaxAttributePoints")
+
+        -- Apply faction modifiers
+        local faction = char:getFaction()
+        local factionData = lia.faction.indices[faction]
+        if factionData and factionData.attributeMods then
+            local mod = factionData.attributeMods[attrKey]
+            if mod then
+                baseMax = baseMax * mod
+            end
+        end
+
+        -- Apply item modifiers
+        local inv = char:getInv()
+        for _, item in pairs(inv:getItems()) do
+            if item:getData("equip", false) and item.attributeMaxMods then
+                local mod = item.attributeMaxMods[attrKey]
+                if mod then
+                    baseMax = baseMax + mod
+                end
+            end
+        end
+
+        -- Apply level bonuses
+        local level = char:getData("level", 1)
+        baseMax = baseMax + (level * 2)
+
+        return math.floor(baseMax)
+    end)
+    ```
+]]
+function GetAttributeMax(target, attrKey)
+end
+
+--[[
+    Purpose:
+        Gets the starting maximum value for an attribute during character creation
+
+    When Called:
+        When validating starting attribute points during character creation
+
+    Parameters:
+        client (Player) - The client creating the character
+        k (string) - The attribute key
+
+    Returns:
+        number or nil - Return the starting maximum value, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed starting max
+    hook.Add("GetAttributeStartingMax", "MyAddon", function(client, k)
+        return 50
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on faction
+    hook.Add("GetAttributeStartingMax", "FactionBased", function(client, k)
+        local context = lia.gui.charCreate and lia.gui.charCreate.context or {}
+        local faction = context.faction
+
+        if faction == "athlete" and k == "str" then
+            return 60
+        end
+
+        return lia.config.get("MaxStartingAttributes", 50)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex starting max system
+    hook.Add("GetAttributeStartingMax", "AdvancedStarting", function(client, k)
+        local attribTable = lia.attribs.list[k]
+        if not attribTable then return lia.config.get("MaxStartingAttributes") end
+
+        local baseMax = attribTable.startingMax or lia.config.get("MaxStartingAttributes")
+
+        -- Apply faction modifiers
+        local context = lia.gui.charCreate and lia.gui.charCreate.context or {}
+        local faction = context.faction
+        if faction then
+            local factionData = lia.faction.indices[faction]
+            if factionData and factionData.startingAttributeMods then
+                local mod = factionData.startingAttributeMods[k]
+                if mod then
+                    baseMax = baseMax * mod
+                end
+            end
+        end
+
+        -- Apply VIP bonuses
+        if client:IsVIP() then
+            baseMax = baseMax + 10
+        end
+
+        return math.floor(baseMax)
+    end)
+    ```
+]]
+function GetAttributeStartingMax(client, k)
+end
+
+--[[
+    Purpose:
+        Gets the maximum stamina value for a character
+
+    When Called:
+        When calculating or displaying character stamina
+
+    Parameters:
+        char (Character) - The character to check
+
+    Returns:
+        number or nil - Return the maximum stamina, or nil to use default
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed max
+    hook.Add("GetCharMaxStamina", "MyAddon", function(char)
+        return 150
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on attributes
+    hook.Add("GetCharMaxStamina", "AttributeBased", function(char)
+        local baseStamina = lia.config.get("DefaultStamina", 100)
+        local con = char:getAttrib("con", 0)
+        return baseStamina + (con * 5)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex stamina max system
+    hook.Add("GetCharMaxStamina", "AdvancedStamina", function(char)
+        local baseStamina = lia.config.get("DefaultStamina", 100)
+
+        -- Apply attribute modifiers
+        local con = char:getAttrib("con", 0)
+        baseStamina = baseStamina + (con * 5)
+
+        -- Apply faction modifiers
+        local faction = char:getFaction()
+        local factionData = lia.faction.indices[faction]
+        if factionData and factionData.staminaMod then
+            baseStamina = baseStamina * factionData.staminaMod
+        end
+
+        -- Apply item modifiers
+        local inv = char:getInv()
+        for _, item in pairs(inv:getItems()) do
+            if item:getData("equip", false) and item.staminaMaxMod then
+                baseStamina = baseStamina + item.staminaMaxMod
+            end
+        end
+
+        -- Apply level bonuses
+        local level = char:getData("level", 1)
+        baseStamina = baseStamina + (level * 2)
+
+        return math.floor(baseStamina)
+    end)
+    ```
+]]
+function GetCharMaxStamina(char)
+end
+
+--[[
+    Purpose:
+        Allows modification of damage scale before damage is applied
+
+    When Called:
+        During damage scaling calculation, after initial scale is determined
+
+    Parameters:
+        hitgroup (number) - The hitgroup that was hit (HITGROUP_HEAD, etc.)
+        dmgInfo (CTakeDamageInfo) - The damage info object
+        damageScale (number) - The current damage scale
+
+    Returns:
+        number or nil - Return modified damage scale, or nil to use original
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Modify headshot damage
+    hook.Add("GetDamageScale", "MyAddon", function(hitgroup, dmgInfo, damageScale)
+        if hitgroup == HITGROUP_HEAD then
+            return damageScale * 2
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on weapon
+    hook.Add("GetDamageScale", "WeaponBased", function(hitgroup, dmgInfo, damageScale)
+        local weapon = dmgInfo:GetInflictor()
+        if IsValid(weapon) and weapon:IsWeapon() then
+            local class = weapon:GetClass()
+            if class == "weapon_pistol" then
+                return damageScale * 1.2
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex damage scaling system
+    hook.Add("GetDamageScale", "AdvancedDamage", function(hitgroup, dmgInfo, damageScale)
+        local attacker = dmgInfo:GetAttacker()
+        local victim = dmgInfo:GetInflictor()
+
+        -- Get base scale from hitgroup
+        if hitgroup == HITGROUP_HEAD then
+            damageScale = lia.config.get("HeadShotDamage", 2.0)
+        elseif table.HasValue({HITGROUP_LEFTARM, HITGROUP_RIGHTARM, HITGROUP_LEFTLEG, HITGROUP_RIGHTLEG}, hitgroup) then
+            damageScale = lia.config.get("LimbDamage", 0.5)
+        end
+
+        -- Apply weapon modifiers
+        if IsValid(attacker) and attacker:IsPlayer() then
+            local weapon = attacker:GetActiveWeapon()
+            if IsValid(weapon) then
+                local weaponData = weapon:GetTable()
+                if weaponData.damageMod then
+                    damageScale = damageScale * weaponData.damageMod
+                end
+            end
+
+            -- Apply character attribute modifiers
+            local char = attacker:getChar()
+            if char then
+                local str = char:getAttrib("str", 0)
+                damageScale = damageScale * (1 + str * 0.01)
+            end
+        end
+
+        -- Apply victim armor
+        if IsValid(victim) and victim:IsPlayer() then
+            local char = victim:getChar()
+            if char then
+                local armor = char:getData("armor", 0)
+                damageScale = damageScale * (1 - armor * 0.01)
+            end
+        end
+
+        return math.max(0.1, damageScale) -- Minimum 10% damage
+    end)
+    ```
+]]
+function GetDamageScale(hitgroup, dmgInfo, damageScale)
+end
+
+--[[
+    Purpose:
+        Gets the default character description for character creation
+
+    When Called:
+        During character creation when determining default description
+
+    Parameters:
+        client (Player) - The client creating the character
+        factionIndex (string) - The faction unique ID
+        context (table) - The character creation context data
+
+    Returns:
+        string, boolean or nil - Return description and override flag, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return default description
+    hook.Add("GetDefaultCharDesc", "MyAddon", function(client, factionIndex, context)
+        return "A new character", true
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on faction
+    hook.Add("GetDefaultCharDesc", "FactionBasedDesc", function(client, factionIndex, context)
+        local faction = lia.faction.indices[factionIndex]
+        if faction and faction.defaultDesc then
+            return faction.defaultDesc, true
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex description generation
+    hook.Add("GetDefaultCharDesc", "AdvancedDesc", function(client, factionIndex, context)
+        local faction = lia.faction.indices[factionIndex]
+        if not faction then return end
+
+        -- Generate description based on faction
+        local descriptions = {
+            police = "A dedicated officer of the law, sworn to protect and serve.",
+            medic = "A medical professional committed to saving lives.",
+            civilian = "An ordinary citizen trying to make their way in the world."
+        }
+
+        local baseDesc = descriptions[factionIndex] or "A new character"
+
+        -- Add playtime-based flavor
+        local playtime = client:getPlayTime()
+        if playtime > 100 * 3600 then
+            baseDesc = baseDesc .. " With years of experience."
+        end
+
+        -- Add VIP flavor
+        if client:IsVIP() then
+            baseDesc = baseDesc .. " A distinguished member of the community."
+        end
+
+        return baseDesc, true
+    end)
+    ```
+]]
+function GetDefaultCharDesc(client, factionIndex, context)
+end
+
+--[[
+    Purpose:
+        Gets the default character name for character creation
+
+    When Called:
+        During character creation when determining default name
+
+    Parameters:
+        client (Player) - The client creating the character
+        factionIndex (string) - The faction unique ID
+        context (table) - The character creation context data
+
+    Returns:
+        string, boolean or nil - Return name and override flag, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return default name
+    hook.Add("GetDefaultCharName", "MyAddon", function(client, factionIndex, context)
+        return "John Doe", true
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on faction
+    hook.Add("GetDefaultCharName", "FactionBasedName", function(client, factionIndex, context)
+        local faction = lia.faction.indices[factionIndex]
+        if faction and faction.defaultName then
+            return faction.defaultName, true
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex name generation
+    hook.Add("GetDefaultCharName", "AdvancedName", function(client, factionIndex, context)
+        local faction = lia.faction.indices[factionIndex]
+        if not faction then return end
+
+        -- Generate name based on faction
+        local names = {
+            police = {"Officer", "Detective", "Sergeant"},
+            medic = {"Doctor", "Nurse", "Paramedic"},
+            civilian = {"Citizen", "Resident", "Person"}
+        }
+
+        local nameList = names[factionIndex] or {"Person"}
+        local firstName = nameList[math.random(#nameList)]
+        local lastName = "Smith" -- Could be randomized
+
+        -- Add playtime-based titles
+        local playtime = client:getPlayTime()
+        if playtime > 200 * 3600 then
+            firstName = "Veteran " .. firstName
+        end
+
+        return firstName .. " " .. lastName, true
+    end)
+    ```
+]]
+function GetDefaultCharName(client, factionIndex, context)
+end
+
+--[[
+    Purpose:
+        Gets the default inventory size for a character
+
+    When Called:
+        When creating a new character's inventory
+
+    Parameters:
+        client (Player) - The client creating the character
+        char (Character) - The character being created (may be nil during creation)
+
+    Returns:
+        number, number or nil - Return width, height, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed size
+    hook.Add("GetDefaultInventorySize", "MyAddon", function(client, char)
+        return 10, 10
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on faction
+    hook.Add("GetDefaultInventorySize", "FactionBasedSize", function(client, char)
+        if char then
+            local faction = char:getFaction()
+            if faction == "police" then
+                return 12, 8
+            elseif faction == "medic" then
+                return 10, 10
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex inventory size system
+    hook.Add("GetDefaultInventorySize", "AdvancedSize", function(client, char)
+        local baseWidth, baseHeight = 10, 10
+
+        if char then
+            -- Apply faction modifiers
+            local faction = char:getFaction()
+            local factionData = lia.faction.indices[faction]
+            if factionData and factionData.inventorySize then
+                baseWidth = factionData.inventorySize[1] or baseWidth
+                baseHeight = factionData.inventorySize[2] or baseHeight
+            end
+
+            -- Apply level bonuses
+            local level = char:getData("level", 1)
+            baseWidth = baseWidth + math.floor(level / 10)
+            baseHeight = baseHeight + math.floor(level / 10)
+
+            -- Apply VIP bonuses
+            if client:IsVIP() then
+                baseWidth = baseWidth + 2
+                baseHeight = baseHeight + 2
+            end
+        end
+
+        return baseWidth, baseHeight
+    end)
+    ```
+]]
+function GetDefaultInventorySize(client, char)
+end
+
+--[[
+    Purpose:
+        Gets the default inventory type for a character
+
+    When Called:
+        When creating a new character's inventory
+
+    Parameters:
+        character (Character) - The character being created (may be nil)
+
+    Returns:
+        string or nil - Return inventory type name, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed type
+    hook.Add("GetDefaultInventoryType", "MyAddon", function(character)
+        return "GridInv"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on faction
+    hook.Add("GetDefaultInventoryType", "FactionBasedType", function(character)
+        if character then
+            local faction = character:getFaction()
+            if faction == "police" then
+                return "PoliceInv"
+            end
+        end
+        return "GridInv"
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex inventory type system
+    hook.Add("GetDefaultInventoryType", "AdvancedType", function(character)
+        local defaultType = "GridInv"
+
+        if character then
+            -- Check faction-specific inventory types
+            local faction = character:getFaction()
+            local factionData = lia.faction.indices[faction]
+            if factionData and factionData.inventoryType then
+                return factionData.inventoryType
+            end
+
+            -- Check for custom inventory type from data
+            local customType = character:getData("inventoryType")
+            if customType and lia.inventory.types[customType] then
+                return customType
+            end
+
+            -- Check VIP status
+            local client = character:getPlayer()
+            if IsValid(client) and client:IsVIP() then
+                return "VIPInv"
+            end
+        end
+
+        return defaultType
+    end)
+    ```
+]]
+function GetDefaultInventoryType(character)
+end
+
+--[[
+    Purpose:
+        Gets the attack speed delay for hands/melee weapons
+
+    When Called:
+        When calculating attack delay for hand-to-hand combat
+
+    Parameters:
+        client (Player) - The player performing the attack
+        defaultDelay (number) - The default attack delay
+
+    Returns:
+        number or nil - Return modified delay, or nil to use default
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed delay
+    hook.Add("GetHandsAttackSpeed", "MyAddon", function(client, defaultDelay)
+        return defaultDelay * 0.5
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on attributes
+    hook.Add("GetHandsAttackSpeed", "AttributeBased", function(client, defaultDelay)
+        local char = client:getChar()
+        if not char then return end
+
+        local str = char:getAttrib("str", 0)
+        return defaultDelay * (1 - str * 0.01)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex attack speed system
+    hook.Add("GetHandsAttackSpeed", "AdvancedSpeed", function(client, defaultDelay)
+        local char = client:getChar()
+        if not char then return end
+
+        local modifiers = {
+            base = defaultDelay
+        }
+
+        -- Apply attribute modifiers
+        local str = char:getAttrib("str", 0)
+        modifiers.attribute = 1.0 - (str * 0.01)
+
+        -- Apply faction modifiers
+        local faction = char:getFaction()
+        local factionData = lia.faction.indices[faction]
+        if factionData and factionData.attackSpeedMod then
+            modifiers.faction = factionData.attackSpeedMod
+        end
+
+        -- Apply item modifiers
+        local inv = char:getInv()
+        for _, item in pairs(inv:getItems()) do
+            if item:getData("equip", false) and item.attackSpeedMod then
+                modifiers.item = (modifiers.item or 1.0) * item.attackSpeedMod
+            end
+        end
+
+        -- Calculate final delay
+        local finalDelay = modifiers.base * modifiers.attribute * (modifiers.faction or 1.0) * (modifiers.item or 1.0)
+        return math.max(0.1, finalDelay) -- Minimum 0.1 second
+    end)
+    ```
+]]
+function GetHandsAttackSpeed(client, defaultDelay)
+end
+
+--[[
+    Purpose:
+        Gets the model to use when an item is dropped
+
+    When Called:
+        When spawning an item entity in the world
+
+    Parameters:
+        itemTable (Item) - The item table/instance
+        self (Entity) - The item entity being spawned
+
+    Returns:
+        string or nil - Return model path, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed model
+    hook.Add("GetItemDropModel", "MyAddon", function(itemTable, self)
+        if itemTable.uniqueID == "my_item" then
+            return "models/props/custom_model.mdl"
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on item data
+    hook.Add("GetItemDropModel", "DataBasedModel", function(itemTable, self)
+        local customModel = itemTable:getData("dropModel")
+        if customModel then
+            return customModel
+        end
+
+        return itemTable:getModel() or itemTable.model
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex model selection system
+    hook.Add("GetItemDropModel", "AdvancedModel", function(itemTable, self)
+        -- Check for custom drop model in data
+        local customModel = itemTable:getData("dropModel")
+        if customModel and file.Exists(customModel, "GAME") then
+            return customModel
+        end
+
+        -- Check item's model property
+        local itemModel = itemTable:getModel() or itemTable.model
+        if itemModel and itemModel ~= "" then
+            return itemModel
+        end
+
+        -- Check category-based defaults
+        local category = itemTable.category
+        local categoryModels = {
+            weapon = "models/weapons/w_pistol.mdl",
+            food = "models/props_junk/popcan01a.mdl",
+            storage = "models/props_c17/suitcase001a.mdl"
+        }
+
+        if categoryModels[category] then
+            return categoryModels[category]
+        end
+
+        -- Fallback to default
+        return "models/props_junk/cardboard_box002b.mdl"
+    end)
+    ```
+]]
+function GetItemDropModel(itemTable, self)
+end
+
+--[[
+    Purpose:
+        Gets the stack key for an item to determine if it can stack with others
+
+    When Called:
+        When checking if items can be stacked together in an inventory
+
+    Parameters:
+        item (Item) - The item instance to get the stack key for
+
+    Returns:
+        string or nil - Return stack key, or nil to use default
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return unique ID as key
+    hook.Add("GetItemStackKey", "MyAddon", function(item)
+        return item.uniqueID
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Include data in key
+    hook.Add("GetItemStackKey", "DataBasedKey", function(item)
+        local elements = {}
+        for key, value in SortedPairs(item.data) do
+            elements[#elements + 1] = key
+            elements[#elements + 1] = value
+        end
+        return item.uniqueID .. pon.encode(elements)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex stacking system
+    hook.Add("GetItemStackKey", "AdvancedStacking", function(item)
+        -- Base key from unique ID
+        local key = item.uniqueID
+
+        -- Add data that affects stacking
+        local stackableData = {}
+        for k, v in pairs(item.data) do
+            -- Only include data that affects stacking
+            if item.stackableFields and table.HasValue(item.stackableFields, k) then
+                stackableData[k] = v
+            end
+        end
+
+        -- Encode stackable data
+        if next(stackableData) then
+            local elements = {}
+            for k, v in SortedPairs(stackableData) do
+                elements[#elements + 1] = k
+                elements[#elements + 1] = v
+            end
+            key = key .. pon.encode(elements)
+        end
+
+        -- Add quality/condition if applicable
+        if item:getData("quality") then
+            key = key .. "_q" .. item:getData("quality")
+        end
+
+        return key
+    end)
+    ```
+]]
+function GetItemStackKey(item)
+end
+
+--[[
+    Purpose:
+        Gets all item stacks from an inventory
+
+    When Called:
+        When organizing or displaying items in stacks
+
+    Parameters:
+        inventory (Inventory) - The inventory to get stacks from
+
+    Returns:
+        table or nil - Return table of stacks, or nil to use default
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return empty stacks
+    hook.Add("GetItemStacks", "MyAddon", function(inventory)
+        return {}
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Group items by stack key
+    hook.Add("GetItemStacks", "BasicStacking", function(inventory)
+        local stacks = {}
+        for _, item in pairs(inventory:getItems()) do
+            local key = hook.Run("GetItemStackKey", item) or item.uniqueID
+            stacks[key] = stacks[key] or {}
+            table.insert(stacks[key], item)
+        end
+        return stacks
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex stacking system
+    hook.Add("GetItemStacks", "AdvancedStacking", function(inventory)
+        local stacks = {}
+        local stack, key
+
+        for _, item in SortedPairs(inventory:getItems()) do
+            key = hook.Run("GetItemStackKey", item) or item.uniqueID
+            stack = stacks[key] or {}
+            stack[#stack + 1] = item
+            stacks[key] = stack
+        end
+
+        -- Sort stacks by item name
+        local sortedStacks = {}
+        for key, stack in pairs(stacks) do
+            table.insert(sortedStacks, {
+                key = key,
+                items = stack,
+                count = #stack,
+                name = stack[1]:getName()
+            })
+        end
+
+        table.sort(sortedStacks, function(a, b)
+            return a.name < b.name
+        end)
+
+        return sortedStacks
+    end)
+    ```
+]]
+function GetItemStacks(inventory)
+end
+
+--[[
+    Purpose:
+        Gets the maximum starting attribute points for character creation
+
+    When Called:
+        When validating total attribute points during character creation
+
+    Parameters:
+        client (Player) - The client creating the character
+        count (number) - The current total of attribute points being assigned
+
+    Returns:
+        number or nil - Return maximum points, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed max
+    hook.Add("GetMaxStartingAttributePoints", "MyAddon", function(client, count)
+        return 50
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on playtime
+    hook.Add("GetMaxStartingAttributePoints", "PlaytimeBased", function(client, count)
+        local playtime = client:getPlayTime()
+        local basePoints = lia.config.get("StartingAttributePoints", 30)
+
+        if playtime > 100 * 3600 then
+            return basePoints + 10
+        end
+
+        return basePoints
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex point system
+    hook.Add("GetMaxStartingAttributePoints", "AdvancedPoints", function(client, count)
+        local basePoints = lia.config.get("StartingAttributePoints", 30)
+
+        -- Apply playtime bonuses
+        local playtime = client:getPlayTime()
+        local playtimeBonus = math.floor(playtime / (50 * 3600)) * 2 -- 2 points per 50 hours
+        basePoints = basePoints + playtimeBonus
+
+        -- Apply VIP bonuses
+        if client:IsVIP() then
+            basePoints = basePoints + 10
+        end
+
+        -- Apply faction bonuses
+        local context = lia.gui.charCreate and lia.gui.charCreate.context or {}
+        local faction = context.faction
+        if faction then
+            local factionData = lia.faction.indices[faction]
+            if factionData and factionData.startingPoints then
+                basePoints = basePoints + factionData.startingPoints
+            end
+        end
+
+        -- Cap maximum
+        return math.min(basePoints, 100)
+    end)
+    ```
+]]
+function GetMaxStartingAttributePoints(client, count)
+end
+
+--[[
+    Purpose:
+        Gets the model to use for a money entity
+
+    When Called:
+        When spawning a money entity in the world
+
+    Parameters:
+        amount (number) - The amount of money
+
+    Returns:
+        string or nil - Return model path, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed model
+    hook.Add("GetMoneyModel", "MyAddon", function(amount)
+        return "models/props/cash_stack.mdl"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on amount
+    hook.Add("GetMoneyModel", "AmountBased", function(amount)
+        if amount > 1000 then
+            return "models/props/cash_large.mdl"
+        elseif amount > 100 then
+            return "models/props/cash_medium.mdl"
+        else
+            return "models/props/cash_small.mdl"
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex model selection
+    hook.Add("GetMoneyModel", "AdvancedMoney", function(amount)
+        local models = {
+            [1] = "models/props/cash_single.mdl",
+            [2] = "models/props/cash_small.mdl",
+            [3] = "models/props/cash_medium.mdl",
+            [4] = "models/props/cash_large.mdl",
+            [5] = "models/props/cash_stack.mdl"
+        }
+
+        local tier = 1
+        if amount >= 10000 then
+            tier = 5
+        elseif amount >= 1000 then
+            tier = 4
+        elseif amount >= 100 then
+            tier = 3
+        elseif amount >= 10 then
+            tier = 2
+        end
+
+        local model = models[tier]
+        if model and file.Exists(model, "GAME") then
+            return model
+        end
+
+        return lia.config.get("MoneyModel", "models/props/cash_small.mdl")
+    end)
+    ```
+]]
+function GetMoneyModel(amount)
+end
+
+--[[
+    Purpose:
+        Gets the OOC (Out of Character) delay for a speaker
+
+    When Called:
+        When calculating cooldown for OOC chat messages
+
+    Parameters:
+        speaker (Player) - The player sending the OOC message
+
+    Returns:
+        number or nil - Return delay in seconds, or nil to use default
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed delay
+    hook.Add("GetOOCDelay", "MyAddon", function(speaker)
+        return 5
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on admin status
+    hook.Add("GetOOCDelay", "AdminBased", function(speaker)
+        if speaker:IsAdmin() then
+            return 0 -- No delay for admins
+        end
+        return 3 -- 3 seconds for regular players
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex delay system
+    hook.Add("GetOOCDelay", "AdvancedDelay", function(speaker)
+        local baseDelay = lia.config.get("OOCDelay", 3)
+
+        -- Admins have no delay
+        if speaker:IsAdmin() then
+            return 0
+        end
+
+        -- VIPs have reduced delay
+        if speaker:IsVIP() then
+            baseDelay = baseDelay * 0.5
+        end
+
+        -- Check for recent spam
+        local lastOOC = speaker:GetNWFloat("lastOOC", 0)
+        local timeSince = CurTime() - lastOOC
+        if timeSince < 1 then
+            baseDelay = baseDelay * 2 -- Double delay for spam
+        end
+
+        -- Apply character-based modifiers
+        local char = speaker:getChar()
+        if char then
+            local faction = char:getFaction()
+            if faction == "staff" then
+                baseDelay = 0
+            end
+        end
+
+        return math.max(0, baseDelay)
+    end)
+    ```
+]]
+function GetOOCDelay(speaker)
+end
+
+--[[
+    Purpose:
+        Gets the death sound to play when a player dies
+
+    When Called:
+        When a player dies and a death sound needs to be played
+
+    Parameters:
+        client (Player) - The player who died
+        isFemale (boolean) - Whether the player is female
+
+    Returns:
+        string or nil - Return sound path, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed sound
+    hook.Add("GetPlayerDeathSound", "MyAddon", function(client, isFemale)
+        return "vo/npc/male01/pain07.wav"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Gender-based sounds
+    hook.Add("GetPlayerDeathSound", "GenderBased", function(client, isFemale)
+        if isFemale then
+            return "vo/npc/female01/pain07.wav"
+        else
+            return "vo/npc/male01/pain07.wav"
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex sound selection
+    hook.Add("GetPlayerDeathSound", "AdvancedDeath", function(client, isFemale)
+        local sounds = {
+            male = {
+                "vo/npc/male01/pain07.wav",
+                "vo/npc/male01/pain08.wav",
+                "vo/npc/male01/pain09.wav"
+            },
+            female = {
+                "vo/npc/female01/pain07.wav",
+                "vo/npc/female01/pain08.wav",
+                "vo/npc/female01/pain09.wav"
+            }
+        }
+
+        local gender = isFemale and "female" or "male"
+        local soundList = sounds[gender]
+        if soundList then
+            return soundList[math.random(#soundList)]
+        end
+    end)
+    ```
+]]
+function GetPlayerDeathSound(client, isFemale)
+end
+
+--[[
+    Purpose:
+        Gets the pain sound to play when a player takes damage
+
+    When Called:
+        When a player takes damage and a pain sound needs to be played
+
+    Parameters:
+        client (Player) - The player taking damage
+        paintype (string) - The type of pain ("hurt", "drown", etc.)
+        isFemale (boolean) - Whether the player is female
+
+    Returns:
+        string or nil - Return sound path, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed sound
+    hook.Add("GetPlayerPainSound", "MyAddon", function(client, paintype, isFemale)
+        return "vo/npc/male01/pain01.wav"
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Type and gender-based sounds
+    hook.Add("GetPlayerPainSound", "TypeBased", function(client, paintype, isFemale)
+        local sounds = {
+            hurt = {
+                male = "vo/npc/male01/pain01.wav",
+                female = "vo/npc/female01/pain01.wav"
+            },
+            drown = {
+                male = "player/pl_drown1.wav",
+                female = "player/pl_drown2.wav"
+            }
+        }
+
+        local gender = isFemale and "female" or "male"
+        return sounds[paintype] and sounds[paintype][gender]
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex pain sound system
+    hook.Add("GetPlayerPainSound", "AdvancedPain", function(client, paintype, isFemale)
+        local soundTables = {
+            hurt = {
+                male = {
+                    "vo/npc/male01/pain01.wav",
+                    "vo/npc/male01/pain02.wav",
+                    "vo/npc/male01/pain03.wav"
+                },
+                female = {
+                    "vo/npc/female01/pain01.wav",
+                    "vo/npc/female01/pain02.wav",
+                    "vo/npc/female01/pain03.wav"
+                }
+            },
+            drown = {
+                male = {"player/pl_drown1.wav"},
+                female = {"player/pl_drown2.wav"}
+            }
+        }
+
+        local gender = isFemale and "female" or "male"
+        local soundList = soundTables[paintype] and soundTables[paintype][gender]
+        if soundList then
+            return soundList[math.random(#soundList)]
+        end
+    end)
+    ```
+]]
+function GetPlayerPainSound(client, paintype, isFemale)
+end
+
+--[[
+    Purpose:
+        Gets or modifies the punch damage for a player
+
+    When Called:
+        When a player performs a punch attack
+
+    Parameters:
+        client (Player) - The player performing the punch
+        damage (number) - The base damage amount
+        context (table) - Additional context about the punch
+
+    Returns:
+        number or nil - Return modified damage, or nil to use original
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed damage
+    hook.Add("GetPlayerPunchDamage", "MyAddon", function(client, damage, context)
+        return 20
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on attributes
+    hook.Add("GetPlayerPunchDamage", "AttributeBased", function(client, damage, context)
+        local char = client:getChar()
+        if not char then return end
+
+        local str = char:getAttrib("str", 0)
+        return damage * (1 + str * 0.1)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex damage system
+    hook.Add("GetPlayerPunchDamage", "AdvancedPunch", function(client, damage, context)
+        local char = client:getChar()
+        if not char then return end
+
+        local modifiers = {
+            base = damage
+        }
+
+        -- Apply attribute modifiers
+        local str = char:getAttrib("str", 0)
+        modifiers.attribute = 1.0 + (str * 0.1)
+
+        -- Apply faction modifiers
+        local faction = char:getFaction()
+        local factionData = lia.faction.indices[faction]
+        if factionData and factionData.punchDamageMod then
+            modifiers.faction = factionData.punchDamageMod
+        end
+
+        -- Apply item modifiers
+        local inv = char:getInv()
+        for _, item in pairs(inv:getItems()) do
+            if item:getData("equip", false) and item.punchDamageMod then
+                modifiers.item = (modifiers.item or 1.0) + item.punchDamageMod
+            end
+        end
+
+        -- Calculate final damage
+        local finalDamage = modifiers.base * modifiers.attribute * (modifiers.faction or 1.0) * (modifiers.item or 1.0)
+        return math.max(1, finalDamage) -- Minimum 1 damage
+    end)
+    ```
+]]
+function GetPlayerPunchDamage(client, damage, context)
+end
+
+--[[
+    Purpose:
+        Gets the ragdoll time for a player when punched
+
+    When Called:
+        When a player is knocked down by a punch
+
+    Parameters:
+        client (Player) - The player performing the punch
+        target (Player) - The target being punched
+
+    Returns:
+        number or nil - Return ragdoll time in seconds, or nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed time
+    hook.Add("GetPlayerPunchRagdollTime", "MyAddon", function(client, target)
+        return 30
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on target attributes
+    hook.Add("GetPlayerPunchRagdollTime", "AttributeBased", function(client, target)
+        local char = target:getChar()
+        if not char then return end
+
+        local con = char:getAttrib("con", 0)
+        return 25 - (con * 0.5) -- Less time with more constitution
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex ragdoll time system
+    hook.Add("GetPlayerPunchRagdollTime", "AdvancedRagdoll", function(client, target)
+        local baseTime = lia.config.get("PunchRagdollTime", 25)
+
+        -- Apply target constitution
+        local targetChar = target:getChar()
+        if targetChar then
+            local con = targetChar:getAttrib("con", 0)
+            baseTime = baseTime - (con * 0.5)
+        end
+
+        -- Apply attacker strength
+        local attackerChar = client:getChar()
+        if attackerChar then
+            local str = attackerChar:getAttrib("str", 0)
+            baseTime = baseTime + (str * 0.3)
+        end
+
+        -- Apply faction modifiers
+        if targetChar then
+            local faction = targetChar:getFaction()
+            if faction == "athlete" then
+                baseTime = baseTime * 0.7
+            end
+        end
+
+        return math.max(5, math.min(60, baseTime)) -- Clamp between 5 and 60 seconds
+    end)
+    ```
+]]
+function GetPlayerPunchRagdollTime(client, target)
+end
+
+--[[
+    Purpose:
+        Gets the ragdoll time for a player
+
+    When Called:
+        When setting a player's ragdoll state
+
+    Parameters:
+        self (Player) - The player being ragdolled
+        time (number) - The base ragdoll time
+
+    Returns:
+        number or nil - Return modified time, or nil to use base time
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed time
+    hook.Add("GetRagdollTime", "MyAddon", function(self, time)
+        return 15
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on character
+    hook.Add("GetRagdollTime", "CharBased", function(self, time)
+        local char = self:getChar()
+        if not char then return end
+
+        local con = char:getAttrib("con", 0)
+        return (time or 10) - (con * 0.2)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex ragdoll time system
+    hook.Add("GetRagdollTime", "AdvancedRagdoll", function(self, time)
+        local baseTime = time or 10
+        local char = self:getChar()
+        if not char then return baseTime end
+
+        -- Apply constitution modifier
+        local con = char:getAttrib("con", 0)
+        baseTime = baseTime - (con * 0.2)
+
+        -- Apply faction modifiers
+        local faction = char:getFaction()
+        local factionData = lia.faction.indices[faction]
+        if factionData and factionData.ragdollTimeMod then
+            baseTime = baseTime * factionData.ragdollTimeMod
+        end
+
+        -- Apply item modifiers
+        local inv = char:getInv()
+        for _, item in pairs(inv:getItems()) do
+            if item:getData("equip", false) and item.ragdollTimeMod then
+                baseTime = baseTime * item.ragdollTimeMod
+            end
+        end
+
+        return math.max(1, baseTime) -- Minimum 1 second
+    end)
+    ```
+]]
+function GetRagdollTime(self, time)
+end
+
+--[[
+    Purpose:
+        Gets the display name for a weapon
+
+    When Called:
+        When displaying weapon names in UI or item registration
+
+    Parameters:
+        weapon (Weapon) - The weapon entity or class
+
+    Returns:
+        string or nil - Return display name, or nil to use default
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Return fixed name
+    hook.Add("GetWeaponName", "MyAddon", function(weapon)
+        if IsValid(weapon) and weapon:GetClass() == "weapon_pistol" then
+            return "Custom Pistol"
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on weapon class
+    hook.Add("GetWeaponName", "ClassBased", function(weapon)
+        local class = isstring(weapon) and weapon or (IsValid(weapon) and weapon:GetClass())
+        if not class then return end
+
+        local names = {
+            weapon_pistol = "Pistol",
+            weapon_smg1 = "SMG",
+            weapon_ar2 = "Rifle"
+        }
+
+        return names[class] or language.GetPhrase(weapon:GetPrintName())
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex name system
+    hook.Add("GetWeaponName", "AdvancedName", function(weapon)
+        local class = isstring(weapon) and weapon or (IsValid(weapon) and weapon:GetClass())
+        if not class then return end
+
+        -- Check for custom name in item data
+        local item = lia.item.list[class]
+        if item and item.customName then
+            return item.customName
+        end
+
+        -- Check for localized name
+        local localized = L("weapon_" .. class)
+        if localized and localized ~= "weapon_" .. class then
+            return localized
+        end
+
+        -- Use weapon's print name
+        if IsValid(weapon) then
+            return language.GetPhrase(weapon:GetPrintName())
+        end
+
+        -- Fallback to class name
+        return class
+    end)
+    ```
+]]
+function GetWeaponName(weapon)
+end
+
+--[[
+    Purpose:
+        Called when an inventory is deleted
+
+    When Called:
+        After an inventory instance has been removed from memory
+
+    Parameters:
+        instance (Inventory) - The inventory instance that was deleted
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log deletion
+    hook.Add("InventoryDeleted", "MyAddon", function(instance)
+        print("Inventory deleted:", instance:getID())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Clean up related data
+    hook.Add("InventoryDeleted", "Cleanup", function(instance)
+        local invID = instance:getID()
+
+        -- Remove from cache
+        if myInventoryCache[invID] then
+            myInventoryCache[invID] = nil
+        end
+
+        -- Notify related systems
+        hook.Run("OnInventoryCleanup", invID)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex cleanup system
+    hook.Add("InventoryDeleted", "AdvancedCleanup", function(instance)
+        local invID = instance:getID()
+
+        -- Log deletion
+        lia.log.add("Inventory deleted: " .. invID, FLAG_NORMAL)
+
+        -- Clean up caches
+        if myInventoryCache[invID] then
+            myInventoryCache[invID] = nil
+        end
+
+        -- Clean up UI panels
+        if IsValid(myInventoryPanels[invID]) then
+            myInventoryPanels[invID]:Remove()
+            myInventoryPanels[invID] = nil
+        end
+
+        -- Notify dependent systems
+        hook.Run("OnInventoryCleanup", invID)
+
+        -- Save deletion to database if needed
+        if SERVER then
+            lia.db.query("DELETE FROM inventory_cache WHERE invID = ?", {invID})
+        end
+    end)
+    ```
+]]
+function InventoryDeleted(instance)
+end
+
+--[[
+    Purpose:
+        Called when an item is added to an inventory
+
+    When Called:
+        After an item has been successfully added to an inventory
+
+    Parameters:
+        inventory (Inventory) - The inventory the item was added to
+        item (Item) - The item instance that was added
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log addition
+    hook.Add("InventoryItemAdded", "MyAddon", function(inventory, item)
+        print("Item added:", item:getName())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update cache
+    hook.Add("InventoryItemAdded", "CacheUpdate", function(inventory, item)
+        local invID = inventory:getID()
+        myItemCache[invID] = myItemCache[invID] or {}
+        myItemCache[invID][item:getID()] = item
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex item tracking
+    hook.Add("InventoryItemAdded", "AdvancedTracking", function(inventory, item)
+        local invID = inventory:getID()
+        local itemID = item:getID()
+
+        -- Update cache
+        myItemCache[invID] = myItemCache[invID] or {}
+        myItemCache[invID][itemID] = item
+
+        -- Check for special items
+        if item.uniqueID == "special_item" then
+            hook.Run("OnSpecialItemAdded", inventory, item)
+        end
+
+        -- Update statistics
+        local char = inventory:getOwner()
+        if char then
+            local stats = char:getData("itemStats", {})
+            stats.totalItems = (stats.totalItems or 0) + 1
+            char:setData("itemStats", stats)
+        end
+
+        -- Notify UI
+        if CLIENT and IsValid(myInventoryPanels[invID]) then
+            myInventoryPanels[invID]:Refresh()
+        end
+    end)
+    ```
+]]
+function InventoryItemAdded(inventory, item)
+end
+
+--[[
+    Purpose:
+        Called when an item is removed from an inventory
+
+    When Called:
+        After an item has been removed from an inventory
+
+    Parameters:
+        self (Inventory) - The inventory the item was removed from
+        instance (Item) - The item instance that was removed
+        preserveItem (boolean) - Whether the item should be preserved (not deleted)
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log removal
+    hook.Add("InventoryItemRemoved", "MyAddon", function(self, instance, preserveItem)
+        print("Item removed:", instance:getName())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update cache
+    hook.Add("InventoryItemRemoved", "CacheUpdate", function(self, instance, preserveItem)
+        local invID = self:getID()
+        if myItemCache[invID] then
+            myItemCache[invID][instance:getID()] = nil
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex removal handling
+    hook.Add("InventoryItemRemoved", "AdvancedRemoval", function(self, instance, preserveItem)
+        local invID = self:getID()
+        local itemID = instance:getID()
+
+        -- Update cache
+        if myItemCache[invID] then
+            myItemCache[invID][itemID] = nil
+        end
+
+        -- Handle special items
+        if instance.uniqueID == "special_item" then
+            hook.Run("OnSpecialItemRemoved", self, instance)
+        end
+
+        -- Update statistics
+        local char = self:getOwner()
+        if char then
+            local stats = char:getData("itemStats", {})
+            stats.totalItems = math.max(0, (stats.totalItems or 0) - 1)
+            char:setData("itemStats", stats)
+        end
+
+        -- Handle item preservation
+        if not preserveItem and SERVER then
+            -- Item will be deleted, do cleanup
+            hook.Run("OnItemBeingDeleted", instance)
+        end
+
+        -- Notify UI
+        if CLIENT and IsValid(myInventoryPanels[invID]) then
+            myInventoryPanels[invID]:Refresh()
+        end
+    end)
+    ```
+]]
+function InventoryItemRemoved(self, instance, preserveItem)
+end
+
+--[[
+    Purpose:
+        Determines if an entity is suitable for use as a vehicle trunk
+
+    When Called:
+        When checking if an entity can be used for trunk storage
+
+    Parameters:
+        entity (Entity) - The entity to check
+
+    Returns:
+        boolean or nil - Return true if suitable, false if not, nil to use default
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Check for simfphys cars
+    hook.Add("IsSuitableForTrunk", "MyAddon", function(entity)
+        if IsValid(entity) and entity:isSimfphysCar() then
+            return true
+        end
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Check multiple vehicle types
+    hook.Add("IsSuitableForTrunk", "VehicleCheck", function(entity)
+        if not IsValid(entity) then return false end
+
+        -- Check for simfphys
+        if entity:isSimfphysCar() then
+            return true
+        end
+
+        -- Check for custom vehicle class
+        if entity:GetClass() == "prop_vehicle_jeep" then
+            return true
+        end
+
+        return false
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex vehicle validation
+    hook.Add("IsSuitableForTrunk", "AdvancedTrunk", function(entity)
+        if not IsValid(entity) then return false end
+
+        -- Check for simfphys
+        if entity:isSimfphysCar() then
+            return true
+        end
+
+        -- Check for custom vehicle classes
+        local validClasses = {
+            "prop_vehicle_jeep",
+            "prop_vehicle_airboat",
+            "gmod_sent_vehicle_fphysics_base"
+        }
+
+        if table.HasValue(validClasses, entity:GetClass()) then
+            return true
+        end
+
+        -- Check for vehicle flag
+        if entity:GetNWBool("isVehicle", false) then
+            return true
+        end
+
+        -- Check for custom vehicle data
+        if entity:getData("isVehicle", false) then
+            return true
+        end
+
+        return false
+    end)
+    ```
+]]
+function IsSuitableForTrunk(entity)
+end
+
+--[[
+    Purpose:
+        Called when an item instance is deleted
+
+    When Called:
+        After an item instance has been removed from memory
+
+    Parameters:
+        instance (Item) - The item instance that was deleted
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log deletion
+    hook.Add("ItemDeleted", "MyAddon", function(instance)
+        print("Item deleted:", instance:getName())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Clean up related data
+    hook.Add("ItemDeleted", "Cleanup", function(instance)
+        local itemID = instance:getID()
+
+        -- Remove from cache
+        if myItemCache[itemID] then
+            myItemCache[itemID] = nil
+        end
+
+        -- Clean up UI
+        if IsValid(myItemPanels[itemID]) then
+            myItemPanels[itemID]:Remove()
+            myItemPanels[itemID] = nil
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex cleanup system
+    hook.Add("ItemDeleted", "AdvancedCleanup", function(instance)
+        local itemID = instance:getID()
+
+        -- Log deletion
+        lia.log.add("Item deleted: " .. itemID, FLAG_NORMAL)
+
+        -- Clean up caches
+        if myItemCache[itemID] then
+            myItemCache[itemID] = nil
+        end
+
+        -- Clean up UI panels
+        if IsValid(myItemPanels[itemID]) then
+            myItemPanels[itemID]:Remove()
+            myItemPanels[itemID] = nil
+        end
+
+        -- Handle special items
+        if instance.uniqueID == "special_item" then
+            hook.Run("OnSpecialItemDeleted", instance)
+        end
+
+        -- Update statistics
+        local char = instance:getOwner()
+        if char then
+            local stats = char:getData("itemStats", {})
+            stats.deletedItems = (stats.deletedItems or 0) + 1
+            char:setData("itemStats", stats)
+        end
+    end)
+    ```
+]]
+function ItemDeleted(instance)
+end
+
+--[[
+    Purpose:
+        Called when an item function is called
+
+    When Called:
+        After an item method has been executed
+
+    Parameters:
+        self (Item) - The item instance
+        method (string) - The method name that was called
+        client (Player) - The client who triggered the call
+        entity (Entity) - The entity associated with the call
+        results (table) - The return values from the method
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log function calls
+    hook.Add("ItemFunctionCalled", "MyAddon", function(self, method, client, entity, results)
+        print("Item function called:", method)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track usage
+    hook.Add("ItemFunctionCalled", "UsageTracking", function(self, method, client, entity, results)
+        local itemID = self:getID()
+        local usage = self:getData("usageCount", {})
+        usage[method] = (usage[method] or 0) + 1
+        self:setData("usageCount", usage)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex function tracking
+    hook.Add("ItemFunctionCalled", "AdvancedTracking", function(self, method, client, entity, results)
+        local itemID = self:getID()
+        local char = client:getChar()
+
+        -- Log function call
+        lia.log.add(client:Name() .. " called " .. method .. " on " .. self:getName(), FLAG_NORMAL)
+
+        -- Track usage statistics
+        local usage = self:getData("usageCount", {})
+        usage[method] = (usage[method] or 0) + 1
+        usage.lastUsed = os.time()
+        self:setData("usageCount", usage)
+
+        -- Check for special methods
+        if method == "onUse" then
+            hook.Run("OnItemUsed", self, client, entity)
+        elseif method == "onEquip" then
+            hook.Run("OnItemEquipped", self, client)
+        elseif method == "onUnequip" then
+            hook.Run("OnItemUnequipped", self, client)
+        end
+
+        -- Update character statistics
+        if char then
+            local stats = char:getData("itemFunctionStats", {})
+            stats.totalCalls = (stats.totalCalls or 0) + 1
+            stats.methods = stats.methods or {}
+            stats.methods[method] = (stats.methods[method] or 0) + 1
+            char:setData("itemFunctionStats", stats)
+        end
+
+        -- Validate results
+        if results and #results > 0 then
+            hook.Run("OnItemFunctionResults", self, method, results)
+        end
+    end)
+    ```
+]]
+function ItemFunctionCalled(self, method, client, entity, results)
+end
+
+--[[
+    Purpose:
+        Called when an item is transferred between inventories
+
+    When Called:
+        After an item has been successfully transferred
+
+    Parameters:
+        context (table) - The transfer context containing fromInv, toInv, item, etc.
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log transfer
+    hook.Add("ItemTransfered", "MyAddon", function(context)
+        print("Item transferred:", context.item:getName())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track transfers
+    hook.Add("ItemTransfered", "TransferTracking", function(context)
+        local item = context.item
+        local transfers = item:getData("transferCount", 0)
+        item:setData("transferCount", transfers + 1)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex transfer system
+    hook.Add("ItemTransfered", "AdvancedTransfer", function(context)
+        local item = context.item
+        local fromInv = context.fromInv
+        local toInv = context.toInv
+        local client = context.client
+
+        -- Log transfer
+        lia.log.add("Item transferred: " .. item:getName(), FLAG_NORMAL)
+
+        -- Track transfer statistics
+        local transfers = item:getData("transferHistory", {})
+        table.insert(transfers, {
+            from = fromInv and fromInv:getID() or nil,
+            to = toInv and toInv:getID() or nil,
+            time = os.time(),
+            client = client and client:SteamID() or nil
+        })
+        item:setData("transferHistory", transfers)
+
+        -- Check for special transfers
+        if fromInv and toInv then
+            local fromChar = fromInv:getOwner()
+            local toChar = toInv:getOwner()
+
+            if fromChar and toChar and fromChar ~= toChar then
+                hook.Run("OnItemTraded", item, fromChar, toChar, client)
+            end
+        end
+
+        -- Update character statistics
+        if client then
+            local char = client:getChar()
+            if char then
+                local stats = char:getData("transferStats", {})
+                stats.totalTransfers = (stats.totalTransfers or 0) + 1
+                char:setData("transferStats", stats)
+            end
+        end
+
+        -- Notify both inventories
+        if fromInv then hook.Run("OnInventoryItemTransferred", fromInv, item, "out") end
+        if toInv then hook.Run("OnInventoryItemTransferred", toInv, item, "in") end
+    end)
+    ```
+]]
+function ItemTransfered(context)
+end
+
+--[[
+    Purpose:
+        Called when a player is kicked from a character
+
+    When Called:
+        When a character is forcibly unloaded from a player
+
+    Parameters:
+        id (number) - The character ID that was kicked
+        isCurrentChar (boolean) - Whether this was the player's current character
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log kick
+    hook.Add("KickedFromChar", "MyAddon", function(id, isCurrentChar)
+        print("Kicked from character:", id)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Handle UI cleanup
+    hook.Add("KickedFromChar", "UICleanup", function(id, isCurrentChar)
+        if isCurrentChar then
+            -- Close character-related panels
+            if IsValid(lia.gui.char) then
+                lia.gui.char:Remove()
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex kick handling
+    hook.Add("KickedFromChar", "AdvancedKick", function(id, isCurrentChar)
+        -- Log kick
+        lia.log.add("Kicked from character: " .. id, FLAG_NORMAL)
+
+        -- Clean up UI
+        if isCurrentChar then
+            -- Close all character panels
+            if IsValid(lia.gui.char) then
+                lia.gui.char:Remove()
+            end
+            if IsValid(lia.gui.inventory) then
+                lia.gui.inventory:Remove()
+            end
+
+            -- Reset character data
+            LocalPlayer().liaChar = nil
+        end
+
+        -- Clean up character cache
+        if lia.char.loaded[id] then
+            lia.char.loaded[id] = nil
+        end
+
+        -- Notify other systems
+        hook.Run("OnCharacterUnloaded", id)
+
+        -- Show notification
+        if CLIENT then
+            LocalPlayer():notify("You have been kicked from this character")
+        end
+    end)
+    ```
+]]
+function KickedFromChar(id, isCurrentChar)
+end
+
+--[[
+    Purpose:
+        Called when a character attribute is boosted
+
+    When Called:
+        After an attribute boost has been applied to a character
+
+    Parameters:
+        client (Player) - The player whose character was boosted
+        character (Character) - The character that received the boost
+        attribID (string) - The attribute key that was boosted
+        boostID (string) - The unique ID of the boost
+        boostAmount (number/boolean) - The boost amount or true if boost was removed
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log boost
+    hook.Add("OnCharAttribBoosted", "MyAddon", function(client, character, attribID, boostID, boostAmount)
+        print("Attribute boosted:", attribID, boostAmount)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track boosts
+    hook.Add("OnCharAttribBoosted", "BoostTracking", function(client, character, attribID, boostID, boostAmount)
+        local boosts = character:getData("boostHistory", {})
+        table.insert(boosts, {
+            attrib = attribID,
+            boost = boostID,
+            amount = boostAmount,
+            time = os.time()
+        })
+        character:setData("boostHistory", boosts)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex boost system
+    hook.Add("OnCharAttribBoosted", "AdvancedBoost", function(client, character, attribID, boostID, boostAmount)
+        -- Log boost
+        lia.log.add("Attribute boost applied: " .. attribID .. " (" .. boostID .. ")", FLAG_NORMAL)
+
+        -- Track boost history
+        local boosts = character:getData("boostHistory", {})
+        table.insert(boosts, {
+            attrib = attribID,
+            boost = boostID,
+            amount = boostAmount,
+            time = os.time(),
+            client = client:SteamID()
+        })
+        character:setData("boostHistory", boosts)
+
+        -- Check for boost limits
+        local currentBoosts = character:getVar("boosts", {})
+        local attribBoosts = currentBoosts[attribID] or {}
+        local boostCount = table.Count(attribBoosts)
+
+        if boostCount > 5 then
+            client:notify("Warning: You have " .. boostCount .. " boosts on " .. attribID)
+        end
+
+        -- Apply boost effects
+        if boostAmount and boostAmount ~= true then
+            hook.Run("OnBoostEffectApplied", character, attribID, boostAmount)
+        end
+
+        -- Notify client
+        if IsValid(client) then
+            client:notify("Attribute " .. attribID .. " boosted by " .. tostring(boostAmount))
+        end
+    end)
+    ```
+]]
+function OnCharAttribBoosted(client, character, attribID, boostID, boostAmount)
+end
+
+--[[
+    Purpose:
+        Called when a character attribute is updated
+
+    When Called:
+        After an attribute value has been changed
+
+    Parameters:
+        client (Player) - The player whose character attribute was updated
+        character (Character) - The character whose attribute was updated
+        key (string) - The attribute key that was updated
+        value (number) - The new attribute value
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log update
+    hook.Add("OnCharAttribUpdated", "MyAddon", function(client, character, key, value)
+        print("Attribute updated:", key, value)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track changes
+    hook.Add("OnCharAttribUpdated", "ChangeTracking", function(client, character, key, value)
+        local changes = character:getData("attribChanges", {})
+        changes[key] = changes[key] or {}
+        table.insert(changes[key], {
+            value = value,
+            time = os.time()
+        })
+        character:setData("attribChanges", changes)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex attribute system
+    hook.Add("OnCharAttribUpdated", "AdvancedAttribute", function(client, character, key, value)
+        -- Log update
+        lia.log.add("Attribute updated: " .. key .. " = " .. value, FLAG_NORMAL)
+
+        -- Track change history
+        local changes = character:getData("attribHistory", {})
+        changes[key] = changes[key] or {}
+        table.insert(changes[key], {
+            value = value,
+            time = os.time(),
+            client = client:SteamID()
+        })
+        character:setData("attribHistory", changes)
+
+        -- Check for attribute milestones
+        local attrib = lia.attribs.list[key]
+        if attrib then
+            if value >= attrib.maxValue * 0.9 then
+                client:notify("Your " .. attrib.name .. " is nearly maxed out!")
+            end
+        end
+
+        -- Apply attribute-based effects
+        if key == "str" and value >= 20 then
+            hook.Run("OnStrengthMilestone", character, value)
+        elseif key == "con" and value >= 20 then
+            hook.Run("OnConstitutionMilestone", character, value)
+        end
+
+        -- Update character statistics
+        local stats = character:getData("attribStats", {})
+        stats.totalPoints = (stats.totalPoints or 0) + 1
+        character:setData("attribStats", stats)
+
+        -- Sync to client
+        if IsValid(client) then
+            net.Start("liaAttributeUpdated")
+            net.WriteString(key)
+            net.WriteUInt(value, 32)
+            net.Send(client)
+        end
+    end)
+    ```
+]]
+function OnCharAttribUpdated(client, character, key, value)
+end
+
+--[[
+    Purpose:
+        Called when a character network variable changes
+
+    When Called:
+        After a character's network variable has been updated on the client
+
+    Parameters:
+        character (Character) - The character whose variable changed
+        key (string) - The variable key that changed
+        oldVar (any) - The previous value
+        value (any) - The new value
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log change
+    hook.Add("OnCharNetVarChanged", "MyAddon", function(character, key, oldVar, value)
+        print("NetVar changed:", key, oldVar, "->", value)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update UI
+    hook.Add("OnCharNetVarChanged", "UIUpdate", function(character, key, oldVar, value)
+        if key == "money" then
+            -- Update money display
+            if IsValid(lia.gui.money) then
+                lia.gui.money:SetText(lia.currency.get(value))
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex variable handling
+    hook.Add("OnCharNetVarChanged", "AdvancedNetVar", function(character, key, oldVar, value)
+        -- Log important changes
+        if key == "money" or key == "level" then
+            lia.log.add("Character " .. key .. " changed: " .. tostring(oldVar) .. " -> " .. tostring(value), FLAG_NORMAL)
+        end
+
+        -- Update UI elements
+        if key == "money" then
+            if IsValid(lia.gui.money) then
+                lia.gui.money:SetText(lia.currency.get(value))
+            end
+            -- Animate money change
+            hook.Run("OnMoneyChanged", oldVar, value)
+        elseif key == "level" then
+            if IsValid(lia.gui.level) then
+                lia.gui.level:SetText("Level " .. value)
+            end
+            -- Show level up effect
+            if value > (oldVar or 0) then
+                hook.Run("OnLevelUp", character, value)
+            end
+        end
+
+        -- Update character cache
+        character:getVar()[key] = value
+
+        -- Notify other systems
+        hook.Run("OnCharacterDataChanged", character, key, oldVar, value)
+    end)
+    ```
+]]
+function OnCharNetVarChanged(character, key, oldVar, value)
+end
+
+--[[
+    Purpose:
+        Called when a character is recognized by another player
+
+    When Called:
+        After a character recognition check succeeds
+
+    Parameters:
+        client (Player) - The player who recognized the character
+        charID (number) - The character ID that was recognized (optional, may be nil)
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log recognition
+    hook.Add("OnCharRecognized", "MyAddon", function(client, charID)
+        print("Character recognized:", charID)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track recognition
+    hook.Add("OnCharRecognized", "RecognitionTracking", function(client, charID)
+        local char = client:getChar()
+        if not char then return end
+
+        local recognized = char:getData("recognizedBy", {})
+        if not table.HasValue(recognized, client:SteamID()) then
+            table.insert(recognized, client:SteamID())
+            char:setData("recognizedBy", recognized)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex recognition system
+    hook.Add("OnCharRecognized", "AdvancedRecognition", function(client, charID)
+        local char = client:getChar()
+        if not char then return end
+
+        local targetChar = charID and lia.char.loaded[charID]
+        if not targetChar then return end
+
+        -- Log recognition
+        lia.log.add(client:Name() .. " recognized " .. targetChar:getName(), FLAG_NORMAL)
+
+        -- Track recognition history
+        local recognized = char:getData("recognitionHistory", {})
+        table.insert(recognized, {
+            target = charID,
+            time = os.time(),
+            client = client:SteamID()
+        })
+        char:setData("recognitionHistory", recognized)
+
+        -- Update recognition list
+        local recognizedBy = targetChar:getData("recognizedBy", {})
+        if not table.HasValue(recognizedBy, client:SteamID()) then
+            table.insert(recognizedBy, client:SteamID())
+            targetChar:setData("recognizedBy", recognizedBy)
+        end
+
+        -- Apply recognition effects
+        hook.Run("OnRecognitionEffect", client, targetChar)
+
+        -- Notify both players
+        client:notify("You recognized " .. targetChar:getName())
+        local targetClient = targetChar:getPlayer()
+        if IsValid(targetClient) then
+            targetClient:notify(client:Name() .. " recognized you")
+        end
+    end)
+    ```
+]]
+function OnCharRecognized(client, charID)
+end
+
+--[[
+    Purpose:
+        Called when a character variable changes
+
+    When Called:
+        After a character variable has been modified
+
+    Parameters:
+        character (Character) - The character whose variable changed
+        varName (string) - The variable name that changed
+        oldVar (any) - The previous value
+        newVar (any) - The new value
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log change
+    hook.Add("OnCharVarChanged", "MyAddon", function(character, varName, oldVar, newVar)
+        print("Variable changed:", varName, oldVar, "->", newVar)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track changes
+    hook.Add("OnCharVarChanged", "ChangeTracking", function(character, varName, oldVar, newVar)
+        local changes = character:getData("varChanges", {})
+        changes[varName] = changes[varName] or {}
+        table.insert(changes[varName], {
+            old = oldVar,
+            new = newVar,
+            time = os.time()
+        })
+        character:setData("varChanges", changes)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex variable system
+    hook.Add("OnCharVarChanged", "AdvancedVariable", function(character, varName, oldVar, newVar)
+        -- Log important changes
+        if varName == "model" or varName == "faction" then
+            lia.log.add("Character " .. varName .. " changed", FLAG_NORMAL)
+        end
+
+        -- Track change history
+        local history = character:getData("varHistory", {})
+        history[varName] = history[varName] or {}
+        table.insert(history[varName], {
+            old = oldVar,
+            new = newVar,
+            time = os.time()
+        })
+        character:setData("varHistory", history)
+
+        -- Handle specific variable changes
+        if varName == "model" then
+            local client = character:getPlayer()
+            if IsValid(client) then
+                client:SetModel(newVar)
+                hook.Run("OnModelChanged", character, oldVar, newVar)
+            end
+        elseif varName == "faction" then
+            hook.Run("OnFactionChanged", character, oldVar, newVar)
+        elseif varName == "flags" then
+            hook.Run("OnFlagsChanged", character, oldVar, newVar)
+        end
+
+        -- Validate variable
+        local varDef = lia.char.vars[varName]
+        if varDef and varDef.onChanged then
+            varDef.onChanged(character, oldVar, newVar)
+        end
+
+        -- Sync to client
+        local client = character:getPlayer()
+        if IsValid(client) then
+            net.Start("liaCharVar")
+            net.WriteString(varName)
+            net.WriteType(newVar)
+            net.WriteType(character:getID())
+            net.Send(client)
+        end
+    end)
+    ```
+]]
+function OnCharVarChanged(character, varName, oldVar, newVar)
+end
+
+--[[
+    Purpose:
+        Called when a configuration value is updated
+
+    When Called:
+        After a configuration value has been changed
+
+    Parameters:
+        key (string) - The configuration key that was updated
+        oldValue (any) - The previous value
+        value (any) - The new value
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log update
+    hook.Add("OnConfigUpdated", "MyAddon", function(key, oldValue, value)
+        print("Config updated:", key, oldValue, "->", value)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Apply changes
+    hook.Add("OnConfigUpdated", "ApplyChanges", function(key, oldValue, value)
+        if key == "WalkSpeed" then
+            for _, ply in player.Iterator() do
+                ply:SetWalkSpeed(value)
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex config system
+    hook.Add("OnConfigUpdated", "AdvancedConfig", function(key, oldValue, value)
+        -- Log update
+        lia.log.add("Config updated: " .. key, FLAG_NORMAL)
+
+        -- Track config history
+        local history = lia.data.get("configHistory", {})
+        history[key] = history[key] or {}
+        table.insert(history[key], {
+            old = oldValue,
+            new = value,
+            time = os.time()
+        })
+        lia.data.set("configHistory", history)
+
+        -- Apply immediate effects
+        if key == "WalkSpeed" then
+            for _, ply in player.Iterator() do
+                ply:SetWalkSpeed(value)
+            end
+        elseif key == "RunSpeed" then
+            for _, ply in player.Iterator() do
+                ply:SetRunSpeed(value)
+            end
+        elseif key == "JumpPower" then
+            for _, ply in player.Iterator() do
+                ply:SetJumpPower(value)
+            end
+        end
+
+        -- Notify all players
+        for _, ply in player.Iterator() do
+            ply:notify("Configuration " .. key .. " has been updated")
+        end
+
+        -- Save to database
+        if SERVER then
+            lia.config.save()
+        end
+    end)
+    ```
+]]
+function OnConfigUpdated(key, oldValue, value)
+end
+
+--[[
+    Purpose:
+        Called when data is set in the data system
+
+    When Called:
+        After data has been saved to the database
+
+    Parameters:
+        key (string) - The data key that was set
+        value (any) - The value that was set
+        gamemode (string) - The gamemode scope (may be nil)
+        map (string) - The map scope (may be nil)
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log data set
+    hook.Add("OnDataSet", "MyAddon", function(key, value, gamemode, map)
+        print("Data set:", key, value)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track data changes
+    hook.Add("OnDataSet", "DataTracking", function(key, value, gamemode, map)
+        local changes = lia.data.get("dataChanges", {})
+        changes[key] = {
+            value = value,
+            gamemode = gamemode,
+            map = map,
+            time = os.time()
+        }
+        lia.data.set("dataChanges", changes)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex data system
+    hook.Add("OnDataSet", "AdvancedData", function(key, value, gamemode, map)
+        -- Log data set
+        lia.log.add("Data set: " .. key .. " (Gamemode: " .. tostring(gamemode) .. ", Map: " .. tostring(map) .. ")", FLAG_NORMAL)
+
+        -- Track data history
+        local history = lia.data.get("dataHistory", {})
+        history[key] = history[key] or {}
+        table.insert(history[key], {
+            value = value,
+            gamemode = gamemode,
+            map = map,
+            time = os.time()
+        })
+        lia.data.set("dataHistory", history)
+
+        -- Handle specific data keys
+        if key == "serverName" then
+            SetGlobalString("ServerName", value)
+        elseif key == "serverDesc" then
+            SetGlobalString("ServerDesc", value)
+        end
+
+        -- Notify dependent modules
+        hook.Run("OnDataKeyChanged", key, value, gamemode, map)
+
+        -- Sync to clients if needed
+        if key == "serverSettings" then
+            net.Start("liaDataUpdate")
+            net.WriteString(key)
+            net.WriteType(value)
+            net.Broadcast()
+        end
+    end)
+    ```
+]]
+function OnDataSet(key, value, gamemode, map)
+end
+
+--[[
+    Purpose:
+        Called when the database has finished loading
+
+    When Called:
+        After all database tables have been loaded and initialized
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log load
+    hook.Add("OnDatabaseLoaded", "MyAddon", function()
+        print("Database loaded")
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Initialize systems
+    hook.Add("OnDatabaseLoaded", "SystemInit", function()
+        -- Now safe to use database
+        lia.db.query("SELECT * FROM my_table", function(data)
+            print("My table loaded:", #data, "rows")
+        end)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex initialization
+    hook.Add("OnDatabaseLoaded", "AdvancedInit", function()
+        -- Log database load
+        lia.log.add("Database loaded successfully", FLAG_NORMAL)
+
+        -- Initialize custom tables
+        lia.db.query("CREATE TABLE IF NOT EXISTS my_custom_table (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)")
+
+        -- Load custom data
+        lia.db.query("SELECT * FROM my_custom_table", function(data)
+            for _, row in ipairs(data) do
+                -- Process each row
+                hook.Run("OnCustomDataLoaded", row)
+            end
+        end)
+
+        -- Initialize modules that depend on database
+        for _, module in pairs(lia.module.list) do
+            if module.onDatabaseLoaded then
+                module:onDatabaseLoaded()
+            end
+        end
+
+        -- Notify all systems
+        hook.Run("OnDatabaseReady")
+    end)
+    ```
+]]
+function OnDatabaseLoaded()
+end
+
+--[[
+    Purpose:
+        Called when an item is overridden
+
+    When Called:
+        After an item has been overridden with new properties
+
+    Parameters:
+        item (Item) - The item that was overridden
+        overrides (table) - The override data that was applied
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log override
+    hook.Add("OnItemOverridden", "MyAddon", function(item, overrides)
+        print("Item overridden:", item.uniqueID)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Validate overrides
+    hook.Add("OnItemOverridden", "Validation", function(item, overrides)
+        -- Check for invalid overrides
+        if overrides.name and #overrides.name > 100 then
+            lia.error("Item name too long: " .. item.uniqueID)
+        end
+
+        -- Log override
+        lia.log.add("Item overridden: " .. item.uniqueID, FLAG_NORMAL)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex override system
+    hook.Add("OnItemOverridden", "AdvancedOverride", function(item, overrides)
+        -- Log override
+        lia.log.add("Item overridden: " .. item.uniqueID, FLAG_NORMAL)
+
+        -- Track override history
+        local history = item:getData("overrideHistory", {})
+        table.insert(history, {
+            overrides = table.Copy(overrides),
+            time = os.time()
+        })
+        item:setData("overrideHistory", history)
+
+        -- Validate overrides
+        for key, value in pairs(overrides) do
+            if key == "name" and #value > 100 then
+                lia.error("Item name too long: " .. item.uniqueID)
+                overrides.name = string.sub(value, 1, 100)
+            elseif key == "desc" and #value > 500 then
+                lia.error("Item description too long: " .. item.uniqueID)
+                overrides.desc = string.sub(value, 1, 500)
+            end
+        end
+
+        -- Apply override effects
+        if overrides.model then
+            hook.Run("OnItemModelChanged", item, overrides.model)
+        end
+
+        -- Notify dependent systems
+        hook.Run("OnItemPropertiesChanged", item, overrides)
+
+        -- Sync to clients
+        net.Start("liaItemOverride")
+        net.WriteString(item.uniqueID)
+        net.WriteTable(overrides)
+        net.Broadcast()
+    end)
+    ```
+]]
+function OnItemOverridden(item, overrides)
+end
+
+--[[
+    Purpose:
+        Called when database tables are being loaded
+
+    When Called:
+        During the database table creation/loading process
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log table load
+    hook.Add("OnLoadTables", "MyAddon", function()
+        print("Loading tables...")
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Create custom tables
+    hook.Add("OnLoadTables", "CustomTables", function()
+        lia.db.query("CREATE TABLE IF NOT EXISTS my_table (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)")
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex table system
+    hook.Add("OnLoadTables", "AdvancedTables", function()
+        -- Create custom tables
+        local tables = {
+            {
+                name = "my_custom_table",
+                schema = "id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT, timestamp INTEGER"
+            },
+            {
+                name = "my_other_table",
+                schema = "id INTEGER PRIMARY KEY AUTOINCREMENT, value TEXT"
+            }
+        }
+
+        for _, tableData in ipairs(tables) do
+            lia.db.query("CREATE TABLE IF NOT EXISTS " .. tableData.name .. " (" .. tableData.schema .. ")", function()
+                lia.log.add("Created table: " .. tableData.name, FLAG_NORMAL)
+            end)
+        end
+
+        -- Add indexes
+        lia.db.query("CREATE INDEX IF NOT EXISTS idx_timestamp ON my_custom_table(timestamp)")
+
+        -- Migrate data if needed
+        hook.Run("OnTablesMigrated")
+    end)
+    ```
+]]
+function OnLoadTables()
+end
+
+--[[
+    Purpose:
+        Called when a PAC3 part is transferred to a ragdoll
+
+    When Called:
+        When a player's PAC3 parts are transferred to their ragdoll on death
+
+    Parameters:
+        part (Entity) - The PAC3 part entity being transferred
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log transfer
+    hook.Add("OnPAC3PartTransfered", "MyAddon", function(part)
+        print("PAC3 part transferred")
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify part
+    hook.Add("OnPAC3PartTransfered", "PartModify", function(part)
+        if IsValid(part) then
+            -- Adjust part properties for ragdoll
+            part:SetScale(Vector(1, 1, 1))
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex part system
+    hook.Add("OnPAC3PartTransfered", "AdvancedPart", function(part)
+        if not IsValid(part) then return end
+
+        -- Log transfer
+        lia.log.add("PAC3 part transferred to ragdoll", FLAG_NORMAL)
+
+        -- Store original owner
+        local originalOwner = part.last_owner
+        if IsValid(originalOwner) then
+            part:SetData("originalOwner", originalOwner)
+        end
+
+        -- Adjust part for ragdoll
+        part:SetScale(Vector(1, 1, 1))
+        part:SetColor(Color(255, 255, 255, 255))
+
+        -- Track transferred parts
+        local ragdoll = part:GetOwner()
+        if IsValid(ragdoll) then
+            ragdoll.transferredParts = ragdoll.transferredParts or {}
+            table.insert(ragdoll.transferredParts, part)
+        end
+
+        -- Apply ragdoll-specific modifications
+        hook.Run("OnPartRagdollModified", part)
+    end)
+    ```
+]]
+function OnPAC3PartTransfered(part)
+end
+
+--[[
+    Purpose:
+        Allows overriding the spawn time for a player
+
+    When Called:
+        When calculating spawn time for a player
+
+    Parameters:
+        client (Player) - The player spawning
+        baseTime (number) - The base spawn time in seconds
+
+    Returns:
+        number or nil - Return modified spawn time, or nil to use base time
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Increase spawn time
+    hook.Add("OverrideSpawnTime", "MyAddon", function(client, baseTime)
+        return baseTime * 2
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify based on character
+    hook.Add("OverrideSpawnTime", "CharBasedSpawn", function(client, baseTime)
+        local char = client:getChar()
+        if not char then return end
+
+        local faction = char:getFaction()
+        if faction == "medic" then
+            return baseTime * 0.5 -- Medics spawn faster
+        end
+
+        return baseTime
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex spawn time system
+    hook.Add("OverrideSpawnTime", "AdvancedSpawn", function(client, baseTime)
+        local char = client:getChar()
+        if not char then return end
+
+        local modifiers = {
+            base = baseTime
+        }
+
+        -- Faction modifiers
+        local faction = char:getFaction()
+        local factionMods = {
+            medic = 0.5,
+            police = 0.75,
+            civilian = 1.0
+        }
+        modifiers.faction = factionMods[faction] or 1.0
+
+        -- Attribute modifiers
+        local con = char:getAttrib("con", 0)
+        modifiers.attribute = 1.0 - (con * 0.01) -- 1% faster per constitution
+
+        -- Death count modifiers
+        local deathCount = char:getData("deathCount", 0)
+        if deathCount > 5 then
+            modifiers.death = 1.5 -- Longer spawn after multiple deaths
+        end
+
+        -- Calculate final time
+        local finalTime = modifiers.base * modifiers.faction * modifiers.attribute * (modifiers.death or 1.0)
+        return math.max(1, finalTime) -- Minimum 1 second
+    end)
+    ```
+]]
+function OverrideSpawnTime(client, baseTime)
+end
+
+--[[
+    Purpose:
+        Called when a player's Lilia data has been loaded
+
+    When Called:
+        After a player's persistent data has been loaded from the database
+
+    Parameters:
+        client (Player) - The player whose data was loaded
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log load
+    hook.Add("PlayerLiliaDataLoaded", "MyAddon", function(client)
+        print("Player data loaded:", client:Name())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Initialize player systems
+    hook.Add("PlayerLiliaDataLoaded", "SystemInit", function(client)
+        -- Now safe to access player data
+        local playtime = client:getPlayTime()
+        if playtime > 100 * 3600 then
+            client:notify("Welcome back, veteran player!")
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex initialization
+    hook.Add("PlayerLiliaDataLoaded", "AdvancedInit", function(client)
+        -- Log data load
+        lia.log.add("Player data loaded: " .. client:Name(), FLAG_NORMAL)
+
+        -- Initialize custom player data
+        local customData = client:getData("customData", {})
+        if not customData.initialized then
+            customData.initialized = true
+            customData.firstJoin = os.time()
+            client:setData("customData", customData)
+        end
+
+        -- Apply playtime bonuses
+        local playtime = client:getPlayTime()
+        if playtime > 200 * 3600 then
+            client:setData("veteranStatus", true)
+        end
+
+        -- Sync custom data to client
+        net.Start("liaPlayerDataLoaded")
+        net.WriteTable(customData)
+        net.Send(client)
+
+        -- Initialize modules
+        for _, module in pairs(lia.module.list) do
+            if module.onPlayerDataLoaded then
+                module:onPlayerDataLoaded(client)
+            end
+        end
+
+        -- Notify other systems
+        hook.Run("OnPlayerReady", client)
+    end)
+    ```
+]]
+function PlayerLiliaDataLoaded(client)
+end
+
+--[[
+    Purpose:
+        Called when a player loads a character
+
+    When Called:
+        After a character has been fully loaded and set up for a player
+
+    Parameters:
+        client (Player) - The player who loaded the character
+        character (Character) - The character that was loaded
+        currentChar (Character) - The previously loaded character (may be nil)
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log load
+    hook.Add("PlayerLoadedChar", "MyAddon", function(client, character, currentChar)
+        print("Character loaded:", character:getName())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Initialize character systems
+    hook.Add("PlayerLoadedChar", "SystemInit", function(client, character, currentChar)
+        -- Give starting items
+        if not currentChar then
+            local inv = character:getInv()
+            inv:add("starting_item")
+        end
+
+        -- Set spawn position
+        local spawn = lia.spawn.getRandom()
+        if spawn then
+            client:SetPos(spawn:GetPos())
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex character loading
+    hook.Add("PlayerLoadedChar", "AdvancedLoad", function(client, character, currentChar)
+        -- Log character load
+        lia.log.add(client:Name() .. " loaded character: " .. character:getName(), FLAG_NORMAL)
+
+        -- Save previous character if exists
+        if currentChar then
+            currentChar:save()
+        end
+
+        -- Initialize character systems
+        character:setup()
+
+        -- Give starting items for new characters
+        if not currentChar then
+            local inv = character:getInv()
+            local faction = character:getFaction()
+            local factionData = lia.faction.indices[faction]
+
+            if factionData and factionData.startingItems then
+                for _, itemID in ipairs(factionData.startingItems) do
+                    inv:add(itemID)
+                end
+            end
+        end
+
+        -- Set spawn position
+        local spawn = lia.spawn.getRandom(character:getFaction())
+        if spawn then
+            client:SetPos(spawn:GetPos())
+            client:SetAngles(spawn:GetAngles())
+        end
+
+        -- Apply character-specific settings
+        client:SetModel(character:getModel())
+        client:SetSkin(character:getData("skin", 0))
+
+        -- Initialize modules
+        for _, module in pairs(lia.module.list) do
+            if module.onPlayerLoadedChar then
+                module:onPlayerLoadedChar(client, character, currentChar)
+            end
+        end
+
+        -- Notify client
+        client:notify("Character loaded: " .. character:getName())
+    end)
+    ```
+]]
+function PlayerLoadedChar(client, character, currentChar)
+end
+
+--[[
+    Purpose:
+        Called after damage has been scaled
+
+    When Called:
+        After damage scaling has been applied to a damage info object
+
+    Parameters:
+        hitgroup (number) - The hitgroup that was hit
+        dmgInfo (CTakeDamageInfo) - The damage info object
+        damageScale (number) - The damage scale that was applied
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log damage
+    hook.Add("PostScaleDamage", "MyAddon", function(hitgroup, dmgInfo, damageScale)
+        print("Damage scaled:", damageScale)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track damage
+    hook.Add("PostScaleDamage", "DamageTracking", function(hitgroup, dmgInfo, damageScale)
+        local attacker = dmgInfo:GetAttacker()
+        local victim = dmgInfo:GetInflictor()
+
+        if IsValid(attacker) and attacker:IsPlayer() then
+            local damage = dmgInfo:GetDamage()
+            local stats = attacker:getData("damageStats", {})
+            stats.totalDamage = (stats.totalDamage or 0) + damage
+            attacker:setData("damageStats", stats)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex damage system
+    hook.Add("PostScaleDamage", "AdvancedDamage", function(hitgroup, dmgInfo, damageScale)
+        local attacker = dmgInfo:GetAttacker()
+        local victim = dmgInfo:GetInflictor()
+        local damage = dmgInfo:GetDamage()
+
+        -- Log damage
+        if IsValid(attacker) and attacker:IsPlayer() and IsValid(victim) and victim:IsPlayer() then
+            lia.log.add(attacker:Name() .. " dealt " .. damage .. " damage to " .. victim:Name(), FLAG_NORMAL)
+        end
+
+        -- Track damage statistics
+        if IsValid(attacker) and attacker:IsPlayer() then
+            local char = attacker:getChar()
+            if char then
+                local stats = char:getData("damageStats", {})
+                stats.totalDamage = (stats.totalDamage or 0) + damage
+                stats.hits = (stats.hits or 0) + 1
+                if hitgroup == HITGROUP_HEAD then
+                    stats.headshots = (stats.headshots or 0) + 1
+                end
+                char:setData("damageStats", stats)
+            end
+        end
+
+        -- Apply damage effects
+        if IsValid(victim) and victim:IsPlayer() then
+            local char = victim:getChar()
+            if char and damage > 50 then
+                hook.Run("OnHighDamage", victim, damage, hitgroup)
+            end
+        end
+
+        -- Check for kill
+        if IsValid(victim) and victim:IsPlayer() then
+            local health = victim:Health()
+            if health - damage <= 0 then
+                hook.Run("OnPlayerKilled", attacker, victim, dmgInfo)
+            end
+        end
+    end)
+    ```
+]]
+function PostScaleDamage(hitgroup, dmgInfo, damageScale)
+end
+
+--[[
+    Purpose:
+        Called before damage is scaled
+
+    When Called:
+        Before damage scaling is applied to a damage info object
+
+    Parameters:
+        hitgroup (number) - The hitgroup that was hit
+        dmgInfo (CTakeDamageInfo) - The damage info object
+        damageScale (number) - The current damage scale
+
+    Returns:
+        None
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log pre-scale
+    hook.Add("PreScaleDamage", "MyAddon", function(hitgroup, dmgInfo, damageScale)
+        print("Pre-scale damage:", damageScale)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Modify scale
+    hook.Add("PreScaleDamage", "ScaleModify", function(hitgroup, dmgInfo, damageScale)
+        local attacker = dmgInfo:GetAttacker()
+        if IsValid(attacker) and attacker:IsPlayer() then
+            local char = attacker:getChar()
+            if char and char:getFaction() == "police" then
+                -- Police deal less damage
+                dmgInfo:ScaleDamage(damageScale * 0.8)
+            end
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex pre-scale system
+    hook.Add("PreScaleDamage", "AdvancedPreScale", function(hitgroup, dmgInfo, damageScale)
+        local attacker = dmgInfo:GetAttacker()
+        local victim = dmgInfo:GetInflictor()
+        local damage = dmgInfo:GetDamage()
+
+        -- Log pre-scale
+        if IsValid(attacker) and attacker:IsPlayer() then
+            lia.log.add("Pre-scale damage: " .. damage .. " (scale: " .. damageScale .. ")", FLAG_NORMAL)
+        end
+
+        -- Apply attacker modifiers
+        if IsValid(attacker) and attacker:IsPlayer() then
+            local char = attacker:getChar()
+            if char then
+                -- Faction modifiers
+                local faction = char:getFaction()
+                if faction == "police" then
+                    damageScale = damageScale * 0.9 -- Police deal less damage
+                elseif faction == "medic" then
+                    damageScale = damageScale * 0.5 -- Medics deal very little damage
+                end
+
+                -- Attribute modifiers
+                local str = char:getAttrib("str", 0)
+                damageScale = damageScale * (1 + str * 0.01)
+            end
+        end
+
+        -- Apply victim modifiers
+        if IsValid(victim) and victim:IsPlayer() then
+            local char = victim:getChar()
+            if char then
+                -- Armor protection
+                local armor = char:getData("armor", 0)
+                damageScale = damageScale * (1 - armor * 0.01)
+
+                -- Constitution protection
+                local con = char:getAttrib("con", 0)
+                damageScale = damageScale * (1 - con * 0.005)
+            end
+        end
+
+        -- Apply modified scale
+        dmgInfo:ScaleDamage(damageScale)
+    end)
+    ```
+]]
+function PreScaleDamage(hitgroup, dmgInfo, damageScale)
+end
+
+--[[
+    Purpose:
+        Determines if data should be saved during shutdown
+
+    When Called:
+        When the server is shutting down and checking if data should be saved
+
+    Parameters:
+        None
+
+    Returns:
+        boolean or nil - Return false to prevent saving, true or nil to allow
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Always allow saving
+    hook.Add("ShouldDataBeSaved", "MyAddon", function()
+        return true
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Check conditions
+    hook.Add("ShouldDataBeSaved", "ConditionalSave", function()
+        -- Don't save if in development mode
+        if lia.config.get("DevMode", false) then
+            return false
+        end
+
+        return true
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex save system
+    hook.Add("ShouldDataBeSaved", "AdvancedSave", function()
+        -- Check if save is disabled
+        if lia.config.get("DisableAutoSave", false) then
+            return false
+        end
+
+        -- Check if database is available
+        if not lia.db.tablesLoaded then
+            lia.log.add("Cannot save: Database not loaded", FLAG_ERROR)
+            return false
+        end
+
+        -- Check if there are unsaved changes
+        if lia.data.hasUnsavedChanges() then
+            return true
+        end
+
+        -- Check if save is forced
+        if lia.shuttingDown and lia.config.get("ForceSaveOnShutdown", true) then
+            return true
+        end
+
+        -- Default: allow saving
+        return true
+    end)
+    ```
+]]
+function ShouldDataBeSaved()
+end
+
+--[[
+    Purpose:
+        Called when a web image has been downloaded
+
+    When Called:
+        After a web image has been successfully downloaded and cached
+
+    Parameters:
+        name (string) - The name/URL of the image
+        path (string) - The local file path where the image was saved
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log download
+    hook.Add("WebImageDownloaded", "MyAddon", function(name, path)
+        print("Image downloaded:", name, path)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update cache
+    hook.Add("WebImageDownloaded", "CacheUpdate", function(name, path)
+        myImageCache[name] = path
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex image system
+    hook.Add("WebImageDownloaded", "AdvancedImage", function(name, path)
+        -- Log download
+        lia.log.add("Web image downloaded: " .. name, FLAG_NORMAL)
+
+        -- Update cache
+        myImageCache[name] = {
+            path = path,
+            time = os.time(),
+            size = file.Size(path, "DATA")
+        }
+
+        -- Validate image
+        local valid = hook.Run("ValidateWebImage", name, path)
+        if not valid then
+            file.Delete(path)
+            return
+        end
+
+        -- Notify UI
+        if IsValid(lia.gui.imageViewer) then
+            lia.gui.imageViewer:RefreshImage(name, path)
+        end
+
+        -- Update statistics
+        local stats = lia.data.get("imageStats", {})
+        stats.downloaded = (stats.downloaded or 0) + 1
+        stats.totalSize = (stats.totalSize or 0) + file.Size(path, "DATA")
+        lia.data.set("imageStats", stats)
+    end)
+    ```
+]]
+function WebImageDownloaded(name, path)
+end
+
+--[[
+    Purpose:
+        Called when a web sound has been downloaded
+
+    When Called:
+        After a web sound has been successfully downloaded and cached
+
+    Parameters:
+        name (string) - The name/URL of the sound
+        path (string) - The local file path where the sound was saved
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log download
+    hook.Add("WebSoundDownloaded", "MyAddon", function(name, path)
+        print("Sound downloaded:", name, path)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update cache
+    hook.Add("WebSoundDownloaded", "CacheUpdate", function(name, path)
+        mySoundCache[name] = path
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex sound system
+    hook.Add("WebSoundDownloaded", "AdvancedSound", function(name, path)
+        -- Log download
+        lia.log.add("Web sound downloaded: " .. name, FLAG_NORMAL)
+
+        -- Update cache
+        mySoundCache[name] = {
+            path = path,
+            time = os.time(),
+            size = file.Size(path, "DATA")
+        }
+
+        -- Validate sound
+        local valid = hook.Run("ValidateWebSound", name, path)
+        if not valid then
+            file.Delete(path)
+            return
+        end
+
+        -- Preload sound
+        sound.PlayFile(path, "noplay", function(station, errorID, errorName)
+            if IsValid(station) then
+                station:Stop()
+            end
+        end)
+
+        -- Update statistics
+        local stats = lia.data.get("soundStats", {})
+        stats.downloaded = (stats.downloaded or 0) + 1
+        stats.totalSize = (stats.totalSize or 0) + file.Size(path, "DATA")
+        lia.data.set("soundStats", stats)
+    end)
+    ```
+]]
+function WebSoundDownloaded(name, path)
+end

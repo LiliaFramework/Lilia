@@ -3159,6 +3159,82 @@ end
         return true
     end)
     ```
-]]]
+]]
 function ShouldShowCharVarInCreation(varName)
+end
+
+--[[
+    Purpose:
+        Called when Lilia database tables have finished loading
+
+    When Called:
+        After all Lilia framework database tables have been created and loaded
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log table load
+    hook.Add("LiliaTablesLoaded", "MyAddon", function()
+        print("Lilia tables loaded")
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Initialize systems
+    hook.Add("LiliaTablesLoaded", "SystemInit", function()
+        -- Now safe to use database
+        lia.db.query("SELECT * FROM my_table", function(data)
+            print("My table loaded:", #data, "rows")
+        end)
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex initialization
+    hook.Add("LiliaTablesLoaded", "AdvancedInit", function()
+        -- Log table load
+        lia.log.add("Lilia tables loaded successfully", FLAG_NORMAL)
+
+        -- Create custom tables
+        lia.db.query("CREATE TABLE IF NOT EXISTS my_custom_table (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT, timestamp INTEGER)")
+
+        -- Wait for custom tables to be ready
+        lia.db.waitForTablesToLoad():next(function()
+            -- Load custom data
+            lia.db.query("SELECT * FROM my_custom_table", function(data)
+                for _, row in ipairs(data) do
+                    -- Process each row
+                    hook.Run("OnCustomDataLoaded", row)
+                end
+            end)
+
+            -- Initialize modules that depend on tables
+            for _, module in pairs(lia.module.list) do
+                if module.onTablesLoaded then
+                    module:onTablesLoaded()
+                end
+            end
+
+            -- Notify all systems
+            hook.Run("OnLiliaReady")
+        end)
+    end)
+    ```
+]]
+function LiliaTablesLoaded()
 end
