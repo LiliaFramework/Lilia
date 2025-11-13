@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.016 (November 13, 2025)
+
+### Changes
+
+- Update loader.lua
+- Successfully updated workshop Lilia to 7.014
+- NPC library
+- Font Stadartization
+- Added Bruteforce in case players dont  respawn
+- Localization
+- Added More Docs
+- Successfully updated workshop Lilia to 7.08
+- ShouldShowCharVarInCreation Hook and R to rotate an held item
+- Successfully updated workshop Lilia to 7.06
+- Minor Bug Fixes
+- Successfully updated workshop Lilia to 7.04
+- Update ci.yml
+- Successfully updated workshop Lilia to 7.02
+- Config now only sends changed values
+- Minor Bug Fix
+- Optimized SWEP Editor
+- Added Categories to the Player Interact Library & LiaQuick
+- Incosistency w/  Scoreboard and Player Interact
+- Better Char Creation Angle
+
 ## Version 7.014 (November 13, 2025)
 
 ### Changes
