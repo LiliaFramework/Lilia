@@ -28,8 +28,6 @@
 
 - [Code Utilities](https://liliaframework.github.io/modules/utilities/about/)
 
-- [Code Utilities](https://liliaframework.github.io/modules/viewbob/about/)
-
 - [Code Utilities](https://liliaframework.github.io/modules/vmanip/about/)
 
 - [Community Commands](https://liliaframework.github.io/modules/communitycommands/about/)

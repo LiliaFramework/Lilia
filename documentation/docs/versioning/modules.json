@@ -557,18 +557,6 @@
   },
   {
     "name": "Code Utilities",
-    "versionID": "public_viewbob",
-    "author": "Samael",
-    "discord": "@liliaplayer",
-    "description": "Adds extra helper functions in lia.util, simplified utilities for common scripting tasks, a central library used by other modules, utilities for networking data, and shared constants for modules.",
-    "version": "1",
-    "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/viewbob.zip",
-    "source": "https://liliaframework.github.io/modules/viewbob/about/",
-    "features": [],
-    "workshop": []
-  },
-  {
-    "name": "Code Utilities",
     "versionID": "public_vmanip",
     "author": "Samael",
     "discord": "@liliaplayer",
