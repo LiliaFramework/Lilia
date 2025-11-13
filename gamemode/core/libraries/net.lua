@@ -12,6 +12,7 @@ lia.net.sendq = lia.net.sendq or {}
 lia.net.globals = lia.net.globals or {}
 lia.net.buffers = lia.net.buffers or {}
 lia.net.registry = lia.net.registry or {}
+local chunkTime = 0.05
 --[[
     Purpose:
         Registers a network message handler for receiving messages sent via lia.net.send
@@ -284,7 +285,6 @@ function lia.net.readBigTable(netStr, callback)
 end
 
 if SERVER then
-    local chunkTime = 0.05
     local function sendChunk(ply, s, sid, idx)
         if not IsValid(ply) then
             if lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
@@ -307,30 +307,6 @@ if SERVER then
         net.Send(ply)
         if idx == s.total and lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
     end
-
-    net.Receive("liaBigTableAck", function(_, ply)
-        if not IsValid(ply) then return end
-        local sid = net.ReadUInt(32)
-        local last = net.ReadUInt(16)
-        local q = lia.net.sendq[ply]
-        if not q then return end
-        local s = q[sid]
-        if not s then return end
-        if last ~= s.idx then return end
-        if s.idx >= s.total then
-            q[sid] = nil
-            return
-        end
-
-        timer.Simple(chunkTime, function()
-            if not IsValid(ply) then return end
-            local qq = lia.net.sendq[ply]
-            if not qq then return end
-            local ss = qq[sid]
-            if not ss then return end
-            sendChunk(ply, ss, sid, ss.idx + 1)
-        end)
-    end)
 
     local function beginStream(ply, netStr, chunks, sid)
         lia.net.sendq[ply] = lia.net.sendq[ply] or {}

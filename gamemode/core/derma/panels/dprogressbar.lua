@@ -6,7 +6,7 @@ function PANEL:Init()
     self.BarColor = lia.config.get("Color")
     self.Fraction = 0
     self.GradientMat = Material("vgui/gradient-d")
-    self.Font = "liaSmallFont"
+    self.Font = "LiliaFont.17"
 end
 
 function PANEL:GetFraction()

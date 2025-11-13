@@ -1866,7 +1866,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -1878,12 +1878,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -1909,20 +1909,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -1959,7 +1959,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -1971,12 +1971,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -2002,20 +2002,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -2052,7 +2052,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -2064,12 +2064,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -2095,20 +2095,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -2145,7 +2145,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -2157,12 +2157,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -2188,20 +2188,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -2272,7 +2272,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -2284,7 +2284,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -2294,13 +2294,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -2371,7 +2371,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -2383,7 +2383,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -2393,13 +2393,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -2470,7 +2470,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -2482,7 +2482,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -2492,13 +2492,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -2569,7 +2569,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -2581,7 +2581,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -2591,13 +2591,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -2635,7 +2635,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -2655,7 +2655,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -2683,20 +2683,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -2735,7 +2735,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -2755,7 +2755,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -2783,20 +2783,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -2835,7 +2835,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -2855,7 +2855,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -2883,20 +2883,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -2935,7 +2935,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -2955,7 +2955,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -2983,20 +2983,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -3568,7 +3568,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -3699,7 +3699,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -3830,7 +3830,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -3961,7 +3961,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -15195,7 +15195,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -15211,7 +15211,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -15236,7 +15236,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -15527,7 +15527,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -15679,7 +15679,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -15695,7 +15695,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -15720,7 +15720,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -16011,7 +16011,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -16163,7 +16163,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -16179,7 +16179,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -16204,7 +16204,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -16495,7 +16495,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -16647,7 +16647,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -16663,7 +16663,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -16688,7 +16688,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -16979,7 +16979,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -17131,7 +17131,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -17147,7 +17147,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -17172,7 +17172,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -17463,7 +17463,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -17615,7 +17615,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -17631,7 +17631,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -17656,7 +17656,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -17947,7 +17947,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -18099,7 +18099,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -18115,7 +18115,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -18140,7 +18140,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -18431,7 +18431,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -18583,7 +18583,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -18599,7 +18599,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -18624,7 +18624,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -18915,7 +18915,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -19067,7 +19067,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -19083,7 +19083,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -19108,7 +19108,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -19399,7 +19399,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -19551,7 +19551,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -19567,7 +19567,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -19592,7 +19592,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -19883,7 +19883,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -20035,7 +20035,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -20051,7 +20051,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -20076,7 +20076,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -20367,7 +20367,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -20519,7 +20519,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -20535,7 +20535,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -20560,7 +20560,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -20851,7 +20851,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -21003,7 +21003,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -21019,7 +21019,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -21044,7 +21044,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -21335,7 +21335,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -21487,7 +21487,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -21503,7 +21503,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -21528,7 +21528,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -21819,7 +21819,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -21971,7 +21971,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -21987,7 +21987,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -22012,7 +22012,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -22303,7 +22303,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -22455,7 +22455,7 @@ Client
         panel:AddStep("Welcome", function(stepPanel)
             local label = vgui.Create("DLabel", stepPanel)
             label:SetText("Welcome to character creation!")
-            label:SetFont("liaBigFont")
+            label:SetFont("LiliaFont.36")
             label:SizeToContents()
             label:Center()
         end)
@@ -22471,7 +22471,7 @@ Client
         panel:AddStep("Background", function(stepPanel)
             local backgroundLabel = vgui.Create("DLabel", stepPanel)
             backgroundLabel:SetText("Choose your character's background:")
-            backgroundLabel:SetFont("liaMediumFont")
+            backgroundLabel:SetFont("LiliaFont.25")
             backgroundLabel:SetPos(10, 10)
             backgroundLabel:SizeToContents()
             local backgroundCombo = vgui.Create("DComboBox", stepPanel)
@@ -22496,7 +22496,7 @@ Client
         panel:AddStep("Traits", function(stepPanel)
             local traitsLabel = vgui.Create("DLabel", stepPanel)
             traitsLabel:SetText("Select up to 2 traits:")
-            traitsLabel:SetFont("liaMediumFont")
+            traitsLabel:SetFont("LiliaFont.25")
             traitsLabel:SetPos(10, 10)
             traitsLabel:SizeToContents()
             local availableTraits = {"Lucky", "Tough", "Smart", "Charismatic", "Athletic", "Creative"}
@@ -22787,7 +22787,7 @@ Client
     function MODULE:CreateReviewStep(stepPanel, mainPanel)
         local reviewLabel = vgui.Create("DLabel", stepPanel)
         reviewLabel:SetText("Review your character:")
-        reviewLabel:SetFont("liaBigFont")
+        reviewLabel:SetFont("LiliaFont.36")
         reviewLabel:SetPos(10, 10)
         reviewLabel:SizeToContents()
         -- Character summary
@@ -23517,7 +23517,7 @@ Client
         searchBar:Dock(TOP)
         searchBar:SetPlaceholderText("Search information...")
         searchBar:SetTall(30)
-        searchBar:SetFont("liaMediumFont")
+        searchBar:SetFont("LiliaFont.25")
         searchBar.OnChange = function(s)
             self:FilterButtons(s:GetValue())
         end
@@ -23646,7 +23646,7 @@ Client
         searchBar:Dock(TOP)
         searchBar:SetPlaceholderText("Search information...")
         searchBar:SetTall(30)
-        searchBar:SetFont("liaMediumFont")
+        searchBar:SetFont("LiliaFont.25")
         searchBar.OnChange = function(s)
             self:FilterButtons(s:GetValue())
         end
@@ -23775,7 +23775,7 @@ Client
         searchBar:Dock(TOP)
         searchBar:SetPlaceholderText("Search information...")
         searchBar:SetTall(30)
-        searchBar:SetFont("liaMediumFont")
+        searchBar:SetFont("LiliaFont.25")
         searchBar.OnChange = function(s)
             self:FilterButtons(s:GetValue())
         end
@@ -23904,7 +23904,7 @@ Client
         searchBar:Dock(TOP)
         searchBar:SetPlaceholderText("Search information...")
         searchBar:SetTall(30)
-        searchBar:SetFont("liaMediumFont")
+        searchBar:SetFont("LiliaFont.25")
         searchBar.OnChange = function(s)
             self:FilterButtons(s:GetValue())
         end
@@ -24033,7 +24033,7 @@ Client
         searchBar:Dock(TOP)
         searchBar:SetPlaceholderText("Search information...")
         searchBar:SetTall(30)
-        searchBar:SetFont("liaMediumFont")
+        searchBar:SetFont("LiliaFont.25")
         searchBar.OnChange = function(s)
             self:FilterButtons(s:GetValue())
         end
@@ -24162,7 +24162,7 @@ Client
         searchBar:Dock(TOP)
         searchBar:SetPlaceholderText("Search information...")
         searchBar:SetTall(30)
-        searchBar:SetFont("liaMediumFont")
+        searchBar:SetFont("LiliaFont.25")
         searchBar.OnChange = function(s)
             self:FilterButtons(s:GetValue())
         end
@@ -24263,7 +24263,7 @@ Client
         titleBar:DockMargin(0, 0, 0, 5)
         local title = vgui.Create("DLabel", titleBar)
         title:SetText("Inventory - " .. inventory:getName())
-        title:SetFont("liaBigFont")
+        title:SetFont("LiliaFont.36")
         title:Dock(LEFT)
         title:DockMargin(10, 0, 0, 0)
         title:SizeToContents()
@@ -24380,7 +24380,7 @@ Client
         titleBar:DockMargin(0, 0, 0, 5)
         local title = vgui.Create("DLabel", titleBar)
         title:SetText("Inventory - " .. inventory:getName())
-        title:SetFont("liaBigFont")
+        title:SetFont("LiliaFont.36")
         title:Dock(LEFT)
         title:DockMargin(10, 0, 0, 0)
         title:SizeToContents()
@@ -24497,7 +24497,7 @@ Client
         titleBar:DockMargin(0, 0, 0, 5)
         local title = vgui.Create("DLabel", titleBar)
         title:SetText("Inventory - " .. inventory:getName())
-        title:SetFont("liaBigFont")
+        title:SetFont("LiliaFont.36")
         title:Dock(LEFT)
         title:DockMargin(10, 0, 0, 0)
         title:SizeToContents()
@@ -24614,7 +24614,7 @@ Client
         titleBar:DockMargin(0, 0, 0, 5)
         local title = vgui.Create("DLabel", titleBar)
         title:SetText("Inventory - " .. inventory:getName())
-        title:SetFont("liaBigFont")
+        title:SetFont("LiliaFont.36")
         title:Dock(LEFT)
         title:DockMargin(10, 0, 0, 0)
         title:SizeToContents()
@@ -24703,7 +24703,7 @@ Client
             button:SetSize(120, 40)
             button:SetPos(xOffset, 10)
             -- Style the button
-            button:SetFont("liaMediumFont")
+            button:SetFont("LiliaFont.25")
             button.Paint = function(s, w, h)
                 local color = s:IsHovered() and Color(70, 130, 180) or Color(50, 50, 50)
                 draw.RoundedBox(6, 0, 0, w, h, color)
@@ -24749,7 +24749,7 @@ Client
             -- Category label
             local categoryLabel = vgui.Create("DLabel", menuBar)
             categoryLabel:SetText(categoryName .. ":")
-            categoryLabel:SetFont("liaSmallFont")
+            categoryLabel:SetFont("LiliaFont.17")
             categoryLabel:SetTextColor(Color(200, 200, 200))
             categoryLabel:SetPos(currentX, 5)
             categoryLabel:SizeToContents()
@@ -24763,7 +24763,7 @@ Client
                     button:SetSize(math.max(80, tab.name:len() * 8), 35)
                     button:SetPos(currentX, 7)
                     -- Advanced button styling
-                    button:SetFont("liaMediumFont")
+                    button:SetFont("LiliaFont.25")
                     button.normalColor = tab.color or Color(60, 60, 60)
                     button.hoverColor = Color(
                         math.min(button.normalColor.r + 20, 255),
@@ -24863,7 +24863,7 @@ Client
             button:SetSize(120, 40)
             button:SetPos(xOffset, 10)
             -- Style the button
-            button:SetFont("liaMediumFont")
+            button:SetFont("LiliaFont.25")
             button.Paint = function(s, w, h)
                 local color = s:IsHovered() and Color(70, 130, 180) or Color(50, 50, 50)
                 draw.RoundedBox(6, 0, 0, w, h, color)
@@ -24909,7 +24909,7 @@ Client
             -- Category label
             local categoryLabel = vgui.Create("DLabel", menuBar)
             categoryLabel:SetText(categoryName .. ":")
-            categoryLabel:SetFont("liaSmallFont")
+            categoryLabel:SetFont("LiliaFont.17")
             categoryLabel:SetTextColor(Color(200, 200, 200))
             categoryLabel:SetPos(currentX, 5)
             categoryLabel:SizeToContents()
@@ -24923,7 +24923,7 @@ Client
                     button:SetSize(math.max(80, tab.name:len() * 8), 35)
                     button:SetPos(currentX, 7)
                     -- Advanced button styling
-                    button:SetFont("liaMediumFont")
+                    button:SetFont("LiliaFont.25")
                     button.normalColor = tab.color or Color(60, 60, 60)
                     button.hoverColor = Color(
                         math.min(button.normalColor.r + 20, 255),
@@ -25023,7 +25023,7 @@ Client
             button:SetSize(120, 40)
             button:SetPos(xOffset, 10)
             -- Style the button
-            button:SetFont("liaMediumFont")
+            button:SetFont("LiliaFont.25")
             button.Paint = function(s, w, h)
                 local color = s:IsHovered() and Color(70, 130, 180) or Color(50, 50, 50)
                 draw.RoundedBox(6, 0, 0, w, h, color)
@@ -25069,7 +25069,7 @@ Client
             -- Category label
             local categoryLabel = vgui.Create("DLabel", menuBar)
             categoryLabel:SetText(categoryName .. ":")
-            categoryLabel:SetFont("liaSmallFont")
+            categoryLabel:SetFont("LiliaFont.17")
             categoryLabel:SetTextColor(Color(200, 200, 200))
             categoryLabel:SetPos(currentX, 5)
             categoryLabel:SizeToContents()
@@ -25083,7 +25083,7 @@ Client
                     button:SetSize(math.max(80, tab.name:len() * 8), 35)
                     button:SetPos(currentX, 7)
                     -- Advanced button styling
-                    button:SetFont("liaMediumFont")
+                    button:SetFont("LiliaFont.25")
                     button.normalColor = tab.color or Color(60, 60, 60)
                     button.hoverColor = Color(
                         math.min(button.normalColor.r + 20, 255),
@@ -25183,7 +25183,7 @@ Client
             button:SetSize(120, 40)
             button:SetPos(xOffset, 10)
             -- Style the button
-            button:SetFont("liaMediumFont")
+            button:SetFont("LiliaFont.25")
             button.Paint = function(s, w, h)
                 local color = s:IsHovered() and Color(70, 130, 180) or Color(50, 50, 50)
                 draw.RoundedBox(6, 0, 0, w, h, color)
@@ -25229,7 +25229,7 @@ Client
             -- Category label
             local categoryLabel = vgui.Create("DLabel", menuBar)
             categoryLabel:SetText(categoryName .. ":")
-            categoryLabel:SetFont("liaSmallFont")
+            categoryLabel:SetFont("LiliaFont.17")
             categoryLabel:SetTextColor(Color(200, 200, 200))
             categoryLabel:SetPos(currentX, 5)
             categoryLabel:SizeToContents()
@@ -25243,7 +25243,7 @@ Client
                     button:SetSize(math.max(80, tab.name:len() * 8), 35)
                     button:SetPos(currentX, 7)
                     -- Advanced button styling
-                    button:SetFont("liaMediumFont")
+                    button:SetFont("LiliaFont.25")
                     button.normalColor = tab.color or Color(60, 60, 60)
                     button.hoverColor = Color(
                         math.min(button.normalColor.r + 20, 255),
@@ -26026,7 +26026,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -26038,12 +26038,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -26069,20 +26069,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -26119,7 +26119,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -26131,12 +26131,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -26162,20 +26162,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -26212,7 +26212,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -26224,12 +26224,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -26255,20 +26255,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -26305,7 +26305,7 @@ Client
 ```lua
     -- Simple: Draw basic character name
     function MODULE:DrawCharInfo(player, character, info)
-        draw.SimpleText(character:getName(), "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(character:getName(), "LiliaFont.20", 10, 10, color_white)
     end
 
 ```
@@ -26317,12 +26317,12 @@ Client
         local name = character:getName()
         local faction = lia.faction.get(character:getFaction())
         local class = lia.class.get(character:getClass())
-        draw.SimpleText(name, "liaCharInfo", 10, 10, color_white)
+        draw.SimpleText(name, "LiliaFont.20", 10, 10, color_white)
         if faction then
-            draw.SimpleText(faction.name, "liaCharInfoSmall", 10, 30, faction.color or color_white)
+            draw.SimpleText(faction.name, "LiliaFont.17", 10, 30, faction.color or color_white)
         end
         if class then
-            draw.SimpleText(class.name, "liaCharInfoSmall", 10, 50, color_white)
+            draw.SimpleText(class.name, "LiliaFont.17", 10, 50, color_white)
         end
     end
 
@@ -26348,20 +26348,20 @@ Client
         if character:getData("title") then
             displayName = character:getData("title") .. " " .. name
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         -- Faction and class info
         local yOffset = 10
         if faction then
-            draw.SimpleTextOutlined(faction.name, "liaCharInfoSmall", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(faction.name, "LiliaFont.17", screenPos.x, screenPos.y - 10, faction.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             yOffset = yOffset + 15
         end
         if class then
-            draw.SimpleTextOutlined(class.name, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined(class.name, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
         -- Custom info from hook data
         if info and info.custom then
             for i, customInfo in ipairs(info.custom) do
-                draw.SimpleTextOutlined(customInfo.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(customInfo.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset + (i * 15), customInfo.color or color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -26432,7 +26432,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -26444,7 +26444,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -26454,13 +26454,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -26531,7 +26531,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -26543,7 +26543,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -26553,13 +26553,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -26630,7 +26630,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -26642,7 +26642,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -26652,13 +26652,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -26729,7 +26729,7 @@ Client
             table.insert(infoTexts, {
                 text = doorData.title,
                 color = Color(255, 255, 0, alpha),
-                font = "liaCharInfo"
+                font = "LiliaFont.20"
             })
         end
         -- Add ownership info
@@ -26741,7 +26741,7 @@ Client
                     table.insert(infoTexts, {
                         text = "Owner: " .. char:getName(),
                         color = Color(200, 200, 200, alpha),
-                        font = "liaCharInfoSmall"
+                        font = "LiliaFont.17"
                     })
                 end
             end
@@ -26751,13 +26751,13 @@ Client
             table.insert(infoTexts, {
                 text = "Locked",
                 color = Color(255, 0, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         else
             table.insert(infoTexts, {
                 text = "Unlocked",
                 color = Color(0, 255, 0, alpha),
-                font = "liaCharInfoSmall"
+                font = "LiliaFont.17"
             })
         end
     end
@@ -26795,7 +26795,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -26815,7 +26815,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -26843,20 +26843,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -26895,7 +26895,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -26915,7 +26915,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -26943,20 +26943,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -26995,7 +26995,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -27015,7 +27015,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -27043,20 +27043,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -27095,7 +27095,7 @@ Client
     -- Simple: Draw basic entity name
     function MODULE:DrawEntityInfo(entity, alpha, position)
         if IsValid(entity) then
-            draw.SimpleText(entity:GetClass(), "liaCharInfoSmall", position.x, position.y, Color(255, 255, 255, alpha))
+            draw.SimpleText(entity:GetClass(), "LiliaFont.17", position.x, position.y, Color(255, 255, 255, alpha))
         end
     end
 
@@ -27115,7 +27115,7 @@ Client
                 name = char:getName()
             end
         end
-        draw.SimpleTextOutlined(name, "liaCharInfoSmall", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(name, "LiliaFont.17", screenPos.x, screenPos.y, Color(255, 255, 255, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
     end
 
 ```
@@ -27143,20 +27143,20 @@ Client
         elseif entity:IsVehicle() then
             displayName = entity:GetDisplayName() or entity:GetClass()
         end
-        draw.SimpleTextOutlined(displayName, "liaCharInfo", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+        draw.SimpleTextOutlined(displayName, "LiliaFont.20", screenPos.x, screenPos.y + yOffset, infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
         yOffset = yOffset + 20
         -- Draw health if applicable
         if entity:Health() and entity:GetMaxHealth() and entity:GetMaxHealth() > 0 then
             local healthPercent = math.Clamp(entity:Health() / entity:GetMaxHealth(), 0, 1)
             local healthColor = Color(255 * (1 - healthPercent), 255 * healthPercent, 0, alpha)
-            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+            draw.SimpleTextOutlined("HP: " .. entity:Health() .. "/" .. entity:GetMaxHealth(), "LiliaFont.17", screenPos.x, screenPos.y + yOffset, healthColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
             yOffset = yOffset + 15
         end
         -- Draw custom entity data
         local customData = entity:getNetVar("customInfo")
         if customData then
             for i, data in ipairs(customData) do
-                draw.SimpleTextOutlined(data.text, "liaCharInfoSmall", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
+                draw.SimpleTextOutlined(data.text, "LiliaFont.17", screenPos.x, screenPos.y + yOffset, data.color or infoColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0, 0, 0, alpha))
                 yOffset = yOffset + 15
             end
         end
@@ -27652,7 +27652,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleText(character.name, "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(character.name, "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     end
@@ -27688,7 +27688,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -27743,7 +27743,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleText(character.name, "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(character.name, "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     end
@@ -27779,7 +27779,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -27834,7 +27834,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleText(character.name, "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(character.name, "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     end
@@ -27870,7 +27870,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -27925,7 +27925,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleText(character.name, "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(character.name, "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
     end
@@ -27961,7 +27961,7 @@ Client
             local pos = entity:GetPos() + Vector(0, 0, 10)
             local screenPos = pos:ToScreen()
             if screenPos.visible then
-                draw.SimpleTextOutlined(character:getName(), "liaCharInfoSmall", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+                draw.SimpleTextOutlined(character:getName(), "LiliaFont.17", screenPos.x, screenPos.y, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
             end
         end
     end
@@ -32472,7 +32472,7 @@ Client
         header.Paint = function(self, w, h)
             local itemCount = inventory:getItemCount()
             local maxItems = inventory:getMaxItems() or 0
-            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "liaCharInfoSmall", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "LiliaFont.17", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
         -- Add toolbar with buttons
         local toolbar = panel:Add("DPanel")
@@ -32594,7 +32594,7 @@ Client
         header.Paint = function(self, w, h)
             local itemCount = inventory:getItemCount()
             local maxItems = inventory:getMaxItems() or 0
-            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "liaCharInfoSmall", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "LiliaFont.17", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
         -- Add toolbar with buttons
         local toolbar = panel:Add("DPanel")
@@ -32716,7 +32716,7 @@ Client
         header.Paint = function(self, w, h)
             local itemCount = inventory:getItemCount()
             local maxItems = inventory:getMaxItems() or 0
-            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "liaCharInfoSmall", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "LiliaFont.17", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
         -- Add toolbar with buttons
         local toolbar = panel:Add("DPanel")
@@ -32838,7 +32838,7 @@ Client
         header.Paint = function(self, w, h)
             local itemCount = inventory:getItemCount()
             local maxItems = inventory:getMaxItems() or 0
-            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "liaCharInfoSmall", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            draw.SimpleText("Items: " .. itemCount .. " / " .. maxItems, "LiliaFont.17", 10, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
         end
         -- Add toolbar with buttons
         local toolbar = panel:Add("DPanel")
@@ -33320,7 +33320,7 @@ Client
     -- Simple: Draw item name
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if itemTable then
-            draw.SimpleText(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white)
+            draw.SimpleText(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white)
         end
     end
 
@@ -33332,10 +33332,10 @@ Client
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if not itemTable then return end
         -- Draw item name
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity if stackable
         if itemTable.quantity and itemTable.quantity > 1 then
-            draw.SimpleTextOutlined("x" .. itemTable.quantity, "liaCharInfoTiny", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+            draw.SimpleTextOutlined("x" .. itemTable.quantity, "LiliaFont.12", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
         end
     end
 
@@ -33360,13 +33360,13 @@ Client
             }
             nameColor = rarityColors[itemTable.rarity] or nameColor
         end
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity badge
         if itemTable.quantity and itemTable.quantity > 1 then
             local badgeWidth = 30
             local badgeHeight = 15
             draw.RoundedBox(4, width - badgeWidth - 5, height - badgeHeight - 5, badgeWidth, badgeHeight, Color(100, 100, 100, 200))
-            draw.SimpleText("x" .. itemTable.quantity, "liaCharInfoTiny", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("x" .. itemTable.quantity, "LiliaFont.12", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Draw durability bar
         if itemTable.durability and itemTable.maxDurability then
@@ -33391,7 +33391,7 @@ Client
         end
         -- Draw equipped indicator
         if itemTable.equipped then
-            draw.SimpleTextOutlined("EQUIPPED", "liaCharInfoTiny", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined("EQUIPPED", "LiliaFont.12", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
     end
 
@@ -33429,7 +33429,7 @@ Client
     -- Simple: Draw item name
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if itemTable then
-            draw.SimpleText(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white)
+            draw.SimpleText(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white)
         end
     end
 
@@ -33441,10 +33441,10 @@ Client
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if not itemTable then return end
         -- Draw item name
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity if stackable
         if itemTable.quantity and itemTable.quantity > 1 then
-            draw.SimpleTextOutlined("x" .. itemTable.quantity, "liaCharInfoTiny", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+            draw.SimpleTextOutlined("x" .. itemTable.quantity, "LiliaFont.12", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
         end
     end
 
@@ -33469,13 +33469,13 @@ Client
             }
             nameColor = rarityColors[itemTable.rarity] or nameColor
         end
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity badge
         if itemTable.quantity and itemTable.quantity > 1 then
             local badgeWidth = 30
             local badgeHeight = 15
             draw.RoundedBox(4, width - badgeWidth - 5, height - badgeHeight - 5, badgeWidth, badgeHeight, Color(100, 100, 100, 200))
-            draw.SimpleText("x" .. itemTable.quantity, "liaCharInfoTiny", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("x" .. itemTable.quantity, "LiliaFont.12", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Draw durability bar
         if itemTable.durability and itemTable.maxDurability then
@@ -33500,7 +33500,7 @@ Client
         end
         -- Draw equipped indicator
         if itemTable.equipped then
-            draw.SimpleTextOutlined("EQUIPPED", "liaCharInfoTiny", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined("EQUIPPED", "LiliaFont.12", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
     end
 
@@ -33538,7 +33538,7 @@ Client
     -- Simple: Draw item name
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if itemTable then
-            draw.SimpleText(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white)
+            draw.SimpleText(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white)
         end
     end
 
@@ -33550,10 +33550,10 @@ Client
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if not itemTable then return end
         -- Draw item name
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity if stackable
         if itemTable.quantity and itemTable.quantity > 1 then
-            draw.SimpleTextOutlined("x" .. itemTable.quantity, "liaCharInfoTiny", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+            draw.SimpleTextOutlined("x" .. itemTable.quantity, "LiliaFont.12", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
         end
     end
 
@@ -33578,13 +33578,13 @@ Client
             }
             nameColor = rarityColors[itemTable.rarity] or nameColor
         end
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity badge
         if itemTable.quantity and itemTable.quantity > 1 then
             local badgeWidth = 30
             local badgeHeight = 15
             draw.RoundedBox(4, width - badgeWidth - 5, height - badgeHeight - 5, badgeWidth, badgeHeight, Color(100, 100, 100, 200))
-            draw.SimpleText("x" .. itemTable.quantity, "liaCharInfoTiny", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("x" .. itemTable.quantity, "LiliaFont.12", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Draw durability bar
         if itemTable.durability and itemTable.maxDurability then
@@ -33609,7 +33609,7 @@ Client
         end
         -- Draw equipped indicator
         if itemTable.equipped then
-            draw.SimpleTextOutlined("EQUIPPED", "liaCharInfoTiny", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined("EQUIPPED", "LiliaFont.12", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
     end
 
@@ -33647,7 +33647,7 @@ Client
     -- Simple: Draw item name
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if itemTable then
-            draw.SimpleText(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white)
+            draw.SimpleText(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white)
         end
     end
 
@@ -33659,10 +33659,10 @@ Client
     function MODULE:ItemPaintOver(panel, itemTable, width, height)
         if not itemTable then return end
         -- Draw item name
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity if stackable
         if itemTable.quantity and itemTable.quantity > 1 then
-            draw.SimpleTextOutlined("x" .. itemTable.quantity, "liaCharInfoTiny", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+            draw.SimpleTextOutlined("x" .. itemTable.quantity, "LiliaFont.12", width - 5, height - 5, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
         end
     end
 
@@ -33687,13 +33687,13 @@ Client
             }
             nameColor = rarityColors[itemTable.rarity] or nameColor
         end
-        draw.SimpleTextOutlined(itemTable.name or "Item", "liaCharInfoSmall", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
+        draw.SimpleTextOutlined(itemTable.name or "Item", "LiliaFont.17", 5, 5, nameColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, color_black)
         -- Draw quantity badge
         if itemTable.quantity and itemTable.quantity > 1 then
             local badgeWidth = 30
             local badgeHeight = 15
             draw.RoundedBox(4, width - badgeWidth - 5, height - badgeHeight - 5, badgeWidth, badgeHeight, Color(100, 100, 100, 200))
-            draw.SimpleText("x" .. itemTable.quantity, "liaCharInfoTiny", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("x" .. itemTable.quantity, "LiliaFont.12", width - badgeWidth/2 - 5, height - badgeHeight/2 - 5, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Draw durability bar
         if itemTable.durability and itemTable.maxDurability then
@@ -33718,7 +33718,7 @@ Client
         end
         -- Draw equipped indicator
         if itemTable.equipped then
-            draw.SimpleTextOutlined("EQUIPPED", "liaCharInfoTiny", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
+            draw.SimpleTextOutlined("EQUIPPED", "LiliaFont.12", width/2, height - 10, Color(100, 255, 100), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, color_black)
         end
     end
 
@@ -36685,7 +36685,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(storageInvPanel:GetWide(), 40)
         header.Paint = function(self, w, h)
-            draw.SimpleText(storage.name or "Storage", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(storage.name or "Storage", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add sort button
         local sortBtn = vgui.Create("DButton", storageInvPanel)
@@ -36772,7 +36772,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(storageInvPanel:GetWide(), 40)
         header.Paint = function(self, w, h)
-            draw.SimpleText(storage.name or "Storage", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(storage.name or "Storage", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add sort button
         local sortBtn = vgui.Create("DButton", storageInvPanel)
@@ -36859,7 +36859,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(storageInvPanel:GetWide(), 40)
         header.Paint = function(self, w, h)
-            draw.SimpleText(storage.name or "Storage", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(storage.name or "Storage", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add sort button
         local sortBtn = vgui.Create("DButton", storageInvPanel)
@@ -36946,7 +36946,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(storageInvPanel:GetWide(), 40)
         header.Paint = function(self, w, h)
-            draw.SimpleText(storage.name or "Storage", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(storage.name or "Storage", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add sort button
         local sortBtn = vgui.Create("DButton", storageInvPanel)
@@ -37377,7 +37377,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(panel:GetWide(), 50)
         header.Paint = function(self, w, h)
-            draw.SimpleText(vendorData.name or "Vendor", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(vendorData.name or "Vendor", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add vendor info panel
         if vendorData.description then
@@ -37385,7 +37385,7 @@ Client
             infoPanel:SetPos(10, 60)
             infoPanel:SetSize(panel:GetWide() - 20, 60)
             infoPanel.Paint = function(self, w, h)
-                draw.SimpleText(vendorData.description, "liaMediumFont", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText(vendorData.description, "LiliaFont.25", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
         end
         -- Add custom buttons
@@ -37475,7 +37475,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(panel:GetWide(), 50)
         header.Paint = function(self, w, h)
-            draw.SimpleText(vendorData.name or "Vendor", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(vendorData.name or "Vendor", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add vendor info panel
         if vendorData.description then
@@ -37483,7 +37483,7 @@ Client
             infoPanel:SetPos(10, 60)
             infoPanel:SetSize(panel:GetWide() - 20, 60)
             infoPanel.Paint = function(self, w, h)
-                draw.SimpleText(vendorData.description, "liaMediumFont", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText(vendorData.description, "LiliaFont.25", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
         end
         -- Add custom buttons
@@ -37573,7 +37573,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(panel:GetWide(), 50)
         header.Paint = function(self, w, h)
-            draw.SimpleText(vendorData.name or "Vendor", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(vendorData.name or "Vendor", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add vendor info panel
         if vendorData.description then
@@ -37581,7 +37581,7 @@ Client
             infoPanel:SetPos(10, 60)
             infoPanel:SetSize(panel:GetWide() - 20, 60)
             infoPanel.Paint = function(self, w, h)
-                draw.SimpleText(vendorData.description, "liaMediumFont", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText(vendorData.description, "LiliaFont.25", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
         end
         -- Add custom buttons
@@ -37671,7 +37671,7 @@ Client
         header:SetPos(0, 0)
         header:SetSize(panel:GetWide(), 50)
         header.Paint = function(self, w, h)
-            draw.SimpleText(vendorData.name or "Vendor", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(vendorData.name or "Vendor", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
         -- Add vendor info panel
         if vendorData.description then
@@ -37679,7 +37679,7 @@ Client
             infoPanel:SetPos(10, 60)
             infoPanel:SetSize(panel:GetWide() - 20, 60)
             infoPanel.Paint = function(self, w, h)
-                draw.SimpleText(vendorData.description, "liaMediumFont", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+                draw.SimpleText(vendorData.description, "LiliaFont.25", 5, 5, Color(200, 200, 200), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             end
         end
         -- Add custom buttons
@@ -39832,7 +39832,7 @@ Client
 ```lua
     -- Simple: Paint item with default style
     function MODULE:PaintItem(item)
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -39844,7 +39844,7 @@ Client
         if item:getData("rare", false) then
             draw.RoundedBox(4, 0, 0, 100, 100, Color(255, 215, 0, 100))
         end
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -39873,10 +39873,10 @@ Client
             surface.DrawTexturedRect(x + 10, y + 10, w - 20, h - 40)
         end
         -- Paint item name
-        draw.SimpleText(item.name, "liaMediumFont", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(item.name, "LiliaFont.25", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         -- Paint quantity if stackable
         if item.isStackable and item:getData("quantity", 1) > 1 then
-            draw.SimpleText("x" .. item:getData("quantity", 1), "liaSmallFont", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+            draw.SimpleText("x" .. item:getData("quantity", 1), "LiliaFont.17", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
         end
         -- Paint glow effect for rare items
         if rarity == "legendary" then
@@ -39916,7 +39916,7 @@ Client
 ```lua
     -- Simple: Paint item with default style
     function MODULE:PaintItem(item)
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -39928,7 +39928,7 @@ Client
         if item:getData("rare", false) then
             draw.RoundedBox(4, 0, 0, 100, 100, Color(255, 215, 0, 100))
         end
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -39957,10 +39957,10 @@ Client
             surface.DrawTexturedRect(x + 10, y + 10, w - 20, h - 40)
         end
         -- Paint item name
-        draw.SimpleText(item.name, "liaMediumFont", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(item.name, "LiliaFont.25", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         -- Paint quantity if stackable
         if item.isStackable and item:getData("quantity", 1) > 1 then
-            draw.SimpleText("x" .. item:getData("quantity", 1), "liaSmallFont", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+            draw.SimpleText("x" .. item:getData("quantity", 1), "LiliaFont.17", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
         end
         -- Paint glow effect for rare items
         if rarity == "legendary" then
@@ -40000,7 +40000,7 @@ Client
 ```lua
     -- Simple: Paint item with default style
     function MODULE:PaintItem(item)
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -40012,7 +40012,7 @@ Client
         if item:getData("rare", false) then
             draw.RoundedBox(4, 0, 0, 100, 100, Color(255, 215, 0, 100))
         end
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -40041,10 +40041,10 @@ Client
             surface.DrawTexturedRect(x + 10, y + 10, w - 20, h - 40)
         end
         -- Paint item name
-        draw.SimpleText(item.name, "liaMediumFont", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(item.name, "LiliaFont.25", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         -- Paint quantity if stackable
         if item.isStackable and item:getData("quantity", 1) > 1 then
-            draw.SimpleText("x" .. item:getData("quantity", 1), "liaSmallFont", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+            draw.SimpleText("x" .. item:getData("quantity", 1), "LiliaFont.17", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
         end
         -- Paint glow effect for rare items
         if rarity == "legendary" then
@@ -40084,7 +40084,7 @@ Client
 ```lua
     -- Simple: Paint item with default style
     function MODULE:PaintItem(item)
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -40096,7 +40096,7 @@ Client
         if item:getData("rare", false) then
             draw.RoundedBox(4, 0, 0, 100, 100, Color(255, 215, 0, 100))
         end
-        draw.SimpleText(item.name, "liaMediumFont", 10, 10, color_white)
+        draw.SimpleText(item.name, "LiliaFont.25", 10, 10, color_white)
     end
 
 ```
@@ -40125,10 +40125,10 @@ Client
             surface.DrawTexturedRect(x + 10, y + 10, w - 20, h - 40)
         end
         -- Paint item name
-        draw.SimpleText(item.name, "liaMediumFont", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(item.name, "LiliaFont.25", x + w/2, y + h - 30, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         -- Paint quantity if stackable
         if item.isStackable and item:getData("quantity", 1) > 1 then
-            draw.SimpleText("x" .. item:getData("quantity", 1), "liaSmallFont", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+            draw.SimpleText("x" .. item:getData("quantity", 1), "LiliaFont.17", x + w - 10, y + 10, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
         end
         -- Paint glow effect for rare items
         if rarity == "legendary" then
@@ -40240,9 +40240,9 @@ Client
         infoPanel:SetPos(10, 200)
         infoPanel:SetSize(200, 100)
         infoPanel.Paint = function(self, w, h)
-            draw.SimpleText("Target: " .. targetChar:getName(), "liaMediumFont", 5, 5, color_white)
-            draw.SimpleText("Health: " .. currentTarget:Health(), "liaSmallFont", 5, 25, color_white)
-            draw.SimpleText("Armor: " .. currentTarget:Armor(), "liaSmallFont", 5, 40, color_white)
+            draw.SimpleText("Target: " .. targetChar:getName(), "LiliaFont.25", 5, 5, color_white)
+            draw.SimpleText("Health: " .. currentTarget:Health(), "LiliaFont.17", 5, 25, color_white)
+            draw.SimpleText("Armor: " .. currentTarget:Armor(), "LiliaFont.17", 5, 40, color_white)
         end
     end
 
@@ -40348,9 +40348,9 @@ Client
         infoPanel:SetPos(10, 200)
         infoPanel:SetSize(200, 100)
         infoPanel.Paint = function(self, w, h)
-            draw.SimpleText("Target: " .. targetChar:getName(), "liaMediumFont", 5, 5, color_white)
-            draw.SimpleText("Health: " .. currentTarget:Health(), "liaSmallFont", 5, 25, color_white)
-            draw.SimpleText("Armor: " .. currentTarget:Armor(), "liaSmallFont", 5, 40, color_white)
+            draw.SimpleText("Target: " .. targetChar:getName(), "LiliaFont.25", 5, 5, color_white)
+            draw.SimpleText("Health: " .. currentTarget:Health(), "LiliaFont.17", 5, 25, color_white)
+            draw.SimpleText("Armor: " .. currentTarget:Armor(), "LiliaFont.17", 5, 40, color_white)
         end
     end
 
@@ -40456,9 +40456,9 @@ Client
         infoPanel:SetPos(10, 200)
         infoPanel:SetSize(200, 100)
         infoPanel.Paint = function(self, w, h)
-            draw.SimpleText("Target: " .. targetChar:getName(), "liaMediumFont", 5, 5, color_white)
-            draw.SimpleText("Health: " .. currentTarget:Health(), "liaSmallFont", 5, 25, color_white)
-            draw.SimpleText("Armor: " .. currentTarget:Armor(), "liaSmallFont", 5, 40, color_white)
+            draw.SimpleText("Target: " .. targetChar:getName(), "LiliaFont.25", 5, 5, color_white)
+            draw.SimpleText("Health: " .. currentTarget:Health(), "LiliaFont.17", 5, 25, color_white)
+            draw.SimpleText("Armor: " .. currentTarget:Armor(), "LiliaFont.17", 5, 40, color_white)
         end
     end
 
@@ -40564,9 +40564,9 @@ Client
         infoPanel:SetPos(10, 200)
         infoPanel:SetSize(200, 100)
         infoPanel.Paint = function(self, w, h)
-            draw.SimpleText("Target: " .. targetChar:getName(), "liaMediumFont", 5, 5, color_white)
-            draw.SimpleText("Health: " .. currentTarget:Health(), "liaSmallFont", 5, 25, color_white)
-            draw.SimpleText("Armor: " .. currentTarget:Armor(), "liaSmallFont", 5, 40, color_white)
+            draw.SimpleText("Target: " .. targetChar:getName(), "LiliaFont.25", 5, 5, color_white)
+            draw.SimpleText("Health: " .. currentTarget:Health(), "LiliaFont.17", 5, 25, color_white)
+            draw.SimpleText("Armor: " .. currentTarget:Armor(), "LiliaFont.17", 5, 40, color_white)
         end
     end
 
@@ -40635,7 +40635,7 @@ Client
                 func = function(panel)
                     local label = panel:Add("DLabel")
                     label:SetText("Custom Admin Tools")
-                    label:SetFont("liaBigFont")
+                    label:SetFont("LiliaFont.36")
                     local btn = panel:Add("DButton")
                     btn:SetText("Custom Action")
                     btn:SetSize(200, 30)
@@ -40733,7 +40733,7 @@ Client
                 func = function(panel)
                     local label = panel:Add("DLabel")
                     label:SetText("Custom Admin Tools")
-                    label:SetFont("liaBigFont")
+                    label:SetFont("LiliaFont.36")
                     local btn = panel:Add("DButton")
                     btn:SetText("Custom Action")
                     btn:SetSize(200, 30)
@@ -40831,7 +40831,7 @@ Client
                 func = function(panel)
                     local label = panel:Add("DLabel")
                     label:SetText("Custom Admin Tools")
-                    label:SetFont("liaBigFont")
+                    label:SetFont("LiliaFont.36")
                     local btn = panel:Add("DButton")
                     btn:SetText("Custom Action")
                     btn:SetSize(200, 30)
@@ -40929,7 +40929,7 @@ Client
                 func = function(panel)
                     local label = panel:Add("DLabel")
                     label:SetText("Custom Admin Tools")
-                    label:SetFont("liaBigFont")
+                    label:SetFont("LiliaFont.36")
                     local btn = panel:Add("DButton")
                     btn:SetText("Custom Action")
                     btn:SetSize(200, 30)
@@ -41773,7 +41773,7 @@ Client
 ```lua
     -- Simple: Add overlay after inventory draw
     function MODULE:PostDrawInventory(mainPanel, parentPanel)
-        draw.SimpleText("Inventory", "liaBigFont", 10, 10, color_white)
+        draw.SimpleText("Inventory", "LiliaFont.36", 10, 10, color_white)
     end
 
 ```
@@ -41809,15 +41809,15 @@ Client
         statsPanel.Paint = function(self, w, h)
             draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 240))
             local items = inv:getItems()
-            draw.SimpleText("Items: " .. table.Count(items), "liaMediumFont", 5, 5, color_white)
+            draw.SimpleText("Items: " .. table.Count(items), "LiliaFont.25", 5, 5, color_white)
             local weight = 0
             for _, item in pairs(items) do
                 weight = weight + (item.weight or 0) * (item:getData("quantity", 1) or 1)
             end
-            draw.SimpleText("Weight: " .. weight .. "kg", "liaMediumFont", 5, 25, color_white)
+            draw.SimpleText("Weight: " .. weight .. "kg", "LiliaFont.25", 5, 25, color_white)
             local maxWeight = inv:getData("maxWeight", 100)
             local weightPercent = (weight / maxWeight) * 100
-            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "liaMediumFont", 5, 45, color_white)
+            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "LiliaFont.25", 5, 45, color_white)
             -- Draw weight bar
             local barWidth = w - 10
             local barHeight = 10
@@ -41859,7 +41859,7 @@ Client
 ```lua
     -- Simple: Add overlay after inventory draw
     function MODULE:PostDrawInventory(mainPanel, parentPanel)
-        draw.SimpleText("Inventory", "liaBigFont", 10, 10, color_white)
+        draw.SimpleText("Inventory", "LiliaFont.36", 10, 10, color_white)
     end
 
 ```
@@ -41895,15 +41895,15 @@ Client
         statsPanel.Paint = function(self, w, h)
             draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 240))
             local items = inv:getItems()
-            draw.SimpleText("Items: " .. table.Count(items), "liaMediumFont", 5, 5, color_white)
+            draw.SimpleText("Items: " .. table.Count(items), "LiliaFont.25", 5, 5, color_white)
             local weight = 0
             for _, item in pairs(items) do
                 weight = weight + (item.weight or 0) * (item:getData("quantity", 1) or 1)
             end
-            draw.SimpleText("Weight: " .. weight .. "kg", "liaMediumFont", 5, 25, color_white)
+            draw.SimpleText("Weight: " .. weight .. "kg", "LiliaFont.25", 5, 25, color_white)
             local maxWeight = inv:getData("maxWeight", 100)
             local weightPercent = (weight / maxWeight) * 100
-            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "liaMediumFont", 5, 45, color_white)
+            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "LiliaFont.25", 5, 45, color_white)
             -- Draw weight bar
             local barWidth = w - 10
             local barHeight = 10
@@ -41945,7 +41945,7 @@ Client
 ```lua
     -- Simple: Add overlay after inventory draw
     function MODULE:PostDrawInventory(mainPanel, parentPanel)
-        draw.SimpleText("Inventory", "liaBigFont", 10, 10, color_white)
+        draw.SimpleText("Inventory", "LiliaFont.36", 10, 10, color_white)
     end
 
 ```
@@ -41981,15 +41981,15 @@ Client
         statsPanel.Paint = function(self, w, h)
             draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 240))
             local items = inv:getItems()
-            draw.SimpleText("Items: " .. table.Count(items), "liaMediumFont", 5, 5, color_white)
+            draw.SimpleText("Items: " .. table.Count(items), "LiliaFont.25", 5, 5, color_white)
             local weight = 0
             for _, item in pairs(items) do
                 weight = weight + (item.weight or 0) * (item:getData("quantity", 1) or 1)
             end
-            draw.SimpleText("Weight: " .. weight .. "kg", "liaMediumFont", 5, 25, color_white)
+            draw.SimpleText("Weight: " .. weight .. "kg", "LiliaFont.25", 5, 25, color_white)
             local maxWeight = inv:getData("maxWeight", 100)
             local weightPercent = (weight / maxWeight) * 100
-            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "liaMediumFont", 5, 45, color_white)
+            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "LiliaFont.25", 5, 45, color_white)
             -- Draw weight bar
             local barWidth = w - 10
             local barHeight = 10
@@ -42031,7 +42031,7 @@ Client
 ```lua
     -- Simple: Add overlay after inventory draw
     function MODULE:PostDrawInventory(mainPanel, parentPanel)
-        draw.SimpleText("Inventory", "liaBigFont", 10, 10, color_white)
+        draw.SimpleText("Inventory", "LiliaFont.36", 10, 10, color_white)
     end
 
 ```
@@ -42067,15 +42067,15 @@ Client
         statsPanel.Paint = function(self, w, h)
             draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 240))
             local items = inv:getItems()
-            draw.SimpleText("Items: " .. table.Count(items), "liaMediumFont", 5, 5, color_white)
+            draw.SimpleText("Items: " .. table.Count(items), "LiliaFont.25", 5, 5, color_white)
             local weight = 0
             for _, item in pairs(items) do
                 weight = weight + (item.weight or 0) * (item:getData("quantity", 1) or 1)
             end
-            draw.SimpleText("Weight: " .. weight .. "kg", "liaMediumFont", 5, 25, color_white)
+            draw.SimpleText("Weight: " .. weight .. "kg", "LiliaFont.25", 5, 25, color_white)
             local maxWeight = inv:getData("maxWeight", 100)
             local weightPercent = (weight / maxWeight) * 100
-            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "liaMediumFont", 5, 45, color_white)
+            draw.SimpleText("Capacity: " .. math.Round(weightPercent) .. "%", "LiliaFont.25", 5, 45, color_white)
             -- Draw weight bar
             local barWidth = w - 10
             local barHeight = 10
@@ -42126,11 +42126,7 @@ Client
 ```lua
     -- Medium: Create custom fonts
     function MODULE:PostLoadFonts(mainFont, configuredFont)
-        surface.CreateFont("liaCustomFont", {
-            font = configuredFont or "Arial",
-            size = 24,
-            weight = 500
-        })
+        -- liaCustomFont replaced with LiliaFont.24
     end
 
 ```
@@ -42159,12 +42155,7 @@ Client
             })
         end
         -- Create icon font
-        surface.CreateFont("liaIconFont", {
-            font = "FontAwesome",
-            size = 16,
-            weight = 400,
-            antialias = true
-        })
+        -- liaIconFont replaced with LiliaFont.16
         -- Validate fonts
         for _, size in ipairs(fontSizes) do
             if not surface.GetFontID("liaFont" .. size) then
@@ -42218,11 +42209,7 @@ Client
 ```lua
     -- Medium: Create custom fonts
     function MODULE:PostLoadFonts(mainFont, configuredFont)
-        surface.CreateFont("liaCustomFont", {
-            font = configuredFont or "Arial",
-            size = 24,
-            weight = 500
-        })
+        -- liaCustomFont replaced with LiliaFont.24
     end
 
 ```
@@ -42251,12 +42238,7 @@ Client
             })
         end
         -- Create icon font
-        surface.CreateFont("liaIconFont", {
-            font = "FontAwesome",
-            size = 16,
-            weight = 400,
-            antialias = true
-        })
+        -- liaIconFont replaced with LiliaFont.16
         -- Validate fonts
         for _, size in ipairs(fontSizes) do
             if not surface.GetFontID("liaFont" .. size) then
@@ -42310,11 +42292,7 @@ Client
 ```lua
     -- Medium: Create custom fonts
     function MODULE:PostLoadFonts(mainFont, configuredFont)
-        surface.CreateFont("liaCustomFont", {
-            font = configuredFont or "Arial",
-            size = 24,
-            weight = 500
-        })
+        -- liaCustomFont replaced with LiliaFont.24
     end
 
 ```
@@ -42343,12 +42321,7 @@ Client
             })
         end
         -- Create icon font
-        surface.CreateFont("liaIconFont", {
-            font = "FontAwesome",
-            size = 16,
-            weight = 400,
-            antialias = true
-        })
+        -- liaIconFont replaced with LiliaFont.16
         -- Validate fonts
         for _, size in ipairs(fontSizes) do
             if not surface.GetFontID("liaFont" .. size) then
@@ -42402,11 +42375,7 @@ Client
 ```lua
     -- Medium: Create custom fonts
     function MODULE:PostLoadFonts(mainFont, configuredFont)
-        surface.CreateFont("liaCustomFont", {
-            font = configuredFont or "Arial",
-            size = 24,
-            weight = 500
-        })
+        -- liaCustomFont replaced with LiliaFont.24
     end
 
 ```
@@ -42435,12 +42404,7 @@ Client
             })
         end
         -- Create icon font
-        surface.CreateFont("liaIconFont", {
-            font = "FontAwesome",
-            size = 16,
-            weight = 400,
-            antialias = true
-        })
+        -- liaIconFont replaced with LiliaFont.16
         -- Validate fonts
         for _, size in ipairs(fontSizes) do
             if not surface.GetFontID("liaFont" .. size) then
@@ -42794,7 +42758,7 @@ Client
 ```lua
     -- Simple: Refresh fonts
     function MODULE:RefreshFonts()
-        surface.SetFont("liaGenericFont")
+        surface.SetFont("LiliaFont.16")
     end
 
 ```
@@ -42814,7 +42778,7 @@ Client
     -- High: Advanced font management with fallbacks
     function MODULE:RefreshFonts()
         local fontSizes = {12, 14, 16, 18, 20, 24, 32, 48}
-        local fontFamilies = {"liaGenericFont", "liaMediumFont", "liaBigFont"}
+        local fontFamilies = {"LiliaFont.16", "LiliaFont.25", "LiliaFont.36"}
         -- Recreate all fonts with current configuration
         for _, family in ipairs(fontFamilies) do
             for _, size in ipairs(fontSizes) do
@@ -42860,7 +42824,7 @@ Client
 ```lua
     -- Simple: Refresh fonts
     function MODULE:RefreshFonts()
-        surface.SetFont("liaGenericFont")
+        surface.SetFont("LiliaFont.16")
     end
 
 ```
@@ -42880,7 +42844,7 @@ Client
     -- High: Advanced font management with fallbacks
     function MODULE:RefreshFonts()
         local fontSizes = {12, 14, 16, 18, 20, 24, 32, 48}
-        local fontFamilies = {"liaGenericFont", "liaMediumFont", "liaBigFont"}
+        local fontFamilies = {"LiliaFont.16", "LiliaFont.25", "LiliaFont.36"}
         -- Recreate all fonts with current configuration
         for _, family in ipairs(fontFamilies) do
             for _, size in ipairs(fontSizes) do
@@ -42926,7 +42890,7 @@ Client
 ```lua
     -- Simple: Refresh fonts
     function MODULE:RefreshFonts()
-        surface.SetFont("liaGenericFont")
+        surface.SetFont("LiliaFont.16")
     end
 
 ```
@@ -42946,7 +42910,7 @@ Client
     -- High: Advanced font management with fallbacks
     function MODULE:RefreshFonts()
         local fontSizes = {12, 14, 16, 18, 20, 24, 32, 48}
-        local fontFamilies = {"liaGenericFont", "liaMediumFont", "liaBigFont"}
+        local fontFamilies = {"LiliaFont.16", "LiliaFont.25", "LiliaFont.36"}
         -- Recreate all fonts with current configuration
         for _, family in ipairs(fontFamilies) do
             for _, size in ipairs(fontSizes) do
@@ -42992,7 +42956,7 @@ Client
 ```lua
     -- Simple: Refresh fonts
     function MODULE:RefreshFonts()
-        surface.SetFont("liaGenericFont")
+        surface.SetFont("LiliaFont.16")
     end
 
 ```
@@ -43012,7 +42976,7 @@ Client
     -- High: Advanced font management with fallbacks
     function MODULE:RefreshFonts()
         local fontSizes = {12, 14, 16, 18, 20, 24, 32, 48}
-        local fontFamilies = {"liaGenericFont", "liaMediumFont", "liaBigFont"}
+        local fontFamilies = {"LiliaFont.16", "LiliaFont.25", "LiliaFont.36"}
         -- Recreate all fonts with current configuration
         for _, family in ipairs(fontFamilies) do
             for _, size in ipairs(fontSizes) do
@@ -44103,7 +44067,7 @@ Client
             header:SetPos(0, 0)
             header.Paint = function(self, w, h)
                 draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 200))
-                draw.SimpleText("Custom Server Scoreboard", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Custom Server Scoreboard", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             table.insert(MODULE.customScoreboardElements, header)
         end
@@ -44188,7 +44152,7 @@ Client
             header:SetPos(0, 0)
             header.Paint = function(self, w, h)
                 draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 200))
-                draw.SimpleText("Custom Server Scoreboard", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Custom Server Scoreboard", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             table.insert(MODULE.customScoreboardElements, header)
         end
@@ -44273,7 +44237,7 @@ Client
             header:SetPos(0, 0)
             header.Paint = function(self, w, h)
                 draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 200))
-                draw.SimpleText("Custom Server Scoreboard", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Custom Server Scoreboard", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             table.insert(MODULE.customScoreboardElements, header)
         end
@@ -44358,7 +44322,7 @@ Client
             header:SetPos(0, 0)
             header.Paint = function(self, w, h)
                 draw.RoundedBox(4, 0, 0, w, h, Color(30, 30, 40, 200))
-                draw.SimpleText("Custom Server Scoreboard", "liaBigFont", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText("Custom Server Scoreboard", "LiliaFont.36", w/2, h/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             table.insert(MODULE.customScoreboardElements, header)
         end
@@ -44435,7 +44399,7 @@ Client
             if faction then
                 local factionLabel = vgui.Create("DLabel", rowPanel)
                 factionLabel:SetText(faction.name)
-                factionLabel:SetFont("liaSmallFont")
+                factionLabel:SetFont("LiliaFont.17")
                 factionLabel:SetColor(faction.color or color_white)
                 factionLabel:SizeToContents()
                 factionLabel:SetPos(rowPanel:GetWide() - factionLabel:GetWide() - 10, 5)
@@ -44460,7 +44424,7 @@ Client
         local pingColor = ping < 50 and Color(0, 255, 0) or ping < 100 and Color(255, 255, 0) or Color(255, 0, 0)
         local pingLabel = vgui.Create("DLabel", rowPanel)
         pingLabel:SetText(ping .. "ms")
-        pingLabel:SetFont("liaSmallFont")
+        pingLabel:SetFont("LiliaFont.17")
         pingLabel:SetColor(pingColor)
         pingLabel:SizeToContents()
         pingLabel:SetPos(rowPanel:GetWide() - pingLabel:GetWide() - 10, rowPanel:GetTall() - pingLabel:GetTall() - 5)
@@ -44527,7 +44491,7 @@ Client
             if faction then
                 local factionLabel = vgui.Create("DLabel", rowPanel)
                 factionLabel:SetText(faction.name)
-                factionLabel:SetFont("liaSmallFont")
+                factionLabel:SetFont("LiliaFont.17")
                 factionLabel:SetColor(faction.color or color_white)
                 factionLabel:SizeToContents()
                 factionLabel:SetPos(rowPanel:GetWide() - factionLabel:GetWide() - 10, 5)
@@ -44552,7 +44516,7 @@ Client
         local pingColor = ping < 50 and Color(0, 255, 0) or ping < 100 and Color(255, 255, 0) or Color(255, 0, 0)
         local pingLabel = vgui.Create("DLabel", rowPanel)
         pingLabel:SetText(ping .. "ms")
-        pingLabel:SetFont("liaSmallFont")
+        pingLabel:SetFont("LiliaFont.17")
         pingLabel:SetColor(pingColor)
         pingLabel:SizeToContents()
         pingLabel:SetPos(rowPanel:GetWide() - pingLabel:GetWide() - 10, rowPanel:GetTall() - pingLabel:GetTall() - 5)
@@ -44619,7 +44583,7 @@ Client
             if faction then
                 local factionLabel = vgui.Create("DLabel", rowPanel)
                 factionLabel:SetText(faction.name)
-                factionLabel:SetFont("liaSmallFont")
+                factionLabel:SetFont("LiliaFont.17")
                 factionLabel:SetColor(faction.color or color_white)
                 factionLabel:SizeToContents()
                 factionLabel:SetPos(rowPanel:GetWide() - factionLabel:GetWide() - 10, 5)
@@ -44644,7 +44608,7 @@ Client
         local pingColor = ping < 50 and Color(0, 255, 0) or ping < 100 and Color(255, 255, 0) or Color(255, 0, 0)
         local pingLabel = vgui.Create("DLabel", rowPanel)
         pingLabel:SetText(ping .. "ms")
-        pingLabel:SetFont("liaSmallFont")
+        pingLabel:SetFont("LiliaFont.17")
         pingLabel:SetColor(pingColor)
         pingLabel:SizeToContents()
         pingLabel:SetPos(rowPanel:GetWide() - pingLabel:GetWide() - 10, rowPanel:GetTall() - pingLabel:GetTall() - 5)
@@ -44711,7 +44675,7 @@ Client
             if faction then
                 local factionLabel = vgui.Create("DLabel", rowPanel)
                 factionLabel:SetText(faction.name)
-                factionLabel:SetFont("liaSmallFont")
+                factionLabel:SetFont("LiliaFont.17")
                 factionLabel:SetColor(faction.color or color_white)
                 factionLabel:SizeToContents()
                 factionLabel:SetPos(rowPanel:GetWide() - factionLabel:GetWide() - 10, 5)
@@ -44736,7 +44700,7 @@ Client
         local pingColor = ping < 50 and Color(0, 255, 0) or ping < 100 and Color(255, 255, 0) or Color(255, 0, 0)
         local pingLabel = vgui.Create("DLabel", rowPanel)
         pingLabel:SetText(ping .. "ms")
-        pingLabel:SetFont("liaSmallFont")
+        pingLabel:SetFont("LiliaFont.17")
         pingLabel:SetColor(pingColor)
         pingLabel:SizeToContents()
         pingLabel:SetPos(rowPanel:GetWide() - pingLabel:GetWide() - 10, rowPanel:GetTall() - pingLabel:GetTall() - 5)
@@ -45194,7 +45158,7 @@ Client
                 btn.Paint = function(self, w, h)
                     local color = self:IsHovered() and Color(60, 60, 70) or Color(40, 40, 50)
                     draw.RoundedBox(4, 0, 0, w, h, color)
-                    draw.SimpleText(actionData.name, "liaMediumFont", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(actionData.name, "LiliaFont.25", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -45336,7 +45300,7 @@ Client
                 btn.Paint = function(self, w, h)
                     local color = self:IsHovered() and Color(60, 60, 70) or Color(40, 40, 50)
                     draw.RoundedBox(4, 0, 0, w, h, color)
-                    draw.SimpleText(actionData.name, "liaMediumFont", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(actionData.name, "LiliaFont.25", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -45478,7 +45442,7 @@ Client
                 btn.Paint = function(self, w, h)
                     local color = self:IsHovered() and Color(60, 60, 70) or Color(40, 40, 50)
                     draw.RoundedBox(4, 0, 0, w, h, color)
-                    draw.SimpleText(actionData.name, "liaMediumFont", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(actionData.name, "LiliaFont.25", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -45620,7 +45584,7 @@ Client
                 btn.Paint = function(self, w, h)
                     local color = self:IsHovered() and Color(60, 60, 70) or Color(40, 40, 50)
                     draw.RoundedBox(4, 0, 0, w, h, color)
-                    draw.SimpleText(actionData.name, "liaMediumFont", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(actionData.name, "LiliaFont.25", 35, h/2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -53863,17 +53827,17 @@ Client
         local requesterLabel = vgui.Create("DLabel", headerPanel)
         requesterLabel:SetPos(10, 5)
         requesterLabel:SetText("Requester: " .. requester:Name())
-        requesterLabel:SetFont("liaSmallFont")
+        requesterLabel:SetFont("LiliaFont.17")
         requesterLabel:SizeToContents()
         local steamIDLabel = vgui.Create("DLabel", headerPanel)
         steamIDLabel:SetPos(10, 25)
         steamIDLabel:SetText("Steam ID: " .. requester:SteamID())
-        steamIDLabel:SetFont("liaSmallFont")
+        steamIDLabel:SetFont("LiliaFont.17")
         steamIDLabel:SizeToContents()
         local statusLabel = vgui.Create("DLabel", headerPanel)
         statusLabel:SetPos(10, 45)
         statusLabel:SetText("Status: " .. (claimed and "Claimed" or "Unclaimed"))
-        statusLabel:SetFont("liaSmallFont")
+        statusLabel:SetFont("LiliaFont.17")
         statusLabel:SetColor(claimed and Color(0, 255, 0) or Color(255, 255, 0))
         statusLabel:SizeToContents()
         -- Message display
@@ -53888,7 +53852,7 @@ Client
         messageLabel:SetSize(460, 130)
         messageLabel:SetText("Message:\n" .. message)
         messageLabel:SetWrap(true)
-        messageLabel:SetFont("liaSmallFont")
+        messageLabel:SetFont("LiliaFont.17")
         -- Action buttons
         local buttonY = 280
         local buttonWidth = 150
@@ -54074,17 +54038,17 @@ Client
         local requesterLabel = vgui.Create("DLabel", headerPanel)
         requesterLabel:SetPos(10, 5)
         requesterLabel:SetText("Requester: " .. requester:Name())
-        requesterLabel:SetFont("liaSmallFont")
+        requesterLabel:SetFont("LiliaFont.17")
         requesterLabel:SizeToContents()
         local steamIDLabel = vgui.Create("DLabel", headerPanel)
         steamIDLabel:SetPos(10, 25)
         steamIDLabel:SetText("Steam ID: " .. requester:SteamID())
-        steamIDLabel:SetFont("liaSmallFont")
+        steamIDLabel:SetFont("LiliaFont.17")
         steamIDLabel:SizeToContents()
         local statusLabel = vgui.Create("DLabel", headerPanel)
         statusLabel:SetPos(10, 45)
         statusLabel:SetText("Status: " .. (claimed and "Claimed" or "Unclaimed"))
-        statusLabel:SetFont("liaSmallFont")
+        statusLabel:SetFont("LiliaFont.17")
         statusLabel:SetColor(claimed and Color(0, 255, 0) or Color(255, 255, 0))
         statusLabel:SizeToContents()
         -- Message display
@@ -54099,7 +54063,7 @@ Client
         messageLabel:SetSize(460, 130)
         messageLabel:SetText("Message:\n" .. message)
         messageLabel:SetWrap(true)
-        messageLabel:SetFont("liaSmallFont")
+        messageLabel:SetFont("LiliaFont.17")
         -- Action buttons
         local buttonY = 280
         local buttonWidth = 150
@@ -54285,17 +54249,17 @@ Client
         local requesterLabel = vgui.Create("DLabel", headerPanel)
         requesterLabel:SetPos(10, 5)
         requesterLabel:SetText("Requester: " .. requester:Name())
-        requesterLabel:SetFont("liaSmallFont")
+        requesterLabel:SetFont("LiliaFont.17")
         requesterLabel:SizeToContents()
         local steamIDLabel = vgui.Create("DLabel", headerPanel)
         steamIDLabel:SetPos(10, 25)
         steamIDLabel:SetText("Steam ID: " .. requester:SteamID())
-        steamIDLabel:SetFont("liaSmallFont")
+        steamIDLabel:SetFont("LiliaFont.17")
         steamIDLabel:SizeToContents()
         local statusLabel = vgui.Create("DLabel", headerPanel)
         statusLabel:SetPos(10, 45)
         statusLabel:SetText("Status: " .. (claimed and "Claimed" or "Unclaimed"))
-        statusLabel:SetFont("liaSmallFont")
+        statusLabel:SetFont("LiliaFont.17")
         statusLabel:SetColor(claimed and Color(0, 255, 0) or Color(255, 255, 0))
         statusLabel:SizeToContents()
         -- Message display
@@ -54310,7 +54274,7 @@ Client
         messageLabel:SetSize(460, 130)
         messageLabel:SetText("Message:\n" .. message)
         messageLabel:SetWrap(true)
-        messageLabel:SetFont("liaSmallFont")
+        messageLabel:SetFont("LiliaFont.17")
         -- Action buttons
         local buttonY = 280
         local buttonWidth = 150
@@ -54496,17 +54460,17 @@ Client
         local requesterLabel = vgui.Create("DLabel", headerPanel)
         requesterLabel:SetPos(10, 5)
         requesterLabel:SetText("Requester: " .. requester:Name())
-        requesterLabel:SetFont("liaSmallFont")
+        requesterLabel:SetFont("LiliaFont.17")
         requesterLabel:SizeToContents()
         local steamIDLabel = vgui.Create("DLabel", headerPanel)
         steamIDLabel:SetPos(10, 25)
         steamIDLabel:SetText("Steam ID: " .. requester:SteamID())
-        steamIDLabel:SetFont("liaSmallFont")
+        steamIDLabel:SetFont("LiliaFont.17")
         steamIDLabel:SizeToContents()
         local statusLabel = vgui.Create("DLabel", headerPanel)
         statusLabel:SetPos(10, 45)
         statusLabel:SetText("Status: " .. (claimed and "Claimed" or "Unclaimed"))
-        statusLabel:SetFont("liaSmallFont")
+        statusLabel:SetFont("LiliaFont.17")
         statusLabel:SetColor(claimed and Color(0, 255, 0) or Color(255, 255, 0))
         statusLabel:SizeToContents()
         -- Message display
@@ -54521,7 +54485,7 @@ Client
         messageLabel:SetSize(460, 130)
         messageLabel:SetText("Message:\n" .. message)
         messageLabel:SetWrap(true)
-        messageLabel:SetFont("liaSmallFont")
+        messageLabel:SetFont("LiliaFont.17")
         -- Action buttons
         local buttonY = 280
         local buttonWidth = 150
@@ -54651,7 +54615,7 @@ Client
     -- Medium: Add basic styling
     function MODULE:TooltipInitialize(tooltipPanel, panel)
         if not IsValid(tooltipPanel) then return end
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5) -- Center
     end
@@ -54667,7 +54631,7 @@ Client
         local panelData = panel:GetTable()
         local tooltipText = panelData.tooltipText or "No information available"
         -- Set up tooltip appearance
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5)
         tooltipPanel:SetText(tooltipText)
@@ -54726,7 +54690,7 @@ Client
     -- Medium: Add basic styling
     function MODULE:TooltipInitialize(tooltipPanel, panel)
         if not IsValid(tooltipPanel) then return end
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5) -- Center
     end
@@ -54742,7 +54706,7 @@ Client
         local panelData = panel:GetTable()
         local tooltipText = panelData.tooltipText or "No information available"
         -- Set up tooltip appearance
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5)
         tooltipPanel:SetText(tooltipText)
@@ -54801,7 +54765,7 @@ Client
     -- Medium: Add basic styling
     function MODULE:TooltipInitialize(tooltipPanel, panel)
         if not IsValid(tooltipPanel) then return end
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5) -- Center
     end
@@ -54817,7 +54781,7 @@ Client
         local panelData = panel:GetTable()
         local tooltipText = panelData.tooltipText or "No information available"
         -- Set up tooltip appearance
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5)
         tooltipPanel:SetText(tooltipText)
@@ -54876,7 +54840,7 @@ Client
     -- Medium: Add basic styling
     function MODULE:TooltipInitialize(tooltipPanel, panel)
         if not IsValid(tooltipPanel) then return end
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5) -- Center
     end
@@ -54892,7 +54856,7 @@ Client
         local panelData = panel:GetTable()
         local tooltipText = panelData.tooltipText or "No information available"
         -- Set up tooltip appearance
-        tooltipPanel:SetFont("liaSmallFont")
+        tooltipPanel:SetFont("LiliaFont.17")
         tooltipPanel:SetTextColor(color_white)
         tooltipPanel:SetContentAlignment(5)
         tooltipPanel:SetText(tooltipText)
@@ -57609,6 +57573,785 @@ Client
             MODULE.LogWeaponSelect(client, weapon:GetClass())
         end
     end
+
+```
+
+---
+
+### AdjustPACPartData
+
+#### 📋 Purpose
+Allows modification of PAC3 part data before it is attached to a player
+
+#### ⏰ When Called
+When a PAC3 part is being adjusted or attached to a player
+
+#### ↩️ Returns
+* table or nil - Return modified data table, or nil to use original data
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Modify part color
+    hook.Add("AdjustPACPartData", "MyAddon", function(wearer, id, data)
+        if id == "my_custom_item" then
+            data.Color = Color(255, 0, 0)
+            return data
+        end
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Adjust part based on character
+    hook.Add("AdjustPACPartData", "CharacterBasedPAC", function(wearer, id, data)
+        local char = wearer:getChar()
+        if not char then return end
+        if id == "faction_badge" then
+            local faction = char:getFaction()
+            if faction == "police" then
+                data.Color = Color(0, 0, 255)
+            elseif faction == "medic" then
+                data.Color = Color(255, 0, 0)
+            end
+            return data
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex PAC3 part modification system
+    hook.Add("AdjustPACPartData", "AdvancedPACMod", function(wearer, id, data)
+        local char = wearer:getChar()
+        if not char then return end
+        local item = lia.item.list[id]
+        if not item or not item.pacAdjust then return end
+        -- Let item handle its own adjustment
+        local result = item:pacAdjust(data, wearer)
+        if result ~= nil then return result end
+        -- Apply faction-based modifications
+        local faction = char:getFaction()
+        local factionMods = {
+            police = {Color = Color(0, 0, 255), Scale = 1.1},
+            medic = {Color = Color(255, 0, 0), Scale = 0.9}
+        }
+        if factionMods[faction] then
+            for key, value in pairs(factionMods[faction]) do
+                data[key] = value
+            end
+        end
+        -- Apply attribute-based modifications
+        local con = char:getAttrib("con", 0)
+        if con > 10 then
+            data.Scale = (data.Scale or 1) * (1 + con * 0.01)
+        end
+        return data
+    end)
+
+```
+
+---
+
+### GetAdjustedPartData
+
+#### 📋 Purpose
+Retrieves adjusted PAC3 part data for a player
+
+#### ⏰ When Called
+When a PAC3 part needs to be retrieved for attachment
+
+#### ↩️ Returns
+* table or nil - Return the adjusted part data table, or nil if part doesn't exist
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Return cached part data
+    hook.Add("GetAdjustedPartData", "MyAddon", function(wearer, id)
+        local cached = myPartCache[id]
+        if cached then
+            return table.Copy(cached)
+        end
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Get and adjust part data
+    hook.Add("GetAdjustedPartData", "PartDataRetrieval", function(wearer, id)
+        if not partData[id] then return end
+        local data = table.Copy(partData[id])
+        return hook.Run("AdjustPACPartData", wearer, id, data) or data
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex part data retrieval with validation
+    hook.Add("GetAdjustedPartData", "AdvancedPartData", function(wearer, id)
+        local char = wearer:getChar()
+        if not char then return end
+        -- Check if part exists in cache
+        if not partData[id] then return end
+        -- Get base data
+        local data = table.Copy(partData[id])
+        -- Validate part compatibility with character
+        local item = lia.item.list[id]
+        if item and item.requiredFaction then
+            if char:getFaction() ~= item.requiredFaction then
+                return nil -- Part not compatible
+            end
+        end
+        -- Apply adjustments
+        data = hook.Run("AdjustPACPartData", wearer, id, data) or data
+        -- Apply character-specific modifications
+        if char:getData("customPACMods") then
+            for key, value in pairs(char:getData("customPACMods")) do
+                if data[key] ~= nil then
+                    data[key] = value
+                end
+            end
+        end
+        return data
+    end)
+
+```
+
+---
+
+### CanDisplayCharInfo
+
+#### 📋 Purpose
+Determines if character information can be displayed for a given name
+
+#### ⏰ When Called
+When the F1 menu or character info panel checks if it should display character information
+
+#### ↩️ Returns
+* boolean - Return false to prevent display, true or nil to allow
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Always allow display
+    hook.Add("CanDisplayCharInfo", "MyAddon", function(name)
+        return true
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Hide info for certain characters
+    hook.Add("CanDisplayCharInfo", "HideCharInfo", function(name)
+        local client = LocalPlayer()
+        if not client then return true end
+        local char = client:getChar()
+        if not char then return true end
+        -- Hide info for own character
+        if char:getName() == name then
+            return false
+        end
+        return true
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex permission-based display system
+    hook.Add("CanDisplayCharInfo", "PermissionBasedDisplay", function(name)
+        local client = LocalPlayer()
+        if not client then return true end
+        local char = client:getChar()
+        if not char then return true end
+        -- Check if player has permission to view character info
+        if not client:hasPrivilege("viewCharInfo") then
+            return false
+        end
+        -- Check faction restrictions
+        local targetChar = lia.char.find(name)
+        if targetChar then
+            local targetFaction = targetChar:getFaction()
+            local myFaction = char:getFaction()
+            -- Police can view all character info
+            if myFaction == "police" then
+                return true
+            end
+            -- Same faction can view each other
+            if targetFaction == myFaction then
+                return true
+            end
+            -- Check if target has privacy flag
+            if targetChar:getData("hideInfo", false) then
+                return false
+            end
+        end
+        return true
+    end)
+
+```
+
+---
+
+### CharListColumns
+
+#### 📋 Purpose
+Allows modification of character list columns in the administration panel
+
+#### ⏰ When Called
+When the character list is being built in the administration panel
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Add a custom column
+    hook.Add("CharListColumns", "MyAddon", function(columns)
+        columns[#columns + 1] = {
+            field = "customField",
+            format = function(val) return tostring(val) end
+        }
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Add multiple columns with formatting
+    hook.Add("CharListColumns", "CustomColumns", function(columns)
+        table.insert(columns, {
+            field = "reputation",
+            format = function(val) return tostring(val) .. " rep" end
+        })
+        table.insert(columns, {
+            field = "playtime",
+            format = function(val) return string.NiceTime(val) end
+        })
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex column system with conditional display
+    hook.Add("CharListColumns", "AdvancedColumns", function(columns)
+        local client = LocalPlayer()
+        if not client then return end
+        -- Only admins see certain columns
+        if client:IsAdmin() then
+            table.insert(columns, {
+                field = "steamID",
+                format = function(val) return val or "N/A" end
+            })
+        end
+        -- Add faction-specific columns
+        table.insert(columns, {
+            field = "faction",
+            format = function(val)
+                local faction = lia.faction.indices[val]
+                return faction and faction.name or val
+            end
+        })
+        -- Add playtime with color coding
+        table.insert(columns, {
+            field = "playtime",
+            format = function(val)
+                local hours = val / 3600
+                local color = hours > 100 and Color(0, 255, 0) or hours > 50 and Color(255, 255, 0) or Color(255, 0, 0)
+                return string.NiceTime(val)
+            end
+        })
+    end)
+
+```
+
+---
+
+### ChatboxTextAdded
+
+#### 📋 Purpose
+Called when text is added to the chatbox
+
+#### ⏰ When Called
+After text has been added to the chatbox panel
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log chat messages
+    hook.Add("ChatboxTextAdded", "MyAddon", function(...)
+        print("Chat text added:", ...)
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Filter or modify chat display
+    hook.Add("ChatboxTextAdded", "ChatFilter", function(...)
+        local args = {...}
+        -- Check if message contains certain words
+        for i, arg in ipairs(args) do
+            if isstring(arg) and arg:find("spam") then
+                return -- Don't display spam messages
+            end
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex chat processing system
+    hook.Add("ChatboxTextAdded", "AdvancedChat", function(...)
+        local args = {...}
+        local client = LocalPlayer()
+        if not client then return end
+        -- Extract message text
+        local messageText = ""
+        for _, arg in ipairs(args) do
+            if isstring(arg) then
+                messageText = messageText .. arg
+            end
+        end
+        -- Check for mentions
+        local playerName = client:Name()
+        if messageText:find(playerName, 1, true) then
+            -- Play notification sound
+            surface.PlaySound("buttons/blip1.wav")
+            -- Flash chat panel
+            if IsValid(lia.gui.chat) then
+                lia.gui.chat:Flash()
+            end
+        end
+        -- Log important messages
+        if messageText:find("admin", 1, true) or messageText:find("help", 1, true) then
+            lia.log.add("Important chat: " .. messageText, FLAG_NORMAL)
+        end
+    end)
+
+```
+
+---
+
+### FilterCharModels
+
+#### 📋 Purpose
+Filters character models available for selection
+
+#### ⏰ When Called
+When building the character model selection list
+
+#### ↩️ Returns
+* boolean or nil - Return false to exclude the model, true or nil to include
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Filter out specific models
+    hook.Add("FilterCharModels", "MyAddon", function(client, faction, data, idx)
+        if idx == "restricted_model" then
+            return false
+        end
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Filter based on faction
+    hook.Add("FilterCharModels", "FactionFilter", function(client, faction, data, idx)
+        local char = client:getChar()
+        if not char then return true end
+        -- Only show certain models for specific factions
+        if faction.uniqueID == "police" then
+            if not data.isPoliceModel then
+                return false
+            end
+        end
+        return true
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex model filtering system
+    hook.Add("FilterCharModels", "AdvancedFilter", function(client, faction, data, idx)
+        local char = client:getChar()
+        if not char then return true end
+        -- Check faction restrictions
+        if data.requiredFaction and data.requiredFaction ~= faction.uniqueID then
+            return false
+        end
+        -- Check level requirements
+        if data.requiredLevel then
+            local charLevel = char:getData("level", 1)
+            if charLevel < data.requiredLevel then
+                return false
+            end
+        end
+        -- Check permission requirements
+        if data.requiredPermission then
+            if not client:hasPrivilege(data.requiredPermission) then
+                return false
+            end
+        end
+        -- Check if model is unlocked
+        if data.unlockable then
+            local unlocked = char:getData("unlockedModels", {})
+            if not table.HasValue(unlocked, idx) then
+                return false
+            end
+        end
+        return true
+    end)
+
+```
+
+---
+
+### GetInjuredText
+
+#### 📋 Purpose
+Gets the injured status text for a character
+
+#### ⏰ When Called
+When drawing character information and checking injury status
+
+#### ↩️ Returns
+* table or nil - Return {textKey, color} table, or nil for no injured text
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Return basic injured text
+    hook.Add("GetInjuredText", "MyAddon", function(character)
+        if character:getData("injured", false) then
+            return {"injured", Color(255, 0, 0)}
+        end
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check health-based injury
+    hook.Add("GetInjuredText", "HealthInjury", function(character)
+        local client = character:getPlayer()
+        if not IsValid(client) then return end
+        local health = client:Health()
+        if health < 30 then
+            return {"criticallyInjured", Color(255, 0, 0)}
+        elseif health < 60 then
+            return {"injured", Color(255, 165, 0)}
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex injury system with multiple states
+    hook.Add("GetInjuredText", "AdvancedInjury", function(character)
+        local client = character:getPlayer()
+        if not IsValid(client) then return end
+        local health = client:Health()
+        local maxHealth = client:GetMaxHealth()
+        local healthPercent = health / maxHealth
+        -- Check for critical injury
+        if healthPercent < 0.2 then
+            return {"criticallyInjured", Color(255, 0, 0)}
+        end
+        -- Check for serious injury
+        if healthPercent < 0.4 then
+            return {"seriouslyInjured", Color(255, 100, 0)}
+        end
+        -- Check for moderate injury
+        if healthPercent < 0.7 then
+            return {"moderatelyInjured", Color(255, 200, 0)}
+        end
+        -- Check for stamina-based injury
+        local stamina = client:getNetVar("stamina", 100)
+        if stamina < 10 then
+            return {"exhausted", Color(100, 100, 255)}
+        end
+        -- Check for custom injury states
+        local injuryState = character:getData("injuryState")
+        if injuryState then
+            local injuryData = {
+                bleeding = {"bleeding", Color(200, 0, 0)},
+                broken = {"brokenBone", Color(150, 150, 150)},
+                poisoned = {"poisoned", Color(0, 200, 0)}
+            }
+            return injuryData[injuryState]
+        end
+    end)
+
+```
+
+---
+
+### InitializedKeybinds
+
+#### 📋 Purpose
+Called when keybinds have been initialized
+
+#### ⏰ When Called
+After all keybinds have been loaded and initialized
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log initialization
+    hook.Add("InitializedKeybinds", "MyAddon", function()
+        print("Keybinds initialized")
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Register custom keybinds
+    hook.Add("InitializedKeybinds", "CustomKeybinds", function()
+        lia.keybind.register("myCustomAction", {
+            name = "My Custom Action",
+            key = KEY_F1,
+            onPressed = function()
+                print("Custom action triggered")
+            end
+        })
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex keybind system
+    hook.Add("InitializedKeybinds", "AdvancedKeybinds", function()
+        -- Register multiple keybinds
+        local keybinds = {
+            {id = "quickUse", key = KEY_E, name = "Quick Use"},
+            {id = "inventory", key = KEY_TAB, name = "Inventory"},
+            {id = "radio", key = KEY_R, name = "Radio"}
+        }
+        for _, bind in ipairs(keybinds) do
+            lia.keybind.register(bind.id, {
+                name = bind.name,
+                key = bind.key,
+                onPressed = function()
+                    hook.Run("OnKeybindPressed", bind.id)
+                end
+            })
+        end
+        -- Load saved keybind preferences
+        local saved = lia.data.get("keybinds", {})
+        for id, key in pairs(saved) do
+            lia.keybind.set(id, key)
+        end
+    end)
+
+```
+
+---
+
+### InitializedOptions
+
+#### 📋 Purpose
+Called when options have been initialized
+
+#### ⏰ When Called
+After all options have been loaded and initialized
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log initialization
+    hook.Add("InitializedOptions", "MyAddon", function()
+        print("Options initialized")
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Register custom options
+    hook.Add("InitializedOptions", "CustomOptions", function()
+        lia.option.add("myCustomOption", {
+            category = "My Category",
+            type = "Boolean",
+            default = true,
+            onChanged = function(value)
+                print("Option changed:", value)
+            end
+        })
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex option system
+    hook.Add("InitializedOptions", "AdvancedOptions", function()
+        -- Register multiple options
+        local options = {
+            {
+                id = "myBoolean",
+                category = "My Category",
+                type = "Boolean",
+                default = true
+            },
+            {
+                id = "myNumber",
+                category = "My Category",
+                type = "Number",
+                default = 50,
+                min = 0,
+                max = 100
+            },
+            {
+                id = "myString",
+                category = "My Category",
+                type = "String",
+                default = "default"
+            }
+        }
+        for _, opt in ipairs(options) do
+            lia.option.add(opt.id, opt)
+        end
+        -- Apply saved options
+        local saved = lia.data.get("options", {})
+        for id, value in pairs(saved) do
+            lia.option.set(id, value)
+        end
+    end)
+
+```
+
+---
+
+### OverrideSpawnTime
+
+#### 📋 Purpose
+Allows overriding the spawn time for a player
+
+#### ⏰ When Called
+When calculating spawn time for a player
+
+#### ↩️ Returns
+* number or nil - Return modified spawn time, or nil to use base time
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Increase spawn time
+    hook.Add("OverrideSpawnTime", "MyAddon", function(client, baseTime)
+        return baseTime * 2
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Modify based on character
+    hook.Add("OverrideSpawnTime", "CharBasedSpawn", function(client, baseTime)
+        local char = client:getChar()
+        if not char then return end
+        local faction = char:getFaction()
+        if faction == "medic" then
+            return baseTime * 0.5 -- Medics spawn faster
+        end
+        return baseTime
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex spawn time system
+    hook.Add("OverrideSpawnTime", "AdvancedSpawn", function(client, baseTime)
+        local char = client:getChar()
+        if not char then return end
+        local modifiers = {
+            base = baseTime
+        }
+        -- Faction modifiers
+        local faction = char:getFaction()
+        local factionMods = {
+            medic = 0.5,
+            police = 0.75,
+            civilian = 1.0
+        }
+        modifiers.faction = factionMods[faction] or 1.0
+        -- Attribute modifiers
+        local con = char:getAttrib("con", 0)
+        modifiers.attribute = 1.0 - (con * 0.01) -- 1% faster per constitution
+        -- Death count modifiers
+        local deathCount = char:getData("deathCount", 0)
+        if deathCount > 5 then
+            modifiers.death = 1.5 -- Longer spawn after multiple deaths
+        end
+        -- Calculate final time
+        local finalTime = modifiers.base * modifiers.faction * modifiers.attribute * (modifiers.death or 1.0)
+        return math.max(1, finalTime) -- Minimum 1 second
+    end)
 
 ```
 

@@ -65,7 +65,7 @@ function PANEL:Init()
     serverName:Dock(TOP)
     serverName:DockMargin(0, -5, 0, 0)
     serverName:SetText(GetHostName())
-    serverName:SetFont("liaMediumFont")
+    serverName:SetFont("LiliaFont.25")
     serverName:SetContentAlignment(5)
     serverName:SetTextColor(color_white)
     serverName:SetExpensiveShadow(1, color_black)
@@ -128,7 +128,7 @@ function PANEL:Init()
             lbl = vgui.Create("DLabel")
         end
 
-        lbl:SetFont("liaMediumFont")
+        lbl:SetFont("LiliaFont.25")
         lbl:SetTextColor(color_white)
         lbl:SetExpensiveShadow(1, color_black)
         lbl:SetText(L(facData.name))
@@ -183,7 +183,7 @@ function PANEL:Init()
                     hlbl = vgui.Create("DLabel")
                 end
 
-                hlbl:SetFont("liaSmallFont")
+                hlbl:SetFont("LiliaFont.17")
                 hlbl:SetTextColor(color_white)
                 hlbl:SetExpensiveShadow(1, color_black)
                 hlbl:SetText(L(clsData.name))
@@ -309,7 +309,7 @@ function PANEL:addPlayer(ply, parent)
                         surface.DrawTexturedRect(8, (h - localIconSize) / 2, localIconSize, localIconSize)
                     end
 
-                    draw.SimpleText(L(o.name), "liaSmallFont", 32, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(L(o.name), "LiliaFont.17", 32, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
 
                 button.DoClick = function()
@@ -334,14 +334,14 @@ function PANEL:addPlayer(ply, parent)
     end)
 
     slot.name = vgui.Create("DLabel", slot)
-    slot.name:SetFont("liaMediumFont")
+    slot.name:SetFont("LiliaFont.25")
     slot.name:SetTextColor(color_white)
     slot.name:SetExpensiveShadow(1, color_black)
     slot.desc = vgui.Create("DLabel", slot)
     slot.desc:SetAutoStretchVertical(true)
     slot.desc:SetWrap(true)
     slot.desc:SetContentAlignment(7)
-    slot.desc:SetFont("liaSmallFont")
+    slot.desc:SetFont("LiliaFont.17")
     slot.desc:SetTextColor(color_white)
     slot.desc:SetExpensiveShadow(1, Color(0, 0, 0, 100))
     slot.ping = vgui.Create("DLabel", slot)
@@ -413,8 +413,8 @@ function PANEL:addPlayer(ply, parent)
 
         local desc = hook.Run("ShouldAllowScoreboardOverride", ply, "desc") and hook.Run("GetDisplayedDescription", ply, false) or char:getDesc()
         desc = desc:gsub("#", "\226\128\139#")
-        local wrapped = wrap(desc, self.desc:GetWide(), "liaSmallFont")
-        surface.SetFont("liaSmallFont")
+        local wrapped = wrap(desc, self.desc:GetWide(), "LiliaFont.17")
+        surface.SetFont("LiliaFont.17")
         local maxLines = 2
         if #wrapped > maxLines then
             wrapped[maxLines] = wrapped[maxLines] .. " (...)"

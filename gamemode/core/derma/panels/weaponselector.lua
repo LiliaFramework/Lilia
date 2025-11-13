@@ -80,7 +80,7 @@ local function HUDPaint()
             if index == 1 then lastY = 0 end
         end
 
-        surface.SetFont("liaBigFont")
+        surface.SetFont("LiliaFont.36")
         local name = hook.Run("GetWeaponName", weapon) or language.GetPhrase(weapon:GetPrintName())
         local _, ty = surface.GetTextSize(name)
         local scale = math.max(1 - math.abs(theta * 2), 0)
@@ -97,7 +97,7 @@ local function HUDPaint()
         matrix:Translate(Vector(textX, textY, 1))
         matrix:Scale(Vector(scale, scale, 1))
         cam.PushModelMatrix(matrix)
-        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "liaBigFont")
+        lia.util.drawText(name, 2, ty / 2, col, 0, 1, "LiliaFont.36")
         cam.PopModelMatrix()
     end
 
@@ -122,7 +122,7 @@ local function onIndexChanged()
 
         if #textParts > 0 then
             local text = table.concat(textParts)
-            infoMarkup = markup.Parse("<font=liaSmallFont>" .. text, ScrW() * 0.3)
+            infoMarkup = markup.Parse("<font=LiliaFont.17>" .. text, ScrW() * 0.3)
         end
 
         local source, pitch = hook.Run("WeaponCycleSound")

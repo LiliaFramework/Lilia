@@ -113,9 +113,9 @@ end
             - screenPadding (number, optional): Screen padding for frame positioning (defaults to 15% of screen width)
             - x (number, optional): Custom X position (auto-calculated if not provided)
             - y (number, optional): Custom Y position (auto-calculated if not provided)
-            - titleFont (string, optional): Font for title text (defaults to "liaSmallFont")
+            - titleFont (string, optional): Font for title text (defaults to "LiliaFont.17")
             - titleColor (Color, optional): Color for title text (defaults to color_white)
-            - buttonFont (string, optional): Font for option buttons (defaults to "liaSmallFont")
+            - buttonFont (string, optional): Font for option buttons (defaults to "LiliaFont.17")
             - buttonTextColor (Color, optional): Color for button text (defaults to color_white)
             - closeOnSelect (boolean, optional): Whether to close menu when option is selected (defaults to true)
             - timerName (string, optional): Name for auto-close timer
@@ -191,7 +191,7 @@ end
     description = "Enter a custom frequency",
     callback = function()
     -- Open frequency input dialog
-    lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+    lia.derma.requestString("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
     local numFreq = tonumber(freq)
     if numFreq and numFreq >= 80 and numFreq <= 200 then
         lia.radio.setFrequency(numFreq)
@@ -385,7 +385,7 @@ function lia.derma.optionsMenu(rawOptions, config)
 
     local layout = vgui.Create("DListLayout", scroll)
     layout:Dock(FILL)
-    local buttonFont = config.buttonFont or "liaSmallFont"
+    local buttonFont = config.buttonFont or "LiliaFont.17"
     local buttonTextColor = config.buttonTextColor or color_white
     local shouldCloseOnSelect = config.closeOnSelect
     if shouldCloseOnSelect == nil then shouldCloseOnSelect = true end
@@ -409,7 +409,7 @@ function lia.derma.optionsMenu(rawOptions, config)
                 local displayText = entry.name or ""
                 local localized = L(displayText)
                 if localized and localized ~= "" then displayText = localized end
-                draw.SimpleText(displayText, "liaSmallFont", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(displayText, "LiliaFont.17", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
 
             layout:Add(categoryPanel)
@@ -510,7 +510,7 @@ end
     Low Complexity:
     ```lua
     -- Simple: Open color picker with callback
-    lia.derma.colorPicker(function(color)
+    lia.derma.requestColorPicker(function(color)
     print("Selected color:", color.r, color.g, color.b)
     end)
     ```
@@ -519,7 +519,7 @@ end
     ```lua
     -- Medium: Open color picker with default color
     local defaultColor = Color(255, 0, 0)
-    lia.derma.colorPicker(function(color)
+    lia.derma.requestColorPicker(function(color)
     myPanel:SetColor(color)
     end, defaultColor)
     ```
@@ -528,7 +528,7 @@ end
     ```lua
     -- High: Color picker with validation and multiple callbacks
     local currentColor = settings:GetColor("theme_color")
-    lia.derma.colorPicker(function(color)
+    lia.derma.requestColorPicker(function(color)
     if color:Distance(currentColor) > 50 then
         settings:SetColor("theme_color", color)
         updateTheme(color)
@@ -537,7 +537,7 @@ end
     end, currentColor)
     ```
 ]]
-function lia.derma.colorPicker(func, color_standart)
+function lia.derma.requestColorPicker(func, color_standart)
     if IsValid(lia.gui.menuColorPicker) then lia.gui.menuColorPicker:Remove() end
     local selected_color = color_standart or Color(255, 255, 255)
     local hue = 0
@@ -797,7 +797,7 @@ end
     Low Complexity:
     ```lua
     -- Simple: Open player selector with callback
-    lia.derma.playerSelector(function(player)
+    lia.derma.requestPlayerSelector(function(player)
     print("Selected player:", player:Name())
     end)
     ```
@@ -805,7 +805,7 @@ end
     Medium Complexity:
     ```lua
     -- Medium: Player selector with validation
-    lia.derma.playerSelector(function(player)
+    lia.derma.requestPlayerSelector(function(player)
     if IsValid(player) and player:IsPlayer() then
         sendMessage(player, "Hello!")
     end
@@ -815,7 +815,7 @@ end
     High Complexity:
     ```lua
     -- High: Player selector with admin checks and multiple actions
-    lia.derma.playerSelector(function(player)
+    lia.derma.requestPlayerSelector(function(player)
     if not IsValid(player) then return end
 
         local menu = lia.derma.dermaMenu()
@@ -828,7 +828,7 @@ end
     end)
     ```
 ]]
-function lia.derma.playerSelector(do_click)
+function lia.derma.requestPlayerSelector(do_click)
     if IsValid(lia.gui.menuPlayerSelector) then lia.gui.menuPlayerSelector:Remove() end
     lia.gui.menuPlayerSelector = vgui.Create("liaFrame")
     lia.gui.menuPlayerSelector:SetSize(340, 398)
@@ -916,96 +916,6 @@ function lia.derma.playerSelector(do_click)
     lia.gui.menuPlayerSelector.btn_close:SetTxt(L("close"))
     lia.gui.menuPlayerSelector.btn_close:SetColorHover(color_disconnect)
     lia.gui.menuPlayerSelector.btn_close.DoClick = function() lia.gui.menuPlayerSelector:Remove() end
-end
-
---[[
-    Purpose:
-        Opens a text input dialog for user text entry
-
-    When Called:
-        When user needs to input text through a dialog
-
-    Parameters:
-        title (string) - Title of the dialog window
-        desc (string) - Description/placeholder text for the input field
-        func (function) - Callback function called with the entered text
-
-    Returns:
-        None
-
-    Realm:
-        Client
-
-    Example Usage:
-    Low Complexity:
-    ```lua
-    -- Simple: Open text input dialog
-    lia.derma.textBox("Enter Name", "Type your name here", function(text)
-    print("Entered:", text)
-    end)
-    ```
-
-    Medium Complexity:
-    ```lua
-    -- Medium: Text input with validation
-    lia.derma.textBox("Set Password", "Enter new password", function(text)
-    if string.len(text) >= 6 then
-        setPassword(text)
-        else
-            notify("Password too short!")
-        end
-    end)
-    ```
-
-    High Complexity:
-    ```lua
-    -- High: Text input with multiple validations and processing
-    lia.derma.textBox("Create Item", "Enter item name", function(text)
-    if not text or text == "" then return end
-
-        local cleanText = string.Trim(text)
-        if string.len(cleanText) < 3 then
-            notify("Name too short!")
-            return
-        end
-
-        if itemExists(cleanText) then
-            notify("Item already exists!")
-            return
-        end
-
-        createItem(cleanText)
-        refreshItemList()
-    end)
-    ```
-]]
-function lia.derma.textBox(title, desc, func)
-    if IsValid(lia.gui.menuTextBox) then lia.gui.menuTextBox:Remove() end
-    lia.gui.menuTextBox = vgui.Create("liaFrame")
-    lia.gui.menuTextBox:SetSize(300, 132)
-    lia.gui.menuTextBox:Center()
-    lia.gui.menuTextBox:MakePopup()
-    lia.gui.menuTextBox:SetTitle(title)
-    lia.gui.menuTextBox:ShowAnimation()
-    lia.gui.menuTextBox:DockPadding(12, 30, 12, 12)
-    local entry = vgui.Create("liaEntry", lia.gui.menuTextBox)
-    entry:Dock(TOP)
-    entry:SetTitle(desc)
-    local function apply_func()
-        func(entry:GetValue())
-        lia.gui.menuTextBox:Remove()
-    end
-
-    entry.OnEnter = function() apply_func() end
-    local btn_accept = vgui.Create("liaButton", lia.gui.menuTextBox)
-    btn_accept:Dock(BOTTOM)
-    btn_accept:SetTall(30)
-    btn_accept:SetTxt(L("apply"))
-    btn_accept:SetColorHover(color_accept)
-    btn_accept.DoClick = function()
-        btn_accept.BaseClass.DoClick(btn_accept)
-        apply_func()
-    end
 end
 
 local bit_band = bit.band
@@ -3068,7 +2978,7 @@ end
 function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
     defaults = defaults or {}
     local count = table.Count(argTypes)
-    local frameW, frameH = 600, 450 + count * 135
+    local frameW, frameH = 600, math.min(450 + count * 135, ScrH() * 0.5)
     local frame = vgui.Create("liaFrame")
     frame:SetSize(frameW, frameH)
     frame:Center()
@@ -3080,7 +2990,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
     local scroll = vgui.Create("liaScrollPanel", frame)
     scroll:Dock(FILL)
     scroll:DockMargin(10, 40, 10, 10)
-    surface.SetFont("liaSmallFont")
+    surface.SetFont("LiliaFont.17")
     local controls, watchers = {}, {}
     local validate
     local ordered = {}
@@ -3184,13 +3094,13 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
             ctrl:PostInit()
         elseif fieldType == "int" or fieldType == "number" then
             ctrl = vgui.Create("liaEntry", panel)
-            ctrl:SetFont("liaSmallFont")
+            ctrl:SetFont("LiliaFont.17")
             ctrl:SetTitle("")
             if ctrl.SetNumeric then ctrl:SetNumeric(true) end
             if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
         elseif fieldType == "player" then
             ctrl = vgui.Create("liaComboBox", panel)
-            ctrl:SetFont("liaSmallFont")
+            ctrl:SetFont("LiliaFont.17")
             ctrl:SetPlaceholder(L("select"))
             ctrl:AddChoice(L("select"), "")
             for _, pl in player.Iterator() do
@@ -3210,7 +3120,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
             end
         else
             ctrl = vgui.Create("liaEntry", panel)
-            ctrl:SetFont("liaSmallFont")
+            ctrl:SetFont("LiliaFont.17")
             ctrl:SetTitle("")
             if defaultVal ~= nil then ctrl:SetValue(tostring(defaultVal)) end
         end
@@ -3512,7 +3422,7 @@ function lia.derma.openOptionsMenu(title, options)
     titleLabel:SetPos(0, 8)
     titleLabel:SetSize(frameW, 20)
     titleLabel:SetText(L(title or "options"))
-    titleLabel:SetFont("liaSmallFont")
+    titleLabel:SetFont("LiliaFont.17")
     titleLabel:SetColor(Color(255, 255, 255))
     titleLabel:SetContentAlignment(5)
     local layout = frame:Add("DListLayout")
@@ -3920,7 +3830,7 @@ function lia.derma.requestString(title, description, callback, defaultValue, max
     descriptionLabel:Dock(TOP)
     descriptionLabel:DockMargin(20, 40, 20, 10)
     descriptionLabel:SetText(description or L("enterValue"))
-    descriptionLabel:SetFont("liaSmallFont")
+    descriptionLabel:SetFont("LiliaFont.17")
     descriptionLabel:SetTextColor(lia.color.theme.text or color_white)
     descriptionLabel:SetContentAlignment(5)
     descriptionLabel:SizeToContents()
@@ -4055,7 +3965,7 @@ function lia.derma.requestOptions(title, options, callback, defaults)
             label:Dock(FILL)
             label:DockMargin(40, 0, 0, 0)
             label:SetText(optionText)
-            label:SetFont("liaSmallFont")
+            label:SetFont("LiliaFont.17")
             label:SetTextColor(lia.color.theme.text or color_white)
             label:SetContentAlignment(4)
             checkboxes[optionData] = checkbox
@@ -4165,7 +4075,7 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     questionLabel:Dock(TOP)
     questionLabel:DockMargin(20, 40, 20, 20)
     questionLabel:SetText(question or L("areYouSure"))
-    questionLabel:SetFont("liaMediumFont")
+    questionLabel:SetFont("LiliaFont.25")
     questionLabel:SetTextColor(lia.color.theme.text or color_white)
     questionLabel:SetContentAlignment(5)
     questionLabel:SizeToContents()
@@ -4270,7 +4180,7 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     descriptionLabel:Dock(TOP)
     descriptionLabel:DockMargin(20, 40, 20, 20)
     descriptionLabel:SetText(description or "")
-    descriptionLabel:SetFont("liaSmallFont")
+    descriptionLabel:SetFont("LiliaFont.17")
     descriptionLabel:SetTextColor(lia.color.theme.text or color_white)
     descriptionLabel:SetContentAlignment(5)
     descriptionLabel:SizeToContents()
@@ -4330,6 +4240,88 @@ function lia.derma.requestButtons(title, buttons, callback, description)
     return frame, buttonPanels
 end
 
+--[[
+    Purpose:
+        Creates a popup dialog with a question and multiple buttons with individual callbacks
+
+    When Called:
+        When user needs to make a choice from multiple options with custom actions
+
+    Parameters:
+        question (string) - The question text to display
+        buttons (table) - Array of button definitions {text, callback} where callback is executed when button is clicked
+
+    Returns:
+        frame (Panel) - The created dialog frame
+
+    Realm:
+        Client
+
+    Example Usage:
+    ```lua
+    lia.derma.requestPopupQuestion("Are you sure you want to delete this?", {
+        {"Yes", function()
+            print("User clicked Yes")
+        end},
+        {"No", function()
+            print("User clicked No")
+        end},
+        {"Maybe", function()
+            print("User clicked Maybe")
+        end}
+    })
+    ```
+]]
+function lia.derma.requestPopupQuestion(question, buttons)
+    if IsValid(lia.gui.menuRequestPopup) then lia.gui.menuRequestPopup:Remove() end
+    local buttonCount = #buttons
+    local frameHeight = 180 + (buttonCount * 45)
+    local frame = vgui.Create("liaFrame")
+    frame:SetSize(400, frameHeight)
+    frame:Center()
+    frame:MakePopup()
+    frame:SetTitle("")
+    frame:SetCenterTitle(L("question"))
+    frame:ShowAnimation()
+    frame:SetZPos(1000)
+    local questionLabel = vgui.Create("DLabel", frame)
+    questionLabel:Dock(TOP)
+    questionLabel:DockMargin(20, 40, 20, 20)
+    questionLabel:SetText(question or L("areYouSure"))
+    questionLabel:SetFont("LiliaFont.14")
+    questionLabel:SetTextColor(lia.color.theme.text or color_white)
+    questionLabel:SetContentAlignment(5)
+    questionLabel:SizeToContents()
+    local buttonContainer = vgui.Create("Panel", frame)
+    buttonContainer:Dock(FILL)
+    buttonContainer:DockMargin(20, 0, 20, 20)
+    for _, buttonInfo in ipairs(buttons) do
+        local buttonText
+        local buttonCallback = nil
+        if istable(buttonInfo) then
+            buttonText = buttonInfo[1] or tostring(buttonInfo)
+            buttonCallback = buttonInfo[2]
+        else
+            buttonText = tostring(buttonInfo)
+        end
+
+        local buttonPanel = vgui.Create("Panel", buttonContainer)
+        buttonPanel:Dock(TOP)
+        buttonPanel:DockMargin(0, 5, 0, 5)
+        buttonPanel:SetTall(40)
+        local button = vgui.Create("liaButton", buttonPanel)
+        button:Dock(FILL)
+        button:SetTxt(buttonText)
+        button.DoClick = function()
+            if buttonCallback and isfunction(buttonCallback) then buttonCallback() end
+            frame:Remove()
+        end
+    end
+
+    lia.gui.menuRequestPopup = frame
+    return frame
+end
+
 timer.Simple(0, function()
     if IsValid(lia.gui.menuDermaMenu) then lia.gui.menuDermaMenu:Remove() end
     if IsValid(lia.gui.menuTextBox) then lia.gui.menuTextBox:Remove() end
@@ -4341,6 +4333,7 @@ timer.Simple(0, function()
     if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
     if IsValid(lia.gui.menuRequestBinary) then lia.gui.menuRequestBinary:Remove() end
     if IsValid(lia.gui.menuRequestButtons) then lia.gui.menuRequestButtons:Remove() end
+    if IsValid(lia.gui.menuRequestPopup) then lia.gui.menuRequestPopup:Remove() end
     if IsValid(lia.gui.menuOpenOptions) then lia.gui.menuOpenOptions:Remove() end
     if IsValid(lia.gui.menuTableUI) then lia.gui.menuTableUI:Remove() end
     if IsValid(lia.gui.quick) then lia.gui.quick:Remove() end

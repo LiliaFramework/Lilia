@@ -25,7 +25,7 @@ end
 
 function PANEL:addLabel(text)
     local lbl = self:Add("DLabel")
-    lbl:SetFont("liaMediumFont")
+    lbl:SetFont("LiliaFont.25")
     lbl:SetText(L(text):upper())
     lbl:SizeToContents()
     lbl:Dock(TOP)

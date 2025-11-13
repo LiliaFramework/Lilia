@@ -877,7 +877,7 @@ function PANEL:populateFactionPanel()
         faction:SetTextColor(lia.color.theme.text or color_white)
         faction:SetText(L(v.name))
         faction:DockMargin(0, 0, 0, 4)
-        faction:SetFont("liaSmallFont")
+        faction:SetFont("LiliaFont.17")
         faction.factionID = k
         faction.OnChange = function(_, state) lia.vendor.editor.faction(k, state) end
         self.factions[k] = faction
@@ -888,7 +888,7 @@ function PANEL:populateFactionPanel()
                 class:DockMargin(16, 0, 0, 4)
                 class:SetText(L(v2.name))
                 class:SetTextColor(lia.color.theme.text or color_white)
-                class:SetFont("liaSmallFont")
+                class:SetFont("LiliaFont.17")
                 class.classID = k2
                 class.factionID = faction.factionID
                 class.OnChange = function(_, state) lia.vendor.editor.class(k2, state) end

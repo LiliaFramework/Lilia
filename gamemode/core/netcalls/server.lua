@@ -4,9 +4,19 @@
     if not char then return end
     local baseTime = lia.config.get("SpawnTime", 5)
     baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
-    local lastDeath = client:getNetVar("lastDeathTime", os.time())
+    local lastDeath = client:getNetVar("lastDeathTime")
+    if not lastDeath or lastDeath == 0 then
+        client:Spawn()
+        lia.log.add(client, "respawn", "Forced respawn due to missing lastDeathTime")
+        return
+    end
+
     local timePassed = os.time() - lastDeath
-    if timePassed >= baseTime then client:Spawn() end
+    if timePassed >= baseTime then
+        client:Spawn()
+    else
+        lia.log.add(client, "respawn", "Respawn denied - timePassed: " .. timePassed .. " < baseTime: " .. baseTime)
+    end
 end)
 
 net.Receive("liaStringRequest", function(_, client)
@@ -575,6 +585,20 @@ net.Receive("liaBinaryQuestionRequestCancel", function(_, client)
     if client.liaBinaryReqs then client.liaBinaryReqs[id] = nil end
 end)
 
+net.Receive("liaPopupQuestionRequest", function(_, client)
+    local id = net.ReadUInt(32)
+    local buttonIndex = net.ReadUInt(8)
+    local callbacks = client.liaPopupReqs and client.liaPopupReqs[id]
+    if not callbacks or not callbacks[buttonIndex] then return end
+    if isfunction(callbacks[buttonIndex]) then callbacks[buttonIndex]() end
+    client.liaPopupReqs[id] = nil
+end)
+
+net.Receive("liaPopupQuestionRequestCancel", function(_, client)
+    local id = net.ReadUInt(32)
+    if client.liaPopupReqs then client.liaPopupReqs[id] = nil end
+end)
+
 net.Receive("liaButtonRequest", function(_, client)
     local id = net.ReadUInt(32)
     local choice = net.ReadUInt(8)
@@ -781,6 +805,155 @@ net.Receive("liaCommandData", function(_, client)
     end
 end)
 
+net.Receive("liaSwepeditorUpdate", function(_, ply)
+    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
+    local updateData = net.ReadTable()
+    local class = net.ReadString()
+    local hasChanges = false
+    for k, v in pairs(updateData) do
+        lia.swepeditor.NetworkData[class] = lia.swepeditor.NetworkData[class] or {}
+        if lia.swepeditor.NetworkData[class][k] ~= v then
+            lia.swepeditor.adjustValue(class, k, v)
+            lia.swepeditor.NetworkData[class][k] = v
+            hasChanges = true
+        end
+    end
+
+    if not hasChanges then return end
+    print(ply:Name() .. " has updated the variables of: " .. class)
+    ply:ChatPrint(string.upper(class) .. " has been successfully updated!")
+    for _, v in player.Iterator() do
+        if v:HasWeapon(class) then
+            v:StripWeapon(class)
+            v:Give(class)
+            v:SelectWeapon(class)
+        end
+    end
+
+    if lia.swepeditor.NetworkData[class] then
+        local jsonData = util.TableToJSON(lia.swepeditor.NetworkData[class])
+        lia.db.upsert({
+            class = class,
+            data = jsonData
+        }, "swepeditor")
+    end
+
+    for _, v in player.Iterator() do
+        if v ~= ply and lia.swepeditor.NetworkData[class] then
+            net.Start("liaSwepeditorLoad")
+            net.WriteTable(lia.swepeditor.NetworkData[class])
+            net.WriteString(class)
+            net.Send(v)
+        end
+    end
+end)
+
+net.Receive("liaSwepeditorRequestAll", function(_, ply)
+    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
+    lia.swepeditor.sync(ply)
+end)
+
+local chunkTime = 0.05
+local function sendChunk(ply, s, sid, idx)
+    if not IsValid(ply) then
+        if lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
+        return
+    end
+
+    local part = s.chunks[idx]
+    if not part then
+        if lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
+        return
+    end
+
+    s.idx = idx
+    net.Start(s.netStr)
+    net.WriteUInt(sid, 32)
+    net.WriteUInt(s.total, 16)
+    net.WriteUInt(idx, 16)
+    net.WriteUInt(#part, 16)
+    net.WriteData(part, #part)
+    net.Send(ply)
+    if idx == s.total and lia.net.sendq[ply] then lia.net.sendq[ply][sid] = nil end
+end
+
+net.Receive("liaBigTableAck", function(_, ply)
+    if not IsValid(ply) then return end
+    local sid = net.ReadUInt(32)
+    local last = net.ReadUInt(16)
+    local q = lia.net.sendq[ply]
+    if not q then return end
+    local s = q[sid]
+    if not s then return end
+    if last ~= s.idx then return end
+    if s.idx >= s.total then
+        q[sid] = nil
+        return
+    end
+
+    timer.Simple(chunkTime, function()
+        if not IsValid(ply) then return end
+        local qq = lia.net.sendq[ply]
+        if not qq then return end
+        local ss = qq[sid]
+        if not ss then return end
+        sendChunk(ply, ss, sid, ss.idx + 1)
+    end)
+end)
+
+net.Receive("liaSwepeditorReset", function(_, ply)
+    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
+    local class = net.ReadString()
+    local weapon = lia.swepeditor.DefaultSweps[class]
+    if weapon then
+        local stored = weapons.GetStored(class)
+        if stored then
+            for k, v in pairs(weapon) do
+                stored[k] = v
+            end
+        end
+    end
+
+    lia.db.delete("swepeditor", {
+        class = class
+    })
+
+    lia.swepeditor.NetworkData[class] = nil
+    for _, v in player.Iterator() do
+        if v:HasWeapon(class) then
+            v:StripWeapon(class)
+            v:Give(class)
+            v:SelectWeapon(class)
+        end
+    end
+end)
+
+net.Receive("liaSwepeditorResetAll", function(_, ply)
+    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
+    lia.db.query("DELETE FROM lia_swepeditor", function()
+        for class, weapon in pairs(lia.swepeditor.DefaultSweps) do
+            local stored = weapons.GetStored(class)
+            if stored then
+                for k, v in pairs(weapon) do
+                    stored[k] = v
+                end
+            end
+
+            lia.swepeditor.NetworkData[class] = nil
+        end
+
+        for _, v in player.Iterator() do
+            for weaponClass, _ in pairs(lia.swepeditor.DefaultSweps) do
+                if v:HasWeapon(weaponClass) then
+                    v:StripWeapon(weaponClass)
+                    v:Give(weaponClass)
+                    v:SelectWeapon(weaponClass)
+                end
+            end
+        end
+    end)
+end)
+
 net.Receive("liaAdminSetCharProperty", function(_, client)
     if not client:hasPrivilege("listCharacters") then return end
     local charID = net.ReadInt(32)
@@ -882,4 +1055,230 @@ net.Receive("liaItemRotate", function(_, client)
     if not canAccess then return end
     item:setData("rotated", rotated)
     item.forceRender = true
+end)
+
+net.Receive("liaWorkshopDownloaderRequest", function(_, client) lia.workshop.send(client) end)
+local function findOption(options, label, ply)
+    if isfunction(options) then options = options(ply) end
+    if not istable(options) then return nil end
+    for k, v in pairs(options) do
+        if k == label then return v end
+        if v.options then
+            local found = findOption(v.options, label, ply)
+            if found then return found end
+        end
+    end
+    return nil
+end
+
+local function setupNPCType(npc, npcType)
+    if not IsValid(npc) or not npcType then return end
+    local existingCustomData = npc.customData
+    npc.uniqueID = npcType
+    local npcData = lia.dialog.getNPCData(npcType)
+    if npcData then
+        local currentPos = npc:GetPos()
+        local currentAng = npc:GetAngles()
+        npc:SetModel("models/Barney.mdl")
+        if npcData.BodyGroups and istable(npcData.BodyGroups) then
+            for bodygroup, value in pairs(npcData.BodyGroups) do
+                local bgIndex = npc:FindBodygroupByName(bodygroup)
+                if bgIndex > -1 then npc:SetBodygroup(bgIndex, value) end
+            end
+        end
+
+        if npcData.Skin then npc:SetSkin(npcData.Skin) end
+        npc.NPCName = npcData.PrintName or "NPC"
+        npc:setNetVar("uniqueID", npcType)
+        npc:setNetVar("NPCName", npc.NPCName)
+        npc:SetMoveType(MOVETYPE_VPHYSICS)
+        npc:SetSolid(SOLID_OBB)
+        npc:PhysicsInit(SOLID_OBB)
+        npc:SetCollisionGroup(COLLISION_GROUP_WORLD)
+        npc:SetPos(currentPos)
+        npc:SetAngles(currentAng)
+        local physObj = npc:GetPhysicsObject()
+        if IsValid(physObj) then
+            physObj:EnableMotion(false)
+            physObj:Sleep()
+        end
+
+        npc:setAnim()
+        if existingCustomData then
+            if existingCustomData.name and existingCustomData.name ~= "" then npc.NPCName = existingCustomData.name end
+            if existingCustomData.model and existingCustomData.model ~= "" then npc:SetModel(existingCustomData.model) end
+            if existingCustomData.skin then npc:SetSkin(tonumber(existingCustomData.skin) or 0) end
+            if existingCustomData.bodygroups and istable(existingCustomData.bodygroups) then
+                for bodygroupIndex, value in pairs(existingCustomData.bodygroups) do
+                    npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
+                end
+            end
+
+            if existingCustomData.animation and existingCustomData.animation ~= "auto" then
+                local sequenceIndex = npc:LookupSequence(existingCustomData.animation)
+                if sequenceIndex >= 0 then
+                    npc.customAnimation = existingCustomData.animation
+                    npc:ResetSequence(sequenceIndex)
+                end
+            end
+
+            npc.customData = existingCustomData
+        end
+
+        npc:setNetVar("NPCName", npc.NPCName)
+        hook.Run("UpdateEntityPersistence", npc)
+    end
+end
+
+net.Receive("liaNpcDialogServerCallback", function(_, ply)
+    local npc = net.ReadEntity()
+    local label = net.ReadString()
+    local npcData = lia.dialog.getOriginalNPCData(npc.uniqueID)
+    local conversationTable = npcData and npcData.Conversation
+    local option = findOption(conversationTable, label, ply)
+    if not IsValid(npc) or not option then return end
+    if option.ShouldShow and not option.ShouldShow(ply, npc) then return end
+    if option.Callback then option.Callback(ply, npc) end
+end)
+
+net.Receive("liaNpcCustomize", function(_, ply)
+    local npc = net.ReadEntity()
+    local customData = net.ReadTable()
+    if not IsValid(npc) or not ply:hasPrivilege("canManageProperties") then return end
+    if customData.name and customData.name ~= "" then npc.NPCName = customData.name end
+    if customData.model and customData.model ~= "" then npc:SetModel(customData.model) end
+    if customData.skin then npc:SetSkin(tonumber(customData.skin) or 0) end
+    if customData.bodygroups and istable(customData.bodygroups) then
+        for bodygroupIndex, value in pairs(customData.bodygroups) do
+            npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
+        end
+    end
+
+    if customData.animation and customData.animation ~= "auto" then
+        local sequenceIndex = npc:LookupSequence(customData.animation)
+        if sequenceIndex >= 0 then
+            npc.customAnimation = customData.animation
+            npc:ResetSequence(sequenceIndex)
+        end
+    end
+
+    local currentPos = npc:GetPos()
+    local currentAng = npc:GetAngles()
+    npc:SetMoveType(MOVETYPE_VPHYSICS)
+    npc:SetSolid(SOLID_OBB)
+    npc:PhysicsInit(SOLID_OBB)
+    npc:SetCollisionGroup(COLLISION_GROUP_WORLD)
+    npc:SetPos(currentPos)
+    npc:SetAngles(currentAng)
+    local physObj = npc:GetPhysicsObject()
+    if IsValid(physObj) then
+        physObj:EnableMotion(false)
+        physObj:Sleep()
+    end
+
+    npc:setAnim()
+    npc.customData = customData
+    npc:setNetVar("NPCName", npc.NPCName)
+    hook.Run("UpdateEntityPersistence", npc)
+    hook.Run("SaveData")
+    ply:notifySuccess("NPC customized successfully!")
+end)
+
+net.Receive("liaRequestNPCSelection", function(_, client)
+    local npcEntity = net.ReadEntity()
+    local uniqueID = net.ReadString()
+    if IsValid(npcEntity) and IsValid(client) then
+        local character = client:getChar()
+        if character then setupNPCType(npcEntity, uniqueID) end
+    end
+end)
+
+local function broadcastGroups()
+    lia.net.ready = lia.net.ready or setmetatable({}, {
+        __mode = "k"
+    })
+
+    local players = player.GetHumans()
+    for _, ply in ipairs(players) do
+        if lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.administrator.groups or {}) end
+    end
+end
+
+net.Receive("liaGroupsRequest", function(_, p)
+    if not IsValid(p) or not p:hasPrivilege("manageUsergroups") then return end
+    lia.net.ready = lia.net.ready or setmetatable({}, {
+        __mode = "k"
+    })
+
+    lia.net.ready[p] = true
+    lia.administrator.sync(p)
+end)
+
+net.Receive("liaGroupsAdd", function(_, p)
+    if not p:hasPrivilege("manageUsergroups") then return end
+    local data = net.ReadTable()
+    local n = string.Trim(tostring(data.name or ""))
+    if n == "" then return end
+    lia.administrator.groups = lia.administrator.groups or {}
+    if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
+    if lia.administrator.groups[n] then return end
+    lia.administrator.createGroup(n, {
+        _info = {
+            inheritance = data.inherit or "user",
+            types = data.types or {}
+        }
+    })
+
+    lia.administrator.save()
+    broadcastGroups()
+    p:notifySuccessLocalized("groupCreated", n)
+end)
+
+net.Receive("liaGroupsRemove", function(_, p)
+    if not p:hasPrivilege("manageUsergroups") then return end
+    local n = net.ReadString()
+    if n == "" or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
+    lia.administrator.removeGroup(n)
+    if lia.administrator.groups then lia.administrator.groups[n] = nil end
+    lia.administrator.save()
+    broadcastGroups()
+    p:notifySuccessLocalized("groupRemoved", n)
+end)
+
+net.Receive("liaGroupsRename", function(_, p)
+    if not p:hasPrivilege("manageUsergroups") then return end
+    local old = string.Trim(net.ReadString() or "")
+    local new = string.Trim(net.ReadString() or "")
+    if old == "" or new == "" then return end
+    if old == new then return end
+    if not lia.administrator.groups or not lia.administrator.groups[old] then return end
+    if lia.administrator.groups[new] or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[new] then return end
+    if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[old] then return end
+    lia.administrator.renameGroup(old, new)
+    broadcastGroups()
+    p:notifySuccessLocalized("groupRenamed", old, new)
+end)
+
+net.Receive("liaGroupsSetPerm", function(_, p)
+    if not p:hasPrivilege("manageUsergroups") then return end
+    local group = net.ReadString()
+    local privilege = net.ReadString()
+    local value = net.ReadBool()
+    if group == "" or privilege == "" then return end
+    if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[group] then return end
+    if not lia.administrator.groups or not lia.administrator.groups[group] then return end
+    if SERVER then
+        if value then
+            lia.administrator.addPermission(group, privilege, true)
+        else
+            lia.administrator.removePermission(group, privilege, true)
+        end
+    end
+
+    net.Start("liaGroupPermChanged")
+    net.WriteString(group)
+    net.WriteString(privilege)
+    net.WriteBool(value)
+    net.Broadcast()
+    p:notifySuccessLocalized("groupPermissionsUpdated")
 end)

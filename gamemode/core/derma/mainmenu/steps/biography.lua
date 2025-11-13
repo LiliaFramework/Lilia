@@ -6,7 +6,7 @@ function PANEL:Init()
         lbl:Dock(TOP)
         lbl:DockMargin(0, 0, 0, 8)
         lbl:SetTall(32)
-        lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "liaMediumFont", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+        lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "LiliaFont.25", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
         return lbl
     end
 
@@ -91,7 +91,7 @@ function PANEL:addAttributes()
         lbl:Dock(TOP)
         lbl:DockMargin(0, 0, 0, 8)
         lbl:SetTall(32)
-        lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "liaMediumFont", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+        lbl.Paint = function(_, _, h) draw.SimpleText(L(key):upper(), "LiliaFont.25", 0, h * 0.5, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
         return lbl
     end
 

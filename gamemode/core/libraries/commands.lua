@@ -721,7 +721,7 @@ else
         local scroll = vgui.Create("liaScrollPanel", frame)
         scroll:Dock(FILL)
         scroll:DockMargin(10, 10, 10, 10)
-        surface.SetFont("liaSmallFont")
+        surface.SetFont("LiliaFont.17")
         local controls = {}
         local watchers = {}
         local validate
@@ -784,11 +784,11 @@ else
                     ctrl = vgui.Create("liaCheckbox", panel)
                 else
                     ctrl = vgui.Create("liaEntry", panel)
-                    ctrl:SetFont("liaSmallFont")
+                    ctrl:SetFont("LiliaFont.17")
                 end
 
                 local label = vgui.Create("DLabel", panel)
-                label:SetFont("liaSmallFont")
+                label:SetFont("LiliaFont.17")
                 label:SetText(L(data.description or name))
                 label:SizeToContents()
                 panel.PerformLayout = function(_, w, h)
@@ -1532,7 +1532,7 @@ else
 
             local nameLabel = vgui.Create("DLabel", panel)
             nameLabel:SetText(soundName)
-            nameLabel:SetFont("liaSmallFont")
+            nameLabel:SetFont("LiliaFont.17")
             nameLabel:SetTextColor(Color(255, 255, 255))
             nameLabel:Dock(LEFT)
             nameLabel:DockMargin(10, 0, 0, 0)
@@ -1731,7 +1731,7 @@ else
             imagePreview:SetImage("data/" .. imagePath)
             local nameLabel = vgui.Create("DLabel", panel)
             nameLabel:SetText(imageName)
-            nameLabel:SetFont("liaSmallFont")
+            nameLabel:SetFont("LiliaFont.17")
             nameLabel:SetTextColor(Color(255, 255, 255))
             nameLabel:SetPos(120, 10)
             nameLabel:SetWide(300)
@@ -2041,7 +2041,7 @@ lia.command.add("demorequests", {
     onRun = function(client)
         if SERVER then
             client:notifyInfoLocalized("openingDemo")
-            client:binaryQuestion(L("demoQuestion"), L("yesShowMe"), L("noThanks"), false, function(confirmed)
+            client:requestBinaryQuestion(L("demoQuestion"), L("yesShowMe"), L("noThanks"), false, function(confirmed)
                 if confirmed then
                     client:requestDropdown(L("demoDropdownTitle"), L("chooseColor"), {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected)
                         if selected ~= nil then
@@ -7771,5 +7771,128 @@ lia.command.add("kickbots", {
         else
             client:notifyInfoLocalized("botsKickedAll", kickedCount)
         end
+    end
+})
+
+lia.command.add("npcchangetype", {
+    adminOnly = true,
+    desc = "Change the type of a dialog NPC you are looking at.",
+    onRun = function(client)
+        if not client:hasPrivilege("Can Manage NPCs") then return client:notifyError("You lack permission to manage NPCs.") end
+        local ent = client:getTracedEntity()
+        if not ent or not IsValid(ent) then return client:notifyError("You must be looking at a valid entity.") end
+        if ent:GetClass() ~= "lia_npc" then return client:notifyError("You must be looking at a dialog NPC.") end
+        lia.dialog.syncToClients(client)
+        timer.Simple(0.1, function()
+            if not IsValid(client) or not IsValid(ent) then return end
+            local npcOptions = {}
+            local displayToUniqueID = {}
+            for uniqueID, data in pairs(lia.dialog.stored) do
+                local displayName = data.PrintName or uniqueID
+                table.insert(npcOptions, {displayName, uniqueID})
+                displayToUniqueID[displayName] = uniqueID
+            end
+
+            if not table.IsEmpty(npcOptions) then
+                client.npcDisplayToUniqueID = displayToUniqueID
+                client.npcEntity = ent
+                client:requestDropdown("Change NPC Type", "Choose what type of NPC this should be:", npcOptions, function(selectedDisplayName, selectedUniqueID)
+                    if selectedDisplayName and selectedDisplayName ~= "" then
+                        local uniqueID = selectedUniqueID or (client.npcDisplayToUniqueID and client.npcDisplayToUniqueID[selectedDisplayName])
+                        if uniqueID and IsValid(client.npcEntity) then
+                            local npc = client.npcEntity
+                            local npcType = uniqueID
+                            if not IsValid(npc) or not npcType then return end
+                            local existingCustomData = npc.customData
+                            npc.uniqueID = npcType
+                            local npcData = lia.dialog.getNPCData(npcType)
+                            if npcData then
+                                local currentPos = npc:GetPos()
+                                local currentAng = npc:GetAngles()
+                                npc:SetModel("models/Barney.mdl")
+                                if npcData.BodyGroups and istable(npcData.BodyGroups) then
+                                    for bodygroup, value in pairs(npcData.BodyGroups) do
+                                        local bgIndex = npc:FindBodygroupByName(bodygroup)
+                                        if bgIndex > -1 then npc:SetBodygroup(bgIndex, value) end
+                                    end
+                                end
+
+                                if npcData.Skin then npc:SetSkin(npcData.Skin) end
+                                npc.NPCName = npcData.PrintName or "NPC"
+                                npc:setNetVar("uniqueID", npcType)
+                                npc:setNetVar("NPCName", npc.NPCName)
+                                npc:SetMoveType(MOVETYPE_VPHYSICS)
+                                npc:SetSolid(SOLID_OBB)
+                                npc:PhysicsInit(SOLID_OBB)
+                                npc:SetCollisionGroup(COLLISION_GROUP_WORLD)
+                                npc:SetPos(currentPos)
+                                npc:SetAngles(currentAng)
+                                local physObj = npc:GetPhysicsObject()
+                                if IsValid(physObj) then
+                                    physObj:EnableMotion(false)
+                                    physObj:Sleep()
+                                end
+
+                                npc:setAnim()
+                                if existingCustomData then
+                                    if existingCustomData.name and existingCustomData.name ~= "" then npc.NPCName = existingCustomData.name end
+                                    if existingCustomData.model and existingCustomData.model ~= "" then npc:SetModel(existingCustomData.model) end
+                                    if existingCustomData.skin then npc:SetSkin(tonumber(existingCustomData.skin) or 0) end
+                                    if existingCustomData.bodygroups and istable(existingCustomData.bodygroups) then
+                                        for bodygroupIndex, value in pairs(existingCustomData.bodygroups) do
+                                            npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
+                                        end
+                                    end
+
+                                    if existingCustomData.animation and existingCustomData.animation ~= "auto" then
+                                        local sequenceIndex = npc:LookupSequence(existingCustomData.animation)
+                                        if sequenceIndex >= 0 then
+                                            npc.customAnimation = existingCustomData.animation
+                                            npc:ResetSequence(sequenceIndex)
+                                        end
+                                    end
+
+                                    npc.customData = existingCustomData
+                                end
+
+                                npc:setNetVar("NPCName", npc.NPCName)
+                                hook.Run("UpdateEntityPersistence", npc)
+                                client:notifyInfo("NPC type changed to: " .. (npcData.PrintName or npcType))
+                            end
+                        end
+                    end
+                end)
+            else
+                client:notifyError("No NPC types available! The server may still be loading modules. Please try again in a moment.")
+            end
+        end)
+    end
+})
+
+lia.command.add("forcerespawn", {
+    adminOnly = true,
+    arguments = {
+        {
+            name = "target",
+            type = "player"
+        }
+    },
+    desc = "forceRespawnDesc",
+    onRun = function(client, arguments)
+        local target = arguments[1]
+        if not IsValid(target) then
+            client:notifyErrorLocalized("invalidTarget")
+            return
+        end
+
+        if target:Alive() then
+            client:notifyErrorLocalized("playerAlreadyAlive")
+            return
+        end
+
+        target:Spawn()
+        client:notifySuccessLocalized("playerForceRespawned", target:Name())
+        target:notifyLocalized("youWereForceRespawned")
+        lia.log.add(client, "forceRespawn", target:Name())
     end
 })

@@ -1886,7 +1886,7 @@ else
         ```lua
         -- Medium: Create a multi-line label with wrapped text
         local text = "This is a very long description that should wrap to multiple lines when displayed in the UI."
-        local lines, maxWidth = lia.util.wrapText(text, 300, "liaSmallFont")
+        local lines, maxWidth = lia.util.wrapText(text, 300, "LiliaFont.17")
 
         local label = vgui.Create("DLabel")
         label:SetSize(maxWidth, #lines * 20)
@@ -2584,7 +2584,7 @@ else
         titleLabel:SetPos(0, 8)
         titleLabel:SetSize(frameW, 20)
         titleLabel:SetText(L(title or "options"))
-        titleLabel:SetFont("liaSmallFont")
+        titleLabel:SetFont("LiliaFont.17")
         titleLabel:SetColor(color_white)
         titleLabel:SetContentAlignment(5)
         local layout = frame:Add("DListLayout")
@@ -2596,7 +2596,7 @@ else
             btn:Dock(TOP)
             btn:DockMargin(0, 0, 0, 5)
             btn:SetText(L(opt.name))
-            btn:SetFont("liaSmallFont")
+            btn:SetFont("LiliaFont.17")
             btn:SetTextColor(color_white)
             btn:SetContentAlignment(5)
             btn.Paint = function(self, w, h)

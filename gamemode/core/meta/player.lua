@@ -2899,7 +2899,7 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
                     surface.DrawTexturedRect(spos.x - logoSize / 2, spos.y - logoSize / 2 - 25, logoSize, logoSize)
                 end
 
-                surface.SetFont("liaSmallFont")
+                surface.SetFont("LiliaFont.17")
                 local nameText = name
                 local metersText = L("meters", howClose)
                 local nameTw, nameTh = surface.GetTextSize(nameText)
@@ -2921,8 +2921,8 @@ function playerMeta:setWaypoint(name, vector, logo, onReach)
                 lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
                 lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
                 lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
-                draw.SimpleText(nameText, "liaSmallFont", math.Round(spos.x), math.Round(spos.y - 1), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-                draw.SimpleText(metersText, "liaSmallFont", math.Round(spos.x), math.Round(spos.y - 1 + nameTh + 3), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                draw.SimpleText(nameText, "LiliaFont.17", math.Round(spos.x), math.Round(spos.y - 1), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+                draw.SimpleText(metersText, "LiliaFont.17", math.Round(spos.x), math.Round(spos.y - 1 + nameTh + 3), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
             end
 
             if howClose <= 3 then RunConsoleCommand("waypoint_stop_" .. waypointID) end
@@ -3414,13 +3414,13 @@ end
     Low Complexity:
         ```lua
         -- Simple: Ask yes/no question
-        player:binaryQuestion("Do you want to continue?", "Yes", "No")
+        player:requestBinaryQuestion("Do you want to continue?", "Yes", "No")
         ```
 
     Medium Complexity:
         ```lua
         -- Medium: Ask with callback
-        player:binaryQuestion("Delete this item?", "Delete", "Cancel", true, function(choice)
+        player:requestBinaryQuestion("Delete this item?", "Delete", "Cancel", true, function(choice)
         if choice == 1 then
             player:notify("Item deleted!")
             else
@@ -3446,10 +3446,10 @@ end
                 player:notifyInfo("Character reset cancelled")
             end
         end
-        player:binaryQuestion(question, option1, option2, true, callback)
+        player:requestBinaryQuestion(question, option1, option2, true, callback)
         ```
 ]]
-function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, callback)
+function playerMeta:requestBinaryQuestion(question, option1, option2, manualDismiss, callback)
     if SERVER then
         self.liaBinaryReqs = self.liaBinaryReqs or {}
         local id = table.insert(self.liaBinaryReqs, callback)
@@ -3461,7 +3461,66 @@ function playerMeta:binaryQuestion(question, option1, option2, manualDismiss, ca
         net.WriteBool(manualDismiss)
         net.Send(self)
     else
-        lia.derma.binaryQuestion(question, option1, option2, manualDismiss, callback)
+        lia.derma.requestBinaryQuestion("", question, function(result) if callback then callback(result and 0 or 1) end end, option1, option2)
+    end
+end
+
+--[[
+    Purpose:
+        Presents a popup dialog to the player with multiple buttons and individual callbacks
+
+    When Called:
+        When user needs to make a choice from multiple options with custom server-side actions
+
+    Parameters:
+        question (string) - The question text to display
+        buttons (table) - Array of button definitions {text, callback} where callback is executed on the server when button is clicked
+
+    Returns:
+        None
+
+    Realm:
+        Shared (works on both client and server, but callbacks only work on server)
+
+    Example Usage:
+    ```lua
+    player:requestPopupQuestion("Are you sure you want to delete this?", {
+        {"Yes", function()
+            -- Delete the item
+            print("Item deleted")
+        end},
+        {"No", function()
+            -- Do nothing
+            print("Deletion cancelled")
+        end},
+        {"Maybe", function()
+            -- Ask again later
+            print("User is unsure")
+        end}
+    })
+    ```
+]]
+function playerMeta:requestPopupQuestion(question, buttons)
+    if SERVER then
+        self.liaPopupReqs = self.liaPopupReqs or {}
+        local callbacks = {}
+        for i, buttonInfo in ipairs(buttons) do
+            if istable(buttonInfo) then callbacks[i] = buttonInfo[2] end
+        end
+
+        local id = table.insert(self.liaPopupReqs, callbacks)
+        net.Start("liaPopupQuestionRequest")
+        net.WriteUInt(id, 32)
+        net.WriteString(question)
+        net.WriteUInt(#buttons, 8)
+        for _, buttonInfo in ipairs(buttons) do
+            local buttonText = istable(buttonInfo) and buttonInfo[1] or tostring(buttonInfo)
+            net.WriteString(buttonText)
+        end
+
+        net.Send(self)
+    else
+        lia.derma.requestPopupQuestion(question, buttons)
     end
 end
 
@@ -3513,7 +3572,7 @@ end
         local title = "Character Management"
         local buttons = {
             {text = "Reset Character", callback = function()
-                player:binaryQuestion("Reset character?", "Yes", "No", true, function(choice)
+                player:requestBinaryQuestion("Reset character?", "Yes", "No", true, function(choice)
                     if choice == 1 then
                         local char = player:getChar()
                         if char then char:delete() end

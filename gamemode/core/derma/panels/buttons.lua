@@ -187,7 +187,7 @@ end
 
 local function RegisterButton(name, defaultFont, useBase)
     local BUTTON_PANEL = {}
-    BUTTON_PANEL.DefaultFont = defaultFont or name:match("lia(%w+)Button") .. "Font"
+    BUTTON_PANEL.DefaultFont = defaultFont or "LiliaFont.17"
     BUTTON_PANEL.Base = useBase
     function BUTTON_PANEL:Init()
         self:SetFont(self.DefaultFont)
@@ -223,10 +223,10 @@ local function RegisterButton(name, defaultFont, useBase)
     vgui.Register(name, BUTTON_PANEL, "DButton")
 end
 
-RegisterButton("liaHugeButton", "liaHugeFont", true)
-RegisterButton("liaBigButton", "liaBigFont", true)
-RegisterButton("liaMediumButton", "liaMediumFont", true)
-RegisterButton("liaSmallButton", "liaSmallFont", true)
-RegisterButton("liaMiniButton", "liaMiniFont", true)
-RegisterButton("liaNoBGButton", "liaBigFont", false)
-RegisterButton("liaCustomFontButton", "liaSmallFont", true)
+RegisterButton("liaHugeButton", "LiliaFont.72", true)
+RegisterButton("liaBigButton", "LiliaFont.36", true)
+RegisterButton("liaMediumButton", "LiliaFont.25", true)
+RegisterButton("liaSmallButton", "LiliaFont.17", true)
+RegisterButton("liaMiniButton", "LiliaFont.14", true)
+RegisterButton("liaNoBGButton", "LiliaFont.36", false)
+RegisterButton("liaCustomFontButton", "LiliaFont.17", true)

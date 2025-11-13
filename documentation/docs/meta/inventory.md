@@ -1870,7 +1870,7 @@ Server
 ```lua
     local function sendCustomNotification(inv, message)
         local recipients = inv:getRecipients()
-        net.Start("CustomInventoryNotification")
+        net.Start("liaCustomInventoryNotification")
         net.WriteString(message)
         net.Send(recipients)
     end
@@ -2818,7 +2818,7 @@ Server
         inv:sync(targetClients)
         -- Send additional metadata if needed
         for _, client in ipairs(targetClients) do
-            net.Start("InventoryMetadata")
+            net.Start("liaInventoryMetadata")
             net.WriteType(inv:getID())
             net.WriteTable(inv:getData())
             net.Send(client)
@@ -2984,7 +2984,7 @@ Client
         sortButton:Dock(BOTTOM)
         sortButton:SetText("Sort Items")
         sortButton.DoClick = function()
-            net.Start("InventorySort")
+            net.Start("liaInventorySort")
             net.WriteType(inv:getID())
             net.SendToServer()
         end

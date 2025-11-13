@@ -364,8 +364,8 @@ function lia.bar.drawAction(text, duration)
         surfaceSetDrawColor(200, 200, 200, 20)
         surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
         surface.DrawTexturedRect(x + 4, y + 4, w * frac - 8, h - 8)
-        draw.SimpleText(text, "liaMediumFont", x + 2, y - 22, Color(20, 20, 20))
-        draw.SimpleText(text, "liaMediumFont", x, y - 24, Color(240, 240, 240))
+        draw.SimpleText(text, "LiliaFont.25", x + 2, y - 22, Color(20, 20, 20))
+        draw.SimpleText(text, "LiliaFont.25", x, y - 24, Color(240, 240, 240))
     end)
 end
 

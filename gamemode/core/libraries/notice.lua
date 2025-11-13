@@ -210,7 +210,6 @@ else
         end)
     end
 
-    net.Receive("liaNotificationData", lia.notices.receiveNotify)
     --[[
         Purpose:
             Receives and displays localized notification messages from the server
@@ -291,7 +290,6 @@ else
         end)
     end
 
-    net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
     --[[
         Purpose:
             Creates and displays a notification message directly on the client

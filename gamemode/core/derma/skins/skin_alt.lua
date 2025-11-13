@@ -2,8 +2,8 @@
 local Color = Color
 local SKIN = {}
 SKIN.fontFrame = "BudgetLabel"
-SKIN.fontTab = "liaSmallFont"
-SKIN.fontButton = "liaSmallFont"
+SKIN.fontTab = "LiliaFont.17"
+SKIN.fontButton = "LiliaFont.17"
 SKIN.Colours = table.Copy(derma.SkinList.Default.Colours)
 SKIN.Colours.Window.TitleActive = Color(255, 255, 255)
 SKIN.Colours.Window.TitleInactive = Color(255, 255, 255)

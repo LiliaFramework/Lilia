@@ -718,7 +718,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                     draw.RoundedBox(2, 0, 0, w, h, Color(255, 255, 255, 50))
                 end
 
-                button.DoClick = function() lia.derma.colorPicker(function(color) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, color) end) end, lia.option.get(key, cfg.value)) end
+                button.DoClick = function() lia.derma.requestColorPicker(function(color) timer.Create("ConfigChange" .. name, 1, 1, function() lia.option.set(key, color) end) end, lia.option.get(key, cfg.value)) end
             end
             return container
         end,
@@ -808,7 +808,7 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             if IsValid(cat.Header) then
                 cat.Header:SetContentAlignment(5)
                 cat.Header:SetTall(30)
-                cat.Header:SetFont("liaMediumFont")
+                cat.Header:SetFont("LiliaFont.25")
                 cat.Header:SetTextColor(lia.color.theme.text)
                 cat.Header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 120)):Shape(lia.derma.SHAPE_IOS):Draw() end
             end

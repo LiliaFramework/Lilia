@@ -95,9 +95,9 @@ When displaying a menu with selectable options (interactions, actions, or custom
 | `screenPadding` | **number, optional** | Screen padding for frame positioning (defaults to 15% of screen width) |
 | `x` | **number, optional** | Custom X position (auto-calculated if not provided) |
 | `y` | **number, optional** | Custom Y position (auto-calculated if not provided) |
-| `titleFont` | **string, optional** | Font for title text (defaults to "liaSmallFont") |
+| `titleFont` | **string, optional** | Font for title text (defaults to "LiliaFont.17") |
 | `titleColor` | **Color, optional** | Color for title text (defaults to color_white) |
-| `buttonFont` | **string, optional** | Font for option buttons (defaults to "liaSmallFont") |
+| `buttonFont` | **string, optional** | Font for option buttons (defaults to "LiliaFont.17") |
 | `buttonTextColor` | **Color, optional** | Color for button text (defaults to color_white) |
 | `closeOnSelect` | **boolean, optional** | Whether to close menu when option is selected (defaults to true) |
 | `timerName` | **string, optional** | Name for auto-close timer |
@@ -176,7 +176,7 @@ Client
     description = "Enter a custom frequency",
     callback = function()
     -- Open frequency input dialog
-    lia.derma.textBox("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
+    lia.derma.requestString("Enter Frequency", "Enter radio frequency (MHz):", function(freq)
     local numFreq = tonumber(freq)
     if numFreq and numFreq >= 80 and numFreq <= 200 then
         lia.radio.setFrequency(numFreq)
@@ -199,7 +199,7 @@ Client
 
 ---
 
-### lia.derma.colorPicker
+### lia.derma.requestColorPicker
 
 #### 📋 Purpose
 Opens a color picker dialog for selecting colors
@@ -218,7 +218,7 @@ Client
 #### 🔰 Low Complexity
 ```lua
     -- Simple: Open color picker with callback
-    lia.derma.colorPicker(function(color)
+    lia.derma.requestColorPicker(function(color)
     print("Selected color:", color.r, color.g, color.b)
     end)
 
@@ -228,7 +228,7 @@ Client
 ```lua
     -- Medium: Open color picker with default color
     local defaultColor = Color(255, 0, 0)
-    lia.derma.colorPicker(function(color)
+    lia.derma.requestColorPicker(function(color)
     myPanel:SetColor(color)
     end, defaultColor)
 
@@ -238,7 +238,7 @@ Client
 ```lua
     -- High: Color picker with validation and multiple callbacks
     local currentColor = settings:GetColor("theme_color")
-    lia.derma.colorPicker(function(color)
+    lia.derma.requestColorPicker(function(color)
     if color:Distance(currentColor) > 50 then
         settings:SetColor("theme_color", color)
         updateTheme(color)
@@ -308,7 +308,7 @@ Client
 
 ---
 
-### lia.derma.playerSelector
+### lia.derma.requestPlayerSelector
 
 #### 📋 Purpose
 Opens a player selection dialog showing all connected players
@@ -327,7 +327,7 @@ Client
 #### 🔰 Low Complexity
 ```lua
     -- Simple: Open player selector with callback
-    lia.derma.playerSelector(function(player)
+    lia.derma.requestPlayerSelector(function(player)
     print("Selected player:", player:Name())
     end)
 
@@ -336,7 +336,7 @@ Client
 #### 📊 Medium Complexity
 ```lua
     -- Medium: Player selector with validation
-    lia.derma.playerSelector(function(player)
+    lia.derma.requestPlayerSelector(function(player)
     if IsValid(player) and player:IsPlayer() then
         sendMessage(player, "Hello!")
     end
@@ -347,7 +347,7 @@ Client
 #### ⚙️ High Complexity
 ```lua
     -- High: Player selector with admin checks and multiple actions
-    lia.derma.playerSelector(function(player)
+    lia.derma.requestPlayerSelector(function(player)
     if not IsValid(player) then return end
         local menu = lia.derma.dermaMenu()
         menu:AddOption("Teleport", function() teleportToPlayer(player) end)
@@ -356,66 +356,6 @@ Client
             menu:AddOption("Admin Panel", function() openAdminPanel(player) end)
         end
         menu:Open()
-    end)
-
-```
-
----
-
-### lia.derma.textBox
-
-#### 📋 Purpose
-Opens a text input dialog for user text entry
-
-#### ⏰ When Called
-When user needs to input text through a dialog
-
-#### ↩️ Returns
-* None
-
-#### 🌐 Realm
-Client
-
-#### 💡 Example Usage
-
-#### 🔰 Low Complexity
-```lua
-    -- Simple: Open text input dialog
-    lia.derma.textBox("Enter Name", "Type your name here", function(text)
-    print("Entered:", text)
-    end)
-
-```
-
-#### 📊 Medium Complexity
-```lua
-    -- Medium: Text input with validation
-    lia.derma.textBox("Set Password", "Enter new password", function(text)
-    if string.len(text) >= 6 then
-        setPassword(text)
-        else
-            notify("Password too short!")
-        end
-    end)
-
-```
-
-#### ⚙️ High Complexity
-```lua
-    -- High: Text input with multiple validations and processing
-    lia.derma.textBox("Create Item", "Enter item name", function(text)
-    if not text or text == "" then return end
-        local cleanText = string.Trim(text)
-        if string.len(cleanText) < 3 then
-            notify("Name too short!")
-            return
-        end
-        if itemExists(cleanText) then
-            notify("Item already exists!")
-            return
-        end
-        createItem(cleanText)
-        refreshItemList()
     end)
 
 ```
@@ -2443,6 +2383,39 @@ Client
     lia.derma.requestButtons("Item Options", buttons, function(index, text)
     logAction("Button clicked: " .. text)
     end, "Available actions for " .. item:GetName())
+
+```
+
+---
+
+### lia.derma.requestPopupQuestion
+
+#### 📋 Purpose
+Creates a popup dialog with a question and multiple buttons with individual callbacks
+
+#### ⏰ When Called
+When user needs to make a choice from multiple options with custom actions
+
+#### ↩️ Returns
+* frame (Panel) - The created dialog frame
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+```lua
+    lia.derma.requestPopupQuestion("Are you sure you want to delete this?", {
+        {"Yes", function()
+            print("User clicked Yes")
+        end},
+        {"No", function()
+            print("User clicked No")
+        end},
+        {"Maybe", function()
+            print("User clicked Maybe")
+        end}
+    })
 
 ```
 

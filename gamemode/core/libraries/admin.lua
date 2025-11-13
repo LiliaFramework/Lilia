@@ -1998,96 +1998,7 @@ if SERVER then
         end
     end
 
-    local function broadcastGroups()
-        lia.net.ready = lia.net.ready or setmetatable({}, {
-            __mode = "k"
-        })
-
-        local players = player.GetHumans()
-        for _, ply in ipairs(players) do
-            if lia.net.ready[ply] then lia.net.writeBigTable(ply, "liaUpdateAdminGroups", lia.administrator.groups or {}) end
-        end
-    end
-
     ensureStructures()
-    net.Receive("liaGroupsRequest", function(_, p)
-        if not IsValid(p) or not p:hasPrivilege("manageUsergroups") then return end
-        lia.net.ready = lia.net.ready or setmetatable({}, {
-            __mode = "k"
-        })
-
-        lia.net.ready[p] = true
-        lia.administrator.sync(p)
-    end)
-
-    net.Receive("liaGroupsAdd", function(_, p)
-        if not p:hasPrivilege("manageUsergroups") then return end
-        local data = net.ReadTable()
-        local n = string.Trim(tostring(data.name or ""))
-        if n == "" then return end
-        lia.administrator.groups = lia.administrator.groups or {}
-        if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
-        if lia.administrator.groups[n] then return end
-        lia.administrator.createGroup(n, {
-            _info = {
-                inheritance = data.inherit or "user",
-                types = data.types or {}
-            }
-        })
-
-        lia.administrator.save()
-        broadcastGroups()
-        p:notifySuccessLocalized("groupCreated", n)
-    end)
-
-    net.Receive("liaGroupsRemove", function(_, p)
-        if not p:hasPrivilege("manageUsergroups") then return end
-        local n = net.ReadString()
-        if n == "" or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[n] then return end
-        lia.administrator.removeGroup(n)
-        if lia.administrator.groups then lia.administrator.groups[n] = nil end
-        lia.administrator.save()
-        broadcastGroups()
-        p:notifySuccessLocalized("groupRemoved", n)
-    end)
-
-    net.Receive("liaGroupsRename", function(_, p)
-        if not p:hasPrivilege("manageUsergroups") then return end
-        local old = string.Trim(net.ReadString() or "")
-        local new = string.Trim(net.ReadString() or "")
-        if old == "" or new == "" then return end
-        if old == new then return end
-        if not lia.administrator.groups or not lia.administrator.groups[old] then return end
-        if lia.administrator.groups[new] or lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[new] then return end
-        if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[old] then return end
-        lia.administrator.renameGroup(old, new)
-        broadcastGroups()
-        p:notifySuccessLocalized("groupRenamed", old, new)
-    end)
-
-    net.Receive("liaGroupsSetPerm", function(_, p)
-        if not p:hasPrivilege("manageUsergroups") then return end
-        local group = net.ReadString()
-        local privilege = net.ReadString()
-        local value = net.ReadBool()
-        if group == "" or privilege == "" then return end
-        if lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[group] then return end
-        if not lia.administrator.groups or not lia.administrator.groups[group] then return end
-        if SERVER then
-            if value then
-                lia.administrator.addPermission(group, privilege, true)
-            else
-                lia.administrator.removePermission(group, privilege, true)
-            end
-        end
-
-        net.Start("liaGroupPermChanged")
-        net.WriteString(group)
-        net.WriteString(privilege)
-        net.WriteBool(value)
-        net.Broadcast()
-        p:notifySuccessLocalized("groupPermissionsUpdated")
-    end)
 else
     local LAST_GROUP
     local categoryMapCache = {}
@@ -2241,7 +2152,7 @@ else
         end
 
         local ordered = computeCategoryMap(groups)
-        surface.SetFont("liaBigFont")
+        surface.SetFont("LiliaFont.36")
         local _, hfh = surface.GetTextSize("W")
         local headerH = math.max(hfh + 18, 36)
         for _, cat in ipairs(ordered) do
@@ -2261,13 +2172,13 @@ else
             c:SetExpanded(false)
             local header = c.Header or c.GetHeader and c:GetHeader() or nil
             if IsValid(header) then
-                header:SetFont("liaBigFont")
+                header:SetFont("LiliaFont.36")
                 header:SetTall(headerH)
                 header:SetTextInset(12, 0)
                 header:SetContentAlignment(4)
                 header.Paint = function(_, w, h)
                     lia.derma.rect(0, 0, w, h):Rad(8):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw()
-                    draw.SimpleText(cat.label, "liaBigFont", 12, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                    draw.SimpleText(cat.label, "LiliaFont.36", 12, h / 2, lia.color.theme.text, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 end
             end
         end
@@ -2400,32 +2311,6 @@ else
             lia.administrator.privilegeNames = tbl.names or {}
         else
             lia.administrator.privileges = tbl
-        end
-    end)
-
-    net.Receive("liaGroupPermChanged", function()
-        local group = net.ReadString()
-        local privilege = net.ReadString()
-        local value = net.ReadBool()
-        lia.administrator.groups = lia.administrator.groups or {}
-        lia.administrator.groups[group] = lia.administrator.groups[group] or {}
-        if value then
-            lia.administrator.groups[group][privilege] = true
-        else
-            lia.administrator.groups[group][privilege] = nil
-        end
-
-        if IsValid(lia.gui.usergroups) then
-            if lia.gui.usergroups.groupsList then
-                local selectedGroup = lia.gui.usergroups.groupsList:GetSelectedGroup()
-                if selectedGroup == group and lia.gui.usergroups.updateGroupDetails then lia.gui.usergroups.updateGroupDetails(group) end
-            elseif lia.gui.usergroups.checks and lia.gui.usergroups.checks[group] then
-                local chk = lia.gui.usergroups.checks[group][privilege]
-                if IsValid(chk) and chk:GetChecked() ~= value then
-                    chk._suppress = true
-                    chk:SetChecked(value)
-                end
-            end
         end
     end)
 

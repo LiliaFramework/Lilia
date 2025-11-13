@@ -40,7 +40,7 @@ end
 
 function PANEL:RecalcSize()
     self.scale = ScrH() / 1080
-    surface.SetFont("liaSmallFont")
+    surface.SetFont("LiliaFont.17")
     local msg = self.msg or ""
     local tw, th = surface.GetTextSize(msg)
     if tw == 0 or th == 0 then tw, th = surface.GetTextSize(" ") end
@@ -115,7 +115,7 @@ function PANEL:Paint(w, h)
         surface.DrawTexturedRect(self.padding, (h - self.iconSize) / 2, self.iconSize, self.iconSize)
     end
 
-    draw.SimpleText(self.msg or "", "liaSmallFont", self.padding + self.iconSize + self.padding / 2, h / 2, Color(255, 255, 255, self.alpha), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.msg or "", "LiliaFont.17", self.padding + self.iconSize + self.padding / 2, h / 2, Color(255, 255, 255, self.alpha), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("liaNotice", PANEL, "DPanel")
@@ -127,7 +127,7 @@ function PANEL:Init()
     self.text = self:Add("DLabel")
     self.text:SetText(L("unassigned"))
     self.text:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-    self.text:SetFont("liaMediumFont")
+    self.text:SetFont("LiliaFont.25")
     self.text:SetTextColor(color_white)
     self.text:SetDrawOnTop(true)
     function self.text:Think()

@@ -27,13 +27,14 @@ local function tryFixPropPosition(client, ent)
 end
 
 function MODULE:PlayerSay(client, text)
-    if client:getNetVar("liaGagged") then return "" end
     if text and string.sub(text, 1, 1) == "@" then
         local message = string.sub(text, 2)
         ClientAddText(client, Color(70, 0, 130), L("you"), Color(151, 211, 255), " " .. L("ticketMessageToAdmins") .. ": ", Color(0, 255, 0), message)
         self:SendPopup(client, message)
         return ""
     end
+
+    if client:getNetVar("liaGagged") then return "" end
 end
 
 function MODULE:PlayerSpawn(client)

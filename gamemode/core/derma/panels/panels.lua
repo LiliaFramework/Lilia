@@ -220,7 +220,7 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
         local displayText = categoryName
         local localized = L(displayText)
         if localized and localized ~= "" then displayText = localized end
-        draw.SimpleText(displayText, "liaSmallFont", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(displayText, "LiliaFont.17", w / 2, h / 2, textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
 
     self.items[#self.items + 1] = header

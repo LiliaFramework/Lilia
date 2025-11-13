@@ -57,7 +57,7 @@ end
 function PANEL:Paint(w, h)
     surface.SetDrawColor(45, 45, 45, 250)
     surface.DrawRect(0, 0, w, h)
-    draw.SimpleText(self.Title or L("itemList"), "liaMediumFont", w / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.Title or L("itemList"), "LiliaFont.25", w / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("liaItemList", PANEL, "DFrame")
@@ -144,7 +144,7 @@ end
 function PANEL:Paint(w, h)
     surface.SetDrawColor(45, 45, 45, 250)
     surface.DrawRect(0, 0, w, h)
-    draw.SimpleText(self.Title or L("selectItems"), "liaMediumFont", w / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.Title or L("selectItems"), "LiliaFont.25", w / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("liaItemSelector", PANEL, "DFrame")

@@ -1811,7 +1811,7 @@ function MODULE:PopulateAdminTabs(pages)
             }
         end)
 
-        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText(L("pressInstructions"), "liaMediumFont", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
+        hook.Add("HUDPaint", "EntityViewHUD", function() draw.SimpleText(L("pressInstructions"), "LiliaFont.25", ScrW() / 2, ScrH() - 50, color_white, TEXT_ALIGN_CENTER) end)
         hook.Add("Think", "EntityViewRotate", function()
             if input.IsKeyDown(KEY_A) then yaw = yaw - FrameTime() * 100 end
             if input.IsKeyDown(KEY_D) then yaw = yaw + FrameTime() * 100 end
@@ -1858,7 +1858,7 @@ function MODULE:PopulateAdminTabs(pages)
                         itemPanel:SetTall(100)
                         itemPanel.Paint = function(pnl, w, h)
                             derma.SkinHook("Paint", "Panel", pnl, w, h)
-                            draw.SimpleText(displayName, "liaMediumFont", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                            draw.SimpleText(displayName, "LiliaFont.25", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                         end
 
                         local icon = vgui.Create("liaSpawnIcon", itemPanel)

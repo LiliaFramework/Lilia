@@ -22,7 +22,7 @@ function PANEL:SetupUI()
     self.label = self:Add("DLabel")
     self.label:Dock(FILL)
     self.label:DockMargin(15, 0, 40, 0)
-    self.label:SetFont("liaMediumFont")
+    self.label:SetFont("LiliaFont.25")
     self.label:SetTextColor(lia.color.theme.text)
     self.label:SetContentAlignment(4)
 end

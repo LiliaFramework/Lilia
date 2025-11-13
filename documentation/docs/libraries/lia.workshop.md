@@ -209,12 +209,12 @@ Client
     -- High: Check downloads and create custom UI
     local function checkDownloads()
         if lia.workshop.hasContentToDownload() then
-            local frame = vgui.Create("DFrame")
+            local frame = vgui.Create("liaFrame")
             frame:SetTitle("Workshop Downloads Available")
             frame:SetSize(400, 200)
             frame:Center()
             frame:MakePopup()
-            local btn = vgui.Create("DButton", frame)
+            local btn = vgui.Create("liaButton", frame)
             btn:SetText("Download Now")
             btn:Dock(BOTTOM)
             btn.DoClick = function()
@@ -281,17 +281,25 @@ Client
             end
         end
         if #needed > 0 then
-            local frame = vgui.Create("DFrame")
+            local frame = vgui.Create("liaFrame")
             frame:SetTitle("Workshop Content Download")
             frame:SetSize(500, 300)
             frame:Center()
             frame:MakePopup()
-            local progress = vgui.Create("DProgress", frame)
-            progress:Dock(TOP)
-            progress:SetHeight(30)
+            local progressPanel = vgui.Create("Panel", frame)
+            progressPanel:Dock(TOP)
+            progressPanel:SetHeight(30)
+            progressPanel:DockMargin(10, 10, 10, 10)
+            local progressFraction = 0
+            local progressText = "0/" .. #needed
+            progressPanel.Paint = function(s, w, h)
+                draw.RoundedBox(4, 0, 0, w, h, Color(60, 60, 60))
+                draw.RoundedBox(4, 2, 2, (w - 4) * progressFraction, h - 4, lia.color.theme.primary or Color(100, 150, 255))
+                draw.SimpleText(progressText, "LiliaFont.17", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
             local function updateProgress(current, total)
-                progress:SetFraction(current / total)
-                progress:SetText(current .. "/" .. total)
+                progressFraction = current / total
+                progressText = current .. "/" .. total
             end
             lia.workshop.mountContent()
         end

@@ -483,4 +483,16 @@ MODULE.Privileges = {
         MinAccess = "admin",
         Category = "commands",
     },
+    {
+        Name = "canManageNPCs",
+        ID = "canManageNPCs",
+        MinAccess = "admin",
+        Category = "NPCs",
+    },
+    {
+        Name = "canManageProperties",
+        ID = "canManageProperties",
+        MinAccess = "superadmin",
+        Category = "categoryStaffManagement",
+    },
 }

@@ -102,8 +102,8 @@ function PANEL:AddTextRow(data)
     local compact = data.compact
     local minHeight = data.minHeight or compact and 30 or 40
     local rowData = self:AddRow(function(p, row)
-        local titleFont = compact and "liaSmallFont" or "liaMediumFont"
-        local descFont = compact and "liaMiniFont" or "liaSmallFont"
+        local titleFont = compact and "LiliaFont.17" or "LiliaFont.25"
+        local descFont = compact and "LiliaFont.14" or "LiliaFont.17"
         local t = vgui.Create("DLabel", p)
         t:SetFont(titleFont)
         t:SetText(title)
@@ -168,7 +168,7 @@ function PANEL:AddSubsheetRow(cfg)
             cat.Header:SetTall(28)
             cat.Header.Paint = function(pnl, w, h)
                 derma.SkinHook("Paint", "Panel", pnl, w, h)
-                draw.SimpleText(title, "liaSmallFont", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(title, "LiliaFont.17", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
 
@@ -213,14 +213,14 @@ function PANEL:AddPreviewRow(data)
         end
 
         local t = vgui.Create("DLabel", p)
-        t:SetFont("liaMediumFont")
+        t:SetFont("LiliaFont.25")
         t:SetText(title)
         t:SetTextColor(lia.color.theme.text)
         t:SizeToContents()
         local d
         if desc ~= "" then
             d = vgui.Create("DLabel", p)
-            d:SetFont("liaSmallFont")
+            d:SetFont("LiliaFont.17")
             d:SetWrap(true)
             d:SetAutoStretchVertical(true)
             d:SetText(desc)
@@ -230,7 +230,7 @@ function PANEL:AddPreviewRow(data)
         local r
         if right ~= "" then
             r = vgui.Create("DLabel", p)
-            r:SetFont("liaSmallFont")
+            r:SetFont("LiliaFont.17")
             r:SetText(right)
             r:SetTextColor(lia.color.theme.text)
             r:SizeToContents()

@@ -39,7 +39,7 @@ local rangeSqr = 9216
 local clickDist = 96
 local function buildItems(opts)
     local list, w = {}, 0
-    surface_SetFont("liaMediumFont")
+    surface_SetFont("LiliaFont.25")
     for k, v in pairs(opts) do
         list[#list + 1] = {k, v}
         w = math_max(w, surface_GetTextSize(tostring(k)))
@@ -245,7 +245,7 @@ function lia.menu.drawAll()
                 surface_DrawRect(x, oy, w, rowH)
             end
 
-            lia_drawText(lbl, x + pad, oy + 2, ColorAlpha(color_white, d.alpha), nil, nil, "liaMediumFont")
+            lia_drawText(lbl, x + pad, oy + 2, ColorAlpha(color_white, d.alpha), nil, nil, "LiliaFont.25")
         end
     end
 end

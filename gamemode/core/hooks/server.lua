@@ -510,6 +510,7 @@ function GM:PlayerInitialSpawn(client)
         end
 
         timer.Simple(1, function() lia.playerinteract.sync(client) end)
+        timer.Simple(1, function() lia.dialog.syncToClients(client) end)
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
@@ -1000,6 +1001,65 @@ local oldGameConsoleCommand = game.ConsoleCommand
 game.ConsoleCommand = function(cmd)
     if cmd:sub(1, #"lia_wipedb") == "lia_wipedb" or cmd:sub(1, #"lia_resetconfig") == "lia_resetconfig" or cmd:sub(1, #"lia_wipe_sounds") == "lia_wipe_sounds" or cmd:sub(1, #"lia_wipewebimages") == "lia_wipewebimages" or cmd:sub(1, #"lia_wipecharacters") == "lia_wipecharacters" or cmd:sub(1, #"lia_wipelogs") == "lia_wipelogs" or cmd:sub(1, #"lia_wipebans") == "lia_wipebans" or cmd:sub(1, #"lia_wipepersistence") == "lia_wipepersistence" then return end
     return oldGameConsoleCommand(cmd)
+end
+
+function GM:GetEntitySaveData(ent)
+    if ent:GetClass() == "lia_npc" then
+        local saveData = {
+            uniqueID = ent.uniqueID or "",
+            npcName = ent.NPCName or ""
+        }
+
+        if ent.customData then saveData.customData = ent.customData end
+        return saveData
+    end
+end
+
+function GM:OnEntityLoaded(ent, data)
+    if ent:GetClass() == "lia_npc" and data and data.uniqueID and data.uniqueID ~= "" then
+        ent.uniqueID = data.uniqueID
+        ent.NPCName = data.npcName or "NPC"
+        local npcData = lia.dialog.getNPCData(data.uniqueID)
+        if npcData then
+            ent:SetModel("models/Barney.mdl")
+            if npcData.BodyGroups and istable(npcData.BodyGroups) then
+                for bodygroup, value in pairs(npcData.BodyGroups) do
+                    local bgIndex = ent:FindBodygroupByName(bodygroup)
+                    if bgIndex > -1 then ent:SetBodygroup(bgIndex, value) end
+                end
+            end
+
+            if npcData.Skin then ent:SetSkin(npcData.Skin) end
+        end
+
+        if data.data and data.data.customData and istable(data.data.customData) then
+            ent.customData = data.data.customData
+            if data.data.customData.name and data.data.customData.name ~= "" then ent.NPCName = data.data.customData.name end
+            if data.data.customData.model and data.data.customData.model ~= "" then ent:SetModel(data.data.customData.model) end
+            if data.data.customData.skin then ent:SetSkin(tonumber(data.data.customData.skin) or 0) end
+            if data.data.customData.bodygroups and istable(data.data.customData.bodygroups) then
+                for bodygroupIndex, value in pairs(data.data.customData.bodygroups) do
+                    ent:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
+                end
+            end
+        end
+
+        if data.data and data.data.customData and data.data.customData.animation and data.data.customData.animation ~= "auto" then ent.customAnimation = data.data.customData.animation end
+        ent:setNetVar("uniqueID", data.uniqueID)
+        ent:setNetVar("NPCName", ent.NPCName)
+        if not ent.NPCName or ent.NPCName == "" then ent.NPCName = ent:getNetVar("NPCName", "NPC") end
+        ent:SetMoveType(MOVETYPE_VPHYSICS)
+        ent:SetSolid(SOLID_OBB)
+        ent:PhysicsInit(SOLID_OBB)
+        ent:SetCollisionGroup(COLLISION_GROUP_WORLD)
+        local physObj = ent:GetPhysicsObject()
+        if IsValid(physObj) then
+            physObj:EnableMotion(false)
+            physObj:Sleep()
+        end
+
+        ent:setAnim()
+    end
 end
 
 gameevent.Listen("server_addban")

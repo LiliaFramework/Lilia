@@ -685,6 +685,27 @@ net.Receive("liaBinaryQuestionRequest", function()
     end)
 end)
 
+net.Receive("liaPopupQuestionRequest", function()
+    local id = net.ReadUInt(32)
+    local question = net.ReadString()
+    local buttonCount = net.ReadUInt(8)
+    local buttons = {}
+    for i = 1, buttonCount do
+        local buttonText = net.ReadString()
+        buttons[i] = {
+            buttonText,
+            function()
+                net.Start("liaPopupQuestionRequest")
+                net.WriteUInt(id, 32)
+                net.WriteUInt(i, 8)
+                net.SendToServer()
+            end
+        }
+    end
+
+    lia.derma.requestPopupQuestion(question, buttons)
+end)
+
 net.Receive("liaButtonRequest", function()
     local id = net.ReadUInt(32)
     local titleKey = net.ReadString()
@@ -962,3 +983,150 @@ net.Receive("liaDoorPerm", function()
 end)
 
 net.Receive("liaRemoveFOne", function() if IsValid(lia.gui.menu) then lia.gui.menu:remove() end end)
+local function uiCreate()
+    if panel and panel:IsValid() then return end
+    local pad, bh = 10, 30
+    local w, h = 400 + pad * 2, 80
+    panel = vgui.Create("liaFrame")
+    panel:SetSize(w, h)
+    panel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
+    panel:SetZPos(999999)
+    panel:MoveToFront()
+    panel:SetTitle("")
+    panel:SetCenterTitle(L("downloadingWorkshopAddonsTitle"))
+    panel:ShowAnimation()
+    panel.bar = vgui.Create("liaDProgressBar", panel)
+    panel.bar:SetPos(pad, h * 0.65 - bh / 2)
+    panel.bar:SetSize(w - pad * 2, bh)
+    panel.bar:SetFraction(0)
+end
+
+local queue = {}
+local MOUNT_DELAY = 0.1
+local function gmaPath(id)
+    return "lilia/workshop/" .. id .. ".gma"
+end
+
+local function mounted(id)
+    for _, addon in pairs(engine.GetAddons() or {}) do
+        if tostring(addon.wsid or addon.workshopid) == tostring(id) and addon.mounted then return true end
+    end
+    return false
+end
+
+local function mountLocal(id)
+    local rel = gmaPath(id)
+    if file.Exists(rel, "DATA") then
+        game.MountGMA("data/" .. rel)
+        return true
+    end
+    return false
+end
+
+local function uiUpdate()
+    if not (panel and panel:IsValid()) then return end
+    panel.bar:SetFraction(totalDownloads > 0 and (totalDownloads - remainingDownloads) / totalDownloads or 0)
+    panel.bar:SetText((totalDownloads - remainingDownloads) .. "/" .. totalDownloads)
+end
+
+local function start()
+    for id in pairs(queue) do
+        if mounted(id) or mountLocal(id) then queue[id] = nil end
+    end
+
+    local seq, idx = {}, 1
+    for id in pairs(queue) do
+        seq[#seq + 1] = id
+    end
+
+    totalDownloads = #seq
+    remainingDownloads = totalDownloads
+    if totalDownloads == 0 then
+        lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
+        return
+    end
+
+    uiCreate()
+    uiUpdate()
+    local function nextItem()
+        if idx > #seq then
+            if panel and panel:IsValid() then
+                panel:Remove()
+                panel = nil
+            end
+            return
+        end
+
+        local id = seq[idx]
+        lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
+        steamworks.DownloadUGC(id, function(path)
+            remainingDownloads = remainingDownloads - 1
+            lia.bootstrap(L("workshopDownloader"), L("workshopDownloadComplete", id))
+            if path then
+                local rel = gmaPath(id)
+                local data = file.Read(path, "GAME")
+                if data then
+                    file.Write(rel, data)
+                    path = "data/" .. rel
+                end
+
+                game.MountGMA(path)
+            end
+
+            uiUpdate()
+            idx = idx + 1
+            timer.Simple(MOUNT_DELAY, nextItem)
+        end)
+    end
+
+    nextItem()
+end
+
+local function buildQueue(all)
+    table.Empty(queue)
+    for id in pairs(lia.workshop.serverIds or {}) do
+        if id == FORCE_ID or all then queue[id] = true end
+    end
+end
+
+local function refresh(tbl)
+    if tbl then lia.workshop.serverIds = tbl end
+    for id in pairs(lia.workshop.serverIds or {}) do
+        if id ~= FORCE_ID then mountLocal(id) end
+    end
+end
+
+net.Receive("liaWorkshopDownloaderStart", function()
+    refresh(net.ReadTable())
+    buildQueue(true)
+    start()
+end)
+
+net.Receive("liaNotificationData", lia.notices.receiveNotify)
+net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
+net.Receive("liaWorkshopDownloaderInfo", function()
+    refresh(net.ReadTable())
+    timer.Simple(1, function() if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then lia.workshop.mountContent() end end)
+end)
+
+net.Receive("liaGroupPermChanged", function()
+    local group = net.ReadString()
+    local privilege = net.ReadString()
+    local value = net.ReadBool()
+    lia.administrator.groups = lia.administrator.groups or {}
+    lia.administrator.groups[group] = lia.administrator.groups[group] or {}
+    if value then
+        lia.administrator.groups[group][privilege] = true
+    else
+        lia.administrator.groups[group][privilege] = nil
+    end
+
+    if IsValid(lia.gui.usergroups) and lia.gui.usergroups.groupsList then
+        for _, v in ipairs(lia.gui.usergroups.groupsList:GetLines()) do
+            if v.groupName == group and lia.gui.usergroups.checks and lia.gui.usergroups.checks[group] and lia.gui.usergroups.checks[group][privilege] then
+                lia.gui.usergroups.checks[group][privilege]:SetChecked(value)
+                break
+            end
+        end
+    end
+end)

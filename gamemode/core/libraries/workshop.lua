@@ -211,14 +211,22 @@ if SERVER then
         end)
     end)
 
-    net.Receive("liaWorkshopDownloaderRequest", function(_, client) lia.workshop.send(client) end)
     lia.workshop.addWorkshop("3527535922")
     resource.AddWorkshop = lia.workshop.addWorkshop
 else
     local FORCE_ID = "3527535922"
-    local MOUNT_DELAY = 3
-    local queue, panel, totalDownloads, remainingDownloads = {}, nil, 0, 0
     lia.workshop.serverIds = lia.workshop.serverIds or {}
+    local function formatSize(bytes)
+        if not bytes or bytes <= 0 then return "0 B" end
+        local units = {"B", "KB", "MB", "GB", "TB"}
+        local unit = 1
+        while bytes >= 1024 and unit < #units do
+            bytes = bytes / 1024
+            unit = unit + 1
+        end
+        return string.format("%.2f %s", bytes, units[unit])
+    end
+
     local function mounted(id)
         for _, addon in pairs(engine.GetAddons() or {}) do
             if tostring(addon.wsid or addon.workshopid) == tostring(id) and addon.mounted then return true end
@@ -284,13 +292,13 @@ else
             -- High: Check downloads and create custom UI
             local function checkDownloads()
                 if lia.workshop.hasContentToDownload() then
-                    local frame = vgui.Create("DFrame")
+                    local frame = vgui.Create("liaFrame")
                     frame:SetTitle("Workshop Downloads Available")
                     frame:SetSize(400, 200)
                     frame:Center()
                     frame:MakePopup()
 
-                    local btn = vgui.Create("DButton", frame)
+                    local btn = vgui.Create("liaButton", frame)
                     btn:SetText("Download Now")
                     btn:Dock(BOTTOM)
                     btn.DoClick = function()
@@ -314,120 +322,6 @@ else
         return false
     end
 
-    local function formatSize(bytes)
-        if not bytes or bytes <= 0 then return "0 B" end
-        local units = {"B", "KB", "MB", "GB", "TB"}
-        local unit = 1
-        while bytes >= 1024 and unit < #units do
-            bytes = bytes / 1024
-            unit = unit + 1
-        end
-        return string.format("%.2f %s", bytes, units[unit])
-    end
-
-    local function uiCreate()
-        if panel and panel:IsValid() then return end
-        surface.SetFont("DermaLarge")
-        local tw, th = surface.GetTextSize(L("downloadingWorkshopAddonsTitle"))
-        local pad, bh = 10, 20
-        local w, h = math.max(tw, 200) + pad * 2, th + bh + pad * 3
-        panel = vgui.Create("DPanel")
-        panel:SetSize(w, h)
-        panel:SetPos((ScrW() - w) / 2, ScrH() * 0.1)
-        panel:SetZPos(10000)
-        panel:MoveToFront()
-        derma.SkinHook("Paint", "Panel", panel, w, h)
-        local lbl = vgui.Create("DLabel", panel)
-        lbl:SetFont("DermaLarge")
-        lbl:SetText(L("downloadingWorkshopAddonsTitle"))
-        lbl:SizeToContents()
-        lbl:SetPos(pad, pad)
-        panel.bar = vgui.Create("liaDProgressBar", panel)
-        panel.bar:SetPos(pad, pad + th + pad)
-        panel.bar:SetSize(w - pad * 2, bh)
-        panel.bar:SetFraction(0)
-    end
-
-    local function uiUpdate()
-        if not (panel and panel:IsValid()) then return end
-        panel.bar:SetFraction(totalDownloads > 0 and (totalDownloads - remainingDownloads) / totalDownloads or 0)
-        panel.bar:SetText((totalDownloads - remainingDownloads) .. "/" .. totalDownloads)
-    end
-
-    local function start()
-        for id in pairs(queue) do
-            if mounted(id) or mountLocal(id) then queue[id] = nil end
-        end
-
-        local seq, idx = {}, 1
-        for id in pairs(queue) do
-            seq[#seq + 1] = id
-        end
-
-        totalDownloads = #seq
-        remainingDownloads = totalDownloads
-        if totalDownloads == 0 then
-            lia.bootstrap(L("workshopDownloader"), L("workshopAllInstalled"))
-            return
-        end
-
-        uiCreate()
-        uiUpdate()
-        local function nextItem()
-            if idx > #seq then
-                if panel and panel:IsValid() then
-                    panel:Remove()
-                    panel = nil
-                end
-                return
-            end
-
-            local id = seq[idx]
-            lia.bootstrap(L("workshopDownloader"), L("workshopDownloading", id))
-            steamworks.DownloadUGC(id, function(path)
-                remainingDownloads = remainingDownloads - 1
-                lia.bootstrap(L("workshopDownloader"), L("workshopDownloadComplete", id))
-                if path then
-                    local rel = gmaPath(id)
-                    local data = file.Read(path, "GAME")
-                    if data then
-                        file.Write(rel, data)
-                        path = "data/" .. rel
-                    end
-
-                    game.MountGMA(path)
-                end
-
-                uiUpdate()
-                idx = idx + 1
-                timer.Simple(MOUNT_DELAY, nextItem)
-            end)
-        end
-
-        nextItem()
-    end
-
-    local function buildQueue(all)
-        table.Empty(queue)
-        for id in pairs(lia.workshop.serverIds or {}) do
-            if id == FORCE_ID or all then queue[id] = true end
-        end
-    end
-
-    local function refresh(tbl)
-        if tbl then lia.workshop.serverIds = tbl end
-        for id in pairs(lia.workshop.serverIds or {}) do
-            if id ~= FORCE_ID then mountLocal(id) end
-        end
-    end
-
-    net.Receive("liaWorkshopDownloaderStart", function()
-        refresh(net.ReadTable())
-        buildQueue(true)
-        start()
-    end)
-
-    net.Receive("liaWorkshopDownloaderInfo", function() refresh(net.ReadTable()) end)
     --[[
         Purpose:
             Initiates the mounting process for required workshop content with user confirmation
@@ -478,19 +372,29 @@ else
                 end
 
                 if #needed > 0 then
-                    local frame = vgui.Create("DFrame")
+                    local frame = vgui.Create("liaFrame")
                     frame:SetTitle("Workshop Content Download")
                     frame:SetSize(500, 300)
                     frame:Center()
                     frame:MakePopup()
 
-                    local progress = vgui.Create("DProgress", frame)
-                    progress:Dock(TOP)
-                    progress:SetHeight(30)
+                    local progressPanel = vgui.Create("Panel", frame)
+                    progressPanel:Dock(TOP)
+                    progressPanel:SetHeight(30)
+                    progressPanel:DockMargin(10, 10, 10, 10)
+
+                    local progressFraction = 0
+                    local progressText = "0/" .. #needed
+
+                    progressPanel.Paint = function(s, w, h)
+                        draw.RoundedBox(4, 0, 0, w, h, Color(60, 60, 60))
+                        draw.RoundedBox(4, 2, 2, (w - 4) * progressFraction, h - 4, lia.color.theme.primary or Color(100, 150, 255))
+                        draw.SimpleText(progressText, "LiliaFont.17", w / 2, h / 2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    end
 
                     local function updateProgress(current, total)
-                        progress:SetFraction(current / total)
-                        progress:SetText(current .. "/" .. total)
+                        progressFraction = current / total
+                        progressText = current .. "/" .. total
                     end
 
                     lia.workshop.mountContent()
@@ -522,10 +426,16 @@ else
                 if fi and fi.size then totalSize = totalSize + fi.size end
                 pending = pending - 1
                 if pending <= 0 then
-                    Derma_Query(L("workshopConfirmMount", formatSize(totalSize)), L("workshopDownloader"), L("yes"), function()
-                        net.Start("liaWorkshopDownloaderRequest")
-                        net.SendToServer()
-                    end, L("no"))
+                    lia.derma.requestPopupQuestion(L("workshopConfirmMount", formatSize(totalSize)), {
+                        {
+                            L("yes"),
+                            function()
+                                net.Start("liaWorkshopDownloaderRequest")
+                                net.SendToServer()
+                            end
+                        },
+                        {L("no")}
+                    })
                 end
             end)
         end

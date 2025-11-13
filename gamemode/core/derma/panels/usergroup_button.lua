@@ -51,7 +51,7 @@ function PANEL:Paint(w, h)
 
     lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
     if self.selected then lia.derma.rect(0, 0, w, h):Rad(8):Color(accentColor):Shape(lia.derma.SHAPE_IOS):Outline(2):Draw() end
-    draw.SimpleText(self.groupName, "liaMediumFont", 15, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+    draw.SimpleText(self.groupName, "LiliaFont.25", 15, h / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 end
 
 vgui.Register("liaUserGroupButton", PANEL, "DButton")

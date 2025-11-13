@@ -759,8 +759,17 @@ if SERVER then
             ```
     ]]
     function lia.config.send(client)
-        local data = lia.config.getChangedValues()
-        if not client and table.Count(data) == 0 then return end
+        local data
+        if client then
+            data = {}
+            for k, v in pairs(lia.config.stored) do
+                if v.value ~= nil then data[k] = v.value end
+            end
+        else
+            data = lia.config.getChangedValues()
+            if table.Count(data) == 0 then return end
+        end
+
         local function getTargets()
             if IsValid(client) then return {client} end
             return player.GetHumans()
@@ -878,22 +887,24 @@ if SERVER then
             ```
     ]]
     function lia.config.save()
-        local changed = lia.config.getChangedValues()
-        local rows = {}
-        for k, v in pairs(changed) do
-            rows[#rows + 1] = {
-                key = k,
-                value = {v},
-            }
-        end
-
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local queries = {"DELETE FROM lia_config WHERE schema = " .. lia.db.convertDataType(gamemode)}
-        for _, row in ipairs(rows) do
-            queries[#queries + 1] = "INSERT INTO lia_config (schema,key,value) VALUES (" .. lia.db.convertDataType(gamemode) .. ", " .. lia.db.convertDataType(row.key) .. ", " .. lia.db.convertDataType(row.value) .. ")"
+        local rows = {}
+        for k, v in pairs(lia.config.stored) do
+            if v.value ~= nil then
+                rows[#rows + 1] = {
+                    schema = gamemode,
+                    key = k,
+                    value = {v.value},
+                }
+            end
         end
 
-        lia.db.transaction(queries)
+        local ops = {}
+        for _, row in ipairs(rows) do
+            ops[#ops + 1] = lia.db.upsert(row, "config")
+        end
+
+        if #ops > 0 then deferred.all(ops) end
     end
 
     --[[
@@ -2143,7 +2154,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 end
 
                 button.DoClick = function()
-                    lia.derma.colorPicker(function(color)
+                    lia.derma.requestColorPicker(function(color)
                         local t = "ConfigChange_" .. key .. "_" .. os.time()
                         timer.Create(t, 0.5, 1, function()
                             net.Start("liaCfgSet")
@@ -2274,7 +2285,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 if IsValid(cat.Header) then
                     cat.Header:SetContentAlignment(5)
                     cat.Header:SetTall(30)
-                    cat.Header:SetFont("liaMediumFont")
+                    cat.Header:SetFont("LiliaFont.25")
                     cat.Header:SetTextColor(lia.color.theme.text)
                     cat.Header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 120)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
