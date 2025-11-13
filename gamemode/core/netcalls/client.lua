@@ -784,6 +784,112 @@ net.Receive("liaCharacterData", function()
     end
 end)
 
+net.Receive("liaDialogSync", function() lia.dialog.stored = net.ReadTable() end)
+net.Receive("liaOpenNpcDialog", function()
+    local npc = net.ReadEntity()
+    local canCustomize = net.ReadBool()
+    local npcData = net.ReadTable()
+    local npcName = "Dialog"
+    if IsValid(npc) then
+        npcName = npc:getNetVar("NPCName", npc.NPCName or "Dialog")
+    elseif npcData and npcData.PrintName then
+        npcName = npcData.PrintName
+    end
+
+    lia.dialog.vgui = vgui.Create("DialogMenu")
+    lia.dialog.vgui:SetDialogTitle(npcName)
+    if npcData then
+        if canCustomize then
+            local originalConversation = npcData.Conversation or {}
+            local enhancedConversation = table.Copy(originalConversation)
+            enhancedConversation["Customize this NPC"] = {
+                Callback = function()
+                    lia.dialog.openCustomizationUI(npc)
+                    if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
+                end,
+                serverOnly = false
+            }
+
+            local enhancedData = table.Copy(npcData)
+            enhancedData.Conversation = enhancedConversation
+            lia.dialog.vgui:LoadNPCDialog(enhancedData, npc)
+        else
+            lia.dialog.vgui:LoadNPCDialog(npcData, npc)
+        end
+    end
+end)
+
+net.Receive("liaRequestNPCSelection", function()
+    local npcEntity = net.ReadEntity()
+    local npcOptions = net.ReadTable()
+    if not IsValid(npcEntity) or not npcOptions then return end
+    local frame = vgui.Create("liaFrame")
+    frame:SetSize(800, 600)
+    frame:Center()
+    frame:MakePopup()
+    frame:SetTitle("Select NPC Type")
+    local scroll = vgui.Create("liaScrollPanel", frame)
+    scroll:Dock(FILL)
+    scroll:DockMargin(20, 20, 20, 20)
+    for _, option in ipairs(npcOptions) do
+        local displayName = option[1]
+        local uniqueID = option[2]
+        local button = vgui.Create("liaSmallButton", scroll)
+        button:Dock(TOP)
+        button:SetTall(50)
+        button:DockMargin(0, 0, 0, 10)
+        button:SetText(displayName)
+        button.DoClick = function()
+            net.Start("liaRequestNPCSelection")
+            net.WriteEntity(npcEntity)
+            net.WriteString(uniqueID)
+            net.SendToServer()
+            frame:Close()
+        end
+    end
+
+    local closeBtn = vgui.Create("liaSmallButton", frame)
+    closeBtn:Dock(BOTTOM)
+    closeBtn:SetTall(60)
+    closeBtn:DockMargin(20, 10, 20, 20)
+    closeBtn:SetText("Cancel")
+    closeBtn.DoClick = function() frame:Close() end
+end)
+
+net.Receive("liaPacSync", function()
+    for _, client in player.Iterator() do
+        for id in pairs(client:getParts()) do
+            hook.Run("AttachPart", client, id)
+        end
+    end
+end)
+
+net.Receive("liaPacPartAdd", function()
+    local client = net.ReadEntity()
+    local id = net.ReadString()
+    if not IsValid(client) then return end
+    hook.Run("AttachPart", client, id)
+end)
+
+net.Receive("liaPacPartRemove", function()
+    local client = net.ReadEntity()
+    local id = net.ReadString()
+    if not IsValid(client) then return end
+    hook.Run("RemovePart", client, id)
+end)
+
+net.Receive("liaPacPartReset", function()
+    local client = net.ReadEntity()
+    if not IsValid(client) or not client.RemovePACPart then return end
+    if client.liaPACParts then
+        for _, part in pairs(client.liaPACParts) do
+            client:RemovePACPart(part)
+        end
+
+        client.liaPACParts = nil
+    end
+end)
+
 net.Receive("liaEmitUrlSound", function()
     local ent = net.ReadEntity()
     local soundPath = net.ReadString()

@@ -19,6 +19,24 @@
     end
 end)
 
+net.Receive("liaSwepeditorLoad", function(_, ply)
+    local weaponClass = net.ReadString()
+    if weaponClass and weaponClass ~= "" then
+        lia.db.query(string.format("SELECT * FROM lia_swepeditor WHERE class = '%s'", string.gsub(weaponClass, "'", "''")), function(results)
+            local dataToSend = {}
+            if results and results[1] then
+                local saveData = util.JSONToTable(results[1].data)
+                if saveData then dataToSend = lia.swepeditor.NetworkData[weaponClass] or saveData end
+            end
+
+            net.Start("liaSwepeditorLoad")
+            net.WriteTable(dataToSend)
+            net.WriteString(weaponClass)
+            net.Send(ply)
+        end)
+    end
+end)
+
 net.Receive("liaStringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()

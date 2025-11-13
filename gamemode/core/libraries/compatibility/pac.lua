@@ -124,40 +124,6 @@ else
     end)
 end
 
-net.Receive("liaPacSync", function()
-    for _, client in player.Iterator() do
-        for id in pairs(client:getParts()) do
-            hook.Run("AttachPart", client, id)
-        end
-    end
-end)
-
-net.Receive("liaPacPartAdd", function()
-    local client = net.ReadEntity()
-    local id = net.ReadString()
-    if not IsValid(client) then return end
-    hook.Run("AttachPart", client, id)
-end)
-
-net.Receive("liaPacPartRemove", function()
-    local client = net.ReadEntity()
-    local id = net.ReadString()
-    if not IsValid(client) then return end
-    hook.Run("RemovePart", client, id)
-end)
-
-net.Receive("liaPacPartReset", function()
-    local client = net.ReadEntity()
-    if not IsValid(client) or not client.RemovePACPart then return end
-    if client.liaPACParts then
-        for _, part in pairs(client.liaPACParts) do
-            client:RemovePACPart(part)
-        end
-
-        client.liaPACParts = nil
-    end
-end)
-
 lia.command.add("fixpac", {
     adminOnly = false,
     desc = "pacFixCommandDesc",
