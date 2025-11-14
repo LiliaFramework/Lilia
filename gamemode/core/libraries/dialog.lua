@@ -571,7 +571,7 @@ if SERVER then
     function lia.dialog.registerNPC(uniqueID, data, shouldSync)
         if not uniqueID or not data then return false end
         if not data.Conversation then return false end
-        local hasChanged = false
+        local hasChanged
         local sanitizedData = table.Copy(data)
         if sanitizedData.Conversation then sanitizedData.Conversation = sanitizeConversationTable(sanitizedData.Conversation) end
         if not lia.dialog.stored[uniqueID] then
@@ -1366,7 +1366,7 @@ end
 function lia.dialog.getAvailableConfigurations(ply, npc, npcID)
     local options = {}
     if not IsValid(ply) then return options end
-    for uniqueID, config in pairs(lia.dialog.configurations) do
+    for _, config in pairs(lia.dialog.configurations) do
         if not isfunction(config.onOpen) then continue end
         if isConfigurationVisible(config, ply, npc, npcID) then options[#options + 1] = config end
     end
@@ -1521,6 +1521,6 @@ else
             if not IsValid(ent) or ent:GetClass() ~= "lia_npc" then return false end
             return ply:hasPrivilege("canManageNPCs")
         end,
-        Action = function(self, ent) lia.dialog.openConfigurationPicker(ent) end
+        Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end
     })
 end

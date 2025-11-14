@@ -248,7 +248,7 @@ function lia.derma.optionsMenu(rawOptions, config)
     if preFiltered then
         if liaDermaIsSequential(rawOptions) then
             for _, entry in ipairs(rawOptions) do
-                if istable(entry) then addOption(entry.id or entry.name or tostring(_), entry.opt or entry, entry.label) end
+                if istable(entry) then addOption(entry.id or entry.name or tostring(), entry.opt or entry, entry.label) end
             end
         else
             for id, option in pairs(rawOptions) do

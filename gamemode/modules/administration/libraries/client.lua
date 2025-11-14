@@ -2926,7 +2926,7 @@ local function OpenLogsUI(panel, categorizedLogs)
             showCurrentPage()
         end
 
-        local function goToPage(_)
+        local function goToPage()
             local totalPages = getTotalPages()
             if _ >= 1 and _ <= totalPages then
                 currentPage = _

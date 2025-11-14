@@ -87,7 +87,7 @@ function PANEL:PerformLayout()
     self.slider:SetTall(20)
 end
 
-function PANEL:Paint(_, _)
+function PANEL:Paint()
     if IsValid(self.valueLabel) then
         local displayValue = self.decimals == 0 and math.Round(self.value) or math.Round(self.value, self.decimals)
         self.valueLabel:SetText(self.text .. " - " .. displayValue)

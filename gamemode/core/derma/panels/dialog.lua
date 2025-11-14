@@ -118,7 +118,7 @@ function PANEL:AppendDialogLine(text, isPlayer, skipResponseUpdate)
     container:DockMargin(0, 0, 0, 6)
     container.dialogHistoryScroll = self.dialogHistoryScroll
     container.dialogHistoryList = self.dialogHistoryList
-    function container:PerformLayout(w, h)
+    function container:PerformLayout()
         if IsValid(self.dialogHistoryScroll) then
             local scrollW = self.dialogHistoryScroll:GetWide()
             if scrollW > 0 then
@@ -139,7 +139,7 @@ function PANEL:AppendDialogLine(text, isPlayer, skipResponseUpdate)
     label:SetTextColor(self:GetSpeakerColor(isPlayer))
     label:SetText(formatted)
     label:SetContentAlignment(4)
-    function label:PerformLayout(w, h)
+    function label:PerformLayout()
         if IsValid(self:GetParent()) then
             local parentW = self:GetParent():GetWide()
             if parentW > 0 and self:GetWide() ~= parentW then self:SetWide(parentW) end
