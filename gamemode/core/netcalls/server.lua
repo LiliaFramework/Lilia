@@ -1089,6 +1089,32 @@ local function findOption(options, label, ply)
     return nil
 end
 
+local function buildResponsePayload(response)
+    if response == nil then return nil end
+    if istable(response) then
+        local payload = {}
+        local function pushLine(line)
+            if isstring(line) then
+                payload[#payload + 1] = line
+            elseif line ~= nil then
+                payload[#payload + 1] = tostring(line)
+            end
+        end
+
+        for _, line in ipairs(response) do
+            pushLine(line)
+        end
+
+        if #payload == 0 then
+            for _, line in pairs(response) do
+                pushLine(line)
+            end
+        end
+        return #payload > 0 and payload or nil
+    end
+    return {tostring(response)}
+end
+
 local function setupNPCType(npc, npcType)
     if not IsValid(npc) or not npcType then return end
     local existingCustomData = npc.customData
@@ -1159,47 +1185,64 @@ net.Receive("liaNpcDialogServerCallback", function(_, ply)
     if option.Callback then option.Callback(ply, npc) end
 end)
 
-net.Receive("liaNpcCustomize", function(_, ply)
+net.Receive("liaNpcDialogRequestResponse", function(_, ply)
     local npc = net.ReadEntity()
-    local customData = net.ReadTable()
-    if not IsValid(npc) or not ply:hasPrivilege("canManageProperties") then return end
-    if customData.name and customData.name ~= "" then npc.NPCName = customData.name end
-    if customData.model and customData.model ~= "" then npc:SetModel(customData.model) end
-    if customData.skin then npc:SetSkin(tonumber(customData.skin) or 0) end
-    if customData.bodygroups and istable(customData.bodygroups) then
-        for bodygroupIndex, value in pairs(customData.bodygroups) do
-            npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
+    local label = net.ReadString()
+    if not IsValid(ply) or not IsValid(npc) or not npc.uniqueID then return end
+    local npcData = lia.dialog.getOriginalNPCData(npc.uniqueID)
+    local conversationTable = npcData and npcData.Conversation
+    if not conversationTable then return end
+    local option = findOption(conversationTable, label, ply)
+    if not option then return end
+    if option.ShouldShow and not option.ShouldShow(ply, npc) then return end
+    if not option.Response then return end
+    local payload
+    if isfunction(option.Response) then
+        local success, result = pcall(option.Response, ply, npc)
+        if not success then
+            ErrorNoHalt(string.format("[Lilia] Dialog response error for '%s': %s\n", label, tostring(result)))
+            return
         end
+
+        payload = result
+    else
+        payload = option.Response
     end
 
-    if customData.animation and customData.animation ~= "auto" then
-        local sequenceIndex = npc:LookupSequence(customData.animation)
-        if sequenceIndex >= 0 then
-            npc.customAnimation = customData.animation
-            npc:ResetSequence(sequenceIndex)
+    if istable(payload) and #payload > 1 then
+        local randomIndex = math.random(1, #payload)
+        payload = payload[randomIndex]
+    end
+
+    payload = buildResponsePayload(payload)
+    if not payload then return end
+    net.Start("liaNpcDialogDeliverResponse")
+    net.WriteEntity(npc)
+    net.WriteTable(payload)
+    net.Send(ply)
+end)
+
+net.Receive("liaNpcCustomize", function(_, ply)
+    local configID = net.ReadString()
+    local npc = net.ReadEntity()
+    local payload = net.ReadTable() or {}
+    if not isstring(configID) or configID == "" then return end
+    if not IsValid(ply) or not IsValid(npc) then return end
+    if not ply.hasPrivilege or not ply:hasPrivilege("canManageNPCs") then return end
+    local config = lia.dialog.getConfiguration(configID)
+    if not config or not isfunction(config.onApply) then return end
+    if isfunction(config.shouldShow) then
+        local ok, allowed = pcall(config.shouldShow, ply, npc, npc.uniqueID)
+        if not ok then
+            ErrorNoHalt(string.format("[Lilia] NPC configuration '%s' visibility check failed: %s\n", configID, tostring(allowed)))
+            return
         end
+
+        if allowed == false then return end
     end
 
-    local currentPos = npc:GetPos()
-    local currentAng = npc:GetAngles()
-    npc:SetMoveType(MOVETYPE_VPHYSICS)
-    npc:SetSolid(SOLID_OBB)
-    npc:PhysicsInit(SOLID_OBB)
-    npc:SetCollisionGroup(COLLISION_GROUP_WORLD)
-    npc:SetPos(currentPos)
-    npc:SetAngles(currentAng)
-    local physObj = npc:GetPhysicsObject()
-    if IsValid(physObj) then
-        physObj:EnableMotion(false)
-        physObj:Sleep()
-    end
-
-    npc:setAnim()
-    npc.customData = customData
-    npc:setNetVar("NPCName", npc.NPCName)
-    hook.Run("UpdateEntityPersistence", npc)
-    hook.Run("SaveData")
-    ply:notifySuccess("NPC customized successfully!")
+    local success, err = pcall(config.onApply, ply, npc, payload)
+    if not success then ErrorNoHalt(string.format("[Lilia] NPC configuration '%s' errored: %s\n", configID, tostring(err))) end
 end)
 
 net.Receive("liaRequestNPCSelection", function(_, client)

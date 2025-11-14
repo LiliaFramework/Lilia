@@ -33,12 +33,13 @@ function PANEL:SetIndicatorHeight(height)
     self:Rebuild()
 end
 
-function PANEL:AddTab(name, pan, icon)
+function PANEL:AddTab(name, pan, icon, callback)
     local newId = #self.tabs + 1
     self.tabs[newId] = {
         name = name,
         pan = pan,
-        icon = icon
+        icon = icon,
+        callback = callback
     }
 
     self.tabs[newId].pan:SetParent(self.content)
@@ -72,9 +73,9 @@ function PANEL:CreateNavigationButtons()
     self.btn_left.DoClick = function() self:ScrollTabs(-1) end
     self.btn_left.Paint = function(_, w, h)
         if self.scroll_offset > 0 then
-            draw.SimpleText("◀", "LiliaFont.18", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("◀", "LiliaFont.32", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         else
-            draw.SimpleText("◀", "LiliaFont.18", w / 2, h / 2, Color(100, 100, 100, 150), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("◀", "LiliaFont.32", w / 2, h / 2, Color(100, 100, 100, 150), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
 
@@ -88,9 +89,9 @@ function PANEL:CreateNavigationButtons()
     self.btn_right.Paint = function(_, w, h)
         local max_scroll = math.max(0, #self.tabs - self.max_visible_tabs)
         if self.scroll_offset < max_scroll then
-            draw.SimpleText("▶", "LiliaFont.18", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("▶", "LiliaFont.32", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         else
-            draw.SimpleText("▶", "LiliaFont.18", w / 2, h / 2, Color(100, 100, 100, 150), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText("▶", "LiliaFont.32", w / 2, h / 2, Color(100, 100, 100, 150), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
     end
 end
@@ -151,6 +152,7 @@ function PANEL:Rebuild()
                 self.active_id = id
                 lia.websound.playButtonSound()
                 self:UpdateActiveTabVisual()
+                if tab.callback then tab.callback() end
             end
 
             btnTab.DoRightClick = function()
@@ -161,6 +163,7 @@ function PANEL:Rebuild()
                         v.pan:SetVisible(true)
                         self.active_id = k
                         self:UpdateActiveTabVisual()
+                        if v.callback then v.callback() end
                     end, v.icon)
                 end
             end
@@ -278,6 +281,7 @@ function PANEL:SetActiveTab(tab)
         local button = self.panel_tabs:GetChild(tab)
         if IsValid(button) then self.m_pActiveTab = button end
         self:UpdateActiveTabVisual()
+        if self.tabs[tab] and self.tabs[tab].callback then self.tabs[tab].callback() end
     else
         for searchId, data in ipairs(self.tabs) do
             if data.pan == tab or self.panel_tabs:GetChild(searchId) == tab then

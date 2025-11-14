@@ -771,7 +771,7 @@ function PANEL:Init()
     if IsValid(self.factionPanel) then self.factionPanel:SetParent(self.leftPanel) end
     if hasBodygroups or entity:SkinCount() > 1 then
         if hasBodygroups then
-            self.bodygroups = self.leftPanel:Add("liaSmallButton")
+            self.bodygroups = self.leftPanel:Add("liaButton")
             self.bodygroups:Dock(BOTTOM)
             self.bodygroups:DockMargin(0, 4, 0, 0)
             self.bodygroups:SetText(L("bodygroups"))

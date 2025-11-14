@@ -578,7 +578,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local cx = fx + (fw - bw) * 0.5
     local selectText = L("select") .. " " .. L("character")
     if character:isBanned() then selectText = L("permaKilledCharacter") end
-    self.selectBtn = self:Add("liaSmallButton")
+    self.selectBtn = self:Add("liaButton")
     self.selectBtn:SetSize(bw, bh)
     self.selectBtn:SetPos(cx, fy + fh + pad)
     self.selectBtn:SetText(selectText)
@@ -592,7 +592,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         lia.module.get("mainmenu"):ChooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end
 
-    self.deleteBtn = self:Add("liaSmallButton")
+    self.deleteBtn = self:Add("liaButton")
     self.deleteBtn:SetSize(bw, bh)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
     self.deleteBtn:SetText(L("delete") .. " " .. L("character"))

@@ -799,24 +799,23 @@ net.Receive("liaOpenNpcDialog", function()
     lia.dialog.vgui = vgui.Create("DialogMenu")
     lia.dialog.vgui:SetDialogTitle(npcName)
     if npcData then
-        if canCustomize then
-            local originalConversation = npcData.Conversation or {}
-            local enhancedConversation = table.Copy(originalConversation)
-            enhancedConversation["Customize this NPC"] = {
-                Callback = function()
-                    lia.dialog.openCustomizationUI(npc)
-                    if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
-                end,
-                serverOnly = false
-            }
-
-            local enhancedData = table.Copy(npcData)
-            enhancedData.Conversation = enhancedConversation
-            lia.dialog.vgui:LoadNPCDialog(enhancedData, npc)
-        else
-            lia.dialog.vgui:LoadNPCDialog(npcData, npc)
+        local enhancedConversation = table.Copy(npcData.Conversation or {})
+        local additionalOptions = hook.Run("GetNPCDialogOptions", LocalPlayer(), npc, canCustomize) or {}
+        for optionName, optionData in pairs(additionalOptions) do
+            enhancedConversation[optionName] = optionData
         end
+
+        local enhancedData = table.Copy(npcData)
+        enhancedData.Conversation = enhancedConversation
+        lia.dialog.vgui:LoadNPCDialog(enhancedData, npc)
     end
+end)
+
+net.Receive("liaNpcDialogDeliverResponse", function()
+    local npc = net.ReadEntity()
+    local responses = net.ReadTable()
+    if not IsValid(lia.dialog.vgui) or not responses then return end
+    if lia.dialog.vgui.DisplayServerResponse then lia.dialog.vgui:DisplayServerResponse(responses, npc) end
 end)
 
 net.Receive("liaRequestNPCSelection", function()
@@ -834,7 +833,7 @@ net.Receive("liaRequestNPCSelection", function()
     for _, option in ipairs(npcOptions) do
         local displayName = option[1]
         local uniqueID = option[2]
-        local button = vgui.Create("liaSmallButton", scroll)
+        local button = vgui.Create("liaButton", scroll)
         button:Dock(TOP)
         button:SetTall(50)
         button:DockMargin(0, 0, 0, 10)
@@ -848,7 +847,7 @@ net.Receive("liaRequestNPCSelection", function()
         end
     end
 
-    local closeBtn = vgui.Create("liaSmallButton", frame)
+    local closeBtn = vgui.Create("liaButton", frame)
     closeBtn:Dock(BOTTOM)
     closeBtn:SetTall(60)
     closeBtn:DockMargin(20, 10, 20, 20)
@@ -1210,11 +1209,7 @@ end)
 
 net.Receive("liaNotificationData", lia.notices.receiveNotify)
 net.Receive("liaNotifyLocal", lia.notices.receiveNotifyL)
-net.Receive("liaWorkshopDownloaderInfo", function()
-    refresh(net.ReadTable())
-    timer.Simple(1, function() if lia.workshop.hasContentToDownload and lia.workshop.hasContentToDownload() then lia.workshop.mountContent() end end)
-end)
-
+net.Receive("liaWorkshopDownloaderInfo", function() refresh(net.ReadTable()) end)
 net.Receive("liaGroupPermChanged", function()
     local group = net.ReadString()
     local privilege = net.ReadString()

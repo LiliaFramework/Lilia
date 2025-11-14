@@ -1872,95 +1872,6 @@ else
         MsgC(Color(255, 255, 255), "Vector = (" .. math.Round(pos.x, 2) .. ", " .. math.Round(pos.y, 2) .. ", " .. math.Round(pos.z, 2) .. "), \nAngle = (" .. math.Round(ang.x, 2) .. ", " .. math.Round(ang.y, 2) .. ", " .. math.Round(ang.z, 2) .. ")\n")
     end)
 
-    factionViewEnabled = factionViewEnabled or false
-    factionViewPosition = factionViewPosition or nil
-    factionViewAngles = factionViewAngles or nil
-    factionViewModel = factionViewModel or nil
-    factionViewFaction = factionViewFaction or nil
-    concommand.Add("viewAsFaction", function(client)
-        if not IsValid(client) then
-            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
-            return
-        end
-
-        local factionOptions = {}
-        for uniqueID, faction in pairs(lia.faction.teams) do
-            table.insert(factionOptions, {faction.name, uniqueID})
-        end
-
-        if table.IsEmpty(factionOptions) then
-            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("noFactionsFound") .. "\n")
-            return
-        end
-
-        lia.util.requestArguments("Select Faction to View As", {
-            ["Faction"] = {"table", factionOptions}
-        }, function(success, data)
-            if not success or not data or not data.Faction then return end
-            local factionUniqueID = data.Faction
-            local faction = lia.faction.teams[factionUniqueID]
-            if not faction then
-                client:notifyErrorLocalized("factionNotFound")
-                return
-            end
-
-            local menuPos = faction.mainMenuPosition
-            if not menuPos then
-                client:notifyErrorLocalized("factionNoMainMenuPosition", faction.name)
-                return
-            end
-
-            local position, angles = nil, nil
-            local currentMap = game.GetMap()
-            if isvector(menuPos) then
-                position = menuPos
-                angles = Angle(0, 180, 0)
-            elseif istable(menuPos) then
-                if menuPos[currentMap] then
-                    local mapPos = menuPos[currentMap]
-                    if istable(mapPos) then
-                        position = mapPos.position or mapPos
-                        angles = mapPos.angles or Angle(0, 180, 0)
-                    elseif isvector(mapPos) then
-                        position = mapPos
-                        angles = Angle(0, 180, 0)
-                    end
-                else
-                    local fallbackMap, fallbackPos = next(menuPos)
-                    if fallbackMap and fallbackPos then
-                        if istable(fallbackPos) then
-                            position = fallbackPos.position or fallbackPos
-                            angles = fallbackPos.angles or Angle(0, 180, 0)
-                        elseif isvector(fallbackPos) then
-                            position = fallbackPos
-                            angles = Angle(0, 180, 0)
-                        end
-                    elseif menuPos.position then
-                        position = menuPos.position
-                        angles = menuPos.angles or Angle(0, 180, 0)
-                    end
-                end
-            end
-
-            if not position then
-                client:notifyErrorLocalized("factionPositionNotDetermined", faction.name, currentMap)
-                return
-            end
-
-            factionViewEnabled = true
-            factionViewPosition = position
-            factionViewAngles = angles or Angle(0, 180, 0)
-            factionViewFaction = factionUniqueID
-            MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewUsingMap", currentMap, faction.name) .. "\n")
-            MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewPosition", tostring(position)) .. "\n")
-            if angles then MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewAngles", tostring(angles)) .. "\n") end
-            client:notifyInfoLocalized("viewingAsFaction", faction.name)
-            client:notifyInfoLocalized("factionViewPosition", tostring(position))
-            if angles then client:notifyInfoLocalized("factionViewAngles", tostring(angles)) end
-            client:notifyInfoLocalized("stopFactionView")
-        end)
-    end)
-
     concommand.Add("debugFactionMaps", function(client, _, args)
         if not IsValid(client) then
             MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
@@ -2009,29 +1920,6 @@ else
                 end
             end
         end
-    end)
-
-    concommand.Add("stopFactionView", function(client)
-        if not IsValid(client) then
-            MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
-            return
-        end
-
-        if not factionViewEnabled then
-            MsgC(Color(255, 193, 7), "[Lilia] " .. L("factionViewNotActive") .. "\n")
-            return
-        end
-
-        factionViewEnabled = false
-        factionViewPosition = nil
-        factionViewAngles = nil
-        factionViewFaction = nil
-        if IsValid(factionViewModel) then
-            factionViewModel:Remove()
-            factionViewModel = nil
-        end
-
-        MsgC(Color(0, 255, 0), "[Lilia] " .. L("factionViewDisabled") .. "\n")
     end)
 end
 

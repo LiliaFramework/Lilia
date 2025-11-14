@@ -388,32 +388,6 @@ function GM:CreateMove(cmd)
 end
 
 function GM:CalcView(client, origin, angles, fov)
-    if factionViewEnabled and factionViewPosition then
-        local view = self.BaseClass:CalcView(client, origin, angles, fov)
-        view.origin = factionViewPosition
-        if factionViewAngles then view.angles = factionViewAngles end
-        view.znear = 1
-        if not factionViewModel or not IsValid(factionViewModel) then factionViewModel = ClientsideModel("models/error.mdl", RENDERGROUP_OPAQUE) end
-        if IsValid(factionViewModel) then
-            local forwardOffset = factionViewAngles and factionViewAngles:Forward() * 50 or Vector(0, 0, 50)
-            local modelPos = factionViewPosition + forwardOffset
-            factionViewModel:SetPos(modelPos)
-            factionViewModel:SetAngles(factionViewAngles or Angle(0, 180, 0))
-            if factionViewFaction then
-                local faction = lia.faction.teams[factionViewFaction]
-                if faction and faction.models then
-                    local modelInfo = faction.models[1]
-                    local modelPath = modelInfo
-                    if istable(modelInfo) then modelPath = modelInfo[1] end
-                    if modelPath and modelPath ~= factionViewModel:GetModel() then factionViewModel:SetModel(modelPath) end
-                end
-            end
-
-            factionViewModel:DrawModel()
-        end
-        return view
-    end
-
     local ragEntity = client:getNetVar("ragdoll")
     local ragdoll = client:GetRagdollEntity()
     local ent

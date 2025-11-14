@@ -234,8 +234,6 @@ function PANEL:Init()
     self.anchorMode = true
     self.invKey = lia.keybind.get(L("openInventory"), KEY_I)
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
-    local baseBtnW, btnH, spacing = 150, 40, 20
-    self.baseBtnW = baseBtnW
     local topBar = self:Add("DPanel")
     topBar:Dock(TOP)
     topBar:SetTall(70)
@@ -271,64 +269,10 @@ function PANEL:Init()
         surface.DrawTexturedRect(w - iconSize - 20, iconY, iconSize, iconSize)
     end
 
-    local leftArrow = topBar:Add("liaSmallButton")
-    leftArrow:Dock(LEFT)
-    leftArrow:DockMargin(0, 0, spacing, 0)
-    leftArrow:SetWide(40)
-    leftArrow:SetText(L("previousArrow"))
-    leftArrow:SetFont("LiliaFont.25")
-    leftArrow:SetTextColor(color_white)
-    leftArrow:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    local rightArrow = topBar:Add("liaSmallButton")
-    rightArrow:Dock(RIGHT)
-    rightArrow:DockMargin(spacing, 0, 0, 0)
-    rightArrow:SetWide(40)
-    rightArrow:SetText(L("nextArrow"))
-    rightArrow:SetFont("LiliaFont.25")
-    rightArrow:SetTextColor(color_white)
-    rightArrow:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    local tabsContainer = topBar:Add("Panel")
-    tabsContainer:Dock(FILL)
-    function tabsContainer:PerformLayout(w, h)
-        local btns = self:GetChildren()
-        local totalW = -spacing
-        for _, btn in ipairs(btns) do
-            totalW = totalW + (btn.calcW or baseBtnW) + spacing
-        end
-
-        local overflow = totalW - w
-        if overflow > 0 then
-            leftArrow:SetVisible(true)
-            rightArrow:SetVisible(true)
-            self.tabOffset = math.Clamp(self.tabOffset or 0, -overflow, 0)
-        else
-            leftArrow:SetVisible(false)
-            rightArrow:SetVisible(false)
-            self.tabOffset = 0
-        end
-
-        local x = (w - totalW) * 0.5 + (self.tabOffset or 0)
-        for _, btn in ipairs(btns) do
-            local bW = btn.calcW or baseBtnW
-            btn:SetSize(bW, btnH)
-            btn:SetPos(x, (h - btnH) * 0.5)
-            x = x + bW + spacing
-        end
-    end
-
-    leftArrow.DoClick = function()
-        lia.websound.playButtonSound()
-        tabsContainer.tabOffset = (tabsContainer.tabOffset or 0) + baseBtnW + spacing
-        tabsContainer:InvalidateLayout()
-    end
-
-    rightArrow.DoClick = function()
-        lia.websound.playButtonSound()
-        tabsContainer.tabOffset = (tabsContainer.tabOffset or 0) - (baseBtnW + spacing)
-        tabsContainer:InvalidateLayout()
-    end
-
-    self.tabs = tabsContainer
+    local tabsPanel = topBar:Add("liaTabs")
+    tabsPanel:Dock(FILL)
+    tabsPanel:DockMargin(0, 5, 80, 5)
+    self.tabs = tabsPanel
     local panel = self:Add("EditablePanel")
     panel:Dock(FILL)
     local mX, mY = ScrW() * 0.05, ScrH() * 0.05
@@ -391,48 +335,49 @@ function PANEL:Init()
 end
 
 function PANEL:addTab(name, callback)
-    local tab = self.tabs:Add("liaSmallButton")
-    tab:SetText(L(name))
-    tab:SetFont("LiliaFont.25")
-    surface.SetFont(tab:GetFont())
-    local tw = select(1, surface.GetTextSize(tab:GetText()))
-    tab.calcW = math.max(self.baseBtnW or 150, tw + 20)
-    tab:SetTextColor(lia.color.theme.text or Color(210, 235, 235))
-    tab:SetExpensiveShadow(1, Color(0, 0, 0, 100))
-    tab:SetContentAlignment(5)
-    tab.DoClick = function()
-        lia.websound.playButtonSound()
+    local contentPanel = vgui.Create("EditablePanel")
+    contentPanel:Dock(FILL)
+    contentPanel.Paint = function() end
+    local wrappedCallback = function()
         if IsValid(lia.gui.info) then lia.gui.info:Remove() end
-        for _, t in pairs(self.tabList) do
-            t:SetSelected(false)
-        end
-
-        tab:SetSelected(true)
-        self.activeTab = tab
-        self.panel:Clear()
-        self.panel:AlphaTo(255, 0.3, 0)
         if callback then
+            local mainPanel = self.panel
+            mainPanel:Clear()
+            mainPanel:AlphaTo(255, 0.3, 0)
             self:UpdateTabColors()
             self:ApplyCurrentTheme()
-            callback(self.panel)
-            self.panel:InvalidateLayout(true)
+            callback(mainPanel)
+            mainPanel:InvalidateLayout(true)
         end
     end
-    return tab
+
+    self.tabs:AddTab(L(name), contentPanel, nil, wrappedCallback)
+    local tabData = {
+        name = name,
+        panel = contentPanel,
+        callback = callback
+    }
+
+    if not self.tabList then self.tabList = {} end
+    self.tabList[name] = tabData
+    return tabData
 end
 
 function PANEL:setActiveTab(key)
-    local tab = self.tabList[key]
-    if IsValid(tab) then
-        tab:DoClick()
-        tab:SetSelected(true)
+    local tabData = self.tabList[key]
+    if tabData and IsValid(tabData.panel) then
+        for i, tabInfo in ipairs(self.tabs.tabs) do
+            if tabInfo.pan == tabData.panel then
+                self.tabs:SetActiveTab(i)
+                return
+            end
+        end
         return
     end
 
-    for _, tabPanel in pairs(self.tabList) do
-        if IsValid(tabPanel) and tabPanel:GetText() == key then
-            tabPanel:DoClick()
-            tabPanel:SetSelected(true)
+    for i, tabInfo in ipairs(self.tabs.tabs) do
+        if tabInfo.name == key or L(tabInfo.name) == key then
+            self.tabs:SetActiveTab(i)
             return
         end
     end
@@ -462,11 +407,6 @@ function PANEL:ApplyCurrentTheme()
 end
 
 function PANEL:UpdateTabColors()
-    if not self.tabList then return end
-    local textColor = lia.color.theme.text or Color(210, 235, 235)
-    for _, tab in pairs(self.tabList) do
-        if IsValid(tab) then tab:SetTextColor(textColor) end
-    end
 end
 
 function PANEL:OnKeyCodePressed(key)
@@ -1350,7 +1290,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                     header:Dock(TOP)
                     header:SetTall(60)
                     header:SetPaintBackground(false)
-                    local applyButton = header:Add("liaSmallButton")
+                    local applyButton = header:Add("liaButton")
                     applyButton:Dock(TOP)
                     applyButton:DockMargin(0, 5, 0, 0)
                     applyButton:SetWide(200)
