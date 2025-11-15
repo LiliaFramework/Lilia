@@ -41,7 +41,7 @@ Shared
     -- Simple: Add a basic boolean configuration
     lia.config.add("EnableFeature", "Enable Feature", true, nil, {
         desc      = "Enable or disable this feature",
-        category  = "general",
+        category  = "categoryGeneral",
         type      = "Boolean"
     })
 
@@ -56,7 +56,7 @@ Shared
         end
     end, {
         desc      = "Player walking speed",
-        category  = "character",
+        category  = "categoryCharacter",
         type      = "Int",
         min       = 50,
         max       = 300
@@ -69,7 +69,7 @@ Shared
     -- High: Add configuration with dynamic options and complex validation
     lia.config.add("Language", "Language", "English", nil, {
         desc      = "Select your preferred language",
-        category  = "general",
+        category  = "categoryGeneral",
         type      = "Table",
         options   = function()
             local languages = {}

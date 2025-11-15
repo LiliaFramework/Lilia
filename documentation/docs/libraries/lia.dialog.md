@@ -833,6 +833,7 @@ Array of available configuration modules, sorted by order
 
 #### 📋 Purpose
 Opens a configuration picker interface that displays all available NPC customization modules for privileged users
+Now directly opens the appearance menu and adds other configuration buttons at the bottom
 
 #### ⚙️ Parameters
 

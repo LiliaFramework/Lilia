@@ -748,23 +748,20 @@ end
 
     Realm:
         Client
-]]--
+]]
+--
 function lia.websound.clearCache(skipReRegister)
-    -- Clear the in-memory cache
     cache = {}
     urlMap = {}
-
-    -- Recursively delete all cached sound files
     local function deleteRecursive(path)
         local files, folders = file.Find(path .. "*", "DATA")
         if files then
             for _, fileName in ipairs(files) do
                 local filePath = path .. fileName
-                if file.Exists(filePath, "DATA") then
-                    file.Delete(filePath)
-                end
+                if file.Exists(filePath, "DATA") then file.Delete(filePath) end
             end
         end
+
         if folders then
             for _, folderName in ipairs(folders) do
                 deleteRecursive(path .. folderName .. "/")
@@ -773,13 +770,9 @@ function lia.websound.clearCache(skipReRegister)
     end
 
     deleteRecursive(baseDir)
-
-    -- Re-register all stored sounds to force re-download (unless skipReRegister is true)
     if not skipReRegister and lia.websound.stored then
         for name, url in pairs(lia.websound.stored) do
-            if url then
-                lia.websound.register(name, url)
-            end
+            if url then lia.websound.register(name, url) end
         end
     end
 end

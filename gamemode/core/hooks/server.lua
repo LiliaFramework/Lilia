@@ -118,7 +118,6 @@ function GM:PlayerLoadedChar(client, character)
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
-    -- Death sound logic (from MODULE:PlayerDeath)
     if lia.config.get("DeathSoundEnabled") then
         local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
         if deathSound and hook.Run("ShouldPlayDeathSound", client, deathSound) ~= false then
@@ -127,7 +126,6 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
     end
 
-    -- Main PlayerDeath logic
     local character = client:getChar()
     if not character then return end
     if IsValid(client:GetRagdollEntity()) then client:GetRagdollEntity():Remove() end
@@ -378,7 +376,6 @@ function GM:EntityTakeDamage(entity, dmgInfo)
         end
     end
 
-    -- Damage prevention for staff, noclip, or ragdolled players
     if not entity:IsPlayer() then return end
     if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
     if entity:GetMoveType() == MOVETYPE_NOCLIP then return true end

@@ -768,13 +768,9 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
         name = "options",
         drawFunc = function(parent)
             parent:Clear()
-
-            -- Create tabs panel
             local tabs = parent:Add("liaTabs")
             tabs:Dock(FILL)
-
             local function populate(filter)
-                -- Clear existing tabs by closing them all
                 if tabs.tabs then
                     for i = #tabs.tabs, 1, -1 do
                         tabs:CloseTab(i)
@@ -814,20 +810,14 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 end
 
                 table.sort(catNames)
-
-                -- Create a tab for each category
                 for _, catName in ipairs(catNames) do
                     local items = categories[catName]
-
-                    -- Create scroll panel for this category
                     local scrollPanel = vgui.Create("liaScrollPanel")
                     scrollPanel:Dock(FILL)
                     scrollPanel:InvalidateLayout(true)
                     if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
                     local canvas = scrollPanel:GetCanvas()
                     canvas:DockPadding(10, 10, 10, 10)
-
-                    -- Add options for this category
                     for _, v in ipairs(items) do
                         local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, canvas)
                         panel:Dock(TOP)
@@ -835,7 +825,6 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                         panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                     end
 
-                    -- Add tab for this category
                     tabs:AddTab(catName, scrollPanel)
                 end
             end

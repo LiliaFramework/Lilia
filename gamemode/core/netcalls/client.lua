@@ -927,8 +927,6 @@ net.Receive("liaNetMessage", function()
 end)
 
 net.Receive("liaAssureClientSideAssets", function()
-    -- Clear webimages and websounds cache to force re-download on every join
-    -- Pass true to skip re-registration since liaAssureClientSideAssets handles downloads
     lia.webimage.clearCache(true)
     lia.websound.clearCache(true)
     local webimages = lia.webimage.stored

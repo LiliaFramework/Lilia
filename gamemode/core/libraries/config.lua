@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Configuration Library
 
     Comprehensive user-configurable settings management system for the Lilia framework.
@@ -1961,7 +1961,6 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                         net.WriteType(numValue)
                         net.SendToServer()
                     else
-                        -- Invalid number, reset to current value
                         entry:SetValue(tostring(lia.config.get(key, config.value)))
                     end
                 end
@@ -2149,16 +2148,13 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         end
     }
 
-    -- Add legacy support for Int and Float types
     ConfigFormatting.Int = function(key, name, config, parent) return ConfigFormatting.Number(key, name, config, parent) end
     ConfigFormatting.Float = function(key, name, config, parent) return ConfigFormatting.Number(key, name, config, parent) end
     local function buildConfiguration(parent)
         parent:Clear()
-        -- Create tabs panel
         local tabs = parent:Add("liaTabs")
         tabs:Dock(FILL)
         local function populate(filter)
-            -- Clear existing tabs by closing them all
             if tabs.tabs then
                 for i = #tabs.tabs, 1, -1 do
                     tabs:CloseTab(i)
@@ -2217,17 +2213,14 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             end
 
             table.sort(categoryNames)
-            -- Create a tab for each category
             for _, categoryName in ipairs(categoryNames) do
                 local items = categories[categoryName]
-                -- Create scroll panel for this category
                 local scrollPanel = vgui.Create("liaScrollPanel")
                 scrollPanel:Dock(FILL)
                 scrollPanel:InvalidateLayout(true)
                 if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
                 local canvas = scrollPanel:GetCanvas()
                 canvas:DockPadding(10, 10, 10, 10)
-                -- Add config items to this category's panel
                 for _, it in ipairs(items) do
                     local el = ConfigFormatting[it.elemType](it.key, it.name, it.config, canvas)
                     el:Dock(TOP)
@@ -2235,7 +2228,6 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     el.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
 
-                -- Add tab for this category
                 tabs:AddTab(categoryName, scrollPanel)
             end
         end

@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.028 (November 15, 2025)
+
+### Changes
+
+- Way too many changes
+- Successfully updated workshop Lilia to 7.026
+- Linting
+- Minor UI Update & Removed useless Command
+- Net Profiler
+- Successfully updated workshop Lilia to 7.022
+- Revert "Successfully updated workshop Lilia to 7.020"
+- Successfully updated workshop Lilia to 7.020
+- Update shared.lua
+- Successfully updated workshop Lilia to 7.018
+- Moved Nets
+- Successfully updated workshop Lilia to 7.016
+- Update loader.lua
+- Successfully updated workshop Lilia to 7.014
+- NPC library
+- Font Stadartization
+- Added Bruteforce in case players dont  respawn
+- Localization
+- Added More Docs
+- Successfully updated workshop Lilia to 7.08
+
 ## Version 7.026 (November 14, 2025)
 
 ### Changes

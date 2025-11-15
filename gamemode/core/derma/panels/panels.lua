@@ -232,26 +232,17 @@ function QuickPanel:addSlider(text, cb, val, min, max, dec)
     container:SetTall(100)
     container:Dock(TOP)
     container:DockMargin(0, 1, 0, 0)
-    container.Paint = function(_, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw()
-    end
-
+    container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
     local panel = container:Add("DPanel")
     panel:Dock(FILL)
     panel:DockMargin(20, 5, 20, 5)
-    panel.Paint = function(_, w, h)
-        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
-    end
-
+    panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
     local label = vgui.Create("DLabel", panel)
     label:Dock(TOP)
     label:SetTall(25)
     label:DockMargin(0, 5, 0, 0)
     label:SetText("")
-    label.Paint = function(_, w, h)
-        draw.SimpleText(text, "LiliaFont.24", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
-
+    label.Paint = function(_, w, h) draw.SimpleText(text, "LiliaFont.24", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     local slider = panel:Add("liaSlideBox")
     slider:Dock(TOP)
     slider:DockMargin(20, 5, 20, 5)

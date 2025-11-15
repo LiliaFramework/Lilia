@@ -337,6 +337,23 @@ Shared
 
 ---
 
+### lia.websound.clearCache
+
+#### 📋 Purpose
+Clears all cached web sounds and forces re-download on next access
+
+#### ⏰ When Called
+When you want to force all web sounds to be re-downloaded (e.g., on player join)
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+]]
+
+---
+
 ### lia.websound.playButtonSound
 
 #### 📋 Purpose

@@ -1272,17 +1272,11 @@ local hasInitializedModules = false
 ]]
 function lia.loader.initializeGamemode(isReload)
     if isReload then
-        -- Prevent overlapping reload operations that can cause server unresponsiveness
-        if lia.reloadInProgress then
-            return
-        end
-
-        -- Clean up any existing reload timers to prevent accumulation
+        if lia.reloadInProgress then return end
         timer.Remove("liaReloadConfigSync")
         timer.Remove("liaReloadAdminSync")
         timer.Remove("liaReloadPlayerInteractSync")
         timer.Remove("liaReloadComplete")
-
         lia.reloadInProgress = true
     end
 

@@ -321,3 +321,20 @@ Client
 
 ---
 
+### lia.webimage.clearCache
+
+#### 📋 Purpose
+Clears all cached web images and forces re-download on next access
+
+#### ⏰ When Called
+When you want to force all web images to be re-downloaded (e.g., on player join)
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+]]
+
+---
+

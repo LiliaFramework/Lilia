@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Keybind Library
 
     Keyboard binding registration, storage, and execution system for the Lilia framework.
@@ -845,7 +845,6 @@ if CLIENT then
         local function buildKeybinds(parent)
             parent:Clear()
             local allowEdit = lia.config.get("AllowKeybindEditing", true)
-            -- Create scroll panel for all keybinds
             local scrollPanel = parent:Add("liaScrollPanel")
             scrollPanel:Dock(FILL)
             scrollPanel:InvalidateLayout(true)
@@ -857,7 +856,6 @@ if CLIENT then
                 if istable(data) and data.value then taken[data.value] = action end
             end
 
-            -- Get all keybinds and sort them alphabetically
             local actions = {}
             for action, data in pairs(lia.keybind.stored) do
                 if istable(data) then table.insert(actions, action) end
@@ -869,7 +867,6 @@ if CLIENT then
                 return la < lb
             end)
 
-            -- Add keybinds to the scroll panel
             for _, action in ipairs(actions) do
                 local data = lia.keybind.stored[action]
                 local keybindPanel = KeybindFormatting.Keybind(action, data, canvas, allowEdit, taken, buildKeybinds)
@@ -878,7 +875,6 @@ if CLIENT then
                 keybindPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
             end
 
-            -- Add reset button at the bottom if editing is allowed
             if allowEdit then
                 local resetAllBtn = vgui.Create("liaMediumButton", canvas)
                 resetAllBtn:Dock(TOP)

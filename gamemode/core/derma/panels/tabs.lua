@@ -330,7 +330,6 @@ end
 function PANEL:ApplyTabOrdering()
     local orderedTabs = {}
     local unorderedTabs = {}
-    -- Separate tabs into ordered and unordered
     for _, tab in ipairs(self.tabs) do
         local forcedPosition = self.tab_order[tab.name]
         if forcedPosition and forcedPosition >= 1 and forcedPosition <= #self.tabs then
@@ -340,9 +339,7 @@ function PANEL:ApplyTabOrdering()
         end
     end
 
-    -- Sort unordered tabs alphabetically
     table.sort(unorderedTabs, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
-    -- Combine ordered and unordered tabs
     local resultTabs = {}
     local unorderedIndex = 1
     for i = 1, #self.tabs do
@@ -354,7 +351,6 @@ function PANEL:ApplyTabOrdering()
         end
     end
 
-    -- Handle any remaining unordered tabs
     for i = unorderedIndex, #unorderedTabs do
         table.insert(resultTabs, unorderedTabs[i])
     end

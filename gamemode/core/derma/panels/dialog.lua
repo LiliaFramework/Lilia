@@ -284,9 +284,7 @@ function PANEL:HandleResponse(info, npc, label)
 end
 
 function PANEL:DisplayServerResponse(responses)
-    -- Ignore responses if we're closing for goodbye
     if self.closingForGoodbye then return end
-
     self.pendingResponse = false
     if self.lastResponseRequest then self.lastResponseRequest = nil end
     self:DisplayResponsePayload(responses)
@@ -350,14 +348,9 @@ function PANEL:AddDialogOptions(options, npc)
         choiceBtn:SetFont("LiliaFont.32")
         choiceBtn.DoClick = function()
             local isGoodbye = string.lower(label) == "goodbye" or string.lower(label) == "bye" or string.lower(label) == "farewell" or string.lower(label) == "close"
-
             self:AppendDialogLine(label, true)
-
-            -- For goodbye buttons, close immediately without showing response
             if isGoodbye then
-                -- Set flag to ignore any incoming server responses
                 self.closingForGoodbye = true
-
                 if info.Callback and not info.serverOnly then info.Callback(ply, npc) end
                 if info.serverOnly then
                     local targetNPC = IsValid(npc) and npc or self.activeNPC
@@ -369,7 +362,6 @@ function PANEL:AddDialogOptions(options, npc)
                     end
                 end
 
-                -- Close immediately without delay
                 self:Remove()
                 return
             end
@@ -399,9 +391,7 @@ function PANEL:AddDialogOptions(options, npc)
             if self.pendingResponse then return end
             local shouldClose = info.closeDialog or false
             if shouldClose or info.keepOpen == false then
-                timer.Simple(0.1, function()
-                    if IsValid(self) then self:Remove() end
-                end)
+                timer.Simple(0.1, function() if IsValid(self) then self:Remove() end end)
                 return
             end
             return

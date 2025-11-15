@@ -41,7 +41,7 @@ Shared
 ```lua
     -- Simple: Add a boolean toggle option
     lia.option.add("showHUD", "Show HUD", "Toggle HUD visibility", true, nil, {
-        category = "categoryGeneral",
+        category = "categoryLiliaGeneral",
         isQuick  = true
     })
 
