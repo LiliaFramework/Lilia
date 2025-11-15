@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Keybind Library
 
     Keyboard binding registration, storage, and execution system for the Lilia framework.
@@ -200,12 +200,13 @@ local KeybindKeys = {
         ```
 ]]
 function lia.keybind.add(k, d, desc, cb)
-    local actionName, key, description, callbacks
+    local actionName, key, description, callbacks, category
     if isstring(k) and istable(d) and desc == nil and cb == nil then
         actionName = k
         local config = d
         key = config.keyBind
         description = config.desc
+        category = config.category
         callbacks = {
             onPress = config.onPress,
             onRelease = config.onRelease,
@@ -231,6 +232,7 @@ function lia.keybind.add(k, d, desc, cb)
     if not lia.keybind.stored[actionName].value then lia.keybind.stored[actionName].value = c end
     lia.keybind.stored[actionName].default = c
     lia.keybind.stored[actionName].description = description
+    lia.keybind.stored[actionName].category = category
     lia.keybind.stored[actionName].callback = callbacks.onPress
     lia.keybind.stored[actionName].release = callbacks.onRelease
     lia.keybind.stored[actionName].shouldRun = callbacks.shouldRun
@@ -843,41 +845,42 @@ if CLIENT then
         local function buildKeybinds(parent)
             parent:Clear()
             local allowEdit = lia.config.get("AllowKeybindEditing", true)
-            local sheet = parent:Add("liaSheet")
-            sheet:Dock(FILL)
-            sheet:SetPlaceholderText(L("searchKeybinds"))
-            sheet:SetSpacing(4)
-            sheet:SetPadding(4)
+            -- Create scroll panel for all keybinds
+            local scrollPanel = parent:Add("liaScrollPanel")
+            scrollPanel:Dock(FILL)
+            scrollPanel:InvalidateLayout(true)
+            if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+            local canvas = scrollPanel:GetCanvas()
+            canvas:DockPadding(10, 10, 10, 10)
             local taken = {}
             for action, data in pairs(lia.keybind.stored) do
                 if istable(data) and data.value then taken[data.value] = action end
             end
 
-            local sortedActions = {}
+            -- Get all keybinds and sort them alphabetically
+            local actions = {}
             for action, data in pairs(lia.keybind.stored) do
-                if istable(data) then sortedActions[#sortedActions + 1] = action end
+                if istable(data) then table.insert(actions, action) end
             end
 
-            table.sort(sortedActions, function(a, b)
+            table.sort(actions, function(a, b)
                 local la, lb = #tostring(a), #tostring(b)
                 if la == lb then return tostring(a) < tostring(b) end
                 return la < lb
             end)
 
-            for _, action in ipairs(sortedActions) do
+            -- Add keybinds to the scroll panel
+            for _, action in ipairs(actions) do
                 local data = lia.keybind.stored[action]
-                local keybindPanel = KeybindFormatting.Keybind(action, data, sheet.canvas, allowEdit, taken, buildKeybinds)
+                local keybindPanel = KeybindFormatting.Keybind(action, data, canvas, allowEdit, taken, buildKeybinds)
                 keybindPanel:Dock(TOP)
                 keybindPanel:DockMargin(10, 10, 10, 0)
                 keybindPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
-                sheet:AddPanelRow(keybindPanel, {
-                    height = 220,
-                    filterText = tostring(action):lower()
-                })
             end
 
+            -- Add reset button at the bottom if editing is allowed
             if allowEdit then
-                local resetAllBtn = vgui.Create("liaMediumButton")
+                local resetAllBtn = vgui.Create("liaMediumButton", canvas)
                 resetAllBtn:Dock(TOP)
                 resetAllBtn:DockMargin(10, 20, 10, 0)
                 resetAllBtn:SetTall(60)
@@ -894,10 +897,6 @@ if CLIENT then
                     lia.keybind.save()
                     buildKeybinds(parent)
                 end
-
-                sheet:AddPanelRow(resetAllBtn, {
-                    height = 60
-                })
             end
         end
 

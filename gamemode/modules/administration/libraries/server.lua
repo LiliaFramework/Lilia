@@ -838,9 +838,19 @@ function GM:PlayerNoClip(ply, enabled)
         return false
     end
 
-    ply:DrawShadow(not enabled)
-    ply:SetNoTarget(enabled)
-    ply:AddFlags(FL_NOTARGET)
+    ply:SetNoDraw(enabled and true or false)
+    ply:SetNotSolid(enabled and true or false)
+    ply:DrawWorldModel(enabled and false or true)
+    ply:DrawShadow(enabled and false or true)
+    ply:SetNoTarget(enabled and true or false)
+    if enabled then
+        ply:GodEnable()
+        ply:AddFlags(FL_NOTARGET)
+    else
+        ply:GodDisable()
+        ply:RemoveFlags(FL_NOTARGET)
+    end
+
     hook.Run("OnPlayerObserve", ply, enabled)
     return true
 end

@@ -567,6 +567,57 @@ function lia.webimage.getStats()
     }
 end
 
+--[[
+    Purpose:
+        Clears all cached web images and forces re-download on next access
+
+    When Called:
+        When you want to force all web images to be re-downloaded (e.g., on player join)
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Realm:
+        Client
+]]--
+function lia.webimage.clearCache(skipReRegister)
+    -- Clear the in-memory cache
+    cache = {}
+    urlMap = {}
+
+    -- Recursively delete all cached image files
+    local function deleteRecursive(path)
+        local files, folders = file.Find(path .. "*", "DATA")
+        if files then
+            for _, fileName in ipairs(files) do
+                local filePath = path .. fileName
+                if file.Exists(filePath, "DATA") then
+                    file.Delete(filePath)
+                end
+            end
+        end
+        if folders then
+            for _, folderName in ipairs(folders) do
+                deleteRecursive(path .. folderName .. "/")
+            end
+        end
+    end
+
+    deleteRecursive(baseDir)
+
+    -- Re-register all stored images to force re-download (unless skipReRegister is true)
+    if not skipReRegister and lia.webimage.stored then
+        for name, data in pairs(lia.webimage.stored) do
+            if data and data.url then
+                lia.webimage.register(name, data.url, nil, data.flags)
+            end
+        end
+    end
+end
+
 lia.webimage.register("lilia.png", "https://bleonheart.github.io/Samael-Assets/lilia.png")
 lia.webimage.register("locked.png", "https://bleonheart.github.io/Samael-Assets/misc/locked.png")
 lia.webimage.register("unlocked.png", "https://bleonheart.github.io/Samael-Assets/misc/unlocked.png")

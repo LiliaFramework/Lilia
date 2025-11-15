@@ -10,6 +10,7 @@ local maxValues = {
 
 hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
     ft = FrameTime()
+    owner = owner or LocalPlayer()
     if client:canOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer() then
         if client:OnGround() and client:KeyDown(IN_DUCK) or client:Crouching() then
             crouchFactor = Lerp(ft * 5, crouchFactor, 1)
@@ -23,14 +24,24 @@ hook.Add("CalcView", "liaThirdPersonCalcView", function(client)
         traceData.start = client:GetPos() + client:GetViewOffset() + curAng:Up() * clmp(lia.option.get("thirdPersonHeight"), 0, maxValues.height) + curAng:Right() * clmp(lia.option.get("thirdPersonHorizontal"), -maxValues.horizontal, maxValues.horizontal) - client:GetViewOffsetDucked() * .5 * crouchFactor
         traceData.endpos = traceData.start - curAng:Forward() * clmp(lia.option.get("thirdPersonDistance"), 0, maxValues.distance)
         traceData.filter = client
-        view.origin = util.TraceLine(traceData).HitPos
+        local isNoclip = client:GetMoveType() == MOVETYPE_NOCLIP
+        if isNoclip then
+            view.origin = traceData.endpos
+        else
+            view.origin = util.TraceLine(traceData).HitPos
+        end
+
         aimOrigin = view.origin
         view.angles = curAng + client:GetViewPunchAngles()
-        traceData2 = {}
-        traceData2.start = aimOrigin
-        traceData2.endpos = aimOrigin + curAng:Forward() * 65535
-        traceData2.filter = client
-        if lia.option.get("thirdPersonClassicMode", false) or owner.isWepRaised and owner:isWepRaised() or owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10 then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        if isNoclip then
+            client:SetEyeAngles(curAng)
+        else
+            traceData2 = {}
+            traceData2.start = aimOrigin
+            traceData2.endpos = aimOrigin + curAng:Forward() * 65535
+            traceData2.filter = client
+            if lia.option.get("thirdPersonClassicMode", false) or owner.isWepRaised and owner:isWepRaised() or owner:KeyDown(bit.bor(IN_FORWARD, IN_BACK, IN_MOVELEFT, IN_MOVERIGHT)) and owner:GetVelocity():Length() >= 10 then client:SetEyeAngles((util.TraceLine(traceData2).HitPos - client:GetShootPos()):Angle()) end
+        end
         return view
     end
 end)

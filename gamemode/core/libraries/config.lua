@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Configuration Library
 
     Comprehensive user-configurable settings management system for the Lilia framework.
@@ -43,7 +43,7 @@ lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
         -- Simple: Add a basic boolean configuration
         lia.config.add("EnableFeature", "Enable Feature", true, nil, {
             desc      = "Enable or disable this feature",
-            category  = "general",
+            category  = "categoryGeneral",
             type      = "Boolean"
         })
         ```
@@ -57,7 +57,7 @@ lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
             end
         end, {
             desc      = "Player walking speed",
-            category  = "character",
+            category  = "categoryCharacter",
             type      = "Int",
             min       = 50,
             max       = 300
@@ -69,7 +69,7 @@ lia.config._lastSyncedValues = lia.config._lastSyncedValues or {}
         -- High: Add configuration with dynamic options and complex validation
         lia.config.add("Language", "Language", "English", nil, {
             desc      = "Select your preferred language",
-            category  = "general",
+            category  = "categoryGeneral",
             type      = "Table",
             options   = function()
                 local languages = {}
@@ -85,11 +85,12 @@ function lia.config.add(key, name, value, callback, data)
     assert(isstring(key), L("configKeyString", type(key)))
     assert(istable(data), L("configDataTable", type(data)))
     local t = type(value)
-    local configType = t == "boolean" and "Boolean" or t == "number" and (math.floor(value) == value and "Int" or "Float") or t == "table" and (value.r and value.g and value.b and "Color" or "Table") or "Generic"
+    local configType = t == "boolean" and "Boolean" or t == "number" and "Number" or t == "table" and (value.r and value.g and value.b and "Color" or "Table") or "Generic"
     local validTypes = {
         Boolean = true,
         Int = true,
         Float = true,
+        Number = true,
         Color = true,
         Table = true,
         Generic = true
@@ -977,39 +978,39 @@ end
 
 lia.config.add("MoneyModel", "moneyModel", "models/props/cs_office/money.mdl", nil, {
     desc = "moneyModelDesc",
-    category = "money",
+    category = "categoryCharacter",
     type = "Generic"
 })
 
 lia.config.add("MaxMoneyEntities", "maxMoneyEntities", 3, nil, {
     desc = "maxMoneyEntitiesDesc",
-    category = "money",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 1,
     max = 50
 })
 
 lia.config.add("CurrencySymbol", "currencySymbol", "", function(newVal) lia.currency.symbol = newVal end, {
     desc = "currencySymbolDesc",
-    category = "money",
+    category = "categoryCharacter",
     type = "Generic"
 })
 
 lia.config.add("PKWorld", "pkWorld", false, nil, {
     desc = "pkWorldDesc",
-    category = "character",
+    category = "categoryCharacter",
     type = "Boolean"
 })
 
 lia.config.add("CurrencySingularName", "currencySingularName", "currencySingular", function(newVal) lia.currency.singular = L(newVal) end, {
     desc = "currencySingularNameDesc",
-    category = "money",
+    category = "categoryCharacter",
     type = "Generic"
 })
 
 lia.config.add("CurrencyPluralName", "currencyPluralName", "currencyPlural", function(newVal) lia.currency.plural = L(newVal) end, {
     desc = "currencyPluralNameDesc",
-    category = "money",
+    category = "categoryCharacter",
     type = "Generic"
 })
 
@@ -1019,10 +1020,40 @@ lia.config.add("WalkSpeed", "walkSpeed", 130, function(_, newValue)
     end
 end, {
     desc = "walkSpeedDesc",
-    category = "character",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 50,
     max = 300
+})
+
+lia.config.add("DeathSoundEnabled", "enableDeathSound", true, nil, {
+    desc = "enableDeathSoundDesc",
+    category = "categoryInterface",
+    type = "Boolean"
+})
+
+lia.config.add("LimbDamage", "limbDamageMultiplier", 0.5, nil, {
+    desc = "limbDamageMultiplierDesc",
+    category = "categoryGameplay",
+    type = "Number",
+    min = 0.1,
+    max = 1
+})
+
+lia.config.add("DamageScale", "globalDamageScale", 1, nil, {
+    desc = "globalDamageScaleDesc",
+    category = "categoryGameplay",
+    type = "Number",
+    min = 0.1,
+    max = 5
+})
+
+lia.config.add("HeadShotDamage", "headshotDamageMultiplier", 2, nil, {
+    desc = "headshotDamageMultiplierDesc",
+    category = "categoryGameplay",
+    type = "Number",
+    min = 1,
+    max = 10
 })
 
 lia.config.add("RunSpeed", "runSpeed", 275, function(_, newValue)
@@ -1031,16 +1062,16 @@ lia.config.add("RunSpeed", "runSpeed", 275, function(_, newValue)
     end
 end, {
     desc = "runSpeedDesc",
-    category = "character",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 100,
     max = 500
 })
 
 lia.config.add("WalkRatio", "walkRatio", 0.5, nil, {
     desc = "walkRatioDesc",
-    category = "character",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 0.2,
     max = 1.0,
     decimals = 2
@@ -1066,84 +1097,84 @@ lia.config.add("BlacklistedEnabled", "blacklistEnabled", false, nil, {
 
 lia.config.add("MaxCharacters", "maxCharacters", 5, nil, {
     desc = "maxCharactersDesc",
-    category = "character",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 1,
     max = 20
 })
 
 lia.config.add("AllowPMs", "allowPMs", true, nil, {
     desc = "allowPMsDesc",
-    category = "categoryChat",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("MinDescLen", "minDescriptionLength", 16, nil, {
     desc = "minDescriptionLengthDesc",
-    category = "character",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 10,
     max = 500
 })
 
 lia.config.add("SaveInterval", "saveInterval", 300, nil, {
     desc = "saveIntervalDesc",
-    category = "character",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 60,
     max = 3600
 })
 
 lia.config.add("DefaultMoney", "defaultMoney", 0, nil, {
     desc = "defaultMoneyDesc",
-    category = "character",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 0,
     max = 10000
 })
 
 lia.config.add("DataSaveInterval", "dataSaveInterval", 600, nil, {
     desc = "dataSaveIntervalDesc",
-    category = "categoryData",
-    type = "Int",
+    category = "categoryServer",
+    type = "Number",
     min = 60,
     max = 3600
 })
 
 lia.config.add("CharacterDataSaveInterval", "characterDataSaveInterval", 300, nil, {
     desc = "characterDataSaveIntervalDesc",
-    category = "categoryData",
-    type = "Int",
+    category = "categoryServer",
+    type = "Number",
     min = 60,
     max = 3600
 })
 
 lia.config.add("SpawnTime", "respawnTime", 5, nil, {
     desc = "respawnTimeDesc",
-    category = "death",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 1,
     max = 60
 })
 
 lia.config.add("TimeToEnterVehicle", "timeToEnterVehicle", 1, nil, {
     desc = "timeToEnterVehicleDesc",
-    category = "categoryQualityOfLife",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0.1,
     max = 30
 })
 
 lia.config.add("CarEntryDelayEnabled", "carEntryDelayEnabled", true, nil, {
     desc = "carEntryDelayEnabledDesc",
-    category = "categoryTimers",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("MaxChatLength", "maxChatLength", 256, nil, {
     desc = "maxChatLengthDesc",
-    category = "categoryVisuals",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 50,
     max = 1024
 })
@@ -1151,14 +1182,14 @@ lia.config.add("MaxChatLength", "maxChatLength", 256, nil, {
 lia.config.add("SchemaYear", "schemaYear", 2025, nil, {
     desc = "schemaYearDesc",
     category = "categoryGeneral",
-    type = "Int",
+    type = "Number",
     min = 0,
     max = 999999
 })
 
 lia.config.add("DoorsAlwaysDisabled", "doorsAlwaysDisabled", false, nil, {
     desc = "doorsAlwaysDisabledDesc",
-    category = "Doors",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
@@ -1176,13 +1207,13 @@ lia.config.add("AmericanTimeStamp", "americanTimeStamp", true, nil, {
 
 lia.config.add("AdminConsoleNetworkLogs", "adminConsoleNetworkLogs", true, nil, {
     desc = "adminConsoleNetworkLogsDesc",
-    category = "categoryLogging",
+    category = "categoryServer",
     type = "Boolean"
 })
 
 lia.config.add("CharMenuBGInputDisabled", "charMenuBGInputDisabled", true, nil, {
     desc = "charMenuBGInputDisabledDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
@@ -1194,13 +1225,13 @@ lia.config.add("AllowKeybindEditing", "allowKeybindEditing", true, nil, {
 
 lia.config.add("CrosshairEnabled", "enableCrosshair", false, nil, {
     desc = "enableCrosshairDesc",
-    category = "categoryVisuals",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("BarsDisabled", "disableBars", false, nil, {
     desc = "disableBarsDesc",
-    category = "categoryVisuals",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
@@ -1224,7 +1255,7 @@ lia.config.add("ItemsCanBeDestroyed", "itemsCanBeDestroyed", true, nil, {
 
 lia.config.add("AmmoDrawEnabled", "enableAmmoDisplay", true, nil, {
     desc = "enableAmmoDisplayDesc",
-    category = "categoryVisuals",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
@@ -1239,46 +1270,46 @@ lia.config.add("SalaryInterval", "salaryInterval", 300, function()
     timer.Simple(0.1, function() GM:CreateSalaryTimers() end)
 end, {
     desc = "salaryIntervalDesc",
-    category = "categorySalary",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 5,
     max = 36000
 })
 
 lia.config.add("ThirdPersonEnabled", "thirdPersonEnabled", true, nil, {
     desc = "thirdPersonEnabledDesc",
-    category = "categoryThirdPerson",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, nil, {
     desc = "maxThirdPersonDistanceDesc",
-    category = "categoryThirdPerson",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 25,
     max = 200
 })
 
 lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, {
     desc = "maxThirdPersonHorizontalDesc",
-    category = "categoryThirdPerson",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 5,
     max = 100
 })
 
 lia.config.add("MaxThirdPersonHeight", "maxThirdPersonHeight", 30, nil, {
     desc = "maxThirdPersonHeightDesc",
-    category = "categoryThirdPerson",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 5,
     max = 100
 })
 
 lia.config.add("MaxViewDistance", "maxViewDistance", 32768, nil, {
     desc = "maxViewDistanceDesc",
-    category = "categoryQualityOfLife",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 500,
     max = 32768,
 })
@@ -1295,7 +1326,7 @@ end
 
 lia.config.add("DermaSkin", "dermaSkin", "Lilia Skin", function(_, newSkin) hook.Run("DermaSkinChanged", newSkin) end, {
     desc = "dermaSkinDesc",
-    category = "categoryVisuals",
+    category = "categoryGameplay",
     type = "Table",
     options = CLIENT and getDermaSkins() or {"liliaSkin"}
 })
@@ -1309,95 +1340,95 @@ lia.config.add("Language", "language", "English", nil, {
 
 lia.config.add("SpawnMenuLimit", "spawnMenuLimit", false, nil, {
     desc = "spawnMenuLimitDesc",
-    category = "categorySpawnGeneral",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("LogRetentionDays", "logRetentionPeriod", 7, nil, {
     desc = "logRetentionPeriodDesc",
-    category = "categoryLogging",
-    type = "Int",
+    category = "categoryServer",
+    type = "Number",
     min = 1,
     max = 30,
 })
 
 lia.config.add("MaxLogLines", "maximumLogLines", 1000, nil, {
     desc = "maximumLogLinesDesc",
-    category = "categoryLogging",
-    type = "Int",
+    category = "categoryServer",
+    type = "Number",
     min = 100,
     max = 1000000,
 })
 
 lia.config.add("StaminaSlowdown", "staminaSlowdownEnabled", true, nil, {
     desc = "staminaSlowdownEnabledDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     type = "Boolean",
 })
 
 lia.config.add("DefaultStamina", "defaultStaminaValue", 100, nil, {
     desc = "defaultStaminaValueDesc",
-    category = "attributes",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 10,
     max = 1000
 })
 
 lia.config.add("MaxAttributePoints", "maxAttributePoints", 30, nil, {
     desc = "maxAttributePointsDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     isGlobal = true,
-    type = "Int",
+    type = "Number",
     min = 1,
     max = 100
 })
 
 lia.config.add("JumpStaminaCost", "jumpStaminaCost", 10, nil, {
     desc = "jumpStaminaCostDesc",
-    category = "attributes",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 1,
     max = 1000
 })
 
 lia.config.add("MaxStartingAttributes", "maxStartingAttributes", 30, nil, {
     desc = "maxStartingAttributesDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     isGlobal = true,
-    type = "Int",
+    type = "Number",
     min = 1,
     max = 100
 })
 
 lia.config.add("StartingAttributePoints", "startingAttributePoints", 30, nil, {
     desc = "startingAttributePointsDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     isGlobal = true,
-    type = "Int",
+    type = "Number",
     min = 1,
     max = 100
 })
 
 lia.config.add("PunchStamina", "punchStamina", 10, nil, {
     desc = "punchStaminaDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     isGlobal = true,
-    type = "Int",
+    type = "Number",
     min = 1,
     max = 100
 })
 
 lia.config.add("PunchLethality", "punchLethality", true, nil, {
     desc = "punchLethalityDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     isGlobal = true,
     type = "Boolean"
 })
 
 lia.config.add("StaminaDrain", "staminaDrain", 1, nil, {
     desc = "staminaDrainDesc",
-    category = "attributes",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 0.1,
     max = 10,
     decimals = 2
@@ -1405,8 +1436,8 @@ lia.config.add("StaminaDrain", "staminaDrain", 1, nil, {
 
 lia.config.add("StaminaRegeneration", "staminaRegeneration", 5, nil, {
     desc = "staminaRegenerationDesc",
-    category = "attributes",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 0.1,
     max = 50,
     decimals = 2
@@ -1414,8 +1445,8 @@ lia.config.add("StaminaRegeneration", "staminaRegeneration", 5, nil, {
 
 lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 8, nil, {
     desc = "staminaCrouchRegenerationDesc",
-    category = "attributes",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 0.1,
     max = 50,
     decimals = 2
@@ -1423,17 +1454,17 @@ lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 8, nil,
 
 lia.config.add("logsPerPage", "logsPerPage", 50, nil, {
     desc = "logsPerPageDesc",
-    category = "categoryLogging",
-    type = "Int",
+    category = "categoryServer",
+    type = "Number",
     min = 10,
     max = 200
 })
 
 lia.config.add("PunchRagdollTime", "punchRagdollTime", 25, nil, {
     desc = "punchRagdollTimeDesc",
-    category = "attributes",
+    category = "categoryCharacter",
     isGlobal = true,
-    type = "Int",
+    type = "Number",
     min = 1,
     max = 120
 })
@@ -1441,7 +1472,7 @@ lia.config.add("PunchRagdollTime", "punchRagdollTime", 25, nil, {
 lia.config.add("MaxHoldWeight", "maximumHoldWeight", 100, nil, {
     desc = "maximumHoldWeightDesc",
     category = "categoryGeneral",
-    type = "Int",
+    type = "Number",
     min = 10,
     max = 500
 })
@@ -1449,7 +1480,7 @@ lia.config.add("MaxHoldWeight", "maximumHoldWeight", 100, nil, {
 lia.config.add("ThrowForce", "throwForce", 100, nil, {
     desc = "throwForceDesc",
     category = "categoryGeneral",
-    type = "Int",
+    type = "Number",
     min = 10,
     max = 500
 })
@@ -1458,318 +1489,318 @@ lia.config.add("PunchPlaytime", "punchPlaytimeProtection", 7200, nil, {
     desc = "punchPlaytimeProtectionDesc",
     category = "categoryGeneral",
     isGlobal = true,
-    type = "Int",
+    type = "Number",
     min = 0,
     max = 86400
 })
 
 lia.config.add("CustomChatSound", "customChatSound", "", nil, {
     desc = "customChatSoundDesc",
-    category = "categoryChat",
+    category = "categoryInterface",
     type = "Generic",
 })
 
 lia.config.add("TalkRange", "talkRange", 280, nil, {
     desc = "talkRangeDesc",
-    category = "categoryChat",
-    type = "Int",
+    category = "categoryInterface",
+    type = "Number",
     min = 50,
     max = 10000
 })
 
 lia.config.add("WhisperRange", "whisperRange", 70, nil, {
     desc = "whisperRangeDesc",
-    category = "categoryChat",
-    type = "Int",
+    category = "categoryInterface",
+    type = "Number",
     min = 10,
     max = 500
 })
 
 lia.config.add("YellRange", "yellRange", 840, nil, {
     desc = "yellRangeDesc",
-    category = "categoryChat",
-    type = "Int",
+    category = "categoryInterface",
+    type = "Number",
     min = 100,
     max = 2000
 })
 
 lia.config.add("OOCLimit", "oocCharacterLimit", 150, nil, {
     desc = "oocCharacterLimitDesc",
-    category = "categoryChat",
-    type = "Int",
+    category = "categoryInterface",
+    type = "Number",
     min = 25,
     max = 1000
 })
 
 lia.config.add("OOCDelay", "oocDelayTitle", 10, nil, {
     desc = "oocDelayDesc",
-    category = "categoryChat",
-    type = "Float",
+    category = "categoryInterface",
+    type = "Number",
     min = 1,
     max = 60
 })
 
 lia.config.add("LOOCDelay", "loocDelayTitle", 6, nil, {
     desc = "loocDelayDesc",
-    category = "categoryChat",
-    type = "Float",
+    category = "categoryInterface",
+    type = "Number",
     min = 1,
     max = 60
 })
 
 lia.config.add("LOOCDelayAdmin", "loocDelayAdmin", false, nil, {
     desc = "loocDelayAdminDesc",
-    category = "categoryChat",
+    category = "categoryInterface",
     type = "Boolean",
 })
 
 lia.config.add("ChatSizeDiff", "enableDifferentChatSize", false, nil, {
     desc = "enableDifferentChatSizeDesc",
-    category = "categoryChat",
+    category = "categoryInterface",
     type = "Boolean",
 })
 
 lia.config.add("MusicVolume", "mainMenuMusicVolume", 0.25, nil, {
     desc = "mainMenuMusicVolumeDesc",
-    category = "mainMenu",
-    type = "Float",
+    category = "categoryInterface",
+    type = "Number",
     min = 0.01,
     max = 1.0
 })
 
 lia.config.add("Music", "mainMenuMusic", "", nil, {
     desc = "mainMenuMusicDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Generic"
 })
 
 lia.config.add("BackgroundURL", "mainMenuBackgroundURL", "", nil, {
     desc = "mainMenuBackgroundURLDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Generic"
 })
 
 lia.config.add("ServerLogo", "mainMenuCenterLogo", "", nil, {
     desc = "mainMenuCenterLogoDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Generic"
 })
 
 lia.config.add("ScoreboardLogoEnabled", "scoreboardLogoEnabled", true, nil, {
     desc = "scoreboardLogoEnabledDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("MainMenuLogoEnabled", "mainMenuLogoEnabled", true, nil, {
     desc = "mainMenuLogoEnabledDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("DiscordURL", "mainMenuDiscordURL", "", nil, {
     desc = "mainMenuDiscordURLDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Generic"
 })
 
 lia.config.add("Workshop", "mainMenuWorkshopURL", "", nil, {
     desc = "mainMenuWorkshopURLDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Generic"
 })
 
 lia.config.add("CharMenuBGInputDisabled", "mainMenuCharBGInputDisabled", true, nil, {
     desc = "mainMenuCharBGInputDisabledDesc",
-    category = "mainMenu",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("SwitchCooldownOnAllEntities", "switchCooldownOnAllEntities", false, nil, {
     desc = "switchCooldownOnAllEntitiesDesc",
-    category = "character",
+    category = "categoryCharacter",
     type = "Boolean",
 })
 
 lia.config.add("OnDamageCharacterSwitchCooldownTimer", "onDamageCharacterSwitchCooldownTimer", 15, nil, {
     desc = "onDamageCharacterSwitchCooldownTimerDesc",
-    category = "character",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 1,
     max = 120
 })
 
 lia.config.add("CharacterSwitchCooldownTimer", "characterSwitchCooldownTimer", 5, nil, {
     desc = "characterSwitchCooldownTimerDesc",
-    category = "character",
-    type = "Float",
+    category = "categoryCharacter",
+    type = "Number",
     min = 1,
     max = 120
 })
 
 lia.config.add("ExplosionRagdoll", "explosionRagdoll", false, nil, {
     desc = "explosionRagdollDesc",
-    category = "categoryQualityOfLife",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("CarRagdoll", "carRagdoll", false, nil, {
     desc = "carRagdollDesc",
-    category = "categoryQualityOfLife",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("NPCsDropWeapons", "npcsDropWeapons", false, nil, {
     desc = "npcsDropWeaponsDesc",
-    category = "categoryQualityOfLife",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("TimeUntilDroppedSWEPRemoved", "timeUntilDroppedSWEPRemoved", 15, nil, {
     desc = "timeUntilDroppedSWEPRemovedDesc",
-    category = "protection",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 1,
     max = 300
 })
 
 lia.config.add("AltsDisabled", "altsDisabled", false, nil, {
     desc = "altsDisabledDesc",
-    category = "protection",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("ActsActive", "actsActive", false, nil, {
     desc = "actsActiveDesc",
-    category = "protection",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("PropProtection", "propProtection", true, nil, {
     desc = "propProtectionDesc",
-    category = "protection",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("PassableOnFreeze", "passableOnFreeze", false, nil, {
     desc = "passableOnFreezeDesc",
-    category = "protection",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("PlayerSpawnVehicleDelay", "playerSpawnVehicleDelay", 30, nil, {
     desc = "playerSpawnVehicleDelayDesc",
-    category = "protection",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0,
     max = 300
 })
 
 lia.config.add("ToolInterval", "toolInterval", 0, nil, {
     desc = "toolInterval",
-    category = "protection",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0,
     max = 60
 })
 
 lia.config.add("DisableLuaRun", "disableLuaRun", false, nil, {
     desc = "disableLuaRunDesc",
-    category = "protection",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("EquipDelay", "equipDelay", 0, nil, {
     desc = "equipDelayDesc",
-    category = "items",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0,
     max = 30
 })
 
 lia.config.add("UnequipDelay", "unequipDelay", 0, nil, {
     desc = "unequipDelayDesc",
-    category = "items",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0,
     max = 30
 })
 
 lia.config.add("DropDelay", "dropDelay", 0, nil, {
     desc = "dropDelayDesc",
-    category = "items",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0,
     max = 30
 })
 
 lia.config.add("TakeDelay", "takeDelay", 0, nil, {
     desc = "takeDelayDesc",
-    category = "items",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0,
     max = 30
 })
 
 lia.config.add("ItemGiveSpeed", "itemGiveSpeed", 6, nil, {
     desc = "itemGiveSpeedDesc",
-    category = "items",
-    type = "Int",
+    category = "categoryGameplay",
+    type = "Number",
     min = 1,
     max = 60
 })
 
 lia.config.add("ItemGiveEnabled", "itemGiveEnabled", true, nil, {
     desc = "itemGiveEnabledDesc",
-    category = "items",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("DisableCheaterActions", "disableCheaterActions", true, nil, {
     desc = "disableCheaterActionsDesc",
-    category = "protection",
+    category = "categoryGameplay",
     type = "Boolean",
 })
 
 lia.config.add("LoseItemsonDeathNPC", "loseItemsOnNPCDeath", false, nil, {
     desc = "loseItemsOnNPCDeathDesc",
-    category = "death",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("LoseItemsonDeathHuman", "loseItemsOnHumanDeath", false, nil, {
     desc = "loseItemsOnHumanDeathDesc",
-    category = "death",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("LoseItemsonDeathWorld", "loseItemsOnWorldDeath", false, nil, {
     desc = "loseItemsOnWorldDeathDesc",
-    category = "death",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("DeathPopupEnabled", "enableDeathPopup", true, nil, {
     desc = "enableDeathPopupDesc",
-    category = "death",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("StaffHasGodMode", "staffGodMode", true, nil, {
     desc = "staffGodModeDesc",
-    category = "categoryStaffSettings",
+    category = "categoryServer",
     type = "Boolean"
 })
 
 lia.config.add("RagdollDamageTransfer", "ragdollDamageTransfer", true, nil, {
     desc = "ragdollDamageTransferDesc",
-    category = "categoryQualityOfLife",
+    category = "categoryGameplay",
     type = "Boolean"
 })
 
 lia.config.add("ClassDisplay", "displayClassesOnCharacters", true, nil, {
     desc = "displayClassesOnCharactersDesc",
-    category = "character",
+    category = "categoryCharacter",
     type = "Boolean",
 })
 
@@ -1779,42 +1810,42 @@ end
 
 lia.config.add("sbWidth", "sbWidth", 0.65, refreshScoreboard, {
     desc = "sbWidthDesc",
-    category = "scoreboard",
-    type = "Float",
+    category = "categoryInterface",
+    type = "Number",
     min = 0.2,
     max = 1.0
 })
 
 lia.config.add("sbHeight", "sbHeight", 0.65, refreshScoreboard, {
     desc = "sbHeightDesc",
-    category = "scoreboard",
-    type = "Float",
+    category = "categoryInterface",
+    type = "Number",
     min = 0.2,
     max = 1.0
 })
 
 lia.config.add("sbDock", "sbDock", "center", refreshScoreboard, {
     desc = "sbDockDesc",
-    category = "scoreboard",
+    category = "categoryInterface",
     type = "Table",
     options = {"left", "center", "right"}
 })
 
 lia.config.add("ClassHeaders", "classHeaders", true, nil, {
     desc = "classHeadersDesc",
-    category = "scoreboard",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("UseSolidBackground", "useSolidBackground", false, nil, {
     desc = "useSolidBackgroundDesc",
-    category = "scoreboard",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("ClassLogo", "classLogo", false, nil, {
     desc = "classLogoDesc",
-    category = "scoreboard",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
@@ -1825,26 +1856,26 @@ lia.config.add("ScoreboardBackgroundColor", "scoreboardBackgroundColor", {
     a = 255
 }, nil, {
     desc = "scoreboardBackgroundColorDesc",
-    category = "scoreboard",
+    category = "categoryInterface",
     type = "Color"
 })
 
 lia.config.add("RecognitionEnabled", "recognitionEnabled", true, nil, {
     desc = "recognitionEnabledDesc",
-    category = "recognition",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("FakeNamesEnabled", "fakeNamesEnabled", false, nil, {
     desc = "fakeNamesEnabledDesc",
-    category = "recognition",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.config.add("vendorDefaultMoney", "vendorDefaultMoney", 500, nil, {
     desc = "vendorDefaultMoneyDesc",
-    category = "vendor",
-    type = "Int",
+    category = "categoryCharacter",
+    type = "Number",
     min = 100,
     max = 10000
 })
@@ -1861,7 +1892,7 @@ end
 
 lia.config.add("DefaultMenuTab", "defaultMenuTab", "you", nil, {
     desc = "defaultMenuTabDesc",
-    category = "categoryMenu",
+    category = "categoryInterface",
     type = "Table",
     options = function()
         local tabs = {}
@@ -1875,23 +1906,23 @@ lia.config.add("DefaultMenuTab", "defaultMenuTab", "you", nil, {
 
 lia.config.add("DoorLockTime", "doorLockTime", 0.5, nil, {
     desc = "doorLockTimeDesc",
-    category = "moduleDoorsName",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0.05,
     max = 30.0
 })
 
 lia.config.add("DoorSellRatio", "doorSellRatio", 0.5, nil, {
     desc = "doorSellRatioDesc",
-    category = "moduleDoorsName",
-    type = "Float",
+    category = "categoryGameplay",
+    type = "Number",
     min = 0.1,
     max = 1.0
 })
 
 hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
     local ConfigFormatting = {
-        Int = function(key, name, config, parent)
+        Number = function(key, name, config, parent)
             local container = vgui.Create("DPanel", parent)
             container:SetTall(220)
             container:Dock(TOP)
@@ -1913,125 +1944,27 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             description:DockMargin(0, 10, 0, 0)
             description:SetText("")
             description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local slider = panel:Add("liaSlideBox")
-            slider:Dock(TOP)
-            slider:DockMargin(20, 10, 50, 0)
-            slider:SetTall(60)
-            slider:SetRange(lia.config.get(key .. "_min", config.data and config.data.min or 0), lia.config.get(key .. "_max", config.data and config.data.max or 1), 0)
-            slider:SetValue(lia.config.get(key, config.value))
-            slider:SetText("")
-            slider.Paint = function(s, w)
-                local padX = 16
-                local padTop = 2
-                local barY = 32
-                local barH = 6
-                local barR = barH / 2
-                local handleW, handleH = 14, 14
-                local handleR = handleH / 2
-                local textFont = "LiliaFont.18"
-                local valueFont = "LiliaFont.16"
-                if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
-                local barStart = padX + handleW / 2
-                local barEnd = w - padX - handleW / 2
-                local barW = barEnd - barStart
-                local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
-                local activeW = math.Clamp(barW * progress, 0, barW)
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-                lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
-                s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-                local handleX = barStart + s.smoothPos
-                local handleY = barY + barH / 2
-                lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
-                local targetAlpha = s.dragging and 100 or 255
-                s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
-                local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
-                lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
-
-            slider.OnValueChanged = function(_, v)
-                local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function()
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(math.floor(v))
-                    net.SendToServer()
-                end)
-            end
-            return container
-        end,
-        Float = function(key, name, config, parent)
-            local container = vgui.Create("DPanel", parent)
-            container:SetTall(220)
-            container:Dock(TOP)
-            container:DockMargin(0, 60, 0, 10)
-            container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local panel = container:Add("DPanel")
-            panel:Dock(FILL)
-            panel:DockMargin(300, 5, 300, 5)
-            panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            local label = vgui.Create("DLabel", panel)
-            label:Dock(TOP)
-            label:SetTall(45)
-            label:DockMargin(0, 20, 0, 0)
-            label:SetText("")
-            label.Paint = function(_, w, h) draw.SimpleText(name, "LiliaFont.36", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local description = vgui.Create("DLabel", panel)
-            description:Dock(TOP)
-            description:SetTall(35)
-            description:DockMargin(0, 10, 0, 0)
-            description:SetText("")
-            description.Paint = function(_, w, h) draw.SimpleText(config.desc or "", "LiliaFont.24", w / 2, h / 2, lia.color.theme.gray, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-            local slider = panel:Add("liaSlideBox")
-            slider:Dock(TOP)
-            slider:DockMargin(20, 10, 50, 0)
-            slider:SetTall(60)
-            slider:SetRange(lia.config.get(key .. "_min", config.data and config.data.min or 0), lia.config.get(key .. "_max", config.data and config.data.max or 1), config.data and config.data.decimals or 2)
-            slider:SetValue(lia.config.get(key, config.value))
-            slider:SetText("")
-            slider.Paint = function(s, w)
-                local padX = 16
-                local padTop = 2
-                local barY = 32
-                local barH = 6
-                local barR = barH / 2
-                local handleW, handleH = 14, 14
-                local handleR = handleH / 2
-                local textFont = "LiliaFont.18"
-                local valueFont = "LiliaFont.16"
-                if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
-                local barStart = padX + handleW / 2
-                local barEnd = w - padX - handleW / 2
-                local barW = barEnd - barStart
-                local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
-                local activeW = math.Clamp(barW * progress, 0, barW)
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
-                lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-                lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
-                s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-                local handleX = barStart + s.smoothPos
-                local handleY = barY + barH / 2
-                lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
-                local targetAlpha = s.dragging and 100 or 255
-                s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
-                local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
-                lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-                draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
-
-            slider.OnValueChanged = function(_, v)
-                local t = "ConfigChange_" .. key .. "_" .. os.time()
-                timer.Create(t, 0.5, 1, function()
-                    net.Start("liaCfgSet")
-                    net.WriteString(key)
-                    net.WriteString(name)
-                    net.WriteType(tonumber(v))
-                    net.SendToServer()
-                end)
+            local entry = vgui.Create("liaEntry", panel)
+            if IsValid(entry) then
+                entry:Dock(TOP)
+                entry:SetTall(60)
+                entry:DockMargin(300, 10, 300, 0)
+                entry:SetValue(tostring(lia.config.get(key, config.value)))
+                entry:SetFont("LiliaFont.36")
+                entry.textEntry.OnEnter = function()
+                    local value = entry:GetValue()
+                    local numValue = tonumber(value)
+                    if numValue ~= nil then
+                        net.Start("liaCfgSet")
+                        net.WriteString(key)
+                        net.WriteString(name)
+                        net.WriteType(numValue)
+                        net.SendToServer()
+                    else
+                        -- Invalid number, reset to current value
+                        entry:SetValue(tostring(lia.config.get(key, config.value)))
+                    end
+                end
             end
             return container
         end,
@@ -2216,13 +2149,22 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         end
     }
 
+    -- Add legacy support for Int and Float types
+    ConfigFormatting.Int = function(key, name, config, parent) return ConfigFormatting.Number(key, name, config, parent) end
+    ConfigFormatting.Float = function(key, name, config, parent) return ConfigFormatting.Number(key, name, config, parent) end
     local function buildConfiguration(parent)
         parent:Clear()
-        local sheet = parent:Add("liaSheet")
-        sheet:Dock(FILL)
-        sheet:SetPlaceholderText(L("searchConfigs"))
+        -- Create tabs panel
+        local tabs = parent:Add("liaTabs")
+        tabs:Dock(FILL)
         local function populate(filter)
-            sheet:Clear()
+            -- Clear existing tabs by closing them all
+            if tabs.tabs then
+                for i = #tabs.tabs, 1, -1 do
+                    tabs:CloseTab(i)
+                end
+            end
+
             local categories = {}
             local keys = {}
             for k in pairs(lia.config.stored) do
@@ -2275,37 +2217,29 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             end
 
             table.sort(categoryNames)
+            -- Create a tab for each category
             for _, categoryName in ipairs(categoryNames) do
                 local items = categories[categoryName]
-                local cat = vgui.Create("DCollapsibleCategory", sheet.canvas)
-                cat:Dock(TOP)
-                cat:SetLabel(categoryName)
-                cat:SetExpanded(true)
-                cat:DockMargin(0, 0, 0, 10)
-                if IsValid(cat.Header) then
-                    cat.Header:SetContentAlignment(5)
-                    cat.Header:SetTall(30)
-                    cat.Header:SetFont("LiliaFont.25")
-                    cat.Header:SetTextColor(lia.color.theme.text)
-                    cat.Header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 120)):Shape(lia.derma.SHAPE_IOS):Draw() end
-                end
-
-                cat.Paint = function() end
-                local body = vgui.Create("DPanel", cat)
-                body:SetTall(#items * 240)
-                body:DockMargin(5, 5, 5, 5)
-                body.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(45, 45, 55, 60)):Shape(lia.derma.SHAPE_IOS):Draw() end
-                cat:SetContents(body)
+                -- Create scroll panel for this category
+                local scrollPanel = vgui.Create("liaScrollPanel")
+                scrollPanel:Dock(FILL)
+                scrollPanel:InvalidateLayout(true)
+                if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+                local canvas = scrollPanel:GetCanvas()
+                canvas:DockPadding(10, 10, 10, 10)
+                -- Add config items to this category's panel
                 for _, it in ipairs(items) do
-                    local el = ConfigFormatting[it.elemType](it.key, it.name, it.config, body)
+                    local el = ConfigFormatting[it.elemType](it.key, it.name, it.config, canvas)
                     el:Dock(TOP)
                     el:DockMargin(10, 10, 10, 0)
                     el.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
+
+                -- Add tab for this category
+                tabs:AddTab(categoryName, scrollPanel)
             end
         end
 
-        sheet.search.OnTextChanged = function() populate(sheet.search:GetValue():lower()) end
         populate("")
     end
 

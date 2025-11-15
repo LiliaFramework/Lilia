@@ -10,6 +10,7 @@
 lia.dialog = lia.dialog or {}
 lia.dialog.stored = lia.dialog.stored or {}
 lia.dialog.configurations = lia.dialog.configurations or {}
+lia.dialog.clientHashes = lia.dialog.clientHashes or {}
 --[[
     Purpose:
         Deeply compares two tables for equality. Used internally for dialog state management.
@@ -275,6 +276,21 @@ if SERVER then
         return value
     end
 
+    local function removeFunctions(tbl)
+        if not istable(tbl) then return tbl end
+        local cleaned = {}
+        for k, v in pairs(tbl) do
+            if not isfunction(v) then
+                if istable(v) then
+                    cleaned[k] = removeFunctions(v)
+                else
+                    cleaned[k] = v
+                end
+            end
+        end
+        return cleaned
+    end
+
     local function normalizeResponseValue(response)
         if response == nil then return nil end
         if istable(response) then
@@ -434,10 +450,15 @@ if SERVER then
         end
         ```
     ]]
+    local function getDataHash(data)
+        if not istable(data) then return "" end
+        local json = util.TableToJSON(data, false)
+        return util.CRC(json or "")
+    end
+
     function lia.dialog.syncToClients(client)
         local targetClients = client and {client} or player.GetAll()
         for _, ply in ipairs(targetClients) do
-            net.Start("liaDialogSync")
             local filteredData = {}
             for uniqueID, data in pairs(lia.dialog.stored) do
                 local filteredNPCData = table.Copy(data)
@@ -445,8 +466,15 @@ if SERVER then
                 filteredData[uniqueID] = sanitizeConversationTable(filteredNPCData)
             end
 
-            net.WriteTable(filteredData)
-            net.Send(ply)
+            local dataHash = getDataHash(filteredData)
+            local clientID = ply:SteamID64() or ply:SteamID()
+            local lastHash = lia.dialog.clientHashes[clientID]
+            if dataHash ~= lastHash then
+                lia.dialog.clientHashes[clientID] = dataHash
+                net.Start("liaDialogSync")
+                net.WriteTable(filteredData)
+                net.Send(ply)
+            end
         end
     end
 
@@ -812,10 +840,39 @@ if SERVER then
     ]]
     function lia.dialog.openDialog(client, npc, npcID)
         local npcData = lia.dialog.getOriginalNPCData(npcID)
-        if not npcData then return end
+        if not npcData then
+            -- NPC type not registered, fall back to selection menu
+            client:notifyWarning("This NPC type is not registered. Please select a valid NPC type.")
+            lia.dialog.syncToClients(client)
+            timer.Simple(0.1, function()
+                if not IsValid(client) or not IsValid(npc) then return end
+                local npcOptions = {}
+                for uniqueID, data in pairs(lia.dialog.stored) do
+                    local displayName = data.PrintName or uniqueID
+                    table.insert(npcOptions, {displayName, uniqueID})
+                end
+
+                if not table.IsEmpty(npcOptions) then
+                    client.npcEntity = npc
+                    net.Start("liaRequestNPCSelection")
+                    net.WriteEntity(npc)
+                    net.WriteTable(npcOptions)
+                    net.Send(client)
+                else
+                    client:notifyError("No NPC types available! The server may still be loading modules. Please try again in a moment.")
+                end
+            end)
+            return
+        end
+
         local filteredData = table.Copy(npcData)
         if filteredData.Conversation then filteredData.Conversation = filterConversationOptions(filteredData.Conversation, client, npc) end
         filteredData.UniqueID = npcID
+        hook.Run("OnNPCTypeSet", client, npc, npcID, filteredData)
+        -- Sanitize the entire data structure to remove any functions before sending
+        if filteredData.Conversation then filteredData.Conversation = sanitizeConversationTable(filteredData.Conversation) end
+        -- Remove any remaining functions from the entire structure
+        filteredData = removeFunctions(filteredData)
         net.Start("liaOpenNpcDialog")
         net.WriteEntity(npc)
         net.WriteBool(client:hasPrivilege("canManageProperties"))
@@ -1304,6 +1361,32 @@ else
             end
         end
 
+        -- Dialog Type Selection
+        local dialogTypeLabel = vgui.Create("DLabel", scroll)
+        dialogTypeLabel:Dock(TOP)
+        dialogTypeLabel:SetText("Dialog Type:")
+        dialogTypeLabel:SetTall(20)
+        dialogTypeLabel:DockMargin(0, 15, 0, 5)
+        local currentType = npc:getNetVar("uniqueID", npc.uniqueID) or "none"
+        local dialogTypeCombo = vgui.Create("liaComboBox", scroll)
+        dialogTypeCombo:Dock(TOP)
+        dialogTypeCombo:SetTall(30)
+        dialogTypeCombo:DockMargin(0, 0, 0, 10)
+        -- Add "None" option first
+        dialogTypeCombo:AddChoice("None (No Dialog)", "none", currentType == "none" or currentType == nil)
+        -- Add all available dialog types
+        for uniqueID, data in pairs(lia.dialog.stored) do
+            local displayName = data.PrintName or uniqueID
+            dialogTypeCombo:AddChoice(displayName, uniqueID, uniqueID == currentType)
+        end
+
+        dialogTypeCombo:FinishAddingOptions()
+        dialogTypeCombo:PostInit()
+        dialogTypeCombo.OnSelect = function(_, _, value)
+            -- Preview the selection but don't apply yet
+            selectedDialogType = value
+        end
+
         local applyBtn = vgui.Create("liaButton", scroll)
         applyBtn:Dock(TOP)
         applyBtn:SetTall(35)
@@ -1325,7 +1408,52 @@ else
 
             if hasAnimations and animationCombo then customData.animation = selectedAnimation end
             lia.dialog.submitConfiguration(configID, npc, customData)
+            -- Apply dialog type change if it was modified
+            if selectedDialogType ~= currentType then
+                lia.dialog.submitConfiguration("dialog_type", npc, {
+                    dialogType = selectedDialogType
+                })
+            end
+
             frame:Close()
+        end
+
+        -- Add other configuration buttons at the bottom
+        if lia.dialog.pendingOtherConfigs and #lia.dialog.pendingOtherConfigs > 0 then
+            local otherConfigs = lia.dialog.pendingOtherConfigs
+            local pendingNPC = lia.dialog.pendingNPC
+            local pendingNPCID = lia.dialog.pendingNPCID
+            -- Clear the pending configs
+            lia.dialog.pendingOtherConfigs = nil
+            lia.dialog.pendingNPC = nil
+            lia.dialog.pendingNPCID = nil
+            -- Add separator
+            local separator = vgui.Create("DPanel", scroll)
+            separator:Dock(TOP)
+            separator:SetTall(1)
+            separator:DockMargin(0, 10, 0, 10)
+            separator.Paint = function(_, w, h) draw.RoundedBox(0, 0, 0, w, h, Color(100, 100, 100, 100)) end
+            -- Add label for other configurations
+            local otherLabel = vgui.Create("DLabel", scroll)
+            otherLabel:Dock(TOP)
+            otherLabel:SetText("Other Configurations:")
+            otherLabel:SetTall(20)
+            otherLabel:SetTextColor(color_white)
+            otherLabel:DockMargin(0, 5, 0, 5)
+            -- Add buttons for each other configuration
+            for _, config in ipairs(otherConfigs) do
+                if isfunction(config.onOpen) then
+                    local configBtn = vgui.Create("liaButton", scroll)
+                    configBtn:Dock(TOP)
+                    configBtn:SetTall(30)
+                    configBtn:SetText(config.name or config.id or "Configuration")
+                    configBtn:DockMargin(0, 5, 0, 5)
+                    configBtn.DoClick = function()
+                        frame:Close()
+                        config.onOpen(pendingNPC, pendingNPCID)
+                    end
+                end
+            end
         end
 
         local cancelBtn = vgui.Create("liaButton", scroll)
@@ -1383,6 +1511,7 @@ end
 --[[
     Purpose:
         Opens a configuration picker interface that displays all available NPC customization modules for privileged users
+        Now directly opens the appearance menu and adds other configuration buttons at the bottom
 
     Parameters:
         npc (Entity)
@@ -1399,49 +1528,27 @@ function lia.dialog.openConfigurationPicker(npc, npcID)
         return
     end
 
-    local function openConfig(config)
-        if not isfunction(config.onOpen) then return end
-        if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
-        config.onOpen(npc, npcID)
-    end
-
-    if #configurations == 1 then
-        openConfig(configurations[1])
-        return
-    end
-
-    local frame = vgui.Create("liaFrame")
-    frame:SetTitle("NPC Configuration")
-    frame:SetSize(420, 520)
-    frame:Center()
-    frame:MakePopup()
-    frame:DockPadding(10, 35, 10, 10)
-    local scroll = vgui.Create("liaScrollPanel", frame)
-    scroll:Dock(FILL)
-    scroll:DockMargin(0, 0, 0, 5)
+    -- Find appearance configuration and open it directly
+    local appearanceConfig = nil
+    local otherConfigs = {}
     for _, config in ipairs(configurations) do
-        local container = vgui.Create("DPanel", scroll)
-        container:Dock(TOP)
-        container:DockMargin(0, 0, 0, 10)
-        container.Paint = function() end
-        container:SetTall(config.description and 70 or 45)
-        local button = vgui.Create("liaButton", container)
-        button:Dock(TOP)
-        button:SetTall(32)
-        button:SetText(config.name or config.id or "Configuration")
-        button.DoClick = function()
-            frame:Close()
-            openConfig(config)
+        if config.id == "appearance" then
+            appearanceConfig = config
+        else
+            table.insert(otherConfigs, config)
         end
+    end
 
-        if isstring(config.description) and config.description ~= "" then
-            local desc = vgui.Create("DLabel", container)
-            desc:Dock(TOP)
-            desc:SetWrap(true)
-            desc:SetAutoStretchVertical(true)
-            desc:SetText(config.description)
-            desc:SetTextColor(color_white)
-            desc:DockMargin(4, 4, 4, 0)
+    -- If appearance exists, open it directly; otherwise open the first available config
+    local primaryConfig = appearanceConfig or configurations[1]
+    if primaryConfig and isfunction(primaryConfig.onOpen) then
+        if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end
+        primaryConfig.onOpen(npc, npcID)
+        -- Store other configs for adding buttons at the bottom
+        if #otherConfigs > 0 then
+            lia.dialog.pendingOtherConfigs = otherConfigs
+            lia.dialog.pendingNPC = npc
+            lia.dialog.pendingNPCID = npcID
         end
     end
 end

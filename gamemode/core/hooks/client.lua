@@ -412,6 +412,8 @@ function GM:CalcView(client, origin, angles, fov)
             end
         end
     end
+
+    if IsValid(client:GetVehicle()) then return self.BaseClass:CalcView(client, origin, angles, fov) end
 end
 
 function GM:PlayerBindPress(client, bind, pressed)

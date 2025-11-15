@@ -1481,7 +1481,7 @@ lia.config.add("Theme", "theme", "Teal", function(_, newValue)
     end
 end, {
     desc = "themeDesc",
-    category = "categoryVisuals",
+    category = "categoryGameplay",
     type = "Table",
     options = function()
         local themes = {}

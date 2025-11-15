@@ -42,7 +42,7 @@ lia.option.stored = lia.option.stored or {}
         ```lua
         -- Simple: Add a boolean toggle option
         lia.option.add("showHUD", "Show HUD", "Toggle HUD visibility", true, nil, {
-            category = "categoryGeneral",
+            category = "categoryLiliaGeneral",
             isQuick  = true
         })
         ```
@@ -764,98 +764,96 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
         end
     }
 
-    local function buildOptions(parent, filter)
-        local categories = {}
-        local keys = {}
-        for k in pairs(lia.option.stored) do
-            keys[#keys + 1] = k
-        end
-
-        table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
-        for _, key in ipairs(keys) do
-            local opt = lia.option.stored[key]
-            if not opt.visible or isfunction(opt.visible) and opt.visible() then
-                local name = opt.name
-                local desc = opt.desc or ""
-                local catName = opt.data and opt.data.category or L("misc")
-                local ln, ld = name:lower(), desc:lower()
-                local lk, lc = key:lower(), catName:lower()
-                if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
-                    categories[catName] = categories[catName] or {}
-                    categories[catName][#categories[catName] + 1] = {
-                        key = key,
-                        name = name,
-                        config = opt,
-                        elemType = opt.type or "Generic"
-                    }
-                end
-            end
-        end
-
-        local catNames = {}
-        for name in pairs(categories) do
-            catNames[#catNames + 1] = name
-        end
-
-        table.sort(catNames)
-        for _, catName in ipairs(catNames) do
-            local items = categories[catName]
-            local cat = vgui.Create("DCollapsibleCategory", parent)
-            cat:Dock(TOP)
-            cat:SetLabel(catName)
-            cat:SetExpanded(true)
-            cat:DockMargin(0, 0, 0, 10)
-            if IsValid(cat.Header) then
-                cat.Header:SetContentAlignment(5)
-                cat.Header:SetTall(30)
-                cat.Header:SetFont("LiliaFont.25")
-                cat.Header:SetTextColor(lia.color.theme.text)
-                cat.Header.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 120)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            end
-
-            cat.Paint = function() end
-            local body = vgui.Create("DPanel", cat)
-            body:SetTall(#items * 240)
-            body:DockMargin(5, 5, 5, 5)
-            body.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(45, 45, 55, 60)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            cat:SetContents(body)
-            for _, v in ipairs(items) do
-                local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, body)
-                panel:Dock(TOP)
-                panel:DockMargin(10, 10, 10, 0)
-                panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
-            end
-        end
-    end
-
     pages[#pages + 1] = {
         name = "options",
         drawFunc = function(parent)
             parent:Clear()
-            local sheet = parent:Add("liaSheet")
-            sheet:Dock(FILL)
-            sheet:SetPlaceholderText(L("searchOptions"))
-            local function refresh()
-                sheet:Clear()
-                buildOptions(sheet.canvas, sheet.search:GetValue():lower())
-                sheet:Refresh()
+
+            -- Create tabs panel
+            local tabs = parent:Add("liaTabs")
+            tabs:Dock(FILL)
+
+            local function populate(filter)
+                -- Clear existing tabs by closing them all
+                if tabs.tabs then
+                    for i = #tabs.tabs, 1, -1 do
+                        tabs:CloseTab(i)
+                    end
+                end
+
+                local categories = {}
+                local keys = {}
+                for k in pairs(lia.option.stored) do
+                    keys[#keys + 1] = k
+                end
+
+                table.sort(keys, function(a, b) return lia.option.stored[a].name < lia.option.stored[b].name end)
+                for _, key in ipairs(keys) do
+                    local opt = lia.option.stored[key]
+                    if not opt.visible or isfunction(opt.visible) and opt.visible() then
+                        local name = opt.name
+                        local desc = opt.desc or ""
+                        local catName = opt.data and opt.data.category or L("misc")
+                        local ln, ld = name:lower(), desc:lower()
+                        local lk, lc = key:lower(), catName:lower()
+                        if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
+                            categories[catName] = categories[catName] or {}
+                            categories[catName][#categories[catName] + 1] = {
+                                key = key,
+                                name = name,
+                                config = opt,
+                                elemType = opt.type or "Generic"
+                            }
+                        end
+                    end
+                end
+
+                local catNames = {}
+                for name in pairs(categories) do
+                    catNames[#catNames + 1] = name
+                end
+
+                table.sort(catNames)
+
+                -- Create a tab for each category
+                for _, catName in ipairs(catNames) do
+                    local items = categories[catName]
+
+                    -- Create scroll panel for this category
+                    local scrollPanel = vgui.Create("liaScrollPanel")
+                    scrollPanel:Dock(FILL)
+                    scrollPanel:InvalidateLayout(true)
+                    if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+                    local canvas = scrollPanel:GetCanvas()
+                    canvas:DockPadding(10, 10, 10, 10)
+
+                    -- Add options for this category
+                    for _, v in ipairs(items) do
+                        local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, canvas)
+                        panel:Dock(TOP)
+                        panel:DockMargin(10, 10, 10, 0)
+                        panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
+                    end
+
+                    -- Add tab for this category
+                    tabs:AddTab(catName, scrollPanel)
+                end
             end
 
-            sheet.search.OnTextChanged = refresh
-            refresh()
+            populate("")
         end
     }
 end)
 
 lia.option.add("descriptionWidth", "descriptionWidth", "descriptionWidthDesc", 0.5, nil, {
-    category = "categoryHUD",
+    category = "categoryInterface",
     min = 0.1,
     max = 1,
     decimals = 2
 })
 
 lia.option.add("invertWeaponScroll", "invertWeaponScroll", "invertWeaponScrollDesc", false, nil, {
-    category = "categoryWeaponSelector",
+    category = "categoryGameplay",
     isQuick = true,
 })
 
@@ -990,15 +988,8 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
 })
 
 lia.option.add("BarsAlwaysVisible", "barsAlwaysVisible", "barsAlwaysVisibleDesc", false, nil, {
-    category = "categoryGeneral",
+    category = "categoryInterface",
     isQuick = true,
-})
-
-lia.option.add("descriptionWidth", "descriptionWidth", "descriptionWidthDesc", 0.5, nil, {
-    category = "categoryHUD",
-    min = 0.1,
-    max = 1,
-    decimals = 2
 })
 
 lia.option.add("thirdPersonEnabled", "thirdPersonEnabled", "thirdPersonEnabledDesc", false, function(_, newValue) hook.Run("ThirdPersonToggled", newValue) end, {
@@ -1033,18 +1024,18 @@ lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanc
 })
 
 lia.option.add("ChatShowTime", "chatShowTime", "chatShowTimeDesc", false, nil, {
-    category = "categoryChat",
+    category = "categoryInterface",
     type = "Boolean"
 })
 
 lia.option.add("voiceRange", "voiceRange", "voiceRangeDesc", false, nil, {
-    category = "categoryHUD",
+    category = "categoryVoice",
     isQuick = true,
     type = "Boolean"
 })
 
 lia.option.add("weaponSelectorPosition", "weaponSelectorPosition", "weaponSelectorPositionDesc", "Left", nil, {
-    category = "categoryWeaponSelector",
+    category = "categoryInterface",
     type = "Table",
     options = {"Left", "Right", "Center"}
 })

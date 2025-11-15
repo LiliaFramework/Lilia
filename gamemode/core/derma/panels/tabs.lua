@@ -16,6 +16,7 @@ function PANEL:Init()
     self.btn_left = nil
     self.btn_right = nil
     self.needs_navigation = false
+    self.tab_order = {}
 end
 
 function PANEL:SetTabStyle(style)
@@ -45,7 +46,7 @@ function PANEL:AddTab(name, pan, icon, callback)
     self.tabs[newId].pan:SetParent(self.content)
     self.tabs[newId].pan:Dock(FILL)
     self.tabs[newId].pan:SetVisible(newId == 1 and true or false)
-    self:Rebuild()
+    self:SortTabsAlphabetically()
 end
 
 function PANEL:AddSheet(label, panel, material)
@@ -314,6 +315,51 @@ function PANEL:CloseTab(tab)
     if IsValid(panel) then panel:Remove() end
     table.remove(self.tabs, id)
     self.active_id = math.Clamp(self.active_id, 1, #self.tabs)
+    self:Rebuild()
+end
+
+function PANEL:SortTabsAlphabetically()
+    table.sort(self.tabs, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
+    self:Rebuild()
+end
+
+function PANEL:SetTabOrder(order)
+    self.tab_order = order or {}
+end
+
+function PANEL:ApplyTabOrdering()
+    local orderedTabs = {}
+    local unorderedTabs = {}
+    -- Separate tabs into ordered and unordered
+    for _, tab in ipairs(self.tabs) do
+        local forcedPosition = self.tab_order[tab.name]
+        if forcedPosition and forcedPosition >= 1 and forcedPosition <= #self.tabs then
+            orderedTabs[forcedPosition] = tab
+        else
+            table.insert(unorderedTabs, tab)
+        end
+    end
+
+    -- Sort unordered tabs alphabetically
+    table.sort(unorderedTabs, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
+    -- Combine ordered and unordered tabs
+    local resultTabs = {}
+    local unorderedIndex = 1
+    for i = 1, #self.tabs do
+        if orderedTabs[i] then
+            table.insert(resultTabs, orderedTabs[i])
+        elseif unorderedIndex <= #unorderedTabs then
+            table.insert(resultTabs, unorderedTabs[unorderedIndex])
+            unorderedIndex = unorderedIndex + 1
+        end
+    end
+
+    -- Handle any remaining unordered tabs
+    for i = unorderedIndex, #unorderedTabs do
+        table.insert(resultTabs, unorderedTabs[i])
+    end
+
+    self.tabs = resultTabs
     self:Rebuild()
 end
 

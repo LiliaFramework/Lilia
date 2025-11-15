@@ -505,7 +505,7 @@ lia.config.add("Font", "font", "Montserrat Medium", function()
     hook.Run("RefreshFonts")
 end, {
     desc = "fontDesc",
-    category = "categoryFonts",
+    category = "categoryInterface",
     type = "Table",
     options = lia.font.getAvailableFonts()
 })

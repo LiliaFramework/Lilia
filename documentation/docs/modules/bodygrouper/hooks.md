@@ -238,6 +238,56 @@ Client
 
 ---
 
+### BodygrouperModelPaint
+
+#### 📋 Purpose
+Called when the bodygrouper model panel is painted (2D overlay drawing).
+
+#### ⏰ When Called
+During the PaintOver function of the model panel, after drawing the rotation instructions.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `panel` | **Panel** | The model panel instance |
+| `entity` | **Entity** | The model entity being displayed |
+| `target` | **Player** | The target player whose bodygroups are being edited |
+| `width` | **number** | The width of the model panel |
+| `height` | **number** | The height of the model panel |
+
+#### ↩️ Returns
+nil
+
+#### 🌐 Realm
+Client
+
+---
+
+### BodygrouperPostDrawModel
+
+#### 📋 Purpose
+Called after the model is drawn in 3D space. Useful for drawing bonemerge extras or other 3D elements.
+
+#### ⏰ When Called
+After the model entity is rendered in the 3D viewport.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `panel` | **Panel** | The model panel instance |
+| `entity` | **Entity** | The model entity being displayed |
+| `target` | **Player** | The target player whose bodygroups are being edited |
+
+#### ↩️ Returns
+nil
+
+#### 🌐 Realm
+Client
+
+---
+
 ### BodygrouperValidated
 
 #### 📋 Purpose

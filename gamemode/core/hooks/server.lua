@@ -1,4 +1,50 @@
 ﻿local GM = GM or GAMEMODE
+local LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
+local sounds = {
+    male = {
+        death = {Sound("vo/npc/male01/pain07.wav"), Sound("vo/npc/male01/pain08.wav"), Sound("vo/npc/male01/pain09.wav"),},
+        hurt = {Sound("vo/npc/male01/pain01.wav"), Sound("vo/npc/male01/pain02.wav"), Sound("vo/npc/male01/pain03.wav"), Sound("vo/npc/male01/pain04.wav"), Sound("vo/npc/male01/pain05.wav"), Sound("vo/npc/male01/pain06.wav"),},
+    },
+    female = {
+        death = {Sound("vo/npc/female01/pain07.wav"), Sound("vo/npc/female01/pain08.wav"), Sound("vo/npc/female01/pain09.wav"),},
+        hurt = {Sound("vo/npc/female01/pain01.wav"), Sound("vo/npc/female01/pain02.wav"), Sound("vo/npc/female01/pain03.wav"), Sound("vo/npc/female01/pain04.wav"), Sound("vo/npc/female01/pain05.wav"), Sound("vo/npc/female01/pain06.wav"),},
+    }
+}
+
+local function getGender(isFemale)
+    return isFemale and "female" or "male"
+end
+
+function GM:GetPlayerDeathSound(_, isFemale)
+    local sndTab = sounds[getGender(isFemale)].death
+    return sndTab[math.random(#sndTab)]
+end
+
+function GM:GetPlayerPainSound(_, paintype, isFemale)
+    if paintype == "hurt" then
+        local sndTab = sounds[getGender(isFemale)].hurt
+        return sndTab[math.random(#sndTab)]
+    end
+end
+
+function GM:GetFallDamage(_, speed)
+    return math.max(0, (speed - 580) * 100 / 444)
+end
+
+function GM:ScalePlayerDamage(_, hitgroup, dmgInfo)
+    local damageScale = lia.config.get("DamageScale")
+    hook.Run("PreScaleDamage", hitgroup, dmgInfo, damageScale)
+    if hitgroup == HITGROUP_HEAD then
+        damageScale = lia.config.get("HeadShotDamage")
+    elseif table.HasValue(LimbHitgroups, hitgroup) then
+        damageScale = lia.config.get("LimbDamage")
+    end
+
+    damageScale = hook.Run("GetDamageScale", hitgroup, dmgInfo, damageScale) or damageScale
+    dmgInfo:ScaleDamage(damageScale)
+    hook.Run("PostScaleDamage", hitgroup, dmgInfo, damageScale)
+end
+
 function GM:CharPreSave(character)
     local client = character:getPlayer()
     local loginTime = character:getLoginTime()
@@ -72,6 +118,16 @@ function GM:PlayerLoadedChar(client, character)
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
+    -- Death sound logic (from MODULE:PlayerDeath)
+    if lia.config.get("DeathSoundEnabled") then
+        local deathSound = hook.Run("GetPlayerDeathSound", client, client:isFemale())
+        if deathSound and hook.Run("ShouldPlayDeathSound", client, deathSound) ~= false then
+            client:EmitSound(deathSound)
+            hook.Run("OnDeathSoundPlayed", client, deathSound)
+        end
+    end
+
+    -- Main PlayerDeath logic
     local character = client:getChar()
     if not character then return end
     if IsValid(client:GetRagdollEntity()) then client:GetRagdollEntity():Remove() end
@@ -312,6 +368,17 @@ function GM:CanPlayerHoldObject(_, entity)
 end
 
 function GM:EntityTakeDamage(entity, dmgInfo)
+    if lia.config.get("PainSoundEnabled") and entity:IsPlayer() and entity:Health() > 0 then
+        local painSound = hook.Run("GetPlayerPainSound", entity, "hurt", entity:isFemale())
+        if entity:WaterLevel() >= 3 then painSound = hook.Run("GetPlayerPainSound", entity, "drown", entity:isFemale()) end
+        if painSound and hook.Run("ShouldPlayPainSound", entity, painSound) ~= false then
+            entity:EmitSound(painSound)
+            hook.Run("OnPainSoundPlayed", entity, painSound)
+            entity.NextPain = CurTime() + 0.33
+        end
+    end
+
+    -- Damage prevention for staff, noclip, or ragdolled players
     if not entity:IsPlayer() then return end
     if entity:isStaffOnDuty() and lia.config.get("StaffHasGodMode", true) then return true end
     if entity:GetMoveType() == MOVETYPE_NOCLIP then return true end

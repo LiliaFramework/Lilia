@@ -32,7 +32,7 @@ function PANEL:Init()
     self.dialogHistoryScroll = self.dialogHistoryFrame:Add("liaScrollPanel")
     self.dialogHistoryScroll:Dock(FILL)
     self.dialogHistoryScroll:DockMargin(6, 6, 6, 6)
-    self.dialogHistoryScroll:DockPadding(2, 2, 2, 2)
+    self.dialogHistoryScroll:DockPadding(2, 10, 2, 2)
     self.dialogHistoryList = self.dialogHistoryScroll:Add("DListLayout")
     self.dialogHistoryList:Dock(TOP)
     self.content = self:Add("DPanel")
@@ -58,6 +58,7 @@ function PANEL:Init()
     self.npcDisplayName = "Dialog"
     self.lastResponseText = ""
     self.pendingResponse = false
+    self.hasHistoryMessage = false
 end
 
 function PANEL:SetDialogText(text)
@@ -111,11 +112,13 @@ function PANEL:AppendDialogLine(text, isPlayer, skipResponseUpdate)
     end
 
     local formatted = prefix and prefix ~= "" and (prefix .. ": " .. text) or text
+    local isFirstMessage = not self.hasHistoryMessage
+    self.hasHistoryMessage = true
     local container = self.dialogHistoryList:Add("DPanel")
     container:SetPaintBackground(false)
     container:SetTall(0)
     container:Dock(TOP)
-    container:DockMargin(0, 0, 0, 6)
+    container:DockMargin(0, isFirstMessage and 6 or 0, 0, 6)
     container.dialogHistoryScroll = self.dialogHistoryScroll
     container.dialogHistoryList = self.dialogHistoryList
     function container:PerformLayout()
@@ -135,7 +138,7 @@ function PANEL:AppendDialogLine(text, isPlayer, skipResponseUpdate)
     label:Dock(TOP)
     label:SetWrap(true)
     label:SetAutoStretchVertical(true)
-    label:SetFont(isPlayer and "LiliaFont.24" or "LiliaFont.28")
+    label:SetFont("LiliaFont.20")
     label:SetTextColor(self:GetSpeakerColor(isPlayer))
     label:SetText(formatted)
     label:SetContentAlignment(4)
@@ -210,6 +213,7 @@ end
 function PANEL:ResetConversationHistory(initialText)
     if not IsValid(self.dialogHistoryList) then return end
     self.dialogHistoryList:Clear()
+    self.hasHistoryMessage = false
     if initialText and initialText ~= "" then
         self:AppendDialogLine(initialText, false)
     else
@@ -280,6 +284,9 @@ function PANEL:HandleResponse(info, npc, label)
 end
 
 function PANEL:DisplayServerResponse(responses)
+    -- Ignore responses if we're closing for goodbye
+    if self.closingForGoodbye then return end
+
     self.pendingResponse = false
     if self.lastResponseRequest then self.lastResponseRequest = nil end
     self:DisplayResponsePayload(responses)
@@ -342,7 +349,31 @@ function PANEL:AddDialogOptions(options, npc)
         choiceBtn:SetText(label)
         choiceBtn:SetFont("LiliaFont.32")
         choiceBtn.DoClick = function()
+            local isGoodbye = string.lower(label) == "goodbye" or string.lower(label) == "bye" or string.lower(label) == "farewell" or string.lower(label) == "close"
+
             self:AppendDialogLine(label, true)
+
+            -- For goodbye buttons, close immediately without showing response
+            if isGoodbye then
+                -- Set flag to ignore any incoming server responses
+                self.closingForGoodbye = true
+
+                if info.Callback and not info.serverOnly then info.Callback(ply, npc) end
+                if info.serverOnly then
+                    local targetNPC = IsValid(npc) and npc or self.activeNPC
+                    if IsValid(targetNPC) then
+                        net.Start("liaNpcDialogServerCallback")
+                        net.WriteEntity(targetNPC)
+                        net.WriteString(label)
+                        net.SendToServer()
+                    end
+                end
+
+                -- Close immediately without delay
+                self:Remove()
+                return
+            end
+
             self:HandleResponse(info, npc, label)
             if info.Callback and not info.serverOnly then info.Callback(ply, npc) end
             if info.serverOnly then
@@ -366,12 +397,11 @@ function PANEL:AddDialogOptions(options, npc)
             end
 
             if self.pendingResponse then return end
-            local isGoodbye = string.lower(label) == "goodbye" or string.lower(label) == "bye" or string.lower(label) == "farewell" or string.lower(label) == "close"
-            local hasResponse = info.Response or (info.hasResponse and not info.Response)
-            local hasCallback = info.Callback or info.serverOnly
             local shouldClose = info.closeDialog or false
-            if shouldClose or (isGoodbye and not hasResponse and not hasCallback) or info.keepOpen == false then
-                if IsValid(self) then self:Remove() end
+            if shouldClose or info.keepOpen == false then
+                timer.Simple(0.1, function()
+                    if IsValid(self) then self:Remove() end
+                end)
                 return
             end
             return

@@ -14,7 +14,6 @@ lia = lia or {
 }
 
 lia.reloadInProgress = false
-lia.lastReloadTime = 0
 local FilesToLoad = {
     {
         path = "lilia/gamemode/core/libraries/net.lua",
@@ -1273,8 +1272,18 @@ local hasInitializedModules = false
 ]]
 function lia.loader.initializeGamemode(isReload)
     if isReload then
+        -- Prevent overlapping reload operations that can cause server unresponsiveness
+        if lia.reloadInProgress then
+            return
+        end
+
+        -- Clean up any existing reload timers to prevent accumulation
+        timer.Remove("liaReloadConfigSync")
+        timer.Remove("liaReloadAdminSync")
+        timer.Remove("liaReloadPlayerInteractSync")
+        timer.Remove("liaReloadComplete")
+
         lia.reloadInProgress = true
-        lia.lastReloadTime = CurTime()
     end
 
     if isReload or not hasInitializedModules then
@@ -1289,10 +1298,10 @@ function lia.loader.initializeGamemode(isReload)
             local adminHasChanges = lia.administrator.hasChanges()
             local playerInteractHasChanges = lia.playerinteract.hasChanges()
             local configHasChanges = lia.config.hasChanges()
-            timer.Simple(0.5, function() if configHasChanges then lia.config.send() end end)
-            timer.Simple(2.0, function() if adminHasChanges then lia.administrator.sync() end end)
-            timer.Simple(3.5, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
-            timer.Simple(5.0, function() lia.reloadInProgress = false end)
+            timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
+            timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.administrator.sync() end end)
+            timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
+            timer.Create("liaReloadComplete", 5.0, 1, function() lia.reloadInProgress = false end)
         else
             lia.config.send()
             lia.administrator.sync()
@@ -1309,19 +1318,6 @@ function GM:Initialize()
 end
 
 function GM:OnReloaded()
-    local currentTime = CurTime()
-    local timeSinceLastReload = currentTime - lia.lastReloadTime
-    if lia.config then lia.reloadCooldown = 5 end
-    if timeSinceLastReload < lia.reloadCooldown then
-        local remaining = math.ceil(lia.reloadCooldown - timeSinceLastReload)
-        if SERVER then
-            MsgC(Color(0, 255, 0), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
-            MsgC(Color(0, 255, 0), "[HotReload] ")
-            MsgC(Color(255, 255, 255), L("reloadCooldownActive", remaining) .. "\n")
-        end
-        return
-    end
-
     lia.loader.initializeGamemode(true)
 end
 

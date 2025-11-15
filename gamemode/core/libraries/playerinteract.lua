@@ -935,6 +935,7 @@ end
 lia.keybind.add("interactionMenu", {
     keyBind = KEY_TAB,
     desc = L("interactionMenuDesc"),
+    category = "Lilia",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("interaction")
@@ -945,6 +946,7 @@ lia.keybind.add("interactionMenu", {
 lia.keybind.add("personalActions", {
     keyBind = KEY_G,
     desc = L("personalActionsDesc"),
+    category = "Lilia",
     onPress = function()
         net.Start("liaRequestInteractOptions")
         net.WriteString("action")

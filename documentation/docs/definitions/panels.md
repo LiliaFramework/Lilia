@@ -618,6 +618,19 @@ A container that manages tab navigation
 
 #### ⏰ When Called
 For tabbed interfaces or navigation
+
+#### 🔧 Methods
+
+##### SetTabOrder(order)
+Sets a custom ordering for specific tabs. Tabs not specified will be sorted alphabetically.
+- **order**: Table mapping tab names to their desired positions (1-based)
+- **Example**: `tabs:SetTabOrder({["General"] = 1, ["Advanced"] = 2})`
+
+##### SortTabsAlphabetically()
+Sorts all tabs alphabetically by name (case-insensitive).
+
+##### ApplyTabOrdering()
+Applies alphabetical sorting to tabs, but respects any forced positions set by SetTabOrder().
 ]]
 
 ---

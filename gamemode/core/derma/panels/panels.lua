@@ -228,24 +228,77 @@ function QuickPanel:addCategoryHeader(categoryName, categoryColor)
 end
 
 function QuickPanel:addSlider(text, cb, val, min, max, dec)
-    local s = self.scroll:Add("liaNumSlider")
-    s:SetText(text)
-    s:SetTall(60)
-    s:Dock(TOP)
-    s:DockMargin(0, 1, 0, 0)
-    s:SetMin(min or 0)
-    s:SetMax(max or 100)
-    s:SetDecimals(dec or 0)
-    s:SetValue(val or 0)
+    local container = self.scroll:Add("DPanel")
+    container:SetTall(100)
+    container:Dock(TOP)
+    container:DockMargin(0, 1, 0, 0)
+    container.Paint = function(_, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw()
+    end
+
+    local panel = container:Add("DPanel")
+    panel:Dock(FILL)
+    panel:DockMargin(20, 5, 20, 5)
+    panel.Paint = function(_, w, h)
+        lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw()
+    end
+
+    local label = vgui.Create("DLabel", panel)
+    label:Dock(TOP)
+    label:SetTall(25)
+    label:DockMargin(0, 5, 0, 0)
+    label:SetText("")
+    label.Paint = function(_, w, h)
+        draw.SimpleText(text, "LiliaFont.24", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
+    local slider = panel:Add("liaSlideBox")
+    slider:Dock(TOP)
+    slider:DockMargin(20, 5, 20, 5)
+    slider:SetTall(50)
+    slider:SetRange(min or 0, max or 100, dec or 0)
+    slider:SetValue(val or 0)
+    slider:SetText("")
+    slider.Paint = function(s, w)
+        local padX = 16
+        local padTop = 2
+        local barY = 32
+        local barH = 6
+        local barR = barH / 2
+        local handleW, handleH = 14, 14
+        local handleR = handleH / 2
+        local textFont = "LiliaFont.18"
+        local valueFont = "LiliaFont.16"
+        if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
+        local barStart = padX + handleW / 2
+        local barEnd = w - padX - handleW / 2
+        local barW = barEnd - barStart
+        local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
+        local activeW = math.Clamp(barW * progress, 0, barW)
+        lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
+        lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
+        lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
+        lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
+        s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
+        local handleX = barStart + s.smoothPos
+        local handleY = barY + barH / 2
+        lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
+        local targetAlpha = s.dragging and 100 or 255
+        s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
+        local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
+        lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
+        draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+
     if cb then
-        s.OnValueChanged = function(this, newVal)
-            local r = math.Round(newVal, dec or 0)
-            cb(this, r)
+        slider.OnValueChanged = function(_, v)
+            local r = math.Round(v, dec or 0)
+            cb(slider, r)
         end
     end
 
-    self.items[#self.items + 1] = s
-    return s
+    self.items[#self.items + 1] = container
+    return container
 end
 
 function QuickPanel:addCheck(text, cb, checked)
