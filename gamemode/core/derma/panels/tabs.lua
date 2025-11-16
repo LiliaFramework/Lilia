@@ -46,7 +46,7 @@ function PANEL:AddTab(name, pan, icon, callback)
     self.tabs[newId].pan:SetParent(self.content)
     self.tabs[newId].pan:Dock(FILL)
     self.tabs[newId].pan:SetVisible(newId == 1 and true or false)
-    self:SortTabsAlphabetically()
+    self:Rebuild()
 end
 
 function PANEL:AddSheet(label, panel, material)

@@ -388,9 +388,11 @@ function GM:CreateMove(cmd)
 end
 
 function GM:CalcView(client, origin, angles, fov)
+    local view = self.BaseClass:CalcView(client, origin, angles, fov)
     local ragEntity = client:getNetVar("ragdoll")
     local ragdoll = client:GetRagdollEntity()
     local ent
+    if IsValid(client:GetVehicle()) then return view end
     if not IsValid(client:GetVehicle()) and client:GetViewEntity() == client and not client:ShouldDrawLocalPlayer() then
         if IsValid(ragEntity) and ragEntity:IsRagdoll() then
             ent = ragEntity
@@ -404,7 +406,6 @@ function GM:CalcView(client, origin, angles, fov)
         if idx then
             local data = ent:GetAttachment(idx)
             if data then
-                local view = self.BaseClass:CalcView(client, origin, angles, fov)
                 view.origin = data.Pos
                 view.angles = data.Ang
                 view.znear = 1
@@ -412,8 +413,7 @@ function GM:CalcView(client, origin, angles, fov)
             end
         end
     end
-
-    if IsValid(client:GetVehicle()) then return self.BaseClass:CalcView(client, origin, angles, fov) end
+    return view
 end
 
 function GM:PlayerBindPress(client, bind, pressed)
@@ -535,10 +535,6 @@ end
 
 function GM:HUDShouldDraw(element)
     return not hidden[element]
-end
-
-function GM:PrePlayerDraw(client)
-    if not client:getChar() then return true end
 end
 
 function GM:PlayerStartVoice(client)
