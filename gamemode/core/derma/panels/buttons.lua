@@ -75,6 +75,23 @@ function PANEL:SetColorHover(col)
     self.col_hov = col or (lia.color.theme and lia.color.theme.button_hovered) or Color(70, 140, 140)
 end
 
+function PANEL:PaintButton(baseColor, hoverColor)
+    if not baseColor then return end
+    -- Set the base color
+    self:SetColor(baseColor)
+    -- If hover color is provided, use it; otherwise auto-generate a lighter version
+    if hoverColor then
+        self:SetColorHover(hoverColor)
+    else
+        -- Auto-generate hover color by brightening the base color
+        local r = math.min(baseColor.r + 30, 255)
+        local g = math.min(baseColor.g + 30, 255)
+        local b = math.min(baseColor.b + 30, 255)
+        local a = baseColor.a or 255
+        self:SetColorHover(Color(r, g, b, a))
+    end
+end
+
 function PANEL:SetGradient(is_grad)
     self.bool_gradient = is_grad
 end
