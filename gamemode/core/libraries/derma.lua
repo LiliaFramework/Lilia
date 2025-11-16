@@ -297,7 +297,7 @@ function lia.derma.optionsMenu(rawOptions, config)
     end
 
     local fadeSpeed = config.fadeSpeed or 0.05
-    local frameW = config.frameW or 450
+    local frameW = config.frameW or 550
     local entryH = config.entryH or 26
     local titleH = config.titleHeight or 16
     local titleY = config.titleOffsetY or 4
