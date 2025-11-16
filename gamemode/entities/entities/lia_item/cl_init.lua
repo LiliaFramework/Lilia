@@ -12,8 +12,18 @@ function ENT:onDrawEntityInfo(alpha)
     if not item then return end
     local oldE, oldD = item.entity, item.data
     item.entity, item.data = self, self:getNetVar("data") or oldD
-    local name = L(item.getName and item:getName() or item.name)
-    lia.util.drawEntText(self, name, 0, alpha)
+    local infoTable = {
+        {
+            text = L(item.getName and item:getName() or item.name),
+            yOffset = 0
+        }
+    }
+
+    hook.Run("DrawItemEntityInfo", self, item, infoTable, alpha)
+    for i, info in ipairs(infoTable) do
+        lia.util.drawEntText(self, info.text, (i - 1) * 50, alpha)
+    end
+
     item.data, item.entity = oldD, oldE
 end
 

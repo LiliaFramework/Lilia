@@ -167,7 +167,7 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
     if uniqueID == "schema" then
         if SCHEMA then MODULE = SCHEMA end
         variable = "SCHEMA"
-        MODULE.folder = engine.ActiveGamemode()
+        MODULE.folder = engine.ActiveGamemode():gsub("\\", "/")
     end
 
     _G[variable] = MODULE
@@ -225,7 +225,7 @@ function lia.module.load(uniqueID, path, variable, skipSubmodules)
         lia.module.list[uniqueID] = MODULE
         if not skipSubmodules then loadSubmodules(path) end
         if MODULE.ModuleLoaded then MODULE:ModuleLoaded() end
-        if string.StartsWith(path, engine.ActiveGamemode() .. "/modules") then lia.bootstrap(L("module"), L("moduleFinishedLoading", MODULE.name)) end
+        if string.StartsWith(path, engine.ActiveGamemode():gsub("\\", "/") .. "/modules") then lia.bootstrap(L("module"), L("moduleFinishedLoading", MODULE.name)) end
         _G[variable] = prev
     end
 end
@@ -275,7 +275,7 @@ end
     ```
 ]]
 function lia.module.initialize()
-    local schemaPath = engine.ActiveGamemode()
+    local schemaPath = engine.ActiveGamemode():gsub("\\", "/")
     lia.module.load("schema", schemaPath .. "/schema", "schema")
     hook.Run("InitializedSchema")
     local preloadPath = schemaPath .. "/preload"
@@ -296,7 +296,7 @@ function lia.module.initialize()
     hook.Run("InitializedModules")
     lia.item.loadFromDir(schemaPath .. "/schema/items")
     lia.loader.includeEntities("lilia/gamemode/entities")
-    lia.loader.includeEntities(engine.ActiveGamemode() .. "/gamemode/entities")
+    lia.loader.includeEntities(engine.ActiveGamemode():gsub("\\", "/") .. "/gamemode/entities")
     for id, mod in pairs(lia.module.list) do
         if id ~= "schema" then
             local ok = isfunction(mod.enabled) and mod.enabled() or mod.enabled

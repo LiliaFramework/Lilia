@@ -583,7 +583,6 @@ end
     Realm:
         Client
 ]]
---
 function lia.webimage.clearCache(skipReRegister)
     cache = {}
     urlMap = {}

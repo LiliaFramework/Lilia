@@ -2638,19 +2638,19 @@ else
     end
 
     local function EntText(text, x, y, fade)
-        surface.SetFont("LiliaFont.40")
+        surface.SetFont("LiliaFont.24")
         local tw, th = surface.GetTextSize(text)
-        local bx, by = math.Round(x - tw * 0.5 - 18), math.Round(y - 12)
-        local bw, bh = tw + 36, th + 24
+        local bx, by = math.Round(x - tw * 0.5 - 8), math.Round(y - 8)
+        local bw, bh = tw + 16, th + 16
         local theme = lia.color.theme or defaultTheme
         local fadeAlpha = math.Clamp(fade, 0, 1)
         local headerColor = scaleColorAlpha(theme.background_panelpopup or theme.header or defaultTheme.header, fadeAlpha)
         local accentColor = scaleColorAlpha(theme.theme or theme.text or defaultTheme.accent, fadeAlpha)
         local textColor = scaleColorAlpha(theme.text or defaultTheme.text, fadeAlpha)
         lia.util.drawBlurAt(bx, by, bw, bh - 6, 6, 0.2, math.floor(fadeAlpha * 255))
-        lia.derma.rect(bx, by, bw, bh - 6):Radii(16, 16, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
-        lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 16, 16):Color(accentColor):Draw()
-        draw.SimpleText(text, "LiliaFont.40", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        lia.derma.rect(bx, by, bw, bh - 6):Radii(8, 8, 0, 0):Color(headerColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        lia.derma.rect(bx, by + bh - 6, bw, 6):Radii(0, 0, 8, 8):Color(accentColor):Draw()
+        draw.SimpleText(text, "LiliaFont.24", math.Round(x), math.Round(y - 2), textColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         return bh
     end
 

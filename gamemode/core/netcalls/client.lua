@@ -1233,3 +1233,5 @@ net.Receive("liaGroupPermChanged", function()
         end
     end
 end)
+
+net.Receive("liaJobNpcCloseDialog", function() if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end end)

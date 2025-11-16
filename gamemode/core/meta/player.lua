@@ -1919,7 +1919,10 @@ end
         ```
 ]]
 function playerMeta:isVIP()
-    return groupHasType(self:GetUserGroup(), "VIP")
+    local userGroup = self:GetUserGroup()
+    if userGroup == "superadmin" or userGroup == "admin" then return true end
+    local hasVIP = groupHasType(userGroup, "VIP")
+    return hasVIP
 end
 
 --[[

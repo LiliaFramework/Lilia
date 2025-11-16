@@ -1,6 +1,6 @@
 ﻿lia.playerinteract.addInteraction("inviteToFaction", {
     serverOnly = true,
-    category = L("categoryFactionManagement"),
+    category = "categoryFactionManagement",
     shouldShow = function(client, target)
         local cChar = client:getChar()
         local tChar = target:getChar()
@@ -52,7 +52,7 @@
 
 lia.playerinteract.addInteraction("inviteToClass", {
     serverOnly = true,
-    category = L("categoryFactionManagement"),
+    category = "categoryFactionManagement",
     shouldShow = function(client, target)
         local cChar = client:getChar()
         local tChar = target:getChar()

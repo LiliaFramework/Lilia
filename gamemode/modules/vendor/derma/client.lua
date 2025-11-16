@@ -455,6 +455,18 @@ function PANEL:Init()
     self:SetPaintBackground(false)
     self:SetCursor("hand")
     self.hoverAlpha = 0
+    -- Initialize local cooldown tracking
+    self.localCooldowns = {}
+    -- Add cooldown refresh timer
+    self.cooldownTimer = "vendorCooldown_" .. tostring(self)
+    timer.Create(self.cooldownTimer, 1, 0, function()
+        if IsValid(self) then
+            self:updateAction()
+        else
+            timer.Remove(self.cooldownTimer)
+        end
+    end)
+
     self.background = self:Add("DPanel")
     self.background:Dock(FILL)
     self.background.Paint = function(_, w, h)
@@ -564,6 +576,13 @@ function PANEL:Init()
     self.action:SetHeight(36)
     self.action:Dock(RIGHT)
     self.action:SetFont("LiliaFont.16")
+    self.action:SetEnabled(true)
+    self.action:SetVisible(true)
+    self.action:SetText("") -- Start with empty text
+    -- Ensure liaButton text property is initialized
+    self.action.text = ""
+    -- Mark that we haven't set custom paint yet
+    self.action._hasCustomPaint = false
     self.isSelling = false
     self.suffix = ""
     self.currentPrice = 0
@@ -587,6 +606,12 @@ end
 function PANEL:buyItemFromVendor()
     local item = self.item
     if not item then return end
+    -- Mark as attempted purchase for cooldown tracking
+    if item.Cooldown and item.Cooldown > 0 then
+        self.purchaseAttempted = true
+        self.purchaseAttemptTime = CurTime()
+    end
+
     if IsValid(lia.gui.vendor) then
         lia.gui.vendor:buyItemFromVendor(item.uniqueID)
         clickEffects()
@@ -596,7 +621,9 @@ end
 function PANEL:updateAction()
     if not self.action or not self.item then return end
     if not IsValid(liaVendorEnt) then
-        self.action:SetText(self.isSelling and L("vendorSellAction", "N/A") or L("vendorBuyAction", "N/A"))
+        local errorText = self.isSelling and L("vendorSellAction", "N/A") or L("vendorBuyAction", "N/A")
+        self.action:SetText(errorText)
+        self.action.text = errorText -- liaButton uses custom text property
         return
     end
 
@@ -612,12 +639,142 @@ function PANEL:updateAction()
     end
 
     if IsValid(self.priceLabel) then self.priceLabel:SetText(priceText) end
-    self.action:SetText(self.isSelling and L("sell") or L("buy"))
+    -- Always enable button by default
+    local buttonText = self.isSelling and L("sell") or L("buy")
+    self.action:SetText(buttonText)
+    self.action.text = buttonText -- liaButton uses custom text property
+    self.action:SetEnabled(true)
+    self.action:SetVisible(true)
+    -- Remove custom paint if it was set for cooldown, restore default liaButton paint
+    if self.action._hasCustomPaint then
+        self.action.Paint = nil -- This will restore the default Paint from vgui.Register
+        self.action._hasCustomPaint = false
+        -- Restore original colors if they were stored
+        if self.action._originalCol then
+            self.action.col = self.action._originalCol
+            self.action._originalCol = nil
+        end
+
+        if self.action._originalColHov then
+            self.action.col_hov = self.action._originalColHov
+            self.action._originalColHov = nil
+        end
+
+        -- Force a repaint
+        self.action:InvalidateLayout()
+    end
+
     self.action.DoClick = function()
         if self.isSelling then
             self:sellItemToVendor()
         else
             self:buyItemFromVendor()
+        end
+    end
+
+    -- Only override for actual cooldown situations
+    if not self.isSelling and self.item.Cooldown and self.item.Cooldown > 0 then
+        local client = LocalPlayer()
+        local char = client:getChar()
+        local shouldShowCooldown = false
+        if char then
+            local cooldowns = char:getData("vendorCooldowns", {})
+            local lastPurchase = cooldowns[self.item.uniqueID] or 0
+            local timeSincePurchase = CurTime() - lastPurchase
+            if timeSincePurchase < self.item.Cooldown then shouldShowCooldown = true end
+        end
+
+        -- Check local tracking for recent attempts
+        if not shouldShowCooldown and self.purchaseAttempted and self.purchaseAttemptTime then
+            local timeSinceAttempt = CurTime() - self.purchaseAttemptTime
+            if timeSinceAttempt < 5 then
+                shouldShowCooldown = true
+            elseif timeSinceAttempt > 10 then
+                self.purchaseAttempted = false
+                self.purchaseAttemptTime = nil
+            end
+        end
+
+        if shouldShowCooldown then
+            local cooldownText = "In Cooldown"
+            self.action:SetText(cooldownText)
+            self.action.text = cooldownText -- liaButton uses custom text property
+            self.action:SetEnabled(false)
+            self.action.DoClick = function() end
+            -- Use liaButton paint style with cooldown colors
+            local adjustedColors = lia.color.returnMainAdjustedColors()
+            local negativeColor = adjustedColors.negative or Color(255, 100, 100)
+            -- Store original colors temporarily
+            local originalCol = self.action.col
+            local originalColHov = self.action.col_hov
+            -- Set cooldown colors with less contrast
+            self.action.col = negativeColor
+            -- Create a subtle hover color that's slightly darker but still harmonious
+            self.action.col_hov = Color(math.Clamp(negativeColor.r * 0.85, 0, 255), math.Clamp(negativeColor.g * 0.85, 0, 255), math.Clamp(negativeColor.b * 0.85, 0, 255))
+            -- Custom paint that uses liaButton structure but with cooldown colors
+            self.action.Paint = function(panel, w, h)
+                local math_clamp = math.Clamp
+                if panel:IsHovered() then
+                    panel.hover_status = math_clamp((panel.hover_status or 0) + 4 * FrameTime(), 0, 1)
+                else
+                    panel.hover_status = math_clamp((panel.hover_status or 0) - 8 * FrameTime(), 0, 1)
+                end
+
+                local isActive = (panel:IsDown() or panel.Depressed) and (panel.hover_status or 0) > 0.8
+                if isActive then panel._activeShadowTimer = SysTime() + (panel._activeShadowMinTime or 0.03) end
+                local showActiveShadow = isActive or ((panel._activeShadowTimer or 0) > SysTime())
+                local activeTarget = showActiveShadow and 10 or 0
+                local activeSpeed = (activeTarget > 0) and 7 or 3
+                panel._activeShadowLerp = Lerp(FrameTime() * activeSpeed, panel._activeShadowLerp or 0, activeTarget)
+                if panel._activeShadowLerp > 0 then
+                    local col = Color(panel.col_hov.r, panel.col_hov.g, panel.col_hov.b, math.Clamp(panel.col_hov.a * 1.5, 0, 255))
+                    draw.RoundedBox(panel.radius or 16, 0, 0, w, h, col)
+                end
+
+                draw.RoundedBox(panel.radius or 16, 0, 0, w, h, panel.col)
+                if panel.bool_gradient ~= false then
+                    local shadowCol = (lia.color.theme and lia.color.theme.button_shadow) or Color(18, 32, 32, 35)
+                    surface.SetDrawColor(shadowCol)
+                    surface.SetMaterial(Material("vgui/gradient-d"))
+                    surface.DrawTexturedRect(0, 0, w, h)
+                end
+
+                if panel.bool_hover ~= false and (panel.hover_status or 0) > 0 then
+                    local hoverCol = Color(panel.col_hov.r, panel.col_hov.g, panel.col_hov.b, (panel.hover_status or 0) * 255)
+                    draw.RoundedBox(panel.radius or 16, 0, 0, w, h, hoverCol)
+                end
+
+                if panel.click_alpha and panel.click_alpha > 0 then
+                    panel.click_alpha = math_clamp(panel.click_alpha - FrameTime() * (panel.ripple_speed or 4), 0, 1)
+                    local ripple_size = (1 - panel.click_alpha) * math.max(w, h) * 2
+                    local ripple_color = Color(255, 255, 255, 30 * panel.click_alpha)
+                    draw.RoundedBox(ripple_size * 0.5, (panel.click_x or w / 2) - ripple_size * 0.5, (panel.click_y or h / 2) - ripple_size * 0.5, ripple_size, ripple_size, ripple_color)
+                end
+
+                local iconSize = panel.icon_size or 16
+                if panel.text and panel.text ~= "" then
+                    draw.SimpleText(panel.text, panel.font or "LiliaFont.16", w * 0.5 + (panel.icon and panel.icon ~= "" and iconSize * 0.5 + 2 or 0), h * 0.5, (lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    if panel.icon and panel.icon ~= "" then
+                        surface.SetFont(panel.font or "LiliaFont.16")
+                        local textSize = surface.GetTextSize(panel.text)
+                        local posX = (w - textSize - iconSize) * 0.5 - 2
+                        local posY = (h - iconSize) * 0.5
+                        surface.SetMaterial(panel.icon)
+                        surface.SetDrawColor(color_white)
+                        surface.DrawTexturedRect(posX, posY, iconSize, iconSize)
+                    end
+                elseif panel.icon and panel.icon ~= "" then
+                    local posX = (w - iconSize) * 0.5
+                    local posY = (h - iconSize) * 0.5
+                    surface.SetMaterial(panel.icon)
+                    surface.SetDrawColor(color_white)
+                    surface.DrawTexturedRect(posX, posY, iconSize, iconSize)
+                end
+            end
+
+            self.action._hasCustomPaint = true
+            self.action._originalCol = originalCol
+            self.action._originalColHov = originalColHov
         end
     end
 end
@@ -696,6 +853,10 @@ function PANEL:updateLabel()
     self.description:SetText(self.item:getDesc() or L("noDesc"))
     self:updateAction()
     if self.currentQuantity > 0 or not self.isSelling then self:setQuantity(self.currentQuantity, true) end
+end
+
+function PANEL:OnRemove()
+    if self.cooldownTimer then timer.Remove(self.cooldownTimer) end
 end
 
 vgui.Register("liaVendorItem", PANEL, "DPanel")
@@ -955,15 +1116,6 @@ function PANEL:updateVendor(key, value)
     end
 
     net.SendToServer()
-end
-
-function PANEL:OnFocusChanged(gained)
-    if not gained then
-        timer.Simple(0, function()
-            if not IsValid(self) then return end
-            self:MakePopup()
-        end)
-    end
 end
 
 function PANEL:refreshAnimationDropdown()

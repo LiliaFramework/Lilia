@@ -178,16 +178,6 @@ if SERVER then
         return nil
     end
 
-    function lia.dialog.submitConfiguration(configID, npc, payload)
-        if not isstring(configID) or configID == "" then return end
-        if not IsValid(npc) then return end
-        net.Start("liaNpcCustomize")
-        net.WriteString(configID)
-        net.WriteEntity(npc)
-        net.WriteTable(payload or {})
-        net.SendToServer()
-    end
-
     --[[
     Purpose:
         Retrieves the original, unmodified NPC dialog data before any filtering or sanitization
@@ -729,6 +719,11 @@ if SERVER then
                 ShouldShow = function() return true end,
                 Response = "Great! Remember: stay in character, respect others, and have fun. The character menu (F1) and inventory (F2) are your best friends!",
                 serverOnly = false
+            },
+            ["Goodbye"] = {
+                Response = "Good luck out there! Feel free to come back if you have any more questions.",
+                Callback = function() if IsValid(lia.dialog.vgui) then lia.dialog.vgui:Remove() end end,
+                serverOnly = false
             }
         }
     })
@@ -978,6 +973,16 @@ else
         return nil
     end
 
+    function lia.dialog.submitConfiguration(configID, npc, payload)
+        if not isstring(configID) or configID == "" then return end
+        if not IsValid(npc) then return end
+        net.Start("liaNpcCustomize")
+        net.WriteString(configID)
+        net.WriteEntity(npc)
+        net.WriteTable(payload or {})
+        net.SendToServer()
+    end
+
     --[[
     Purpose:
         Opens a comprehensive NPC customization interface allowing players with management privileges to modify NPC appearance, name, and animations
@@ -1175,13 +1180,6 @@ else
         nameEntry:SetTall(25)
         nameEntry:SetValue(existingData.name or "NPC")
         nameEntry:DockMargin(0, 0, 0, 10)
-        nameEntry.action = function(value)
-            if IsValid(npc) and value and value ~= "" then
-                npc.NPCName = value
-                LocalPlayer():notifySuccess("NPC name will be updated: " .. value)
-            end
-        end
-
         local modelLabel = vgui.Create("DLabel", scroll)
         modelLabel:Dock(TOP)
         modelLabel:SetText("Model Path:")
@@ -1299,20 +1297,6 @@ else
                 end
             end
 
-            local previewBtn = vgui.Create("liaButton", scroll)
-            previewBtn:Dock(TOP)
-            previewBtn:SetTall(25)
-            previewBtn:DockMargin(0, 5, 0, 10)
-            previewBtn:SetText("Preview Animation")
-            previewBtn.DoClick = function()
-                if IsValid(npc) and selectedAnimation ~= "auto" then
-                    local sequenceIndex = npc:LookupSequence(selectedAnimation)
-                    if sequenceIndex >= 0 then npc:ResetSequence(sequenceIndex) end
-                elseif IsValid(npc) then
-                    npc:setAnim()
-                end
-            end
-
             local refreshBtn = vgui.Create("liaButton", scroll)
             refreshBtn:Dock(TOP)
             refreshBtn:SetTall(25)
@@ -1383,8 +1367,9 @@ else
         applyBtn:SetText("Apply Customizations")
         applyBtn:DockMargin(0, 5, 0, 10)
         applyBtn.DoClick = function()
+            local nameValue = nameEntry:GetValue() or ""
             local customData = {
-                name = nameEntry:GetValue(),
+                name = string.Trim(nameValue),
                 model = modelEntry:GetValue(),
                 bodygroups = {}
             }
@@ -1538,9 +1523,11 @@ local function canAccessNPCConfigurations(ply)
     if not IsValid(ply) then return false end
     if CLIENT and ply == LocalPlayer() and not ply.hasPrivilege then return true end
     if not ply.hasPrivilege then return false end
-    local ok, allowed = pcall(function() return ply:hasPrivilege("canManageProperties") end)
-    if not ok then return CLIENT end
-    return allowed == true
+    local ok1, allowed1 = pcall(function() return ply:hasPrivilege("canManageNPCs") end)
+    if ok1 and allowed1 == true then return true end
+    local ok2, allowed2 = pcall(function() return ply:hasPrivilege("canManageProperties") end)
+    if not ok2 then return CLIENT end
+    return allowed2 == true
 end
 
 lia.dialog.registerConfiguration("appearance", {
@@ -1555,7 +1542,15 @@ if SERVER then
         onApply = function(ply, npc, customData)
             if not IsValid(npc) then return end
             customData = istable(customData) and customData or {}
-            if customData.name and customData.name ~= "" then npc.NPCName = customData.name end
+            if customData.name then
+                local trimmedName = string.Trim(customData.name)
+                if trimmedName ~= "" then
+                    npc.NPCName = trimmedName
+                else
+                    npc.NPCName = "NPC"
+                end
+            end
+
             if customData.model and customData.model ~= "" then npc:SetModel(customData.model) end
             if customData.skin then npc:SetSkin(tonumber(customData.skin) or 0) end
             if customData.bodygroups and istable(customData.bodygroups) then
@@ -1590,6 +1585,7 @@ if SERVER then
 
             npc:setAnim()
             npc.customData = customData
+            if not npc.NPCName or npc.NPCName == "" then npc.NPCName = "NPC" end
             npc:setNetVar("NPCName", npc.NPCName)
             hook.Run("UpdateEntityPersistence", npc)
             hook.Run("SaveData")
@@ -1607,7 +1603,7 @@ else
         MenuIcon = "icon16/wrench.png",
         Filter = function(_, ent, ply)
             if not IsValid(ent) or ent:GetClass() ~= "lia_npc" then return false end
-            return ply:hasPrivilege("canManageNPCs")
+            return canAccessNPCConfigurations(ply)
         end,
         Action = function(_, ent) lia.dialog.openConfigurationPicker(ent) end
     })

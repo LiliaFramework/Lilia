@@ -64,20 +64,21 @@ lia.playerinteract.addAction("recognizeInWhisperRange", {
 })
 
 lia.playerinteract.addAction("recognizeInTalkRange", {
-    category = L("categoryRecognition"),
+    category = "categoryRecognition",
     shouldShow = function(ply) return hasPlayersInRange(ply, 3) end,
     onRun = function(ply) doRange(ply, 3) end,
     serverOnly = true
 })
 
 lia.playerinteract.addAction("recognizeInYellRange", {
-    category = L("categoryRecognition"),
+    category = "categoryRecognition",
     shouldShow = function(ply) return hasPlayersInRange(ply, 4) end,
     onRun = function(ply) doRange(ply, 4) end,
     serverOnly = true
 })
 
-lia.playerinteract.addInteraction("recognizeOption", {
+lia.playerinteract.addInteraction("giveRecognitionToPerson", {
+    category = "categoryRecognition",
     serverOnly = true,
     shouldShow = function(ply, tgt)
         if not canRecog(ply) then return false end

@@ -469,7 +469,7 @@ if SERVER then
     ```lua
     -- Simple: Add basic personal action
     lia.playerinteract.addAction("changeToWhisper", {
-        category = L("categoryVoice"),
+        category = ("categoryVoice"),
         shouldShow = function(client)
             return client:getChar() and client:Alive() and
                 client:getNetVar("VoiceType") ~= L("whispering")
@@ -765,7 +765,7 @@ if SERVER then
     })
 
     lia.playerinteract.addAction("changeToWhisper", {
-        category = L("categoryVoice"),
+        category = "categoryVoice",
         shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("whispering") end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("whispering"))
@@ -775,7 +775,7 @@ if SERVER then
     })
 
     lia.playerinteract.addAction("changeToTalk", {
-        category = L("categoryVoice"),
+        category = "categoryVoice",
         shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("talking") end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("talking"))
@@ -785,7 +785,7 @@ if SERVER then
     })
 
     lia.playerinteract.addAction("changeToYell", {
-        category = L("categoryVoice"),
+        category = "categoryVoice",
         shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("yelling") end,
         onRun = function(client)
             client:setNetVar("VoiceType", L("yelling"))

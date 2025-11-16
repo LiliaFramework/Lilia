@@ -333,6 +333,7 @@ local ConditionalFiles = {
 ]]
 function lia.loader.include(path, realm)
     if not path then lia.error(L("missingFilePath")) end
+    path = path:gsub("\\", "/")
     local resolved = realm
     if not resolved then
         local filename = path:match("([^/\\]+)%.lua$")

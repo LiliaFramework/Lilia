@@ -1568,12 +1568,6 @@ local suspiciousFunctions = {
     ["RunConsoleCommand"] = true
 }
 
-local hideWeaponSet = {
-    ["weapon_gravitygun"] = true,
-    ["weapon_physgun"] = true,
-    ["gmod_tool"] = true
-}
-
 local function getEntityDisplayName(ent)
     if not IsValid(ent) then return L("unknownEntity") end
     if ent:GetClass() == "lia_item" and ent.getItemTable then
@@ -1613,18 +1607,6 @@ end
 
 function MODULE:DrawPhysgunBeam(client)
     return client == LocalPlayer()
-end
-
-local function ShouldHideWeapon(wep)
-    if not IsValid(wep) or not IsValid(wep.Owner) then return false end
-    if not wep.Owner:isStaffOnDuty() then return false end
-    return hideWeaponSet[wep:GetClass()] or false
-end
-
-function MODULE:PrePlayerDraw(client)
-    local activeWep = client:GetActiveWeapon()
-    if not IsValid(activeWep) then return end
-    if ShouldHideWeapon(activeWep) then activeWep:SetNoDraw(true) end
 end
 
 local function detect_cheadleware()

@@ -36,6 +36,16 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     if not isSellingToVendor then
         local money = client:getChar():getMoney()
         if money < price then return false, L("canNotAfford") end
+        -- Check cooldown for buying items
+        if item.Cooldown and item.Cooldown > 0 then
+            local character = client:getChar()
+            local cooldowns = character:getData("vendorCooldowns", {})
+            local lastPurchase = cooldowns[itemType] or 0
+            if CurTime() - lastPurchase < item.Cooldown then
+                local remainingTime = math.ceil(item.Cooldown - (CurTime() - lastPurchase))
+                return false, "vendorItemOnCooldown", remainingTime
+            end
+        end
     end
 
     if SteamIDWhitelist or FactionWhitelist or UserGroupWhitelist or VIPOnly then
@@ -76,9 +86,15 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         VENDOR_INVENTORY_MEASURE:onInstanced()
     end
 
-    local canAccess, reason = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
+    local canAccess, reason, param1 = hook.Run("CanPlayerTradeWithVendor", client, vendor, itemType, isSellingToVendor)
     if canAccess == false then
-        if isstring(reason) then client:notifyErrorLocalized(reason) end
+        if isstring(reason) then
+            if param1 then
+                client:notifyErrorLocalized(reason, param1)
+            else
+                client:notifyErrorLocalized(reason)
+            end
+        end
         return
     end
 
@@ -130,6 +146,13 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
         vendor:takeStock(itemType)
         character:getInv():add(itemType):next(function(item)
             client:notifyMoneyLocalized("vendorYouBoughtItem", item:getName(), lia.currency.get(price))
+            local itemData = lia.item.list[itemType]
+            if itemData and itemData.Cooldown and itemData.Cooldown > 0 then
+                local cooldowns = character:getData("vendorCooldowns", {})
+                cooldowns[itemType] = CurTime()
+                character:setData("vendorCooldowns", cooldowns)
+            end
+
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
             client.vendorTransaction = nil
         end)

@@ -1368,6 +1368,59 @@ if SERVER then
 
     --[[
     Purpose:
+        Removes all attribute boosts from this character
+
+    When Called:
+        When clearing all effects from a character (e.g., when switching characters)
+
+    Parameters:
+        None
+
+    Returns:
+        boolean - True if boosts were cleared successfully
+
+    Realm:
+        Server
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Clear all boosts from character
+        local char = player:getChar()
+        char:clearAllBoosts()
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Clear boosts when switching characters
+        local currentChar = client:getChar()
+        if currentChar then
+            currentChar:clearAllBoosts()
+        end
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Clear boosts as part of full effect cleanup
+        local char = player:getChar()
+        char:clearAllBoosts()
+        -- Additional cleanup for other effects...
+        ```
+    ]]
+    function characterMeta:clearAllBoosts()
+        local client = self:getPlayer()
+        local boosts = self:getVar("boosts", {})
+        for attribID, attribBoosts in pairs(boosts) do
+            for boostID, _ in pairs(attribBoosts) do
+                hook.Run("OnCharAttribBoosted", client, self, attribID, boostID, true)
+            end
+        end
+        return self:setVar("boosts", {}, nil, client)
+    end
+
+    --[[
+    Purpose:
         Sets the character flags to a specific string
 
     When Called:

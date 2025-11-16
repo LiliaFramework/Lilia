@@ -3489,11 +3489,6 @@ net.Receive("liaOnlineStaffData", function()
     hook.Run("OnlineStaffDataReceived", staffData)
 end)
 
-function MODULE:PrePlayerDraw(client)
-    if not IsValid(client) then return end
-    if client:GetMoveType() == MOVETYPE_NOCLIP then return true end
-end
-
 function MODULE:HUDPaint()
     local client = LocalPlayer()
     if not client:IsValid() or not client:IsPlayer() or not client:getChar() then return end

@@ -16,9 +16,11 @@ function MODULE:IsCharRecognized(character, id)
     if not IsValid(otherClient) then return false end
     local factionID = character.getFaction and character:getFaction() or nil
     local faction = factionID and lia.faction.indices[factionID] or nil
-    if faction and faction.RecognizesGlobally then return true end
     local otherFactionID = other and other.getFaction and other:getFaction() or nil
     local otherFaction = otherFactionID and lia.faction.indices[otherFactionID] or nil
+    if faction and faction.uniqueID == "staff" then return true end
+    if otherFaction and otherFaction.uniqueID == "staff" then return true end
+    if faction and faction.RecognizesGlobally then return true end
     if otherFaction then
         if otherFaction.isGloballyRecognized then return true end
         if factionID and factionID == otherFactionID and otherFaction.MemberToMemberAutoRecognition then return true end
