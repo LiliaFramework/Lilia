@@ -126,72 +126,6 @@ Server
 
 ---
 
-### lia.dialog.submitConfiguration
-
-#### 📋 Purpose
-Retrieves stored NPC dialog data for a specific NPC ID
-
-#### ⏰ When Called
-Used internally when accessing NPC conversation data from the server-side storage
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `npcID` | **string** | The unique identifier of the NPC to retrieve data for |
-
-#### ↩️ Returns
-* (table or nil)
-The NPC dialog data table if found, nil otherwise
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-#### 🔰 Low Complexity
-```lua
-    -- Simple: Get NPC data for interaction
-    local npcData = lia.dialog.getNPCData("foodie_dealer")
-    if npcData then
-        print("Found NPC: " .. npcData.PrintName)
-    end
-
-```
-
-#### 📊 Medium Complexity
-```lua
-    -- Medium: Check if NPC has specific conversation options
-    local npcData = lia.dialog.getNPCData("merchant")
-    if npcData and npcData.Conversation then
-        local hasTradeOption = npcData.Conversation["Trade"] ~= nil
-        if hasTradeOption then
-            -- Handle trade logic
-        end
-    end
-
-```
-
-#### ⚙️ High Complexity
-```lua
-    -- High: Validate and process NPC conversation data
-    local function validateNPCConversation(npcID)
-        local npcData = lia.dialog.getNPCData(npcID)
-        if not npcData then return false, "NPC not found" end
-        if not npcData.Conversation then return false, "No conversation data" end
-        local optionCount = 0
-        for optionName, optionData in pairs(npcData.Conversation) do
-            if type(optionData) == "table" and optionData.Callback then
-                optionCount = optionCount + 1
-            end
-        end
-        return optionCount > 0, "NPC has " .. optionCount .. " valid options"
-    end
-
-```
-
----
-
 ### lia.dialog.getOriginalNPCData
 
 #### 📋 Purpose
@@ -619,6 +553,105 @@ Server
 ---
 
 ### lia.dialog.getNPCData
+
+#### 📋 Purpose
+Retrieves stored NPC dialog data for a specific NPC ID on the client side
+
+#### ⏰ When Called
+Used internally when accessing NPC conversation data from the client-side storage
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `npcID` | **string** | The unique identifier of the NPC to retrieve data for |
+
+#### ↩️ Returns
+* (table or nil)
+The NPC dialog data table if found, nil otherwise
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get NPC data for UI display
+    local npcData = lia.dialog.getNPCData("shopkeeper")
+    if npcData then
+        -- Display NPC information in UI
+    end
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check conversation options before opening dialog
+    local npcData = lia.dialog.getNPCData("quest_giver")
+    if npcData and npcData.Conversation then
+        local optionCount = 0
+        for optionName, optionData in pairs(npcData.Conversation) do
+            if istable(optionData) then
+                optionCount = optionCount + 1
+            end
+        end
+        print("NPC has " .. optionCount .. " conversation options available")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Build dynamic UI based on NPC conversation structure
+    local function createConversationUI(npcID)
+        local npcData = lia.dialog.getNPCData(npcID)
+        if not npcData or not npcData.Conversation then return end
+        local frame = vgui.Create("DFrame")
+        frame:SetTitle(npcData.PrintName or "NPC Dialog")
+        frame:SetSize(400, 500)
+        frame:Center()
+        frame:MakePopup()
+        local scroll = vgui.Create("DScrollPanel", frame)
+        scroll:Dock(FILL)
+        scroll:DockMargin(10, 10, 10, 10)
+        local yPos = 0
+        for optionName, optionData in pairs(npcData.Conversation) do
+            if istable(optionData) then
+                local button = vgui.Create("DButton", scroll)
+                button:SetText(optionName)
+                button:SetPos(0, yPos)
+                button:SetSize(380, 30)
+                button.DoClick = function()
+                    -- Handle conversation option selection
+                    if optionData.Callback then
+                        -- Note: Client-side callbacks are limited
+                        -- Server communication required for most actions
+                    end
+                    frame:Close()
+                end
+                yPos = yPos + 35
+                -- Add sub-options if they exist
+                if optionData.options then
+                    for subOption, subData in pairs(optionData.options) do
+                        local subButton = vgui.Create("DButton", scroll)
+                        subButton:SetText("  ? " .. subOption)
+                        subButton:SetPos(20, yPos)
+                        subButton:SetSize(360, 25)
+                        -- Handle sub-option logic
+                        yPos = yPos + 30
+                    end
+                end
+            end
+        end
+        return frame
+    end
+
+```
+
+---
+
+### lia.dialog.submitConfiguration
 
 #### 📋 Purpose
 Retrieves stored NPC dialog data for a specific NPC ID on the client side

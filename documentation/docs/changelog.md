@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.035 (November 17, 2025)
+
+### Changes
+
+- Update color.lua
+- Update color.lua
+- Dialog, Item Buy Cooldowns and Language Imrpovements
+- Update derma.lua
+- Fixed weird car glitch
+- Method  to pa int lilia buttons
+- Successfully updated workshop Lilia to 7.028
+- Way too many changes
+- Successfully updated workshop Lilia to 7.026
+- Linting
+- Minor UI Update & Removed useless Command
+- Net Profiler
+- Successfully updated workshop Lilia to 7.022
+- Revert "Successfully updated workshop Lilia to 7.020"
+- Successfully updated workshop Lilia to 7.020
+- Update shared.lua
+- Successfully updated workshop Lilia to 7.018
+- Moved Nets
+- Successfully updated workshop Lilia to 7.016
+- Update loader.lua
+
 ## Version 7.028 (November 15, 2025)
 
 ### Changes

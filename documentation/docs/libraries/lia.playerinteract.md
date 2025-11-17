@@ -389,7 +389,7 @@ Server
 ```lua
     -- Simple: Add basic personal action
     lia.playerinteract.addAction("changeToWhisper", {
-        category = L("categoryVoice"),
+        category = ("categoryVoice"),
         shouldShow = function(client)
             return client:getChar() and client:Alive() and
                 client:getNetVar("VoiceType") ~= L("whispering")

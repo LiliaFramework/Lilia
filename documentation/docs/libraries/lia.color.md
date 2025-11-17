@@ -629,16 +629,22 @@ Client
 
 ---
 
-### lia.color.returnMainAdjustedColors
+### lia.color.calculateNegativeColor
 
 #### 📋 Purpose
-Returns a set of adjusted colors based on the main theme color
+Calculates a negative/contrast color based on the main theme color for error/warning states
 
 #### ⏰ When Called
-When creating UI color schemes or theme-based color palettes
+When creating theme-appropriate colors for error states, cooldowns, warnings, etc.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mainColor` | **Color** | The main theme color to base the negative color on |
 
 #### ↩️ Returns
-* table - Table containing adjusted colors (background, sidebar, accent, text, hover, border, highlight)
+* Color - A contrasting color suitable for error/warning states
 
 #### 🌐 Realm
 Client
@@ -647,49 +653,77 @@ Client
 
 #### 🔰 Low Complexity
 ```lua
-    -- Simple: Get theme colors
-    local colors = lia.color.returnMainAdjustedColors()
-    local bgColor = colors.background
+    -- Simple: Get negative color for current theme
+    local errorColor = lia.color.calculateNegativeColor(lia.color.getMainColor())
 
 ```
 
 #### 📊 Medium Complexity
 ```lua
-    -- Medium: Apply colors to UI elements
-    local function createThemedPanel()
-        local colors = lia.color.returnMainAdjustedColors()
-        local panel = vgui.Create("DPanel")
-        panel:SetBackgroundColor(colors.background)
-        panel.Paint = function(self, w, h)
-            draw.RoundedBox(4, 0, 0, w, h, colors.background)
-            draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
-        end
-        return panel
-    end
+    -- Medium: Use in UI elements
+    local negativeColor = lia.color.calculateNegativeColor(lia.color.getMainColor())
+    draw.RoundedBox(4, 0, 0, w, h, negativeColor)
 
 ```
 
 #### ⚙️ High Complexity
 ```lua
-    -- High: Dynamic UI system with theme colors
-    local function createAdvancedUI()
-        local colors = lia.color.returnMainAdjustedColors()
-        local ui = {
-            background = colors.background,
-            primary    = colors.accent,
-            secondary  = colors.sidebar,
-            text       = colors.text,
-            hover      = colors.hover,
-            border     = colors.border,
-            highlight  = colors.highlight
-        }
-        -- Apply colors to multiple UI elements
-        for _, element in ipairs(uiElements) do
-            element:SetColor(ui.primary)
-            element:SetTextColor(ui.text)
-        end
-        return ui
-    end
+    -- High: Dynamic color calculation based on theme
+    hook.Add("OnThemeChanged", "UpdateNegativeColor", function()
+        local mainColor = lia.color.getMainColor()
+        local negativeColor = lia.color.calculateNegativeColor(mainColor)
+        -- Update UI elements that use negative color
+    end)
+
+```
+
+---
+
+### lia.color.returnMainAdjustedColors
+
+#### 📋 Purpose
+Calculates a negative/contrast color based on the main theme color for error/warning states
+
+#### ⏰ When Called
+When creating theme-appropriate colors for error states, cooldowns, warnings, etc.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mainColor` | **Color** | The main theme color to base the negative color on |
+
+#### ↩️ Returns
+* Color - A contrasting color suitable for error/warning states
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get negative color for current theme
+    local errorColor = lia.color.calculateNegativeColor(lia.color.getMainColor())
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Use in UI elements
+    local negativeColor = lia.color.calculateNegativeColor(lia.color.getMainColor())
+    draw.RoundedBox(4, 0, 0, w, h, negativeColor)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Dynamic color calculation based on theme
+    hook.Add("OnThemeChanged", "UpdateNegativeColor", function()
+        local mainColor = lia.color.getMainColor()
+        local negativeColor = lia.color.calculateNegativeColor(mainColor)
+        -- Update UI elements that use negative color
+    end)
 
 ```
 

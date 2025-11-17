@@ -36,7 +36,6 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
     if not isSellingToVendor then
         local money = client:getChar():getMoney()
         if money < price then return false, L("canNotAfford") end
-        -- Check cooldown for buying items
         if item.Cooldown and item.Cooldown > 0 then
             local character = client:getChar()
             local cooldowns = character:getData("vendorCooldowns", {})
