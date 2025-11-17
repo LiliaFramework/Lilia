@@ -725,6 +725,72 @@ if CLIENT then
 
     --[[
         Purpose:
+            Returns a set of adjusted colors based on the main theme color
+
+        When Called:
+            When creating UI color schemes or theme-based color palettes
+
+        Parameters:
+            None
+
+        Returns:
+            table - Table containing adjusted colors (background, sidebar, accent, text, hover, border, highlight)
+
+        Realm:
+            Client
+
+        Example Usage:
+
+        Low Complexity:
+            ```lua
+            -- Simple: Get theme colors
+            local colors = lia.color.returnMainAdjustedColors()
+            local bgColor = colors.background
+            ```
+
+        Medium Complexity:
+            ```lua
+            -- Medium: Apply colors to UI elements
+            local function createThemedPanel()
+                local colors = lia.color.returnMainAdjustedColors()
+                local panel = vgui.Create("DPanel")
+                panel:SetBackgroundColor(colors.background)
+                panel.Paint = function(self, w, h)
+                    draw.RoundedBox(4, 0, 0, w, h, colors.background)
+                    draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
+                end
+                return panel
+            end
+            ```
+
+        High Complexity:
+            ```lua
+            -- High: Dynamic UI system with theme colors
+            local function createAdvancedUI()
+                local colors = lia.color.returnMainAdjustedColors()
+
+                local ui = {
+                    background = colors.background,
+                    primary    = colors.accent,
+                    secondary  = colors.sidebar,
+                    text       = colors.text,
+                    hover      = colors.hover,
+                    border     = colors.border,
+                    highlight  = colors.highlight
+                }
+
+                -- Apply colors to multiple UI elements
+                for _, element in ipairs(uiElements) do
+                    element:SetColor(ui.primary)
+                    element:SetTextColor(ui.text)
+                end
+
+                return ui
+            end
+            ```
+    ]]
+    --[[
+        Purpose:
             Calculates a negative/contrast color based on the main theme color for error/warning states
 
         When Called:
@@ -795,73 +861,6 @@ if CLIENT then
         return Color(negativeR, negativeG, negativeB, 255)
     end
 
-    --[[
-        Purpose:
-            Returns a set of adjusted colors based on the main theme color
-
-        When Called:
-            When creating UI color schemes or theme-based color palettes
-
-        Parameters:
-            None
-
-        Returns:
-            table - Table containing adjusted colors (background, sidebar, accent, text, hover, border, highlight, negative)
-
-        Realm:
-            Client
-
-        Example Usage:
-
-        Low Complexity:
-            ```lua
-            -- Simple: Get theme colors
-            local colors = lia.color.returnMainAdjustedColors()
-            local bgColor = colors.background
-            ```
-
-        Medium Complexity:
-            ```lua
-            -- Medium: Apply colors to UI elements
-            local function createThemedPanel()
-                local colors = lia.color.returnMainAdjustedColors()
-                local panel = vgui.Create("DPanel")
-                panel:SetBackgroundColor(colors.background)
-                panel.Paint = function(self, w, h)
-                    draw.RoundedBox(4, 0, 0, w, h, colors.background)
-                    draw.RoundedBox(4, 0, 0, w, 2, colors.accent)
-                end
-                return panel
-            end
-            ```
-
-        High Complexity:
-            ```lua
-            -- High: Dynamic UI system with theme colors
-            local function createAdvancedUI()
-                local colors = lia.color.returnMainAdjustedColors()
-
-                local ui = {
-                    background = colors.background,
-                    primary    = colors.accent,
-                    secondary  = colors.sidebar,
-                    text       = colors.text,
-                    hover      = colors.hover,
-                    border     = colors.border,
-                    highlight  = colors.highlight,
-                    negative   = colors.negative
-                }
-
-                -- Apply colors to multiple UI elements
-                for _, element in ipairs(uiElements) do
-                    element:SetColor(ui.primary)
-                    element:SetTextColor(ui.text)
-                end
-
-                return ui
-            end
-            ```
-    ]]
     function lia.color.returnMainAdjustedColors()
         local base = lia.color.getMainColor()
         local background = lia.color.adjust(base, -20, -10, -50, 0)
