@@ -1827,6 +1827,55 @@ Client
 
 ---
 
+### lia.util.requestEntityInformation
+
+#### 📋 Purpose
+Request entity information from the user using a dialog, and optionally remove the entity if cancelled
+
+#### ⏰ When Called
+When you need to get information from a user about an entity, and want to remove the entity if they cancel
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The entity to potentially remove if the user cancels |
+| `argTypes` | **table** | Table of argument types in the format {"name" = "string"} or {"name" = {"string", options}} |
+| `callback` | **function** | Function to call with the information when the user submits. Receives the information table as parameter. |
+
+#### ↩️ Returns
+* Nothing (opens a dialog)
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Request name for an entity
+    lia.util.requestEntityInformation(entity, {name = "string"}, function(information)
+        print("Name entered: " .. information.name)
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Request multiple fields
+    lia.util.requestEntityInformation(entity, {
+        ["name"] = "string",
+        ["description"] = "string",
+        ["type"] = {"table", {"option1", "option2", "option3"}}
+    }, function(information)
+        -- Process the information
+        entity:SetNWString("Name", information.name)
+    end)
+
+```
+
+---
+
 ### lia.util.createTableUI
 
 #### 📋 Purpose

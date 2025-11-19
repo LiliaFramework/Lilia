@@ -7864,7 +7864,6 @@ lia.command.add("npcchangetype", {
     end
 })
 
--- Command for admins to respawn a specified player (even if they are alive or dead)
 lia.command.add("plyrespawn", {
     adminOnly = true,
     arguments = {

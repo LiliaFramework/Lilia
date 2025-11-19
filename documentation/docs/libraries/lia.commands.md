@@ -102,7 +102,7 @@ Shared
         onRun = function(client, arguments)
             client:notify("Hello, " .. client:Name() .. "!")
         end,
-        desc = "Say hello"
+        desc = "helloDesc"
     })
 
 ```
@@ -115,6 +115,12 @@ Shared
             {type = "player", name = "target"},
             {type = "string", name = "reason", optional = true}
         },
+        AdminStick = {
+            Name = "adminStickKickName",
+            Category = "moderation",
+            SubCategory = "adminStickSubCategoryBans",
+            Icon = "icon16/user_delete.png"
+        },
         onRun = function(client, arguments)
             local target = arguments[1]
             local reason = arguments[2] or "No reason provided"
@@ -122,7 +128,7 @@ Shared
             client:notify("Kicked " .. target:Name())
         end,
         adminOnly = true,
-        desc = "Kick a player from the server"
+        desc = "kickDesc"
     })
 
 ```
@@ -147,7 +153,7 @@ Shared
             return client:IsSuperAdmin() or client:hasPrivilege("moderation")
         end,
         privilege = "moderation",
-        desc = "Ban a player temporarily or permanently"
+        desc = "banDesc"
     })
 
 ```
