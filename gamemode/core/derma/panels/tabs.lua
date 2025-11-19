@@ -121,7 +121,6 @@ end
 
 function PANEL:Rebuild()
     self.panel_tabs:Clear()
-    self.needs_navigation = #self.tabs > self.max_visible_tabs
     if self.tab_style == "modern" then
         local tabWidths = {}
         local baseMargin = 6
@@ -211,34 +210,58 @@ function PANEL:PerformLayout()
         self.panel_tabs:DockMargin(0, 0, 0, 4)
         self.panel_tabs:SetTall(self.tab_height)
         if #self.tabs > 0 then
-            local navButtonWidth = (self.needs_navigation and self.nav_button_size * 2) or 0
+            local totalMinRequiredWidth = 0
+            for i = 1, #self.tabs do
+                totalMinRequiredWidth = totalMinRequiredWidth + (self._tabWidths[i] or 80)
+            end
+
+            local totalMarginsForAll = self._baseMargin * (#self.tabs - 1)
+            local totalWidthNeeded = totalMinRequiredWidth + totalMarginsForAll
+            local needsNavigation = totalWidthNeeded > self:GetWide()
+            if needsNavigation ~= self.needs_navigation then
+                self.needs_navigation = needsNavigation
+                self:CreateNavigationButtons()
+            end
+
+            local navButtonWidth = (needsNavigation and self.nav_button_size * 2) or 0
             local availableWidth = math.max(self:GetWide() - navButtonWidth, 0)
-            local visibleTabs = self.needs_navigation and self.max_visible_tabs or #self.tabs
-            visibleTabs = math.min(visibleTabs, math.max(#self.tabs - self.scroll_offset, 0))
-            if visibleTabs > 0 then
-                local totalMargins = self._baseMargin * (visibleTabs - 1)
-                local widthPool = math.max(availableWidth - totalMargins, 0)
-                local widthPerTab = math.floor(widthPool / visibleTabs)
-                local remainder = widthPool % visibleTabs
-                local children = self.panel_tabs:GetChildren()
-                local tab_children = {}
-                for _, child in ipairs(children) do
-                    if child ~= self.btn_left and child ~= self.btn_right then table.insert(tab_children, child) end
+            local maxVisibleTabs = needsNavigation and self.max_visible_tabs or #self.tabs
+            local visibleTabs = math.min(maxVisibleTabs, math.max(#self.tabs - self.scroll_offset, 0))
+            local startIndex = self.scroll_offset + 1
+            local endIndex = math.min(self.scroll_offset + visibleTabs, #self.tabs)
+            local children = self.panel_tabs:GetChildren()
+            local tab_children = {}
+            for _, child in ipairs(children) do
+                if child ~= self.btn_left and child ~= self.btn_right then table.insert(tab_children, child) end
+            end
+
+            local visibleMargins = self._baseMargin * (visibleTabs - 1)
+            local visibleMinWidth = 0
+            for i = startIndex, endIndex do
+                visibleMinWidth = visibleMinWidth + (self._tabWidths[i] or 80)
+            end
+
+            local visibleAvailable = math.max(availableWidth - visibleMargins, 0)
+            local visibleExtraSpace = visibleAvailable - visibleMinWidth
+            for i, child in ipairs(tab_children) do
+                local baseWidth = self._tabWidths[i] or 80
+                local finalWidth = baseWidth
+                if i >= startIndex and i <= endIndex then
+                    if visibleExtraSpace > 0 then
+                        local extraPerVisibleTab = math.floor(visibleExtraSpace / visibleTabs)
+                        local remainder = visibleExtraSpace % visibleTabs
+                        local slotIndex = i - self.scroll_offset
+                        finalWidth = baseWidth + extraPerVisibleTab + ((slotIndex <= remainder) and 1 or 0)
+                    end
+
+                    child:SetVisible(true)
+                    local slotIndex = i - self.scroll_offset
+                    child:DockMargin(0, 0, (slotIndex < visibleTabs) and self._baseMargin or 0, 0)
+                else
+                    child:SetVisible(false)
                 end
 
-                local startIndex = self.scroll_offset + 1
-                local endIndex = self.scroll_offset + visibleTabs
-                for i, child in ipairs(tab_children) do
-                    if i >= startIndex and i <= endIndex then
-                        child:SetVisible(true)
-                        local slotIndex = i - self.scroll_offset
-                        local finalWidth = math.max(widthPerTab + ((slotIndex <= remainder) and 1 or 0), 50)
-                        child:SetWide(finalWidth)
-                        child:DockMargin(0, 0, (slotIndex < visibleTabs) and self._baseMargin or 0, 0)
-                    else
-                        child:SetVisible(false)
-                    end
-                end
+                child:SetWide(finalWidth)
             end
         end
     else

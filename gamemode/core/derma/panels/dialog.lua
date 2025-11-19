@@ -118,7 +118,7 @@ function PANEL:AppendDialogLine(text, isPlayer, skipResponseUpdate)
     container:SetPaintBackground(false)
     container:SetTall(0)
     container:Dock(TOP)
-    container:DockMargin(0, isFirstMessage and 6 or 0, 0, 6)
+    container:DockMargin(0, isFirstMessage and 4 or 2, 0, 2)
     container.dialogHistoryScroll = self.dialogHistoryScroll
     container.dialogHistoryList = self.dialogHistoryList
     function container:PerformLayout()
@@ -348,6 +348,7 @@ function PANEL:AddDialogOptions(options, npc)
         choiceBtn:SetFont("LiliaFont.32")
         choiceBtn.DoClick = function()
             local isGoodbye = string.lower(label) == "goodbye" or string.lower(label) == "bye" or string.lower(label) == "farewell" or string.lower(label) == "close"
+            local isBack = string.lower(label) == "back" or string.lower(label) == "return"
             self:AppendDialogLine(label, true)
             if isGoodbye then
                 self.closingForGoodbye = true
@@ -363,6 +364,11 @@ function PANEL:AddDialogOptions(options, npc)
                 end
 
                 self:Remove()
+                return
+            end
+
+            if isBack and info.Callback and not info.serverOnly then
+                info.Callback(ply, npc)
                 return
             end
 

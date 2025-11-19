@@ -58,7 +58,7 @@ function MODULE:HUDPaint()
             surface.SetFont("LiliaFont.17")
             local hintText = L("forceRespawnHint")
             local hw = select(1, surface.GetTextSize(hintText))
-            local hx, hy = (ScrW() - hw) / 2, dy + 25
+            local hx, hy = (ScrW() - hw) / 2, dy + 50
             lia.util.drawText(hintText, hx + 1, hy + 1, Color(0, 0, 0, 200), 0, 0, "LiliaFont.17")
             lia.util.drawText(hintText, hx, hy, Color(255, 255, 0, 200), 0, 0, "LiliaFont.17")
         end

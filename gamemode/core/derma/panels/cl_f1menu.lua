@@ -152,7 +152,6 @@ function PANEL:CreateSection(parent, title)
     frame:Dock(TOP)
     frame:DockMargin(0, 10, 0, 10)
     frame:SetTall(200)
-    local maxSectionHeight = ScrH() * 0.45
     frame.Paint = function(_, w)
         draw.SimpleText(L(title), "LiliaFont.17", w / 2, 8, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
         surface.SetDrawColor(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, 100)
@@ -164,10 +163,8 @@ function PANEL:CreateSection(parent, title)
     header:Dock(TOP)
     header:DockPadding(0, 0, 0, 0)
     header.Paint = function() end
-    local scroll = vgui.Create("liaScrollPanel", frame)
-    scroll:Dock(FILL)
-    scroll.Paint = function() end
-    local contents = scroll:GetCanvas()
+    local contents = frame:Add("DPanel")
+    contents:Dock(FILL)
     contents:DockPadding(8, 8, 8, 10)
     contents.Paint = function() end
     frame.PerformLayout = function(f)
@@ -184,7 +181,7 @@ function PANEL:CreateSection(parent, title)
         end
 
         estimatedHeight = estimatedHeight + 10
-        f:SetTall(math.max(100, math.min(estimatedHeight, maxSectionHeight)))
+        f:SetTall(math.max(100, estimatedHeight))
     end
     return contents
 end
@@ -897,7 +894,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
             local availableWidth = tabContainer:GetWide()
             local totalMargins = baseMargin * (#pages - 1)
             local extraSpace = availableWidth - totalTabsWidth - totalMargins
-            if extraSpace > 0 and #pages > 1 then
+            if extraSpace > 0 then
                 local extraPerTab = math.floor(extraSpace / #pages)
                 local adjustedWidths = {}
                 for tabId, baseWidth in pairs(baseTabWidths) do
@@ -1003,7 +1000,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
             local availableWidth = tabContainer:GetWide()
             local totalMargins = baseMargin * (#pages - 1)
             local extraSpace = availableWidth - totalTabsWidth - totalMargins
-            if extraSpace > 0 and #pages > 1 then
+            if extraSpace > 0 then
                 local extraPerTab = math.floor(extraSpace / #pages)
                 local adjustedWidths = {}
                 for tabId, baseWidth in pairs(baseTabWidths) do

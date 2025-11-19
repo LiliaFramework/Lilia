@@ -2411,3 +2411,5 @@ else
         }
     end)
 end
+
+hook.Add("OnAdminSystemLoaded", "liaAdminSyncAfterLoad", function() lia.administrator.sync() end)

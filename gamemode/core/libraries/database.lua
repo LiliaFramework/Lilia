@@ -266,6 +266,11 @@ function lia.db.loadTables()
         lia.db.tablesLoaded = true
         hook.Run("LiliaTablesLoaded")
         hook.Run("OnDatabaseLoaded")
+        timer.Simple(0, function() lia.config.load() end)
+        timer.Simple(0.1, function()
+            lia.config.send()
+            lia.playerinteract.sync()
+        end)
     end
 
     lia.db.query([[

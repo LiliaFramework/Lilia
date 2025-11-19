@@ -115,7 +115,7 @@ end
             onRun = function(client, arguments)
                 client:notify("Hello, " .. client:Name() .. "!")
             end,
-            desc = "Say hello"
+            desc = "helloDesc"
         })
         ```
 
@@ -127,6 +127,12 @@ end
                 {type = "player", name = "target"},
                 {type = "string", name = "reason", optional = true}
             },
+            AdminStick = {
+                Name = "adminStickKickName",
+                Category = "moderation",
+                SubCategory = "adminStickSubCategoryBans",
+                Icon = "icon16/user_delete.png"
+            },
             onRun = function(client, arguments)
                 local target = arguments[1]
                 local reason = arguments[2] or "No reason provided"
@@ -134,7 +140,7 @@ end
                 client:notify("Kicked " .. target:Name())
             end,
             adminOnly = true,
-            desc = "Kick a player from the server"
+            desc = "kickDesc"
         })
         ```
 
@@ -158,7 +164,7 @@ end
                 return client:IsSuperAdmin() or client:hasPrivilege("moderation")
             end,
             privilege = "moderation",
-            desc = "Ban a player temporarily or permanently"
+            desc = "banDesc"
         })
         ```
 ]]
@@ -1171,7 +1177,14 @@ if SERVER then
 
         lia.db.wipeTables(function()
             lia.information(L("dbWiped"))
-            RunConsoleCommand("changelevel", game.GetMap())
+            lia.db.loadTables()
+            hook.Add("PostLoadData", "lia_wipedb_changemap", function()
+                hook.Remove("PostLoadData", "lia_wipedb_changemap")
+                timer.Simple(2.5, function()
+                    lia.information("Database wipe complete. Changing map...")
+                    RunConsoleCommand("changelevel", game.GetMap())
+                end)
+            end)
         end)
     end)
 
@@ -1341,6 +1354,20 @@ if SERVER then
         lia.notices.notifySuccessLocalized("testNotificationSuccess")
     end)
 
+    lia.command.add("testnotifications", {
+        desc = "testnotificationsDesc",
+        onRun = function(client)
+            client:notify("This is a default notification")
+            timer.Simple(0.5, function() if IsValid(client) then client:notifyError("This is an error notification") end end)
+            timer.Simple(1.0, function() if IsValid(client) then client:notifyWarning("This is a warning notification") end end)
+            timer.Simple(1.5, function() if IsValid(client) then client:notifyInfo("This is an info notification") end end)
+            timer.Simple(2.0, function() if IsValid(client) then client:notifySuccess("This is a success notification") end end)
+            timer.Simple(2.5, function() if IsValid(client) then client:notifyMoney("This is a money notification - You received $100!") end end)
+            timer.Simple(3.0, function() if IsValid(client) then client:notifyAdmin("This is an admin notification") end end)
+            client:notifyInfo("All notification types will appear over the next few seconds...")
+        end
+    })
+
     concommand.Add("print_vector", function(client)
         if not IsValid(client) then
             MsgC(Color(255, 0, 0), "[Lilia] " .. L("errorPrefix") .. L("commandCanOnlyBeUsedByPlayers") .. "\n")
@@ -1467,16 +1494,6 @@ else
             for panelType, count in pairs(hiddenPanelTypes) do
                 LocalPlayer():ChatPrint("  " .. panelType .. ": " .. count)
             end
-        end
-
-        print("[TestPanels] Total panels (including subpanels): " .. panelCount .. ", Visible: " .. visiblePanels)
-        for panelType, count in pairs(panelTypes) do
-            print("[TestPanels] " .. panelType .. ": " .. count)
-        end
-
-        print("[TestPanels] Hidden panels (including subpanels):")
-        for panelType, count in pairs(hiddenPanelTypes) do
-            print("[TestPanels] " .. panelType .. ": " .. count)
         end
     end
 
@@ -2360,6 +2377,12 @@ lia.command.add("plyban", {
             type = "string"
         },
     },
+    AdminStick = {
+        Name = "adminStickBanName",
+        Category = "moderation",
+        SubCategory = "adminStickSubCategoryBans",
+        Icon = "icon16/lock.png"
+    },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("ban", arguments[1], arguments[2], arguments[3], client) end
 })
 
@@ -2377,6 +2400,12 @@ lia.command.add("plykick", {
             optional = true
         },
     },
+    AdminStick = {
+        Name = "adminStickKickPlayerName",
+        Category = "moderation",
+        SubCategory = "adminStickSubCategoryBans",
+        Icon = "icon16/user_delete.png"
+    },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("kick", arguments[1], nil, arguments[2], client) end
 })
 
@@ -2388,6 +2417,12 @@ lia.command.add("plykill", {
             name = "name",
             type = "player"
         },
+    },
+    AdminStick = {
+        Name = "adminStickKillPlayerName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/user_red.png"
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("kill", arguments[1], nil, nil, client) end
 })
@@ -2461,6 +2496,12 @@ lia.command.add("plyrespawn", {
             type = "player"
         },
     },
+    AdminStick = {
+        Name = "adminStickRespawnPlayerName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/arrow_refresh.png"
+    },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("respawn", arguments[1], nil, nil, client) end
 })
 
@@ -2521,6 +2562,12 @@ lia.command.add("plyblindfade", {
             type = "string",
             optional = true
         },
+    },
+    AdminStick = {
+        Name = "adminStickBlindFadeName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/eye.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -2704,6 +2751,12 @@ lia.command.add("plycloak", {
             type = "player"
         },
     },
+    AdminStick = {
+        Name = "adminStickCloakName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/status_offline.png"
+    },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("cloak", arguments[1], nil, nil, client) end
 })
 
@@ -2715,6 +2768,12 @@ lia.command.add("plyuncloak", {
             name = "name",
             type = "player"
         },
+    },
+    AdminStick = {
+        Name = "adminStickUncloakName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/status_online.png"
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("uncloak", arguments[1], nil, nil, client) end
 })
@@ -2728,6 +2787,12 @@ lia.command.add("plygod", {
             type = "player"
         },
     },
+    AdminStick = {
+        Name = "adminStickGodModeName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/shield.png"
+    },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("god", arguments[1], nil, nil, client) end
 })
 
@@ -2739,6 +2804,12 @@ lia.command.add("plyungod", {
             name = "name",
             type = "player"
         },
+    },
+    AdminStick = {
+        Name = "adminStickRemoveGodModeName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/shield_delete.png"
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("ungod", arguments[1], nil, nil, client) end
 })
@@ -2780,6 +2851,12 @@ lia.command.add("plystrip", {
             name = "name",
             type = "player"
         },
+    },
+    AdminStick = {
+        Name = "adminStickStripWeaponsName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/gun.png"
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("strip", arguments[1], nil, nil, client) end
 })
@@ -2907,6 +2984,12 @@ lia.command.add("plyspectate", {
             name = "name",
             type = "player"
         },
+    },
+    AdminStick = {
+        Name = "adminStickSpectateName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/zoom.png"
     },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
@@ -6645,6 +6728,12 @@ lia.command.add("plyunwhitelist", {
             end
         }
     },
+    AdminStick = {
+        Name = "adminStickUnwhitelistName",
+        Category = "characterManagement",
+        SubCategory = "setFactionTitle",
+        Icon = "icon16/group_delete.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1])
         if not target or not IsValid(target) then
@@ -7567,6 +7656,12 @@ lia.command.add("recogwhisper", {
         },
     },
     desc = "recogWhisperDesc",
+    AdminStick = {
+        Name = "adminStickForceRecognitionWhisperName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/user_comment.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1]) or client
         if not IsValid(target) or not target:getChar() then return end
@@ -7583,6 +7678,12 @@ lia.command.add("recognormal", {
         },
     },
     desc = "recogNormalDesc",
+    AdminStick = {
+        Name = "adminStickForceRecognitionNormalName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/user_green.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1]) or client
         if not IsValid(target) or not target:getChar() then return end
@@ -7599,6 +7700,12 @@ lia.command.add("recogyell", {
         },
     },
     desc = "recogYellDesc",
+    AdminStick = {
+        Name = "adminStickForceRecognitionYellName",
+        Category = "moderation",
+        SubCategory = "moderationTools",
+        Icon = "icon16/user_red.png"
+    },
     onRun = function(client, arguments)
         local target = lia.util.findPlayer(client, arguments[1]) or client
         if not IsValid(target) or not target:getChar() then return end
@@ -7664,7 +7771,7 @@ lia.command.add("kickbots", {
 
 lia.command.add("npcchangetype", {
     adminOnly = true,
-    desc = "Change the type of a dialog NPC you are looking at.",
+    desc = "npcchangetypeDesc",
     onRun = function(client)
         if not client:hasPrivilege("Can Manage NPCs") then return client:notifyError("You lack permission to manage NPCs.") end
         local ent = client:getTracedEntity()
@@ -7757,7 +7864,8 @@ lia.command.add("npcchangetype", {
     end
 })
 
-lia.command.add("forcerespawn", {
+-- Command for admins to respawn a specified player (even if they are alive or dead)
+lia.command.add("plyrespawn", {
     adminOnly = true,
     arguments = {
         {
@@ -7765,7 +7873,7 @@ lia.command.add("forcerespawn", {
             type = "player"
         }
     },
-    desc = "forceRespawnDesc",
+    desc = "plyRespawnDesc",
     onRun = function(client, arguments)
         local target = arguments[1]
         if not IsValid(target) then
@@ -7773,14 +7881,69 @@ lia.command.add("forcerespawn", {
             return
         end
 
-        if target:Alive() then
+        target:Spawn()
+        client:notifySuccessLocalized("playerForceRespawned", target:Name())
+        target:notifyLocalized("youWereForceRespawned")
+        lia.log.add(client, "plyrespawn", target:Name())
+    end
+})
+
+lia.command.add("forcerespawn", {
+    desc = "forceRespawnDesc",
+    onRun = function(client)
+        if client:Alive() then
             client:notifyErrorLocalized("playerAlreadyAlive")
             return
         end
 
-        target:Spawn()
-        client:notifySuccessLocalized("playerForceRespawned", target:Name())
-        target:notifyLocalized("youWereForceRespawned")
-        lia.log.add(client, "forceRespawn", target:Name())
+        local baseTime = lia.config.get("SpawnTime", 5)
+        baseTime = hook.Run("OverrideSpawnTime", client, baseTime) or baseTime
+        local lastDeath = client:getNetVar("lastDeathTime", os.time())
+        local timePassed = os.time() - lastDeath
+        if timePassed < baseTime then
+            client:notifyErrorLocalized("cannotRespawnYet", baseTime - timePassed)
+            return
+        end
+
+        client:Spawn()
+        client:notifySuccessLocalized("playerForceRespawned", client:Name())
+        client:notifyLocalized("youWereForceRespawned")
+        lia.log.add(client, "forcerespawn", client:Name())
+    end
+})
+
+lia.command.add("resetvendorcooldowns", {
+    desc = "resetvendorcooldownsDesc",
+    privilege = "canEditVendors",
+    adminOnly = true,
+    arguments = {
+        {
+            name = "target",
+            type = "player",
+            description = "The player to reset cooldowns for"
+        }
+    },
+    AdminStick = {
+        Name = "adminStickResetVendorCooldownsName",
+        Category = "items",
+        SubCategory = "items",
+        Icon = "icon16/time_delete.png"
+    },
+    onRun = function(client, arguments)
+        local target = lia.util.findPlayer(client, arguments[1])
+        if not IsValid(target) then
+            client:notifyErrorLocalized("invalidTarget")
+            return
+        end
+
+        local character = target:getChar()
+        if not character then
+            client:notifyErrorLocalized("invalidTarget")
+            return
+        end
+
+        character:setData("vendorCooldowns", {})
+        client:notifyLocalized("vendorCooldownsReset", target:Name())
+        target:notifyLocalized("vendorCooldownsResetByAdmin")
     end
 })

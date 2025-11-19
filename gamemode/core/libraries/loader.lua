@@ -1286,7 +1286,6 @@ function lia.loader.initializeGamemode(isReload)
         if not isReload then hasInitializedModules = true end
     end
 
-    lia.config.load()
     lia.faction.formatModelData()
     if SERVER then
         if isReload then
@@ -1297,10 +1296,6 @@ function lia.loader.initializeGamemode(isReload)
             timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.administrator.sync() end end)
             timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
             timer.Create("liaReloadComplete", 5.0, 1, function() lia.reloadInProgress = false end)
-        else
-            lia.config.send()
-            lia.administrator.sync()
-            lia.playerinteract.sync()
         end
     end
 

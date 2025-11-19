@@ -199,6 +199,14 @@ liaComboBox
 liaDermaMenu
 --[[
     Purpose:
+        NPC dialog interface
+        A comprehensive dialog system for NPC conversations with conversation history, response options, and server-side callbacks
+    When Used:
+        For NPC interactions, quest dialogs, or scripted conversations with non-player characters
+]]
+liaDialogMenu
+--[[
+    Purpose:
         Custom list view
         A styled list view with custom theming
     When Used:

@@ -1180,6 +1180,18 @@ net.Receive("liaNpcDialogServerCallback", function(_, ply)
     local npcData = lia.dialog.getOriginalNPCData(npc.uniqueID)
     local conversationTable = npcData and npcData.Conversation
     local option = findOption(conversationTable, label, ply)
+    if not option and conversationTable then
+        for _, entry in pairs(conversationTable) do
+            if istable(entry) and isfunction(entry.GetOptions) then
+                local dynamicOptions = entry.GetOptions(ply, npc)
+                if istable(dynamicOptions) and dynamicOptions[label] then
+                    option = dynamicOptions[label]
+                    break
+                end
+            end
+        end
+    end
+
     if not IsValid(npc) or not option then return end
     if option.ShouldShow and not option.ShouldShow(ply, npc) then return end
     if option.Callback then option.Callback(ply, npc) end

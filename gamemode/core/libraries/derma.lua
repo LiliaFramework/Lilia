@@ -1894,6 +1894,16 @@ lia.derma.Rect = {
     Shadow = lia.derma.baseFuncs.Shadow,
     Flags = lia.derma.baseFuncs.Flags,
     Draw = function()
+        if not TEXTURE and not USING_BLUR and not SHADOW_ENABLED and SHAPE == shapes[defaultShape] and OUTLINE_THICKNESS == -1 and START_ANGLE == 0 and END_ANGLE == 360 and not ROTATION and not CLIP_PANEL then
+            surface_SetDrawColor(COL_R, COL_G, COL_B, COL_A)
+            if TL > 0 then
+                draw.RoundedBox(TL, X, Y, W, H, Color(COL_R, COL_G, COL_B, COL_A))
+            else
+                surface_DrawTexturedRect(X, Y, W, H)
+            end
+            return
+        end
+
         if START_ANGLE == END_ANGLE then return end
         local OLD_CLIPPING_STATE
         if SHADOW_ENABLED or CLIP_PANEL then OLD_CLIPPING_STATE = DisableClipping(true) end

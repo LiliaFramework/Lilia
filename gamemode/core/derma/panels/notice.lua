@@ -1,16 +1,25 @@
-﻿local NotificationHeight = 54
+﻿lia.config.add("CurrencyNotificationImage", "Currency Notification Image", "icon16/money.png", nil, {
+    desc = "The material path for the currency icon used in money-type notifications",
+    category = "Notifications",
+    type = "String"
+})
+
+local NotificationHeight = 54
 local NotificationPadding = 18
 local NotificationLifetime = 6
 local NotificationFadeoutTime = 1
-local NotifIcons = {
-    info = Material("icon16/information.png"),
-    error = Material("icon16/exclamation.png"),
-    success = Material("icon16/accept.png"),
-    warning = Material("icon16/error.png"),
-    money = Material("icon16/money.png"),
-    admin = Material("icon16/shield.png"),
-    default = Material("icon16/lightbulb.png")
-}
+local function GetNotifIcon(notifType)
+    local icons = {
+        info = Material("icon16/information.png"),
+        error = Material("icon16/exclamation.png"),
+        success = Material("icon16/accept.png"),
+        warning = Material("icon16/error.png"),
+        money = Material(lia.config.get("CurrencyNotificationImage", "icon16/money.png")),
+        admin = Material("icon16/shield.png"),
+        default = Material("icon16/lightbulb.png")
+    }
+    return icons[notifType] or icons.default
+end
 
 local NotifColors = {
     info = Color(70, 130, 180),
@@ -68,12 +77,7 @@ function PANEL:SetType(t)
 end
 
 function PANEL:Think()
-    if self._lastScrH ~= ScrH() then
-        self._lastScrH = ScrH()
-        self:RecalcSize()
-        OrganizeNotices()
-    end
-
+    if not self._lastScrH then self._lastScrH = ScrH() end
     local elapsed = CurTime() - self.startTime
     if elapsed > NotificationLifetime then
         local fadeProgress = math.Clamp((elapsed - NotificationLifetime) / NotificationFadeoutTime, 0, 1)
@@ -102,13 +106,15 @@ function PANEL:Think()
 end
 
 function PANEL:Paint(w, h)
-    local typeColor = NotifColors[self.ntype] or NotifColors.default
-    local icon = NotifIcons[self.ntype] or NotifIcons.default
-    draw.RoundedBox(8, 0, 0, w, h, Color(40, 40, 40, math.floor(200 * (self.alpha / 255))))
-    draw.RoundedBox(8, 0, 0, 4, h, Color(typeColor.r, typeColor.g, typeColor.b, math.floor(255 * (self.alpha / 255))))
-    draw.RoundedBox(8, 4, 0, w - 4, h, Color(typeColor.r * 0.2, typeColor.g * 0.2, typeColor.b * 0.2, math.floor(150 * (self.alpha / 255))))
-    surface.SetDrawColor(0, 0, 0, math.floor(100 * (self.alpha / 255)))
-    surface.DrawOutlinedRect(0, 0, w, h, 1)
+    if not self._cachedTypeColor then self._cachedTypeColor = NotifColors[self.ntype] or NotifColors.default end
+    if not self._cachedIcon then self._cachedIcon = GetNotifIcon(self.ntype) end
+    local typeColor = self._cachedTypeColor
+    local icon = self._cachedIcon
+    local alpha = self.alpha / 255
+    lia.derma.rect(0, 0, w, h):Rad(8):Color(Color(40, 40, 40, math.floor(200 * alpha))):Draw()
+    lia.derma.rect(0, 0, 4, h):Rad(8):Color(Color(typeColor.r, typeColor.g, typeColor.b, math.floor(255 * alpha))):Draw()
+    lia.derma.rect(4, 0, w - 4, h):Rad(8):Color(Color(typeColor.r * 0.2, typeColor.g * 0.2, typeColor.b * 0.2, math.floor(150 * alpha))):Draw()
+    lia.derma.rect(0, 0, w, h):Rad(8):Outline(1):Color(Color(0, 0, 0, math.floor(100 * alpha))):Draw()
     if icon then
         surface.SetMaterial(icon)
         surface.SetDrawColor(255, 255, 255, self.alpha)
