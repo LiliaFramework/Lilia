@@ -215,6 +215,169 @@ Shared
 
 ---
 
+### setAction
+
+#### 📋 Purpose
+Sets an action for the player with optional duration and callback
+
+#### ⏰ When Called
+When implementing player actions, progress bars, or timed activities for the player
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `text` | **string** | The action text to display |
+| `time` | **number, optional** | The duration of the action in seconds |
+| `callback` | **function, optional** | Function to call when action completes |
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Set action
+    player:setAction("Loading...")
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Set action with duration
+    player:setAction("Crafting item...", 5)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex action system with callback
+    local actionText = "Repairing weapon..."
+    local duration = 10
+    local callback = function(ply)
+    ply:notifySuccess("Weapon repaired!")
+    local weapon = ply:GetActiveWeapon()
+    if IsValid(weapon) then
+        weapon:SetHealth(100)
+    end
+    end
+    player:setAction(actionText, duration, callback)
+
+```
+
+---
+
+### doStaredAction
+
+#### 📋 Purpose
+Makes the player perform an action by staring at an entity for a specified duration
+
+#### ⏰ When Called
+When implementing interaction systems, examination mechanics, or focused actions for the player
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The entity to stare at |
+| `callback` | **function** | Function to call when action completes |
+| `time` | **number** | The duration to stare at the entity |
+| `onCancel` | **function, optional** | Function to call if action is cancelled |
+| `distance` | **number, optional** | Maximum distance to check (default: 96) |
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Stare at entity
+    player:doStaredAction(ent, function() print("Action completed") end, 3)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Stare with cancellation
+    local onCancel = function() player:notify("Action cancelled") end
+    player:doStaredAction(ent, function() player:notify("Action completed") end, 5, onCancel)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex interaction system with validation
+    local entity = player:getTracedEntity()
+    if IsValid(entity) then
+        local callback = function()
+        player:notifySuccess("Examination complete!")
+        local data = entity:getData("examinationData", {})
+        player:notifyInfo("Entity data: " .. table.Count(data) .. " entries")
+    end
+    local onCancel = function()
+    player:notifyWarning("Examination interrupted")
+    end
+    player:doStaredAction(entity, callback, 10, onCancel, 150)
+    end
+
+```
+
+---
+
+### stopAction
+
+#### 📋 Purpose
+Stops the player's current action and clears action timers
+
+#### ⏰ When Called
+When interrupting player actions, implementing action cancellation, or cleaning up player state
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Stop player action
+    player:stopAction()
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Stop action with notification
+    player:stopAction()
+    player:notify("Action stopped")
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex action management with cleanup
+    if player:getNetVar("actionActive", false) then
+        player:stopAction()
+        player:setNetVar("actionActive", false)
+        player:notifyWarning("Action interrupted")
+        -- Clean up any action-related data
+        player:setData("actionProgress", 0)
+    end
+
+```
+
+---
+
 ### hasPrivilege
 
 #### 📋 Purpose
@@ -3122,14 +3285,14 @@ Shared
 #### 🔰 Low Complexity
 ```lua
     -- Simple: Ask yes/no question
-    player:requestBinaryQuestion("Do you want to continue?", "Yes", "No")
+    player:requestBinaryQuestion("Confirmation", "Do you want to continue?", "Yes", "No")
 
 ```
 
 #### 📊 Medium Complexity
 ```lua
     -- Medium: Ask with callback
-    player:requestBinaryQuestion("Delete this item?", "Delete", "Cancel", true, function(choice)
+    player:requestBinaryQuestion("Delete Item", "Delete this item?", "Delete", "Cancel", function(choice)
     if choice == 1 then
         player:notify("Item deleted!")
         else
@@ -3250,7 +3413,7 @@ Shared
     local title = "Character Management"
     local buttons = {
         {text = "Reset Character", callback = function()
-            player:requestBinaryQuestion("Reset character?", "Yes", "No", true, function(choice)
+            player:requestBinaryQuestion("Character Reset", "Reset character?", "Yes", "No", function(choice)
                 if choice == 1 then
                     local char = player:getChar()
                     if char then char:delete() end
@@ -4134,169 +4297,6 @@ Server
     local banner = admin
     player:banPlayer(reason, duration, banner)
     lia.log.add("Player " .. player:Name() .. " banned by " .. banner:Name() .. " for: " .. reason)
-
-```
-
----
-
-### setAction
-
-#### 📋 Purpose
-Sets an action for the player with optional duration and callback
-
-#### ⏰ When Called
-When implementing player actions, progress bars, or timed activities for the player
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | **string** | The action text to display |
-| `time` | **number, optional** | The duration of the action in seconds |
-| `callback` | **function, optional** | Function to call when action completes |
-
-#### ↩️ Returns
-* None
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-#### 🔰 Low Complexity
-```lua
-    -- Simple: Set action
-    player:setAction("Loading...")
-
-```
-
-#### 📊 Medium Complexity
-```lua
-    -- Medium: Set action with duration
-    player:setAction("Crafting item...", 5)
-
-```
-
-#### ⚙️ High Complexity
-```lua
-    -- High: Complex action system with callback
-    local actionText = "Repairing weapon..."
-    local duration = 10
-    local callback = function(ply)
-    ply:notifySuccess("Weapon repaired!")
-    local weapon = ply:GetActiveWeapon()
-    if IsValid(weapon) then
-        weapon:SetHealth(100)
-    end
-    end
-    player:setAction(actionText, duration, callback)
-
-```
-
----
-
-### doStaredAction
-
-#### 📋 Purpose
-Makes the player perform an action by staring at an entity for a specified duration
-
-#### ⏰ When Called
-When implementing interaction systems, examination mechanics, or focused actions for the player
-
-#### ⚙️ Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | **Entity** | The entity to stare at |
-| `callback` | **function** | Function to call when action completes |
-| `time` | **number** | The duration to stare at the entity |
-| `onCancel` | **function, optional** | Function to call if action is cancelled |
-| `distance` | **number, optional** | Maximum distance to check (default: 96) |
-
-#### ↩️ Returns
-* None
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-#### 🔰 Low Complexity
-```lua
-    -- Simple: Stare at entity
-    player:doStaredAction(ent, function() print("Action completed") end, 3)
-
-```
-
-#### 📊 Medium Complexity
-```lua
-    -- Medium: Stare with cancellation
-    local onCancel = function() player:notify("Action cancelled") end
-    player:doStaredAction(ent, function() player:notify("Action completed") end, 5, onCancel)
-
-```
-
-#### ⚙️ High Complexity
-```lua
-    -- High: Complex interaction system with validation
-    local entity = player:getTracedEntity()
-    if IsValid(entity) then
-        local callback = function()
-        player:notifySuccess("Examination complete!")
-        local data = entity:getData("examinationData", {})
-        player:notifyInfo("Entity data: " .. table.Count(data) .. " entries")
-    end
-    local onCancel = function()
-    player:notifyWarning("Examination interrupted")
-    end
-    player:doStaredAction(entity, callback, 10, onCancel, 150)
-    end
-
-```
-
----
-
-### stopAction
-
-#### 📋 Purpose
-Stops the player's current action and clears action timers
-
-#### ⏰ When Called
-When interrupting player actions, implementing action cancellation, or cleaning up player state
-
-#### ↩️ Returns
-* None
-
-#### 🌐 Realm
-Server
-
-#### 💡 Example Usage
-
-#### 🔰 Low Complexity
-```lua
-    -- Simple: Stop player action
-    player:stopAction()
-
-```
-
-#### 📊 Medium Complexity
-```lua
-    -- Medium: Stop action with notification
-    player:stopAction()
-    player:notify("Action stopped")
-
-```
-
-#### ⚙️ High Complexity
-```lua
-    -- High: Complex action management with cleanup
-    if player:getNetVar("actionActive", false) then
-        player:stopAction()
-        player:setNetVar("actionActive", false)
-        player:notifyWarning("Action interrupted")
-        -- Clean up any action-related data
-        player:setData("actionProgress", 0)
-    end
 
 ```
 

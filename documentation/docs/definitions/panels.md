@@ -298,7 +298,7 @@ When interacting with doors or similar entities
 
 ---
 
-### liaDProgressBar
+### liaProgressBar
 
 #### 📋 Purpose
 Progress bar with custom styling
