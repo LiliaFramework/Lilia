@@ -229,61 +229,47 @@ end
 
 function QuickPanel:addSlider(text, cb, val, min, max, dec)
     local container = self.scroll:Add("DPanel")
-    container:SetTall(100)
+    container:SetTall(70)
     container:Dock(TOP)
     container:DockMargin(0, 1, 0, 0)
     container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(40, 40, 50, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
-    local panel = container:Add("DPanel")
-    panel:Dock(FILL)
-    panel:DockMargin(20, 5, 20, 5)
-    panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(60, 60, 70, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
-    local label = vgui.Create("DLabel", panel)
+    local label = vgui.Create("DLabel", container)
     label:Dock(TOP)
     label:SetTall(25)
-    label:DockMargin(0, 5, 0, 0)
+    label:DockMargin(10, 5, 10, 0)
     label:SetText("")
-    label.Paint = function(_, w, h) draw.SimpleText(text, "LiliaFont.24", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
-    local slider = panel:Add("liaSlideBox")
-    slider:Dock(TOP)
-    slider:DockMargin(20, 5, 20, 5)
-    slider:SetTall(50)
-    slider:SetRange(min or 0, max or 100, dec or 0)
-    slider:SetValue(val or 0)
-    slider:SetText("")
-    slider.Paint = function(s, w)
-        local padX = 16
-        local padTop = 2
-        local barY = 32
-        local barH = 6
-        local barR = barH / 2
-        local handleW, handleH = 14, 14
-        local handleR = handleH / 2
-        local textFont = "LiliaFont.18"
-        local valueFont = "LiliaFont.16"
-        if s.text and s.text ~= "" then draw.SimpleText(s.text, textFont, padX, padTop, lia.color.theme.text) end
-        local barStart = padX + handleW / 2
-        local barEnd = w - padX - handleW / 2
-        local barW = barEnd - barStart
-        local progress = (s.value - s.min_value) / (s.max_value - s.min_value)
-        local activeW = math.Clamp(barW * progress, 0, barW)
-        lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.window_shadow):Shadow(5, 20):Draw()
-        lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.focus_panel):Draw()
-        lia.derma.rect(barStart, barY, barW, barH):Rad(barR):Color(lia.color.theme.button_shadow):Draw()
-        lia.derma.rect(barStart, barY, s.smoothPos, barH):Rad(barR):Color(lia.color.theme.theme):Draw()
-        s.smoothPos = Lerp(FrameTime() * 12, s.smoothPos or 0, activeW)
-        local handleX = barStart + s.smoothPos
-        local handleY = barY + barH / 2
-        lia.derma.drawShadows(handleR, handleX - handleW / 2, handleY - handleH / 2, handleW, handleH, lia.color.theme.window_shadow, 3, 10)
-        local targetAlpha = s.dragging and 100 or 255
-        s._dragAlpha = Lerp(FrameTime() * 10, s._dragAlpha, targetAlpha)
-        local colorText = Color(lia.color.theme.theme.r, lia.color.theme.theme.g, lia.color.theme.theme.b, s._dragAlpha)
-        lia.derma.rect(handleX - handleW / 2, handleY - handleH / 2, handleW, handleH):Rad(handleR):Color(colorText):Draw()
-        draw.SimpleText(s.value, valueFont, w / 2, barY - 20, colorText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    local function updateLabelText(value)
+        local displayValue
+        if dec and dec > 0 then
+            displayValue = math.Round(value, dec)
+        else
+            displayValue = math.Round(value)
+        end
+
+        local displayText = text .. " - " .. tostring(displayValue)
+        label.Paint = function(_, w, h) draw.SimpleText(displayText, "LiliaFont.24", w / 2, h / 2, lia.color.theme.text, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) end
     end
 
+    updateLabelText(val or 0)
+    local slider = container:Add("liaSlider")
+    slider:Dock(TOP)
+    slider:DockMargin(20, 5, 20, 10)
+    slider:SetTall(20)
+    slider:SetRange(min or 0, max or 100, dec or 0)
+    slider:SetValue(val or 0)
     if cb then
-        slider.OnValueChanged = function(_, v)
-            local r = math.Round(v, dec or 0)
+        slider.OnValueChanged = function()
+            local actualValue = slider:GetValue()
+            if not isnumber(actualValue) then
+                if isvector(actualValue) then
+                    actualValue = actualValue.x or 0
+                else
+                    actualValue = tonumber(actualValue) or 0
+                end
+            end
+
+            local r = math.Round(actualValue, dec or 0)
+            updateLabelText(r)
             cb(slider, r)
         end
     end
@@ -403,10 +389,23 @@ function QuickPanel:populateOptions()
     end)
 
     local hasAddedItems = false
+    local function getTypeOrder(optType)
+        if optType == "Boolean" then
+            return 1
+        elseif optType == "Int" or optType == "Float" then
+            return 2
+        else
+            return 3
+        end
+    end
+
     for _, categoryName in ipairs(sortedCategories) do
         local categoryOptions = categories[categoryName]
         if #categoryOptions > 0 then
             table.sort(categoryOptions, function(a, b)
+                local typeA = getTypeOrder(a.opt.type)
+                local typeB = getTypeOrder(b.opt.type)
+                if typeA ~= typeB then return typeA < typeB end
                 local nameA = a.opt.name or a.key
                 local nameB = b.opt.name or b.key
                 return nameA < nameB
