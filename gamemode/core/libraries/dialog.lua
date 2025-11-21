@@ -565,7 +565,7 @@ if SERVER then
                         ShouldShow = function(ply) return ply:GetFaction() == factionName end,
                         options = factionData.quests
                     },
-                    ["General Info"] = {
+                    [L("generalInfo")] = {
                         Response = "The " .. factionName .. " is dedicated to [faction purpose]. We value [faction values]."
                     }
                 }
@@ -1138,8 +1138,8 @@ else
         if IsValid(npc) then
             existingData = {
                 name = npc:getNetVar("NPCName", npc.NPCName or "NPC"),
-                model = "models/Barney.mdl",
-                skin = npc:GetSkin() or 0,
+                model = npc:GetModel(),
+                skin = npc:GetSkin(),
                 bodygroups = {},
                 animation = npc.customData and npc.customData.animation or "auto"
             }
@@ -1147,24 +1147,6 @@ else
             for i = 0, npc:GetNumBodyGroups() - 1 do
                 existingData.bodygroups[i] = npc:GetBodygroup(i)
             end
-        end
-
-        local hasSkins = false
-        if IsValid(npc) then
-            local maxSkins = 0
-            for i = 0, 31 do
-                local oldSkin = npc:GetSkin()
-                npc:SetSkin(i)
-                if npc:GetSkin() == i then
-                    maxSkins = i
-                else
-                    break
-                end
-
-                npc:SetSkin(oldSkin)
-            end
-
-            hasSkins = maxSkins > 0
         end
 
         local hasBodygroups = false
@@ -1181,7 +1163,10 @@ else
         local bodygroupControls = {}
         local bodygroupScroll = nil
         local function onBodygroupValueChanged(bodygroupIndex, _, val)
-            if IsValid(npc) then npc:SetBodygroup(bodygroupIndex, math.Round(val)) end
+            if IsValid(npc) then
+                npc:SetBodygroup(bodygroupIndex, math.Round(val))
+                existingData.bodygroups[bodygroupIndex] = math.Round(val)
+            end
         end
 
         local function updateBodygroupControls()
@@ -1236,29 +1221,24 @@ else
         modelEntry:DockMargin(0, 0, 0, 10)
         modelEntry.action = function(value)
             if IsValid(npc) and value and value ~= "" then
-                npc:SetModel(value)
-                updateBodygroupControls()
-                LocalPlayer():notifySuccess("NPC model updated to: " .. value)
-            end
-        end
+                local oldModel = npc:GetModel()
+                if oldModel ~= value then
+                    npc:SetModel(value)
+                    existingData.bodygroups = {}
+                    existingData.skin = 0
+                    for i = 0, npc:GetNumBodyGroups() - 1 do
+                        existingData.bodygroups[i] = npc:GetBodygroup(i)
+                    end
 
-        local skinEntry = nil
-        if hasSkins then
-            local skinLabel = vgui.Create("DLabel", scroll)
-            skinLabel:Dock(TOP)
-            skinLabel:SetText("Skin ID:")
-            skinLabel:SetTall(20)
-            skinLabel:DockMargin(0, 5, 0, 5)
-            skinEntry = vgui.Create("DNumSlider", scroll)
-            skinEntry:Dock(TOP)
-            skinEntry:SetTall(40)
-            skinEntry:SetMin(0)
-            skinEntry:SetMax(31)
-            skinEntry:SetDecimals(0)
-            skinEntry:SetValue(existingData.skin or 0)
-            skinEntry:DockMargin(0, 0, 0, 10)
-            skinEntry:SetText("Skin ID")
-            skinEntry.OnValueChanged = function(_, val) if IsValid(npc) then npc:SetSkin(math.Round(val)) end end
+                    updateBodygroupControls()
+                    if hasSkin and skinSlider then
+                        skinSlider:SetMax(math.max(0, npc:SkinCount() - 1))
+                        skinSlider:SetValue(0)
+                    end
+
+                    LocalPlayer():notifySuccess("NPC model updated to: " .. value .. ". Bodygroups and skin have been reset.")
+                end
+            end
         end
 
         if hasBodygroups then
@@ -1275,6 +1255,31 @@ else
             bodygroupScroll:Dock(FILL)
             bodygroupScroll:DockMargin(5, 5, 5, 5)
             updateBodygroupControls()
+        end
+
+        local hasSkin = false
+        local skinSlider = nil
+        if IsValid(npc) then hasSkin = npc:SkinCount() > 1 end
+        if hasSkin then
+            local skinLabel = vgui.Create("DLabel", scroll)
+            skinLabel:Dock(TOP)
+            skinLabel:SetText("Skin:")
+            skinLabel:SetTall(20)
+            skinLabel:DockMargin(0, 5, 0, 5)
+            skinSlider = vgui.Create("DNumSlider", scroll)
+            skinSlider:Dock(TOP)
+            skinSlider:SetTall(25)
+            skinSlider:DockMargin(0, 0, 0, 10)
+            skinSlider:SetMin(0)
+            skinSlider:SetMax(math.max(0, npc:SkinCount() - 1))
+            skinSlider:SetDecimals(0)
+            skinSlider:SetValue(existingData.skin or 0)
+            skinSlider.OnValueChanged = function(_, val)
+                if IsValid(npc) then
+                    npc:SetSkin(math.Round(val))
+                    existingData.skin = math.Round(val)
+                end
+            end
         end
 
         local hasAnimations = false
@@ -1392,6 +1397,7 @@ else
         dialogTypeLabel:SetTall(20)
         dialogTypeLabel:DockMargin(0, 15, 0, 5)
         local currentType = npc:getNetVar("uniqueID", npc.uniqueID) or "none"
+        local selectedDialogType = currentType
         local dialogTypeCombo = vgui.Create("liaComboBox", scroll)
         dialogTypeCombo:Dock(TOP)
         dialogTypeCombo:SetTall(30)
@@ -1412,13 +1418,14 @@ else
         applyBtn:DockMargin(0, 5, 0, 10)
         applyBtn.DoClick = function()
             local nameValue = nameEntry:GetValue() or ""
+            local modelValue = modelEntry:GetValue() or ""
             local customData = {
                 name = string.Trim(nameValue),
-                model = modelEntry:GetValue(),
+                model = modelValue,
+                skin = hasSkin and skinSlider and skinSlider:GetValue() or existingData.skin or 0,
                 bodygroups = {}
             }
 
-            if skinEntry and hasSkins then customData.skin = skinEntry:GetValue() end
             if hasBodygroups then
                 for i, slider in pairs(bodygroupControls) do
                     if IsValid(slider) then customData.bodygroups[i] = slider:GetValue() end
@@ -1595,12 +1602,25 @@ if SERVER then
                 end
             end
 
-            if customData.model and customData.model ~= "" then npc:SetModel(customData.model) end
-            if customData.skin then npc:SetSkin(tonumber(customData.skin) or 0) end
+            local modelChanged = false
+            if customData.model and customData.model ~= "" then
+                local oldModel = npc:GetModel()
+                if oldModel ~= customData.model then modelChanged = true end
+                npc:SetModel(customData.model)
+            end
+
             if customData.bodygroups and istable(customData.bodygroups) then
                 for bodygroupIndex, value in pairs(customData.bodygroups) do
                     npc:SetBodygroup(tonumber(bodygroupIndex) or 0, tonumber(value) or 0)
                 end
+            end
+
+            if customData.skin ~= nil then npc:SetSkin(tonumber(customData.skin) or 0) end
+            if modelChanged then
+                npc.customAnimation = nil
+                customData.animation = "auto"
+                npc:SetSkin(0)
+                customData.skin = 0
             end
 
             if customData.animation and customData.animation ~= "auto" then
@@ -1608,6 +1628,9 @@ if SERVER then
                 if sequenceIndex >= 0 then
                     npc.customAnimation = customData.animation
                     npc:ResetSequence(sequenceIndex)
+                else
+                    npc.customAnimation = nil
+                    customData.animation = "auto"
                 end
             else
                 npc.customAnimation = nil
