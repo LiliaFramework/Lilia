@@ -34,10 +34,11 @@ function MODULE:StoreSpawns(spawns)
     return deferred.resolve(true)
 end
 
-local function SpawnPlayer(client)
+local function SpawnPlayer(client, isLoadout)
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
+    if isLoadout then return end
     local posData = character:getLastPos()
     if posData and posData.map and posData.map:lower() == game.GetMap():lower() then
         if posData.pos and isvector(posData.pos) then client:SetPos(posData.pos) end
@@ -116,8 +117,7 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
-    local InVehicle = IsValid(client:GetVehicle())
-    if not InVehicle and client:Alive() then
+    if client:Alive() then
         local lastPosData = {
             pos = client:GetPos(),
             ang = client:EyeAngles(),
@@ -184,5 +184,5 @@ function MODULE:PlayerSpawn(client)
     client:SetDSP(0, false)
 end
 
-hook.Add("PostPlayerLoadedChar", "liaSpawns", SpawnPlayer)
-hook.Add("PostPlayerLoadout", "liaSpawns", SpawnPlayer)
+hook.Add("PostPlayerLoadedChar", "liaSpawns", function(client) SpawnPlayer(client, false) end)
+hook.Add("PostPlayerLoadout", "liaSpawns", function(client) SpawnPlayer(client, true) end)
