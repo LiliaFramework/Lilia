@@ -30,7 +30,7 @@
             return
         end
 
-        target:requestBinaryQuestion(L("joinFactionPrompt"), L("yes"), L("no"), false, function(choice)
+        target:requestBinaryQuestion("Join Faction", L("joinFactionPrompt"), L("yes"), L("no"), function(choice)
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return
@@ -74,7 +74,7 @@ lia.playerinteract.addInteraction("inviteToClass", {
             return
         end
 
-        target:requestBinaryQuestion(L("joinClassPrompt"), L("yes"), L("no"), false, function(choice)
+        target:requestBinaryQuestion("Join Class", L("joinClassPrompt"), L("yes"), L("no"), function(choice)
             if choice ~= 0 then
                 client:notifyInfoLocalized("inviteDeclined")
                 return

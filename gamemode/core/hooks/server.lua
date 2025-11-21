@@ -158,7 +158,8 @@ function GM:CharLoaded(id)
         local client = character:getPlayer()
         if IsValid(client) then
             local uniqueID = "liaSaveChar" .. client:SteamID64()
-            timer.Create(uniqueID, lia.config.get("CharacterDataSaveInterval"), 0, function()
+            local saveInterval = lia.config.get("CharacterDataSaveInterval")
+            timer.Create(uniqueID, saveInterval, 0, function()
                 if IsValid(client) and client:getChar() then
                     client:getChar():save()
                 else
@@ -578,7 +579,6 @@ function GM:PlayerInitialSpawn(client)
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
-        lia.swepeditor.sync(client)
     end)
 
     hook.Run("PostPlayerInitialSpawn", client)
@@ -814,7 +814,20 @@ function GM:LoadData()
                 end
 
                 createdEnt:Activate()
-                hook.Run("OnEntityLoaded", createdEnt, ent.data)
+                local loadData = table.Copy(ent)
+                if cls == "lia_npc" and ent.data and istable(ent.data) then
+                    if ent.data.uniqueID then loadData.uniqueID = ent.data.uniqueID end
+                    if ent.data.npcName then loadData.npcName = ent.data.npcName end
+                    loadData.data = {
+                        customData = ent.data.customData
+                    }
+                elseif ent.data and istable(ent.data) and next(ent.data) then
+                    for k, v in pairs(ent.data) do
+                        loadData[k] = v
+                    end
+                end
+
+                hook.Run("OnEntityLoaded", createdEnt, loadData)
             until true
         end
     end)
@@ -1084,8 +1097,9 @@ function GM:OnEntityLoaded(ent, data)
         ent.uniqueID = data.uniqueID
         ent.NPCName = data.npcName or "NPC"
         local npcData = lia.dialog.getNPCData(data.uniqueID)
+        local hasCustomModel = data.data and data.data.customData and data.data.customData.model and data.data.customData.model ~= ""
         if npcData then
-            ent:SetModel("models/Barney.mdl")
+            if not hasCustomModel then ent:SetModel("models/Barney.mdl") end
             if npcData.BodyGroups and istable(npcData.BodyGroups) then
                 for bodygroup, value in pairs(npcData.BodyGroups) do
                     local bgIndex = ent:FindBodygroupByName(bodygroup)
@@ -1108,7 +1122,19 @@ function GM:OnEntityLoaded(ent, data)
             end
         end
 
-        if data.data and data.data.customData and data.data.customData.animation and data.data.customData.animation ~= "auto" then ent.customAnimation = data.data.customData.animation end
+        if data.data and data.data.customData and data.data.customData.animation and data.data.customData.animation ~= "auto" then
+            local sequenceIndex = ent:LookupSequence(data.data.customData.animation)
+            if sequenceIndex >= 0 then
+                ent.customAnimation = data.data.customData.animation
+                ent:ResetSequence(sequenceIndex)
+            else
+                ent.customAnimation = nil
+                data.data.customData.animation = "auto"
+            end
+        else
+            ent.customAnimation = nil
+        end
+
         ent:setNetVar("uniqueID", data.uniqueID)
         ent:setNetVar("NPCName", ent.NPCName)
         if not ent.NPCName or ent.NPCName == "" then ent.NPCName = ent:getNetVar("NPCName", "NPC") end

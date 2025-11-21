@@ -7,7 +7,6 @@
     Overview:
         The bars library provides a comprehensive system for creating and managing dynamic progress bars in the Lilia framework. It handles the creation, rendering, and lifecycle management of various types of bars including health, armor, and custom progress indicators. The library operates primarily on the client side, providing smooth animated transitions between bar values and intelligent visibility management based on value changes and user preferences. It includes built-in health and armor bars, custom action progress displays, and a flexible system for adding custom bars with priority-based ordering. The library ensures consistent visual presentation across all bar types while providing hooks for customization and integration with other framework components.
 ]]
-local surfaceSetDrawColor, surfaceDrawRect, surfaceDrawOutlinedRect = surface.SetDrawColor, surface.DrawRect, surface.DrawOutlinedRect
 lia.bar = lia.bar or {}
 lia.bar.delta = lia.bar.delta or {}
 lia.bar.values = lia.bar.values or {}
@@ -215,10 +214,7 @@ function lia.bar.remove(identifier)
 end
 
 local function PaintPanel(x, y, w, h)
-    surfaceSetDrawColor(0, 0, 0, 255)
-    surfaceDrawOutlinedRect(x, y, w, h)
-    surfaceSetDrawColor(0, 0, 0, 150)
-    surfaceDrawRect(x + 1, y + 1, w - 2, h - 2)
+    lia.derma.rect(x, y, w, h):Rad(4):Color(Color(0, 0, 0, 150)):Draw()
 end
 
 --[[
@@ -285,8 +281,7 @@ function lia.bar.drawBar(x, y, w, h, pos, max, color)
     local usable = math.max(w - 6, 0)
     local fill = usable * pos / max
     PaintPanel(x, y, w + 6, h)
-    surfaceSetDrawColor(color.r, color.g, color.b)
-    surfaceDrawRect(x + 3, y + 3, fill, h - 6)
+    if fill > 0 then lia.derma.rect(x + 3, y + 3, fill, h - 6):Rad(3):Color(color):Draw() end
 end
 
 --[[
@@ -345,28 +340,33 @@ end
         ```
 ]]
 function lia.bar.drawAction(text, duration)
+    if IsValid(lia.gui.actionPanel) then lia.gui.actionPanel:Remove() end
     local startTime, endTime = CurTime(), CurTime() + duration
-    hook.Remove("HUDPaint", "liaBarDrawAction")
-    hook.Add("HUDPaint", "liaBarDrawAction", function()
+    local w, h = ScrW() * 0.35, 80
+    local x, y = ScrW() * 0.5 - w * 0.5, ScrH() * 0.725 - h * 0.5
+    lia.gui.actionPanel = vgui.Create("liaProgressBar")
+    lia.gui.actionPanel:SetPos(x, y)
+    lia.gui.actionPanel:SetSize(w, h)
+    lia.gui.actionPanel:SetAsActionBar(true)
+    lia.gui.actionPanel:SetText(text)
+    lia.gui.actionPanel:SetBarColor(lia.config.get("Color"))
+    lia.gui.actionPanel:SetProgress(startTime, endTime)
+    lia.gui.actionPanel:SetFraction(0)
+    lia.gui.actionPanel.Think = function(self)
         local curTime = CurTime()
         if curTime >= endTime then
-            hook.Remove("HUDPaint", "liaBarDrawAction")
+            self:Remove()
+            lia.gui.actionPanel = nil
             return
         end
 
         local frac = 1 - math.TimeFraction(startTime, endTime, curTime)
-        local w, h = ScrW() * 0.35, 28
-        local x, y = ScrW() * 0.5 - w * 0.5, ScrH() * 0.725 - h * 0.5
-        lia.util.drawBlurAt(x, y, w, h)
-        PaintPanel(x, y, w, h)
-        surfaceSetDrawColor(lia.config.get("Color"))
-        surfaceDrawRect(x + 4, y + 4, w * frac - 8, h - 8)
-        surfaceSetDrawColor(200, 200, 200, 20)
-        surface.SetMaterial(lia.util.getMaterial("vgui/gradient-d"))
-        surface.DrawTexturedRect(x + 4, y + 4, w * frac - 8, h - 8)
-        draw.SimpleText(text, "LiliaFont.25", x + 2, y - 22, Color(20, 20, 20))
-        draw.SimpleText(text, "LiliaFont.25", x, y - 24, Color(240, 240, 240))
-    end)
+        self:SetFraction(frac)
+    end
+
+    lia.gui.actionPanel:MakePopup()
+    lia.gui.actionPanel:SetKeyboardInputEnabled(false)
+    lia.gui.actionPanel:SetMouseInputEnabled(false)
 end
 
 --[[
@@ -438,7 +438,7 @@ function lia.bar.drawAll()
         return a.priority < b.priority
     end)
 
-    local w, h = ScrW() * 0.35, 14
+    local w, h = ScrW() * 0.35, 18
     local x, y = 4, 4
     local deltas = lia.bar.delta
     local update = FrameTime() * 0.6

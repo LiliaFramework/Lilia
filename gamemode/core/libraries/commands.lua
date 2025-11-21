@@ -1946,7 +1946,7 @@ lia.command.add("demorequests", {
     onRun = function(client)
         if SERVER then
             client:notifyInfoLocalized("openingDemo")
-            client:requestBinaryQuestion(L("demoQuestion"), L("yesShowMe"), L("noThanks"), false, function(confirmed)
+            client:requestBinaryQuestion("UI Demo", L("demoQuestion"), L("yesShowMe"), L("noThanks"), function(confirmed)
                 if confirmed then
                     client:requestDropdown(L("demoDropdownTitle"), L("chooseColor"), {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected)
                         if selected ~= nil then
@@ -5251,6 +5251,11 @@ lia.command.add("trunk", {
         local entity = client:getTracedEntity()
         local maxDistance = 128
         local openTime = 0.7
+        if not IsValid(entity) then
+            client:notifyErrorLocalized("notLookingAtVehicle")
+            return
+        end
+
         if hook.Run("IsSuitableForTrunk", entity) == false then
             client:notifyErrorLocalized("notLookingAtVehicle")
             return
@@ -5263,6 +5268,11 @@ lia.command.add("trunk", {
 
         client.liaStorageEntity = entity
         client:setAction(L("openingTrunk"), openTime, function()
+            if not IsValid(entity) then
+                client.liaStorageEntity = nil
+                return
+            end
+
             if client:GetPos():Distance(entity:GetPos()) > maxDistance then
                 client.liaStorageEntity = nil
                 return

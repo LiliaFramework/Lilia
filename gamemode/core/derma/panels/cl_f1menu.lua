@@ -15,10 +15,6 @@ function PANEL:Init()
     canvas.Paint = function() end
     self.content = canvas
     hook.Run("LoadCharInformation")
-    for _, module in pairs(lia.module.list) do
-        if module.LoadCharInformation then module:LoadCharInformation() end
-    end
-
     hook.Add("OnThemeChanged", self, self.OnThemeChanged)
     local function tryGenerate()
         if not IsValid(self) then return end
@@ -90,20 +86,22 @@ function PANEL:CreateFillableBarWithBackgroundAndLabel(parent, name, labelText, 
     lbl:DockMargin(8, 0, 10, 0)
     lbl:SetContentAlignment(5)
     lbl:SetTextColor(lia.color.theme.text or Color(210, 235, 235))
-    local bar = entry:Add("DPanel")
+    local bar = entry:Add("liaProgressBar")
     bar:Dock(FILL)
     bar:DockMargin(0, 6, 8, 6)
-    bar.Paint = function(_, w, h)
+    bar:SetBarColor(lia.color.theme.theme or lia.config.get("Color"))
+    bar.Think = function(barSelf)
         local mn = isfunction(minFunc) and minFunc() or tonumber(minFunc) or 0
         local mx = isfunction(maxFunc) and maxFunc() or tonumber(maxFunc) or 1
         local val = isfunction(valueFunc) and valueFunc() or tonumber(valueFunc) or 0
         local frac = mx > mn and math.Clamp((val - mn) / (mx - mn), 0, 1) or 0
-        lia.derma.rect(0, 0, w, h):Rad(6):Color(lia.color.theme.focus_panel):Shape(lia.derma.SHAPE_IOS):Draw()
-        if frac > 0 then lia.derma.rect(0, 0, w * frac, h):Rad(6):Color(lia.color.theme.theme):Shape(lia.derma.SHAPE_IOS):Draw() end
+        barSelf:SetFraction(frac)
         local text = L("barProgress", math.Round(val), math.Round(mx))
-        draw.SimpleText(text, "LiliaFont.17", w / 2, h / 2, lia.color.theme.text or Color(210, 235, 235), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        barSelf:SetText(text)
     end
 
+    local originalPaint = bar.Paint
+    bar.Paint = function(barSelf, w, h) originalPaint(barSelf, w, h) end
     parent[name] = bar
     return bar
 end

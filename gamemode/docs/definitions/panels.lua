@@ -228,7 +228,7 @@ liaDoorMenu
     When Used:
         For loading bars, progress indicators, or value displays
 ]]
-liaDProgressBar
+liaProgressBar
 --[[
     Purpose:
         Text input entry field
@@ -421,6 +421,7 @@ liaSheet
         For sliding panels or animated content
 ]]
 liaSlideBox
+liaSlider
 --[[
     Purpose:
         Spawn icon display

@@ -14,6 +14,7 @@ lia = lia or {
 }
 
 lia.reloadInProgress = false
+lia.isReloading = false
 local FilesToLoad = {
     {
         path = "lilia/gamemode/core/libraries/net.lua",
@@ -138,10 +139,6 @@ local FilesToLoad = {
     {
         path = "lilia/gamemode/core/libraries/thirdperson.lua",
         realm = "client"
-    },
-    {
-        path = "lilia/gamemode/core/libraries/swepeditor.lua",
-        realm = "shared"
     },
     {
         path = "lilia/gamemode/core/libraries/currency.lua",
@@ -957,6 +954,7 @@ end
     ```
 ]]
 function lia.bootstrap(section, msg)
+    if lia.isReloading and section ~= "HotReload" then return end
     MsgC(Color(83, 143, 239), "[Lilia] ", "[" .. L("logBootstrap") .. "] ")
     MsgC(Color(0, 255, 0), "[" .. section .. "] ")
     MsgC(Color(255, 255, 255), tostring(msg), "\n")
@@ -1279,6 +1277,7 @@ function lia.loader.initializeGamemode(isReload)
         timer.Remove("liaReloadPlayerInteractSync")
         timer.Remove("liaReloadComplete")
         lia.reloadInProgress = true
+        lia.isReloading = true
     end
 
     if isReload or not hasInitializedModules then
@@ -1287,19 +1286,20 @@ function lia.loader.initializeGamemode(isReload)
     end
 
     lia.faction.formatModelData()
-    if SERVER then
-        if isReload then
-            local adminHasChanges = lia.administrator.hasChanges()
-            local playerInteractHasChanges = lia.playerinteract.hasChanges()
-            local configHasChanges = lia.config.hasChanges()
-            timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
-            timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.administrator.sync() end end)
-            timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
-            timer.Create("liaReloadComplete", 5.0, 1, function() lia.reloadInProgress = false end)
-        end
+    if SERVER and isReload then
+        local adminHasChanges = lia.administrator.hasChanges()
+        local playerInteractHasChanges = lia.playerinteract.hasChanges()
+        local configHasChanges = lia.config.hasChanges()
+        timer.Create("liaReloadConfigSync", 0.5, 1, function() if configHasChanges then lia.config.send() end end)
+        timer.Create("liaReloadAdminSync", 2.0, 1, function() if adminHasChanges then lia.administrator.sync() end end)
+        timer.Create("liaReloadPlayerInteractSync", 3.5, 1, function() if playerInteractHasChanges then lia.playerinteract.sync() end end)
+        timer.Create("liaReloadComplete", 5.0, 1, function() lia.reloadInProgress = false end)
     end
 
-    if isReload then lia.bootstrap("HotReload", L("gamemodeHotreloadedSuccessfully")) end
+    if isReload then
+        lia.bootstrap("HotReload", L("gamemodeHotreloadedSuccessfully"))
+        lia.isReloading = false
+    end
 end
 
 function GM:Initialize()

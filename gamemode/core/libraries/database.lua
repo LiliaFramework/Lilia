@@ -436,10 +436,6 @@ CREATE TABLE IF NOT EXISTS lia_data (
     data text,
     PRIMARY KEY (gamemode, map)
 );
-CREATE TABLE IF NOT EXISTS lia_swepeditor (
-    class TEXT PRIMARY KEY,
-    data TEXT
-);
 ]], done)
     hook.Run("OnLoadTables")
 end

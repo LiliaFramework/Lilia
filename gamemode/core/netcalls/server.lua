@@ -19,24 +19,6 @@
     end
 end)
 
-net.Receive("liaSwepeditorLoad", function(_, ply)
-    local weaponClass = net.ReadString()
-    if weaponClass and weaponClass ~= "" then
-        lia.db.query(string.format("SELECT * FROM lia_swepeditor WHERE class = '%s'", string.gsub(weaponClass, "'", "''")), function(results)
-            local dataToSend = {}
-            if results and results[1] then
-                local saveData = util.JSONToTable(results[1].data)
-                if saveData then dataToSend = lia.swepeditor.NetworkData[weaponClass] or saveData end
-            end
-
-            net.Start("liaSwepeditorLoad")
-            net.WriteTable(dataToSend)
-            net.WriteString(weaponClass)
-            net.Send(ply)
-        end)
-    end
-end)
-
 net.Receive("liaStringRequest", function(_, client)
     local id = net.ReadUInt(32)
     local value = net.ReadString()
@@ -823,54 +805,6 @@ net.Receive("liaCommandData", function(_, client)
     end
 end)
 
-net.Receive("liaSwepeditorUpdate", function(_, ply)
-    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
-    local updateData = net.ReadTable()
-    local class = net.ReadString()
-    local hasChanges = false
-    for k, v in pairs(updateData) do
-        lia.swepeditor.NetworkData[class] = lia.swepeditor.NetworkData[class] or {}
-        if lia.swepeditor.NetworkData[class][k] ~= v then
-            lia.swepeditor.adjustValue(class, k, v)
-            lia.swepeditor.NetworkData[class][k] = v
-            hasChanges = true
-        end
-    end
-
-    if not hasChanges then return end
-    print(ply:Name() .. " has updated the variables of: " .. class)
-    ply:ChatPrint(string.upper(class) .. " has been successfully updated!")
-    for _, v in player.Iterator() do
-        if v:HasWeapon(class) then
-            v:StripWeapon(class)
-            v:Give(class)
-            v:SelectWeapon(class)
-        end
-    end
-
-    if lia.swepeditor.NetworkData[class] then
-        local jsonData = util.TableToJSON(lia.swepeditor.NetworkData[class])
-        lia.db.upsert({
-            class = class,
-            data = jsonData
-        }, "swepeditor")
-    end
-
-    for _, v in player.Iterator() do
-        if v ~= ply and lia.swepeditor.NetworkData[class] then
-            net.Start("liaSwepeditorLoad")
-            net.WriteTable(lia.swepeditor.NetworkData[class])
-            net.WriteString(class)
-            net.Send(v)
-        end
-    end
-end)
-
-net.Receive("liaSwepeditorRequestAll", function(_, ply)
-    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
-    lia.swepeditor.sync(ply)
-end)
-
 local chunkTime = 0.05
 local function sendChunk(ply, s, sid, idx)
     if not IsValid(ply) then
@@ -916,59 +850,6 @@ net.Receive("liaBigTableAck", function(_, ply)
         local ss = qq[sid]
         if not ss then return end
         sendChunk(ply, ss, sid, ss.idx + 1)
-    end)
-end)
-
-net.Receive("liaSwepeditorReset", function(_, ply)
-    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
-    local class = net.ReadString()
-    local weapon = lia.swepeditor.DefaultSweps[class]
-    if weapon then
-        local stored = weapons.GetStored(class)
-        if stored then
-            for k, v in pairs(weapon) do
-                stored[k] = v
-            end
-        end
-    end
-
-    lia.db.delete("swepeditor", {
-        class = class
-    })
-
-    lia.swepeditor.NetworkData[class] = nil
-    for _, v in player.Iterator() do
-        if v:HasWeapon(class) then
-            v:StripWeapon(class)
-            v:Give(class)
-            v:SelectWeapon(class)
-        end
-    end
-end)
-
-net.Receive("liaSwepeditorResetAll", function(_, ply)
-    if not IsValid(ply) or not ply:hasPrivilege("canEditWeapons") then return end
-    lia.db.query("DELETE FROM lia_swepeditor", function()
-        for class, weapon in pairs(lia.swepeditor.DefaultSweps) do
-            local stored = weapons.GetStored(class)
-            if stored then
-                for k, v in pairs(weapon) do
-                    stored[k] = v
-                end
-            end
-
-            lia.swepeditor.NetworkData[class] = nil
-        end
-
-        for _, v in player.Iterator() do
-            for weaponClass, _ in pairs(lia.swepeditor.DefaultSweps) do
-                if v:HasWeapon(weaponClass) then
-                    v:StripWeapon(weaponClass)
-                    v:Give(weaponClass)
-                    v:SelectWeapon(weaponClass)
-                end
-            end
-        end
     end)
 end)
 

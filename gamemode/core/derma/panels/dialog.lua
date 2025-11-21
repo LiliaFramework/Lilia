@@ -41,7 +41,25 @@ function PANEL:Init()
     self.content:DockMargin(6, 6, 6, 6)
     self.content:DockPadding(6, 6, 6, 6)
     self.content:SetPaintBackground(false)
-    self.responseText = self.content:Add("DLabel")
+    self.dialogOptions = self.content:Add("liaScrollPanel")
+    self.dialogOptions:Dock(BOTTOM)
+    self.dialogOptions:SetTall(0)
+    self.dialogOptions:SetZPos(4)
+    self.dialogOptions:DockMargin(0, 0, 0, 0)
+    self.dialogOptions:DockPadding(2, 2, 2, 2)
+    self.responseScroll = self.content:Add("liaScrollPanel")
+    self.responseScroll:Dock(FILL)
+    self.responseScroll:DockMargin(0, 0, 0, 8)
+    self.responseScroll:DockPadding(2, 2, 2, 2)
+    local canvas = self.dialogOptions:GetCanvas()
+    if IsValid(canvas) and canvas.SizeToChildren then
+        canvas.PerformLayout = function(canvasPanel)
+            if canvasPanel.BaseClass and canvasPanel.BaseClass.PerformLayout then canvasPanel.BaseClass.PerformLayout(canvasPanel) end
+            canvasPanel:SizeToChildren(false, true)
+        end
+    end
+
+    self.responseText = self.responseScroll:Add("DLabel")
     self.responseText:Dock(TOP)
     self.responseText:SetWrap(true)
     self.responseText:SetAutoStretchVertical(true)
@@ -49,16 +67,24 @@ function PANEL:Init()
     self.responseText:SetTextColor(self:GetSpeakerColor(false))
     self.responseText:SetText("")
     self.responseText:SetTall(0)
-    self.responseText:DockMargin(0, 0, 0, 16)
     self.responseText:SetContentAlignment(4)
-    self.dialogOptions = self.content:Add("liaScrollPanel")
-    self.dialogOptions:Dock(FILL)
-    self.dialogOptions:SetZPos(4)
-    self.dialogOptions:DockPadding(2, 2, 2, 2)
+    self.responseText.PerformLayout = function(label)
+        if IsValid(label:GetParent()) then
+            local parentW = label:GetParent():GetWide()
+            if parentW > 0 and label:GetWide() ~= parentW then label:SetWide(parentW) end
+        end
+
+        if label.BaseClass and label.BaseClass.PerformLayout then label.BaseClass.PerformLayout(label) end
+    end
+
     self.npcDisplayName = "Dialog"
     self.lastResponseText = ""
     self.pendingResponse = false
     self.hasHistoryMessage = false
+    self.conversationStack = {}
+end
+
+function PANEL:Think()
 end
 
 function PANEL:SetDialogText(text)
@@ -226,6 +252,20 @@ function PANEL:UpdateResponseText(text)
     self.responseText:SetText(text or "")
     self.responseText:InvalidateLayout(true)
     self.responseText:SizeToChildren(false, true)
+    if IsValid(self.responseScroll) then
+        local scrollBar = self.responseScroll:GetVBar()
+        if IsValid(scrollBar) then scrollBar:SetScroll(0) end
+        timer.Simple(0.01, function()
+            if IsValid(self) and IsValid(self.responseScroll) and IsValid(self.responseText) and IsValid(self.content) then
+                local textHeight = self.responseText:GetTall()
+                local contentH = self.content:GetTall()
+                local maxHeight = math.max(contentH * 0.7, 150)
+                local minHeight = 50
+                local targetHeight = math.min(math.max(textHeight + 8, minHeight), maxHeight)
+                if self.responseScroll:GetTall() ~= targetHeight then self.responseScroll:SetTall(targetHeight) end
+            end
+        end)
+    end
 end
 
 function PANEL:DisplayResponsePayload(payload)
@@ -292,6 +332,24 @@ end
 
 function PANEL:PerformLayout(w, h)
     self.BaseClass.PerformLayout(self, w, h)
+    if IsValid(self.content) and IsValid(self.dialogOptions) then
+        local contentH = self.content:GetTall()
+        local canvas = self.dialogOptions:GetCanvas()
+        local buttonsContentHeight = 0
+        if IsValid(canvas) then
+            canvas:SizeToChildren(false, true)
+            buttonsContentHeight = canvas:GetTall()
+        end
+
+        local minButtonsHeight = 100
+        local maxButtonsHeight = math.max(contentH * 0.5, minButtonsHeight)
+        local targetButtonsHeight = math.Clamp(buttonsContentHeight + 4, minButtonsHeight, maxButtonsHeight)
+        local minTextHeight = math.max(contentH * 0.3, 150)
+        local availableForButtons = contentH - minTextHeight - 8
+        targetButtonsHeight = math.min(targetButtonsHeight, math.max(availableForButtons, minButtonsHeight))
+        if self.dialogOptions:GetTall() ~= targetButtonsHeight then self.dialogOptions:SetTall(targetButtonsHeight) end
+    end
+
     if IsValid(self.dialogHistoryFrame) then
         local dialogX, y = self:GetPos()
         local historyW = ScrW() * 0.2
@@ -312,7 +370,7 @@ function PANEL:OnRemove()
     if lia.dialog.historyFrame == self.dialogHistoryFrame then lia.dialog.historyFrame = nil end
 end
 
-function PANEL:AddDialogOptions(options, npc)
+function PANEL:AddDialogOptions(options, npc, skipBackButton)
     local ply = LocalPlayer()
     if isfunction(options) then options = options(ply, npc) end
     local validOptions = {}
@@ -323,6 +381,16 @@ function PANEL:AddDialogOptions(options, npc)
         })
     end
 
+    if not skipBackButton and #self.conversationStack > 0 then
+        table.insert(validOptions, {
+            label = "Back",
+            info = {
+                Response = "",
+                isAutoBack = true
+            }
+        })
+    end
+
     table.sort(validOptions, function(a, b)
         local labelA = a.label:lower()
         local labelB = b.label:lower()
@@ -330,6 +398,10 @@ function PANEL:AddDialogOptions(options, npc)
         local bIsAdmin = labelB:find("^%[admin%]") or labelB:find("^%[admin%]:")
         if aIsAdmin and not bIsAdmin then return true end
         if bIsAdmin and not aIsAdmin then return false end
+        local aIsBack = (labelA == "back") and a.info.isAutoBack
+        local bIsBack = (labelB == "back") and b.info.isAutoBack
+        if aIsBack and not bIsBack then return true end
+        if bIsBack and not aIsBack then return false end
         local aIsGoodbye = (labelA == "goodbye") or (labelA == "bye") or (labelA == "farewell")
         local bIsGoodbye = labelB == "goodbye" or labelB == "bye" or labelB == "farewell"
         if aIsGoodbye and not bIsGoodbye then return false end
@@ -349,6 +421,17 @@ function PANEL:AddDialogOptions(options, npc)
         choiceBtn.DoClick = function()
             local isGoodbye = string.lower(label) == "goodbye" or string.lower(label) == "bye" or string.lower(label) == "farewell" or string.lower(label) == "close"
             local isBack = string.lower(label) == "back" or string.lower(label) == "return"
+            if isBack and info.isAutoBack then
+                self:AppendDialogLine(label, true)
+                if #self.conversationStack > 0 then
+                    local previousLevel = table.remove(self.conversationStack)
+                    self:ClearDialogOptions()
+                    self:AddDialogOptions(previousLevel.options, previousLevel.npc, false)
+                    return
+                end
+                return
+            end
+
             self:AppendDialogLine(label, true)
             if isGoodbye then
                 self.closingForGoodbye = true
@@ -388,8 +471,13 @@ function PANEL:AddDialogOptions(options, npc)
                 local nextOptions = info.options
                 if isfunction(nextOptions) then nextOptions = nextOptions(ply, npc) end
                 if nextOptions and istable(nextOptions) then
+                    table.insert(self.conversationStack, {
+                        options = options,
+                        npc = npc
+                    })
+
                     self:ClearDialogOptions()
-                    self:AddDialogOptions(nextOptions, npc)
+                    self:AddDialogOptions(nextOptions, npc, false)
                     return
                 end
             end
@@ -403,6 +491,8 @@ function PANEL:AddDialogOptions(options, npc)
             return
         end
     end
+
+    timer.Simple(0, function() if IsValid(self) and IsValid(self.dialogOptions) then self:InvalidateLayout(true) end end)
 end
 
 function PANEL:LoadNPCDialog(convoSettings, npc)
@@ -410,9 +500,10 @@ function PANEL:LoadNPCDialog(convoSettings, npc)
     local dialogText = convoSettings.Greeting or convoSettings.text or convoSettings.description or convoSettings.dialog or ""
     self.activeNPC = npc
     self.activeConversation = convoSettings
+    self.conversationStack = {}
     self:SetDialogText(dialogText)
     self:ClearDialogOptions()
-    if convoSettings.Conversation then self:AddDialogOptions(convoSettings.Conversation, npc) end
+    if convoSettings.Conversation then self:AddDialogOptions(convoSettings.Conversation, npc, false) end
 end
 
 vgui.Register("DialogMenu", PANEL, "liaFrame")

@@ -1816,7 +1816,7 @@ lia.derma.baseFuncs = {
         return self
     end,
     Material = function(self, mat)
-        if mat and mat:IsValid() then
+        if mat then
             local tex = mat:GetTexture("$basetexture")
             if tex then TEXTURE = tex end
         end
@@ -4074,7 +4074,7 @@ end
 function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noText)
     if IsValid(lia.gui.menuRequestBinary) then lia.gui.menuRequestBinary:Remove() end
     local frame = vgui.Create("liaFrame")
-    frame:SetSize(350, 180)
+    frame:SetSize(450, 220)
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
@@ -4085,7 +4085,7 @@ function lia.derma.requestBinaryQuestion(title, question, callback, yesText, noT
     questionLabel:Dock(TOP)
     questionLabel:DockMargin(20, 40, 20, 20)
     questionLabel:SetText(question or L("areYouSure"))
-    questionLabel:SetFont("LiliaFont.25")
+    questionLabel:SetFont("LiliaFont.18")
     questionLabel:SetTextColor(lia.color.theme.text or color_white)
     questionLabel:SetContentAlignment(5)
     questionLabel:SizeToContents()

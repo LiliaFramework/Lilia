@@ -32,15 +32,19 @@
         local delay = lia.config.get("TimeToEnterVehicle", 5)
         if entity:isSimfphysCar() and delay > 0 then
             entity.IsBeingEntered = true
-            client:setAction(L("enteringVehicle"), delay)
-            client:doStaredAction(entity, function()
-                if IsValid(entity) then
+            client:setAction(L("enteringVehicle"), delay, function()
+                if IsValid(entity) and IsValid(client) then
+                    local distance = client:GetPos():Distance(entity:GetPos())
+                    if distance <= 150 then
+                        entity.IsBeingEntered = false
+                        entity:SetPassenger(client)
+                    else
+                        entity.IsBeingEntered = false
+                        client:notifyWarningLocalized("tooFarAway")
+                    end
+                elseif IsValid(entity) then
                     entity.IsBeingEntered = false
-                    entity:SetPassenger(client)
                 end
-            end, delay, function()
-                if IsValid(entity) then entity.IsBeingEntered = false end
-                if IsValid(client) then client:stopAction() end
             end)
         end
         return true

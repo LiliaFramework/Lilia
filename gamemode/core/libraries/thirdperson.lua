@@ -3,8 +3,8 @@ local clmp = math.Clamp
 crouchFactor = 0
 local diff, fm, sm
 local maxValues = {
-    height = 30,
-    horizontal = 30,
+    height = 90,
+    horizontal = 90,
     distance = 100
 }
 

@@ -555,20 +555,20 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         local currentValue = character:getAttrib(entry.id) or minValue
         local label = scroll:Add("DLabel")
         label:Dock(TOP)
-        label:DockMargin(10, 3, 10, 5)
+        label:DockMargin(10, 3, 10, -2)
         label:SetFont("LiliaFont.17")
         label:SetTextColor(Color(255, 255, 255))
         label:SetText(entry.attr.name)
         label:SetContentAlignment(5)
         label:SizeToContentsY()
-        local progressBar = scroll:Add("liaDProgressBar")
+        local progressBar = scroll:Add("liaProgressBar")
         progressBar:Dock(TOP)
         progressBar:DockMargin(10, 0, 10, 10)
         progressBar:SetBarColor(entry.attr.color or lia.config.get("Color") or Color(255, 255, 255))
         progressBar:SetFraction(math.Clamp(currentValue / maxValue, 0, 1))
         progressBar:SetText(currentValue .. "/" .. maxValue)
-        progressBar.Font = "LiliaFont.17"
-        progressBar:SetTall(20)
+        progressBar.Font = "LiliaFont.14"
+        progressBar:SetTall(48)
     end
 
     local fx, fy = self.infoFrame:GetPos()
@@ -578,7 +578,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
     local cx = fx + (fw - bw) * 0.5
     local selectText = L("select") .. " " .. L("character")
     if character:isBanned() then selectText = L("permaKilledCharacter") end
-    self.selectBtn = self:Add("liaButton")
+    self.selectBtn = self:Add("liaSmallButton")
     self.selectBtn:SetSize(bw, bh)
     self.selectBtn:SetPos(cx, fy + fh + pad)
     self.selectBtn:SetText(selectText)
@@ -592,7 +592,7 @@ function PANEL:createSelectedCharacterInfoPanel(character)
         lia.module.get("mainmenu"):ChooseCharacter(character:getID()):next(function() if IsValid(self) then self:Remove() end end):catch(function(err) if err and err ~= "" then LocalPlayer():notifyErrorLocalized(err) end end)
     end
 
-    self.deleteBtn = self:Add("liaButton")
+    self.deleteBtn = self:Add("liaSmallButton")
     self.deleteBtn:SetSize(bw, bh)
     self.deleteBtn:SetPos(cx, fy + fh + pad + bh + pad)
     self.deleteBtn:SetText(L("delete") .. " " .. L("character"))

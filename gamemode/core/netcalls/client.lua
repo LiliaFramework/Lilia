@@ -1107,7 +1107,7 @@ end)
 net.Receive("liaRemoveFOne", function() if IsValid(lia.gui.menu) then lia.gui.menu:remove() end end)
 local function uiCreate()
     if panel and panel:IsValid() then return end
-    local pad, bh = 10, 30
+    local pad, bh = 10, 40
     local w, h = 400 + pad * 2, 80
     panel = vgui.Create("liaFrame")
     panel:SetSize(w, h)
@@ -1117,7 +1117,7 @@ local function uiCreate()
     panel:SetTitle("")
     panel:SetCenterTitle(L("downloadingWorkshopAddonsTitle"))
     panel:ShowAnimation()
-    panel.bar = vgui.Create("liaDProgressBar", panel)
+    panel.bar = vgui.Create("liaProgressBar", panel)
     panel.bar:SetPos(pad, h * 0.65 - bh / 2)
     panel.bar:SetSize(w - pad * 2, bh)
     panel.bar:SetFraction(0)

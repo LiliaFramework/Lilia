@@ -2000,7 +2000,6 @@ if SERVER then
 
     ensureStructures()
 else
-    local LAST_GROUP
     local categoryMapCache = {}
     local lastCacheGroups = {}
     local function computeCategoryMap(groups)
@@ -2107,7 +2106,6 @@ else
             if data.Staff then types[#types + 1] = "Staff" end
             if data.User then types[#types + 1] = "User" end
             if data.VIP then types[#types + 1] = "VIP" end
-            LAST_GROUP = name
             net.Start("liaGroupsAdd")
             net.WriteTable({
                 name = name,
@@ -2186,123 +2184,9 @@ else
         categoryList:InvalidateLayout(true)
     end
 
-    local function renderGroupInfo(parent, g, groups)
-        parent:Clear()
-        local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[g] ~= nil
-        local editable = not isDefault
-        local bottomTall, bottomMargin = 44, 12
-        local bottom = parent:Add("DPanel")
-        bottom:Dock(BOTTOM)
-        bottom:SetTall(bottomTall)
-        bottom:DockMargin(10, 0, 10, bottomMargin)
-        bottom.Paint = function() end
-        local content = parent:Add("DPanel")
-        content:Dock(FILL)
-        content:DockMargin(0, 0, 0, bottomTall + bottomMargin)
-        content.Paint = function() end
-        local details = content:Add("DPanel")
-        details:Dock(TOP)
-        details:DockMargin(20, 20, 20, 10)
-        details.Paint = function() end
-        details:InvalidateLayout(true)
-        details:SizeToChildren(true, true)
-        local privContainer = content:Add("DPanel")
-        privContainer:Dock(FILL)
-        privContainer:DockMargin(20, 0, 20, 0)
-        privContainer.Paint = function() end
-        buildPrivilegeList(privContainer, g, groups, editable)
-        if editable then
-            local createBtn = bottom:Add("liaMediumButton")
-            local renameBtn = bottom:Add("liaMediumButton")
-            local delBtn = bottom:Add("liaMediumButton")
-            createBtn:SetText(L("create") .. " " .. L("group"))
-            renameBtn:SetText(L("rename") .. " " .. L("group"))
-            delBtn:SetText(L("delete") .. " " .. L("group"))
-            createBtn.DoClick = promptCreateGroup
-            renameBtn.DoClick = function()
-                LocalPlayer():requestString(L("rename") .. " " .. L("group"), L("renameGroupPrompt", g) .. ":", function(txt)
-                    txt = string.Trim(txt or "")
-                    if txt ~= "" and txt ~= g then
-                        net.Start("liaGroupsRename")
-                        net.WriteString(g)
-                        net.WriteString(txt)
-                        net.SendToServer()
-                    end
-                end, g)
-            end
-
-            delBtn.DoClick = function()
-                Derma_Query(L("deleteGroupPrompt", g), L("confirm"), L("yes"), function()
-                    net.Start("liaGroupsRemove")
-                    net.WriteString(g)
-                    net.SendToServer()
-                end, L("no"))
-            end
-
-            bottom.PerformLayout = function(_, w, h)
-                local bw = math.floor(w / 3)
-                createBtn:SetPos(0, 0)
-                createBtn:SetSize(bw, h)
-                renameBtn:SetPos(bw, 0)
-                renameBtn:SetSize(bw, h)
-                delBtn:SetPos(bw * 2, 0)
-                delBtn:SetSize(w - bw * 2, h)
-            end
-        else
-            local addBtn = bottom:Add("liaMediumButton")
-            addBtn:SetText(L("create") .. " " .. L("group"))
-            addBtn.DoClick = promptCreateGroup
-            bottom.PerformLayout = function(_, w, h)
-                addBtn:SetPos(0, 0)
-                addBtn:SetSize(w, h)
-            end
-        end
-    end
-
-    local function buildGroupsUI(panel, groups)
-        panel:Clear()
-        local sheet = panel:Add("DPropertySheet")
-        sheet:Dock(FILL)
-        sheet:DockMargin(10, 10, 10, 10)
-        panel.pages = {}
-        panel.checks = {}
-        lia.gui.usergroups.checks = {}
-        local keys = {}
-        for g in pairs(groups or {}) do
-            keys[#keys + 1] = g
-        end
-
-        table.sort(keys, function(a, b) return a:lower() < b:lower() end)
-        for _, g in ipairs(keys) do
-            local page = sheet:Add("DPanel")
-            page:Dock(FILL)
-            page.Paint = function(pnl, w, h) derma.SkinHook("Paint", "Panel", pnl, w, h) end
-            renderGroupInfo(page, g, groups)
-            sheet:AddSheet(g, page)
-            panel.pages[g] = page
-        end
-
-        if LAST_GROUP and groups[LAST_GROUP] then
-            for _, tab in ipairs(sheet.Items) do
-                if tab.Name == LAST_GROUP then
-                    sheet:SetActiveTab(tab.Tab)
-                    break
-                end
-            end
-        elseif sheet.Items[1] then
-            sheet:SetActiveTab(sheet.Items[1].Tab)
-        end
-    end
-
     lia.net.readBigTable("liaUpdateAdminGroups", function(tbl)
         lia.administrator.groups = tbl
-        if IsValid(lia.gui.usergroups) then
-            if lia.gui.usergroups.groupsList then
-                lia.gui.usergroups.groupsList:SetGroups(tbl)
-            else
-                buildGroupsUI(lia.gui.usergroups, tbl)
-            end
-        end
+        if IsValid(lia.gui.usergroups) and lia.gui.usergroups.refreshTabs then lia.gui.usergroups.refreshTabs() end
     end)
 
     lia.net.readBigTable("liaUpdateAdminPrivileges", function(tbl)
@@ -2318,15 +2202,9 @@ else
         local container = parent:Add("DPanel")
         container:Dock(FILL)
         container.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
-        local groupsList = container:Add("liaUserGroupList")
-        groupsList:Dock(LEFT)
-        groupsList:SetWide(200)
-        groupsList:DockMargin(10, 5, 5, 10)
-        groupsList.buttonType = "liaButton"
-        local groupDetails = container:Add("DPanel")
-        groupDetails:Dock(FILL)
-        groupDetails:DockMargin(5, 5, 10, 10)
-        groupDetails.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
+        local tabs = container:Add("liaTabs")
+        tabs:Dock(FILL)
+        tabs:DockMargin(10, 10, 10, 10)
         local bottom = container:Add("DPanel")
         bottom:Dock(BOTTOM)
         bottom:SetTall(50)
@@ -2344,17 +2222,17 @@ else
         renameBtn:DockMargin(0, 0, 10, 0)
         renameBtn:SetTxt(L("rename") .. " " .. L("group"))
         renameBtn.DoClick = function()
-            local selectedGroup = groupsList:GetSelectedGroup()
-            if not selectedGroup then return end
-            LocalPlayer():requestString(L("rename") .. " " .. L("group"), L("renameGroupPrompt", selectedGroup) .. ":", function(txt)
+            local activeTab = tabs:GetActiveTab()
+            if not activeTab or not activeTab.groupName then return end
+            LocalPlayer():requestString(L("rename") .. " " .. L("group"), L("renameGroupPrompt", activeTab.groupName) .. ":", function(txt)
                 txt = string.Trim(txt or "")
-                if txt ~= "" and txt ~= selectedGroup then
+                if txt ~= "" and txt ~= activeTab.groupName then
                     net.Start("liaGroupsRename")
-                    net.WriteString(selectedGroup)
+                    net.WriteString(activeTab.groupName)
                     net.WriteString(txt)
                     net.SendToServer()
                 end
-            end, selectedGroup)
+            end, activeTab.groupName)
         end
 
         local deleteBtn = vgui.Create("liaButton", bottom)
@@ -2363,35 +2241,47 @@ else
         deleteBtn:DockMargin(0, 0, 10, 0)
         deleteBtn:SetTxt(L("delete") .. " " .. L("group"))
         deleteBtn.DoClick = function()
-            local selectedGroup = groupsList:GetSelectedGroup()
-            if not selectedGroup then return end
-            Derma_Query(L("deleteGroupPrompt", selectedGroup), L("confirm"), L("yes"), function()
+            local activeTab = tabs:GetActiveTab()
+            if not activeTab or not activeTab.groupName then return end
+            Derma_Query(L("deleteGroupPrompt", activeTab.groupName), L("confirm"), L("yes"), function()
                 net.Start("liaGroupsRemove")
-                net.WriteString(selectedGroup)
+                net.WriteString(activeTab.groupName)
                 net.SendToServer()
             end, L("no"))
         end
 
-        local function updateGroupDetails(groupName)
-            if not groupName or not lia.administrator.groups[groupName] then
-                groupDetails:Clear()
-                return
-            end
-
-            groupDetails:Clear()
+        local function createGroupTab(groupName, groups)
+            if not groups[groupName] then return end
+            local tabPanel = vgui.Create("DPanel")
+            tabPanel:Dock(FILL)
+            tabPanel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(12):Color(lia.color.theme.panel[1]):Shape(lia.derma.SHAPE_IOS):Draw() end
             local isDefault = lia.administrator.DefaultGroups and lia.administrator.DefaultGroups[groupName] ~= nil
             local editable = not isDefault
-            local privContainer = groupDetails:Add("DPanel")
+            local privContainer = tabPanel:Add("DPanel")
             privContainer:Dock(FILL)
-            privContainer:DockMargin(20, 0, 20, 20)
+            privContainer:DockMargin(20, 20, 20, 20)
             privContainer.Paint = function() end
-            buildPrivilegeList(privContainer, groupName, lia.administrator.groups, editable)
+            buildPrivilegeList(privContainer, groupName, groups, editable)
+            local tabData = tabs:AddTab(groupName, tabPanel)
+            tabData.groupName = groupName
+            return tabData
         end
 
-        groupsList.OnGroupSelected = function(_, groupName) updateGroupDetails(groupName) end
-        groupsList:SetGroups(lia.administrator.groups)
-        parent.groupsList = groupsList
-        parent.updateGroupDetails = updateGroupDetails
+        local function refreshTabs()
+            tabs:Clear()
+            local groups = lia.administrator.groups or {}
+            local keys = {}
+            for g in pairs(groups) do
+                keys[#keys + 1] = g
+            end
+
+            table.sort(keys, function(a, b) return a:lower() < b:lower() end)
+            for _, groupName in ipairs(keys) do
+                createGroupTab(groupName, groups)
+            end
+        end
+
+        parent.refreshTabs = refreshTabs
     end
 
     hook.Add("PopulateAdminTabs", "liaAdmin", function(pages)
@@ -2405,6 +2295,7 @@ else
                 parent:DockPadding(10, 10, 10, 10)
                 parent.Paint = function(p, w, h) derma.SkinHook("Paint", "Frame", p, w, h) end
                 SetupUserGroupInterface(parent)
+                timer.Simple(0.1, function() if IsValid(parent) and parent.refreshTabs then parent.refreshTabs() end end)
                 net.Start("liaGroupsRequest")
                 net.SendToServer()
             end

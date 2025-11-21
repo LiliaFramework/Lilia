@@ -307,6 +307,10 @@ function PANEL:setActive(state)
         end
 
         hook.Run("StartChat")
+        if IsValid(self.scroll) and #self.list > 0 then
+            local lastPanel = self.list[#self.list]
+            if IsValid(lastPanel) then self.scroll:ScrollToChild(lastPanel) end
+        end
     end
 end
 

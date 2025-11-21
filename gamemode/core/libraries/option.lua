@@ -995,14 +995,14 @@ lia.option.add("thirdPersonHeight", "thirdPersonHeight", "thirdPersonHeightDesc"
     category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
-    max = lia.config.get("MaxThirdPersonHeight", 30),
+    max = lia.config.get("MaxThirdPersonHeight", 90),
 })
 
 lia.option.add("thirdPersonHorizontal", "thirdPersonHorizontal", "thirdPersonHorizontalDesc", 10, nil, {
     category = "categoryThirdPerson",
     min = 0,
     isQuick = true,
-    max = lia.config.get("MaxThirdPersonHorizontal", 30),
+    max = lia.config.get("MaxThirdPersonHorizontal", 90),
 })
 
 lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanceDesc", 50, nil, {

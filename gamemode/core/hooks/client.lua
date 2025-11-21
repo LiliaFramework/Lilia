@@ -321,7 +321,7 @@ function GM:HUDPaint()
                 if info.text and info.position then
                     local drawOptions = {
                         textColor = info.color or Color(255, 255, 255),
-                        font = info.font or "LiliaFont.20"
+                        font = info.font or "LiliaFont.24"
                     }
 
                     if info.backgroundColor then drawOptions.backgroundColor = info.backgroundColor end

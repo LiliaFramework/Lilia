@@ -1141,7 +1141,7 @@ lia.config.add("DataSaveInterval", "dataSaveInterval", 600, nil, {
     max = 3600
 })
 
-lia.config.add("CharacterDataSaveInterval", "characterDataSaveInterval", 300, nil, {
+lia.config.add("CharacterDataSaveInterval", "characterDataSaveInterval", 60, nil, {
     desc = "characterDataSaveIntervalDesc",
     category = "categoryServer",
     type = "Number",
@@ -1290,7 +1290,7 @@ lia.config.add("MaxThirdPersonDistance", "maxThirdPersonDistance", 100, nil, {
     max = 200
 })
 
-lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, {
+lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 90, nil, {
     desc = "maxThirdPersonHorizontalDesc",
     category = "categoryGameplay",
     type = "Number",
@@ -1298,7 +1298,7 @@ lia.config.add("MaxThirdPersonHorizontal", "maxThirdPersonHorizontal", 30, nil, 
     max = 100
 })
 
-lia.config.add("MaxThirdPersonHeight", "maxThirdPersonHeight", 30, nil, {
+lia.config.add("MaxThirdPersonHeight", "maxThirdPersonHeight", 90, nil, {
     desc = "maxThirdPersonHeightDesc",
     category = "categoryGameplay",
     type = "Number",
