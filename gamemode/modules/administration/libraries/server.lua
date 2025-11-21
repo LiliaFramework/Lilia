@@ -713,7 +713,7 @@ function GM:PlayerSpawnProp(client, model)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnProps") or client:hasFlags("e")
     if not canSpawn then
         lia.log.add(client, "spawnDenied", L("prop"), model)
-        client:notifyErrorLocalized("noSpawnPropsPerm")
+        client:notifyErrorLocalized("noSpawnPropsPerm", model)
     end
     return canSpawn
 end
@@ -820,7 +820,7 @@ function GM:PlayerSpawnVehicle(client, model)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnCars") or client:hasFlags("C")
     if not canSpawn then
         lia.log.add(client, "spawnDenied", L("vehicle"), model)
-        client:notifyErrorLocalized("noSpawnVehicles")
+        client:notifyErrorLocalized("noSpawnVehicles", model)
     end
     return canSpawn
 end
@@ -838,11 +838,11 @@ function GM:PlayerNoClip(ply, enabled)
         return false
     end
 
-    ply:SetNoDraw(enabled and true or false)
-    ply:SetNotSolid(enabled and true or false)
-    ply:DrawWorldModel(enabled and false or true)
-    ply:DrawShadow(enabled and false or true)
-    ply:SetNoTarget(enabled and true or false)
+    ply:SetNoDraw(enabled)
+    ply:SetNotSolid(enabled)
+    ply:DrawWorldModel(not enabled)
+    ply:DrawShadow(enabled)
+    ply:SetNoTarget(enabled)
     if enabled then
         ply:GodEnable()
         ply:AddFlags(FL_NOTARGET)
@@ -882,20 +882,20 @@ function GM:PlayerSpawnRagdoll(client)
     return canSpawn
 end
 
-function GM:PlayerSpawnSENT(client)
+function GM:PlayerSpawnSENT(client, class)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSENTs") or client:hasFlags("E")
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("sent"))
-        client:notifyErrorLocalized("noSpawnSents")
+        lia.log.add(client, "spawnDenied", L("sent"), tostring(class))
+        client:notifyErrorLocalized("noSpawnSents", tostring(class))
     end
     return canSpawn
 end
 
-function GM:PlayerSpawnSWEP(client)
+function GM:PlayerSpawnSWEP(client, weapon)
     local canSpawn = client:isStaffOnDuty() or client:hasPrivilege("canSpawnSWEPs") or client:hasFlags("z")
     if not canSpawn then
-        lia.log.add(client, "spawnDenied", L("swep"), tostring(swep))
-        client:notifyErrorLocalized("noSpawnSweps")
+        lia.log.add(client, "spawnDenied", L("swep"), tostring(weapon))
+        client:notifyErrorLocalized("noSpawnSweps", tostring(weapon))
     end
     return canSpawn
 end
