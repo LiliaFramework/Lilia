@@ -43,10 +43,22 @@ function PANEL:AddTab(name, pan, icon, callback)
         callback = callback
     }
 
+    -- Ensure panels exist
+    if not IsValid(self.panel_tabs) then
+        self.panel_tabs = vgui.Create("Panel", self)
+        self.panel_tabs.Paint = nil
+    end
+
+    if not IsValid(self.content) then
+        self.content = vgui.Create("Panel", self)
+        self.content.Paint = nil
+    end
+
     self.tabs[newId].pan:SetParent(self.content)
     self.tabs[newId].pan:Dock(FILL)
     self.tabs[newId].pan:SetVisible(newId == 1 and true or false)
     self:Rebuild()
+    return self.tabs[newId]
 end
 
 function PANEL:AddSheet(label, panel, material)
@@ -120,7 +132,26 @@ function PANEL:OnSizeChanged()
 end
 
 function PANEL:Rebuild()
-    self.panel_tabs:Clear()
+    if not IsValid(self.panel_tabs) then
+        self.panel_tabs = vgui.Create("Panel", self)
+        self.panel_tabs.Paint = nil
+        self.panel_tabs:Dock(TOP)
+        self.panel_tabs:DockMargin(0, 0, 0, 4)
+        self.panel_tabs:SetTall(self.tab_height)
+    else
+        -- Manually remove tab buttons, keeping navigation buttons
+        local children = self.panel_tabs:GetChildren()
+        for _, child in ipairs(children) do
+            if child ~= self.btn_left and child ~= self.btn_right then child:Remove() end
+        end
+    end
+
+    if not IsValid(self.content) then
+        self.content = vgui.Create("Panel", self)
+        self.content.Paint = nil
+        self.content:Dock(FILL)
+    end
+
     if self.tab_style == "modern" then
         local tabWidths = {}
         local baseMargin = 6
@@ -147,8 +178,8 @@ function PANEL:Rebuild()
             btnTab:SetWide(btnWidth)
             btnTab:SetText("")
             btnTab.DoClick = function()
-                self.tabs[self.active_id].pan:SetVisible(false)
-                tab.pan:SetVisible(true)
+                if IsValid(self.tabs[self.active_id]) and IsValid(self.tabs[self.active_id].pan) then self.tabs[self.active_id].pan:SetVisible(false) end
+                if IsValid(tab.pan) then tab.pan:SetVisible(true) end
                 self.active_id = id
                 lia.websound.playButtonSound()
                 self:UpdateActiveTabVisual()
@@ -159,11 +190,13 @@ function PANEL:Rebuild()
                 local dm = lia.derma.dermaMenu()
                 for k, v in pairs(self.tabs) do
                     dm:AddOption(v.name, function()
-                        self.tabs[self.active_id].pan:SetVisible(false)
-                        v.pan:SetVisible(true)
-                        self.active_id = k
-                        self:UpdateActiveTabVisual()
-                        if v.callback then v.callback() end
+                        if IsValid(self.tabs[self.active_id]) and IsValid(self.tabs[self.active_id].pan) then self.tabs[self.active_id].pan:SetVisible(false) end
+                        if IsValid(v.pan) then
+                            v.pan:SetVisible(true)
+                            self.active_id = k
+                            self:UpdateActiveTabVisual()
+                            if v.callback then v.callback() end
+                        end
                     end, v.icon)
                 end
             end
@@ -317,7 +350,7 @@ function PANEL:SetActiveTab(tab)
 end
 
 function PANEL:GetActiveTab()
-    return self.panel_tabs:GetChild(self.active_id)
+    return self.tabs[self.active_id]
 end
 
 function PANEL:CloseTab(tab)
@@ -386,6 +419,25 @@ function PANEL:SetFadeTime()
 end
 
 function PANEL:SetShowIcons()
+end
+
+function PANEL:Clear()
+    -- Clear the tabs array
+    self.tabs = {}
+    -- Reset active tab
+    self.active_id = 1
+    -- Clear navigation state
+    self.scroll_offset = 0
+    self.needs_navigation = false
+    -- Call parent Clear method to remove child panels
+    if self.BaseClass and self.BaseClass.Clear then
+        self.BaseClass.Clear(self)
+    else
+        -- Fallback: manually remove child panels
+        for _, child in ipairs(self:GetChildren()) do
+            child:Remove()
+        end
+    end
 end
 
 vgui.Register("liaTabs", PANEL, "Panel")
