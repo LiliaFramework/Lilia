@@ -56,6 +56,10 @@ function MODULE:StorageItemRemoved()
     self:SaveData()
 end
 
+function MODULE:InventoryItemAdded(inventory)
+    if inventory.isStorage then self:SaveData() end
+end
+
 local PROHIBITED_ACTIONS = {
     [L("equip")] = true,
     [L("unequip")] = true,
@@ -121,9 +125,6 @@ function MODULE:SaveData()
     end
 end
 
-function MODULE:OnDatabaseLoaded()
-    self.loadedData = true
-end
 
 lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
     name = L("storageContainer"),

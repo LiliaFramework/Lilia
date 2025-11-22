@@ -1,6 +1,8 @@
-﻿local MODULE = MODULE
-function ENT:Initialize()
-    self:SetModel("models/props_junk/cardboard_box002b.mdl")
+﻿function ENT:Initialize()
+    -- Only set default model if no model is already set (e.g., from persistence loading)
+    if self:GetModel() == "models/error.mdl" or self:GetModel() == "" then
+        self:SetModel("models/props_junk/cardboard_box002b.mdl")
+    end
     self:SetSolid(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
     self.receivers = {}
@@ -30,7 +32,7 @@ end
 
 function ENT:OnRemove()
     if not self.liaForceDelete then
-        if not lia.entityDataLoaded or not MODULE.loadedData then return end
+        if not lia.entityDataLoaded then return end
         if self.liaIsSafe then return end
         if lia.shuttingDown then return end
     end

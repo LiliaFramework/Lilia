@@ -14383,7 +14383,6 @@ end
         -- High: Complex data loading with validation, error handling, and fallbacks
         function MODULE:LoadData()
             MODULE.customData = {}
-            MODULE.loadedData = false
 
             -- Try loading from database first
             lia.db.query("SELECT * FROM custom_module_data WHERE map = ?", {game.GetMap()}, function(data)
@@ -14405,7 +14404,7 @@ end
                         end
                     end
 
-                    MODULE.loadedData = true
+                    
                     print("[MODULE] Loaded " .. #data .. " data entries from database")
                 else
                     -- Fallback to file system

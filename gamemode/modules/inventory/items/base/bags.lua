@@ -73,11 +73,8 @@ ITEM.functions.Open = {
         if SERVER then
             inventory:sync(client)
         else
-            local panel = inventory:show()
-            if IsValid(panel) then
-                panel:Center()
-                panel:MakePopup()
-            end
+            local myInv = LocalPlayer():getChar():getInv()
+            lia.inventory.showDual(myInv, inventory)
         end
         return false
     end,

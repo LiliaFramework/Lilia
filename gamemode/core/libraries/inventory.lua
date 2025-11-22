@@ -11,6 +11,7 @@ lia.inventory = lia.inventory or {}
 lia.inventory.types = lia.inventory.types or {}
 lia.inventory.storage = lia.inventory.storage or {}
 lia.inventory.instances = lia.inventory.instances or {}
+lia.inventory.dualInventoryOpen = lia.inventory.dualInventoryOpen or false
 local function serverOnly(value)
     return SERVER and value or nil
 end
@@ -1429,5 +1430,120 @@ else
 
         lia.gui[globalName] = panel
         return panel
+    end
+
+    --[[
+    Purpose:
+        Displays two inventory panels side-by-side with linked closing behavior
+
+    When Called:
+        When needing to show two inventories simultaneously (e.g., player inventory with storage, trading, etc.)
+
+    Parameters:
+        inventory1 (table)
+            The first inventory instance to display
+        inventory2 (table)
+            The second inventory instance to display
+        parent (panel, optional)
+            Parent panel to attach the inventory panels to
+
+    Returns:
+        Table containing both created inventory panels {panel1, panel2}, or nil if dual inventory is already open
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+        -- Simple: Show two inventories side-by-side
+        local panels = lia.inventory.showDual(playerInv, storageInv)
+
+    Medium Complexity:
+        -- Medium: Show dual inventories with custom positioning
+        local panels = lia.inventory.showDual(inv1, inv2)
+        if panels and panels[1] and panels[2] then
+            panels[1]:SetTitle("Player Inventory")
+            panels[2]:SetTitle("Storage")
+        end
+
+    High Complexity:
+        -- High: Show dual inventories with comprehensive setup
+        local function showDualInventories(inv1, inv2, customSetup)
+            if not inv1 or not inv1.id or not inv2 or not inv2.id then
+                lia.notify("Invalid inventories provided", "error")
+                return nil
+            end
+
+            local panels = lia.inventory.showDual(inv1, inv2)
+            if not panels then return nil end
+
+            -- Apply custom setup if provided
+            if customSetup then
+                customSetup(panels[1], panels[2])
+            end
+
+            return panels
+        end
+    ]]
+    function lia.inventory.showDual(inventory1, inventory2, parent)
+        -- Validate inventories
+        if not inventory1 or not inventory1.id or not inventory2 or not inventory2.id then
+            lia.error("Invalid inventories provided to showDual")
+            return nil
+        end
+
+        -- Prevent multiple dual inventories from being open simultaneously
+        if lia.inventory.dualInventoryOpen then
+            lia.notify(L("inventoryAlreadyOpen"), "error")
+            return nil
+        end
+
+        -- Show both inventory panels
+        local panel1 = lia.inventory.show(inventory1, parent)
+        local panel2 = lia.inventory.show(inventory2, parent)
+        if not IsValid(panel1) or not IsValid(panel2) then
+            lia.error("Failed to create inventory panels")
+            return nil
+        end
+
+        -- Mark that a dual inventory is now open
+        lia.inventory.dualInventoryOpen = true
+
+        -- Position panels side-by-side
+        local extraWidth = (panel2:GetWide() + 4) / 2
+        panel1:Center()
+        panel2:Center()
+        panel1.x = panel1.x + extraWidth
+        panel2:MoveLeftOf(panel1, 4)
+        -- Enable close buttons
+        panel1:ShowCloseButton(true)
+        panel2:ShowCloseButton(true)
+        -- Link the panels so closing one closes the other
+        local firstToRemove = true
+        local oldOnRemove1 = panel1.OnRemove
+        local oldOnRemove2 = panel2.OnRemove
+        local function exitDualOnRemove(closingPanel)
+            if firstToRemove then
+                firstToRemove = false
+                local otherPanel = (closingPanel == panel1) and panel2 or panel1
+                if IsValid(otherPanel) then otherPanel:Remove() end
+                -- Reset the dual inventory flag when closing
+                lia.inventory.dualInventoryOpen = false
+            end
+
+            -- Call original OnRemove if it exists
+            if closingPanel == panel1 and oldOnRemove1 then
+                oldOnRemove1(closingPanel)
+            elseif closingPanel == panel2 and oldOnRemove2 then
+                oldOnRemove2(closingPanel)
+            end
+        end
+
+        panel1.OnRemove = exitDualOnRemove
+        panel2.OnRemove = exitDualOnRemove
+        -- Run hook for dual inventory setup
+        hook.Run("OnCreateDualInventoryPanels", panel1, panel2, inventory1, inventory2)
+        return {panel1, panel2}
     end
 end

@@ -13,75 +13,50 @@ end
 
 function MODULE:StorageOpen(storage, isCar)
     local client = LocalPlayer()
+    local localInv = client:getChar() and client:getChar():getInv()
+    if not localInv then return self:ExitStorage() end
+    local storageInv
     if isCar then
-        local localInv = client:getChar() and client:getChar():getInv()
-        if not localInv then return self:ExitStorage() end
-        local localInvPanel = localInv:show()
-        local storageInvPanel = storage:show()
-        storageInvPanel:SetTitle(L("carTrunk"))
-        localInvPanel:ShowCloseButton(true)
-        storageInvPanel:ShowCloseButton(true)
-        local extraWidth = (storageInvPanel:GetWide() + 4) / 2
-        localInvPanel:Center()
-        storageInvPanel:Center()
-        localInvPanel.x = localInvPanel.x + extraWidth
-        storageInvPanel:MoveLeftOf(localInvPanel, 4)
-        local firstToRemove = true
-        localInvPanel.oldOnRemove = localInvPanel.OnRemove
-        storageInvPanel.oldOnRemove = storageInvPanel.OnRemove
-        local function exitStorageOnRemove(panel)
-            if firstToRemove then
-                firstToRemove = false
-                self:ExitStorage()
-                local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
-                if IsValid(otherPanel) then otherPanel:Remove() end
-            end
-
-            panel:oldOnRemove()
-        end
-
-        hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
-        localInvPanel.OnRemove = exitStorageOnRemove
-        storageInvPanel.OnRemove = exitStorageOnRemove
+        storageInv = storage
     else
         if not IsValid(storage) then return end
-        local localInv = client:getChar() and client:getChar():getInv()
-        local storageInv = storage:getInv()
-        if not localInv or not storageInv then return self:ExitStorage() end
-        local localInvPanel = localInv:show()
-        local storageInvPanel = storageInv:show()
+        storageInv = storage:getInv()
+    end
+
+    if not storageInv then return self:ExitStorage() end
+    -- Use the new dual inventory function
+    local panels = lia.inventory.showDual(localInv, storageInv)
+    if not panels then return self:ExitStorage() end
+    local localInvPanel, storageInvPanel = panels[1], panels[2]
+    -- Set titles
+    if isCar then
+        storageInvPanel:SetTitle(L("carTrunk"))
+    else
         local storageInfo = storage:getStorageInfo()
         if storageInfo and storageInfo.name then
             storageInvPanel:SetTitle(L(storageInfo.name))
         else
             storageInvPanel:SetTitle(L("storageContainer"))
         end
-
-        localInvPanel:ShowCloseButton(true)
-        storageInvPanel:ShowCloseButton(true)
-        local extraWidth = (storageInvPanel:GetWide() + 4) / 2
-        localInvPanel:Center()
-        storageInvPanel:Center()
-        localInvPanel.x = localInvPanel.x + extraWidth
-        storageInvPanel:MoveLeftOf(localInvPanel, 4)
-        local firstToRemove = true
-        localInvPanel.oldOnRemove = localInvPanel.OnRemove
-        storageInvPanel.oldOnRemove = storageInvPanel.OnRemove
-        local function exitStorageOnRemove(panel)
-            if firstToRemove then
-                firstToRemove = false
-                self:ExitStorage()
-                local otherPanel = panel == localInvPanel and storageInvPanel or localInvPanel
-                if IsValid(otherPanel) then otherPanel:Remove() end
-            end
-
-            panel:oldOnRemove()
-        end
-
-        hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
-        localInvPanel.OnRemove = exitStorageOnRemove
-        storageInvPanel.OnRemove = exitStorageOnRemove
     end
+
+    -- Override the OnRemove behavior to call ExitStorage when either panel closes
+    local originalOnRemove1 = localInvPanel.OnRemove
+    local originalOnRemove2 = storageInvPanel.OnRemove
+    local function exitStorageOnRemove(panel)
+        self:ExitStorage()
+        -- Call the original dual inventory OnRemove behavior
+        if panel == localInvPanel and originalOnRemove1 then
+            originalOnRemove1(panel)
+        elseif panel == storageInvPanel and originalOnRemove2 then
+            originalOnRemove2(panel)
+        end
+    end
+
+    localInvPanel.OnRemove = exitStorageOnRemove
+    storageInvPanel.OnRemove = exitStorageOnRemove
+    -- Run hook for storage panel creation
+    hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
 end
 
 function MODULE:TransferItem(itemID)

@@ -355,15 +355,8 @@ net.Receive("liaOpenInvMenu", function()
     local index = net.ReadType()
     local targetInv = lia.inventory.instances[index]
     local myInv = LocalPlayer():getChar():getInv()
-    local inventoryDerma = targetInv:show()
-    inventoryDerma:SetTitle(L("inventoryTitle", target:getChar():getName()))
-    inventoryDerma:MakePopup()
-    inventoryDerma:ShowCloseButton(true)
-    local myInventoryDerma = myInv:show()
-    myInventoryDerma:MakePopup()
-    myInventoryDerma:ShowCloseButton(true)
-    myInventoryDerma:SetParent(inventoryDerma)
-    myInventoryDerma:MoveLeftOf(inventoryDerma, 4)
+    local panels = lia.inventory.showDual(myInv, targetInv)
+    if panels and panels[1] and panels[2] then panels[2]:SetTitle(L("inventoryTitle", target:getChar():getName())) end
 end)
 
 lia.net.readBigTable("liaSendTableUI", function(data) lia.util.createTableUI(data.title, data.columns, data.data, data.options, data.characterID) end)
