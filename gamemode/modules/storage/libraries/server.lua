@@ -125,7 +125,6 @@ function MODULE:SaveData()
     end
 end
 
-
 lia.inventory.registerStorage("models/props_junk/wood_crate001a.mdl", {
     name = L("storageContainer"),
     invType = "GridInv",

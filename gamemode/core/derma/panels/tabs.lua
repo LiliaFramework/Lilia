@@ -43,7 +43,6 @@ function PANEL:AddTab(name, pan, icon, callback)
         callback = callback
     }
 
-    -- Ensure panels exist
     if not IsValid(self.panel_tabs) then
         self.panel_tabs = vgui.Create("Panel", self)
         self.panel_tabs.Paint = nil
@@ -139,7 +138,6 @@ function PANEL:Rebuild()
         self.panel_tabs:DockMargin(0, 0, 0, 4)
         self.panel_tabs:SetTall(self.tab_height)
     else
-        -- Manually remove tab buttons, keeping navigation buttons
         local children = self.panel_tabs:GetChildren()
         for _, child in ipairs(children) do
             if child ~= self.btn_left and child ~= self.btn_right then child:Remove() end
@@ -422,18 +420,13 @@ function PANEL:SetShowIcons()
 end
 
 function PANEL:Clear()
-    -- Clear the tabs array
     self.tabs = {}
-    -- Reset active tab
     self.active_id = 1
-    -- Clear navigation state
     self.scroll_offset = 0
     self.needs_navigation = false
-    -- Call parent Clear method to remove child panels
     if self.BaseClass and self.BaseClass.Clear then
         self.BaseClass.Clear(self)
     else
-        -- Fallback: manually remove child panels
         for _, child in ipairs(self:GetChildren()) do
             child:Remove()
         end

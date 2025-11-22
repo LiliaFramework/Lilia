@@ -14404,7 +14404,7 @@ end
                         end
                     end
 
-                    
+
                     print("[MODULE] Loaded " .. #data .. " data entries from database")
                 else
                     -- Fallback to file system

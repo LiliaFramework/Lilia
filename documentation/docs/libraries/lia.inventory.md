@@ -1252,3 +1252,44 @@ Client
 
 ---
 
+### lia.inventory.showDual
+
+#### 📋 Purpose
+Displays two inventory panels side-by-side with linked closing behavior
+
+#### ⏰ When Called
+When needing to show two inventories simultaneously (e.g., player inventory with storage, trading, etc.)
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `inventory1` | **table** | The first inventory instance to display |
+| `inventory2` | **table** | The second inventory instance to display |
+| `parent` | **panel, optional** | Parent panel to attach the inventory panels to |
+
+#### ↩️ Returns
+* Table containing both created inventory panels {panel1, panel2}, or nil if dual inventory is already open
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+
+```
+
+#### 📊 Medium Complexity
+```lua
+
+```
+
+#### ⚙️ High Complexity
+```lua
+
+```
+
+---
+
