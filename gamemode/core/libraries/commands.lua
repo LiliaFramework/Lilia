@@ -2439,7 +2439,7 @@ lia.command.add("plyunban", {
     onRun = function(client, arguments)
         local steamid = arguments[1]
         if steamid and steamid ~= "" then
-            lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. steamid)
+            lia.db.query("DELETE FROM lia_bans WHERE playerSteamID = " .. lia.db.convertDataType(steamid))
             client:notifySuccessLocalized("playerUnbanned")
             lia.log.add(client, "plyUnban", steamid)
         end
@@ -5187,37 +5187,6 @@ lia.command.add("checkattributes", {
                 net = "ChangeAttribute"
             }
         }, client:getChar():getID())
-    end
-})
-
-lia.command.add("storagelock", {
-    adminOnly = true,
-    desc = "storagelockDesc",
-    arguments = {
-        {
-            name = "password",
-            type = "string",
-            optional = true
-        },
-    },
-    onRun = function(client, arguments)
-        local entity = client:getTracedEntity()
-        if entity and IsValid(entity) then
-            local password = table.concat(arguments, " ")
-            if password ~= "" then
-                entity:setNetVar("locked", true)
-                entity.password = password
-                client:notifySuccessLocalized("storPass", password)
-                lia.log.add(client, "storageLock", entity:GetClass(), true)
-            else
-                entity:setNetVar("locked", nil)
-                entity.password = nil
-                client:notifySuccessLocalized("storPassRmv")
-                lia.log.add(client, "storageLock", entity:GetClass(), false)
-            end
-        else
-            client:notifyErrorLocalized("invalidEntity")
-        end
     end
 })
 
