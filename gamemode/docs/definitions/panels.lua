@@ -207,6 +207,14 @@ liaDermaMenu
 liaDialogMenu
 --[[
     Purpose:
+        NPC dialog interface panel
+        The main dialog menu panel for NPC conversations with conversation history tracking, response display, and interactive dialog options
+    When Used:
+        When initiating NPC dialog interactions, quest conversations, or scripted dialogue sequences with non-player characters
+]]
+DialogMenu
+--[[
+    Purpose:
         Custom list view
         A styled list view with custom theming
     When Used:
@@ -421,6 +429,13 @@ liaSheet
         For sliding panels or animated content
 ]]
 liaSlideBox
+--[[
+    Purpose:
+        Custom slider control with smooth animations
+        A styled slider panel for numeric value input with smooth animations, convar synchronization support, and custom Lilia theming
+    When Used:
+        For settings panels, configuration interfaces, or any UI that requires smooth numeric value selection with visual feedback
+]]
 liaSlider
 --[[
     Purpose:

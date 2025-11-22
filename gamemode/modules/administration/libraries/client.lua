@@ -699,12 +699,16 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
             local combo = vgui.Create("liaComboBox", popup)
             combo:Dock(TOP)
             combo:PostInit()
-            for _, character in pairs(lia.char.getAll()) do
-                local ply = character:getPlayer()
-                if IsValid(ply) then
-                    local steamID = ply:SteamID() or ""
-                    local charName = character:getName() or L("unknown")
-                    combo:AddChoice(L("characterSteamIDFormat", charName, steamID), steamID)
+            for _, ply in player.Iterator() do
+                if IsValid(ply) and ply:IsPlayer() then
+                    local character = ply:getChar()
+                    if character then
+                        local steamID = ply:SteamID() or character.steamID or ""
+                        if steamID and steamID ~= "" then
+                            local charName = character:getName() or L("unknown")
+                            combo:AddChoice(L("characterSteamIDFormat", charName, steamID), steamID)
+                        end
+                    end
                 end
             end
 
@@ -717,6 +721,7 @@ spawnmenu.AddContentType("inventoryitem", function(container, data)
                 net.WriteString(data.id)
                 net.WriteString(target or "")
                 net.SendToServer()
+                LocalPlayer():notifySuccess("Item given successfully!")
                 popup:Remove()
             end
         end)

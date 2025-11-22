@@ -13202,3 +13202,456 @@ end
 ]]
 function OverrideSpawnTime(client, baseTime)
 end
+--[[
+    Purpose:
+        Allows customization of the information displayed when looking at an item entity in the world
+
+    When Called:
+        When drawing entity information for an item entity that the player is looking at
+
+    Parameters:
+        self (Entity)
+            The item entity being drawn
+        item (table)
+            The item table associated with the entity
+        infoTable (table)
+            Table of information entries to display (can be modified)
+        alpha (number)
+            The alpha value for the text rendering
+
+    Returns:
+        nil (modify infoTable in place)
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Add item name to display
+        hook.Add("DrawItemEntityInfo", "MyAddon", function(self, item, infoTable, alpha)
+            table.insert(infoTable, {
+                text = item.name,
+                yOffset = 0
+            })
+        end)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Add custom information based on item data
+        hook.Add("DrawItemEntityInfo", "CustomItemInfo", function(self, item, infoTable, alpha)
+            local itemData = item.data or {}
+            if itemData.durability then
+                table.insert(infoTable, {
+                    text = "Durability: " .. itemData.durability .. "%",
+                    yOffset = 50
+                })
+            end
+            if itemData.owner then
+                local ownerChar = lia.char.loaded[itemData.owner]
+                if ownerChar then
+                    table.insert(infoTable, {
+                        text = "Owner: " .. ownerChar:getName(),
+                        yOffset = 100
+                    })
+                end
+            end
+        end)
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Complex item information display
+        hook.Add("DrawItemEntityInfo", "AdvancedItemInfo", function(self, item, infoTable, alpha)
+            local itemData = item.data or {}
+            local yOffset = 0
+            
+            -- Add item name with quality color
+            local quality = itemData.quality or "common"
+            local qualityColors = {
+                common = Color(255, 255, 255),
+                uncommon = Color(0, 255, 0),
+                rare = Color(0, 100, 255),
+                epic = Color(150, 0, 255),
+                legendary = Color(255, 165, 0)
+            }
+            table.insert(infoTable, {
+                text = item.name,
+                color = qualityColors[quality] or qualityColors.common,
+                yOffset = yOffset
+            })
+            yOffset = yOffset + 50
+            
+            -- Add durability if applicable
+            if itemData.durability then
+                local durabilityColor = itemData.durability > 50 and Color(0, 255, 0) or 
+                                        itemData.durability > 25 and Color(255, 255, 0) or 
+                                        Color(255, 0, 0)
+                table.insert(infoTable, {
+                    text = "Durability: " .. itemData.durability .. "%",
+                    color = durabilityColor,
+                    yOffset = yOffset
+                })
+                yOffset = yOffset + 50
+            end
+            
+            -- Add owner information
+            if itemData.owner then
+                local ownerChar = lia.char.loaded[itemData.owner]
+                if ownerChar then
+                    table.insert(infoTable, {
+                        text = "Owner: " .. ownerChar:getName(),
+                        yOffset = yOffset
+                    })
+                    yOffset = yOffset + 50
+                end
+            end
+            
+            -- Add custom description
+            if itemData.customDesc then
+                table.insert(infoTable, {
+                    text = itemData.customDesc,
+                    yOffset = yOffset
+                })
+            end
+        end)
+        ```
+]]
+function DrawItemEntityInfo(self, item, infoTable, alpha)
+end
+
+--[[
+    Purpose:
+        Allows customization of what information is displayed for entities in the admin ESP system
+
+    When Called:
+        When rendering ESP information for an entity in the admin ESP overlay
+
+    Parameters:
+        ent (Entity)
+            The entity being rendered in ESP
+        client (Player)
+            The admin client viewing the ESP
+
+    Returns:
+        table or nil - Table with ESP information, or nil to use default rendering
+            kind (string) - The category/type of entity
+            label (string) - The main label text
+            subLabel (string, optional) - Additional subtitle text
+            baseColor (Color) - The base color for the ESP text
+            customRender (function, optional) - Custom rendering function
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Custom ESP for specific entity class
+        hook.Add("GetAdminESPTarget", "MyAddon", function(ent, client)
+            if ent:GetClass() == "my_custom_entity" then
+                return {
+                    kind = "Custom Entity",
+                    label = "My Custom Entity",
+                    baseColor = Color(255, 0, 255)
+                }
+            end
+        end)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Custom ESP with entity data
+        hook.Add("GetAdminESPTarget", "CustomESP", function(ent, client)
+            if ent:GetClass() == "lia_storage" then
+                local storageData = ent:getNetVar("storageData", {})
+                return {
+                    kind = "Storage",
+                    label = storageData.name or "Storage Container",
+                    subLabel = "Items: " .. (storageData.itemCount or 0),
+                    baseColor = Color(0, 255, 255)
+                }
+            end
+        end)
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Complex ESP system with custom rendering
+        hook.Add("GetAdminESPTarget", "AdvancedESP", function(ent, client)
+            if ent:GetClass() == "my_vehicle" then
+                local vehicleData = ent:getNetVar("vehicleData", {})
+                local health = ent:Health()
+                local maxHealth = ent:GetMaxHealth()
+                local healthPercent = (health / maxHealth) * 100
+                
+                -- Determine color based on health
+                local healthColor = healthPercent > 75 and Color(0, 255, 0) or
+                                   healthPercent > 50 and Color(255, 255, 0) or
+                                   healthPercent > 25 and Color(255, 165, 0) or
+                                   Color(255, 0, 0)
+                
+                return {
+                    kind = "Vehicle",
+                    label = vehicleData.name or "Unknown Vehicle",
+                    subLabel = string.format("Health: %d%% (%s)", healthPercent, vehicleData.owner or "No Owner"),
+                    baseColor = healthColor,
+                    customRender = function(pos, alpha)
+                        -- Custom rendering logic here
+                        draw.SimpleText("Custom Vehicle Info", "DermaDefault", pos.x, pos.y, healthColor, TEXT_ALIGN_CENTER)
+                    end
+                }
+            end
+        end)
+        ```
+]]
+function GetAdminESPTarget(ent, client)
+end
+
+--[[
+    Purpose:
+        Allows adding custom dialog options to NPC conversation menus
+
+    When Called:
+        When an NPC dialog menu is being created and options are being loaded
+
+    Parameters:
+        client (Player)
+            The client opening the dialog
+        npc (Entity)
+            The NPC entity
+        canCustomize (boolean)
+            Whether the client can customize the NPC
+
+    Returns:
+        table - Table of additional dialog options to add (key = option name, value = option data)
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Add a custom dialog option
+        hook.Add("GetNPCDialogOptions", "MyAddon", function(client, npc, canCustomize)
+            return {
+                ["Custom Option"] = {
+                    text = "Ask about custom topic",
+                    callback = function()
+                        client:ChatPrint("NPC responds to custom topic!")
+                    end
+                }
+            }
+        end)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Add conditional dialog options
+        hook.Add("GetNPCDialogOptions", "ConditionalOptions", function(client, npc, canCustomize)
+            local char = client:getChar()
+            if not char then return {} end
+            
+            local options = {}
+            
+            -- Add faction-specific option
+            if char:getFaction() == "police" then
+                options["Police Question"] = {
+                    text = "Ask about recent crimes",
+                    callback = function()
+                        client:ChatPrint("The NPC tells you about recent criminal activity.")
+                    end
+                }
+            end
+            
+            -- Add option based on character data
+            if char:getData("hasCompletedQuest", false) then
+                options["Quest Follow-up"] = {
+                    text = "Ask about the quest",
+                    callback = function()
+                        client:ChatPrint("The NPC thanks you for completing the quest!")
+                    end
+                }
+            end
+            
+            return options
+        end)
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Complex dialog system with multiple conditions
+        hook.Add("GetNPCDialogOptions", "AdvancedDialog", function(client, npc, canCustomize)
+            local char = client:getChar()
+            if not char then return {} end
+            
+            local npcID = npc:getNetVar("uniqueID", "")
+            local options = {}
+            
+            -- Faction-based options
+            local faction = char:getFaction()
+            if faction == "police" and npcID == "citizen_npc" then
+                options["Question Witness"] = {
+                    text = "Question as a witness",
+                    callback = function()
+                        client:ChatPrint("The citizen provides witness testimony.")
+                    end
+                }
+            end
+            
+            -- Reputation-based options
+            local reputation = char:getData("npcReputation_" .. npcID, 0)
+            if reputation >= 50 then
+                options["Friendly Chat"] = {
+                    text = "Have a friendly conversation",
+                    callback = function()
+                        client:ChatPrint("You have a pleasant conversation with the NPC.")
+                        char:setData("npcReputation_" .. npcID, reputation + 5)
+                    end
+                }
+            end
+            
+            -- Quest-related options
+            local activeQuests = char:getData("activeQuests", {})
+            for _, questID in ipairs(activeQuests) do
+                if questID == "quest_" .. npcID then
+                    options["Quest Progress"] = {
+                        text = "Check quest progress",
+                        callback = function()
+                            local questData = char:getData("questData_" .. questID, {})
+                            client:ChatPrint("Quest progress: " .. (questData.progress or 0) .. "%")
+                        end
+                    }
+                end
+            end
+            
+            -- Time-based options
+            local hour = tonumber(os.date("%H"))
+            if hour >= 6 and hour < 12 then
+                options["Morning Greeting"] = {
+                    text = "Good morning!",
+                    callback = function()
+                        client:ChatPrint("The NPC greets you warmly.")
+                    end
+                }
+            end
+            
+            return options
+        end)
+        ```
+]]
+function GetNPCDialogOptions(client, npc, canCustomize)
+end
+
+--[[
+    Purpose:
+        Called when dual inventory panels are created (e.g., trading, storage access)
+
+    When Called:
+        When two inventory panels are opened simultaneously, such as during trading or accessing storage
+
+    Parameters:
+        panel1 (Panel)
+            The first inventory panel
+        panel2 (Panel)
+            The second inventory panel
+        inventory1 (Inventory)
+            The first inventory instance
+        inventory2 (Inventory)
+            The second inventory instance
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Log when dual panels are created
+        hook.Add("OnCreateDualInventoryPanels", "MyAddon", function(panel1, panel2, inventory1, inventory2)
+            print("Dual inventory panels created")
+        end)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Add custom buttons to dual inventory panels
+        hook.Add("OnCreateDualInventoryPanels", "CustomButtons", function(panel1, panel2, inventory1, inventory2)
+            -- Add transfer all button to panel1
+            local transferBtn = vgui.Create("DButton", panel1)
+            transferBtn:SetText("Transfer All")
+            transferBtn:SetPos(10, 10)
+            transferBtn:SetSize(100, 30)
+            transferBtn.DoClick = function()
+                -- Transfer all items from inventory1 to inventory2
+                for _, item in pairs(inventory1:getItems()) do
+                    inventory1:transfer(item:getID(), inventory2:getID())
+                end
+            end
+        end)
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Complex dual inventory system with custom UI
+        hook.Add("OnCreateDualInventoryPanels", "AdvancedDualInventory", function(panel1, panel2, inventory1, inventory2)
+            local client = LocalPlayer()
+            local char = client:getChar()
+            if not char then return end
+            
+            -- Add custom header to panel1
+            local header1 = vgui.Create("DPanel", panel1)
+            header1:SetPos(0, 0)
+            header1:SetSize(panel1:GetWide(), 40)
+            header1.Paint = function(self, w, h)
+                draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 255))
+                draw.SimpleText("Your Inventory", "DermaDefault", w/2, h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            
+            -- Add custom header to panel2
+            local header2 = vgui.Create("DPanel", panel2)
+            header2:SetPos(0, 0)
+            header2:SetSize(panel2:GetWide(), 40)
+            header2.Paint = function(self, w, h)
+                draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 255))
+                local inv2Name = inventory2:getData("name", "Storage")
+                draw.SimpleText(inv2Name, "DermaDefault", w/2, h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            
+            -- Add weight display
+            local weight1 = inventory1:getData("weight", 0)
+            local maxWeight1 = inventory1:getData("maxWeight", 100)
+            local weightLabel1 = vgui.Create("DLabel", panel1)
+            weightLabel1:SetText(string.format("Weight: %d/%d", weight1, maxWeight1))
+            weightLabel1:SetPos(10, panel1:GetTall() - 30)
+            weightLabel1:SizeToContents()
+            
+            local weight2 = inventory2:getData("weight", 0)
+            local maxWeight2 = inventory2:getData("maxWeight", 100)
+            local weightLabel2 = vgui.Create("DLabel", panel2)
+            weightLabel2:SetText(string.format("Weight: %d/%d", weight2, maxWeight2))
+            weightLabel2:SetPos(10, panel2:GetTall() - 30)
+            weightLabel2:SizeToContents()
+            
+            -- Add quick transfer buttons
+            local quickTransfer = vgui.Create("DButton", panel1)
+            quickTransfer:SetText("Quick Transfer")
+            quickTransfer:SetPos(panel1:GetWide() - 110, panel1:GetTall() - 30)
+            quickTransfer:SetSize(100, 25)
+            quickTransfer.DoClick = function()
+                -- Transfer selected items
+                -- Implementation depends on your selection system
+            end
+        end)
+        ```
+]]
+function OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)
+end
+
