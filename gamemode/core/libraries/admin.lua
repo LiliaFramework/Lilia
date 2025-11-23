@@ -1953,7 +1953,16 @@ else
             return true
         end
 
-        local id = IsValid(victim) and victim:SteamID() or tostring(victim)
+        local id
+        if IsValid(victim) and victim:IsPlayer() then
+            if victim:IsBot() then
+                id = victim:Name()
+            else
+                id = victim:SteamID()
+            end
+        else
+            id = tostring(victim)
+        end
         local commandFunc = liaCommands[cmd]
         if commandFunc then
             commandFunc(id, dur, reason)
