@@ -1,4 +1,6 @@
 ﻿local MODULE = MODULE
+local playerLoadedChar = {}
+local playerCharID = {}
 function MODULE:FetchSpawns()
     local d = deferred.new()
     local stored = lia.data.get("spawns", {})
@@ -182,7 +184,39 @@ end
 function MODULE:PlayerSpawn(client)
     client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
+    playerLoadedChar[client] = nil
+    playerCharID[client] = nil
 end
 
-hook.Add("PostPlayerLoadedChar", "liaSpawns", function(client) SpawnPlayer(client, false) end)
-hook.Add("PostPlayerLoadout", "liaSpawns", function(client) SpawnPlayer(client, true) end)
+function MODULE:PostPlayerLoadedChar(client)
+    local character = client:getChar()
+    if character then
+        playerLoadedChar[client] = true
+        playerCharID[client] = character:getID()
+    end
+
+    SpawnPlayer(client, false)
+end
+
+function MODULE:PostPlayerLoadout(client)
+    local character = client:getChar()
+    if not character then
+        SpawnPlayer(client, true)
+        return
+    end
+
+    local wasLoadedChar = playerLoadedChar[client] or false
+    local savedCharID = playerCharID[client]
+    local currentCharID = character and character:getID() or nil
+    local lastDeathTime = client:getNetVar("lastDeathTime", 0)
+    local hasDied = lastDeathTime > 0
+    local isSameChar = savedCharID and currentCharID and savedCharID == currentCharID
+    if not wasLoadedChar and isSameChar and hasDied then
+        SpawnPlayer(client, false)
+    else
+        SpawnPlayer(client, true)
+    end
+
+    playerLoadedChar[client] = nil
+    playerCharID[client] = nil
+end
