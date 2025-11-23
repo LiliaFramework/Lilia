@@ -2208,7 +2208,7 @@ end
         end
 
         -- Notify admins
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 ply:ChatPrint("New privilege registered: " .. name)
             end
@@ -2272,7 +2272,7 @@ end
         end
 
         -- Revoke privilege from all players
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             local char = ply:getChar()
             if char and char:hasPrivilege(privilege) then
                 char:revokePrivilege(privilege)
@@ -2487,7 +2487,7 @@ end
 
         -- Add player count to description
         local count = 0
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             local char = ply:getChar()
             if char and char:getFaction() == faction.index then
                 count = count + 1
@@ -2628,7 +2628,7 @@ end
 
         -- Add member count to name
         local count = 0
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             local char = ply:getChar()
             if char and char:getFaction() == faction.index then
                 count = count + 1

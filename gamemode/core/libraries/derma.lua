@@ -3641,7 +3641,7 @@ end
     ```lua
     -- High: Dynamic options with validation
     local options = {}
-    for _, player in pairs(player.GetAll()) do
+    for _, player in player.Iterator() do
         if IsValid(player) then
             table.insert(options, {player:Name(), player:SteamID()})
         end

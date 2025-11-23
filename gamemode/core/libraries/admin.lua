@@ -1963,7 +1963,6 @@ else
         else
             id = tostring(victim)
         end
-
         local commandFunc = liaCommands[cmd]
         if commandFunc then
             commandFunc(id, dur, reason)

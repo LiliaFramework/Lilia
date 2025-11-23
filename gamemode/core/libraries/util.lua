@@ -179,7 +179,7 @@ end
             {center = Vector(250, 250, 0),  radius = 100, type = "neutral"}
         }
 
-        for _, player in player.GetAll() do
+        for _, player in player.Iterator() do
             local playerPos = player:GetPos()
             local inZone = {}
 
@@ -891,7 +891,7 @@ end
             {center = Vector(200, 200, 0), radius = 80,  type = "neutral"}
         }
 
-        for _, player in player.GetAll() do
+        for _, player in player.Iterator() do
             local playerPos = player:GetPos()
             local zonesIn = {}
 
