@@ -14404,7 +14404,7 @@ end
                         end
                     end
 
-                    
+
                     print("[MODULE] Loaded " .. #data .. " data entries from database")
                 else
                     -- Fallback to file system
@@ -30474,7 +30474,7 @@ end
                     specialItems = {"item_rare_weapon", "item_rare_armor"}
                 }
             end
-            
+
             -- Modify conversation based on time of day
             local hour = tonumber(os.date("%H"))
             if hour >= 18 or hour < 6 then
@@ -30497,35 +30497,35 @@ end
         -- High: Complex NPC configuration system
         hook.Add("OnNPCTypeSet", "AdvancedNPCConfig", function(client, npc, npcID, filteredData)
             if not IsValid(npc) then return end
-            
+
             -- Load NPC configuration from database
             lia.db.query("SELECT * FROM npc_config WHERE npc_id = ?", {npcID}, function(data)
                 if data and #data > 0 then
                     local config = data[1]
-                    
+
                     -- Apply custom name if configured
                     if config.custom_name then
                         filteredData.Name = config.custom_name
                         npc:setNetVar("NPCName", config.custom_name)
                     end
-                    
+
                     -- Apply custom model if configured
                     if config.custom_model then
                         npc:SetModel(config.custom_model)
                     end
-                    
+
                     -- Apply faction restrictions
                     if config.allowed_factions then
                         local factions = util.JSONToTable(config.allowed_factions) or {}
                         filteredData.allowedFactions = factions
                     end
-                    
+
                     -- Apply custom conversation options
                     if config.custom_conversation then
                         local customConv = util.JSONToTable(config.custom_conversation) or {}
                         filteredData.Conversation = table.Merge(filteredData.Conversation or {}, customConv)
                     end
-                    
+
                     -- Apply quest data
                     if config.quest_data then
                         local questData = util.JSONToTable(config.quest_data) or {}
@@ -30533,11 +30533,11 @@ end
                     end
                 end
             end)
-            
+
             -- Apply dynamic modifications based on server state
             local serverTime = os.time()
             local dayOfWeek = tonumber(os.date("%w"))
-            
+
             -- Weekend special NPC behavior
             if dayOfWeek == 0 or dayOfWeek == 6 then
                 if filteredData.Conversation then
@@ -30555,13 +30555,13 @@ end
                     }
                 end
             end
-            
+
             -- Apply player-specific modifications
             if IsValid(client) then
                 local char = client:getChar()
                 if char then
                     local faction = char:getFaction()
-                    
+
                     -- Faction-specific NPC behavior
                     if faction == "police" and npcID == "citizen_npc" then
                         if filteredData.Conversation then
@@ -30573,7 +30573,7 @@ end
                             }
                         end
                     end
-                    
+
                     -- Reputation-based modifications
                     local reputation = char:getData("npcReputation_" .. npcID, 0)
                     if reputation >= 50 then
@@ -30589,7 +30589,7 @@ end
                     end
                 end
             end
-            
+
             -- Store modified data back to NPC
             npc:setNetVar("npcData", filteredData)
         end)

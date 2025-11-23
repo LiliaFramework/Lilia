@@ -1941,7 +1941,7 @@ Server
     function ITEM:onInstanced()
         -- Initialize complex item state
         self:setData("durability", self:getData("maxDurability", 100))
-        self:setData("serialNumber", "SN-" .. self:getID())
+        self:setData("serialNumber", string.format("SN-%06d-%04d-%03d", math.random(100000, 999999), math.random(1000, 9999), math.random(100, 999)))
         -- Register with item tracking system
         local trackingData = lia.data.get("item_tracking", {})
         trackingData[self:getID()] = {
@@ -2002,7 +2002,7 @@ Server
     function ITEM:onInstanced()
         -- Initialize complex item state
         self:setData("durability", self:getData("maxDurability", 100))
-        self:setData("serialNumber", "SN-" .. self:getID())
+        self:setData("serialNumber", string.format("SN-%06d-%04d-%03d", math.random(100000, 999999), math.random(1000, 9999), math.random(100, 999)))
         -- Register with item tracking system
         local trackingData = lia.data.get("item_tracking", {})
         trackingData[self:getID()] = {
@@ -2063,7 +2063,7 @@ Server
     function ITEM:onInstanced()
         -- Initialize complex item state
         self:setData("durability", self:getData("maxDurability", 100))
-        self:setData("serialNumber", "SN-" .. self:getID())
+        self:setData("serialNumber", string.format("SN-%06d-%04d-%03d", math.random(100000, 999999), math.random(1000, 9999), math.random(100, 999)))
         -- Register with item tracking system
         local trackingData = lia.data.get("item_tracking", {})
         trackingData[self:getID()] = {
@@ -2124,7 +2124,7 @@ Server
     function ITEM:onInstanced()
         -- Initialize complex item state
         self:setData("durability", self:getData("maxDurability", 100))
-        self:setData("serialNumber", "SN-" .. self:getID())
+        self:setData("serialNumber", string.format("SN-%06d-%04d-%03d", math.random(100000, 999999), math.random(1000, 9999), math.random(100, 999)))
         -- Register with item tracking system
         local trackingData = lia.data.get("item_tracking", {})
         trackingData[self:getID()] = {
