@@ -24,11 +24,9 @@ function MODULE:StorageOpen(storage, isCar)
     end
 
     if not storageInv then return self:ExitStorage() end
-    -- Use the new dual inventory function
     local panels = lia.inventory.showDual(localInv, storageInv)
     if not panels then return self:ExitStorage() end
     local localInvPanel, storageInvPanel = panels[1], panels[2]
-    -- Set titles
     if isCar then
         storageInvPanel:SetTitle(L("carTrunk"))
     else
@@ -40,12 +38,10 @@ function MODULE:StorageOpen(storage, isCar)
         end
     end
 
-    -- Override the OnRemove behavior to call ExitStorage when either panel closes
     local originalOnRemove1 = localInvPanel.OnRemove
     local originalOnRemove2 = storageInvPanel.OnRemove
     local function exitStorageOnRemove(panel)
         self:ExitStorage()
-        -- Call the original dual inventory OnRemove behavior
         if panel == localInvPanel and originalOnRemove1 then
             originalOnRemove1(panel)
         elseif panel == storageInvPanel and originalOnRemove2 then
@@ -55,7 +51,6 @@ function MODULE:StorageOpen(storage, isCar)
 
     localInvPanel.OnRemove = exitStorageOnRemove
     storageInvPanel.OnRemove = exitStorageOnRemove
-    -- Run hook for storage panel creation
     hook.Run("OnCreateStoragePanel", localInvPanel, storageInvPanel, storage)
 end
 

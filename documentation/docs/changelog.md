@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.051 (November 23, 2025)
+
+### Changes
+
+- Update tabs.lua
+- Minor Bug Fixing
+- Successfully updated workshop Lilia to 7.048
+- Storage Bug Fixes and added lia.inventory.showDual
+- Minor Tabs Bug
+- Fixed Error W/ ply unban
+- Successfully updated workshop Lilia to 7.044
+- Fix NPC Model Save bug
+- Better Slider
+- SetAction Is Now Shared & Improved Progress Bar
+- MD
+- Better Logs
+- Fixed Weird LastPos bug
+- Successfully updated workshop Lilia to 7.037
+- Vendor Item Cooldown UI Changes, Localization and  New Notif
+- Successfully updated workshop Lilia to 7.035
+- Update color.lua
+- Update color.lua
+- Dialog, Item Buy Cooldowns and Language Imrpovements
+- Update derma.lua
+
 ## Version 7.048 (November 22, 2025)
 
 ### Changes
