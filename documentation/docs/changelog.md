@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.059 (November 23, 2025)
+
+### Changes
+
+- Linting
+- Fixed charunbanoffline
+- Added Configuration to Delete Items of DIsconnected Players
+- Successfully updated workshop Lilia to 7.055
+- Bots Now Can Be Called From Scoreboard
+- Weird Logging Error
+- Fixed Weird Bug W/ Spawns
+- Successfully updated workshop Lilia to 7.051
+- Update tabs.lua
+- Minor Bug Fixing
+- Successfully updated workshop Lilia to 7.048
+- Storage Bug Fixes and added lia.inventory.showDual
+- Minor Tabs Bug
+- Fixed Error W/ ply unban
+- Successfully updated workshop Lilia to 7.044
+- Fix NPC Model Save bug
+- Better Slider
+- SetAction Is Now Shared & Improved Progress Bar
+- MD
+- Better Logs
+
 ## Version 7.055 (November 23, 2025)
 
 ### Changes

@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Commands Library
 
     Comprehensive command registration, parsing, and execution system for the Lilia framework.
@@ -2912,13 +2912,8 @@ lia.command.add("charunbanoffline", {
     onRun = function(client, arguments)
         local charID = tonumber(arguments[1])
         if not charID then return client:notifyErrorLocalized("invalidCharID") end
-
-        -- Check if character exists in database
         local result = sql.Query("SELECT id FROM lia_characters WHERE id = " .. charID .. " LIMIT 1")
-        if not istable(result) or not result[1] then
-            return client:notifyErrorLocalized("characterNotFound")
-        end
-
+        if not istable(result) or not result[1] then return client:notifyErrorLocalized("characterNotFound") end
         lia.char.setCharDatabase(charID, "banned", 0)
         lia.char.setCharDatabase(charID, "charBanInfo", nil)
         client:notifySuccessLocalized("offlineCharUnbanned", charID)
@@ -2938,13 +2933,8 @@ lia.command.add("charbanoffline", {
     onRun = function(client, arguments)
         local charID = tonumber(arguments[1])
         if not charID then return client:notifyErrorLocalized("invalidCharID") end
-
-        -- Check if character exists in database
         local result = sql.Query("SELECT id FROM lia_characters WHERE id = " .. charID .. " LIMIT 1")
-        if not istable(result) or not result[1] then
-            return client:notifyErrorLocalized("characterNotFound")
-        end
-
+        if not istable(result) or not result[1] then return client:notifyErrorLocalized("characterNotFound") end
         lia.char.setCharDatabase(charID, "banned", -1)
         lia.char.setCharDatabase(charID, "charBanInfo", {
             name = client:Nick(),

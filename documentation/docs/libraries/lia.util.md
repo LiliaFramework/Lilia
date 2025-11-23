@@ -179,7 +179,7 @@ Shared
         {center = Vector(500, 0, 0),    radius = 150, type = "danger" },
         {center = Vector(250, 250, 0),  radius = 100, type = "neutral"}
     }
-    for _, player in player.GetAll() do
+    for _, player in player.Iterator() do
         local playerPos = player:GetPos()
         local inZone = {}
         for _, zone in ipairs(zones) do
@@ -812,7 +812,7 @@ Shared
         {center = Vector(400, 0, 0),  radius = 100, type = "combat" },
         {center = Vector(200, 200, 0), radius = 80,  type = "neutral"}
     }
-    for _, player in player.GetAll() do
+    for _, player in player.Iterator() do
         local playerPos = player:GetPos()
         local zonesIn = {}
         for _, zone in ipairs(zones) do

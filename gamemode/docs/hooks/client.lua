@@ -13268,7 +13268,7 @@ end
         hook.Add("DrawItemEntityInfo", "AdvancedItemInfo", function(self, item, infoTable, alpha)
             local itemData = item.data or {}
             local yOffset = 0
-            
+
             -- Add item name with quality color
             local quality = itemData.quality or "common"
             local qualityColors = {
@@ -13284,11 +13284,11 @@ end
                 yOffset = yOffset
             })
             yOffset = yOffset + 50
-            
+
             -- Add durability if applicable
             if itemData.durability then
-                local durabilityColor = itemData.durability > 50 and Color(0, 255, 0) or 
-                                        itemData.durability > 25 and Color(255, 255, 0) or 
+                local durabilityColor = itemData.durability > 50 and Color(0, 255, 0) or
+                                        itemData.durability > 25 and Color(255, 255, 0) or
                                         Color(255, 0, 0)
                 table.insert(infoTable, {
                     text = "Durability: " .. itemData.durability .. "%",
@@ -13297,7 +13297,7 @@ end
                 })
                 yOffset = yOffset + 50
             end
-            
+
             -- Add owner information
             if itemData.owner then
                 local ownerChar = lia.char.loaded[itemData.owner]
@@ -13309,7 +13309,7 @@ end
                     yOffset = yOffset + 50
                 end
             end
-            
+
             -- Add custom description
             if itemData.customDesc then
                 table.insert(infoTable, {
@@ -13388,13 +13388,13 @@ end
                 local health = ent:Health()
                 local maxHealth = ent:GetMaxHealth()
                 local healthPercent = (health / maxHealth) * 100
-                
+
                 -- Determine color based on health
                 local healthColor = healthPercent > 75 and Color(0, 255, 0) or
                                    healthPercent > 50 and Color(255, 255, 0) or
                                    healthPercent > 25 and Color(255, 165, 0) or
                                    Color(255, 0, 0)
-                
+
                 return {
                     kind = "Vehicle",
                     label = vehicleData.name or "Unknown Vehicle",
@@ -13456,9 +13456,9 @@ end
         hook.Add("GetNPCDialogOptions", "ConditionalOptions", function(client, npc, canCustomize)
             local char = client:getChar()
             if not char then return {} end
-            
+
             local options = {}
-            
+
             -- Add faction-specific option
             if char:getFaction() == "police" then
                 options["Police Question"] = {
@@ -13468,7 +13468,7 @@ end
                     end
                 }
             end
-            
+
             -- Add option based on character data
             if char:getData("hasCompletedQuest", false) then
                 options["Quest Follow-up"] = {
@@ -13478,7 +13478,7 @@ end
                     end
                 }
             end
-            
+
             return options
         end)
         ```
@@ -13489,10 +13489,10 @@ end
         hook.Add("GetNPCDialogOptions", "AdvancedDialog", function(client, npc, canCustomize)
             local char = client:getChar()
             if not char then return {} end
-            
+
             local npcID = npc:getNetVar("uniqueID", "")
             local options = {}
-            
+
             -- Faction-based options
             local faction = char:getFaction()
             if faction == "police" and npcID == "citizen_npc" then
@@ -13503,7 +13503,7 @@ end
                     end
                 }
             end
-            
+
             -- Reputation-based options
             local reputation = char:getData("npcReputation_" .. npcID, 0)
             if reputation >= 50 then
@@ -13515,7 +13515,7 @@ end
                     end
                 }
             end
-            
+
             -- Quest-related options
             local activeQuests = char:getData("activeQuests", {})
             for _, questID in ipairs(activeQuests) do
@@ -13529,7 +13529,7 @@ end
                     }
                 end
             end
-            
+
             -- Time-based options
             local hour = tonumber(os.date("%H"))
             if hour >= 6 and hour < 12 then
@@ -13540,7 +13540,7 @@ end
                     end
                 }
             end
-            
+
             return options
         end)
         ```
@@ -13606,7 +13606,7 @@ end
             local client = LocalPlayer()
             local char = client:getChar()
             if not char then return end
-            
+
             -- Add custom header to panel1
             local header1 = vgui.Create("DPanel", panel1)
             header1:SetPos(0, 0)
@@ -13615,7 +13615,7 @@ end
                 draw.RoundedBox(4, 0, 0, w, h, Color(50, 50, 50, 255))
                 draw.SimpleText("Your Inventory", "DermaDefault", w/2, h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
-            
+
             -- Add custom header to panel2
             local header2 = vgui.Create("DPanel", panel2)
             header2:SetPos(0, 0)
@@ -13625,7 +13625,7 @@ end
                 local inv2Name = inventory2:getData("name", "Storage")
                 draw.SimpleText(inv2Name, "DermaDefault", w/2, h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
-            
+
             -- Add weight display
             local weight1 = inventory1:getData("weight", 0)
             local maxWeight1 = inventory1:getData("maxWeight", 100)
@@ -13633,14 +13633,14 @@ end
             weightLabel1:SetText(string.format("Weight: %d/%d", weight1, maxWeight1))
             weightLabel1:SetPos(10, panel1:GetTall() - 30)
             weightLabel1:SizeToContents()
-            
+
             local weight2 = inventory2:getData("weight", 0)
             local maxWeight2 = inventory2:getData("maxWeight", 100)
             local weightLabel2 = vgui.Create("DLabel", panel2)
             weightLabel2:SetText(string.format("Weight: %d/%d", weight2, maxWeight2))
             weightLabel2:SetPos(10, panel2:GetTall() - 30)
             weightLabel2:SizeToContents()
-            
+
             -- Add quick transfer buttons
             local quickTransfer = vgui.Create("DButton", panel1)
             quickTransfer:SetText("Quick Transfer")

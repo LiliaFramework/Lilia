@@ -255,7 +255,7 @@ Server
         local syncTime = SysTime() - startTime
         print("NPC '" .. npcID .. "' registered and synced in " .. string.format("%.3f", syncTime) .. " seconds")
         -- Notify admins of new NPC availability
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 ply:ChatPrint("New NPC '" .. (npcData.PrintName or npcID) .. "' is now available!")
             end
@@ -321,7 +321,7 @@ Server
         local syncTime = SysTime() - startTime
         print("NPC '" .. npcID .. "' registered and synced in " .. string.format("%.3f", syncTime) .. " seconds")
         -- Notify admins of new NPC availability
-        for _, ply in ipairs(player.GetAll()) do
+        for _, ply in player.Iterator() do
             if ply:IsAdmin() then
                 ply:ChatPrint("New NPC '" .. (npcData.PrintName or npcID) .. "' is now available!")
             end
