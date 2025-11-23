@@ -1734,6 +1734,18 @@ lia.config.add("DropDelay", "dropDelay", 0, nil, {
     max = 30
 })
 
+lia.config.add("DeleteDroppedItemsOnLeave", "deleteDroppedItemsOnLeave", false, nil, {
+    desc = "deleteDroppedItemsOnLeaveDesc",
+    category = "categoryGameplay",
+    type = "Boolean"
+})
+
+lia.config.add("DeleteEntitiesOnLeave", "deleteEntitiesOnLeave", true, nil, {
+    desc = "deleteEntitiesOnLeaveDesc",
+    category = "categoryGameplay",
+    type = "Boolean"
+})
+
 lia.config.add("TakeDelay", "takeDelay", 0, nil, {
     desc = "takeDelayDesc",
     category = "categoryGameplay",

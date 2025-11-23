@@ -542,8 +542,23 @@ function GM:PlayerDisconnected(client)
 
     client:removeRagdoll()
     lia.char.cleanUpForPlayer(client)
-    for _, entity in ents.Iterator() do
-        if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then SafeRemoveEntity(entity) end
+
+    -- Delete dropped items if config is enabled
+    if lia.config.get("DeleteDroppedItemsOnLeave", false) then
+        local droppedItems = lia.util.findPlayerItems(client)
+        for _, item in ipairs(droppedItems) do
+            if IsValid(item) and item:isItem() then
+                item.liaIsSafe = true
+                SafeRemoveEntity(item)
+            end
+        end
+    end
+
+    -- Delete entities if config is enabled
+    if lia.config.get("DeleteEntitiesOnLeave", true) then
+        for _, entity in ents.Iterator() do
+            if entity:GetCreator() == client and not string.StartsWith(entity:GetClass(), "lia_") then SafeRemoveEntity(entity) end
+        end
     end
 end
 
