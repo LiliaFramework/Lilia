@@ -198,11 +198,19 @@ function MODULE:PlayerDisconnected(client)
 end
 
 function MODULE:PlayerHurt(client, attacker, health, damage)
-    lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
+    if IsValid(attacker) then
+        lia.log.add(client, "playerHurt", attacker:IsPlayer() and attacker:Name() or attacker:GetClass(), damage, health)
+    else
+        lia.log.add(client, "playerHurt", "unknown", damage, health)
+    end
 end
 
 function MODULE:PlayerDeath(client, attacker)
-    lia.log.add(client, "playerDeath", attacker:IsPlayer() and attacker:Name() or attacker:GetClass())
+    if IsValid(attacker) then
+        lia.log.add(client, "playerDeath", attacker:IsPlayer() and attacker:Name() or attacker:GetClass())
+    else
+        lia.log.add(client, "playerDeath", "unknown")
+    end
 end
 
 function MODULE:OnCharCreated(client, character)
