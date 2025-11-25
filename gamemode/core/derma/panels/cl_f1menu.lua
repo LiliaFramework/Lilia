@@ -311,7 +311,7 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    local defaultTab = lia.option.get("DefaultMenuTab", "you")
+    local defaultTab = lia.config.get("DefaultMenuTab", "you")
     if not self.tabList[defaultTab] then
         if self.tabList["you"] then
             defaultTab = "you"
