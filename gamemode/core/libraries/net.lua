@@ -111,7 +111,10 @@ end
 ]]
 function lia.net.addToCache(name, args)
     local key = generateCacheKey(name, args)
-    lia.net.cache[key] = {timestamp = CurTime()}
+    lia.net.cache[key] = {
+        timestamp = CurTime()
+    }
+
     cleanupCache()
 end
 
@@ -243,9 +246,7 @@ function lia.net.send(name, target, ...)
     end
 
     local args = {...}
-
     if SERVER and target == nil and lia.net.isCacheHit(name, args) then return true end
-
     if SERVER then
         net.Start("liaNetMessage")
         net.WriteString(name)
@@ -269,7 +270,6 @@ function lia.net.send(name, target, ...)
         net.WriteTable(args)
         net.SendToServer()
     end
-
     return true
 end
 

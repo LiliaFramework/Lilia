@@ -2249,7 +2249,6 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     el.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
 
-                -- Force layout update
                 scrollPanel:InvalidateLayout(true)
             end
 
@@ -2271,10 +2270,7 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                 categoryContainer.searchBar = searchBar
                 categoryContainer.scrollPanel = scrollPanel
                 categoryContainer.categoryName = categoryName
-                searchBar.OnTextChanged = function(_, value)
-                    populateCategoryTab(categoryName, scrollPanel, value or "")
-                end
-
+                searchBar.OnTextChanged = function(_, value) populateCategoryTab(categoryName, scrollPanel, value or "") end
                 populateCategoryTab(categoryName, scrollPanel, "")
                 tabs:AddTab(categoryName, categoryContainer)
             end

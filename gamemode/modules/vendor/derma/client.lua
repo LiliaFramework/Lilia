@@ -1206,10 +1206,7 @@ function PANEL:Init()
     self.items:AddColumn(L("price"))
     self.items:AddColumn(L("stock"))
     self.items:AddColumn(L("category"))
-
     self.lines = {}
-
-    -- Override liaTable's CreateRow to fix right-click menu
     self.items.CreateRow = function(tbl, rowIndex, rowData)
         local row = vgui.Create("DButton", tbl.content)
         row:Dock(TOP)
@@ -1231,7 +1228,6 @@ function PANEL:Init()
             tbl.selectedRow = rowIndex
             self:OnRowRightClick(rowIndex, rowData)
             if tbl.OnRightClick then tbl.OnRightClick(rowData) end
-            -- Don't create the default liaTable menu for vendor editor
         end
 
         local xPos = 0
@@ -1271,9 +1267,7 @@ function PANEL:populateFactionPanel()
             local theme = lia.color.theme
             local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
             local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
-
             lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
-
             if panel:IsHovered() then
                 panel.hoverAlpha = math.min(panel.hoverAlpha + FrameTime() * 5, 1)
             else
@@ -1285,7 +1279,6 @@ function PANEL:populateFactionPanel()
                 lia.derma.rect(0, 0, w, h):Rad(8):Color(hoverCol):Draw()
             end
 
-            -- Subtle inner glow effect
             if panel.hoverAlpha > 0.5 then
                 local glowColor = ColorAlpha(theme and theme.theme or Color(100, 150, 200), 15 * panel.hoverAlpha)
                 lia.derma.rect(2, 2, w - 4, h - 4):Rad(6):Color(glowColor):Draw()
@@ -1293,21 +1286,17 @@ function PANEL:populateFactionPanel()
 
             surface.SetDrawColor(theme and theme.panel and theme.panel[2] or Color(80, 80, 80, 100))
             surface.DrawOutlinedRect(0, 0, w, h)
-
-            -- Enhanced border for better definition
             if panel.hoverAlpha > 0.3 then
                 surface.SetDrawColor(ColorAlpha(theme and theme.theme or Color(100, 150, 200), 100 * panel.hoverAlpha))
                 surface.DrawOutlinedRect(0, 0, w, h)
             end
         end
 
-        -- Faction header with checkbox
         local factionHeader = panel:Add("DPanel")
         factionHeader:Dock(TOP)
         factionHeader:DockMargin(0, 0, 0, 8)
         factionHeader:SetTall(36)
         factionHeader:SetPaintBackground(false)
-
         local factionCheckbox = factionHeader:Add("liaCheckbox")
         factionCheckbox:Dock(LEFT)
         factionCheckbox:SetWide(48)
@@ -1315,7 +1304,6 @@ function PANEL:populateFactionPanel()
         factionCheckbox.factionID = k
         factionCheckbox.OnChange = function(_, state) lia.vendor.editor.faction(k, state) end
         self.factions[k] = factionCheckbox
-
         local factionLabel = factionHeader:Add("DLabel")
         factionLabel:Dock(FILL)
         factionLabel:SetText(L(v.name))
@@ -1324,8 +1312,6 @@ function PANEL:populateFactionPanel()
         factionLabel:SetContentAlignment(4)
         factionLabel:SetCursor("hand")
         factionLabel.DoClick = function() factionCheckbox:Toggle() end
-
-        -- Add a separator line for better visual organization
         local separator = panel:Add("DPanel")
         separator:Dock(TOP)
         separator:DockMargin(0, 0, 0, 8)
@@ -1343,7 +1329,6 @@ function PANEL:populateFactionPanel()
                 classRow:DockMargin(16, 0, 0, 6)
                 classRow:SetTall(28)
                 classRow:SetPaintBackground(false)
-
                 local classCheckbox = classRow:Add("liaCheckbox")
                 classCheckbox:Dock(LEFT)
                 classCheckbox:SetWide(44)
@@ -1352,7 +1337,6 @@ function PANEL:populateFactionPanel()
                 classCheckbox.factionID = factionCheckbox.factionID
                 classCheckbox.OnChange = function(_, state) lia.vendor.editor.class(k2, state) end
                 self.classes[k2] = classCheckbox
-
                 local classLabel = classRow:Add("DLabel")
                 classLabel:Dock(FILL)
                 classLabel:SetText(L(v2.name))
@@ -1361,14 +1345,10 @@ function PANEL:populateFactionPanel()
                 classLabel:SetContentAlignment(4)
                 classLabel:SetCursor("hand")
                 classLabel.DoClick = function() classCheckbox:Toggle() end
-
                 classCount = classCount + 1
             end
         end
 
-        -- Adjust panel height based on content
-       -- Header (36px) + margins (8px + 8px) + separator (1px + 8px margin) + padding (8px top + 8px bottom) = 69px base
-        -- Each class row: 28px height + 6px margin = 34px per class
         local baseHeight = 69 + (classCount * 34)
         panel:SetTall(math.max(baseHeight, 100))
     end
@@ -1590,9 +1570,7 @@ function PANEL:Init()
             local theme = lia.color.theme
             local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
             local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
-
             lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
-
             if panel:IsHovered() then
                 panel.hoverAlpha = math.min(panel.hoverAlpha + FrameTime() * 5, 1)
             else
@@ -1604,7 +1582,6 @@ function PANEL:Init()
                 lia.derma.rect(0, 0, w, h):Rad(8):Color(hoverCol):Draw()
             end
 
-            -- Subtle inner glow effect
             if panel.hoverAlpha > 0.5 then
                 local glowColor = ColorAlpha(theme and theme.theme or Color(100, 150, 200), 15 * panel.hoverAlpha)
                 lia.derma.rect(2, 2, w - 4, h - 4):Rad(6):Color(glowColor):Draw()
@@ -1612,21 +1589,17 @@ function PANEL:Init()
 
             surface.SetDrawColor(theme and theme.panel and theme.panel[2] or Color(80, 80, 80, 100))
             surface.DrawOutlinedRect(0, 0, w, h)
-
-            -- Enhanced border for better definition
             if panel.hoverAlpha > 0.3 then
                 surface.SetDrawColor(ColorAlpha(theme and theme.theme or Color(100, 150, 200), 100 * panel.hoverAlpha))
                 surface.DrawOutlinedRect(0, 0, w, h)
             end
         end
 
-        -- Faction header with checkbox
         local factionHeader = panel:Add("DPanel")
         factionHeader:Dock(TOP)
         factionHeader:DockMargin(0, 0, 0, 8)
         factionHeader:SetTall(36)
         factionHeader:SetPaintBackground(false)
-
         local factionCheckbox = factionHeader:Add("liaCheckbox")
         factionCheckbox:Dock(LEFT)
         factionCheckbox:SetWide(48)
@@ -1634,7 +1607,6 @@ function PANEL:Init()
         factionCheckbox.factionID = k
         factionCheckbox.OnChange = onFactionStateChanged
         self.factions[k] = factionCheckbox
-
         local factionLabel = factionHeader:Add("DLabel")
         factionLabel:Dock(FILL)
         factionLabel:SetText(L(v.name))
@@ -1643,8 +1615,6 @@ function PANEL:Init()
         factionLabel:SetContentAlignment(4)
         factionLabel:SetCursor("hand")
         factionLabel.DoClick = function() factionCheckbox:Toggle() end
-
-        -- Add a separator line for better visual organization
         local separator = panel:Add("DPanel")
         separator:Dock(TOP)
         separator:DockMargin(0, 0, 0, 8)
@@ -1662,7 +1632,6 @@ function PANEL:Init()
                 classRow:DockMargin(16, 0, 0, 6)
                 classRow:SetTall(28)
                 classRow:SetPaintBackground(false)
-
                 local classCheckbox = classRow:Add("liaCheckbox")
                 classCheckbox:Dock(LEFT)
                 classCheckbox:SetWide(44)
@@ -1671,7 +1640,6 @@ function PANEL:Init()
                 classCheckbox.factionID = factionCheckbox.factionID
                 classCheckbox.OnChange = onClassStateChanged
                 self.classes[k2] = classCheckbox
-
                 local classLabel = classRow:Add("DLabel")
                 classLabel:Dock(FILL)
                 classLabel:SetText(L(v2.name))
@@ -1680,14 +1648,10 @@ function PANEL:Init()
                 classLabel:SetContentAlignment(4)
                 classLabel:SetCursor("hand")
                 classLabel.DoClick = function() classCheckbox:Toggle() end
-
                 classCount = classCount + 1
             end
         end
 
-        -- Adjust panel height based on content
-        -- Header (36px) + margins (8px + 8px) + separator (1px + 8px margin) + padding (8px top + 8px bottom) = 69px base
-        -- Each class row: 28px height + 6px margin = 34px per class
         local baseHeight = 69 + (classCount * 34)
         panel:SetTall(math.max(baseHeight, 100))
     end

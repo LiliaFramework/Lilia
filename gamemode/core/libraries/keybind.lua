@@ -921,7 +921,6 @@ if CLIENT then
                     end
                 end
 
-                -- Force layout update
                 scrollPanel:InvalidateLayout(true)
             end
 

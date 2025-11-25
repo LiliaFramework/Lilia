@@ -324,7 +324,6 @@ local function OpenFlagsPanel(panel, data)
         end
 
         panel.populating = false
-        -- Force table layout update
         list:InvalidateLayout(true)
         if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
     end
@@ -551,7 +550,6 @@ function MODULE:PopulateAdminTabs(pages)
                                 end
                             end
 
-                            -- Force table layout update
                             list:InvalidateLayout(true)
                             if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
                         end
@@ -2512,7 +2510,6 @@ local function OpenLogsUI(panel, categorizedLogs)
             currentPage = 1
             updatePagination()
             showCurrentPage()
-            -- Force table layout update
             list:InvalidateLayout(true)
             if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
         end
@@ -2768,7 +2765,6 @@ net.Receive("liaAllPks", function()
             end
         end
 
-        -- Force table layout update
         list:InvalidateLayout(true)
         if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
     end
@@ -2942,7 +2938,6 @@ lia.net.readBigTable("liaStaffSummary", function(data)
             if match then list:AddLine(unpack(values)) end
         end
 
-        -- Force table layout update
         list:InvalidateLayout(true)
         if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
     end
@@ -3063,7 +3058,6 @@ lia.net.readBigTable("liaAllPlayers", function(players)
             end
         end
 
-        -- Force table layout update
         list:InvalidateLayout(true)
         if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
     end
@@ -3539,7 +3533,6 @@ net.Receive("liaActiveTickets", function()
             if match then list:AddLine(unpack(values)) end
         end
 
-        -- Force table layout update
         list:InvalidateLayout(true)
         if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
     end
@@ -3687,7 +3680,6 @@ net.Receive("liaAllWarnings", function()
             if match then list:AddLine(unpack(values)) end
         end
 
-        -- Force table layout update
         list:InvalidateLayout(true)
         if list.scrollPanel then list.scrollPanel:InvalidateLayout(true) end
     end
