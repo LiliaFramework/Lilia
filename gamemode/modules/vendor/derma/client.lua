@@ -1,7 +1,4 @@
 ﻿local sw, sh = ScrW(), ScrH()
-local COLS_MODE = 2
-local COLS_PRICE = 3
-local COLS_STOCK = 4
 local RarityColors = lia.vendor.rarities
 local VendorClick = {"buttons/button15.wav", 30, 250}
 local PANEL = {}
@@ -1201,26 +1198,62 @@ function PANEL:Init()
         end
     end)
 
-    self.items = self.rightPanel:Add("DListView")
+    self.items = self.rightPanel:Add("liaTable")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 0, 0, 0)
-    self.items:AddColumn(L("name")).Header:SetTextColor(lia.color.theme.text or color_white)
-    self.items:AddColumn(L("mode")).Header:SetTextColor(lia.color.theme.text or color_white)
-    self.items:AddColumn(L("price")).Header:SetTextColor(lia.color.theme.text or color_white)
-    self.items:AddColumn(L("stock")).Header:SetTextColor(lia.color.theme.text or color_white)
-    self.items:AddColumn(L("category")).Header:SetTextColor(lia.color.theme.text or color_white)
-    self.items:SetMultiSelect(false)
-    self.items.OnRowRightClick = function(_, _, line) self:OnRowRightClick(line) end
-    self.items.Paint = function(listView)
-        for _, line in ipairs(listView:GetLines()) do
-            for i = 1, #listView.Columns do
-                local colData = line.Columns and line.Columns[i]
-                if colData and colData.TextPanel then colData.TextPanel:SetTextColor(lia.color.theme.text or color_white) end
+    self.items:AddColumn(L("name"))
+    self.items:AddColumn(L("mode"))
+    self.items:AddColumn(L("price"))
+    self.items:AddColumn(L("stock"))
+    self.items:AddColumn(L("category"))
+
+    self.lines = {}
+
+    -- Override liaTable's CreateRow to fix right-click menu
+    self.items.CreateRow = function(tbl, rowIndex, rowData)
+        local row = vgui.Create("DButton", tbl.content)
+        row:Dock(TOP)
+        row:DockMargin(0, 0, 0, 1)
+        row:SetTall(tbl.rowHeight)
+        row:SetText("")
+        row.Paint = function(s, w, h)
+            local bgColor = tbl.selectedRow == rowIndex and lia.color.theme.theme or (s:IsHovered() and lia.color.theme.hover or lia.color.theme.panel[1])
+            lia.derma.rect(0, 0, w, h):Color(bgColor):Shape(lia.derma.SHAPE_IOS):Draw()
+        end
+
+        row.DoClick = function()
+            tbl.selectedRow = rowIndex
+            tbl.OnAction(rowData)
+            lia.websound.playButtonSound()
+        end
+
+        row.DoRightClick = function()
+            tbl.selectedRow = rowIndex
+            self:OnRowRightClick(rowIndex, rowData)
+            if tbl.OnRightClick then tbl.OnRightClick(rowData) end
+            -- Don't create the default liaTable menu for vendor editor
+        end
+
+        local xPos = 0
+        for i, column in ipairs(tbl.columns) do
+            local label = vgui.Create("DLabel", row)
+            label:SetText(tostring(rowData[i]))
+            label:SetFont(tbl.rowFont)
+            label:SetTextColor(lia.color.theme.text)
+            label:SetContentAlignment(column.align)
+            label:SetSize(column.width, tbl.rowHeight)
+            label:SetPos(xPos, 0)
+            if column.align == TEXT_ALIGN_LEFT then
+                label:SetTextInset(tbl.padding, 0)
+            elseif column.align == TEXT_ALIGN_RIGHT then
+                label:SetTextInset(0, 0, tbl.padding, 0)
             end
+
+            label:SetContentAlignment(column.align + 4)
+            xPos = xPos + column.width
         end
     end
 
-    self.lines = {}
     self:ReloadItemList()
     self:listenForUpdates()
 end
@@ -1229,35 +1262,115 @@ function PANEL:populateFactionPanel()
     if not IsValid(self.factionScroll) then return end
     self.factionScroll:Clear()
     for k, v in ipairs(lia.faction.indices) do
-        local panel = self.factionScroll:Add("DPanel")
+        local panel = self.factionScroll:Add("liaSemiTransparentDPanel")
         panel:Dock(TOP)
-        panel:DockPadding(4, 4, 4, 4)
-        panel:DockMargin(0, 0, 0, 4)
-        panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(4):Color(lia.color.theme.panel[1]):Draw() end
-        local faction = panel:Add("DCheckBoxLabel")
-        faction:Dock(TOP)
-        faction:SetTextColor(lia.color.theme.text or color_white)
-        faction:SetText(L(v.name))
-        faction:DockMargin(0, 0, 0, 4)
-        faction:SetFont("LiliaFont.17")
-        faction.factionID = k
-        faction.OnChange = function(_, state) lia.vendor.editor.faction(k, state) end
-        self.factions[k] = faction
-        for k2, v2 in ipairs(lia.class.list) do
-            if v2.faction == k then
-                local class = panel:Add("DCheckBoxLabel")
-                class:Dock(TOP)
-                class:DockMargin(16, 0, 0, 4)
-                class:SetText(L(v2.name))
-                class:SetTextColor(lia.color.theme.text or color_white)
-                class:SetFont("LiliaFont.17")
-                class.classID = k2
-                class.factionID = faction.factionID
-                class.OnChange = function(_, state) lia.vendor.editor.class(k2, state) end
-                self.classes[k2] = class
-                panel:SetTall(panel:GetTall() + class:GetTall() + 4)
+        panel:DockPadding(8, 8, 8, 8)
+        panel:DockMargin(0, 0, 0, 6)
+        panel.hoverAlpha = 0
+        panel.Paint = function(_, w, h)
+            local theme = lia.color.theme
+            local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
+            local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
+
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
+
+            if panel:IsHovered() then
+                panel.hoverAlpha = math.min(panel.hoverAlpha + FrameTime() * 5, 1)
+            else
+                panel.hoverAlpha = math.max(panel.hoverAlpha - FrameTime() * 5, 0)
+            end
+
+            if panel.hoverAlpha > 0 then
+                local hoverCol = ColorAlpha(hoverColor, hoverColor.a * panel.hoverAlpha)
+                lia.derma.rect(0, 0, w, h):Rad(8):Color(hoverCol):Draw()
+            end
+
+            -- Subtle inner glow effect
+            if panel.hoverAlpha > 0.5 then
+                local glowColor = ColorAlpha(theme and theme.theme or Color(100, 150, 200), 15 * panel.hoverAlpha)
+                lia.derma.rect(2, 2, w - 4, h - 4):Rad(6):Color(glowColor):Draw()
+            end
+
+            surface.SetDrawColor(theme and theme.panel and theme.panel[2] or Color(80, 80, 80, 100))
+            surface.DrawOutlinedRect(0, 0, w, h)
+
+            -- Enhanced border for better definition
+            if panel.hoverAlpha > 0.3 then
+                surface.SetDrawColor(ColorAlpha(theme and theme.theme or Color(100, 150, 200), 100 * panel.hoverAlpha))
+                surface.DrawOutlinedRect(0, 0, w, h)
             end
         end
+
+        -- Faction header with checkbox
+        local factionHeader = panel:Add("DPanel")
+        factionHeader:Dock(TOP)
+        factionHeader:DockMargin(0, 0, 0, 8)
+        factionHeader:SetTall(36)
+        factionHeader:SetPaintBackground(false)
+
+        local factionCheckbox = factionHeader:Add("liaCheckbox")
+        factionCheckbox:Dock(LEFT)
+        factionCheckbox:SetWide(48)
+        factionCheckbox:DockMargin(0, 0, 8, 0)
+        factionCheckbox.factionID = k
+        factionCheckbox.OnChange = function(_, state) lia.vendor.editor.faction(k, state) end
+        self.factions[k] = factionCheckbox
+
+        local factionLabel = factionHeader:Add("DLabel")
+        factionLabel:Dock(FILL)
+        factionLabel:SetText(L(v.name))
+        factionLabel:SetTextColor(lia.color.theme.text or color_white)
+        factionLabel:SetFont("LiliaFont.18b")
+        factionLabel:SetContentAlignment(4)
+        factionLabel:SetCursor("hand")
+        factionLabel.DoClick = function() factionCheckbox:Toggle() end
+
+        -- Add a separator line for better visual organization
+        local separator = panel:Add("DPanel")
+        separator:Dock(TOP)
+        separator:DockMargin(0, 0, 0, 8)
+        separator:SetTall(1)
+        separator.Paint = function(_, w, h)
+            surface.SetDrawColor(lia.color.theme.panel and lia.color.theme.panel[2] or Color(80, 80, 80, 50))
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        local classCount = 0
+        for k2, v2 in ipairs(lia.class.list) do
+            if v2.faction == k then
+                local classRow = panel:Add("DPanel")
+                classRow:Dock(TOP)
+                classRow:DockMargin(16, 0, 0, 6)
+                classRow:SetTall(28)
+                classRow:SetPaintBackground(false)
+
+                local classCheckbox = classRow:Add("liaCheckbox")
+                classCheckbox:Dock(LEFT)
+                classCheckbox:SetWide(44)
+                classCheckbox:DockMargin(0, 0, 6, 0)
+                classCheckbox.classID = k2
+                classCheckbox.factionID = factionCheckbox.factionID
+                classCheckbox.OnChange = function(_, state) lia.vendor.editor.class(k2, state) end
+                self.classes[k2] = classCheckbox
+
+                local classLabel = classRow:Add("DLabel")
+                classLabel:Dock(FILL)
+                classLabel:SetText(L(v2.name))
+                classLabel:SetTextColor(lia.color.theme.text and ColorAlpha(lia.color.theme.text, 220) or Color(220, 220, 220))
+                classLabel:SetFont("LiliaFont.16")
+                classLabel:SetContentAlignment(4)
+                classLabel:SetCursor("hand")
+                classLabel.DoClick = function() classCheckbox:Toggle() end
+
+                classCount = classCount + 1
+            end
+        end
+
+        -- Adjust panel height based on content
+       -- Header (36px) + margins (8px + 8px) + separator (1px + 8px margin) + padding (8px top + 8px bottom) = 69px base
+        -- Each class row: 28px height + 6px margin = 34px per class
+        local baseHeight = 69 + (classCount * 34)
+        panel:SetTall(math.max(baseHeight, 100))
     end
 
     self:updateFactionChecked()
@@ -1359,41 +1472,16 @@ function PANEL:onNameDescChanged(key)
     end
 end
 
-function PANEL:onItemModeUpdated(_, itemType, value)
-    local line = self.lines[itemType]
-    if not IsValid(line) then return end
-    line:SetColumnText(COLS_MODE, self:getModeText(value))
-    timer.Simple(0, function()
-        if IsValid(line) then
-            local colData = line.Columns and line.Columns[COLS_MODE]
-            if colData and colData.TextPanel then colData.TextPanel:SetTextColor(lia.color.theme.text or color_white) end
-        end
-    end)
+function PANEL:onItemModeUpdated()
+    self:ReloadItemList(self.lastSearchValue)
 end
 
-function PANEL:onItemPriceUpdated(vendor, itemType)
-    local line = self.lines[itemType]
-    if not IsValid(line) then return end
-    line:SetColumnText(COLS_PRICE, vendor:getPrice(itemType))
-    timer.Simple(0, function()
-        if IsValid(line) then
-            local colData = line.Columns and line.Columns[COLS_PRICE]
-            if colData and colData.TextPanel then colData.TextPanel:SetTextColor(lia.color.theme.text or color_white) end
-        end
-    end)
+function PANEL:onItemPriceUpdated()
+    self:ReloadItemList(self.lastSearchValue)
 end
 
-function PANEL:onItemStockUpdated(vendor, itemType)
-    local line = self.lines[itemType]
-    if not IsValid(line) then return end
-    local current, max = vendor:getStock(itemType)
-    line:SetColumnText(COLS_STOCK, max and current .. "/" .. max or "-")
-    timer.Simple(0, function()
-        if IsValid(line) then
-            local colData = line.Columns and line.Columns[COLS_STOCK]
-            if colData and colData.TextPanel then colData.TextPanel:SetTextColor(lia.color.theme.text or color_white) end
-        end
-    end)
+function PANEL:onItemStockUpdated()
+    self:ReloadItemList(self.lastSearchValue)
 end
 
 function PANEL:listenForUpdates()
@@ -1404,7 +1492,7 @@ function PANEL:listenForUpdates()
     hook.Add("VendorItemMaxStockUpdated", self, self.onItemStockUpdated)
 end
 
-function PANEL:OnRowRightClick(line)
+function PANEL:OnRowRightClick(_, rowData)
     local entity = liaVendorEnt
     if not IsValid(entity) then
         LocalPlayer():notifyError(L("vendorEntityInvalid"))
@@ -1412,7 +1500,7 @@ function PANEL:OnRowRightClick(line)
     end
 
     if IsValid(menu) then menu:Remove() end
-    local uniqueID = line.item
+    local uniqueID = rowData.item
     local itemTable = lia.item.list[uniqueID]
     menu = lia.derma.dermaMenu()
     local mode, modePanel = menu:AddSubMenu(L("mode"))
@@ -1464,17 +1552,9 @@ function PANEL:ReloadItemList(filter)
         if filter and not (v.getName and name or L(name)):lower():find(filter:lower(), 1, true) then continue end
         local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
         local current, max = entity:getStock(k)
-        local panel = self.items:AddLine(v.getName and name or L(name), self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", v:getCategory())
-        panel.item = k
-        self.lines[k] = panel
-        timer.Simple(0, function()
-            if IsValid(panel) then
-                for i = 1, #self.items.Columns do
-                    local colData = panel.Columns and panel.Columns[i]
-                    if colData and colData.TextPanel then colData.TextPanel:SetTextColor(lia.color.theme.text or color_white) end
-                end
-            end
-        end)
+        local rowData = self.items:AddLine(v.getName and name or L(name), self:getModeText(mode), entity:getPrice(k), max and current .. "/" .. max or "-", v:getCategory())
+        rowData.item = k
+        self.lines[k] = rowData
     end
 end
 
@@ -1501,32 +1581,115 @@ function PANEL:Init()
     self.factions = {}
     self.classes = {}
     for k, v in ipairs(lia.faction.indices) do
-        local panel = self.scroll:Add("DPanel")
+        local panel = self.scroll:Add("liaSemiTransparentDPanel")
         panel:Dock(TOP)
-        panel:DockPadding(4, 4, 4, 4)
-        panel:DockMargin(0, 0, 0, 4)
-        local faction = panel:Add("DCheckBoxLabel")
-        faction:Dock(TOP)
-        faction:SetTextColor(lia.color.theme.text or color_white)
-        faction:SetText(L(v.name))
-        faction:DockMargin(0, 0, 0, 4)
-        faction.factionID = k
-        faction.OnChange = onFactionStateChanged
-        self.factions[k] = faction
-        for k2, v2 in ipairs(lia.class.list) do
-            if v2.faction == k then
-                local class = panel:Add("DCheckBoxLabel")
-                class:Dock(TOP)
-                class:DockMargin(16, 0, 0, 4)
-                class:SetText(L(v2.name))
-                class:SetTextColor(lia.color.theme.text or color_white)
-                class.classID = k2
-                class.factionID = faction.factionID
-                class.OnChange = onClassStateChanged
-                self.classes[k2] = class
-                panel:SetTall(panel:GetTall() + class:GetTall() + 4)
+        panel:DockPadding(8, 8, 8, 8)
+        panel:DockMargin(0, 0, 0, 6)
+        panel.hoverAlpha = 0
+        panel.Paint = function(_, w, h)
+            local theme = lia.color.theme
+            local bgColor = theme and theme.panel and theme.panel[1] or Color(50, 50, 50, 240)
+            local hoverColor = theme and theme.button_hovered or Color(70, 140, 140, 30)
+
+            lia.derma.rect(0, 0, w, h):Rad(8):Color(bgColor):Draw()
+
+            if panel:IsHovered() then
+                panel.hoverAlpha = math.min(panel.hoverAlpha + FrameTime() * 5, 1)
+            else
+                panel.hoverAlpha = math.max(panel.hoverAlpha - FrameTime() * 5, 0)
+            end
+
+            if panel.hoverAlpha > 0 then
+                local hoverCol = ColorAlpha(hoverColor, hoverColor.a * panel.hoverAlpha)
+                lia.derma.rect(0, 0, w, h):Rad(8):Color(hoverCol):Draw()
+            end
+
+            -- Subtle inner glow effect
+            if panel.hoverAlpha > 0.5 then
+                local glowColor = ColorAlpha(theme and theme.theme or Color(100, 150, 200), 15 * panel.hoverAlpha)
+                lia.derma.rect(2, 2, w - 4, h - 4):Rad(6):Color(glowColor):Draw()
+            end
+
+            surface.SetDrawColor(theme and theme.panel and theme.panel[2] or Color(80, 80, 80, 100))
+            surface.DrawOutlinedRect(0, 0, w, h)
+
+            -- Enhanced border for better definition
+            if panel.hoverAlpha > 0.3 then
+                surface.SetDrawColor(ColorAlpha(theme and theme.theme or Color(100, 150, 200), 100 * panel.hoverAlpha))
+                surface.DrawOutlinedRect(0, 0, w, h)
             end
         end
+
+        -- Faction header with checkbox
+        local factionHeader = panel:Add("DPanel")
+        factionHeader:Dock(TOP)
+        factionHeader:DockMargin(0, 0, 0, 8)
+        factionHeader:SetTall(36)
+        factionHeader:SetPaintBackground(false)
+
+        local factionCheckbox = factionHeader:Add("liaCheckbox")
+        factionCheckbox:Dock(LEFT)
+        factionCheckbox:SetWide(48)
+        factionCheckbox:DockMargin(0, 0, 8, 0)
+        factionCheckbox.factionID = k
+        factionCheckbox.OnChange = onFactionStateChanged
+        self.factions[k] = factionCheckbox
+
+        local factionLabel = factionHeader:Add("DLabel")
+        factionLabel:Dock(FILL)
+        factionLabel:SetText(L(v.name))
+        factionLabel:SetTextColor(lia.color.theme.text or color_white)
+        factionLabel:SetFont("LiliaFont.18b")
+        factionLabel:SetContentAlignment(4)
+        factionLabel:SetCursor("hand")
+        factionLabel.DoClick = function() factionCheckbox:Toggle() end
+
+        -- Add a separator line for better visual organization
+        local separator = panel:Add("DPanel")
+        separator:Dock(TOP)
+        separator:DockMargin(0, 0, 0, 8)
+        separator:SetTall(1)
+        separator.Paint = function(_, w, h)
+            surface.SetDrawColor(lia.color.theme.panel and lia.color.theme.panel[2] or Color(80, 80, 80, 50))
+            surface.DrawRect(0, 0, w, h)
+        end
+
+        local classCount = 0
+        for k2, v2 in ipairs(lia.class.list) do
+            if v2.faction == k then
+                local classRow = panel:Add("DPanel")
+                classRow:Dock(TOP)
+                classRow:DockMargin(16, 0, 0, 6)
+                classRow:SetTall(28)
+                classRow:SetPaintBackground(false)
+
+                local classCheckbox = classRow:Add("liaCheckbox")
+                classCheckbox:Dock(LEFT)
+                classCheckbox:SetWide(44)
+                classCheckbox:DockMargin(0, 0, 6, 0)
+                classCheckbox.classID = k2
+                classCheckbox.factionID = factionCheckbox.factionID
+                classCheckbox.OnChange = onClassStateChanged
+                self.classes[k2] = classCheckbox
+
+                local classLabel = classRow:Add("DLabel")
+                classLabel:Dock(FILL)
+                classLabel:SetText(L(v2.name))
+                classLabel:SetTextColor(lia.color.theme.text and ColorAlpha(lia.color.theme.text, 220) or Color(220, 220, 220))
+                classLabel:SetFont("LiliaFont.16")
+                classLabel:SetContentAlignment(4)
+                classLabel:SetCursor("hand")
+                classLabel.DoClick = function() classCheckbox:Toggle() end
+
+                classCount = classCount + 1
+            end
+        end
+
+        -- Adjust panel height based on content
+        -- Header (36px) + margins (8px + 8px) + separator (1px + 8px margin) + padding (8px top + 8px bottom) = 69px base
+        -- Each class row: 28px height + 6px margin = 34px per class
+        local baseHeight = 69 + (classCount * 34)
+        panel:SetTall(math.max(baseHeight, 100))
     end
 
     self:updateChecked()
