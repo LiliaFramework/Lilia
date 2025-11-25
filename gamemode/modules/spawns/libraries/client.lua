@@ -1,6 +1,7 @@
 ﻿local ceil, clamp = math.ceil, math.Clamp
 local fade, shadowFade = 0, 0
 local hideKey = false
+local fastFade = false
 function MODULE:HUDPaint()
     local ply, ft = LocalPlayer(), FrameTime()
     if not ply:getChar() then return end
@@ -19,7 +20,9 @@ function MODULE:HUDPaint()
     if ply:getChar() and ply:Alive() then
         if fade > 0 then
             shadowFade = clamp(shadowFade - ft * 2 / baseTime, 0, 1)
-            if shadowFade == 0 then fade = clamp(fade - ft / baseTime, 0, 1) end
+            local fadeSpeed = fastFade and (ft * 4) or (ft / baseTime)
+            if shadowFade == 0 then fade = clamp(fade - fadeSpeed, 0, 1) end
+            if fade <= 0 then fastFade = false end
             hideKey = true
         end
     else
@@ -74,6 +77,7 @@ function MODULE:PlayerButtonDown(client, key)
     local lastDeath = ply:getNetVar("lastDeathTime", os.time())
     local left = math.Clamp(baseTime - (os.time() - lastDeath), 0, baseTime)
     if left > 0 then return end
+    fastFade = true
     net.Start("liaPlayerRespawn")
     net.SendToServer()
 end

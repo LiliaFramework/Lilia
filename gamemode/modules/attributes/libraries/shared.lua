@@ -3,11 +3,12 @@
     if not char then return 1 end
     local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
     local offset
-    local draining = not (client:GetMoveType() == MOVETYPE_NOCLIP) and client:KeyDown(IN_SPEED) and (client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed or client:InVehicle() and not client:OnGround())
-    if draining then
+    if client:Crouching() then
+        offset = lia.config.get("StaminaCrouchRegeneration")
+    elseif not (client:GetMoveType() == MOVETYPE_NOCLIP) and client:KeyDown(IN_SPEED) and ((client:OnGround() and client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed) or (client:InVehicle() and not client:OnGround())) then
         offset = -lia.config.get("StaminaDrain")
     else
-        offset = client:Crouching() and lia.config.get("StaminaCrouchRegeneration") or lia.config.get("StaminaRegeneration")
+        offset = lia.config.get("StaminaRegeneration")
     end
 
     offset = hook.Run("AdjustStaminaOffset", client, offset) or offset
