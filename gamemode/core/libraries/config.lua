@@ -2166,7 +2166,8 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         parent:Clear()
         local tabs = parent:Add("liaTabs")
         tabs:Dock(FILL)
-        local function populate(filter)
+        local allCategoryItems = {}
+        local function populate()
             if tabs.tabs then
                 for i = #tabs.tabs, 1, -1 do
                     tabs:CloseTab(i)
@@ -2203,19 +2204,14 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
                     lia.error(L("configWithKey") .. "\"" .. tostring(k) .. "\" is missing from stored configs")
                 else
                     local n = tostring(opt.name or "")
-                    local d = tostring(opt.desc or "")
                     local cat = tostring(opt.category or L("misc"))
-                    local ln, ld = n:lower(), d:lower()
-                    local lk, lc = k:lower(), cat:lower()
-                    if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
-                        categories[cat] = categories[cat] or {}
-                        categories[cat][#categories[cat] + 1] = {
-                            key = k,
-                            name = n,
-                            config = opt,
-                            elemType = opt.data and opt.data.type or "Generic"
-                        }
-                    end
+                    categories[cat] = categories[cat] or {}
+                    categories[cat][#categories[cat] + 1] = {
+                        key = k,
+                        name = n,
+                        config = opt,
+                        elemType = opt.data and opt.data.type or "Generic"
+                    }
                 end
             end
 
@@ -2225,26 +2221,66 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
             end
 
             table.sort(categoryNames)
-            for _, categoryName in ipairs(categoryNames) do
-                local items = categories[categoryName]
-                local scrollPanel = vgui.Create("liaScrollPanel")
-                scrollPanel:Dock(FILL)
-                scrollPanel:InvalidateLayout(true)
-                if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+            allCategoryItems = categories
+            local function populateCategoryTab(categoryName, scrollPanel, searchFilter)
                 local canvas = scrollPanel:GetCanvas()
+                canvas:Clear()
                 canvas:DockPadding(10, 10, 10, 10)
-                for _, it in ipairs(items) do
+                local items = allCategoryItems[categoryName] or {}
+                local filteredItems = {}
+                searchFilter = tostring(searchFilter or "")
+                if searchFilter ~= "" then
+                    local filterLower = searchFilter:lower()
+                    for _, it in ipairs(items) do
+                        local n = tostring(it.name or "")
+                        local d = tostring(it.config.desc or "")
+                        local k = tostring(it.key or "")
+                        local ln, ld, lk = n:lower(), d:lower(), k:lower()
+                        if ln:find(filterLower, 1, true) or ld:find(filterLower, 1, true) or lk:find(filterLower, 1, true) then filteredItems[#filteredItems + 1] = it end
+                    end
+                else
+                    filteredItems = items
+                end
+
+                for _, it in ipairs(filteredItems) do
                     local el = ConfigFormatting[it.elemType](it.key, it.name, it.config, canvas)
                     el:Dock(TOP)
                     el:DockMargin(10, 10, 10, 0)
                     el.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                 end
 
-                tabs:AddTab(categoryName, scrollPanel)
+                -- Force layout update
+                scrollPanel:InvalidateLayout(true)
+            end
+
+            for _, categoryName in ipairs(categoryNames) do
+                local categoryContainer = vgui.Create("DPanel")
+                categoryContainer:Dock(FILL)
+                categoryContainer.Paint = function() end
+                local searchBar = vgui.Create("liaEntry", categoryContainer)
+                searchBar:Dock(TOP)
+                searchBar:DockMargin(10, 10, 10, 10)
+                searchBar:SetTall(40)
+                searchBar:SetFont("LiliaFont.18")
+                searchBar:SetPlaceholderText(L("searchConfigs") or "Search configs...")
+                searchBar:SetTextColor(Color(200, 200, 200))
+                local scrollPanel = vgui.Create("liaScrollPanel", categoryContainer)
+                scrollPanel:Dock(FILL)
+                scrollPanel:InvalidateLayout(true)
+                if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+                categoryContainer.searchBar = searchBar
+                categoryContainer.scrollPanel = scrollPanel
+                categoryContainer.categoryName = categoryName
+                searchBar.OnTextChanged = function(_, value)
+                    populateCategoryTab(categoryName, scrollPanel, value or "")
+                end
+
+                populateCategoryTab(categoryName, scrollPanel, "")
+                tabs:AddTab(categoryName, categoryContainer)
             end
         end
 
-        populate("")
+        populate()
     end
 
     if hook.Run("CanPlayerModifyConfig", LocalPlayer()) ~= false then

@@ -24,12 +24,11 @@ function PANEL:Init()
     self.topBar:Dock(TOP)
     self.topBar:SetTall(44)
     self.topBar.Paint = nil
-    self.searchBox = vgui.Create("DTextEntry", self.topBar)
+    self.searchBox = vgui.Create("liaEntry", self.topBar)
     self.searchBox:Dock(FILL)
     self.searchBox:SetTall(32)
     self.searchBox:SetPlaceholderText("")
     self.searchBox:SetText("")
-    self.searchBox.PaintOver = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
     self.searchBox.OnTextChanged = function() self:Populate() end
     self.refreshButton = vgui.Create("DButton", self.topBar)
     self.refreshButton:Dock(RIGHT)

@@ -12,7 +12,7 @@ function PANEL:Init()
     self.textEntry.OnLoseFocus = function() self.action(self:GetValue()) end
     self.textEntry.OnValueChange = function(_, value) if self.OnValueChange then self:OnValueChange(value) end end
     self.textEntry.OnTextChanged = function()
-        local value = self:GetValue()
+        local value = self:GetValue() or ""
         if self.OnTextChanged then self:OnTextChanged(value) end
     end
 

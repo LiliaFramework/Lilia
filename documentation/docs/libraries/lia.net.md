@@ -10,6 +10,68 @@ The network library provides comprehensive functionality for managing network co
 
 ---
 
+### lia.net.isCacheHit
+
+#### 📋 Purpose
+Checks if a network message with specific arguments is currently cached
+
+#### ⏰ When Called
+Before sending or processing a network message to avoid duplicate transmissions
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | **string** | The name identifier for the network message |
+| `args` | **table** | The arguments that were sent with the message |
+
+#### ↩️ Returns
+* boolean - true if message is cached and not expired, false otherwise
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    if lia.net.isCacheHit("updateStatus", {"ready", true}) then
+        return -- Skip, already sent recently
+    end
+
+```
+
+---
+
+### lia.net.addToCache
+
+#### 📋 Purpose
+Adds a network message to the cache to prevent duplicate transmissions
+
+#### ⏰ When Called
+After successfully sending or receiving a network message
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | **string** | The name identifier for the network message |
+| `args` | **table** | The arguments that were sent with the message |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+```lua
+    lia.net.addToCache("updateStatus", {"ready", true})
+
+```
+
+---
+
 ### lia.net.register
 
 #### 📋 Purpose

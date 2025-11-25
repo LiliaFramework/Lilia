@@ -276,7 +276,7 @@ Client
         dashboard:SetTitle("Web Image Statistics")
         dashboard:Center()
         dashboard:MakePopup()
-        local scrollPanel = vgui.Create("DScrollPanel", dashboard)
+        local scrollPanel = vgui.Create("liaScrollPanel", dashboard)
         scrollPanel:Dock(FILL)
         -- Download statistics
         local downloadPanel = vgui.Create("DPanel", scrollPanel)

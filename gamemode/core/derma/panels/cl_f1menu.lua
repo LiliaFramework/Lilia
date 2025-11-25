@@ -311,7 +311,7 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    local defaultTab = lia.config.get("DefaultMenuTab", "you")
+    local defaultTab = lia.option.get("DefaultMenuTab", "you")
     if not self.tabList[defaultTab] then
         if self.tabList["you"] then
             defaultTab = "you"
@@ -1053,7 +1053,8 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                     panel.originalStaffData = {}
                     panel.filteredStaffData = {}
                     local function filterStaffData(searchText)
-                        if not searchText or searchText == "" then
+                        searchText = tostring(searchText or "")
+                        if searchText == "" then
                             panel.filteredStaffData = panel.originalStaffData
                         else
                             panel.filteredStaffData = {}
@@ -1070,16 +1071,15 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
 
                     local function createStaffTable(staffData)
                         panel:Clear()
-                        local searchEntry = panel:Add("DTextEntry")
+                        local searchEntry = panel:Add("liaEntry")
                         searchEntry:Dock(TOP)
-                        searchEntry:DockMargin(0, 0, 0, 15)
+                        searchEntry:DockMargin(0, 20, 0, 15)
                         searchEntry:SetTall(30)
                         searchEntry:SetFont("LiliaFont.17")
                         searchEntry:SetPlaceholderText(L("searchStaff") or "Search staff...")
                         searchEntry:SetTextColor(Color(200, 200, 200))
-                        searchEntry.PaintOver = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
-                        searchEntry.OnChange = function(textEntry)
-                            local filteredData = filterStaffData(textEntry:GetValue())
+                        searchEntry.OnTextChanged = function(_, value)
+                            local filteredData = filterStaffData(value or "")
                             updateStaffTable(filteredData)
                         end
 
@@ -1292,7 +1292,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                     applyButton:SetTall(35)
                     applyButton:CenterHorizontal()
                     applyButton:SetText(L("apply"))
-                    local scroll = page:Add("DScrollPanel")
+                    local scroll = page:Add("liaScrollPanel")
                     scroll:Dock(FILL)
                     local entries = {}
                     for key, value in pairs(themeData) do

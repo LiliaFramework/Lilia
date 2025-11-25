@@ -108,7 +108,7 @@ end
 
 local originalNewIndex = PANEL.__newindex
 PANEL.__newindex = function(self, key, value)
-    if key == "OnChange" and type(value) == "function" then
+    if key == "OnChange" and isfunction(value) then
         self.userOnChange = value
     else
         if originalNewIndex then

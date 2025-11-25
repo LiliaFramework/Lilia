@@ -12,7 +12,109 @@ lia.net.sendq = lia.net.sendq or {}
 lia.net.globals = lia.net.globals or {}
 lia.net.buffers = lia.net.buffers or {}
 lia.net.registry = lia.net.registry or {}
+lia.net.cache = lia.net.cache or {}
 local chunkTime = 0.05
+local CACHE_TTL = 30
+local MAX_CACHE_SIZE = 1000
+local function generateCacheKey(name, args)
+    local key = name .. "|"
+    for i, arg in ipairs(args) do
+        key = key .. tostring(arg) .. (i < #args and "|" or "")
+    end
+    return util.CRC(key)
+end
+
+local function cleanupCache()
+    local currentTime = CurTime()
+    local expired = {}
+    for key, entry in pairs(lia.net.cache) do
+        if currentTime - entry.timestamp > CACHE_TTL then table.insert(expired, key) end
+    end
+
+    for _, key in ipairs(expired) do
+        lia.net.cache[key] = nil
+    end
+
+    local cacheSize = table.Count(lia.net.cache)
+    if cacheSize > MAX_CACHE_SIZE then
+        local sorted = {}
+        for key, entry in pairs(lia.net.cache) do
+            table.insert(sorted, {
+                key = key,
+                timestamp = entry.timestamp
+            })
+        end
+
+        table.sort(sorted, function(a, b) return a.timestamp < b.timestamp end)
+        local toRemove = cacheSize - MAX_CACHE_SIZE
+        for i = 1, math.min(toRemove, #sorted) do
+            lia.net.cache[sorted[i].key] = nil
+        end
+    end
+end
+
+--[[
+    Purpose:
+        Checks if a network message with specific arguments is currently cached
+
+    When Called:
+        Before sending or processing a network message to avoid duplicate transmissions
+
+    Parameters:
+        name (string)
+            The name identifier for the network message
+        args (table)
+            The arguments that were sent with the message
+
+    Returns:
+        boolean - true if message is cached and not expired, false otherwise
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        if lia.net.isCacheHit("updateStatus", {"ready", true}) then
+            return -- Skip, already sent recently
+        end
+        ```
+]]
+function lia.net.isCacheHit(name, args)
+    local key = generateCacheKey(name, args)
+    local entry = lia.net.cache[key]
+    return entry and CurTime() - entry.timestamp <= CACHE_TTL
+end
+
+--[[
+    Purpose:
+        Adds a network message to the cache to prevent duplicate transmissions
+
+    When Called:
+        After successfully sending or receiving a network message
+
+    Parameters:
+        name (string)
+            The name identifier for the network message
+        args (table)
+            The arguments that were sent with the message
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+        ```lua
+        lia.net.addToCache("updateStatus", {"ready", true})
+        ```
+]]
+function lia.net.addToCache(name, args)
+    local key = generateCacheKey(name, args)
+    lia.net.cache[key] = {timestamp = CurTime()}
+    cleanupCache()
+end
+
 --[[
     Purpose:
         Registers a network message handler for receiving messages sent via lia.net.send
@@ -141,12 +243,16 @@ function lia.net.send(name, target, ...)
     end
 
     local args = {...}
+
+    if SERVER and target == nil and lia.net.isCacheHit(name, args) then return true end
+
     if SERVER then
         net.Start("liaNetMessage")
         net.WriteString(name)
         net.WriteTable(args)
         if target == nil then
             net.Broadcast()
+            lia.net.addToCache(name, args)
         elseif istable(target) then
             for _, ply in ipairs(target) do
                 if IsValid(ply) then net.Send(ply) end
@@ -163,6 +269,7 @@ function lia.net.send(name, target, ...)
         net.WriteTable(args)
         net.SendToServer()
     end
+
     return true
 end
 

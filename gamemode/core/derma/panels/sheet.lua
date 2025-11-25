@@ -5,11 +5,10 @@ function PANEL:Init()
     self.spacingY = 8
     self.padding = 10
     self.rows = {}
-    self.search = vgui.Create("DTextEntry", self)
+    self.search = vgui.Create("liaEntry", self)
     self.search:Dock(TOP)
     self.search:SetTall(30)
     self.search:DockMargin(0, 0, 0, 8)
-    self.search.PaintOver = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(0, 0, 0, 100)):Shape(lia.derma.SHAPE_IOS):Draw() end
     self.scroll = vgui.Create("liaScrollPanel", self)
     self.scroll:Dock(FILL)
     self.scroll:InvalidateLayout(true)

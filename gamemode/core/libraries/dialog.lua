@@ -164,7 +164,7 @@ if SERVER then
 
             local optionCount = 0
             for optionName, optionData in pairs(npcData.Conversation) do
-                if type(optionData) == "table" and optionData.Callback then
+                if istable(optionData) and optionData.Callback then
                     optionCount = optionCount + 1
                 end
             end
@@ -229,7 +229,7 @@ if SERVER then
 
             local questOptions = {}
             for optionName, optionData in pairs(originalData.Conversation) do
-                if type(optionData) == "table" then
+                if istable(optionData) then
                     -- Check for quest-related callbacks or nested options
                     if optionData.Callback and string.find(optionName, "quest") then
                         questOptions[optionName] = true
@@ -973,7 +973,7 @@ else
             frame:Center()
             frame:MakePopup()
 
-            local scroll = vgui.Create("DScrollPanel", frame)
+            local scroll = vgui.Create("liaScrollPanel", frame)
             scroll:Dock(FILL)
             scroll:DockMargin(10, 10, 10, 10)
 

@@ -770,7 +770,8 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
             parent:Clear()
             local tabs = parent:Add("liaTabs")
             tabs:Dock(FILL)
-            local function populate(filter)
+            local allCategoryItems = {}
+            local function populate()
                 if tabs.tabs then
                     for i = #tabs.tabs, 1, -1 do
                         tabs:CloseTab(i)
@@ -788,19 +789,14 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                     local opt = lia.option.stored[key]
                     if not opt.visible or isfunction(opt.visible) and opt.visible() then
                         local name = opt.name
-                        local desc = opt.desc or ""
                         local catName = opt.data and opt.data.category or L("misc")
-                        local ln, ld = name:lower(), desc:lower()
-                        local lk, lc = key:lower(), catName:lower()
-                        if filter == "" or ln:find(filter, 1, true) or ld:find(filter, 1, true) or lk:find(filter, 1, true) or lc:find(filter, 1, true) then
-                            categories[catName] = categories[catName] or {}
-                            categories[catName][#categories[catName] + 1] = {
-                                key = key,
-                                name = name,
-                                config = opt,
-                                elemType = opt.type or "Generic"
-                            }
-                        end
+                        categories[catName] = categories[catName] or {}
+                        categories[catName][#categories[catName] + 1] = {
+                            key = key,
+                            name = name,
+                            config = opt,
+                            elemType = opt.type or "Generic"
+                        }
                     end
                 end
 
@@ -810,44 +806,84 @@ hook.Add("PopulateConfigurationButtons", "liaOptionsPopulate", function(pages)
                 end
 
                 table.sort(catNames)
-                for _, catName in ipairs(catNames) do
-                    local items = categories[catName]
-                    local scrollPanel = vgui.Create("liaScrollPanel")
-                    scrollPanel:Dock(FILL)
-                    scrollPanel:InvalidateLayout(true)
-                    if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+                allCategoryItems = categories
+                local function populateCategoryTab(categoryName, scrollPanel, searchFilter)
                     local canvas = scrollPanel:GetCanvas()
+                    canvas:Clear()
                     canvas:DockPadding(10, 10, 10, 10)
-                    for _, v in ipairs(items) do
+                    local items = allCategoryItems[categoryName] or {}
+                    local filteredItems = {}
+                    searchFilter = tostring(searchFilter or "")
+                    if searchFilter ~= "" then
+                        local filterLower = searchFilter:lower()
+                        for _, it in ipairs(items) do
+                            local n = tostring(it.name or "")
+                            local d = tostring(it.config.desc or "")
+                            local k = tostring(it.key or "")
+                            local ln, ld, lk = n:lower(), d:lower(), k:lower()
+                            if ln:find(filterLower, 1, true) or ld:find(filterLower, 1, true) or lk:find(filterLower, 1, true) then filteredItems[#filteredItems + 1] = it end
+                        end
+                    else
+                        filteredItems = items
+                    end
+
+                    for _, v in ipairs(filteredItems) do
                         local panel = OptionFormatting[v.elemType](v.key, v.name, v.config, canvas)
                         panel:Dock(TOP)
                         panel:DockMargin(10, 10, 10, 0)
                         panel.Paint = function(_, w, h) lia.derma.rect(0, 0, w, h):Rad(16):Color(Color(50, 50, 60, 80)):Shape(lia.derma.SHAPE_IOS):Draw() end
                     end
 
-                    tabs:AddTab(catName, scrollPanel)
+                    -- Force layout update
+                    scrollPanel:InvalidateLayout(true)
+                end
+
+                for _, catName in ipairs(catNames) do
+                    local categoryContainer = vgui.Create("DPanel")
+                    categoryContainer:Dock(FILL)
+                    categoryContainer.Paint = function() end
+                    local searchBar = vgui.Create("liaEntry", categoryContainer)
+                    searchBar:Dock(TOP)
+                    searchBar:DockMargin(10, 10, 10, 10)
+                    searchBar:SetTall(40)
+                    searchBar:SetFont("LiliaFont.18")
+                    searchBar:SetPlaceholderText(L("searchOptions") or "Search Options...")
+                    searchBar:SetTextColor(Color(200, 200, 200))
+                    local scrollPanel = vgui.Create("liaScrollPanel", categoryContainer)
+                    scrollPanel:Dock(FILL)
+                    scrollPanel:InvalidateLayout(true)
+                    if not IsValid(scrollPanel.VBar) then scrollPanel:PerformLayout() end
+                    categoryContainer.searchBar = searchBar
+                    categoryContainer.scrollPanel = scrollPanel
+                    categoryContainer.categoryName = catName
+                    searchBar.OnTextChanged = function(_, value)
+                        populateCategoryTab(catName, scrollPanel, value or "")
+                    end
+
+                    populateCategoryTab(catName, scrollPanel, "")
+                    tabs:AddTab(catName, categoryContainer)
                 end
             end
 
-            populate("")
+            populate()
         end
     }
 end)
 
 lia.option.add("descriptionWidth", "descriptionWidth", "descriptionWidthDesc", 0.5, nil, {
-    category = "categoryInterface",
+    category = "categoryLiliaGeneral",
     min = 0.1,
     max = 1,
     decimals = 2
 })
 
 lia.option.add("invertWeaponScroll", "invertWeaponScroll", "invertWeaponScrollDesc", false, nil, {
-    category = "categoryGameplay",
+    category = "categoryLiliaGeneral",
     isQuick = true,
 })
 
 lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -857,7 +893,7 @@ lia.option.add("espEnabled", "espEnabled", "espEnabledDesc", false, nil, {
 })
 
 lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -867,7 +903,7 @@ lia.option.add("espPlayers", "espPlayers", "espPlayersDesc", false, nil, {
 })
 
 lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -877,7 +913,7 @@ lia.option.add("espItems", "espItems", "espItemsDesc", false, nil, {
 })
 
 lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -887,7 +923,7 @@ lia.option.add("espEntities", "espEntities", "espEntitiesDesc", false, nil, {
 })
 
 lia.option.add("espUnconfiguredDoors", "espUnconfiguredDoors", "espUnconfiguredDoorsDesc", false, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -902,7 +938,7 @@ lia.option.add("espItemsColor", "espItemsColor", "espItemsColorDesc", {
     b = 0,
     a = 255
 }, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -916,7 +952,7 @@ lia.option.add("espEntitiesColor", "espEntitiesColor", "espEntitiesColorDesc", {
     b = 0,
     a = 255
 }, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -930,7 +966,7 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
     b = 255,
     a = 255
 }, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -939,7 +975,7 @@ lia.option.add("espUnconfiguredDoorsColor", "espUnconfiguredDoorsColor", "espUnc
 })
 
 lia.option.add("espConfiguredDoors", "espConfiguredDoors", "espConfiguredDoorsDesc", false, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     isQuick = true,
     visible = function()
         local ply = LocalPlayer()
@@ -954,7 +990,7 @@ lia.option.add("espConfiguredDoorsColor", "espConfiguredDoorsColor", "espConfigu
     b = 0,
     a = 255
 }, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -968,7 +1004,7 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
     b = 255,
     a = 255
 }, nil, {
-    category = "categoryESP",
+    category = "categoryLiliaESP",
     visible = function()
         local ply = LocalPlayer()
         if not IsValid(ply) then return false end
@@ -977,54 +1013,54 @@ lia.option.add("espPlayersColor", "espPlayersColor", "espPlayersColorDesc", {
 })
 
 lia.option.add("BarsAlwaysVisible", "barsAlwaysVisible", "barsAlwaysVisibleDesc", false, nil, {
-    category = "categoryInterface",
+    category = "categoryLiliaGeneral",
     isQuick = true,
 })
 
 lia.option.add("thirdPersonEnabled", "thirdPersonEnabled", "thirdPersonEnabledDesc", false, function(_, newValue) hook.Run("ThirdPersonToggled", newValue) end, {
-    category = "categoryThirdPerson",
+    category = "categoryLiliaGeneral",
     isQuick = true,
 })
 
 lia.option.add("thirdPersonClassicMode", "thirdPersonClassicMode", "thirdPersonClassicModeDesc", false, nil, {
-    category = "categoryThirdPerson",
+    category = "categoryLiliaGeneral",
     isQuick = true,
 })
 
 lia.option.add("thirdPersonHeight", "thirdPersonHeight", "thirdPersonHeightDesc", 10, nil, {
-    category = "categoryThirdPerson",
+    category = "categoryLiliaGeneral",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHeight", 90),
 })
 
 lia.option.add("thirdPersonHorizontal", "thirdPersonHorizontal", "thirdPersonHorizontalDesc", 10, nil, {
-    category = "categoryThirdPerson",
+    category = "categoryLiliaGeneral",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonHorizontal", 90),
 })
 
 lia.option.add("thirdPersonDistance", "thirdPersonDistance", "thirdPersonDistanceDesc", 50, nil, {
-    category = "categoryThirdPerson",
+    category = "categoryLiliaGeneral",
     min = 0,
     isQuick = true,
     max = lia.config.get("MaxThirdPersonDistance", 100),
 })
 
 lia.option.add("ChatShowTime", "chatShowTime", "chatShowTimeDesc", false, nil, {
-    category = "categoryInterface",
+    category = "categoryLiliaGeneral",
     type = "Boolean"
 })
 
 lia.option.add("voiceRange", "voiceRange", "voiceRangeDesc", false, nil, {
-    category = "categoryVoice",
+    category = "categoryLiliaGeneral",
     isQuick = true,
     type = "Boolean"
 })
 
 lia.option.add("weaponSelectorPosition", "weaponSelectorPosition", "weaponSelectorPositionDesc", "Left", nil, {
-    category = "categoryInterface",
+    category = "categoryLiliaGeneral",
     type = "Table",
     options = {"Left", "Right", "Center"}
 })
