@@ -43,7 +43,7 @@ function MODULE:PlayerSpawn(client)
 end
 
 function MODULE:PostPlayerLoadout(client)
-    if client:hasPrivilege("alwaysSpawnAdminStick") or client:isStaffOnDuty() then client:Give("adminstick") end
+    if client:hasPrivilege("alwaysSpawnAdminStick") or client:isStaffOnDuty() then client:Give("lia_adminstick") end
 end
 
 net.Receive("liaSpawnMenuSpawnItem", function(_, client)
@@ -101,7 +101,7 @@ end
 local function ReadLogEntries(category)
     local d = deferred.new()
     local maxDays = lia.config.get("LogRetentionDays", 7)
-    local maxLines = math.max(lia.config.get("logsPerPage", 50), 1) * 5
+    local maxLines = math.max(lia.config.get("logsPerPage", 500), 1) * 5
     local cutoff = os.time() - maxDays * 86400
     local cutoffStr = os.date("%Y-%m-%d %H:%M:%S", cutoff)
     local condition = table.concat({"gamemode = " .. lia.db.convertDataType(engine.ActiveGamemode()), "category = " .. lia.db.convertDataType(category), "timestamp >= " .. lia.db.convertDataType(cutoffStr)}, " AND ") .. " ORDER BY id DESC LIMIT " .. maxLines

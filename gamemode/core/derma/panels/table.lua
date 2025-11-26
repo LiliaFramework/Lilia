@@ -25,6 +25,8 @@ function PANEL:Init()
     self.OnAction = function() end
     self.OnRightClick = function() end
     self.customMenuOptions = {}
+    self.batchMode = true
+    self.batchRows = {}
 end
 
 function PANEL:AddColumn(name, width, align, sortable)
@@ -42,16 +44,28 @@ end
 function PANEL:AddItem(...)
     local args = {...}
     if #args ~= #self.columns then return end
-    table.insert(self.rows, args)
-    local rowIndex = #self.rows
-    self:RebuildRows()
-    local proxy = {}
-    local rowData = self.rows[rowIndex]
-    setmetatable(proxy, {
-        __index = function(_, key) return rowData[key] end,
-        __newindex = function(_, key, value) rowData[key] = value end
-    })
-    return proxy
+    if self.batchMode then
+        table.insert(self.batchRows, args)
+        local rowIndex = #self.batchRows
+        local proxy = {}
+        local rowData = self.batchRows[rowIndex]
+        setmetatable(proxy, {
+            __index = function(_, key) return rowData[key] end,
+            __newindex = function(_, key, value) rowData[key] = value end
+        })
+        return proxy
+    else
+        table.insert(self.rows, args)
+        local rowIndex = #self.rows
+        self:RebuildRows()
+        local proxy = {}
+        local rowData = self.rows[rowIndex]
+        setmetatable(proxy, {
+            __index = function(_, key) return rowData[key] end,
+            __newindex = function(_, key, value) rowData[key] = value end
+        })
+        return proxy
+    end
 end
 
 function PANEL:AddLine(...)
@@ -262,8 +276,10 @@ function PANEL:ClearMenuOptions()
 end
 
 function PANEL:Clear()
+    self:EnsureCommitted()
     self.rows = {}
     self.selectedRow = nil
+    self.batchRows = {}
     self.content:Clear()
 end
 
@@ -276,10 +292,12 @@ function PANEL:ClearLines()
 end
 
 function PANEL:GetSelectedRow()
+    self:EnsureCommitted()
     return self.selectedRow and self.rows[self.selectedRow] or nil
 end
 
 function PANEL:GetRowCount()
+    self:EnsureCommitted()
     return #self.rows
 end
 
@@ -298,6 +316,7 @@ function PANEL:RemoveRow(index)
 end
 
 function PANEL:GetLine(id)
+    self:EnsureCommitted()
     return self.rows[id]
 end
 
@@ -309,6 +328,7 @@ function PANEL:IsLineSelected(id)
 end
 
 function PANEL:SelectItem(id)
+    self:EnsureCommitted()
     if id < 1 or id > #self.rows then return end
     self.selectedRow = id
     if self.OnAction then self.OnAction(self.rows[id]) end
@@ -341,15 +361,18 @@ function PANEL:GetSelectedLines()
 end
 
 function PANEL:GetSelected()
+    self:EnsureCommitted()
     if not self.selectedRow then return nil end
     return self.rows[self.selectedRow]
 end
 
 function PANEL:GetLines()
+    self:EnsureCommitted()
     return self.rows
 end
 
 function PANEL:OnSizeChanged()
+    self:EnsureCommitted()
     if #self.columns > 0 then
         self:CalculateColumnWidths()
         if #self.rows > 0 then
@@ -508,6 +531,7 @@ function PANEL:GetLines()
 end
 
 function PANEL:SortByColumn(columnIndex, desc)
+    self:EnsureCommitted()
     local column = self.columns[columnIndex]
     if not column or not column.sortable then return end
     self.sortColumn = columnIndex
@@ -643,6 +667,43 @@ function PANEL:CreateRow(rowIndex, rowData)
         label:SetContentAlignment(column.align + 4)
         xPos = xPos + column.width
     end
+end
+
+function PANEL:SetBatchMode(enabled)
+    if not enabled and self.batchMode and #self.batchRows > 0 then self:CommitBatch() end
+    self.batchMode = enabled or false
+    if enabled and not self.batchRows then self.batchRows = {} end
+end
+
+function PANEL:CommitBatch()
+    if #self.batchRows == 0 then return end
+    for _, row in ipairs(self.batchRows) do
+        table.insert(self.rows, row)
+    end
+
+    self.batchRows = {}
+    self:RebuildRows()
+end
+
+function PANEL:ForceCommit()
+    if #self.batchRows > 0 then self:CommitBatch() end
+end
+
+function PANEL:EnsureCommitted()
+    if #self.batchRows > 0 then self:CommitBatch() end
+end
+
+function PANEL:AddItemsBatch(itemsArray, mapperFunc, filterFunc)
+    if not itemsArray or not mapperFunc then return end
+    self:SetBatchMode(true)
+    for _, item in ipairs(itemsArray) do
+        if not filterFunc or filterFunc(item) then
+            local rowData = mapperFunc(item)
+            if rowData then self:AddItem(unpack(rowData)) end
+        end
+    end
+
+    self:CommitBatch()
 end
 
 vgui.Register("liaTable", PANEL, "Panel")

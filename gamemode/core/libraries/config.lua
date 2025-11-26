@@ -1452,12 +1452,12 @@ lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 8, nil,
     decimals = 2
 })
 
-lia.config.add("logsPerPage", "logsPerPage", 50, nil, {
+lia.config.add("logsPerPage", "logsPerPage", 500, nil, {
     desc = "logsPerPageDesc",
     category = "categoryServer",
     type = "Number",
     min = 10,
-    max = 200
+    max = 1000
 })
 
 lia.config.add("PunchRagdollTime", "punchRagdollTime", 25, nil, {

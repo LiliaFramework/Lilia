@@ -44,7 +44,7 @@ end
 
 function MODULE:LoadData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local mapName = game.GetMap()
+    local mapName = lia.data.getEquivalencyMap(game.GetMap())
     local condition = buildCondition(gamemode, mapName)
     local query = "SELECT * FROM lia_doors WHERE " .. condition
     lia.db.query(query):next(function(res)
@@ -272,7 +272,7 @@ end
 
 function MODULE:SaveData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = game.GetMap()
+    local map = lia.data.getEquivalencyMap(game.GetMap())
     local rows = {}
     local doorCount = 0
     for _, door in ents.Iterator() do
@@ -511,7 +511,7 @@ end
     Medium Complexity:
     ```lua
     -- Medium: Check and use preset data
-    local mapName = game.GetMap()
+    local mapName = lia.data.getEquivalencyMap(game.GetMap())
     local preset = lia.doors.getPreset(mapName)
     if preset then
         for doorID, doorData in pairs(preset) do
@@ -719,7 +719,7 @@ end
 
         -- Additional validation
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = game.GetMap()
+        local map = lia.data.getEquivalencyMap(game.GetMap())
         local condition = "gamemode = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
 
         lia.db.query("SELECT COUNT(*) as count FROM lia_doors WHERE " .. condition):next(function(res)
@@ -731,7 +731,7 @@ end
 ]]
 function lia.doors.cleanupCorruptedData()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = game.GetMap()
+    local map = lia.data.getEquivalencyMap(game.GetMap())
     local condition = buildCondition(gamemode, map)
     local query = "SELECT id, factions, classes FROM lia_doors WHERE " .. condition
     lia.db.query(query):next(function(res)

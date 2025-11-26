@@ -9,6 +9,110 @@
 ]]
 lia.data = lia.data or {}
 lia.data.stored = lia.data.stored or {}
+lia.data.equivalencyMaps = lia.data.equivalencyMaps or {}
+--[[
+    Purpose:
+        Creates a bidirectional equivalency mapping between two maps for database operations
+
+    When Called:
+        Called during gamemode initialization to set up map equivalencies for data sharing
+
+    Parameters:
+        map1 (string)
+            First map name in the equivalency pair
+        map2 (string)
+            Second map name in the equivalency pair
+
+    Returns:
+        nil
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Create equivalency between day and night versions of same map
+        lia.data.addEquivalencyMap("rp_nycity_day", "rp_nycity_city")
+        -- Data saved on either map will be accessible from both
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Set up multiple equivalency pairs
+        lia.data.addEquivalencyMap("rp_nycity_day", "rp_nycity_city")
+        lia.data.addEquivalencyMap("rp_downtown_v1", "rp_downtown_v2")
+        -- Each pair shares data independently
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Set up equivalencies with validation
+        local dayMap = "rp_nycity_day"
+        local nightMap = "rp_nycity_city"
+        if dayMap and nightMap then
+            lia.data.addEquivalencyMap(dayMap, nightMap)
+            print("Equivalency set up between " .. dayMap .. " and " .. nightMap)
+        end
+        ```
+]]
+function lia.data.addEquivalencyMap(map1, map2)
+    lia.data.equivalencyMaps[map1] = map2
+    lia.data.equivalencyMaps[map2] = map1
+end
+
+--[[
+    Purpose:
+        Retrieves the equivalency map name for a given map, or returns the original map if no equivalency exists
+
+    When Called:
+        Automatically called by database operations to resolve map equivalencies
+
+    Parameters:
+        map (string)
+            The map name to resolve equivalency for
+
+    Returns:
+        string - The equivalency map name, or the original map name if no equivalency exists
+
+    Realm:
+        Shared
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Get equivalency for current map
+        local equivMap = lia.data.getEquivalencyMap(game.GetMap())
+        -- Returns equivalency map name or original map name
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Check if map has equivalency
+        local currentMap = game.GetMap()
+        local equivMap = lia.data.getEquivalencyMap(currentMap)
+        if equivMap ~= currentMap then
+            print("Map " .. currentMap .. " has equivalency: " .. equivMap)
+        else
+            print("Map " .. currentMap .. " has no equivalency")
+        end
+        ```
+
+    High Complexity:
+        ```lua
+        -- High: Use in database query building
+        local map = lia.data.getEquivalencyMap(game.GetMap())
+        local condition = "gamemode = " .. lia.db.convertDataType(SCHEMA.folder) ..
+                         " AND map = " .. lia.db.convertDataType(map)
+        -- Ensures queries use correct equivalency map
+        ```
+]]
+function lia.data.getEquivalencyMap(map)
+    return lia.data.equivalencyMaps[map] or map
+end
+
 --[[
     Purpose:
         Converts complex data types (vectors, angles, colors, tables) into database-storable formats
@@ -585,6 +689,7 @@ function lia.data.set(key, value, global, ignoreMap)
     else
         if gamemode == nil then gamemode = NULL end
         if map == nil then map = NULL end
+        if map ~= NULL then map = lia.data.getEquivalencyMap(map) end
     end
 
     lia.data.stored[key] = value
@@ -654,6 +759,8 @@ function lia.data.delete(key, global, ignoreMap)
     if global then
         gamemode = nil
         map = nil
+    else
+        if map then map = lia.data.getEquivalencyMap(map) end
     end
 
     lia.data.stored[key] = nil
@@ -717,6 +824,7 @@ end
 function lia.data.loadTables()
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
+    local equivalencyMap = lia.data.getEquivalencyMap(map)
     local function loadData(gm, m)
         local cond = buildCondition(gm, m)
         return lia.db.select("data", "data", cond):next(function(res)
@@ -730,7 +838,7 @@ function lia.data.loadTables()
         end)
     end
 
-    lia.db.waitForTablesToLoad():next(function() return loadData(nil, nil) end):next(function() return loadData(gamemode, nil) end):next(function() return loadData(gamemode, map) end)
+    lia.db.waitForTablesToLoad():next(function() return loadData(nil, nil) end):next(function() return loadData(gamemode, nil) end):next(function() return loadData(gamemode, equivalencyMap) end)
 end
 
 local defaultCols = {
@@ -884,6 +992,7 @@ end
 function lia.data.savePersistence(entities)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
+    map = lia.data.getEquivalencyMap(map)
     lia.data.persistCache = entities
     local condition = buildCondition(gamemode, map)
     local dynamic = {}
@@ -995,6 +1104,7 @@ end
 function lia.data.loadPersistenceData(callback)
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
     local map = game.GetMap()
+    map = lia.data.getEquivalencyMap(map)
     local condition = buildCondition(gamemode, map)
     ensurePersistenceColumns(baseCols):next(function() return lia.db.select("*", "persistence", condition) end):next(function(res)
         local rows = res.results or {}

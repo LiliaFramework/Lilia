@@ -311,7 +311,7 @@ function PANEL:Init()
     end
 
     self:MakePopup()
-    local defaultTab = lia.config.get("DefaultMenuTab", "you")
+    local defaultTab = lia.option.get("DefaultMenuTab", "you")
     if not self.tabList[defaultTab] then
         if self.tabList["you"] then
             defaultTab = "you"
@@ -1100,6 +1100,7 @@ hook.Add("CreateMenuButtons", "liaF1MenuCreateMenuButtons", function(tabs)
                             end
 
                             if not staffFound then staffTable:AddLine(L("noStaffCurrentlyOnline"), "", "") end
+                            staffTable:ForceCommit()
                         end
 
                         panel.updateStaffTable = updateStaffTable

@@ -11,9 +11,9 @@ function PANEL:Init()
 end
 
 function PANEL:SetupUI()
-    self.checkbox = self:Add("liaSimpleCheckbox")
-    self.checkbox:SetSize(24, 24)
-    self.checkbox:SetPos(self:GetWide() - 30, (self:GetTall() - 24) / 2)
+    self.checkbox = self:Add("liaCheckbox")
+    self.checkbox:SetSize(48, 24)
+    self.checkbox:SetPos(self:GetWide() - 75, (self:GetTall() - 24) / 2)
     self.checkbox.OnChange = function(_, value)
         self.checked = value
         if self.OnChange then self:OnChange(value) end
@@ -21,7 +21,7 @@ function PANEL:SetupUI()
 
     self.label = self:Add("DLabel")
     self.label:Dock(FILL)
-    self.label:DockMargin(15, 0, 40, 0)
+    self.label:DockMargin(15, 0, 60, 0)
     self.label:SetFont("LiliaFont.25")
     self.label:SetTextColor(lia.color.theme.text)
     self.label:SetContentAlignment(4)
@@ -56,7 +56,7 @@ function PANEL:OnCursorExited()
 end
 
 function PANEL:PerformLayout(w, h)
-    if IsValid(self.checkbox) then self.checkbox:SetPos(w - 30, (h - 24) / 2) end
+    if IsValid(self.checkbox) then self.checkbox:SetPos(w - 75, (h - 24) / 2) end
 end
 
 function PANEL:Paint(w, h)

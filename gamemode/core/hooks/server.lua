@@ -845,7 +845,7 @@ function GM:LoadData()
     end)
 
     local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-    local map = game.GetMap()
+    local map = lia.data.getEquivalencyMap(game.GetMap())
     local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map)
     lia.db.select({"itemID", "pos", "angles"}, "saveditems", condition):next(function(res)
         local items = res.results or {}

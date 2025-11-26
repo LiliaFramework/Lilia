@@ -234,7 +234,7 @@ function GM:DrawEntityInfo(e, a, pos)
     pos = pos or toScreen(e:GetPos() + (e:Crouching() and Vector(0, 0, 48) or Vector(0, 0, 80)))
     local x, y = pos.x, pos.y
     local charInfo = {}
-    local width = lia.option.get("descriptionWidth", 0.5)
+    local width = lia.config.get("descriptionWidth", 0.5)
     if e.widthCache ~= width then
         e.widthCache = width
         e.liaNameCache = nil

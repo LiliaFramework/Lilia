@@ -10,6 +10,115 @@ The data library provides comprehensive functionality for data persistence, seri
 
 ---
 
+### lia.data.addEquivalencyMap
+
+#### 📋 Purpose
+Creates a bidirectional equivalency mapping between two maps for database operations
+
+#### ⏰ When Called
+Called during gamemode initialization to set up map equivalencies for data sharing
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `map1` | **string** | First map name in the equivalency pair |
+| `map2` | **string** | Second map name in the equivalency pair |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Create equivalency between day and night versions of same map
+    lia.data.addEquivalencyMap("rp_nycity_day", "rp_nycity_city")
+    -- Data saved on either map will be accessible from both
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Set up multiple equivalency pairs
+    lia.data.addEquivalencyMap("rp_nycity_day", "rp_nycity_city")
+    lia.data.addEquivalencyMap("rp_downtown_v1", "rp_downtown_v2")
+    -- Each pair shares data independently
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Set up equivalencies with validation
+    local dayMap = "rp_nycity_day"
+    local nightMap = "rp_nycity_city"
+    if dayMap and nightMap then
+        lia.data.addEquivalencyMap(dayMap, nightMap)
+        print("Equivalency set up between " .. dayMap .. " and " .. nightMap)
+    end
+
+```
+
+---
+
+### lia.data.getEquivalencyMap
+
+#### 📋 Purpose
+Retrieves the equivalency map name for a given map, or returns the original map if no equivalency exists
+
+#### ⏰ When Called
+Automatically called by database operations to resolve map equivalencies
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `map` | **string** | The map name to resolve equivalency for |
+
+#### ↩️ Returns
+* string - The equivalency map name, or the original map name if no equivalency exists
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get equivalency for current map
+    local equivMap = lia.data.getEquivalencyMap(game.GetMap())
+    -- Returns equivalency map name or original map name
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check if map has equivalency
+    local currentMap = game.GetMap()
+    local equivMap = lia.data.getEquivalencyMap(currentMap)
+    if equivMap ~= currentMap then
+        print("Map " .. currentMap .. " has equivalency: " .. equivMap)
+    else
+        print("Map " .. currentMap .. " has no equivalency")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Use in database query building
+    local map = lia.data.getEquivalencyMap(game.GetMap())
+    local condition = "gamemode = " .. lia.db.convertDataType(SCHEMA.folder) ..
+                     " AND map = " .. lia.db.convertDataType(map)
+    -- Ensures queries use correct equivalency map
+
+```
+
+---
+
 ### lia.data.encodetable
 
 #### 📋 Purpose

@@ -41,7 +41,7 @@ local function DoSpawnLogic(client)
     local character = client:getChar()
     if not character then return end
     local posData = character:getLastPos()
-    if posData and posData.map and posData.map:lower() == game.GetMap():lower() then
+    if posData and posData.map and posData.map:lower() == lia.data.getEquivalencyMap(game.GetMap()):lower() then
         if posData.pos and isvector(posData.pos) then client:SetPos(posData.pos) end
         if posData.ang and isangle(posData.ang) then client:SetEyeAngles(posData.ang) end
         character:setLastPos(nil)
@@ -58,7 +58,7 @@ local function DoSpawnLogic(client)
 
     if factionID then
         local factionInfo = lia.faction.get(factionID)
-        local curMap = game.GetMap():lower()
+        local curMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
         if factionInfo and factionInfo.spawns and factionInfo.spawns[curMap] then
             local mapSpawns = factionInfo.spawns[curMap]
             if istable(mapSpawns) and #mapSpawns > 0 then
@@ -122,7 +122,7 @@ function MODULE:CharPreSave(character)
         local lastPosData = {
             pos = client:GetPos(),
             ang = client:EyeAngles(),
-            map = game.GetMap()
+            map = lia.data.getEquivalencyMap(game.GetMap())
         }
 
         character:setLastPos(lastPosData)

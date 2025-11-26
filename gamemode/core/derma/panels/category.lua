@@ -23,8 +23,12 @@ function PANEL:Init()
 
     self.header.DoClick = function()
         self.bool_opened = not self.bool_opened
-        local totalTall = 30 + (self.bool_opened and self.content_size + 12 or 0)
+        self:SizeToContents()
+        local totalTall = self:GetTall()
         self:SizeTo(-1, totalTall, 0.2, 0, 0.2)
+        if IsValid(self.contents) then
+            self.contents:SetVisible(self.bool_opened)
+        end
         self:InvalidateLayout(true)
         self:InvalidateParent(true)
     end
@@ -52,8 +56,24 @@ function PANEL:SetContents(panel)
     panel:SetParent(self)
     panel:Dock(TOP)
     panel:SetVisible(self.bool_opened)
-    self.content_size = panel:GetTall()
-    self:SetTall(30 + (self.bool_opened and self.content_size + 12 or 0))
+    self:SizeToContents()
+end
+
+function PANEL:SizeToContents()
+    if not IsValid(self.contents) then
+        self.content_size = 0
+    else
+        -- Force layout update to get accurate sizing
+        self.contents:InvalidateLayout(true)
+        self.content_size = self.contents:GetTall()
+    end
+
+    local totalTall = 30 + (self.bool_opened and self.content_size + 12 or 0)
+    self:SetTall(totalTall)
+end
+
+function PANEL:RecalculateSize()
+    self:SizeToContents()
 end
 
 function PANEL:Toggle()
@@ -66,9 +86,7 @@ end
 
 function PANEL:AddItem(panel)
     panel:SetParent(self)
-    local _, marginTop, _, marginBottom = panel:GetDockMargin()
-    self.content_size = self.content_size + panel:GetTall() + marginTop + marginBottom
-    if self.bool_opened then self:SetTall(30 + self.content_size + 12) end
+    self:SizeToContents()
 end
 
 function PANEL:SetColor(col)
@@ -79,12 +97,19 @@ function PANEL:SetActive(is_active)
     if self.bool_opened == is_active then return end
     self.bool_opened = is_active
     self.header_color = is_active and self.header_color_opened or self.header_color_standard
-    local totalTall = 30 + (is_active and self.content_size + 12 or 0)
-    self:SetTall(totalTall)
+    self:SizeToContents()
+    if IsValid(self.contents) then
+        self.contents:SetVisible(is_active)
+    end
 end
 
 function PANEL:PerformLayout(w)
     self.header:SetSize(w, 30)
+
+    -- Recalculate content size if contents exist and are visible
+    if IsValid(self.contents) and self.bool_opened then
+        self:SizeToContents()
+    end
 end
 
 vgui.Register("liaCategory", PANEL, "Panel")

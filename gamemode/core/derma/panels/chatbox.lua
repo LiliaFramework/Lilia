@@ -355,8 +355,9 @@ function PANEL:addText(...)
         if self.active then
             p:SetAlpha(255)
         else
-            local alpha = (1 - math.TimeFraction(p.start, p.finish, CurTime())) * 255
-            p:SetAlpha(math.max(alpha, 0))
+            local fraction = math.TimeFraction(p.start, p.finish, CurTime())
+            local alpha = 255 - (fraction * 205)
+            p:SetAlpha(math.max(alpha, 50))
         end
     end
 

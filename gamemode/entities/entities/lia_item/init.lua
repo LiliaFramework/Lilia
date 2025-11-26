@@ -78,7 +78,7 @@ function ENT:setItem(itemID)
 
     if not itemTable.temp then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = game.GetMap()
+        local map = lia.data.getEquivalencyMap(game.GetMap())
         local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND itemID = " .. tonumber(itemID)
         lia.db.delete("saveditems", condition):next(function()
             lia.db.insertTable({
@@ -115,7 +115,7 @@ function ENT:OnRemove()
     if not lia.shuttingDown and not self.liaIsSafe and self.liaItemID then lia.item.deleteByID(self.liaItemID) end
     if SERVER and not lia.shuttingDown and self.liaItemID then
         local gamemode = SCHEMA and SCHEMA.folder or engine.ActiveGamemode()
-        local map = game.GetMap()
+        local map = lia.data.getEquivalencyMap(game.GetMap())
         local condition = "schema = " .. lia.db.convertDataType(gamemode) .. " AND map = " .. lia.db.convertDataType(map) .. " AND itemID = " .. tonumber(self.liaItemID)
         lia.db.delete("saveditems", condition)
     end

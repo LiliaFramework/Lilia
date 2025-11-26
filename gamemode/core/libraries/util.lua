@@ -2412,6 +2412,7 @@ else
             line.rowData = row
         end
 
+        listView:ForceCommit()
         listView:AddMenuOption(L("copyRow"), function(rowData)
             local rowString = ""
             for key, value in pairs(rowData) do

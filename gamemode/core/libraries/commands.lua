@@ -1402,7 +1402,12 @@ if SERVER then
         end
 
         local tableName = args[1]
-        lia.db.snapshotTable(tableName)
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("creatingSnapshot", tableName) .. "\n")
+        lia.db.createSnapshot(tableName):next(function(snapshot)
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotCreated") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotRecords", snapshot.records) .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotPath", snapshot.path) .. "\n")
+        end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotFailed", tostring(err)) .. "\n") end)
     end)
 
     concommand.Add("lia_snapshot_load", function(_, _, args)
@@ -1410,14 +1415,39 @@ if SERVER then
             MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotUsage") .. "\n")
             MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("availableSnapshots") .. "\n")
             local files = file.Find("lilia/snapshots/*", "DATA")
-            for _, fileName in ipairs(files) do
-                MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), fileName .. "\n")
+            if #files == 0 then
+                MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), L("noSnapshotsFound") .. "\n")
+            else
+                for _, fileName in ipairs(files) do
+                    MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), "  - " .. fileName .. "\n")
+                end
             end
             return
         end
 
         local fileName = args[1]
-        lia.db.loadSnapshot(fileName)
+        MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("loadingSnapshot", fileName) .. "\n")
+        lia.db.loadSnapshot(fileName):next(function(result)
+            MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotLoaded") .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotTable", result.table) .. "\n")
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("snapshotRecords", result.records) .. "\n")
+        end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("snapshotLoadFailed", tostring(err)) .. "\n") end)
+    end)
+
+    concommand.Add("lia_wipetable", function(_, _, args)
+        if not args[1] then
+            MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("wipeTableUsage") .. "\n")
+            return
+        end
+
+        local tableName = args[1]
+        local fullTableName = "lia_" .. tableName
+        MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), L("creatingBackupBeforeWipe", tableName) .. "\n")
+        lia.db.createSnapshot(tableName):next(function(snapshot)
+            MsgC(Color(83, 143, 239), "[Lilia] ", Color(255, 255, 255), L("backupCreated", snapshot.file) .. "\n")
+            MsgC(Color(255, 165, 0), "[Lilia] ", Color(255, 255, 255), L("wipingTable", fullTableName) .. "\n")
+            lia.db.query("DELETE FROM " .. fullTableName, function() MsgC(Color(0, 255, 0), "[Lilia] ", Color(255, 255, 255), L("tableWiped", fullTableName) .. "\n") end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("tableWipeFailed", tostring(err)) .. "\n") end)
+        end, function(err) MsgC(Color(255, 0, 0), "[Lilia] ", Color(255, 255, 255), L("backupFailedAbortingWipe", tostring(err)) .. "\n") end)
     end)
 
     concommand.Add("lia_add_door_group_column", function()
@@ -7166,7 +7196,7 @@ lia.command.add("returnitems", {
             local inv = character:getInv()
             if not inv then return end
             for _, item in pairs(target.LostItems) do
-                inv:add(item)
+                inv:add(lia.item.new(item.name, item.id))
             end
 
             target.LostItems = nil
@@ -7175,6 +7205,50 @@ lia.command.add("returnitems", {
             lia.log.add(client, "returnItems", target:Name())
         else
             client:notifyInfoLocalized("returnItemsNotEnabled")
+        end
+    end
+})
+
+lia.command.add("returnallitems", {
+    superAdminOnly = true,
+    desc = "returnAllItemsDesc",
+    AdminStick = {
+        Name = "returnAllItems",
+        Category = "characterManagement",
+        SubCategory = "items",
+        Icon = "icon16/arrow_refresh.png"
+    },
+    onRun = function(client)
+        if not lia.config.get("LoseItemsonDeathHuman", false) and not lia.config.get("LoseItemsonDeathNPC", false) then
+            client:notifyInfoLocalized("returnItemsNotEnabled")
+            return
+        end
+
+        local returnedCount = 0
+        local totalItems = 0
+        for _, target in ipairs(player.GetAll()) do
+            if not target.LostItems or table.IsEmpty(target.LostItems) then continue end
+            local character = target:getChar()
+            if not character then continue end
+            local inv = character:getInv()
+            if not inv then continue end
+            local playerItemCount = 0
+            for _, item in pairs(target.LostItems) do
+                inv:add(lia.item.new(item.name, item.id))
+                playerItemCount = playerItemCount + 1
+            end
+
+            target.LostItems = nil
+            target:notifySuccessLocalized("returnItemsReturnedToPlayer")
+            returnedCount = returnedCount + 1
+            totalItems = totalItems + playerItemCount
+            lia.log.add(client, "returnItems", target:Name())
+        end
+
+        if returnedCount > 0 then
+            client:notifySuccessLocalized("returnAllItemsAdminConfirmed", returnedCount, totalItems)
+        else
+            client:notifyInfoLocalized("returnAllItemsNoItemsFound")
         end
     end
 })
