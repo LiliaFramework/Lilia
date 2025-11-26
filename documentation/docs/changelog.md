@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.075 (November 26, 2025)
+
+### Changes
+
+- Bug Fixing, Map Data Equivalency Function, Name Consistnecy
+- Successfully updated workshop Lilia to 7.073
+- Update client.lua
+- Successfully updated workshop Lilia to 7.071
+- Update thirdperson.lua
+- Update client.lua
+- Update cl_f1menu.lua
+- Successfully updated workshop Lilia to 7.067
+- Search Bar Theme Consistency
+- Minor Stamina Changes
+- Improved SitAnywhere Comp
+- Vendor UI improved
+- Spawn Logic
+- Successfully updated workshop Lilia to 7.061
+- Missing Localization
+- Successfully updated workshop Lilia to 7.059
+- Linting
+- Fixed charunbanoffline
+- Added Configuration to Delete Items of DIsconnected Players
+- Successfully updated workshop Lilia to 7.055
+
 ## Version 7.073 (November 26, 2025)
 
 ### Changes
