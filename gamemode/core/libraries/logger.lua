@@ -57,6 +57,7 @@ local logTypeData = {
         charSetMoney = function(client, targetName, amount) return L("logCharSetMoney", client:Name(), targetName, lia.currency.get(amount)) end,
         charAddMoney = function(client, targetName, amount, total) return L("logCharAddMoney", client:Name(), targetName, lia.currency.get(amount), lia.currency.get(total)) end,
         moneyDropped = function(client, amount) return L("logMoneyDropped", client:Name(), lia.currency.get(amount)) end,
+        moneyDupeAttempt = function(client, message) return L("logMoneyDupeAttempt", client:Name(), message) end,
     },
     items = {
         itemTake = function(client, item) return L("logItemTake", client:Name(), item) end,
@@ -203,14 +204,12 @@ local logTypeData = {
         steamIDMissing = function(_, name, steamID) return L("logSteamIDMissing", name, steamID) end,
         steamIDMismatch = function(_, name, realSteamID, sentSteamID) return L("logSteamIDMismatch", name, realSteamID, sentSteamID) end,
     },
-    exploits = {
+    cheating = {
         exploitAttempt = function(_, name, steamID, netMessage) return L("logExploitAttempt", name, steamID, netMessage) end,
         backdoorDetected = function(_, netMessage, file, line)
             if file then return L("logBackdoorDetectedFile", netMessage, file, tostring(line)) end
             return L("logBackdoorDetected", netMessage)
         end,
-    },
-    cheating = {
         hackAttempt = function(client, netName)
             if netName then return L("logHackAttemptNet", client:Name(), netName) end
             return L("logHackAttempt", client:Name())
@@ -236,7 +235,6 @@ local logTypeCategories = {
     factions = L("factions"),
     inventory = L("inv"),
     connections = L("categoryConnections"),
-    exploits = L("categoryExploits"),
     cheating = L("categoryCheating"),
 }
 
