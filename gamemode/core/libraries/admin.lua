@@ -2218,6 +2218,11 @@ else
         renameBtn.DoClick = function()
             local activeTab = tabs:GetActiveTab()
             if not activeTab or not activeTab.groupName then return end
+            if lia.administrator.DefaultGroups[activeTab.groupName] then
+                LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeRenamed")
+                return
+            end
+
             LocalPlayer():requestString(L("rename") .. " " .. L("group"), L("renameGroupPrompt", activeTab.groupName) .. ":", function(txt)
                 txt = string.Trim(txt or "")
                 if txt ~= "" and txt ~= activeTab.groupName then
@@ -2237,6 +2242,11 @@ else
         deleteBtn.DoClick = function()
             local activeTab = tabs:GetActiveTab()
             if not activeTab or not activeTab.groupName then return end
+            if lia.administrator.DefaultGroups[activeTab.groupName] then
+                LocalPlayer():notifyErrorLocalized("baseUsergroupCannotBeRemoved")
+                return
+            end
+
             Derma_Query(L("deleteGroupPrompt", activeTab.groupName), L("confirm"), L("yes"), function()
                 net.Start("liaGroupsRemove")
                 net.WriteString(activeTab.groupName)
