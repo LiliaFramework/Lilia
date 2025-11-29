@@ -7,6 +7,10 @@
     end
 end
 
+function MODULE:CanPersistEntity(entity)
+    if entity:GetClass() == "lia_vendor" then return true end
+end
+
 function MODULE:CanPlayerAccessVendor(client, vendor)
     local character = client:getChar()
     if client:canEditVendor(vendor) then return true end
@@ -32,7 +36,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
         if stock and stock <= 0 then return false, L("vendorNoStock") end
     end
 
-    local price = vendor:getPrice(itemType, isSellingToVendor)
+    local price = vendor:getPrice(itemType, isSellingToVendor, client)
     if not isSellingToVendor then
         local money = client:getChar():getMoney()
         if money < price then return false, L("canNotAfford") end
@@ -42,7 +46,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
             local lastPurchase = cooldowns[itemType] or 0
             if os.time() - lastPurchase < item.Cooldown then
                 local remainingTime = math.ceil(item.Cooldown - (os.time() - lastPurchase))
-                return false, "vendorItemOnCooldown", remainingTime
+                return false, L("vendorItemOnCooldown"), remainingTime
             end
         end
     end
@@ -101,7 +105,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
     client.vendorTransaction = true
     client.vendorTimeout = RealTime() + 0.1
     local character = client:getChar()
-    local price = vendor:getPrice(itemType, isSellingToVendor)
+    local price = vendor:getPrice(itemType, isSellingToVendor, client)
     if isSellingToVendor then
         local inventory = character:getInv()
         local item = inventory:getFirstItemOfType(itemType)
@@ -115,14 +119,14 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
 
             local canTransfer, transferReason = VENDOR_INVENTORY_MEASURE:canAccess("transfer", context)
             if not canTransfer then
-                client:notifyErrorLocalized(transferReason or "vendorError")
+                client:notifyErrorLocalized(transferReason or L("vendorError"))
                 client.vendorTransaction = nil
                 return
             end
 
             local canTransferItem, itemTransferReason = hook.Run("CanItemBeTransfered", item, inventory, VENDOR_INVENTORY_MEASURE, client)
             if canTransferItem == false then
-                client:notifyErrorLocalized(itemTransferReason or "vendorError")
+                client:notifyErrorLocalized(itemTransferReason or L("vendorError"))
                 client.vendorTransaction = nil
                 return
             end
@@ -130,7 +134,7 @@ function MODULE:VendorTradeEvent(client, vendor, itemType, isSellingToVendor)
             character:giveMoney(price)
             item:remove():next(function() client.vendorTransaction = nil end):catch(function() client.vendorTransaction = nil end)
             vendor:addStock(itemType)
-            client:notifyMoneyLocalized("vendorYouSoldItem", item:getName(), lia.currency.get(price))
+            client:notifyVendorTradeLocalized("vendorYouSoldItem", item:getName(), lia.currency.get(price))
             hook.Run("OnCharTradeVendor", client, vendor, item, isSellingToVendor, character)
         end
     else
@@ -162,6 +166,10 @@ function MODULE:PlayerAccessVendor(client, vendor)
     vendor:addReceiver(client)
     net.Start("liaVendorOpen")
     net.WriteEntity(vendor)
+    net.Send(client)
+    -- Sync presets to client
+    net.Start("liaVendorSyncPresets")
+    net.WriteTable(lia.vendor.presets)
     net.Send(client)
     if client:canEditVendor(vendor) then
         for factionID in pairs(vendor.factions) do
@@ -197,26 +205,21 @@ function MODULE:GetEntitySaveData(ent)
             end
             return groups
         end)(),
-        welcomeMessage = ent:getNetVar("welcomeMessage"),
-        preset = ent:getNetVar("preset"),
         animation = ent:getNetVar("animation"),
+        factionBuyScales = ent.factionBuyScales,
+        factionSellScales = ent.factionSellScales,
     }
 end
 
 function MODULE:OnEntityLoaded(ent, data)
     if ent:GetClass() ~= "lia_vendor" or not data then return end
     ent:setNetVar("name", data.name)
-    ent:setNetVar("welcomeMessage", data.welcomeMessage)
-    ent:setNetVar("preset", data.preset or "none")
     ent:setNetVar("animation", data.animation or "")
-    if data.preset and data.preset ~= "none" then
-        ent:applyPreset(data.preset)
-    else
-        ent.items = data.items or {}
-    end
-
+    ent.items = data.items or {}
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
+    ent.factionBuyScales = data.factionBuyScales or {}
+    ent.factionSellScales = data.factionSellScales or {}
     if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
         ent:SetModel(data.model)
         timer.Simple(0.1, function()
@@ -282,3 +285,62 @@ net.Receive("liaVendorTrade", function(_, client)
     if not hook.Run("CanPlayerAccessVendor", client, entity) then return end
     hook.Run("VendorTradeEvent", client, entity, uniqueID, isSellingToVendor)
 end)
+
+net.Receive("liaVendorLoadPreset", function(_, client)
+    local vendor = client.liaVendor
+    if not IsValid(vendor) or not client:canEditVendor(vendor) then return end
+    local presetName = net.ReadString()
+    if not presetName or presetName:Trim() == "" then return end
+    presetName = presetName:Trim():lower()
+    vendor:loadPreset(presetName)
+    client:notifyInfoLocalized("vendorPresetLoaded", presetName)
+    lia.log.add(client, "vendorPresetLoad", presetName)
+end)
+
+net.Receive("liaVendorSavePreset", function(_, client)
+    if not client:hasPrivilege("canCreateVendorPresets") then
+        client:notifyErrorLocalized("noPermission")
+        return
+    end
+
+    local presetName = net.ReadString()
+    local itemsData = net.ReadTable()
+    if not presetName or presetName:Trim() == "" then
+        client:notifyErrorLocalized("vendorPresetNameRequired")
+        return
+    end
+
+    presetName = presetName:Trim():lower()
+    -- Validate items data
+    local validItems = {}
+    for itemType, itemData in pairs(itemsData) do
+        if lia.item.list[itemType] then validItems[itemType] = itemData end
+    end
+
+    -- Save to memory
+    lia.vendor.presets[presetName] = validItems
+    -- Save to database
+    lia.db.upsert({
+        name = presetName,
+        data = util.TableToJSON(validItems)
+    }, "lia_vendor_presets"):next(function()
+        client:notifyInfoLocalized("vendorPresetSaved", presetName)
+        lia.log.add(client, "vendorPresetSave", presetName)
+        -- Sync presets to all clients
+        net.Start("liaVendorSyncPresets")
+        net.WriteTable(lia.vendor.presets)
+        net.Broadcast()
+    end)
+end)
+
+function MODULE:LiliaTablesLoaded()
+    lia.db.query("SELECT name, data FROM lia_vendor_presets", function(data)
+        if data then
+            for _, row in ipairs(data) do
+                local presetName = row.name
+                local itemsData = util.JSONToTable(row.data)
+                if presetName and itemsData then lia.vendor.presets[presetName] = itemsData end
+            end
+        end
+    end)
+end

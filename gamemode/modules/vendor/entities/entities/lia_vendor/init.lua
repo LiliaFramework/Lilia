@@ -24,12 +24,7 @@ function ENT:Use(activator)
     self.receivers = self.receivers or {}
     self.receivers[#self.receivers + 1] = activator
     activator.liaVendor = self
-    if self:getNetVar("welcomeMessage") then activator:notifyInfoLocalized("vendorMessageFormat", self:getNetVar("name"), self:getNetVar("welcomeMessage")) end
     hook.Run("PlayerAccessVendor", activator, self)
-end
-
-function ENT:setWelcomeMessage(value)
-    self:setNetVar("welcomeMessage", value)
 end
 
 function ENT:setStock(itemType, value)
@@ -219,9 +214,8 @@ function ENT:setAnimation(animation)
     if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
 
-function ENT:applyPreset(name)
+function ENT:loadPreset(name)
     name = string.lower(name)
-    self:setNetVar("preset", name)
     if name == "none" then
         self.items = {}
         if self.receivers then
@@ -229,34 +223,18 @@ function ENT:applyPreset(name)
                 self:sync(client)
             end
         end
-
-        net.Start("liaVendorEdit")
-        net.WriteString("preset")
-        if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
         return
     end
 
     local preset = lia.vendor and lia.vendor.getPreset(name)
     if not preset then return end
-    self.items = {}
-    for itemType, data in pairs(preset) do
-        if lia.item.list[itemType] then
-            if data.mode ~= nil then self:setTradeMode(itemType, data.mode) end
-            if data.price ~= nil then self:setItemPrice(itemType, data.price) end
-            if data.maxStock ~= nil then self:setMaxStock(itemType, data.maxStock) end
-            if data.stock ~= nil then self:setStock(itemType, data.stock) end
-        end
-    end
-
+    -- Directly set the items from the preset
+    self.items = table.Copy(preset)
     if self.receivers then
         for _, client in ipairs(self.receivers) do
             self:sync(client)
         end
     end
-
-    net.Start("liaVendorEdit")
-    net.WriteString("preset")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
 end
 
 function ENT:sync(client)

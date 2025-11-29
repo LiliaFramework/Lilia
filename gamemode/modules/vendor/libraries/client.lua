@@ -134,9 +134,9 @@ end)
 function MODULE:AddToAdminStickHUD(_, target, information)
     if not IsValid(target) or not target.IsVendor then return end
     local name = target:getName()
-    if name and name ~= "" then table.insert(information, L("vendor") .. " " .. L("name") .. ": " .. name) end
+    if name and name ~= "" then table.insert(information, L("vendorNameLabel") .. name) end
     local animation = target:getNetVar("animation", "")
-    if animation and animation ~= "" then table.insert(information, L("animation") .. ": " .. animation) end
+    if animation and animation ~= "" then table.insert(information, L("animationLabel") .. animation) end
     local itemCount = 0
     if target.items then
         for _, itemData in pairs(target.items) do
@@ -144,7 +144,7 @@ function MODULE:AddToAdminStickHUD(_, target, information)
         end
     end
 
-    table.insert(information, L("vendorItemCount") .. ": " .. itemCount)
+    table.insert(information, L("vendorItemCountLabel") .. itemCount)
     local factionNames = {}
     if target.factions then
         for factionID, _ in pairs(target.factions) do
@@ -154,14 +154,14 @@ function MODULE:AddToAdminStickHUD(_, target, information)
     end
 
     if #factionNames > 0 then
-        table.insert(information, L("doorAllowedFactions") .. ":")
+        table.insert(information, L("allowedFactionsLabel"))
         for _, factionName in ipairs(factionNames) do
             table.insert(information, "- " .. factionName)
         end
 
         table.insert(information, "")
     else
-        table.insert(information, L("factions") .. ": " .. L("all"))
+        table.insert(information, L("allFactionsLabel"))
     end
 
     local classNames = {}
@@ -173,9 +173,11 @@ function MODULE:AddToAdminStickHUD(_, target, information)
     end
 
     if #classNames > 0 then
-        table.insert(information, L("doorAllowedClasses") .. ":")
+        table.insert(information, L("allowedClassesLabel"))
         for _, className in ipairs(classNames) do
             table.insert(information, "- " .. className)
         end
     end
 end
+
+net.Receive("liaVendorSyncPresets", function() lia.vendor.presets = net.ReadTable() end)

@@ -59,10 +59,6 @@ function ENT:Initialize()
     timer.Simple(0.5, function() if IsValid(self) and self:isReadyForAnim() then self:setAnim() end end)
 end
 
-function ENT:getWelcomeMessage()
-    return self:getNetVar("welcomeMessage", L("vendorWelcomeMessage"))
-end
-
 function ENT:getStock(uniqueID)
     if not self.items then self:setupVars() end
     if self.items[uniqueID] and self.items[uniqueID][VENDOR_MAXSTOCK] then return self.items[uniqueID][VENDOR_STOCK] or 0, self.items[uniqueID][VENDOR_MAXSTOCK] end
@@ -83,14 +79,51 @@ function ENT:isItemInStock(itemType, amount)
     return info[VENDOR_STOCK] >= amount
 end
 
-function ENT:getPrice(uniqueID, isSellingToVendor)
+function ENT:setFactionBuyScale(factionID, scale)
+    self.factionBuyScales = self.factionBuyScales or {}
+    self.factionBuyScales[factionID] = math.Clamp(scale, 0, 5) -- 0% to 500%
+    if SERVER then self:saveData() end
+end
+
+function ENT:setFactionSellScale(factionID, scale)
+    self.factionSellScales = self.factionSellScales or {}
+    self.factionSellScales[factionID] = math.Clamp(scale, 0, 1) -- 0% to 100%
+    if SERVER then self:saveData() end
+end
+
+function ENT:getFactionBuyScale(factionID)
+    self.factionBuyScales = self.factionBuyScales or {}
+    return self.factionBuyScales[factionID] or 1.0 -- Default 100%
+end
+
+function ENT:getFactionSellScale(factionID)
+    self.factionSellScales = self.factionSellScales or {}
+    return self.factionSellScales[factionID] or 1.0 -- Default 100%
+end
+
+function ENT:getPrice(uniqueID, isSellingToVendor, client)
     if not self.items then self:setupVars() end
     local price = lia.item.list[uniqueID] and self.items[uniqueID] and self.items[uniqueID][VENDOR_PRICE] or (lia.item.list[uniqueID] and lia.item.list[uniqueID]:getPrice() or 0)
     local overridePrice = hook.Run("GetPriceOverride", self, uniqueID, price, isSellingToVendor)
     if overridePrice then
         price = overridePrice
     else
-        if isSellingToVendor then price = math.floor(price * self:getSellScale()) end
+        if isSellingToVendor then
+            price = math.floor(price * self:getSellScale())
+            -- Apply faction-specific sell scale
+            if client and client:getChar() then
+                local factionID = client:Team()
+                local factionSellScale = self:getFactionSellScale(factionID)
+                price = math.floor(price * factionSellScale)
+            end
+        else
+            -- Apply faction-specific buy scale for buying from vendor
+            if client and client:getChar() then
+                local factionID = client:Team()
+                local factionBuyScale = self:getFactionBuyScale(factionID)
+                price = math.floor(price * factionBuyScale)
+            end
+        end
     end
     return price
 end
