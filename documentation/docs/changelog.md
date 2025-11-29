@@ -1,5 +1,30 @@
 # Changelog
 
+## Version 7.086 (November 29, 2025)
+
+### Changes
+
+- Minor Bug Fixes
+- NEW CS1.6 Content
+- Prevented Weird Bug
+- Better Character Creation Sizes
+- Vendor UI Overhaul + Presets
+- Added FACTION.scoreboardPriority
+- Minor Dumb Money Exploit
+- More Localization
+- Replaced liaNumSlider with liaSlider
+- Merged Logging Categories
+- Successfully updated workshop Lilia to 7.075
+- Bug Fixing, Map Data Equivalency Function, Name Consistnecy
+- Successfully updated workshop Lilia to 7.073
+- Update client.lua
+- Successfully updated workshop Lilia to 7.071
+- Update thirdperson.lua
+- Update client.lua
+- Update cl_f1menu.lua
+- Successfully updated workshop Lilia to 7.067
+- Search Bar Theme Consistency
+
 ## Version 7.075 (November 26, 2025)
 
 ### Changes

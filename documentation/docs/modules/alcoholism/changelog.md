@@ -1,5 +1,9 @@
 # Changelog
 
+### Version 1.5
+
+- Fixed localization format error in `alcoholDesc` string by correcting `%s%` to `%s%%` in all language files (English, Spanish, Portuguese, Italian, German, French)
+
 ### Version 1.4
 
 - Added comprehensive configuration documentation

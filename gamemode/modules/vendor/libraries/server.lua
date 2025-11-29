@@ -167,7 +167,6 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Start("liaVendorOpen")
     net.WriteEntity(vendor)
     net.Send(client)
-    -- Sync presets to client
     net.Start("liaVendorSyncPresets")
     net.WriteTable(lia.vendor.presets)
     net.Send(client)
@@ -311,22 +310,18 @@ net.Receive("liaVendorSavePreset", function(_, client)
     end
 
     presetName = presetName:Trim():lower()
-    -- Validate items data
     local validItems = {}
     for itemType, itemData in pairs(itemsData) do
         if lia.item.list[itemType] then validItems[itemType] = itemData end
     end
 
-    -- Save to memory
     lia.vendor.presets[presetName] = validItems
-    -- Save to database
     lia.db.upsert({
         name = presetName,
         data = util.TableToJSON(validItems)
     }, "lia_vendor_presets"):next(function()
         client:notifyInfoLocalized("vendorPresetSaved", presetName)
         lia.log.add(client, "vendorPresetSave", presetName)
-        -- Sync presets to all clients
         net.Start("liaVendorSyncPresets")
         net.WriteTable(lia.vendor.presets)
         net.Broadcast()

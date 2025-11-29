@@ -76,9 +76,7 @@ function PANEL:makeFactionComboBox()
     end
 
     combo:FinishAddingOptions()
-    -- Force set userSetHeight to true before calling SetTall to prevent AutoSize override
     combo.userSetHeight = true
-    -- Try direct panel SetTall instead of the overridden one
     local panelTable = vgui.GetControlTable("Panel")
     if panelTable and panelTable.SetTall then
         panelTable.SetTall(combo, 40)

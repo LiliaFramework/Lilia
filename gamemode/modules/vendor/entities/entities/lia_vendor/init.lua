@@ -228,7 +228,6 @@ function ENT:loadPreset(name)
 
     local preset = lia.vendor and lia.vendor.getPreset(name)
     if not preset then return end
-    -- Directly set the items from the preset
     self.items = table.Copy(preset)
     if self.receivers then
         for _, client in ipairs(self.receivers) do
