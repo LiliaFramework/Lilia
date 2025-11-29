@@ -7093,7 +7093,7 @@ end
         -- Medium: Add vendor info
         function MODULE:OnOpenVendorMenu(panel, vendor)
             if IsValid(vendor) then
-                local vendorData = vendor:GetNetVar("vendorData")
+                local vendorData = vendor:getNetVar("vendorData")
                 if vendorData then
                     -- Display vendor name
                     local label = vgui.Create("DLabel", panel)
@@ -7111,7 +7111,7 @@ end
             if not IsValid(panel) or not IsValid(vendor) then return end
 
             -- Get vendor data
-            local vendorData = vendor:GetNetVar("vendorData")
+            local vendorData = vendor:getNetVar("vendorData")
             if not vendorData then return end
 
             -- Customize panel
@@ -9622,7 +9622,7 @@ end
 
             -- Show for doors with special permissions
             if entity:GetClass() == "lia_door" then
-                local doorData = entity:GetNetVar("doorData")
+                local doorData = entity:getNetVar("doorData")
                 if doorData and doorData.owner then
                     return doorData.owner == char:getID() or client:IsAdmin()
                 end
@@ -11088,9 +11088,9 @@ end
             end
 
             -- Get storage information
-            local storageName = entity:GetNetVar("storageName", "Storage")
-            local storageType = entity:GetNetVar("storageType", "container")
-            local ownerName = entity:GetNetVar("ownerName", "Unknown")
+            local storageName = entity:getNetVar("storageName", "Storage")
+            local storageType = entity:getNetVar("storageType", "container")
+            local ownerName = entity:getNetVar("ownerName", "Unknown")
 
             -- Create advanced unlock menu
             local frame = vgui.Create("DFrame")
@@ -12002,8 +12002,8 @@ end
             local client = LocalPlayer()
 
             -- Clear vendor interaction state
-            client:SetNetVar("currentVendor", nil)
-            client:SetNetVar("vendorMode", nil)
+            client:setNetVar("currentVendor", nil)
+            client:setNetVar("vendorMode", nil)
 
             -- Close vendor UI
             if lia.gui.vendor then
@@ -12027,7 +12027,7 @@ end
             local char = client:getChar()
 
             -- Log vendor session end
-            local sessionStart = client:GetNetVar("vendorSessionStart", 0)
+            local sessionStart = client:getNetVar("vendorSessionStart", 0)
             local sessionDuration = exitTime - sessionStart
 
             if sessionDuration > 0 then
@@ -12038,10 +12038,10 @@ end
             end
 
             -- Clear all vendor-related network variables
-            client:SetNetVar("currentVendor", nil)
-            client:SetNetVar("vendorMode", nil)
-            client:SetNetVar("vendorSessionStart", nil)
-            client:SetNetVar("vendorTransactionCount", nil)
+            client:setNetVar("currentVendor", nil)
+            client:setNetVar("vendorMode", nil)
+            client:setNetVar("vendorSessionStart", nil)
+            client:setNetVar("vendorTransactionCount", nil)
 
             -- Close all vendor-related UI panels
             MODULE.CloseAllVendorPanels()
@@ -12135,7 +12135,7 @@ end
         -- Medium: Update voice state
         function MODULE:VoiceToggled(enabled)
             local client = LocalPlayer()
-            client:SetNetVar("voiceEnabled", enabled)
+            client:setNetVar("voiceEnabled", enabled)
 
             if enabled then
                 -- Show voice icon
@@ -12157,7 +12157,7 @@ end
             local char = client:getChar()
 
             -- Update voice state
-            client:SetNetVar("voiceEnabled", enabled)
+            client:setNetVar("voiceEnabled", enabled)
 
             -- Log voice toggle
             lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)

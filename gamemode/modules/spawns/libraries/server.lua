@@ -40,14 +40,29 @@ local function DoSpawnLogic(client)
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
+    print("[SPAWN DEBUG] DoSpawnLogic called for player:", client:Name())
     local posData = character:getLastPos()
-    if posData and posData.map and posData.map:lower() == lia.data.getEquivalencyMap(game.GetMap()):lower() then
-        if posData.pos and isvector(posData.pos) then client:SetPos(posData.pos) end
-        if posData.ang and isangle(posData.ang) then client:SetEyeAngles(posData.ang) end
+    print("[SPAWN DEBUG] lastPos data:", posData)
+    local currentMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+    print("[SPAWN DEBUG] Current map equivalency:", currentMap, "| Saved map:", posData and posData.map and posData.map:lower())
+    if posData and posData.map and posData.map:lower() == currentMap then
+        print("[SPAWN DEBUG] Using lastPos for spawn")
+        if posData.pos and isvector(posData.pos) then
+            print("[SPAWN DEBUG] Setting position to:", posData.pos)
+            client:SetPos(posData.pos)
+        end
+
+        if posData.ang and isangle(posData.ang) then
+            print("[SPAWN DEBUG] Setting angles to:", posData.ang)
+            client:SetEyeAngles(posData.ang)
+        end
+
         character:setLastPos(nil)
+        print("[SPAWN DEBUG] Cleared lastPos data")
         return
     end
 
+    print("[SPAWN DEBUG] Falling back to faction spawns")
     local factionID
     for _, info in ipairs(lia.faction.indices) do
         if info.index == client:Team() then
@@ -125,6 +140,7 @@ function MODULE:CharPreSave(character)
             map = lia.data.getEquivalencyMap(game.GetMap())
         }
 
+        print("[SPAWN DEBUG] CharPreSave: Saving lastPos for", client:Name(), ":", lastPosData)
         character:setLastPos(lastPosData)
     end
 end
@@ -181,6 +197,7 @@ function MODULE:PlayerDeath(client, _, attacker)
 end
 
 function MODULE:PlayerSpawn(client)
+    print("[SPAWN DEBUG] PlayerSpawn called for:", client:Name())
     client:setNetVar("IsDeadRestricted", false)
     client:SetDSP(0, false)
     playerLoadedChar[client] = nil
@@ -189,6 +206,7 @@ function MODULE:PlayerSpawn(client)
 end
 
 function MODULE:PostPlayerLoadedChar(client)
+    print("[SPAWN DEBUG] PostPlayerLoadedChar called for:", client:Name())
     local character = client:getChar()
     if character then
         playerLoadedChar[client] = true

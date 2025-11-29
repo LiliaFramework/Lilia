@@ -304,7 +304,7 @@ end
             local char = ply:getChar()
             if char:hasFlags("v") then
                 entity:SetDriver(ply)
-                entity:SetNetVar("owner", char:getID())
+                entity:setNetVar("owner", char:getID())
             end
         end
         ```

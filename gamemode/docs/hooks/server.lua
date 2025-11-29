@@ -12198,7 +12198,7 @@ end
         -- Simple: Force recognition for all nearby players
         function MODULE:ForceRecognizeRange(player, range, fakeName)
             if IsValid(player) then
-                player:SetNetVar("forceRecognized", true)
+                player:setNetVar("forceRecognized", true)
             end
         end
         ```
@@ -14186,9 +14186,9 @@ end
                 FLAG_NORMAL)
 
             -- Store lock data
-            entity:SetNetVar("lockedBy", owner:SteamID())
-            entity:SetNetVar("lockedTime", os.time())
-            entity:SetNetVar("lockDuration", time or 0)
+            entity:setNetVar("lockedBy", owner:SteamID())
+            entity:setNetVar("lockedTime", os.time())
+            entity:setNetVar("lockDuration", time or 0)
 
             -- Notify nearby players with sound
             for _, v in player.Iterator() do
@@ -14255,9 +14255,9 @@ end
                 lia.log.add(owner:Name() .. " unlocked entity " .. tostring(entity), FLAG_NORMAL)
 
                 -- Check if entity was locked by this player
-                local lockedBy = entity:GetNetVar("lockedBy")
+                local lockedBy = entity:getNetVar("lockedBy")
                 if lockedBy == owner:SteamID() then
-                    entity:SetNetVar("lockedBy", nil)
+                    entity:setNetVar("lockedBy", nil)
                 end
             end
         end
@@ -14273,7 +14273,7 @@ end
             if not IsValid(entity) then return end
 
             -- Verify unlock permission
-            local lockedBy = entity:GetNetVar("lockedBy")
+            local lockedBy = entity:getNetVar("lockedBy")
             local canUnlock = false
 
             if lockedBy == owner:SteamID() then
@@ -14298,9 +14298,9 @@ end
                 FLAG_NORMAL)
 
             -- Clear lock data
-            entity:SetNetVar("lockedBy", nil)
-            entity:SetNetVar("lockedTime", nil)
-            entity:SetNetVar("lockDuration", nil)
+            entity:setNetVar("lockedBy", nil)
+            entity:setNetVar("lockedTime", nil)
+            entity:setNetVar("lockDuration", nil)
 
             -- Notify nearby players
             for _, v in player.Iterator() do
@@ -15870,9 +15870,9 @@ end
             end
 
             -- Store ragdoll data
-            entity:SetNetVar("ragdollOwner", player:SteamID())
-            entity:SetNetVar("ragdollTime", os.time())
-            entity:SetNetVar("isDead", isDead)
+            entity:setNetVar("ragdollOwner", player:SteamID())
+            entity:setNetVar("ragdollTime", os.time())
+            entity:setNetVar("isDead", isDead)
 
             -- Apply death effects
             if isDead then
@@ -15960,7 +15960,7 @@ end
 
             -- Restore custom data
             if data.customData then
-                entity:SetNetVar("customData", data.customData)
+                entity:setNetVar("customData", data.customData)
             end
 
             -- Restore health
@@ -16017,7 +16017,7 @@ end
         -- Medium: Track entity changes
         function MODULE:OnEntityPersistUpdated(entity, data)
             if IsValid(entity) then
-                entity:SetNetVar("lastUpdated", os.time())
+                entity:setNetVar("lastUpdated", os.time())
             end
         end
         ```
@@ -16034,11 +16034,11 @@ end
             end
 
             -- Store update timestamp
-            entity:SetNetVar("lastUpdated", os.time())
-            entity:SetNetVar("updateCount", (entity:GetNetVar("updateCount", 0) + 1))
+            entity:setNetVar("lastUpdated", os.time())
+            entity:setNetVar("updateCount", (entity:getNetVar("updateCount", 0) + 1))
 
             -- Log significant changes
-            local oldPos = entity:GetNetVar("lastSavedPos")
+            local oldPos = entity:getNetVar("lastSavedPos")
             if oldPos then
                 local dist = Vector(data.pos[1], data.pos[2], data.pos[3]):Distance(oldPos)
                 if dist > 100 then
@@ -16050,7 +16050,7 @@ end
             end
 
             -- Store last saved position
-            entity:SetNetVar("lastSavedPos", Vector(data.pos[1], data.pos[2], data.pos[3]))
+            entity:setNetVar("lastSavedPos", Vector(data.pos[1], data.pos[2], data.pos[3]))
 
             -- Notify modules
             hook.Run("EntityPersistenceChanged", entity, data)
@@ -16094,7 +16094,7 @@ end
         -- Medium: Add custom data to persistence
         function MODULE:OnEntityPersisted(entity, entityData)
             if IsValid(entity) then
-                entityData.customData = entity:GetNetVar("customData")
+                entityData.customData = entity:getNetVar("customData")
             end
         end
         ```
@@ -16111,13 +16111,13 @@ end
             entityData.serverName = GetHostName()
 
             -- Store custom data
-            local customData = entity:GetNetVar("customData")
+            local customData = entity:getNetVar("customData")
             if customData then
                 entityData.customData = customData
             end
 
             -- Store owner if applicable
-            local owner = entity:GetNetVar("owner")
+            local owner = entity:getNetVar("owner")
             if owner then
                 entityData.owner = owner
             end
@@ -16269,8 +16269,8 @@ end
         -- Medium: Customize item entity on creation
         function MODULE:OnItemCreated(itemTable, itemEntity)
             if IsValid(itemEntity) then
-                itemEntity:SetNetVar("itemName", itemTable.name)
-                itemEntity:SetNetVar("itemID", itemTable.uniqueID)
+                itemEntity:setNetVar("itemName", itemTable.name)
+                itemEntity:setNetVar("itemID", itemTable.uniqueID)
             end
         end
         ```
@@ -16282,9 +16282,9 @@ end
             if not itemTable or not IsValid(itemEntity) then return end
 
             -- Set item properties
-            itemEntity:SetNetVar("itemName", itemTable.name)
-            itemEntity:SetNetVar("itemID", itemTable.uniqueID)
-            itemEntity:SetNetVar("itemCategory", itemTable.category)
+            itemEntity:setNetVar("itemName", itemTable.name)
+            itemEntity:setNetVar("itemID", itemTable.uniqueID)
+            itemEntity:setNetVar("itemCategory", itemTable.category)
 
             -- Apply custom model if specified
             if itemTable.model then
@@ -16351,7 +16351,7 @@ end
         -- Medium: Track spawn and apply effects
         function MODULE:OnItemSpawned(itemEntity)
             if IsValid(itemEntity) then
-                itemEntity:SetNetVar("spawnTime", os.time())
+                itemEntity:setNetVar("spawnTime", os.time())
 
                 -- Make item glow briefly
                 itemEntity:SetRenderMode(RENDERMODE_TRANSADD)
@@ -16371,8 +16371,8 @@ end
             if not IsValid(itemEntity) then return end
 
             -- Store spawn data
-            itemEntity:SetNetVar("spawnTime", os.time())
-            itemEntity:SetNetVar("spawnPos", itemEntity:GetPos())
+            itemEntity:setNetVar("spawnTime", os.time())
+            itemEntity:setNetVar("spawnPos", itemEntity:GetPos())
 
             -- Create spawn effect
             local effectdata = EffectData()
@@ -16531,7 +16531,7 @@ end
         function MODULE:OnPickupMoney(client, moneyEntity)
             local char = client:getChar()
             if char then
-                local amount = moneyEntity:GetNetVar("amount", 0)
+                local amount = moneyEntity:getNetVar("amount", 0)
                 lia.log.add(string.format("%s picked up $%d",
                     client:Name(),
                     amount),
@@ -16549,7 +16549,7 @@ end
             local char = client:getChar()
             if not char then return end
 
-            local amount = moneyEntity:GetNetVar("amount", 0)
+            local amount = moneyEntity:getNetVar("amount", 0)
             if amount <= 0 then return end
 
             -- Log pickup
@@ -16649,9 +16649,9 @@ end
                 FLAG_NORMAL)
 
             -- Store weapon data on dropped entity
-            droppedEntity:SetNetVar("weaponClass", originalWeapon:GetClass())
-            droppedEntity:SetNetVar("droppedBy", client:SteamID())
-            droppedEntity:SetNetVar("dropTime", os.time())
+            droppedEntity:setNetVar("weaponClass", originalWeapon:GetClass())
+            droppedEntity:setNetVar("droppedBy", client:SteamID())
+            droppedEntity:setNetVar("dropTime", os.time())
 
             -- Set persistence
             droppedEntity:SetSaveValue("persist", true)
@@ -17266,7 +17266,7 @@ end
             if not char then return end
 
             local action = isPurchase and "purchased" or "sold"
-            local price = door:GetNetVar("price", 0)
+            local price = door:getNetVar("price", 0)
 
             -- Log transaction
             lia.log.add(string.format("%s (%s) %s door at %s for $%d",
@@ -17295,11 +17295,11 @@ end
 
             -- Update door ownership
             if isPurchase then
-                door:SetNetVar("owner", client:SteamID())
-                door:SetNetVar("owned", true)
+                door:setNetVar("owner", client:SteamID())
+                door:setNetVar("owned", true)
             else
-                door:SetNetVar("owner", nil)
-                door:SetNetVar("owned", false)
+                door:setNetVar("owner", nil)
+                door:setNetVar("owned", false)
             end
 
             -- Notify nearby players
@@ -18526,7 +18526,7 @@ end
                 FLAG_NORMAL)
 
             -- Store edit history
-            local editHistory = vendor:GetNetVar("editHistory", {})
+            local editHistory = vendor:getNetVar("editHistory", {})
             table.insert(editHistory, {
                 editor = client:SteamID(),
                 editorName = client:Name(),
@@ -18538,13 +18538,13 @@ end
                 table.remove(editHistory, 1)
             end
 
-            vendor:SetNetVar("editHistory", editHistory)
+            vendor:setNetVar("editHistory", editHistory)
 
             -- Validate edit
             if key == "price" then
-                local price = vendor:GetNetVar("price", 0)
+                local price = vendor:getNetVar("price", 0)
                 if price < 0 then
-                    vendor:SetNetVar("price", 0)
+                    vendor:setNetVar("price", 0)
                     client:notify("Price cannot be negative.")
                 end
             end
@@ -18623,7 +18623,7 @@ end
             char:setData("vendorStats", vendorStats)
 
             -- Check vendor restrictions
-            local vendorData = vendor:GetNetVar("vendorData")
+            local vendorData = vendor:getNetVar("vendorData")
             if vendorData and vendorData.restricted then
                 local faction = char:getFaction()
                 if faction and not vendorData.allowedFactions[faction.uniqueID] then
@@ -19237,7 +19237,7 @@ end
 
             -- Check if killed by admin
             if IsValid(attacker) and attacker:IsAdmin() then
-                local reason = attacker:GetNetVar("permakillReason")
+                local reason = attacker:getNetVar("permakillReason")
                 if reason then
                     lia.log.add(string.format("%s permakilled %s: %s",
                         attacker:Name(),
@@ -19804,7 +19804,7 @@ end
             if not char then return end
 
             -- Check door access
-            local doorData = door:GetNetVar("doorData")
+            local doorData = door:getNetVar("doorData")
             if doorData and doorData.locked then
                 local owner = doorData.owner
                 if owner and owner ~= client:SteamID() then
@@ -19858,7 +19858,7 @@ end
         -- Simple: Process door data
         function MODULE:PostDoorDataLoad(entity, doorData)
             if doorData then
-                entity:SetNetVar("doorData", doorData)
+                entity:setNetVar("doorData", doorData)
             end
         end
         ```
@@ -19869,10 +19869,10 @@ end
         function MODULE:PostDoorDataLoad(entity, doorData)
             if IsValid(entity) and doorData then
                 if doorData.locked then
-                    entity:SetNetVar("locked", true)
+                    entity:setNetVar("locked", true)
                 end
                 if doorData.owner then
-                    entity:SetNetVar("owner", doorData.owner)
+                    entity:setNetVar("owner", doorData.owner)
                 end
             end
         end
@@ -19885,23 +19885,23 @@ end
             if not IsValid(entity) or not doorData then return end
 
             -- Restore door properties
-            entity:SetNetVar("doorData", doorData)
+            entity:setNetVar("doorData", doorData)
 
             if doorData.locked then
-                entity:SetNetVar("locked", true)
+                entity:setNetVar("locked", true)
             end
 
             if doorData.owner then
-                entity:SetNetVar("owner", doorData.owner)
+                entity:setNetVar("owner", doorData.owner)
             end
 
             if doorData.price then
-                entity:SetNetVar("price", doorData.price)
+                entity:setNetVar("price", doorData.price)
             end
 
             -- Validate and restore custom data
             if doorData.customData then
-                entity:SetNetVar("customData", doorData.customData)
+                entity:setNetVar("customData", doorData.customData)
             end
 
             -- Apply door-specific restoration
@@ -20437,7 +20437,7 @@ end
             doorData.ang = {door:GetAngles().p, door:GetAngles().y, door:GetAngles().r}
 
             -- Store door properties
-            local doorNetData = door:GetNetVar("doorData")
+            local doorNetData = door:getNetVar("doorData")
             if doorNetData then
                 doorData.locked = doorNetData.locked
                 doorData.owner = doorNetData.owner
@@ -21386,11 +21386,11 @@ end
             client:SetAmmo(50, "pistol")
 
             -- Store character data
-            client:SetNetVar("charData", charData)
+            client:setNetVar("charData", charData)
 
             -- Set bot flags
-            client:SetNetVar("isBot", true)
-            client:SetNetVar("botType", "generic")
+            client:setNetVar("isBot", true)
+            client:setNetVar("botType", "generic")
 
             -- Initialize bot AI
             timer.Simple(1, function()
@@ -21576,7 +21576,7 @@ end
                 MODULE.pacDataCache[steamID] = pacData
 
                 -- Apply PAC data to player
-                client:SetNetVar("pacData", pacData)
+                client:setNetVar("pacData", pacData)
 
                 -- Log PAC setup
                 if table.Count(pacData.parts) > 0 then
@@ -22196,8 +22196,8 @@ end
             hook.Remove("PlayerDisconnected", "storage_cleanup_" .. inventory:getID())
 
             -- Remove any network variables
-            storageEntity:SetNetVar("storageID", nil)
-            storageEntity:SetNetVar("storageType", nil)
+            storageEntity:setNetVar("storageID", nil)
+            storageEntity:setNetVar("storageType", nil)
 
             -- Final cleanup
             inventory:destroy()
@@ -22240,7 +22240,7 @@ end
         -- Simple: Basic inventory setup
         function MODULE:StorageInventorySet(entity, inventory, isCar)
             -- Initialize storage properties
-            entity:SetNetVar("hasInventory", true)
+            entity:setNetVar("hasInventory", true)
         end
         ```
 
@@ -22252,8 +22252,8 @@ end
 
             -- Set inventory properties
             inventory:setCapacity(isCar and 20 or 50) -- Cars have less capacity
-            entity:SetNetVar("inventoryID", inventory:getID())
-            entity:SetNetVar("isCarStorage", isCar)
+            entity:setNetVar("inventoryID", inventory:getID())
+            entity:setNetVar("isCarStorage", isCar)
 
             -- Log inventory assignment
             lia.log.add(string.format("Inventory %s assigned to %s storage (%s)",
@@ -22290,19 +22290,19 @@ end
             -- Handle car-specific setup
             if isCar then
                 MODULE.SetupCarStorage(entity, inventory)
-                entity:SetNetVar("carStorage", true)
+                entity:setNetVar("carStorage", true)
 
                 -- Add car-specific restrictions
                 inventory:addRestriction("no_explosives", true)
                 inventory:addRestriction("max_weight", 100)
             else
-                entity:SetNetVar("carStorage", false)
+                entity:setNetVar("carStorage", false)
             end
 
             -- Setup network variables
-            entity:SetNetVar("inventoryID", inventory:getID())
-            entity:SetNetVar("storageType", storageType)
-            entity:SetNetVar("capacity", capacity)
+            entity:setNetVar("inventoryID", inventory:getID())
+            entity:setNetVar("storageType", storageType)
+            entity:setNetVar("capacity", capacity)
 
             -- Initialize storage timers
             timer.Create("storage_maintenance_" .. inventory:getID(), 300, 0, function()
@@ -22657,7 +22657,7 @@ end
             lia.log.add(string.format("Storage restored with %d items", itemCount), FLAG_NORMAL)
 
             -- Mark as restored
-            entity:SetNetVar("restored", true)
+            entity:setNetVar("restored", true)
         end
         ```
 
@@ -22700,16 +22700,16 @@ end
             SetGlobalInt("TotalStorageRestorations", totalRestorations + 1)
 
             -- Set network variables for client sync
-            entity:SetNetVar("restored", true)
-            entity:SetNetVar("restoreTime", restoreTime)
-            entity:SetNetVar("itemCount", validItems)
+            entity:setNetVar("restored", true)
+            entity:setNetVar("restoreTime", restoreTime)
+            entity:setNetVar("itemCount", validItems)
 
             -- Handle special storage types
             if storageType == "lia_bank" then
                 MODULE.RestoreBankStorage(entity, inventory)
             elseif storageType == "lia_vendor" then
                 MODULE.RestoreVendorStorage(entity, inventory)
-            elseif entity:GetNetVar("isCarStorage", false) then
+            elseif entity:getNetVar("isCarStorage", false) then
                 MODULE.RestoreCarStorage(entity, inventory)
             end
 
@@ -23864,7 +23864,7 @@ end
         -- Simple: Basic persistence update
         function MODULE:UpdateEntityPersistence(entity)
             -- Mark entity for save
-            entity:SetNetVar("needsSave", true)
+            entity:setNetVar("needsSave", true)
         end
         ```
 
@@ -23875,8 +23875,8 @@ end
             if not IsValid(entity) then return end
 
             -- Update last modified time
-            entity:SetNetVar("lastModified", os.time())
-            entity:SetNetVar("needsSave", true)
+            entity:setNetVar("lastModified", os.time())
+            entity:setNetVar("needsSave", true)
 
             -- Log the update
             lia.log.add(string.format("Entity persistence updated: %s", entity:GetClass()), FLAG_NORMAL)
@@ -23894,13 +23894,13 @@ end
             -- Validate entity data before persistence
             if MODULE.ValidateEntityForPersistence(entity) then
                 -- Update persistence metadata
-                entity:SetNetVar("lastPersistenceUpdate", currentTime)
-                entity:SetNetVar("persistenceVersion", MODULE.GetCurrentPersistenceVersion())
-                entity:SetNetVar("needsSave", true)
+                entity:setNetVar("lastPersistenceUpdate", currentTime)
+                entity:setNetVar("persistenceVersion", MODULE.GetCurrentPersistenceVersion())
+                entity:setNetVar("needsSave", true)
 
                 -- Update entity statistics
-                local saveCount = entity:GetNetVar("saveCount", 0) + 1
-                entity:SetNetVar("saveCount", saveCount)
+                local saveCount = entity:getNetVar("saveCount", 0) + 1
+                entity:setNetVar("saveCount", saveCount)
 
                 -- Handle special entity types
                 if entity:IsPlayer() then
@@ -24876,7 +24876,7 @@ end
             if not IsValid(vendor) then return end
 
             vendor:setData("lastSynced", os.time())
-            vendor:SetNetVar("synced", true)
+            vendor:setNetVar("synced", true)
 
             lia.log.add(string.format("Vendor %s synchronized", vendor:getNetVar("name", "Unknown")), FLAG_NORMAL)
         end
@@ -24894,7 +24894,7 @@ end
             -- Update sync statistics
             vendor:setData("lastSynced", currentTime)
             vendor:setData("totalSyncs", vendor:getData("totalSyncs", 0) + 1)
-            vendor:SetNetVar("synced", true)
+            vendor:setNetVar("synced", true)
 
             -- Track sync history
             local syncHistory = vendor:getData("syncHistory", {})

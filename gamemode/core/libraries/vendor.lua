@@ -19,7 +19,11 @@ if SERVER then
         end
     end
 
-    addEditor("name", function() return net.ReadString() end, function(vendor, name) vendor:setName(name) end)
+    addEditor("name", function() return net.ReadString() end, function(vendor, name)
+        vendor:setName(name)
+        client:notifyLocalized("vendorNameUpdated", name)
+    end)
+
     addEditor("mode", function() return net.ReadString(), net.ReadInt(8) end, function(vendor, itemType, mode)
         if vendor:getNetVar("preset") ~= "none" then return end
         vendor:setTradeMode(itemType, mode)
@@ -49,9 +53,23 @@ if SERVER then
     addEditor("welcome", function() return net.ReadString() end, function(vendor, message) vendor:setWelcomeMessage(message) end)
     addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, factionID, allowed) vendor:setFactionAllowed(factionID, allowed) end)
     addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, classID, allowed) vendor:setClassAllowed(classID, allowed) end)
-    addEditor("model", function() return net.ReadString() end, function(vendor, model) vendor:setModel(model) end)
-    addEditor("skin", function() return net.ReadUInt(8) end, function(vendor, skin) vendor:setSkin(skin) end)
-    addEditor("bodygroup", function() return net.ReadUInt(8), net.ReadUInt(8) end, function(vendor, index, value) vendor:setBodyGroup(index, value) end)
+    addEditor("factionBuyScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, factionID, scale) vendor:setFactionBuyScale(factionID, scale) end)
+    addEditor("factionSellScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, factionID, scale) vendor:setFactionSellScale(factionID, scale) end)
+    addEditor("model", function() return net.ReadString() end, function(vendor, model)
+        vendor:setModel(model)
+        client:notifyLocalized("vendorModelUpdated")
+    end)
+
+    addEditor("skin", function() return net.ReadUInt(8) end, function(vendor, skin)
+        vendor:setSkin(skin)
+        client:notifyLocalized("vendorSkinUpdated")
+    end)
+
+    addEditor("bodygroup", function() return net.ReadUInt(8), net.ReadUInt(8) end, function(vendor, index, value)
+        vendor:setBodyGroup(index, value)
+        client:notifyLocalized("vendorBodygroupUpdated")
+    end)
+
     addEditor("useMoney", function() return net.ReadBool() end, function(vendor, useMoney)
         if useMoney then
             vendor:setMoney(lia.config.get("vendorDefaultMoney", 500))
@@ -66,7 +84,10 @@ if SERVER then
     addEditor("animation", function()
         local anim = net.ReadString()
         return anim
-    end, function(vendor, animation) vendor:setAnimation(animation) end)
+    end, function(vendor, animation)
+        vendor:setAnimation(animation)
+        client:notifyLocalized("vendorAnimationUpdated")
+    end)
 else
     local function addEditor(name, writer)
         lia.vendor.editor[name] = function(...)
@@ -113,6 +134,16 @@ else
     addEditor("class", function(classID, allowed)
         net.WriteUInt(classID, 8)
         net.WriteBool(allowed)
+    end)
+
+    addEditor("factionBuyScale", function(factionID, scale)
+        net.WriteUInt(factionID, 8)
+        net.WriteFloat(scale)
+    end)
+
+    addEditor("factionSellScale", function(factionID, scale)
+        net.WriteUInt(factionID, 8)
+        net.WriteFloat(scale)
     end)
 
     addEditor("model", function(model) net.WriteString(model) end)

@@ -124,19 +124,33 @@ local DefaultFunctions = {
             if not (target and target:IsValid() and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
             local targetInv = target:getChar():getInv()
             if not target or not targetInv then return false end
-            inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
-            targetInv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
-            client:setAction(L("givingItemTo", L(item.name), target:Name()), lia.config.get("ItemGiveSpeed", 6))
-            target:setAction(L("givingYouItem", client:Name(), L(item.name)), lia.config.get("ItemGiveSpeed", 6))
-            client:doStaredAction(target, function()
-                local res = hook.Run("HandleItemTransferRequest", client, item:getID(), nil, nil, targetInv:getID())
-                if not res then return end
-                res:next(function()
-                    if not IsValid(client) then return end
-                    if istable(res) and isstring(res.error) then return client:notifyErrorLocalized(res.error) end
-                    client:EmitSound("physics/cardboard/cardboard_box_impact_soft2.wav", 50)
-                end)
-            end, lia.config.get("ItemGiveSpeed", 6), function() client:setAction() end, 100)
+            -- Check if target has space for the item
+            if not targetInv:doesFitInventory(item) then
+                client:notifyLocalized("noFit")
+                return false
+            end
+
+            target:requestBinaryQuestion(L("itemGiveRequest", client:Name(), L(item.name)), L("yes"), L("no"), function(choice)
+                if choice == 0 then -- Accept
+                    inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
+                    targetInv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
+                    client:setAction(L("givingItemTo", L(item.name), target:Name()), lia.config.get("ItemGiveSpeed", 6))
+                    target:setAction(L("givingYouItem", client:Name(), L(item.name)), lia.config.get("ItemGiveSpeed", 6))
+                    client:doStaredAction(target, function()
+                        local res = hook.Run("HandleItemTransferRequest", client, item:getID(), nil, nil, targetInv:getID())
+                        if not res then return end
+                        res:next(function()
+                            if not IsValid(client) then return end
+                            if istable(res) and isstring(res.error) then return client:notifyErrorLocalized(res.error) end
+                            client:EmitSound("physics/cardboard/cardboard_box_impact_soft2.wav", 50)
+                            client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
+                        end)
+                    end, lia.config.get("ItemGiveSpeed", 6), function() client:setAction() end, 100)
+                else -- Decline
+                    client:notifyLocalized("itemGiveDeclined", target:Name())
+                    target:notifyLocalized("itemGiveDeclinedSelf", client:Name())
+                end
+            end)
             return false
         end,
         onCanRun = function(item)

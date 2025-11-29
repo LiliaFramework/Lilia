@@ -138,18 +138,9 @@ function GM:PlayerDeath(client, inflictor, attacker)
         end
     end
 
-    local pkWorld = lia.config.get("PKWorld", false)
-    local playerKill = IsValid(attacker) and attacker:IsPlayer() and attacker ~= client
-    local selfKill = attacker == client
-    local worldKill = not IsValid(attacker) or attacker:GetClass() == "worldspawn"
-    if (playerKill or pkWorld and selfKill or pkWorld and worldKill) and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
+    if IsValid(attacker) and attacker:IsPlayer() and attacker ~= client and hook.Run("PlayerShouldPermaKill", client, inflictor, attacker) then character:ban() end
     net.Start("liaRemoveFOne")
     net.Send(client)
-end
-
-function GM:PlayerShouldPermaKill(client)
-    local character = client:getChar()
-    return character:getMarkedForDeath()
 end
 
 function GM:CharLoaded(id)
