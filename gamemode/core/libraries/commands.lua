@@ -1269,7 +1269,7 @@ if SERVER then
         end
     end)
 
-    concommand.Add("database_list", function(ply)
+    concommand.Add("lia_database_list", function(ply)
         if IsValid(ply) then return end
         lia.db.getCharacterTable(function(columns)
             if #columns == 0 then
@@ -1291,44 +1291,6 @@ if SERVER then
 
         lia.db.fixCharacters()
         lia.information(L("charsFixed"))
-    end)
-
-    concommand.Add("test_all_notifications", function()
-        local notificationTypes = {
-            {
-                type = "default",
-                message = L("defaultNotification"),
-                method = "notify"
-            },
-            {
-                type = "info",
-                message = L("infoNotification"),
-                method = "notifyInfo"
-            },
-            {
-                type = "warning",
-                message = L("warningNotification"),
-                method = "notifyWarning"
-            },
-            {
-                type = "error",
-                message = L("errorNotification"),
-                method = "notifyError"
-            },
-            {
-                type = "success",
-                message = L("successNotification"),
-                method = "notifySuccess"
-            }
-        }
-
-        for _, notification in ipairs(notificationTypes) do
-            if notification.method == "notify" then
-                lia.notices.notify(notification.message, notification.type)
-            else
-                lia.notices.notify(notification.message, notification.type)
-            end
-        end
     end)
 
     concommand.Add("lia_redownload_assets", function(client)
@@ -1353,20 +1315,6 @@ if SERVER then
         lia.notices.notifyErrorLocalized("testNotificationError")
         lia.notices.notifySuccessLocalized("testNotificationSuccess")
     end)
-
-    lia.command.add("testnotifications", {
-        desc = "testnotificationsDesc",
-        onRun = function(client)
-            client:notify("This is a default notification")
-            timer.Simple(0.5, function() if IsValid(client) then client:notifyError("This is an error notification") end end)
-            timer.Simple(1.0, function() if IsValid(client) then client:notifyWarning("This is a warning notification") end end)
-            timer.Simple(1.5, function() if IsValid(client) then client:notifyInfo("This is an info notification") end end)
-            timer.Simple(2.0, function() if IsValid(client) then client:notifySuccess("This is a success notification") end end)
-            timer.Simple(2.5, function() if IsValid(client) then client:notifyMoney("This is a money notification - You received $100!") end end)
-            timer.Simple(3.0, function() if IsValid(client) then client:notifyAdmin("This is an admin notification") end end)
-            client:notifyInfo("All notification types will appear over the next few seconds...")
-        end
-    })
 
     concommand.Add("print_vector", function(client)
         if not IsValid(client) then
@@ -2215,6 +2163,7 @@ lia.command.add("returnsitroom", {
 
 lia.command.add("charkill", {
     superAdminOnly = true,
+    alias = "permakill",
     desc = "charkillDesc",
     AdminStick = {
         Name = "adminStickCharKillName",
@@ -2889,45 +2838,6 @@ lia.command.add("plystrip", {
         Icon = "icon16/gun.png"
     },
     onRun = function(client, arguments) lia.administrator.serverExecCommand("strip", arguments[1], nil, nil, client) end
-})
-
-lia.command.add("pktoggle", {
-    adminOnly = true,
-    desc = "togglePermakillDesc",
-    arguments = {
-        {
-            name = "name",
-            type = "player"
-        },
-    },
-    AdminStick = {
-        Name = "adminStickTogglePermakillName",
-        Category = "characterManagement",
-        SubCategory = "adminStickSubCategoryBans",
-        Icon = "icon16/user_delete.png"
-    },
-    onRun = function(client, arguments)
-        local target = lia.util.findPlayer(client, arguments[1])
-        if not target or not IsValid(target) then
-            client:notifyErrorLocalized("targetNotFound")
-            return
-        end
-
-        local character = target:getChar()
-        if not character then
-            client:notifyErrorLocalized("invalid", L("character"))
-            return
-        end
-
-        local currentState = character:getMarkedForDeath()
-        local newState = not currentState
-        character:setMarkedForDeath(newState)
-        if newState then
-            client:notifySuccessLocalized("pktoggle_true")
-        else
-            client:notifySuccessLocalized("pktoggle_false")
-        end
-    end
 })
 
 lia.command.add("charunbanoffline", {
@@ -4774,7 +4684,15 @@ lia.command.add("dropmoney", {
         },
     },
     onRun = function(client, arguments)
-        local amount = tonumber(arguments[1])
+        local originalAmount = tonumber(arguments[1]) or 0
+        local amount = math.floor(originalAmount)
+        if originalAmount ~= amount and originalAmount > 0 then
+            lia.log.add(client, "moneyDupeAttempt", "Attempted to drop " .. tostring(originalAmount) .. " money (floored to " .. amount .. ")")
+            for _, admin in ipairs(player.GetAll()) do
+                if admin:IsAdmin() then admin:notifyLocalized("moneyDupeAttempt", client:Name(), "dropmoney", tostring(originalAmount), tostring(amount)) end
+            end
+        end
+
         if not amount or amount <= 0 then
             client:notifyErrorLocalized("invalidArg")
             return
@@ -4804,8 +4722,9 @@ lia.command.add("dropmoney", {
             money.charID = character:getID()
             client:notifyMoneyLocalized("moneyDropped", lia.currency.get(amount))
             lia.log.add(client, "moneyDropped", amount)
-            client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
         end
+
+        client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
     end
 })
 
@@ -5355,51 +5274,6 @@ lia.command.add("restockallvendors", {
     end
 })
 
-lia.command.add("createvendorpreset", {
-    adminOnly = true,
-    desc = "createVendorPresetDesc",
-    arguments = {
-        {
-            name = "presetName",
-            type = "string"
-        },
-    },
-    onRun = function(client, arguments)
-        if not client:hasPrivilege("canCreateVendorPresets") then
-            client:notifyErrorLocalized("noPermission")
-            return
-        end
-
-        local presetName = arguments[1]
-        if not presetName or presetName:Trim() == "" then
-            client:notifyErrorLocalized("vendorPresetNameRequired")
-            return
-        end
-
-        local target = client:getTracedEntity()
-        if not target or not IsValid(target) or target:GetClass() ~= "lia_vendor" then
-            client:notifyErrorLocalized("notLookingAtValidVendor")
-            return
-        end
-
-        local presetData = {}
-        for itemType, itemData in pairs(target.items or {}) do
-            if lia.item.list[itemType] then
-                presetData[itemType] = {
-                    mode = itemData[VENDOR_MODE],
-                    price = itemData[VENDOR_PRICE],
-                    stock = itemData[VENDOR_STOCK],
-                    maxStock = itemData[VENDOR_MAXSTOCK]
-                }
-            end
-        end
-
-        lia.vendor.addPreset(presetName, presetData)
-        client:notifySuccessLocalized("vendorPresetSaved", presetName)
-        lia.log.add(client, "createvendorpreset", presetName)
-    end
-})
-
 lia.command.add("deletevendorpreset", {
     adminOnly = true,
     desc = "deleteVendorPresetDesc",
@@ -5428,7 +5302,14 @@ lia.command.add("deletevendorpreset", {
         end
 
         lia.vendor.presets[presetName] = nil
-        if SERVER then lia.db.delete("vendor_presets", "name = " .. lia.db.convertDataType(presetName)) end
+        if SERVER then
+            lia.db.delete("lia_vendor_presets", "name = " .. lia.db.convertDataType(presetName))
+            -- Sync updated presets to all clients
+            net.Start("liaVendorSyncPresets")
+            net.WriteTable(lia.vendor.presets)
+            net.Broadcast()
+        end
+
         client:notifySuccessLocalized("vendorPresetDeleted", presetName)
         lia.log.add(client, "deletevendorpreset", presetName)
     end
@@ -7622,7 +7503,7 @@ lia.command.add("viewwarns", {
             }, warningList, {
                 {
                     name = "removeWarning",
-                    net = "RequestRemoveWarning"
+                    net = "liaRequestRemoveWarning"
                 }
             }, target:getChar():getID())
 
@@ -7991,5 +7872,93 @@ lia.command.add("resetvendorcooldowns", {
         character:setData("vendorCooldowns", {})
         client:notifyLocalized("vendorCooldownsReset", target:Name())
         target:notifyLocalized("vendorCooldownsResetByAdmin")
+    end
+})
+
+lia.command.add("testrequests", {
+    desc = "Test all client:requestXXXX functions individually",
+    privilege = "Staff",
+    onRun = function(client)
+        if SERVER then
+            client:notifyInfoLocalized("startingRequestTests")
+            -- Test 1: Binary Question
+            client:requestBinaryQuestion("Test Binary Question", "Do you want to continue testing?", "Yes", "No", function(confirmed)
+                if confirmed then
+                    client:notify("✓ Binary Question: Confirmed", "success")
+                    -- Test 2: Dropdown
+                    client:requestDropdown("Test Dropdown", "Choose a color:", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected, selectedData)
+                        if selected then
+                            client:notify("✓ Dropdown: Selected " .. selected .. " (" .. (selectedData or "no data") .. ")", "success")
+                            -- Test 3: Options (Multi-select)
+                            client:requestOptions("Test Options", "Select your favorite activities (max 2):", {{"Gaming", "gaming"}, {"Reading", "reading"}, {"Sports", "sports"}, {"Music", "music"}}, 2, function(selectedOptions)
+                                if selectedOptions and #selectedOptions > 0 then
+                                    local selectedStr = table.concat(selectedOptions, ", ")
+                                    client:notify("✓ Options: Selected " .. selectedStr, "success")
+                                    -- Test 4: String Input
+                                    client:requestString("Test String Input", "Enter your name:", function(text)
+                                        if text then
+                                            client:notify("✓ String Input: '" .. text .. "'", "success")
+                                            -- Test 5: Arguments Form
+                                            client:requestArguments("Test Arguments Form", {
+                                                {"Name", "string"},
+                                                {
+                                                    "Age",
+                                                    {
+                                                        "number",
+                                                        {
+                                                            min = 1,
+                                                            max = 120
+                                                        }
+                                                    }
+                                                },
+                                                {"Favorite Color", {"table", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}}}},
+                                                {"Agree to Terms", "boolean"}
+                                            }, function(success, data)
+                                                if success and data then
+                                                    local result = string.format("Name: %s, Age: %d, Color: %s, Agreed: %s", data["Name"] or "N/A", data["Age"] or 0, data["Favorite Color"] or "N/A", tostring(data["Agree to Terms"] or false))
+                                                    client:notify("✓ Arguments: " .. result, "success")
+                                                    -- Test 6: Buttons
+                                                    client:requestButtons("Test Buttons", {
+                                                        {
+                                                            text = "Save",
+                                                            icon = "icon16/disk.png"
+                                                        },
+                                                        {
+                                                            text = "Load",
+                                                            icon = "icon16/folder.png"
+                                                        },
+                                                        {
+                                                            text = "Delete",
+                                                            icon = "icon16/delete.png"
+                                                        },
+                                                        {
+                                                            text = "Cancel",
+                                                            icon = "icon16/cancel.png"
+                                                        }
+                                                    }, function(selectedIndex, buttonText)
+                                                        client:notify("✓ Buttons: Selected '" .. buttonText .. "' (index " .. selectedIndex .. ")", "success")
+                                                        client:notify("All request tests completed!", "success")
+                                                    end, "Choose an action:")
+                                                else
+                                                    client:notify("✗ Arguments: Cancelled or failed", "warning")
+                                                end
+                                            end)
+                                        else
+                                            client:notify("✗ String Input: Cancelled", "warning")
+                                        end
+                                    end, "John Doe")
+                                else
+                                    client:notify("✗ Options: Cancelled or no selection", "warning")
+                                end
+                            end)
+                        else
+                            client:notify("✗ Dropdown: Cancelled", "warning")
+                        end
+                    end)
+                else
+                    client:notify("✗ Binary Question: Declined", "warning")
+                end
+            end)
+        end
     end
 })

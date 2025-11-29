@@ -730,7 +730,16 @@ if SERVER then
         shouldShow = function(client, target) return IsValid(target) and target:IsPlayer() and client:getChar():getMoney() > 0 end,
         onRun = function(client, target)
             client:requestString("@giveMoney", "@enterAmount", function(amount)
-                amount = tonumber(amount)
+                local originalAmount = tonumber(amount) or 0
+                amount = math.floor(originalAmount)
+                -- Check if someone tried to input decimals (potential money duping)
+                if originalAmount ~= amount and originalAmount > 0 then
+                    lia.log.add(client, "moneyDupeAttempt", "Attempted to give " .. tostring(originalAmount) .. " money (floored to " .. amount .. ")")
+                    for _, admin in ipairs(player.GetAll()) do
+                        if admin:IsAdmin() then admin:notifyLocalized("moneyDupeAttempt", client:Name(), "givemoney", tostring(originalAmount), tostring(amount)) end
+                    end
+                end
+
                 if not amount or amount <= 0 then
                     client:notifyErrorLocalized("invalidAmount")
                     return
@@ -760,6 +769,7 @@ if SERVER then
                 local targetName = client:getChar():getDisplayedName(client)
                 client:notifyMoneyLocalized("moneyTransferSent", lia.currency.get(amount), targetName)
                 target:notifyMoneyLocalized("moneyTransferReceived", lia.currency.get(amount), senderName)
+                client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
             end, "")
         end
     })
