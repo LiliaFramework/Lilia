@@ -976,7 +976,7 @@ if SERVER then
     end
 end
 
-lia.config.add("MoneyModel", "moneyModel", "models/props/cs_office/money.mdl", nil, {
+lia.config.add("MoneyModel", "moneyModel", "models/props/cs_assault/Dollar.mdl", nil, {
     desc = "moneyModelDesc",
     category = "categoryCharacter",
     type = "Generic"
