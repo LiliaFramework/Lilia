@@ -429,11 +429,25 @@ function PANEL:FinishAddingOptions()
 end
 
 function PANEL:SetTall(tall, internal)
-    if self.BaseClass and self.BaseClass.SetTall then
-        self.BaseClass.SetTall(self, tall)
+    -- Try to find the base SetTall method through metatable
+    local meta = getmetatable(self)
+    local baseSetTall = nil
+    -- Try different ways to find the base SetTall method
+    if meta and meta.BaseClass and meta.BaseClass.SetTall then
+        baseSetTall = meta.BaseClass.SetTall
+    elseif self.BaseClass and self.BaseClass.SetTall then
+        baseSetTall = self.BaseClass.SetTall
     else
-        local panel = vgui.GetControlTable("Panel")
-        if panel and panel.SetTall then panel.SetTall(self, tall) end
+        -- Try to find it in the control table
+        local panelTable = vgui.GetControlTable("Panel")
+        if panelTable and panelTable.SetTall then baseSetTall = panelTable.SetTall end
+    end
+
+    if baseSetTall then
+        baseSetTall(self, tall)
+    else
+        -- Try direct assignment as last resort
+        self:SetSize(self:GetWide(), tall)
     end
 
     if not internal then self.userSetHeight = true end
