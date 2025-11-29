@@ -124,14 +124,13 @@ local DefaultFunctions = {
             if not (target and target:IsValid() and target:IsPlayer() and target:Alive() and client:GetPos():DistToSqr(target:GetPos()) < 6500) then return false end
             local targetInv = target:getChar():getInv()
             if not target or not targetInv then return false end
-            -- Check if target has space for the item
             if not targetInv:doesFitInventory(item) then
                 client:notifyLocalized("noFit")
                 return false
             end
 
             target:requestBinaryQuestion(L("itemGiveRequest", client:Name(), L(item.name)), L("yes"), L("no"), function(choice)
-                if choice == 0 then -- Accept
+                if choice == 0 then
                     inv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
                     targetInv:addAccessRule(canTransferItemsFromInventoryUsingGiveForward)
                     client:setAction(L("givingItemTo", L(item.name), target:Name()), lia.config.get("ItemGiveSpeed", 6))
@@ -146,7 +145,7 @@ local DefaultFunctions = {
                             client:doGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_GMOD_GESTURE_ITEM_PLACE, true)
                         end)
                     end, lia.config.get("ItemGiveSpeed", 6), function() client:setAction() end, 100)
-                else -- Decline
+                else
                     client:notifyLocalized("itemGiveDeclined", target:Name())
                     target:notifyLocalized("itemGiveDeclinedSelf", client:Name())
                 end

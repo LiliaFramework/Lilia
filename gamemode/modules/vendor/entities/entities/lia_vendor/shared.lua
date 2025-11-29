@@ -81,24 +81,24 @@ end
 
 function ENT:setFactionBuyScale(factionID, scale)
     self.factionBuyScales = self.factionBuyScales or {}
-    self.factionBuyScales[factionID] = math.Clamp(scale, 0, 5) -- 0% to 500%
+    self.factionBuyScales[factionID] = math.Clamp(scale, 0, 5)
     if SERVER then self:saveData() end
 end
 
 function ENT:setFactionSellScale(factionID, scale)
     self.factionSellScales = self.factionSellScales or {}
-    self.factionSellScales[factionID] = math.Clamp(scale, 0, 1) -- 0% to 100%
+    self.factionSellScales[factionID] = math.Clamp(scale, 0, 1)
     if SERVER then self:saveData() end
 end
 
 function ENT:getFactionBuyScale(factionID)
     self.factionBuyScales = self.factionBuyScales or {}
-    return self.factionBuyScales[factionID] or 1.0 -- Default 100%
+    return self.factionBuyScales[factionID] or 1.0
 end
 
 function ENT:getFactionSellScale(factionID)
     self.factionSellScales = self.factionSellScales or {}
-    return self.factionSellScales[factionID] or 1.0 -- Default 100%
+    return self.factionSellScales[factionID] or 1.0
 end
 
 function ENT:getPrice(uniqueID, isSellingToVendor, client)
@@ -110,14 +110,12 @@ function ENT:getPrice(uniqueID, isSellingToVendor, client)
     else
         if isSellingToVendor then
             price = math.floor(price * self:getSellScale())
-            -- Apply faction-specific sell scale
             if client and client:getChar() then
                 local factionID = client:Team()
                 local factionSellScale = self:getFactionSellScale(factionID)
                 price = math.floor(price * factionSellScale)
             end
         else
-            -- Apply faction-specific buy scale for buying from vendor
             if client and client:getChar() then
                 local factionID = client:Team()
                 local factionBuyScale = self:getFactionBuyScale(factionID)

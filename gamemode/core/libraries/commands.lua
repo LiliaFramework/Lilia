@@ -5304,7 +5304,6 @@ lia.command.add("deletevendorpreset", {
         lia.vendor.presets[presetName] = nil
         if SERVER then
             lia.db.delete("lia_vendor_presets", "name = " .. lia.db.convertDataType(presetName))
-            -- Sync updated presets to all clients
             net.Start("liaVendorSyncPresets")
             net.WriteTable(lia.vendor.presets)
             net.Broadcast()
@@ -7881,24 +7880,19 @@ lia.command.add("testrequests", {
     onRun = function(client)
         if SERVER then
             client:notifyInfoLocalized("startingRequestTests")
-            -- Test 1: Binary Question
             client:requestBinaryQuestion("Test Binary Question", "Do you want to continue testing?", "Yes", "No", function(confirmed)
                 if confirmed then
                     client:notify("✓ Binary Question: Confirmed", "success")
-                    -- Test 2: Dropdown
                     client:requestDropdown("Test Dropdown", "Choose a color:", {{"Red", "red"}, {"Blue", "blue"}, {"Green", "green"}, {"Yellow", "yellow"}}, function(selected, selectedData)
                         if selected then
                             client:notify("✓ Dropdown: Selected " .. selected .. " (" .. (selectedData or "no data") .. ")", "success")
-                            -- Test 3: Options (Multi-select)
                             client:requestOptions("Test Options", "Select your favorite activities (max 2):", {{"Gaming", "gaming"}, {"Reading", "reading"}, {"Sports", "sports"}, {"Music", "music"}}, 2, function(selectedOptions)
                                 if selectedOptions and #selectedOptions > 0 then
                                     local selectedStr = table.concat(selectedOptions, ", ")
                                     client:notify("✓ Options: Selected " .. selectedStr, "success")
-                                    -- Test 4: String Input
                                     client:requestString("Test String Input", "Enter your name:", function(text)
                                         if text then
                                             client:notify("✓ String Input: '" .. text .. "'", "success")
-                                            -- Test 5: Arguments Form
                                             client:requestArguments("Test Arguments Form", {
                                                 {"Name", "string"},
                                                 {
@@ -7917,7 +7911,6 @@ lia.command.add("testrequests", {
                                                 if success and data then
                                                     local result = string.format("Name: %s, Age: %d, Color: %s, Agreed: %s", data["Name"] or "N/A", data["Age"] or 0, data["Favorite Color"] or "N/A", tostring(data["Agree to Terms"] or false))
                                                     client:notify("✓ Arguments: " .. result, "success")
-                                                    -- Test 6: Buttons
                                                     client:requestButtons("Test Buttons", {
                                                         {
                                                             text = "Save",

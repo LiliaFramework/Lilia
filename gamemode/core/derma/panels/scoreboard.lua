@@ -99,7 +99,6 @@ function PANEL:Init()
     layout:Dock(TOP)
     self.scroll, self.layout = scroll, layout
     self.playerSlots, self.factionLists = {}, {}
-    -- Sort factions by scoreboardPriority (lower numbers first)
     local sortedFactions = {}
     for facID, facData in ipairs(lia.faction.indices) do
         table.insert(sortedFactions, {

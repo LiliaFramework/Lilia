@@ -3138,7 +3138,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
         panel.PerformLayout = function(_, w, h)
             local ctrlH, ctrlW
             if isBool then
-                ctrlH, ctrlW = 22, 60 -- Fixed width for checkbox centering
+                ctrlH, ctrlW = 22, 60
             else
                 ctrlH, ctrlW = 60, w * 0.85
             end

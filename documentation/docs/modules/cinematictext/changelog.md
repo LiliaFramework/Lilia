@@ -1,5 +1,11 @@
 # Changelog
 
+### Version 1.5
+
+- Removed custom font configuration option
+- Replaced custom font registrations with standard LiliaFont system
+- Simplified font usage for better consistency
+
 ### Version 1.4
 
 - Added comprehensive configuration documentation

@@ -1,5 +1,10 @@
 # Changelog
 
+### Version 1.4
+
+- Standardized flashlight toggle sound behavior
+- Simplified sound playback logic
+
 ### Version 1.3
 
 - Added comprehensive configuration documentation
