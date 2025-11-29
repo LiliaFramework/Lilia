@@ -99,7 +99,23 @@ function PANEL:Init()
     layout:Dock(TOP)
     self.scroll, self.layout = scroll, layout
     self.playerSlots, self.factionLists = {}, {}
+    -- Sort factions by scoreboardPriority (lower numbers first)
+    local sortedFactions = {}
     for facID, facData in ipairs(lia.faction.indices) do
+        table.insert(sortedFactions, {
+            id = facID,
+            data = facData
+        })
+    end
+
+    table.sort(sortedFactions, function(a, b)
+        local aPriority = a.data.scoreboardPriority or 999
+        local bPriority = b.data.scoreboardPriority or 999
+        return aPriority < bPriority
+    end)
+
+    for _, factionInfo in ipairs(sortedFactions) do
+        local facID, facData = factionInfo.id, factionInfo.data
         local facColor = team.GetColor(facID)
         local facCat = layout:Add("DCollapsibleCategory")
         facCat:SetLabel("")
