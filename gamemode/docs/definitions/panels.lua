@@ -343,14 +343,6 @@ liaNotice
 liaNoticePanel
 --[[
     Purpose:
-        Numeric slider control
-        A slider for numeric value input
-    When Used:
-        For numeric input with visual feedback
-]]
-liaNumSlider
---[[
-    Purpose:
         Blurred frame background
         A frame with blurred background effect
     When Used:
