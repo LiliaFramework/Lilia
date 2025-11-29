@@ -478,18 +478,6 @@ For managing multiple notifications
 
 ---
 
-### liaNumSlider
-
-#### 📋 Purpose
-Numeric slider control
-A slider for numeric value input
-
-#### ⏰ When Called
-For numeric input with visual feedback
-]]
-
----
-
 ### liaBlurredDFrame
 
 #### 📋 Purpose

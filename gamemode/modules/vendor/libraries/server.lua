@@ -46,7 +46,7 @@ function MODULE:CanPlayerTradeWithVendor(client, vendor, itemType, isSellingToVe
             local lastPurchase = cooldowns[itemType] or 0
             if os.time() - lastPurchase < item.Cooldown then
                 local remainingTime = math.ceil(item.Cooldown - (os.time() - lastPurchase))
-                return false, L("vendorItemOnCooldown"), remainingTime
+                return false, L("vendorItemOnCooldown", remainingTime)
             end
         end
     end
@@ -320,9 +320,10 @@ net.Receive("liaVendorSavePreset", function(_, client)
     -- Save to memory
     lia.vendor.presets[presetName] = validItems
     -- Save to database
+    local jsonData = util.TableToJSON(validItems)
     lia.db.upsert({
         name = presetName,
-        data = util.TableToJSON(validItems)
+        data = jsonData
     }, "lia_vendor_presets"):next(function()
         client:notifyInfoLocalized("vendorPresetSaved", presetName)
         lia.log.add(client, "vendorPresetSave", presetName)
@@ -330,11 +331,12 @@ net.Receive("liaVendorSavePreset", function(_, client)
         net.Start("liaVendorSyncPresets")
         net.WriteTable(lia.vendor.presets)
         net.Broadcast()
-    end)
+    end):catch(function(err) client:notifyErrorLocalized("vendorPresetSaveFailed") end)
 end)
 
 function MODULE:LiliaTablesLoaded()
-    lia.db.query("SELECT name, data FROM lia_vendor_presets", function(data)
+    lia.db.query("SELECT name, data FROM lia_vendor_presets"):next(function(result)
+        local data = result.results
         if data then
             for _, row in ipairs(data) do
                 local presetName = row.name
@@ -342,5 +344,7 @@ function MODULE:LiliaTablesLoaded()
                 if presetName and itemsData then lia.vendor.presets[presetName] = itemsData end
             end
         end
+    end):catch(function(err)
+        -- Silently handle database errors during loading
     end)
 end
