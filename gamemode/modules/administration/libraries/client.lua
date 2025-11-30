@@ -1,5 +1,6 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 AdminStickIsOpen = false
+local adminStickDevMode = true -- Set to false to disable command printing in chat (temporary debug mode)
 local pksCount, ticketsCount, warningsCount = 0, 0, 0
 local playerInfoLabel = L("player") .. " " .. L("information")
 local subMenuIcons = {
@@ -39,7 +40,7 @@ local subMenuIcons = {
 function GetIdentifier(ent)
     if not IsValid(ent) or not ent:IsPlayer() then return "" end
     if ent:IsBot() then return ent:Name() end
-    return ent:SteamID()
+    return ent:SteamID64()
 end
 
 local function QuoteArgs(...)
@@ -104,7 +105,7 @@ function MODULE:ShowPlayerOptions(target, options)
         })
     end
 
-    if not target:getNetVar("liaGagged", false) then
+    if not target:getLiliaData("liaGagged", false) then
         table.insert(orderedOptions, {
             name = L("gag"),
             image = "icon16/sound_mute.png",
@@ -174,7 +175,7 @@ function MODULE:ShowPlayerOptions(target, options)
         })
     end
 
-    if target:getNetVar("liaGagged", false) then
+    if target:getLiliaData("liaGagged", false) then
         table.insert(orderedOptions, {
             name = L("ungag"),
             image = "icon16/sound_low.png",
@@ -1320,6 +1321,8 @@ local function OpenPlayerModelUI(tgt)
         })
     end
 
+    hook.Run("AdminStickAddModels", modList, tgt)
+
     table.sort(modList, function(a, b) return a.name < b.name end)
     for _, md in ipairs(modList) do
         local ic = wr:Add("SpawnIcon")
@@ -1557,7 +1560,7 @@ local function IncludeAdminMenu(tgt, menu, stores)
         }
     end
 
-    if tgt:getNetVar("liaGagged", false) then
+    if tgt:getLiliaData("liaGagged", false) then
         mods[#mods + 1] = {
             name = L("ungag"),
             cmd = "ungag",
@@ -1940,43 +1943,66 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
     if IsValid(m) then
         local ic = data.AdminStick.Icon or "icon16/page.png"
         m:AddOption(L(name), function()
+            local id = GetIdentifier(tgt)
+            local cmd = "say /" .. key
+
+            -- Always put the player as the first argument when using AdminStick
+            if id ~= "" then
+                cmd = cmd .. " " .. QuoteArgs(id)
+            end
+
             if data.arguments and #data.arguments > 0 then
                 local argTypes = {}
                 local defaults = {}
-                for _, arg in ipairs(data.arguments) do
+
+                -- Skip the first argument if it's a player/target type, since we already added the player
+                local startIndex = 1
+                if data.arguments[1] and (data.arguments[1].type == "player" or data.arguments[1].type == "target") then
+                    startIndex = 2
+                end
+
+                -- Only request arguments starting from the second argument (skip the player argument)
+                for i = startIndex, #data.arguments do
+                    local arg = data.arguments[i]
                     table.insert(argTypes, {arg.name, arg.type})
                     if arg.optional then defaults[arg.name] = "" end
                 end
 
-                lia.derma.requestArguments(name .. " - Arguments", argTypes, function(success, argData)
-                    if not success or not argData then
-                        timer.Simple(0.1, function() AdminStickIsOpen = false end)
-                        LocalPlayer().AdminStickTarget = nil
-                        return
-                    end
+                if #argTypes > 0 then
+                    lia.derma.requestArguments(name .. " - Arguments", argTypes, function(success, argData)
+                        if not success or not argData then
+                            timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                            LocalPlayer().AdminStickTarget = nil
+                            return
+                        end
 
-                    local id = GetIdentifier(tgt)
-                    local cmd = "say /" .. key
-                    local hasTargetArg = data.arguments[1] and (data.arguments[1].type == "player" or data.arguments[1].type == "target")
-                    if id ~= "" and not hasTargetArg then cmd = cmd .. " " .. QuoteArgs(id) end
-                    for _, arg in ipairs(data.arguments) do
-                        local value = argData[arg.name]
-                        if value and value ~= "" then
-                            if (arg.type == "player" or arg.type == "target") and id ~= "" then
-                                cmd = cmd .. " " .. QuoteArgs(id)
-                            else
+                        -- Add the remaining arguments (skip the first player argument if it exists)
+                        for i = startIndex, #data.arguments do
+                            local arg = data.arguments[i]
+                            local value = argData[arg.name]
+                            if value and value ~= "" then
                                 cmd = cmd .. " " .. QuoteArgs(value)
                             end
                         end
-                    end
 
+                        if adminStickDevMode then
+                            chat.AddText(Color(255, 255, 0), "[AdminStick Debug] ", Color(255, 255, 255), cmd)
+                        end
+                        cl:ConCommand(cmd)
+                        timer.Simple(0.1, function() AdminStickIsOpen = false end)
+                    end, defaults)
+                else
+                    -- No additional arguments to request, just run the command
+                    if adminStickDevMode then
+                        chat.AddText(Color(255, 255, 0), "[AdminStick Debug] ", Color(255, 255, 255), cmd)
+                    end
                     cl:ConCommand(cmd)
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
-                end, defaults)
+                end
             else
-                local id = GetIdentifier(tgt)
-                local cmd = "say /" .. key
-                if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
+                if adminStickDevMode then
+                    chat.AddText(Color(255, 255, 0), "[AdminStick Debug] ", Color(255, 255, 255), cmd)
+                end
                 cl:ConCommand(cmd)
                 timer.Simple(0.1, function() AdminStickIsOpen = false end)
             end
@@ -3116,13 +3142,8 @@ function MODULE:HUDPaint()
         elseif ent:IsPlayer() then
             kind = L("players")
             subLabel = ent:Name():gsub("#", "\226\128\139#")
-            if ent:getNetVar("cheater", false) then
-                label = string.upper(L("cheater"))
-                baseColor = Color(255, 0, 0)
-            else
-                label = subLabel
-                baseColor = lia.option.get("espPlayersColor")
-            end
+            label = subLabel
+            baseColor = lia.option.get("espPlayersColor")
         elseif ent.isItem and ent:isItem() and lia.option.get("espItems", false) then
             kind = L("items")
             local item = ent.getItemTable and ent:getItemTable()
@@ -3147,7 +3168,7 @@ function MODULE:HUDPaint()
                 baseColor = lia.option.get("espEntitiesColor")
             end
         elseif ent:isDoor() then
-            local doorData = ent:getNetVar("doorData", {})
+            local doorData = lia.doors.getData(ent)
             local factions = doorData.factions or {}
             local classes = doorData.classes or {}
             local name = doorData.name

@@ -16,7 +16,7 @@
 
 ### Version 1.3
 
-- Shared library functions and language files for all supported languages (English, French, German, Italian, Portuguese, Spanish)
+- **Updated**: Shared library functions and language files for all supported languages (English, French, German, Italian, Portuguese, Spanish)
 - Configuration and shared library optimizations
 
 ### Version 1.2

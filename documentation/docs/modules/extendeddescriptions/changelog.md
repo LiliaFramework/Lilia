@@ -1,9 +1,5 @@
 # Changelog
 
-### Version 1.4
-
-- Changed button component from liaSmallButton to liaButton for consistency
-
 ### Version 1.3
 
 - Added comprehensive hooks documentation

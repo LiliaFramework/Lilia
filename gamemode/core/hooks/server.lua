@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 local LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
 local sounds = {
     male = {
@@ -441,7 +441,7 @@ function GM:PostPlayerLoadout(client)
     end
 
     client:SetSkin(character:getSkin())
-    client:setNetVar("VoiceType", L("talking"))
+    client:setNetVar("VoiceType", VOICE_TALKING)
 end
 
 function GM:DoPlayerDeath(client, attacker)
@@ -579,6 +579,24 @@ function GM:PlayerInitialSpawn(client)
 
         timer.Simple(1, function() lia.playerinteract.sync(client) end)
         timer.Simple(1, function() lia.dialog.syncToClients(client) end)
+        timer.Simple(1, function()
+            -- Sync door data to the newly spawned client
+            if IsValid(client) then
+                local syncCount = 0
+                local doorsWithData = 0
+                for _, door in ents.Iterator() do
+                    if IsValid(door) and door:isDoor() then 
+                        local syncData = lia.doors.getSyncData(door)
+                        if not table.IsEmpty(syncData) then
+                            doorsWithData = doorsWithData + 1
+                        end
+                        lia.doors.syncToClient(client, door)
+                        syncCount = syncCount + 1
+                    end
+                end
+                print("[TEST] GM:PlayerInitialSpawn: Checked " .. syncCount .. " doors, " .. doorsWithData .. " have data to sync to client " .. client:Name())
+            end
+        end)
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
@@ -1006,16 +1024,19 @@ local function IsLineOfSightClear(listener, speaker)
     return true
 end
 
+-- Voice type constants for internal logic (avoid localization in performance-critical code)
+local VOICE_WHISPERING = "whispering"
+local VOICE_TALKING = "talking"
+local VOICE_YELLING = "yelling"
+
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end
-    if speaker:getNetVar("IsDeadRestricted", false) or speaker:getNetVar("liaGagged", false) or not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
+    if speaker:getNetVar("IsDeadRestricted", false) or speaker:getLiliaData("liaGagged", false) or not speaker:getChar() or speaker:getLiliaData("VoiceBan", false) then return false, false end
     if not lia.config.get("IsVoiceEnabled", true) then return false, false end
-    local voiceType = speaker:getNetVar("VoiceType", L("talking"))
-    local baseRange = voiceType == L("whispering") and lia.config.get("WhisperRange", 70) or voiceType == L("talking") and lia.config.get("TalkRange", 280) or voiceType == L("yelling") and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
+    local voiceType = speaker:getNetVar("VoiceType", VOICE_TALKING)
+    local baseRange = voiceType == VOICE_WHISPERING and lia.config.get("WhisperRange", 70) or voiceType == VOICE_TALKING and lia.config.get("TalkRange", 280) or voiceType == VOICE_YELLING and lia.config.get("YellRange", 840) or lia.config.get("TalkRange", 280)
     local distance = listener:GetPos():Distance(speaker:GetPos())
-    local clearLOS = IsLineOfSightClear(listener, speaker)
-    local effectiveRange = clearLOS and baseRange or baseRange * 0.16
-    local canHear = distance <= effectiveRange
+    local canHear = distance <= baseRange
     return canHear, canHear
 end
 

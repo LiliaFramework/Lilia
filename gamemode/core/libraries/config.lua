@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Configuration Library
 
     Comprehensive user-configurable settings management system for the Lilia framework.
@@ -2286,3 +2286,9 @@ hook.Add("PopulateConfigurationButtons", "liaConfigPopulate", function(pages)
         }
     end
 end)
+
+lia.config.add("MainMenuUseLastPos", "mainMenuUseLastPos", true, nil, {
+    desc = "mainMenuUseLastPosDesc",
+    category = "categoryGameplay",
+    type = "Boolean"
+})

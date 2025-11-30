@@ -1,8 +1,13 @@
-﻿VoicePanels = {}
+-- Voice type constants for internal logic (avoid localization in performance-critical code)
+local VOICE_WHISPERING = "whispering"
+local VOICE_TALKING = "talking"
+local VOICE_YELLING = "yelling"
+
+VoicePanels = {}
 local ICON_MAP = {
-    [L("whispering")] = "whispertalk.png",
-    [L("yelling")] = "yelltalk.png",
-    [L("talking")] = "normaltalk.png"
+    [VOICE_WHISPERING] = "whispertalk.png",
+    [VOICE_YELLING] = "yelltalk.png",
+    [VOICE_TALKING] = "normaltalk.png"
 }
 
 local PANEL = {}
@@ -30,7 +35,7 @@ function PANEL:Setup(client)
 end
 
 function PANEL:UpdateIcon()
-    local vt = self.client:getNetVar("VoiceType", L("talking"))
+    local vt = self.client:getNetVar("VoiceType", VOICE_TALKING)
     local img = ICON_MAP[vt] or "normaltalk.png"
     self.Icon:SetImage(img)
 end

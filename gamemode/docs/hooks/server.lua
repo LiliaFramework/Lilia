@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Server-Side Hooks
 
     Server-side hook system for the Lilia framework.
@@ -1504,7 +1504,7 @@ end
             end
 
             -- Check character permissions
-            local doorData = door:getNetVar("doorData", {})
+            local doorData = door:lia.doors.getData(door)
             if doorData.allowedChars and table.HasValue(doorData.allowedChars, char:getID()) then
                 return true
             end
@@ -11188,7 +11188,7 @@ end
             if client:IsAdmin() then return true end
 
             -- Check door-specific permissions
-            local doorData = door:getNetVar("doorData", {})
+            local doorData = door:lia.doors.getData(door)
             if doorData.allowedPlayers then
                 for _, steamID in ipairs(doorData.allowedPlayers) do
                     if client:SteamID() == steamID then
@@ -12021,7 +12021,7 @@ end
             if not IsValid(door) or not IsValid(client) then return end
 
             -- Check if player owns the door
-            local doorData = door:getNetVar("doorData")
+            local doorData = lia.doors.getData(door)
             if not doorData or doorData.owner ~= client:SteamID() then
                 client:notify("You don't own this door!")
                 return
@@ -12671,7 +12671,7 @@ end
             if IsValid(target) then
                 local doorCount = 0
                 for _, door in ipairs(ents.FindByClass("prop_door_rotating")) do
-                    local doorData = door:getNetVar("doorData")
+                    local doorData = lia.doors.getData(door)
                     if doorData and doorData.owner == target:SteamID() then
                         doorCount = doorCount + 1
                     end
@@ -12694,7 +12694,7 @@ end
             local totalValue = 0
 
             for _, door in ipairs(ents.FindByClass("prop_door_rotating")) do
-                local doorData = door:getNetVar("doorData")
+                local doorData = lia.doors.getData(door)
                 if doorData and doorData.owner == target:SteamID() then
                     table.insert(ownedDoors, {
                         name = doorData.name or "Unnamed Door",
@@ -12729,7 +12729,7 @@ end
 
             -- Scan all doors
             for _, door in ipairs(ents.FindByClass("prop_door_rotating")) do
-                local doorData = door:getNetVar("doorData")
+                local doorData = lia.doors.getData(door)
                 if doorData then
                     local isOwner = doorData.owner == target:SteamID()
                     local hasAccess = false
@@ -12892,8 +12892,8 @@ end
             end
 
             -- Save door data if it's a door
-            if entity:getNetVar("doorData") then
-                local doorData = entity:getNetVar("doorData")
+            if lia.doors.getData(entity) then
+                local doorData = lia.doors.getData(entity)
                 data.doorData = {
                     name = doorData.name,
                     owner = doorData.owner,
@@ -14203,10 +14203,11 @@ end
 
             -- Update door data if it's a door
             if entity:GetClass() == "lia_door" then
-                local doorData = entity:getNetVar("doorData")
+                local doorData = lia.doors.getData(entity)
                 if doorData then
                     doorData.locked = true
-                    entity:setNetVar("doorData", doorData)
+                    lia.doors.setData(entity, doorData)
+                lia.doors.syncUpdateToClients(entity)
                 end
             end
         end
@@ -14315,10 +14316,11 @@ end
 
             -- Update door data if it's a door
             if entity:GetClass() == "lia_door" then
-                local doorData = entity:getNetVar("doorData")
+                local doorData = lia.doors.getData(entity)
                 if doorData then
                     doorData.locked = false
-                    entity:setNetVar("doorData", doorData)
+                    lia.doors.setData(entity, doorData)
+                lia.doors.syncUpdateToClients(entity)
                 end
             end
         end
@@ -19804,7 +19806,7 @@ end
             if not char then return end
 
             -- Check door access
-            local doorData = door:getNetVar("doorData")
+            local doorData = lia.doors.getData(door)
             if doorData and doorData.locked then
                 local owner = doorData.owner
                 if owner and owner ~= client:SteamID() then
@@ -19858,7 +19860,8 @@ end
         -- Simple: Process door data
         function MODULE:PostDoorDataLoad(entity, doorData)
             if doorData then
-                entity:setNetVar("doorData", doorData)
+                lia.doors.setData(entity, doorData)
+                lia.doors.syncUpdateToClients(entity)
             end
         end
         ```
@@ -19872,7 +19875,7 @@ end
                     entity:setNetVar("locked", true)
                 end
                 if doorData.owner then
-                    entity:setNetVar("owner", doorData.owner)
+                    -- Note: Owner data is now handled by the door data cache system
                 end
             end
         end
@@ -19885,23 +19888,24 @@ end
             if not IsValid(entity) or not doorData then return end
 
             -- Restore door properties
-            entity:setNetVar("doorData", doorData)
+            lia.doors.setData(entity, doorData)
+                lia.doors.syncUpdateToClients(entity)
 
             if doorData.locked then
                 entity:setNetVar("locked", true)
             end
 
             if doorData.owner then
-                entity:setNetVar("owner", doorData.owner)
+                -- Note: Owner data is now handled by the door data cache system
             end
 
             if doorData.price then
-                entity:setNetVar("price", doorData.price)
+                -- Note: Price data is now handled by the door data cache system
             end
 
             -- Validate and restore custom data
             if doorData.customData then
-                entity:setNetVar("customData", doorData.customData)
+                -- Note: Custom data is now handled by the door data cache system
             end
 
             -- Apply door-specific restoration
@@ -20437,7 +20441,7 @@ end
             doorData.ang = {door:GetAngles().p, door:GetAngles().y, door:GetAngles().r}
 
             -- Store door properties
-            local doorNetData = door:getNetVar("doorData")
+            local doorNetData = lia.doors.getData(door)
             if doorNetData then
                 doorData.locked = doorNetData.locked
                 doorData.owner = doorNetData.owner

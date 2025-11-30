@@ -1,4 +1,4 @@
-﻿net.Receive("liaSetWaypoint", function()
+net.Receive("liaSetWaypoint", function()
     local name = net.ReadString()
     local pos = net.ReadVector()
     local logo = net.ReadString()
@@ -1097,6 +1097,29 @@ net.Receive("liaDoorPerm", function()
                 return
             end
         end
+    end
+end)
+
+net.Receive("liaDoorData", function()
+    local door = net.ReadEntity()
+    local syncData = net.ReadTable()
+    if IsValid(door) and istable(syncData) then
+        local mapID = door:MapCreationID() or 0
+        print("[TEST CLIENT] Received door data for door #" .. mapID .. " - keys: " .. table.concat(table.GetKeys(syncData), ", "))
+        print("[TEST CLIENT] Door #" .. mapID .. " data: " .. util.TableToJSON(syncData))
+        lia.doors.stored[door] = syncData
+        local verifyData = lia.doors.getData(door)
+        print("[TEST CLIENT] Door #" .. mapID .. " getData after receive - name: " .. tostring(verifyData.name) .. ", price: " .. tostring(verifyData.price))
+        hook.Run("DoorDataReceived", door, syncData)
+    end
+end)
+
+net.Receive("liaDoorDataUpdate", function()
+    local door = net.ReadEntity()
+    local syncData = net.ReadTable()
+    if IsValid(door) and istable(syncData) then
+        lia.doors.stored[door] = syncData
+        hook.Run("DoorDataUpdated", door, syncData)
     end
 end)
 

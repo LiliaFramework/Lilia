@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Logger Library
 
     Comprehensive logging and audit trail system for the Lilia framework.
@@ -77,22 +77,22 @@ local logTypeData = {
         itemDraggedOut = function(client, itemName) return L("logItemDraggedOut", client:Name(), itemName) end,
         spawnItem = function(client, displayName, message) return L("logSpawnItem", client:Name(), displayName, message) end,
         chargiveItem = function(client, itemName, target, message) return L("logCharGiveItem", client:Name(), itemName, target:Name(), message) end,
-        vendorAccess = function(client, vendor) return L("logVendorAccess", client:Name(), vendor:getNetVar("name") or L("unknown")) end,
-        vendorExit = function(client, vendor) return L("logVendorExit", client:Name(), vendor:getNetVar("name") or L("unknown")) end,
-        vendorSell = function(client, item, vendor) return L("logVendorSell", client:Name(), item, vendor:getNetVar("name") or L("unknown")) end,
-        vendorEdit = function(client, vendor, key) return L("logVendorEdit", client:Name(), vendor:getNetVar("name") or L("unknown"), key) end,
+        vendorAccess = function(client, vendor) return L("logVendorAccess", client:Name(), vendor:getName() or L("unknown")) end,
+        vendorExit = function(client, vendor) return L("logVendorExit", client:Name(), vendor:getName() or L("unknown")) end,
+        vendorSell = function(client, item, vendor) return L("logVendorSell", client:Name(), item, vendor:getName() or L("unknown")) end,
+        vendorEdit = function(client, vendor, key) return L("logVendorEdit", client:Name(), vendor:getName() or L("unknown"), key) end,
         vendorBuy = function(client, item, vendor, isFailed)
             if isFailed then
-                return L("logVendorBuyFailed", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
+                return L("logVendorBuyFailed", client:Name(), item, vendor:getName() or L("unknown"))
             else
-                return L("logVendorBuy", client:Name(), item, vendor:getNetVar("name") or L("unknown"))
+                return L("logVendorBuy", client:Name(), item, vendor:getName() or L("unknown"))
             end
         end,
-        restockvendor = function(client, vendor) return L("logVendorRestock", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown")) end,
+        restockvendor = function(client, vendor) return L("logVendorRestock", client:Name(), IsValid(vendor) and (vendor:getName() or L("unknown")) or L("unknown")) end,
         restockallvendors = function(client, count) return L("logVendorsRestockAll", client:Name(), count) end,
-        resetvendormoney = function(client, vendor, amount) return L("logVendorMoneyReset", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"), lia.currency.get(amount)) end,
+        resetvendormoney = function(client, vendor, amount) return L("logVendorMoneyReset", client:Name(), IsValid(vendor) and (vendor:getName() or L("unknown")) or L("unknown"), lia.currency.get(amount)) end,
         resetallvendormoney = function(client, amount, count) return L("logVendorMoneyResetAll", client:Name(), lia.currency.get(amount), count) end,
-        restockvendormoney = function(client, vendor, amount) return L("logVendorMoneyRestock", client:Name(), IsValid(vendor) and (vendor:getNetVar("name") or L("unknown")) or L("unknown"), lia.currency.get(amount)) end,
+        restockvendormoney = function(client, vendor, amount) return L("logVendorMoneyRestock", client:Name(), IsValid(vendor) and (vendor:getName() or L("unknown")) or L("unknown"), lia.currency.get(amount)) end,
         savevendors = function(client) return L("logVendorsSave", client:Name()) end,
     },
     permissions = {

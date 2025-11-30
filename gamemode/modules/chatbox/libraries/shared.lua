@@ -1,4 +1,4 @@
-﻿lia.chat.register("ic", {
+lia.chat.register("ic", {
     arguments = {
         {
             name = "text",
@@ -236,27 +236,6 @@ lia.chat.register("looc", {
     filter = "ooc"
 })
 
-lia.chat.register("adminchat", {
-    arguments = {
-        {
-            name = "text",
-            type = "string"
-        },
-    },
-    desc = "adminchatDesc",
-    onGetColor = lia.chat.classes.ic.onGetColor,
-    onCanHear = function(_, listener) return listener:hasPrivilege("adminChat") end,
-    onCanSay = function(speaker)
-        if not speaker:hasPrivilege("adminChat") then
-            speaker:notifyErrorLocalized("notAdminForTicket")
-            return false
-        end
-        return true
-    end,
-    onChatAdd = function(speaker, text) chat.AddText((lia.color.theme and lia.color.theme.text) or Color(210, 235, 235), "[" .. L("adminChat") .. "] ", (lia.color.theme and lia.color.theme.chat) or Color(255, 239, 150), speaker:getChar():getName(), ": " .. text) end,
-    prefix = {"/adminchat", "/asay", "/admin", "/a"}
-})
-
 lia.chat.register("roll", {
     desc = "rollDesc",
     format = "rollFormat",
@@ -348,7 +327,8 @@ lia.chat.register("ooc", {
             return false
         end
 
-        if #text > lia.config.get("OOCLimit", 150) then
+        -- Only check text length if text is provided (when actually sending message)
+        if text and #text > lia.config.get("OOCLimit", 150) then
             speaker:notifyErrorLocalized("textTooBig")
             return false
         end

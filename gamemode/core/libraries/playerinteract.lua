@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Player Interaction Library
 
     Player-to-player and entity interaction management system for the Lilia framework.
@@ -7,6 +7,11 @@
     Overview:
         The player interaction library provides comprehensive functionality for managing player interactions and actions within the Lilia framework. It handles the creation, registration, and execution of various interaction types including player-to-player interactions, entity interactions, and personal actions. The library operates on both server and client sides, with the server managing interaction registration and validation, while the client handles UI display and user input. It includes range checking, timed actions, and network synchronization to ensure consistent interaction behavior across all clients. The library supports both immediate and delayed actions with progress indicators, making it suitable for complex interaction systems like money transfers, voice changes, and other gameplay mechanics.
 ]]
+-- Voice type constants for internal logic (avoid localization in performance-critical code)
+local VOICE_WHISPERING = "whispering"
+local VOICE_TALKING = "talking"
+local VOICE_YELLING = "yelling"
+
 lia.playerinteract = lia.playerinteract or {}
 lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
@@ -385,7 +390,7 @@ if SERVER then
         end,
         onRun = function(client, target)
             -- Complex arrest logic with validation
-            if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
+            if lia.config.get("DisableCheaterActions", true) and client.isCheater then
                 lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
                 client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
                 return
@@ -472,10 +477,10 @@ if SERVER then
         category = ("categoryVoice"),
         shouldShow = function(client)
             return client:getChar() and client:Alive() and
-                client:getNetVar("VoiceType") ~= L("whispering")
+                client:getNetVar("VoiceType") ~= VOICE_WHISPERING
         end,
         onRun = function(client)
-            client:setNetVar("VoiceType", L("whispering"))
+            client:setNetVar("VoiceType", VOICE_WHISPERING)
             client:notifyInfoLocalized("voiceModeSet", L("whispering"))
         end
     })
@@ -732,6 +737,7 @@ if SERVER then
             client:requestString("@giveMoney", "@enterAmount", function(amount)
                 local originalAmount = tonumber(amount) or 0
                 amount = math.floor(originalAmount)
+                -- Check if someone tried to input decimals (potential money duping)
                 if originalAmount ~= amount and originalAmount > 0 then
                     lia.log.add(client, "moneyDupeAttempt", "Attempted to give " .. tostring(originalAmount) .. " money (floored to " .. amount .. ")")
                     for _, admin in ipairs(player.GetAll()) do
@@ -744,7 +750,7 @@ if SERVER then
                     return
                 end
 
-                if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
+                if lia.config.get("DisableCheaterActions", true) and client.isCheater then
                     lia.log.add(client, "cheaterAction", L("cheaterActionTransferMoney"))
                     client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
                     return
@@ -785,9 +791,9 @@ if SERVER then
 
     lia.playerinteract.addAction("changeToTalk", {
         category = "categoryVoice",
-        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("talking") end,
+        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= VOICE_TALKING end,
         onRun = function(client)
-            client:setNetVar("VoiceType", L("talking"))
+            client:setNetVar("VoiceType", VOICE_TALKING)
             client:notifyInfoLocalized("voiceModeSet", L("talking"))
         end,
         serverOnly = true
@@ -795,9 +801,9 @@ if SERVER then
 
     lia.playerinteract.addAction("changeToYell", {
         category = "categoryVoice",
-        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("yelling") end,
+        shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= VOICE_YELLING end,
         onRun = function(client)
-            client:setNetVar("VoiceType", L("yelling"))
+            client:setNetVar("VoiceType", VOICE_YELLING)
             client:notifyInfoLocalized("voiceModeSet", L("yelling"))
         end,
         serverOnly = true

@@ -1,6 +1,6 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
 local function IsCheater(client)
-    return lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false)
+    return lia.config.get("DisableCheaterActions", true) and client.isCheater
 end
 
 local function LogCheaterAction(client, action)
@@ -309,7 +309,7 @@ function MODULE:PlayerInitialSpawn(client)
         if IsValid(client) and client.VerifyCheatsPending then
             lia.log.add(client, "hackAttempt", "VerifyCheatsTimeout")
             local override = hook.Run("PlayerCheatDetected", client)
-            client:setNetVar("cheater", true)
+            client.isCheater = true
             client:setLiliaData("cheater", true)
             if IsValid(client) then
                 lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())

@@ -1,4 +1,4 @@
-﻿ITEM.name = "bagName"
+ITEM.name = "bagName"
 ITEM.desc = "bagDesc"
 ITEM.model = "models/props_c17/suitcase001a.mdl"
 ITEM.category = "storage"
@@ -80,7 +80,7 @@ ITEM.functions.Open = {
     end,
     onCanRun = function(item)
         local client = item.player
-        if SERVER and client:getNetVar("cheater", false) then
+        if SERVER and client.isCheater then
             client:notifyWarningLocalized("cheaterActionUseInteractionMenu")
             return false
         end

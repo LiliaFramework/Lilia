@@ -61,6 +61,7 @@ function PANEL:SizeToContents()
     if not IsValid(self.contents) then
         self.content_size = 0
     else
+        -- Force layout update to get accurate sizing
         self.contents:InvalidateLayout(true)
         self.content_size = self.contents:GetTall()
     end
@@ -82,7 +83,18 @@ function PANEL:GetHeader()
 end
 
 function PANEL:AddItem(panel)
-    panel:SetParent(self)
+    -- Create contents panel if it doesn't exist
+    if not IsValid(self.contents) then
+        self.contents = vgui.Create("DPanel", self)
+        self.contents:Dock(TOP)
+        self.contents:DockPadding(5, 5, 5, 5)
+        self.contents:SetPaintBackground(false)
+        self.contents:SetVisible(self.bool_opened)
+    end
+
+    panel:SetParent(self.contents)
+    panel:Dock(TOP)
+    panel:DockMargin(0, 0, 0, 5)
     self:SizeToContents()
 end
 
@@ -100,6 +112,7 @@ end
 
 function PANEL:PerformLayout(w)
     self.header:SetSize(w, 30)
+    -- Recalculate content size if contents exist and are visible
     if IsValid(self.contents) and self.bool_opened then self:SizeToContents() end
 end
 

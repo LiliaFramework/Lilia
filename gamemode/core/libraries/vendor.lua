@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Vendor Library
 
     NPC vendor management system with editing and rarity support for the Lilia framework.
@@ -8,69 +8,84 @@
         The vendor library provides comprehensive functionality for managing NPC vendors in the Lilia framework. It handles vendor configuration, editing, presets, and rarity systems for items sold by vendors. The library operates on both server and client sides, with the server handling vendor data processing and the client managing the editing interface. It includes support for vendor presets, item rarities, stock management, pricing, faction/class restrictions, and visual customization. The library ensures that vendors can be easily configured and managed through both code and in-game editing tools.
 ]]
 lia.vendor = lia.vendor or {}
+lia.vendor.stored = lia.vendor.stored or {}
 lia.vendor.editor = lia.vendor.editor or {}
 lia.vendor.presets = lia.vendor.presets or {}
 lia.vendor.rarities = lia.vendor.rarities or {}
+lia.vendor.defaults = {
+    name = L("vendorDefaultName"),
+    preset = "none",
+    animation = "",
+    items = {},
+    factions = {},
+    classes = {},
+    factionBuyScales = {},
+    factionSellScales = {}
+}
+
 if SERVER then
     local function addEditor(name, reader, applier)
-        lia.vendor.editor[name] = function(vendor)
+        lia.vendor.editor[name] = function(vendor, client)
             local args = {reader()}
-            applier(vendor, unpack(args))
+            applier(vendor, client, unpack(args))
         end
     end
 
-    addEditor("name", function() return net.ReadString() end, function(vendor, name)
+    addEditor("name", function() return net.ReadString() end, function(vendor, client, name)
+        -- Ensure name is not empty
+        if not name or name == "" then name = lia.vendor.defaults.name or "Jane Doe" end
         vendor:setName(name)
-        client:notifyLocalized("vendorNameUpdated", name)
+        client:notifyLocalized("vendorNameChanged")
     end)
 
-    addEditor("mode", function() return net.ReadString(), net.ReadInt(8) end, function(vendor, itemType, mode)
-        if vendor:getNetVar("preset") ~= "none" then return end
+    addEditor("mode", function() return net.ReadString(), net.ReadInt(8) end, function(vendor, client, itemType, mode)
         vendor:setTradeMode(itemType, mode)
     end)
 
-    addEditor("price", function() return net.ReadString(), net.ReadInt(32) end, function(vendor, itemType, price)
-        if vendor:getNetVar("preset") ~= "none" then return end
+    addEditor("price", function() return net.ReadString(), net.ReadInt(32) end, function(vendor, client, itemType, price)
         vendor:setItemPrice(itemType, price)
     end)
 
-    addEditor("stockDisable", function() return net.ReadString() end, function(vendor, itemType)
-        if vendor:getNetVar("preset") ~= "none" then return end
+    addEditor("stockDisable", function() return net.ReadString() end, function(vendor, client, itemType)
         vendor:setMaxStock(itemType, nil)
     end)
 
-    addEditor("stockMax", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, itemType, value)
-        if vendor:getNetVar("preset") ~= "none" then return end
+    addEditor("stockMax", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, client, itemType, value)
         vendor:setMaxStock(itemType, value)
     end)
 
-    addEditor("stock", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, itemType, value)
-        if vendor:getNetVar("preset") ~= "none" then return end
+    addEditor("stock", function() return net.ReadString(), net.ReadUInt(32) end, function(vendor, client, itemType, value)
         vendor:setStock(itemType, value)
     end)
 
-    addEditor("flag", function() return net.ReadString() end, function(vendor, flag) vendor:setFlag(flag) end)
-    addEditor("welcome", function() return net.ReadString() end, function(vendor, message) vendor:setWelcomeMessage(message) end)
-    addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, factionID, allowed) vendor:setFactionAllowed(factionID, allowed) end)
-    addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, classID, allowed) vendor:setClassAllowed(classID, allowed) end)
-    addEditor("factionBuyScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, factionID, scale) vendor:setFactionBuyScale(factionID, scale) end)
-    addEditor("factionSellScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, factionID, scale) vendor:setFactionSellScale(factionID, scale) end)
-    addEditor("model", function() return net.ReadString() end, function(vendor, model)
+    addEditor("faction", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, client, factionID, allowed)
+        vendor:setFactionAllowed(factionID, allowed)
+    end)
+    addEditor("class", function() return net.ReadUInt(8), net.ReadBool() end, function(vendor, client, classID, allowed)
+        vendor:setClassAllowed(classID, allowed)
+    end)
+    addEditor("factionBuyScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, client, factionID, scale)
+        vendor:setFactionBuyScale(factionID, scale)
+    end)
+    addEditor("factionSellScale", function() return net.ReadUInt(8), net.ReadFloat() end, function(vendor, client, factionID, scale)
+        vendor:setFactionSellScale(factionID, scale)
+    end)
+    addEditor("model", function() return net.ReadString() end, function(vendor, client, model)
         vendor:setModel(model)
-        client:notifyLocalized("vendorModelUpdated")
+        client:notifyLocalized("vendorModelChanged")
     end)
 
-    addEditor("skin", function() return net.ReadUInt(8) end, function(vendor, skin)
+    addEditor("skin", function() return net.ReadUInt(8) end, function(vendor, client, skin)
         vendor:setSkin(skin)
-        client:notifyLocalized("vendorSkinUpdated")
+        client:notifyLocalized("vendorSkinChanged")
     end)
 
-    addEditor("bodygroup", function() return net.ReadUInt(8), net.ReadUInt(8) end, function(vendor, index, value)
+    addEditor("bodygroup", function() return net.ReadUInt(8), net.ReadUInt(8) end, function(vendor, client, index, value)
         vendor:setBodyGroup(index, value)
-        client:notifyLocalized("vendorBodygroupUpdated")
+        client:notifyLocalized("vendorBodygroupChanged")
     end)
 
-    addEditor("useMoney", function() return net.ReadBool() end, function(vendor, useMoney)
+    addEditor("useMoney", function() return net.ReadBool() end, function(vendor, client, useMoney)
         if useMoney then
             vendor:setMoney(lia.config.get("vendorDefaultMoney", 500))
         else
@@ -78,15 +93,15 @@ if SERVER then
         end
     end)
 
-    addEditor("money", function() return net.ReadUInt(32) end, function(vendor, money) vendor:setMoney(money) end)
-    addEditor("scale", function() return net.ReadFloat() end, function(vendor, scale) vendor:setSellScale(scale) end)
-    addEditor("preset", function() return net.ReadString() end, function(vendor, preset) vendor:applyPreset(preset) end)
+    addEditor("money", function() return net.ReadUInt(32) end, function(vendor, client, money) vendor:setMoney(money) end)
+    addEditor("scale", function() return net.ReadFloat() end, function(vendor, client, scale) vendor:setSellScale(scale) end)
+    addEditor("preset", function() return net.ReadString() end, function(vendor, client, preset) vendor:applyPreset(preset) end)
     addEditor("animation", function()
         local anim = net.ReadString()
         return anim
-    end, function(vendor, animation)
+    end, function(vendor, client, animation)
         vendor:setAnimation(animation)
-        client:notifyLocalized("vendorAnimationUpdated")
+        client:notifyLocalized("vendorAnimationChanged")
     end)
 else
     local function addEditor(name, writer)
@@ -124,8 +139,6 @@ else
         net.WriteUInt(value, 32)
     end)
 
-    addEditor("flag", function(flag) net.WriteString(flag) end)
-    addEditor("welcome", function(message) net.WriteString(message) end)
     addEditor("faction", function(factionID, allowed)
         net.WriteUInt(factionID, 8)
         net.WriteBool(allowed)
@@ -345,4 +358,61 @@ end
 ]]
 function lia.vendor.getPreset(name)
     return lia.vendor.presets[string.lower(name)]
+end
+
+function lia.vendor.getVendorProperty(entity, property)
+    if not IsValid(entity) then return lia.vendor.defaults[property] end
+    local cached = lia.vendor.stored[entity]
+    if cached and cached[property] ~= nil then return cached[property] end
+    return lia.vendor.defaults[property]
+end
+
+function lia.vendor.setVendorProperty(entity, property, value)
+    if not IsValid(entity) then return end
+    -- Check if value differs from default
+    local defaultValue = lia.vendor.defaults[property]
+    local isDefault = false
+    if istable(defaultValue) then
+        isDefault = table.IsEmpty(value) or (table.Count(value) == 0)
+    else
+        isDefault = value == defaultValue
+    end
+
+    if not lia.vendor.stored[entity] then lia.vendor.stored[entity] = {} end
+    if isDefault then
+        -- Remove from cache if it's the default value
+        lia.vendor.stored[entity][property] = nil
+        -- Clean up empty cache entries
+        if table.IsEmpty(lia.vendor.stored[entity]) then lia.vendor.stored[entity] = nil end
+    else
+        -- Store non-default value
+        lia.vendor.stored[entity][property] = value
+    end
+
+    -- Sync to clients if on server
+    if SERVER then lia.vendor.syncVendorProperty(entity, property, value, isDefault) end
+end
+
+function lia.vendor.syncVendorProperty(entity, property, value, isDefault)
+    if not SERVER then return end
+    net.Start("liaVendorPropertySync")
+    net.WriteEntity(entity)
+    net.WriteString(property)
+    if isDefault then
+        net.WriteBool(true) -- indicates default value
+    else
+        net.WriteBool(false)
+        net.WriteType(value)
+    end
+
+    net.Broadcast()
+end
+
+function lia.vendor.getAllVendorData(entity)
+    if not IsValid(entity) then return {} end
+    local data = {}
+    for property, defaultValue in pairs(lia.vendor.defaults) do
+        data[property] = lia.vendor.getVendorProperty(entity, property)
+    end
+    return data
 end

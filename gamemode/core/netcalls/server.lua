@@ -1,4 +1,4 @@
-﻿net.Receive("liaPlayerRespawn", function(_, client)
+net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     local char = client:getChar()
     if not char then return end
@@ -115,7 +115,7 @@ end)
 net.Receive("liaCheckHack", function(_, client)
     lia.log.add(client, "hackAttempt", "CheckHack")
     local override = hook.Run("PlayerCheatDetected", client)
-    client:setNetVar("cheater", true)
+    client.isCheater = true
     client:setLiliaData("cheater", true)
     hook.Run("OnCheaterCaught", client)
     if override ~= true then lia.adminstrator.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
@@ -657,7 +657,7 @@ net.Receive("liaInvAct", function(_, client)
 end)
 
 net.Receive("liaRunInteraction", function(_, ply)
-    if lia.config.get("DisableCheaterActions", true) and ply:getNetVar("cheater", false) then
+    if lia.config.get("DisableCheaterActions", true) and ply.isCheater then
         lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
         ply:notifyWarningLocalized("maybeYouShouldntHaveCheated")
         return

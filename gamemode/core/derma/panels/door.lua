@@ -1,4 +1,4 @@
-﻿local PANEL = {}
+local PANEL = {}
 function PANEL:Init()
     self:SetSize(700, 600)
     self:SetTitle(L("door") .. " " .. L("settings"))
@@ -92,7 +92,8 @@ function PANEL:setDoor(door, accessData, fallback)
         entry.Think = function()
             if not entry:IsEditing() then
                 local ent = IsValid(fallback) and fallback or door
-                entry:SetText(ent:getNetVar("title", L("doorTitleOwned")))
+                local doorData = lia.doors.getData(ent)
+                entry:SetText(doorData.name or L("doorTitleOwned"))
             end
         end
 

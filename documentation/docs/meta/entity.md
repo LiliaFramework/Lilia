@@ -253,7 +253,7 @@ Shared
         local char = ply:getChar()
         if char:hasFlags("v") then
             entity:SetDriver(ply)
-            entity:setNetVar("owner", char:getID())
+            entity:SetNetVar("owner", char:getID())
         end
     end
 

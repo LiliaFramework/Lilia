@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Database Library
 
     Comprehensive database management system with SQLite support for the Lilia framework.
@@ -403,7 +403,6 @@ CREATE TABLE IF NOT EXISTS lia_doors (
     name text,
     price integer,
     locked integer,
-    door_group text,
     PRIMARY KEY (gamemode, map, id)
 );
 CREATE TABLE IF NOT EXISTS lia_persistence (

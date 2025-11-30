@@ -1,6 +1,3 @@
-﻿local function safeSendToReceivers(entity)
-    if entity.receivers and #entity.receivers > 0 then net.Send(entity.receivers) end
-end
 
 function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
@@ -16,11 +13,11 @@ end
 
 function ENT:Use(activator)
     if not hook.Run("CanPlayerAccessVendor", activator, self) then
-        if self.messages[VENDOR_NOTRADE] then activator:notifyErrorLocalized("vendorMessageFormat", self:getNetVar("name"), L(self.messages[VENDOR_NOTRADE], activator)) end
+        if self.messages[VENDOR_NOTRADE] then activator:notifyErrorLocalized("vendorMessageFormat", lia.vendor.getVendorProperty(self, "name"), L(self.messages[VENDOR_NOTRADE], activator)) end
         return
     end
 
-    lia.log.add(activator, "vendorAccess", self:getNetVar("name"))
+    lia.log.add(activator, "vendorAccess", lia.vendor.getVendorProperty(self, "name"))
     self.receivers = self.receivers or {}
     self.receivers[#self.receivers + 1] = activator
     activator.liaVendor = self
@@ -36,7 +33,7 @@ function ENT:setStock(itemType, value)
     net.Start("liaVendorStock")
     net.WriteString(itemType)
     net.WriteUInt(value, 32)
-    safeSendToReceivers(self, "VendorStock")
+    net.Broadcast()
 end
 
 function ENT:addStock(itemType, value)
@@ -59,10 +56,12 @@ function ENT:setMaxStock(itemType, value)
     net.Start("liaVendorMaxStock")
     net.WriteString(itemType)
     net.WriteUInt(value, 32)
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setFactionAllowed(factionID, isAllowed)
+    if not isnumber(factionID) then return end
+
     if isAllowed then
         self.factions[factionID] = true
     else
@@ -72,7 +71,7 @@ function ENT:setFactionAllowed(factionID, isAllowed)
     net.Start("liaVendorAllowFaction")
     net.WriteUInt(factionID, 8)
     net.WriteBool(self.factions[factionID])
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
     if self.receivers then
         for _, client in ipairs(self.receivers) do
             if not hook.Run("CanPlayerAccessVendor", client, self) then self:removeReceiver(client) end
@@ -81,6 +80,8 @@ function ENT:setFactionAllowed(factionID, isAllowed)
 end
 
 function ENT:setClassAllowed(classID, isAllowed)
+    if not isnumber(classID) then return end
+
     if isAllowed then
         self.classes[classID] = true
     else
@@ -90,7 +91,7 @@ function ENT:setClassAllowed(classID, isAllowed)
     net.Start("liaVendorAllowClass")
     net.WriteUInt(classID, 8)
     net.WriteBool(self.classes[classID])
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:removeReceiver(client, requestedByPlayer)
@@ -100,7 +101,7 @@ function ENT:removeReceiver(client, requestedByPlayer)
     if not lia.shuttingDown then
         net.Start("liaVendorExit")
         net.Send(client)
-        lia.log.add(client, "vendorExit", self:getNetVar("name"))
+        lia.log.add(client, "vendorExit", lia.vendor.getVendorProperty(self, "name"))
     end
 end
 
@@ -111,10 +112,10 @@ local ALLOWED_MODES = {
 }
 
 function ENT:setName(name)
-    self:setNetVar("name", name)
+    lia.vendor.setVendorProperty(self, "name", name)
     net.Start("liaVendorEdit")
     net.WriteString("name")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setTradeMode(itemType, mode)
@@ -125,7 +126,7 @@ function ENT:setTradeMode(itemType, mode)
     net.Start("liaVendorMode")
     net.WriteString(itemType)
     net.WriteInt(mode or -1, 8)
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setItemPrice(itemType, value)
@@ -136,7 +137,7 @@ function ENT:setItemPrice(itemType, value)
     net.Start("liaVendorPrice")
     net.WriteString(itemType)
     net.WriteInt(value or -1, 32)
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setItemStock(itemType, value)
@@ -147,7 +148,7 @@ function ENT:setItemStock(itemType, value)
     net.Start("liaVendorStock")
     net.WriteString(itemType)
     net.WriteInt(value, 32)
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setItemMaxStock(itemType, value)
@@ -158,7 +159,7 @@ function ENT:setItemMaxStock(itemType, value)
     net.Start("liaVendorMaxStock")
     net.WriteString(itemType)
     net.WriteInt(value, 32)
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:OnRemove()
@@ -183,7 +184,7 @@ function ENT:setModel(model)
     hook.Run("UpdateEntityPersistence", self)
     net.Start("liaVendorEdit")
     net.WriteString("model")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setSkin(skin)
@@ -192,7 +193,7 @@ function ENT:setSkin(skin)
     hook.Run("UpdateEntityPersistence", self)
     net.Start("liaVendorEdit")
     net.WriteString("skin")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setBodyGroup(id, value)
@@ -202,38 +203,44 @@ function ENT:setBodyGroup(id, value)
     hook.Run("UpdateEntityPersistence", self)
     net.Start("liaVendorEdit")
     net.WriteString("bodygroup")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:setAnimation(animation)
-    self:setNetVar("animation", animation or "")
+    lia.vendor.setVendorProperty(self, "animation", animation or "")
     if self:isReadyForAnim() then self:setAnim() end
     hook.Run("UpdateEntityPersistence", self)
     net.Start("liaVendorEdit")
     net.WriteString("animation")
-    if self.receivers and #self.receivers > 0 then net.Send(self.receivers) end
+    net.Broadcast()
 end
 
 function ENT:loadPreset(name)
     name = string.lower(name)
     if name == "none" then
         self.items = {}
-        if self.receivers then
-            for _, client in ipairs(self.receivers) do
-                self:sync(client)
-            end
-        end
+        hook.Run("UpdateEntityPersistence", self)
+        self:syncToAll()
         return
     end
 
     local preset = lia.vendor and lia.vendor.getPreset(name)
     if not preset then return end
-    self.items = table.Copy(preset)
-    if self.receivers then
-        for _, client in ipairs(self.receivers) do
-            self:sync(client)
+    -- Copy the preset data to vendor items, ensuring proper structure
+    self.items = {}
+    for itemType, itemData in pairs(preset) do
+        if lia.item.list[itemType] and istable(itemData) then
+            self.items[itemType] = {}
+            if itemData[VENDOR_PRICE] ~= nil then self.items[itemType][VENDOR_PRICE] = tonumber(itemData[VENDOR_PRICE]) end
+            if itemData[VENDOR_STOCK] ~= nil then self.items[itemType][VENDOR_STOCK] = tonumber(itemData[VENDOR_STOCK]) end
+            if itemData[VENDOR_MAXSTOCK] ~= nil then self.items[itemType][VENDOR_MAXSTOCK] = tonumber(itemData[VENDOR_MAXSTOCK]) end
+            if itemData[VENDOR_MODE] ~= nil then self.items[itemType][VENDOR_MODE] = tonumber(itemData[VENDOR_MODE]) end
         end
     end
+
+    -- Save the preset to the vendor entity
+    hook.Run("UpdateEntityPersistence", self)
+    self:syncToAll()
 end
 
 function ENT:sync(client)
@@ -249,6 +256,21 @@ function ENT:sync(client)
     end
 
     net.Send(client)
+end
+
+function ENT:syncToAll()
+    net.Start("liaVendorSync")
+    net.WriteEntity(self)
+    net.WriteUInt(table.Count(self.items), 16)
+    for itemType, item in pairs(self.items) do
+        net.WriteString(itemType)
+        net.WriteInt(item[VENDOR_PRICE] or -1, 32)
+        net.WriteInt(item[VENDOR_STOCK] or -1, 32)
+        net.WriteInt(item[VENDOR_MAXSTOCK] or -1, 32)
+        net.WriteInt(item[VENDOR_MODE] or -1, 8)
+    end
+
+    net.Broadcast()
 end
 
 function ENT:addReceiver(client, noSync)

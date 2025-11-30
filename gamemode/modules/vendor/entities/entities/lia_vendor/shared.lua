@@ -1,4 +1,4 @@
-﻿LiliaVendors = LiliaVendors or {}
+LiliaVendors = LiliaVendors or {}
 ENT.Type = "anim"
 ENT.PrintName = L("entityVendorName")
 ENT.Author = "Samael"
@@ -13,16 +13,18 @@ ENT.DrawEntityInfo = true
 ENT.IsPersistent = true
 function ENT:setupVars()
     if SERVER then
-        self:setNetVar("name", L("vendorDefaultName"))
-        self:setNetVar("preset", "none")
-        self:setNetVar("animation", "")
+        lia.vendor.setVendorProperty(self, "name", L("vendorDefaultName"))
+        lia.vendor.setVendorProperty(self, "preset", "none")
+        lia.vendor.setVendorProperty(self, "animation", "")
     end
 
     self.receivers = self.receivers or {}
-    self.items = {}
-    self.factions = {}
-    self.messages = {}
-    self.classes = {}
+    self.items = self.items or {}
+    self.factions = self.factions or {}
+    self.messages = self.messages or {}
+    self.classes = self.classes or {}
+    self.factionBuyScales = self.factionBuyScales or {}
+    self.factionSellScales = self.factionSellScales or {}
     self.hasSetupVars = true
 end
 
@@ -81,24 +83,67 @@ end
 
 function ENT:setFactionBuyScale(factionID, scale)
     self.factionBuyScales = self.factionBuyScales or {}
-    self.factionBuyScales[factionID] = math.Clamp(scale, 0, 5)
-    if SERVER then self:saveData() end
+    self.factionBuyScales[factionID] = math.Clamp(scale, 0, 5) -- 0% to 500%
+    if SERVER then
+        hook.Run("UpdateEntityPersistence", self)
+        net.Start("liaVendorFactionBuyScale")
+        net.WriteUInt(factionID, 8)
+        net.WriteFloat(self.factionBuyScales[factionID])
+        net.Broadcast()
+    end
 end
 
 function ENT:setFactionSellScale(factionID, scale)
     self.factionSellScales = self.factionSellScales or {}
-    self.factionSellScales[factionID] = math.Clamp(scale, 0, 1)
-    if SERVER then self:saveData() end
+    self.factionSellScales[factionID] = math.Clamp(scale, 0, 1) -- 0% to 100%
+    if SERVER then
+        hook.Run("UpdateEntityPersistence", self)
+        net.Start("liaVendorFactionSellScale")
+        net.WriteUInt(factionID, 8)
+        net.WriteFloat(self.factionSellScales[factionID])
+        net.Broadcast()
+    end
+end
+
+function ENT:setFactionAllowed(factionID, allowed)
+    self.factions = self.factions or {}
+    if allowed then
+        self.factions[factionID] = true
+    else
+        self.factions[factionID] = nil
+    end
+    if SERVER then hook.Run("UpdateEntityPersistence", self) end
+end
+
+function ENT:setClassAllowed(classID, allowed)
+    self.classes = self.classes or {}
+    if allowed then
+        self.classes[classID] = true
+    else
+        self.classes[classID] = nil
+    end
+    if SERVER then hook.Run("UpdateEntityPersistence", self) end
+end
+
+function ENT:setMessage(messageType, message)
+    self.messages = self.messages or {}
+    self.messages[messageType] = message
+    if SERVER then
+        hook.Run("UpdateEntityPersistence", self)
+        net.Start("liaVendorSyncMessages")
+        net.WriteTable(self.messages)
+        net.Broadcast()
+    end
 end
 
 function ENT:getFactionBuyScale(factionID)
     self.factionBuyScales = self.factionBuyScales or {}
-    return self.factionBuyScales[factionID] or 1.0
+    return self.factionBuyScales[factionID] or 1.0 -- Default 100%
 end
 
 function ENT:getFactionSellScale(factionID)
     self.factionSellScales = self.factionSellScales or {}
-    return self.factionSellScales[factionID] or 1.0
+    return self.factionSellScales[factionID] or 1.0 -- Default 100%
 end
 
 function ENT:getPrice(uniqueID, isSellingToVendor, client)
@@ -110,12 +155,14 @@ function ENT:getPrice(uniqueID, isSellingToVendor, client)
     else
         if isSellingToVendor then
             price = math.floor(price * self:getSellScale())
+            -- Apply faction-specific sell scale
             if client and client:getChar() then
                 local factionID = client:Team()
                 local factionSellScale = self:getFactionSellScale(factionID)
                 price = math.floor(price * factionSellScale)
             end
         else
+            -- Apply faction-specific buy scale for buying from vendor
             if client and client:getChar() then
                 local factionID = client:Team()
                 local factionBuyScale = self:getFactionBuyScale(factionID)
@@ -156,11 +203,20 @@ function ENT:getSellScale()
 end
 
 function ENT:getName()
-    return self:getNetVar("name", "")
+    return lia.vendor.getVendorProperty(self, "name")
 end
 
-function ENT:getPreset()
-    return self:getNetVar("preset", "none")
+function ENT:setName(name)
+    lia.vendor.setVendorProperty(self, "name", name)
+    if SERVER then hook.Run("UpdateEntityPersistence", self) end
+end
+
+function ENT:setAnimation(animation)
+    lia.vendor.setVendorProperty(self, "animation", animation)
+    if SERVER then
+        hook.Run("UpdateEntityPersistence", self)
+        self:setAnim()
+    end
 end
 
 function ENT:isReadyForAnim()
@@ -173,7 +229,7 @@ end
 
 function ENT:setAnim()
     if not self:isReadyForAnim() then return end
-    local customAnim = self:getNetVar("animation", "")
+    local customAnim = lia.vendor.getVendorProperty(self, "animation")
     local sequenceList = self:GetSequenceList()
     if customAnim and customAnim ~= "" then
         for k, v in ipairs(sequenceList) do

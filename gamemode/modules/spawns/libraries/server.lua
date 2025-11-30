@@ -1,6 +1,4 @@
 ﻿local MODULE = MODULE
-local playerLoadedChar = {}
-local playerCharID = {}
 function MODULE:FetchSpawns()
     local d = deferred.new()
     local stored = lia.data.get("spawns", {})
@@ -40,29 +38,6 @@ local function DoSpawnLogic(client)
     if not IsValid(client) then return end
     local character = client:getChar()
     if not character then return end
-    print("[SPAWN DEBUG] DoSpawnLogic called for player:", client:Name())
-    local posData = character:getLastPos()
-    print("[SPAWN DEBUG] lastPos data:", posData)
-    local currentMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
-    print("[SPAWN DEBUG] Current map equivalency:", currentMap, "| Saved map:", posData and posData.map and posData.map:lower())
-    if posData and posData.map and posData.map:lower() == currentMap then
-        print("[SPAWN DEBUG] Using lastPos for spawn")
-        if posData.pos and isvector(posData.pos) then
-            print("[SPAWN DEBUG] Setting position to:", posData.pos)
-            client:SetPos(posData.pos)
-        end
-
-        if posData.ang and isangle(posData.ang) then
-            print("[SPAWN DEBUG] Setting angles to:", posData.ang)
-            client:SetEyeAngles(posData.ang)
-        end
-
-        character:setLastPos(nil)
-        print("[SPAWN DEBUG] Cleared lastPos data")
-        return
-    end
-
-    print("[SPAWN DEBUG] Falling back to faction spawns")
     local factionID
     for _, info in ipairs(lia.faction.indices) do
         if info.index == client:Team() then
@@ -133,14 +108,15 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
-    if client:Alive() then
+    -- Save position if client has a character and is in the world
+    -- Don't require client:Alive() as they might be disconnecting
+    if client:getChar() == character then
         local lastPosData = {
             pos = client:GetPos(),
-            ang = client:EyeAngles(),
+            ang = angle_zero,
             map = lia.data.getEquivalencyMap(game.GetMap())
         }
 
-        print("[SPAWN DEBUG] CharPreSave: Saving lastPos for", client:Name(), ":", lastPosData)
         character:setLastPos(lastPosData)
     end
 end
@@ -165,6 +141,24 @@ local function RemovedDropOnDeathItems(client)
 
     local lostCount = #client.LostItems
     if lostCount > 0 then client:notifyWarningLocalized("itemsLostOnDeath", lostCount) end
+end
+
+function MODULE:PlayerSpawn(client)
+    client.liaSpawnHandled = nil
+end
+
+function MODULE:OnCharDisconnect(client, character)
+    if not IsValid(client) or not character then return end
+    -- Save position on disconnect before character is unloaded
+    local lastPosData = {
+        pos = client:GetPos(),
+        ang = angle_zero,
+        map = lia.data.getEquivalencyMap(game.GetMap())
+    }
+
+    character:setLastPos(lastPosData)
+    -- Force save the character to persist the lastPos data
+    character:save()
 end
 
 function MODULE:PlayerDeath(client, _, attacker)
@@ -196,36 +190,25 @@ function MODULE:PlayerDeath(client, _, attacker)
     char:setData("deathPos", client:GetPos())
 end
 
-function MODULE:PlayerSpawn(client)
-    print("[SPAWN DEBUG] PlayerSpawn called for:", client:Name())
-    client:setNetVar("IsDeadRestricted", false)
-    client:SetDSP(0, false)
-    playerLoadedChar[client] = nil
-    playerCharID[client] = nil
-    DoSpawnLogic(client)
-end
-
-function MODULE:PostPlayerLoadedChar(client)
-    print("[SPAWN DEBUG] PostPlayerLoadedChar called for:", client:Name())
-    local character = client:getChar()
-    if character then
-        playerLoadedChar[client] = true
-        playerCharID[client] = character:getID()
-    end
-
-    DoSpawnLogic(client)
-end
-
 function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
-    local wasLoadedChar = playerLoadedChar[client] or false
-    local savedCharID = playerCharID[client]
-    local currentCharID = character and character:getID() or nil
-    local lastDeathTime = client:getNetVar("lastDeathTime", 0)
-    local hasDied = lastDeathTime > 0
-    local isSameChar = savedCharID and currentCharID and savedCharID == currentCharID
-    if not wasLoadedChar and isSameChar and hasDied then DoSpawnLogic(client) end
-    playerLoadedChar[client] = nil
-    playerCharID[client] = nil
+    -- Prevent running spawn logic multiple times
+    if client.liaSpawnHandled then return end
+    local lastPos = character:getLastPos()
+    if lastPos and lastPos.map then
+        local currentMap = lia.data.getEquivalencyMap(game.GetMap()):lower()
+        local savedMapLower = tostring(lastPos.map):lower()
+        if savedMapLower == currentMap then
+            if lastPos.pos and isvector(lastPos.pos) then client:SetPos(lastPos.pos) end
+            if lastPos.ang and isangle(lastPos.ang) then client:SetEyeAngles(lastPos.ang) end
+            character:setLastPos(nil)
+            client.liaSpawnHandled = true
+            return -- Successfully used lastPos, don't do faction spawns
+        end
+    end
+
+    -- Mark as handled before calling DoSpawnLogic to prevent duplicate calls
+    client.liaSpawnHandled = true
+    DoSpawnLogic(client)
 end

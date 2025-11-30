@@ -1,5 +1,5 @@
-﻿function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
-    local vendorName = vendor:getNetVar("name")
+function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
+    local vendorName = lia.vendor.getVendorProperty(vendor, "name")
     if not isSellingToVendor then
         lia.log.add(client, "vendorBuy", item and (item:getName() or item.name) or "", vendorName or L("unknown"), isFailed)
     else
@@ -171,15 +171,69 @@ function MODULE:PlayerAccessVendor(client, vendor)
     net.Start("liaVendorSyncPresets")
     net.WriteTable(lia.vendor.presets)
     net.Send(client)
-    if client:canEditVendor(vendor) then
-        for factionID in pairs(vendor.factions) do
+
+    -- Sync name and animation to client
+    local name = lia.vendor.getVendorProperty(vendor, "name")
+    local animation = lia.vendor.getVendorProperty(vendor, "animation")
+    if name then
+        net.Start("liaVendorPropertySync")
+        net.WriteEntity(vendor)
+        net.WriteString("name")
+        net.WriteBool(false)
+        net.WriteType(name)
+        net.Send(client)
+    end
+    if animation then
+        net.Start("liaVendorPropertySync")
+        net.WriteEntity(vendor)
+        net.WriteString("animation")
+        net.WriteBool(false)
+        net.WriteType(animation)
+        net.Send(client)
+    end
+
+    -- Sync faction buy/sell scales to client
+    if vendor.factionBuyScales then
+        for factionID, scale in pairs(vendor.factionBuyScales) do
+            if isnumber(factionID) and isnumber(scale) then
+                net.Start("liaVendorFactionBuyScale")
+                net.WriteUInt(factionID, 8)
+                net.WriteFloat(scale)
+                net.Send(client)
+            end
+        end
+    end
+
+    if vendor.factionSellScales then
+        for factionID, scale in pairs(vendor.factionSellScales) do
+            if isnumber(factionID) and isnumber(scale) then
+                net.Start("liaVendorFactionSellScale")
+                net.WriteUInt(factionID, 8)
+                net.WriteFloat(scale)
+                net.Send(client)
+            end
+        end
+    end
+
+    -- Sync messages to client
+    if vendor.messages then
+        net.Start("liaVendorSyncMessages")
+        net.WriteTable(vendor.messages)
+        net.Send(client)
+    end
+
+    -- Sync faction and class restrictions to all players (not just editors)
+    for factionID in pairs(vendor.factions or {}) do
+        if isnumber(factionID) then
             net.Start("liaVendorAllowFaction")
             net.WriteUInt(factionID, 8)
             net.WriteBool(true)
             net.Send(client)
         end
+    end
 
-        for classID in pairs(vendor.classes) do
+    for classID in pairs(vendor.classes or {}) do
+        if isnumber(classID) then
             net.Start("liaVendorAllowClass")
             net.WriteUInt(classID, 8)
             net.WriteBool(true)
@@ -188,13 +242,74 @@ function MODULE:PlayerAccessVendor(client, vendor)
     end
 end
 
+function MODULE:syncVendorDataToClient(client)
+    local vendors = {}
+    for _, vendor in pairs(ents.FindByClass("lia_vendor")) do
+        if IsValid(vendor) then table.insert(vendors, vendor) end
+    end
+
+    if #vendors == 0 then return end
+    net.Start("liaVendorInitialSync")
+    net.WriteUInt(#vendors, 16)
+    for _, vendor in ipairs(vendors) do
+        net.WriteEntity(vendor)
+        local cached = lia.vendor.stored[vendor] or {}
+        local propertyCount = 0
+
+        -- Always sync name and animation, even if they're defaults
+        local propertiesToSync = {}
+
+        -- Add name and animation explicitly
+        local name = lia.vendor.getVendorProperty(vendor, "name")
+        local animation = lia.vendor.getVendorProperty(vendor, "animation")
+        if name then propertiesToSync["name"] = name end
+        if animation then propertiesToSync["animation"] = animation end
+
+        -- Add other non-default properties
+        for property, value in pairs(cached) do
+            if property ~= "name" and property ~= "animation" then
+                propertiesToSync[property] = value
+            end
+        end
+
+        -- Count properties to sync
+        for property, value in pairs(propertiesToSync) do
+            propertyCount = propertyCount + 1
+        end
+
+        net.WriteUInt(propertyCount, 8)
+        -- Send each property
+        for property, value in pairs(propertiesToSync) do
+            net.WriteString(property)
+            net.WriteType(value)
+        end
+    end
+
+    net.Send(client)
+end
+
 function MODULE:GetEntitySaveData(ent)
     if ent:GetClass() ~= "lia_vendor" then return end
-    return {
-        name = ent:getNetVar("name"),
-        items = ent.items,
-        factions = ent.factions,
-        classes = ent.classes,
+    -- Ensure faction scales are tables before saving
+    local factionBuyScales = ent.factionBuyScales
+    local factionSellScales = ent.factionSellScales
+
+    if not istable(factionBuyScales) then
+        factionBuyScales = {}
+        ent.factionBuyScales = factionBuyScales
+    end
+
+    if not istable(factionSellScales) then
+        factionSellScales = {}
+        ent.factionSellScales = factionSellScales
+    end
+
+    local data = {
+        name = lia.vendor.getVendorProperty(ent, "name"),
+        items = ent.items or {},
+        factions = ent.factions or {},
+        classes = ent.classes or {},
+        messages = ent.messages or {},
         model = ent:GetModel(),
         skin = ent:GetSkin(),
         bodygroups = (function()
@@ -205,21 +320,41 @@ function MODULE:GetEntitySaveData(ent)
             end
             return groups
         end)(),
-        animation = ent:getNetVar("animation"),
-        factionBuyScales = ent.factionBuyScales,
-        factionSellScales = ent.factionSellScales,
+        animation = lia.vendor.getVendorProperty(ent, "animation"),
+        factionBuyScales = factionBuyScales,
+        factionSellScales = factionSellScales,
     }
+    return data
 end
 
 function MODULE:OnEntityLoaded(ent, data)
     if ent:GetClass() ~= "lia_vendor" or not data then return end
-    ent:setNetVar("name", data.name)
-    ent:setNetVar("animation", data.animation or "")
+    if not istable(data.factionBuyScales) then
+        data.factionBuyScales = {}
+    end
+    if not istable(data.factionSellScales) then
+        data.factionSellScales = {}
+    end
+
+    lia.vendor.setVendorProperty(ent, "name", data.name)
+    lia.vendor.setVendorProperty(ent, "animation", data.animation or "")
     ent.items = data.items or {}
     ent.factions = data.factions or {}
     ent.classes = data.classes or {}
-    ent.factionBuyScales = data.factionBuyScales or {}
-    ent.factionSellScales = data.factionSellScales or {}
+    ent.messages = data.messages or {}
+    ent.factionBuyScales = data.factionBuyScales
+    ent.factionSellScales = data.factionSellScales
+
+    -- Sync this vendor's data to all clients after it's loaded
+    timer.Simple(0.1, function()
+        if IsValid(ent) then
+            for _, client in ipairs(player.GetAll()) do
+                if IsValid(client) then
+                    self:syncVendorDataToClient(client)
+                end
+            end
+        end
+    end)
     if data.model and data.model ~= "" and data.model ~= ent:GetModel() then
         ent:SetModel(data.model)
         timer.Simple(0.1, function()
@@ -264,9 +399,10 @@ net.Receive("liaVendorEdit", function(_, client)
     if not client:canEditVendor() then return end
     local vendor = client.liaVendor
     if not IsValid(vendor) or not lia.vendor.editor[key] then return end
+
     lia.log.add(client, "vendorEdit", vendor, key)
     hook.Run("OnVendorEdited", client, vendor, key)
-    lia.vendor.editor[key](vendor, client, key)
+    lia.vendor.editor[key](vendor, client)
     hook.Run("UpdateEntityPersistence", vendor)
 end)
 
@@ -297,6 +433,43 @@ net.Receive("liaVendorLoadPreset", function(_, client)
     lia.log.add(client, "vendorPresetLoad", presetName)
 end)
 
+net.Receive("liaVendorDeletePreset", function(_, client)
+    if not client:hasPrivilege("canCreateVendorPresets") then
+        client:notifyErrorLocalized("noPermission")
+        return
+    end
+
+    local presetName = net.ReadString()
+    if not presetName or presetName:Trim() == "" then
+        client:notifyErrorLocalized("vendorPresetNameRequired")
+        return
+    end
+
+    presetName = presetName:Trim():lower()
+    if not lia.vendor.presets[presetName] then
+        client:notifyErrorLocalized("vendorPresetNotFound")
+        return
+    end
+
+    -- Save preset data in case we need to restore it
+    local presetData = lia.vendor.presets[presetName]
+    -- Remove from memory
+    lia.vendor.presets[presetName] = nil
+    -- Delete from database
+    lia.db.delete("vendor_presets", "name = " .. lia.db.convertDataType(presetName)):next(function()
+        client:notifySuccessLocalized("vendorPresetDeleted", presetName)
+        lia.log.add(client, "vendorPresetDelete", presetName)
+        -- Sync updated presets to all clients
+        net.Start("liaVendorSyncPresets")
+        net.WriteTable(lia.vendor.presets)
+        net.Broadcast()
+    end):catch(function()
+        -- Restore preset to memory if database delete failed
+        lia.vendor.presets[presetName] = presetData
+        client:notifyErrorLocalized("vendorPresetDeleteFailed")
+    end)
+end)
+
 net.Receive("liaVendorSavePreset", function(_, client)
     if not client:hasPrivilege("canCreateVendorPresets") then
         client:notifyErrorLocalized("noPermission")
@@ -324,17 +497,44 @@ net.Receive("liaVendorSavePreset", function(_, client)
     lia.db.upsert({
         name = presetName,
         data = jsonData
-    }, "lia_vendor_presets"):next(function()
+    }, "vendor_presets"):next(function()
         client:notifyInfoLocalized("vendorPresetSaved", presetName)
         lia.log.add(client, "vendorPresetSave", presetName)
         -- Sync presets to all clients
         net.Start("liaVendorSyncPresets")
         net.WriteTable(lia.vendor.presets)
         net.Broadcast()
-    end):catch(function(err) client:notifyErrorLocalized("vendorPresetSaveFailed") end)
+    end):catch(function() client:notifyErrorLocalized("vendorPresetSaveFailed") end)
 end)
 
-function MODULE:LiliaTablesLoaded()
+net.Receive("liaVendorRequestData", function(_, client)
+    local vendor = net.ReadEntity()
+    if not IsValid(vendor) or vendor:GetClass() ~= "lia_vendor" then return end
+
+    -- Send the vendor's name and animation to the requesting client
+    local name = lia.vendor.getVendorProperty(vendor, "name")
+    local animation = lia.vendor.getVendorProperty(vendor, "animation")
+
+    if name then
+        net.Start("liaVendorPropertySync")
+        net.WriteEntity(vendor)
+        net.WriteString("name")
+        net.WriteBool(false)
+        net.WriteType(name)
+        net.Send(client)
+    end
+
+    if animation then
+        net.Start("liaVendorPropertySync")
+        net.WriteEntity(vendor)
+        net.WriteString("animation")
+        net.WriteBool(false)
+        net.WriteType(animation)
+        net.Send(client)
+    end
+end)
+
+function MODULE:DatabaseConnected()
     lia.db.query("SELECT name, data FROM lia_vendor_presets"):next(function(result)
         local data = result.results
         if data then
@@ -344,7 +544,25 @@ function MODULE:LiliaTablesLoaded()
                 if presetName and itemsData then lia.vendor.presets[presetName] = itemsData end
             end
         end
-    end):catch(function(err)
-        -- Silently handle database errors during loading
+    end):catch(function() end)
+end
+
+function MODULE:InitPostEntity()
+    -- Sync vendor data to all connected players after all entities are loaded
+    timer.Simple(0.1, function()
+        for _, client in ipairs(player.GetAll()) do
+            if IsValid(client) then
+                self:syncVendorDataToClient(client)
+            end
+        end
+    end)
+end
+
+function MODULE:PostPlayerInitialSpawn(client)
+    -- For players who join after InitPostEntity, sync immediately
+    timer.Simple(0.1, function()
+        if IsValid(client) then
+            self:syncVendorDataToClient(client)
+        end
     end)
 end

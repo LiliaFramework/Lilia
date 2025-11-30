@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Administrator Library
 
     Comprehensive user group and privilege management system for the Lilia framework.
@@ -1674,13 +1674,13 @@ if SERVER then
                 return true
             end
         elseif cmd == "gag" then
-            target:setNetVar("liaGagged", true)
+            target:setLiliaData("liaGagged", true)
             admin:notifySuccessLocalized("plyGagged")
             lia.log.add(admin, "plyGag", target:Name())
             hook.Run("PlayerGagged", target, admin)
             return true
         elseif cmd == "ungag" then
-            target:setNetVar("liaGagged", false)
+            target:setLiliaData("liaGagged", false)
             admin:notifySuccessLocalized("plyUngagged")
             lia.log.add(admin, "plyUngag", target:Name())
             hook.Run("PlayerUngagged", target, admin)
@@ -1689,10 +1689,12 @@ if SERVER then
             target:Freeze(true)
             local duration = tonumber(dur) or 0
             if duration > 0 then timer.Simple(duration, function() if IsValid(target) then target:Freeze(false) end end) end
+            admin:notifySuccessLocalized("plyFrozen")
             lia.log.add(admin, "plyFreeze", target:Name(), duration)
             return true
         elseif cmd == "unfreeze" then
             target:Freeze(false)
+            admin:notifySuccessLocalized("plyUnfrozen")
             lia.log.add(admin, "plyUnfreeze", target:Name())
             return true
         elseif cmd == "slay" then
@@ -1719,12 +1721,14 @@ if SERVER then
             returnPositions = returnPositions or {}
             returnPositions[target] = target:GetPos()
             target:SetPos(admin:GetPos() + admin:GetForward() * 50)
+            admin:notifySuccessLocalized("plyBrought")
             lia.log.add(admin, "plyBring", target:Name())
             return true
         elseif cmd == "goto" then
             returnPositions = returnPositions or {}
             returnPositions[admin] = admin:GetPos()
             admin:SetPos(target:GetPos() + target:GetForward() * 50)
+            admin:notifySuccessLocalized("plyGoto")
             lia.log.add(admin, "plyGoto", target:Name())
             return true
         elseif cmd == "return" then
@@ -1734,12 +1738,14 @@ if SERVER then
                 (IsValid(target) and target or admin):SetPos(pos)
                 returnPositions[target] = nil
                 returnPositions[admin] = nil
+                admin:notifySuccessLocalized("plyReturned")
                 lia.log.add(admin, "plyReturn", IsValid(target) and target:Name() or admin:Name())
                 return true
             end
         elseif cmd == "jail" then
             target:Lock()
             target:Freeze(true)
+            admin:notifySuccessLocalized("plyJailed")
             lia.log.add(admin, "plyJail", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
@@ -1754,35 +1760,43 @@ if SERVER then
         elseif cmd == "unjail" then
             target:UnLock()
             target:Freeze(false)
+            admin:notifySuccessLocalized("plyUnjailed")
             lia.log.add(admin, "plyUnjail", target:Name())
             return true
         elseif cmd == "cloak" then
             target:SetNoDraw(true)
+            admin:notifySuccessLocalized("plyCloaked")
             lia.log.add(admin, "plyCloak", target:Name())
             return true
         elseif cmd == "uncloak" then
             target:SetNoDraw(false)
+            admin:notifySuccessLocalized("plyUncloaked")
             lia.log.add(admin, "plyUncloak", target:Name())
             return true
         elseif cmd == "god" then
             target:GodEnable()
+            admin:notifySuccessLocalized("plyGodded")
             lia.log.add(admin, "plyGod", target:Name())
             return true
         elseif cmd == "ungod" then
             target:GodDisable()
+            admin:notifySuccessLocalized("plyUngodded")
             lia.log.add(admin, "plyUngod", target:Name())
             return true
         elseif cmd == "ignite" then
             local duration = tonumber(dur) or 5
             target:Ignite(duration)
+            admin:notifySuccessLocalized("plyIgnited")
             lia.log.add(admin, "plyIgnite", target:Name(), duration)
             return true
         elseif cmd == "extinguish" or cmd == "unignite" then
             target:Extinguish()
+            admin:notifySuccessLocalized("plyExtinguished")
             lia.log.add(admin, "plyExtinguish", target:Name())
             return true
         elseif cmd == "strip" then
             target:StripWeapons()
+            admin:notifySuccessLocalized("plyStripped")
             lia.log.add(admin, "plyStrip", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
@@ -1796,6 +1810,7 @@ if SERVER then
             return true
         elseif cmd == "respawn" then
             target:Spawn()
+            admin:notifySuccessLocalized("plyRespawned")
             lia.log.add(admin, "plyRespawn", target:Name())
             lia.db.insertTable({
                 player = target:Name(),
@@ -1822,6 +1837,7 @@ if SERVER then
                 end)
             end
 
+            admin:notifySuccessLocalized("plyBlinded")
             lia.log.add(admin, "plyBlind", target:Name(), duration)
             lia.db.insertTable({
                 player = target:Name(),
@@ -1837,6 +1853,7 @@ if SERVER then
             net.Start("liaBlindTarget")
             net.WriteBool(false)
             net.Send(target)
+            admin:notifySuccessLocalized("plyUnblinded")
             lia.log.add(admin, "plyUnblind", target:Name())
             return true
         end

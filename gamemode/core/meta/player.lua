@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Player Meta
 
     Player management system for the Lilia framework.
@@ -4623,7 +4623,7 @@ if SERVER then
                 self.lastJoin = data[1].lastJoin or timeStamp
                 self.liaData = util.JSONToTable(data[1].data)
                 local isCheater = self:getLiliaData("cheater", false)
-                self:setNetVar("cheater", isCheater and true or nil)
+                self.isCheater = isCheater
                 self.totalOnlineTime = tonumber(data[1].totalOnlineTime) or self:getLiliaData("totalOnlineTime", 0)
                 local default = os.time(lia.time.toNumber(self.lastJoin))
                 self.lastOnline = tonumber(data[1].lastOnline) or self:getLiliaData("lastOnline", default)
@@ -4642,6 +4642,7 @@ if SERVER then
                     totalOnlineTime = 0
                 }, nil, "players")
 
+                self.isCheater = false
                 if callback then callback({}) end
             end
         end)

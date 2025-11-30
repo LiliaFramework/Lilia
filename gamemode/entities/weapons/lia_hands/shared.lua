@@ -132,16 +132,16 @@ function SWEP:Think()
 end
 
 function SWEP:GetHeldPhysicsObject()
-    return IsValid(self.heldEntity) and IsValid(self.heldEntity.ixHeldOwner) and self.heldEntity.ixHeldOwner == self:GetOwner() and self.heldEntity:GetPhysicsObject() or nil
+    return IsValid(self.heldEntity) and IsValid(self.heldEntity.HeldOwner) and self.heldEntity.HeldOwner == self:GetOwner() and self.heldEntity:GetPhysicsObject() or nil
 end
 
 function SWEP:CanHoldObject(entity)
     local physics = entity:GetPhysicsObject()
-    return IsValid(physics) and physics:GetMass() <= lia.config.get("MaxHoldWeight", 100) and physics:IsMoveable() and not self:IsHoldingObject() and not IsValid(entity.ixHeldOwner) and hook.Run("CanPlayerHoldObject", self:GetOwner(), entity)
+    return IsValid(physics) and physics:GetMass() <= lia.config.get("MaxHoldWeight", 100) and physics:IsMoveable() and not self:IsHoldingObject() and not IsValid(entity.HeldOwner) and hook.Run("CanPlayerHoldObject", self:GetOwner(), entity)
 end
 
 function SWEP:IsHoldingObject()
-    return IsValid(self.heldEntity) and IsValid(self.heldEntity.ixHeldOwner) and self.heldEntity.ixHeldOwner == self:GetOwner()
+    return IsValid(self.heldEntity) and IsValid(self.heldEntity.HeldOwner) and self.heldEntity.HeldOwner == self:GetOwner()
 end
 
 function SWEP:PickupObject(entity)
@@ -149,8 +149,8 @@ function SWEP:PickupObject(entity)
     local physics = entity:GetPhysicsObject()
     physics:EnableGravity(false)
     physics:AddGameFlag(FVPHYSICS_PLAYER_HELD)
-    entity.ixHeldOwner = self:GetOwner()
-    entity.ixCollisionGroup = entity:GetCollisionGroup()
+    entity.HeldOwner = self:GetOwner()
+    entity.CollisionGroup = entity:GetCollisionGroup()
     entity:StartMotionController()
     entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
     self.heldObjectAngle = entity:GetAngles()
@@ -184,12 +184,12 @@ function SWEP:PickupObject(entity)
 end
 
 function SWEP:DropObject(bThrow)
-    if not IsValid(self.heldEntity) or self.heldEntity.ixHeldOwner ~= self:GetOwner() then return end
+    if not IsValid(self.heldEntity) or self.heldEntity.HeldOwner ~= self:GetOwner() then return end
     self.lastPlayerAngles = nil
     SafeRemoveEntity(self.constraint)
     SafeRemoveEntity(self.holdEntity)
     self.heldEntity:StopMotionController()
-    self.heldEntity:SetCollisionGroup(self.heldEntity.ixCollisionGroup or COLLISION_GROUP_NONE)
+    self.heldEntity:SetCollisionGroup(self.heldEntity.CollisionGroup or COLLISION_GROUP_NONE)
     local physics = self:GetHeldPhysicsObject()
     physics:EnableGravity(true)
     physics:Wake()
@@ -204,8 +204,8 @@ function SWEP:DropObject(bThrow)
     end
 
     self:SetHoldType("normal")
-    self.heldEntity.ixHeldOwner = nil
-    self.heldEntity.ixCollisionGroup = nil
+    self.heldEntity.HeldOwner = nil
+    self.heldEntity.CollisionGroup = nil
     self.heldEntity = nil
 end
 

@@ -1,4 +1,4 @@
-﻿function MODULE:VendorOpened(vendor)
+function MODULE:VendorOpened(vendor)
     local vendorUI = vgui.Create("liaVendor")
     vendorUI.vendor = vendor
     hook.Run("OnOpenVendorMenu", self, vendor)
@@ -72,7 +72,10 @@ net.Receive("liaVendorPrice", function()
 end)
 
 net.Receive("liaVendorMode", function()
-    if not IsValid(liaVendorEnt) then return end
+    if not IsValid(liaVendorEnt) then
+        return
+    end
+
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadInt(8)
@@ -83,7 +86,10 @@ net.Receive("liaVendorMode", function()
 end)
 
 net.Receive("liaVendorStock", function()
-    if not IsValid(liaVendorEnt) then return end
+    if not IsValid(liaVendorEnt) then
+        return
+    end
+
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)
@@ -93,7 +99,10 @@ net.Receive("liaVendorStock", function()
 end)
 
 net.Receive("liaVendorMaxStock", function()
-    if not IsValid(liaVendorEnt) then return end
+    if not IsValid(liaVendorEnt) then
+        return
+    end
+
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)
@@ -131,11 +140,38 @@ net.Receive("liaVendorAllowClass", function()
     hook.Run("VendorClassUpdated", vendor, id, allowed)
 end)
 
+net.Receive("liaVendorFactionBuyScale", function()
+    if not IsValid(liaVendorEnt) then return end
+    local vendor = liaVendorEnt
+    local factionID = net.ReadUInt(8)
+    local scale = net.ReadFloat()
+    vendor.factionBuyScales = vendor.factionBuyScales or {}
+    vendor.factionBuyScales[factionID] = scale
+    hook.Run("VendorFactionBuyScaleUpdated", vendor, factionID, scale)
+end)
+
+net.Receive("liaVendorFactionSellScale", function()
+    if not IsValid(liaVendorEnt) then return end
+    local vendor = liaVendorEnt
+    local factionID = net.ReadUInt(8)
+    local scale = net.ReadFloat()
+    vendor.factionSellScales = vendor.factionSellScales or {}
+    vendor.factionSellScales[factionID] = scale
+    hook.Run("VendorFactionSellScaleUpdated", vendor, factionID, scale)
+end)
+
+net.Receive("liaVendorSyncMessages", function()
+    if not IsValid(liaVendorEnt) then return end
+    local vendor = liaVendorEnt
+    vendor.messages = net.ReadTable()
+    hook.Run("VendorMessagesUpdated", vendor)
+end)
+
 function MODULE:AddToAdminStickHUD(_, target, information)
     if not IsValid(target) or not target.IsVendor then return end
     local name = target:getName()
     if name and name ~= "" then table.insert(information, L("vendorNameLabel") .. name) end
-    local animation = target:getNetVar("animation", "")
+    local animation = lia.vendor.getVendorProperty(target, "animation")
     if animation and animation ~= "" then table.insert(information, L("animationLabel") .. animation) end
     local itemCount = 0
     if target.items then
@@ -181,3 +217,35 @@ function MODULE:AddToAdminStickHUD(_, target, information)
 end
 
 net.Receive("liaVendorSyncPresets", function() lia.vendor.presets = net.ReadTable() end)
+net.Receive("liaVendorInitialSync", function()
+    local vendorCount = net.ReadUInt(16)
+    for _ = 1, vendorCount do
+        local vendor = net.ReadEntity()
+        if not IsValid(vendor) then continue end
+        local propertyCount = net.ReadUInt(8)
+        lia.vendor.stored[vendor] = lia.vendor.stored[vendor] or {}
+        for _ = 1, propertyCount do
+            local propertyName = net.ReadString()
+            local propertyValue = net.ReadType()
+            lia.vendor.stored[vendor][propertyName] = propertyValue
+        end
+    end
+end)
+
+net.Receive("liaVendorPropertySync", function()
+    local vendor = net.ReadEntity()
+    if not IsValid(vendor) then return end
+    local propertyName = net.ReadString()
+    local isDefault = net.ReadBool()
+    if not lia.vendor.stored[vendor] then lia.vendor.stored[vendor] = {} end
+    if isDefault then
+        -- Remove property since it's now default
+        lia.vendor.stored[vendor][propertyName] = nil
+        -- Clean up empty entries
+        if table.IsEmpty(lia.vendor.stored[vendor]) then lia.vendor.stored[vendor] = nil end
+    else
+        -- Update property with new value
+        local propertyValue = net.ReadType()
+        lia.vendor.stored[vendor][propertyName] = propertyValue
+    end
+end)

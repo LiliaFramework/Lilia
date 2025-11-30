@@ -37347,7 +37347,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:getNetVar("vendorData")
+            local vendorData = vendor:GetNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37365,7 +37365,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:getNetVar("vendorData")
+        local vendorData = vendor:GetNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -37445,7 +37445,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:getNetVar("vendorData")
+            local vendorData = vendor:GetNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37463,7 +37463,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:getNetVar("vendorData")
+        local vendorData = vendor:GetNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -37543,7 +37543,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:getNetVar("vendorData")
+            local vendorData = vendor:GetNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37561,7 +37561,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:getNetVar("vendorData")
+        local vendorData = vendor:GetNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -37641,7 +37641,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:getNetVar("vendorData")
+            local vendorData = vendor:GetNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37659,7 +37659,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:getNetVar("vendorData")
+        local vendorData = vendor:GetNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -47037,7 +47037,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:getNetVar("doorData")
+            local doorData = entity:GetNetVar("doorData")
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -47132,7 +47132,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:getNetVar("doorData")
+            local doorData = entity:GetNetVar("doorData")
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -47227,7 +47227,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:getNetVar("doorData")
+            local doorData = entity:GetNetVar("doorData")
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -47322,7 +47322,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:getNetVar("doorData")
+            local doorData = entity:GetNetVar("doorData")
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -52535,9 +52535,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:getNetVar("storageName", "Storage")
-        local storageType = entity:getNetVar("storageType", "container")
-        local ownerName = entity:getNetVar("ownerName", "Unknown")
+        local storageName = entity:GetNetVar("storageName", "Storage")
+        local storageType = entity:GetNetVar("storageType", "container")
+        local ownerName = entity:GetNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -52697,9 +52697,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:getNetVar("storageName", "Storage")
-        local storageType = entity:getNetVar("storageType", "container")
-        local ownerName = entity:getNetVar("ownerName", "Unknown")
+        local storageName = entity:GetNetVar("storageName", "Storage")
+        local storageType = entity:GetNetVar("storageType", "container")
+        local ownerName = entity:GetNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -52859,9 +52859,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:getNetVar("storageName", "Storage")
-        local storageType = entity:getNetVar("storageType", "container")
-        local ownerName = entity:getNetVar("ownerName", "Unknown")
+        local storageName = entity:GetNetVar("storageName", "Storage")
+        local storageType = entity:GetNetVar("storageType", "container")
+        local ownerName = entity:GetNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -53021,9 +53021,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:getNetVar("storageName", "Storage")
-        local storageType = entity:getNetVar("storageType", "container")
-        local ownerName = entity:getNetVar("ownerName", "Unknown")
+        local storageName = entity:GetNetVar("storageName", "Storage")
+        local storageType = entity:GetNetVar("storageType", "container")
+        local ownerName = entity:GetNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -56040,8 +56040,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56062,7 +56062,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56070,10 +56070,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
+        client:SetNetVar("vendorSessionStart", nil)
+        client:SetNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56154,8 +56154,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56176,7 +56176,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56184,10 +56184,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
+        client:SetNetVar("vendorSessionStart", nil)
+        client:SetNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56268,8 +56268,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56290,7 +56290,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56298,10 +56298,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
+        client:SetNetVar("vendorSessionStart", nil)
+        client:SetNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56382,8 +56382,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56404,7 +56404,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:getNetVar("vendorSessionStart", 0)
+        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56412,10 +56412,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:setNetVar("currentVendor", nil)
-        client:setNetVar("vendorMode", nil)
-        client:setNetVar("vendorSessionStart", nil)
-        client:setNetVar("vendorTransactionCount", nil)
+        client:SetNetVar("currentVendor", nil)
+        client:SetNetVar("vendorMode", nil)
+        client:SetNetVar("vendorSessionStart", nil)
+        client:SetNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56498,7 +56498,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56518,7 +56518,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56577,7 +56577,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56597,7 +56597,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56656,7 +56656,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56676,7 +56676,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56735,7 +56735,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56755,7 +56755,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:setNetVar("voiceEnabled", enabled)
+        client:SetNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Client-Side Hooks
 
     Client-side hook system for the Lilia framework.
@@ -356,7 +356,7 @@ end
             -- Handle doors
             elseif target:isDoor() then
                 table.insert(information, "=== DOOR INFO ===")
-                local doorData = target:getNetVar("doorData", {})
+                local doorData = target:lia.doors.getData(target)
                 if doorData.name and doorData.name ~= "" then
                     table.insert(information, "Name: " .. doorData.name)
                 end
@@ -819,7 +819,7 @@ end
         ```lua
         -- Medium: Add formatted door information
         function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-            local doorData = entity:getNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             if doorData then
                 if doorData.title then
                     table.insert(infoTexts, "Title: " .. doorData.title)
@@ -837,7 +837,7 @@ end
         function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
             if not IsValid(entity) then return end
 
-            local doorData = entity:getNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             local alpha = alphaOverride or 255
 
             -- Add door title if available
@@ -4186,7 +4186,7 @@ end
         ```lua
         -- Medium: Add formatted door information
         function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-            local doorData = entity:getNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             if doorData then
                 if doorData.title then
                     table.insert(infoTexts, "Title: " .. doorData.title)
@@ -4204,7 +4204,7 @@ end
         function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
             if not IsValid(entity) then return end
 
-            local doorData = entity:getNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             local alpha = alphaOverride or 255
 
             -- Add door title if available
@@ -9622,7 +9622,7 @@ end
 
             -- Show for doors with special permissions
             if entity:GetClass() == "lia_door" then
-                local doorData = entity:getNetVar("doorData")
+                local doorData = lia.doors.getData(entity)
                 if doorData and doorData.owner then
                     return doorData.owner == char:getID() or client:IsAdmin()
                 end
@@ -13649,6 +13649,69 @@ end
             quickTransfer.DoClick = function()
                 -- Transfer selected items
                 -- Implementation depends on your selection system
+            end
+        end)
+        ```
+]]
+function AdminStickAddModels(modList, target)
+end
+
+--[[
+    Purpose:
+        Allows adding custom models to the adminstick model selector.
+
+    When Called:
+        When the adminstick model selector UI is opened and building the list of available models.
+
+    Parameters:
+        modList (table)
+            A table containing model entries with 'name' and 'mdl' fields. Add new entries to this table.
+        target (Player)
+            The player whose model is being changed.
+
+    Returns:
+        nil
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+        ```lua
+        -- Simple: Add a custom model to the adminstick selector
+        hook.Add("AdminStickAddModels", "AddCustomModel", function(modList, target)
+            table.insert(modList, {
+                name = "Custom Model",
+                mdl = "models/custom/model.mdl"
+            })
+        end)
+        ```
+
+    Medium Complexity:
+        ```lua
+        -- Medium: Add multiple models with conditional logic
+        hook.Add("AdminStickAddModels", "AddAdminModels", function(modList, target)
+            -- Only add special models for admins
+            if target:hasPrivilege("adminModels") then
+                table.insert(modList, {
+                    name = "Admin Model",
+                    mdl = "models/admin/model.mdl"
+                })
+
+                table.insert(modList, {
+                    name = "Super Admin Model",
+                    mdl = "models/superadmin/model.mdl"
+                })
+            end
+
+            -- Add seasonal models
+            local currentMonth = os.date("*t").month
+            if currentMonth == 12 then -- December
+                table.insert(modList, {
+                    name = "Christmas Model",
+                    mdl = "models/christmas/model.mdl"
+                })
             end
         end)
         ```

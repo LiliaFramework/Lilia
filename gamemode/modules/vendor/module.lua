@@ -1,4 +1,4 @@
-﻿MODULE.name = "vendorModuleName"
+MODULE.name = "vendorModuleName"
 MODULE.author = "Samael"
 MODULE.discord = "@liliaplayer"
 MODULE.desc = "npcVendorDescription"

@@ -1,4 +1,4 @@
-﻿local ActiveTickets = {}
+local ActiveTickets = {}
 local function fixupProp(client, ent, mins, maxs)
     local pos = ent:GetPos()
     local down, up = ent:LocalToWorld(mins), ent:LocalToWorld(maxs)
@@ -34,7 +34,7 @@ function MODULE:PlayerSay(client, text)
         return ""
     end
 
-    if client:getNetVar("liaGagged") then return "" end
+    if client:getLiliaData("liaGagged", false) then return "" end
 end
 
 function MODULE:PlayerSpawn(client)
