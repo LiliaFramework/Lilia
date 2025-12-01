@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 local function IsCheater(client)
     return lia.config.get("DisableCheaterActions", true) and client.isCheater
 end

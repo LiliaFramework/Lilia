@@ -3138,7 +3138,7 @@ function lia.derma.requestArguments(title, argTypes, onSubmit, defaults)
         panel.PerformLayout = function(_, w, h)
             local ctrlH, ctrlW
             if isBool then
-                ctrlH, ctrlW = 22, 60 -- Fixed width for checkbox centering
+                ctrlH, ctrlW = 22, 60
             else
                 ctrlH, ctrlW = 60, w * 0.85
             end
@@ -3880,16 +3880,24 @@ end
 
 --[[
     Purpose:
-        Creates a multi-select dialog for choosing multiple options
+        Creates a dialog for selecting options with checkboxes or dropdowns, formatted like requestArguments
 
     When Called:
-        When user needs to select multiple options from a list
+        When user needs to select options using checkboxes or choose from dropdown menus
 
     Parameters:
         title (string, optional) - Title of the dialog
-        options (table) - Array of options (strings or {text, data} tables)
-        callback (function) - Callback function called with selected options array
-        defaults (table, optional) - Array of default selected values
+        options (table) - Array of options where each option can be:
+            * String - Creates a checkbox option
+            * {text, data} - Creates a checkbox option with custom data
+            * {text, {choice1, choice2, ...}} - Creates a dropdown with choices array
+            * {text, {{display, value}, ...}} - Creates a dropdown with display/value pairs
+        callback (function) - Callback function called with selected options
+            For checkboxes: array of selected values
+            For dropdowns: table with option names as keys and selected values as values
+        defaults (table, optional) - Default selections
+            For checkboxes: array of default selected values
+            For dropdowns: table with option names as keys and default values as values
 
     Returns:
         Panel - The created dialog frame
@@ -3900,7 +3908,7 @@ end
     Example Usage:
     Low Complexity:
     ```lua
-    -- Simple: Request multiple selections
+    -- Simple checkboxes
     local options = {"Option 1", "Option 2", "Option 3"}
     lia.derma.requestOptions("Choose Options", options, function(selected)
     print("Selected:", table.concat(selected, ", "))
@@ -3909,38 +3917,44 @@ end
 
     Medium Complexity:
     ```lua
-    -- Medium: Request with data values and defaults
+    -- Mixed checkboxes and dropdowns
     local options = {
-    {"Admin", "admin"},
-    {"Moderator", "moderator"},
-    {"VIP", "vip"}
+        {"Enable Feature", "feature_enabled"}, -- checkbox
+        {"Gaming", {"PC", "Console", "Mobile"}}, -- dropdown
+        {"Reading", {"Books", "Articles", "Novels"}} -- dropdown
     }
-    local defaults = {"admin"}
-    lia.derma.requestOptions("Select Roles", options, function(selected)
-    assignRoles(selected)
+    local defaults = {
+        feature_enabled = true, -- checkbox default
+        Gaming = "PC", -- dropdown default
+        Reading = "Books" -- dropdown default
+    }
+    lia.derma.requestOptions("Select Preferences", options, function(selected)
+        print("Feature enabled:", selected.feature_enabled)
+        print("Gaming platform:", selected.Gaming)
+        print("Reading type:", selected.Reading)
     end, defaults)
     ```
 
     High Complexity:
     ```lua
-    -- High: Dynamic options with validation
-    local options = {}
-    for _, permission in pairs(availablePermissions) do
-        table.insert(options, {permission.displayName, permission.id})
-    end
-    lia.derma.requestOptions("Select Permissions", options, function(selected)
-    if #selected > 0 then
-        validateAndAssignPermissions(selected)
-        else
-            notify("Please select at least one permission!")
-        end
-    end, userPermissions)
+    -- Advanced dropdowns with display/value pairs
+    local options = {
+        {"Role", {{"Administrator", "admin"}, {"Moderator", "mod"}, {"User", "user"}}},
+        {"Permissions", {{"Read Only", "read"}, {"Read/Write", "write"}, {"Full Access", "full"}}}
+    }
+    lia.derma.requestOptions("Configure User", options, function(selected)
+        assignRole(selected.Role)
+        setPermissions(selected.Permissions)
+    end, {Role = "user", Permissions = "read"})
     ```
 ]]
 function lia.derma.requestOptions(title, options, callback, defaults)
+    defaults = defaults or {}
     if IsValid(lia.gui.menuRequestOptions) then lia.gui.menuRequestOptions:Remove() end
+    local count = table.Count(options)
+    local frameW, frameH = 600, math.min(350 + count * 100, ScrH() * 0.5)
     local frame = vgui.Create("liaFrame")
-    frame:SetSize(500, 400)
+    frame:SetSize(frameW, frameH)
     frame:Center()
     frame:MakePopup()
     frame:SetTitle("")
@@ -3949,51 +3963,96 @@ function lia.derma.requestOptions(title, options, callback, defaults)
     frame:SetZPos(1000)
     local scrollPanel = vgui.Create("liaScrollPanel", frame)
     scrollPanel:Dock(FILL)
-    scrollPanel:DockMargin(20, 40, 20, 60)
-    local checkboxes = {}
+    scrollPanel:DockMargin(10, 40, 10, 10)
+    local controls = {}
     if istable(options) then
         for _, option in ipairs(options) do
-            local optionText
-            local optionData
+            local optionName, optionData
             if istable(option) then
-                optionText = option[1] or tostring(option[2])
+                optionName = option[1] or tostring(option[2])
                 optionData = option[2]
             else
-                optionText = tostring(option)
+                optionName = tostring(option)
                 optionData = option
             end
 
-            local optionPanel = vgui.Create("Panel", scrollPanel)
-            optionPanel:Dock(TOP)
-            optionPanel:DockMargin(0, 5, 0, 5)
-            optionPanel:SetTall(30)
-            local checkbox = vgui.Create("liaCheckbox", optionPanel)
-            checkbox:Dock(LEFT)
-            checkbox:SetWide(30)
-            checkbox:SetChecked(defaults and table.HasValue(defaults, optionData))
-            local label = vgui.Create("DLabel", optionPanel)
-            label:Dock(FILL)
-            label:DockMargin(40, 0, 0, 0)
-            label:SetText(optionText)
-            label:SetFont("LiliaFont.17")
-            label:SetTextColor(lia.color.theme.text or color_white)
-            label:SetContentAlignment(4)
-            checkboxes[optionData] = checkbox
+            local panel = vgui.Create("DPanel", scrollPanel)
+            panel:Dock(TOP)
+            panel:DockMargin(0, 0, 0, 10)
+            panel:SetTall(90)
+            panel.Paint = nil
+            local label = vgui.Create("DLabel", panel)
+            label:SetFont("LiliaFont.20")
+            label:SetText(optionName)
+            label:SizeToContents()
+            local textW = select(1, surface.GetTextSize(optionName))
+            local ctrl
+            if istable(optionData) then
+                ctrl = vgui.Create("liaComboBox", panel)
+                local defaultChoiceIndex
+                for idx, v in ipairs(optionData) do
+                    if istable(v) then
+                        ctrl:AddChoice(v[1], v[2])
+                        if defaults[optionName] ~= nil and (v[2] == defaults[optionName] or v[1] == defaults[optionName]) then defaultChoiceIndex = idx end
+                    else
+                        ctrl:AddChoice(tostring(v))
+                        if defaults[optionName] ~= nil and v == defaults[optionName] then defaultChoiceIndex = idx end
+                    end
+                end
+
+                if defaultChoiceIndex then ctrl:ChooseOptionID(defaultChoiceIndex) end
+                ctrl:FinishAddingOptions()
+                ctrl:PostInit()
+            else
+                ctrl = vgui.Create("liaCheckbox", panel)
+                ctrl:SetChecked(defaults and table.HasValue(defaults, optionData))
+            end
+
+            panel.PerformLayout = function(_, w, h)
+                local ctrlH, ctrlW
+                if ctrl:GetName() == "liaCheckbox" then
+                    ctrlH, ctrlW = 22, 60
+                else
+                    ctrlH, ctrlW = 60, w * 0.85
+                end
+
+                local ctrlX = (w - ctrlW) / 2
+                ctrl:SetPos(ctrlX, (h - ctrlH) / 2 + 6)
+                ctrl:SetSize(ctrlW, ctrlH)
+                label:SetPos((w - textW) / 2, (h - ctrlH) / 2 - 18)
+            end
+
+            controls[optionName] = {
+                ctrl = ctrl,
+                data = optionData
+            }
         end
     end
 
     local buttonPanel = vgui.Create("Panel", frame)
     buttonPanel:Dock(BOTTOM)
-    buttonPanel:DockMargin(20, 10, 20, 20)
-    buttonPanel:SetTall(40)
+    buttonPanel:DockMargin(15, 15, 15, 15)
+    buttonPanel:SetTall(90)
+    buttonPanel.Paint = nil
     local submitBtn = vgui.Create("liaButton", buttonPanel)
-    submitBtn:Dock(RIGHT)
-    submitBtn:SetWide(120)
-    submitBtn:SetTxt(L("confirm"))
+    submitBtn:Dock(LEFT)
+    submitBtn:DockMargin(0, 0, 15, 0)
+    submitBtn:SetWide(270)
+    submitBtn:SetTxt(L("submit"))
     submitBtn.DoClick = function()
         local selectedOptions = {}
-        for optionData, checkbox in pairs(checkboxes) do
-            if checkbox:GetChecked() then table.insert(selectedOptions, optionData) end
+        for optionName, controlInfo in pairs(controls) do
+            local ctrl = controlInfo.ctrl
+            if ctrl:GetName() == "liaCheckbox" then
+                if ctrl:GetChecked() then table.insert(selectedOptions, controlInfo.data) end
+            elseif ctrl:GetName() == "liaComboBox" then
+                local selectedText, selectedData = ctrl:GetSelected()
+                if selectedData then
+                    selectedOptions[optionName] = selectedData
+                else
+                    selectedOptions[optionName] = selectedText
+                end
+            end
         end
 
         if callback then callback(selectedOptions) end
@@ -4001,8 +4060,8 @@ function lia.derma.requestOptions(title, options, callback, defaults)
     end
 
     local cancelBtn = vgui.Create("liaButton", buttonPanel)
-    cancelBtn:Dock(LEFT)
-    cancelBtn:SetWide(120)
+    cancelBtn:Dock(RIGHT)
+    cancelBtn:SetWide(270)
     cancelBtn:SetTxt(L("cancel"))
     cancelBtn.DoClick = function()
         if callback then callback(false) end

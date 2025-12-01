@@ -1,4 +1,4 @@
-lia.chat.register("ic", {
+﻿lia.chat.register("ic", {
     arguments = {
         {
             name = "text",
@@ -327,7 +327,6 @@ lia.chat.register("ooc", {
             return false
         end
 
-        -- Only check text length if text is provided (when actually sending message)
         if text and #text > lia.config.get("OOCLimit", 150) then
             speaker:notifyErrorLocalized("textTooBig")
             return false

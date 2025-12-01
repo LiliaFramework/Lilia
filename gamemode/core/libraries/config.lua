@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Configuration Library
 
     Comprehensive user-configurable settings management system for the Lilia framework.
@@ -235,7 +235,7 @@ end
             local defaults = {
                 MaxCharacters = lia.module.get("characters") and 5 or 1,
                 AllowPMs      = lia.module.get("chatbox") and true or false,
-                WalkSpeed     = lia.module.get("attributes") and 130 or 100
+                WalkSpeed     = lia.module.get("attributes") and 200 or 100
             }
             for key, value in pairs(defaults) do
                 lia.config.setDefault(key, value)
@@ -1014,7 +1014,7 @@ lia.config.add("CurrencyPluralName", "currencyPluralName", "currencyPlural", fun
     type = "Generic"
 })
 
-lia.config.add("WalkSpeed", "walkSpeed", 130, function(_, newValue)
+lia.config.add("WalkSpeed", "walkSpeed", 200, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetWalkSpeed(newValue)
     end
@@ -1056,7 +1056,7 @@ lia.config.add("HeadShotDamage", "headshotDamageMultiplier", 2, nil, {
     max = 10
 })
 
-lia.config.add("RunSpeed", "runSpeed", 275, function(_, newValue)
+lia.config.add("RunSpeed", "runSpeed", 400, function(_, newValue)
     for _, client in player.Iterator() do
         client:SetRunSpeed(newValue)
     end
@@ -1436,15 +1436,6 @@ lia.config.add("StaminaDrain", "staminaDrain", 1, nil, {
 
 lia.config.add("StaminaRegeneration", "staminaRegeneration", 5, nil, {
     desc = "staminaRegenerationDesc",
-    category = "categoryCharacter",
-    type = "Number",
-    min = 0.1,
-    max = 50,
-    decimals = 2
-})
-
-lia.config.add("StaminaCrouchRegeneration", "staminaCrouchRegeneration", 8, nil, {
-    desc = "staminaCrouchRegenerationDesc",
     category = "categoryCharacter",
     type = "Number",
     min = 0.1,

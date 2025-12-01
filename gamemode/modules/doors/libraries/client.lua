@@ -1,4 +1,4 @@
-function MODULE:GetDoorInfo(entity, doorData, doorInfo)
+﻿function MODULE:GetDoorInfo(entity, doorData, doorInfo)
     local owner = entity:GetDTEntity(0)
     local classes = doorData.classes or {}
     local factions = doorData.factions or {}
@@ -304,41 +304,35 @@ function MODULE:AddToAdminStickHUD(_, target, information)
             end
         end
 
-        local factions = target:getNetVar("factions")
-        if factions and factions ~= "[]" then
-            local factionData = util.JSONToTable(factions)
-            if factionData and #factionData > 0 then
-                local factionNames = {}
-                for _, factionId in ipairs(factionData) do
-                    local faction = lia.faction.indices[factionId]
-                    if faction then table.insert(factionNames, faction.name) end
-                end
+        local factions = doorData.factions
+        if factions and #factions > 0 then
+            local factionNames = {}
+            for _, factionId in ipairs(factions) do
+                local faction = lia.faction.indices[factionId]
+                if faction then table.insert(factionNames, faction.name) end
+            end
 
-                if #factionNames > 0 then
-                    table.insert(information, L("doorAllowedFactions") .. ":")
-                    for _, factionName in ipairs(factionNames) do
-                        table.insert(information, "- " .. factionName)
-                    end
+            if #factionNames > 0 then
+                table.insert(information, L("doorAllowedFactions") .. ":")
+                for _, factionName in ipairs(factionNames) do
+                    table.insert(information, "- " .. factionName)
                 end
             end
         end
 
-        local classes = target:getNetVar("classes")
-        if classes and classes ~= "[]" then
-            local classData = util.JSONToTable(classes)
-            if classData and #classData > 0 then
-                local classNames = {}
-                for _, classId in ipairs(classData) do
-                    local classIndex = lia.class.retrieveClass(classId)
-                    local classInfo = lia.class.list[classIndex]
-                    if classInfo then table.insert(classNames, classInfo.name) end
-                end
+        local classes = doorData.classes
+        if classes and #classes > 0 then
+            local classNames = {}
+            for _, classId in ipairs(classes) do
+                local classIndex = lia.class.retrieveClass(classId)
+                local classInfo = lia.class.list[classIndex]
+                if classInfo then table.insert(classNames, classInfo.name) end
+            end
 
-                if #classNames > 0 then
-                    table.insert(information, L("doorAllowedClasses") .. ":")
-                    for _, className in ipairs(classNames) do
-                        table.insert(information, "- " .. className)
-                    end
+            if #classNames > 0 then
+                table.insert(information, L("doorAllowedClasses") .. ":")
+                for _, className in ipairs(classNames) do
+                    table.insert(information, "- " .. className)
                 end
             end
         end

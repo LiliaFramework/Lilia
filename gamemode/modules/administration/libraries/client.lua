@@ -1,6 +1,5 @@
 local MODULE = MODULE
 AdminStickIsOpen = false
-local adminStickDevMode = true -- Set to false to disable command printing in chat (temporary debug mode)
 local pksCount, ticketsCount, warningsCount = 0, 0, 0
 local playerInfoLabel = L("player") .. " " .. L("information")
 local subMenuIcons = {
@@ -1322,7 +1321,6 @@ local function OpenPlayerModelUI(tgt)
     end
 
     hook.Run("AdminStickAddModels", modList, tgt)
-
     table.sort(modList, function(a, b) return a.name < b.name end)
     for _, md in ipairs(modList) do
         local ic = wr:Add("SpawnIcon")
@@ -1945,23 +1943,12 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
         m:AddOption(L(name), function()
             local id = GetIdentifier(tgt)
             local cmd = "say /" .. key
-
-            -- Always put the player as the first argument when using AdminStick
-            if id ~= "" then
-                cmd = cmd .. " " .. QuoteArgs(id)
-            end
-
+            if id ~= "" then cmd = cmd .. " " .. QuoteArgs(id) end
             if data.arguments and #data.arguments > 0 then
                 local argTypes = {}
                 local defaults = {}
-
-                -- Skip the first argument if it's a player/target type, since we already added the player
                 local startIndex = 1
-                if data.arguments[1] and (data.arguments[1].type == "player" or data.arguments[1].type == "target") then
-                    startIndex = 2
-                end
-
-                -- Only request arguments starting from the second argument (skip the player argument)
+                if data.arguments[1] and (data.arguments[1].type == "player" or data.arguments[1].type == "target") then startIndex = 2 end
                 for i = startIndex, #data.arguments do
                     local arg = data.arguments[i]
                     table.insert(argTypes, {arg.name, arg.type})
@@ -1976,33 +1963,20 @@ local function AddCommandToMenu(menu, data, key, tgt, name, stores)
                             return
                         end
 
-                        -- Add the remaining arguments (skip the first player argument if it exists)
                         for i = startIndex, #data.arguments do
                             local arg = data.arguments[i]
                             local value = argData[arg.name]
-                            if value and value ~= "" then
-                                cmd = cmd .. " " .. QuoteArgs(value)
-                            end
+                            if value and value ~= "" then cmd = cmd .. " " .. QuoteArgs(value) end
                         end
 
-                        if adminStickDevMode then
-                            chat.AddText(Color(255, 255, 0), "[AdminStick Debug] ", Color(255, 255, 255), cmd)
-                        end
                         cl:ConCommand(cmd)
                         timer.Simple(0.1, function() AdminStickIsOpen = false end)
                     end, defaults)
                 else
-                    -- No additional arguments to request, just run the command
-                    if adminStickDevMode then
-                        chat.AddText(Color(255, 255, 0), "[AdminStick Debug] ", Color(255, 255, 255), cmd)
-                    end
                     cl:ConCommand(cmd)
                     timer.Simple(0.1, function() AdminStickIsOpen = false end)
                 end
             else
-                if adminStickDevMode then
-                    chat.AddText(Color(255, 255, 0), "[AdminStick Debug] ", Color(255, 255, 255), cmd)
-                end
                 cl:ConCommand(cmd)
                 timer.Simple(0.1, function() AdminStickIsOpen = false end)
             end
@@ -3460,13 +3434,13 @@ function MODULE:TicketFrame(requester, message, claimed)
     closeButton:SetPos(frameWidth - 18, 2)
     closeButton:SetSize(16, 16)
     closeButton.DoClick = function() frm:Remove() end
-    frm:SetPos(xpos, ypos + 130 * #TicketFrames)
-    frm:MoveTo(xpos, ypos + 130 * #TicketFrames, 0.2, 0, 1, function() surface.PlaySound("garrysmod/balloon_pop_cute.wav") end)
+    frm:SetPos(xpos, ypos + 180 * #TicketFrames)
+    frm:MoveTo(xpos, ypos + 180 * #TicketFrames, 0.2, 0, 1, function() surface.PlaySound("garrysmod/balloon_pop_cute.wav") end)
     function frm:OnRemove()
         if TicketFrames then
             table.RemoveByValue(TicketFrames, frm)
             for k, v in ipairs(TicketFrames) do
-                v:MoveTo(xpos, ypos + 130 * (k - 1), 0.1, 0, 1)
+                v:MoveTo(xpos, ypos + 180 * (k - 1), 0.1, 0, 1)
             end
         end
 

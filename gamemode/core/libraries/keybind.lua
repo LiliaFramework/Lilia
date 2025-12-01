@@ -253,6 +253,7 @@ lia.keybind.add("adminMode", {
     keyBind = KEY_NONE,
     desc = "adminModeDesc",
     serverOnly = true,
+    shouldRun = function(client) return client:isStaff() end,
     onPress = function(client)
         if not IsValid(client) then return end
         local steamID = client:SteamID()

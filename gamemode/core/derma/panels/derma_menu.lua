@@ -13,6 +13,8 @@ function PANEL:Init()
     self._openTime = CurTime()
     self.deleteSelf = true
     self.maxHeight = nil
+    self._scrollPanel = nil
+    self._usingScroll = false
     self.Think = function()
         if CurTime() - self._openTime < 0.1 then return end
         if (input.IsMouseDown(MOUSE_LEFT) or input.IsMouseDown(MOUSE_RIGHT)) and not self:IsChildHovered() then
@@ -90,7 +92,8 @@ function PANEL:AddOption(text, func, icon, optData)
     local iconW = icon and 16 or 0
     self.MaxTextWidth = math.max(self.MaxTextWidth or 0, textW)
     self.MaxIconWidth = math.max(self.MaxIconWidth or 0, iconW)
-    local option = vgui.Create("DButton", self)
+    local parentPanel = self._usingScroll and self._scrollPanel or self
+    local option = vgui.Create("DButton", parentPanel)
     option:SetText("")
     option:Dock(TOP)
     option:DockMargin(2, 2, 2, 0)
@@ -327,7 +330,8 @@ function PANEL:AddOption(text, func, icon, optData)
 end
 
 function PANEL:AddSpacer()
-    local spacer = vgui.Create("DPanel", self)
+    local parentPanel = self._usingScroll and self._scrollPanel or self
+    local spacer = vgui.Create("DPanel", parentPanel)
     spacer:Dock(TOP)
     spacer:DockMargin(8, 6, 8, 6)
     spacer:SetTall(1)
@@ -347,7 +351,8 @@ end
 
 function PANEL:AddSubMenuSeparator()
     if not IsValid(self) then return end
-    local spacer = vgui.Create("DPanel", self)
+    local parentPanel = self._usingScroll and self._scrollPanel or self
+    local spacer = vgui.Create("DPanel", parentPanel)
     spacer:Dock(TOP)
     spacer:DockMargin(8, 3, 8, 3)
     spacer:SetTall(1)
@@ -382,7 +387,33 @@ function PANEL:UpdateSize()
     local iconExtra = self.MaxIconWidth > 0 and (self.MaxIconWidth + 8) or 0
     local maxWidth = math.max(200, self.MaxTextWidth + 60 + iconExtra)
     local limit = self.maxHeight or (ScrH() * 0.8)
-    self:SetSize(maxWidth, math.min(height, limit))
+    if height > limit then
+        if not self._usingScroll then
+            self._usingScroll = true
+            self._scrollPanel = vgui.Create("liaScrollPanel", self)
+            self._scrollPanel:Dock(FILL)
+            self._scrollPanel:DockMargin(0, 0, 0, 0)
+            for _, item in ipairs(self.Items) do
+                if IsValid(item) then item:SetParent(self._scrollPanel) end
+            end
+        end
+
+        self:SetSize(maxWidth, limit)
+    else
+        if self._usingScroll then
+            self._usingScroll = false
+            for _, item in ipairs(self.Items) do
+                if IsValid(item) then item:SetParent(self) end
+            end
+
+            if IsValid(self._scrollPanel) then
+                self._scrollPanel:Remove()
+                self._scrollPanel = nil
+            end
+        end
+
+        self:SetSize(maxWidth, height)
+    end
 end
 
 function PANEL:Open(x, y, skipanimation, ownerpanel)
@@ -441,6 +472,8 @@ function PANEL:AddCVar(name, convar, on, off, funcFunction)
 end
 
 function PANEL:AddPanel(pnl)
+    local parentPanel = self._usingScroll and self._scrollPanel or self
+    pnl:SetParent(parentPanel)
     pnl:Dock(TOP)
     pnl:DockMargin(2, 2, 2, 0)
     table.insert(self.Items, pnl)
@@ -580,6 +613,12 @@ function PANEL:Clear()
     self.Items = {}
     self.MaxTextWidth = 0
     self.MaxIconWidth = 0
+    if IsValid(self._scrollPanel) then
+        self._scrollPanel:Remove()
+        self._scrollPanel = nil
+        self._usingScroll = false
+    end
+
     self:UpdateSize()
 end
 

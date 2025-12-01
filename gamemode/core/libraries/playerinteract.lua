@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Player Interaction Library
 
     Player-to-player and entity interaction management system for the Lilia framework.
@@ -7,11 +7,9 @@
     Overview:
         The player interaction library provides comprehensive functionality for managing player interactions and actions within the Lilia framework. It handles the creation, registration, and execution of various interaction types including player-to-player interactions, entity interactions, and personal actions. The library operates on both server and client sides, with the server managing interaction registration and validation, while the client handles UI display and user input. It includes range checking, timed actions, and network synchronization to ensure consistent interaction behavior across all clients. The library supports both immediate and delayed actions with progress indicators, making it suitable for complex interaction systems like money transfers, voice changes, and other gameplay mechanics.
 ]]
--- Voice type constants for internal logic (avoid localization in performance-critical code)
 local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
-
 lia.playerinteract = lia.playerinteract or {}
 lia.playerinteract.stored = lia.playerinteract.stored or {}
 lia.playerinteract.categories = lia.playerinteract.categories or {}
@@ -737,10 +735,9 @@ if SERVER then
             client:requestString("@giveMoney", "@enterAmount", function(amount)
                 local originalAmount = tonumber(amount) or 0
                 amount = math.floor(originalAmount)
-                -- Check if someone tried to input decimals (potential money duping)
                 if originalAmount ~= amount and originalAmount > 0 then
                     lia.log.add(client, "moneyDupeAttempt", "Attempted to give " .. tostring(originalAmount) .. " money (floored to " .. amount .. ")")
-                    for _, admin in ipairs(player.GetAll()) do
+                    for _, admin in player.Iterator() do
                         if admin:IsAdmin() then admin:notifyLocalized("moneyDupeAttempt", client:Name(), "givemoney", tostring(originalAmount), tostring(amount)) end
                     end
                 end
@@ -783,7 +780,7 @@ if SERVER then
         category = "categoryVoice",
         shouldShow = function(client) return client:getChar() and client:Alive() and client:getNetVar("VoiceType") ~= L("whispering") end,
         onRun = function(client)
-            client:setNetVar("VoiceType", L("whispering"))
+            client:setNetVar("VoiceType", VOICE_WHISPERING)
             client:notifyInfoLocalized("voiceModeSet", L("whispering"))
         end,
         serverOnly = true

@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 chat.liaAddText = chat.liaAddText or chat.AddText
 function MODULE:CreateChat()
     if IsValid(self.panel) then return end

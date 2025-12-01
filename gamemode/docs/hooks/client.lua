@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Client-Side Hooks
 
     Client-side hook system for the Lilia framework.
@@ -13715,6 +13715,433 @@ end
             end
         end)
         ```
+]]
+function DoorDataReceived(door, syncData)
+end
+
+--[[
+    Purpose:
+        Called when door data is first received from the server
+
+    When Called:
+        When the client receives initial door synchronization data from the server
+
+    Parameters:
+        door (Entity) - The door entity that received data
+        syncData (table) - The synchronized door data containing all door properties
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log door data reception
+    hook.Add("DoorDataReceived", "MyAddon", function(door, syncData)
+        print("Received data for door: " .. tostring(door))
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track door ownership changes
+    hook.Add("DoorDataReceived", "TrackDoorOwnership", function(door, syncData)
+        if syncData.owner then
+            print("Door owned by: " .. tostring(syncData.owner))
+        else
+            print("Door is unowned")
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex door data processing
+    hook.Add("DoorDataReceived", "AdvancedDoorProcessing", function(door, syncData)
+        -- Store door data for later use
+        local doorData = {
+            entity = door,
+            name = syncData.name or "Door",
+            price = syncData.price or 0,
+            owner = syncData.owner,
+            faction = syncData.faction,
+            class = syncData.class,
+            receivedAt = CurTime()
+        }
+
+        -- Add to custom door registry
+        MyAddon.doorRegistry = MyAddon.doorRegistry or {}
+        MyAddon.doorRegistry[door:EntIndex()] = doorData
+
+        -- Notify other systems
+        hook.Run("OnDoorDataProcessed", door, doorData)
+
+        -- Update UI if door panel is open
+        if MyAddon.doorPanel and MyAddon.doorPanel:IsValid() then
+            MyAddon.doorPanel:UpdateDoorInfo(doorData)
+        end
+    end)
+    ```
+]]
+function DoorDataUpdated(door, syncData)
+end
+
+--[[
+    Purpose:
+        Called when existing door data is updated
+
+    When Called:
+        When the client receives updated door synchronization data from the server
+
+    Parameters:
+        door (Entity) - The door entity whose data was updated
+        syncData (table) - The updated synchronized door data
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log door updates
+    hook.Add("DoorDataUpdated", "MyAddon", function(door, syncData)
+        print("Door data updated: " .. tostring(door))
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Track ownership changes
+    hook.Add("DoorDataUpdated", "TrackOwnershipChanges", function(door, syncData)
+        local oldOwner = door:getNetVar("owner")
+        local newOwner = syncData.owner
+
+        if oldOwner ~= newOwner then
+            print("Door ownership changed from " .. tostring(oldOwner) .. " to " .. tostring(newOwner))
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex door update handling
+    hook.Add("DoorDataUpdated", "AdvancedDoorUpdates", function(door, syncData)
+        -- Get previous data
+        local oldData = MyAddon.doorRegistry and MyAddon.doorRegistry[door:EntIndex()] or {}
+
+        -- Compare changes
+        local changes = {}
+        for key, newValue in pairs(syncData) do
+            if oldData[key] ~= newValue then
+                changes[key] = {
+                    old = oldData[key],
+                    new = newValue
+                }
+            end
+        end
+
+        -- Handle specific changes
+        if changes.owner then
+            hook.Run("OnDoorOwnershipChanged", door, changes.owner.old, changes.owner.new)
+        end
+
+        if changes.price then
+            hook.Run("OnDoorPriceChanged", door, changes.price.old, changes.price.new)
+        end
+
+        -- Update registry
+        if MyAddon.doorRegistry then
+            MyAddon.doorRegistry[door:EntIndex()] = {
+                entity = door,
+                name = syncData.name or oldData.name or "Door",
+                price = syncData.price or oldData.price or 0,
+                owner = syncData.owner,
+                faction = syncData.faction,
+                class = syncData.class,
+                updatedAt = CurTime()
+            }
+        end
+
+        -- Refresh UI
+        if MyAddon.doorPanel and MyAddon.doorPanel:IsValid() then
+            MyAddon.doorPanel:RefreshDoorData(door)
+        end
+    end)
+    ```
+]]
+function VendorFactionBuyScaleUpdated(vendor, factionID, scale)
+end
+
+--[[
+    Purpose:
+        Called when a vendor's faction buy scale is updated
+
+    When Called:
+        When the client receives updated faction-specific buy pricing from the server
+
+    Parameters:
+        vendor (Entity) - The vendor entity whose scale was updated
+        factionID (number) - The faction ID for which the scale applies
+        scale (number) - The new buy price multiplier (1.0 = normal price, 0.8 = 20% discount, 1.2 = 20% markup)
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log scale updates
+    hook.Add("VendorFactionBuyScaleUpdated", "MyAddon", function(vendor, factionID, scale)
+        print("Vendor buy scale updated for faction " .. factionID .. ": " .. scale)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update UI displays
+    hook.Add("VendorFactionBuyScaleUpdated", "UpdateVendorUI", function(vendor, factionID, scale)
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateBuyPrices(vendor, factionID, scale)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex pricing system
+    hook.Add("VendorFactionBuyScaleUpdated", "AdvancedPricing", function(vendor, factionID, scale)
+        -- Store scale data
+        vendor.factionBuyScales = vendor.factionBuyScales or {}
+        vendor.factionBuyScales[factionID] = scale
+
+        -- Get faction name
+        local faction = lia.faction.indices[factionID]
+        local factionName = faction and faction.name or ("Faction " .. factionID)
+
+        -- Calculate price impact
+        local priceChange = (scale - 1.0) * 100
+        local changeType = priceChange > 0 and "increase" or "decrease"
+
+        -- Notify player if they're affected
+        local client = LocalPlayer()
+        local char = client:getChar()
+        if char and char:getFaction() == factionID then
+            client:ChatPrint(string.format("Buy prices at %s %s by %.1f%%",
+                vendor:getName(), changeType, math.abs(priceChange)))
+        end
+
+        -- Update cached prices
+        if MyAddon.vendorPrices then
+            MyAddon.vendorPrices:InvalidateCache(vendor, factionID)
+        end
+
+        -- Log for analytics
+        lia.log.add("vendor_buy_scale_update", {
+            vendor = vendor:getName(),
+            faction = factionName,
+            oldScale = vendor.factionBuyScales[factionID] or 1.0,
+            newScale = scale,
+            timestamp = os.time()
+        })
+    end)
+    ```
+]]
+function VendorFactionSellScaleUpdated(vendor, factionID, scale)
+end
+
+--[[
+    Purpose:
+        Called when a vendor's faction sell scale is updated
+
+    When Called:
+        When the client receives updated faction-specific sell pricing from the server
+
+    Parameters:
+        vendor (Entity) - The vendor entity whose scale was updated
+        factionID (number) - The faction ID for which the scale applies
+        scale (number) - The new sell price multiplier (1.0 = normal price, 0.8 = 20% less for items sold, 1.2 = 20% more for items sold)
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log scale updates
+    hook.Add("VendorFactionSellScaleUpdated", "MyAddon", function(vendor, factionID, scale)
+        print("Vendor sell scale updated for faction " .. factionID .. ": " .. scale)
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Update sell price displays
+    hook.Add("VendorFactionSellScaleUpdated", "UpdateSellPrices", function(vendor, factionID, scale)
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateSellPrices(vendor, factionID, scale)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Complex sell pricing system
+    hook.Add("VendorFactionSellScaleUpdated", "AdvancedSellPricing", function(vendor, factionID, scale)
+        -- Store scale data
+        vendor.factionSellScales = vendor.factionSellScales or {}
+        vendor.factionSellScales[factionID] = scale
+
+        -- Get faction name
+        local faction = lia.faction.indices[factionID]
+        local factionName = faction and faction.name or ("Faction " .. factionID)
+
+        -- Calculate profit impact
+        local profitChange = (scale - 1.0) * 100
+        local changeType = profitChange > 0 and "increase" or "decrease"
+
+        -- Notify affected players
+        local client = LocalPlayer()
+        local char = client:getChar()
+        if char and char:getFaction() == factionID then
+            client:ChatPrint(string.format("Sell prices at %s %s by %.1f%%",
+                vendor:getName(), changeType, math.abs(profitChange)))
+        end
+
+        -- Update economic calculations
+        if MyAddon.economyTracker then
+            MyAddon.economyTracker:UpdateFactionProfitability(factionID, vendor, scale)
+        end
+
+        -- Log transaction data
+        lia.log.add("vendor_sell_scale_update", {
+            vendor = vendor:getName(),
+            faction = factionName,
+            oldScale = vendor.factionSellScales[factionID] or 1.0,
+            newScale = scale,
+            timestamp = os.time()
+        })
+    end)
+    ```
+]]
+function VendorMessagesUpdated(vendor)
+end
+
+--[[
+    Purpose:
+        Called when a vendor's messages are updated
+
+    When Called:
+        When the client receives updated vendor message data from the server
+
+    Parameters:
+        vendor (Entity) - The vendor entity whose messages were updated
+
+    Returns:
+        None
+
+    Realm:
+        Client
+
+    Example Usage:
+
+    Low Complexity:
+
+    ```lua
+    -- Simple: Log message updates
+    hook.Add("VendorMessagesUpdated", "MyAddon", function(vendor)
+        print("Vendor messages updated: " .. vendor:getName())
+    end)
+    ```
+
+    Medium Complexity:
+
+    ```lua
+    -- Medium: Refresh vendor UI
+    hook.Add("VendorMessagesUpdated", "RefreshVendorUI", function(vendor)
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateMessages(vendor.messages)
+        end
+    end)
+    ```
+
+    High Complexity:
+
+    ```lua
+    -- High: Advanced message handling system
+    hook.Add("VendorMessagesUpdated", "AdvancedMessageHandling", function(vendor)
+        -- Store message history
+        local oldMessages = vendor.messages or {}
+        local newMessages = vendor.messages or {}
+
+        -- Detect new messages
+        local addedMessages = {}
+        for key, message in pairs(newMessages) do
+            if not oldMessages[key] or oldMessages[key] ~= message then
+                table.insert(addedMessages, {
+                    key = key,
+                    message = message,
+                    timestamp = CurTime()
+                })
+            end
+        end
+
+        -- Process message types
+        for _, msgData in ipairs(addedMessages) do
+            if msgData.key == "greeting" then
+                hook.Run("OnVendorGreetingChanged", vendor, msgData.message)
+            elseif msgData.key == "farewell" then
+                hook.Run("OnVendorFarewellChanged", vendor, msgData.message)
+            elseif msgData.key:find("error") then
+                hook.Run("OnVendorErrorMessageChanged", vendor, msgData.key, msgData.message)
+            end
+        end
+
+        -- Update UI components
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateMessages(newMessages)
+        end
+
+        -- Notify relevant systems
+        if MyAddon.npcSystem then
+            MyAddon.npcSystem:OnVendorMessagesUpdated(vendor, addedMessages)
+        end
+
+        -- Log message changes
+        lia.log.add("vendor_messages_updated", {
+            vendor = vendor:getName(),
+            messageCount = table.Count(newMessages),
+            timestamp = os.time()
+        })
+    end)
+    ```
 ]]
 function OnCreateDualInventoryPanels(panel1, panel2, inventory1, inventory2)
 end

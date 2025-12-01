@@ -224,25 +224,38 @@ def process_file(filepath):
 
 def main():
     if len(sys.argv) > 1:
-        target = sys.argv[1]
+        targets = [sys.argv[1]]
     else:
-        target = "."
+        # Default targets when no arguments provided
+        targets = [
+            r"E:\Server\garrysmod\gamemodes\Lilia\gamemode",
+            r"E:\Server\garrysmod\gamemodes\metrorp\modules",
+            r"E:\Server\garrysmod\gamemodes\metrorp\gitmodules"
+        ]
 
-    if os.path.isfile(target) and target.endswith('.lua'):
-        # Single file
-        process_file(target)
-    else:
-        # Directory - first remove comments from all files
-        count = 0
-        for root, dirs, files in os.walk(target):
-            for file in files:
-                if file.endswith('.lua'):
-                    if process_file(os.path.join(root, file)):
-                        count += 1
-        print(f"Processed {count} files")
+    total_count = 0
+    for target in targets:
+        print(f"Processing: {target}")
+        if os.path.isfile(target) and target.endswith('.lua'):
+            # Single file
+            if process_file(target):
+                total_count += 1
+        else:
+            # Directory - first remove comments from all files
+            count = 0
+            for root, dirs, files in os.walk(target):
+                for file in files:
+                    if file.endswith('.lua'):
+                        if process_file(os.path.join(root, file)):
+                            count += 1
+            print(f"Processed {count} files in {target}")
+            total_count += count
 
-        # Then run glualint pretty-print if available
-        run_glualint_pretty_print(target)
+            # Then run glualint pretty-print if available
+            run_glualint_pretty_print(target)
+
+    if len(targets) > 1:
+        print(f"Total processed files across all targets: {total_count}")
 
 if __name__ == '__main__':
     main()

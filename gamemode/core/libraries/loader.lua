@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Loader Library
     Core initialization and module loading system for the Lilia framework.
 ]]
@@ -146,6 +146,10 @@ local FilesToLoad = {
     },
     {
         path = "lilia/gamemode/core/libraries/vendor.lua",
+        realm = "shared"
+    },
+    {
+        path = "lilia/gamemode/core/libraries/doors.lua",
         realm = "shared"
     },
     {

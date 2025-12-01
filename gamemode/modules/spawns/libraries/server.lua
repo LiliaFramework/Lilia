@@ -108,8 +108,6 @@ end
 function MODULE:CharPreSave(character)
     local client = character:getPlayer()
     if not IsValid(client) then return end
-    -- Save position if client has a character and is in the world
-    -- Don't require client:Alive() as they might be disconnecting
     if client:getChar() == character then
         local lastPosData = {
             pos = client:GetPos(),
@@ -149,7 +147,6 @@ end
 
 function MODULE:OnCharDisconnect(client, character)
     if not IsValid(client) or not character then return end
-    -- Save position on disconnect before character is unloaded
     local lastPosData = {
         pos = client:GetPos(),
         ang = angle_zero,
@@ -157,7 +154,6 @@ function MODULE:OnCharDisconnect(client, character)
     }
 
     character:setLastPos(lastPosData)
-    -- Force save the character to persist the lastPos data
     character:save()
 end
 
@@ -193,7 +189,6 @@ end
 function MODULE:PostPlayerLoadout(client)
     local character = client:getChar()
     if not character then return end
-    -- Prevent running spawn logic multiple times
     if client.liaSpawnHandled then return end
     local lastPos = character:getLastPos()
     if lastPos and lastPos.map then
@@ -204,11 +199,10 @@ function MODULE:PostPlayerLoadout(client)
             if lastPos.ang and isangle(lastPos.ang) then client:SetEyeAngles(lastPos.ang) end
             character:setLastPos(nil)
             client.liaSpawnHandled = true
-            return -- Successfully used lastPos, don't do faction spawns
+            return
         end
     end
 
-    -- Mark as handled before calling DoSpawnLogic to prevent duplicate calls
     client.liaSpawnHandled = true
     DoSpawnLogic(client)
 end

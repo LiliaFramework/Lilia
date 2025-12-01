@@ -1,4 +1,4 @@
-net.Receive("liaPlayerRespawn", function(_, client)
+﻿net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     local char = client:getChar()
     if not char then return end
@@ -442,25 +442,52 @@ net.Receive("liaArgumentsRequest", function(_, client)
     local req = client.liaArgReqs and client.liaArgReqs[id]
     if not req then return end
     local spec = req.spec or {}
-    for name, typeInfo in pairs(spec) do
-        local expectedType = typeInfo
-        if istable(typeInfo) then expectedType = typeInfo[1] end
-        local val = data and data[name]
-        if expectedType == "boolean" then
-            if val == nil then
-                client.liaArgReqs[id] = nil
-                return
+    local isOrdered = istable(spec) and #spec > 0 and istable(spec[1])
+    if isOrdered then
+        for _, argInfo in ipairs(spec) do
+            local name, typeInfo = argInfo[1], argInfo[2]
+            local expectedType = typeInfo
+            if istable(typeInfo) then expectedType = typeInfo[1] end
+            local val = data and data[name]
+            if expectedType == "boolean" then
+                if val == nil then
+                    client.liaArgReqs[id] = nil
+                    return
+                end
+            elseif expectedType == "table" then
+                if val == nil then
+                    client.liaArgReqs[id] = nil
+                    return
+                end
+            else
+                if val == nil then
+                    client:notifyErrorLocalized("requiredFieldsMissing")
+                    client.liaArgReqs[id] = nil
+                    return
+                end
             end
-        elseif expectedType == "table" then
-            if val == nil then
-                client.liaArgReqs[id] = nil
-                return
-            end
-        else
-            if val == nil then
-                client:notifyErrorLocalized("requiredFieldsMissing")
-                client.liaArgReqs[id] = nil
-                return
+        end
+    else
+        for name, typeInfo in pairs(spec) do
+            local expectedType = typeInfo
+            if istable(typeInfo) then expectedType = typeInfo[1] end
+            local val = data and data[name]
+            if expectedType == "boolean" then
+                if val == nil then
+                    client.liaArgReqs[id] = nil
+                    return
+                end
+            elseif expectedType == "table" then
+                if val == nil then
+                    client.liaArgReqs[id] = nil
+                    return
+                end
+            else
+                if val == nil then
+                    client:notifyErrorLocalized("requiredFieldsMissing")
+                    client.liaArgReqs[id] = nil
+                    return
+                end
             end
         end
     end

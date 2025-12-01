@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Server-Side Hooks
 
     Server-side hook system for the Lilia framework.
@@ -1340,7 +1340,7 @@ end
 
             -- Count current persistent entities for this player
             local currentPersistent = 0
-            for _, ent in ipairs(ents.GetAll()) do
+            for _, ent in ents.Iterator() do
                 if ent:getNetVar("owner") == owner and ent:getNetVar("persistent", false) then
                     currentPersistent = currentPersistent + 1
                 end
@@ -1398,7 +1398,7 @@ end
 
             -- Check server performance (don't persist too many entities)
             local totalPersistent = 0
-            for _, ent in ipairs(ents.GetAll()) do
+            for _, ent in ents.Iterator() do
                 if ent:getNetVar("persistent", false) then
                     totalPersistent = totalPersistent + 1
                 end
@@ -6834,7 +6834,7 @@ end
         -- Medium: Remove character-related entities
         function MODULE:CharCleanUp(character)
             -- Remove any entities owned by this character
-            for _, ent in ipairs(ents.GetAll()) do
+            for _, ent in ents.Iterator() do
                 if ent:getNetVar("owner") == character:getPlayer() then
                     -- Only remove certain types of entities
                     if ent:GetClass():find("lia_") then
@@ -6857,7 +6857,7 @@ end
 
             -- Clean up owned entities
             local entitiesCleaned = 0
-            for _, ent in ipairs(ents.GetAll()) do
+            for _, ent in ents.Iterator() do
                 if ent:getNetVar("owner") == player then
                     local class = ent:GetClass()
 
@@ -25828,92 +25828,6 @@ end
     ```
 ]]
 function BagInventoryRemoved(self, inv)
-end
-
---[[
-    Purpose:
-        Calculates the stamina change offset for a player
-
-    When Called:
-        During stamina calculation to determine regeneration or drain rate
-
-    Parameters:
-        client (Player) - The player whose stamina is being calculated
-
-    Returns:
-        number - The stamina change offset (positive for regen, negative for drain)
-
-    Realm:
-        Shared
-
-    Example Usage:
-
-    Low Complexity:
-
-    ```lua
-    -- Simple: Return fixed offset
-    hook.Add("CalcStaminaChange", "MyAddon", function(client)
-        return 1 -- Always regenerate 1 point
-    end)
-    ```
-
-    Medium Complexity:
-
-    ```lua
-    -- Medium: Modify based on character
-    hook.Add("CalcStaminaChange", "CharBasedStamina", function(client)
-        local char = client:getChar()
-        if not char then return 1 end
-
-        local con = char:getAttrib("con", 0)
-        return 1 + (con * 0.1) -- 0.1 bonus per constitution
-    end)
-    ```
-
-    High Complexity:
-
-    ```lua
-    -- High: Complex stamina calculation
-    hook.Add("CalcStaminaChange", "AdvancedStamina", function(client)
-        local char = client:getChar()
-        if not char then return 1 end
-
-        local walkSpeed = lia.config.get("WalkSpeed", client:GetWalkSpeed())
-        local offset
-        local draining = not (client:GetMoveType() == MOVETYPE_NOCLIP) and
-                        client:KeyDown(IN_SPEED) and
-                        (client:GetVelocity():LengthSqr() >= walkSpeed * walkSpeed or
-                         client:InVehicle() and not client:OnGround())
-
-        if draining then
-            offset = -lia.config.get("StaminaDrain")
-        else
-            offset = client:Crouching() and
-                    lia.config.get("StaminaCrouchRegeneration") or
-                    lia.config.get("StaminaRegeneration")
-        end
-
-        -- Apply attribute modifiers
-        local con = char:getAttrib("con", 0)
-        if offset > 0 then
-            offset = offset * (1 + con * 0.1) -- Faster regen
-        else
-            offset = offset * (1 - con * 0.05) -- Less drain
-        end
-
-        -- Apply item modifiers
-        local inv = char:getInv()
-        for _, item in pairs(inv:getItems()) do
-            if item:getData("equip", false) and item.staminaMod then
-                offset = offset + item.staminaMod
-            end
-        end
-
-        return offset
-    end)
-    ```
-]]
-function CalcStaminaChange(client)
 end
 
 --[[

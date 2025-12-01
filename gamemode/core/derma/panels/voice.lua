@@ -1,8 +1,6 @@
--- Voice type constants for internal logic (avoid localization in performance-critical code)
-local VOICE_WHISPERING = "whispering"
+﻿local VOICE_WHISPERING = "whispering"
 local VOICE_TALKING = "talking"
 local VOICE_YELLING = "yelling"
-
 VoicePanels = {}
 local ICON_MAP = {
     [VOICE_WHISPERING] = "whispertalk.png",

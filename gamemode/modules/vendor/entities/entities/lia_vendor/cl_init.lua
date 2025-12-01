@@ -1,4 +1,4 @@
-function ENT:Draw()
+﻿function ENT:Draw()
     self:DrawModel()
 end
 
@@ -22,11 +22,11 @@ end
 
 function ENT:onDrawEntityInfo(alpha)
     local name = lia.vendor.getVendorProperty(self, "name")
-    -- If we don't have the name stored and it's still the default, request vendor data
     if not lia.vendor.stored[self] or not lia.vendor.stored[self]["name"] then
         net.Start("liaVendorRequestData")
         net.WriteEntity(self)
         net.SendToServer()
     end
+
     lia.util.drawEntText(self, name, 0, alpha)
 end

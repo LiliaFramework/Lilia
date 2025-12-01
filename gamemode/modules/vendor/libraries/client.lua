@@ -1,4 +1,4 @@
-function MODULE:VendorOpened(vendor)
+﻿function MODULE:VendorOpened(vendor)
     local vendorUI = vgui.Create("liaVendor")
     vendorUI.vendor = vendor
     hook.Run("OnOpenVendorMenu", self, vendor)
@@ -72,10 +72,7 @@ net.Receive("liaVendorPrice", function()
 end)
 
 net.Receive("liaVendorMode", function()
-    if not IsValid(liaVendorEnt) then
-        return
-    end
-
+    if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadInt(8)
@@ -86,10 +83,7 @@ net.Receive("liaVendorMode", function()
 end)
 
 net.Receive("liaVendorStock", function()
-    if not IsValid(liaVendorEnt) then
-        return
-    end
-
+    if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)
@@ -99,10 +93,7 @@ net.Receive("liaVendorStock", function()
 end)
 
 net.Receive("liaVendorMaxStock", function()
-    if not IsValid(liaVendorEnt) then
-        return
-    end
-
+    if not IsValid(liaVendorEnt) then return end
     local vendor = liaVendorEnt
     local itemType = net.ReadString()
     local value = net.ReadUInt(32)
@@ -239,12 +230,9 @@ net.Receive("liaVendorPropertySync", function()
     local isDefault = net.ReadBool()
     if not lia.vendor.stored[vendor] then lia.vendor.stored[vendor] = {} end
     if isDefault then
-        -- Remove property since it's now default
         lia.vendor.stored[vendor][propertyName] = nil
-        -- Clean up empty entries
         if table.IsEmpty(lia.vendor.stored[vendor]) then lia.vendor.stored[vendor] = nil end
     else
-        -- Update property with new value
         local propertyValue = net.ReadType()
         lia.vendor.stored[vendor][propertyName] = propertyValue
     end

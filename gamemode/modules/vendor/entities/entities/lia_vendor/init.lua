@@ -1,5 +1,4 @@
-
-function ENT:SpawnFunction(client, trace)
+﻿function ENT:SpawnFunction(client, trace)
     local angles = (trace.HitPos - client:GetPos()):Angle()
     angles.r = 0
     angles.p = 0
@@ -61,7 +60,6 @@ end
 
 function ENT:setFactionAllowed(factionID, isAllowed)
     if not isnumber(factionID) then return end
-
     if isAllowed then
         self.factions[factionID] = true
     else
@@ -81,7 +79,6 @@ end
 
 function ENT:setClassAllowed(classID, isAllowed)
     if not isnumber(classID) then return end
-
     if isAllowed then
         self.classes[classID] = true
     else
@@ -226,7 +223,6 @@ function ENT:loadPreset(name)
 
     local preset = lia.vendor and lia.vendor.getPreset(name)
     if not preset then return end
-    -- Copy the preset data to vendor items, ensuring proper structure
     self.items = {}
     for itemType, itemData in pairs(preset) do
         if lia.item.list[itemType] and istable(itemData) then
@@ -238,7 +234,6 @@ function ENT:loadPreset(name)
         end
     end
 
-    -- Save the preset to the vendor entity
     hook.Run("UpdateEntityPersistence", self)
     self:syncToAll()
 end

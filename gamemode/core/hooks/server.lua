@@ -1,4 +1,7 @@
-local GM = GM or GAMEMODE
+﻿local GM = GM or GAMEMODE
+local VOICE_WHISPERING = "whispering"
+local VOICE_TALKING = "talking"
+local VOICE_YELLING = "yelling"
 local LimbHitgroups = {HITGROUP_GEAR, HITGROUP_RIGHTARM, HITGROUP_LEFTARM}
 local sounds = {
     male = {
@@ -414,6 +417,34 @@ function GM:KeyPress(client, key)
             local dist = math.abs(trHi.HitPos.z - client:GetPos().z)
             client:SetVelocity(Vector(0, 0, 50 + dist * 3))
         end
+
+        local char = client:getChar()
+        if char then
+            local stamina = client:getNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+            local jumpReq = lia.config.get("JumpStaminaCost", 25)
+            if stamina >= jumpReq and client:GetMoveType() ~= MOVETYPE_NOCLIP and not client:InVehicle() and client:Alive() and (client.liaNextJump or 0) <= CurTime() then
+                client.liaNextJump = CurTime() + 0.1
+                client:consumeStamina(jumpReq)
+                local newStamina = client:getNetVar("stamina", hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100))
+                if newStamina <= 0 then
+                    client:setNetVar("brth", true)
+                    client:ConCommand("-speed")
+                end
+            elseif stamina < jumpReq then
+                client:SetVelocity(Vector(0, 0, 0))
+                return false
+            end
+        end
+    end
+
+    if key == IN_ATTACK2 then
+        local wep = client:GetActiveWeapon()
+        if IsValid(wep) and wep.IsHands and wep.ReadyToPickup then
+            wep:Pickup()
+        elseif IsValid(client.Grabbed) then
+            client:DropObject(client.Grabbed)
+            client.Grabbed = NULL
+        end
     end
 end
 
@@ -580,23 +611,19 @@ function GM:PlayerInitialSpawn(client)
         timer.Simple(1, function() lia.playerinteract.sync(client) end)
         timer.Simple(1, function() lia.dialog.syncToClients(client) end)
         timer.Simple(1, function()
-            -- Sync door data to the newly spawned client
             if IsValid(client) then
                 local syncCount = 0
                 local doorsWithData = 0
                 for _, door in ents.Iterator() do
-                    if IsValid(door) and door:isDoor() then 
-                        local syncData = lia.doors.getSyncData(door)
-                        if not table.IsEmpty(syncData) then
-                            doorsWithData = doorsWithData + 1
-                        end
-                        lia.doors.syncToClient(client, door)
+                    if IsValid(door) and door:isDoor() then
+                        local syncData = lia.doors.getData(door)
+                        if not table.IsEmpty(syncData) then doorsWithData = doorsWithData + 1 end
                         syncCount = syncCount + 1
                     end
                 end
-                print("[TEST] GM:PlayerInitialSpawn: Checked " .. syncCount .. " doors, " .. doorsWithData .. " have data to sync to client " .. client:Name())
             end
         end)
+
         hook.Run("PlayerLiliaDataLoaded", client)
         net.Start("liaAssureClientSideAssets")
         net.Send(client)
@@ -618,12 +645,16 @@ function GM:PlayerLoadout(client)
     client:StripWeapons()
     client:setNetVar("blur", nil)
     client:SetModel(character:getModel())
-    client:SetWalkSpeed(lia.config.get("WalkSpeed"))
-    client:SetRunSpeed(lia.config.get("RunSpeed"))
     client:SetJumpPower(160)
     lia.flag.onSpawn(client)
     hook.Run("PostPlayerLoadout", client)
     client:SelectWeapon("lia_hands")
+    timer.Simple(0.5, function()
+        if IsValid(client) and client:getChar() == character then
+            client:SetWalkSpeed(lia.config.get("WalkSpeed"))
+            client:SetRunSpeed(lia.config.get("RunSpeed"))
+        end
+    end)
 end
 
 function GM:CreateDefaultInventory(character)
@@ -1006,28 +1037,6 @@ function ClientAddText(client, ...)
     net.WriteTable(args)
     net.Send(client)
 end
-
-local function IsLineOfSightClear(listener, speaker)
-    local tr = util.TraceLine{
-        start = listener:GetShootPos(),
-        endpos = speaker:GetShootPos(),
-        filter = {listener, speaker},
-        mask = MASK_BLOCKLOS
-    }
-
-    if tr.Hit then
-        local ent = tr.Entity
-        if ent == speaker then return true end
-        if ent:GetClass() == "func_door_rotating" then return false end
-        return false
-    end
-    return true
-end
-
--- Voice type constants for internal logic (avoid localization in performance-critical code)
-local VOICE_WHISPERING = "whispering"
-local VOICE_TALKING = "talking"
-local VOICE_YELLING = "yelling"
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
     if not IsValid(listener) or not IsValid(speaker) or listener == speaker then return false, false end

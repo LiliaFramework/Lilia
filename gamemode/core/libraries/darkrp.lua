@@ -60,7 +60,7 @@ if SERVER then
         -- High: Validate spawn position with multiple checks
         local spawnPos = Vector(0, 0, 0)
         local ignoreList = {}
-        for _, ent in ipairs(ents.GetAll()) do
+        for _, ent in ents.Iterator() do
             if ent:GetClass() == "prop_physics" then
                 table.insert(ignoreList, ent)
             end

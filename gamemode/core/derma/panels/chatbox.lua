@@ -1,4 +1,4 @@
-local PANEL = {}
+﻿local PANEL = {}
 function PANEL:Init()
     local border = 32
     local screenW, screenH = ScrW(), ScrH()
@@ -81,17 +81,15 @@ function PANEL:setActive(state)
     self:SetKeyboardInputEnabled(state)
     if not state then self:setScrollbarVisible(false) end
     if state then
-        -- Restore all message panels to full visibility when chatbox is reopened
-        -- Reset fade timers so messages stay visible longer
         local currentTime = CurTime()
         for _, msgPanel in ipairs(self.list or {}) do
             if IsValid(msgPanel) then
                 msgPanel:SetAlpha(255)
-                -- Reset fade timer: start fading after 8 seconds, finish after 12 more seconds
                 msgPanel.start = currentTime + 8
                 msgPanel.finish = msgPanel.start + 12
             end
         end
+
         self.entry = self:Add("liaEntry")
         self.entry:Dock(BOTTOM)
         self.entry:SetTall(28)
