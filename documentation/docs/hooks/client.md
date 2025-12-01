@@ -348,7 +348,7 @@ Client
         -- Handle doors
         elseif target:isDoor() then
             table.insert(information, "=== DOOR INFO ===")
-            local doorData = target:getNetVar("doorData", {})
+            local doorData = target:lia.doors.getData(target)
             if doorData.name and doorData.name ~= "" then
                 table.insert(information, "Name: " .. doorData.name)
             end
@@ -455,7 +455,7 @@ Client
         -- Handle doors
         elseif target:isDoor() then
             table.insert(information, "=== DOOR INFO ===")
-            local doorData = target:getNetVar("doorData", {})
+            local doorData = target:lia.doors.getData(target)
             if doorData.name and doorData.name ~= "" then
                 table.insert(information, "Name: " .. doorData.name)
             end
@@ -562,7 +562,7 @@ Client
         -- Handle doors
         elseif target:isDoor() then
             table.insert(information, "=== DOOR INFO ===")
-            local doorData = target:getNetVar("doorData", {})
+            local doorData = target:lia.doors.getData(target)
             if doorData.name and doorData.name ~= "" then
                 table.insert(information, "Name: " .. doorData.name)
             end
@@ -669,7 +669,7 @@ Client
         -- Handle doors
         elseif target:isDoor() then
             table.insert(information, "=== DOOR INFO ===")
-            local doorData = target:getNetVar("doorData", {})
+            local doorData = target:lia.doors.getData(target)
             if doorData.name and doorData.name ~= "" then
                 table.insert(information, "Name: " .. doorData.name)
             end
@@ -2247,7 +2247,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -2265,7 +2265,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -2346,7 +2346,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -2364,7 +2364,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -2445,7 +2445,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -2463,7 +2463,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -2544,7 +2544,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -2562,7 +2562,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -26407,7 +26407,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -26425,7 +26425,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -26506,7 +26506,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -26524,7 +26524,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -26605,7 +26605,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -26623,7 +26623,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -26704,7 +26704,7 @@ Client
 ```lua
     -- Medium: Add formatted door information
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         if doorData then
             if doorData.title then
                 table.insert(infoTexts, "Title: " .. doorData.title)
@@ -26722,7 +26722,7 @@ Client
     -- High: Advanced door info display with custom styling
     function MODULE:DrawDoorInfoBox(entity, infoTexts, alphaOverride)
         if not IsValid(entity) then return end
-        local doorData = entity:getNetVar("doorData")
+        local doorData = lia.doors.getData(entity)
         local alpha = alphaOverride or 255
         -- Add door title if available
         if doorData and doorData.title then
@@ -37347,7 +37347,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:GetNetVar("vendorData")
+            local vendorData = vendor:getNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37365,7 +37365,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:GetNetVar("vendorData")
+        local vendorData = vendor:getNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -37445,7 +37445,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:GetNetVar("vendorData")
+            local vendorData = vendor:getNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37463,7 +37463,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:GetNetVar("vendorData")
+        local vendorData = vendor:getNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -37543,7 +37543,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:GetNetVar("vendorData")
+            local vendorData = vendor:getNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37561,7 +37561,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:GetNetVar("vendorData")
+        local vendorData = vendor:getNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -37641,7 +37641,7 @@ Client
     -- Medium: Add vendor info
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if IsValid(vendor) then
-            local vendorData = vendor:GetNetVar("vendorData")
+            local vendorData = vendor:getNetVar("vendorData")
             if vendorData then
                 -- Display vendor name
                 local label = vgui.Create("DLabel", panel)
@@ -37659,7 +37659,7 @@ Client
     function MODULE:OnOpenVendorMenu(panel, vendor)
         if not IsValid(panel) or not IsValid(vendor) then return end
         -- Get vendor data
-        local vendorData = vendor:GetNetVar("vendorData")
+        local vendorData = vendor:getNetVar("vendorData")
         if not vendorData then return end
         -- Customize panel
         panel:SetBackgroundColor(Color(50, 50, 60))
@@ -47037,7 +47037,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:GetNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -47132,7 +47132,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:GetNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -47227,7 +47227,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:GetNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -47322,7 +47322,7 @@ Client
         end
         -- Show for doors with special permissions
         if entity:GetClass() == "lia_door" then
-            local doorData = entity:GetNetVar("doorData")
+            local doorData = lia.doors.getData(entity)
             if doorData and doorData.owner then
                 return doorData.owner == char:getID() or client:IsAdmin()
             end
@@ -52535,9 +52535,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:GetNetVar("storageName", "Storage")
-        local storageType = entity:GetNetVar("storageType", "container")
-        local ownerName = entity:GetNetVar("ownerName", "Unknown")
+        local storageName = entity:getNetVar("storageName", "Storage")
+        local storageType = entity:getNetVar("storageType", "container")
+        local ownerName = entity:getNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -52697,9 +52697,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:GetNetVar("storageName", "Storage")
-        local storageType = entity:GetNetVar("storageType", "container")
-        local ownerName = entity:GetNetVar("ownerName", "Unknown")
+        local storageName = entity:getNetVar("storageName", "Storage")
+        local storageType = entity:getNetVar("storageType", "container")
+        local ownerName = entity:getNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -52859,9 +52859,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:GetNetVar("storageName", "Storage")
-        local storageType = entity:GetNetVar("storageType", "container")
-        local ownerName = entity:GetNetVar("ownerName", "Unknown")
+        local storageName = entity:getNetVar("storageName", "Storage")
+        local storageType = entity:getNetVar("storageType", "container")
+        local ownerName = entity:getNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -53021,9 +53021,9 @@ Client
             return
         end
         -- Get storage information
-        local storageName = entity:GetNetVar("storageName", "Storage")
-        local storageType = entity:GetNetVar("storageType", "container")
-        local ownerName = entity:GetNetVar("ownerName", "Unknown")
+        local storageName = entity:getNetVar("storageName", "Storage")
+        local storageType = entity:getNetVar("storageType", "container")
+        local ownerName = entity:getNetVar("ownerName", "Unknown")
         -- Create advanced unlock menu
         local frame = vgui.Create("DFrame")
         frame:SetSize(400, 300)
@@ -56040,8 +56040,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56062,7 +56062,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56070,10 +56070,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
-        client:SetNetVar("vendorSessionStart", nil)
-        client:SetNetVar("vendorTransactionCount", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
+        client:setNetVar("vendorSessionStart", nil)
+        client:setNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56154,8 +56154,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56176,7 +56176,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56184,10 +56184,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
-        client:SetNetVar("vendorSessionStart", nil)
-        client:SetNetVar("vendorTransactionCount", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
+        client:setNetVar("vendorSessionStart", nil)
+        client:setNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56268,8 +56268,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56290,7 +56290,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56298,10 +56298,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
-        client:SetNetVar("vendorSessionStart", nil)
-        client:SetNetVar("vendorTransactionCount", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
+        client:setNetVar("vendorSessionStart", nil)
+        client:setNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56382,8 +56382,8 @@ Client
     function MODULE:VendorExited()
         local client = LocalPlayer()
         -- Clear vendor interaction state
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
         -- Close vendor UI
         if lia.gui.vendor then
             lia.gui.vendor:Remove()
@@ -56404,7 +56404,7 @@ Client
         local exitTime = CurTime()
         local char = client:getChar()
         -- Log vendor session end
-        local sessionStart = client:GetNetVar("vendorSessionStart", 0)
+        local sessionStart = client:getNetVar("vendorSessionStart", 0)
         local sessionDuration = exitTime - sessionStart
         if sessionDuration > 0 then
             lia.log.add(string.format("Vendor session ended - Duration: %.2f seconds", sessionDuration), FLAG_NORMAL)
@@ -56412,10 +56412,10 @@ Client
             MODULE.TrackVendorSession(client, sessionDuration)
         end
         -- Clear all vendor-related network variables
-        client:SetNetVar("currentVendor", nil)
-        client:SetNetVar("vendorMode", nil)
-        client:SetNetVar("vendorSessionStart", nil)
-        client:SetNetVar("vendorTransactionCount", nil)
+        client:setNetVar("currentVendor", nil)
+        client:setNetVar("vendorMode", nil)
+        client:setNetVar("vendorSessionStart", nil)
+        client:setNetVar("vendorTransactionCount", nil)
         -- Close all vendor-related UI panels
         MODULE.CloseAllVendorPanels()
         -- Reset player state
@@ -56498,7 +56498,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56518,7 +56518,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56577,7 +56577,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56597,7 +56597,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56656,7 +56656,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56676,7 +56676,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -56735,7 +56735,7 @@ Client
     -- Medium: Update voice state
     function MODULE:VoiceToggled(enabled)
         local client = LocalPlayer()
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         if enabled then
             -- Show voice icon
             MODULE.ShowVoiceIcon()
@@ -56755,7 +56755,7 @@ Client
         if not IsValid(client) then return end
         local char = client:getChar()
         -- Update voice state
-        client:SetNetVar("voiceEnabled", enabled)
+        client:setNetVar("voiceEnabled", enabled)
         -- Log voice toggle
         lia.log.add(string.format("Voice %s for %s", enabled and "enabled" or "disabled", client:Name()), FLAG_NORMAL)
         if enabled then
@@ -58423,7 +58423,7 @@ Client
 
 ---
 
-### OnCreateDualInventoryPanels
+### AdminStickAddModels
 
 #### 📋 Purpose
 Called when dual inventory panels are created (e.g., trading, storage access)
@@ -58522,6 +58522,452 @@ Client
             -- Transfer selected items
             -- Implementation depends on your selection system
         end
+    end)
+
+```
+
+---
+
+### DoorDataReceived
+
+#### 📋 Purpose
+Allows adding custom models to the adminstick model selector.
+
+#### ⏰ When Called
+When the adminstick model selector UI is opened and building the list of available models.
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `modList` | **table** | A table containing model entries with 'name' and 'mdl' fields. Add new entries to this table. |
+| `target` | **Player** | The player whose model is being changed. |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Add a custom model to the adminstick selector
+    hook.Add("AdminStickAddModels", "AddCustomModel", function(modList, target)
+        table.insert(modList, {
+            name = "Custom Model",
+            mdl = "models/custom/model.mdl"
+        })
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Add multiple models with conditional logic
+    hook.Add("AdminStickAddModels", "AddAdminModels", function(modList, target)
+        -- Only add special models for admins
+        if target:hasPrivilege("adminModels") then
+            table.insert(modList, {
+                name = "Admin Model",
+                mdl = "models/admin/model.mdl"
+            })
+            table.insert(modList, {
+                name = "Super Admin Model",
+                mdl = "models/superadmin/model.mdl"
+            })
+        end
+        -- Add seasonal models
+        local currentMonth = os.date("*t").month
+        if currentMonth == 12 then -- December
+            table.insert(modList, {
+                name = "Christmas Model",
+                mdl = "models/christmas/model.mdl"
+            })
+        end
+    end)
+
+```
+
+---
+
+### DoorDataUpdated
+
+#### 📋 Purpose
+Called when door data is first received from the server
+
+#### ⏰ When Called
+When the client receives initial door synchronization data from the server
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log door data reception
+    hook.Add("DoorDataReceived", "MyAddon", function(door, syncData)
+        print("Received data for door: " .. tostring(door))
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Track door ownership changes
+    hook.Add("DoorDataReceived", "TrackDoorOwnership", function(door, syncData)
+        if syncData.owner then
+            print("Door owned by: " .. tostring(syncData.owner))
+        else
+            print("Door is unowned")
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex door data processing
+    hook.Add("DoorDataReceived", "AdvancedDoorProcessing", function(door, syncData)
+        -- Store door data for later use
+        local doorData = {
+            entity = door,
+            name = syncData.name or "Door",
+            price = syncData.price or 0,
+            owner = syncData.owner,
+            faction = syncData.faction,
+            class = syncData.class,
+            receivedAt = CurTime()
+        }
+        -- Add to custom door registry
+        MyAddon.doorRegistry = MyAddon.doorRegistry or {}
+        MyAddon.doorRegistry[door:EntIndex()] = doorData
+        -- Notify other systems
+        hook.Run("OnDoorDataProcessed", door, doorData)
+        -- Update UI if door panel is open
+        if MyAddon.doorPanel and MyAddon.doorPanel:IsValid() then
+            MyAddon.doorPanel:UpdateDoorInfo(doorData)
+        end
+    end)
+
+```
+
+---
+
+### VendorFactionBuyScaleUpdated
+
+#### 📋 Purpose
+Called when existing door data is updated
+
+#### ⏰ When Called
+When the client receives updated door synchronization data from the server
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log door updates
+    hook.Add("DoorDataUpdated", "MyAddon", function(door, syncData)
+        print("Door data updated: " .. tostring(door))
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Track ownership changes
+    hook.Add("DoorDataUpdated", "TrackOwnershipChanges", function(door, syncData)
+        local oldOwner = door:getNetVar("owner")
+        local newOwner = syncData.owner
+        if oldOwner ~= newOwner then
+            print("Door ownership changed from " .. tostring(oldOwner) .. " to " .. tostring(newOwner))
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex door update handling
+    hook.Add("DoorDataUpdated", "AdvancedDoorUpdates", function(door, syncData)
+        -- Get previous data
+        local oldData = MyAddon.doorRegistry and MyAddon.doorRegistry[door:EntIndex()] or {}
+        -- Compare changes
+        local changes = {}
+        for key, newValue in pairs(syncData) do
+            if oldData[key] ~= newValue then
+                changes[key] = {
+                    old = oldData[key],
+                    new = newValue
+                }
+            end
+        end
+        -- Handle specific changes
+        if changes.owner then
+            hook.Run("OnDoorOwnershipChanged", door, changes.owner.old, changes.owner.new)
+        end
+        if changes.price then
+            hook.Run("OnDoorPriceChanged", door, changes.price.old, changes.price.new)
+        end
+        -- Update registry
+        if MyAddon.doorRegistry then
+            MyAddon.doorRegistry[door:EntIndex()] = {
+                entity = door,
+                name = syncData.name or oldData.name or "Door",
+                price = syncData.price or oldData.price or 0,
+                owner = syncData.owner,
+                faction = syncData.faction,
+                class = syncData.class,
+                updatedAt = CurTime()
+            }
+        end
+        -- Refresh UI
+        if MyAddon.doorPanel and MyAddon.doorPanel:IsValid() then
+            MyAddon.doorPanel:RefreshDoorData(door)
+        end
+    end)
+
+```
+
+---
+
+### VendorFactionSellScaleUpdated
+
+#### 📋 Purpose
+Called when a vendor's faction buy scale is updated
+
+#### ⏰ When Called
+When the client receives updated faction-specific buy pricing from the server
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log scale updates
+    hook.Add("VendorFactionBuyScaleUpdated", "MyAddon", function(vendor, factionID, scale)
+        print("Vendor buy scale updated for faction " .. factionID .. ": " .. scale)
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Update UI displays
+    hook.Add("VendorFactionBuyScaleUpdated", "UpdateVendorUI", function(vendor, factionID, scale)
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateBuyPrices(vendor, factionID, scale)
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex pricing system
+    hook.Add("VendorFactionBuyScaleUpdated", "AdvancedPricing", function(vendor, factionID, scale)
+        -- Store scale data
+        vendor.factionBuyScales = vendor.factionBuyScales or {}
+        vendor.factionBuyScales[factionID] = scale
+        -- Get faction name
+        local faction = lia.faction.indices[factionID]
+        local factionName = faction and faction.name or ("Faction " .. factionID)
+        -- Calculate price impact
+        local priceChange = (scale - 1.0) * 100
+        local changeType = priceChange > 0 and "increase" or "decrease"
+        -- Notify player if they're affected
+        local client = LocalPlayer()
+        local char = client:getChar()
+        if char and char:getFaction() == factionID then
+            client:ChatPrint(string.format("Buy prices at %s %s by %.1f%%",
+                vendor:getName(), changeType, math.abs(priceChange)))
+        end
+        -- Update cached prices
+        if MyAddon.vendorPrices then
+            MyAddon.vendorPrices:InvalidateCache(vendor, factionID)
+        end
+        -- Log for analytics
+        lia.log.add("vendor_buy_scale_update", {
+            vendor = vendor:getName(),
+            faction = factionName,
+            oldScale = vendor.factionBuyScales[factionID] or 1.0,
+            newScale = scale,
+            timestamp = os.time()
+        })
+    end)
+
+```
+
+---
+
+### VendorMessagesUpdated
+
+#### 📋 Purpose
+Called when a vendor's faction sell scale is updated
+
+#### ⏰ When Called
+When the client receives updated faction-specific sell pricing from the server
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log scale updates
+    hook.Add("VendorFactionSellScaleUpdated", "MyAddon", function(vendor, factionID, scale)
+        print("Vendor sell scale updated for faction " .. factionID .. ": " .. scale)
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Update sell price displays
+    hook.Add("VendorFactionSellScaleUpdated", "UpdateSellPrices", function(vendor, factionID, scale)
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateSellPrices(vendor, factionID, scale)
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Complex sell pricing system
+    hook.Add("VendorFactionSellScaleUpdated", "AdvancedSellPricing", function(vendor, factionID, scale)
+        -- Store scale data
+        vendor.factionSellScales = vendor.factionSellScales or {}
+        vendor.factionSellScales[factionID] = scale
+        -- Get faction name
+        local faction = lia.faction.indices[factionID]
+        local factionName = faction and faction.name or ("Faction " .. factionID)
+        -- Calculate profit impact
+        local profitChange = (scale - 1.0) * 100
+        local changeType = profitChange > 0 and "increase" or "decrease"
+        -- Notify affected players
+        local client = LocalPlayer()
+        local char = client:getChar()
+        if char and char:getFaction() == factionID then
+            client:ChatPrint(string.format("Sell prices at %s %s by %.1f%%",
+                vendor:getName(), changeType, math.abs(profitChange)))
+        end
+        -- Update economic calculations
+        if MyAddon.economyTracker then
+            MyAddon.economyTracker:UpdateFactionProfitability(factionID, vendor, scale)
+        end
+        -- Log transaction data
+        lia.log.add("vendor_sell_scale_update", {
+            vendor = vendor:getName(),
+            faction = factionName,
+            oldScale = vendor.factionSellScales[factionID] or 1.0,
+            newScale = scale,
+            timestamp = os.time()
+        })
+    end)
+
+```
+
+---
+
+### OnCreateDualInventoryPanels
+
+#### 📋 Purpose
+Called when a vendor's messages are updated
+
+#### ⏰ When Called
+When the client receives updated vendor message data from the server
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Client
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Log message updates
+    hook.Add("VendorMessagesUpdated", "MyAddon", function(vendor)
+        print("Vendor messages updated: " .. vendor:getName())
+    end)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Refresh vendor UI
+    hook.Add("VendorMessagesUpdated", "RefreshVendorUI", function(vendor)
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateMessages(vendor.messages)
+        end
+    end)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Advanced message handling system
+    hook.Add("VendorMessagesUpdated", "AdvancedMessageHandling", function(vendor)
+        -- Store message history
+        local oldMessages = vendor.messages or {}
+        local newMessages = vendor.messages or {}
+        -- Detect new messages
+        local addedMessages = {}
+        for key, message in pairs(newMessages) do
+            if not oldMessages[key] or oldMessages[key] ~= message then
+                table.insert(addedMessages, {
+                    key = key,
+                    message = message,
+                    timestamp = CurTime()
+                })
+            end
+        end
+        -- Process message types
+        for _, msgData in ipairs(addedMessages) do
+            if msgData.key == "greeting" then
+                hook.Run("OnVendorGreetingChanged", vendor, msgData.message)
+            elseif msgData.key == "farewell" then
+                hook.Run("OnVendorFarewellChanged", vendor, msgData.message)
+            elseif msgData.key:find("error") then
+                hook.Run("OnVendorErrorMessageChanged", vendor, msgData.key, msgData.message)
+            end
+        end
+        -- Update UI components
+        if MyAddon.vendorPanel and MyAddon.vendorPanel:IsValid() then
+            MyAddon.vendorPanel:UpdateMessages(newMessages)
+        end
+        -- Notify relevant systems
+        if MyAddon.npcSystem then
+            MyAddon.npcSystem:OnVendorMessagesUpdated(vendor, addedMessages)
+        end
+        -- Log message changes
+        lia.log.add("vendor_messages_updated", {
+            vendor = vendor:getName(),
+            messageCount = table.Count(newMessages),
+            timestamp = os.time()
+        })
     end)
 
 ```

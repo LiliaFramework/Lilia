@@ -191,3 +191,258 @@ Shared
 
 ---
 
+### lia.vendor.getVendorProperty
+
+#### 📋 Purpose
+Retrieves a vendor property value, either from cached storage or default values
+
+#### ⏰ When Called
+When accessing vendor properties such as name, animation, or other custom settings
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The vendor entity to get the property from |
+| `property` | **string** | The name of the property to retrieve (e.g., "name", "animation") |
+
+#### ↩️ Returns
+* any - The property value if found, or the default value for the property
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get a vendor's name
+    local name = lia.vendor.getVendorProperty(vendor, "name")
+    print("Vendor name:", name)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Get multiple properties with fallbacks
+    local name = lia.vendor.getVendorProperty(vendor, "name") or "Unknown Vendor"
+    local animation = lia.vendor.getVendorProperty(vendor, "animation") or ""
+    print(name .. " uses animation: " .. animation)
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Build vendor info dynamically based on properties
+    local properties = {"name", "animation", "preset"}
+    local vendorInfo = {}
+    for _, prop in ipairs(properties) do
+        vendorInfo[prop] = lia.vendor.getVendorProperty(vendor, prop)
+    end
+    if vendorInfo.name and vendorInfo.name ~= "" then
+        print("Vendor '" .. vendorInfo.name .. "' configured successfully")
+    end
+
+```
+
+---
+
+### lia.vendor.setVendorProperty
+
+#### 📋 Purpose
+Sets a vendor property value, storing it only if it differs from the default value
+
+#### ⏰ When Called
+When configuring vendor properties such as name, animation, or other custom settings
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The vendor entity to set the property on |
+| `property` | **string** | The name of the property to set (e.g., "name", "animation") |
+| `value` | **any** | The value to set for the property |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Set a vendor's name
+    lia.vendor.setVendorProperty(vendor, "name", "Bob's Weapons")
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Set multiple properties on a vendor
+    lia.vendor.setVendorProperty(vendor, "name", "Medical Shop")
+    lia.vendor.setVendorProperty(vendor, "animation", "idle")
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Configure vendor with validation and error handling
+    local vendorConfigs = {
+        {property = "name", value = "Armory"},
+        {property = "animation", value = "alert"},
+        {property = "preset", value = "weapon_vendor"}
+    }
+    for _, config in ipairs(vendorConfigs) do
+        if config.value and config.value ~= "" then
+            lia.vendor.setVendorProperty(vendor, config.property, config.value)
+            print("Set " .. config.property .. " to " .. tostring(config.value))
+        else
+            print("Skipped empty value for " .. config.property)
+        end
+    end
+
+```
+
+---
+
+### lia.vendor.syncVendorProperty
+
+#### 📋 Purpose
+Synchronizes a vendor property change from server to all connected clients
+
+#### ⏰ When Called
+Automatically called when vendor properties are modified on the server side
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The vendor entity whose property is being synchronized |
+| `property` | **string** | The name of the property being synchronized |
+| `value` | **any** | The new value of the property |
+| `isDefault` | **boolean** | Whether the value is the default value (affects network transmission) |
+
+#### ↩️ Returns
+* nil
+
+#### 🌐 Realm
+Server
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Sync a name change to clients
+    lia.vendor.syncVendorProperty(vendor, "name", "New Vendor Name", false)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Sync multiple properties after batch changes
+    local changes = {
+        {property = "name", value = "Shop", isDefault = false},
+        {property = "animation", value = "idle", isDefault = false}
+    }
+    for _, change in ipairs(changes) do
+        lia.vendor.syncVendorProperty(vendor, change.property, change.value, change.isDefault)
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Sync property with validation and logging
+    local function syncPropertyWithValidation(vendor, property, value)
+        if not IsValid(vendor) then
+            print("Invalid vendor entity")
+            return false
+        end
+        local defaultValue = lia.vendor.defaults[property]
+        local isDefault = (istable(defaultValue) and table.IsEmpty(value)) or (value == defaultValue)
+        lia.vendor.syncVendorProperty(vendor, property, value, isDefault)
+        print("Synchronized property '" .. property .. "' for vendor " .. vendor:EntIndex())
+        return true
+    end
+
+```
+
+---
+
+### lia.vendor.getAllVendorData
+
+#### 📋 Purpose
+Retrieves all vendor properties at once, returning both custom and default values
+
+#### ⏰ When Called
+When needing to access multiple vendor properties or save/serialize vendor data
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `entity` | **Entity** | The vendor entity to get all properties from |
+
+#### ↩️ Returns
+* table - A table containing all vendor properties with their current values
+
+#### 🌐 Realm
+Shared
+
+#### 💡 Example Usage
+
+#### 🔰 Low Complexity
+```lua
+    -- Simple: Get all vendor data for display
+    local data = lia.vendor.getAllVendorData(vendor)
+    print("Vendor name:", data.name)
+    print("Animation:", data.animation)
+
+```
+
+#### 📊 Medium Complexity
+```lua
+    -- Medium: Check if vendor has custom settings
+    local data = lia.vendor.getAllVendorData(vendor)
+    local defaults = lia.vendor.defaults
+    local hasCustomSettings = false
+    for property, value in pairs(data) do
+        if value ~= defaults[property] then
+            hasCustomSettings = true
+            print("Custom " .. property .. ": " .. tostring(value))
+        end
+    end
+    if not hasCustomSettings then
+        print("Vendor uses all default settings")
+    end
+
+```
+
+#### ⚙️ High Complexity
+```lua
+    -- High: Serialize vendor data for persistence
+    local function serializeVendor(vendor)
+        local data = lia.vendor.getAllVendorData(vendor)
+        local serialized = {}
+        -- Only save non-default values and essential data
+        for property, value in pairs(data) do
+            if property == "name" or property == "animation" or
+               (value ~= lia.vendor.defaults[property] and property ~= "preset") then
+                serialized[property] = value
+            end
+        end
+        -- Add entity-specific data
+        serialized.items = vendor.items or {}
+        serialized.factions = vendor.factions or {}
+        serialized.classes = vendor.classes or {}
+        return util.TableToJSON(serialized)
+    end
+    local jsonData = serializeVendor(vendor)
+    file.Write("vendor_backup.json", jsonData)
+
+```
+
+---
+

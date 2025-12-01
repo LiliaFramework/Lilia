@@ -2216,10 +2216,10 @@ Client
 ### lia.derma.requestOptions
 
 #### 📋 Purpose
-Creates a multi-select dialog for choosing multiple options
+Creates a dialog for selecting options with checkboxes or dropdowns, formatted like requestArguments
 
 #### ⏰ When Called
-When user needs to select multiple options from a list
+When user needs to select options using checkboxes or choose from dropdown menus
 
 #### ↩️ Returns
 * Panel - The created dialog frame
@@ -2231,7 +2231,7 @@ Client
 
 #### 🔰 Low Complexity
 ```lua
-    -- Simple: Request multiple selections
+    -- Simple checkboxes
     local options = {"Option 1", "Option 2", "Option 3"}
     lia.derma.requestOptions("Choose Options", options, function(selected)
     print("Selected:", table.concat(selected, ", "))
@@ -2241,33 +2241,36 @@ Client
 
 #### 📊 Medium Complexity
 ```lua
-    -- Medium: Request with data values and defaults
+    -- Mixed checkboxes and dropdowns
     local options = {
-    {"Admin", "admin"},
-    {"Moderator", "moderator"},
-    {"VIP", "vip"}
+        {"Enable Feature", "feature_enabled"}, -- checkbox
+        {"Gaming", {"PC", "Console", "Mobile"}}, -- dropdown
+        {"Reading", {"Books", "Articles", "Novels"}} -- dropdown
     }
-    local defaults = {"admin"}
-    lia.derma.requestOptions("Select Roles", options, function(selected)
-    assignRoles(selected)
+    local defaults = {
+        feature_enabled = true, -- checkbox default
+        Gaming = "PC", -- dropdown default
+        Reading = "Books" -- dropdown default
+    }
+    lia.derma.requestOptions("Select Preferences", options, function(selected)
+        print("Feature enabled:", selected.feature_enabled)
+        print("Gaming platform:", selected.Gaming)
+        print("Reading type:", selected.Reading)
     end, defaults)
 
 ```
 
 #### ⚙️ High Complexity
 ```lua
-    -- High: Dynamic options with validation
-    local options = {}
-    for _, permission in pairs(availablePermissions) do
-        table.insert(options, {permission.displayName, permission.id})
-    end
-    lia.derma.requestOptions("Select Permissions", options, function(selected)
-    if #selected > 0 then
-        validateAndAssignPermissions(selected)
-        else
-            notify("Please select at least one permission!")
-        end
-    end, userPermissions)
+    -- Advanced dropdowns with display/value pairs
+    local options = {
+        {"Role", {{"Administrator", "admin"}, {"Moderator", "mod"}, {"User", "user"}}},
+        {"Permissions", {{"Read Only", "read"}, {"Read/Write", "write"}, {"Full Access", "full"}}}
+    }
+    lia.derma.requestOptions("Configure User", options, function(selected)
+        assignRole(selected.Role)
+        setPermissions(selected.Permissions)
+    end, {Role = "user", Permissions = "read"})
 
 ```
 

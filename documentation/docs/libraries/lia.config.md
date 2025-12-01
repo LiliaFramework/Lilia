@@ -190,7 +190,7 @@ Shared
         local defaults = {
             MaxCharacters = lia.module.get("characters") and 5 or 1,
             AllowPMs      = lia.module.get("chatbox") and true or false,
-            WalkSpeed     = lia.module.get("attributes") and 130 or 100
+            WalkSpeed     = lia.module.get("attributes") and 200 or 100
         }
         for key, value in pairs(defaults) do
             lia.config.setDefault(key, value)

@@ -53,7 +53,7 @@
     "author": "Samael",
     "discord": "@liliaplayer",
     "description": "Spawns a bodygroup closet where players can edit their model's bodygroups. Admins may inspect others and configure the closet's model.",
-    "version": "1",
+    "version": "2",
     "download": "https://github.com/LiliaFramework/Modules/raw/refs/heads/gh-pages/bodygrouper.zip",
     "source": "https://liliaframework.github.io/modules/bodygrouper/about/",
     "features": [],

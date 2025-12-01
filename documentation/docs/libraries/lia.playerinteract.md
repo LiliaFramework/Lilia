@@ -337,7 +337,7 @@ Server
         end,
         onRun = function(client, target)
             -- Complex arrest logic with validation
-            if lia.config.get("DisableCheaterActions", true) and client:getNetVar("cheater", false) then
+            if lia.config.get("DisableCheaterActions", true) and client.isCheater then
                 lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
                 client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
                 return
@@ -392,10 +392,10 @@ Server
         category = ("categoryVoice"),
         shouldShow = function(client)
             return client:getChar() and client:Alive() and
-                client:getNetVar("VoiceType") ~= L("whispering")
+                client:getNetVar("VoiceType") ~= VOICE_WHISPERING
         end,
         onRun = function(client)
-            client:setNetVar("VoiceType", L("whispering"))
+            client:setNetVar("VoiceType", VOICE_WHISPERING)
             client:notifyInfoLocalized("voiceModeSet", L("whispering"))
         end
     })
