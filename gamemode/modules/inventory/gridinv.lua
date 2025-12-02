@@ -81,8 +81,8 @@ end
 
 function GridInv:canItemFitInInventory(item, x, y)
     local invW, invH = self:getSize()
-    local itemW, itemH = item:getWidth() - 1, item:getHeight() - 1
-    return x >= 1 and y >= 1 and x + itemW <= invW and y + itemH <= invH
+    local itemW, itemH = item:getWidth(), item:getHeight()
+    return x >= 1 and y >= 1 and x + itemW - 1 <= invW and y + itemH - 1 <= invH
 end
 
 function GridInv:doesItemFitAtPos(testItem, x, y)
@@ -205,8 +205,26 @@ if SERVER then
                     end
                 end
             end
+        else
+            local doesFit = targetInventory:doesItemFitAtPos(item, x, y)
+            if not doesFit then
+                x, y = targetInventory:findFreePosition(item)
+                if not x or not y then
+                    for _, bagItem in pairs(targetInventory:getItems(true)) do
+                        if bagItem.isBag then
+                            local bagInventory = bagItem:getInv()
+                            x, y = bagInventory:findFreePosition(item)
+                            if x and y then
+                                targetInventory = bagInventory
+                                break
+                            end
+                        end
+                    end
+                end
+            end
         end
 
+        if not x or not y then return d:reject(L("noSpaceForItem")) end
         if isStackCommand and item.isStackable ~= true then isStackCommand = false end
         local targetAssignments, remainingQuantity = {}, xOrQuantity
         if isStackCommand then
