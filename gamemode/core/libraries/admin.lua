@@ -1810,6 +1810,7 @@ if SERVER then
             return true
         elseif cmd == "respawn" then
             target:Spawn()
+            target:setNetVar("lastDeathTime", 0)
             admin:notifySuccessLocalized("plyRespawned", target:Name())
             lia.log.add(admin, "plyRespawn", target:Name())
             lia.db.insertTable({
@@ -2207,6 +2208,8 @@ else
         else
             lia.administrator.privileges = tbl
         end
+
+        hook.Run("AdminPrivilegesUpdated")
     end)
 
     local function SetupUserGroupInterface(parent)
@@ -2264,11 +2267,13 @@ else
                 return
             end
 
-            Derma_Query(L("deleteGroupPrompt", activeTab.groupName), L("confirm"), L("yes"), function()
-                net.Start("liaGroupsRemove")
-                net.WriteString(activeTab.groupName)
-                net.SendToServer()
-            end, L("no"))
+            LocalPlayer():requestString(L("confirm"), L("deleteGroupPrompt", activeTab.groupName), function(value)
+                if value and value:lower() == "yes" then
+                    net.Start("liaGroupsRemove")
+                    net.WriteString(activeTab.groupName)
+                    net.SendToServer()
+                end
+            end)
         end
 
         local function createGroupTab(groupName, groups)
