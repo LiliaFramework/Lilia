@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Player Meta
 
     Player management system for the Lilia framework.
@@ -4368,9 +4368,7 @@ if SERVER then
         local maxStamina = char and (hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)) or lia.config.get("DefaultStamina", 100)
         local current = self:getLocalVar("stamina", maxStamina)
         local value = math.Clamp(current + amount, 0, maxStamina)
-        if current ~= value then
-            self:setLocalVar("stamina", value)
-        end
+        if current ~= value then self:setLocalVar("stamina", value) end
         if value >= maxStamina * 0.25 and self:getNetVar("brth", false) then
             self:setNetVar("brth", nil)
             hook.Run("PlayerStaminaGained", self)
@@ -5348,12 +5346,9 @@ if SERVER then
         lia.localvars = lia.localvars or {}
         lia.localvars[self] = lia.localvars[self] or {}
         lia.localvars[self][key] = value
-
-        -- Automatically network stamina changes (similar to Helix's approach)
         if key == "stamina" then
             lia.net[self] = lia.net[self] or {}
             local netOldValue = lia.net[self][key]
-            -- Only network if value actually changed
             if netOldValue ~= value then
                 lia.net[self][key] = value
                 if not self:IsBot() then
@@ -5389,9 +5384,7 @@ if SERVER then
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
         lia.localvars = lia.localvars or {}
-        if lia.localvars[self] and lia.localvars[self][key] ~= nil then
-            return lia.localvars[self][key]
-        end
+        if lia.localvars[self] and lia.localvars[self][key] ~= nil then return lia.localvars[self][key] end
         return default
     end
 else
@@ -5533,12 +5526,9 @@ else
     ]]
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
-        -- For stamina on LocalPlayer, read from networked data
         if key == "stamina" and self == LocalPlayer() then
             local idx = self:EntIndex()
-            if lia.net[idx] and lia.net[idx][key] ~= nil then
-                return lia.net[idx][key]
-            end
+            if lia.net[idx] and lia.net[idx][key] ~= nil then return lia.net[idx][key] end
         end
         return default
     end

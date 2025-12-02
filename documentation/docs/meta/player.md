@@ -4613,6 +4613,57 @@ Notes: Broadcasts to all clients so other players can see the player's state cha
 
 ---
 
+### setLocalVar
+
+#### 📋 Purpose
+Sets a local variable on the player and automatically networks it if it's "stamina"
+This provides efficient networking similar to Helix's system
+
+#### ⏰ When Called
+When setting player-local data that needs to sync to the client (like stamina)
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The local variable key |
+| `value` | **any** | The value to store |
+
+#### ↩️ Returns
+* None
+
+#### 🌐 Realm
+Server
+Notes:
+For "stamina" key, automatically networks via liaNetLocal when value changes
+]]
+
+---
+
+### getLocalVar
+
+#### 📋 Purpose
+Gets a local variable from the player
+
+#### ⏰ When Called
+When retrieving player-local data
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The local variable key to retrieve |
+| `default` | **any, optional** | Default value if the key doesn't exist |
+
+#### ↩️ Returns
+* any - The local variable value or default
+
+#### 🌐 Realm
+Server
+]]
+
+---
+
 ### canOverrideView
 
 #### 📋 Purpose
@@ -4714,6 +4765,33 @@ Client
     end
 
 ```
+
+---
+
+### getLocalVar
+
+#### 📋 Purpose
+Gets a local variable from the player, reading from networked data for "stamina"
+This provides client-side access to server-synced local variables
+
+#### ⏰ When Called
+When retrieving player-local data on the client
+
+#### ⚙️ Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | **string** | The local variable key to retrieve |
+| `default` | **any, optional** | Default value if the key doesn't exist |
+
+#### ↩️ Returns
+* any - The local variable value or default
+
+#### 🌐 Realm
+Client
+Notes:
+For "stamina" key on LocalPlayer, reads from lia.net table (networked data)
+]]
 
 ---
 

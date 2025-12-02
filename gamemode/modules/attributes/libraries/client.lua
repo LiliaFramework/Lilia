@@ -1,4 +1,4 @@
-local predictedStamina = 100
+﻿local predictedStamina = 100
 function MODULE:LoadCharInformation()
     local client = LocalPlayer()
     if not IsValid(client) then return end
