@@ -1,4 +1,4 @@
-﻿ENT.Base = "base_entity"
+ENT.Base = "base_entity"
 ENT.Type = "anim"
 ENT.PrintName = L("item")
 ENT.Author = "Samael"
@@ -17,7 +17,23 @@ function ENT:getItemID()
 end
 
 function ENT:getItemTable()
-    return lia.item.instances[self:getItemID()]
+    local itemID = self:getItemID()
+    if not itemID then
+        self.cachedItemID = nil
+        self.cachedItemTable = nil
+        return nil
+    end
+
+    if self.cachedItemID ~= itemID then
+        self.cachedItemID = itemID
+        self.cachedItemTable = lia.item.instances[itemID]
+    end
+
+    if self.cachedItemTable and not lia.item.instances[itemID] then
+        self.cachedItemTable = nil
+        return nil
+    end
+    return self.cachedItemTable
 end
 
 function ENT:getData(key, default)
