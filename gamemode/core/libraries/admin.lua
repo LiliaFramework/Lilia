@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Administrator Library
 
     Comprehensive user group and privilege management system for the Lilia framework.
@@ -162,19 +162,13 @@ local function clearPrivilegeCategoryCache()
     privilegeCategoryCache = {}
 end
 
--- Cache for group levels to avoid recalculating on every call
 local groupLevelCache = {}
-
 local function clearGroupLevelCache()
     groupLevelCache = {}
 end
 
 local function getGroupLevel(group)
-    -- Check cache first
-    if groupLevelCache[group] ~= nil then
-        return groupLevelCache[group]
-    end
-
+    if groupLevelCache[group] ~= nil then return groupLevelCache[group] end
     local levels = lia.administrator.DefaultGroups or {}
     if levels[group] then
         groupLevelCache[group] = levels[group]
@@ -191,6 +185,7 @@ local function getGroupLevel(group)
             groupLevelCache[group] = levels[inh]
             return levels[inh]
         end
+
         current = inh
     end
 
@@ -784,7 +779,6 @@ function lia.administrator.applyInheritance(groupName)
         if shouldGrant(groupName, min) then g[priv] = true end
     end
 
-    -- Clear cache since inheritance may have changed group levels
     clearGroupLevelCache()
 end
 

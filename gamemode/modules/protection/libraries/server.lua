@@ -1,4 +1,4 @@
-local MODULE = MODULE
+﻿local MODULE = MODULE
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     if not client:isStaffOnDuty() then
         local switchingToStaff = newCharacter and newCharacter:getFaction() == FACTION_STAFF
@@ -291,7 +291,6 @@ function MODULE:PlayerInitialSpawn(client)
             if IsValid(client) then
                 lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
                 client:notifyErrorLocalized("caughtCheating")
-                -- Warn staff
                 for _, p in player.Iterator() do
                     if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
                 end
