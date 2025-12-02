@@ -1,4 +1,4 @@
-﻿NAME = "French"
+NAME = "French"
 LANGUAGE = {
     mustProvideString = "Vous devez fournir une chane de caractres",
     use = "Utiliser",
@@ -2669,7 +2669,6 @@ Recharger : Lcher]],
     viewEntityTab = "Voir l'onglet d'entité",
     sitAnywhere = "S'asseoir n'importe où",
     bunnyHop = "Saut de lapin",
-    bypassNoclipShootingRestriction = "Contourner la restriction de tir en noclip",
     noItemCooldown = "Pas de délai sur les objets",
     f1Menu = "Menu F1",
     snapshotFile = "Fichier de sauvegarde",
@@ -3012,7 +3011,6 @@ Recharger : Lcher]],
     you = "Vous",
     accessItemStorage = "Accès au Stockage d'Objets",
     adjustGameplayToggles = "Ajuster les Bascules de Jeu",
-    bypassNoclipShooting = "Contourner la Restriction de Tir en Noclip",
     cannotSpectateSelf = "Vous ne pouvez pas vous observer vous-même",
     notSpectating = "Vous n'observez actuellement personne",
     characterID = "ID de Personnage",

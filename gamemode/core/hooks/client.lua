@@ -1,4 +1,4 @@
-﻿local GM = GM or GAMEMODE
+local GM = GM or GAMEMODE
 local RealTime, FrameTime = RealTime, FrameTime
 local mathApproach = math.Approach
 local IsValid = IsValid
@@ -384,7 +384,7 @@ function GM:CreateMove(cmd)
     local client = LocalPlayer()
     if IsValid(client) then
         local weapon = client:GetActiveWeapon()
-        if IsValid(weapon) and weapon:GetClass() == "lia_hands" and weapon.IsHoldingObject and weapon:IsHoldingObject() and cmd:KeyDown(IN_ATTACK2) then
+        if IsValid(weapon) and weapon:GetClass() == "lia_hands" and (weapon.cachedIsHoldingObject or false) and cmd:KeyDown(IN_ATTACK2) then
             cmd:ClearMovement()
             local angle = cmd:GetViewAngles()
             angle.z = 0

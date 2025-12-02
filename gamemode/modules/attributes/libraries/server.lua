@@ -1,4 +1,21 @@
-﻿local MODULE = MODULE
+local MODULE = MODULE
+local function InitializeStaminaTimer()
+    local staminaTimer = function()
+        for _, client in player.Iterator() do
+            if IsValid(client) then
+                local char = client:getChar()
+                if char and client:GetMoveType() ~= MOVETYPE_NOCLIP then MODULE:CalcStaminaChange(client) end
+            end
+        end
+    end
+
+    if timer.Exists("liaStaminaGlobal") then
+        timer.Adjust("liaStaminaGlobal", 0.25, 0, staminaTimer)
+    else
+        timer.Create("liaStaminaGlobal", 0.25, 0, staminaTimer)
+    end
+end
+
 function MODULE:PostPlayerLoadout(client)
     local char = client:getChar()
     if not char then return end
@@ -17,15 +34,6 @@ function MODULE:PostPlayerLoadout(client)
 
     local maxStamina = hook.Run("GetCharMaxStamina", char) or lia.config.get("DefaultStamina", 100)
     client:setLocalVar("stamina", maxStamina)
-    local uniqueID = "liaStam" .. client:SteamID64()
-    timer.Create(uniqueID, 0.25, 0, function()
-        if not IsValid(client) then
-            timer.Remove(uniqueID)
-            return
-        end
-
-        self:CalcStaminaChange(client)
-    end)
 end
 
 function MODULE:PlayerStaminaLost(client)
@@ -56,6 +64,8 @@ function MODULE:PlayerStaminaLost(client)
 end
 
 function MODULE:PlayerLoadedChar(client, character)
+    -- Initialize global timer if not already done
+    InitializeStaminaTimer()
     timer.Simple(0.25, function()
         if IsValid(client) then
             local maxStamina = hook.Run("GetCharMaxStamina", character) or lia.config.get("DefaultStamina", 100)
@@ -78,3 +88,5 @@ function MODULE:PlayerThrowPunch(client)
         client:setLocalVar("stamina", value)
     end
 end
+
+InitializeStaminaTimer()

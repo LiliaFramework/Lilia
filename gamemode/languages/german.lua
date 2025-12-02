@@ -1,4 +1,4 @@
-﻿NAME = "German"
+NAME = "German"
 LANGUAGE = {
     mustProvideString = "Es muss ein String angegeben werden",
     use = "Benutzen",
@@ -2617,7 +2617,6 @@ Nachladen: Fallenlassen]],
     viewEntityTab = "Entitäten-Tab anzeigen",
     sitAnywhere = "Überall sitzen",
     bunnyHop = "Bunny Hop",
-    bypassNoclipShootingRestriction = "Noclip-Schießbeschränkung umgehen",
     noItemCooldown = "Kein Item-Cooldown",
     f1Menu = "F1-Menü",
     snapshotFile = "Schnappschuss-Datei: %s",
@@ -2976,7 +2975,6 @@ Nachladen: Fallenlassen]],
     badInventoryType = "Schlechter Inventartyp",
     bannedCharacter = "Charakter gesperrt",
     bannedPlayer = "Spieler gesperrt",
-    bypassNoclipShooting = "Noclip-Schießbeschränkung umgehen",
     cannotSpectateSelf = "Du kannst dich nicht selbst beobachten",
     canSpawnStorage = "Kann Lager spawnen",
     classFactionMismatch = "Klassen-Fraktion-Fehlanpassung",

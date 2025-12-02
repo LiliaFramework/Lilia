@@ -1,4 +1,4 @@
-﻿function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
+function MODULE:OnCharTradeVendor(client, vendor, item, isSellingToVendor, _, _, isFailed)
     local vendorName = lia.vendor.getVendorProperty(vendor, "name")
     if not isSellingToVendor then
         lia.log.add(client, "vendorBuy", item and (item:getName() or item.name) or "", vendorName or L("unknown"), isFailed)
@@ -177,7 +177,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
         net.WriteEntity(vendor)
         net.WriteString("name")
         net.WriteBool(false)
-        net.WriteType(name)
+        net.WriteTable({name})
         net.Send(client)
     end
 
@@ -186,7 +186,7 @@ function MODULE:PlayerAccessVendor(client, vendor)
         net.WriteEntity(vendor)
         net.WriteString("animation")
         net.WriteBool(false)
-        net.WriteType(animation)
+        net.WriteTable({animation})
         net.Send(client)
     end
 
@@ -266,7 +266,7 @@ function MODULE:syncVendorDataToClient(client)
         net.WriteUInt(propertyCount, 8)
         for property, value in pairs(propertiesToSync) do
             net.WriteString(property)
-            net.WriteType(value)
+            net.WriteTable({value})
         end
     end
 
@@ -482,7 +482,7 @@ net.Receive("liaVendorRequestData", function(_, client)
         net.WriteEntity(vendor)
         net.WriteString("name")
         net.WriteBool(false)
-        net.WriteType(name)
+        net.WriteTable({name})
         net.Send(client)
     end
 
@@ -491,7 +491,7 @@ net.Receive("liaVendorRequestData", function(_, client)
         net.WriteEntity(vendor)
         net.WriteString("animation")
         net.WriteBool(false)
-        net.WriteType(animation)
+        net.WriteTable({animation})
         net.Send(client)
     end
 end)

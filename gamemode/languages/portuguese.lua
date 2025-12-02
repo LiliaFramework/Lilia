@@ -1,4 +1,4 @@
-﻿NAME = "Portuguese"
+NAME = "Portuguese"
 LANGUAGE = {
     mustProvideString = "Deves fornecer uma cadeia de texto",
     use = "Usar",
@@ -2665,7 +2665,6 @@ Recarregar: Largar]],
     viewEntityTab = "Ver Aba de Entidade",
     sitAnywhere = "Sentar em Qualquer Lugar",
     bunnyHop = "Bunny Hop",
-    bypassNoclipShootingRestriction = "Ignorar Restrição de Tiro em Noclip",
     noItemCooldown = "Sem Cooldown de Item",
     f1Menu = "Menu F1",
     snapshotFile = "Arquivo de Snapshot",
@@ -3053,7 +3052,6 @@ Recarregar: Largar]],
     allAssetsDownloadedSuccessfully = "Todos os assets baixados com sucesso.",
     animation = "Animação",
     assetsDownloadWarning = "Aviso: %s %s falhou ao baixar.",
-    bypassNoclipShooting = "Ignorar Restrição de Tiro em Noclip",
     categoryCheating = "Trapaça",
     categoryCombat = "Combate",
     categoryConnections = "Conexões",

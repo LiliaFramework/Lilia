@@ -1,13 +1,4 @@
-﻿local MODULE = MODULE
-local function IsCheater(client)
-    return lia.config.get("DisableCheaterActions", true) and client.isCheater
-end
-
-local function LogCheaterAction(client, action)
-    lia.log.add(client, "cheaterAction", action)
-    client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
-end
-
+local MODULE = MODULE
 function MODULE:CanPlayerSwitchChar(client, character, newCharacter)
     if not client:isStaffOnDuty() then
         local switchingToStaff = newCharacter and newCharacter:getFaction() == FACTION_STAFF
@@ -51,18 +42,6 @@ function MODULE:EntityTakeDamage(entity, dmgInfo)
 
     local inflictor = dmgInfo:GetInflictor()
     local attacker = dmgInfo:GetAttacker()
-    if IsValid(attacker) and attacker:IsPlayer() and IsCheater(attacker) and entity ~= attacker then
-        local damage = dmgInfo:GetDamage()
-        dmgInfo:SetDamage(0)
-        local refl = DamageInfo()
-        refl:SetDamage(damage)
-        refl:SetAttacker(attacker)
-        refl:SetInflictor(IsValid(inflictor) and inflictor or attacker)
-        attacker:TakeDamageInfo(refl)
-        LogCheaterAction(attacker, L("cheaterActionDealDamage"))
-        return true
-    end
-
     if not IsValid(entity) or entity:IsPlayer() and dmgInfo:IsFallDamage() then return end
     if IsValid(inflictor) and inflictor:isProp() then
         dmgInfo:SetDamage(0)
@@ -308,19 +287,25 @@ function MODULE:PlayerInitialSpawn(client)
     timer.Create(timerName, 10, 1, function()
         if IsValid(client) and client.VerifyCheatsPending then
             lia.log.add(client, "hackAttempt", "VerifyCheatsTimeout")
-            local override = hook.Run("PlayerCheatDetected", client)
-            client.isCheater = true
-            client:setLiliaData("cheater", true)
+            hook.Run("PlayerCheatDetected", client)
             if IsValid(client) then
                 lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
                 client:notifyErrorLocalized("caughtCheating")
+                -- Warn staff
                 for _, p in player.Iterator() do
                     if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
+                end
+
+                if client:getChar() then
+                    local warnsModule = lia.module.get("administration")
+                    if warnsModule and warnsModule.AddWarning then
+                        local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+                        warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM")
+                    end
                 end
             end
 
             hook.Run("OnCheaterCaught", client)
-            if override ~= true then lia.adminstrator.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
         end
     end)
 end
@@ -330,33 +315,4 @@ function MODULE:PlayerDisconnected(client)
         timer.Remove(client.VerifyCheatsTimer)
         client.VerifyCheatsTimer = nil
     end
-end
-
-function MODULE:PlayerUse(client)
-    if IsCheater(client) then
-        LogCheaterAction(client, L("use") .. " " .. L("entity"))
-        return false
-    end
-end
-
-function MODULE:CanPlayerInteractItem(client, action)
-    if IsCheater(client) then
-        LogCheaterAction(client, action .. " " .. L("item"))
-        return false
-    end
-end
-
-local function shouldBlock(ply)
-    if not IsValid(ply) or not ply:IsPlayer() then return false end
-    if ply:GetMoveType() == MOVETYPE_NOCLIP and not ply:hasPrivilege("bypassNoclipShooting") then return true end
-    if ply:getLiliaData("cheater", false) then return true end
-    return false
-end
-
-function MODULE:StartCommand(ply, cmd)
-    if not shouldBlock(ply) then return end
-    local buttons = cmd:GetButtons()
-    buttons = bit.band(buttons, bit.bnot(IN_ATTACK))
-    buttons = bit.band(buttons, bit.bnot(IN_ATTACK2))
-    cmd:SetButtons(buttons)
 end

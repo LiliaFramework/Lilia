@@ -1,4 +1,4 @@
-﻿SWEP.PrintName = L("handsWeaponName")
+SWEP.PrintName = L("handsWeaponName")
 SWEP.Slot = 0
 SWEP.SlotPos = 1
 SWEP.DrawAmmo = false
@@ -43,6 +43,7 @@ function SWEP:Initialize()
     self.heldObjectAngle = Angle(angle_zero)
     self.lastPunchTime = 0
     self.isFistHold = false
+    self.cachedIsHoldingObject = false
 end
 
 function SWEP:Deploy()
@@ -55,6 +56,7 @@ function SWEP:Deploy()
     end
 
     self:DropObject()
+    self.cachedIsHoldingObject = false
     return true
 end
 
@@ -76,6 +78,8 @@ end
 
 function SWEP:Think()
     if not IsValid(self:GetOwner()) then return end
+    -- Cache IsHoldingObject result to avoid calling it every frame in CreateMove
+    self.cachedIsHoldingObject = self:IsHoldingObject()
     if CLIENT then
         local viewModel = self:GetOwner():GetViewModel()
         if IsValid(viewModel) and self.NextAllowedPlayRateChange < CurTime() then viewModel:SetPlaybackRate(1) end
@@ -85,7 +89,7 @@ function SWEP:Think()
             self.isFistHold = false
         end
 
-        if self:IsHoldingObject() then
+        if self.cachedIsHoldingObject then
             local physics = self:GetHeldPhysicsObject()
             local bIsRagdoll = self.heldEntity:IsRagdoll()
             local holdDistance = bIsRagdoll and self.holdDistance * 0.5 or self.holdDistance
@@ -146,6 +150,7 @@ end
 
 function SWEP:PickupObject(entity)
     if self:IsHoldingObject() or not IsValid(entity) or not IsValid(entity:GetPhysicsObject()) then return end
+    self.cachedIsHoldingObject = true
     local physics = entity:GetPhysicsObject()
     physics:EnableGravity(false)
     physics:AddGameFlag(FVPHYSICS_PLAYER_HELD)
@@ -207,6 +212,7 @@ function SWEP:DropObject(bThrow)
     self.heldEntity.HeldOwner = nil
     self.heldEntity.CollisionGroup = nil
     self.heldEntity = nil
+    self.cachedIsHoldingObject = false
 end
 
 function SWEP:PlayPickupSound(surfaceProperty)

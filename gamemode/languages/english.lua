@@ -1,4 +1,4 @@
-﻿NAME = "English"
+NAME = "English"
 LANGUAGE = {
     mustProvideString = "Must Provide a String",
     use = "Use",
@@ -2749,7 +2749,6 @@ Reload: Drop]],
     viewEntityTab = "View Entity Tab",
     sitAnywhere = "Sit Anywhere",
     bunnyHop = "Bunny Hop",
-    bypassNoclipShootingRestriction = "Bypass Noclip Shooting Restriction",
     noItemCooldown = "No item cooldown",
     f1Menu = "F1 Menu",
     snapshotFile = "Snapshot file: %s",
@@ -2762,7 +2761,6 @@ Reload: Drop]],
     domainContainsConsecutiveDots = "Domain contains consecutive dots.",
     urlContainsInvalidChars = "URL contains invalid characters.",
     urlTooLong = "URL is too long (max 2048 characters).",
-    bypassNoclipShooting = "Bypass Noclip Shooting Restriction",
     couldNotReadCachedFile = "Could not read cached file",
     invalidFileFormatNotPngJpeg = "Invalid file format - not PNG or JPEG",
     invalidIPAddressOctet = "invalid IP address octet",

@@ -1,4 +1,4 @@
-﻿NAME = "Spanish"
+NAME = "Spanish"
 LANGUAGE = {
     mustProvideString = "Debes proporcionar una cadena",
     use = "Usar",
@@ -2667,7 +2667,6 @@ Recargar: Soltar]],
     viewEntityTab = "Ver Pestaña de Entidad",
     sitAnywhere = "Sentarse en Cualquier Lugar",
     bunnyHop = "Bunny Hop",
-    bypassNoclipShootingRestriction = "Omitir Restricción de Disparo en Noclip",
     noItemCooldown = "Sin Cooldown de Objeto",
     f1Menu = "Menú F1",
     snapshotFile = "Archivo de instantánea: %s",
@@ -3043,7 +3042,6 @@ Recargar: Soltar]],
     animation = "Animación",
     assetsDownloadWarning = "Advertencia: %s %s falló al descargar.",
     blocked = "Bloqueado",
-    bypassNoclipShooting = "Omitir Restricción de Disparo en Noclip",
     cannotSpectateSelf = "No puedes observarte a ti mismo",
     categoryCheating = "Trampa",
     categoryCombat = "Combate",

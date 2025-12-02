@@ -1,4 +1,4 @@
-﻿function MODULE:VendorOpened(vendor)
+function MODULE:VendorOpened(vendor)
     local vendorUI = vgui.Create("liaVendor")
     vendorUI.vendor = vendor
     hook.Run("OnOpenVendorMenu", self, vendor)
@@ -217,7 +217,8 @@ net.Receive("liaVendorInitialSync", function()
         lia.vendor.stored[vendor] = lia.vendor.stored[vendor] or {}
         for _ = 1, propertyCount do
             local propertyName = net.ReadString()
-            local propertyValue = net.ReadType()
+            local valueTable = net.ReadTable()
+            local propertyValue = valueTable[1]
             lia.vendor.stored[vendor][propertyName] = propertyValue
         end
     end
@@ -233,7 +234,8 @@ net.Receive("liaVendorPropertySync", function()
         lia.vendor.stored[vendor][propertyName] = nil
         if table.IsEmpty(lia.vendor.stored[vendor]) then lia.vendor.stored[vendor] = nil end
     else
-        local propertyValue = net.ReadType()
+        local valueTable = net.ReadTable()
+        local propertyValue = valueTable[1]
         lia.vendor.stored[vendor][propertyName] = propertyValue
     end
 end)

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
     Vendor Library
 
     NPC vendor management system with editing and rarity support for the Lilia framework.
@@ -538,7 +538,7 @@ function lia.vendor.syncVendorProperty(entity, property, value, isDefault)
         net.WriteBool(true)
     else
         net.WriteBool(false)
-        net.WriteType(value)
+        net.WriteTable({value})
     end
 
     net.Broadcast()

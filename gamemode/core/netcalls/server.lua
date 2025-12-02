@@ -1,4 +1,4 @@
-﻿net.Receive("liaPlayerRespawn", function(_, client)
+net.Receive("liaPlayerRespawn", function(_, client)
     if not IsValid(client) or client:Alive() then return end
     local char = client:getChar()
     if not char then return end
@@ -114,11 +114,27 @@ end)
 
 net.Receive("liaCheckHack", function(_, client)
     lia.log.add(client, "hackAttempt", "CheckHack")
-    local override = hook.Run("PlayerCheatDetected", client)
-    client.isCheater = true
-    client:setLiliaData("cheater", true)
+    hook.Run("PlayerCheatDetected", client)
+    if IsValid(client) then
+        lia.log.add(client, "cheaterDetected", client:Name(), client:SteamID())
+        client:notifyErrorLocalized("caughtCheating")
+        -- Warn staff
+        for _, p in player.Iterator() do
+            if p:isStaffOnDuty() or p:hasPrivilege("receiveCheaterNotifications") then p:notifyWarningLocalized("cheaterDetectedStaff", client:Name(), client:SteamID()) end
+        end
+
+        -- Add warning to player
+        if client:getChar() then
+            local warnsModule = lia.module.get("administration")
+            if warnsModule and warnsModule.AddWarning then
+                local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+                warnsModule:AddWarning(client:getChar():getID(), client:Nick(), client:SteamID(), timestamp, L("cheaterWarningReason"), "System", "SYSTEM")
+            end
+        end
+    end
+
     hook.Run("OnCheaterCaught", client)
-    if override ~= true then lia.adminstrator.applyPunishment(client, L("hackingInfraction"), true, true, 0, "kickedForInfractionPeriod", "bannedForInfractionPeriod") end
+    -- Removed automatic punishment - only warn staff
 end)
 
 net.Receive("liaVerifyCheatsResponse", function(_, client)
@@ -717,11 +733,6 @@ net.Receive("liaInvAct", function(_, client)
 end)
 
 net.Receive("liaRunInteraction", function(_, ply)
-    if lia.config.get("DisableCheaterActions", true) and ply.isCheater then
-        lia.log.add(ply, "cheaterAction", L("cheaterActionUseInteractionMenu"))
-        ply:notifyWarningLocalized("maybeYouShouldntHaveCheated")
-        return
-    end
 
     local name = net.ReadString()
     local hasEntity = net.ReadBool()
