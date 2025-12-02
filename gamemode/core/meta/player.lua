@@ -1,4 +1,4 @@
---[[
+﻿--[[
     Player Meta
 
     Player management system for the Lilia framework.
@@ -2970,18 +2970,16 @@ function playerMeta:networkAnimation(active, boneData)
         net.WriteTable(boneData)
         net.Broadcast()
     else
-        -- Initialize bone cache if it doesn't exist
         if not self.liaBoneCache then self.liaBoneCache = {} end
         for name, ang in pairs(boneData) do
             local i = self:LookupBone(name)
             if i then
                 local targetAng = active and ang or angle_zero
                 local cachedAng = self.liaBoneCache[i]
-                -- Only update if the angle has actually changed (compare components)
                 local shouldUpdate = true
                 if cachedAng then
                     local diff = math.abs(cachedAng.p - targetAng.p) + math.abs(cachedAng.y - targetAng.y) + math.abs(cachedAng.r - targetAng.r)
-                    shouldUpdate = diff > 0.001 -- Small threshold to account for floating point precision
+                    shouldUpdate = diff > 0.001
                 end
 
                 if shouldUpdate then
@@ -5359,11 +5357,9 @@ if SERVER then
         lia.localvars = lia.localvars or {}
         lia.localvars[self] = lia.localvars[self] or {}
         lia.localvars[self][key] = value
-        -- Automatically network stamina changes (similar to Helix's approach)
         if key == "stamina" then
             lia.net[self] = lia.net[self] or {}
             local netOldValue = lia.net[self][key]
-            -- Only network if value actually changed
             if netOldValue ~= value then
                 lia.net[self][key] = value
                 if not self:IsBot() then
@@ -5541,7 +5537,6 @@ else
     ]]
     function playerMeta:getLocalVar(key, default)
         if not IsValid(self) then return default end
-        -- For stamina on LocalPlayer, read from networked data
         if key == "stamina" and self == LocalPlayer() then
             local idx = self:EntIndex()
             if lia.net[idx] and lia.net[idx][key] ~= nil then return lia.net[idx][key] end

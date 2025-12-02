@@ -337,11 +337,6 @@ Server
         end,
         onRun = function(client, target)
             -- Complex arrest logic with validation
-            if lia.config.get("DisableCheaterActions", true) and client.isCheater then
-                lia.log.add(client, "cheaterAction", "Attempted arrest while flagged as cheater")
-                client:notifyWarningLocalized("maybeYouShouldntHaveCheated")
-                return
-            end
             target:getChar():setData("arrested", true)
             target:StripWeapons()
             client:notify("Suspect arrested!")

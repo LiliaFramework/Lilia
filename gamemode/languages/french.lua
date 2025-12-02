@@ -1,4 +1,4 @@
-NAME = "French"
+﻿NAME = "French"
 LANGUAGE = {
     mustProvideString = "Vous devez fournir une chane de caractres",
     use = "Utiliser",
